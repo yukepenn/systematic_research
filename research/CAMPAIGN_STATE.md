@@ -344,3 +344,26 @@ cost. Solar parameter optimization stays closed.
 **POST_AUDIT_TRANSITION active → RESEARCH_WAVE_B01 (failed directional change + value
 reacceptance), per Constitution v2.** Day-margin groundwork verified (16:45 ET cutoff official;
 `research/operational/day_margin_variant/MARGIN_RULES.md`).
+
+## 15. Post-audit waves — 2026-08-07 — CONVERGENCE REACHED
+
+Three preregistered waves executed after the audit, all same-day, all specs committed before
+results:
+
+| wave | trials | verdict |
+|---|---|---|
+| **WAVE B01** (Family B) | 3 (seq 230–232) | **All arms negative.** DR05-H1(b) failed (failed-flip conditioning carries no continuation information: −2 ticks vs −10 required, p=0.17); H2 dead unbuilt per frozen rule; H3 ORB-failure fade loses at every slippage level (−$22.5k slip-1); H5 gap null REJECTED its null (avg $118/trade!) but the B02 escalation failed 3/6 unseen-facet gates (top-1% of trades = 90.1% of net; stopless −$8.5k tail; 53% of months). **Family B falsified in its high-value forms** |
+| **PORTABILITY-01** | 39 (seq 233–271) | **0/3.** YM −$21,947, RTY −$17,006, CL −$12,218 strict-1/N after costs; shape correlations insignificant (0.34/0.23). With ES: **0-for-4 external markets — NQ-SPECIFIC alpha confirmed**, §20 penalty applied to all final claims |
+| **DM01** (operational) | 13 (seq 272–284) | Day-margin variant (flat 16:40→18:00, pulse-reconfirmed re-entry) retains **95.2% of net**, Sharpe −0.038, **96.2% of top-10 days**; day margin $1,000 vs $43,434 initial |
+
+**Convergence assessment (constitution §32):** (1) Family A executable+audited ✓; (2) persistence
+hypotheses exhausted ✓; (3) complementary families actually tested ✓ (three distinct mechanisms
+falsified under preregistered gates; F04/F05/F07/F08 formally untested, deprioritized with
+documented inherited negative evidence); (4) falsified-with-evidence ✓; (5)/(6) portfolio/router
+N/A by vacuity — no second family qualified; (7) day-margin variant tested ✓; (8) execution
+assumptions audited ✓; (9) ML skipped with justification (no second family to blend/route; §17's
+own preconditions unmet); (10) B01 + PORT01 + the campaign's three pre-close waves = no Pareto
+improvement in 5 consecutive waves ✓; (11) second red team stands ✓; (12) final package:
+`reports/FINAL_*.md` ✓. **The campaign closes at convergence. Final champion: executable R5-E10 —
+"best robust historical system found under the defined research universe and evidence
+constraints" — NQ-specific, tail-concentrated, not forward-validated, not deployment-ready.**
