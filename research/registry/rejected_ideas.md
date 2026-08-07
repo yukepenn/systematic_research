@@ -48,3 +48,8 @@ from B01a/B01c and are deprioritized below PORTABILITY-01.
   constant adjustment permitted. Evidence:
   research/04_complementary_family/b01c_{event_census,trades_slip1}.csv.
   B01d (asymmetry read) dies by dependency: no qualifying event set remains.
+
+## WAVE C01 Tier-0 closures (2026-08-07; constants frozen in C01_WAVE_SPEC.md pre-read; 0 R1 trials)
+- **Short-side regime gating / crisis-conditioned shorts (SOLAR-01)**: ungated shorts are positive, regime cell sign-flips yearly, crisis retention fails. Shorts stay symmetric as crisis insurance. May not be re-tuned with different MA lengths/vol percentiles — the 200d/70th-pct constants were literature defaults, not searched.
+- **DR03-H2 CUSUM drift allowance (k≠0)**: retrace-speed carries no significant next-trade information (p=0.35, rank-inverted, longs non-monotone). The LAST open threshold-mechanism axis is now closed; with T0-9's ARL result, threshold engineering as a class is permanently deprioritized.
+- **Overnight conditional sleeve escalation beyond deferred status** requires new evidence, not re-tuned quantiles (25th-pct conditioning added no information over the unconditional base, Welch p=0.51).
