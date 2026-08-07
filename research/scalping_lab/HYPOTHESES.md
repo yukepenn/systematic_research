@@ -47,12 +47,16 @@ gap-settle dynamics in the first minutes; thin book → measurable but possibly 
 
 ## DR batch 1 synthesis (2026-08-07; full blocks in deep_research/DR_A..D)
 
-**Zone verdicts (converging across all four reports):** sub-5-min effects from best-level
-book/flow signals are worth 0.1–1 tick gross vs our 2.872-tick floor → aggressive harvesting
-of micro book signals is STRUCTURALLY DEAD at retail latency (any backtest showing otherwise
-is presumed a bug). Millisecond cross-market price lead-lag: NON_RETAIL, dead. What survives:
-structural-scalp horizons (30s–hours), mechanically-caused windows, large-magnitude events,
-and cost-side engineering.
+**Zone priors (REVISED per MANDATE_AMENDMENT_1 §1 — literature is a prior, not a local
+verdict):** pure next-tick / simple top-of-book harvesting has a LOW PRIOR of surviving our
+retail friction (external estimates: 0.1–1 tick gross vs 2.872-tick floor). Millisecond
+cross-market price lead-lag: NON_RETAIL prior. Neither is a closed axis: seconds-to-minutes
+NQ research continues empirically on our own L1/L2 data, especially conditional and
+high-magnitude states, and every microstructure feature is evaluated in THREE separate roles
+(A directional alpha / B selectivity-meta-labeling / C execution alpha) — a 0.5-tick signal
+can fail A and still be valuable as C. Higher-prior zones: structural horizons, mechanical
+windows, large-magnitude events, cost-side engineering. Unexpectedly strong micro results
+get extra scrutiny (illusion checklist), not automatic dismissal.
 
 **Priority-1 (Tier-0 candidates), merged and deduplicated:**
 - **H-A1/H-D5 — last-30-min hedging momentum**: rest-of-day (or first-30-min) NQ return
@@ -86,3 +90,15 @@ contracts only; 1-tick-against shift test for any reversion edge; DSR/PBO at pro
 iceberg absorption (P3, data purchase = banned).
 
 ## Discovery queue (append below with mechanism/observable/horizon/falsifier)
+
+**S2a — breakout-acceptance pullback rebreak (owner seed, 2026-08-07; STRUCTURAL_SCALP /
+ADJACENT boundary).** Concretization of S2: completed 1-min bar closes beyond the prior
+20-bar extreme with close-location ≥ 0.70 (≤ 0.30 short); 1–3 completed pullback bars all
+holding the broken level, ≥ 1 down-close; entry = tick-series rebreak of pullback extreme
++1 tick with a strictly-later-timestamp guard; Tier-0/1 exits = fixed horizon {1,2,3,5,8}
+min (primary 3). Mechanism: initiative flow still active after acceptance + retracement.
+Owner-supplied notes filtered per Amendment 1: commission is $2.18/side (their $1.09 figure
+is wrong), our tier gates and split geometry apply (not their 20-session runbook), no
+Playback/Sim101 progression (banned), OnBarClose + explicit 1-tick series architecture and
+the same-timestamp look-ahead guard are adopted as written. Vulnerable to: bar-close
+fantasy, session artifacts, back-adjustment (uses relative levels — low), event clustering.

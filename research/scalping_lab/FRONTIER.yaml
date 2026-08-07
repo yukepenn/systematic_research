@@ -1,13 +1,20 @@
 # Scalping Lab frontier — machine-readable state
 updated: 2026-08-07
 phase: P1_DATA_REALITY
-champions:
-  SCALP_SIGNAL_REFERENCE: null
+champions:  # per-zone per Amendment 1 par.6; adjacent may never claim the scalp title
+  MICRO:            {signal_reference: null, final: null}
+  STRUCTURAL_SCALP: {signal_reference: null, final: null}
+  ADJACENT_INTRADAY: {signal_reference: null, final: null}
   SCALP_1NQ_REFERENCE: null
   SCALP_HIGH_WIN_REFERENCE: null
   SCALP_MAX_SHARPE: null
   SCALP_LOW_DD: null
-  SCALP_FINAL_CHAMPION: null
+  SCALP_FINAL_CHAMPION: null   # must come from MICRO or STRUCTURAL_SCALP
+splits:
+  development_tick: [2025-08-10, 2026-05-31]
+  holdout_scalp: [2026-06-01, 2026-07-31]   # sealed; single-read at Tier-3
+  development_minute: [2005-01-01, 2026-05-31]
+  locked_forward: 2026-08-01
 data_levels:
   determined: true  # DATAPROBE01, 2026-08-07
   level0_ohlcv: confirmed_minute_to_2005

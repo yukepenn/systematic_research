@@ -12,12 +12,24 @@
       HYPOTHESES.md). Zone verdict: micro book-signal harvesting structurally dead at
       retail latency; survivors = structural horizons, mechanical windows, large-magnitude
       events, cost-side engineering. Fill model adopted into EXECUTION_MODEL.md (binding).
-- [ ] **Wave W1 (Tier-0, next): instrumentation first, alpha second** —
-      W1-0 instrumentation (no selection risk): spread-state map (H-EXEC-1), Roll-bounce
-      guardrail (H-A3), ES↔NQ sync known-answer test, L3 semantics check;
-      W1-1 Z1 DC scale transfer; W1-2 H-A1/D5 last-30-min momentum (20-yr minute data);
-      W1-3 H-B5 spike classification; W1-4 H-D3 cash-close window.
-      Specs frozen+committed before any result is read; split geometry (P2) frozen first.
+- [x] **AMENDMENT 1 applied (2026-08-07)**: zone verdict softened to prior; three-use
+      separation (directional/selectivity/execution); BBO_EXEC model specified alongside
+      BENCHMARK_C1; xcorr=0 known-answer test WITHDRAWN (replaced by result-agnostic
+      timestamp-integrity audit; ES→NQ lag is an empirical object); external numbers
+      demoted to EXTERNAL PRIOR; zones MICRO/STRUCTURAL_SCALP/ADJACENT_INTRADAY with
+      separate champions; P(+A before −B) excursion axis formalized; NO live recorder
+      (owner ruling); owner seed S2a (breakout-pullback rebreak) registered.
+- [x] **P2: split geometry FROZEN** (CONTAMINATION_LEDGER): dev tick 2025-08-10→2026-05-31,
+      sealed scalp holdout 2026-06-01→2026-07-31 (single-read at Tier-3), minute dev from
+      2005, ≥2026-08-01 locked.
+- [~] **E10 Flatten1644 direct confirmation** (Amendment §11, Solar side): building
+      SolarWaveE10Master_v2, full-period Analyzer run vs v1 — in progress.
+- [ ] **Wave W1 (Tier-0): instrumentation first, alpha second** —
+      W1-0 instrumentation (no selection risk): tick/BBO export pipeline → spread-state map
+      (H-EXEC-1), Roll-bounce guardrail (H-A3), timestamp-integrity audit, L3 semantics;
+      W1-1 Z1 DC scale transfer; W1-2 H-A1/D5 last-30-min momentum (minute data, dev only);
+      W1-3 H-B5 spike classification; W1-4 H-D3 cash-close window; W1-5 S2a owner seed.
+      Every spec frozen+committed before results; all P&L under BBO_EXEC + BENCHMARK_C1.
 - [ ] P1c: remaining audit — L3 semantics check; ES minute/tick coverage; tick-window
       spot-check at 2025-08; export-to-parquet pipeline design (0.7B rows/yr at L2)
 - [ ] P2: Freeze split geometry in CONTAMINATION_LEDGER.md (after P1c)

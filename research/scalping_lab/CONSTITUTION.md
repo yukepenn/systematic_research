@@ -60,7 +60,31 @@ SCALP_LOW_DD, SCALP_FINAL_CHAMPION — tracked in `reports/SCALP_CHAMPION.md`; m
 - Compilation mirror: canonical source in `src/ninjascript/` here; byte-identical copy to
   NT8 bin\Custom with hashes recorded per run (mandate §4).
 
-## 8. Stop condition (§35)
+## 8. Amendment 1 rules (2026-08-07, `MANDATE_AMENDMENT_1.txt` — governs on conflict)
+
+- **Research zones with separate champions**: MICRO (tick → <30s), STRUCTURAL_SCALP
+  (~30s → 5min), ADJACENT_INTRADAY (>5min). Adjacent ideas (e.g. last-30-min flows) are
+  testable but never silently redefine the scalp mission or claim the scalp-champion title.
+- **Three uses of microstructure information, evaluated separately**: (A) directional alpha,
+  (B) selectivity/meta-labeling on a structural setup, (C) execution alpha (cost reduction).
+  Failing A does not kill B/C.
+- **Literature = prior, never local verdict or local constant.** External numbers are
+  labeled EXTERNAL PRIOR / SOURCE-SAMPLE-SPECIFIC until reproduced on our NQ sample. No
+  hypothesis family testable on our own L1/L2 data is closed by citation alone.
+- **High-win-rate discovery is a formal axis**: preregistered coarse excursion grid
+  P(+A before −B | state) with A/B ∈ {+4/−2, +6/−2, +6/−3, +8/−4}; report hit rate,
+  break-even hit rate, avg win/loss, left-tail ES, net ticks after cost, PF, count,
+  trades/day. Win rate bought with catastrophic left tails is rejected.
+- **Interactions**: after univariate Tier-0 characterization, a SMALL economically motivated
+  interaction space is allowed (e.g. impulse + spread state + imbalance); no unrestricted
+  combinatorial search. ML estimates conditional trade quality (P(target-before-stop), MFE/
+  MAE), simple models first, chronological benchmark to escalate.
+- **Clock validation must not assume the economic result**: timestamp integrity tests
+  (monotonicity, cross-source consistency, common exogenous events) are the sync audit;
+  ES→NQ lag is itself an empirical object, never forced to zero.
+- **No live/realtime data recording** (owner ruling): historical resources only.
+
+## 9. Stop condition (§35)
 Converge only when: frontier materially explored; families qualified/rejected/BLOCKED_BY_DATA;
 champions survive red team; three consecutive well-designed waves without Pareto improvement;
 marginal value low. A null overall result ("no robust retail-executable NQ scalping edge")

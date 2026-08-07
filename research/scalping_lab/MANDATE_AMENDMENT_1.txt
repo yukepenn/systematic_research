@@ -1,0 +1,282 @@
+OWNER AMENDMENT 1 — SCALPING LAB SCIENTIFIC CORRECTIONS
+(owner-issued 2026-08-07, verbatim; amends MANDATE_V2.txt. Where they conflict, this
+amendment governs. Owner also ruled in the same message: NO live/realtime market-data
+recorder — backtest resources only; the appended "Project Structure" notes are seeds the
+owner explicitly labeled as partly wrong — filter through the constitution, do not adopt
+their runbook, Sim101/Playback progression, or the $1.09/side figure.)
+
+=====================================================================
+OWNER AMENDMENT — SCALPING LAB SCIENTIFIC CORRECTIONS
+=====================================================================
+
+Continue the existing MANDATE_V2 autonomously.
+
+Do not restart the campaign.
+
+The work to date is useful and approved, but apply the following
+corrections immediately before Tier-0 profitability studies.
+
+1. DO NOT DECLARE SUB-5-MINUTE ALPHA STRUCTURALLY DEAD
+
+External literature is a prior, not a local verdict.
+
+The statement that best-level flow/book signals have only 0.1–1 tick
+gross edge and are therefore structurally dead for all sub-5-minute NQ
+strategies is too broad.
+
+Replace it with:
+
+    Pure next-tick / simple top-of-book harvesting has a low prior
+    probability of surviving our retail friction.
+
+But continue direct empirical NQ testing of:
+
+    seconds
+    tens of seconds
+    1–5 minutes
+
+especially conditional/high-magnitude states.
+
+Do not let literature terminate a hypothesis family that our newly
+confirmed NQ L1/L2 data can cheaply test.
+
+2. SEPARATE THREE DIFFERENT USES OF MICROSTRUCTURE INFORMATION
+
+A. DIRECTIONAL ALPHA
+    predicts future NQ movement large enough to trade standalone.
+
+B. SELECTIVITY / META-LABELING
+    improves hit rate or payoff of a larger structural setup.
+
+C. EXECUTION ALPHA
+    improves entry timing / reduces adverse selection / reduces realized
+    trading cost without necessarily predicting a large standalone move.
+
+Evaluate all three separately.
+
+A 0.5-tick informational signal may be useless as a standalone trade
+but economically important as an execution overlay.
+
+3. BUILD A BBO-BASED EXECUTION MODEL
+
+Historical Bid/Ask is now confirmed.
+
+Do not rely solely on:
+
+    first Last trade after t+250ms + generic 1-tick slippage.
+
+Create two explicitly separate execution models:
+
+BENCHMARK_C1:
+    current standardized cost model:
+    commission + 1 tick slippage/execution.
+
+BBO_EXEC:
+    signal observable at t
+    choose latency L
+    reconstruct latest causal Bid/Ask at t+L
+    buy at Ask
+    sell at Bid
+    charge actual commission
+    then apply residual slippage stress separately.
+
+Report:
+    observed spread
+    latency drift
+    residual slippage
+    commission
+
+as separate components.
+
+Do not double-count the same latency/spread effect.
+
+Latency grid remains:
+    next-event
+    250ms
+    500ms
+    1s
+    2s
+    5s
+
+where supported.
+
+4. REMOVE THE ES↔NQ XCORR=0 AS A HARD CLOCK-SYNC TRUTH
+
+Do not assume cross-correlation peak must be exactly zero merely because
+ES and NQ trade on CME infrastructure.
+
+They are separate books and genuine economic lead-lag may exist.
+
+Clock validation must use timestamp integrity tests that do NOT assume the
+economic result being studied.
+
+After timestamp validation, ES→NQ lag itself is an empirical object.
+
+5. SOURCE-SPECIFIC EXTERNAL NUMBERS MUST NOT BECOME NQ FACTS
+
+Any literature number such as:
+
+    passive-fill adverse selection = 65.8%
+
+must be labeled:
+
+    EXTERNAL PRIOR / SOURCE-SAMPLE-SPECIFIC
+
+unless independently reproduced on our NQ sample.
+
+Literature creates hypotheses and guardrails.
+It does not supply local constants.
+
+6. KEEP THE ORIGINAL SCALPING QUESTION INTACT
+
+Separate research zones:
+
+MICRO:
+    tick to <30 seconds
+
+STRUCTURAL_SCALP:
+    ~30 seconds to 5 minutes
+
+ADJACENT_INTRADAY:
+    >5 minutes
+
+Adjacent intraday ideas such as last-30-minute flows may be worth
+studying, but must NOT silently redefine the scalping mission.
+
+Maintain separate champions for these zones.
+
+7. HIGH-WIN-RATE DISCOVERY MUST BE EXPLICIT
+
+In addition to expected return, search for conditional states that maximize
+honest probability of favorable excursion.
+
+For every candidate estimate surfaces such as:
+
+    P(+A ticks before -B ticks | state)
+
+for economically meaningful A/B pairs.
+
+Examples may include:
+    +4 / -2
+    +6 / -2
+    +6 / -3
+    +8 / -4
+
+The exact grid should be coarse and preregistered.
+
+For each state report:
+
+    hit rate
+    break-even hit rate
+    average win
+    average loss
+    left-tail ES
+    net ticks after cost
+    PF
+    trade count
+    trades/day
+
+High win rate is desirable,
+but not if created by rare catastrophic losses.
+
+8. SEARCH FOR INTERACTIONS, NOT ONLY UNIVARIATE MICRO SIGNALS
+
+Simple OFI or simple imbalance may have too little standalone magnitude.
+
+After Tier-0 single-feature characterization, investigate a SMALL,
+economically motivated interaction space such as:
+
+    price impulse
+    + spread state
+    + BBO imbalance
+
+or:
+
+    failed local breakout
+    + opposite trade-flow confirmation
+
+or:
+
+    structural setup
+    + microstructure entry confirmation.
+
+Do not create an unrestricted combinatorial feature search.
+
+9. ML SHOULD ESTIMATE CONDITIONAL TRADE QUALITY
+
+If data volume supports it, ML may estimate:
+
+    probability target is reached before stop
+    expected MFE
+    expected MAE
+    expected net executable move
+
+rather than merely next-tick direction.
+
+Start simple:
+
+    logistic regression
+    GAM
+    shallow tree
+    gradient boosting
+
+Only escalate if the simple benchmark is genuinely beaten chronologically.
+
+10. DATA SPLIT MUST BE FROZEN BEFORE ALPHA READOUT
+
+The ~12-month tick/BBO sample is precious and small.
+
+Before reading any Tier-0 profitability:
+
+freeze exact:
+
+    development period
+    internal validation geometry
+    sealed final scalp holdout
+
+Capability-only probes do not automatically contaminate a date,
+but record every inspected session.
+
+Do not repeatedly consume the sealed holdout.
+
+11. 16:44 MARGIN RESULT REQUIRES DIRECT STRATEGY CONFIRMATION
+
+The historical 16:45–17:00 contribution study is encouraging and the
+current operational decision is provisionally accepted.
+
+But finalize it only after SolarWaveE10Master_v2 directly backtests
+Flatten1644=true with the actual strategy state machine and costs.
+
+Compare against the original E10:
+
+    net
+    Sharpe
+    bar-level DD
+    tail-day retention
+    trades
+    commissions
+    next-session behavior.
+
+12. CONTINUE AUTONOMOUSLY
+
+After applying these corrections:
+
+    finish L3 field-semantics audit
+    finish ES synchronization/data audit
+    freeze scalp split geometry
+    build BBO_EXEC
+    run instrumentation
+    begin Tier-0 event studies
+    continue through the existing autonomous mandate
+
+Do not ask the owner for routine continuation.
+
+Do not stop micro research because literature says the obvious
+single-feature version is small.
+
+Find whether conditional NQ states create a move large enough to survive
+our actual friction.
+
+=====================================================================
+END OWNER AMENDMENT
+=====================================================================

@@ -22,15 +22,28 @@ Consequences:
 - Latency: decision-to-fill delay grid {0, next-event, 250ms, 500ms, 1s, 2s, 5s}; DATAPROBE01
   confirmed ~4ms timestamp fidelity, so the full grid is honest.
 
-## Adopted fill model (DR-C, 2026-08-07 — binding for all event studies and Tier-1 sims)
+## Two execution models (MANDATE_AMENDMENT_1 §3 — both reported for every candidate)
 
-Market orders only. A signal formed at time t fills at the **first trade print at or after
-t + 250ms** (report the decay curve at next-event/500ms/1s alongside). Cost = C1's 1 tick per
-execution (interpreted as half-spread ≈ 0.5 + latency drift ≈ 0.5 — never additionally charge
-spread crossing on top). Brackets are evaluated on the tick stream (never bar OHLC); stops
-fill at the through-print. ETH trades: C2 or excluded. ±2min around calendar news: C2
-mandatory. Passive/limit fills remain banned (measured NQ touch-fill adverse-selection rate
-65.8%; touched ≠ filled).
+**BBO_EXEC (primary executable approximation — uses the confirmed L2 data):**
+signal observable at t → choose latency L from the grid → reconstruct the latest CAUSAL
+Bid/Ask at t+L → buys fill at prevailing Ask, sells at prevailing Bid → charge actual
+commission ($2.18/side NQ) → residual implementation slippage applied as a SEPARATE stress
+(0 / +1 tick per execution). Components reported separately: observed spread, latency drift
+(price change t→t+L), residual slippage, commission. Never double-count spread inside a
+generic slippage constant.
+
+**BENCHMARK_C1 (standardized cross-campaign stress, same as Family A):**
+first trade print ≥ t+250ms + commission + 1 tick/execution. C2 = 2 ticks/execution.
+Retained so every scalp result is comparable to Family-A accounting; not a substitute for
+BBO_EXEC.
+
+Common rules: market orders only in Tier 0–2; brackets evaluated on the tick stream (never
+bar OHLC), stops fill at the through-print; ETH → C2-or-excluded; ±2min around calendar news
+→ C2 mandatory; latency grid {next-event, 250ms, 500ms, 1s, 2s, 5s} (~4ms fidelity
+confirmed). Passive/limit fills remain out of scope for backtests — EXTERNAL PRIOR
+(source-sample-specific, e.g. one study's 65.8% touch-fill adverse-selection rate): passive
+fills can suffer severe adverse selection and touched ≠ filled; no local NQ constant is
+claimed until independently reproduced on our data.
 
 Margin context (owner-supplied, ninjatrader.com/pricing/margins 2026-08; floats with vol):
 NQ $1,000 intraday / $43,433.67 initial; MNQ $100 / $4,343.38. Intraday margin applies until

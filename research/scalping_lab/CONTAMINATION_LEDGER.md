@@ -18,10 +18,19 @@ after `DATA_INVENTORY.md` is complete; entries below record what is already know
 1. **≥ 2026-08-01 is SEALED for this campaign** (also Solar's LOCKED_FORWARD). No scalp
    experiment reads it until a frozen champion exists and the reading is logged as an
    evaluation, not selection. One virgin block protects both campaigns.
-2. A late in-development sealed scalp holdout will be declared here (dates frozen) after the
-   data audit reports actual tick/second coverage, BEFORE any family profitability is read.
-   Until that entry exists, NO experiment may compute strategy-level P&L beyond Tier-0 event
-   statistics.
+2. **SPLIT GEOMETRY — FROZEN 2026-08-07 (before any Tier-0 profitability was read):**
+   - Tick/BBO sample: 2025-08-10 → 2026-07-31 (~247 sessions).
+   - **Development: 2025-08-10 → 2026-05-31** (~205 sessions). All Tier-0/1/2 work lives here.
+   - **Sealed scalp holdout: 2026-06-01 → 2026-07-31** (~42 sessions). Read ONLY at Tier-3
+     promotion of a frozen candidate; every read logged here; never re-consumed for redesign.
+   - Overall seal ≥ 2026-08-01 (shared with Solar LOCKED_FORWARD) — unchanged.
+   - Internal validation: chronological expanding-window walk-forward inside the development
+     period; for ML, all normalization/feature/threshold/hyperparameter selection nested
+     inside training folds.
+   - Minute-history studies (STRUCTURAL_SCALP / ADJACENT_INTRADAY): development = 2005-01 →
+     2026-05-31; the same 2026-06/07 holdout dates apply at promotion.
+   - Instrumentation measurements (spread map, Roll-bounce, sync integrity, L3 semantics —
+     no selection content) may use the full development period, never the holdout.
 
 ## Known owner-side exposure
 
