@@ -1,0 +1,26 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE results are read.
+# Instrumentation export for RESEARCH_WAVE_B01 arm B01a (DR05-H1 calibration).
+run_id: B01A_BARS_1M
+experiment_id: RESEARCH_WAVE_B01
+hypothesis_id: DR05-H1 (overshoot / failed-flip calibration — data prerequisite)
+family: failed_persistence (Family B)
+parent_candidate: n/a (instrumentation)
+timestamp_before_execution: 2026-08-07 (commit timestamp authoritative)
+source_commit: a788e23 (parent; committed before execution)
+strategy_class: AuditBarExport1 (trades nothing)
+engine_version: NT8 8.1.8.1 / CrossTrade v1.13.9 / engine_fingerprint sha256:b4255f1b0dd7fba1
+vendor_dependency: none
+instrument: "NQ 09-26"
+timeframe: {period_type: Minute, value: 1, market_data_type: Last}
+data_boundaries: {from_utc: "2022-01-01T06:00:00Z", to_utc: "2026-07-31T21:59:59Z"}
+trading_hours: instrument default (CME index futures ETH)
+commission_model: n/a (no trades)
+slippage_model: n/a
+fill_model: n/a
+effective_parameters: {ExportPath: "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\runs\\B01A_BARS_1M\\nq_1m_2022_2026.csv"}
+selection_metric: none
+pass_criteria: monotone timestamps, no duplicates, ~1.62M bars (consistent with ledger bar indices), sessions align with the validated 3m series
+reject_criteria: structural inconsistency with the 3m export
+research_family_budget: 0 trials (instrumentation; counts_as_trial: no)
+degrees_of_freedom: 0
+selection_relevance: none
