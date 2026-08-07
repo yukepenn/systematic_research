@@ -1,0 +1,183 @@
+# Final system-design and decision package — NQ Solar Wave campaign
+
+_2026-08-07 · All figures: NQ 09-26 back-adjusted, 3-minute, full history 2022-01-01 → 2026-07-31,
+real NT8 slippage of 1 tick per execution, NinjaTrader Brokerage Lifetime commission, all-days
+Sharpe on the 1,370-session union calendar. Every ensemble number produced by
+`src/analytics/ensembles.py`; every candidate strategy gate-checked against the frozen canonical
+baseline (2,915 trades / $146,440.60 / PF 1.132213) to the penny before its results were read._
+
+---
+
+## 1. The one-paragraph answer
+
+The vendor indicator was fully reverse-engineered and the campaign is completely vendor-independent.
+The underlying edge is **real but very thin, and the historical record is too short to certify it**.
+A directional-change filter on NQ closes does capture genuine trend persistence — the overshoot
+ratio exceeds the martingale null at every threshold with t up to 31, and every candidate ensemble's
+absolute edge has `P(Sharpe ≤ 0) ≤ 0.015`. But the edge is a ~3 % deviation from a no-alpha null,
+the top 1 % of trades supply 160–250 % of net profit, **no individual parameter is selectable**
+(PBO 0.48–0.90 with a negative in-sample→out-of-sample slope), **no refinement is statistically
+separable from any other** on 4.6 years, and **the system does not transfer to ES**. The
+recommended historical-research architecture is an unselected ensemble; the recommended posture is
+that this is a candidate for further study, not a validated edge.
+
+## 2. What was definitively achieved
+
+**The indicator is 100 % recovered.** Every published series, every signal symbol, exact on every
+bar: 1,436,860 bars across 9 parameter configurations, zero mismatches. Type-2 alone: 45,825
+events, 0 false positives, 0 false negatives. Recovered by behavioural observation of published
+output only — no decryption, unpacking, patching or memory dumping; the vendor assembly is
+unmodified and not redistributed. Reference implementation `src/analytics/solarwave.py`.
+
+This is the only unambiguous, non-statistical result in the campaign, and it is what made
+everything downstream possible: the open model can be modified along axes the vendor never exposed,
+and all three signal types can be generated with zero vendor dependency.
+
+## 3. Ranked Pareto set
+
+No candidate dominates. All are ensembles; none is a single cell.
+
+| candidate | net | Sharpe | max DD | Calmar | worst year | pos. years | P(Sharpe ≤ 0) |
+|---|---|---|---|---|---|---|---|
+| **R5** adaptive `S = k·σ`, 13 cells | $198,059 | **0.995** | **−$39,126** | **0.928** | +$12,160 | 5/5 | **0.0032** |
+| **R4** fixed, all 21 cells | $159,424 | 0.908 | **−$35,669** | 0.820 | +$2,583 | 5/5 | 0.0076 |
+| **C2** T1 core + one T3 re-entry, 8 cells | **$221,253** | 0.818 | −$46,957 | 0.864 | **+$13,463** | 5/5 | 0.0115 |
+| anchor: close-confirmed High/Low, 10 cells | $215,137 | 0.928 | −$47,698 | 0.827 | +$7,023 | 5/5 | 0.0112 |
+| R4b fixed plateau, 8 cells *(as first published)* | $180,479 | 0.787 | −$53,689 | 0.617 | +$7,796 | 5/5 | 0.0154 |
+
+**Recommended architecture: R5** — the volatility-normalised ensemble. Best Sharpe, best Calmar,
+best drawdown among the profitable set, strongest absolute-edge significance, positive every year,
+and the only family whose *mechanism* was confirmed by a preregistered control (§4). **C2** is the
+strongest single addition and should be layered on it once the sleeve is re-tested on an adaptive
+core rather than a fixed one.
+
+Every one of these is quoted at one contract of average exposure. None should be scaled without the
+tail analysis in §6.
+
+## 4. What is actually established, and how strongly
+
+| claim | evidence | strength |
+|---|---|---|
+| The indicator is exactly recovered | 1.4 M bars, 9 configs, zero mismatches | **certain** |
+| NQ closes carry directional persistence beyond the null | overshoot ratio `r > 1` at every threshold, t = 31 → 2.1 | **strong** |
+| Each ensemble's absolute edge ≠ 0 | block bootstrap P(Sharpe ≤ 0) = 0.003–0.015 | **strong** |
+| The threshold mechanism is **volatility**-specific, not generic time-variation | volatility vs price normalisation, ΔSharpe +0.728, **p = 0.009** | **strong** |
+| Parameter selection is impossible | PBO 0.48–0.90, negative IS→OOS slope at every block count; walk-forward argmax earned $16k where the median config earned $121k | **strong** |
+| Ensembles beat their own members | beats 7/8 (fixed) and 88 % (adaptive) on Sharpe; positive every year when only 3/8 members are | **strong** |
+| Adaptive beats fixed | ΔSharpe +0.087, P = 0.358 | **not established** |
+| The Type-3 re-entry sleeve adds value | +$24.89/marginal trade over 19,606 trades, but session-block P(mean ≤ 0) = 0.115; loses $98k in 2022 | **not established** |
+| The system travels to ES | ES ensemble Sharpe −0.329, P(Sharpe ≤ 0) = 0.829 | **refuted** |
+
+## 5. What was killed, with evidence (none deleted)
+
+| hypothesis | verdict | evidence |
+|---|---|---|
+| 16:30 timed exit dominates | **FALSE** on full history | wins 4/28 matched pairs, median −$12,476 |
+| the 46 % untaken Type-1 signals are opportunity | **FALSE** | −$9.04 per marginal trade over 54,151 trades |
+| H-011 stop-order execution recovers the 89 % friction | **FALSE** | negative in 10/10 cells, −$1.88 M |
+| H-007 / DR03-H1 split exit ≠ reversal | **FALSE** | monotone degradation at both reversal distances |
+| H-008 raw High/Low anchor | **FALSE** | Sharpe 0.527 — the ladder chases wicks |
+| C4 adding Type-2 to the core | **FALSE** | −0.33 Sharpe vs the T1 core |
+| price-proportional threshold | **FALSE** | Sharpe 0.250; worse than a plain fixed tick count (p = 0.999) |
+| DR06-H5 iid understates tail risk | **FALSE** | block/iid drawdown ratio 0.987 |
+| original SW05 chop veto | **INVERTED** | would delete 74 % of profit |
+
+Three of these — H-011, the raw High/Low anchor, and H-007 — failed for one shared reason worth
+carrying forward: **the close basis is a noise filter, not a defect.** DC01 measured the close-basis
+crossing excess at ~$117.57 per segment, 89 % of all friction and four times commission plus
+slippage combined. Both routes to capturing it (intrabar execution, intrabar anchor) fail
+catastrophically. The excess is what the filter costs, and it is not recoverable.
+
+## 6. The risk disclosures that matter more than the returns
+
+1. **The P&L is entirely right tail.** The top 1 % of trades contribute **160 % (adaptive) / 249 %
+   (fixed)** of net profit — the bottom 99 % lose money in aggregate. The top 10 *days* carry 64 %
+   of the adaptive ensemble's net. Any fill degradation, any filter, any profit target, any
+   position cap that touches the right tail destroys the entire result. This is not a defect —
+   DC01 predicted it from the exponential overshoot distribution — but it is the dominant risk.
+2. **The short side has no standalone edge.** Excluding 2022 and 2025 it is net negative
+   (−$8,397, Sharpe −0.113). The long side carries the system.
+3. **The edge is thin by construction.** A ~3 % deviation of the overshoot ratio from its no-alpha
+   value. There is no version of this system with a large margin of safety.
+4. **Deflation cannot certify it.** Under the preregistered trial-accounting rule, DSR is 0.45–0.55
+   for every candidate — far below the 0.90 bar — and the Harvey–Liu haircut Sharpe is 0.000. A
+   defensible alternative variance pool gives 0.96. **The answer is dominated by a judgement call,
+   not by the data**, which means deflation adjudicates nothing here in either direction.
+5. **No clean historical out-of-sample window remains.** All data through 2026-07-31 was examined
+   during discovery. ~316 configurations consumed.
+
+## 7. Exact specification of the recommended architecture (R5)
+
+```
+Engine     : SolarWaveOpenV4, ThresholdMode = 1        (open model, zero vendor dependency)
+Instrument : NQ 09-26 back-adjusted, 3-minute bars, Last
+Core       : anchor = running extreme of the CLOSE since trend start
+             flip when close STRICTLY breaks anchor -/+ S
+             S = VolMult * sigma, sampled ONCE at trend birth, clamped [40, 1200] ticks
+             sigma = causal mean |close - close[1]| over the trailing 460 bars
+Entries    : Type-1 flips only (EntrySignalType = 1), long and short
+Exits      : the trailing level, plus flat at session close
+Ensemble   : equal risk across VolMult = 6, 8, 10, ..., 30 (13 members, 1/N each)
+             DO NOT select a VolMult - PBO for that choice is 0.898
+Costs      : $4.36/RT commission, 1 tick/execution slippage ($9.5352/RT realised on NQ)
+Inert      : TrendMultiplier, SlowdownScan, WeakWeakSplit, PullbackSplit do not enter the
+             Type-1 flip rule at all - this is derived, not merely measured
+```
+
+Robustness already established for it: every σ-estimator lag from 0.13 to 7.96 sessions gives
+Sharpe 0.769–1.494 with 11/13 cells positive in all five years (H-012), so the 460-bar choice is
+not load-bearing.
+
+## 8. What would invalidate this system economically
+
+Stated in advance so it cannot be rationalised later:
+
+- **The right tail stops recurring.** If a 12-month period passes in which the top 1 % of trades no
+  longer supply the bulk of profit while the bottom 99 % keep losing, the system is broken — this
+  is the single most likely failure mode.
+- **Execution degrades beyond ~2 ticks.** The slip-2 stress already halves net; slip-3 would erase
+  it.
+- **Volatility compresses persistently.** The edge lives at δ/σ ≈ 10–18 with a fixed dollar friction
+  floor; a durable low-volatility regime pushes the system onto that floor (the ES failure is
+  partly this mechanism).
+- **Intraday persistence disappears** — the overshoot ratio `r` returning to 1.0 would remove the
+  edge outright, and `r` is directly measurable each quarter at zero cost. **This is the single
+  best early-warning statistic and it requires no trading to monitor.**
+
+## 9. Honest limitations
+
+- **No clean historical OOS remains.** Nothing in this package is out-of-sample.
+- **Historical robustness does not imply future profitability.** Every result here is conditional
+  on 4.6 years of one instrument in one macro regime (a bear year, two strong bull years, and a
+  partial year).
+- **The comparative claims are unresolved, not resolved in favour of the leaders.** R5 over R4, and
+  C2 over C1, are both point-estimate improvements that fail their significance tests. They are
+  ranked above the alternatives because point estimates plus a confirmed mechanism is the best
+  available evidence — not because they were shown to be better.
+- **ES portability failed.** Per the campaign constitution this earns a large overfitting penalty,
+  and it is applied rather than explained away.
+- **A second market, or genuinely forward data, is the only thing that can move this forward.**
+  Resampling 4.6 years of NQ has been exhausted; every remaining question is now data-limited
+  rather than method-limited.
+
+## 10. Recommendation
+
+**Do not treat this as a validated edge.** Treat it as a well-characterised candidate with a
+confirmed mechanism, a fully open implementation, a known dominant risk (right-tail dependence),
+and one failed external portability test.
+
+If work continues, the highest-value next steps are, in order:
+
+1. **Monitor the overshoot ratio `r` quarterly** — free, requires no trading, and is the system's
+   own early-warning statistic.
+2. **Re-test the C2 Type-3 sleeve on an adaptive core** (it was only tested on a fixed one) and on
+   ES.
+3. **Wave-index conditioning** — per-trade economics rise monotonically through wave 4 ($26 → $151);
+   this is the last untested live signal in the recovered model.
+4. **A third instrument** (RTY, YM, or CL) to convert the single ES failure into an actual
+   portability distribution rather than one data point.
+5. Complementary families (failed persistence per DR-05), which is the only route to a portfolio
+   that does not simply hold more of the same factor.
+
+Nothing here should be deployed. This campaign is historical research only, and its most defensible
+output is the exact open model plus a clear-eyed account of how thin the edge is.

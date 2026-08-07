@@ -228,3 +228,62 @@
     ensemble-active days; ensembles are strict 1/N including flat days; exposure-matched dollar
     figures are convention-dependent and must not be quoted as achievable; every ensemble/DSR/
     CSCV table must be produced by a committed driver script.
+- id: H014_PRICE_PROPORTIONAL_RESULT
+  phase: 2
+  status: passed
+  result: >
+    DECISIVE CONTROL PASSED. Price-proportional threshold ensemble Sharpe 0.250 vs
+    volatility-proportional 0.978 and fixed 0.893. Paired block bootstrap: vol - price
+    = +0.728 with P(d<=0) = 0.009, and price is significantly WORSE than a plain fixed
+    tick count (P = 0.999). The H-006 mechanism is volatility-specific, not generic
+    time-variation. First clean significance result in the campaign - it works because it
+    compares two DISSIMILAR families rather than two near-copies. Does NOT restore
+    "adaptive beats fixed" (+0.085, P = 0.358).
+- id: ES_PORTABILITY
+  phase: 5
+  status: failed
+  result: >
+    Blind transfer of the NQ-calibrated parameter to ES loses money. ES vol-adaptive
+    ensemble Sharpe -0.329, net -$12,455, 8/13 cells positive, P(Sharpe<=0) = 0.829.
+    ES price-proportional is far worse (-1.920), consistent with H-014. The SHAPE travels
+    (Spearman rank corr of Sharpe across the grid, NQ vs ES = 0.780; both prefer wider
+    thresholds) but the LEVEL does not: the profitable region shifts up to k >= 18 on ES,
+    mechanically consistent with ES's $12.50 tick vs NQ's $5 making friction 2.5x larger
+    per sigma unit. Per constitution section 16 this earns a large overfitting penalty,
+    applied rather than explained away. Fitting k separately per instrument was NOT done.
+- id: TYPE0_ATTRIBUTION_AND_SLEEVES
+  phase: 2
+  status: passed
+  result: >
+    Possible only after the complete RE02 recovery; run in pure Python at zero engine time
+    and zero config burn, then confirmed in the engine. C2 (Type-1 core + ONE Type-3
+    re-entry per episode) improves EVERY point estimate at once: net $233,628 vs $180,479,
+    Sharpe 0.862 vs 0.784, max DD -$47,413 vs -$53,689, worst year +$19,801 vs +$7,796.
+    Marginal economics +$39.23 per marginal trade over 10,838 trades. C4 (adding Type-2)
+    FAILS at -0.33 Sharpe, confirming Wave-1's cost-fragility finding independently.
+    Wave-index conditioning shows monotone per-trade economics through wave 4
+    ($26/$53/$76/$151) - the last untested live signal in the model.
+- id: C2_TYPE3_REENTRY_SLEEVE
+  phase: 2
+  status: inconclusive
+  result: >
+    Best point estimates in the campaign but not certifiable. On its own 19,606 trades:
+    mean +$24.89, naive iid t = 2.432 (p = 0.0075), but the SESSION-BLOCK bootstrap that
+    respects clustering gives P(mean <= 0) = 0.1147. Structural weaknesses: loses $98,220
+    in 2022 (the bear year), and the gain concentrates in the wide cells (SM 230/240/250
+    contribute $111k/$125k/$136k while SM 200 is slightly negative). 7/8 cells positive.
+    Must be re-tested on an ADAPTIVE core (it was only tested on a fixed one) and on ES.
+- id: DSR_UNDER_PREREGISTERED_RULE
+  phase: 0
+  status: inconclusive
+  result: >
+    Applied research/registry/TRIAL_ACCOUNTING_RULE.md (written BEFORE recomputation) to
+    all 213 inspected trials: N_eff = 5 clusters, cluster-representative Sharpe variance
+    0.645, benchmark expected-max Sharpe 0.958. DSR = 0.454 (R4-21), 0.538 (adaptive),
+    0.545 (combo) - all far below the R7 bar of 0.90. Harvey-Liu haircut Sharpe 0.000 for
+    every candidate; none passes BHY. SENSITIVITY (reported, NOT used for promotion):
+    removing the mechanically-broken arms collapses V to 0.027 and lifts every DSR to 0.96.
+    The answer is dominated by a judgement call about which failed experiments count as
+    trials, not by the data. CONCLUSION: deflation cannot adjudicate this edge in either
+    direction; promotion must rest on structure, mechanism and portability - exactly as the
+    preregistered rule anticipated in writing.
