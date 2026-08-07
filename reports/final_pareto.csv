@@ -1,6 +1,10 @@
-candidate,net,sharpe,maxdd,calmar,psr,worst_year,pos_years,p_sharpe_le0
-"C2  T1 core + one T3 re-entry (8 cells, fixed SM 180-250)",221252.64609523825,0.8179970561470246,-46957.21000000002,0.8641716134781222,0.9729629460192037,13462.970333333347,1.0,0.0115
-R5  adaptive S=k*sigma (13 cells),198058.82461538448,0.9948068402586747,-39125.61230769221,0.9284250681821454,0.9929258954865701,12159.879999999977,1.0,0.0032
-"R4  fixed, ALL 21 cells",159423.70095238078,0.908374192703472,-35669.31619047621,0.8197320419948739,0.9864705976835348,2583.321904761881,1.0,0.0076
-R4b fixed plateau 8 cells (as originally published),180479.44000000006,0.7868016750821984,-53689.42999999999,0.6165279211151147,0.9694615219917131,7796.450000000001,1.0,0.0154
-anchor close-confirmed HL (10 cells),215137.14800000007,0.9284270064987455,-47697.572000000015,0.8272426988975401,0.9863024240219547,7023.460000000008,1.0,0.0112
+# NQ campaign Pareto set. Basis: 1424 calendar-date buckets, 2022-01-02..2026-07-31, 3-minute NQ, real slip-1, Lifetime commission.
+# Ensembles are STRICT 1/N over members with flat days counted as zero (src/analytics/ensembles.py).
+# sharpe_session_basis re-buckets P&L by NT8 session date (18:00 ET roll, 1184 buckets); reported as a sensitivity, not the headline.
+# 'net' is calendar-invariant. Ranked by Sharpe, never by net profit.
+candidate,status,sharpe,sharpe_session_basis,net,max_dd,calmar,psr,worst_year,pos_years,p_sharpe_le_0
+"R5  adaptive S=k*sigma, 13 cells",RECOMMENDED,0.9771,1.0642,198058.82,-39125.61,0.8958,0.9929,12159.88,5/5,0.002
+"anchor close-confirmed HL, 10 cells",PASS but redundant with R5,0.9119,0.9992,215137.15,-47697.57,0.7982,0.9863,7023.46,5/5,0.0102
+"R4  fixed, all 21 cells",reference,0.8922,0.9704,159423.7,-35669.32,0.7909,0.9865,2583.32,5/5,0.0051
+"C2  T1 core + one T3 re-entry, 8 fixed cells",REJECTED - fails interaction test,0.8499,0.9139,233628.36,-47413.26,0.872,0.9792,19801.3,5/5,0.0074
+"R4b fixed plateau, 8 cells (as first published)",superseded by R4,0.7728,0.8446,180479.44,-53689.43,0.5949,0.9695,7796.45,5/5,0.017

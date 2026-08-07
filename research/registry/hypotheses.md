@@ -26,8 +26,19 @@ In the vendor design ONE distance does two jobs: it is simultaneously the traili
 ## Wave 2 registrations and verdicts (2026-08-07)
 
 - **H-006 - volatility-normalised threshold.** `S_episode = k*sigma_birth`, sigma causal, frozen at
-  trend birth, clamped. **PASS.** Ensemble Sharpe 1.010 vs fixed 0.814, DD -$39,126 vs -$53,689,
-  Calmar 0.958 vs 0.659, DSR 0.832 vs 0.677, positive every year. Confound controlled by a
+  trend birth, clamped.
+  > **SUPERSEDED 2026-08-07 — the verdict below is WRONG. Final verdict: INCONCLUSIVE.**
+  > The comparison was not like-for-like: the fixed family was scored as two half-range ensembles
+  > while adaptive got its full sweep. Scored fairly the advantage falls from +0.210 to **+0.087**
+  > with paired block-bootstrap P(delta <= 0) = 0.358 (ex-2025: +0.046). **The DSR 0.832 quoted
+  > below is one of the withdrawn figures** - it paired n_trials = 255 with a survivor-only
+  > variance. Under the preregistered rule (`TRIAL_ACCOUNTING_RULE.md`) every candidate scores
+  > 0.45-0.55 against a 0.90 bar. The original text is retained below because this log is
+  > append-only and the constitution forbids erasing superseded results.
+  > See `research/06_red_team/RED_TEAM_WAVE1C_WAVE2.md` and CAMPAIGN_STATE section 8.
+
+  ~~**PASS.**~~ Ensemble Sharpe 1.010 vs fixed 0.814, DD -$39,126 vs -$53,689,
+  Calmar 0.958 vs 0.659, ~~DSR 0.832 vs 0.677~~, positive every year. Confound controlled by a
   fixed-threshold sweep to SM 880 (Sharpe 0.805 - wider is NOT better) and by turnover-matched
   cell comparison. Survives the exposure check (32% less exposure but 61% more net per unit).
   Predicted in advance by DC02 from the price series alone. -> reference architecture **R5**.
@@ -58,3 +69,51 @@ In the vendor design ONE distance does two jobs: it is simultaneously the traili
 PBO by family - fixed 0.631, anchor 0.689, adaptive 0.898, combo 0.481 - with a negative
 in-sample -> out-of-sample slope in every case. Ensembles are the only defensible holding form,
 and no finalist may be a single cell.
+
+---
+
+## Wave 3 registrations and verdicts (2026-08-07) — the frontier closes
+
+- **H-012 - sigma-estimator robustness.** (registered above as open) **PASS.** Every estimator lag
+  from 0.13 to 7.96 sessions gives Sharpe 0.769-1.494 with 11/13 cells positive in all five years.
+  The 460-bar choice is not load-bearing. R5's remaining promotion gate cleared.
+- **H-013 - ensemble weighting.** (registered above as open) **NOT RUN.** Superseded: once no
+  comparative claim in the campaign could be separated from noise on 4.6 years, a weighting study
+  had no chance of producing a defensible answer, and 1/N stands on complexity grounds as
+  preregistered. Recorded as not-run, not as a failure.
+- **H-014 - price-proportional vs volatility-proportional threshold.** The decisive control for
+  H-006: if a *price*-normalised threshold worked as well, H-006's mechanism claim would be
+  generic time-variation rather than volatility. **PASS - volatility wins by +0.728 Sharpe,
+  p = 0.009** (price-proportional reaches only Sharpe 0.250; p = 0.999 against it). **The
+  campaign's only clean significance result**, and the reason R5 is recommended despite failing to
+  separate from R4: its mechanism is confirmed, not merely its point estimates.
+- **ES portability.** **FAIL.** Blind transfer loses money (ES ensemble Sharpe -0.329,
+  P(Sharpe <= 0) = 0.829). Shape travels (Spearman 0.780 across the threshold grid), level does
+  not - the profitable region shifts to k >= 18 on ES, mechanically consistent with ES's $12.50
+  tick. Constitution section 16 overfitting penalty applied, not explained away.
+- **C2 - Type-1 core + one Type-3 re-entry.** **REJECT.** Best point estimates the campaign
+  produced (+29% net, smaller DD, 2.5x better worst year, +$39.23/marginal trade) and still
+  rejected on two independent grounds: session-block bootstrap P(mean <= 0) = 0.115, and it
+  **reverses sign on an adaptive core** (-0.402 Sharpe, P = 0.879). A sleeve whose sign flips with
+  the core is an interaction, not an effect.
+- **C4 - adding Type 2 to the core.** **REJECT.** -0.33 Sharpe. Confirms Wave 1's "unconditional
+  Type 2 is cost-fragile" from an independent direction.
+- **C3 / C5 / C6 - remaining signal architectures.** **NOT BUILT.** With Type-2 dead (C4) and the
+  wave selector dead (below), no mechanism remained to test. Recorded as not-run.
+- **Wave-index conditioning.** **REJECT.** The Python screen showed clean monotone per-trade
+  economics by wave ($26 -> $53 -> $76 -> $151); the engine gave **0.54-0.93, non-monotone**
+  across MinWave 1-8. A textbook case of a screen effect dying under real execution, and the
+  reason engine confirmation is mandatory before promotion.
+- **DSR as a promotion criterion.** **ABANDONED.** Under the preregistered rule every candidate
+  scores 0.45-0.55 against a 0.90 bar, with a Harvey-Liu haircut Sharpe of 0.000; a defensible
+  alternative variance pool gives 0.96. The answer is dominated by a judgement call rather than by
+  the data, so deflation adjudicates nothing here **in either direction**. This conclusion was
+  written into `TRIAL_ACCOUNTING_RULE.md` *before* the figures were computed, and is honoured.
+
+**Standing conclusion (Wave 3): every sleeve and conditioning axis is closed. R5 - the
+volatility-normalised ensemble, Type-1 signals only - stands alone and unimproved.**
+
+**Campaign-wide statistical pattern, stated as the log's final entry: every absolute-edge test
+passed and every comparative test failed.** On 4.6 years of one instrument the data supports
+"something is here" and refuses to say "this version is better than that one". That is why the
+deliverable is an unselected ensemble and why nothing was promoted.

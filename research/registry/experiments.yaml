@@ -15,3 +15,93 @@
     carry +$189.6k PF 10.8 while Solar-exit trades net negative — edge lives in
     trends still running at the close. High fill = identical (market orders only).
     Native optimization bit-identical to standalone -> Tier-1 sweep mode validated.
+
+# ---------------------------------------------------------------------------
+# Entries below were BACKFILLED 2026-08-07 during the post-campaign integrity
+# audit. They are reconstructed from committed evidence, NOT contemporaneous
+# records: this file lapsed after SW00 and the omission is disclosed in
+# registry/REGISTRY_GAP_NOTE.md. Treat `preregistered: false` as binding.
+# ---------------------------------------------------------------------------
+- experiment_id: PHASE1_ATTRIBUTION_NULL_REGIME
+  status: PASS
+  preregistered: true
+  spec: [research/01_diagnostics/SW01_spec.md, SW01b_spec.md, SW01c_spec.md]
+  report: research/01_diagnostics/SW01_report.md
+  key_findings: >
+    SW01b null REJECTED p=0.0323 - Type-1 entry timing adds real value beyond exit
+    machinery plus drift. SW01c: positive in the 2022 bear regime (thin). External
+    review filed at research/01_diagnostics/external_review.md.
+- experiment_id: DISCOVERY_WAVE1_AND_1B
+  status: PASS
+  preregistered: true
+  spec: research/02_solar_refinements/DISCOVERY_WAVE1_spec.md
+  report: research/02_solar_refinements/WAVE1_report.md
+  key_findings: >
+    Type-1 core collapses to f(StopMultiplier, timeframe, exit). 3-minute is the
+    stronger timeframe. Profitable plateau 1m [170,280], 3m [180,260]. SW02a: no
+    session-close fill artifact (its 16:30 bonus finding was later falsified).
+- experiment_id: RE01_RE02_FULL_RECOVERY
+  status: PASS
+  preregistered: true
+  spec: research/03_reverse_engineering/TYPE2_RECOVERY_SPEC.md
+  report: research/03_reverse_engineering/TYPE2_RECOVERY_REPORT.md
+  runs: [RE01_open_parity]
+  key_findings: >
+    Solar Wave RK fully recovered. 2,035,869 bars, 9 configurations, zero mismatches
+    on any series; Type 2 at 45,825 events, 0 FP / 0 FN. One bounded ambiguity at
+    V > S/2 that provably never touches a Type-1 signal. Vendor dependency ends.
+    Validation: research/00_truth/OPEN_MODEL_VALIDATION.md (45/45 tests pass).
+- experiment_id: WAVE1C_TIER2
+  status: PASS
+  preregistered: false          # spec not committed before results were read
+  report: research/02_solar_refinements/WAVE1C_report.md
+  key_findings: >
+    PBO 0.56-0.66 with a NEGATIVE IS->OOS slope: StopMultiplier is not selectable.
+    Walk-forward argmax earned $16,131 where the median config earned $121,373.
+    The ENSEMBLE becomes the deliverable. DSR figures in this report are WITHDRAWN.
+- experiment_id: DC01_DC02_OVERSHOOT
+  status: PASS
+  preregistered: true
+  report: research/deep_research/DC01_DC02_RESULTS.md
+  key_findings: >
+    Overshoot ratio r = E[omega]/delta exceeds the martingale null at every threshold
+    (t = 31 -> 2.1); the edge is a ~3% deviation of r from 1.0. Close-basis crossing
+    excess = $117.57/segment = 89% of all friction. Zero configuration budget.
+- experiment_id: WAVE2_OPEN_AXES
+  status: MIXED
+  preregistered: false
+  report: research/05_open_axes/WAVE2_AXES_report.md
+  key_findings: >
+    H-006 adaptive threshold PASS -> later DOWNGRADED to INCONCLUSIVE by red team.
+    H-007 split exit/reversal FAILED. H-008 raw High/Low FAILED, close-confirmed
+    High/Low PASS-but-redundant. H-011 stop-order execution FAILED 10/10 cells.
+    H-012 sigma-estimator robustness PASS. All DSR figures WITHDRAWN.
+- experiment_id: RED_TEAM_WAVE1C_WAVE2
+  status: COMPLETE
+  preregistered: true           # reviewers independent of the results they audited
+  report: research/06_red_team/RED_TEAM_WAVE1C_WAVE2.md
+  key_findings: >
+    Four independent reviewers; every severe claim re-verified by the controller with
+    independent code. H-006 downgraded to INCONCLUSIVE; all DSR figures withdrawn
+    (inconsistent N/V pair); R4 redefined as the full 21-cell range (better on BOTH
+    Sharpe and drawdown); two undisclosed risk concentrations surfaced.
+- experiment_id: WAVE3_MECHANISM_PORTABILITY_SLEEVES
+  status: MIXED
+  preregistered: partial        # H-014 criteria and the trial rule were; sleeves were not
+  report: research/07_h014_price/WAVE3_report.md
+  key_findings: >
+    H-014 PASS - volatility beats price normalisation by +0.728 Sharpe, p = 0.009.
+    The campaign's only clean significance result. ES portability FAILED (ensemble
+    Sharpe -0.329). C2 Type-3 sleeve REJECTED on its interaction test (-0.402 Sharpe
+    on an adaptive core, P = 0.879). C4 FAILED. Wave conditioning FAILED. DSR as a
+    promotion criterion ABANDONED under the preregistered rule.
+- experiment_id: REPORTS_INTEGRITY_AUDIT
+  status: COMPLETE
+  preregistered: n/a
+  report: research/registry/REGISTRY_GAP_NOTE.md
+  key_findings: >
+    Eight documentation defects found and fixed or disclosed; none changed a ranking
+    or a verdict. Stale reports rewritten; final_pareto.csv rebuilt on one stated
+    calendar after its C2 row was found to use a skipna mean instead of strict 1/N;
+    vendor-parity bar count corrected 1,436,860 -> 2,035,869; trial count counted
+    (229 on the R1 basis) rather than asserted. Registry and runs/ gap remains OPEN.

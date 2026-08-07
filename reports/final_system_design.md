@@ -2,9 +2,17 @@
 
 _2026-08-07 · All figures: NQ 09-26 back-adjusted, 3-minute, full history 2022-01-01 → 2026-07-31,
 real NT8 slippage of 1 tick per execution, NinjaTrader Brokerage Lifetime commission, all-days
-Sharpe on the 1,370-session union calendar. Every ensemble number produced by
+Sharpe on the **1,424-session NQ campaign calendar**. Every ensemble number produced by
 `src/analytics/ensembles.py`; every candidate strategy gate-checked against the frozen canonical
 baseline (2,915 trades / $146,440.60 / PF 1.132213) to the penny before its results were read._
+
+> **Revised 2026-08-07 after a full integrity audit of the reports.** Sharpe figures below were
+> previously quoted on a 1,370-session calendar while the accompanying `final_pareto.csv` had been
+> computed on a 1,374-session one; all are now on a single 1,424-session basis (the union over
+> every NQ family evaluated, fixed so that rejecting a candidate cannot move it). **Net, drawdown
+> and worst-year figures are calendar-invariant and did not change. No ranking changed, and the
+> recommendation is unaltered.** Audit trail: `research/CAMPAIGN_STATE.md` §13 and
+> `reports/final_red_team.md` §2.
 
 ---
 
@@ -24,7 +32,7 @@ that this is a candidate for further study, not a validated edge.
 ## 2. What was definitively achieved
 
 **The indicator is 100 % recovered.** Every published series, every signal symbol, exact on every
-bar: 1,436,860 bars across 9 parameter configurations, zero mismatches. Type-2 alone: 45,825
+bar: **2,035,869 bars** across 9 parameter configurations, zero mismatches. Type-2 alone: 45,825
 events, 0 false positives, 0 false negatives. Recovered by behavioural observation of published
 output only — no decryption, unpacking, patching or memory dumping; the vendor assembly is
 unmodified and not redistributed. Reference implementation `src/analytics/solarwave.py`.
@@ -39,11 +47,16 @@ No candidate dominates. All are ensembles; none is a single cell.
 
 | candidate | net | Sharpe | max DD | Calmar | worst year | pos. years | P(Sharpe ≤ 0) |
 |---|---|---|---|---|---|---|---|
-| **R5** adaptive `S = k·σ`, 13 cells | $198,059 | **0.995** | **−$39,126** | **0.928** | +$12,160 | 5/5 | **0.0032** |
-| **R4** fixed, all 21 cells | $159,424 | 0.908 | **−$35,669** | 0.820 | +$2,583 | 5/5 | 0.0076 |
-| ~~**C2** T1 core + one T3 re-entry, 8 cells~~ **REJECTED** | $221,253 | 0.818 | −$46,957 | 0.864 | +$13,463 | 5/5 | 0.0115 |
-| anchor: close-confirmed High/Low, 10 cells | $215,137 | 0.928 | −$47,698 | 0.827 | +$7,023 | 5/5 | 0.0112 |
-| R4b fixed plateau, 8 cells *(as first published)* | $180,479 | 0.787 | −$53,689 | 0.617 | +$7,796 | 5/5 | 0.0154 |
+| **R5** adaptive `S = k·σ`, 13 cells | $198,059 | **0.977** | −$39,126 | **0.896** | +$12,160 | 5/5 | **0.0020** |
+| anchor: close-confirmed High/Low, 10 cells | $215,137 | 0.912 | −$47,698 | 0.798 | +$7,023 | 5/5 | 0.0102 |
+| **R4** fixed, all 21 cells | $159,424 | 0.892 | **−$35,669** | 0.791 | +$2,583 | 5/5 | 0.0051 |
+| ~~**C2** T1 core + one T3 re-entry, 8 cells~~ **REJECTED** | $233,628 | 0.850 | −$47,413 | 0.872 | +$19,801 | 5/5 | 0.0074 |
+| R4b fixed plateau, 8 cells *(as first published)* | $180,479 | 0.773 | −$53,689 | 0.595 | +$7,796 | 5/5 | 0.0170 |
+
+_The C2 row previously read $221,253 / 0.818. That was the one row in `final_pareto.csv` not
+produced by `ensembles.py`: it used a skipna mean instead of the binding strict-1/N rule (flat days
+as zero). Recomputed correctly it is $233,628 / 0.850 — **better** than published, and still
+rejected, on its interaction test rather than its level._
 
 **Recommended architecture: R5** — the volatility-normalised ensemble, **Type-1 signals only**.
 Best Sharpe, best Calmar, best drawdown among the profitable set, strongest absolute-edge
@@ -99,7 +112,7 @@ catastrophically. The excess is what the filter costs, and it is not recoverable
 
 ## 6. The risk disclosures that matter more than the returns
 
-1. **The P&L is entirely right tail.** The top 1 % of trades contribute **160 % (adaptive) / 249 %
+1. **The P&L is entirely right tail.** The top 1 % of trades contribute **160 % (adaptive) / 214 %
    (fixed)** of net profit — the bottom 99 % lose money in aggregate. The top 10 *days* carry 64 %
    of the adaptive ensemble's net. Any fill degradation, any filter, any profit target, any
    position cap that touches the right tail destroys the entire result. This is not a defect —
@@ -113,7 +126,13 @@ catastrophically. The excess is what the filter costs, and it is not recoverable
    defensible alternative variance pool gives 0.96. **The answer is dominated by a judgement call,
    not by the data**, which means deflation adjudicates nothing here in either direction.
 5. **No clean historical out-of-sample window remains.** All data through 2026-07-31 was examined
-   during discovery. ~316 configurations consumed.
+   during discovery. **229 configurations consumed** on the preregistered rule-R1 basis (383
+   counting every ledger including cost-stress re-runs) — counted from the committed evidence in
+   `research/registry/tested_configs_backfill.csv`, not asserted.
+6. **Waves 1c–3 were not preregistered.** The `runs/<run_id>/spec.yaml` convention lapsed after
+   `RE01_open_parity`. Results are reproducible from ~296 committed ledgers, but there is no record
+   proving pass/fail criteria were fixed before the numbers were seen. A reviewer should discount
+   those waves accordingly. Full disclosure: `research/registry/REGISTRY_GAP_NOTE.md`.
 
 ## 7. Exact specification of the recommended architecture (R5)
 

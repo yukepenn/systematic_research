@@ -197,12 +197,14 @@ def test_F():
     if not LEDGERS.exists():
         print("  [SKIP] probe ledgers not present")
         return
+    total_bars = 0
     for tag, kw in cfg:
         f = LEDGERS / f"{tag}.csv"
         if not f.exists():
             print(f"  [SKIP] {tag}")
             continue
         d = pd.read_csv(f, comment="#")
+        total_bars += len(d)
         r = solar_wave_full(d.open, d.high, d.low, d.close, SolarWaveParams(**kw))
         exact = (np.isclose(r.trailing_stop, d.trailing_stop).all()
                  and np.isclose(r.trend_vector, d.trend_vector).all()
@@ -210,11 +212,48 @@ def test_F():
                  and (r.signal_trend == d.signal_trend.to_numpy()).all()
                  and (r.signal_wave == d.signal_wave.to_numpy()).all())
         check(f"{tag}: every series exact on {len(d):,} bars", exact)
+    print(f"  ---- vendor-parity total: {total_bars:,} bars across "
+          f"{sum((LEDGERS / f'{t}.csv').exists() for t, _ in cfg)} configurations")
+
+
+# ------------------------------------------------------------------ G bounded ambiguity
+def test_G():
+    """The ONE known gap: when V > S/2 the TrendVector ladder takes a second rung whose
+    tie-breaking could not be resolved from published output. This test pins down exactly
+    how far the ambiguity reaches, so it can never quietly widen. The claim under test is
+    NOT 'we match' - it is 'the divergence is confined to the Type-2/3 layer and the
+    Type-1 trading core is still exact'."""
+    print("\nG. Bounded ambiguity at V > S/2 (the one known gap)")
+    f = LEDGERS / "t2_probe_TM135.csv"
+    if not f.exists():
+        print("  [SKIP] TM135 probe not present")
+        return
+    d = pd.read_csv(f, comment="#")
+    p = SolarWaveParams(offset_multiplier_trend=135)          # V/S = 0.754 > 0.5
+    r = solar_wave_full(d.open, d.high, d.low, d.close, p)
+
+    check("V/S is genuinely in the ambiguous regime",
+          135 / p.offset_multiplier_stop > 0.5)
+    check("TrailingStop is STILL exact in the ambiguous regime",
+          np.isclose(r.trailing_stop, d.trailing_stop).all())
+    t1_mine = np.abs(r.signal_trade) == 1
+    t1_theirs = np.abs(d.signal_trade.to_numpy()) == 1
+    check("every Type-1 flip is STILL exact in the ambiguous regime",
+          bool((t1_mine == t1_theirs).all()),
+          f"{int((t1_mine != t1_theirs).sum())} disagreements")
+    # the divergence must never involve a Type-1 on either side
+    bad = r.signal_trade != d.signal_trade.to_numpy()
+    involved = set(np.abs(r.signal_trade[bad]).tolist()) | \
+               set(np.abs(d.signal_trade.to_numpy()[bad]).tolist())
+    check("no Signal_Trade disagreement involves a Type-1",
+          1 not in involved, f"types involved: {sorted(involved)}")
+    check("Signal_Trade divergence stays under 2% of bars",
+          bad.mean() < 0.02, f"{bad.mean()*100:.3f}%")
 
 
 if __name__ == "__main__":
     print("Open-model test suite — src/analytics/solarwave.py")
-    test_A(); test_B(); test_D(); test_E(); test_F()
+    test_A(); test_B(); test_D(); test_E(); test_F(); test_G()
     print("\n" + ("ALL TESTS PASSED" if not FAILURES
                   else f"{len(FAILURES)} FAILURE(S): {FAILURES}"))
     sys.exit(1 if FAILURES else 0)

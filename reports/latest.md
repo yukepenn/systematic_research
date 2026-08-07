@@ -1,8 +1,45 @@
-# Latest — 2026-08-06 (Discovery Wave 1 in progress)
+# Latest — 2026-08-07 · campaign CLOSED
 
-**Objective updated (user directive):** full-history discovery campaign, 2022→2026-07-31, no live-sim ever, no artificial holdout. Selection = strong robust full-history economics + per-year stability + parameter plateaus.
+**Status: closed at the formal stop condition** (constitution §23(B)). Three consecutive waves
+produced no robust Pareto improvement and the remaining frontier is data-limited, not
+method-limited. Start at [`../README.md`](../README.md).
 
-- **SW02a: PASS, no fill artifact.** Timed market exit at 16:58 retains 100.0% of baseline net (slip-0 AND slip-1). Bonus: **exiting at ~16:31 beats holding to the close** (102.4% of net, smaller DD) — final 30 min contributes negatively; 16:30-exit is now a Wave-2 exit candidate.
-- **Full-history canonical (1m/90-179/T1):** $259,102 slip-0 (~$162k at 1-tick), 10,182 trades, PF 1.060, DD −$51,898, **positive every year 2022→2026** including the never-examined 2025-03→2026-07. Caveat: 2025–26 per-trade economics much thinner ($25.55 → $11.19/trade slip-0).
-- **S4 signal types (full history):** Type 1 remains the best after-cost core (analytic slip-1 ≈ $162k vs T2 $128k on double the trades, T0 $123k, T3 $27k). Unconditional Type 2 is cost-fragile exactly as the thesis predicted.
-- Running: S1 spatial grid (TM×SM 28 combos), S3 temporal grid (18), S2 timeframes (2m/3m/5m × identical/time-normalized), full-history slip-1 reference.
+## The result
+
+**R5** — a volatility-normalised directional-change ensemble on 3-minute NQ, Type-1 signals only,
+13 members at equal risk.
+
+| Sharpe | net | max DD | positive years | P(Sharpe ≤ 0) |
+|--:|--:|--:|--:|--:|
+| **0.977** | $198,059 | −$39,126 | 5/5 | **0.0020** |
+
+**Nothing is promotable.** The edge is real but ~3 % from a no-alpha null, it failed its one
+external portability test (ES), and it cannot be certified by deflation on 4.6 years. This is a
+well-characterised candidate, not a validated system.
+
+## What closed the campaign
+
+| wave | outcome |
+|---|---|
+| Wave 3 — H-014 | **PASS.** Volatility beats price normalisation by +0.728 Sharpe, **p = 0.009**. The mechanism is volatility-specific. The campaign's only clean significance result |
+| Wave 3 — ES portability | **FAIL.** Ensemble Sharpe −0.329, P(Sharpe ≤ 0) = 0.829. Shape travels (Spearman 0.780), level does not |
+| Wave 3 — C2 Type-3 sleeve | **REJECTED.** Best point estimates in the campaign, then cost 0.40 Sharpe on an adaptive core (P = 0.879). An effect that reverses with the core is an interaction |
+| Wave 3 — C4, wave conditioning | **FAIL.** −0.33 Sharpe; 0.54–0.93 non-monotone |
+| DSR as a promotion criterion | **ABANDONED.** 0.45–0.55 against a 0.90 bar; a defensible alternative pool gives 0.96. Dominated by a judgement call, not the data |
+
+**R5 stands alone and unimproved.** Every sleeve and conditioning axis is closed.
+
+## Integrity audit, 2026-08-07
+
+A full audit of the reports (not the research) found eight bookkeeping defects — stale reports, a
+mixed calendar in `final_pareto.csv`, one ensemble row computed with the wrong estimator, and an
+understated vendor-parity bar count. **All are fixed or disclosed; none changed the ranking.**
+Two remain open and are recorded in [`final_red_team.md`](final_red_team.md) §5: the config
+registry stops at Wave 1b, and the immutable `runs/` convention lapsed after `RE01_open_parity`.
+
+## Next, if resumed
+
+1. Monitor the overshoot ratio `r` quarterly — free, no trading, the system's own early warning.
+2. A third instrument (RTY/YM/CL) — portability is the only promotion criterion still open.
+3. Complementary families — never built; see [`complementary_families.md`](complementary_families.md).
+4. Genuinely forward data after a freeze. No clean historical out-of-sample window remains.

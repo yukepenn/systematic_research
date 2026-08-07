@@ -9,8 +9,18 @@ Conventions, fixed by the 2026-08-07 red-team review and binding from here on:
     days. The active-day basis inflates sparse cells badly (adaptive k=30 reads 1.290
     active vs 0.993 all-days).
   * The calendar is the **union of every family's traded dates**. The archived
-    wave1c_table_daily.csv holds 1,285 dates; the union is 1,348. Joining a new family
-    onto the archived matrix silently drops real P&L.
+    wave1c_table_daily.csv holds 1,285 dates. Joining a new family onto the archived
+    matrix silently drops real P&L.
+    The union GROWS as families are added - it read 1,348 when four families existed,
+    1,370 with the combo family, and 1,374 once the C2 sleeve was included. That is a
+    moving basis, and it silently changed published Sharpes in the third decimal.
+    **Fixed 2026-08-07: the campaign basis is the union over EVERY NQ family ever
+    evaluated = 1,424 sessions**, so that adding or rejecting a candidate can never
+    move it again. `build()` below returns only the five headline families and their
+    narrower union; anything published must use the 1,424-session campaign calendar.
+  * Bucketing is by CALENDAR DATE of the exit, not by NT8 session date (18:00 ET roll).
+    On a session basis there are 1,184 buckets and every Sharpe is ~6% HIGHER, so the
+    published basis is the conservative one. Both are reported in final_pareto.csv.
   * Ensembles are a strict fixed 1/N mean over members, flat days included as zero. No
     reweighting, ever.
   * Exposure figures are reported as daily signed tilt AND flagged as such; the

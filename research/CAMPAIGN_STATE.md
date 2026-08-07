@@ -1,16 +1,20 @@
 # Campaign State
 
-_Last updated: 2026-08-07 (Solar Wave RK **fully** recovered; ensemble promoted over parameter
-selection; H-006 downgraded to INCONCLUSIVE and all DSR figures withdrawn after independent
-red-team review - see section 8)_
+_Last updated: 2026-08-07, after the reports integrity audit (section 13). **Campaign CLOSED** at
+the formal stop condition — see section 9b. Entry point for everything: [`../README.md`](../README.md);
+decision package: [`../reports/final_system_design.md`](../reports/final_system_design.md)._
 
 ## 1. Vendor independence — COMPLETE (RE01 + RE02)
 
 The RenkoKings Solar Wave RK indicator is **fully reverse-engineered**. Every published series,
 every signal symbol, exact on every bar:
 
-**1,436,860 bars · 9 parameter configurations · zero mismatches on any series.**
+**2,035,869 bars · 9 parameter configurations · zero mismatches on any series.**
 Type 2 specifically: 45,825 events, 0 false positives, 0 false negatives.
+
+> _Corrected 2026-08-07: this was previously reported as "1,436,860 bars". That figure was wrong
+> and **understated** the evidence. The count above is the row total of the committed ledgers,
+> printed by the test suite itself. The configuration count (9) was always right._
 
 Reference implementation `solar_wave_full()` in `src/analytics/solarwave.py`; derivation in
 `research/03_reverse_engineering/{SOLARWAVE_MATH.md, TYPE2_RECOVERY_SPEC.md,
@@ -37,9 +41,10 @@ three new axes. All gate-checked against the baseline to the penny before use.
 
 ## 2. Current phase
 
-**WAVE 2 — open-model axes.** Historical research only (no live-sim / paper / forward monitoring
-ever, unless explicitly requested). Research universe = all data 2022-01 → 2026-07-31; no clean
-OOS remains and none is claimed.
+**CLOSED.** All waves complete (Phase 0 → Wave 3), stop condition reached and declared in section
+9b, decision package delivered. Historical research only — no live-sim, paper trading or forward
+monitoring was ever performed, and none may be without an explicit new instruction. Research
+universe = all data 2022-01 → 2026-07-31; **no clean OOS remains and none is claimed.**
 
 ## 3. The central result: the deliverable is a region, not a parameter
 
@@ -51,23 +56,32 @@ selectable** from in-sample performance.
 What works instead - hold the whole connected profitable range at equal risk, **without choosing
 its boundary**. The red team showed the original 8-cell "plateau" boundary was itself an in-sample
 selection, so the honest reference is every fixed cell actually tested. All figures are all-days
-Sharpe on the 1,370-session union calendar, produced by `src/analytics/ensembles.py`:
+Sharpe on the **1,424-session NQ campaign calendar** (the union over every NQ family evaluated,
+fixed so that rejecting a candidate can never move the basis), produced by
+`src/analytics/ensembles.py`:
 
 | | **R4: fixed, ALL 21 cells** | 8-cell plateau (as originally published) | best single (unknowable ex ante) |
 |---|---|---|---|
 | net | $159,424 | $180,479 | $249,934 |
-| daily Sharpe | **+0.910** | +0.788 | +0.947 |
+| daily Sharpe | **+0.892** | +0.773 | +1.236 |
 | max drawdown | **-$35,669** | -$53,689 | -$71,395 |
 | worst year | +$2,583 | +$7,796 | - |
 | positive in all 5 years | **yes** | yes | - |
+
+> _Sharpe basis corrected 2026-08-07. Earlier revisions quoted +0.910 here, +0.917 in section 8,
+> and +0.908 in the Pareto file — three numbers for one object, each on a different calendar. All
+> Sharpes in this document are now on the single 1,424-session campaign calendar. **Net, drawdown
+> and worst year are calendar-invariant and did not change, and no ranking changed.**_
 
 The full-range ensemble beats the hand-drawn plateau on both Sharpe and drawdown - which is what
 one expects if the boundary added only selection. Both are positive every year when only 3 of the
 8 plateau members are, and neither is an exposure artifact (gross exposure ratio 1.000).
 
-**The absolute edge is statistically real:** circular block bootstrap P(Sharpe <= 0) = 0.0066 for
-R4-21, 0.0147 for the 8-cell version, 0.0032 for the adaptive family. What is *not* established is
-any comparative ranking between families - see section 8.
+**The absolute edge is statistically real:** circular block bootstrap P(Sharpe <= 0) = **0.0051**
+for R4-21, 0.0170 for the 8-cell version, **0.0020** for the adaptive family (1,424-session basis;
+previously 0.0066 / 0.0147 / 0.0032 on the narrower calendar - the conclusion is unchanged and
+slightly stronger). What is *not* established is any comparative ranking between families - see
+section 8.
 
 (The DSR figure and the "$216,922 exposure-matched" figure originally quoted here are both
 **withdrawn** - see section 8. The latter came from a daily-tilt convention; a minute-level
@@ -133,7 +147,8 @@ severe claim re-verified by the controller with its own code.
 
 **Why H-006 was downgraded.** The fixed family had been scored as two separate half-range
 ensembles while the adaptive family got its full sweep. Scored fairly, the **full 21-cell fixed
-family reaches Sharpe 0.917**, and the adaptive advantage falls from +0.210 to **+0.087** with a
+family reaches Sharpe 0.892** (quoted as 0.917 in the original red-team text, on that reviewer's
+narrower calendar), and the adaptive advantage falls from +0.210 to **+0.087** with a
 paired block-bootstrap **P(delta <= 0) = 0.358**. Excluding 2025 alone leaves +0.046. The entire
 effect sits in one calendar year, and adaptive *underperforms* fixed in the low-volatility tercile
 - the opposite of its claimed mechanism.
@@ -152,7 +167,10 @@ be checked for right-tail retention first. (b) The **short side has no standalon
 2022 and 2025 it is net negative (-$8,397, Sharpe -0.113). The long side carries the system.
 
 **Conventions fixed going forward:** Sharpe is computed on **all days**, not ensemble-active days;
-the cross-family calendar is the **union** (1,348 sessions), not the archived 1,285-day matrix.
+the cross-family calendar is the **union** over every NQ family evaluated — **1,424 sessions** —
+not the archived 1,285-day matrix. (This was written as 1,348 when only four families existed and
+1,370 after the combo family was added; it is now pinned to the full campaign union so that adding
+or rejecting a candidate cannot move the basis again.)
 
 ## 9. Wave 3 verdicts — the frontier is closed
 
@@ -194,19 +212,80 @@ Remaining work that would genuinely move things forward, in order:
 
 ## 10. Config accounting
 
-Wave 1 + 1b ≈ 90 · Wave 1c 80 · H-011 30 · open axes ≈ 55 → **≈ 255** campaign-to-date.
-DSR in the Wave-1c report used n_trials = 170 (the count at that time); it must be re-run at the
-current total before any promotion decision.
+**Counted, not asserted, as of the 2026-08-07 audit** (`registry/tested_configs_backfill.csv`,
+method and caveats in `registry/REGISTRY_GAP_NOTE.md`):
 
-## 11. Unresolved integrity issues
+| basis | count |
+|---|--:|
+| Wave 1 + 1b, contemporaneously registered (seq 1–90) | 90 |
+| Waves 1c–3, distinct parameter sets (seq 91–229) | 139 |
+| **campaign total, rule-R1 basis** | **229** |
+| upper bound, counting every ledger including slip re-runs | 383 |
+| *previously asserted here as ≈255, later ≈316* | *assertion, now superseded* |
 
-None. Benign notes: the exporter emits 737,707 of 737,708 bars (boundary bar); the vendor
+The old ≈316 sits inside the honest 229–383 bracket, so nothing published was inflated by an
+undercount. **This changes no downstream figure:** the R6 Harvey–Liu haircut Sharpe is 0.000 at
+either end of the bracket, and deflation uses the preregistered `N_eff` (participation ratio ≈ 7),
+not the raw count — see `registry/TRIAL_ACCOUNTING_RULE.md`.
+
+## 11. Integrity issues
+
+**Benign, resolved:** the exporter emits 737,707 of 737,708 bars (boundary bar); the vendor
 publishes `Signal_Wave = 0` before the first flip and treats bar 0 as a seed rather than a
-no-progress bar — both now reproduced exactly.
+no-progress bar — both reproduced exactly.
+
+**Open — see section 13.** The configuration registry and the immutable-run convention both
+lapsed after Wave 1b. This is the campaign's most serious governance defect.
 
 ## 12. Next highest-value action
 
-Finish the H-006 confound control (fixed thresholds at matched turnover). If adaptive still wins
-at matched turnover *and* at matched exposure, it is the first genuine improvement over the vendor
-design; if not, the correct conclusion is "wider is better and normalisation is cosmetic", which
-is equally publishable inside the campaign and much cheaper to run.
+None inside this campaign — it is closed (section 9b). The ranked list of what would genuinely
+move things forward is in section 9b and `reports/final_system_design.md` §10. The cheapest by far
+is **quarterly monitoring of the overshoot ratio `r`**: free, requires no trading, no new
+configurations and no data licence, and it is the system's own early-warning statistic.
+
+(The action previously listed here — "finish the H-006 confound control" — **was run**, as H-014.
+Volatility normalisation beat price normalisation by +0.728 Sharpe, p = 0.009. See section 9.)
+
+## 13. Reports integrity audit — 2026-08-07
+
+A full audit of the *documents* (not the research) after the campaign closed. Eight defects found;
+none changed a ranking or a verdict, and all figures below were re-derived from the committed
+execution ledgers.
+
+**Fixed:**
+- Four of six `reports/` files were stale by a full campaign — rewritten.
+- `final_pareto.csv` mixed calendars and its **C2 row used a skipna mean** instead of the binding
+  strict-1/N rule; it was the one row not produced by `ensembles.py`. Rebuilt. C2 was the rejected
+  candidate, so nothing downstream moved.
+- Vendor parity reported as 1,436,860 bars; the true count is **2,035,869** (the error understated
+  the evidence).
+- R4's Sharpe appeared as 0.910 / 0.917 / 0.908 in three places, each on a different calendar —
+  now pinned to one 1,424-session basis.
+- `registry/hypotheses.md` still recorded H-006 as PASS with a withdrawn DSR — corrected.
+- Eight artifacts required by the mandate were missing (`type_semantics`, `active_parameter_map`,
+  `type0_attribution`, `open_model_validation`, `solar_family_finalists`, `complementary_families`,
+  `final_red_team`, `TYPE0_ATTRIBUTION_REPORT`) — all now written.
+
+**Disclosed, not fixed:** daily P&L is bucketed by calendar date rather than NT8 session date
+(18:00 ET roll). The published basis is ~6 % **conservative**; both are now reported in
+`final_pareto.csv`.
+
+**Still open — the serious one.** `registry/tested_configs.csv` stopped at Wave 1b (seq 90),
+`experiments.yaml` holds 2 of ~12 entries, and the `runs/<run_id>/spec.yaml` convention lapsed
+after `RE01_open_parity`; Waves 1c–3 wrote 296 execution ledgers under `research/` instead.
+
+*Partially mitigated:* `registry/tested_configs_backfill.csv` now enumerates all 296 ledgers with
+parameters and evidence paths (seq 91–229), every row flagged `reconstructed=yes`. That restores
+**auditability of what was run**. It does **not** restore preregistration: there is no record
+proving pass/fail criteria were fixed before the numbers were seen in Waves 1c–3, so those waves
+rest on researcher discipline rather than on the record, and a reviewer is entitled to discount
+them. Full disclosure: `registry/REGISTRY_GAP_NOTE.md`.
+
+*What was genuinely preregistered anyway:* `TRIAL_ACCOUNTING_RULE.md` (written, with its own
+expected negative conclusion, before any DSR was recomputed under it), the H-014 pass/fail
+criteria, and the red-team review (run by independent agents against results they did not
+produce). Those three are on the record.
+
+**Rule for any resumed work: restore the `runs/<run_id>/spec.yaml` convention and demonstrate it
+on one throwaway run before adding a single new configuration.**
