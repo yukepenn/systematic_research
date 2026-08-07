@@ -1,0 +1,38 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE results are read.
+# PORTABILITY-01: third-instrument mechanism test. Instruments preselected in the
+# thesis (§20 / PORTABILITY-01) BEFORE any result: YM, RTY, CL. No cherry-picking:
+# all three run and all three are reported regardless of outcome.
+run_id: PORT01_SWEEPS
+experiment_id: PORTABILITY_01_THIRD_INSTRUMENT
+hypothesis_id: X01 (universal-mechanism vs NQ-specific alpha)
+family: solar_persistence (Family A mechanism test)
+parent_candidate: R5 (13-cell adaptive grid); ES failure is the prior datapoint
+tested_config_seq: 233-271 (13 cells x 3 instruments; slip variants none)
+timestamp_before_execution: 2026-08-07 (commit timestamp authoritative)
+source_commit: 82d19e4 (parent; committed before execution)
+strategy_class: SolarWaveOpenV3 (sha256 60d584c5c820d8fe131eb889a37d1e07d6e746ed5f3919b8d47d0ba7d74df167)
+engine_version: NT8 8.1.8.1 / CrossTrade v1.13.9 / engine_fingerprint sha256:b4255f1b0dd7fba1
+instruments:
+  - {name: "YM 09-26",  tick_value: 5.0,  SMinTicks: 40, SMaxTicks: 1200}   # $5/tick == NQ band $200..$6,000
+  - {name: "RTY 09-26", tick_value: 5.0,  SMinTicks: 40, SMaxTicks: 1200}   # $5/tick
+  - {name: "CL 09-26",  tick_value: 10.0, SMinTicks: 20, SMaxTicks: 600}    # $10/tick -> halve tick counts
+timeframe: {period_type: Minute, value: 3, market_data_type: Last}
+data_boundaries: {from_utc: "2022-01-01T06:00:00Z", to_utc: "2026-07-31T21:59:59Z"}
+commission_model: "NinjaTrader Brokerage Lifetime" (per-instrument schedule, engine-applied)
+slippage_model: 1 tick per execution
+fill_model: Standard; exit-on-session-close true/30s; qty 1; isolated Backtest account
+effective_parameters_fixed: {TrendMultiplier: 90, StopMultiplier: 179, SlowdownScan: 5, WeakWeakSplit: 10, StartUp: false, AnchorMode: 0, ThresholdMode: 1, VolPeriod: 460, ExitMultiplier: 0, EntrySignalType: 1, EnableLong: true, EnableShort: true, UseTimeFilter: false}
+parameters_sweep: [{name: VolMult, min: 6, max: 30, step: 2, type: double}]   # IDENTICAL grid; sigma-scaling is the normalization; NO per-instrument fitting
+selection_metric: none — mechanism test, no selection among instruments or cells
+pass_criteria: >
+  Read from payload per-cell NetProfit only. UNIVERSAL-MECHANISM SUPPORT requires
+  strict-1/N ensemble net (mean of 13 cell nets) > 0 after costs in >= 2 of the 3
+  preselected markets. 1/3 = WEAK support. 0/3 = NQ-SPECIFIC alpha confirmed;
+  constitution §20 confidence penalty applies to all structural-alpha claims.
+  Secondary (reported, not gating): Spearman rank correlation of per-cell net
+  across the grid vs NQ's (shape transfer; ES precedent 0.78).
+reject_criteria: >
+  No rescue permitted: no per-instrument threshold fitting, no clamp retuning, no
+  sub-period selection. All three results reported regardless of sign.
+research_family_budget: 39 R1 configs (3 preregistered family reads)
+selection_relevance: yes — portability evidence feeds the final confidence assessment
