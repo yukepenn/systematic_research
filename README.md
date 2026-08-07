@@ -113,6 +113,30 @@ forbids silently changing the record.
 | `runs/<run_id>/` convention lapsed after `RE01_open_parity`; later waves wrote ledgers under `research/` instead | **OPEN** — same cause, same mitigation |
 | Daily P&L is bucketed by **calendar date**, not NT8 session date (18:00 ET roll) | **DISCLOSED** — the published basis is ~6 % *conservative*; both are now reported in `final_pareto.csv` |
 | `hypotheses.md` still recorded H-006 as PASS with a withdrawn DSR | **FIXED** — corrected and Wave-3 verdicts appended |
+| The R5 spec named `SolarWaveOpenV4`; every R5 figure was measured on `SolarWaveOpenV3`, and the two are **not** equivalent | **FIXED** — verified fill-by-fill, spec corrected to V3, no published number changed ([analysis](research/10_v3v4_equivalence/V3_V4_EQUIVALENCE.md)) |
+| **No NinjaScript source was in the repo at all** — R5 was not reproducible from a clone | **FIXED** — all 11 strategies added under [`src/ninjascript/`](src/ninjascript/) with provenance and a reproduction recipe |
+| **The licensed vendor DLL was committed to a PUBLIC GitHub repo** | **CONTAINED, NOT ERASED** — see §6b |
+
+### 6b. Vendor-binary exposure — disclosed in full
+
+`SolarWaveRK/RenkoKings_SolarWaveRK_NT8.dll` (4.5 MB) was committed in `35901db`
+(2026-08-06 22:16) and pushed to a **public** repository. This violated the campaign's own hard
+boundary — *never redistribute vendor binaries*. It was found by the 2026-08-07 audit, not by
+design.
+
+**Exposure window:** repository created 2026-08-06 23:46 UTC, set **private** 2026-08-07 ~12:15 UTC
+— roughly **12.5 hours public**. At the time of remediation: **0 forks, 0 stars.**
+
+**Residual risk, stated plainly:** making the repository private removes public access but **does
+not remove the blob from git history**. It remains reachable inside the repo and in any clone taken
+during the exposure window. Fully erasing it requires `git filter-repo` plus a force-push and a
+GitHub Support request to garbage-collect the unreachable object — a history rewrite, which the
+constitution otherwise forbids and which has **not** been performed. The vendor `Info.xml` and the
+two `templates/*.xml` are in the same position. (`RenkoKings_SolarWaveRK_NT8.cs` is NT8's
+auto-generated wrapper stub and contains no vendor logic.)
+
+This entry is deliberately not deleted after remediation. The constitution forbids erasing failures,
+and a redistribution incident is exactly the kind of thing that should stay on the record.
 
 ## 7. If work ever resumes
 

@@ -280,6 +280,22 @@ correlation 0.9949) while individual cells move by up to 44 %. Full analysis:
 (18:00 ET roll). The published basis is ~6 % **conservative**; both are now reported in
 `final_pareto.csv`.
 
+**SAFETY-BOUNDARY VIOLATION — found, contained, disclosed (2026-08-07).** The licensed vendor
+binary `SolarWaveRK/RenkoKings_SolarWaveRK_NT8.dll` (4.5 MB) was committed in `35901db` and pushed
+to a **public** GitHub repository, violating the constitution's *never redistribute vendor
+binaries*. Found by audit, not by design. The repository was set **private** on 2026-08-07;
+exposure window ≈ **12.5 hours**, with 0 forks and 0 stars at remediation.
+
+**Not fully remediated.** Private visibility removes public access but the blob remains in git
+history and in any clone taken during the window. Erasure requires `git filter-repo` + force-push
++ a GitHub Support GC request — a history rewrite the constitution otherwise forbids, and it has
+**not** been done. The vendor `Info.xml` and `templates/*.xml` are in the same position. Awaiting
+an explicit decision. Full disclosure: `README.md` §6b.
+
+**Reproducibility gap — fixed.** No NinjaScript source was tracked at all; R5 was not reproducible
+from a clone. All 11 strategies are now in `src/ninjascript/` with a provenance statement, the
+exact R5 recipe (V3, not V4) and the baseline gate check.
+
 **Still open — the serious one.** `registry/tested_configs.csv` stopped at Wave 1b (seq 90),
 `experiments.yaml` holds 2 of ~12 entries, and the `runs/<run_id>/spec.yaml` convention lapsed
 after `RE01_open_parity`; Waves 1c–3 wrote 296 execution ledgers under `research/` instead.
