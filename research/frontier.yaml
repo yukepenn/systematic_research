@@ -20,8 +20,12 @@
     high-vol tercile carries $85.4k of $146.8k (SW08 interaction).
 - id: SW02A_TIMED_EXIT_FALSIFICATION
   phase: 1
-  status: pending
-  priority: 1
+  status: passed
+  result: >
+    No fill artifact: 16:58 timed market exit retains 100.0% of baseline net (slip0 and slip1).
+    Bonus: ~16:31 exit DOMINATES (102.4% net, smaller DD) — final 30 min of holding is negative.
+    16:30-exit becomes a Wave-2 exit-architecture candidate.
+  priority: done
   hypothesis: >
     Close-bucket edge survives explicit timed market exits (16:58/16:55/16:45/16:30 ladder)
     replacing exit-on-session-close. If it collapses by 16:55, the absolute edge is a
