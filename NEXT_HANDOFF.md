@@ -1,6 +1,12 @@
-# NEXT_HANDOFF — POST_CAMPAIGN_AUDIT_01 complete, Wave B01 open
+# NEXT_HANDOFF — POST_CAMPAIGN_AUDIT_01 + post-audit waves complete; CONVERGENCE
 
-_2026-08-07._
+_2026-08-07. Superseding note: after the audit passed, three further preregistered
+waves ran to completion the same day — WAVE B01 (Family B: all arms negative, 3
+trials), PORTABILITY-01 (0/3: YM/RTY/CL all negative → NQ-specific alpha
+confirmed, 39 trials), DM01 (day-margin variant measured: 95.2% net retention,
+13 trials). The campaign has reached formal convergence
+(`research/CAMPAIGN_STATE.md` §15). Final package: `reports/FINAL_*.md` +
+`reports/DAY_MARGIN_VARIANT.md`. Sections below describe the audit phase._
 
 ## A. Git
 
@@ -74,8 +80,16 @@ FILL_AND_TAIL_AUDIT.md §4).
 5. All standing campaign caveats (no OOS, ES failure, tail concentration, DSR
    inconclusive) unchanged.
 
-## H. Recommended next step
+## H. Recommended next step (post-convergence: all decisions are the owner's)
 
-Wave B01 arm B01a (DR05-H1 overshoot/failed-flip calibration) — data exported
-(`runs/B01A_BARS_1M`, 1.62M bars), spec preregistered, analysis pending. Then
-B01b/B01c per `B01_WAVE_SPEC.md`; PORTABILITY-01 (YM/RTY/CL) is parallel-eligible.
+1. **P0 vendor decision** (§G.1): filter-repo + force-push + GitHub Support GC,
+   and the `research-campaign` remote-tip remediation. Keep the repo private
+   until then.
+2. **Push** `post_campaign_audit` (the session could not push: permission
+   classifier). Everything is committed locally through the convergence commit.
+3. If the program resumes: the only research doors left open are (a) a
+   locked-forward freeze of R5-E10 with quarterly overshoot-r monitoring
+   (MONITOR-01, free), (b) a genuinely new Family-B event definition (the
+   falsified ones may not be re-tuned), (c) a NinjaScript master-strategy
+   implementation of E10 with engine-level validation against the audited
+   simulator. None may start without a new explicit instruction.
