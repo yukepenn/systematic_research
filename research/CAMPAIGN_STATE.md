@@ -154,17 +154,43 @@ be checked for right-tail retention first. (b) The **short side has no standalon
 **Conventions fixed going forward:** Sharpe is computed on **all days**, not ensemble-active days;
 the cross-family calendar is the **union** (1,348 sessions), not the archived 1,285-day matrix.
 
-## 9. Open / next
+## 9. Wave 3 verdicts — the frontier is closed
 
-1. **H-014 (new, decisive):** run a **price-proportional** threshold family through NT8. If it
-   matches the volatility-proportional one, "volatility normalisation" is just "time-varying
-   threshold" and H-006's mechanism claim dies. Cheapest way to resolve H-006.
-2. Ensemble-level nested walk-forward of adaptive vs fixed-full-range; the fold structure, not the
-   aggregate, is the honest unit.
-3. Preregister the trial-counting rule (clusters-as-trials with `N_eff` from the trial correlation
-   matrix), then recompute every DSR in the campaign under it.
-4. **Type-0 attribution + controlled architectures C0-C6** - unblocked by the complete model.
-5. Complementary families (failed persistence per DR-05), ES portability, portfolio routing.
+Full detail: `research/07_h014_price/WAVE3_report.md`; decision package:
+`reports/final_system_design.md`.
+
+| hypothesis | verdict |
+|---|---|
+| **H-014** volatility vs price normalisation | **PASS** — vol beats price by +0.728 Sharpe, **p = 0.009**; the mechanism is volatility-specific, not generic time-variation. The campaign's first clean significance result |
+| **ES portability** | **FAIL** — blind transfer loses money (ES ensemble Sharpe −0.329). Shape travels (Spearman 0.780), level does not. Constitution §16 overfitting penalty applied |
+| **C2** Type-1 + one Type-3 re-entry | **FAIL** — looked strong on a fixed core (+29 % net, smaller DD), then cost **0.40 Sharpe** on the adaptive core (P = 0.879) and broke the every-year-positive property. A sleeve whose sign flips with the core is an interaction, not an effect |
+| **C4** adding Type-2 | **FAIL** — −0.33 Sharpe |
+| **wave-index conditioning** | **FAIL** — non-monotone, 0.54–0.93 across MinWave 1–8. The wave counter describes structure but is not an edge |
+| **DSR as a promotion criterion** | **ABANDONED** — under the preregistered rule every candidate scores 0.45–0.55 against a 0.90 bar with a Harvey–Liu haircut Sharpe of 0.000; a defensible alternative variance pool gives 0.96. The answer is dominated by a judgement call, not the data |
+
+**Every sleeve and conditioning axis is now closed. R5 — the volatility-normalised ensemble,
+Type-1 signals only — stands alone and unimproved.** That is a cleaner outcome than a stack of
+marginal enhancements would have been, and it is consistent with the campaign's dominant finding:
+on 4.6 years of one instrument almost nothing is separable from noise, and the additions that look
+helpful are the ones most likely to be fitting the specific core they were tested against.
+
+## 9b. Stop condition reached
+
+Constitution §23(B): three consecutive properly designed research waves failed to produce a new
+robust Pareto improvement (Wave 2's H-006 downgraded to inconclusive; Wave 3's sleeves and
+conditioning all rejected; the red team's own follow-ups all negative), and the remaining frontier
+is **data-limited rather than method-limited**. Resampling 4.6 years of one instrument is
+exhausted. The campaign therefore closes with the decision package in
+`reports/final_system_design.md` rather than continuing to burn configurations.
+
+Remaining work that would genuinely move things forward, in order:
+1. **A third instrument** (RTY, YM, CL) — portability is the only promotion criterion still open,
+   and one ES failure is a data point, not a distribution.
+2. **Complementary families** (failed persistence, DR-05) — the only route to a portfolio that
+   does not simply hold more of the same factor.
+3. **Genuinely forward data after a strategy freeze.**
+4. **Quarterly monitoring of the overshoot ratio `r`** — free, requires no trading, and is the
+   system's own early-warning statistic.
 
 ## 10. Config accounting
 
