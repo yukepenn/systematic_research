@@ -12,10 +12,25 @@
   gates: research/00_truth/SW00_spec.md
 - id: SW01_EPISODE_AND_EXIT_ATTRIBUTION
   phase: 1
-  status: active
-- id: SW01B_DRIFT_MATCHED_CONTROL
+  status: passed
+  key_findings: >
+    100% signal-trade integrity; 46% of Type-1 signals untaken (SW03 opportunity set);
+    chop-veto hypothesis INVERTED (4+ flips = best bucket PF 1.303); lowest path-efficiency
+    quartile (eff_120<=0.035) = 25% of trades netting +$157 total (redesigned SW05 target);
+    high-vol tercile carries $85.4k of $146.8k (SW08 interaction).
+- id: SW02A_TIMED_EXIT_FALSIFICATION
   phase: 1
   status: pending
+  priority: 1
+  hypothesis: >
+    Close-bucket edge survives explicit timed market exits (16:58/16:55/16:45/16:30 ladder)
+    replacing exit-on-session-close. If it collapses by 16:55, the absolute edge is a
+    last-print fill artifact (external review 3.1) and the campaign pivots.
+  note: instrumentation variant strategy (new class); relative SW01b conclusions immune; absolute levels conditional on this
+  depends_on: [SW01_EPISODE_AND_EXIT_ATTRIBUTION]
+- id: SW01B_DRIFT_MATCHED_CONTROL
+  phase: 1
+  status: passed
   hypothesis: >
     The baseline's net edge (esp. the session-close bucket and long-side PF) does NOT
     exceed what random/time-shifted entries with identical session-close exit machinery
@@ -24,7 +39,7 @@
   depends_on: [SW00_BASELINE_PARITY_COST]
 - id: SW01C_2022_REGIME_COMPLEMENT
   phase: 1
-  status: pending
+  status: passed_thin
   hypothesis: >
     Canonical config on never-examined 2022 (bear regime) retains positive expectancy
     after 1-tick costs. 2022 is legitimate research data; running it consumes it (log in registry).
@@ -56,7 +71,11 @@
   depends_on: [SW03_SINGLE_TYPE3_REENTRY]
 - id: SW05_CHOP_VETO
   phase: 3
-  status: pending
+  status: redesigned
+  note: >
+    Original flip-count veto INVERTED by SW01 attribution (would delete 74% of profit).
+    New hypothesis: low path-efficiency veto (eff_120 <= dev-sample Q1 = 0.035) removes
+    ~25% of trades at ~zero profit cost; must pass CPCV OOS + exposure-normalized gates.
   depends_on: [SW01_EPISODE_AND_EXIT_ATTRIBUTION]
 - id: SW06_TIMEFRAME_PORTABILITY
   phase: 5

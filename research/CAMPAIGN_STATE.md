@@ -1,43 +1,40 @@
 # Campaign State
 
-_Last updated: 2026-08-06 (SW00 complete)_
+_Last updated: 2026-08-06 (Phase 1 complete)_
 
 ## Current phase
-**Phase 1 — Understand the baseline** (SW01 active; Phase 0 gate passed)
+**Phase 1 wrap → SW02a gate.** Phase-1 diagnostics done; SW02a (timed-exit falsification) must run before any Phase-2 candidate work, because absolute profitability is conditional on it.
 
-## Frozen baseline
-SolarWaveRKReplicaV0 · Type 1 · 90/179/5/10/true/10 · 1-min Last · NQU6 back-adjusted · Lifetime commission · Standard fill · window 2023-01-01T06:00:00Z → 2025-02-02T22:59:59Z · slip0: Net $146,440.60, 2,915 trades, DD −$22,066.60, PF 1.132213 · **honest cost basis (slip1): Net $118,645.60, avg $40.83, PF 1.106, daily Sharpe 1.39, Calmar 2.56**. Source sha256 `221d1e13…`, ledger hash `fe395c14…`.
+## Frozen baseline (unchanged)
+SolarWaveRKReplicaV0 · T1 · 90/179/5/10/true/10 · 1m Last · NQU6 · Lifetime · canonical window. slip0 $146,440.60 / slip1 $118,645.60 (avg $40.83, PF 1.106). Source sha `221d1e13…`, ledger `fe395c14…`.
 
-## Completed experiments
-- PARITY (pre-campaign) — PASS. research/solar_wave_parity/.
-- **SW00_BASELINE_PARITY_COST — PASS** (all 7 preregistered gates). research/00_truth/SW00_report.md. Key: deterministic pipeline (7 bit-identical runs incl. concurrent); slip1/2/3 all positive; session-close exits carry the entire net edge (+$189.6k, PF 10.8) while Solar-trailing exits net −$42.8k; median MFE giveback 1.34×; High fill = no-op for market-order strategies; native optimization sweeps validated bit-identical (Tier-1 mode).
+## Completed
+- PARITY — PASS. SW00 — PASS (research/00_truth/SW00_report.md).
+- **SW01c** — gate PASS, thin: 2022 slip1 +$11,385.72, PF 1.012, DD −$44,821; shorts carried (PF 1.071), longs $0.00.
+- **SW01b** — null REJECTED p=0.0323 (entry timing ≈ +$90k over median null); machinery alone = 30/30 positive, median $58.6k; hold-to-close random = zero-mean. Instrument: SW01bRandomEntryV1.
+- **SW01** — PASS: byte-identical bar ledger (`237203AB…`, also the pre-roll close archive), 100% entry-signal integrity. Findings: 46% of Type-1 signals untaken; chop-veto inverted (4+ flips = PF 1.303 best bucket); eff_120≤0.035 quartile = 25% of trades netting +$157; high-vol tercile = 58% of net.
+- **External review** (research/01_diagnostics/external_review.md): P(12-mo forward > 0 at 1-tick) ≈ 35–55%; P(true alpha) 10–20%; session-close fill artifact is the #1 falsifiable risk.
 
-## Active experiments
-- SW01_EPISODE_AND_EXIT_ATTRIBUTION — next: build read-only ledger exporter `SolarWaveRKLedgerV1` (new class; zero trading-logic changes; per-bar Signal_Trade/Trend/Wave/TrailingStop + episode reconstruction), join to R01 trade ledger, produce full decomposition incl. episode/wave/flip/efficiency tags.
+## Active / next
+1. **SW02a_TIMED_EXIT_FALSIFICATION (priority 1, spec before run):** variant strategy with explicit timed market exit; ladder 16:58/16:55/16:45/16:30; H-005 registered. Kills or validates the absolute edge.
+2. Then SW02 (catastrophe stop + session-close counterfactual, using SW01 tags), SW03 (re-entry, opportunity set = the 46% untaken signals), redesigned SW05 (low-efficiency veto, threshold frozen at dev Q1=0.035, CPCV-tested).
 
-## Pending (frontier order)
-SW02 (catastrophe stop + session-close counterfactual — now high-stakes given exit-reason finding), SW03 (single Type-3 re-entry), SW04 (selective Type 2), SW05 (chop veto), SW06 (timeframes), SW07 (context), SW08 (vol sizing), FB01, portfolio, locked-forward.
-
-## Decisions
-- 2026-08-06: SW00 PASS → Solar promotion proceeds. Campaign execution modes fixed: Tier 1 = native optimization sweeps (validated bit-identical, ~4 s/combination, summary payload); Tier 2 = individual full-payload runs; Tier 3 = High-fill (stop-order candidates) + manual Playback (user-run only). Determinism-critical runs serial; concurrency safe but ≤2 and modest gain.
-- 2026-08-06: 1-tick slippage adopted as the honest reporting basis for all future candidate comparisons; 2-tick checked at every promotion.
-- Earlier init decisions: see git history of this file.
-
-## Unresolved integrity issues
-- None blocking. Playback/reload audit remains a deferred manual item (safety boundary). Benign known artifacts documented in SW00_report §1 gate 5.
+## Protocol upgrades adopted (from external review; binding on all future experiments)
+- Archive per-config **daily P&L vectors** in every sweep (CSCV/PBO needs the T×N matrix).
+- **CPCV over monthly blocks** replaces 18/6 WFO; per-fold indicator warm-up preregistered.
+- Promotion gates add: **PSR (empirical skew/kurt) + Harvey-Liu bracketed haircuts (N∈{10,100,1000})**; state-dependent slippage overlay (2 ticks close/ETH, 5–10 event windows); targeted 2–4 tick stress on close-bucket fills.
+- **2025-03→2026-07 reserved** as the only vendor-clean OOS window — single preregistered read, late in campaign.
+- Bar archive before September roll: DONE (sw01_bar_ledger.csv). Tags pushed to GitHub.
+- MNQ live-sim shadow fills: REQUIRES EXPLICIT USER AUTHORIZATION (outside backtest boundary) — parked.
 
 ## Tested-config count
-- Search-space configs consumed: **1** (canonical anchor). 16 backtest jobs run total (3 pre-campaign + 13 SW00). Every job logged in registry/tested_configs.csv.
+Candidate search-space configs: **1**. Instrumentation/null runs (seq 0): 48 sweep iterations + 2 exporter runs + probes, all registered.
 
-## Compute usage
-- ~75 s total NT8 engine time; ~40 MB raw payloads archived under runs/.
+## Compute
+32 backtest jobs + 2 sweeps (45 iterations) + 2 export runs; ~9 min engine time total. External review: 6 agents, ~310k tokens.
 
-## Pareto frontier
-- reports/leaderboard.md — baseline reference row only.
+## Unresolved integrity issues
+None. Benign notes: exporter emits 737,707 of 737,708 bars (boundary bar); stop-distance undefined at trend-start bars (trailing stop NaN at episode birth).
 
 ## Next highest-value action
-Phase 1 triple, in order of information value per unit work:
-1. **SW01c** — canonical config on never-examined 2022 (bear-regime complement; one Tier-2 run + one slip-1 run; red-team-originated, zero DoF).
-2. **SW01b** — drift-matched control: time-shifted/random entries with identical session-close machinery vs the baseline's close-bucket and long-side edge (null-hypothesis test for drift beta; zero DoF).
-3. **SW01** — `SolarWaveRKLedgerV1` read-only exporter (new class, in-memory compile first, vendor assembly untouched) → episode/wave/flip/efficiency attribution that SW02/SW03/SW05 gates depend on.
-Red-team standing items for every future promotion: Thursday/quarterly concentration, short-side cost fragility, session-close survivorship confound, slip-2 as event-day honest floor.
+Write SW02a spec + `SW01cTimedExitV1`-style variant (new class), preregister the collapse gate, run the 4-rung ladder (Tier-2 full payloads, slip 0 and 1), decide. Everything downstream (SW02/SW03/SW05 designs) is already staged on SW01 outputs.
