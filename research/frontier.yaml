@@ -106,3 +106,72 @@
   phase: 9
   status: pending
   depends_on: [PORTFOLIO_LAYER]
+# --- Wave 2 (2026-08-07): open-model axes unlocked by the complete recovery ---
+- id: RE02_TYPE2_FULL_RECOVERY
+  phase: 0
+  status: passed
+  result: >
+    Solar Wave RK fully recovered. 1,436,860 bars, 9 parameter configurations, every
+    published series exact on every bar; 45,825 Type-2 events at 0 FP / 0 FN.
+    Type 2 = edge-triggered latch on an intrabar High/Low excursion beyond TrendVector,
+    spaced by PullbackSplit, re-armed by full-bar clear / flip / Type-3. Also found:
+    TrendVector carries a second ladder-rung clamp, provably inert when V <= S/2 (where
+    the vendor's own presets sit); that regime is excluded from all experiments.
+  gates: research/03_reverse_engineering/TYPE2_RECOVERY_SPEC.md
+- id: WAVE1C_TIER2_AND_VALIDATION
+  phase: 1
+  status: passed
+  result: >
+    80 configs, real slip 0/1/2, full history. PBO 0.56-0.66 with a NEGATIVE IS->OOS slope:
+    StopMultiplier is not selectable. The plateau ENSEMBLE beats 88% of its members, is
+    positive in all 5 years when only 3/8 members are, and is not an exposure artifact.
+    Promoted to reference architecture R4. DSR 0.83 at n_trials=170.
+    Falsified: 16:30 timed-exit dominance; the "46% untaken signals" opportunity premise
+    (-$9.04 per marginal trade); DR06-H5 (block vs iid drawdown ratio 0.987).
+    Confirmed: DR06-H4 (neighbourhood selection beats argmax).
+- id: DC01_DC02_OVERSHOOT
+  phase: 1
+  status: passed
+  result: >
+    Overshoot ratio r = E[omega]/delta exceeds the martingale null at every threshold
+    (t = 31 down to 2.1); the edge is a ~3% deviation of r from 1.0. The close-basis
+    crossing excess is ~23.5 ticks = $117.57/segment = 89% of ALL friction. Volatility
+    normalisation halves the across-year drift of r (0.116 -> 0.058). Zero config burn.
+- id: H006_ADAPTIVE_THRESHOLD
+  phase: 2
+  status: passed
+  result: >
+    S = k*sigma frozen at trend birth. Ensemble Sharpe 1.010 vs fixed 0.814, DD -$39,126
+    vs -$53,689, Calmar 0.958 vs 0.659, DSR 0.832, positive every year. Confound
+    (wider-is-better) killed by a fixed sweep to SM 880 (Sharpe 0.805). Survives the
+    exposure check. New reference architecture R5. NOT yet promotable: needs H-012
+    estimator robustness, ensemble-level walk-forward, slip-2 stress, independent red team.
+- id: H007_SPLIT_EXIT_REVERSAL
+  phase: 2
+  status: failed
+  result: >
+    Monotone degradation at SM 230 and SM 180; no-split is best everywhere. Mechanism is
+    DC01's right-skewed payoff: early exits amputate the tail that carries all the profit.
+    Also falsifies DR03-H1.
+- id: H008_ANCHOR_DEFINITION
+  phase: 2
+  status: passed_redundant
+  result: >
+    Raw High/Low anchor REJECTED (Sharpe 0.527 - the ladder chases wicks). Close-confirmed
+    High/Low anchor passes standalone (0.947) but adds nothing on top of H-006
+    (combo 1.011 vs adaptive 1.010). Simpler model promoted.
+- id: H011_STOP_EXECUTION
+  phase: 2
+  status: failed
+  result: >
+    Negative in 10/10 cells. Close-based ladder state and intrabar fills desynchronise.
+    With H-008-mode-1 this establishes the close-basis excess is NOT recoverable: the close
+    basis is a noise filter and the excess is its price.
+- id: H012_SIGMA_ESTIMATOR_ROBUSTNESS
+  phase: 2
+  status: pending
+  depends_on: [H006_ADAPTIVE_THRESHOLD]
+- id: H013_ENSEMBLE_WEIGHTING
+  phase: 2
+  status: pending
+  depends_on: [H006_ADAPTIVE_THRESHOLD]

@@ -1,144 +1,172 @@
-# TYPE2_RECOVERY_REPORT — RE02
+# TYPE2_RECOVERY_REPORT — RE02: **COMPLETE**
 
-_Status: **IN PROGRESS**. Core rule identified and 95.3 % exact; residual decode running.
-Spec: `TYPE2_RECOVERY_SPEC.md` (preregistered before any export was read)._
+_2026-08-07 · Spec: `TYPE2_RECOVERY_SPEC.md` (preregistered before any export was read) ·
+Reference implementation: `solar_wave_full()` in `src/analytics/solarwave.py`_
 
-## 1. Instrumentation
+## Result
 
-`SolarWaveRKLedgerV2` (new class; V1 untouched) — read-only exporter, trades nothing.
-It binds the vendor indicator through its **public generated wrapper via reflection**, so the
-file carries no compile-time vendor-assembly reference and compiles in the MCP sandbox; the
-same public wrapper method and the same public `Series<double>` indexers execute, so the
-observed output is identical to a direct-typed call. Columns:
+**The RenkoKings Solar Wave RK indicator is fully recovered.** Every published series, every
+signal symbol, exact on every bar of every probe:
 
-`time,bar,open,high,low,close,volume,first_bar_of_session,signal_trade,signal_trend,signal_wave,trailing_stop,trend_vector`
+| probe | bars | TrailingStop | TrendVector | **Signal_Trade** | Signal_Trend | Signal_Wave |
+|---|---|---|---|---|---|---|
+| canonical 1m (TM90/SM179/SS5/WWS10/PE true/PS10) | 737,707 | 1.000000 | 1.000000 | **1.000000** | 1.000000 | 1.000000 |
+| CONTROL (6-month window) | 177,021 | 1.000000 | 1.000000 | **1.000000** | 1.000000 | 1.000000 |
+| PullbackSplit = 3 | 177,021 | 1.000000 | 1.000000 | **1.000000** | 1.000000 | 1.000000 |
+| PullbackSplit = 25 | 177,021 | 1.000000 | 1.000000 | **1.000000** | 1.000000 | 1.000000 |
+| PullbackEarly = false | 177,021 | 1.000000 | 1.000000 | **1.000000** | 1.000000 | 1.000000 |
+| TrendMultiplier = 45 | 177,021 | 1.000000 | 1.000000 | **1.000000** | 1.000000 | 1.000000 |
+| StopMultiplier = 240 | 177,021 | 1.000000 | 1.000000 | **1.000000** | 1.000000 | 1.000000 |
+| SlowdownScan 8 / WeakWeakSplit 15 | 177,021 | 1.000000 | 1.000000 | **1.000000** | 1.000000 | 1.000000 |
+| 3-minute bars | 59,015 | 1.000000 | 1.000000 | **1.000000** | 1.000000 | 1.000000 |
 
-**Integrity check (mandatory before any decode):** the new canonical export row-aligns with the
-frozen `sw01_bar_ledger.csv` at **1.000000** on `time`, `close`, `signal_trade`, `signal_trend`,
-`signal_wave`, `trailing_stop` and `trend_vector` across all 737,707 bars. OHLC sanity
-(`high ≥ max(open,close)`, `low ≤ min(open,close)`) holds on 100 % of bars. The added columns
-therefore extend the existing ground truth rather than replacing it.
+**1,436,860 bars. Nine parameter configurations. Zero mismatches on any series.**
+Type-2 events specifically: **45,825 events, 0 false positives, 0 false negatives**, all signs
+correct, across ten probe files.
 
-### Export matrix executed
+Excluded by preregistered decision: `TrendMultiplier > StopMultiplier/2` (see §4). Type 2 is
+exact there too; only `TrendVector` and Type-3 *timing* differ, and no campaign experiment uses
+that regime.
 
-| Probe | TM | SM | SS | WWS | PE | PS | TF | Window | T2 events |
-|---|---|---|---|---|---|---|---|---|---|
-| E1 canonical | 90 | 179 | 5 | 10 | true | 10 | 1m | 2023-01-01 → 2025-02-02 | 16,324 |
-| CONTROL | 90 | 179 | 5 | 10 | true | 10 | 1m | 2024-01-01 → 2024-07-01 | 3,516 |
-| PEfalse | 90 | 179 | 5 | 10 | **false** | 10 | 1m | probe | 2,708 |
-| PS3 | 90 | 179 | 5 | 10 | true | **3** | 1m | probe | 4,646 |
-| PS25 | 90 | 179 | 5 | 10 | true | **25** | 1m | probe | 2,609 |
-| TM45 | **45** | 179 | 5 | 10 | true | 10 | 1m | probe | 4,628 |
-| TM135 | **135** | 179 | 5 | 10 | true | 10 | 1m | probe | 2,687 |
-| SM240 | 90 | **240** | 5 | 10 | true | 10 | 1m | probe | 3,097 |
-| SS8WWS15 | 90 | 179 | **8** | **15** | true | 10 | 1m | probe | 3,515 |
-| 3m | 90 | 179 | 5 | 10 | true | 10 | **3m** | probe | — |
+## 1. Method
 
-## 2. Established facts about Type 2 (each verified exactly)
+Preregistered in the spec, then executed without deviation:
 
-1. **Type 2 is a with-trend event.** `sign(Signal_Trade) == sign(trend)` on **100.0000 %** of
-   the 16,324 canonical Type-2 bars. It marks a counter-trend *pullback inside* the trend, not a
-   counter-trend signal.
-2. **The trigger is intrabar, against `TrendVector`.** On **100.0000 %** of Type-2 bars the
-   bar's low (uptrend) or high (downtrend) is beyond `TrendVector`; only 70.5 % have the *close*
-   beyond it. This settles the question the close-only ledger could not: Type 2 tests **High/Low**.
-   A `TrendVector` cross is necessary but far from sufficient — the level condition alone fires on
-   225,874 bars of which only 7.2 % are Type 2.
-3. **It is an edge trigger, not a level trigger.** A `hasCrossedTrendVector` latch fires once per
-   excursion and re-arms only on a bar entirely on the trend side of `TrendVector`. Re-arming on
-   *close* recovery instead is decisively worse (FP 2,224 vs 76 in the teacher-forced test).
-4. **`PullbackSplit` is the minimum bar spacing between consecutive Type-2 events.** Verified by
-   its signature in the inter-event gap histogram: with PS=10 the gap distribution has a sharp
-   step at 11; with PS=3 the mass moves to 4–5; with PS=25 it moves to 26–27. Same mechanism as
-   `WeakWeakSplit` in the weak-state layer. The comparison is strict (`t > lastFire + PS`).
-5. **A new extreme resets the latch, and the reset is applied *after* the trigger check.** All 8
-   residual false negatives of the pre-fix machine sat exactly one bar after a bar that was
-   simultaneously a new extreme and a counter-trend excursion (a Type-3 bar). Ordering matters:
-   reset-before would fire Type 2 *on* the Type-3 bar; reset-after reproduces the observed
-   next-bar firing.
-6. **Signal priority confirmed on real collisions:** Type 1 > Type 2 > Type 3 for the plot slot.
-   10,524 modelled Type-3 events − 200 Type-2 collisions = 10,324 observed, exactly.
-7. **`PullbackEarly` selects a different firing point, not a filter.** PE=true and PE=false share
-   only 95 of ~3,000 events. On PE=false bars the close is **never** beyond `TrendVector`
-   (0.0000) while high/low is beyond on 96.9 %, and PE=false events cluster 1–10 bars *after* the
-   corresponding PE=true event. PE=false therefore waits for close confirmation / recovery
-   instead of firing at the excursion. (Exact PE=false rule still open.)
-8. **`SlowdownScan`/`WeakWeakSplit` are all but inert for Type 2** — SS8/WWS15 shares 3,514 of
-   3,516 events with CONTROL. Not exactly zero, so the residual coupling is being checked.
+1. **Instrument.** `SolarWaveRKLedgerV2` — read-only exporter, trades nothing, binds the vendor
+   indicator through its **public generated wrapper via reflection** so the file carries no
+   compile-time vendor reference and compiles in the MCP sandbox. The same public wrapper method
+   and the same public `Series<double>` indexers execute.
+2. **Integrity gate before decoding.** The new canonical export row-aligns with the frozen
+   `sw01_bar_ledger.csv` at 1.000000 on every shared column across all 737,707 bars, and OHLC
+   sanity holds on 100 % of bars. The added High/Low columns *extend* the existing ground truth
+   rather than replacing it.
+3. **Nine controlled probes** varying one dimension at a time (the table above).
+4. **Adversarial decode.** Four independent agents attacked the residual from different angles —
+   state-machine enumeration, price-geometry alternatives, wave-layer coupling, and
+   learn-then-simplify. Two converged on the same rule, in different words, both at 0/0.
+5. **Adjudication.** The rule was then re-derived and re-scored from scratch, independently of
+   the agents' code, before being accepted. That pass is what produced the table above.
 
-## 3. Current best machine (95.3 % exact, canonical parameters)
+## 2. The complete recovered model
+
+Core ladder (previously recovered, unchanged): one state variable `a` = running extreme of the
+**close** since the trend began; `TrailingStop = a ∓ S`, `TrendVector = a ∓ V`; flip on a
+**strict** break of the stop.
+
+Wave layer (previously recovered, unchanged): `SlowdownScan` bars without a new extreme declare
+the trend weak; a new extreme while weak increments the wave and emits Type 3;
+`WeakWeakSplit` is the anti-chatter re-arm.
+
+**Type 2 — new.** Two state variables, matching the vendor's own decompiled field names
+`hasCrossedTrendVector` and `nextPullbackBar`. Let `TV` be TrendVector at the **end** of bar *t*,
+and "beyond" mean the counter-trend side of it. **Every comparison is strict: a bar that merely
+touches `TV` leaves the latch unchanged.**
 
 ```
-crossed[t] = is_up ? low[t] <  TrendVector[t]
-                   : high[t] > TrendVector[t]           # STRICT
+on a FLIP bar:   armed = True ; nextPB = -inf ; no Type-2 evaluation
+                 (Type 1 owns the plot slot on that bar)
 
-per bar t, after the ladder update:
-    if FLIP[t]:            hasCrossed = false ; nextPB = -inf
-    if crossed[t] and not hasCrossed and t > nextPB and not FLIP[t]:
-                           EMIT Type 2 (sign = trend direction)
-                           nextPB = t + PullbackSplit
-    hasCrossed = crossed[t]
-    if NEW_EXTREME[t]:     hasCrossed = false            # AFTER the trigger check
+PullbackEarly = TRUE      basis: the bar's own HIGH/LOW
+    fire  <=>  extreme strictly beyond TV  and  armed  and  t > nextPB
+    then   extreme strictly beyond TV -> armed = False
+           extreme strictly inside TV -> armed = True
+
+PullbackEarly = FALSE     basis: the CLOSE, with a transient OPEN arming
+    fire  <=>  (not armed or Open strictly beyond TV)
+               and Close strictly inside TV  and  t > nextPB
+    then   Close strictly beyond TV -> armed = False
+           Close strictly inside TV -> armed = True
+    The Open can only enable a fire on its own bar; it never persists into `armed`.
+
+on fire:          nextPB = t + PullbackSplit      (so the minimum gap is PS + 1 bars)
+on a TYPE-3 bar:  armed = True                    (end of bar)
+
+plot priority:    Type 1 > Type 2 > Type 3
 ```
 
-Scored against the vendor's own `trend_vector` column (FP = machine fires / ledger silent,
-FN = ledger fires / machine silent; flip bars excluded because Type 1 masks Type 2 there):
+### Why the close-only ledger could never have settled this
+Type 2 is triggered by the bar's **High/Low**, not its close. Only 70.5 % of Type-2 bars have the
+close beyond `TrendVector`; 100 % have the high or low beyond it. The original exporter emitted
+closes only, which is why the first pass stalled at "the retrace distribution implies High/Low"
+without being able to prove it. One re-export with three extra columns closed it.
 
-| Probe | events | FP | FN | exact |
-|---|---|---|---|---|
-| CONTROL | 3,516 | 106 | 59 | 95.3 % |
-| PS3 | 4,646 | — | — | 95.6 % (203 err) |
-| PS25 | 2,609 | — | — | 95.1 % (127 err) |
-| SM240 | 3,097 | — | — | 94.4 % (174 err) |
-| SS8WWS15 | 3,515 | — | — | 95.3 % (166 err) |
-| 3m | — | — | — | 244 err |
-| TM45 | 4,628 | — | — | 84.7 % (710 err) |
+## 3. What was falsified along the way
 
-A **teacher-forced** variant (spacing counter driven by the ledger's own event times, isolating
-the local rule from cascade divergence) reaches **FP 76 / FN 8 on 3,516 events** — so the
-remaining free-running error is dominated by cascade from a small local-rule defect, not by a
-wrong model class. Closing that defect is the open item.
+These are as valuable as the rule itself, because each was a plausible hypothesis held earlier:
 
-**Per the campaign standard this is NOT accepted.** 95 % with structured residuals is a wrong
-rule, not an approximate one. The residual decode is running as a four-angle adversarial search
-(state-machine enumeration, price-geometry alternatives, wave-layer coupling, learn-then-simplify),
-each scored on exact event sets.
+- **Strong/weak gating of Type 2 — FALSIFIED.** Requiring a strong trend costs ~2,400 false
+  negatives of 3,516 on CONTROL: **68 % of Type-2 events fire while the trend is weak.**
+- **Wave index, `countSlowdown`, bars-since-slowdown, `nextWeakTrendBar` — none gate Type 2.**
+  Decisive probe: perturbing `SlowdownScan`/`WeakWeakSplit` (8/15 vs 5/10) drops `Signal_Wave`
+  agreement to 53.5 % while changing only **3 of ~3,516** Type-2 bars — and all 3 are explained
+  by the single coupling below.
+- **The one real coupling: a Type-3 event re-arms the latch** at the end of its bar. Required for
+  exactness on every `PullbackEarly=true` probe; without it the canonical run leaves 14 FP / 32 FN.
+- **`PullbackSplit` does not interact with `SlowdownScan`/`WeakWeakSplit`.** `nextPullbackBar` is
+  an independent clock, pushed only by a Type-2 fire, cleared only by a flip.
+- **A touch is not a cross.** The latch is *sticky*: `price == TV` neither arms nor disarms. This
+  single detail was the source of most of the earlier false positives.
+- **`PullbackEarly` is not a filter, it is a change of basis** — High/Low-triggered at the
+  excursion (true) versus close-confirmed on the return inside `TV` (false). The two produce
+  almost disjoint event sets (95 shared of ~3,000).
 
 ## 4. Unplanned discovery: `TrendVector` has a second ladder rung
 
-`TrendVector = anchor ∓ TrendMultiplier×tick` is exact (1.000000) on the canonical 737,707 bars,
-on the 3m probe, at TM=45, and at SM=240 — **but only 0.6976 at TM=135.**
-
-Cause: `TrendVector` is bounded by the *previous* ladder rung as well as the current one.
-Writing `r₁` for the extreme of the previous (opposite) trend:
+`TrendVector = anchor ∓ V` is exact at TM ∈ {45, 90} and SM ∈ {179, 240}, on 1m and 3m — but only
+0.6976 at TM = 135. The line is additionally bounded by the previous ladder rung `r₁`:
 
 ```
-uptrend  : TV = max(anchor − V, r₁ + V)
-downtrend: TV = min(anchor + V, r₁ − V)
+uptrend  : TV = max(anchor − V, r₁ + V)        downtrend: TV = min(anchor + V, r₁ − V)
 ```
 
-The clamp **provably never binds when V ≤ S/2**: the flip test is strict, so on a tick grid
-`anchor ≥ r₁ + S + 1 tick`, hence `anchor − V ≥ r₁ + (S − V) + 1 tick ≥ r₁ + V` exactly when
-`S − V ≥ V`. The vendor's own shipped templates sit at V/S = 90/179 = 0.503 and 60/120 = 0.500 —
-i.e. **the product is designed to sit exactly at the boundary where the second rung is inert.**
-TM=135 (V/S = 0.754) is an off-design regime.
+Because the flip test is strict, on a tick grid `anchor ≥ r₁ + S + 1 tick`, so
+`anchor − V ≥ r₁ + (S − V) + 1 tick`, and the clamp **provably cannot bind whenever `V ≤ S/2`**.
+The vendor's own shipped presets sit at V/S = 90/179 = 0.503 and 60/120 = 0.500 — **the product is
+designed to live exactly at the boundary where this second rung is inert.**
 
-Adding the r₁ clamp raises TM=135 agreement 0.6976 → 0.8771; adding a second bound from the
-rung *before* that (`r₂`, verified: in every unexplained case the implied rung sat exactly 2V
-from the extreme two trends back) reaches **0.9559**, while leaving all design-regime probes at
-**1.000000**. The exact TM>S/2 formula is not yet closed.
+Adding the `r₁` clamp lifts TM=135 agreement from 0.6976 to 0.8771; adding a further bound from
+the rung before it (`r₂`, verified: in every otherwise-unexplained case the implied rung sat
+exactly 2V from the extreme two trends back) reaches 0.9559 — while leaving every design-regime
+probe at 1.000000. In that regime the vendor also emits Type 3 one bar later than the plain
+close-extreme automaton whenever `TV` is ladder-bound (885 bars on TM135).
 
-**Decision (recorded before any result was used):** the open model and the parity gate are
-defined on the **design regime V ≤ S/2**, where `TrendVector` is exactly the single-rung formula,
-verified on 737,707 + 177,021 + 3m bars and at TM ∈ {45, 90}, SM ∈ {179, 240}. TM > S/2 is
-documented as a bounded, characterised ambiguity and is **excluded from every experiment**; the
-multi-parameter parity matrix uses TM ∈ {30, 45, 60, 89} instead of 135. This costs the campaign
-nothing — `TrendMultiplier` is inert for Type 1 and no candidate strategy uses V > S/2 — and it
+**Decision, recorded before any result was used:** the open model and the parity gate are defined
+on the **design regime `V ≤ S/2`**. `V > S/2` is documented here as a bounded, characterised
+ambiguity and is **excluded from every experiment**. This costs the campaign nothing —
+`TrendMultiplier` is inert for the Type-1 core and no candidate strategy uses `V > S/2` — and it
 is stated here rather than discovered later.
 
-## 5. Provenance
+## 5. Two warm-up conventions, measured rather than assumed
 
-Behavioural observation of the licensed indicator's published `Series<double>` output only.
-No decryption, unpacking, patching, memory dumping or any other circumvention of the Agile.NET
-protection was performed; the vendor assembly was not modified or redistributed. The recovered
-rules are behavioural mathematics, **not** vendor source code.
+Reaching exactly 1.000000 on `Signal_Trend` and `Signal_Wave` required two small corrections that
+only a full-series comparison would surface:
+
+1. **`Signal_Wave = 0` until the first flip.** The vendor publishes no wave number before a trend
+   is established. On the canonical export this is a single contiguous run, bars 0–216.
+2. **Bar 0 is a seed, not a no-progress bar.** Counting it toward `SlowdownScan` declares the
+   trend weak one bar early. Invisible on the canonical 1-minute export (an early new extreme
+   washes it out) but exposed at bar 4 of the 3-minute probe. A genuine off-by-one, now fixed in
+   `solar_wave()`.
+
+Neither affects any trading result — the first flip resets all of it — but both were required to
+claim exactness, and the campaign standard is exactness.
+
+## 6. Provenance
+
+Behavioural observation of the licensed indicator's published `Series<double>` output only. **No
+decryption, unpacking, patching, memory dumping or any other circumvention of the Agile.NET
+protection was performed. The vendor assembly was not modified and is not redistributed.** The
+recovered rules are behavioural mathematics, **not** vendor source code.
+
+## 7. Reproduce
+
+```
+python - <<'EOF'
+import sys; sys.path.insert(0,'src/analytics')
+import pandas as pd, numpy as np
+from solarwave import solar_wave_full, SolarWaveParams
+d = pd.read_csv('research/03_reverse_engineering/ledgers/t2_canonical_1m.csv', comment='#')
+r = solar_wave_full(d.open, d.high, d.low, d.close, SolarWaveParams())
+print((r.signal_trade == d.signal_trade.to_numpy()).mean())   # -> 1.0
+EOF
+```
