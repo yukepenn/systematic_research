@@ -1,0 +1,30 @@
+run_id: E10MASTER_V2
+experiment_id: E10_FLATTEN1644_CONFIRMATION
+hypothesis_id: Owner Amendment 1 par.11 (2026-08-07) — direct strategy confirmation of the 16:44 flatten
+family: ENGINEERING_VALIDATION
+parent_candidate: SolarWaveE10Master_v1 (validated EXACT target parity; engine net $181,079.10)
+counts_as_trial: no (operational variant of a frozen design; decision rule already frozen in research/operational/MARGIN_1644_FLATTEN.md BEFORE any P&L was read)
+preregistered: 2026-08-07 committed before any build/run
+design: >
+  SolarWaveE10Master_v2 = v1 verbatim plus bool Flatten1644 (default true): when the
+  primary-bar close time is in [16:42, 17:00] ET, the PHYSICAL net-change submission targets
+  0 instead of targetQty (decision at the 16:42-stamped bar close -> market exit at next bar
+  open ~16:42:0x, flat well before the 16:45 ET margin cutoff). Virtual member state
+  machines are untouched (flatten acts only on the physical execution layer), so member
+  state, next-session eligibility and session-boundary logic are bit-identical to v1 by
+  construction; the ONLY behavioral difference is late-session physical exposure.
+run_config:
+  strategy_class: SolarWaveE10Master_v2
+  instrument: NQ 09-26 (primary, Minute/3); exec series MNQ 09-26 Minute/3 (AddDataSeries)
+  window: 2022-01-02T23:00:00Z -> 2026-07-31T21:59:59Z (same as v1 validation)
+  fill: Standard, slippage 1 tick, commission template NinjaTrader Brokerage Lifetime
+comparison_gates (v2 vs v1 stored artifacts):
+  G1_identity: daily P&L correlation vs v1 >= 0.99 outside the flatten window by construction;
+    trade/commission deltas explained entirely by suppressed late-session activity
+  G2_cost_of_flatten: net delta within [-8%, 0%] of v1 net (prior from attribution study:
+    ~-3.2% MTM / -3.7% of net, plus ~3 extra flat minutes 16:42-16:45 not in that estimate)
+  G3_risk: bar-level max drawdown and worst-day not materially worse than v1 (flatten can
+    only reduce late-day exposure; any DD increase > 2% flags an implementation bug)
+  G4_tail_retention: top-10 winning days retain >= 90% of their v1 P&L in aggregate
+verdict_classes: CONFIRMED_ADOPT / COST_EXCEEDS_PRIOR (escalate to owner) / IMPLEMENTATION_BUG (fix, rerun)
+safety: backtest only; never enabled/deployed; Backtest account only; class renamed per hot-reload convention
