@@ -1,0 +1,20 @@
+run_id: E10MASTER_V1
+experiment_id: E10_MASTER_STRATEGY_ENGINEERING
+hypothesis_id: NEXT_HANDOFF door (c); owner instruction 2026-08-07
+family: ENGINEERING_VALIDATION
+parent_candidate: R5-E10 executable champion (frozen; audited simulator src/analytics/audit04_executable.py)
+counts_as_trial: no (engineering validation of a frozen design; no selection among alternatives)
+preregistered: 2026-08-07 committed before any build/run
+design: >
+  One NinjaScript strategy SolarWaveE10Master_v1: 13 virtual SolarWaveOpenV3 member state
+  machines (VolMult 6..30 step 2, ThresholdMode 1, VolPeriod 460, clamp 40-1200 ticks,
+  AnchorMode 0, EntrySignalType 1, StartUp=false semantics, session-close flat per member),
+  shared sigma460 from the primary NQ 3-min series; physical target = round(10 * mean virtual
+  position) clamped [-10,+10] MNQ, traded as NET CHANGES on an added MNQ series; managed
+  orders; exit-on-session-close engine semantics; per-bar target ledger exported to CSV.
+validation_gates:
+  V1_target_parity: strategy's per-bar target sequence == Python simulator target sequence (exact; any diff itemized)
+  V2_engine_vs_audit: engine daily P&L vs research/audit/e_variant_daily_vectors.csv E10_round_session - corr >= 0.995 AND full-window net within +/-5% (MNQ-vs-NQ print differences are the honest tolerance)
+  V3_costs: MNQ commission $0.65/side observed in engine output; slippage 1 tick
+verdict_classes: EXACT / CLOSE_WITHIN_TOLERANCE / FAILED (no rescue by tuning; classify honestly)
+safety: backtest only; never enabled/deployed; Backtest account only

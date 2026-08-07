@@ -1,0 +1,15 @@
+run_id: C01T2_KSCALE
+experiment_id: CAPITAL_SCALE_FEE_STRUCTURE
+hypothesis_id: audit finding (E10 penalty = MNQ fee multiple; shrinks at K>1) - descriptive sizing arithmetic per constitution sec 23
+family: EXECUTION_COST_STRUCTURE
+counts_as_trial: no (single preregistered variant, no selection; pure re-pricing of frozen member positions)
+preregistered: 2026-08-07 committed before any read
+design: >
+  E3K2 variant: physical target = round(20 * mean member position) contract-units at 2-NQ-eq
+  capital; integer NQ blocks first (1 NQ = 10 units, $2.18/side), MNQ remainder ($0.65/side);
+  trade net changes only; same member positions and re-timing as the audited simulator
+  (src/analytics/audit04_executable.py); slippage 1 tick per execution per leg instrument.
+report: per-NQ-eq (divide by 2) net, Sharpe, maxDD, commission+slippage totals vs E10 and vs
+  theoretical E0; the fee-drag curve K=1 (E10), K=2 (this), K=3 (round(30x)/3, same block rule).
+pass_criteria: none (descriptive) - but claim "cost-structure Sharpe gain" only if per-NQ-eq
+  Sharpe(K=2) - Sharpe(E10) >= +0.03 with corr to E0 >= 0.998 maintained
