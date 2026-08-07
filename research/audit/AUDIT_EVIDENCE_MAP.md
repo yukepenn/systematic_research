@@ -21,7 +21,8 @@ from `e5079e1` (campaign final HEAD). Constitution: `research/Research_Thesis.tx
 | 13 | Slip-2 retains 87.4% (claim correction); paths slippage-invariant | spec `2a125a4` → `runs/AUDIT05_V3_SLIP2/` ledgers + `sweep_summary.json` |
 | 14 | No fill-resolution artifact; tails fill-model-independent | spec `2a125a4` → `runs/AUDIT05_V3_HIGHRES/` ledgers → `FILL_AND_TAIL_AUDIT.md` |
 | 15 | Registry reconciliation 90/229/316/383; strict-relabel 295–335 | `reconstructed_trials.csv` (computed totals), `REGISTRY_GAP_ASSESSMENT.md`, `candidate_lineage.json` |
-| 16 | Zero new R1 trials consumed by the audit | every audit spec carries `counts_as_trial: no` with reason; E-variant menu disclosed as a design-choice set in `SECOND_RED_TEAM.md` |
+| 16 | Zero new R1 trials consumed by the audit | every audit spec carries `counts_as_trial: no` with reason; the E-variant menu and the E10 designation are recorded as a design-choice event in `SECOND_RED_TEAM.md` §3, with micro-choice sensitivity in `e10_sensitivity.csv` |
+| 16b | Audit rerun evidence integrity | all 72 rerun ledgers/exports/payloads SHA-256-manifested in `audit_evidence_hashes.json` and committed; C-arm certificate `v4c_reproduction_diff.csv` |
 | 17 | Day-margin 16:45 ET cutoff verified (operational subproject) | `research/operational/day_margin_variant/MARGIN_RULES.md` (official-source citations) |
 
 Chronology guarantee: every `runs/AUDIT*/spec.yaml` is committed in a parent

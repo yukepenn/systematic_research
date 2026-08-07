@@ -11,11 +11,16 @@ Slippage 2 ticks/execution, all 13 R5 members, identical engine/data:
   preregistered pass criterion; slippage cannot alter paths, only prices).
 - Strict-1/N ensemble net: **$173,084 vs $198,059 = 87.4% retained.**
 - Per-cell retention is turnover-driven: vm6 51.6% → vm30 96.6%.
-- The previously reported claim that "slip-2 roughly halves net" is **wrong for R5**
-  (it described high-turnover 1-minute-era configurations). Correction carried to
-  AUDIT-06. Implied marginal cost ≈ $25.0k per extra tick per execution on the
-  ensemble; linear extrapolation puts slip-3 retention near 75% — "slip-3 erases
-  the edge" is also wrong for R5.
+- Claim correction, precisely scoped (second red team): the measured source of the
+  "slip-2 halves" language is WAVE1C (3-minute plateau cells at high turnover — the
+  audit's own vm6 result, 51.6% retention, partially supports it there), and the
+  1-minute robustness table showed 63–78% retention, never halving. What this
+  measurement **falsifies is the unmeasured extension of that language to R5** in
+  the final design package: R5 retains 87.4%. Implied marginal cost ≈ $25.0k per
+  extra tick per execution on the ensemble; linear extrapolation puts slip-3
+  retention near 75%, and the NT8 bar-range slippage cap binds more often at
+  larger slippage, making that extrapolation a floor — "slip-3 erases the edge"
+  is likewise wrong for R5.
 - Full table: `runs/AUDIT05_V3_SLIP2/sweep_summary.json`.
 
 ## 2. Standard vs High Order Fill Resolution (AUDIT-A07/A08)
@@ -59,9 +64,9 @@ fill-resolution difference found in the three audited cells:
 
 ## 4. Standing limits of this audit
 
-- High resolution was run on 3 of 13 cells (23% of member-fills volume, spanning
-  the narrowest/middle/widest thresholds); the mechanism (slip-cap on sub-bars) is
-  structural and cell-independent.
+- High resolution was run on 3 of 13 cells (32% of member-fills volume — 22,130 of
+  68,296 fills — spanning the narrowest/middle/widest thresholds); the mechanism
+  (slip-cap on sub-bars) is structural and cell-independent.
 - Playback parity was not run: with fills stamped identical in sequence and price
   to within a tick under both resolutions, and market-orders-only execution, the
   incremental information of Playback is judged nil for this order type. Recorded

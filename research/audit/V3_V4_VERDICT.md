@@ -7,13 +7,14 @@ TRADE_PATH_EQUIVALENT / PERFORMANCE_SIMILAR_ONLY / NOT_EQUIVALENT._
 
 **Trade-path level: `NOT_EQUIVALENT`.** **Ensemble level: `PERFORMANCE_SIMILAR_ONLY`.**
 
-The half-tick snap in V4's `ResolveS()` alone changes individual member nets by up to
-−49% (VolMult 6: $166,145 → $83,955) while the 13-member strict-1/N ensembles remain
+The half-tick snap in V4's `ResolveS()` alone changes individual member nets by up
+to −49% (VolMult 6: $166,145 → $83,955; 7 of 13 members move ≥10%, the six
+widest-threshold cells move ≤3.3%) while the 13-member strict-1/N ensembles remain
 statistically indistinguishable (daily corr 0.9952, ΔSharpe +0.019, paired
-circular-block P(Δ≤0) = 0.328). A strategy whose members move 10–49% under a
-half-tick perturbation is not "equivalent" in any executable sense; only the
-ensemble aggregate is robust. This is the single-cell-fragility argument again,
-now measured on a clean pair.
+circular-block P(Δ≤0) = 0.328; 95% CI for ΔSharpe [−0.064, +0.094], spanning
+zero). Members that move up to 49% under a half-tick perturbation are not
+"equivalent" in any executable sense; only the ensemble aggregate is robust. This
+is the single-cell-fragility argument again, now measured on a clean pair.
 
 ## New finding: the published comparison was confounded
 
@@ -74,6 +75,10 @@ larger fraction of S when S is small) — exactly the mechanical expectation.
 4. `V3_V4_EQUIVALENCE.md` stays on the record uncorrected (append-only evidence);
    this document supersedes its causal attribution.
 
-Artifacts: `v3_v4_trade_diff.csv`, `v3_v4_daily_diff.csv` (this directory);
-ledgers under `runs/AUDIT02_V4_SWEEP_B/` and `runs/AUDIT02_V4_SWEEP_C/`;
-driver `src/analytics/audit02_v3v4.py`.
+Artifacts: `v3_v4_trade_diff.csv`, `v3_v4_daily_diff.csv`,
+`v4c_reproduction_diff.csv` (C-arm 13/13 EXACT certificate),
+`v4_startup_confound_diff.csv` (B-arm vs v4verify — the confound demonstration;
+this file was briefly named `v4_reproduction_diff.csv`, which misread as a failed
+reproduction — renamed on second-red-team finding); ledgers under
+`runs/AUDIT02_V4_SWEEP_B/` and `runs/AUDIT02_V4_SWEEP_C/` with SHA-256 manifests
+in `audit_evidence_hashes.json`; driver `src/analytics/audit02_v3v4.py`.

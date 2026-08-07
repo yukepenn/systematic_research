@@ -10,10 +10,21 @@ session-basis TRUE_MTM._
 ## Headline verdict
 
 **R5 is executable: the E10 implementation (target = round(10 × mean member
-position) MNQ, max 10) passes every preregistered gate.**
+position) MNQ, max 10) passes the preregistered gates — by a thin 0.003-Sharpe
+margin on the session basis, and the pass is robust to the unpreregistered
+micro-choices (second red team): round and floor(-toward-zero) rules pass on BOTH
+the session and calendar bases (margins 0.003–0.012); only the cost-maximizing
+ceil rule fails. Sensitivity table: `e10_sensitivity.csv`; committed daily
+vectors: `e_variant_daily_vectors.csv`.**
 **R4 is NOT executable at acceptable cost: every discrete R4 variant fails the
-Sharpe gate.** The R4-vs-R5 question that p = 0.358 could not settle is settled by
-execution economics: R5's lower turnover survives the MNQ fee schedule, R4's does not.
+Sharpe gate by 0.17–0.24 — a wide margin.** The R4-vs-R5 question that p = 0.358
+could not settle is settled asymmetrically by execution economics: R5's lower
+turnover survives the MNQ fee schedule (marginally), R4's does not (decisively).
+Disclosure: the thesis prescribed one "MNQ-discretized target"; the audit computed
+three discretizations (E13/E10/E20) and designates E10 — the direct reading of the
+thesis's target-then-round prescription — as the implementation. The alternates
+are published above with FAIL verdicts; the designation itself is recorded as a
+design-choice event in `SECOND_RED_TEAM.md`.
 
 ## Results (strict gates: ΔSharpe ≥ −0.10, net ≥ 80%, DD ≤ +20%, top-10 retained, no hidden leverage)
 

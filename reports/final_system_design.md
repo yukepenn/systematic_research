@@ -138,6 +138,9 @@ catastrophically. The excess is what the filter costs, and it is not recoverable
 
 ```
 Engine     : SolarWaveOpenV3, ThresholdMode = 1        (open model, zero vendor dependency)
+StartUp    : false   (added 2026-08-07 by POST_CAMPAIGN_AUDIT_01: the committed ledgers
+             were produced with the V3 default StartUp=false; StartUp=true does NOT
+             reproduce them — see research/audit/R5_REPRODUCTION.md)
 Instrument : NQ 09-26 back-adjusted, 3-minute bars, Last
 Core       : anchor = running extreme of the CLOSE since trend start
              flip when close STRICTLY breaks anchor -/+ S

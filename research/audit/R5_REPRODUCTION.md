@@ -27,7 +27,8 @@ the published recipe verbatim gets systematically different numbers in every cel
    first-flip signature) while the StartUp=true rerun opens
    `Short SellShort 2022-01-03T09:03 @19751.25`; both paths converge at the first
    common flip (2022-01-04T10:06). The two divergent early trades explain the vm30
-   net gap to the dollar (committed −$449 vs rerun −$2,219 ≈ Δ$1,770.52 observed).
+   net gap exactly (pre-convergence −$448.72 vs −$2,218.72; full-ledger net gap
+   $1,770.00 — recomputed from raw fills by the second red team).
 
 3. **B-arm** (`runs/AUDIT02_V3_SWEEP_B`, StartUp=false, preregistered at `124af95`):
    **13/13 cells EXACT** — every fill timestamp, order action, price, commission,

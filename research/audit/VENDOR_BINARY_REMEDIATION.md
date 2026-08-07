@@ -42,6 +42,16 @@ At first remediation: 0 forks, 0 stars. Total public exposure: two windows, roug
 4. No vendor file was read, inspected, decompiled, or modified. The working-tree copies are
    untouched.
 
+## 3b. Second-red-team disclosure: containment is LOCAL-ONLY until pushed
+
+The remote (`origin/research-campaign`, tip `e5079e1`) still **tracks the full
+vendor package in its tree** — not merely in history. Any authorized clone of the
+remote checks the vendor files out. The untracking commit `1f169ae` exists only on
+the local `post_campaign_audit` branch. Mitigation: repository visibility is
+PRIVATE (re-verified by the red team). Pushing `post_campaign_audit` puts a
+vendor-free tip on the remote but does not change `research-campaign`'s tip; that
+branch's remediation is bundled into the HUMAN ACTION list below.
+
 ## 4. What remains — HUMAN ACTION REQUIRED
 
 The blob is still **reachable in git history** of every branch (`research-campaign`,
