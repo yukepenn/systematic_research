@@ -19,3 +19,11 @@ Seeded from thesis §14 (2026-08-06):
   Per DR-05's frozen rule, the failed-flip fade (DR05-H2 / thesis FAIL-01
   re-cross variant) is dead unbuilt; re-testing requires a genuinely new
   failure definition, not re-tuned constants.
+- **DR05-H3 / B01c ORB-failure + reacceptance fade (seq 230).** 1,037 events
+  2022-2026, 696 vetoed by the frozen Solar-alignment veto (67%), 341 traded.
+  Net -$22,534 at slip-1 (PF 0.839, avg -$66.08), -$19,124 even at slip-0;
+  positive years 2/5; fails the first gate (net > 0). VWAP target hit 54% of
+  trades but the 2.4:1 adverse stop distance dominates. Axis CLOSED; no
+  constant adjustment permitted. Evidence:
+  research/04_complementary_family/b01c_{event_census,trades_slip1}.csv.
+  B01d (asymmetry read) dies by dependency: no qualifying event set remains.
