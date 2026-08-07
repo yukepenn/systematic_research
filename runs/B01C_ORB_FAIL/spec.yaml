@@ -1,0 +1,45 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE results are read.
+# First selection-relevant NEW configuration since campaign close: seq 230.
+run_id: B01C_ORB_FAIL
+experiment_id: RESEARCH_WAVE_B01
+hypothesis_id: DR05-H3 (ORB failure + value reacceptance)
+family: failed_persistence (Family B)
+parent_candidate: none (first Family-B candidate); comparators = executable R5-E10 (primary), theoretical R4-21 (secondary)
+tested_config_seq: 230
+timestamp_before_execution: 2026-08-07 (commit timestamp authoritative)
+source_commit: 879846c (parent; committed before execution)
+engine: pure-Python vector backtest (Stage 1 per DR-05); driver src/analytics/b01c_orb.py committed before results
+data: runs/B01A_BARS_1M/nq_1m_2022_2026.csv (sha256 in research/audit/audit_evidence_hashes.json)
+instrument: NQ (1-min merged series; point $20, tick $0.25)
+data_boundaries: {from: 2022-01-03, to: 2026-07-31}
+commission_model: $4.36 per round turn
+slippage_model: 0/1/2 ticks per side reported; 1 tick is the base case
+fill_model: >
+  entry market at next 1-min bar OPEN after the reacceptance-confirmation close;
+  stop = 10 ticks beyond the breakout extreme, filled at stop level (slip applied);
+  target = session VWAP (anchored at 18:00 ET session open, (H+L+C)/3 x volume),
+  filled at the VWAP level when a bar's range crosses it; 90-min time stop at bar
+  close; safety flatten at 16:55 ET close. Bar-range fill checks; no look-ahead:
+  all conditions evaluated on closed bars, VWAP as of the prior closed bar.
+effective_parameters: >
+  ALL FROZEN from DR-05.md (2026-08) and thesis: OR window 09:30-10:00 ET;
+  breakout = 1-min close outside OR; failure = close back inside within 15 min;
+  reacceptance = 2 consecutive closes inside; <= 1 trade per side per session;
+  stop 10 ticks beyond failed extreme; 90-min time stop; VETO when the theta=179
+  DC direction (from the B01a ledger recursion, StartUp-equivalent seed false)
+  aligns with the breakout AND current segment overshoot >= 0.5*theta at the
+  reacceptance stamp. Zero tuned parameters; effective new DoF ~1 (the
+  reacceptance clause composition).
+degrees_of_freedom: ~1 effective (all constants frozen in DR-05 before any data read)
+selection_metric: none — single preregistered configuration, no grid
+pass_criteria: >
+  Read ORDER fixed: (1) event count first; n < 150 => INCONCLUSIVE, stop. (2) Then
+  P&L. PASS requires ALL at slip-1: net > 0; PF >= 1.15; positive years >= 3/5;
+  losing-day correlation with Family A (E10 daily, session basis) < 0.2;
+  equal-risk 50/50 combination with executable R5-E10 improves Calmar over
+  R5-E10 alone. REJECT if net ex top-5 winning days <= 0 (concentration), or if
+  Family-A top-10-day retention of the combined portfolio < 85%.
+reject_criteria: any gate failure => FAIL (no constant may be adjusted to rescue; a
+  failed B01c closes the ORB-failure axis for this campaign)
+research_family_budget: this run consumes 1 of the wave's <= 12 R1 trials
+selection_relevance: yes — Family-B candidate gate
