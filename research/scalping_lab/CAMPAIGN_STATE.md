@@ -31,8 +31,15 @@
       W1-1 Z1 DC scale transfer; W1-2 H-A1/D5 last-30-min momentum (minute data, dev only);
       W1-3 H-B5 spike classification; W1-4 H-D3 cash-close window; W1-5 S2a owner seed.
       Every spec frozen+committed before results; all P&L under BBO_EXEC + BENCHMARK_C1.
-- [ ] P1c: remaining audit — L3 semantics check; ES minute/tick coverage; tick-window
-      spot-check at 2025-08; export-to-parquet pipeline design (0.7B rows/yr at L2)
+- [x] P1c/pilots (2026-08-07): **ES tick/BBO CONFIRMED downloadable** (H-D1 feasible);
+      quote series fire on same-price size updates → L3 PLAUSIBLE-size (coarse use only);
+      zero timestamp violations; **NQ real spread = 2-3 ticks RTH median, 1-tick only
+      2-7% of time** → honest market-order RT ≈ 3-4 ticks; C1 mildly optimistic. Substrate
+      architecture adopted (DATA_SUBSTRATE.md, Amendment 2). Session-keying rule learned.
+      artifacts/instrumentation/pilot_report.md.
+- [ ] NEXT: one NT8 F5 → SWScalpTickExport_v1 live → 40-session Layer-0 build →
+      I-1/I-2/I-3-full readouts → Layer-1 grids → Z1 + excursion surfaces (P(+A before −B))
+      + H-B5 + S2a. H-B5 3-min screen may run pre-substrate (no engine needed).
 - [ ] P2: Freeze split geometry in CONTAMINATION_LEDGER.md (after P1c)
 - [ ] P3: Event-study factory (Tier-0): first wave candidates = Z1 (DC scale transfer,
       L1-only, tooling exists), S10 (spread state — foundational for all costs), Z2
