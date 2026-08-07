@@ -1,5 +1,28 @@
 # Wave 2 — the three axes the recovered mathematics unlocked
 
+> ## ERRATA — 2026-08-07, after independent red-team review
+>
+> **H-006 is DOWNGRADED from PASS to INCONCLUSIVE.** The comparison below was not like-for-like:
+> the fixed family was scored as two separate half-range ensembles (SM 180–250 and SM 280–880)
+> while the adaptive family was scored across its whole sweep. Scored the same way, the **full
+> 21-cell fixed family reaches Sharpe 0.917**, not 0.814, and the adaptive advantage falls from
+> +0.210 to **+0.087**, with a paired block-bootstrap **P(Δ ≤ 0) = 0.358**. Excluding 2025 alone
+> drops it to +0.046. The whole effect lives in one calendar year, and the adaptive family
+> *underperforms* fixed in the low-volatility tercile — the opposite of the claimed mechanism.
+>
+> **All DSR figures in this report are WITHDRAWN.** They were computed with an inconsistent
+> (N, V) pair: n_trials = 255 but a variance pool drawn only from the 44 surviving cells. Under an
+> honest pool the adaptive ensemble's DSR at N = 255 is 0.16–0.38, not 0.832, and it fails a
+> Harvey–Liu haircut at N = 1000 outright.
+>
+> **Sharpe convention:** figures below use ensemble-active days; the campaign convention is now
+> all-days, which lowers them (R4 0.814 → 0.794, adaptive 1.010 → 1.004, and much more for sparse
+> cells). Corrected table in the red-team report.
+>
+> The falsifications in this report (H-007, raw-HL anchor) were re-checked and **stand**.
+> Full detail and controller re-verification: `research/06_red_team/RED_TEAM_WAVE1C_WAVE2.md`.
+
+
 _2026-08-07 · Instrument `SolarWaveOpenV3` (open engine, **zero vendor dependency**) · NQ 09-26,
 3-minute · full history 2022-01-01T06:00:00Z → 2026-07-31T21:59:59Z · **real NT8 slippage 1 tick
 per execution** · Lifetime commission · analytics `src/analytics/{execledger,validation}.py`._
@@ -173,3 +196,39 @@ Configurations consumed this wave: 13 (H-006) + 22 (H-007) + 20 (H-008) + 13 (fi
    tested. DR04-H3 predicts non-monotonic sensitivity to estimator lag — that is the next control.
 3. Type-0 attribution and the C0–C6 signal architectures, now unblocked by the complete model.
 4. Complementary families (failed persistence per DR-05), ES portability, portfolio routing.
+
+---
+
+## H-012 — σ-estimator robustness (the preregistered gate on R5): **PASS**
+
+H-006 used exactly one volatility estimator (mean |Δclose| over 460 bars ≈ 1 session). If the
+result depended on that choice, it would be a fitted parameter wearing a mechanism's clothes.
+Sweeping the estimator window from 60 to 3,660 3-minute bars (0.13 to 7.96 sessions) at k = 18:
+
+| window (sessions) | 0.13 | 0.78 | **1.43** | 2.09 | 2.74 | 3.39 | 4.70 | 6.00 | 7.96 |
+|---|---|---|---|---|---|---|---|---|---|
+| Sharpe | **0.769** | 1.116 | **1.494** | 1.410 | 0.912 | 1.199 | 1.013 | 1.244 | 0.996 |
+| positive years | 4/5 | 5/5 | 5/5 | 5/5 | 4/5 | 5/5 | 5/5 | 5/5 | 5/5 |
+
+**Every estimator lag works.** Sharpe ranges 0.769–1.494 and 11 of 13 cells are positive in all
+five years. The H-006 result is not an artifact of the 460-bar choice.
+
+**DR04-H3 partially confirmed.** The packet predicted that both sub-daily *and* multi-week
+estimators would underperform a ~1-session estimator. The sub-daily half holds — the 0.13-session
+window is the worst cell by a clear margin (0.769), consistent with a procyclical estimator
+chasing its own noise. The multi-week half does **not**: windows out to 8 sessions hold Sharpe
+0.99–1.32. The honest reading is "sub-daily is harmful; anything from ~1 session upward is fine",
+not the predicted hump.
+
+`PBO` over the estimator lag is **0.297** — far below the `k` parameter's 0.898, so the estimator
+window is much closer to being a genuine choice than `k` is. It is still above the 0.20 bar, so it
+is held as an ensemble like everything else.
+
+**Caveat, stated because it is load-bearing:** this sweep held `k = 18`, a value chosen *after*
+seeing the k-sweep. The estimator-lag ensemble's headline (Sharpe 1.184, positive every year,
+PSR 0.9953) therefore inherits that selection and **must not be quoted as a further improvement
+over R5**. It is a robustness result only: it shows the adaptive mechanism survives a wide range
+of estimator choices, which is what the gate asked.
+
+**Remaining gates before R5 can be promoted:** ensemble-level nested walk-forward, slip-2 stress,
+H-013 (weighting), and the independent red-team pass.

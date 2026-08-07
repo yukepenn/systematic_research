@@ -1,5 +1,16 @@
 # Wave 1c — Tier-2 confirmation, statistical validation, and two falsifications
 
+> **ERRATA — 2026-08-07, after independent red-team review.** The ensemble result in §4 was
+> independently reproduced to the dollar and **stands**; PBO/CSCV was verified at 8/12/16/24 blocks
+> with every IS→OOS slope negative. Two corrections: (a) **the DSR figures in §4c are withdrawn** —
+> they used n_trials = 170 against a variance pool drawn only from surviving cells; under an honest
+> pool they fall by roughly half. (b) The archived `wave1c_table_daily.csv` calendar holds 1,285
+> traded dates but the union across all campaign families is **1,348**; it omits ~52 Sunday-evening
+> and holiday sessions, so it must not be reused as a cross-family calendar. Also disclosed here
+> rather than left implicit: **the top 1 % of trades contribute 248 % of this family's net P&L**,
+> i.e. the bottom 99 % lose money in aggregate. See `research/06_red_team/RED_TEAM_WAVE1C_WAVE2.md`.
+
+
 _2026-08-07 · Instrument `SolarWaveOpenX2` (open reconstruction, **zero vendor dependency**;
 gate-checked against the frozen baseline to the penny) · NQ 09-26 back-adjusted · full history
 2022-01-01T06:00:00Z → 2026-07-31T21:59:59Z · NinjaTrader Brokerage Lifetime commission ·

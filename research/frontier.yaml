@@ -139,7 +139,15 @@
     normalisation halves the across-year drift of r (0.116 -> 0.058). Zero config burn.
 - id: H006_ADAPTIVE_THRESHOLD
   phase: 2
-  status: passed
+  status: inconclusive
+  red_team: >
+    DOWNGRADED from passed 2026-08-07. The fixed family had been split into two half-range
+    ensembles while adaptive got its full sweep. Scored fairly, fixed-full-range (21 cells)
+    reaches Sharpe 0.917 and the adaptive edge falls to +0.087 with paired block-bootstrap
+    P(diff<=0)=0.358; ex-2025 it is +0.046. The whole effect is in one calendar year, and
+    adaptive UNDERPERFORMS fixed in the low-volatility tercile - the opposite of the claimed
+    mechanism. All DSR figures withdrawn (inconsistent N/V pair; honest DSR@255 = 0.16-0.38,
+    fails Harvey-Liu at N=1000). See research/06_red_team/RED_TEAM_WAVE1C_WAVE2.md.
   result: >
     S = k*sigma frozen at trend birth. Ensemble Sharpe 1.010 vs fixed 0.814, DD -$39,126
     vs -$53,689, Calmar 0.958 vs 0.659, DSR 0.832, positive every year. Confound
@@ -175,3 +183,30 @@
   phase: 2
   status: pending
   depends_on: [H006_ADAPTIVE_THRESHOLD]
+- id: H012_SIGMA_ESTIMATOR_ROBUSTNESS_RESULT
+  phase: 2
+  status: passed
+  result: >
+    Estimator lag swept 0.13-7.96 sessions at k=18: Sharpe 0.769-1.494, 11/13 cells positive in
+    all five years. H-006's mechanism does not depend on the 460-bar choice. DR04-H3 partially
+    confirmed: sub-daily is worst as predicted, but long lags do not degrade (not hump-shaped).
+    PBO over estimator lag 0.297, far below k's 0.898. CAVEAT: k=18 was selected from the earlier
+    sweep, so the ensemble headline is a robustness result only, not a further improvement.
+- id: REDTEAM_WAVE1C_WAVE2
+  phase: 2
+  status: passed
+  result: >
+    Four independent reviewers + controller re-verification. Clean: fill pairing, no look-ahead in
+    the adaptive sigma (barsAgo reads strictly backward), strict 1/N ensembles, validation.py
+    correct against published definitions, PBO stable at 8/12/16/24 blocks, leave-one-year-out
+    clean. Found: the H-006 comparison was not like-for-like (=> INCONCLUSIVE); DSR used an
+    inconsistent N/V pair (=> all DSR withdrawn); top 1% of trades = 160-248% of net P&L (bottom
+    99% lose in aggregate); short side has no standalone edge ex-2022/2025; Sharpe day-basis
+    convention shifted between reports; archived daily calendar was missing 63 sessions.
+- id: H014_PRICE_PROPORTIONAL_THRESHOLD
+  phase: 2
+  status: pending
+  note: >
+    Decisive control for H-006's mechanism claim. If a price-proportional threshold matches the
+    volatility-proportional one, "volatility normalisation" is really just "time-varying
+    threshold" and the mechanism attribution dies. SolarWaveOpenV3 already parameterises the axis.
