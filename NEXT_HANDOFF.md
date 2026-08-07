@@ -65,11 +65,13 @@ FILL_AND_TAIL_AUDIT.md §4).
 
 ## G. Risks / caveats
 
-1. **HUMAN ACTION REQUIRED (P0)**: git history still contains the vendor blob on
-   every branch, and the REMOTE `research-campaign` tip still *tracks* it (private
-   repo mitigates). Decision needed on filter-repo + force-push + GitHub Support
-   GC, and on updating `research-campaign`'s tip. Plan:
-   `research/audit/VENDOR_BINARY_REMEDIATION.md`.
+1. **RESOLVED (2026-08-07, owner-directed)**: vendor blob erased from local history
+   via git filter-repo (verified 0 vendor objects; audit-tip tree bit-identical;
+   SHA map at `research/audit/history_rewrite_commit_map.txt`). Owner closed the
+   governance track (risk accepted — assembly unusable without a registration key).
+   Remaining mechanical step: owner force-pushes both rewritten branches. Record:
+   `research/audit/VENDOR_BINARY_REMEDIATION.md` §7. Old doc SHAs are historical
+   names — resolve via the commit map.
 2. E10's gate margin is thin (0.003–0.012); re-verify MNQ commissions if the
    broker plan changes.
 3. POST_AUDIT_TRANSITION's "compare Family B against BOTH executable R4 and R5"
@@ -82,12 +84,11 @@ FILL_AND_TAIL_AUDIT.md §4).
 
 ## H. Recommended next step (post-convergence: all decisions are the owner's)
 
-1. **P0 vendor decision** (§G.1): filter-repo + force-push + GitHub Support GC,
-   and the `research-campaign` remote-tip remediation. Keep the repo private
-   until then.
-2. **Push** `post_campaign_audit` (the session could not push: permission
-   classifier). Everything is committed locally through the convergence commit.
-3. If the program resumes: the only research doors left open are (a) a
+1. **Force-push the rewritten branches** (the one step left of the vendor track,
+   now otherwise CLOSED — §G.1):
+   `git push --force origin research-campaign post_campaign_audit`
+   (do not fetch/pull first).
+2. If the program resumes: the only research doors left open are (a) a
    locked-forward freeze of R5-E10 with quarterly overshoot-r monitoring
    (MONITOR-01, free), (b) a genuinely new Family-B event definition (the
    falsified ones may not be re-tuned), (c) a NinjaScript master-strategy

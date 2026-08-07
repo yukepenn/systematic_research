@@ -1,8 +1,8 @@
 # Vendor-binary remediation plan — P0 governance track
 
-_2026-08-07, POST_CAMPAIGN_AUDIT_01. Status: **CONTAINED AT TIP, NOT ERASED FROM HISTORY.**
-History erasure is **HUMAN ACTION REQUIRED** — the constitution forbids autonomous history
-rewrites, and this document deliberately does not perform one._
+_2026-08-07, POST_CAMPAIGN_AUDIT_01. Status: **HISTORY ERASED LOCALLY (owner-directed rewrite
+executed 2026-08-07); remote force-push + GitHub Support GC remain.** See §7 for the execution
+record. The original plan (§4) is preserved verbatim below for the audit trail._
 
 ## 1. Incident summary
 
@@ -83,3 +83,46 @@ The research itself is **vendor-independent**: every published campaign figure w
 the vendor-free `SolarWaveOpen*` strategies, and RE01/RE02 established exact behavioural parity.
 The vendor package is needed only for the two legacy parity gates (`SolarWaveRKReplicaV0`,
 ledger exporters). Erasing it from history destroys no research evidence.
+
+## 7. Execution record — history rewrite (2026-08-07, owner-directed) — TRACK CLOSED
+
+The owner explicitly instructed the rewrite ("do the vendor history rewrite"), satisfying §4
+step 1. Executed in the primary working copy (in-place `--force`, so the owner's force-push
+runs from the session cwd):
+
+1. **Archival bundle** (§4.2): `..\systematic_research_pre_rewrite_2026-08-07.bundle`
+   (125,760,515 bytes, `git bundle verify` OK, complete history, all 5 refs). Pre-rewrite
+   tips: `post_campaign_audit` = `170a7f2`, `research-campaign` = `e5079e1`.
+2. **Rewrite** (§4.3): `git filter-repo --invert-paths --path SolarWaveRK/ --force`
+   (git-filter-repo 2.47.0; 53 commits parsed; repack + prune completed).
+3. **Verification** — all invariants held:
+   - `git rev-list --objects --all` matching ` SolarWaveRK/|\.dll|\.zip` → **0 objects**.
+   - `post_campaign_audit` tip tree **bit-identical** pre/post (`013d18c6…`) — vendor was
+     already untracked there, so the rewrite provably changed nothing else.
+   - `research-campaign` tip tree differs from pre-rewrite by **exactly** the six vendor
+     paths (full `ls-tree -r` compare, 0 unexpected lines).
+   - No `git replace` refs; no tags; no stash; working tree clean.
+4. **SHA map preserved**: `research/audit/history_rewrite_commit_map.txt` (old→new, 54
+   entries). All commit SHAs cited in audit/evidence documents are now historical names —
+   resolve them through this map. New tips: `post_campaign_audit` = `204c574`,
+   `research-campaign` = `8118052`.
+5. **Remote re-added** (filter-repo removes it by design); repository re-verified PRIVATE.
+6. **Disk state**: the owner had already deleted the repo-root `SolarWaveRK/` duplicate
+   (owner statement, 2026-08-07). The licensed installation remains intact at
+   `Documents\NinjaTrader 8\bin\Custom\RenkoKings_SolarWaveRK_NT8.dll` (4,600,320 bytes,
+   2025-03-22), and the archival bundle preserves every historical blob.
+
+### Closure (owner decision, 2026-08-07)
+
+- **Force-push** of both rewritten branches is the one remaining mechanical step (owner runs
+  `git push --force origin research-campaign post_campaign_audit`; session pushes are
+  classifier-blocked). **Do not fetch/pull before that push** — fetching would re-download
+  the contaminated history from the remote.
+- The owner **accepts the residual risk** and closes this governance track: the assembly is
+  unusable without a vendor registration key, so stale GitHub objects (fetchable by SHA until
+  GitHub GC) and any historical clones are assessed as low-severity. GitHub Support GC and
+  old-clone hygiene (§4.5–4.6) are left to owner discretion; no further autonomous action on
+  this topic is warranted or expected.
+- The research program remains fully vendor-independent (§6): the SolarWave mathematics is
+  100% recovered in-repo, and all future reasoning should build on that recovered math, not
+  on the vendor package.
