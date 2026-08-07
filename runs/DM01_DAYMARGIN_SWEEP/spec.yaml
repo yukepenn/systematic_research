@@ -1,0 +1,38 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE results are read.
+# Operational subproject: DAY_MARGIN_FLAT variant of the Family-A reference.
+run_id: DM01_DAYMARGIN_SWEEP
+experiment_id: DAY_MARGIN_VARIANT
+hypothesis_id: OP-01 (opportunity cost of the verified 16:45 ET day-margin cutoff)
+family: solar_persistence (operational variant; NOT a new alpha axis)
+parent_candidate: R5 (13-cell adaptive grid, StartUp=false) / executable R5-E10
+tested_config_seq: 272-284 (13 cells; operational-constraint variant of existing configs)
+timestamp_before_execution: 2026-08-07 (commit timestamp authoritative)
+source_commit: (parent = PORT01 YM/RTY commit; committed before execution)
+strategy_class: SolarWaveOpenV3 (sha256 60d584c5c820d8fe131eb889a37d1e07d6e746ed5f3919b8d47d0ba7d74df167)
+engine_version: NT8 8.1.8.1 / CrossTrade v1.13.9 / engine_fingerprint sha256:b4255f1b0dd7fba1
+instrument: "NQ 09-26"
+timeframe: {period_type: Minute, value: 3, market_data_type: Last}
+data_boundaries: {from_utc: "2022-01-01T06:00:00Z", to_utc: "2026-07-31T21:59:59Z"}
+commission_model: "NinjaTrader Brokerage Lifetime"
+slippage_model: 1 tick per execution
+fill_model: Standard; exit-on-session-close true/30s; qty 1; isolated Backtest account
+effective_parameters_fixed: {TrendMultiplier: 90, StopMultiplier: 179, SlowdownScan: 5, WeakWeakSplit: 10, StartUp: false, AnchorMode: 0, ThresholdMode: 1, VolPeriod: 460, SMinTicks: 40, SMaxTicks: 1200, ExitMultiplier: 0, EntrySignalType: 1, EnableLong: true, EnableShort: true, UseTimeFilter: true, StartTime: 180000, EndTime: 164000, Tag: "dm1", ExportDir: "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\runs\\DM01_DAYMARGIN_SWEEP\\ledgers"}
+parameters_sweep: [{name: VolMult, min: 6, max: 30, step: 2, type: double}]
+constraint_semantics: >
+  V3's native time filter: market exit at the first bar close at/after 16:40 ET
+  (5-minute buffer before the verified 16:45 cutoff, MARGIN_RULES.md), entries
+  blocked outside 18:00->16:40. Re-entry after the 18:00 reopen requires a NEW
+  Type-1 pulse while flat and inside the window (policy arm D of thesis SS25 -
+  reconfirmation - selected because it is the code's native semantics and the
+  most conservative; immediate-restore arms are NOT run to avoid an operational
+  parameter search).
+selection_metric: none — opportunity-cost measurement of one preregistered policy
+pass_criteria: >
+  Descriptive, not promotional: report strict-1/N ensemble net/Sharpe (session
+  TRUE_MTM) vs the unconstrained B-arm at equal 1/N risk, right-tail retention
+  (top-10 unconstrained days), and turnover change. The variant is NOT allowed
+  to replace the unconstrained champion unless it dominates on BOTH Sharpe and
+  right-tail retention (thesis SS24).
+reject_criteria: n/a (measurement)
+research_family_budget: 13 configs (operational variant; disclosed in the ledger)
+selection_relevance: descriptive only
