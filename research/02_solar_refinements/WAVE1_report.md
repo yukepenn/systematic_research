@@ -48,7 +48,14 @@ Given D2's noise scale, "3m best" needs its SM-curve (Wave 1b) rather than one p
 ## Config accounting
 Search-space points consumed this wave: 7 unique SM (S1) + 4 signal types (S4) + 4 timeframes×1 (S2; Stage-B and TM/temporal grids consumed 0 new points — inert) + SW02a exit ladder 4 + dense scans (Wave 1b: 16 + 16). Registry updated; DSR/PBO at promotion time will use these counts.
 
-## Next sweeps (in order)
-1. **Wave 1b (running):** dense SM 150–300 step 10 on 1m AND 3m → plateau map + noise band; pick center-of-plateau by neighborhood median slip-1 net.
-2. **Wave 1c:** per-year decomposition (Tier-2 full runs) for the 3–5 best SM×TF cells + the 16:30-exit variant on each; ranking per the preregistered multi-metric table.
-3. **Wave 2:** conditional sleeves on the winning core — T1+single same-episode T3 re-entry, selective early-wave T2 (temporal params become ACTIVE here), catastrophe stops, 16:30-exit; new strategy classes required.
+## Wave 1b — dense SM scans (completed)
+
+**1m × SM 150–300 step 10 (slip-1 analytic):** profitable band [170, 280] with holes (160: −$111k, 210: $136k dip, 290: −$26k); peak zone 190–230 (190: +$216k, 200: +$249k, 220: +$215k, 230: +$173k); neighborhood medians ≈ $107–216k. Canonical SM=179 sits at the band's weak edge — the vendor's 179 is not special.
+
+**3m × SM 150–300 step 10 (slip-1 analytic): the strongest region found — 16/16 points positive** ($62k…$330k, median ≈ $150k). Robust center **SM ∈ [180, 260]**, neighborhood medians $122–225k, per-trade $25–45 at plateau, 3.8–7.6k trades. SM=150's $330k is an isolated spike (neighbor 160 = $79k) — not chased per the plateau rule. Full tables: runs/FH_sweep_SM_dense_{1m,3m}/raw_result.json.
+
+**Wave-1 candidate region (for Tier-2 confirmation):** 3m × SM {180, 190, 200, 230, 240, 250} + 1m × SM {190, 200, 220}, each with default and 16:30-timed exits.
+
+## Next (Wave 1c → Wave 2)
+1. **Wave 1c:** Tier-2 full-payload runs (REAL slip-1) + per-year decomposition + long/short split + concentration metrics for the 9 candidate cells above and the 16:30-exit variants; rank per the preregistered multi-metric table; check per-year positivity (esp. 2025-26 thinness) and neighborhood gates.
+2. **Wave 2:** conditional sleeves on the winning core — T1+single same-episode T3 re-entry, selective early-wave T2 (temporal params become ACTIVE here), catastrophe stops; new strategy classes required.
