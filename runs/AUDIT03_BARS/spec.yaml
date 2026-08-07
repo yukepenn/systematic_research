@@ -1,0 +1,30 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE results are read.
+# Instrumentation export, not a trial: no P&L is produced or read.
+run_id: AUDIT03_BARS
+experiment_id: POST_CAMPAIGN_AUDIT_01
+hypothesis_id: AUDIT-A05 (true daily MTM reconciliation — bar series prerequisite)
+family: infrastructure
+parent_candidate: n/a
+timestamp_before_execution: 2026-08-07 (commit timestamp authoritative)
+source_commit: 034abd9 (parent; committed before execution)
+strategy_class: AuditBarExport1 (new exporter; source src/ninjascript/AuditBarExport1.cs; trades nothing)
+engine_version: NT8 8.1.8.1 / CrossTrade v1.13.9 / engine_fingerprint sha256:b4255f1b0dd7fba1
+vendor_dependency: none
+instrument: "NQ 09-26"
+timeframe: {period_type: Minute, value: 3, market_data_type: Last}
+data_boundaries: {from_utc: "2022-01-01T06:00:00Z", to_utc: "2026-07-31T21:59:59Z"}
+trading_hours: instrument default (CME index futures ETH)
+commission_model: n/a (no trades)
+slippage_model: n/a
+fill_model: n/a
+effective_parameters: {ExportPath: "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\runs\\AUDIT03_BARS\\nq_3m_2022_2026.csv"}
+selection_metric: none
+pass_criteria: >
+  Export contains the same bar count the sweep engine loaded (540,233 bars reported by
+  the V3/V4 sweep trace, minus at most 1 boundary bar per the known exporter quirk),
+  monotone timestamps, no duplicates; every raw member fill price (ledger price
+  de-slipped by 1 tick) matches the exporter's bar-open series at the fill instant.
+reject_criteria: bar-count or price-basis mismatch beyond the documented boundary quirk
+research_family_budget: 0 trials (instrumentation; counts_as_trial: no)
+degrees_of_freedom: 0
+selection_relevance: none

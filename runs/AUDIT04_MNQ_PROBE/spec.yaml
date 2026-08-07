@@ -1,0 +1,29 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE results are read.
+# Instrumentation probe, not a trial: the ONLY quantity read from this run is the
+# per-execution commission the "NinjaTrader Brokerage Lifetime" template applies to
+# MNQ. Strategy P&L is not inspected and must not be quoted anywhere.
+run_id: AUDIT04_MNQ_PROBE
+experiment_id: POST_CAMPAIGN_AUDIT_01
+hypothesis_id: AUDIT-A06 (executable ensemble — MNQ commission schedule verification)
+family: infrastructure
+parent_candidate: n/a
+timestamp_before_execution: 2026-08-07 (commit timestamp authoritative)
+source_commit: 034abd9 (parent; committed before execution)
+strategy_class: SolarWaveOpenV3
+strategy_source_sha256: 60d584c5c820d8fe131eb889a37d1e07d6e746ed5f3919b8d47d0ba7d74df167
+engine_version: NT8 8.1.8.1 / CrossTrade v1.13.9 / engine_fingerprint sha256:b4255f1b0dd7fba1
+vendor_dependency: none
+instrument: "MNQ 09-26"
+timeframe: {period_type: Minute, value: 3, market_data_type: Last}
+data_boundaries: {from_utc: "2026-06-01T06:00:00Z", to_utc: "2026-07-31T21:59:59Z"}
+trading_hours: instrument default
+commission_model: "NinjaTrader Brokerage Lifetime"
+slippage_model: 1 tick per execution
+fill_model: Standard; exit-on-session-close true/30s; qty 1; isolated Backtest account
+effective_parameters: V3 defaults (ThresholdMode 0, StopMultiplier 179) — parameters are irrelevant to the read
+selection_metric: none — commission extraction only
+pass_criteria: a constant per-execution MNQ commission is observed across all fills; recorded for the executable-ensemble cost model
+reject_criteria: n/a (instrumentation)
+research_family_budget: 0 trials (instrumentation; counts_as_trial: no; P&L quarantined)
+degrees_of_freedom: 0
+selection_relevance: none

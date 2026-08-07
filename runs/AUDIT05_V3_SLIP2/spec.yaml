@@ -1,0 +1,33 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE results are read.
+# AUDIT-05 cost-stress arm: identical to AUDIT02_V3_SWEEP_B except slippage 2 ticks.
+run_id: AUDIT05_V3_SLIP2
+experiment_id: POST_CAMPAIGN_AUDIT_01
+hypothesis_id: AUDIT-A09 (two-tick stress on the reproduced R5 members)
+family: solar_persistence (Family A)
+parent_candidate: AUDIT02_V3_SWEEP_B (EXACT_REPRODUCTION arm)
+timestamp_before_execution: 2026-08-07 (commit timestamp authoritative)
+source_commit: 034abd9 (parent; committed before execution)
+strategy_class: SolarWaveOpenV3
+strategy_source_sha256: 60d584c5c820d8fe131eb889a37d1e07d6e746ed5f3919b8d47d0ba7d74df167
+engine_version: NT8 8.1.8.1 / CrossTrade v1.13.9 / engine_fingerprint sha256:b4255f1b0dd7fba1
+vendor_dependency: none
+instrument: "NQ 09-26"
+timeframe: {period_type: Minute, value: 3, market_data_type: Last}
+data_boundaries: {from_utc: "2022-01-01T06:00:00Z", to_utc: "2026-07-31T21:59:59Z"}
+trading_hours: instrument default (CME index futures ETH)
+commission_model: "NinjaTrader Brokerage Lifetime"
+slippage_model: 2 ticks per execution
+fill_model: Standard; exit-on-session-close true/30s; qty 1; isolated Backtest account
+effective_parameters_fixed: {TrendMultiplier: 90, StopMultiplier: 179, SlowdownScan: 5, WeakWeakSplit: 10, StartUp: false, AnchorMode: 0, ThresholdMode: 1, VolPeriod: 460, SMinTicks: 40, SMaxTicks: 1200, ExitMultiplier: 0, EntrySignalType: 1, EnableLong: true, EnableShort: true, UseTimeFilter: false, Tag: "a5s2", ExportDir: "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\runs\\AUDIT05_V3_SLIP2\\ledgers"}
+parameters_sweep: [{name: VolMult, min: 6, max: 30, step: 2, type: double}]
+selection_metric: none — stress diagnostic of an already-selected reference
+pass_criteria: >
+  Trade paths must be identical to the slip-1 B-arm (slippage must not change which
+  bars trade; only fill prices shift by 1 tick per execution). Report per-cell and
+  strict-1/N ensemble net/Sharpe degradation vs slip-1. The campaign's claim
+  "slip-2 roughly halves net" is CHECKED, not assumed.
+reject_criteria: any trade-path difference vs the slip-1 arm (would indicate a
+  slippage-dependent path artifact and trigger investigation)
+research_family_budget: 0 new trials (cost-stress re-run; counts_as_trial: no)
+degrees_of_freedom: 0
+selection_relevance: none

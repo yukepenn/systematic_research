@@ -1,0 +1,37 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE results are read.
+# AUDIT-05 fill-resolution arm: three representative R5 members re-run under
+# High Order Fill Resolution.
+run_id: AUDIT05_V3_HIGHRES
+experiment_id: POST_CAMPAIGN_AUDIT_01
+hypothesis_id: AUDIT-A08/A10 (Standard vs High fill resolution; tail-day fill integrity)
+family: solar_persistence (Family A)
+parent_candidate: AUDIT02_V3_SWEEP_B
+timestamp_before_execution: 2026-08-07 (commit timestamp authoritative)
+source_commit: 034abd9 (parent; committed before execution)
+strategy_class: SolarWaveOpenV3
+strategy_source_sha256: 60d584c5c820d8fe131eb889a37d1e07d6e746ed5f3919b8d47d0ba7d74df167
+engine_version: NT8 8.1.8.1 / CrossTrade v1.13.9 / engine_fingerprint sha256:b4255f1b0dd7fba1
+vendor_dependency: none
+instrument: "NQ 09-26"
+timeframe: {period_type: Minute, value: 3, market_data_type: Last}
+data_boundaries: {from_utc: "2022-01-01T06:00:00Z", to_utc: "2026-07-31T21:59:59Z"}
+trading_hours: instrument default (CME index futures ETH)
+commission_model: "NinjaTrader Brokerage Lifetime"
+slippage_model: 1 tick per execution
+fill_model: HIGH OrderFillResolution; exit-on-session-close true/30s; qty 1; isolated Backtest account
+cells: VolMult in {6, 18, 30} as three SINGLE backtests (Tag a5h6 / a5h18 / a5h30)
+effective_parameters_fixed: {TrendMultiplier: 90, StopMultiplier: 179, SlowdownScan: 5, WeakWeakSplit: 10, StartUp: false, AnchorMode: 0, ThresholdMode: 1, VolPeriod: 460, SMinTicks: 40, SMaxTicks: 1200, ExitMultiplier: 0, EntrySignalType: 1, EnableLong: true, EnableShort: true, UseTimeFilter: false, ExportDir: "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\runs\\AUDIT05_V3_HIGHRES\\ledgers"}
+selection_metric: none
+preregistered_expectation: >
+  The V3 engine submits MARKET orders only, on bar close, filled at next bar open;
+  the only other fills are NT8 session-close exits. High resolution changes the
+  simulated INTRABAR path, which market-on-next-bar-open fills do not consume.
+  EXPECTED: fills identical to the Standard B-arm in count, timestamp and price.
+  Any deviation is a finding: it would localize exactly which fills (e.g. session
+  close, gap opens) depend on fill resolution, and those fills' contribution to the
+  right tail must then be quantified.
+pass_criteria: expectation confirmed, or every deviation enumerated and its tail-P&L contribution quantified
+reject_criteria: right-tail P&L materially dependent on fill resolution => R5 fill-artifact flag for AUDIT-06
+research_family_budget: 0 new trials (fill-model stress; counts_as_trial: no)
+degrees_of_freedom: 0
+selection_relevance: none
