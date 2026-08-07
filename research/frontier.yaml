@@ -2,7 +2,7 @@
 # Every hypothesis is falsifiable; gates preregistered before result reads.
 - id: SW00_BASELINE_PARITY_COST
   phase: 0
-  status: active
+  status: passed
   hypothesis: >
     The canonical Type-1 baseline retains positive after-cost expectancy under
     realistic execution friction (positive at 1 tick/execution slippage; not
@@ -12,7 +12,24 @@
   gates: research/00_truth/SW00_spec.md
 - id: SW01_EPISODE_AND_EXIT_ATTRIBUTION
   phase: 1
+  status: active
+- id: SW01B_DRIFT_MATCHED_CONTROL
+  phase: 1
   status: pending
+  hypothesis: >
+    The baseline's net edge (esp. the session-close bucket and long-side PF) does NOT
+    exceed what random/time-shifted entries with identical session-close exit machinery
+    extract from 2023-25 NQ drift. Rejecting this null is required before any edge claim.
+  note: red-team-originated; zero new DoF
+  depends_on: [SW00_BASELINE_PARITY_COST]
+- id: SW01C_2022_REGIME_COMPLEMENT
+  phase: 1
+  status: pending
+  hypothesis: >
+    Canonical config on never-examined 2022 (bear regime) retains positive expectancy
+    after 1-tick costs. 2022 is legitimate research data; running it consumes it (log in registry).
+  note: red-team-originated; zero new DoF
+  depends_on: [SW00_BASELINE_PARITY_COST]
   hypothesis: >
     A deterministic bar/state/trade ledger (episode ID, wave, signals, flip count,
     path efficiency, MAE/MFE/giveback) reveals where PnL concentrates; no logic change.

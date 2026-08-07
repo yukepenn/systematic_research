@@ -1,39 +1,43 @@
 # Campaign State
 
-_Last updated: 2026-08-06 (initialization)_
+_Last updated: 2026-08-06 (SW00 complete)_
 
 ## Current phase
-**Phase 0 — Establish truth** (SW00_BASELINE_PARITY_COST in progress)
+**Phase 1 — Understand the baseline** (SW01 active; Phase 0 gate passed)
 
 ## Frozen baseline
-SolarWaveRKReplicaV0 · Type 1 · 90/179/5/10/true/10 · 1-min Last · NQU6 back-adjusted · Lifetime commission · Standard fill · slip 0 · window 2023-01-01T06:00:00Z → 2025-02-02T22:59:59Z · Net $146,440.60 · 2,915 trades · DD −$22,066.60 · PF 1.132213. UI parity verified (see research/solar_wave_parity/).
+SolarWaveRKReplicaV0 · Type 1 · 90/179/5/10/true/10 · 1-min Last · NQU6 back-adjusted · Lifetime commission · Standard fill · window 2023-01-01T06:00:00Z → 2025-02-02T22:59:59Z · slip0: Net $146,440.60, 2,915 trades, DD −$22,066.60, PF 1.132213 · **honest cost basis (slip1): Net $118,645.60, avg $40.83, PF 1.106, daily Sharpe 1.39, Calmar 2.56**. Source sha256 `221d1e13…`, ledger hash `fe395c14…`.
 
 ## Completed experiments
-- PARITY (pre-campaign): UI-vs-MCP exact parity — PASS. Evidence: research/solar_wave_parity/type1_2023_2025/.
+- PARITY (pre-campaign) — PASS. research/solar_wave_parity/.
+- **SW00_BASELINE_PARITY_COST — PASS** (all 7 preregistered gates). research/00_truth/SW00_report.md. Key: deterministic pipeline (7 bit-identical runs incl. concurrent); slip1/2/3 all positive; session-close exits carry the entire net edge (+$189.6k, PF 10.8) while Solar-trailing exits net −$42.8k; median MFE giveback 1.34×; High fill = no-op for market-order strategies; native optimization sweeps validated bit-identical (Tier-1 mode).
 
 ## Active experiments
-- SW00_BASELINE_PARITY_COST — spec preregistered in research/00_truth/SW00_spec.md; runs SW00_R01–R13.
+- SW01_EPISODE_AND_EXIT_ATTRIBUTION — next: build read-only ledger exporter `SolarWaveRKLedgerV1` (new class; zero trading-logic changes; per-bar Signal_Trade/Trend/Wave/TrailingStop + episode reconstruction), join to R01 trade ledger, produce full decomposition incl. episode/wave/flip/efficiency tags.
 
 ## Pending (frontier order)
-SW01 (episode/exit attribution — needs signal-ledger exporter), SW02 (catastrophe stop + session-close), SW03 (single Type-3 re-entry), SW04 (selective Type 2), SW05 (chop veto), SW06 (timeframe portability), SW07 (major/minor context), SW08 (vol sizing), FB01 (failed opening breakout), portfolio phase.
+SW02 (catastrophe stop + session-close counterfactual — now high-stakes given exit-reason finding), SW03 (single Type-3 re-entry), SW04 (selective Type 2), SW05 (chop veto), SW06 (timeframes), SW07 (context), SW08 (vol sizing), FB01, portfolio, locked-forward.
 
 ## Decisions
-- 2026-08-06: Campaign structure initialized; specs preregistered before result reads; benchmark integrated into SW00 (determinism reruns double as slippage-0 baseline).
-- 2026-08-06: Optimization-machinery benchmark uses a provably inert sweep (StartTime with UseTimeFilter=false) — zero information leak.
-- 2026-08-06: 3m/2m/5m anchors NOT run during benchmarking to avoid contaminating Phase 5 preregistration; scaling measured via window length instead.
-- 2026-08-06: Playback/reload signal audit DEFERRED — requires connection changes prohibited by the safety boundary; user must run Playback manually if desired. High fill resolution probed via MCP instead.
+- 2026-08-06: SW00 PASS → Solar promotion proceeds. Campaign execution modes fixed: Tier 1 = native optimization sweeps (validated bit-identical, ~4 s/combination, summary payload); Tier 2 = individual full-payload runs; Tier 3 = High-fill (stop-order candidates) + manual Playback (user-run only). Determinism-critical runs serial; concurrency safe but ≤2 and modest gain.
+- 2026-08-06: 1-tick slippage adopted as the honest reporting basis for all future candidate comparisons; 2-tick checked at every promotion.
+- Earlier init decisions: see git history of this file.
 
 ## Unresolved integrity issues
-- None currently. (Known benign artifact: boundary-adjacent session-close trade may be absent from serialized trade list; engine totals correct.)
+- None blocking. Playback/reload audit remains a deferred manual item (safety boundary). Benign known artifacts documented in SW00_report §1 gate 5.
 
 ## Tested-config count
-- Search-space configs consumed: **1** (canonical Type 1 anchor; parity runs). SW00 cost/fill/window variations are cost-model probes of the same config, individually logged in registry/tested_configs.csv.
+- Search-space configs consumed: **1** (canonical anchor). 16 backtest jobs run total (3 pre-campaign + 13 SW00). Every job logged in registry/tested_configs.csv.
 
 ## Compute usage
-- Backtest jobs run to date: 3 (parity A/B + 1 rejected commission-template attempt). SW00 adds ~13.
+- ~75 s total NT8 engine time; ~40 MB raw payloads archived under runs/.
 
 ## Pareto frontier
-- Seeded with canonical baseline only (see reports/leaderboard.md).
+- reports/leaderboard.md — baseline reference row only.
 
 ## Next highest-value action
-Complete SW00 ingestion + gates → if PASS, build SW01 signal/episode ledger exporter (read-only clone strategy writing per-bar state CSV; new class name, never touching baseline).
+Phase 1 triple, in order of information value per unit work:
+1. **SW01c** — canonical config on never-examined 2022 (bear-regime complement; one Tier-2 run + one slip-1 run; red-team-originated, zero DoF).
+2. **SW01b** — drift-matched control: time-shifted/random entries with identical session-close machinery vs the baseline's close-bucket and long-side edge (null-hypothesis test for drift beta; zero DoF).
+3. **SW01** — `SolarWaveRKLedgerV1` read-only exporter (new class, in-memory compile first, vendor assembly untouched) → episode/wave/flip/efficiency attribution that SW02/SW03/SW05 gates depend on.
+Red-team standing items for every future promotion: Thursday/quarterly concentration, short-side cost fragility, session-close survivorship confound, slip-2 as event-day honest floor.
