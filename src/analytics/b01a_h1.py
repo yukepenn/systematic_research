@@ -138,7 +138,7 @@ def main():
     rep.append(f"## VERDICT: **{verdict}**  (arm a: {'PASS' if a_pass else 'FAIL'}, "
                f"arm b: {'PASS' if b_pass else 'FAIL'})\n")
     rep.append("## Arm (a) — yearly mean overshoot, band [89.5, 268.5] ticks\n")
-    rep.append(a_tab.round(2).to_markdown())
+    rep.append("```\n" + a_tab.round(2).to_string() + "\n```")
     rep.append("\n## Arm (b) — failed-flip continuation vs unconditional\n")
     rep.append(f"- failed flips: {len(fail):,} of {len(led):,} "
                f"({100 * led.failed.mean():.1f}%)")
@@ -147,7 +147,7 @@ def main():
                f"(requirement ≤ −10)")
     rep.append(f"- sign stability: worse in {sign_stable}/5 years (requirement ≥ 4)")
     rep.append(f"- one-sided Mann-Whitney p = {p:.2e} (requirement < 0.05)\n")
-    rep.append(ytab.to_markdown(index=False))
+    rep.append("```\n" + ytab.to_string(index=False) + "\n```")
     rep.append("\n## Ledger\n`b01a_h1_ledger.csv.gz` — per-flip omega, 60-min max "
                "overshoot, failure flag, re-cross bar (≥10-tick margin), forward "
                "returns at 15/30/60/120 min, year/side/session strata. Feeds "

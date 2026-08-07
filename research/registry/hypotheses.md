@@ -117,3 +117,16 @@ volatility-normalised ensemble, Type-1 signals only - stands alone and unimprove
 passed and every comparative test failed.** On 4.6 years of one instrument the data supports
 "something is here" and refuses to say "this version is better than that one". That is why the
 deliverable is an unselected ensemble and why nothing was promoted.
+
+## DR05-H1 — overshoot / failed-flip calibration (Wave B01a, 2026-08-07)
+
+**Verdict: FAIL on arm (b); arm (a) PASS.** Preregistered constants (DR-05.md,
+frozen 2026-08): theta=179 ticks, failure < 0.25*theta within 60 min, 10-tick
+margin. Arm (a): yearly mean overshoot 204.7–217.9 ticks, inside [0.5, 1.5]*theta
+all five years — FX scaling-law unit transfers to NQ 1-min DC. Arm (b): failed
+flips' median 60-min continuation −3.0 vs unconditional −1.0 ticks (diff −2.0,
+required ≤ −10); worse in 3/5 years (required ≥4); pooled one-sided Mann-Whitney
+p = 0.171 (required < 0.05). Consequence (binding, preregistered): DR05-H2 is
+killed unbuilt; Wave B01 proceeds to B01c (ORB failure + value reacceptance),
+which is not H1-conditional. Instrumentation seq 0; no R1 trial consumed.
+Driver src/analytics/b01a_h1.py @ commit (pre-result).
