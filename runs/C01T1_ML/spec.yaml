@@ -1,0 +1,28 @@
+run_id: C01T1_ML
+experiment_id: WAVE_C01_TIER1_ML
+hypothesis_id: C01-T0-2 (capacity PASS) + C01-T0-6 (5/8 features fold-stable)
+family: FAMILY_A_ML_OVERLAY
+parent_candidate: theoretical R5 pooled 1/N (research proxy, corr 0.9985 with champion)
+preregistered: 2026-08-07, committed before execution
+counts_as_trial: yes
+trials: 3 (seq 288-290, one per arm)
+features_frozen: [consensus, prev_os_over_theta, session_bucket, eff120, volvol]  # the 5 fold-stable from T0-6; the 3 unstable are excluded and may not re-enter
+label: trade net P&L > 0 (frozen)
+model: L2-logistic only; C in {0.01, 0.1, 1} chosen in inner CV; isotonic calibration fit in inner CV
+harness: >
+  Nested purged CV identical to T0-6: 5 chronological day-grouped outer folds, 2-trading-day
+  embargo, de Prado average-uniqueness weights; inner 4-fold (day-grouped, chronological) for
+  C + calibration + bet threshold. Nothing chosen on outer test.
+arms:
+  ARM_A_binary: bet only if calibrated p > inner-CV threshold
+  ARM_B_sizing: position size = clip((calibrated_p - 0.45)/0.15, 0, 1)  # frozen map
+  ARM_C_volcontrol: size = (1/sigma460) normalized to mean 1, capped at 2; no ML
+pnl_engine: T0-2 counterfactual engine (episode suppression/scaling; penny-exact validation rerun required before reads)
+scoring: outer-fold-only P&L pooled 1/N across 13 members; logG ($100k base), Sharpe, maxDD, MAR; paired day-block bootstrap (block=5, 10k)
+pass_criteria: >
+  ARM_B beats ARM_C paired p<0.05 AND beats take-all baseline on logG or MAR with same sign in
+  both halves AND top-1% right-tail retention >= 90% of baseline share. If ARM_C ~= ARM_B:
+  verdict "vol targeting suffices", ML overlay closes honestly. If ARM_A > ARM_B materially:
+  suspect miscalibration, audit before believing.
+reject_criteria: any pass condition fails; features/label/map may not be adjusted after reads
+notes: all estimates are in-sample-era outer-fold estimates; no OOS claim; champion unchanged unless a later engine-level confirmation is separately preregistered

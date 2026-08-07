@@ -1,0 +1,25 @@
+run_id: C01T1_EXPOSURE
+experiment_id: WAVE_C01_TIER1_EXPOSURE
+hypothesis_id: C01-T0-4 (lag-1 vol-surprise exposure rule; unlocked by Tier-0 PASS)
+family: FAMILY_A_CONDITIONING
+parent_candidate: R5-E10 executable champion (frozen)
+preregistered: 2026-08-07, committed before execution
+counts_as_trial: yes
+trials: 3 (seq 285-287, one per arm)
+comparator: flat E10 daily vector (research/audit/e_variant_daily_vectors.csv E10_round_session)
+universe: sessions with defined lag-1 U tercile (T0-4 expanding terciles, from 2022-09-15)
+inputs:
+  session_table: research/04_complementary_family/c01_t04_session_table.csv (HAR forecast F, residual U, frozen)
+capital_base_for_log_growth: 100000 USD (frozen)
+arms:
+  ARM_A_primary: m=1.5 if lag-1 U in top tercile else m=1.0 (up-weight only)
+  ARM_B: ARM_A plus m=0.5 if lag-1 U in bottom tercile
+  ARM_C_control: identical multipliers driven by lag-1 RV LEVEL terciles (subsumption test)
+scoring: session P&L x m; delta log-growth vs flat, Sharpe, maxDD, MAR; session-block bootstrap (block=5, 10k) CIs; split-half 2022-07->2024-06 / 2024-07->2026-06
+multiple_testing: Romano-Wolf stepdown across the 3 arms
+pass_criteria: >
+  (ARM_A or ARM_B) delta-logG > 0 with RW p<0.05, same sign both halves, maxDD not worsened
+  by >20%, top-1% trade P&L retention >= proportional (ARM_B down-weight leg), AND the winning
+  arm beats ARM_C on delta-logG. Else REJECT (vol-level suffices or effect not robust).
+reject_criteria: any pass condition fails; no constant may be adjusted after reads
+notes: pure Python on committed vectors; no NT8; slippage/commission already embedded in E10 vector
