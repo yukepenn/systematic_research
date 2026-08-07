@@ -1,6 +1,33 @@
 # Campaign State
 
-_Last updated: 2026-08-06 (Phase 1 complete)_
+_Last updated: 2026-08-07 (Solar Wave core reverse-engineered; campaign now vendor-independent)_
+
+## Vendor independence achieved (RE01, 2026-08-07)
+The Solar Wave RK Type-1 core is fully recovered as explicit math — see
+`research/03_reverse_engineering/SOLARWAVE_MATH.md` and `src/analytics/solarwave.py`.
+Method: behavioural reverse engineering from 737,707 bars of the indicator's own published
+output. The vendor DLL is Agile.NET 6.9.1.8 protected; **no decryption, patching, unpacking or
+memory dumping was performed and the assembly was not modified** (constitution: never bypass
+vendor protections). Static analysis was limited to cleartext metadata.
+
+Recovered model: a **fixed-tick, close-basis directional-change filter** with ONE state variable
+(running close extreme since trend start). TrailingStop = anchor ∓ StopMultiplier×tick;
+TrendVector = anchor ∓ TrendMultiplier×tick (rigidly parallel, gap always ±89 ticks); flip on a
+STRICT break of the stop. The wave/strength layer is a pure bar-counter automaton
+(SlowdownScan = bars of no progress ⇒ "weak"; WeakWeakSplit = anti-chatter re-arm;
+Signal_Wave = impulse-leg count). Match vs vendor: TrailingStop/TrendVector 100.000000%
+tick-exact, Type-1 signals 100% (5,405/5,405), Signal_Trend 99.9999%, Signal_Wave 99.9706%.
+Only Type-2 (pullback) is unresolved — it appears to test High/Low, which the close-only ledger
+cannot settle; needs one exporter re-run with H/L columns.
+
+`SolarWaveOpenV1` (no vendor reference) reproduces the frozen canonical baseline exactly:
+net $146,440.60 / 2,915 trades / DD −$22,066.60 / PF 1.1322134 / commission $12,709.40, all
+deltas zero (`runs/RE01_open_parity/`). Structurally explains earlier empirical findings:
+TrendMultiplier/SlowdownScan/WeakWeakSplit are inert for Type 1 because they never enter the
+flip rule; single-point path noise is intrinsic to a threshold recursion. **New design flaw
+found:** the offset is a constant tick count, so effective selectivity fell 41% from 2023→2025
+(44.75 pts = 17.8 vol units in 2023, 10.4 in 2025) as NQ's price and range grew — a mechanism,
+not a story, for the observed per-year thinning. Registered as H-006.
 
 ## Current phase
 **DISCOVERY WAVE 1 (user directive 2026-08-06):** historical-research-only (NO live-sim/paper/forward-monitoring ever unless explicitly requested); 2025-03→2026-07 reservation REMOVED; research universe = all data 2022-01→2026-07-31; selection standard = strong robust full-history economics + per-year stability + neighborhood plateaus. SW02a gate PASSED (no fill artifact; 16:30 exit dominates — see research/02_solar_refinements/SW02a_report.md). Full-history canonical reference: net $259,102 slip-0 / ~$162k analytic slip-1, 10,182 trades, PF 1.060, DD −$51,898, positive every year 2022–2026 (2026 thin: $11.19/trade). Wave-1 sweeps running: S1 spatial 28, S3 temporal 18, S2 timeframes 6, S4 signal types done (T1 best after costs; unconditional T2 cost-fragile as thesis predicted).
