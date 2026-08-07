@@ -3,7 +3,7 @@
 _Last updated: 2026-08-06 (Phase 1 complete)_
 
 ## Current phase
-**Phase 1 wrap → SW02a gate.** Phase-1 diagnostics done; SW02a (timed-exit falsification) must run before any Phase-2 candidate work, because absolute profitability is conditional on it.
+**DISCOVERY WAVE 1 (user directive 2026-08-06):** historical-research-only (NO live-sim/paper/forward-monitoring ever unless explicitly requested); 2025-03→2026-07 reservation REMOVED; research universe = all data 2022-01→2026-07-31; selection standard = strong robust full-history economics + per-year stability + neighborhood plateaus. SW02a gate PASSED (no fill artifact; 16:30 exit dominates — see research/02_solar_refinements/SW02a_report.md). Full-history canonical reference: net $259,102 slip-0 / ~$162k analytic slip-1, 10,182 trades, PF 1.060, DD −$51,898, positive every year 2022–2026 (2026 thin: $11.19/trade). Wave-1 sweeps running: S1 spatial 28, S3 temporal 18, S2 timeframes 6, S4 signal types done (T1 best after costs; unconditional T2 cost-fragile as thesis predicted).
 
 ## Frozen baseline (unchanged)
 SolarWaveRKReplicaV0 · T1 · 90/179/5/10/true/10 · 1m Last · NQU6 · Lifetime · canonical window. slip0 $146,440.60 / slip1 $118,645.60 (avg $40.83, PF 1.106). Source sha `221d1e13…`, ledger `fe395c14…`.
