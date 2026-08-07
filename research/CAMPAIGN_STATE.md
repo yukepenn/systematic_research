@@ -367,3 +367,30 @@ improvement in 5 consecutive waves ✓; (11) second red team stands ✓; (12) fi
 `reports/FINAL_*.md` ✓. **The campaign closes at convergence. Final champion: executable R5-E10 —
 "best robust historical system found under the defined research universe and evidence
 constraints" — NQ-specific, tail-concentrated, not forward-validated, not deployment-ready.**
+
+## 16. Post-convergence reopening (2026-08-07, owner-directed)
+
+The owner reopened research with an explicit instruction (improve/complement the baseline;
+new variables; new thinking). Same session, prior to reopening: vendor history rewrite executed
+via git filter-repo and force-pushed (governance track CLOSED, owner accepted residual risk);
+single-config analytical baseline designated **vm20** (SolarWaveOpenV3, VolMult=20 — med3
+plateau center of vm18–22, five years positive, REFERENCE tier only, PBO 0.898 caveat standing;
+recipe in `src/ninjascript/README.md` + this session's ledger-verified stats).
+
+Reopening actions, all evidence-first:
+
+1. **DC02b / U4 resolved (zero burn):** the overshoot ratio is **σ-invariant** — r ≈ f(θ/σ),
+   year-stable; σ-banded monitoring halves the variance of the campaign's core health statistic.
+   First mechanism-level (not executability-level) vindication of the R5 parameterization.
+   `research/deep_research/DC02B_SIGMA_INVARIANCE.md`.
+2. **Four deep-research packets** (conditioning; hysteresis/CUSUM; meta-labeling; complements +
+   short-side) produced and filtered against the forbidden-axis registry — the externally
+   attractive α/β threshold-split program was dropped wholesale because H-007 is falsified.
+3. **WAVE C01 preregistered** before any read: `research/04_complementary_family/C01_WAVE_SPEC.md`
+   — 11 zero-burn Tier-0 items ranked by EVI (short-side regime structure first; ML gated by an
+   oracle capacity bound; DR03-H2 CUSUM-k as the only open threshold mechanism; Family D/E get
+   their first direct NQ evidence), Tier-1 budget ≤ 10 R1 trials behind frozen pass gates.
+
+Convergence status: the §15 convergence verdict stands for the ORIGINAL mandate. C01 is a new,
+narrower program under the same constitution, discipline unchanged (append-only registry,
+preregistration, right-tail hard gate, AGGRESSIVE EXPLORATION / CONSERVATIVE PROMOTION).
