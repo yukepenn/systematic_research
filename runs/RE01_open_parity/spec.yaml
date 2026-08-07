@@ -1,0 +1,31 @@
+run_id: RE01_open_parity
+purpose: >
+  Falsification test for the reverse-engineered Solar Wave RK core. SolarWaveOpenV1
+  contains NO reference to the vendor assembly; its entire signal engine is the
+  recurrence recovered in research/03_reverse_engineering/SOLARWAVE_MATH.md.
+  If the recovered math is correct, this must reproduce the frozen canonical
+  baseline exactly. Any deviation falsifies the reconstruction.
+strategy_class: SolarWaveOpenV1
+vendor_dependency: none
+instrument: NQ 09-26
+bars_period: {period_type: Minute, value: 1, market_data_type: Last}
+from: 2023-01-01T06:00:00Z
+to:   2025-02-02T22:59:59Z
+fill: {type: Standard, slippage_ticks: 0, commission_template: NinjaTrader Brokerage Lifetime}
+parameters:
+  TrendMultiplier: 90
+  StopMultiplier: 179
+  SlowdownScan: 5
+  WeakWeakSplit: 10
+  StartUp: false
+  EntrySignalType: 1
+  EnableLong: true
+  EnableShort: true
+  UseTimeFilter: false
+prereg_expectation:
+  net_profit: 146440.60
+  trades: 2915
+  drawdown: -22066.60
+  profit_factor: 1.132213
+  commission: 12709.40
+result: PASS — all five match exactly (see RESULT.md)
