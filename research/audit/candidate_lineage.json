@@ -1,0 +1,337 @@
+{
+ "_meta": {
+  "generated": "2026-08-07",
+  "task": "POST_CAMPAIGN_AUDIT_01 / AUDIT-01",
+  "branch": "post_campaign_audit",
+  "parent_commit": "b811a21",
+  "campaign_final_head": "e5079e1",
+  "campaign_stop_commit": "0660f74",
+  "hash_verification": "all six sha256 recomputed 2026-08-07 from src/ninjascript/*.cs at HEAD; the four values quoted in the audit mandate matched exactly",
+  "numbers_source": "reports/final_pareto.csv (rebuilt during the 80a1a31 integrity audit on the single 1,424-bucket calendar)"
+ },
+ "canonical_baseline": {
+  "status": "frozen reference \u2014 not a finalist; the parity gate every open engine must reproduce to the penny before use",
+  "engine": "SolarWaveRKReplicaV0",
+  "source_sha256": {
+   "SolarWaveRKReplicaV0": "221d1e138d54529988fbe19aa563584863081eac917bd6aa6e626e9ed5aa4b20",
+   "SolarWaveOpenV1_open_reproduction": "a8a0c13d2ce870f43a402d97749b4a580dec0bf98645599539887f74140fa151"
+  },
+  "parameters": {
+   "EntrySignalType": 1,
+   "TrendMultiplier": 90,
+   "StopMultiplier": 179,
+   "SlowdownScan": 5,
+   "WeakWeakSplit": 10,
+   "PullbackEarly": true,
+   "PullbackSplit": 10,
+   "timeframe": "1m Last",
+   "instrument": "NQ 09-26 (NQU6 back-adjusted merge)"
+  },
+  "members": [
+   "single cell (not an ensemble)"
+  ],
+  "ledger_glob": null,
+  "window": "2023-01-01T06:00:00Z..2025-02-02T22:59:59Z (canonical window \u2014 NOT the 1,424-bucket campaign basis)",
+  "costs": "Lifetime commission $4.36/RT; slip 0; Standard fill; exit-on-session-close",
+  "published_metrics": {
+   "net": 146440.6,
+   "trades": 2915,
+   "max_dd": -22066.6,
+   "profit_factor": 1.132213,
+   "commission": 12709.4,
+   "sharpe_1424cal": null,
+   "note": "frozen truth (CLAUDE.md); not comparable to final_pareto rows \u2014 different window, slip 0"
+  },
+  "parent_hypothesis": "H-001 (SW00_BASELINE_PARITY_COST, preregistered spec research/00_truth/SW00_spec.md)",
+  "evidence_paths": [
+   "research/solar_wave_parity/type1_2023_2025/parity_report.md",
+   "research/00_truth/SW00_spec.md",
+   "research/00_truth/SW00_report.md",
+   "runs/SW00_R01/",
+   "runs/RE01_open_parity/",
+   "runs/AUDIT_GATE_R01/ (audit-era re-verification, replica engine)",
+   "runs/AUDIT_GATE_R02/ (audit-era re-verification, vendor-free SolarWaveOpenV1)"
+  ],
+  "caveats": [
+   "Behavioral replica of the licensed RenkoKings SolarWaveRK vendor indicator; the vendor assembly itself is untracked as of 1f169ae",
+   "Reproduced exactly by open engines SolarWaveOpenV1/X2/V3 at default settings (three-way gate) \u2014 vendor dependency formally ended at RE01 (e866c77)"
+  ]
+ },
+ "R4_full_21": {
+  "status": "reference \u2014 the fair fixed-threshold comparator (every fixed 3m cell ever tested, no sub-range selection)",
+  "engine": {
+   "plateau_8_cells": "SolarWaveOpenX2",
+   "wide_13_cells": "SolarWaveOpenV3 (ThresholdMode=0, fixed ticks)"
+  },
+  "source_sha256": {
+   "SolarWaveOpenX2": "5a12f633982499b810cbf5c496836142a19c43032f69e67b50a14138b5c57eee",
+   "SolarWaveOpenV3": "60d584c5c820d8fe131eb889a37d1e07d6e746ed5f3919b8d47d0ba7d74df167"
+  },
+  "parameters": "Type-1 core, TM=90, SS=5, WWS=10, 3-minute, fixed StopMultiplier per member, exit-on-session-close",
+  "members": {
+   "plateau": [
+    180,
+    190,
+    200,
+    210,
+    220,
+    230,
+    240,
+    250
+   ],
+   "wide": [
+    280,
+    330,
+    380,
+    430,
+    480,
+    530,
+    580,
+    630,
+    680,
+    730,
+    780,
+    830,
+    880
+   ],
+   "count": 21
+  },
+  "ledger_glob": [
+   "research/02_solar_refinements/wave1c/ledgers/w1c__tf3_*_sc_slip1_*.csv",
+   "research/05_open_axes/fixedwide/*.csv"
+  ],
+  "window": "2022-01-01..2026-07-31 (metrics on 1,424 calendar-date buckets, the fixed campaign basis)",
+  "costs": "NinjaTrader Brokerage Lifetime commission $4.36/RT; real NT8 slip-1 (1 tick/execution); Standard fill; exit-on-session-close",
+  "published_metrics": {
+   "net": 159423.7,
+   "sharpe_1424cal": 0.8922,
+   "max_dd": -35669.32,
+   "calmar": 0.7909,
+   "psr": 0.9865,
+   "sharpe_session_basis": 0.9704,
+   "worst_year": 2583.32,
+   "pos_years": "5/5",
+   "p_sharpe_le_0": 0.0051,
+   "source": "reports/final_pareto.csv"
+  },
+  "parent_hypothesis": "Wave-1/1b StopMultiplier plateau (DISCOVERY_WAVE1_AND_1B); redefined from the 8-cell plateau to the full 21-cell range by red-team adjudication (commit b4c1816, RED_TEAM_WAVE1C_WAVE2)",
+  "evidence_paths": [
+   "research/06_red_team/RED_TEAM_WAVE1C_WAVE2.md",
+   "src/analytics/ensembles.py (fixed_ALL_21)",
+   "research/02_solar_refinements/WAVE1C_report.md",
+   "reports/final_pareto.csv"
+  ],
+  "caveats": [
+   "The 21-cell definition is itself a post-hoc redefinition (after results were known) \u2014 it REMOVES sub-range selection rather than adds it, and improves both Sharpe and DD over R4b, but it is an adjudication-era construct, disclosed as such",
+   "Members span two engines (X2 slip-1 wave1c ledgers + V3 fixed-mode wide sweep), both gate-checked to the penny against the frozen baseline before use"
+  ]
+ },
+ "R4b_plateau_8": {
+  "status": "SUPERSEDED by R4_full_21 (b4c1816) \u2014 the 8-cell plateau as first published was a chosen sub-range and therefore a selection-biased comparator",
+  "engine": "SolarWaveOpenX2",
+  "source_sha256": {
+   "SolarWaveOpenX2": "5a12f633982499b810cbf5c496836142a19c43032f69e67b50a14138b5c57eee"
+  },
+  "parameters": "Type-1 core, TM=90, SS=5, WWS=10, 3-minute, fixed StopMultiplier, exit-on-session-close, slip-1",
+  "members": {
+   "plateau": [
+    180,
+    190,
+    200,
+    210,
+    220,
+    230,
+    240,
+    250
+   ],
+   "count": 8
+  },
+  "ledger_glob": [
+   "research/02_solar_refinements/wave1c/ledgers/w1c__tf3_*_sc_slip1_*.csv"
+  ],
+  "window": "2022-01-01..2026-07-31 (metrics on 1,424 calendar-date buckets, the fixed campaign basis)",
+  "costs": "NinjaTrader Brokerage Lifetime commission $4.36/RT; real NT8 slip-1 (1 tick/execution); Standard fill; exit-on-session-close",
+  "published_metrics": {
+   "net": 180479.44,
+   "sharpe_1424cal": 0.7728,
+   "max_dd": -53689.43,
+   "calmar": 0.5949,
+   "psr": 0.9695,
+   "sharpe_session_basis": 0.8446,
+   "worst_year": 7796.45,
+   "pos_years": "5/5",
+   "p_sharpe_le_0": 0.017,
+   "source": "reports/final_pareto.csv"
+  },
+  "parent_hypothesis": "Wave-1b dense 3m SM scan plateau [180,260] (commit 9a2fff3, seq 75-90) -> Wave-1c Tier-2 confirmation ledgers (seq 101-110)",
+  "evidence_paths": [
+   "research/02_solar_refinements/WAVE1C_report.md",
+   "research/06_red_team/RED_TEAM_WAVE1C_WAVE2.md",
+   "reports/final_pareto.csv"
+  ],
+  "caveats": [
+   "Kept on the Pareto table only to document what was first published; every comparative claim must use R4_full_21"
+  ]
+ },
+ "R5_adaptive_13": {
+  "status": "RECOMMENDED \u2014 sole surviving finalist; recommendation rests on the H-014 mechanism confirmation, not on separating its point estimates from R4 (+0.085 Sharpe, P(d<=0)=0.358, inseparable)",
+  "engine": "SolarWaveOpenV3, ThresholdMode=1 (S = VolMult*sigma, continuous, NOT tick-snapped)",
+  "source_sha256": {
+   "SolarWaveOpenV3": "60d584c5c820d8fe131eb889a37d1e07d6e746ed5f3919b8d47d0ba7d74df167",
+   "SolarWaveOpenV4_nonequivalent_variant": "7671c9fb937fd5adb4ab7a00090d3fe360707834fc387a39c719f1d8070242db"
+  },
+  "parameters": "Type-1 core, TM=90, SM=179 base, SS=5, WWS=10, 3-minute; adaptive threshold S=k*sigma, sigma = mean|dclose| over VolPeriod=460 bars, frozen at trend birth, clamp [40,1200] ticks; exit-on-session-close",
+  "members": {
+   "VolMult_k": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30
+   ],
+   "count": 13
+  },
+  "ledger_glob": [
+   "research/05_open_axes/h006/*.csv"
+  ],
+  "window": "2022-01-01..2026-07-31 (metrics on 1,424 calendar-date buckets, the fixed campaign basis)",
+  "costs": "NinjaTrader Brokerage Lifetime commission $4.36/RT; real NT8 slip-1 (1 tick/execution); Standard fill; exit-on-session-close",
+  "published_metrics": {
+   "net": 198058.82,
+   "sharpe_1424cal": 0.9771,
+   "max_dd": -39125.61,
+   "calmar": 0.8958,
+   "psr": 0.9929,
+   "sharpe_session_basis": 1.0642,
+   "worst_year": 12159.88,
+   "pos_years": "5/5",
+   "p_sharpe_le_0": 0.002,
+   "source": "reports/final_pareto.csv"
+  },
+  "parent_hypothesis": "H-006 volatility-normalised threshold (registered fd4cf4b 2026-08-06T22:19; comparative verdict downgraded to INCONCLUSIVE by red team 851cdef); promotion gates: H-012 sigma-estimator robustness PASS, H-014 mechanism control PASS (+0.728 Sharpe vs price-normalisation, p=0.009)",
+  "evidence_paths": [
+   "research/05_open_axes/WAVE2_AXES_report.md",
+   "research/07_h014_price/WAVE3_report.md",
+   "research/10_v3v4_equivalence/V3_V4_EQUIVALENCE.md",
+   "runs/AUDIT02_V3_SWEEP/spec.yaml (audit-era exact-reproduction spec, committed before results)",
+   "runs/AUDIT02_V3_SWEEP_B/spec.yaml (supersession sweep; rationale recorded in-spec before results)",
+   "reports/final_system_design.md",
+   "reports/final_pareto.csv"
+  ],
+  "caveats": [
+   "reports/final_system_design.md s7 originally specified SolarWaveOpenV4; every published R5 figure was measured on SolarWaveOpenV3. NOT fill-equivalent (V4 snaps S to the tick grid; 0/13 cells match, 97.1% fill overlap) but statistically indistinguishable at ensemble level (dSharpe +0.029, P=0.247, corr 0.9949). Spec corrected to V3 at ec5a359",
+   "H-006's comparative claim (adaptive beats fixed) is INCONCLUSIVE; only the absolute edge and the H-014 mechanism are supported",
+   "ES portability FAILED (ensemble Sharpe -0.329) \u2014 single-instrument evidence only",
+   "Wave-2/3 runs not preregistered at run granularity (REGISTRY_GAP_NOTE.md); H-014 criteria are the exception",
+   "DSR cannot certify: 0.45-0.55 vs a 0.90 bar under the preregistered rule; Harvey-Liu haircut Sharpe 0.000; promotion rests on structure/mechanism per TRIAL_ACCOUNTING_RULE.md"
+  ]
+ },
+ "ccHL_anchor": {
+  "status": "PASS standalone but REDUNDANT with R5 \u2014 combo adds nothing (1.011 vs adaptive-alone 1.010); simpler model promoted",
+  "engine": "SolarWaveOpenV3, AnchorMode=2 (close-confirmed High/Low extreme), ThresholdMode=0 (fixed ticks)",
+  "source_sha256": {
+   "SolarWaveOpenV3": "60d584c5c820d8fe131eb889a37d1e07d6e746ed5f3919b8d47d0ba7d74df167"
+  },
+  "parameters": "Type-1 core, TM=90, SS=5, WWS=10, 3-minute; ladder anchored to close-confirmed High/Low extreme; fixed StopMultiplier per member; exit-on-session-close",
+  "members": {
+   "StopMultiplier": [
+    170,
+    180,
+    190,
+    200,
+    210,
+    220,
+    230,
+    240,
+    250,
+    260
+   ],
+   "count": 10
+  },
+  "ledger_glob": [
+   "research/05_open_axes/h008/h008am2*.csv"
+  ],
+  "window": "2022-01-01..2026-07-31 (metrics on 1,424 calendar-date buckets, the fixed campaign basis)",
+  "costs": "NinjaTrader Brokerage Lifetime commission $4.36/RT; real NT8 slip-1 (1 tick/execution); Standard fill; exit-on-session-close",
+  "published_metrics": {
+   "net": 215137.15,
+   "sharpe_1424cal": 0.9119,
+   "max_dd": -47697.57,
+   "calmar": 0.7982,
+   "psr": 0.9863,
+   "sharpe_session_basis": 0.9992,
+   "worst_year": 7023.46,
+   "pos_years": "5/5",
+   "p_sharpe_le_0": 0.0102,
+   "source": "reports/final_pareto.csv"
+  },
+  "parent_hypothesis": "H-008 anchor definition, mode 2 (close-confirmed); raw-extreme mode 1 REJECTED (Sharpe 0.527); redundancy with H-006 established in WAVE2_AXES_report",
+  "evidence_paths": [
+   "research/05_open_axes/WAVE2_AXES_report.md",
+   "reports/final_pareto.csv"
+  ],
+  "caveats": [
+   "Both ccHL and the adaptive threshold scale filter sensitivity to bar volatility; once the threshold is normalised the anchor refinement adds nothing \u2014 kept as evidence, not as a candidate"
+  ]
+ },
+ "C2_sleeve": {
+  "status": "REJECTED \u2014 fails its interaction test despite the best point estimates in the campaign: sign flips on an adaptive core (-0.402 Sharpe, P=0.879) and session-block bootstrap P(mean<=0)=0.115 on the fixed core",
+  "engine": "SolarWaveSleeveV1 (Type-1 core + one Type-3 re-entry per episode)",
+  "source_sha256": {
+   "SolarWaveSleeveV1": "2f92c12e04ce47c7b6dfa281bf2793d84c48031806199e1eb577400083908dcb"
+  },
+  "parameters": "Type-1 fixed core + max one Type-3 re-entry per episode; mask=5, reentries=1, vm=18, minwave=1; 3-minute; exit-on-session-close",
+  "members": {
+   "StopMultiplier_matched_cells": [
+    180,
+    190,
+    200,
+    210,
+    220,
+    230,
+    240,
+    250
+   ],
+   "count": 8,
+   "note": "10 ledgers committed (SM 170-260); the published row uses the 8 cells matched to the R4b plateau (WAVE3_report 'Engine confirmation, matched cells SM 180-250')"
+  },
+  "ledger_glob": [
+   "research/09_sleeves/c2/*.csv (not in ensembles.py FAMILIES; sleeve evaluated in the Wave-3 package)",
+   "research/09_sleeves/c2adaptive/*.csv (the interaction test that killed it)"
+  ],
+  "window": "2022-01-01..2026-07-31 (metrics on 1,424 calendar-date buckets, the fixed campaign basis)",
+  "costs": "NinjaTrader Brokerage Lifetime commission $4.36/RT; real NT8 slip-1 (1 tick/execution); Standard fill; exit-on-session-close",
+  "published_metrics": {
+   "net": 233628.36,
+   "sharpe_1424cal": 0.8499,
+   "max_dd": -47413.26,
+   "calmar": 0.872,
+   "psr": 0.9792,
+   "sharpe_session_basis": 0.9139,
+   "worst_year": 19801.3,
+   "pos_years": "5/5",
+   "p_sharpe_le_0": 0.0074,
+   "source": "reports/final_pareto.csv"
+  },
+  "parent_hypothesis": "Wave-3 signal-architecture C2 (unblocked by the RE01 full recovery); rejection recorded in WAVE3_report and hypotheses.md final entries",
+  "evidence_paths": [
+   "research/07_h014_price/WAVE3_report.md",
+   "research/09_sleeves/c2/",
+   "research/09_sleeves/c2adaptive/",
+   "reports/final_pareto.csv",
+   "reports/complementary_families.md"
+  ],
+  "caveats": [
+   "A sleeve whose sign flips with the core is an interaction, not an effect \u2014 the rejection ground is structural, not a point estimate",
+   "The final_pareto C2 row was rebuilt during the 80a1a31 integrity audit after its original used a skipna mean instead of strict 1/N"
+  ]
+ }
+}

@@ -1,0 +1,39 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE results are read.
+# Third V4 arm. Evidence chain established BEFORE this spec was written:
+#   - Committed V3 (h006) ledgers reproduce EXACTLY with StartUp=false (B-arm, 13/13).
+#   - Committed V4 (v4verify) ledgers do NOT reproduce with StartUp=false; their first
+#     fills carry the StartUp=true signature (identical to the V3 StartUp=true A-arm's
+#     first fills: Short 2022-01-03T09:03 @ 19751.25 ...).
+#   => The campaign's published V3-vs-V4 comparison was CONFOUNDED: the two committed
+#      ledger sets differ in StartUp as well as the ResolveS tick-snap. Recorded as an
+#      audit finding for V3_V4_VERDICT.md. This arm reproduces v4verify as-run.
+run_id: AUDIT02_V4_SWEEP_C
+experiment_id: POST_CAMPAIGN_AUDIT_01
+hypothesis_id: AUDIT-A04 (V3/V4 trade-path classification — reproduce v4verify as-run)
+family: solar_persistence (Family A)
+parent_candidate: research/10_v3v4_equivalence/ ledgers; parents AUDIT02_V4_SWEEP (unexecuted), AUDIT02_V4_SWEEP_B (StartUp=false arm, kept as the clean tick-snap comparison)
+timestamp_before_execution: 2026-08-07 (commit timestamp authoritative)
+source_commit: 124af95 (parent; spec committed immediately after writing, before execution)
+strategy_class: SolarWaveOpenV4
+strategy_source_sha256: 7671c9fb937fd5adb4ab7a00090d3fe360707834fc387a39c719f1d8070242db
+engine_version: NT8 8.1.8.1 / CrossTrade v1.13.9 / engine_fingerprint sha256:b4255f1b0dd7fba1
+vendor_dependency: none
+instrument: "NQ 09-26"
+timeframe: {period_type: Minute, value: 3, market_data_type: Last}
+data_boundaries: {from_utc: "2022-01-01T06:00:00Z", to_utc: "2026-07-31T21:59:59Z"}
+trading_hours: instrument default (CME index futures ETH)
+commission_model: "NinjaTrader Brokerage Lifetime"
+slippage_model: 1 tick per execution
+fill_model: Standard; exit-on-session-close true/30s; qty 1; isolated Backtest account
+effective_parameters_fixed: {TrendMultiplier: 90, StopMultiplier: 179, SlowdownScan: 5, WeakWeakSplit: 10, StartUp: true, AnchorMode: 0, ThresholdMode: 1, VolPeriod: 460, VolMult: 18.0, SMinTicks: 40, SMaxTicks: 1200, PriceBp: 20.0, ExitMultiplier: 0, EntrySignalType: 1, EnableLong: true, EnableShort: true, UseTimeFilter: false, Tag: "c2v4", ExportDir: "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\runs\\AUDIT02_V4_SWEEP_C\\ledgers"}
+parameters_sweep: [{name: VolMult, min: 6, max: 30, step: 2, type: double}]
+selection_metric: none — reproduction audit
+pass_criteria: >
+  Fill-by-fill match of all 13 cells against the committed v4verify ledgers with the
+  per-cell fills/nets preregistered in AUDIT02_V4_SWEEP/spec.yaml (vm6 17180 $84,023 ...
+  vm30 1794 $253,484). If exact, the V4 arm is EXACT_REPRODUCTION and the AUDIT-A04
+  verdict must additionally disclose the StartUp confound in the published comparison.
+reject_criteria: any unexplained fill mismatch => FAILED_REPRODUCTION for the V4 arm
+research_family_budget: 0 new trials (reproduction re-run; counts_as_trial: no)
+degrees_of_freedom: 0
+selection_relevance: none
