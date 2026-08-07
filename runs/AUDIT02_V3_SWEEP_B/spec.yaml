@@ -1,0 +1,42 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE results are read.
+# Supersedes AUDIT02_V3_SWEEP for the reproduction verdict. Reason, established from
+# the A-sweep evidence BEFORE this spec was written:
+#   The README/src/ninjascript recipe states StartUp=true. The A-sweep (StartUp=true)
+#   FAILED reproduction in all 13 cells; fill-level diff proves the committed h006
+#   ledgers began with a LONG first entry (StartUp=false initial state) and that the
+#   two divergent early trades explain the vm30 net gap to the dollar ($1,770.52).
+#   The committed campaign runs therefore used StartUp=false (the V3 default), and
+#   the README recipe's StartUp=true is a DOCUMENTATION DEFECT (recorded for AUDIT-06).
+#   This is a configuration-identification correction, not alpha tuning: StartUp only
+#   selects the pre-first-flip seed direction.
+run_id: AUDIT02_V3_SWEEP_B
+experiment_id: POST_CAMPAIGN_AUDIT_01
+hypothesis_id: AUDIT-A03 (R5 SolarWaveOpenV3 exact reproduction, corrected StartUp)
+family: solar_persistence (Family A)
+parent_candidate: R5 (ledgers research/05_open_axes/h006/); parent run AUDIT02_V3_SWEEP (StartUp=true arm, kept as evidence)
+timestamp_before_execution: 2026-08-07 (commit timestamp authoritative)
+source_commit: b811a21 (parent; spec committed immediately after writing, before execution)
+strategy_class: SolarWaveOpenV3
+strategy_source_sha256: 60d584c5c820d8fe131eb889a37d1e07d6e746ed5f3919b8d47d0ba7d74df167
+engine_version: NT8 8.1.8.1 / CrossTrade v1.13.9 / engine_fingerprint sha256:b4255f1b0dd7fba1
+vendor_dependency: none
+instrument: "NQ 09-26"
+timeframe: {period_type: Minute, value: 3, market_data_type: Last}
+data_boundaries: {from_utc: "2022-01-01T06:00:00Z", to_utc: "2026-07-31T21:59:59Z"}
+trading_hours: instrument default (CME index futures ETH)
+commission_model: "NinjaTrader Brokerage Lifetime"
+slippage_model: 1 tick per execution
+fill_model: Standard; exit-on-session-close true/30s; qty 1; isolated Backtest account
+effective_parameters_fixed: {TrendMultiplier: 90, StopMultiplier: 179, SlowdownScan: 5, WeakWeakSplit: 10, StartUp: false, AnchorMode: 0, ThresholdMode: 1, VolPeriod: 460, SMinTicks: 40, SMaxTicks: 1200, ExitMultiplier: 0, EntrySignalType: 1, EnableLong: true, EnableShort: true, UseTimeFilter: false, Tag: "b2v3", ExportDir: "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\runs\\AUDIT02_V3_SWEEP_B\\ledgers"}
+parameters_sweep: [{name: VolMult, min: 6, max: 30, step: 2, type: double}]
+selection_metric: none — reproduction audit
+pass_criteria: >
+  EXACT_REPRODUCTION: all 13 cells fill-by-fill identical (time, action, price,
+  commission, qty) to the committed h006 ledgers, same per-cell fill counts and the
+  nets preregistered in AUDIT02_V3_SWEEP/spec.yaml. If exact, the overall AUDIT-A03
+  verdict is RECONCILED_WITH_DOCUMENTED_DIFFERENCE at the recipe level (README
+  StartUp defect) and EXACT_REPRODUCTION at the ledger level.
+reject_criteria: any unexplained fill mismatch => FAILED_REPRODUCTION
+research_family_budget: 0 new trials (reproduction re-run; counts_as_trial: no)
+degrees_of_freedom: 0
+selection_relevance: none

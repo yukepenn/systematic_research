@@ -1,0 +1,34 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE results are read.
+# V4 reproduction arm, StartUp corrected to false (see AUDIT02_V3_SWEEP_B header for
+# the evidence chain; V3_V4_EQUIVALENCE.md confirms the committed V3 "enters long at
+# bar 39" — the StartUp=false signature — and the v4verify ledgers were produced in
+# the same session).
+run_id: AUDIT02_V4_SWEEP_B
+experiment_id: POST_CAMPAIGN_AUDIT_01
+hypothesis_id: AUDIT-A04 (V3/V4 trade-path classification)
+family: solar_persistence (Family A)
+parent_candidate: V4 verification ledgers (research/10_v3v4_equivalence/); supersedes unexecuted AUDIT02_V4_SWEEP
+timestamp_before_execution: 2026-08-07 (commit timestamp authoritative)
+source_commit: b811a21 (parent; spec committed immediately after writing, before execution)
+strategy_class: SolarWaveOpenV4
+strategy_source_sha256: 7671c9fb937fd5adb4ab7a00090d3fe360707834fc387a39c719f1d8070242db
+engine_version: NT8 8.1.8.1 / CrossTrade v1.13.9 / engine_fingerprint sha256:b4255f1b0dd7fba1
+vendor_dependency: none
+instrument: "NQ 09-26"
+timeframe: {period_type: Minute, value: 3, market_data_type: Last}
+data_boundaries: {from_utc: "2022-01-01T06:00:00Z", to_utc: "2026-07-31T21:59:59Z"}
+trading_hours: instrument default (CME index futures ETH)
+commission_model: "NinjaTrader Brokerage Lifetime"
+slippage_model: 1 tick per execution
+fill_model: Standard; exit-on-session-close true/30s; qty 1; isolated Backtest account
+effective_parameters_fixed: {TrendMultiplier: 90, StopMultiplier: 179, SlowdownScan: 5, WeakWeakSplit: 10, StartUp: false, AnchorMode: 0, ThresholdMode: 1, VolPeriod: 460, VolMult: 18.0, SMinTicks: 40, SMaxTicks: 1200, PriceBp: 20.0, ExitMultiplier: 0, EntrySignalType: 1, EnableLong: true, EnableShort: true, UseTimeFilter: false, Tag: "b2v4", ExportDir: "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\runs\\AUDIT02_V4_SWEEP_B\\ledgers"}
+parameters_sweep: [{name: VolMult, min: 6, max: 30, step: 2, type: double}]
+selection_metric: none — reproduction audit
+pass_criteria: >
+  Fill-by-fill match of all 13 cells against the committed v4verify ledgers with the
+  per-cell fills/nets preregistered in AUDIT02_V4_SWEEP/spec.yaml. Verdict vocabulary
+  fixed: TRADE_PATH_EQUIVALENT / PERFORMANCE_SIMILAR_ONLY / NOT_EQUIVALENT.
+reject_criteria: any unexplained fill mismatch => FAILED_REPRODUCTION for the V4 arm
+research_family_budget: 0 new trials (reproduction re-run; counts_as_trial: no)
+degrees_of_freedom: 0
+selection_relevance: none
