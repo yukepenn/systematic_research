@@ -1,0 +1,42 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE results are read.
+# AUDIT-02: exact reproduction of all 13 published R5 members (SolarWaveOpenV3).
+run_id: AUDIT02_V3_SWEEP
+experiment_id: POST_CAMPAIGN_AUDIT_01
+hypothesis_id: AUDIT-A03 (R5 SolarWaveOpenV3 exact reproduction)
+family: solar_persistence (Family A)
+parent_candidate: R5 (adaptive 13-member ensemble; ledgers research/05_open_axes/h006/)
+timestamp_before_execution: 2026-08-07T00:00:00Z  # commit timestamp is authoritative
+source_commit: 1f169ae (parent; spec committed immediately after writing, before execution)
+strategy_class: SolarWaveOpenV3
+strategy_source_sha256: 60d584c5c820d8fe131eb889a37d1e07d6e746ed5f3919b8d47d0ba7d74df167
+strategy_source_matches_nt8_compiled_copy: true (byte-identical repo vs Documents\NinjaTrader 8\bin\Custom\Strategies)
+engine_version: NT8 8.1.8.1 / CrossTrade v1.13.9 / engine_fingerprint sha256:b4255f1b0dd7fba1
+vendor_dependency: none
+instrument: "NQ 09-26"        # resolves NQU6, NT back-adjusted merge; same front month as original runs (run today, same date as campaign)
+timeframe: {period_type: Minute, value: 3, market_data_type: Last}
+data_hash: not preregisterable (NT8 cache); reproduction is judged fill-by-fill against the 13 committed h006 ledgers
+data_boundaries: {from_utc: "2022-01-01T06:00:00Z", to_utc: "2026-07-31T21:59:59Z"}  # WAVE2_AXES_report.md window
+trading_hours: instrument default (CME index futures ETH)
+commission_model: "NinjaTrader Brokerage Lifetime"
+slippage_model: 1 tick per execution
+fill_model: Standard; exit-on-session-close true/30s; EntriesPerDirection 1; GTC; qty 1; isolated Backtest account
+effective_parameters_fixed: {TrendMultiplier: 90, StopMultiplier: 179, SlowdownScan: 5, WeakWeakSplit: 10, StartUp: true, AnchorMode: 0, ThresholdMode: 1, VolPeriod: 460, SMinTicks: 40, SMaxTicks: 1200, ExitMultiplier: 0, EntrySignalType: 1, EnableLong: true, EnableShort: true, UseTimeFilter: false, Tag: "a2v3", ExportDir: "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\runs\\AUDIT02_V3_SWEEP\\ledgers"}
+parameters_sweep: [{name: VolMult, min: 6, max: 30, step: 2, type: double}]  # 13 cells
+parameter_hash: (per-cell, recorded post-run)
+selection_metric: none — reproduction audit; no selection performed
+pass_criteria: >
+  EXACT_REPRODUCTION requires, for every one of the 13 cells, fill-count and fill-by-fill
+  match (timestamp, side, price, commission) against the committed h006 ledger, and net
+  P&L per cell matching V3_V4_EQUIVALENCE.md table:
+  vm6 16984 fills $166,145; vm8 11076 $170,549; vm10 8072 $150,033; vm12 6166 $138,883;
+  vm14 4918 $241,924; vm16 4066 $228,891; vm18 3360 $246,515; vm20 2938 $245,125;
+  vm22 2598 $245,446; vm24 2320 $193,737; vm26 2108 $132,860; vm28 1904 $165,399;
+  vm30 1786 $249,257.
+  Any documented, fully-explained boundary difference downgrades to
+  RECONCILED_WITH_DOCUMENTED_DIFFERENCE. Anything else is FAILED_REPRODUCTION.
+reject_criteria: >
+  Unexplained fill mismatch in any cell => FAILED_REPRODUCTION. Per constitution:
+  no parameter tuning to rescue; classify honestly.
+research_family_budget: 0 new trials (reproduction re-run of existing configs; counts_as_trial: no)
+degrees_of_freedom: 0
+selection_relevance: none — audit reproduction of the already-published R5 members
