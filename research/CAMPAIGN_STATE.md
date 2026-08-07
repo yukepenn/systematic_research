@@ -314,3 +314,33 @@ produce). Those three are on the record.
 
 **Rule for any resumed work: restore the `runs/<run_id>/spec.yaml` convention and demonstrate it
 on one throwaway run before adding a single new configuration.**
+
+## 14. POST_CAMPAIGN_AUDIT_01 — 2026-08-07, branch `post_campaign_audit`
+
+Constitution v2 (the independent external audit) replaced the thesis and mandated a bounded
+reproducibility/executability audit before any new research. Executed same-day; **all pass
+criteria met; zero new R1 trials consumed** (every run a preregistered reproduction, stress, or
+instrumentation re-run). Full artifacts: `research/audit/`; evidence chains:
+`research/audit/AUDIT_EVIDENCE_MAP.md`.
+
+| item | verdict |
+|---|---|
+| P0 vendor exposure | Repo found PUBLIC again → set PRIVATE; vendor files found still **tracked at HEAD** → untracked at tip (`1f169ae`) + .gitignore guard. History rewrite remains **HUMAN ACTION REQUIRED** (`VENDOR_BINARY_REMEDIATION.md`) |
+| Determinism gates | Frozen baseline reproduced to the penny, vendor and vendor-free (`AUDIT_GATE_R01/R02`) |
+| R5 reproduction | **EXACT_REPRODUCTION 13/13 fill-by-fill** — after correcting the README recipe's `StartUp=true` defect (actual: `false`) |
+| V3/V4 | Paths **NOT_EQUIVALENT** (cells move up to −49% from the half-tick snap alone), ensembles **PERFORMANCE_SIMILAR_ONLY** (corr 0.9952, ΔSharpe +0.019, P=0.33). Published comparison was **StartUp-confounded**; conclusion survives with corrected attribution |
+| True MTM | `session_REALIZED == session_TRUE_MTM` proven to the cent for all 34 members. New disclosure: **bar-level intraday max DD is deeper than any published daily figure** (R5 −$42,204; R4 −$39,494) |
+| Executable ensemble | **R5-E10 (round(10×mean member position) MNQ, max 10) PASSES all preregistered gates**: net 90.6%, ΔSharpe −0.097, corr 0.9985, top-10 retention 98.6%. MNQ commission verified $0.65/side; the entire penalty is the micro fee multiple, not rounding. **Every discrete R4 variant FAILS** (−0.17…−0.24 Sharpe) — executability separates R5 from R4 where p=0.358 could not |
+| Cost stress | Slip-2 retains **87.4%** of R5 net (paths unchanged). The old "slip-2 halves net" text is corrected — it described 1-minute-era configs |
+| Fill audit | No fill-resolution artifact (≤1.1% net effect, favorable on balance, tails untouched); Standard is fair-conservative |
+| Registry | `reconstructed_trials.csv` reconciles R1=229 (strict relabel 295–335 disclosed; Harvey–Liu verdict unchanged at 0.000) |
+
+**Family-A reference frozen: executable R5-E10** (13 SolarWaveOpenV3 virtual members,
+StartUp=false, ThresholdMode 1, VolMult 6–30, target = round(10 × mean position) MNQ, net-change
+execution, session-close flatten; TRUE_MTM Sharpe 0.9671, net $179,361, intraday DD −$41,252).
+R4-21 remains the theoretical simplicity/robustness reference; **not** executable at acceptable
+cost. Solar parameter optimization stays closed.
+
+**POST_AUDIT_TRANSITION active → RESEARCH_WAVE_B01 (failed directional change + value
+reacceptance), per Constitution v2.** Day-margin groundwork verified (16:45 ET cutoff official;
+`research/operational/day_margin_variant/MARGIN_RULES.md`).

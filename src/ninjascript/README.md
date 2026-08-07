@@ -48,7 +48,7 @@ Full analysis: [`research/10_v3v4_equivalence/V3_V4_EQUIVALENCE.md`](../../resea
 Strategy    : SolarWaveOpenV3
 Instrument  : NQ 09-26 back-adjusted, 3-minute, Last
 ThresholdMode = 1 | VolPeriod = 460 | SMinTicks = 40 | SMaxTicks = 1200
-AnchorMode = 0 | ExitMultiplier = 0 | EntrySignalType = 1 | StartUp = true
+AnchorMode = 0 | ExitMultiplier = 0 | EntrySignalType = 1 | StartUp = false
 TrendMultiplier = 90 | StopMultiplier = 179   (both inert at ThresholdMode 1)
 SlowdownScan = 5 | WeakWeakSplit = 10 | UseTimeFilter = false
 Commission  : NinjaTrader Brokerage Lifetime      Slippage: 1 tick     Fill: Standard
@@ -57,6 +57,16 @@ Exit on session close = true
 VolMult     : sweep 6, 8, 10, ... 30  -> 13 cells, held at EQUAL RISK (1/N)
               DO NOT select a single VolMult. PBO for that choice is 0.898.
 ```
+
+> _Corrected 2026-08-07 by POST_CAMPAIGN_AUDIT_01: this recipe previously said
+> `StartUp = true`, which does NOT reproduce the published ledgers (all 13 cells
+> differ). The committed campaign runs used `StartUp = false` (the V3 default);
+> with that value the audit re-executed all 13 cells **fill-by-fill identical**.
+> Note the committed V4 comparison ledgers (`research/10_v3v4_equivalence/`) were
+> produced with `StartUp = true`, so the published V3/V4 fill comparison mixes the
+> tick-snap with the StartUp difference — see
+> `research/audit/V3_V4_VERDICT.md` for the clean matched-StartUp comparison
+> (same conclusion, corrected attribution)._
 
 The 13 cells are one optimization job. **The ensemble is not** — NT8 has no
 portfolio-of-parameterisations backtest, so the 1/N aggregation happens in

@@ -105,3 +105,24 @@
     calendar after its C2 row was found to use a skipna mean instead of strict 1/N;
     vendor-parity bar count corrected 1,436,860 -> 2,035,869; trial count counted
     (229 on the R1 basis) rather than asserted. Registry and runs/ gap remains OPEN.
+- experiment_id: POST_CAMPAIGN_AUDIT_01
+  status: PASS
+  preregistered: true           # every run: spec.yaml committed before execution (b811a21/124af95/034abd9/2a125a4)
+  branch: post_campaign_audit   # from campaign HEAD e5079e1; constitution v2 committed 3bc5a3a
+  report: research/audit/AUDIT_EXECUTIVE.md
+  trials_consumed_R1: 0         # reproductions, cost/fill stresses, instrumentation only
+  key_findings: >
+    R5 EXACT_REPRODUCTION 13/13 fill-by-fill after correcting the README recipe's
+    StartUp=true defect (actual: false). Committed V4 evidence reproduced exactly at
+    StartUp=true - the published V3/V4 comparison was StartUp-confounded; clean
+    matched-StartUp comparison: paths NOT_EQUIVALENT (cells to -49%), ensembles
+    PERFORMANCE_SIMILAR_ONLY (corr 0.9952, dSharpe +0.019, P=0.33).
+    session_TRUE_MTM == session_REALIZED proven for all 34 members; bar-level
+    intraday max DD deeper than published dailies (R5 -42,204 / R4 -39,494).
+    Executable: R5-E10 (round(10 x mean) MNQ) PASSES all preregistered gates
+    (net 90.6%, dSharpe -0.097, corr 0.9985, top-10 98.6%); every discrete R4
+    variant FAILS - executability separates R5 from R4. MNQ Lifetime commission
+    verified 0.65/side. Slip-2 retains 87.4% (old "halves net" text corrected).
+    No fill-resolution artifact. P0: repo found public again -> private; vendor
+    files found tracked at HEAD -> untracked at tip; history rewrite HUMAN ACTION.
+    Family-A reference frozen: executable R5-E10. POST_AUDIT_TRANSITION active.
