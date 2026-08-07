@@ -311,3 +311,42 @@
     thin cells, not a conditionable effect. The wave counter is a correct description of
     trend structure and is NOT an edge. This was the last untested live signal in the
     recovered model; the frontier of signal-architecture work is now closed.
+# --- POST_CAMPAIGN_AUDIT_01 (2026-08-07, branch post_campaign_audit) ---
+- id: POST_CAMPAIGN_AUDIT_01
+  phase: audit
+  status: passed
+  result: >
+    All ten audit objectives resolved; zero new R1 trials. R5 EXACT_REPRODUCTION
+    (13/13 fill-by-fill; README StartUp defect corrected). V3/V4: NOT_EQUIVALENT
+    paths / PERFORMANCE_SIMILAR_ONLY ensembles; published comparison was
+    StartUp-confounded. TRUE_MTM == session-realized proven; intraday DD deeper
+    than dailies (R5 -42,204). Executable R5-E10 passes preregistered gates
+    (net 90.6%, dSharpe -0.097); all discrete R4 variants fail. Slip-2 retains
+    87.4%. No fill artifact. MNQ commission 0.65/side verified. Vendor P0
+    re-contained (private; untracked at tip); history rewrite = human action.
+  gates: research/audit/AUDIT_EVIDENCE_MAP.md
+- id: FAMILY_A_EXECUTABLE_REFERENCE
+  phase: post-audit
+  status: frozen
+  result: >
+    R5-E10: 13 SolarWaveOpenV3 virtual members (StartUp=false, ThresholdMode 1,
+    VolPeriod 460, clamp 40-1200 ticks, VolMult 6..30), target = round(10 x mean
+    member position) MNQ, max 10, net-change execution, session-close flatten.
+    TRUE_MTM Sharpe 0.9671, net $179,361, daily DD -$41,252, daily corr with
+    the theoretical proxy 0.9985. R4-21 retained as theoretical robustness
+    benchmark only (executable forms fail gates).
+- id: RESEARCH_WAVE_B01
+  phase: family-B
+  status: active
+  hypothesis: >
+    Failed directional persistence (overshoot-deficit failed flips, re-cross
+    entry per DR-05 triage) plus value/VWAP reacceptance yields a return stream
+    with standalone positive after-cost expectancy and materially lower
+    losing-day correlation with Family A. Seeds: DR05-H1..H5, FAIL-01, VALUE-01,
+    SESSION-01. Gates preregistered per-arm before any result read.
+  depends_on: [POST_CAMPAIGN_AUDIT_01]
+- id: PORTABILITY_01_THIRD_INSTRUMENT
+  phase: portability
+  status: pending
+  note: YM + RTY + CL preregistered; instrument-normalized thresholds; no cherry-picking.
+  depends_on: [POST_CAMPAIGN_AUDIT_01]
