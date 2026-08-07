@@ -267,6 +267,15 @@ execution ledgers.
   `type0_attribution`, `open_model_validation`, `solar_family_finalists`, `complementary_families`,
   `final_red_team`, `TYPE0_ATTRIBUTION_REPORT`) — all now written.
 
+**Found and fixed 2026-08-07 (second pass).** The R5 specification named `SolarWaveOpenV4`; every
+published R5 figure was actually measured on `SolarWaveOpenV3`. Verified by re-running all 13 cells
+through V4 and comparing fill-by-fill: **not equivalent** — V4's `ResolveS()` snaps `S` to the tick
+grid, V3 does not, and a half-tick shift changes which bars flip. Spec corrected to V3; **no
+published number changes**, because none was ever measured on V4. The check produced a bonus
+result: R5 is **insensitive** to the discretisation (ΔSharpe +0.029, P(Δ ≤ 0) = 0.247, daily
+correlation 0.9949) while individual cells move by up to 44 %. Full analysis:
+`research/10_v3v4_equivalence/V3_V4_EQUIVALENCE.md`.
+
 **Disclosed, not fixed:** daily P&L is bucketed by calendar date rather than NT8 session date
 (18:00 ET roll). The published basis is ~6 % **conservative**; both are now reported in
 `final_pareto.csv`.

@@ -99,7 +99,9 @@ years, so the 460-bar choice is not load-bearing.
 ## Exact specification of the recommended finalist (R5)
 
 ```
-Engine     : SolarWaveOpenV4, ThresholdMode = 1        (open model, zero vendor dependency)
+Engine     : SolarWaveOpenV3, ThresholdMode = 1        (open model, zero vendor dependency)
+             NOT V4 - V4 snaps S to the tick grid and is a different strategy.
+             See research/10_v3v4_equivalence/V3_V4_EQUIVALENCE.md
 Instrument : NQ 09-26 back-adjusted, 3-minute bars, Last
 Core       : anchor = running extreme of the CLOSE since trend start
              flip when close STRICTLY breaks anchor -/+ S

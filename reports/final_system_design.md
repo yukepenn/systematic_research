@@ -137,7 +137,7 @@ catastrophically. The excess is what the filter costs, and it is not recoverable
 ## 7. Exact specification of the recommended architecture (R5)
 
 ```
-Engine     : SolarWaveOpenV4, ThresholdMode = 1        (open model, zero vendor dependency)
+Engine     : SolarWaveOpenV3, ThresholdMode = 1        (open model, zero vendor dependency)
 Instrument : NQ 09-26 back-adjusted, 3-minute bars, Last
 Core       : anchor = running extreme of the CLOSE since trend start
              flip when close STRICTLY breaks anchor -/+ S
@@ -152,9 +152,23 @@ Inert      : TrendMultiplier, SlowdownScan, WeakWeakSplit, PullbackSplit do not 
              Type-1 flip rule at all - this is derived, not merely measured
 ```
 
+> **Corrected 2026-08-07.** This block previously named `SolarWaveOpenV4`. It was verified by
+> re-running all 13 cells through V4 and comparing fill-by-fill: **V4 is not equivalent.** V4's
+> `ResolveS()` snaps `S` to the tick grid; V3 does not. Every published R5 figure was measured on
+> **V3**, so no number changes — but the spec was naming a strategy that had never been run.
+> Full analysis: `research/10_v3v4_equivalence/V3_V4_EQUIVALENCE.md`.
+
 Robustness already established for it: every σ-estimator lag from 0.13 to 7.96 sessions gives
 Sharpe 0.769–1.494 with 11/13 cells positive in all five years (H-012), so the 460-bar choice is
 not load-bearing.
+
+**Threshold-discretisation robustness (new, 2026-08-07).** The V3/V4 check above doubles as a free
+sensitivity test: V4 differs from V3 *only* by rounding `S` to the nearest tick (≤ half a tick,
+$2.50 on NQ). Result: ΔSharpe +0.029 with paired block-bootstrap **P(Δ ≤ 0) = 0.247**, daily P&L
+correlation 0.9949, and V4 has the *smaller* drawdown (−$36,275 vs −$39,126). **R5 is insensitive
+to the discretisation.** Note the same test shows individual cells moving by up to 44 % (VolMult 6:
+$166k vs $84k) — the ensemble is stable where its members are not, which is the campaign's central
+finding, reproduced here by accident.
 
 ## 8. What would invalidate this system economically
 
