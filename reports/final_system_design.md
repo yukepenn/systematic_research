@@ -41,15 +41,22 @@ No candidate dominates. All are ensembles; none is a single cell.
 |---|---|---|---|---|---|---|---|
 | **R5** adaptive `S = k·σ`, 13 cells | $198,059 | **0.995** | **−$39,126** | **0.928** | +$12,160 | 5/5 | **0.0032** |
 | **R4** fixed, all 21 cells | $159,424 | 0.908 | **−$35,669** | 0.820 | +$2,583 | 5/5 | 0.0076 |
-| **C2** T1 core + one T3 re-entry, 8 cells | **$221,253** | 0.818 | −$46,957 | 0.864 | **+$13,463** | 5/5 | 0.0115 |
+| ~~**C2** T1 core + one T3 re-entry, 8 cells~~ **REJECTED** | $221,253 | 0.818 | −$46,957 | 0.864 | +$13,463 | 5/5 | 0.0115 |
 | anchor: close-confirmed High/Low, 10 cells | $215,137 | 0.928 | −$47,698 | 0.827 | +$7,023 | 5/5 | 0.0112 |
 | R4b fixed plateau, 8 cells *(as first published)* | $180,479 | 0.787 | −$53,689 | 0.617 | +$7,796 | 5/5 | 0.0154 |
 
-**Recommended architecture: R5** — the volatility-normalised ensemble. Best Sharpe, best Calmar,
-best drawdown among the profitable set, strongest absolute-edge significance, positive every year,
-and the only family whose *mechanism* was confirmed by a preregistered control (§4). **C2** is the
-strongest single addition and should be layered on it once the sleeve is re-tested on an adaptive
-core rather than a fixed one.
+**Recommended architecture: R5** — the volatility-normalised ensemble, **Type-1 signals only**.
+Best Sharpe, best Calmar, best drawdown among the profitable set, strongest absolute-edge
+significance, positive every year, and the only family whose *mechanism* was confirmed by a
+preregistered control (§4).
+
+**R5 stands unimproved.** C2 looked like the strongest available addition on a fixed core
+(+29 % net, smaller drawdown, better worst year) — and then **failed its interaction test**: on the
+adaptive core it costs 0.40 Sharpe, breaks the every-year-positive property, and worsens drawdown
+(ΔSharpe −0.402, P(Δ ≤ 0) = 0.879). A sleeve whose sign flips when the core's threshold rule
+changes is exploiting an interaction, not capturing an effect. It is rejected. Wave-index
+conditioning, the last untested signal in the model, likewise produced nothing usable
+(non-monotone, 0.54–0.93 across MinWave 1–8). **Every sleeve and conditioning axis is closed.**
 
 Every one of these is quoted at one contract of average exposure. None should be scaled without the
 tail analysis in §6.
@@ -78,6 +85,8 @@ tail analysis in §6.
 | H-007 / DR03-H1 split exit ≠ reversal | **FALSE** | monotone degradation at both reversal distances |
 | H-008 raw High/Low anchor | **FALSE** | Sharpe 0.527 — the ladder chases wicks |
 | C4 adding Type-2 to the core | **FALSE** | −0.33 Sharpe vs the T1 core |
+| C2 Type-3 re-entry sleeve as a general improvement | **FALSE** | works on a fixed core, costs 0.40 Sharpe on an adaptive one (P = 0.879) |
+| wave-index conditioning | **FALSE** | non-monotone, 0.54–0.93 across MinWave 1–8; no usable signal |
 | price-proportional threshold | **FALSE** | Sharpe 0.250; worse than a plain fixed tick count (p = 0.999) |
 | DR06-H5 iid understates tail risk | **FALSE** | block/iid drawdown ratio 0.987 |
 | original SW05 chop veto | **INVERTED** | would delete 74 % of profit |
@@ -170,14 +179,17 @@ If work continues, the highest-value next steps are, in order:
 
 1. **Monitor the overshoot ratio `r` quarterly** — free, requires no trading, and is the system's
    own early-warning statistic.
-2. **Re-test the C2 Type-3 sleeve on an adaptive core** (it was only tested on a fixed one) and on
-   ES.
-3. **Wave-index conditioning** — per-trade economics rise monotonically through wave 4 ($26 → $151);
-   this is the last untested live signal in the recovered model.
-4. **A third instrument** (RTY, YM, or CL) to convert the single ES failure into an actual
-   portability distribution rather than one data point.
-5. Complementary families (failed persistence per DR-05), which is the only route to a portfolio
+2. **A third instrument** (RTY, YM, or CL) to convert the single ES failure into an actual
+   portability distribution rather than one data point. This is now the highest-value empirical
+   step, because portability is the only one of the three promotion criteria still open.
+3. Complementary families (failed persistence per DR-05), which is the only route to a portfolio
    that does not simply hold more of the same factor.
+4. Genuinely forward data after a strategy freeze. Every remaining question is data-limited rather
+   than method-limited: resampling 4.6 years of NQ has been exhausted.
+
+Items 2 and 3 from the earlier draft — re-testing C2 on an adaptive core, and wave-index
+conditioning — have since been **run and both failed**; they are recorded in §5 rather than
+carried forward.
 
 Nothing here should be deployed. This campaign is historical research only, and its most defensible
 output is the exact open model plus a clear-eyed account of how thin the edge is.

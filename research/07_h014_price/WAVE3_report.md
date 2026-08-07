@@ -180,3 +180,59 @@ with the raw count used for the R6 haircut.
 | **C4** adding Type-2 | **FAIL** — −0.33 Sharpe |
 | Wave-index conditioning | **live** — monotone per-trade economics through wave 4; not yet tested as a filter in the engine |
 | DSR as a promotion criterion | **abandoned** — cannot adjudicate; promotion must rest on structure, mechanism, portability |
+
+---
+
+## 7. ADDENDUM — the two remaining live items both close NEGATIVE
+
+### 7a. The Type-3 sleeve does **not** stack on an adaptive core — it destroys it
+
+C2 was only ever tested on a *fixed*-threshold core. Re-running it on the adaptive core (13 cells,
+matched k grid, everything else identical):
+
+| architecture | net | **Sharpe** | max DD | Calmar | worst year | positive years |
+|---|---|---|---|---|---|---|
+| **R5** adaptive, Type-1 only | $198,059 | **0.994** | **−$39,126** | **0.926** | **+$12,160** | **5/5** |
+| R5 + C2 one Type-3 re-entry | $147,931 | 0.592 | −$45,278 | 0.598 | **−$4,065** | 4/5 |
+
+Paired block bootstrap: **ΔSharpe −0.402, P(Δ ≤ 0) = 0.879.** The sleeve costs 0.40 Sharpe, breaks
+the every-year-positive property (2025 turns negative), and worsens the drawdown.
+
+**This kills C2 as a general improvement.** Its apparent value on the fixed core (+29 % net, better
+drawdown, better worst year) does not survive a change to the core it sits on. A sleeve whose sign
+flips when you change the threshold rule is not capturing a robust effect — it is exploiting an
+interaction with one specific threshold schedule. That is precisely the fragility the campaign
+exists to detect, and it was found by a preregistered follow-up rather than by chance.
+
+The mechanism is legible in hindsight: on the fixed core the re-entries were concentrated in the
+wide cells (SM 230/240/250 supplied $111k/$125k/$136k of the sleeve's $488k). The adaptive core
+already spends most of its time at an effectively wide threshold, so the re-entries no longer land
+where they helped, and their cost — friction on 10,000+ marginal trades — is all that remains.
+
+### 7b. Wave-index conditioning — **no exploitable signal**
+
+The Python attribution had shown per-trade economics rising monotonically with the wave index
+($26 → $53 → $76 → $151 for waves 1 → 4), which looked like the last free information in the
+recovered model. Requiring a minimum wave index for re-entries (SM 230, up to 3 re-entries):
+
+| MinWave | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---|---|---|---|---|---|---|---|
+| Sharpe | 0.81 | 0.81 | 0.54 | 0.86 | 0.54 | 0.65 | 0.55 | 0.93 |
+| trades | 6,918 | 6,918 | 6,240 | 5,910 | 5,741 | 5,650 | 5,601 | 5,563 |
+
+MinWave 1 and 2 are identical by construction (a Type-3 always implies wave ≥ 2). Beyond that the
+response is **non-monotone and indistinguishable from noise** — 0.54, 0.86, 0.54, 0.65, 0.55, 0.93 —
+on a steadily shrinking trade count. The attractive per-wave averages in the Python attribution came
+from a handful of large trades in a thin cell count, not from a conditionable effect.
+
+**The wave counter carries no usable trading signal.** It remains a correct and interesting
+description of trend structure; it is not an edge.
+
+### 7c. What this leaves
+
+Every sleeve and every conditioning axis is now closed. **R5 — the volatility-normalised ensemble,
+Type-1 signals only — stands alone as the recommended architecture**, and it stands unimproved by
+anything the campaign was able to add to it. That is a cleaner result than a stack of marginal
+enhancements would have been, and it is consistent with the campaign's dominant finding: on 4.6
+years of one instrument, almost nothing is separable from noise, and the additions that look
+helpful are the ones most likely to be fitting the specific core they were tested against.
