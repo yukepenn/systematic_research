@@ -1,0 +1,37 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE the escalation
+# facets are read. Chronology note: B01e's SUMMARY (n=633, net $75,095, avg
+# $118.63, yearly nets, 4/5 positive) was seen when its preregistered null-
+# rejection rule fired. Every gate below is on a facet NOT yet seen.
+run_id: B02_GAP_ESCALATION
+experiment_id: RESEARCH_WAVE_B01
+hypothesis_id: B08/F06 gap rejection (escalated from DR05-H5 null rejection per its own frozen escalation rule)
+family: gap_rejection (Family B candidate, distinct event class from failed-DC and ORB)
+parent_candidate: B01e (seq 231, null REJECTED)
+tested_config_seq: 232
+timestamp_before_execution: 2026-08-07 (commit timestamp authoritative)
+source_commit: (parent = B01e result commit; this spec committed before escalation reads)
+engine: pure-Python vector backtest; driver src/analytics/b02_gap_escalation.py
+data: runs/B01A_BARS_1M/nq_1m_2022_2026.csv (sha256 manifested)
+configuration: IDENTICAL to B01e — gap >= 0.35% at 09:30 vs prior 16:00 close,
+  fade toward prior close, target = prior-close touch, exit 11:30 ET close
+  otherwise, entry next-open with slippage per side, $4.36 RT. ZERO changes.
+degrees_of_freedom: 0 new (escalation reads unseen facets of the same frozen config)
+selection_metric: none
+pass_criteria: >
+  ALL of the following, none yet seen at write time:
+  (1) slip-2 net > 0 and slip-2 avg trade >= $35;
+  (2) roll-day integrity: excluding the ~19 quarterly roll-adjacent sessions
+      changes net by < 15% (else the edge is a back-adjustment artifact => FAIL);
+  (3) concentration: net excluding the top 5 winning days > 0 AND top-1% of
+      trades contribute < 50% of net;
+  (4) no price stop => tail check: worst single trade > -$4,000 and ES5 of
+      per-trade P&L > -$1,500;
+  (5) independence: losing-day correlation with Family A (R5-E10 daily,
+      session basis) < +0.2, and Family-A top-10-day retention of a 50/50
+      equal-risk combination >= 85%;
+  (6) monthly-block stability: positive in >= 60% of months with >= 3 events.
+reject_criteria: >
+  Any gate failure => FAIL and the gap axis closes for this campaign (the B01e
+  summary alone is not promotable evidence). Constants may never be adjusted.
+research_family_budget: 1 R1 trial (seq 232; the escalation read of the same config)
+selection_relevance: yes — Family-B candidate gate
