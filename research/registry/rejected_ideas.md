@@ -19,6 +19,27 @@ Seeded from thesis §14 (2026-08-06):
   Per DR-05's frozen rule, the failed-flip fade (DR05-H2 / thesis FAIL-01
   re-cross variant) is dead unbuilt; re-testing requires a genuinely new
   failure definition, not re-tuned constants.
+- **B01e/B02 gap rejection (seq 231-232).** The DR05-H5 null control REJECTED its
+  null (633 fades, avg $118.63 slip-1, 4/5 years) but the preregistered
+  escalation FAILED 3/6 gates: top-1% of trades = 90.1% of net (< 50% required),
+  worst trade −$8,544 / trade-ES5 −$5,390 (stopless left tail; −$4,000/−$1,500
+  bounds), 52.7% of active months positive (≥ 60% required). Roll-artifact and
+  slip-2 checks PASSED (net_ex_roll Δ0.8%; slip-2 avg $108.63) and losing-day
+  correlation with Family A was −0.08 with 101.7% top-10 retention — the event
+  class is genuinely independent, but the P&L is a few giant gap-fill days plus
+  a fat left tail. Axis CLOSED. A stopped/risk-managed variant would be a NEW
+  hypothesis (tuned constants) requiring fresh preregistration in a future wave;
+  it may not be built by adjusting this one after the read. Evidence:
+  research/04_complementary_family/b02_gap_escalation_result.csv.
+
+**WAVE B01 CONCLUSION (2026-08-07).** All DR-05 arms resolved: H1(b) FAIL, H2
+dead unbuilt, H3 FAIL, H4 dead by dependency, H5 null-rejected then escalation
+FAIL. Family B in its preregistered high-value forms (failed-DC reversion,
+ORB-failure reacceptance, gap rejection) is FALSIFIED on 2022–2026 NQ under
+frozen gates. 3 R1 trials consumed (seq 230–232) of the ≤12 budget. Untested
+lower-prior variants (F04 overnight-range failure, F05 prior-day-range failure,
+F07 balanced-value reversion, F08 session handoff) inherit negative evidence
+from B01a/B01c and are deprioritized below PORTABILITY-01.
 - **DR05-H3 / B01c ORB-failure + reacceptance fade (seq 230).** 1,037 events
   2022-2026, 696 vetoed by the frozen Solar-alignment veto (67%), 341 traded.
   Net -$22,534 at slip-1 (PF 0.839, avg -$66.08), -$19,124 even at slip-0;
