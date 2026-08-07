@@ -193,3 +193,106 @@ Any one of these failing should move H-006 to FAILED rather than back to INCONCL
 - **The falsifications stand** (H-007, H-011, raw-HL anchor, 16:30 exit, the 46 %-untaken premise).
   Negative results at this effect size are far more robust than positive ones: H-007 and H-011 were
   not marginal, they were monotone and catastrophic respectively.
+
+
+---
+
+# ADDENDUM — adjudication (5th reviewer) and controller re-verification
+
+_All numbers below were reproduced by the controller with the newly committed driver
+`src/analytics/ensembles.py`, which now fixes the conventions so no future reviewer has to
+reverse-engineer them. Union calendar: **1,370 sessions**._
+
+## A. The corrected comparison table (all-days Sharpe, union calendar, strict 1/N ensembles)
+
+| family | members | net | **Sharpe** | max DD | PSR | worst year | positive years |
+|---|---|---|---|---|---|---|---|
+| **fixed, ALL 21 cells (the fair comparator)** | 21 | $159,424 | **0.910** | **-$35,669** | 0.986 | +$2,583 | 5/5 |
+| fixed plateau (R4 as published, SM 180-250) | 8 | $180,479 | 0.788 | -$53,689 | 0.969 | +$7,796 | 5/5 |
+| fixed wide (SM 280-880) | 13 | $146,466 | 0.760 | -$53,200 | 0.967 | -$625 | 4/5 |
+| adaptive `S = k*sigma` | 13 | $198,059 | 0.996 | -$39,126 | 0.993 | +$12,160 | 5/5 |
+| close-confirmed HL anchor | 10 | $215,137 | 0.930 | -$47,698 | 0.986 | +$7,023 | 5/5 |
+| combo | 13 | $196,887 | 1.003 | -$41,178 | 0.993 | +$6,422 | 5/5 |
+
+**A claim from the main report is corrected here.** Section 2 said the adaptive family kept an
+advantage on drawdown. Against the *fair* comparator it does not: **fixed-ALL-21 has the best max
+drawdown in the campaign (-$35,669 vs adaptive's -$39,126)** and is positive in all five years.
+
+## B. The absolute edge is real; only the comparison fails
+
+Circular block bootstrap (L = 20, B = 10,000) of `P(Sharpe <= 0)` for each ensemble:
+
+| ensemble | P(Sharpe <= 0) |
+|---|---|
+| adaptive | **0.0032** |
+| fixed, all 21 | **0.0066** |
+| fixed plateau (R4) | **0.0147** |
+
+This is the most important positive result of the review and it had not been stated:
+**every ensemble's edge is statistically distinguishable from zero before deflation.** What fails
+is the *comparative* claim between two families correlated at 0.49 over 4.6 years — which no
+amount of resampling could resolve at a Sharpe difference of 0.2. That is a limit of the data, not
+a defect of the process, and it should be reported that way rather than as a failure of H-006.
+
+Comparative, for the record: adaptive minus fixed-ALL-21 = **+0.087, P(d <= 0) = 0.357**; ex-2025
++0.046, P = 0.452. Against the originally published comparator (R4): +0.208, P = 0.282; ex-2025
++0.052, P = 0.464 — and **excluding 2025 the fixed plateau earns more money** ($151,019 vs
+$137,599).
+
+## C. NEW and serious: R4's own plateau boundary is an in-sample selection
+
+The adjudicator raised a critique none of the first four reviewers did, and it lands on R4 rather
+than on H-006:
+
+> the plateau's own boundary [SM 180, 250] is itself an in-sample selection — the later wide sweep
+> showed the region it excluded (SM 480-880) contains the highest-Sharpe fixed cells (SM 830:
+> 1.748), so "the plateau" is a subregion chosen by full-history performance, exactly the operation
+> the campaign's own CSCV machinery says does not travel.
+
+This is correct, and it is uncomfortable precisely because it applies the campaign's central
+finding to the campaign's own reference architecture. Wave 1c proved you cannot select a
+StopMultiplier — but R4 was defined by selecting a *range* of StopMultipliers on full-history
+performance. The remedy is already visible in the table above: **the honest fixed reference is the
+full 21-cell family, not the 8-cell plateau.** It has both a better drawdown and a better Sharpe
+(0.910 vs 0.788) than the hand-drawn plateau, which is exactly what one expects if the boundary
+contributed nothing but selection.
+
+**Action taken: R4 is redefined as the full connected profitable range (21 cells, SM 170-880).**
+The 8-cell version is retained in the record as the originally published variant.
+
+Two related confirmed findings: the **fixed-wide family's PBO is 0.227** — the *lowest* of any
+family measured, i.e. StopMultiplier in the wide range is the most selectable axis in the whole
+campaign, and it was never reported. And the Wave-2 report's dismissal of "an isolated spike at
+SM 830" is inaccurate: SM 780/830/880 = 0.896/1.748/1.294 is a three-cell elevated tail.
+
+## D. Other confirmed corrections
+
+- **`$216,922` must not be quoted as achievable dollars.** It comes from a daily-tilt exposure
+  convention; a minute-level position reconstruction puts the leverage-achievable figure at
+  **~$188k**. Removed from `CAMPAIGN_STATE.md` section 3.
+- **DC02's headline is overstated but its direction survives.** Its third "year" is January 2025
+  alone (the canonical ledger ends 2025-01-31). On full years only, the spreads shrink to
+  tick 0.049 / price 0.025 / vol 0.018 — volatility normalisation is still the most stable, but
+  the "halves the drift" quantification does not generalise. The mechanism's *direction* stands;
+  its *magnitude* is withdrawn.
+- **No driver scripts were committed** for the ensemble / DSR / CSCV tables, forcing five
+  reviewers to reverse-engineer conventions independently. Fixed: `src/analytics/ensembles.py` is
+  now the single source, with the binding conventions written into its docstring.
+
+## E. Final verdicts
+
+| result | verdict |
+|---|---|
+| **RE01 / RE02 complete indicator recovery** | **STANDS** — exact parity, not a statistical claim; untouched by this review |
+| **"Parameter selection is impossible; hold an unselected ensemble"** | **STANDS** — PBO 0.631-0.898, all IS->OOS slopes negative, verified with independent code |
+| **Absolute edge of every ensemble** | **STANDS** — P(Sharpe <= 0) = 0.003-0.015 |
+| **R4 as published (8-cell plateau)** | **WEAKENED** — its boundary was itself in-sample; redefined as the full 21-cell range |
+| **R5 / H-006 comparative superiority** | **INCONCLUSIVE** — +0.087 Sharpe, P = 0.357; the effect is one calendar year |
+| **All DSR figures** | **WITHDRAWN** — inconsistent (N, V) pair |
+| **All Wave-1c / Wave-2 falsifications** | **STAND** — H-007, H-011, raw-HL anchor, 16:30 exit, the 46%-untaken premise |
+| **Data and computation layer** | **CLEAN** — every headline reproduces to the dollar from raw ledgers; the gate reproduces the frozen baseline to the penny |
+
+No reviewer finding was discarded as wrong. Two results carry reduced weight because they rest on
+reconstructions the adjudicator could not verify to ledger grade (a re-implemented Python engine,
+and a volatility-tercile split built on a pseudo-close proxy); both are routed into the registered
+**H-014** NT8 experiment rather than being treated as established.

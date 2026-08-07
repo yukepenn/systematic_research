@@ -210,3 +210,21 @@
     Decisive control for H-006's mechanism claim. If a price-proportional threshold matches the
     volatility-proportional one, "volatility normalisation" is really just "time-varying
     threshold" and the mechanism attribution dies. SolarWaveOpenV3 already parameterises the axis.
+- id: R4_REDEFINED_FULL_RANGE
+  phase: 1
+  status: passed
+  result: >
+    Red-team finding: the 8-cell "plateau" boundary [SM180,250] was itself chosen on
+    full-history performance - the same operation CSCV says does not travel. Redefined R4
+    as the full connected profitable range (21 cells, SM 170-880): Sharpe 0.910 all-days on
+    the 1,370-session union calendar, max DD -$35,669 (best in the campaign), positive all
+    5 years, worst year +$2,583, block-bootstrap P(Sharpe<=0) = 0.0066. Driver committed at
+    src/analytics/ensembles.py with the binding conventions in its docstring.
+- id: CONVENTIONS_FIXED_20260807
+  phase: 0
+  status: passed
+  result: >
+    Binding from 2026-08-07: Sharpe on ALL days of the union calendar (1,370 sessions), never
+    ensemble-active days; ensembles are strict 1/N including flat days; exposure-matched dollar
+    figures are convention-dependent and must not be quoted as achievable; every ensemble/DSR/
+    CSCV table must be produced by a committed driver script.

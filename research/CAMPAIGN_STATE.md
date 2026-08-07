@@ -48,19 +48,30 @@ CSCV over 16 chronological blocks (12,870 splits, 1,318 trading days): **PBO 0.5
 **$16,131 on 1-minute where the median config earns $121,373**. StopMultiplier is **not
 selectable** from in-sample performance.
 
-What works instead — hold the whole connected plateau at equal risk:
+What works instead - hold the whole connected profitable range at equal risk, **without choosing
+its boundary**. The red team showed the original 8-cell "plateau" boundary was itself an in-sample
+selection, so the honest reference is every fixed cell actually tested. All figures are all-days
+Sharpe on the 1,370-session union calendar, produced by `src/analytics/ensembles.py`:
 
-| | 3m ensemble (8 cells) | best single (unknowable ex ante) | mean single |
+| | **R4: fixed, ALL 21 cells** | 8-cell plateau (as originally published) | best single (unknowable ex ante) |
 |---|---|---|---|
-| net, exposure-matched | **$216,922** | $249,934 | $180,479 |
-| daily Sharpe | **+0.803** | +0.947 | +0.668 |
-| max drawdown | **−$53,689** | −$71,395 | — |
-| positive in all 5 years | **yes** | — | 3 of 8 members |
+| net | $159,424 | $180,479 | $249,934 |
+| daily Sharpe | **+0.910** | +0.788 | +0.947 |
+| max drawdown | **-$35,669** | -$53,689 | -$71,395 |
+| worst year | +$2,583 | +$7,796 | - |
+| positive in all 5 years | **yes** | yes | - |
 
-The ensemble beats 88 % of its own members on Sharpe, is positive every year when only 3 of 8
-members are, and is not an exposure artifact (gross exposure ratio 1.000; members agree on
-direction only 53.6 % of days). Promoted to reference architecture **R4**.
-(The DSR figure originally quoted here is **withdrawn** - see section 8.)
+The full-range ensemble beats the hand-drawn plateau on both Sharpe and drawdown - which is what
+one expects if the boundary added only selection. Both are positive every year when only 3 of the
+8 plateau members are, and neither is an exposure artifact (gross exposure ratio 1.000).
+
+**The absolute edge is statistically real:** circular block bootstrap P(Sharpe <= 0) = 0.0066 for
+R4-21, 0.0147 for the 8-cell version, 0.0032 for the adaptive family. What is *not* established is
+any comparative ranking between families - see section 8.
+
+(The DSR figure and the "$216,922 exposure-matched" figure originally quoted here are both
+**withdrawn** - see section 8. The latter came from a daily-tilt convention; a minute-level
+reconstruction puts it near $188k, and it should never have been presented as achievable dollars.)
 
 ## 4. Frozen baseline (unchanged)
 SolarWaveRKReplicaV0 · T1 · 90/179/5/10/true/10 · 1m Last · NQU6 · Lifetime · canonical window.
