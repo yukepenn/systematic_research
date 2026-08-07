@@ -22,8 +22,9 @@
 - [x] **P2: split geometry FROZEN** (CONTAMINATION_LEDGER): dev tick 2025-08-10→2026-05-31,
       sealed scalp holdout 2026-06-01→2026-07-31 (single-read at Tier-3), minute dev from
       2005, ≥2026-08-01 locked.
-- [~] **E10 Flatten1644 direct confirmation** (Amendment §11, Solar side): building
-      SolarWaveE10Master_v2, full-period Analyzer run vs v1 — in progress.
+- [x] **E10 Flatten1644 CONFIRMED_ADOPT** (Amendment §11): v2 full-period run vs v1 —
+      net −5.35% (gate [−8%,0%]), corr 0.9972, DD flag investigated & cleared, tail
+      retention 95.8%. v2 = live-ops default. runs/E10MASTER_V2/results.md.
 - [ ] **Wave W1 (Tier-0): instrumentation first, alpha second** —
       W1-0 instrumentation (no selection risk): tick/BBO export pipeline → spread-state map
       (H-EXEC-1), Roll-bounce guardrail (H-A3), timestamp-integrity audit, L3 semantics;

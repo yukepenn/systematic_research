@@ -30,8 +30,17 @@ Cost ≈ $1,460/yr on ≈ $46k/yr net, statistically indistinguishable from zero
 2. **The aggressive compounding tiers become margin-feasible.** At $4k-equity/MNQ the ladder was literally infeasible ($4,343 initial > $4,000 equity per contract); at $7.5k it was tight. With flatten, margin never binds at any tier we would consider — the binding constraint reverts to where it belongs: the Kelly/drawdown wall (see sizing discussion, 2026-08-07). Margin relief is NOT a license for more leverage.
 3. **Removes forced-liquidation risk.** NT8's risk desk auto-flattens under-margined positions after the cutoff (with a fee, at their timing, not ours). A strategy that self-flattens at 16:44 never meets the risk desk.
 
-## Implementation note (queued, not yet built)
+## Implementation — CONFIRMED (2026-08-07, direct full-period strategy run)
 
-`SolarWaveE10Master_v2` with `bool Flatten1644` (default true): force target 0 on bars stamped ≥ 16:45 ET; no re-entry until next session (automatic — session opens 18:00). Per hot-reload convention the class gets a new name. Requires a validation Analyzer run before designation; queued behind scalping-lab NT8 work. Until then, live deployment does not exist and the analysis above is the ruling record.
+`SolarWaveE10Master_v2` (Flatten1644=true, exit decided at the 16:42-bar close → filled at
+the 16:45-bar open ≈ 16:42) ran the full 2022→2026-07 window against v1 with identical
+engine config: net $171,389.60 vs $181,079.10 (**−5.35%**, inside the preregistered
+[−8%, 0%] gate), daily corr 0.9972, worst day identical, top-10-day retention 95.8%; the
+2.2% DD increase was investigated and fully reconciled to the removed late-window exposure
+(no bug). One session in 1,183 (2023-04-05) fell through to the 17:00 engine backstop.
+Full record: `runs/E10MASTER_V2/results.md`. **v2 is the live-operations default; the
+realized cost of the margin-cliff exit is ≈ $2,100/yr for a $42k/NQ-eq → $1k capital
+floor.** The 3.16%/n.s. attribution above remains the decision-rule record; the extra
+~1.6pp is the 16:42→16:45 mechanical give-up inherent to 3-min-bar execution.
 
 Analysis code: inline (this file is the record); inputs are committed artifacts.
