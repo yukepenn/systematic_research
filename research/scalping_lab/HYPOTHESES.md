@@ -45,4 +45,44 @@ overnight direction (links M2/M3 but at second-scale with explicit latency surfa
 gap-settle dynamics in the first minutes; thin book → measurable but possibly untradable
 (spread state must be checked — honest C1 accounting will likely kill it; cheap to test).
 
-## Discovery queue (DR agents append below with mechanism/observable/horizon/falsifier)
+## DR batch 1 synthesis (2026-08-07; full blocks in deep_research/DR_A..D)
+
+**Zone verdicts (converging across all four reports):** sub-5-min effects from best-level
+book/flow signals are worth 0.1–1 tick gross vs our 2.872-tick floor → aggressive harvesting
+of micro book signals is STRUCTURALLY DEAD at retail latency (any backtest showing otherwise
+is presumed a bug). Millisecond cross-market price lead-lag: NON_RETAIL, dead. What survives:
+structural-scalp horizons (30s–hours), mechanically-caused windows, large-magnitude events,
+and cost-side engineering.
+
+**Priority-1 (Tier-0 candidates), merged and deduplicated:**
+- **H-A1/H-D5 — last-30-min hedging momentum**: rest-of-day (or first-30-min) NQ return
+  predicts last-30-min return; gamma/leveraged-ETF rebalancing mechanism; documented in
+  futures panels; tens of ticks conditional; 1 trade/day; L1 MINUTE data → 20-yr history.
+- **H-A2 — noise-area breakout**: practitioner replication claims +6bp/trade net on NQ;
+  adversarial replication under C1/C2 + PBO (flat 2010–2017 is a feature to verify, not hide).
+- **H-B5 — endogenous vs exogenous spike fade**: no-news spikes (vol-foreshock) revert more
+  than scheduled-news spikes; 20–100+ tick magnitudes clear C1 outright; uses our committed
+  announcement calendar (c01_announcement_calendar.csv).
+- **H-B1 — anti-chase execution rule**: post-flow-burst transient impact (0.3–1.0 tick)
+  reverses within ~1s; delaying marketable entries 1–3s cuts cost on trades we already take.
+  Cost-side: benefits ANY strategy including Family A execution.
+- **H-B3 — book-fragility veto**: spread widening/quote flicker precede liquidity-gap moves;
+  direction-free risk filter; L2 (CONFIRMED available by DATAPROBE01).
+- **H-D1 — ES flow → NQ continuation (30s–5min)**: flow, not price, survives; gated on ES
+  tick download + the mandatory sync known-answer test (xcorr peak must sit at lag≈0).
+- **H-D3 ≈ Z4 — cash-close mechanical window (15:50–16:00 ET)**: imbalance-leak into NQ;
+  academically under-documented; calendar-causal, daily.
+- **H-A3 — Roll-bounce guardrail (instrumentation)**: quantify mechanical ~½-tick fake
+  reversion in Last-trade data; GATES all sub-minute reversion claims.
+- **H-EXEC-1/2 ≈ S10 — NQ spread-state map (instrumentation)**: % of time 1-tick wide by
+  session/vol; no published number exists; foundational for every cost model.
+
+**Adopted guardrails (from DR-C, now binding):** fill = first print ≥ t+250ms (decay curve
+at next-event/500ms/1s always reported); brackets tick-resolved, stops fill at through-print;
+ETH → C2-or-excluded; ±2min news windows → C2; level signals (Z3) on UNADJUSTED single
+contracts only; 1-tick-against shift test for any reversion edge; DSR/PBO at promotion.
+**Do-not-adopt:** VPIN/bulk-volume classification (worse than tick rule on e-minis).
+**Deferred:** passive execution (needs MBO), micro-price overlay (L3, live-forward only),
+iceberg absorption (P3, data purchase = banned).
+
+## Discovery queue (append below with mechanism/observable/horizon/falsifier)
