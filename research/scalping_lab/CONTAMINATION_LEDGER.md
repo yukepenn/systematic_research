@@ -32,3 +32,7 @@ result as prior knowledge, not claim independent discovery.
 
 ## Amendment log
 - 2026-08-07: ledger created; development/holdout geometry pending data audit.
+- 2026-08-07: DATAPROBE01 read raw tick/BBO events for two capability windows
+  (2026-07-14/15 and 2025-10-14/15, NQ). Raw event dumps only — no conditional statistics,
+  no signal evaluation, no P&L. These sessions are NOT considered selection-contaminated,
+  but the probe is logged here for completeness.

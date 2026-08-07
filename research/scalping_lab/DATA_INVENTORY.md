@@ -1,6 +1,9 @@
 # Data Inventory — Scalping Lab
 
-Status: PRELIMINARY (local-cache census 2026-08-07 complete; engine probe pending).
+Status: PROBED (cache census + DATAPROBE01 engine probe complete 2026-08-07 — see
+`runs/DATAPROBE01/results.md`). **L1 CONFIRMED (ms-class timestamps), L2 CONFIRMED
+(historical Bid/Ask tick series download on demand, same ~12-month depth), L3 UNKNOWN
+(BBO-size field semantics unverified), L4 BLOCKED_BY_DATA.**
 Provider: NinjaTrader hosted historical servers via "Simulation" connection (user rainazur).
 Cache: `C:\Users\Yuke Zhang\Documents\NinjaTrader 8\db\` (hourly `.ncd` files per contract).
 
