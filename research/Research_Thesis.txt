@@ -1,0 +1,1440 @@
+Solar Wave RK Research Thesis for a Robust NQ System
+Evidence standard used here
+I separate four kinds of statements throughout:
+•	Documented mechanics: what the Solar Wave manual says the indicator does.
+•	User-supplied evidence: your current NinjaTrader backtests.
+•	External evidence: academic or official sources about trend persistence, market microstructure, volatility management, validation, and platform behavior.
+•	Research hypotheses: plausible improvements that still require controlled testing.
+The central conclusion is:
+Solar Wave RK should be treated as the prospective directional-expansion core of the NQ system—not as the complete system.
+It is a coherent, low-dimensional, positively skewed trend engine. Its main weakness is not that it lacks historical profitability; it is that its historical edge is thin, its losses cluster during non-trending periods, its fixed-tick scale may not remain appropriate across volatility regimes, and multiple Solar Wave variants do not constitute genuine diversification.
+The path to better future Sharpe and lower drawdown is therefore:
+Preserve Solar Wave’s large-trend payoff
+        +
+remove clearly unproductive repeated exposure
+        +
+scale its risk more consistently
+        +
+add a genuinely different failed-persistence/value-reversion engine
+        +
+control both families through one portfolio risk layer
+That is a better objective than trying to force Solar Wave itself into an unnaturally smooth, always-profitable shape.
+________________________________________
+1. Executive conclusion
+What Solar Wave fundamentally contributes
+Solar Wave is best interpreted as a dual-speed, path-dependent trend state machine with hysteresis.
+Its slower TrailingStop determines whether the directional regime remains valid. Its faster TrendVector distinguishes a progressing trend from a correction or mature trend. The manual recommends that the trailing-stop offset be approximately twice the Trend Vector offset, which closely matches your 179 / 90 ≈ 1.99 configuration.
+That gives the system two distinct questions:a
+90-tick inner threshold:
+    Is the current trend still healthy?
+
+179-tick outer threshold:
+    Is the trend itself still valid?
+Combined with five-bar slowdown confirmation and ten-bar separation between corrections and pullbacks, Solar Wave filters both price noise and time noise.
+Your backtests suggest that this state representation contains information. All three signal families were profitable after commissions in the current historical assumptions, and Type 1 produced the best initial balance of PF, average trade, turnover, and drawdown.
+What Solar Wave cannot contribute by itself
+Solar Wave does not inherently solve:
+•	range-market profitability;
+•	volatility scaling;
+•	portfolio diversification;
+•	position sizing;
+•	real-time fill uncertainty;
+•	session selection;
+•	the distinction between a healthy correction and a mature trend in every case;
+•	catastrophic gap risk;
+•	the problem of multiple correlated strategies losing together.
+The earlier baseline correctly characterized it as a serious core candidate but only one return engine inside a larger NQ portfolio.
+Most likely path to higher portfolio Sharpe and lower drawdown
+The most promising architecture is:
+Solar Wave family
+    Type 1 as core trend initiation
+    One conditional Type 3 re-entry
+    Selective early-wave Type 2
+    Solar trailing exit
+    Catastrophe-risk protection
+    Volatility-aware sizing
+
+Complementary family
+    Failed breakout / return-to-value
+    or tightly conditioned VWAP reversion
+
+Portfolio layer
+    One consolidated NQ exposure
+    Family-level risk budgets
+    Volatility targeting
+    Conflict resolution
+    No-trade state
+High Sharpe should primarily come from:
+1.	reducing repeated low-quality Solar exposure;
+2.	stabilizing dollar risk;
+3.	combining different economic return drivers.
+It should not primarily come from cutting every Solar winner early.
+Immediate concern: the edge is thin relative to turnover
+For NQ, the contract multiplier is $20 per index point and the minimum tick is 0.25, so one tick is $5. NQ trades nearly around the clock. (CME Group)
+Assuming one entry and one exit per trade, one tick of slippage on each execution costs approximately $10 per round trip. A simple linear sensitivity estimate gives:
+Mode	Current average trade	After 1 tick/side	After 2 ticks/side	After 3 ticks/side
+Type 1	$50.24	$40.24	$30.24	$20.24
+Type 2	$30.59	$20.59	$10.59	$0.59
+Type 3	$41.15	$31.15	$21.15	$11.15
+Type 0	$34.73	$24.73	$14.73	$4.73
+Under the same simplified assumption, estimated net profit after three ticks per execution would fall to roughly:
+Type 1: $58,991
+Type 2:  $3,400
+Type 3: $36,346
+Type 0: $27,494
+This is not a substitute for rerunning Strategy Analyzer, because winners, losers, stop fills, gaps, and multiple executions are affected differently. But it strongly supports two conclusions:
+•	Type 1 has the best cost cushion.
+•	Unconditional Type 2 is too fragile to serve as the main engine.
+________________________________________
+2. Economic model of the Solar Wave edge
+2.1 What behavior is Solar Wave monetizing?
+Solar Wave monetizes:
+Directional price persistence after movement has exceeded a meaningful spatial threshold and survived a temporal persistence test.
+It is not forecasting the next minute. It accepts that it will enter late and lose on false starts. Its expected payoff is:
+Many failed or incomplete trends
+        +
+A smaller number of sustained directional moves
+        =
+Positive expectancy if the large moves are large enough
+Trend-following evidence exists across equity-index, bond, commodity, and currency futures, although the classic evidence concerns longer horizons than your one-minute implementation. Moskowitz, Ooi, and Pedersen documented time-series return persistence across 58 futures and forward markets; Hurst, Ooi, and Pedersen extended trend-following evidence across more than a century. These papers support the broad economic premise, not Solar Wave’s specific parameters or intraday NQ profitability. (SSRN)
+Intraday persistence has also been documented. Research on market intraday momentum found that earlier market returns can predict later-session returns, with stronger effects on high-volatility, high-volume, recession, and major-news days. Separate futures research links late-day momentum partly to hedging demand, including short-gamma hedging that requires trading in the direction of price movement. Again, these findings do not validate Solar Wave directly, but they make intraday trend persistence economically plausible. (SSRN)
+2.2 Plausible mechanisms behind intraday NQ persistence
+These mechanisms are not mutually exclusive, and none has been proven to explain your exact backtest.
+Mechanism	How it may create persistence	Confidence
+Institutional order splitting	Large orders are executed gradually to limit market impact, creating persistent same-direction order flow	Strong general microstructure evidence
+Gradual information diffusion	Participants absorb and act on information at different speeds, producing initial underreaction	Strong theoretical and broader empirical foundation
+Hedging and rebalancing	Short-gamma dealers, leveraged products, volatility-control strategies, and portfolio rebalancers may trade with the move	Credible; varies by regime
+Liquidity withdrawal	During shocks, liquidity providers widen or withdraw, allowing directional orders to move price farther	Credible microstructure mechanism
+Stop cascades	Threshold breaks activate stop orders and breakout flows	Plausible; difficult to measure without order data
+Behavioral herding	Traders react to observed movement and reinforce it	Plausible; not independently identified in your data
+Global price discovery	NQ reacts during Asia, Europe, U.S. premarket, macro releases, and the cash session	Structurally relevant because NQ is nearly 24-hour
+Delayed positioning	Investors cannot or do not rebalance instantaneously	Supported by intraday-momentum models
+Order-sign persistence and long memory have been linked to order splitting, while market-impact research shows that sequences of large same-direction orders can generate persistent directional pressure. (APS Journals)
+Hong and Stein’s underreaction model shows how gradually diffusing information can initially produce trend continuation before later overreaction or reversal. It is a broader asset-pricing model, not an NQ-specific explanation. (Columbia University)
+Options-related hedging can either amplify or damp market moves depending on aggregate gamma positioning. Research on intraday futures momentum and Cboe analysis of index-option hedging both describe direction-following hedging when dealers are short gamma. (SSRN)
+2.3 Why hysteresis may outperform one simple crossover
+A single fast crossover tends to alternate between:
+trend
+not trend
+trend
+not trend
+whenever price oscillates around one threshold.
+Solar Wave instead has:
+Inner boundary:
+    strong versus weak
+
+Outer boundary:
+    current trend versus reversed trend
+This reduces “chattering.” A correction may change the trend from strong to weak without requiring a full directional reversal.
+The structure is analogous to a control system that requires more evidence to reverse state than to admit that current momentum has weakened.
+That is particularly appropriate for trend following because normal trends contain retracements. A system that declares every retracement to be a new trend will repeatedly buy highs and sell lows.
+2.4 Why the roughly 2:1 ratio is structurally sensible
+The ratio is vendor guidance, not a mathematical law. The manual says the trailing-stop distance should roughly double the Trend Vector distance.
+The practical logic is:
+Small correction:
+    touches or flattens Trend Vector
+    trend becomes weak
+    direction remains intact
+
+Larger structural reversal:
+    reaches TrailingStop
+    trend direction flips
+If both offsets were almost equal, strength and direction would change together, eliminating the useful weak-trend state.
+If the trailing offset were many times larger, the strategy might survive every correction but return excessive profit and accept very large losses when the trend finally failed.
+A roughly 2:1 hierarchy is therefore a plausible compromise between:
+•	preserving normal corrections;
+•	reacting to genuine reversals;
+•	allowing a meaningful pullback zone;
+•	retaining positive skew.
+2.5 Why the recent historical period may have supported Solar Wave
+The following are inferences, not yet established through your trade-level data:
+1.	NQ regularly experiences large repricing episodes around macro information, technology-sector news, earnings, rates, and risk sentiment.
+2.	Its nearly 24-hour trading creates multiple distinct windows of price discovery.
+3.	The one-minute 90/179 configuration may have been well scaled to recent NQ intraday volatility.
+4.	Large index moves can produce a few highly profitable trades that pay for many false starts.
+5.	One NQ contract carries large dollar exposure, so high nominal profits do not necessarily imply a high statistical edge.
+Your aggregate PF illustrates this last point. With rounded PF of 1.13 and net profit of $146,441, Type 1’s implied gross loss is approximately:
+Gross loss ≈ $146,441 / (1.13 − 1)
+           ≈ $1.13 million
+
+Gross profit ≈ $1.27 million
+That is only an approximation because PF was rounded. It nevertheless shows that the strategy’s margin between gross profit and gross loss is small relative to total turnover.
+2.6 Why it may decay
+Solar Wave could weaken if:
+•	NQ becomes more mean-reverting intraday;
+•	market-making capacity increases relative to directional flow;
+•	trends occur primarily as instantaneous gaps rather than persistent movement;
+•	execution costs increase;
+•	more market participants trade similar fast trend rules;
+•	the fixed offsets become inappropriate for the volatility environment;
+•	price moves remain large but reverse too quickly;
+•	session structure changes;
+•	the few very large trends become less frequent.
+The external literature documents trend persistence broadly but does not imply that every horizon, market, parameterization, or period remains profitable forever. (ScienceDirect)
+________________________________________
+2.7 Distinguishing key market states
+State	Interpretable symptoms	What should happen
+Healthy correction	Trend direction unchanged; early wave; limited flip frequency; recovery step stable; price does not reaccept deeply into prior value	Hold core; possibly permit one pullback
+Failing trend	Weak state persists; repeated failed recoveries; distance to stop shrinks; return into prior range/value; opposite Type 1 becomes increasingly likely	No new adds; allow trailing invalidation
+Mature trend	Higher wave count; decreasing Trend Steps; lower recovery distance after each correction	Keep runner, block late entries
+False Trend Start	Type 1 followed quickly by low MFE and opposite Type 1; low path efficiency; return to prior range	Record as chop; possible cooldown
+True regime transition	Type 1 followed by increasing directional efficiency, widening separation from prior value, and sustained follow-through	Maintain core exposure
+Volatility shock without persistence	Extreme initial bar, high intrabar range, immediate reversal or repeated large swings	Smaller risk or no entry until structure forms
+The manual’s page-3 ladder-rung diagrams explain that Trend Step measures how well a trend recovers after a correction; smaller and consecutively decreasing steps are presented as evidence of trend maturation. The manual also warns that a mature trend may produce one final powerful move before reversing.
+That warning is crucial:
+Trend maturity should first be used to block late new entries—not automatically to exit an existing profitable runner.
+________________________________________
+3. Solar Wave failure-mode map
+Failure mode	Economic cause and observable symptom	Problem type	Lowest-complexity response	Risk to large winners	Falsifiable experiment
+1. Repeated false Type 1 signals	Balanced two-way auction; multiple opposite Type 1 signals within 30–120 minutes	Entry/regime	Cooldown after repeated flips; require minimum path efficiency	May miss breakout immediately after range	Compare baseline with flip-count veto
+2. Immediate post-entry reversal	Shock, stop cascade exhaustion, no follow-through	Entry/execution	Catastrophe stop; optionally one-bar follow-through tag	Confirmation delay may miss fastest trends	MFE/MAE by bars after Type 1
+3. Slow noisy drift	Movement exists but path is inefficient and too small relative to costs	Entry	Minimum directional-efficiency or expected-range requirement	Can reject slow smooth trends	Tag efficiency ratio and cost-adjusted expectancy
+4. Deep correction then continuation	Normal trend behavior; inner state weakens but outer trend survives	Exit	Do not use tight breakeven or weakness exit	Overprotection destroys core edge	MFE after temporary adverse excursion
+5. Deep correction becomes reversal	Directional thesis is genuinely invalidated	Exit/risk	Solar stop plus remote catastrophe stop	Too-tight catastrophe stop clips recoveries	Hard-stop distance study
+6. Late Type 3 near exhaustion	Confirmation arrives after much of the trend is complete	Entry	Use Type 3 only as first re-entry, not standalone	Low risk to early trends	Conditional Type 3 sleeve test
+7. Repeated Type 2 in deteriorating trend	Multiple entries express the same failing thesis	Entry/risk	Strong trend only; early wave; one per wave	Could reduce participation in long trends	Incremental Type 2 attribution
+8. Fixed offsets too tight in high volatility	90/179 becomes small relative to normal movement	Signal/sizing	Keep signals initially; reduce position size	Smaller dollars on some major winners	Volatility-scaled risk comparison
+9. Fixed offsets too wide in low volatility	Thresholds exceed available opportunity	Signal/entry	Broad low-vol eligibility test or slower activity	May skip gradual trends	Offset-to-realized-vol diagnostic
+10. News gaps and optimistic fills	Stops can jump through levels; bar ordering ambiguous	Execution	High fill resolution, Playback, gap stress	None; improves realism	Event-day trade replay
+11. Long/short asymmetry	Downside liquidity and speed may differ from upside	Entry/exit/sizing	Diagnose first; split only if stable across blocks	Extra parameters can overfit	Year-by-year long/short decomposition
+12. RTH/ETH differences	Different liquidity, participants, news, and volatility	Context	Broad session tags, not arbitrary minute search	Time filters may remove overnight trends	Session attribution at equal exposure
+13. Session-close truncation	Mechanical exit interrupts an unfinished trend	Exit	Compare flatten versus carry with gap risk	Carry introduces overnight jump risk	Matched-trade session-close study
+14. Wide stop gives back open profit	Cost of preserving trend convexity	Exit	Late-trend no-new-entry; perhaps partial risk reduction	Aggressive protection destroys right tail	MFE-to-exit giveback distribution
+15. Tight protection destroys right tail	Breakeven/targets remove large trends	Exit	Preserve Solar trailing as baseline	Very high	Leave-large-winners and skew analysis
+16. Daily loss lock stops before recovery	Trend systems often lose repeatedly before one large trend	Portfolio risk	Test only after daily path analysis; use family cap instead	Can eliminate the day’s paying trend	Intraday sequence counterfactual
+17. Correlated Solar variants lose together	All variants express the same directional factor	Portfolio	One family budget; consolidated NQ exposure	None	Position and drawdown-overlap analysis
+________________________________________
+4. Ranked improvement matrix
+The ranking is by expected value of information, not expected in-sample profit.
+Rank	Proposal	Core mechanism	Expected benefit	Main danger	New degrees of freedom	First test
+1	Episode-controlled Type 3 re-entry	Regain exposure after a valid trend position is washed out	More trend capture without trading every Type 3	Late re-entry near exhaustion	3–4	One re-entry, same trend/wave only
+2	Selective early-wave Type 2	Add exposure only to healthy corrections	Higher-quality pullback participation	Correlated stacking inside one trend	3–4	Strong trend, wave 1/2, one per wave
+3	Solar-native chop veto	Avoid repeated state flips with low directional efficiency	Lower losing clusters and turnover	Missing range-to-trend transition	2–3	Flip count plus efficiency ratio
+4	Fixed-signal volatility sizing	Stabilize risk without changing the alpha signal	Lower PnL volatility and drawdown	Smaller size during some best trends	2	MNQ-based inverse-vol risk
+5	Trend-maturity entry block	Avoid late additions after recovery quality deteriorates	Fewer exhaustion entries	Final trend acceleration may be missed	2	No new Type 2/3 after repeated step contraction
+6	Remote catastrophe stop	Cap rare losses outside normal Solar behavior	Lower expected shortfall	Too close becomes ordinary stop	1	200/260/320-tick stress
+7	Session-close policy	Preserve unfinished trends or reduce overnight risk	Potentially better winner retention	Gap risk	1	Flatten versus carry
+8	Major/minor Solar context	Align local signals with slower trend state	Fewer countertrend entries	Lag and factor duplication	1–2	Slow context as veto only
+9	Bar-period robustness	Reduce one-minute noise and test horizon portability	Potentially smoother trends	Changes all bar-count semantics	1 plus rescaling	1/2/3/5-minute staged test
+10	Broad long/short asymmetry	Adapt to stable directional differences	Better fit to downside/upside dynamics	Overfit from doubled parameters	1–3	Eligibility or risk multiplier only
+11	Graded MA context	Measure primary-trend direction and maturity	May reduce countertrend adds	Late entries; redundant with Solar	2–3	Tag first; veto Type 2/3 only
+12	Discrete volatility parameter regimes	Keep thresholds meaningful across environments	Better signal behavior across regimes	Regime switching and overfit	3+	Two broad regimes only
+13	Partial profit or giveback lock	Convert some open PnL into realized PnL	Smoother equity	Removes positive skew	2–4	Defer until complete MFE study
+14	Optimized multiple time windows	Exclude historically poor hours	Potential Sharpe increase	Very high data-mining risk	Many	Defer
+________________________________________
+5. Top five Solar Wave refinements
+5.1 Episode-controlled core with one Type 3 re-entry
+1.	Name: Type 1 Core + Single Same-Episode Type 3 Re-entry.
+2.	Falsifiable hypothesis: The first same-direction Type 3 after a premature Type 1 exit has positive incremental expectancy when the Solar trend direction and episode have not changed.
+3.	Economic mechanism: Persistent order flow can temporarily pause or retrace without ending. A trailing exit may remove the position before the underlying directional flow resumes.
+4.	Market psychology: Early trend followers are shaken out during a correction; later confirmation attracts them back after continuation becomes visible.
+5.	Concrete rule concept:
+Enter Type 1 once per trend episode.
+
+If:
+    position exits at a loss or small gain
+    AND Signal_Trend direction does not flip
+    AND trend episode is unchanged
+    AND no re-entry has occurred
+    AND same-direction Type 3 appears
+Then:
+    permit one re-entry
+6.	Expected return: Moderately higher if genuine trends frequently resume after washouts.
+7.	Expected Sharpe: Potentially higher, provided the re-entry sleeve itself is profitable after costs.
+8.	Expected maximum drawdown: Could fall if re-entry recovers premature losses; could rise if it compounds failing-trend exposure.
+9.	Expected drawdown duration: Potentially shorter during genuine trends.
+10.	Skew and large-winner retention: Should preserve or improve positive skew because it restores exposure to trends.
+11.	Average trade and costs: Lower than Type 1 alone but should be materially better than unconditional Type 3.
+12.	Turnover and exposure: Moderate increase; strictly capped.
+13.	Correlation with baseline: Very high. This is a refinement, not diversification.
+14.	Works in: Deep correction followed by continued trend.
+15.	Fails in: Mature trends, delayed reversals, repeated fake resumptions.
+16.	Degrees of freedom: Maximum re-entries, permitted exit reasons, minimum bars after exit, maximum distance from stop.
+17.	Primary overfitting risk: Selecting precise re-entry timing and distance thresholds from a small profitable subset.
+18.	Data required: Trend episode ID, wave ID, exit reason, prior trade PnL, bars since exit, Type 3 timestamp, stop distance.
+19.	Exact experiment: Compare zero versus one re-entry; then test only three prespecified delay values and three distance buckets derived from development-sample quantiles.
+20.	Pass criteria: Re-entry-only trades positive after one-tick-per-execution stress; positive in at least three of four half-year blocks; combined Calmar improves without more than 10% worse maximum drawdown at equal risk.
+21.	Reject if: Re-entry sleeve PF is below one after costs, performance depends on one year, or more than half its PnL comes from a few trades.
+22.	Priority: Highest among true strategy modifications.
+________________________________________
+5.2 Selective early-wave Type 2
+1.	Name: Strong-Trend Early-Wave Pullback.
+2.	Hypothesis: Type 2 has positive incremental expectancy primarily during strong, early-stage trends and deteriorates when repeatedly traded in mature trends.
+3.	Economic mechanism: Early pullbacks occur while directional demand or supply remains persistent; later pullbacks are more likely to reflect exhaustion.
+4.	Market psychology: Traders who missed the initial move enter the first retracement; later retracements attract increasingly crowded and late participation.
+5.	Rule concept:
+Signal_Trade = ±2
+AND Signal_Trend = same-direction ±2
+AND |Signal_Wave| <= 1 or 2
+AND no previous Type 2 in current wave
+AND no existing full-risk position
+AND stop distance within approved range
+6.	Expected return: Lower than unconditional Type 2 in absolute dollars but potentially higher per trade.
+7.	Expected Sharpe: Likely higher if late-wave and repeated pullbacks cause most losses.
+8.	Expected maximum drawdown: Likely lower.
+9.	Expected drawdown duration: Potentially shorter because repeated failing-trend entries are reduced.
+10.	Skew: Should preserve large trends, but repeated adds can increase left-tail exposure if sizing is not capped.
+11.	Average trade: Expected to rise materially above the current $30.59.
+12.	Turnover: Expected to fall substantially.
+13.	Correlation: Very high with Type 1.
+14.	Works in: Persistent trends with orderly first or second corrections.
+15.	Fails in: V-shaped reversals, shallow trends, first pullback that becomes full reversal.
+16.	Degrees of freedom: Wave cap, stop-distance bucket, strong-trend requirement, entries per wave.
+17.	Overfitting risk: Fine-tuning exact wave and distance cutoffs.
+18.	Data required: Wave, trend strength, stop distance, prior entries in episode, incremental PnL.
+19.	Experiment: Full factorial limited to wave = 1 versus <=2, one per wave, and three distance buckets.
+20.	Pass criteria: Incremental Type 2 sleeve positive after one-tick stress in most temporal blocks; average trade at least 2.5 times round-trip execution cost; combined drawdown does not worsen materially at equal risk.
+21.	Reject if: It raises total profit but lowers exposure-normalized Sharpe, worsens drawdown overlap, or depends on repeated entries.
+22.	Priority: Second.
+The manual itself says the first and second pullbacks are generally considered the most reliable and distinguishes aggressive early pullbacks from close-confirmed later pullbacks. That is vendor guidance, not independent evidence, but it provides a coherent hypothesis.
+________________________________________
+5.3 Solar-native chop veto
+1.	Name: Flip-Frequency and Path-Efficiency Veto.
+2.	Hypothesis: Type 1 expectancy is materially negative after multiple recent trend flips when directional path efficiency remains low.
+3.	Economic mechanism: Balanced auctions repeatedly cross state boundaries without persistent net order flow.
+4.	Psychology: Breakout traders repeatedly commit and are trapped; liquidity providers fade extensions back toward value.
+5.	Rule concept:
+Compute:
+    number of Solar direction flips over trailing 60 or 120 bars
+    efficiency = |Close[t] - Close[t-N]| / Σ |Close[i] - Close[i-1]|
+
+Block only new entries when:
+    recent flip count is high
+    AND efficiency is low
+Existing profitable positions remain untouched.
+6.	Expected return: Lower gross return but potentially higher return per unit of exposure.
+7.	Expected Sharpe: Likely higher if losing clusters are concentrated in low-efficiency periods.
+8.	Maximum drawdown: Likely lower.
+9.	Drawdown duration: Could improve significantly if whipsaw clusters drive long recoveries.
+10.	Skew: Should preserve large winners if the veto releases quickly when directional efficiency rises.
+11.	Average trade: Expected to rise.
+12.	Turnover: Expected to fall.
+13.	Correlation: High, but with fewer flat-regime trades.
+14.	Works in: Narrow and wide ranges, repeated false breakouts.
+15.	Fails in: The final moments before a range resolves into a strong trend.
+16.	Degrees of freedom: Lookback, flip threshold, efficiency threshold, cooldown.
+17.	Overfitting risk: Choosing thresholds that simply delete historical losers.
+18.	Data required: Every Solar direction change and bar-level close path.
+19.	Experiment: Tag all trades first; then compare no veto against a small grid of two lookbacks, two flip counts, and two efficiency thresholds.
+20.	Pass criteria: Retains at least 80–85% of top-decile winner PnL, improves exposure-normalized Sharpe, and reduces losing-cluster depth across multiple half-years.
+21.	Reject if: Improvement disappears after equalizing exposure or most removed trades occur immediately before large trends.
+22.	Priority: Third.
+This is preferable to stacking several generic indicators because it directly measures Solar Wave’s own failure behavior.
+________________________________________
+5.4 Volatility-normalized risk with fixed Solar signals
+1.	Name: Fixed Signal, Variable Risk.
+2.	Hypothesis: Much of Solar Wave’s unstable drawdown is caused by variable dollar risk across volatility regimes rather than variable signal quality.
+3.	Economic mechanism: The same one-contract position exposes capital to much larger expected movement when intraday volatility rises.
+4.	Psychology: None is required; this is a risk transformation, not new alpha.
+5.	Rule concept:
+Keep:
+    90 / 179 / 5 / 10 / true / 10
+    entries and exits unchanged
+
+Scale:
+    NQ-equivalent quantity using MNQ
+    based on trailing realized volatility or catastrophe-stop risk
+
+Cap:
+    minimum and maximum risk multipliers
+6.	Expected return: Lower in high-volatility periods before leverage normalization; similar or higher geometric growth at a fixed risk target.
+7.	Expected Sharpe: Potentially higher.
+8.	Maximum drawdown: Likely lower and more stable.
+9.	Drawdown duration: Possibly lower through steadier risk.
+10.	Skew: Signal-level skew remains; dollar size of high-volatility winners is reduced.
+11.	Average trade: Dollar average changes with sizing; R-multiple distribution should remain similar.
+12.	Turnover: Contract turnover may rise with MNQ, but signal turnover does not.
+13.	Correlation: Nearly one with baseline returns before scaling.
+14.	Works in: Volatility-regime shifts.
+15.	Fails in: If expected return rises proportionally more than risk during high-volatility trends.
+16.	Degrees of freedom: Volatility lookback and risk caps.
+17.	Overfitting risk: Selecting a volatility estimator that retrospectively downweights losing periods.
+18.	Data required: Bar-level realized volatility and mark-to-market PnL.
+19.	Experiment: Fixed one NQ versus capped inverse-vol exposure using two simple lookbacks; evaluate at equal long-run volatility.
+20.	Pass criteria: Higher OOS Sharpe and Calmar, lower expected shortfall, stable performance across estimator choices.
+21.	Reject if: It materially lowers geometric return at equal realized drawdown or depends on one lookback.
+22.	Priority: Fourth.
+Moreira and Muir found that scaling risk down when volatility is high improved Sharpe for several broad factor portfolios because expected returns did not rise proportionally with volatility. That is strong evidence for testing volatility management, but it does not establish that it will improve an intraday Solar Wave strategy. (Amoreira2)
+MNQ is one-tenth the size of NQ, with a $2 index multiplier and $0.50 per 0.25-point tick, making it useful for granular risk scaling. (CME Group)
+________________________________________
+5.5 Trend-maturity overlay that blocks new entries but keeps the runner
+1.	Name: Trend-Step Maturity Gate.
+2.	Hypothesis: Most late Type 2 and Type 3 losses occur after recovery steps contract repeatedly, while the existing trend position may still benefit from one final extension.
+3.	Economic mechanism: Each correction is followed by weaker directional recovery as marginal demand or supply is exhausted.
+4.	Psychology: Early participants take profits; late entrants chase increasingly smaller extensions; the last move may be a capitulation or squeeze.
+5.	Rule concept:
+If:
+    wave count is high
+    OR Trend Step has decreased two times consecutively
+Then:
+    no new Type 2
+    no ordinary Type 3
+    existing Type 1 or re-entry position remains managed by Solar stop
+6.	Expected return: Slightly lower gross profit but higher entry quality.
+7.	Expected Sharpe: Potentially higher.
+8.	Maximum drawdown: Lower if late additions drive reversals.
+9.	Drawdown duration: Potentially lower.
+10.	Skew: Better preserved than an early forced exit.
+11.	Average trade: Expected to rise for added-entry sleeves.
+12.	Turnover: Falls.
+13.	Correlation: High.
+14.	Works in: Long multi-wave trends with weakening recovery.
+15.	Fails in: Trends that produce a powerful final extension after repeated step contraction.
+16.	Degrees of freedom: Wave threshold and number of step decreases.
+17.	Overfitting risk: Selecting the exact contraction count around known reversals.
+18.	Data required: Trend Step sequence or an independently reconstructed equivalent.
+19.	Experiment: No maturity gate versus wave-based gate versus two-step-contraction gate.
+20.	Pass criteria: Fewer late losses with at least 85% retention of large-winner PnL.
+21.	Reject if: It removes a disproportionate share of major trend profits or only works in one direction.
+22.	Priority: Fifth.
+The manual explicitly warns that decreasing Trend Steps indicate weakening trend health but may precede one final large move. That is why the overlay should first block new entries, not force a full exit.
+________________________________________
+6. Multi-timeframe and MA-context assessment
+6.1 Timeframe changes are not simple noise reduction
+With identical parameters:
+Parameter	1-minute	2-minute	3-minute	5-minute
+Slowdown Scan = 5	5 min	10 min	15 min	25 min
+Weak-Weak Split = 10	10 min	20 min	30 min	50 min
+Pullback Split = 10	10 min	20 min	30 min	50 min
+Trend offset = 90 ticks	22.5 pts	22.5 pts	22.5 pts	22.5 pts
+Stop offset = 179 ticks	44.75 pts	44.75 pts	44.75 pts	44.75 pts
+The spatial parameters remain fixed, but the temporal parameters become much slower.
+A five-minute version with the same settings is therefore not merely a smoother one-minute strategy. It is a different state machine:
+•	signals are evaluated less frequently;
+•	slowdown confirmation takes five times longer;
+•	pullback separation takes five times longer;
+•	bar highs and lows aggregate more movement;
+•	entry and exit timing changes;
+•	the count and identity of trends change.
+6.2 Correct staged timeframe research
+Stage A: raw portability
+Run:
+1m, 2m, 3m, 5m
+with identical 90/179/5/10/10 settings
+Question:
+Does the original configuration naturally generalize?
+Stage B: elapsed-time normalization
+Approximate comparable timing:
+Bar period	Slowdown	Weak/Pullback split
+1m	5	10
+2m	3	5
+3m	2	3
+5m	1	2
+This is only approximate because integer bars cannot perfectly preserve elapsed time.
+Question:
+Does a different price-sampling interval improve the signal when temporal meaning is held roughly constant?
+Stage C: multi-horizon context
+Use a slower timeframe as a veto or context, not necessarily a mandatory entry condition.
+For example:
+Type 1:
+    allowed unless the slow trend is strongly opposed
+
+Type 2 and Type 3:
+    require slow trend alignment
+The manual recommends a major/minor approach in which minor-trend entries are taken only when aligned with a slower major trend.
+That is a coherent hypothesis, but the manual’s example is Renko-based and does not prove that the same structure improves NQ one-minute results.
+6.3 MA context: when it helps
+A 20/50/100 versus 200 EMA stack can help identify:
+•	broad primary direction;
+•	whether local Solar signals oppose established drift;
+•	whether a trend is early, established, or mature;
+•	whether averages are compressed and unstable.
+The useful information is not just alignment:
+Direction:
+    fast averages above/below EMA 200
+
+Separation:
+    how far apart they are relative to volatility
+
+Slope:
+    whether EMA 200 and faster averages are actually moving
+
+Stability:
+    how often the alignment state recently changed
+6.4 When MA context enters too late
+Strictly requiring:
+EMA20 > EMA200
+EMA50 > EMA200
+EMA100 > EMA200
+before every long Type 1 can reject the best early trend transitions.
+The likely sequence in a fast reversal is:
+Solar Type 1
+    first
+
+EMA20 confirmation
+    later
+
+EMA50 confirmation
+    still later
+
+EMA100 confirmation
+    latest
+A strict rule may improve PF and win rate simply because it takes fewer, later trades. It may also remove the largest portion of the right tail.
+6.5 Recommended MA role
+The initial test should be:
+Strongly opposed MA state:
+    veto Type 2 and Type 3
+    possibly veto Type 1
+
+Mixed or transitional MA state:
+    permit Type 1 only
+
+Stable full alignment:
+    permit Type 1
+    permit selective Type 2
+    permit controlled Type 3
+MA context should first be recorded as a diagnostic tag. It should not immediately become four additional optimized thresholds.
+6.6 One robust timeframe versus an ensemble
+A 1m, 2m, 3m, and 5m Solar ensemble may appear diversified but will likely share:
+•	the same major NQ trends;
+•	the same directional positions;
+•	the same large winning days;
+•	the same range losses.
+Treat all versions as one family unless empirical position overlap and drawdown overlap show otherwise.
+Choosing one robust timeframe may be safer than averaging several correlated variants. A consensus approach becomes justified only if the versions show materially different trade timing and improved family-level risk after an aggregate exposure cap.
+________________________________________
+7. Exit and right-tail preservation
+Core principle
+A Solar refinement is not successful if it raises PF mainly by deleting the few trades that pay for the strategy’s false starts.
+Trend-following research generally finds positive skew and long-run persistence, while practitioner research also highlights a possible trade-off between maximizing Sharpe and retaining the positive-skew characteristics of trend following. (Research Affiliates)
+Exit assessment
+Exit idea	Likely benefit	Primary risk	Initial judgment
+Solar TrailingStop only	Preserves open-ended winners	Large profit giveback	Keep as reference truth
+Opposite trend/Type 1 exit	Logical state invalidation	May duplicate trailing stop	Diagnose parity
+Remote catastrophe stop	Limits extreme loss and gap exposure	Becomes harmful if too close	Test early as safety layer
+Tight fixed hard stop	Smaller average loser	Frequent washout	Likely harmful
+Immediate breakeven	Converts some losers to flat	Removes trends that retest entry	Defer
+Delayed breakeven	Less aggressive protection	Still path-dependent and optimizable	Only after MFE analysis
+Maximum holding time	Removes stagnant trades	Kills slow trends	Only conditional on weak state
+Weakness exit	Reduces giveback	Exits normal pullbacks	Likely harmful as blanket rule
+Trend-Step deterioration	Identifies maturity	Final trend surge may follow	Use as entry blocker first
+Partial profit	Smooths realized equity	Reduces positive skew	Defer; retain runner if tested
+Profit-giveback lock	Protects open profit	Many thresholds and hindsight	High overfitting risk
+Session-close exit	Removes overnight risk	Truncates valid trends	Must test
+Close-confirmed invalidation	More realistic, less intrabar noise	Later exit	Good reference candidate
+Catastrophe-stop role
+A catastrophe stop should be outside normal Solar trade management.
+Conceptually:
+Normal exit:
+    Solar trailing invalidation
+
+Emergency exit:
+    extreme adverse movement,
+    data failure,
+    gap,
+    or abnormal volatility
+The hard stop should be evaluated using MAE percentiles, not optimized solely for net profit.
+A sensible experiment is:
+No emergency stop
+200 ticks
+260 ticks
+320 ticks
+The purpose is to reduce expected shortfall, not necessarily improve PF.
+Why fast breakeven is dangerous
+Trend-following trades frequently:
+1.	enter after confirmation;
+2.	retrace;
+3.	test entry;
+4.	resume.
+An immediate breakeven rule can create a pattern of:
+entry
+small favorable movement
+stop moved to entry
+normal correction
+flat exit
+large trend without position
+This may make the loss distribution look cleaner while materially weakening geometric growth.
+Session-close decision
+You need a matched-trade counterfactual:
+For every session-close exit:
+    What would have happened under continued Solar management?
+Measure:
+•	overnight MAE;
+•	next-session MFE;
+•	gap distribution;
+•	profit retained;
+•	added expected shortfall;
+•	effect on average holding;
+•	effect on total portfolio overnight exposure.
+Do not decide from aggregate net profit alone.
+________________________________________
+8. Volatility normalization and position sizing
+8.1 Least invasive order of operations
+The safest progression is:
+1. Fixed Solar signals + fixed one-contract baseline
+2. Fixed Solar signals + volatility-adjusted sizing
+3. Fixed signals + broad volatility eligibility
+4. Two discrete signal regimes
+5. Continuous ATR-adaptive Solar parameters, only much later
+Changing position size preserves the original alpha hypothesis. Changing 90/179 dynamically changes which events count as trends.
+8.2 Useful diagnostics
+Record for every entry:
+TrendOffset / ATR60
+StopOffset / ATR60
+TrendOffset / trailing 60-minute realized range
+StopOffset / trailing 60-minute realized range
+Current volatility percentile
+Same-time-of-day volatility percentile
+Interpretation:
+Very low ratio:
+    offsets are tight relative to market movement
+    more flips and noise expected
+
+Very high ratio:
+    offsets are wide relative to available movement
+    late signals and poor reward-to-cost expected
+8.3 Risk sizing
+For one contract:
+Dollar risk ≈ stop distance in points × $20
+Using MNQ permits roughly 0.1-NQ increments.
+A conservative sizing framework would be:
+Desired dollar risk per trade
+    /
+Estimated catastrophe-stop dollar risk per MNQ
+    =
+MNQ quantity
+Then apply:
+•	family-level maximum;
+•	portfolio-level maximum;
+•	volatility-spike cap;
+•	minimum and maximum number of MNQ contracts;
+•	no leverage increase merely because recent volatility is unusually low.
+8.4 Volatility target
+A portfolio volatility target should be selected only after:
+•	reliable daily mark-to-market equity exists;
+•	strategy-family correlations are measured;
+•	stress drawdowns are estimated;
+•	forward behavior is observed.
+Potential research targets such as 6%, 8%, 10%, and 12% annualized volatility may be tested, but they are not recommendations.
+8.5 Kelly criterion
+Kelly sizing maximizes expected logarithmic growth under accurately known probabilities and distributions, but full Kelly can generate severe short-term drawdowns and is highly sensitive to estimation error. Fractional or risk-constrained Kelly methods trade some growth for smaller drawdown risk. (Department of Statistics)
+For this system:
+•	full Kelly is inappropriate;
+•	estimated Kelly should be treated as an upper-bound diagnostic;
+•	any future allocation should be constrained by volatility, expected shortfall, and stress drawdown;
+•	leverage should be applied to the diversified portfolio, not the best Solar variant.
+________________________________________
+9. Complementary strategy-family assessment
+Ranking
+Rank	Family	Independent economic behavior	Expected relationship to Solar	Main risk
+1	Failed breakout with return to value	Monetizes failed directional persistence and trapped breakout traders	Potentially low or negative during Solar chop	Short-volatility tail if genuine breakout resumes
+2	Balanced-auction VWAP reversion	Monetizes two-way price discovery around accepted value	Complementary in flat regimes	Can repeatedly fade a real trend
+3	Overnight inventory correction	Monetizes reversal of overnight imbalance near the U.S. open	Distinct session-specific source	Effect may be unstable or weakened
+4	Gap reaction strategy	Separates gap continuation from gap rejection	Can complement or overlap depending rule	Event dependence and execution gaps
+5	Session-transition strategy	Monetizes opening/closing hedging and inventory flows	Potentially independent in time	Small sample and event concentration
+6	Slower trend horizon	Captures different trend speed	Still strongly related to Solar	False diversification
+7	ORB continuation	Captures directional expansion	Likely same family as Solar	Adds trend concentration
+9.1 Best first diversifier: failed breakout plus value reacceptance
+The first complementary strategy should not be generic:
+Price is far from VWAP
+→ fade it
+It should require objective evidence that directional movement failed.
+A first rule concept:
+Define a fixed opening range.
+
+Price closes outside the range.
+The breakout fails to extend.
+Price closes back inside the range within a limited time.
+Price is reaccepted toward session value/VWAP.
+Solar Wave is not in a strong same-direction trend.
+
+Enter toward:
+    VWAP
+    or opening-range midpoint
+
+Stop:
+    beyond the failed extreme
+
+Maximum:
+    one trade per side per session
+This monetizes a different behavior from Solar:
+Solar:
+    movement persists
+
+Failed breakout:
+    movement is rejected
+Research has documented intraday reversals after large opening moves in U.S. stock-index futures, and separate work documents overnight-to-intraday reversal effects across futures. These findings support testing the family but do not validate this exact NQ rule. (ScienceDirect)
+9.2 Why it can improve portfolio Sharpe
+During Solar’s worst environment:
+Type 1 breakout
+→ no continuation
+→ price returns into value
+→ opposite Type 1
+→ another failure
+A failed-breakout strategy may profit from the return toward value.
+That could reduce:
+•	losing-day overlap;
+•	drawdown overlap;
+•	time under water;
+•	dependence on trend years.
+9.3 Why it can be dangerous
+Mean reversion is often negatively skewed:
+many modest winners
++
+occasional large loss during a true trend
+A mean-reversion strategy must not repeatedly short a strong Solar uptrend or buy a strong Solar downtrend.
+Suggested router logic:
+Solar strong + high efficiency:
+    trend family has priority
+    opposing mean reversion blocked
+
+Solar weak + failed extension + value reacceptance:
+    mean reversion may activate
+
+Conflicting ambiguous state:
+    no trade
+9.4 Overnight inventory correction
+Research has found overnight-intraday reversal patterns across asset classes and futures. More recent work on U.S. market indices reports that overnight-to-opening reversal has varied over time and weakened in some post-2010 periods. That makes it an interesting but lower-priority candidate. (SSRN)
+Its advantage is clear timing and low overlap:
+Signal:
+    overnight imbalance
+
+Trading window:
+    first part of U.S. session
+
+Exit:
+    return toward prior close, VWAP, or defined time
+Its weakness is that it can oppose a genuine opening trend.
+9.5 ORB continuation is not the best first diversifier
+An ORB continuation strategy may be valuable, but economically it resembles Solar:
+range break
+→ continuation
+→ trailing exit
+It should be considered another directional-expansion subfamily unless its drawdowns and positions prove materially distinct.
+________________________________________
+10. Proposed portfolio architecture
+10.1 Family A: Solar Wave directional persistence
+Initial family candidate:
+Type 1 core
+One same-episode Type 3 re-entry
+Selective wave-1/2 Type 2
+No late additions after trend deterioration
+Solar trailing exit
+Remote catastrophe stop
+Volatility-aware sizing
+10.2 Family B: failed persistence and value reversion
+Initial family candidate:
+Opening-range or structural breakout failure
+Close back inside accepted value
+VWAP or range-midpoint objective
+Hard invalidation beyond failed extreme
+One or very few trades per session
+Disabled during strong Solar continuation
+10.3 Possible Family C: session/overnight effect
+Only after A and B are stable:
+Overnight inventory correction
+Gap reaction
+Opening/closing transition
+10.4 Shared exposure layer
+The portfolio must see one consolidated NQ position.
+Conflict rules
+1. Strong Solar trend:
+       opposing mean reversion prohibited.
+
+2. Confirmed failed breakout and weak Solar state:
+       mean reversion permitted.
+
+3. Solar and complementary strategy point the same way:
+       do not automatically add two full-risk positions;
+       cap aggregate NQ exposure.
+
+4. Solar and complementary strategy conflict without clear state:
+       remain flat.
+
+5. Existing profitable Solar runner:
+       do not let a low-confidence reversal strategy force liquidation.
+
+6. Multiple Solar variants:
+       aggregate under one Solar family limit.
+10.5 Portfolio weighting
+Initial comparisons should be simple:
+1.	equal risk by family;
+2.	fixed inverse-volatility weights;
+3.	equal risk with a Solar-family cap.
+Avoid optimized mean-variance weights initially because expected-return and covariance estimates will be noisy.
+Risk-parity and inverse-volatility approaches are generally less dependent on precise expected-return estimates than maximum-Sharpe optimization, but they still depend on stable covariance and risk estimates. (PM Research)
+10.6 Portfolio promotion metrics
+For each added family measure:
+Standalone OOS Sharpe
+Incremental portfolio Sharpe
+Incremental Calmar
+Change in max drawdown
+Change in time under water
+Change in expected shortfall
+Daily PnL correlation
+Losing-day correlation
+Worst-week overlap
+Drawdown overlap
+Position overlap
+Tail dependence
+Positive-quarter percentage
+A strategy can have a modest standalone Sharpe and still be valuable if it improves the portfolio in bad Solar periods.
+________________________________________
+11. Market-regime simulation matrix
+These are qualitative thought experiments, not historical claims.
+Regime	Baseline Solar behavior	Best Solar refinement	Complementary family	Portfolio stance
+1. Clean slow uptrend	Type 1 wins; wide stop may give back	Hold; no aggressive exit	Inactive	Full trend risk
+2. Clean fast uptrend	Strong large winner	Avoid slow MA gate	Inactive	Full capped trend risk
+3. Clean slow downtrend	Profitable if shorts symmetric	Vol-adjusted short risk	Inactive	Full trend risk
+4. Violent downside trend	Large win but extreme risk/slippage	Smaller sizing, catastrophe protection	Block long reversion	Reduced notional, full risk budget
+5. Shallow pullback trend	Type 1 remains positioned	No action	Inactive	Continue
+6. Deep successful pullback	Solar may exit prematurely	One Type 3 re-entry	Inactive	Re-enter once
+7. Deep pullback becomes reversal	Re-entry can compound loss	One-reentry cap	Possible failed-trend trade after value reacceptance	Reduced/transition
+8. Narrow low-vol range	Repeated false Type 1	Chop veto	VWAP reversion	Reversion or flat
+9. Wide high-vol range	Large whipsaws	Vol sizing + flip veto	Failed-breakout trade	Reduced overall risk
+10. Repeated false breakouts	Losing cluster	Cooldown	Primary opportunity	Reversion priority
+11. Sudden macro shock	Potential huge trend or reversal	Smaller initial risk; no tight exit	Usually inactive until failure confirmed	Reduced risk initially
+12. Overnight gap continuation	Type 1 may capture continuation	Avoid RTH-only filter	No opposing reversion	Trend priority
+13. Overnight gap reversal	Solar may enter late or flip	Episode cap	Overnight correction	Reversion after confirmation
+14. Opening drive	Excellent trend opportunity	Do not require full slow MA alignment	Inactive	Trend priority
+15. Opening breakout failure	Multiple Type 1 losses possible	Flip veto	Failed ORB	Reversion priority
+16. Midday compression	Low-value signals	Efficiency veto	Small or no VWAP trade	Low risk or flat
+17. Late-session trend	Solar may profit; session close may truncate	Carry-policy test	Closing-flow strategy later	Trend with overnight cap
+18. Mature decreasing steps	Late Type 2/3 vulnerable	Block new adds	Do not automatically fade	Hold runner only
+19. Final acceleration before reversal	Early exit loses best move	Keep trailing runner	Reversal only after reacceptance	Trend until invalidated
+20. Range-dominated year	Solar underperforms	Veto and lower risk	Value-reversion family critical	Balanced family allocation
+________________________________________
+12. Statistical-validation framework
+12.1 Integrity before optimization
+Required checks:
+1.	same strategy version and parameter hash;
+2.	same contract/merge policy;
+3.	same trading-hours template;
+4.	same commission;
+5.	same session-close logic;
+6.	same order-fill assumptions;
+7.	same bar count;
+8.	deterministic rerun;
+9.	no impossible same-bar entry;
+10.	historical versus reload signal parity;
+11.	selected-date Playback comparison.
+NinjaTrader states that Tick Replay replays historical tick events but was not designed to provide exact historical order-fill accuracy; High Order Fill Resolution is the relevant Strategy Analyzer tool, and Tick Replay cannot be combined with High Fill Resolution. (NinjaTrader Developer Community)
+Therefore:
+Signal-timing audit:
+    historical/reload/Playback
+
+Fill audit:
+    Standard fill
+    High fill resolution
+    recent Playback or Sim
+12.2 Cost matrix
+Every serious candidate must run:
+Commission included
+Slippage:
+    0 ticks per execution
+    1 tick
+    2 ticks
+    3 ticks
+
+Fill:
+    Standard
+    Higher resolution where supported
+Promotion baseline:
+•	positive after one-tick-per-execution stress;
+•	not structurally destroyed by two ticks;
+•	average trade at least 2.5 times realistic round-trip cost;
+•	no reliance on implausibly favorable stop fills.
+12.3 Equity frequency
+Do not use only closed-trade PnL.
+Generate:
+bar-level mark-to-market equity
+daily mark-to-market PnL
+trade ledger
+session-level exposure
+NinjaTrader exposes trade-collection statistics including Sharpe, Sortino, Profit Factor, max recovery time, monthly standard deviation, and related measures. Portfolio research should additionally compute daily mark-to-market metrics externally. (NinjaTrader Developer Community)
+12.4 Temporal decomposition
+Required:
+Year
+Half-year
+Quarter
+Month
+Rolling 3-month
+Rolling 6-month
+Rolling 12-month
+RTH/ETH
+Session segment
+Long/short
+Volatility regime
+Signal type
+Wave
+Trend episode
+Exit reason
+12.5 Research universe and locked forward
+Because 2023–2025 has been repeatedly examined, it is the research universe.
+Any 2026 dates already viewed, compared with author screenshots, or used for strategy decisions are also contaminated.
+The locked-forward period should begin on the first full trading session after the strategy rules, data contract, and portfolio rules are frozen.
+If frozen immediately, a clean practical start would be Monday, August 10, 2026. If not, move the lock date forward accordingly.
+Locked-forward rules:
+No parameter changes
+No rescue tuning
+No changing cost assumptions
+No excluding bad sessions
+No replacing the candidate
+No repeated peeking
+12.6 Walk-forward
+Use at least two geometries:
+A. 12 months train / 3 months test / 3-month step
+B. 18 months train / 6 months test / 3-month step
+The candidate-selection rule must be fixed before the test folds.
+Purge trades that cross fold boundaries and add an embargo at least as long as the maximum intended holding horizon or one full session, whichever is longer.
+12.7 Parameter plateau
+A candidate is preferable when:
+central parameter works
+AND
+most immediate neighbors work
+AND
+neighbor median is close to central result
+Suggested gate:
+At least 60% of immediate neighbors pass basic economics
+Neighbor median Calmar >= 80% of center
+No cliff-like collapse under one small parameter change
+12.8 Multiple testing
+Record every:
+•	hypothesis;
+•	strategy variation;
+•	parameter set;
+•	timeframe;
+•	session rule;
+•	exit;
+•	metric used for selection.
+The Deflated Sharpe Ratio adjusts for selection bias, non-normality, and multiple testing. The Probability of Backtest Overfitting framework estimates the chance that an in-sample winner underperforms out of sample. (SSRN)
+For a large research program, also consider:
+•	White’s Reality Check;
+•	Hansen’s Superior Predictive Ability test;
+•	comparison against the frozen Type 1 benchmark.
+These procedures were developed specifically to account for data snooping across many competing models. (Users SSC Wisconsin)
+12.9 Bootstrap and Monte Carlo
+Do not simply reshuffle individual Solar trades. Solar losses and winners cluster by trend episode and market regime.
+Use:
+•	day-block bootstrap;
+•	trend-episode bootstrap;
+•	stationary bootstrap of daily returns;
+•	scenario injection for gaps and slippage.
+The stationary bootstrap was designed to preserve dependence in weakly dependent time-series observations. (JSTOR)
+12.10 Large-winner concentration
+Run:
+Original
+Remove largest 1 trade
+Remove largest 3
+Remove largest 5
+Remove largest 10
+Cap each trade at 95th percentile
+Do not require Solar to remain highly profitable after removing all large winners—that would reject the fundamental nature of trend following.
+Instead ask:
+•	Is the refined strategy more concentrated than baseline?
+•	Does one accidental trade explain the claimed improvement?
+•	Are large winners distributed across years and directions?
+•	Does the strategy retain positive expectancy after removing only the single largest trade?
+________________________________________
+13. Exact first ten experiments
+Proposed global pass gates
+These are governance proposals, not universal statistical laws:
+Integrity:
+    no unexplained signal or trade mismatch
+
+Costs:
+    positive after commission + 1 tick per execution
+
+Temporal:
+    positive in most half-year or WFO test blocks
+
+Drawdown:
+    no material deterioration at equal risk
+
+Right tail:
+    retain at least 80–85% of baseline top-decile winner contribution
+    for refinements intended to reduce noise
+
+Exposure:
+    if exposure falls >25%, compare exposure-normalized performance
+
+Neighborhood:
+    broad positive region, not isolated winner
+
+Selection:
+    no tuning on locked-forward data
+________________________________________
+Experiment 1 — SW00_BASELINE_PARITY_COST
+Question: Is Type 1’s historical edge real under consistent signal timing, fills, and costs?
+Fixed: Type 1, 90/179/5/10/true/10, one-minute, current exit.
+Changed:
+Slippage = 0, 1, 2, 3 ticks
+Fill = Standard and higher resolution
+Selected dates = historical versus Playback
+Outputs: Full trades, signal timestamps, fill prices, daily MTM, exit reasons.
+Pass: No unexplained signal mismatch; positive at one-tick stress; no impossible fills.
+Reject/project stop: Historical signals change materially after reload/Playback or realistic fills remove all expectancy.
+After pass: SW01.
+________________________________________
+Experiment 2 — SW01_EPISODE_AND_EXIT_ATTRIBUTION
+Question: Where exactly do Type 1 profits and losses arise?
+Changed: No trading logic.
+Add tags:
+Trend episode ID
+Wave
+Signal trend
+Entry distance to stop
+Volatility
+Entry hour/session
+MAE/MFE
+Exit reason
+MFE giveback
+Bars since trend start
+Recent flip count
+Path efficiency
+Pass: Complete, deterministic trade-level dataset.
+Reject: Missing, ambiguous, or inconsistent state information.
+After pass: SW02 and SW03.
+________________________________________
+Experiment 3 — SW02_CATASTROPHE_AND_SESSION_EXIT
+Question: Can tail loss or session truncation be improved without cutting trend winners?
+Changed:
+Catastrophe stop:
+    none, 200, 260, 320 ticks
+
+Session close:
+    flatten, hold
+Run these as separate subexperiments, not one large factorial initially.
+Pass: Lower expected shortfall or drawdown with at least 85% large-winner retention.
+Reject: Improvement comes primarily from deleting profitable carry or ordinary corrections.
+________________________________________
+Experiment 4 — SW03_SINGLE_TYPE3_REENTRY
+Question: Does the first Type 3 after premature Type 1 exit have incremental edge?
+Fixed: Type 1 and approved exit.
+Changed:
+Max re-entry = 0 or 1
+Minimum bars after exit = 0, 2, 5
+Maximum stop distance = development-sample Q25, Q50, Q75
+Eligibility: Same trend direction and episode; no previous re-entry.
+Pass: Re-entry sleeve positive after one-tick stress in most blocks; portfolio Calmar improves.
+Reject: Re-entry sleeve loses after cost or compounds drawdown.
+________________________________________
+Experiment 5 — SW04_SELECTIVE_TYPE2
+Question: Can Type 2 add positive incremental expectancy when restricted to healthy early trends?
+Changed:
+Strong trend required = yes
+Wave = 1 only or <=2
+Entries per wave = 1
+Stop distance = Q25, Q50, Q75
+Pass: Incremental sleeve positive after cost, materially higher average trade than unconditional Type 2, no drawdown deterioration at equal risk.
+Reject: Higher profit comes only from more exposure or one trend year.
+________________________________________
+Experiment 6 — SW05_CHOP_VETO
+Question: Do recent flip frequency and low efficiency identify negative Type 1 expectancy?
+Changed:
+Lookback = 60 or 120 bars
+Flip threshold = 2 or 3
+Efficiency threshold = 0.20 or 0.30
+Pass: Reduced losing clusters and time under water, with at least 80–85% large-winner retention.
+Reject: It misses subsequent breakouts or works only through lower exposure.
+________________________________________
+Experiment 7 — SW06_TIMEFRAME_PORTABILITY
+Question: Is the edge specific to one-minute bars?
+Stage A:
+1m, 2m, 3m, 5m
+same 90/179/5/10/10
+Stage B:
+time-normalized bar counts
+Pass: At least one non-one-minute variant shows stable cross-period economics and a parameter plateau.
+Reject: “Best” timeframe is one isolated sample winner or all variants are destroyed by costs.
+________________________________________
+Experiment 8 — SW07_MAJOR_MINOR_CONTEXT
+Question: Does slower Solar alignment improve Type 2/3 without delaying Type 1 excessively?
+Changed:
+No slow context
+3-minute context
+5-minute context
+Initial use: Veto opposed Type 2/3 only. Do not require full alignment for Type 1.
+Pass: Better pullback/re-entry expectancy with limited loss of large Type 1 winners.
+Reject: Improvement is merely large exposure reduction or the slow context enters after most of the move.
+________________________________________
+Experiment 9 — SW08_FIXED_SIGNAL_VOLATILITY_SIZING
+Question: Can risk scaling improve geometric performance without changing signals?
+Changed:
+Fixed one NQ
+Inverse 60-minute volatility, capped
+Inverse 120-minute volatility, capped
+Simple low/normal/high risk buckets
+Simulate with MNQ-level granularity.
+Pass: Higher OOS Sharpe and Calmar, lower expected shortfall, robust across sizing lookbacks.
+Reject: Benefit depends on one volatility estimator or materially destroys trend participation.
+________________________________________
+Experiment 10 — FB01_FAILED_OPENING_BREAKOUT
+Question: Can an independent failed-persistence rule improve the Solar portfolio?
+Fixed initial rule:
+Opening range = fixed 30 minutes
+Breakout = close outside range
+Failure = close back inside within 15 minutes
+Solar strong in breakout direction = trade blocked
+Target = session VWAP or range midpoint
+Stop = beyond failed extreme
+Maximum one trade per side
+Maximum holding = 90 minutes
+Do not optimize all values initially.
+Pass:
+•	positive after realistic cost;
+•	lower losing-day correlation with Solar;
+•	improves combined OOS Sharpe, Calmar, and worst quarter;
+•	does not erase large Solar trend days.
+Reject:
+•	standalone edge is negative;
+•	profits arise only from shorting strong Solar trends;
+•	negative tail is unacceptable;
+•	daily PnL correlation remains high.
+________________________________________
+CrossTrade translation for the top three operational experiments
+The earlier workflow correctly framed Claude as the research controller and NinjaTrader as the environment that computes Solar Wave and executes Strategy Analyzer.
+CrossTrade states that its MCP can compile NinjaScript, run a compiled strategy through NT8’s Strategy Analyzer path, return full single-backtest performance, and perform parameter sweeps. Those are CrossTrade’s vendor claims and must be verified against your existing UI baseline before use for selection. (CrossTrade)
+A. SW00_BASELINE_PARITY_COST
+NinjaScript properties required
+TrendMultiplier
+StopMultiplier
+SlowdownScan
+WeakWeakSplit
+PullbackEarly
+PullbackSplit
+EntryMode
+Slippage handled by analyzer
+ExitOnSessionClose
+Backtests
+1 baseline × 4 slippage settings
+2 fill settings where available
+selected short Playback comparisons
+Required CrossTrade fields
+effective parameters
+trade count
+entry/exit timestamps
+entry/exit prices
+commission
+slippage
+gross profit/loss
+net profit
+PF
+drawdown
+Sharpe
+Sortino
+equity curve
+Machine decision
+PASS:
+    exact parameters
+    trade-level parity
+    positive 1-tick stress
+
+FAIL:
+    unexplained trade mismatch
+    parameter drift
+    zero or negative realistic expectancy
+Manual inspection
+•	largest five winners;
+•	largest five losers;
+•	same-bar entry/exit;
+•	rollover periods;
+•	session boundaries.
+B. SW03_SINGLE_TYPE3_REENTRY
+Additional properties
+UseType3Reentry
+MaxReentriesPerEpisode
+MinBarsAfterExit
+AllowedPriorExitReason
+MaxDistanceToStopTicks
+RequireSameWave
+RequireSameTrend
+Expected jobs
+Baseline
++
+2 re-entry states
+× 3 delay values
+× 3 distance values
+≈ 19 runs including baseline and confirmations
+Run each under zero and one-tick slippage only at first.
+Required post-processing
+re-entry-only PnL
+re-entry PF
+re-entry drawdown contribution
+recovery of prior loss
+trend-episode results
+half-year results
+C. SW04_SELECTIVE_TYPE2
+Additional properties
+UsePullback
+RequireStrongTrend
+MaxWave
+MaxPullbacksPerWave
+MaxDistanceToStop
+Expected jobs
+2 wave rules
+× 3 distance buckets
+× 2 cost settings
+= 12 targeted runs
+Manual inspection
+•	largest Type 2 winners;
+•	pullbacks immediately preceding full reversal;
+•	repeated signals in one trend;
+•	whether early-mode bar highs/lows create historical timing ambiguity.
+________________________________________
+14. Ideas to reject or defer
+Reject for now
+Full optimization of A1–A5
+Reason:
+•	it can hide weaknesses in entry and exit structure;
+•	fixed-tick behavior has not yet been mapped across volatility;
+•	it creates large multiple-testing burden.
+Strict 20/50/100-over-200 MA alignment for every Type 1
+Reason:
+•	likely to enter late;
+•	duplicates trend information;
+•	may reduce drawdown only by reducing exposure;
+•	risks cutting the beginning of major trends.
+Fixed profit target
+Reason:
+•	fundamentally conflicts with the strategy’s open-ended winner distribution.
+Immediate breakeven
+Reason:
+•	likely to remove trends after normal retests.
+Multiple minute-level optimized time windows
+Reason:
+•	extremely high freedom;
+•	economic rationale is weak;
+•	RTH-only already failed as a simple answer.
+Treating 1m, 2m, 3m, and 5m Solar as four independent strategies
+Reason:
+•	likely one directional factor with different timing.
+Optimizing toward the author’s exact net profit and trade count
+Reason:
+•	author behavior is not the portfolio objective;
+•	matching historical screenshots can create severe overfitting.
+Defer
+Continuous ATR-adaptive 90/179 offsets
+First test risk sizing and broad regime diagnostics.
+Partial profit
+Requires multiple units and a careful runner comparison.
+Profit giveback lock
+Too many thresholds before exit attribution.
+Daily profit/loss lock
+Could prevent the trend that recovers the day’s false starts.
+Long/short separate parameter sets
+Only after stable repeated asymmetry exists.
+Opaque regime ML
+Interpretable state variables should be exhausted first.
+Leverage optimization
+Only after multi-family locked-forward results.
+________________________________________
+15. Red-team critique
+1. Are proposed filters merely reducing exposure?
+Possibly. Every filter must be compared at:
+•	equal realized volatility;
+•	equal market exposure;
+•	equal trade count where meaningful;
+•	net profit per exposed hour.
+A filter is not automatically valuable because absolute drawdown falls.
+2. Is recent NQ unusually favorable?
+Possibly. The sample is short relative to structural regime change and has already been repeatedly inspected. That is why the research must emphasize rolling tests and locked forward rather than full-sample PF.
+3. Could improvements destroy the right tail?
+Yes. The most dangerous ideas are:
+•	strict slow-trend confirmation;
+•	breakeven;
+•	tight hard stop;
+•	maximum holding;
+•	partial profit;
+•	aggressive giveback lock.
+The revised plan uses maturity measures mainly to block new entries, not liquidate the core.
+4. Are multiple Solar versions false diversification?
+Almost certainly until proven otherwise.
+They should share one family risk cap.
+5. Is the proposed Solar architecture becoming too complex?
+It could. The maximum acceptable core should remain approximately:
+Type 1
+One Type 3 re-entry
+One selective Type 2
+One chop state
+One volatility sizing rule
+One catastrophe stop
+Any additional module must displace or simplify an existing one.
+6. Are the context filters causal?
+Not necessarily. MA alignment, ADX, efficiency, and volatility may merely correlate with historical winners.
+Preference should be given to:
+•	recent Solar flip frequency;
+•	wave/episode state;
+•	path efficiency;
+•	normalized volatility.
+These connect directly to identified failure modes.
+7. Could historical bar information leak into exits?
+Yes. In particular:
+•	using a current bar’s completed high/low to update a stop applied within the same bar;
+•	historical early pullback signals;
+•	ambiguous stop versus exit ordering.
+Playback and higher-fill-resolution checks are mandatory.
+8. Could mean reversion erase Solar gains?
+Yes. The failed-breakout strategy must require confirmed failure and value reacceptance, not merely “Solar is weak.”
+9. Could volatility targeting hide poor alpha?
+Yes. Report unscaled strategy expectancy separately from scaled performance.
+10. Could Sharpe improve because fewer trades make the estimate unstable?
+Yes. Minimum trade counts and temporal coverage are hard gates.
+11. Are 90/179 implicitly fitted to recent volatility?
+Possibly. Diagnose offset-to-volatility ratios before changing them.
+12. Could one gap exceed historical drawdown?
+Yes. Bar-based historical maximum drawdown is not a worst-case bound.
+Use:
+•	gap scenarios;
+•	stop-through assumptions;
+•	exchange-halt scenarios;
+•	data-disconnect scenarios;
+•	margin stress.
+13. Is the final portfolio still one NQ bet?
+It will be unless the complementary family earns from genuinely different behavior and has low losing-day/drawdown overlap.
+14. Which recommendation should be removed first?
+The first to remove would be a strict multi-MA or full higher-timeframe alignment gate.
+It is likely redundant, lagging, and capable of deleting the early part of the right tail. It remains worth diagnostic tagging and a soft-veto test, but it should not be part of the first core architecture.
+________________________________________
+16. Final recommended roadmap
+Phase 0 — Establish truth
+SW00 baseline parity
+Cost matrix
+Playback and fill audit
+Contract/roll verification
+No strategy improvement yet.
+Phase 1 — Understand the baseline
+Trend episodes
+Wave state
+Exit reasons
+MFE/MAE
+Giveback
+Flip clusters
+Volatility
+Session
+Long/short
+Phase 2 — Refine entry architecture
+Type 1 core
+One Type 3 re-entry
+Selective early Type 2
+One entry per wave/episode limits
+Phase 3 — Remove obvious low-quality exposure
+Solar flip-count + efficiency veto
+Maturity-based no-new-entry
+Phase 4 — Refine risk, not alpha
+Remote catastrophe stop
+Session-close decision
+MNQ volatility sizing
+Phase 5 — Study horizons
+1/2/3/5-minute portability
+Time-normalized parameters
+Soft major/minor context
+MA context as diagnostic
+Phase 6 — Small Solar parameter neighborhood
+Only now investigate:
+Trend multiplier neighborhood
+Stop multiplier neighborhood
+Slowdown neighborhood
+Look for plateaus, not one winner.
+Phase 7 — Build the complementary family
+Failed opening breakout
+Value reacceptance
+VWAP/range-midpoint objective
+Strict trend-conflict protection
+Phase 8 — Portfolio research
+Daily MTM combination
+Equal family risk
+Inverse-vol family risk
+Volatility target
+Conflict router
+Expected shortfall
+Drawdown overlap
+Phase 9 — Locked forward
+Freeze:
+•	logic;
+•	parameters;
+•	cost assumptions;
+•	risk target;
+•	family weights;
+•	router.
+Then observe without repair.
+Do not touch yet
+Large A1–A5 optimization
+Arbitrary time windows
+Fast breakeven
+Profit targets
+Complex profit locks
+Full long/short parameter separation
+Live leverage
+________________________________________
+17. Research constitution for Claude Code
+1.	The objective is robust portfolio-level geometric growth, not maximum backtest profit.
+2.	Solar Wave’s positive right tail must be explicitly measured and protected.
+3.	One experiment tests one falsifiable hypothesis.
+4.	Acceptance and rejection criteria must be written before results are read.
+5.	Never change signal parameters, entry logic, exit logic, cost assumptions, and time filters in the same experiment.
+6.	Every tested configuration counts toward the multiple-testing burden.
+7.	2023–2025 is research data, not pristine holdout data.
+8.	Locked-forward data may not be used to tune or rescue a failed candidate.
+9.	Compare filters at equal risk or exposure whenever possible.
+10.	A reduction in drawdown caused only by lower exposure is not automatically an alpha improvement.
+11.	Type 1, Type 2, Type 3, and multiple Solar timeframes belong to one strategy family.
+12.	A complementary strategy must have its own independent economic mechanism and standalone evidence.
+13.	No mean-reversion strategy may blindly oppose a strong, efficient Solar trend.
+14.	No candidate is promoted from one metric, one period, or one parameter point.
+15.	Full trade history, daily MTM equity, cost stress, temporal stability, concentration, and parameter-neighborhood results are mandatory.
+16.	Historical and Playback signal/fill disagreements must be resolved before candidate selection.
+17.	Every failed hypothesis is permanently logged; it cannot be repeatedly renamed and retested.
+18.	No leverage recommendation before multi-family locked-forward validation.
+________________________________________
+18. Final decision
+Most promising Solar Wave architecture
+Primary entry:
+    Type 1 Trend Start
+
+Episode controls:
+    one Type 1 per trend episode
+    one conditional Type 3 re-entry
+
+Pullback:
+    Type 2 only when:
+        strong trend
+        early wave
+        one per wave
+        acceptable stop distance
+
+Maturity:
+    block new additions after repeated recovery-step contraction
+    do not automatically exit the runner
+
+Exit:
+    Solar TrailingStop as primary
+    remote catastrophe stop
+    session-close policy decided empirically
+
+Risk:
+    fixed Solar signals initially
+    MNQ-based volatility-aware sizing
+    one Solar family risk cap
+Most promising complementary strategy
+Failed opening-range or structural-breakout reacceptance back toward VWAP/value.
+It has the clearest opposite economic premise:
+Solar profits from persistence.
+The complementary strategy profits from confirmed failure of persistence.
+It must be independently profitable and disabled during strong Solar continuation.
+Most appropriate portfolio-risk approach
+Start with:
+One consolidated NQ position
+Equal risk by economic family
+Family-level exposure caps
+MNQ granularity
+Portfolio-level volatility monitoring
+No simultaneous full-risk opposing trades
+No-trade state
+Then compare fixed equal risk with fixed inverse-volatility weights. Add portfolio volatility targeting only after daily mark-to-market and locked-forward evidence exist.
+Leverage should eventually be constrained by the minimum of:
+volatility target
+stress-drawdown budget
+expected-shortfall budget
+conservative fractional-growth limit
+margin/liquidity constraints
+Three highest-value immediate experiments
+1.	SW00_BASELINE_PARITY_COST
+Determine whether the historical Type 1 edge survives realistic fills and costs.
+2.	SW01_EPISODE_AND_EXIT_ATTRIBUTION
+Build the state and trade ledger needed to understand exactly where profits, losses, and giveback arise.
+3.	SW03_SINGLE_TYPE3_REENTRY
+Test the most economically coherent way to increase trend participation without trading every Type 3.
+The north star remains:
+Do not force Solar Wave to produce smooth daily profits. Preserve its convex trend payoff, remove avoidable repeated losses, stabilize its risk, pair it with an independent failed-persistence engine, and seek smoothness at the portfolio level rather than by amputating the strategy’s largest winners.
+

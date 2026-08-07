@@ -1,0 +1,68 @@
+# Machine-readable research frontier. Status: pending | active | passed | failed | inconclusive | blocked
+# Every hypothesis is falsifiable; gates preregistered before result reads.
+- id: SW00_BASELINE_PARITY_COST
+  phase: 0
+  status: active
+  hypothesis: >
+    The canonical Type-1 baseline retains positive after-cost expectancy under
+    realistic execution friction (positive at 1 tick/execution slippage; not
+    structurally destroyed at 2 ticks), and the MCP pipeline is deterministic
+    (bit-identical trade ledgers across independent reruns).
+  depends_on: []
+  gates: research/00_truth/SW00_spec.md
+- id: SW01_EPISODE_AND_EXIT_ATTRIBUTION
+  phase: 1
+  status: pending
+  hypothesis: >
+    A deterministic bar/state/trade ledger (episode ID, wave, signals, flip count,
+    path efficiency, MAE/MFE/giveback) reveals where PnL concentrates; no logic change.
+  depends_on: [SW00_BASELINE_PARITY_COST]
+  blocker: needs read-only signal-exporter strategy clone (new class name)
+- id: SW02_CATASTROPHE_AND_SESSION_EXIT
+  phase: 4
+  status: pending
+  hypothesis: >
+    A remote catastrophe stop (200/260/320 ticks) reduces expected shortfall with
+    >=85% large-winner retention; session-close flatten vs carry decided by matched
+    counterfactuals, not aggregate net profit.
+  depends_on: [SW01_EPISODE_AND_EXIT_ATTRIBUTION]
+- id: SW03_SINGLE_TYPE3_REENTRY
+  phase: 2
+  status: pending
+  hypothesis: >
+    First same-direction Type 3 after a premature Type 1 exit has positive
+    incremental expectancy when trend direction and episode are unchanged.
+  depends_on: [SW01_EPISODE_AND_EXIT_ATTRIBUTION]
+- id: SW04_SELECTIVE_TYPE2
+  phase: 2
+  status: pending
+  depends_on: [SW03_SINGLE_TYPE3_REENTRY]
+- id: SW05_CHOP_VETO
+  phase: 3
+  status: pending
+  depends_on: [SW01_EPISODE_AND_EXIT_ATTRIBUTION]
+- id: SW06_TIMEFRAME_PORTABILITY
+  phase: 5
+  status: pending
+  note: anchors preregistered in thesis; NOT touched during Phase 0 benchmarking
+  depends_on: [SW02_CATASTROPHE_AND_SESSION_EXIT]
+- id: SW07_MAJOR_MINOR_CONTEXT
+  phase: 5
+  status: pending
+  depends_on: [SW06_TIMEFRAME_PORTABILITY]
+- id: SW08_FIXED_SIGNAL_VOLATILITY_SIZING
+  phase: 4
+  status: pending
+  depends_on: [SW01_EPISODE_AND_EXIT_ATTRIBUTION]
+- id: FB01_FAILED_OPENING_BREAKOUT
+  phase: 7
+  status: pending
+  depends_on: [SW02_CATASTROPHE_AND_SESSION_EXIT]
+- id: PORTFOLIO_LAYER
+  phase: 8
+  status: pending
+  depends_on: [FB01_FAILED_OPENING_BREAKOUT, SW08_FIXED_SIGNAL_VOLATILITY_SIZING]
+- id: LOCKED_FORWARD
+  phase: 9
+  status: pending
+  depends_on: [PORTFOLIO_LAYER]

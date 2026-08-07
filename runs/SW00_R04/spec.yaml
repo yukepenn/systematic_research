@@ -1,0 +1,34 @@
+# IMMUTABLE preregistered run spec — written before results were read.
+run_id: SW00_R04
+experiment_id: SW00_BASELINE_PARITY_COST
+hypothesis: H-001 (research/registry/hypotheses.md)
+mechanism: additive per-execution friction vs baseline edge; pipeline determinism
+purpose: determinism_4
+tested_config_seq: 1        # same search-space config as canonical anchor; no new DoF
+parent_run: parity_B (research/solar_wave_parity/type1_2023_2025/raw_result_boundary_corrected.json)
+strategy_class: SolarWaveRKReplicaV0
+strategy_source_sha256: 221d1e138d54529988fbe19aa563584863081eac917bd6aa6e626e9ed5aa4b20
+strategy_source_mtime: 2026-08-06T01:42:49.015183+00:00
+git_commit: (preregistration commit; filled by git history)
+ninjatrader_version: 8.1.8.1
+crosstrade_version: v1.13.9
+engine_fingerprint: sha256:b4255f1b0dd7fba1
+vendor_indicator: RenkoKings_SolarWaveRK (version not exposed; assembly untouched)
+instrument: "NQ 09-26"       # resolves NQU6, NT-configured back-adjusted merge
+bars: {period_type: Minute, value: 1, market_data_type: Last}
+from_utc: "2023-01-01T06:00:00Z"
+to_utc: "2025-02-02T22:59:59Z"
+timezone_note: payload timestamps are exchange-session time (ET); sessions 18:00->17:00
+trading_hours: instrument default (CME index futures ETH)
+parameters_hash: 9651035fb06d029fbe2a43456600b2286d9923422718efe79f1bdf3b66fa8890
+parameters: {"EntrySignalType": 1, "EnableLong": true, "EnableShort": true, "TrendMultiplier": 90, "StopMultiplier": 179, "SlowdownScan": 5, "WeakWeakSplit": 10, "PullbackEarly": true, "PullbackSplit": 10, "UseTimeFilter": false, "StartTime": 93000, "EndTime": 160000}
+commission_template: "NinjaTrader Brokerage Lifetime"
+slippage_ticks_per_execution: 0
+fill_resolution: Standard
+entries_per_direction: 1 (AllEntries, from SetDefaults)
+session_close: exit-on-session-close true, 30s (from SetDefaults)
+time_in_force: GTC
+quantity: 1 (DefaultQuantity, hardcoded)
+account: isolated Backtest ($100k, USD)
+acceptance_criteria: research/00_truth/SW00_spec.md (gates 1-6)
+rejection_criteria: research/00_truth/SW00_spec.md (rejection section)
