@@ -394,3 +394,11 @@ Reopening actions, all evidence-first:
 Convergence status: the §15 convergence verdict stands for the ORIGINAL mandate. C01 is a new,
 narrower program under the same constitution, discipline unchanged (append-only registry,
 preregistration, right-tail hard gate, AGGRESSIVE EXPLORATION / CONSERVATIVE PROMOTION).
+
+**Wave C01 closed (2026-08-07, same day):** 12 items, 6 R1 trials (285–290), zero Pareto
+improvement — champion unchanged and hardened. Four axes permanently closed (short gating,
+CUSUM-k, announcement conditioning, threshold engineering as a class); the wave's yield is
+scientific: σ-invariance (DC02b), within-session edge locality (T0-9), shorts-as-crisis-insurance
+(T0-1), real-but-untradable FOMC drag (T0-5), real-but-unmonetizable AUC-0.56 state signal
+(T1-ML). MONITOR-01 frozen. Open doors unchanged: E10 master-strategy engineering, locked-forward
+monitoring, genuinely new mechanisms only.
