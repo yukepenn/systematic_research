@@ -1,0 +1,34 @@
+=== W4-C derived stats (from w4c_pooled.csv / w4c_results.csv) ===
+configs: 144  passes: 0
+pass split: reclaim 0 / 72  cont 0 / 72
+
+primary configs (pierce=2, W=60) with reclaim/entry rate and cap fraction:
+level    mode   dir  A  B  n_sweep    n  reclaim_rate  days  p_tgt    net1  ci1_lo  ci1_hi    net2  n_cap  cap_frac  passes
+  ONL reclaim  long 16  6     2443  168        0.0688    18 0.3036 -2.1934 -3.4455 -1.0210 -4.1934      0    0.0000   False
+  ONL reclaim  long 24  8     2437  165        0.0677    18 0.2727 -2.1447 -3.5503 -0.6690 -4.1447      0    0.0000   False
+OR15L reclaim  long 16  6     3533  250        0.0708    23 0.2800 -2.7120 -3.5534 -1.8819 -4.7120      0    0.0000   False
+OR15L reclaim  long 24  8     3523  247        0.0701    23 0.2348 -3.3578 -4.4986 -2.2294 -5.3578      0    0.0000   False
+  ONH reclaim short 16  6     4437  296        0.0667    24 0.2804 -2.7031 -3.8385 -1.7591 -4.7031      0    0.0000   False
+  ONH reclaim short 24  8     4430  294        0.0664    24 0.2687 -2.2734 -3.2823 -1.0605 -4.2734      0    0.0000   False
+OR15H reclaim short 16  6     5671  295        0.0520    26 0.2136 -4.1737 -4.9994 -3.2817 -6.1737      0    0.0000   False
+OR15H reclaim short 24  8     5663  287        0.0507    26 0.1958 -4.6089 -6.0051 -3.1972 -6.6089      1    0.0035   False
+  ONL    cont short 16  6     1473 1133        0.7692    15 0.2665 -3.0079 -3.6844 -2.2278 -5.0079      0    0.0000   False
+  ONL    cont short 24  8     1415 1088        0.7689    15 0.2647 -2.4014 -3.1436 -1.5992 -4.4014      0    0.0000   False
+OR15L    cont short 16  6     2099 1638        0.7804    19 0.2772 -2.7743 -3.2745 -2.2342 -4.7743      0    0.0000   False
+OR15L    cont short 24  8     2033 1574        0.7742    19 0.2548 -2.7195 -3.4430 -2.1467 -4.7195      0    0.0000   False
+  ONH    cont  long 16  6     2520 1958        0.7770    20 0.2764 -2.7900 -3.1624 -2.4059 -4.7900      1    0.0005   False
+  ONH    cont  long 24  8     2383 1816        0.7621    20 0.2452 -3.0077 -3.4408 -2.5762 -5.0077      5    0.0028   False
+OR15H    cont  long 16  6     3070 2506        0.8163    25 0.2622 -3.0949 -3.3925 -2.7469 -5.0949      4    0.0016   False
+OR15H    cont  long 24  8     2883 2319        0.8044    25 0.2409 -3.1195 -3.4831 -2.7752 -5.1195     15    0.0065   False
+
+primary reclaim: netC1 min/max = -4.609 / -2.145 ; max ci1_hi = -0.669
+primary cont:    netC1 min/max = -3.120 / -2.401 ; max ci1_hi = -1.599
+best overall config: ONL reclaim long pierce=4 W=120 +24/-8 n=159 netC1=-1.010 CI=[-2.452,0.610] netC2=-3.010 pass=False
+max ci1_hi across all 144: 0.703 ; num configs with net1>0: 0 ; num with ci1_lo>-0.5: 0
+
+level availability: sessions with each level defined:
+  ONH 37 of 37
+  ONL 37 of 37
+  OR15H 37 of 37
+  OR15L 37 of 37
+total trades: reclaim=17833 cont=126099 ; total sweep episodes (reclaim-mode rows, primary): 32137

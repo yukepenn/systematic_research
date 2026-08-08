@@ -82,11 +82,30 @@
       signal ladder for fast NQ states: micro momentum +0.2-0.6pp; single fast trigger
       +1-2pp; needed +7-10pp. One-feature fast triggers deprioritized; +1-2pp contrarian
       lift kept as role-B reference fact. artifacts/w31_snapback/w31_report.md.
-- [ ] **Wave W3 continues (EVI-reordered after W3-1)**: structural/completed-structure
-      setups now highest EVI — S2a frozen run (P7, needs NT8 engine or python 1-min
-      replica), FSS-2 breakout-acceptance & FSS-5 sweep/reclaim with REAL level logic
-      (ONH/ONL/PDH/PDL, unadjusted prices), H-B5 spike classification (P8), FSS-10 ES
-      confirmation (P10, needs ES exports). Then role-B/C layering (P11).
+- [x] **AMENDMENT 5 applied (2026-08-08)**: ALPHA THROUGHPUT MODE — governance to
+      maintenance; every wave must deliver A(trade readout)/B(kill)/C(promotion)/
+      D(material feature); thin freezes; parallel families; CLEAN_MOVE + path ordering;
+      scoreboard (ALPHA_SCOREBOARD.md). Verbatim: MANDATE_AMENDMENT_5_ALPHA_THROUGHPUT.txt.
+- [x] **W4 COMPLETE (2026-08-08, 5 parallel families via workflow, spec 2db9058): 4
+      KILLS + 1 label map.** FSS-1 killed (0/48; passive limit variant ALSO killed —
+      adverse selection exceeds spread saving: passive gross −1.50 vs market −0.93).
+      S2a killed at owner params (3-min fix net C1 −1.675; short-side +13.5 n=43
+      OBSERVATION only). FSS-5 killed 0/144 (neither reclaim nor continuation; only
+      5-7% of sweeps reclaim). H-B5 killed (P(CONT) 0.390 vs P(REV) 0.407; confounded
+      cell's honest readout −3.46t). CLEAN_MOVE labels: path toll P(−4 before +8)=0.63,
+      median pre-target DD 7.5t, clean fraction 42%; clean-vs-dirty separates on DEEP
+      contrarian pre-move (ret30 −15 vs −5), eff60, flow — NOT vol/spread → W5 seed.
+      Synthesis: artifacts/w4_wave_report.md. Data: s20250902 L2 truncated (RTH
+      quote-dead, L1-only effectively).
+- [x] **ES pipeline CONFIRMED** (pilots ESU5/ESH6 full sessions uncapped, L1+L2 →
+      substrate/raw/ES/ + MANIFEST). Oldest-first ES archival of discovery sessions
+      running (10 jobs queued 2026-08-08; rolling-window vanishing risk).
+- [ ] **Wave W5 (queue)**: W5-1 deep-pullback/clean-entry family (new frozen spec from
+      W4-E contrast; wait-deeper entries + eff/flow alignment); FSS-10 ES conditional
+      lift on NQ structural states (needs ES sechilo build after archival); fast FSS-2
+      (5-30s clocks, distinct from killed 1-min S2a); FSS-6/7 compression/velocity;
+      ML conditional quality (§23) once any base signal exists. Remaining ES exports
+      (27 sessions) + conversion.
 - [ ] Re-queued (Amendment 4 ordering): S2a frozen run (P7); H-B5 (P8); H-B1 anti-chase
       (role C, P11); oldest-first ARCHIVE_ONLY exports of confirmation pool (§20).
 - [ ] (done earlier) capped-session RTH second pass → Layer-1 state grids (250ms/1s/5s) →
