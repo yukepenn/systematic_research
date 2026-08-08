@@ -1,0 +1,52 @@
+run_id: SMV2Z_VIABILITY_POLICY
+date_frozen: 2026-08-08
+class: PORTFOLIO_TEST (R1, bounded)   # V4 s21 escalation: diagnostic passed (SMV2Y) -> policy licensed
+seq: [403, 404, 405]   # 403=policy cells, 404=placebo, 405=chronology+oldregime-proxy
+parent: SMV2Y (seq 399-400): sigma460 and ER150, measured at week t's close, causally predict
+  week t+1 champion downside (t_NW=-2.30/-3.05, bootstrap same-sign 0.99/0.998, cluster rule
+  did NOT fire -- independent states). DISCLOSED PRIOR, per V4.1 s21: "Start with broad states
+  ... Do NOT immediately fit a giant continuous score." This spec tests the SIMPLEST possible
+  combination -- a two-flag AND-gate, not a continuous risk score -- to avoid overfitting a
+  weighting scheme to 176 weeks of data.
+
+hypothesis: when BOTH states sit in their historically-worse-downside top tercile
+  (expanding-rank, >=12mo burn-in, identical construction to SMV2Y) at week t's close,
+  reduce the CHAMPION's exposure for week t+1 by a fixed scale s. Otherwise full exposure.
+  This is a bounded, interpretable, 0/s/1-style risk map (V4 s21: "0 / reduced / normal"),
+  not a fitted continuous function of the two states.
+
+data: champion curve = runs/SMV2M_MASTER_BUILD/out/parity_daily_aligned.csv column 'nt' (NT8
+  executable, 2023-04-05/06 boundary pair merged exactly as SMV2Y did it); states = SMV2Y's
+  own out/target_series.csv (sigma460/ER150 weekly snapshots, already aligned to ISO weeks,
+  already tercile-eligible via the same expanding-rank machinery -- REUSE, do not recompute
+  from scratch). dev <= 2026-05-31.
+
+policy: scaled[week t+1] = s * champion_pnl[week t+1] iff sigma460_top_tercile[t] AND
+  ER150_top_tercile[t] (both measured at week t's close, expanding tercile, >=12mo burn-in);
+  else scaled[week t+1] = champion_pnl[week t+1] unchanged. Applied at the WEEKLY level
+  (scale every daily PnL within the flagged week by s), consistent with how the target itself
+  was defined in SMV2Y.
+cells: s in {0.5, 0.7, 0.85}   # 3 cells, center 0.7 (matches SMV2N/V precedent for comparability)
+
+gates_all_required (identical battery to SMV2N/SMV2V so all three exhaustion-family policies
+  are directly comparable):
+  1: CDaR_0.95 AND TUW improve vs the unscaled champion curve (dev).
+  2: both improvements > placebo median + 2x IQR (200 random same-count trigger-week paths,
+     drawn from the same burn-in-eligible region, non-overlapping with the real trigger set
+     individually -- same convention as SMV2N/SMV2V, pigeonhole caveat disclosed identically
+     if it recurs).
+  3: LOYO >=4/5 dSharpe same sign + leave-2022-out keeps sign.
+  4: RTC >= 0.97 on champion top-decile up-days (dollar-based, per house convention).
+  5: net retention >= 0.97 (policy must not tax the core edge).
+  6 (extra, matches SMV2Y's own limitation): old-regime is a PROXY ONLY (E10-only next-week
+     downside, 2006-2021, same AND-gate construction on the E10-only sigma460/ER150 series) --
+     require the proxy's own AND-gate weeks to show a same-sign (not necessarily significant)
+     downside concentration vs proxy baseline; a REVERSAL is a kill, a weak/flat proxy is not.
+kill: any gate fails -> family killed (this is the SECOND policy attempt built on a
+  joint-loss/downside diagnostic after SMV2N's failure and SMV2V's failure -- if this also
+  fails, V4.1 s21's "viability state -> policy" escalation should be marked EXHAUSTED for the
+  sigma460/ER150 pair specifically; the underlying diagnostic finding from SMV2Y still stands
+  as INFORMATION regardless of the policy's fate, exactly as SMV2N/V's information results did).
+no_moves: no threshold search on the tercile cut, the AND-gate logic, or s beyond the 3 frozen
+  cells; no continuous-score variant in this run.
+outputs: out/policy_cells.csv, out/placebo.csv, out/chronology.csv, out/oldregime_proxy.csv, REPORT.md
