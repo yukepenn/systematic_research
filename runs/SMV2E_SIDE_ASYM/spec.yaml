@@ -1,0 +1,19 @@
+id: SMV2E_SIDE_ASYM
+type: R1   # seq 328-332 unconditional, 333-334 conditional
+frozen: 2026-08-08
+directive: OWNER_DIRECTIVE_V2_20260808 §26 (killed-axis check: 'short gating' was killed as BINARY veto in old campaign; graded side-scaling at matched risk was NOT tested; conditional-on-HTF is new post-SM08)
+base: Solar E10 daily long-PnL and short-PnL split from member fills (runs/SM01_SUBSTRATE/out/member_trades.parquet aggregated to E10 basis via bar replay)
+arms_unconditional:  # short exposure multiplier s, long fixed 1.0
+  s100_seq328: 1.00 (reference)
+  s75_seq329: 0.75
+  s50_seq330: 0.50
+  s25_seq331: 0.25
+  s0_seq332: 0.00 (long-only)
+arms_conditional:
+  c1_seq333: short*0.5 ONLY when HTF(SMA50 prior session) = UP; else 1.0
+  c2_seq334: symmetric: counter-HTF side * 0.5 both directions
+evaluation: raw + equal-vol + equal-DD; crisis check = 2022 calendar year net + 20 worst NQ down-days convexity retention (report % of s100 crisis profit kept)
+verdict_rule: >
+  Promote an arm only if equal-vol Sharpe/Calmar improve with P>=0.9 AND crisis-day convexity
+  retention >= 60% AND effect is monotone across the s-grid (plateau, no single-cell win).
+outputs: [runs/SMV2E_SIDE_ASYM/out/*, research/system_master/LONG_SHORT_FRONTIER.md]

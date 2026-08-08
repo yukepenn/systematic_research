@@ -1,0 +1,17 @@
+id: SMV2F_LEVERAGE_ROBUST
+type: AUDIT   # re-estimation of SM09 under long-dependence; no selection
+frozen: 2026-08-08
+directive: OWNER_DIRECTIVE_V2_20260808 §14
+question: does the '22.5%/yr at P(DD>25%)<=5%' claim survive long block lengths?
+objects: [SOLAR_E10, TILT_SOLAR, PORT_532, PORT_TILT_532, ONELOT_NQ, ONELOT_MNQ, P1_day_only(if SMV2C read by then)]
+resampling:
+  - moving block L in {5, 20, 60, 120}
+  - stationary bootstrap mean L in {20, 60}
+  - quarter-block (calendar quarters resampled with replacement)
+  - year-block (5 dev years resampled with replacement)
+  - historical worst-window stress (rolling 6/12/18-mo actual paths, no resampling)
+n_boot: 5000 per config, seed 20260808
+capital_base: $100k hypothetical
+report: sustainable fraction f* for P(DD > {15,20,25,30}%) <= 5% per method; spread across methods = model risk band
+honesty_rule: headline = WORST of the block-length estimates, not the friendliest
+outputs: [runs/SMV2F_LEVERAGE_ROBUST/out/*, research/system_master/LEVERAGE_ROBUSTNESS.md]

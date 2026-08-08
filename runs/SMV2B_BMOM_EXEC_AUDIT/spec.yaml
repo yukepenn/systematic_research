@@ -1,0 +1,20 @@
+id: SMV2B_BMOM_EXEC_AUDIT
+type: R1_AUDIT   # load-bearing execution audit of frozen rule; seq 320-323
+frozen: 2026-08-08
+directive: OWNER_DIRECTIVE_V2_20260808 §6
+rule_under_test: frozen W8-1 B-MOM (src/analytics/sm_bmom.py, reconciled 1333/1333) — NO retuning
+arms:
+  E0_seq320: signal-bar-close fill (existing research convention) — reference
+  E2_seq321: entry AND exit at NEXT 3-min bar open (fully causal); closeout unchanged 15:57 decision -> 16:00 open if pending
+  E3_seq322: E2 + 1 extra tick adverse per side
+  E4_seq323: E2 + 2 extra ticks adverse per side
+  E1_note: first-tick-after-bar requires tick substrate (exists ~12mo only); run as SUBSAMPLE check E1 vs E2 on available window, not a headline arm
+costs: NQ Lifetime $2.18/side actual; also report C1 (2.872t/RT) and C2 (2x C1) frictions
+window: dev 2022-01-03 .. 2026-05-31 (3m END-stamped RTH bars, same substrate as W8-1)
+metrics: trades, win%, PF, avg ticks/trade, net$, Sharpe, Sortino, Calmar, maxDD, worst month, rolling60 min, long/short split, annual, top-1% trade concentration
+verdict_rule: >
+  If E2 Sharpe >= 0.6 * E0 Sharpe and E2 net > 0 with CI_lo(daily mean, block bootstrap) > 0:
+  B-MOM survives as RECENT_REGIME challenger with E2 as the NEW canonical execution basis.
+  Else: downgrade to EXECUTION_FRAGILE; all portfolios containing B-MOM recomputed either way
+  (no grandfathering).
+outputs: [runs/SMV2B_BMOM_EXEC_AUDIT/out/*, research/system_master/BMOM_EXECUTION_AUDIT.md]

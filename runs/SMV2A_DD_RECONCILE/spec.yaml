@@ -1,0 +1,31 @@
+id: SMV2A_DD_RECONCILE
+type: AUDIT   # measurement/reconciliation, no selection, no R1 burn
+frozen: 2026-08-08
+directive: OWNER_DIRECTIVE_V2_20260808 §4
+question: >
+  Why is PORT_TILT_532 dev maxDD reported -27.2k while OneLot 1-NQ is -58.9k?
+  Verify both numbers; decompose the difference; put all seven objects on one
+  identical accounting basis.
+objects:
+  A_SOLAR_E10:      runs/SM01_SUBSTRATE/out/e10_daily_py.csv  (bar-level: e10_bar_pnl.parquet)
+  B_TILT_SOLAR:     runs/SM08_HTF_TILT/out/tilt50_rounded_daily.csv
+  C_SOLAR_BMOM:     0.625*A_vm + 0.375*BMOM_vm at SM05 frozen vol-match (recomputed here on common calendar)
+  D_PORT_532:       runs/SM09_LEVERAGE_FRONTIER/out/port_532_daily.csv
+  E_PORT_TILT_532:  runs/SM09_LEVERAGE_FRONTIER/out/port_tilt_532_daily.csv
+  F_ONELOT_MNQ:     recomputed from runs/SM14_ONELOT_DAYMARGIN/out/M_target.npy (a=3,b=1) on 3m bars, MNQ costs
+  G_ONELOT_NQ:      same target, NQ costs/point value
+convention:
+  calendar: union of NQ sessions 2022-01-03 .. 2026-05-31 (dev only); flat days = 0
+  dd_algorithm: cummax(equity) - equity, equity = cumsum(daily net), max over window
+  bar_level_dd: computed where bar PnL reconstructable (A, F, G exactly; B approx via day-scaling disclosed; C/D/E component-sum where possible)
+  costs: as embedded in each frozen series (documented per object); no re-costing of frozen artifacts
+exposure_stats: [avg_gross, median_gross, rms, p95, max, time_in_market, daily_vol, ann_vol, turnover, avg_contracts, max_contracts]
+normalizations: [native, equal_vol(target=A vol), equal_avg_exposure, equal_maxdd_budget]
+decomposition_ladder:  # counterfactual chain F->G and A->E, each step isolates one effect
+  - A native (graded 0..10 MNQ)
+  - A_sign10: sign(E10 pending target) * 10 MNQ  (graded-size effect removed)
+  - G OneLot NQ (adds hysteresis/M-state + BMOM component + NQ friction)
+  - B tilt (tilt effect)
+  - D/E portfolio (diversification + B1 + vol-match rescale effect)
+outputs: [runs/SMV2A_DD_RECONCILE/out/*, research/system_master/DRAWDOWN_RECONCILIATION.md]
+no_gates: true   # audit; findings feed re-ranking, nothing is promoted/killed here

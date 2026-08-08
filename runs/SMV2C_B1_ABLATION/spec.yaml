@@ -1,0 +1,17 @@
+id: SMV2C_B1_ABLATION
+type: R1   # seq 324-327
+frozen: 2026-08-08
+directive: OWNER_DIRECTIVE_V2_20260808 §7
+question: does B1 earn its complexity in the full portfolio?
+arms:  # all legs vol-matched to tilt-Solar on dev, weights renormalized, portfolio rescaled to common ann vol
+  P0_seq324: tilt-Solar alone
+  P1_seq325: 0.625 tilt-Solar + 0.375 BMOM (day-only)          # SM05 plateau center re-expressed
+  P2_seq326: 0.8 tilt-Solar + 0.2 B1
+  P3_seq327: 0.5 tilt-Solar + 0.3 BMOM + 0.2 B1                # = PORT_TILT_532
+bmom_basis: E2 (next-bar-open) if SMV2B verdict adopts it; else E0 — decided by SMV2B BEFORE this read
+metrics: dSharpe, dSortino, dCalmar, dMaxDD, dWorstMonth, dRolling60min, dTUW, dCDaR5, dLogG vs P1 (the day-only alternative), all at equal ann vol
+verdict_rule: >
+  B1 stays in CORE only if P3 beats P1 on >=3 of {Sharpe, Calmar, maxDD, worst month, TUW}
+  by margins exceeding block-bootstrap noise (P>=0.9 one-sided on the composite).
+  Otherwise B1 -> EXPERIMENTAL DIVERSIFIER, CORE full portfolio = P1.
+outputs: [runs/SMV2C_B1_ABLATION/out/*, research/system_master/B1_ABLATION.md]

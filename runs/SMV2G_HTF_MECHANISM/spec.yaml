@@ -1,0 +1,22 @@
+id: SMV2G_HTF_MECHANISM
+type: R1_PLATEAU   # seq 335-342; plateau characterization, NOT cell selection
+frozen: 2026-08-08
+directive: OWNER_DIRECTIVE_V2_20260808 §16-17
+question: is 'HTF directional agreement improves Solar' a broad mechanism plateau, or an SMA50 artifact?
+frozen_reference: SM08 SMA50 & SMA200 tilt x1.25 (already passed; NOT re-scored for selection)
+neighbor_states:  # each defines a daily UP/DOWN state from prior-session data; identical x1.25 up-weight applied; NO per-state tuning
+  n1_seq335: SMA20 state
+  n2_seq336: SMA100 state
+  n3_seq337: EMA50 state
+  n4_seq338: Donchian-50 midline state (close vs (max50+min50)/2)
+  n5_seq339: 50-session return sign
+  n6_seq340: 100-session return sign
+  n7_seq341: SMA50 slope sign (5-session slope)
+  n8_seq342: dual agreement SMA50 AND SMA200 (conflict -> no tilt)
+evaluation: dev dSharpe and dNet/DD vs untilted E10, same integer-rounding implementable form as SM08
+verdict_rule: >
+  MECHANISM CONFIRMED if >=6 of 8 neighbors improve Sharpe (any positive margin) —
+  i.e. the plateau is broad. If only SMA50/200 work, downgrade SM08 to FRAGILE_CELL
+  and re-run red team. No neighbor is promoted regardless of score; the deployed
+  form stays SMA50 unless a later preregistered selection round says otherwise.
+outputs: [runs/SMV2G_HTF_MECHANISM/out/*, appended to research/system_master/INDICATOR_FRONTIER.md]

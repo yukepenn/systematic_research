@@ -1,0 +1,2293 @@
+Archived verbatim 2026-08-08. Owner preamble (same message):
+"继续相同苛刻地研究优化我们策略，清理目前文档structure，淑清我们已经有的发现，继续尝试各种新的指标，不要over claim。
+继续找出optimal地最优解以及就只有一个contract sub最优解。以及我还是不能接受如此大地drawdown，这是我们必须要思考，
+最严重地需要修复增强的地方，也需要验证你说的PORT_TILT max-27.2k drawdown是否属实，以及是否可以最小，科学原因在哪？
+以及为什么换成了1NQ maxdd又变成-50k+了？各种什么的。但是你也最了解，要客观要对，要sharpe高，也要考虑实际交易，
+也要能在ninja trader strategy analzyer上复现。"
+
+===============================================================================
+OWNER MASTER DIRECTIVE V2
+NQ SYSTEM MASTER — DRAWDOWN-FIRST ALPHA EXPANSION, PORTFOLIO RESEARCH,
+ONE-CONTRACT OPTIMIZATION, AND NINJATRADER PARITY
+2026-08-08
+===============================================================================
+
+REPOSITORY:
+
+D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research
+
+This directive SUPERSEDES the idea that SYSTEM_MASTER is finished.
+
+It does NOT erase previous work.
+
+It consumes:
+
+    Solar campaign
+    Scalping Lab
+    Program-B
+    SYSTEM_MASTER V1
+    SM01–SM14
+    all negative results
+    all parity work
+    all red-team findings
+    all current NinjaScript implementations
+
+as the starting evidence base.
+
+The mission is no longer to produce another "final report."
+
+The mission is:
+
+    CONTINUOUSLY IMPROVE THE ACTUAL NQ SYSTEM FRONTIER
+
+until we have identified:
+
+1. the strongest full-system historical architecture;
+2. the strongest DAY-ONLY architecture flat before the margin cliff;
+3. the strongest EXACTLY-ONE-CONTRACT architecture;
+4. the strongest low-drawdown architecture;
+5. the strongest Sharpe/Calmar architecture;
+6. the simplest architecture capturing most of the benefit;
+7. the exact reasons remaining drawdown cannot be removed without
+   destroying edge.
+
+Historical research only.
+
+NO:
+
+    real orders
+    account interaction
+    live trading
+    Sim101 execution
+    Playback trading
+    realtime recorder
+    waiting until November
+    waiting for future data
+    "monitor it for six months and see"
+    paid datasets.
+
+Use the historical data and tooling available NOW.
+
+Do not ask the owner routine questions.
+
+Do not stop merely because a previous document contains the word FINAL.
+
+===============================================================================
+0. FIRST ACTION — ESTABLISH REAL REPOSITORY TRUTH
+===============================================================================
+
+Before any new alpha test:
+
+inspect actual local:
+
+    git status
+    git branch
+    git log --oneline --decorate -30
+
+Then read directly:
+
+    research/system_master/*
+    research/scalping_lab/*
+    Solar final/audit documents
+    Program-B artifacts
+    REJECTED_IDEAS.md
+    all SM run specs
+    all current Python analytics
+    all current NinjaScript source.
+
+Do NOT rely on:
+
+    memory summaries
+    prior assistant prose
+    stale GitHub rendered pages
+    "final" documents alone.
+
+Local committed artifacts are authoritative.
+
+Do not switch branches automatically.
+Do not rebase.
+Do not force-push.
+Do not delete historical evidence.
+
+===============================================================================
+1. CLEAN THE RESEARCH STRUCTURE WITHOUT DESTROYING EVIDENCE
+===============================================================================
+
+The repository has accumulated multiple campaigns, finals, amendments,
+frontiers and superseded conclusions.
+
+Clean the documentation layer.
+
+DO NOT delete immutable evidence.
+
+Create or update:
+
+research/system_master/
+
+    START_HERE.md
+    CURRENT_TRUTH.md
+    SYSTEM_SCORECARD.md
+    SYSTEM_FRONTIER.yaml
+    RESEARCH_INDEX.md
+    CLAIM_LEDGER.md
+    KNOWN_ERRORS_AND_CORRECTIONS.md
+    SUPERSEDED_CONCLUSIONS.md
+    DRAWDOWN_FRONTIER.md
+    FULL_PORTFOLIO_FRONTIER.md
+    DAY_ONLY_FRONTIER.md
+    ONE_CONTRACT_FRONTIER.md
+    COMPLEMENTARY_ENGINE_FRONTIER.md
+    INDICATOR_FRONTIER.md
+    EXECUTION_REALITY.md
+    NINJATRADER_PARITY.md
+    NEXT_RESEARCH_QUEUE.md
+
+START_HERE.md should tell a new researcher, in <5 minutes:
+
+    what Solar is
+    what HTF Tilt is
+    what B-MOM is
+    what B1 is
+    what PORT_TILT_532 is
+    what OneLot is
+    which objects are references
+    which are challengers
+    which are experimental
+    which claims were corrected
+    what still needs to be proven.
+
+Do not create duplicate "final" files endlessly.
+
+Historical documents remain intact.
+
+Current truth should link to them.
+
+===============================================================================
+2. CORRECT THE CURRENT CLAIM TAXONOMY
+===============================================================================
+
+Until new evidence changes them, use these labels:
+
+SOLAR_E10:
+    ESTABLISHED HISTORICAL FAMILY-A REFERENCE
+
+HTF_TILT_SOLAR:
+    CURRENT CORE RESEARCH BASELINE
+    conditional exposure enhancement;
+    NOT an independent alpha engine.
+
+BMOM:
+    RECENT_REGIME INDEPENDENT-ENGINE CHALLENGER
+    pending realistic causal execution audit.
+
+SOLAR_PLUS_BMOM:
+    PRIMARY DAY-ONLY PORTFOLIO CHALLENGER
+    pending execution + risk audit.
+
+B1_OVERNIGHT:
+    EXPERIMENTAL DIVERSIFIER / RISK SLEEVE
+    NOT proven standalone alpha.
+
+PORT_TILT_532:
+    RESEARCH COMPOSITE CHALLENGER
+    NOT a statistically clean estimate of future Sharpe.
+
+SolarWaveSMOneLot_v1:
+    POST-HOC ONE-CONTRACT DERIVED CHALLENGER
+    NOT merely a scaled PORT_TILT_532
+    and NOT parity-complete until proven.
+
+Do not call any strategy:
+
+    robustly validated
+    production ready
+    OOS proven
+    optimal
+    tradeable
+
+unless the precise claim is supported.
+
+===============================================================================
+3. THE #1 PROBLEM IS DRAWDOWN
+===============================================================================
+
+Owner requirement:
+
+    THE CURRENT DRAWDOWN IS NOT ACCEPTABLE.
+
+This is not a side metric.
+
+Drawdown reduction is now a first-class research objective.
+
+Current reference observations include roughly:
+
+Solar-like system:
+    ~$40k historical development DD magnitude.
+
+PORT_TILT_532:
+    reported ~-$27.2k development max DD.
+
+OneLot 1 NQ:
+    reported ~-$58.9k development max DD.
+
+OneLot 1 MNQ:
+    reported ~-$6.4k development max DD.
+
+DO NOT ACCEPT THESE NUMBERS AS MUTUALLY COMPARABLE
+UNTIL SM-DD-RECONCILE IS COMPLETED.
+
+Stretch goals, NOT hard optimization constraints:
+
+FULL SYSTEM:
+    challenge ~$27k DD toward <$20k,
+    then <$15k if economically possible.
+
+ONE NQ:
+    aggressively attempt to cut the ~$59k historical DD by >=30–50%
+    WITHOUT destroying risk-adjusted return.
+
+These are research targets, not invitations to overfit.
+
+If the efficient frontier says these targets are impossible,
+prove why.
+
+===============================================================================
+4. MANDATORY SM-DD-RECONCILE
+WHY IS PORT DD ~27k BUT ONE-NQ DD ~59k?
+===============================================================================
+
+This must be solved before more marketing language about either system.
+
+Reconstruct exact equity curves for:
+
+A. Solar E10
+B. HTF Tilt Solar
+C. Solar + B-MOM
+D. PORT_532
+E. PORT_TILT_532
+F. OneLot MNQ
+G. OneLot NQ
+
+using EXACTLY the same:
+
+    calendar
+    start/end dates
+    session attribution
+    flat-day inclusion
+    commission assumptions
+    slippage convention
+    mark-to-market convention
+    DD algorithm.
+
+For every object report BOTH:
+
+    end-of-day max DD
+    bar-level/intraday max DD.
+
+Also report:
+
+    average gross exposure
+    median gross exposure
+    RMS exposure
+    95th percentile exposure
+    max exposure
+    time-in-market
+    daily volatility
+    annualized volatility
+    total notional-turnover
+    average contracts
+    maximum contracts.
+
+Then compare under FOUR normalizations:
+
+1. native implementation;
+2. equal realized daily volatility;
+3. equal average gross exposure;
+4. equal historical max-DD budget.
+
+Explicitly decompose the DD difference into:
+
+    size/notional effect
+    diversification effect
+    B1 inclusion/exclusion
+    graded-size effect
+    sign/hysteresis compression effect
+    NQ vs MNQ commission effect
+    daily vs intraday DD definition
+    16:44 flatten effect
+    signal differences.
+
+Produce:
+
+    DRAWDOWN_RECONCILIATION.md
+
+No hand-waving.
+
+Do not say:
+
+    "OneLot has higher DD because it is one NQ"
+
+without quantifying each component.
+
+===============================================================================
+5. DAY-ONLY AND FULL-PORTFOLIO SYSTEMS MUST BE SEPARATE
+===============================================================================
+
+The owner wants practical day-margin operation.
+
+Therefore maintain TWO system frontiers:
+
+FULL_RESEARCH_PORTFOLIO
+
+    may include overnight B1
+    for scientific comparison.
+
+DAY_ONLY_SYSTEM
+
+    MUST be flat before 16:45 ET
+    preferably target flat by ~16:42 or safer,
+    based on verified NT/session semantics.
+
+B1 overnight CANNOT be part of the practical DAY_ONLY system.
+
+Overnight information MAY be used causally as a feature.
+
+Overnight POSITION exposure may not.
+
+Therefore immediately research:
+
+    HTF Tilt Solar
+        +
+    B-MOM
+        +
+    any new DAY-ONLY complementary engines.
+
+Do not allow PORT_TILT_532 to win the practical category merely because
+it contains an overnight sleeve that the operational mandate forbids.
+
+===============================================================================
+6. B-MOM EXECUTION AUDIT — LOAD-BEARING
+===============================================================================
+
+The current B-MOM implementation forms its signal from a completed
+3-minute bar and historically fills at that same signal-bar close.
+
+This may be execution-optimistic.
+
+Resolve it now.
+
+Freeze exact current B-MOM logic.
+
+DO NOT retune it.
+
+Compare:
+
+BMOM_E0:
+    existing signal-close research convention.
+
+BMOM_E1:
+    first causal trade/tick AFTER the bar is complete,
+    where historical data supports it.
+
+BMOM_E2:
+    next 3-minute bar OPEN.
+
+BMOM_E3:
+    E1 + extra 1 tick execution stress.
+
+BMOM_E4:
+    E1 + extra 2 tick execution stress.
+
+Use actual NQ commission.
+
+Report:
+
+    trades
+    win rate
+    PF
+    avg ticks/trade
+    net
+    Sharpe
+    Sortino
+    Calmar
+    max DD
+    worst month
+    rolling 60D
+    long/short
+    annual breakdown
+    concentration.
+
+If E1/E2 remain strongly profitable:
+    BMOM gains credibility.
+
+If edge collapses:
+    downgrade it immediately.
+
+Then recompute every portfolio containing B-MOM.
+
+No grandfathering of old PORT results.
+
+===============================================================================
+7. B1 ABLATION — DOES IT ACTUALLY EARN ITS COMPLEXITY?
+===============================================================================
+
+Compare:
+
+P0:
+    HTF Tilt Solar
+
+P1:
+    HTF Tilt Solar + B-MOM
+
+P2:
+    HTF Tilt Solar + B1
+
+P3:
+    HTF Tilt Solar + B-MOM + B1
+
+under:
+
+    equal volatility
+    equal drawdown risk
+    equal risk capital.
+
+Measure incremental B1 value:
+
+    ΔSharpe
+    ΔSortino
+    ΔCalmar
+    ΔDD
+    Δworst month
+    Δrolling60
+    ΔTUW
+    ΔCDaR
+    Δlog growth.
+
+If B1 gives only trivial improvement while carrying weak standalone
+evidence:
+
+    remove it from CORE.
+
+It may remain an experimental diversifier.
+
+Complexity must earn its place.
+
+===============================================================================
+8. REBUILD THE ONE-CONTRACT PROBLEM FROM FIRST PRINCIPLES
+===============================================================================
+
+Do NOT merely collapse the full portfolio after the fact.
+
+Create an independent research problem:
+
+    BEST EXACTLY-ONE-CONTRACT DAY-ONLY NQ SYSTEM.
+
+Action space:
+
+    -1
+     0
+    +1
+
+only.
+
+No scaling.
+
+No pyramiding.
+
+No averaging.
+
+No 2 NQ.
+No 10 MNQ pretending to be one NQ.
+
+Develop BOTH:
+
+    ONE_NQ
+    ONE_MNQ
+
+using the same causal system state.
+
+The one-contract strategy may use virtual engines internally:
+
+    Solar state
+    HTF state
+    B-MOM state
+    complementary engine states
+    confidence state
+
+but final position must be exactly:
+
+    short 1
+    flat
+    long 1.
+
+Research simple action maps:
+
+A. dominant-engine rule
+B. weighted vote
+C. sign with hysteresis
+D. priority state machine
+E. conflict = flat
+F. confidence-qualified sign
+G. sequential regime/state router.
+
+Avoid giant threshold optimization.
+
+Use broad plateaus.
+
+Primary ONE-CONTRACT objective:
+
+    maximize Sharpe / Calmar / geometric return
+    while aggressively minimizing MaxDD and TUW.
+
+Maintain:
+
+ONE_CONTRACT_MAX_SHARPE
+ONE_CONTRACT_LOW_DD
+ONE_CONTRACT_MAX_GROWTH
+ONE_CONTRACT_SIMPLE
+ONE_CONTRACT_FINAL
+
+Do not force 1 NQ to win.
+
+If 1 NQ's unavoidable historical drawdown is economically unacceptable,
+the scientific answer may be:
+
+    1 MNQ is the appropriate one-contract risk unit.
+
+===============================================================================
+9. WHY DOES 1 MNQ HAVE LOWER SHARPE THAN 1 NQ?
+===============================================================================
+
+Quantify, do not speculate.
+
+Run identical signal state machines on:
+
+    NQ
+    MNQ.
+
+Separate:
+
+    gross signal return
+    commission
+    slippage
+    spread assumptions
+    round-turn count.
+
+NQ and MNQ commissions do not scale perfectly with tick value.
+
+Show exactly how much of the reported:
+
+    Sharpe ~1.0 MNQ
+    versus
+    Sharpe ~1.1 NQ
+
+comes from relative friction.
+
+===============================================================================
+10. DO NOT TREAT JUNE/JULY 2026 AS PRISTINE GLOBAL OOS
+===============================================================================
+
+Previous campaigns examined history through 2026-07-31.
+
+Therefore there is NO globally pristine historical OOS.
+
+Correct any language that implies otherwise.
+
+June/July may be described, where justified, as:
+
+    overlay/composition quasi-holdout
+    or
+    component-specific late historical evaluation.
+
+Never:
+
+    clean OOS
+    pristine OOS
+    untouched global holdout.
+
+SolarWaveSMOneLot_v1 was created AFTER that read.
+
+Therefore it has NO untouched historical holdout claim.
+
+Do not invent a new one.
+
+Scientific validation must now rely on:
+
+    nested chronology
+    rolling walk-forward
+    expanding windows
+    leave-one-quarter-out
+    leave-one-half-year-out
+    year decomposition
+    parameter neighborhoods
+    block bootstrap
+    mechanism checks
+    explicit multiple-testing accounting.
+
+===============================================================================
+11. CURRENT REGIME IS PRIMARY — OLD HISTORY IS STRESS, NOT VETO
+===============================================================================
+
+Primary economic design era:
+
+    2022 → latest historical data available.
+
+Old history is valuable for:
+
+    failure analysis
+    mechanism
+    regime dependence
+    stress testing
+    falsification
+    low-vol historical environments.
+
+Do NOT require a current-regime engine to make money in 2007.
+
+But do NOT hide old failure.
+
+Classify:
+
+    STRUCTURAL
+    REGIME_LOCAL
+    UNKNOWN
+    FAILED
+
+honestly.
+
+B-MOM and Solar may both be REGIME_LOCAL.
+
+That does not disqualify them from a current-regime system.
+
+===============================================================================
+12. REOPEN DRAWDOWN ENGINEERING — BUT DO NOT REPEAT KILLED STOPS
+===============================================================================
+
+Prior evidence killed many conventional exit mechanisms.
+
+Do NOT blindly rerun:
+
+    identical hard stops
+    identical timed exits
+    identical split exit/reversal
+    identical loss cooldowns
+    identical progress-stop definitions.
+
+But "tested stop classes failed" does NOT imply:
+
+    drawdown cannot be engineered.
+
+Shift the search toward:
+
+    EXPOSURE BEFORE LOSS
+    CONDITIONAL RISK
+    SIDE RISK
+    ENGINE DIVERSIFICATION
+    STATE ELIGIBILITY
+    PORTFOLIO ALLOCATION.
+
+New drawdown-control families may include:
+
+DD1. HTF-CONFLICT DOWN-WEIGHT
+
+Example question:
+
+    HTF trend up
+    Solar short
+
+Should short exposure be:
+
+    100%
+    75%
+    50%
+    25%
+    0%
+
+Do not optimize exact percentages first.
+
+Use coarse monotone plateau.
+
+DD2. LONG/SHORT RISK ASYMMETRY
+
+Compare at matched portfolio risk:
+
+    1.0 / 1.0
+    1.0 / 0.75
+    1.0 / 0.5
+    1.0 / 0.25
+    long-only
+
+but preserve crash/crisis analysis.
+
+DD3. TIME-OF-DAY × SIDE × REGIME
+
+2026 loss anatomy suggests morning short losses deserve investigation.
+
+Do NOT hard-code 09:30–11:30 avoidance from one episode.
+
+Ask whether the effect repeats across other periods.
+
+DD4. ENSEMBLE CONFIDENCE × HTF
+
+Consensus alone was not enough.
+
+Test interactions such as:
+
+    HTF agreement
+    × consensus magnitude
+
+or:
+
+    HTF disagreement
+    × consensus weakness.
+
+DD5. WINNER-PROBABILITY / FAILED-TREND MODEL
+
+Estimate causally:
+
+    P(big Solar winner | state)
+    P(failed Solar episode | state).
+
+Use it for SOFT exposure changes.
+
+Do not binary filter until information is proven.
+
+DD6. DIVERSIFICATION-BASED DRAWDOWN CONTROL
+
+A separate positive engine may reduce DD far more safely than a stop.
+
+This is a major research path.
+
+===============================================================================
+13. DRAWDOWN METRICS — MAX DD IS NOT ENOUGH
+===============================================================================
+
+For every challenger calculate:
+
+    MaxDD — daily
+    MaxDD — intrabar/bar-level
+    Conditional Drawdown at Risk
+    Average drawdown
+    Ulcer Index
+    Pain Index
+    drawdown duration
+    longest TUW
+    median recovery time
+    95th percentile recovery time
+    worst 20D
+    worst 40D
+    worst 60D
+    worst 120D
+    worst month
+    worst quarter
+    losing-month streak
+    losing-week streak
+    positive-day %
+    positive-week %
+    positive-month %.
+
+The owner strongly values PnL smoothness.
+
+Do NOT optimize "every day profitable."
+
+That is not realistic and encourages pathological payoff shapes.
+
+But smoothness MUST be a formal objective.
+
+===============================================================================
+14. ROBUST LEVERAGE FRONTIER — REPLACE THE 5-DAY-ONLY BOOTSTRAP
+===============================================================================
+
+The prior leverage conclusion used block-5 bootstrap.
+
+That is insufficient as the sole tail-risk model for a strategy with:
+
+    multi-month drawdowns
+    long underwater periods
+    persistent regimes.
+
+Redo leverage analysis using:
+
+    moving block bootstrap L=5
+    L=20
+    L=60
+    L=120
+    stationary bootstrap
+    quarter-block bootstrap
+    full-year block bootstrap where sample supports it
+    historical rolling-window stress
+    regime-resampled stress.
+
+For every architecture calculate sustainable exposure under:
+
+    P(DD > 15%) <= 5%
+    P(DD > 20%) <= 5%
+    P(DD > 25%) <= 5%
+    P(DD > 30%) <= 5%
+
+on a standardized hypothetical capital base.
+
+Report sensitivity.
+
+Do NOT state:
+
+    "22.5% compound growth at the same risk"
+
+unless it survives reasonable long-dependence assumptions.
+
+===============================================================================
+15. RISK-NORMALIZED FRONTIER
+===============================================================================
+
+Every major comparison must include:
+
+NATIVE
+EQUAL_VOL
+EQUAL_AVG_EXPOSURE
+EQUAL_MAX_DD
+EQUAL_CDAR
+EQUAL_EXPECTED_SHORTFALL
+
+comparisons.
+
+The system with the greatest raw PnL is not automatically best.
+
+A system that loses 15% raw return but cuts DD 50% may dominate after
+risk normalization.
+
+===============================================================================
+16. HTF TILT — EXPAND SCIENTIFICALLY
+===============================================================================
+
+Current HTF Tilt is one of the strongest new results.
+
+Do NOT overfit it.
+
+First reproduce:
+
+    SMA50
+    SMA200
+
+exactly.
+
+Then investigate the MECHANISM rather than the exact SMA number.
+
+Question:
+
+    why does long-horizon trend agreement improve Solar?
+
+Possible neighboring representations:
+
+    SMA slope
+    EMA slope
+    Donchian long-term state
+    KAMA state
+    long-horizon regression slope
+    long-horizon return sign
+    trend quality + direction.
+
+The goal is to determine whether:
+
+    HTF directional agreement
+
+is a broad plateau.
+
+Not whether:
+
+    SMA73
+
+beats SMA50 by $4,000.
+
+===============================================================================
+17. MA CROSSOVER IS A SEED, NOT THE ANSWER
+===============================================================================
+
+Test:
+
+    30/59
+    20/50
+    50/100
+    50/200
+
+only as broad neighboring examples.
+
+Compare:
+
+ENTRY GATE
+EXPOSURE TILT
+EXIT FILTER
+CONFLICT REDUCTION.
+
+Because Solar already identifies trend direction,
+MA agreement may be redundant as an entry gate.
+
+The promising hypothesis is:
+
+    long-term direction changes expected VALUE / RISK
+    of a Solar state,
+
+not:
+
+    two indicators saying "up" is automatically better.
+
+===============================================================================
+18. INDICATOR DISCOVERY FACTORY
+===============================================================================
+
+Use /deep research repeatedly.
+
+Do NOT run random indicator soup.
+
+Each indicator needs an information hypothesis.
+
+Research, deduplicate, and test families including but not limited to:
+
+TREND QUALITY
+
+    Kaufman Efficiency Ratio
+    Vertical Horizontal Filter
+    ADX
+    DMI
+    Choppiness Index
+    Aroon
+    Vortex
+    regression slope
+    regression R²
+    trend t-statistic
+    directional efficiency
+    variance ratio.
+
+ADAPTIVE TREND
+
+    KAMA
+    VIDYA
+    FRAMA
+    McGinley Dynamic
+    Hull MA
+    T3
+    ZLEMA
+    adaptive EMA
+    Kalman trend estimate
+    state-space local linear trend.
+
+SIGNAL PROCESSING
+
+    Ehlers SuperSmoother
+    Fisher Transform
+    Roofing Filter
+    causal band-pass constructions
+    dominant-cycle estimates
+    Hilbert-type causal features where implementable.
+
+COMPLEXITY / REGIME
+
+    permutation entropy
+    approximate/path entropy
+    fractal dimension proxies
+    realized vol-of-vol
+    CUSUM
+    Bayesian online change-point concepts
+    HMM/state-space regime states
+    trend persistence scores.
+
+VOLATILITY / RANGE
+
+    ATR state
+    Parkinson-type range
+    realized range
+    range expansion
+    compression
+    normalized true range
+    volatility slope
+    volatility acceleration.
+
+AUCTION / LOCATION
+
+    VWAP
+    anchored VWAP
+    opening range
+    initial balance
+    previous-day high/low
+    overnight high/low
+    gap state
+    value/reacceptance logic
+    volume-profile features where causal data are available.
+
+BREAKOUT / MOMENTUM
+
+    Donchian breakout
+    time-of-day normalized momentum
+    noise-area breakout
+    multi-horizon momentum
+    breakout acceptance
+    pullback continuation
+    impulse + retracement quality
+    opening drive.
+
+OSCILLATOR / REVERSAL
+
+    RSI only if mechanism-specific
+    stochastic only if mechanism-specific
+    Fisher state
+    bounded deviation
+    failed breakout
+    VWAP reclaim
+    failed persistence.
+
+CROSS-MARKET
+
+    ES direction
+    ES trend quality
+    ES/NQ relative strength
+    ES confirmation
+    ES non-confirmation
+    relative momentum
+    volatility leadership
+
+at retail-relevant horizons.
+
+Every candidate must answer:
+
+    WHAT NEW INFORMATION DOES X ADD
+    CONDITIONAL ON THE CURRENT SYSTEM?
+
+===============================================================================
+19. USE /DEEP RESEARCH AS HYPOTHESIS GENERATION, NOT AUTHORITY
+===============================================================================
+
+Launch repeated independent research passes.
+
+PASS 1 — academic quantitative finance
+PASS 2 — futures practitioner literature
+PASS 3 — signal processing/control theory
+PASS 4 — NinjaTrader / trading-system ecosystem
+PASS 5 — portfolio/risk engineering
+PASS 6 — market microstructure where data support it.
+
+Every external idea returns:
+
+    mechanism
+    data required
+    causal feature
+    expected horizon
+    expected sign
+    prior evidence
+    local falsification experiment.
+
+External research proposes.
+
+LOCAL HISTORICAL DATA decides.
+
+===============================================================================
+20. B-MOM SHOULD SPAWN A MOMENTUM FAMILY — WITHOUT RETUNING B-MOM
+===============================================================================
+
+Do not tune frozen B-MOM itself after audit.
+
+Instead treat its success as evidence that:
+
+    time-of-day normalized intraday momentum
+
+may be a valid family.
+
+Generate mechanically distinct siblings:
+
+MOM-1:
+    current frozen B-MOM.
+
+MOM-2:
+    opening-range-normalized momentum.
+
+MOM-3:
+    VWAP acceptance + momentum.
+
+MOM-4:
+    multi-horizon RTH momentum.
+
+MOM-5:
+    breakout + shallow pullback continuation.
+
+MOM-6:
+    morning impulse → afternoon continuation.
+
+MOM-7:
+    relative NQ/ES momentum.
+
+MOM-8:
+    volatility-adjusted trend-day momentum.
+
+Each must be a new preregistered family.
+
+Do not mine B-MOM parameter neighborhoods indefinitely.
+
+===============================================================================
+21. FIND GENUINELY DIFFERENT DAY-ONLY ENGINES
+===============================================================================
+
+Solar and B-MOM may share regime fuel.
+
+Therefore prioritize mechanisms that might profit in different states.
+
+Research:
+
+VALUE-1
+    failed trend → VWAP/value reacceptance.
+
+VALUE-2
+    opening drive failure.
+
+VALUE-3
+    failed ORB.
+
+VALUE-4
+    gap acceptance / gap failure.
+
+VOL-1
+    compression → expansion.
+
+VOL-2
+    post-volatility-shock normalization.
+
+VOL-3
+    volatility regime transition.
+
+AUCTION-1
+    initial balance breakout/failure.
+
+AUCTION-2
+    overnight inventory liquidation after 09:30.
+
+EVENT-1
+    scheduled-event continuation.
+
+EVENT-2
+    delayed event reversal.
+
+REL-1
+    ES/NQ relative state.
+
+REL-2
+    NQ-specific over/under reaction to ES.
+
+TREND-2
+    pullback trend continuation distinct from Solar DC.
+
+Do not require every new engine to have huge standalone Sharpe.
+
+But it MUST have positive after-cost standalone expectancy before it can
+be called alpha.
+
+===============================================================================
+22. COMPLEMENTARITY MUST BE MEASURED IN THE DRAWDown REGION
+===============================================================================
+
+For every positive engine calculate:
+
+    normal daily corr
+    losing-day corr
+    losing-week corr
+    bottom-decile Solar-day corr
+    worst-month overlap
+    drawdown overlap
+    recovery overlap
+    tail-loss correlation
+    top-profit-day overlap
+    regime-death overlap.
+
+The most useful second engine is NOT necessarily the lowest overall corr.
+
+We need an engine that earns when Solar bleeds.
+
+===============================================================================
+23. COMPONENT RISK CONTRIBUTION
+===============================================================================
+
+For every portfolio decompose:
+
+    expected return contribution
+    variance contribution
+    expected-shortfall contribution
+    drawdown contribution
+    worst-month contribution.
+
+Use:
+
+    marginal contribution to risk
+    component contribution to ES
+    approximate component drawdown attribution.
+
+Ask:
+
+    WHICH ENGINE CAUSES THE REMAINING $27k DD?
+
+If one sleeve contributes 60% of DD but 20% of expected return,
+it deserves scrutiny.
+
+===============================================================================
+24. PORTFOLIO WEIGHTS — BROAD PLATEAUS ONLY
+===============================================================================
+
+Do not overfit continuous weights.
+
+Compare a small structural grid such as:
+
+Tilt Solar / B-MOM:
+
+    80/20
+    70/30
+    60/40
+    50/50
+
+With B1 for FULL portfolio only:
+
+    60/30/10
+    50/30/20
+    50/40/10
+
+and similarly simple alternatives only if justified.
+
+Evaluate broad plateau.
+
+Do not pick:
+
+    0.473 / 0.318 / 0.209
+
+because it wins historically.
+
+===============================================================================
+25. DIRECT DRAWDOWN-OPTIMAL PORTFOLIO
+===============================================================================
+
+Create a portfolio family whose primary objective is NOT Sharpe.
+
+Objectives:
+
+LOW_DD:
+    minimize max DD subject to a reasonable return floor.
+
+LOW_CDAR:
+    minimize conditional drawdown.
+
+LOW_TUW:
+    minimize long underwater periods.
+
+SMOOTH_MONTHS:
+    maximize positive-month proportion while preserving positive expectancy.
+
+MAX_CALMAR:
+    maximize return/DD.
+
+MAX_SHARPE:
+    separate objective.
+
+MAX_GROWTH:
+    separate objective.
+
+Keep the Pareto frontier.
+
+The owner explicitly prefers a smoother system.
+
+===============================================================================
+26. SHORT-SIDE RESEARCH IS HIGH PRIORITY
+===============================================================================
+
+The current 2026 loss anatomy indicates short exposure during a rally was
+an important drawdown contributor.
+
+Test side asymmetry scientifically.
+
+Solar:
+
+    long 100 / short 100
+    long 100 / short 75
+    long 100 / short 50
+    long 100 / short 25
+    long only
+
+under:
+
+    raw
+    equal-vol
+    equal-DD
+
+comparison.
+
+Then conditional versions:
+
+HTF UP:
+    short size reduced?
+
+HTF DOWN:
+    long size reduced?
+
+Do NOT assume symmetric solution.
+
+Mandatory crisis-day check:
+
+    2022
+    major selloff clusters
+    worst market down days.
+
+Report how much crisis convexity each short reduction destroys.
+
+===============================================================================
+27. MORNING DRAWDOWN STATE
+===============================================================================
+
+Do not hard-code "avoid 09:30–11:30."
+
+Instead ask:
+
+    Are losses truly concentrated in morning sessions
+    AFTER conditioning on:
+        direction
+        HTF state
+        volatility
+        trend quality
+        B-MOM state?
+
+If the effect is repeatable:
+
+test soft exposure reduction.
+
+If not:
+    classify 2026 morning loss concentration as episode-specific.
+
+===============================================================================
+28. WINNER-ABSENCE PROBLEM
+===============================================================================
+
+Current evidence suggests a major portion of Solar drawdown is caused by:
+
+    repeated normal losses
+    +
+    absence of rare large winners.
+
+This may be fundamentally unfixable through stops.
+
+Quantify:
+
+    expected waiting time between major winner clusters
+    distribution of winner drought
+    expected DD conditional on winner drought
+    probability of 3/6/9/12-month recovery.
+
+Compare:
+
+    Solar
+    Tilt Solar
+    Solar+B-MOM
+    day-only challenger
+    full portfolio.
+
+The goal is to know whether diversification actually shortens
+winner drought.
+
+===============================================================================
+29. ML FOR DRAWDOWN / TRADE QUALITY
+===============================================================================
+
+Use ML only after feature definitions are causal.
+
+High-EVI labels:
+
+    P(Solar trade loses)
+    P(Solar trade becomes top-decile winner)
+    P(Solar trade becomes catastrophic loser)
+    expected MFE
+    expected MAE
+    expected net trade
+    P(next 5 Solar episodes net-negative)
+    P(drawdown continues next N sessions).
+
+Inputs may include:
+
+    HTF state
+    ensemble vote
+    vote change
+    consensus persistence
+    S
+    σ
+    trend efficiency
+    volatility
+    time-of-day
+    side
+    B-MOM state
+    ES state
+    VWAP/location.
+
+Start:
+
+    logistic regression
+    GAM
+    shallow trees
+    gradient boosting.
+
+Nested chronological validation.
+
+No black-box PnL maximization.
+
+If model information is real:
+    distill to simple exposure logic if possible.
+
+===============================================================================
+30. ONE-CONTRACT DRAWDOWN ENGINEERING
+===============================================================================
+
+Because one contract cannot size 0.3/0.6/1.0,
+drawdown control must come from STATE SELECTION.
+
+Research specifically for one-contract:
+
+    remain flat in conflicts
+    choose dominant engine
+    allow Solar only
+    allow B-MOM only
+    allow either
+    require agreement
+    use disagreement as flat
+    HTF conflict flat
+    side-specific eligibility
+    state priority.
+
+Do NOT merely use:
+
+    sign(weighted portfolio).
+
+That is only one candidate.
+
+The objective is to find the best discrete control policy:
+
+    {-1,0,+1}
+
+with very few degrees of freedom.
+
+===============================================================================
+31. ONE-CONTRACT SHOULD HAVE ITS OWN ALPHA ATTRIBUTION
+===============================================================================
+
+For each OneLot trade log:
+
+    which engine caused entry?
+    Solar?
+    B-MOM?
+    both?
+    conflict resolution?
+    HTF tilt?
+    re-entry?
+    time exit?
+
+Then report PnL attribution.
+
+We need to know why the OneLot strategy behaves differently from the
+portfolio.
+
+===============================================================================
+32. ONE-CONTRACT NINJATRADER PARITY
+===============================================================================
+
+Compilation is NOT parity.
+
+Mandatory:
+
+SolarWaveSMOneLot_v1
+        ↕
+canonical Python SM14
+
+Run exact Strategy Analyzer tests.
+
+Reconcile:
+
+    signal timestamps
+    desired target
+    actual target
+    direction
+    entry time
+    entry price
+    exit time
+    exit price
+    fill count
+    commission
+    slippage
+    daily PnL
+    cumulative PnL.
+
+Required report:
+
+    Python trades
+    NT trades
+    matching trades
+    signal mismatch count
+    fill mismatch count
+    daily correlation
+    max absolute daily delta
+    net delta.
+
+If not exact:
+    investigate.
+
+Do not call it executable parity-complete until this passes.
+
+===============================================================================
+33. FULL MASTER NINJATRADER PARITY
+===============================================================================
+
+The full portfolio master is currently specified but must be distinguished
+from a Python portfolio.
+
+Build, if not already genuinely implemented:
+
+    ONE NinjaScript master
+
+with virtual:
+
+    Solar ensemble
+    HTF tilt
+    B-MOM
+    optional full-research B1
+    future complementary engines
+    portfolio allocator
+
+feeding:
+
+    ONE consolidated target.
+
+No competing independent strategies fighting account position.
+
+For practical DAY_ONLY master:
+    exclude overnight positions
+    flatten before 16:45.
+
+Run Strategy Analyzer parity.
+
+===============================================================================
+34. 16:44 FLATTEN MUST BE BUILT INTO PRACTICAL CANDIDATES
+===============================================================================
+
+Every practical day-only candidate must include the verified operational
+margin constraint.
+
+Report exact realized flatten timing under 3-minute bar semantics.
+
+Do not merely state:
+
+    "flat before 16:45"
+
+prove it from trade logs.
+
+Holiday/early close handling must be deterministic.
+
+===============================================================================
+35. COST STRESS
+===============================================================================
+
+For every serious candidate:
+
+NQ:
+    actual commission
+    C1
+    C2.
+
+MNQ:
+    actual MNQ commission
+    C1
+    C2.
+
+Never divide NQ commission by 10.
+
+Report:
+
+    gross edge / total friction.
+
+A high-turnover system that barely survives C1 gets downgraded.
+
+===============================================================================
+36. REGIME DEPENDENCE — DO NOT INVENT MONITORS AS SOLUTIONS
+===============================================================================
+
+Do NOT wait for November.
+
+Do NOT make future quarterly monitoring a research dependency.
+
+Use history NOW.
+
+Historical analyses may identify decay conditions.
+
+But no future monitoring date blocks the program.
+
+Questions:
+
+    What changed post-2020?
+    σ?
+    intraday trend persistence?
+    RTH range?
+    options/gamma ecosystem?
+    trend-day frequency?
+    gap behavior?
+    B-MOM signal density?
+    realized range relative to friction?
+
+Look for a CAUSAL/ECONOMIC regime score.
+
+Do not merely fit a year classifier.
+
+===============================================================================
+37. SYSTEM-LEVEL REGIME RISK
+===============================================================================
+
+Solar and B-MOM may share the same broad post-2020 regime fuel.
+
+Therefore build:
+
+    REGIME_COMMON_FACTOR_ANALYSIS.
+
+Measure year/quarter dependence of:
+
+    Solar
+    B-MOM
+    new engines.
+
+Ask:
+
+    Are we truly diversified,
+    or merely diversified CONDITIONAL on one favorable regime?
+
+An engine earns extra strategic value if it remains positive when:
+
+    Solar regime score is weak
+    B-MOM regime score is weak.
+
+===============================================================================
+38. DO NOT REPEAT FAST-SCALP WORK UNLESS NEW INFORMATION EXISTS
+===============================================================================
+
+Previous tested fast-scalp families failed after costs.
+
+Do not repeat identical hypotheses.
+
+But micro/fast information may still be useful as:
+
+    entry timing
+    quality confirmation
+    execution overlay
+    state feature
+
+for Solar/B-MOM.
+
+Only reopen if the role is genuinely different.
+
+===============================================================================
+39. SCIENTIFIC MULTIPLE-TESTING DISCIPLINE
+===============================================================================
+
+This program will test many ideas.
+
+Maintain append-only:
+
+    experiment ID
+    family
+    degrees of freedom
+    data seen
+    result
+    selection use
+    promoted/rejected.
+
+Use:
+
+    family-level budgets
+    broad parameter plateaus
+    chronological tests
+    PBO where appropriate
+    deflated metrics where interpretable
+    block bootstraps.
+
+Do not pretend 100 indicator tests were one test.
+
+===============================================================================
+40. NO PARAMETER ARGMAX WORSHIP
+===============================================================================
+
+Preferred:
+
+    plateau center.
+
+Rejected:
+
+    best historical exact cell.
+
+If:
+
+    49 works
+    50 works
+    51 works
+
+good.
+
+If:
+
+    53 works
+    52/54 fail
+
+fragile.
+
+===============================================================================
+41. DOCUMENT EVERY SURPRISING FINDING
+===============================================================================
+
+For surprising results run:
+
+    toy example
+    code unit test
+    independent implementation where practical
+    alternate data-source check where practical
+    direct PnL reconstruction.
+
+This rule previously saved the project from false conclusions.
+
+Keep it.
+
+===============================================================================
+42. DEEP-RESEARCH HYPOTHESIS EXPANSION LOOP
+===============================================================================
+
+Before ever claiming:
+
+    "the frontier is exhausted"
+
+run at least THREE fresh independent expansion passes.
+
+Each pass must search different conceptual spaces.
+
+Examples:
+
+PASS A:
+    market structure / auction / futures research.
+
+PASS B:
+    digital signal processing / state estimation / control theory.
+
+PASS C:
+    portfolio construction / downside-risk engineering.
+
+Then optionally:
+
+PASS D:
+    lesser-known indicator ecosystems.
+
+PASS E:
+    modern ML/state modeling.
+
+Map every new idea to:
+
+    duplicate?
+    new information?
+    likely horizon?
+    expected benefit?
+    required data?
+    historical experiment?
+
+"Many things failed" is not proof that all useful ideas are exhausted.
+
+===============================================================================
+43. BUT DO NOT CREATE RESEARCH THEATER
+===============================================================================
+
+Every major wave must produce at least one:
+
+A. actual strategy trade ledger
+B. definitive kill
+C. promoted challenger
+D. meaningful DD reduction
+E. meaningful portfolio improvement
+F. NinjaTrader parity result.
+
+A wave consisting only of:
+
+    documents
+    audits
+    research papers
+    specs
+    taxonomies
+
+is NOT ALPHA PROGRESS.
+
+===============================================================================
+44. CURRENT CHAMPION BOARD MUST ALWAYS BE VISIBLE
+===============================================================================
+
+Maintain a live table with:
+
+SOLAR_REFERENCE
+CORE_BASELINE
+BEST_RAW_RETURN
+BEST_SHARPE
+BEST_CALMAR
+BEST_LOW_DD
+BEST_SMOOTH_MONTHS
+BEST_DAY_ONLY
+BEST_ONE_NQ
+BEST_ONE_MNQ
+BEST_ONE_CONTRACT
+BEST_FULL_PORTFOLIO
+BEST_COMPLEMENTARY_ENGINE
+BEST_SIMPLE_SYSTEM.
+
+Never call them all the same "winner."
+
+===============================================================================
+45. IMMEDIATE EXECUTION ORDER
+===============================================================================
+
+Start these in PARALLEL.
+
+TRACK A — DD reconciliation
+    resolve -27.2k vs -58.9k exactly.
+
+TRACK B — B-MOM causal execution audit
+    next event / next bar open / C1 / C2.
+
+TRACK C — B1 ablation
+    Tilt+BMOM vs Tilt+BMOM+B1.
+
+TRACK D — OneLot NT parity
+    Python ↔ Strategy Analyzer.
+
+TRACK E — long/short asymmetry
+    especially HTF conflict.
+
+TRACK F — robust leverage frontier
+    long block dependence.
+
+TRACK G — HTF mechanism expansion
+    SMA50/200 neighbors by mechanism.
+
+TRACK H — new independent DAY-ONLY engine factory.
+
+TRACK I — indicator/deep-research expansion.
+
+TRACK J — document cleanup / current-truth index
+    parallel, never blocking alpha work.
+
+After A–F finish:
+
+re-rank the entire frontier.
+
+Do NOT automatically preserve PORT_TILT_532.
+
+It must re-earn champion status.
+
+===============================================================================
+46. AFTER THE LOAD-BEARING AUDITS — ATTACK DD AGAIN
+===============================================================================
+
+Once execution and reconciliation are correct:
+
+take the current best DAY_ONLY system.
+
+Find its TOP 10 historical drawdowns.
+
+For each:
+
+    component attribution
+    direction attribution
+    time-of-day
+    engine conflict
+    volatility
+    HTF state
+    trend quality
+    winner drought.
+
+Then create NEW causal hypotheses specifically targeted at repeated
+drawdown mechanisms.
+
+Do not optimize each drawdown individually.
+
+A condition must recur across multiple episodes.
+
+===============================================================================
+47. ONE-CONTRACT MUST ALSO GET ITS OWN TOP-10-DD AUTOPSY
+===============================================================================
+
+OneLot's ~$59k NQ DD is unacceptable as the final practical answer.
+
+Reconstruct its largest DD episodes.
+
+Question:
+
+    Is this DD caused by:
+        continuous full-size exposure?
+        state compression?
+        Solar/BMOM conflicts?
+        losing shorts?
+        missing B1?
+        high turnover?
+        winner drought?
+        sign-hysteresis artifact?
+        flat/entry timing?
+
+Then redesign the ONE-CONTRACT state machine based on the actual cause.
+
+===============================================================================
+48. DO NOT OPTIMIZE FOR "EVERY DAY GREEN"
+===============================================================================
+
+The owner values daily/weekly/monthly consistency.
+
+Respect that.
+
+But do not create:
+
+    tiny winners
+    hidden catastrophic left tail.
+
+Primary target:
+
+    high positive-month %
+    high positive-week %
+    controlled losing streaks
+    shallow DD
+    short TUW
+
+with:
+
+    positive expectancy
+    preserved right-tail economics.
+
+===============================================================================
+49. THE OPTIMAL SYSTEM MAY BE LOWER RETURN UNLEVERED
+===============================================================================
+
+A lower raw-return strategy can win if:
+
+    Sharpe rises substantially
+    Calmar rises
+    DD falls
+    TUW falls
+    tail risk falls.
+
+Then compare after robust risk normalization.
+
+This is a central research principle.
+
+===============================================================================
+50. THE FINAL ANSWER MUST EXPLAIN THE ECONOMICS
+===============================================================================
+
+When a candidate wins, do not only report metrics.
+
+Explain:
+
+    what structural market property it exploits;
+    why Solar profits;
+    why B-MOM profits;
+    why HTF tilt helps;
+    why the portfolio reduces DD;
+    why OneLot differs;
+    why specific failed overlays failed;
+    under which regimes the system should stop working.
+
+===============================================================================
+51. FINAL VALIDATION HIERARCHY
+===============================================================================
+
+Because globally pristine historical OOS no longer exists:
+
+rank evidence honestly.
+
+LEVEL A:
+    mechanically exact / parity fact.
+
+LEVEL B:
+    preregistered chronological result.
+
+LEVEL C:
+    nested walk-forward / leave-period-out robustness.
+
+LEVEL D:
+    parameter plateau.
+
+LEVEL E:
+    old-regime stress.
+
+LEVEL F:
+    post-selection diagnostic.
+
+Do not collapse them into one word "validated."
+
+===============================================================================
+52. END-STATE DELIVERABLES
+===============================================================================
+
+Eventually produce:
+
+research/system_master/
+
+    START_HERE.md
+    CURRENT_TRUTH.md
+    FINAL_SYSTEM_FRONTIER.md
+    DRAWDOWN_RECONCILIATION.md
+    DRAWDOWN_FRONTIER.md
+    BMOM_EXECUTION_AUDIT.md
+    B1_ABLATION.md
+    LONG_SHORT_FRONTIER.md
+    LEVERAGE_ROBUSTNESS.md
+    INDICATOR_FRONTIER.md
+    COMPLEMENTARY_ENGINE_FRONTIER.md
+    DAY_ONLY_FRONTIER.md
+    ONE_CONTRACT_FRONTIER.md
+    ONE_CONTRACT_DD_ATLAS.md
+    FULL_PORTFOLIO_FRONTIER.md
+    NINJATRADER_PARITY.md
+    FINAL_RED_TEAM.md
+
+and actual versioned NinjaScript implementations for the leading
+practical candidates.
+
+===============================================================================
+53. FINAL SYSTEM REPORT MUST PROVIDE MULTIPLE ANSWERS
+===============================================================================
+
+Do NOT force one "best" system.
+
+Report:
+
+BEST FULL RESEARCH SYSTEM
+
+BEST DAY-ONLY SYSTEM
+
+BEST LOW-DRAWDOWN SYSTEM
+
+BEST MAX-SHARPE SYSTEM
+
+BEST MAX-CALMAR SYSTEM
+
+BEST ONE-NQ SYSTEM
+
+BEST ONE-MNQ SYSTEM
+
+BEST EXACTLY-ONE-CONTRACT SYSTEM
+
+BEST SIMPLE SYSTEM
+
+For every one report:
+
+    exact strategy components
+    exact logic
+    bars/timeframes
+    quantity
+    flatten time
+    commissions
+    slippage
+    dates
+    net
+    Sharpe
+    Sortino
+    Calmar
+    daily DD
+    intraday DD
+    CDaR
+    Ulcer
+    worst month
+    rolling60
+    positive week %
+    positive month %
+    longest TUW
+    trades/day
+    turnover
+    right-tail concentration
+    long/short attribution
+    component attribution
+    chronology
+    cost stress
+    execution parity status
+    evidence level.
+
+===============================================================================
+54. ANTI-HALLUCINATION RULES
+===============================================================================
+
+Never claim:
+
+    "PORT DD is lower"
+
+without specifying native/equal-vol/equal-risk basis.
+
+Never compare:
+
+    multi-engine vol-matched portfolio
+    versus
+    fixed 1 NQ
+
+as though they have equal risk.
+
+Never call:
+
+    compilation = Strategy Analyzer parity.
+
+Never call:
+
+    B-MOM signal-close fill realistic
+
+until causal execution is tested.
+
+Never call:
+
+    B1 = proven alpha
+
+when it is only useful as a diversifier.
+
+Never call:
+
+    June/July = globally clean OOS.
+
+Never call:
+
+    HTF tilt = independent alpha engine.
+
+Never call:
+
+    5-day bootstrap = true long-horizon drawdown probability.
+
+Never call:
+
+    lower DD = alpha.
+
+Never call:
+
+    leverage = strategy improvement.
+
+Never call:
+
+    one profitable cell = robust.
+
+Never call:
+
+    old-regime failure = current-regime impossibility.
+
+Never call:
+
+    current-regime success = permanent future edge.
+
+Never call:
+
+    13 indicators tested = hypothesis space exhausted.
+
+If evidence changes:
+    correct prior documentation openly.
+
+===============================================================================
+55. AUTONOMOUS LOOP
+===============================================================================
+
+Repeat indefinitely while historical EVI remains meaningful:
+
+1. read current frontier
+2. identify biggest weakness
+3. generate independent hypotheses
+4. deduplicate against killed work
+5. preregister minimally
+6. run real after-cost experiment
+7. compute DD + tail + smoothness
+8. promote or kill
+9. combine survivor with current system
+10. compare at matched risk
+11. update OneContract frontier
+12. run NinjaTrader parity when mature
+13. red-team
+14. deep-research expansion
+15. repeat.
+
+Do NOT ask owner whether to continue.
+
+Do NOT stop after one improvement.
+
+Do NOT stop because the folder already has FINAL_NQ_SYSTEM.md.
+
+Do NOT claim universal exhaustion.
+
+Stop only a SPECIFIC family when evidence warrants it.
+
+===============================================================================
+56. PRIMARY ECONOMIC MISSION
+===============================================================================
+
+The final practical system must answer:
+
+Can we take the real Solar edge,
+
+    preserve its rare large winners,
+
+while using:
+
+    HTF information
+    B-MOM-like independent momentum
+    new complementary engines
+    side-specific risk
+    better state selection
+    portfolio diversification
+
+to make the equity curve materially smoother?
+
+Can we reduce:
+
+    ~$40k Solar DD
+    and
+    ~$59k fixed-1-NQ OneLot DD
+
+without simply deleting the strategy's return?
+
+Can the lower-DD architecture then support greater robust risk-adjusted
+growth than raw Solar?
+
+Can we build an EXACTLY-ONE-CONTRACT version whose DD is genuinely
+acceptable rather than merely smaller because it uses MNQ?
+
+Those are the core questions.
+
+===============================================================================
+57. BEGIN NOW
+===============================================================================
+
+Immediately:
+
+    audit repository truth
+    clean current documentation
+    launch Tracks A–J
+    do not wait for owner
+    do not wait for future dates
+    do not perform live simulation
+    do not stop at previous finals.
+
+The current best-known ideas are INPUTS.
+
+They are not sacred.
+
+PORT_TILT_532 may survive.
+
+Solar + B-MOM may replace it.
+
+A new engine may replace B-MOM.
+
+A better OneContract state machine may replace SM14.
+
+HTF Tilt may survive or be generalized.
+
+The goal is not to defend previous work.
+
+The goal is:
+
+    LOWER DRAWDOWN
+    HIGHER SHARPE
+    HIGHER CALMAR
+    SMOOTHER MONTHLY PNL
+    HIGHER ROBUST GEOMETRIC GROWTH
+    REALISTIC EXECUTION
+    EXACT NINJATRADER IMPLEMENTATION
+
+using the strongest system architecture supported by the historical
+evidence we actually have.
+
+KEEP PUSHING.
+
+===============================================================================
+END OWNER MASTER DIRECTIVE V2
+===============================================================================
