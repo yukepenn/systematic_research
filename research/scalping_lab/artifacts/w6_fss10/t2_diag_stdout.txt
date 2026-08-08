@@ -1,0 +1,15 @@
+W6-T2 repro diagnostic: run (a) pipeline on the FULL C5-equivalent sample (no ES-NaN drop)
+s20250902 SKIPPED (quote-dead)
+modeling rows (C5-equivalent, ES-NaN rows KEPT): 27299 (original C5: 27299)
+  long_24_8    logit lift full-sample -0.8292pp vs C5 -0.8292pp (d -0.0000pp) | skill -0.010904 vs -0.010904 (d -0.000000) | n 22190 vs 22190
+  long_24_8    hgb   lift full-sample +1.6944pp vs C5 +1.6944pp (d +0.0000pp) | skill -0.017968 vs -0.017968 (d -0.000000) | n 22190 vs 22190
+  long_32_10   logit lift full-sample -1.4057pp vs C5 -1.4057pp (d -0.0000pp) | skill -0.011883 vs -0.011883 (d -0.000000) | n 22163 vs 22163
+  long_32_10   hgb   lift full-sample +0.3615pp vs C5 +0.3615pp (d +0.0000pp) | skill -0.008966 vs -0.008966 (d -0.000000) | n 22163 vs 22163
+  short_24_8   logit lift full-sample +1.5326pp vs C5 +1.5326pp (d +0.0000pp) | skill -0.006435 vs -0.006435 (d -0.000000) | n 22189 vs 22189
+  short_24_8   hgb   lift full-sample +2.4200pp vs C5 +2.4200pp (d +0.0000pp) | skill -0.002695 vs -0.002695 (d -0.000000) | n 22189 vs 22189
+  short_32_10  logit lift full-sample +1.1743pp vs C5 +1.1743pp (d +0.0000pp) | skill -0.008203 vs -0.008203 (d -0.000000) | n 22142 vs 22142
+  short_32_10  hgb   lift full-sample +0.2714pp vs C5 +0.2714pp (d +0.0000pp) | skill -0.014726 vs -0.014726 (d -0.000000) | n 22142 vs 22142
+
+exact-match cells: 8/8 | max |dlift| 0.0000pp | max |dskill| 0.000000
+DIAGNOSTIC CONCLUSION: on the identical sample the pipeline reproduces C5 EXACTLY -> the T2 run-(a) tolerance breach is fully attributable to the frozen same-sample rule (818 ES-NaN rows) x HGB sample sensitivity, NOT a construction flaw.
+W6T2-DIAG DONE
