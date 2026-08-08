@@ -1,0 +1,26 @@
+run_id: SM05_BMOM_PORTFOLIO
+program: system_master
+type: MEASUREMENT   # portfolio arithmetic on frozen ledgers; weight grid reported in full, no argmax selection
+date_frozen: 2026-08-08
+objective: >
+  Current-regime portfolio value of the frozen challengers vs Solar, dev
+  window (sessions <= 2026-05-31), union session calendar, zero-fill.
+legs:
+  SOLAR: runs/SM01_SUBSTRATE/out/e10_daily_py.csv (research E10, MNQ costs)
+  BMOM:  research/scalping_lab/artifacts/w8_bmom/w8bmom_w14_daily.csv net_c1_usd (frozen W8-1 rule, 1 NQ, C1)
+  B1:    research/scalping_lab/artifacts/w9_b1/w9b1_nightly.csv (net 2.0t basis, $; 2022+ rows for portfolio)
+  BFADE: appendix diagnostic ONLY (in-sample-characterized; excluded from any promotion arithmetic)
+protocol:
+  risk_normalization: each leg scaled to SOLAR's dev daily vol (report scales); unscaled also reported
+  weight_grid_risk_share: [0, 0.2, 0.25, 0.333, 0.4, 0.5] for each challenger vs Solar; Solar+BMOM+B1 three-way at equal-risk thirds and 0.5/0.3/0.2
+  comparison: every portfolio rescaled to SOLAR dev vol before metric computation (risk-normalized growth per CONVENTIONS 6.7)
+  metrics: full sm_metrics suite + diversification scorecard (rho_full, rho on Solar losing days, rho on Solar losing weeks, Solar-worst-20-day overlap [frac of those days challenger >= 0], DD-series correlation, top-20-day overlap)
+  inference: block bootstrap (5, 10000, seed 20260808) for dSharpe and dlogG of the 0.25/0.333/0.5 risk-share portfolios vs Solar-only; split-half H1 2022-01..2024-03 / H2 2024-04..2026-05 sign check
+  eras: CURRENT primary; BMOM/B1 pre-2022 series reported as TRANSITION/HISTORICAL diagnostics only
+promotion: >
+  NOT decided by this run. If a plateau (>=3 adjacent grid cells) improves
+  risk-normalized logG AND Calmar AND worst-month with H1/H2 same sign and
+  bootstrap P(d<=0) < 0.10, the portfolio advances to candidate status in
+  PORTFOLIO_FRONTIER.md pending the joint holdout read. Gates preregistered here.
+burn: 0
+outputs: [runs/SM05_BMOM_PORTFOLIO/out/portfolio_grid.csv, runs/SM05_BMOM_PORTFOLIO/out/diversification_scorecard.csv, runs/SM05_BMOM_PORTFOLIO/out/report.md]

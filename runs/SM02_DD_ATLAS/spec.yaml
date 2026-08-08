@@ -1,0 +1,19 @@
+run_id: SM02_DD_ATLAS
+program: system_master
+type: INSTRUMENTATION   # diagnosis; no trade rule, no selection
+date_frozen: 2026-08-08
+objective: >
+  Decompose every meaningful drawdown of the Python-substrate E10 daily series
+  (runs/SM01_SUBSTRATE/out/e10_daily_py.csv, sessions <= 2026-05-31 only):
+  all episodes with depth <= -$10,000 plus the top 10 by depth. For each:
+  duration/depth/recovery; long-vs-short P&L; member-trade stats inside the
+  window (false starts := trades with net<0 and MFE < 0.5*S_entry; flip
+  density; entry-vote distribution |vote_pend|; sigma460 level and change vs
+  prior 20 sessions; session-bucket P&L; winner-absence vs loser-accumulation
+  attribution: compare the window's trade-P&L distribution to the full-dev
+  distribution - is the DD from extra left tail or missing right tail);
+  cross-episode taxonomy with counts (directive classes + data-driven).
+  Output: SOLAR_DRAWDOWN_ATLAS.md draft + machine tables (dd_episodes.csv,
+  dd_trade_decomp.csv) in runs/SM02_DD_ATLAS/out/.
+inputs: [runs/SM01_SUBSTRATE/out/e10_daily_py.csv, runs/SM01_SUBSTRATE/out/member_trades.parquet, runs/SM01_SUBSTRATE/out/vote_state_3m.parquet]
+burn: 0

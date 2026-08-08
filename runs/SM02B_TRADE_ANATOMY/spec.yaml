@@ -1,0 +1,25 @@
+run_id: SM02B_TRADE_ANATOMY
+program: system_master
+type: INSTRUMENTATION   # measurement for SM03/SM04 spec design; no selection
+date_frozen: 2026-08-08
+objective: >
+  Trade-path anatomy on runs/SM01_SUBSTRATE/out/member_trades.parquet joined
+  with vote_state_3m.parquet, dev window (entry_sess <= 2026-05-31):
+  (1) MAE/MFE distributions winners vs losers, per member band (vm6-12 fast /
+      vm14-22 mid / vm24-30 slow), normalized by S at entry where useful;
+  (2) progress curves: P(final net > 0 | MFE < q*S by bar b) and conditional
+      expectancy of remaining P&L, for q in {0.25,0.5,1.0}, b in
+      {5,10,20,40,80,160} bars - the time-to-progress / no-progress evidence;
+  (3) MAE-conditional: E[remaining P&L | MAE >= m*S so far], m in {0.5,1,1.5,2};
+      catastrophe table: count/net of trades with final loss >= {1.5,2,3}*S
+      and >= {$2k,$4k,$8k} - the disaster-stop target population;
+  (4) entry-state conditioning: outcome vs |vote_pend| at entry, vs flips_bar
+      in prior 20 bars, vs sigma460 percentile - measurement only;
+  (5) loss clustering: P(next trade net<0 | k prior consecutive losses),
+      conditional expectancy, same at E10 day level;
+  (6) right-tail anatomy: for the top-1% trades, MAE/MFE path shape, time to
+      first 1*S of MFE, worst interim MAE - what any stop must NOT touch.
+  Every table: dev-window, per-band and pooled, with day-clustered bootstrap
+  CIs (block=5, B=2000 for speed, seed 20260808) on key conditionals.
+  Output: anatomy_report.md + anatomy_tables/*.csv in runs/SM02B_TRADE_ANATOMY/out/.
+burn: 0
