@@ -69,3 +69,20 @@ point estimate is favorable. 3m remains CURRENT ROBUST SOLAR INCUMBENT, having n
 five independent challenges (memory 460, cohort structure, MA30/59, T2/T3 signal layers,
 clock) — the language upgrade from "untested baseline" to "repeatedly re-earned incumbent" is
 now justified per V4.1 §20.
+
+## SMV2Y (seq 399-402) — FIRST VIABILITY STATE TO PASS: sigma460 + ER150 predict next-WEEK
+## downside (V4 s21 causal edge-viability state)
+After 16/16 state cells failed against the next-session-Solar-PnL target (VR, ER, Kalman
+whiteness, BOCPD across SMV2J/O), the SAME sigma460 and ER150 series pass cleanly against a
+DIFFERENT target: next-week champion portfolio downside. t_NW=-2.297 (sigma460) / -3.047
+(ER150), bootstrap same-sign 0.990/0.998, monotonic quintiles (1 inversion each, within the
+4/5 tolerance), same-sign on an E10-only old-regime proxy (t=-7.13/-3.14). Cluster rule did
+NOT fire (corr=-0.036) -- both stand independently as candidate viability-state inputs.
+Flip-rate and VR both fail on this new target too (VR now 0/12 cells across two different
+targets). OPEN QUESTION (INFERENCE, not yet explained): ER150's FORWARD relationship (high
+efficiency this week -> worse downside next week) is opposite-signed from SMV2Q's CONCURRENT
+finding (joint-loss weeks have LOW ER150 while they are happening) -- plausibly an
+exhaustion/mean-reversion pattern (a clean trending week gets followed by a rougher one), but
+unproven mechanistically. NEXT STEP (not yet run): a bounded 0/0.5/1 exposure-reduction policy
+gated on these two states ahead of high-predicted-downside weeks, per V4 s21's own escalation
+order -- diagnostic passed, policy design is now licensed.

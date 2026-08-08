@@ -55,3 +55,9 @@ diagnostic. Updated 2026-08-08 (V2 wave-1)._
 - [FACT] All 9 Engine-3 candidates tested across 3 slates (6 reversion, 3 continuation) failed; shock-day continuation is significantly negative.
 - [INFERENCE] The recurring pattern (4 independent challenger objects now: FAST-cohort, A-dominant one-lot, HTF-gated one-lot, 5m clock) of positive point estimates failing 0.85-confidence bootstrap gates is a property of the ~4.4-year daily sample size, not evidence the challengers are economically wrong — worth flagging to the owner as a standing statistical-power limitation of the current gate design.
 - [FACT] Engine-3's NQ-only, 3m-bar-horizon search space is exhausted; cross-market (ES/RTY/YM) data is the identified next unlock and requires an export step not yet done.
+
+## Wave-6 claims (2026-08-08)
+- [FACT] sigma460 and ER150, measured at week t's close, causally predict week t+1's portfolio downside (t_NW=-2.30/-3.05, strong bootstrap confirmation, monotonic) -- the first state to pass any JOB1 viability test in this program.
+- [FACT] Flip-rate and variance ratio fail on this new target too, closing VR entirely (0/12 cells across two distinct targets now).
+- [INFERENCE] ER150's forward relationship to next-week downside is sign-opposite to its concurrent relationship to the current week's joint-loss status -- an unresolved, flagged discrepancy, not yet explained.
+- [FACT] No policy has been built or tested on these two states -- this wave was diagnostic only, per its frozen spec class.

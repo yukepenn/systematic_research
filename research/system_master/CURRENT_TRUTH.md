@@ -1,7 +1,19 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4.1 wave-5 (SMV2W clock R2 + SMV2X engine-3 slate 3).
-Supersedes the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+_Last update: 2026-08-08, end of V4.1 wave-6 (SMV2Y joint-loss viability state). Supersedes
+the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+
+## Wave-6 verdict (spec 51dbc45; red-team CONFIRMED) — FIRST VIABILITY STATE TO PASS
+**sigma460 and ER150 both causally predict next-WEEK portfolio downside** (t_NW=−2.30/−3.05,
+bootstrap same-sign 0.99/0.998, monotonic, same-sign on an E10-only old-regime proxy). This is
+the first state test in the whole program (16 prior cells: VR/ER/Kalman/BOCPD, all killed) to
+pass — the difference is the TARGET: next-week portfolio downside, not next-session Solar PnL.
+No new data or features — same computed series, different (and correct, per V4 §21) dependent
+variable. One open question flagged INFERENCE: ER150's FORWARD sign (high efficiency this week
+→ worse NEXT week) is opposite SMV2Q's CONCURRENT finding (joint-loss weeks have low ER150
+DURING themselves) — not a contradiction (different timing), but unexplained mechanistically.
+**No policy has been tested yet** — this is DIAGNOSTIC only; a bounded 0/0.5/1 exposure policy
+per V4 §21 is the natural next step, queued.
 
 ## Wave-5 verdicts (specs 7abeb79; both red-team CONFIRMED)
 - **5m clock lead CLOSED**: SMV2W's confirmation FAILED 2 of 4 available gates (dev bootstrap
