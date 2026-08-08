@@ -1,7 +1,28 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4.1 wave-7 (SMV2Z viability-state policy). Supersedes the
+_Last update: 2026-08-08, end of V4.1 wave-8 (SMV2AA mix-shift diagnostic). Supersedes the
 "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+
+## Wave-8 verdict (spec f6fb7d1; red-team CONFIRMED, zero issues) — smoothness-policy family
+## closed with a coherent explanation, not four unrelated failures
+Mandatory prerequisite diagnostic (does Solar respond differently from B-MOM during the
+sigma460+ER150-flagged weeks?) FAILED before any policy cell ran: asymmetry ratio 1.04, far
+short of the 1.3 bar. Both legs scale UP TOGETHER in flagged weeks (Solar vol +76%, B-MOM vol
++69% vs unflagged) — this is a JOINT whipsaw, not one engine misbehaving while the other holds
+steady. Per the spec's own honest-stop design, the mix-shift policy cells were correctly never
+run — a complete, valid, non-wasteful outcome.
+**SYNTHESIS across all four smoothness-policy attempts (SMV2N, SMV2V, SMV2Z, SMV2AA — all
+independently designed, all honestly killed):** the flagged/joint-loss weeks are periods where
+Solar and B-MOM behave as CORRELATED expressions of the same underlying modern-regime
+breakout-persistence factor, not diversifying ones. You cannot cheaply de-risk by cutting total
+exposure (SMV2Z: costs more upside than downside saved) or by reallocating between the two
+engines (SMV2AA: they move together, nothing to reallocate toward). This directly answers V4
+§58 Q22 ("are Solar and B-MOM merely two expressions of the same regime factor?") for at least
+this specific state — **yes, during these weeks they are.** Per V4 §51: this exposure/
+reallocation-timing mechanism family is EXHAUSTED; a genuinely different mechanism (e.g. a
+THIRD, structurally uncorrelated return source — which is exactly what Engine-3 has been
+searching for) is required to actually shorten these episodes, not a smarter way to time the
+existing two engines.
 
 ## Wave-7 verdict (spec fdd0e65; red-team CONFIRMED) — the KEY reason smoothness is hard here
 The simplest possible policy on wave-6's finding (cut exposure when sigma460 AND ER150 both

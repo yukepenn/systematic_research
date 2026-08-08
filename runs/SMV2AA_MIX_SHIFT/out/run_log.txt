@@ -1,0 +1,17 @@
+leg_daily.csv loaded: 1139 sessions 2022-01-03..2026-05-29; leg_solar+leg_bmom-twin max abs err=9.095e-13 (SMV2Q reports 1.8e-12)
+SMV2Z flagged (receiver t+1) weeks reused from policy_daily.csv: n=23 weeks, n_scaled_days=113 -> [202411, 202417, 202437, 202440, 202452, 202502, 202507, 202513, 202514, 202515, 202526, 202535, 202542, 202545, 202547, 202551, 202552, 202607, 202609, 202612, 202614, 202618, 202620]
+SMV2Z run_log.txt cross-check line: n_scaled_weeks(receiver, t+1)=23 n_scaled_days=113 trigger_week_keys=[202411, 202417, 202437, 202440, 202452, 202502, 202507, 202513, 202514, 202515, 202526, 202535, 202542, 202545, 202547, 202551, 202552, 202607, 202609, 202612, 202614, 202618, 202620]
+spot-check PASS: policy_daily.csv scaled-week set == run_log.txt trigger_week_keys (23/23, identical)
+leg_daily.csv flagged-week day count = 113 (SMV2Z champion-calendar count = 113; expect equal since boundary week 202314 is not in the flagged set)
+leg_solar stats: {'leg': 'leg_solar', 'n_flagged': 113, 'n_unflagged': 1026, 'vol_flagged': 2459.171360017956, 'vol_unflagged': 1399.5984872111574, 'vol_ratio': 1.75705488573234, 'mean_flagged': 302.77711809532695, 'mean_unflagged': 60.788928351972125, 'mean_all': 84.79653628963597, 'sharpe_flagged': 1.9544948437148857, 'sharpe_all': 0.8753507078478004, 'sharpe_drop': -1.0791441358670852, 'sum_flagged': 34213.81434477195, 'sum_all': 96583.25483389536}
+leg_bmom  stats: {'leg': 'leg_bmom', 'n_flagged': 113, 'n_unflagged': 1026, 'vol_flagged': 1572.4571187189786, 'vol_unflagged': 931.7156407698454, 'vol_ratio': 1.6877006780949926, 'mean_flagged': 174.88748367455986, 'mean_unflagged': 61.348108685066904, 'mean_all': 72.61233113793142, 'sharpe_flagged': 1.765550680063207, 'sharpe_all': 1.1377648701944776, 'sharpe_drop': -0.6277858098687294, 'sum_flagged': 19762.285655225263, 'sum_all': 82705.44516610389}
+twin (context) stats: {'leg': 'twin', 'n_flagged': 113, 'n_unflagged': 1026, 'vol_flagged': 3445.8135345900596, 'vol_unflagged': 1902.741205101921, 'vol_ratio': 1.810973308062398, 'mean_flagged': 477.6646017698868, 'mean_unflagged': 122.13703703703902, 'mean_all': 157.4088674275674, 'sharpe_flagged': 2.2005515975178955, 'sharpe_all': 1.1857636211844897, 'sharpe_drop': -1.0147879763334058, 'sum_flagged': 53976.09999999721, 'sum_all': 179288.69999999925}
+gate(a) asymmetry: vol_ratio_solar=1.7571 vol_ratio_bmom=1.6877 max/min=1.0411 (need >=1.3) -> False
+relatively-more-stable leg (lower vol_ratio) = leg_bmom (vol_ratio=1.6877 vs unstable leg_solar vol_ratio=1.7571)
+gate(b) stable-leg degradation check [leg_bmom]: sharpe_all=1.1378 sharpe_flagged=1.7656 drop=-0.6278 sign_flip(+->-)=False materially_worse(drop>1.0 OR sign_flip)=False -> gate_b=True
+gate(c) power floor: n_flagged_solar=113 n_flagged_bmom=113 (need >=15 each) -> True
+
+406 LICENSE_RULE: gate_a(asymmetry>=1.3)=False gate_b(stable-leg not materially worse)=True gate_c(N>=15 each)=True -> LICENSED=False
+contribution_share (of flagged-week twin PnL): leg_solar=0.6339 leg_bmom=0.3661 (sum to 1.0 by construction); twin flagged-week PnL is 0.3011 share of twin's total dev PnL (context only -- SMV2Z's cited 30.3% figure is computed on the champion 'nt' curve, not 'twin'; nt and twin are highly correlated (SMV2M: 0.9992) but not identical, so this is a plausibility check, not a reproduction)
+
+license_decision.json written: LICENSED=False

@@ -62,3 +62,17 @@ should design explicitly around this constraint (e.g., a policy that changes ENG
 flagged weeks rather than cutting total exposure, since mix changes could theoretically retain
 upside participation while changing risk composition) rather than repeating a fourth blanket
 exposure-scaling variant.
+
+## Smoothness policy family EXHAUSTED (2026-08-08) — 4/4 honestly killed, coherent explanation
+SMV2N (windfall give-back) / SMV2V (ER150 single-leg damper) / SMV2Z (blanket exposure cut) /
+SMV2AA (cross-leg reallocation, killed at the mandatory diagnostic stage before any policy ran)
+— four structurally different mechanisms, four honest kills. SMV2AA's diagnostic supplies the
+unifying explanation: during the flagged weeks, Solar and B-MOM move together (vol ratio
+asymmetry 1.04, essentially none), confirming these are JOINT-REGIME whipsaw episodes, not
+one-engine-fails periods. No amount of re-timing or re-weighting the SAME TWO ENGINES can fix
+this, because there is nothing asymmetric to exploit between them during exactly the weeks
+that matter. The correct next lever is a THIRD, structurally uncorrelated return source
+(Engine #3) that can actually earn or stay flat during joint Solar/B-MOM whipsaws — which is
+exactly what the Engine-3 search has been for all along, now with an even sharper design
+target: does the candidate earn (or at least not lose) specifically when BOTH sigma460 and
+ER150 are elevated together, not just during generically-defined "joint-loss weeks."
