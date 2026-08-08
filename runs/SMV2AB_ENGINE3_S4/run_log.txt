@@ -1,0 +1,81 @@
+==========================================================================================
+STEP 0: substrate + session calendar
+==========================================================================================
+NQ 3m: 1184 sessions total (thru 2026-07-31); dev (<=2026-05-31): 1139 sessions, 519714 bars
+ES: 1620385 1m bars (2 out-of-NQ-calendar-bounds, dropped); dev 3m: 1139 sessions, 519793 bars
+RTY: 1568111 1m bars (2 out-of-NQ-calendar-bounds, dropped); dev 3m: 1132 sessions, 515681 bars
+YM: 1595378 1m bars (2 out-of-NQ-calendar-bounds, dropped); dev 3m: 1132 sessions, 516412 bars
+  instrument  n_dev_sessions  n_dev_bars  nq_n_dev_sessions  nq_n_dev_bars  session_date_set_match_vs_nq_dev  n_dates_only_in_instrument dates_only_in_instrument  n_dates_only_in_nq                                                                                                                                                                                                                                dates_only_in_nq  n_sessions_bar_count_ratio_outside_0.9_1.1
+0         ES            1139      519793               1139         519714                              True                           0                       []                   0                                                                                                                                                                                                                                              []                                           1
+1        RTY            1132      515681               1139         519714                             False                           0                       []                   7  [Timestamp('2023-04-06 00:00:00'), Timestamp('2023-04-07 00:00:00'), Timestamp('2023-04-10 00:00:00'), Timestamp('2023-04-11 00:00:00'), Timestamp('2023-04-12 00:00:00'), Timestamp('2023-04-13 00:00:00'), Timestamp('2023-04-14 00:00:00')]                                           8
+2         YM            1132      516412               1139         519714                             False                           0                       []                   7  [Timestamp('2023-04-06 00:00:00'), Timestamp('2023-04-07 00:00:00'), Timestamp('2023-04-10 00:00:00'), Timestamp('2023-04-11 00:00:00'), Timestamp('2023-04-12 00:00:00'), Timestamp('2023-04-13 00:00:00'), Timestamp('2023-04-14 00:00:00')]                                           8
+  ES: EXACT MATCH
+  RTY: MATCH except 7 NQ sessions absent from RTY (disclosed gap, see above)
+  YM: MATCH except 7 NQ sessions absent from YM (disclosed gap, see above)
+session calendar check: ES exact match; RTY/YM match except the disclosed 2023-04 gap.
+
+merged aligned 3m table (inner join NQ/ES/RTY/YM on time): 515306 bars (NQ dev had 519714; dropped 4408 bars lacking a concurrent ES+RTY+YM 3m bar)
+
+step 0 done.
+
+==========================================================================================
+ENGINE 410: cap-tier dispersion catch-up (ES+NQ 15-min consensus, RTY laggard)
+==========================================================================================
+e410 Z=1.25  N=1364 (raw qualifying bars  3054)  mean=   31.68  t_nw=  0.65
+e410 Z=1.50  N=1008 (raw qualifying bars  2100)  mean=   98.20  t_nw=  1.71
+e410 Z=1.75  N= 764 (raw qualifying bars  1471)  mean=  113.80  t_nw=  1.82
+   z_threshold     n     mean     total   t_nw  p_boot  wf_2022_24_mean  wf_2025_26_mean
+0         1.25  1364   31.681  43212.96  0.649   0.751          105.472         -122.761
+1         1.50  1008   98.204  98990.12  1.707   0.961          185.053          -83.486
+2         1.75   764  113.801  86943.96  1.820   0.967          136.217           66.029
+  engine                              gate          value   pass
+0   e410                             N>=60         1008.0   True
+1   e410                           t_nw>=2       1.707178  False
+2   e410                      WF_same_sign  185.05|-83.49  False
+3   e410  plateau_z1.25_1.5_1.75_same_sign            [1]   True
+E410 VERDICT: FAIL
+
+==========================================================================================
+ENGINE 411: duration-spread shock reaction (NQ 30-min shock w/o proportional YM move)
+==========================================================================================
+e411 YMquiet<0.50  N= 852 (raw qualifying bars  2271)  mean_h60=   47.37  t_nw_h60=  0.98
+e411 YMquiet<0.75  N=1094 (raw qualifying bars  3593)  mean_h60=   54.84  t_nw_h60=  1.30
+e411 YMquiet<1.00  N=1321 (raw qualifying bars  4933)  mean_h60=   14.27  t_nw_h60=  0.35
+   ym_quiet_threshold     n    mean     total   t_nw  p_boot  wf_2022_24_mean  wf_2025_26_mean  mean_h120
+0                0.50   852  47.365  40355.28  0.980   0.813           35.717           72.887    110.828
+1                0.75  1094  54.845  60000.16  1.302   0.890           22.779          120.223    105.786
+2                1.00  1321  14.266  18845.44  0.352   0.639           -0.192           44.020     72.956
+  engine                                                                        gate         value   pass
+0   e411                                                                       N>=40        1094.0   True
+1   e411                                                               t_nw>=2 (h60)      1.301741  False
+2   e411                                                          WF_same_sign (h60)  22.78|120.22   True
+3   e411                                      plateau_ymquiet_0.5_0.75_1.0_same_sign           [1]   True
+4   e411  DISCLOSED_EXTRA_hold60_hold120_same_sign (not in frozen spec's pass: list)           [1]   True
+E411 VERDICT: FAIL
+
+==========================================================================================
+ENGINE 412: quarterly roll basis convergence (ES-vs-(RTY+YM)/2 pre-week spread -> NQ)
+==========================================================================================
+e412: 17 quarterly 3rd-Friday candidates; 0 excluded (see e412_expiry_calendar.csv); 17 tradeable cycles (spread_pre != 0 required)
+    n    mean   total   t_nw  n_sessions  p_boot  wf_2022_24_mean  wf_2022_24_t  wf_2022_24_n  wf_2025_26_mean  wf_2025_26_t  wf_2025_26_n
+0  17  26.816  455.88  0.026          17   0.502         -418.943        -0.248            12          1096.64         0.751             5
+  engine                           gate            value   pass
+0   e412  N>=12 (disclosed power floor)               17   True
+1   e412                        t_nw>=2          0.02616  False
+2   e412                   WF_same_sign  -418.94|1096.64  False
+E412 VERDICT: FAIL
+
+==========================================================================================
+JOINT_WHIPSAW_TARGETING complementarity (V4.1 s14 primary read -- all 3 engines,
+regardless of pass/fail) vs SMV2Z's 23 sigma460+ER150-flagged weeks
+==========================================================================================
+SMV2Z flagged weeks reused verbatim: 23 -> [202411, 202417, 202437, 202440, 202452, 202502, 202507, 202513, 202514, 202515, 202526, 202535, 202542, 202545, 202547, 202551, 202552, 202607, 202609, 202612, 202614, 202618, 202620]
+dev sessions (this run's merged calendar) map to 229 distinct ISO weeks; 23 of those are SMV2Z-flagged weeks (all 23 expected present given the flagged set's own date range sits inside 2024-2026, clear of the disclosed 2023-04 RTY/YM gap)
+                            engine  n_days_dev  n_event_days  corr_daily_vs_champ  corr_weekly_vs_champ  n_weeks_dev  n_jointwhipsaw_weeks  engine_total_all_weeks  engine_mean_week_all  engine_mean_week_jointwhipsaw  engine_total_jointwhipsaw  engine_mean_week_other  engine_n_jw_weeks_with_events  champ_mean_week_all  champ_mean_week_jointwhipsaw  champ_mean_week_other
+0          e410_dispersion_catchup        1132           671                0.191                 0.363          229                    23                98990.12               432.271                        306.595                    7051.68                 446.303                             22              834.275                      2465.901                652.103
+1          e411_shock_reaction_h60        1132           746                0.286                 0.320          229                    23                60000.16               262.009                       -164.944                   -3793.72                 309.679                             23              834.275                      2465.901                652.103
+2  e412_roll_basis_convergence_mtm        1132            85               -0.011                -0.079          229                    23                  455.88                 1.991                       -157.525                   -3623.08                  19.801                              3              834.275                      2465.901                652.103
+
+VERDICTS: {'e410': 'FAIL', 'e411': 'FAIL', 'e412': 'FAIL'}
+
+done.

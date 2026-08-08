@@ -60,3 +60,18 @@ the actual smoothness lever. FINAL TALLY: 3 slates, 9 candidates (6 reversion in
 3 continuation in slate 3), 0 survivors. The NQ-only, 3m-bar-horizon search space for Engine-3
 is exhausted per V4 §51's own terms. NEXT: cross-market data export (ES/RTY/YM) is now the
 highest-EVI blocker to clear before any further Engine-3 work.
+
+## SMV2AB slate 4 (seq 410-412) — first cross-market candidates, ALL KILLED; 12/12 total
+ES/NQ dispersion catch-up (t=1.71, WF sign-flip), NQ-shock/YM-quiet continuation (t=1.30, both
+sign-checks pass but significance fails), quarterly roll basis convergence (t=0.03, essentially
+zero, WF thin/sign-flip) — none survives. None shows the targeted joint-whipsaw
+complementarity either (e410 stays positive but proportionally weak there; e411 is mildly
+ANTI-complementary; e412 has too few flagged-week events to read). Combined with slates 1-3:
+**12 of 12 Engine-3 candidates tested across 4 slates have failed.** Important refinement:
+champion mean weekly PnL is HIGHER during the 23 flagged joint-whipsaw weeks (+$2,465.90/wk)
+than elsewhere (+$652.10/wk) — these are high-variance weeks that have net helped the champion
+so far, not simply losing weeks; any future Engine-3 or smoothness design should target this
+correctly (variance-timing / tail-shaping, not loss-avoidance). Remaining unexplored
+cross-market candidates from the wave-4 expansion passes (D1 ranks 3/4/6, D2 rank 1) are the
+next EVI-justified step before declaring the cross-market axis exhausted (research/system_master/
+deep_research/DR_V4_EXPANSION_PASSES_20260808.md has the full ranked list and dedup notes).

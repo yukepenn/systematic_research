@@ -1,7 +1,22 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4.1 wave-8 (SMV2AA mix-shift diagnostic). Supersedes the
-"FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+_Last update: 2026-08-08, end of V4.1 wave-9 (SMV2AB engine-3 slate 4, cross-market).
+Supersedes the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+
+## Wave-9 verdict (spec 0da78b6; red-team CONFIRMED, 2 trivial arithmetic corrections applied)
+First cross-market Engine-3 slate — ES/NQ dispersion catch-up, duration-spread shock reaction,
+quarterly roll basis convergence — **ALL THREE KILLED** (none clears its significance gate;
+none shows the targeted joint-whipsaw complementarity). Combined with the three NQ-only slates:
+**12 of 12 Engine-3 candidates across 4 slates now dead.**
+**Refinement to the joint-whipsaw understanding**: the 23 SMV2Z-flagged weeks are NOT simply
+losing weeks — champion mean weekly PnL is actually HIGHER there (+$2,465.90/wk vs +$652.10/wk
+elsewhere), driven by high dispersion including some very large positive weeks. These are
+high-variance, regime-uncertain weeks that have, on net, been GOOD for the champion so far —
+sharpening (not contradicting) the wave-7/8 finding that they cannot be cheaply de-risked
+without giving back disproportionate upside. Data note: RTY/YM substrates share a genuine
+11-day gap (2023-04-06..04-14, consistent with the known boundary irregularity) that does not
+touch any of the 23 flagged weeks. Remaining unexplored cross-market candidates (D1 ranks
+3/4/6, D2 rank 1) are the next place to look before declaring cross-market exhausted.
 
 ## Wave-8 verdict (spec f6fb7d1; red-team CONFIRMED, zero issues) — smoothness-policy family
 ## closed with a coherent explanation, not four unrelated failures
