@@ -4,10 +4,17 @@ _Written per V4.1 §0. If this session ends, the next invocation resumes HERE af
 repository-truth ritual. HEAD at write time: 547d2d4 (+ wave-3 results at 140f76c, all pushed)._
 
 ## In flight RIGHT NOW
-1. **Wave-6 workflow** (`wf_3aad9fa9-e85`, script smv2-wave6-wf_3aad9fa9-e85.js): SMV2Y
-   joint-loss/weekly-downside viability state test (seq 399-402), red-teamed. Spec frozen at
-   51dbc45, unread. Genuinely new target (next-week portfolio downside / joint-loss status,
-   not next-session Solar PnL) on 4 already-computed states (sigma460/ER150/flip-rate/VR).
+1. **Wave-7 workflow** (`wf_40edb320-57c`, script smv2-wave7-wf_40edb320-57c.js): SMV2Z bounded
+   exposure-reduction policy (seq 403-405) built on wave-6's finding, red-teamed. Spec frozen
+   at fdd0e65, unread. Wave-6 (SMV2Y) completed CLEANLY and is fully ingested/pushed at
+   2d5d63e: sigma460 + ER150 (both already-computed states) causally predict next-WEEK
+   portfolio downside — the FIRST viability state to pass in this program (16 prior state
+   cells on the next-session-Solar-PnL target all failed). SMV2Z tests the simplest possible
+   policy on that finding: scale exposure when BOTH states sit in their historically-worse
+   top tercile at week close. This is the THIRD downside-policy attempt this program has run
+   (after SMV2N windfall and SMV2V ER-damper, both killed) — if this also fails, the
+   diagnostic-to-policy escalation for this state pair should be marked exhausted, but the
+   underlying SMV2Y information finding stands regardless of the policy's fate.
 2. **DONE**: ES/RTY/YM 1-minute cross-market context substrates all exported, verified, and
    committed (SM1M_ES/RTY/YM_SUBSTRATE, pushed at 3151800). Instrument names resolved cleanly
    as ESU6/RTYU6/YMU6. Engine-3 slate 4 (cross-market lead-lag, ranked candidates in
