@@ -8,20 +8,15 @@ repository-truth ritual. HEAD at write time: 547d2d4 (+ wave-3 results at 140f76
    joint-loss/weekly-downside viability state test (seq 399-402), red-teamed. Spec frozen at
    51dbc45, unread. Genuinely new target (next-week portfolio downside / joint-loss status,
    not next-session Solar PnL) on 4 already-computed states (sigma460/ER150/flip-rate/VR).
-2. **ES 1-minute export in flight** (job `6db86a69aac74f37`, `Tag=es1m_2022_2026`, writing to
-   `Documents/NinjaTrader 8/out/es1m_2022_2026_1m.csv`). Once it lands: convert to
-   `runs/SM1M_ES_SUBSTRATE/out/` parquet (mirror the SM1M NQ pattern exactly, incl.
-   build_meta.json provenance), THEN launch RTY 1m and YM 1m the same way (sequentially, one
-   NT8 job at a time — do not parallelize NT8 calls). This unblocks Engine-3 slate 4
-   (cross-market lead-lag, 8 candidates already ranked in
-   research/system_master/deep_research/DR_V4_EXPANSION_PASSES_20260808.md pass D1 + D2#1).
-   IMPORTANT: NT8/CrossTrade tools are ORCHESTRATOR-ONLY — never delegate this step to a
-   subagent (standing safety boundary; workflow agent prompts explicitly forbid it).
-   Instrument-name convention for the other two: try "RTY 09-26" and "YM 09-26" first (same
-   pattern as ES/NQ); if RunStrategyBacktest returns an instrument-not-found error, use
-   ListNinjaScriptFiles/MarketInfo or CrossTrade's SearchNinjaScriptSymbols to find the exact
-   resolved name before retrying — do not guess repeatedly.
-3. Nothing else pending. 3m/1m NQ substrates committed (SM01/SM1M).
+2. **DONE**: ES/RTY/YM 1-minute cross-market context substrates all exported, verified, and
+   committed (SM1M_ES/RTY/YM_SUBSTRATE, pushed at 3151800). Instrument names resolved cleanly
+   as ESU6/RTYU6/YMU6. Engine-3 slate 4 (cross-market lead-lag, ranked candidates in
+   research/system_master/deep_research/DR_V4_EXPANSION_PASSES_20260808.md pass D1 + D2#1) is
+   now DATA-UNBLOCKED but has NO FROZEN SPEC YET — that is the next Engine-3 step whenever
+   this or a future wave picks it up. NQ/MNQ remain the only traded instruments; ES/RTY/YM are
+   read-only context (V4 §36).
+3. Nothing else in flight besides wave-6 (item 1). 3m/1m NQ + 1m ES/RTY/YM substrates all
+   committed (SM01/SM1M/SM1M_ES/SM1M_RTY/SM1M_YM).
 
 ## On wave-4 completion (the standing loop)
 1. Ingest exec + red-team results (journal.jsonl in the workflow transcript dir).
