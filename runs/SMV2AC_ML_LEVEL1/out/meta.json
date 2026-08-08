@@ -1,0 +1,68 @@
+{
+  "seed": 20260808,
+  "alt_seeds": [
+    1,
+    2,
+    3
+  ],
+  "C_grid": [
+    0.01,
+    0.1,
+    1.0,
+    10.0
+  ],
+  "n_outer": 6,
+  "min_initial_train": 60,
+  "embargo_weeks": 1,
+  "n_inner": 3,
+  "B_boot": 10000,
+  "block_weeks": 4,
+  "N_full_target_series": 230,
+  "N_dropped_missing": 10,
+  "dropped_week_keys": [
+    202201,
+    202202,
+    202203,
+    202204,
+    202205,
+    202206,
+    202207,
+    202208,
+    202209,
+    202622
+  ],
+  "N_usable": 220,
+  "week_key_min": 202210,
+  "week_key_max": 202621,
+  "base_rate_joint_loss_next": 0.22272727272727272,
+  "total_oof_n": 154,
+  "fold_sizes_test": [
+    26,
+    26,
+    26,
+    26,
+    25,
+    25
+  ],
+  "promotion_test_pass": false,
+  "p_improvement_gt_0": 0.6255999999999999,
+  "seed_stability": {
+    "seeds": [
+      20260808,
+      1,
+      2,
+      3
+    ],
+    "aucs": [
+      0.4530612244897959,
+      0.4530612244897959,
+      0.4530612244897959,
+      0.4530612244897959
+    ],
+    "auc_variance": 0.0,
+    "auc_range": 0.0,
+    "note": "solver='lbfgs' (the sklearn default for penalty='l2') does not use random_state for anything (no data shuffling, no stochastic step) -- per sklearn docs, random_state only affects 'sag'/'saga'/'liblinear'. Zero variance across seeds is therefore the CORRECT, expected result for this solver, not a null check that silently passed -- documented as FACT in REPORT.md."
+  },
+  "oof_auc_full5": 0.4530612244897959,
+  "oof_auc_baseline": 0.4369747899159664
+}

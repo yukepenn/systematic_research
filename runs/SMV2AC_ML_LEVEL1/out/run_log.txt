@@ -1,0 +1,61 @@
+column verification PASSED: all required target_series.csv columns present: state_399_sigma460, state_400_ER150, state_401_flip_rate, state_402_VR_q26_N780, control_htf, joint_loss_next, downside_next
+states_dev.csv column cross-check PASSED: VR_q26_N780, htf, ER_n150, sigma460 present.
+dropped 10/230 weeks with a missing feature or target value: [202201, 202202, 202203, 202204, 202205, 202206, 202207, 202208, 202209, 202622]
+  (9 weeks 202201-202209: HTF_agree undefined during the trailing-50-session SMA warmup; 1 week 202622: joint_loss_next undefined, last row of target_series.csv has no next week)
+usable modeling weeks N=220 (week_key 202210..202621, 2022-03-07..2026-05-22)
+base rate joint_loss_next = 49/220 = 0.2227  (spec's stated population base rate: 50/230=0.217, computed here on the reduced usable N=220 population after dropping HTF warm-up/tail rows -- see REPORT.md for FACT note on this N discrepancy vs spec's illustrative '~230-60=~170' OOF estimate)
+expanding z-scores built for all 5 features (causal, ddof=1, first-obs->0.0 convention).
+FOLD 1: train wk[202210..202317] n= 60 (2022-03-07..2023-04-28) | EMBARGO wk 202318 (2023-05-01..2023-05-05) | test wk[202319..202344] n= 26 (2023-05-08..2023-11-03)
+FOLD 2: train wk[202210..202344] n= 87 (2022-03-07..2023-11-03) | EMBARGO wk 202345 (2023-11-06..2023-11-10) | test wk[202346..202419] n= 26 (2023-11-13..2024-05-10)
+FOLD 3: train wk[202210..202419] n=114 (2022-03-07..2024-05-10) | EMBARGO wk 202420 (2024-05-13..2024-05-17) | test wk[202421..202446] n= 26 (2024-05-20..2024-11-15)
+FOLD 4: train wk[202210..202446] n=141 (2022-03-07..2024-11-15) | EMBARGO wk 202447 (2024-11-18..2024-11-22) | test wk[202448..202521] n= 26 (2024-11-25..2025-05-23)
+FOLD 5: train wk[202210..202521] n=168 (2022-03-07..2025-05-23) | EMBARGO wk 202522 (2025-05-26..2025-05-30) | test wk[202523..202547] n= 25 (2025-06-02..2025-11-21)
+FOLD 6: train wk[202210..202547] n=194 (2022-03-07..2025-11-21) | EMBARGO wk 202548 (2025-11-24..2025-11-28) | test wk[202549..202621] n= 25 (2025-12-01..2026-05-22)
+OOF test coverage check PASSED: 154 distinct OOF weeks, 6 single-week embargo gaps ([60, 87, 114, 141, 168, 194]), 60 initial-train-only weeks -- union covers all N=220 weeks exactly once.
+TOTAL OOF weeks across 6 outer test folds: 154 (spec's own rough estimate was ~230-60=~170, based on the full 230-week target_series.csv population before the HTF/tail NaN drop; actual usable N=220 -> 154 OOF weeks; documented as FACT in REPORT.md, not adjusted to hit the spec's illustrative number).
+cv_splitter.csv + cv_splitter_log.txt written -- outer CV splitter VERIFIED before any model fitting begins.
+
+=== fitting FULL 5-feature model (main seed) ===
+  fold 1: best_C=0.01 train_n=60 test_n=26 coef={'z_sigma460': 0.0106, 'z_ER150': -0.0274, 'z_flip_rate': -0.0197, 'z_VR_q26_N780': -0.0112, 'z_HTF_agree': -0.0133} intercept=-1.3809
+  fold 2: best_C=0.01 train_n=87 test_n=26 coef={'z_sigma460': -0.0035, 'z_ER150': 0.003, 'z_flip_rate': -0.0571, 'z_VR_q26_N780': 0.0137, 'z_HTF_agree': 0.0244} intercept=-1.4181
+  fold 3: best_C=0.01 train_n=114 test_n=26 coef={'z_sigma460': -0.0078, 'z_ER150': 0.0208, 'z_flip_rate': -0.0482, 'z_VR_q26_N780': 0.0359, 'z_HTF_agree': 0.0383} intercept=-1.2274
+  fold 4: best_C=0.01 train_n=141 test_n=26 coef={'z_sigma460': 0.0048, 'z_ER150': 0.0482, 'z_flip_rate': -0.0361, 'z_VR_q26_N780': 0.0264, 'z_HTF_agree': 0.0403} intercept=-1.2636
+  fold 5: best_C=0.01 train_n=168 test_n=25 coef={'z_sigma460': 0.0251, 'z_ER150': 0.0363, 'z_flip_rate': -0.032, 'z_VR_q26_N780': 0.0387, 'z_HTF_agree': 0.0617} intercept=-1.3389
+  fold 6: best_C=0.01 train_n=194 test_n=25 coef={'z_sigma460': 0.0097, 'z_ER150': 0.0306, 'z_flip_rate': -0.0166, 'z_VR_q26_N780': 0.0418, 'z_HTF_agree': 0.0585} intercept=-1.2668
+inner_cv_containment_check.csv written: every inner split's train/val week ranges lie strictly inside its own outer fold's training window (asserted programmatically above).
+
+=== fitting BASELINE 1-feature (ER150-only) model, IDENTICAL protocol ===
+  fold 1: best_C=0.1 train_n=60 test_n=26 coef={'z_ER150': -0.1731} intercept=-1.4232
+  fold 2: best_C=0.01 train_n=87 test_n=26 coef={'z_ER150': 0.0025} intercept=-1.4148
+  fold 3: best_C=0.01 train_n=114 test_n=26 coef={'z_ER150': 0.0209} intercept=-1.2159
+  fold 4: best_C=0.01 train_n=141 test_n=26 coef={'z_ER150': 0.0479} intercept=-1.2562
+  fold 5: best_C=0.01 train_n=168 test_n=25 coef={'z_ER150': 0.0355} intercept=-1.3287
+  fold 6: best_C=0.01 train_n=194 test_n=25 coef={'z_ER150': 0.0303} intercept=-1.2508
+
+oof_predictions.csv written: 308 rows (154 weeks x 2 models)
+fold_coefficients.csv written.
+COEF STABILITY z_sigma460: folds+=4 folds-=2 min=-0.0078 max=+0.0251 near-zero(<0.05)_folds=6 -> NOT STABLE
+COEF STABILITY z_ER150: folds+=5 folds-=1 min=-0.0274 max=+0.0482 near-zero(<0.05)_folds=6 -> NOT STABLE
+COEF STABILITY z_flip_rate: folds+=0 folds-=6 min=-0.0571 max=-0.0166 near-zero(<0.05)_folds=5 -> NOT STABLE
+COEF STABILITY z_VR_q26_N780: folds+=5 folds-=1 min=-0.0112 max=+0.0418 near-zero(<0.05)_folds=6 -> NOT STABLE
+COEF STABILITY z_HTF_agree: folds+=5 folds-=1 min=-0.0133 max=+0.0617 near-zero(<0.05)_folds=4 -> NOT STABLE
+
+SEED STABILITY: AUCs across seeds {20260808: 0.4530612244897959, 1: 0.4530612244897959, 2: 0.4530612244897959, 3: 0.4530612244897959} -> variance=0.0000000000 range=0.0000000000  (solver='lbfgs' (the sklearn default for penalty='l2') does not use random_state ...)
+DIAGNOSTICS full5: N=154 AUC=0.4531 Brier=0.1770 meanLogLoss=0.5402
+DIAGNOSTICS baseline_ER150: N=154 AUC=0.4370 Brier=0.1773 meanLogLoss=0.5414
+calibration_deciles.csv written.
+
+SECONDARY CORRELATION (OOF P(joint-loss) vs downside_next, full model): pearson r=-0.1490 (p=0.0651) spearman r=-0.0794 (p=0.3276)
+
+PER-FOLD AUC (full vs baseline): 
+ fold  test_n  auc_full  auc_baseline  auc_delta sign
+    1      26  0.409091      0.431818  -0.022727    -
+    2      26  0.486111      0.541667  -0.055556    -
+    3      26  0.457143      0.742857  -0.285714    -
+    4      26  0.625000      0.420455   0.204545    +
+    5      25  0.404412      0.397059   0.007353    +
+    6      25  0.473684      0.456140   0.017544    +
+fold-level AUC delta sign-stability: 3/6 valid folds favor the full model
+
+promotion_test.csv written. PROMOTION_TEST_PASS=False (P(improvement>0)=0.6256 vs bar 0.85)
+diagnostics.csv + coefficient_stability.csv written.

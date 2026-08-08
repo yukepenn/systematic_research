@@ -1,0 +1,15 @@
+column verification PASSED: all required target_series.csv columns present: state_399_sigma460, state_400_ER150, state_401_flip_rate, state_402_VR_q26_N780, control_htf, joint_loss_next, downside_next
+states_dev.csv column cross-check PASSED: VR_q26_N780, htf, ER_n150, sigma460 present.
+dropped 10/230 weeks with a missing feature or target value: [202201, 202202, 202203, 202204, 202205, 202206, 202207, 202208, 202209, 202622]
+  (9 weeks 202201-202209: HTF_agree undefined during the trailing-50-session SMA warmup; 1 week 202622: joint_loss_next undefined, last row of target_series.csv has no next week)
+usable modeling weeks N=220 (week_key 202210..202621, 2022-03-07..2026-05-22)
+base rate joint_loss_next = 49/220 = 0.2227  (spec's stated population base rate: 50/230=0.217, computed here on the reduced usable N=220 population after dropping HTF warm-up/tail rows -- see REPORT.md for FACT note on this N discrepancy vs spec's illustrative '~230-60=~170' OOF estimate)
+expanding z-scores built for all 5 features (causal, ddof=1, first-obs->0.0 convention).
+FOLD 1: train wk[202210..202317] n= 60 (2022-03-07..2023-04-28) | EMBARGO wk 202318 (2023-05-01..2023-05-05) | test wk[202319..202344] n= 26 (2023-05-08..2023-11-03)
+FOLD 2: train wk[202210..202344] n= 87 (2022-03-07..2023-11-03) | EMBARGO wk 202345 (2023-11-06..2023-11-10) | test wk[202346..202419] n= 26 (2023-11-13..2024-05-10)
+FOLD 3: train wk[202210..202419] n=114 (2022-03-07..2024-05-10) | EMBARGO wk 202420 (2024-05-13..2024-05-17) | test wk[202421..202446] n= 26 (2024-05-20..2024-11-15)
+FOLD 4: train wk[202210..202446] n=141 (2022-03-07..2024-11-15) | EMBARGO wk 202447 (2024-11-18..2024-11-22) | test wk[202448..202521] n= 26 (2024-11-25..2025-05-23)
+FOLD 5: train wk[202210..202521] n=168 (2022-03-07..2025-05-23) | EMBARGO wk 202522 (2025-05-26..2025-05-30) | test wk[202523..202547] n= 25 (2025-06-02..2025-11-21)
+FOLD 6: train wk[202210..202547] n=194 (2022-03-07..2025-11-21) | EMBARGO wk 202548 (2025-11-24..2025-11-28) | test wk[202549..202621] n= 25 (2025-12-01..2026-05-22)
+OOF test coverage check PASSED: 154 distinct OOF weeks, 6 single-week embargo gaps ([60, 87, 114, 141, 168, 194]), 60 initial-train-only weeks -- union covers all N=220 weeks exactly once.
+TOTAL OOF weeks across 6 outer test folds: 154 (spec's own rough estimate was ~230-60=~170, based on the full 230-week target_series.csv population before the HTF/tail NaN drop; actual usable N=220 -> 154 OOF weeks; documented as FACT in REPORT.md, not adjusted to hit the spec's illustrative number).
