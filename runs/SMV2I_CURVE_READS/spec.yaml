@@ -1,0 +1,46 @@
+run_id: SMV2I_CURVE_READS
+date_frozen: 2026-08-08
+class: PORTFOLIO_TEST + DIAGNOSTIC   # V4 §41
+seq: [361, 362, 363, 364, 365]       # 361=C-P1 blend LP, 362=C-P3 Kelly cap, 363=C-P4 drought tilt, 364=C-P4 placebo, 365=C-P7 windfall pre-test
+parent: DR_V2_PASS_C_RISK.md (EXTERNAL PRIORS; local data decides)
+legs:
+  solar: runs/SMV2H_ONECONTRACT/out/solar_dual_htf_daily.csv        # SOLAR_DUAL_HTF daily
+  bmom:  vm(BMOM E2) daily -- reconstruct EXACTLY as the SMV2H rerank did; VALIDATION REQUIRED:
+         reproduce the published 60/40 curve against runs/SMV2H_ONECONTRACT/out/rerank_curves.csv
+         to atol 1e-6 BEFORE any new read. If reproduction fails, STOP and report.
+  champion_ref: DAYONLY_DUAL6040 (w_solar=0.60)
+window: dev sessions <= 2026-05-31; fit split 2022-01-01..2024-12-31 -> evaluate 2025-01-01..2026-05-31
+shared_bootstrap: seed=20260808 everywhere; moving block=5 B=10000 for CI-type reads;
+         stationary bootstrap mean block 20d B=5000 for path-type reads (C-P3).
+right_tail_floor: any policy that changes the curve must retain >= 0.97x champion PnL summed over
+         the champion's top-decile up-days (RTC floor, DR pass C). Below floor = automatic fail.
+
+c_p1_static_blend:               # seq 361
+  grid: w_solar in {0.35,0.40,0.45,0.50,0.55,0.60,0.65}  (coarse, V4 §19; no finer)
+  objectives: CDaR_0.90, EDaR_0.90 (entropic, alpha=0.90), Ulcer index, each on fit window,
+         subject to mean daily PnL >= 0.95 x mean(60/40).
+  adopt_if: all three optima agree within +-0.07 of each other AND the eval window preserves the
+         ordering AND RTC floor holds. If joint optimum within {0.55,0.60,0.65}: record
+         "free validation of 60/40 zone", champion unchanged.
+  else: preserve separate Pareto candidates (no forced single weight).
+c_p3_dd_constrained_leverage:    # seq 362 -- RESEARCH ONLY, no leverage recommendation (V4 §39)
+  L_grid: {1.0,1.1,...,3.0} x base DUAL6040 curve
+  constraint: P(maxDD$ over any rolling 2y window > $25,000) <= 0.10 under stationary bootstrap
+         (mean block 20); cross-check with moving block 5 and joint-loss-block-oversampled-2x variants;
+         HEADLINE = worst defensible method.
+  stability_kill: L* swings > 25% when the input window is trimmed by +-6 months.
+c_p4_drought_tilt:               # seq 363 real + 364 placebo
+  rule: monthly rebalance; delta_w = min(10, 2.5 * z_TUW) percentage points TOWARD the engine
+         deeper in drought (z_TUW = standardized time-under-water gap between legs, expanding
+         baseline with >= 12mo burn-in); floors w in [0.35,0.65]; total exposure unchanged.
+  placebo: 200 random-sign tilt paths (seeds 1..200, same magnitudes, random direction).
+  pass: real TUW reduction AND Sharpe change exceed placebo median by > 2x placebo IQR
+         AND leave-2022-out keeps sign AND RTC floor holds.
+c_p7_windfall_pretest:           # seq 365 -- EVENT STUDY ONLY, no policy built this run
+  event: trailing 5d PnL of DUAL6040 > +2.5 sigma (expanding sigma, >= 12mo burn-in)
+  read: forward 5d and 10d mean PnL after events vs unconditional base, block-bootstrap CI.
+  verdict: if forward PnL is NOT below base at one-sided P < 0.10 -> C-P7 DEAD (recorded kill);
+         if below -> qualifies for a bounded policy spec NEXT wave (not this run).
+outputs: out/c_p1_frontier.csv, out/c_p3_lstar.csv, out/c_p4_tilt.csv, out/c_p4_placebo.csv,
+         out/c_p7_events.csv, REPORT.md
+no_moves: grids/gates above are final at freeze; any deviation is logged as a violation, not adopted.

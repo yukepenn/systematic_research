@@ -1,0 +1,43 @@
+run_id: SMV2K_ENGINE3_S1
+date_frozen: 2026-08-08
+class: R1_FAMILY_TEST             # Stage 1 screen; NO promotion possible from this run (V4 §42)
+seq: [368, 369, 370]              # 368=A-H1 failed range-break fade, 369=A-H3 small-gap fade, 370=A-H5 overnight-drift cheap kill
+parent: DR_V2_PASS_A_AUCTION.md ranks 1, 2, 11 (EXTERNAL PRIORS; first Engine-#3 slate)
+anti_dup: mirror-image mechanisms to Solar/B-MOM breakout premium (V4 §24); fade and continuation
+  NEVER combined into one flexible family; each engine tests its preregistered side only.
+
+data: NQ 3m bars with OHLC, 2022-01-01 .. 2026-05-31 (dev), via the SM01 substrate loader
+  (sm01_solarsim.load_bars_3m -- same bars every SMV2 run used). Daily ATR14 from session H/L/C.
+  3m granularity DISCLOSED as coarser than the 1m in the external spec; thresholds unchanged.
+costs: $4.36/RT NQ + 1 tick/side slippage (C2-analog). Every expectancy is NET.
+
+engine_368_failed_range_break_fade:     # ENGINE3-A/E/D family
+  levels: PDH, PDL (prior RTH day high/low), ONH, ONL (overnight 18:00-09:30 high/low),
+          IBH, IBL (initial balance = first 60min RTH)
+  event: a 3m bar penetrates a level by <= 0.25 x ATR14d AND a 3m close returns back inside
+         within 15 min (5 bars); events only 09:33-15:30; one event per level per session (first).
+  economics: enter toward session VWAP at next 3m open after the close-back-inside bar;
+         exit at VWAP touch or 60 min time-stop; protective stop 2 ticks beyond sweep extreme.
+  pass: net expectancy t >= 2 (Newey-West by session), N >= 300 events pooled across levels,
+         sign stable on 2022-24 vs 2025-26 split, plateau: penetration {0.15,0.25,0.35}xATR and
+         confirmation window {9,15,21}min all same-sign (center = 0.25/15min; grid is plateau
+         check ONLY, not selection).
+engine_369_small_gap_fade:              # ENGINE3-C family (fade side ONLY)
+  gap: 09:30 RTH open minus prior-day 16:00 RTH close (3m bar conventions)
+  condition: |gap| < 0.5 x ATR14d AND open inside prior-day RTH range
+  economics: fade toward prior close from 09:33 next-bar open; exit at prior-close touch or
+         11:30 time-stop.
+  pass: net t >= 2, N >= 250, fill/median-time-to-fill reported, walk-forward sign stable,
+         plateau across gap threshold {0.3,0.5,0.7}xATR (center 0.5).
+engine_370_overnight_drift_kill:        # DESIGNATED CHEAP KILL (DIAGNOSTIC framing)
+  rule: after a down RTH day (16:00 close < 09:30 open), long at 16:42 3m open, exit next 09:33 open.
+  prior: NY Fed 2026 -- unconditional overnight drift ~zero since 2021; expectation = KILL.
+  read: net expectancy + t; also the unconditional version as context. Result recorded either way.
+
+complementarity_read (all three, only where events exist): daily PnL correlation to DAYONLY_DUAL6040,
+  losing-day correlation, mean engine PnL on champion bottom-decile days. (V4 §25 -- this is the
+  strategic criterion for Engine #3, reported at Stage 1 already.)
+verdict_rule: PASS -> Stage 2 characterize in a NEW spec (12-30 neighbors); FAIL -> family killed,
+  next independent family from the DR pass A ranking (H2 value-area rotation / H9 multi-day
+  balance false-break) gets the next spec. No parameter search beyond the frozen plateau grids.
+outputs: out/e368_events.csv, out/e369_events.csv, out/e370_summary.csv, out/complementarity.csv, REPORT.md

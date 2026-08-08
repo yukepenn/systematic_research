@@ -1,0 +1,38 @@
+run_id: SMV2J_STATE_HARNESS
+date_frozen: 2026-08-08
+class: DIAGNOSTIC                 # JOB1 information test ONLY -- no policy, no exposure rule (V4 §27)
+seq: [366, 367]                   # 366=B-H1 variance-ratio state, 367=B-H3 efficiency-ratio state
+parent: DR_V2_PASS_B_DSP.md ranks 1 and 3 (EXTERNAL PRIORS; shared harness; cluster rule)
+question: does a trend-quality state add INCREMENTAL information about next-session Solar
+  economics beyond the two states already deployed (vol level sigma460; HTF SMA50 agreement)?
+
+data:
+  dev: runs/SM01_SUBSTRATE/out/vote_state_3m.parquet (3m close, sigma460, votes; 2022-01..dev end)
+  outcome_primary: next-session SOLAR_DUAL_HTF daily PnL (runs/SMV2H_ONECONTRACT/out/solar_dual_htf_daily.csv)
+  outcome_secondary: next-session E10 daily PnL (runs/SM01_SUBSTRATE/out/e10_daily_py.csv)
+  old_regime: runs/SM06_SOLAR_HISTORY/out/vote_state_3m_hist.parquet + e10_daily_hist.csv (E10 outcome only)
+  window: dev sessions <= 2026-05-31
+
+states:
+  B_H1_variance_ratio:            # seq 366
+    formula: VR_t(q,N) = Var(q-bar overlapping returns) / (q * Var(1-bar returns)), trailing N 3m bars,
+             Lo-MacKinlay heteroskedasticity-consistent form; computed at session close t.
+    grid: q in {6,12,26} x N in {390,780,1950}   # 9 cells, frozen budget
+  B_H3_efficiency_ratio:          # seq 367
+    formula: ER_t(n) = |close_t - close_{t-n}| / sum_{i}|close_i - close_{i-1}| over trailing n 3m bars.
+    grid: n in {60,150,460}                       # 3 cells, frozen budget
+
+harness:                          # PREREGISTERED, one pass, applied identically to all 12 cells
+  bucketing: quintiles by EXPANDING-window ranks (>= 12mo burn-in; no full-sample scaling)
+  test_1_monotonicity: quintile mean of next-session PnL ordered (allow one inversion max = 4/5)
+  test_2_incremental: OLS PnL_{t+1} ~ z(state_t) + z(sigma460_t) + HTF_agree_t, Newey-West lag 5;
+        require |t_state| > 2; confirm with moving-block bootstrap (block=5, B=10000, seed=20260808)
+  test_3_plateau: incremental t and Q5-Q1 spread vary < 30% across each state's own grid
+  test_4_old_regime: same-sign Q5-Q1 spread on 2006-2021 (E10 outcome); flat old-regime spread is
+        reported but NOT an automatic kill (edge itself is regime-local); SIGN REVERSAL is a kill.
+cluster_rule: if |corr(best VR cell, best ER cell)| > 0.7 daily, keep only the better-plateaued
+        family; the other is recorded KILLED-REDUNDANT (DR pass B: H1/H3/H8 form one cluster).
+verdict_per_family: KEEP (-> JOB2 soft-weight policy spec in a LATER run, w in [0.5,1] logistic)
+        or KILL (family recorded; Kalman/BOCPD queue advances regardless per DR sequencing).
+outputs: out/harness_results.csv (12 rows x all four tests), out/state_correlations.csv, REPORT.md
+no_moves: no new grids, no threshold search, no policy simulation in this run.

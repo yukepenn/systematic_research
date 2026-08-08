@@ -1,0 +1,48 @@
+run_id: SMV2H2_ONELOT_CONFIRM
+date_frozen: 2026-08-08
+class: R2_CONFIRMATION            # V4 §41
+seq: [358, 359, 360]              # 358=A_dom_s5, 359=A_dom_s7 (plateau center), 360=A_dom_s9
+parent: runs/SMV2H_ONECONTRACT (seq 347-357); KNOWN_ERRORS #5 (gate mis-spec)
+hypothesis: >
+  The A-dominant one-contract policy family (pos = sign(B-MOM) when B-MOM active,
+  else sign(T_dd) iff |T_dd| >= thr, thr in {5,7,9}, on the DUAL_HTF state T_dd)
+  robustly replaces SM14 hysteresis (oldM a=3,b=1) as ONE_CONTRACT_FINAL.
+  Mechanism: B-MOM entries are higher-quality discrete signals than the marginal
+  Solar consensus band; requiring strong Solar consensus removes the counter-HTF
+  churn that owns 6/10 of SM14's top-DD episodes (sm14_dd_autopsy.csv).
+
+data:
+  dev_daily_curves: runs/SMV2H_ONECONTRACT/out/daily_curves.csv   # canonical replay outputs, keys like "355_SM14_ref_oldM(3,1)", A_dominant s5/s7/s9, MNQ+NQ
+  old_regime_substrate: runs/SM06_SOLAR_HISTORY/out/vote_state_3m_hist.parquet  # 2006-01-05..2021-12-31, 3m close + vote_pend (NO OHLC)
+  dev_window: sessions <= 2026-05-31 (frozen dev convention)
+  virgin: ">= 2026-08-01 untouched; June/July 2026 already consumed, not used here"
+
+gate_A_dev_bootstrap:            # PREREGISTERED, fixes KNOWN_ERRORS #5 (risk-blind daily-mean gate)
+  method: paired moving-block bootstrap on daily PnL differences, block=5, B=10000, seed=20260808
+  statistic_1: delta_Sharpe = Sharpe(A_dom) - Sharpe(SM14) per resample path
+  statistic_2: delta_CDaR = CDaR_0.95(SM14) - CDaR_0.95(A_dom) per resample path (positive = challenger better)
+  pass: P(delta_Sharpe > 0) >= 0.85 AND P(delta_CDaR > 0) >= 0.85 for plateau CENTER s7,
+        evaluated separately on 1-MNQ and 1-NQ bases; BOTH instruments must pass.
+  plateau_support: s5 and s9 must have point delta_Sharpe > 0 and point delta_CDaR > 0 on both instruments.
+gate_B_old_regime:               # non-inferiority stress, NOT a profitability requirement (V4 §6)
+  window: 2006-01-05..2021-12-31, Solar-only mode (B-MOM silent -> A_dom pos = sign(T_dd) iff |T_dd|>=thr;
+          SM14 pos = hysteresis(a=3,b=1) on M = 0.7086*T_tilt with B=0)
+  state_construction: T from vote_pend exactly as smv2h.py builds it on dev; HTF = prior-session
+          close vs SMA50 of session closes, computed causally on the hist substrate;
+          tilt x1.25 on agreement, c1_50 short-halving iff HTF-UP; x0.9026; clip +-13; rha.
+  execution: decisions at 3m bar close; fill at NEXT 3m bar close (hist substrate has no OHLC --
+          DISCLOSED approximation, applied identically to both policies); slippage 1 tick/side;
+          commission NQ $4.36/RT (NQ basis only for the stress; point value $20, tick 0.25).
+  pass: net(A_dom_s7) >= net(SM14) - $10,000 AND maxDD(A_dom_s7) <= 1.25 x maxDD(SM14)
+        AND trades/yr(A_dom_s7) <= 1.5 x trades/yr(SM14). (All on identical replay conventions.)
+loyo_check: reproduce leave-one-year-out table from dev daily curves (verification only; already
+        published in ONE_CONTRACT_FRONTIER addendum -- no new gate).
+
+decision_rule:
+  pass_both_gates: A_dominant_s7 -> ONE_CONTRACT_FINAL candidate; next action = SolarWaveSMOneLot_v2.cs build + Analyzer parity (Stage 4, no alpha changes).
+  fail_any_gate: SM14 retained as FINAL holder; A-dominant recorded CONFIRMATION-FAILED with the
+        failing gate named; next action = ONE new bounded discrete-policy family (V4 §51), separate spec.
+budget: 3 configs x 2 instruments (dev, already-run curves; zero new dev selection) + 2 old-regime replays. No new tuning anywhere.
+kill_criteria: gate A fail on either instrument; gate B catastrophic churn (any single old year < -$25k NQ after costs is reported prominently either way).
+right_tail: report top-10-day retention of A_dom_s7 vs SM14 on dev (both instruments); warning <90%.
+outputs: out/gate_A.csv, out/gate_B_oldregime.csv, out/loyo.csv, out/top10_retention.csv, REPORT.md
