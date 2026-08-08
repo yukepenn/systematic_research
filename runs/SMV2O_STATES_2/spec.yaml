@@ -1,0 +1,24 @@
+run_id: SMV2O_STATES_2
+date_frozen: 2026-08-08
+class: DIAGNOSTIC (JOB1 information only)   # V4.1 §2C; harness identical to SMV2J
+seq: [375, 376]   # 375=Kalman innovation whiteness, 376=BOCPD regime age
+parent: DR_V2_PASS_B ranks 2 and 4; SMV2J killed VR/ER (harness reused verbatim)
+data: same as SMV2J (vote_state_3m.parquet dev; SM06 hist substrate old-regime; outcomes =
+  next-session SOLAR_DUAL_HTF PnL primary, E10 secondary)
+state_375_kalman_whiteness:
+  model: local level+trend Kalman on log(close), 3m bars; q/r ratio FIXED grid {1e-4,1e-3,1e-2}
+    (engineering constants, not fitted); state at session close = Ljung-Box Q statistic (lags 10)
+    over the last M standardized innovations, M in {50,100,200}; 9 cells.
+  axis: "is trend+noise adequate at all right now" (whiteness), NOT slope significance.
+state_376_bocpd_age:
+  model: Adams-MacKay BOCPD on 30-min block returns (10 x 3m), Student-t predictive with fixed
+    weak prior (kappa0=1, alpha0=2, beta0=scale from first 12mo), hazard 1/lambda,
+    lambda in {100,250,500} blocks; state at session close = expected run length (regime age); 3 cells.
+harness: EXACTLY SMV2J's frozen harness (expanding-rank quintiles >=12mo burn-in; monotonicity
+  4/5; incremental |t_NW(5)|>2 with sigma460+HTF controls + block-bootstrap confirmation
+  block=5 B=10000 seed=20260808; plateau <30% variation; old-regime same-sign, reversal=kill).
+extra_kill: |corr(state, sigma460)| > 0.7 daily -> state killed as vol-transition in disguise
+  (BOCPD explicitly at risk per DR pass B).
+verdict: KEEP -> JOB2 soft-weight spec later; KILL -> feature family closed; if BOTH die, the
+  DSP JOB1 branch is exhausted per DR sequencing (EMD rank 5 optional next, needs new EVI case).
+outputs: out/harness_results.csv (12 rows), out/state_correlations.csv, REPORT.md

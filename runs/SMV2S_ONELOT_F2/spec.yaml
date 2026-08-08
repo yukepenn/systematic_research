@@ -1,0 +1,34 @@
+run_id: SMV2S_ONELOT_F2
+date_frozen: 2026-08-08
+class: R1_FAMILY_TEST (one-contract family #2)   # V4.1 §2B — ONE new bounded discrete family, max 3 cells
+seq: [386, 387, 388]
+parent: SMV2H2 (A-dominant CONFIRMATION-FAILED; diagnosed weakness = top-10-day retention 77%;
+  SM14 DD autopsy = counter-HTF Solar churn owns 6/10 top DDs)
+mechanism (genuinely new vs A-dominant consensus-threshold family): HTF-GATED DOMINANT —
+  the Solar leg only ever trades WITH the HTF state; B-MOM keeps priority:
+      pos_t = sign(B_t)                     if B_t != 0
+            = sign(T_dd_t)                  if B_t == 0 AND |T_dd_t| >= thr AND
+                                               HTF_state == sign(T_dd_t)
+            = 0                             otherwise
+  Rationale: preserves big Solar winner days (HTF-agree trend days, the retention failure) at a
+  LOWER threshold than A-dominant needed, while structurally deleting the counter-HTF churn
+  that both SM14 and A-dominant carry. Distinct mechanism: side-blind HTF gate, not a
+  consensus-strength gate.
+cells: thr in {3, 5, 7}   # exactly 3, frozen
+executor: canonical SMV2H run_policy (ops windows verbatim, MNQ + NQ, dev <= 2026-05-31);
+  T_dd and B constructions verbatim from committed smv2h.py; reconcile the SM14 reference
+  against SMV2H2 regen curves before any new read.
+gates (preregistered, all required for replacement):
+  A_dev: paired moving-block bootstrap (block=5 B=10000 seed=20260808) center cell = thr 5:
+    P(dSharpe>0) >= 0.85 AND P(dCDaR>0) >= 0.85 vs SM14, BOTH instruments; neighbors 3/7
+    point-positive both metrics both instruments.
+  B_right_tail (NEW, the diagnosed failure): top-10-day retention vs SM14 >= 0.90 on both
+    instruments — HARD gate this time, not a warning.
+  C_old_regime: 2006-2021 Solar-only replay (B silent; policy degenerates to HTF-gated Solar):
+    net >= SM14 - $10k NQ AND maxDD <= 1.25x SM14 AND trades/yr <= 1.5x SM14 (same approximated
+    fill convention as SMV2H2 gate B, disclosed).
+decision: pass all -> ONE_CONTRACT_FINAL candidate -> SolarWaveSMOneLot_v2.cs + parity.
+  fail any -> family killed; per V4 §51 the NEXT wave designs a different mechanism (not a
+  variant of this one); after two consecutive family kills the one-contract frontier pauses
+  for a mechanism-expansion pass.
+outputs: out/cells.csv, out/gate_A.csv, out/gate_B_retention.csv, out/gate_C_oldregime.csv, REPORT.md

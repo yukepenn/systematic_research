@@ -1,0 +1,21 @@
+run_id: SMV2N_WINDFALL_POLICY
+date_frozen: 2026-08-08
+class: PORTFOLIO_TEST (R2 of the C-P7 pre-test)   # V4.1 §2A/§18 — skeptical confirmation
+seq: [372, 373, 374]   # 372=policy cells, 373=placebo battery, 374=chronology battery
+parent: SMV2I seq 365 (pre-test PASSED p=0.0012 fwd10; de-clustered N=11 — LOW POWER PREREGISTERED)
+curve: runs/SMV2M_MASTER_BUILD/out/twin_daily.csv (executable-rule curve; dev <= 2026-05-31)
+policy: if trailing-5-session PnL > +2.5 sigma (expanding mean/std, >=12mo burn-in) at close of
+  session t: scale exposure (multiply daily PnL) by s for sessions t+1..t+5; retrigger extends,
+  no compounding of scales; SUSPENDED when 20d realized-vol percentile of the NQ close-to-close
+  (expanding) > 85 (never de-risk into a vol spike, DR pass C caution).
+cells: s in {0.7, 0.8, 0.9}   # 3 cells, plateau read; center 0.8 per DR P7
+gates_all_required:
+  - CDaR_0.95 and TUW both improve vs unscaled curve
+  - improvement > placebo median + 2x placebo IQR (373: 200 paths, same number/duration of
+    scaling windows placed at random non-overlapping dates, seeds 1..200)
+  - LOYO sign stability (>=4/5 years dSharpe same sign) AND leave-2022-out keeps sign (374)
+  - RTC >= 0.97 on champion top-decile up-days
+  - net retention >= 0.97 (policy may NOT tax the core edge)
+kill: any gate fails -> C-P7 KILLED at policy level (information result stands, recorded).
+no_moves: no threshold search on 2.5sigma / 5d / percentile-85 — frozen from the pre-test form.
+outputs: out/policy_cells.csv, out/placebo.csv, out/chronology.csv, REPORT.md

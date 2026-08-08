@@ -1,0 +1,43 @@
+run_id: SMV2R_SOLAR_CORE_1
+date_frozen: 2026-08-08
+class: R1_FAMILY_TEST + DIAGNOSTIC   # V4.1 §3-§10 SOLAR_CORE_CHALLENGE part 1 (3m-data-feasible parts)
+seq: [381, 382, 383, 384, 385]
+scope_note: clock challenge (1m/5m) and multi-timeframe Solar are PART 2 — they require a 1m/5m
+  NQ export that does not exist in-repo; this wave runs every challenge answerable from the
+  committed 3m substrate. Incumbent language until complete: CURRENT ROBUST SOLAR INCUMBENT.
+simulator: the committed Python V3 member machine — the exact member state machine in
+  runs/SMV2H_ONECONTRACT/smv2h.py heritage lives in src/analytics/sm01_solarsim.py /
+  SM06 build code (vote_state_3m_hist was generated in Python). Locate the committed member
+  simulator (SM06 run dir or src/analytics), VERIFY it reproduces vote_pend on the SM01 dev
+  substrate (>=99.99% bar match) BEFORE any variant run. If no committed simulator reproduces
+  the substrate, that subtrack is BLOCKED (report, do not improvise).
+sub_381_clamp_audit (DIAGNOSTIC): distribution of S = clamp(k*sigma460, 40t, 1200t) per member
+  per bar on dev: % bars at lower bound, % at upper, by member and by year. If a bound binds
+  <1% of bars for all members, record BOUND-IRRELEVANT (no parameter budget ever).
+sub_382_vol_memory (3 arms): rebuild the 13-member ensemble with sigma memory N in
+  {230, 460 incumbent, 920}; E10 execution (round(10*mean pending), MNQ costs, session flatten)
+  on dev. Report per arm: net/Sharpe/maxDD/CDaR/top-10-day sum/turnover/threshold distribution/
+  clamp %. VERDICT: incumbent is a plateau iff neither neighbor beats it by >20% on Sharpe AND
+  CDaR simultaneously; a dominating neighbor -> R2 confirmation spec later (no adoption now).
+sub_383_cohort_ablation (4 arms): FAST=VolMult{6-12}, MID={14-22}, SLOW={24-30}. Arms: ALL
+  (incumbent), no-FAST (9 members, target=round(10*mean over 9)), no-SLOW (9), MID-only (5).
+  Same executor. Report per arm: net/Sharpe/DD/CDaR/ES/top-trend-day contribution/churn +
+  per-cohort marginal stats. VERDICT rule: a cohort is REMOVABLE-CANDIDATE only if its removal
+  improves Sharpe AND CDaR AND retains >=95% of top-10-day sum (then R2 later; no adoption now).
+sub_384_signal_layer (DIAGNOSTIC): from the verified member simulator, emit T1 (flip), T2
+  (pullback/weak re-touch), T3 (resumption +/-3) event streams per the recovered V3 semantics
+  (E10Master_v2.cs UpdateMachine ev/weak/wave logic is the reference implementation). For each
+  event type x direction: N, forward 30/60/120-min net expectancy AFTER costs, MFE/MAE, overlap
+  with current E10 position state, incremental information conditional on the ensemble already
+  being positioned (does T2/T3 predict anything the position state does not?). NO POLICY.
+sub_385_ma_state_jobs (DIAGNOSTIC): states: MA30/59 cross (3m closes), MA100/400 (broad
+  neighbor), ER150 tercile (non-MA reference). JOB A entry-confirmation counterfactual: delay
+  each E10 target change until state agrees — report net/right-tail cost. JOB B soft confidence:
+  corr of state-agreement with next-day E10 PnL given HTF control. JOB C failure warning: does
+  state flip against an open ensemble position predict remaining-trade PnL (vs random flip
+  placebo)? JOB D re-entry timing after conflict resolution. All information reads, |t_NW|>2
+  bar, NO POLICY. Key output: does ANY job add information conditional on Solar+HTF?
+gates: none of 382/383 adopt anything this wave — dominating variants earn R2 confirmation
+  specs (chronology+plateau+portfolio contribution) per V4.1 §11 before touching any product.
+outputs: out/clamp_audit.csv, out/vol_memory.csv, out/cohort_ablation.csv, out/signal_layer.csv,
+  out/ma_jobs.csv, REPORT.md answering V4.1 §22 questions 4, 5, 6, 7 (+1 partially).

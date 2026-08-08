@@ -1,0 +1,37 @@
+run_id: SMV2Q_DIAGNOSTICS
+date_frozen: 2026-08-08
+class: DIAGNOSTIC (pure measurement, no gates, no selection)   # V4.1 §2E/F/G, §12, §13, owner 2026 question
+seq: [380]
+curves:
+  solar_e10: runs/SM01_SUBSTRATE/out/e10_daily_py.csv
+  solar_dual: runs/SMV2H_ONECONTRACT/out/solar_dual_htf_daily.csv
+  bmom_e2: rebuild from runs/SMV2B_BMOM_EXEC_AUDIT/out/ledger_E2_next_open.parquet (x $5/tick)
+  master_exec: runs/SMV2M_MASTER_BUILD/out/parity_daily_aligned.csv column nt (NT8 executable;
+    merge the 2023-04-05/06 boundary pair as in the parity recompute) and column tw (twin)
+  sm14: regenerate MNQ daily via the canonical executor (or reuse SMV2H2 regen curves)
+  window: dev <= 2026-05-31 primary; June-July 2026 reported SEPARATELY labeled CONSUMED
+deliverables:
+  smoothness_battery: for each curve — positive day/week/month/quarter %; longest losing
+    day/week/month streaks; worst week/month/quarter; rolling 20/60/120-session minimum (sum);
+    TUW; median + p95 recovery. -> out/smoothness_battery.csv (PERMANENT scorecard columns)
+  joint_loss: weekly + monthly 2x2 classification (Solar_DUAL vs BMOM sign); for JOINT-LOSS
+    weeks/months profile the CONCURRENT + PRIOR market state: sigma460 level, 20d realized vol
+    pct, daily-range/friction ratio, ER(150) path efficiency, DC flip rate (vote_pos sign
+    changes/day), HTF state mix, side-of-loss split, B-MOM activation rate. Compare joint-loss
+    periods vs all periods (Welch t per feature). -> out/joint_loss_profile.csv
+  winner_drought: waiting-time distribution between top-decile SOLAR_DUAL days; champion DD
+    depth/TUW conditional on drought length quartile. -> out/winner_drought.csv
+  component_attribution: from runs/SMV2M_MASTER_BUILD/out/twin_bar_ledger.parquet — bar-level
+    MTM split: solar_leg_pos = pos * KS*Tpp/(KS*Tpp+KB*B) proportional split where both active
+    (state fractional attribution), x bar dClose x $2; costs allocated by |target changes| per
+    leg. Daily leg curves -> per-leg net/vol/DD-episode ownership of the top-10 executable DDs;
+    joint-loss bar fraction; side x HTF x time-of-day loss concentration (all years).
+    -> out/component_attribution.csv, out/dd_ownership.csv, out/conditioning_matrix.csv
+  recency_2026: owner question "does it still work in 2026" — rolling 120-session Sharpe of
+    each curve through dev end plotted as percentile vs its own history; calendar-year table
+    2022..2026YTD; June/July 2026 (CONSUMED label) reported for the executable master.
+    RULES: no tuning, no gate, no selection from this read; language per V4 §56 (regime risk
+    stands; a below-median rolling window is path evidence, not proof of death; the
+    preregistered decay monitors MONITOR-01/SM13 remain the load-bearing instruments).
+    -> out/recency_2026.csv
+outputs: all above + REPORT.md answering V4.1 §22 questions 8, 9, 10 (and input to 11-14).
