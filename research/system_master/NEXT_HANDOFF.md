@@ -1,20 +1,25 @@
-# NEXT_HANDOFF — exact continuation state (2026-08-08, after wave-13 close / wave-14 launch)
+# NEXT_HANDOFF — exact continuation state (2026-08-08, after wave-14 close / wave-15 launch)
 
 _Written per V4.1 §0. If this session ends, the next invocation resumes HERE after the §4
-repository-truth ritual. HEAD at write time: wave-14 spec frozen (see git log), pushed._
+repository-truth ritual. HEAD at write time: wave-15 spec frozen (see git log), pushed._
 
-## *** LIVE LEAD, TOP PRIORITY: arm_BLEND_75 (SMV2AI seq 431, R2 confirmation SMV2AJ in flight) ***
-First genuinely new Solar-core mechanism to pass a standalone AND-rule screen since the clamp/
-clock-challenge series closed out. S=clamp(VolMult*(0.75*sigma460+0.25*sigma_ATR_eff),40,1200t),
-sigma_ATR_eff=ATR460/2.025539. Standalone Sharpe 0.746 vs 0.709 control, CDaR $25,183 vs
-$27,162, portfolio Sharpe 1.297 vs 1.264 champion, old-regime screen passed WITH MARGIN
-(net gap +$71.5k vs -$10k floor). If SMV2AJ's R2 gates A-E all pass, this becomes CHAMPION-
-CANDIDATE core -> master rebuild + parity spec is the natural Stage-4 follow-up.
+## Wave-14 close (seq 433-437, red-teamed CONFIRMED, ingested at 6f3b7cc) — closest R2 miss yet
+SMV2AJ_ATR_BLEND_R2: arm_BLEND_75 FAILED at the final confirmation stage, but only just —
+1 of 5 required gates failed (A, and only its CDaR_0.95 bootstrap prong: P(dSharpe>0)=0.932
+clearly passed, P(dCDaR>0)=0.753 fell short of 0.85). Gates B/C/D/E all passed, several with
+real margin (old-regime gap +$86k, portfolio dSharpe+dCDaR both point-positive with almost no
+sizing confound). Gate F (new: neighbor blend-weight bootstrap) showed the CDaR-significance
+weakness is neighborhood-wide, not a mis-picked weight w=0.75. **Incumbent sigma460-only core
+RETAINED. ATR-blend lead CLOSED — no third bite without a new mechanism that specifically
+targets the CDaR-tail effect** (not a re-test of the same blend at a different weight).
+Separately: retrofitted a realtime-fail-closed code guard into SolarWaveSMOneLot_v1.cs (SM14)
+— it had none before, unlike SolarWaveSMMaster_v2.cs, and relied entirely on operating
+discipline (commit 37dcdd7); corrected LIVE_READINESS_CHECKLIST.md's now-accurate header claim.
 
 ## Wave-13 close (seq 426-432, both red-teamed, ingested at 637478b)
 SMV2AH_DAY_CIRCUIT_BREAKER: KILLED, 0/16 cells (same-day loss-reactivity is anti-edge, third
 time-scale confirmed after per-trade/cross-day — directly answered the owner's stop-loss
-question). SMV2AI_ATR_BLEND: see live lead above.
+question). SMV2AI_ATR_BLEND: found arm_BLEND_75 (see wave-14 above for its final disposition).
 
 ## Wave-12 close (seq 420-425, both red-teamed, ingested at 8f0175e)
 SMV2AF_1MIN_RESCALE_R2: **1-minute Solar CLOSED FOR GOOD** (Gate A/bootstrap passed thinly,
@@ -37,27 +42,27 @@ pause — resume auto-chaining per V4.1 §0, do NOT stop at close-out, do NOT as
 launching the next wave unless genuinely blocked.
 
 ## In flight RIGHT NOW
-1. **Wave-14 workflow**: spec frozen before any read (see git log for the freeze commit):
-   - **SMV2AJ_ATR_BLEND_R2** (seq 433-437): R2_CONFIRMATION of SMV2AI's arm_BLEND_75 lead,
-     mirroring SMV2R->SMV2T's exact two-stage gate structure/lettering (A_dev bootstrap 0.85
-     bar, B_chronology LOYO>=4/5, C_old_regime re-verified at the DUAL-transformed object,
-     D_right_tail >=100% retention, E_portfolio point-positive dSharpe/dCDaR) plus one NEW
-     gate F (seed/neighbor-weight robustness at w=0.70/0.80, disclosure-only not pass/fail,
-     added because w=0.75 came from only a 4-point grid — thinner justification than a
-     categorical choice, so a local sensitivity check is warranted before treating it as
-     settled). Object under test is the DUAL-transformed decision object (HTF tilt applied),
-     NOT the raw target SMV2AI screened — these statistics are unseen. Pass ALL of A-E ->
-     CHAMPION-CANDIDATE core -> master rebuild + parity spec next; fail ANY -> incumbent
-     retained, lead closed same as every other core challenge in this program (no double
-     standard for a lead that looks good).
+1. **Wave-15 workflow**: spec frozen before any read (see git log for the freeze commit):
+   - **SMV2AK_VOLUME_BARS** (seq 438-442): expansion-pass EVI rank #2 (the fallback plan since
+     SMV2AJ failed). Tests a genuinely new clock mechanism — bars that close on cumulative
+     volume, not elapsed time — motivated by SMV2U/W's own inference that 5-minute nearly beat
+     3-minute via turnover-damping, not faster information, an axis never directly tested.
+     Builds volume bars from the committed 1-minute substrate (session-bounded, threshold V
+     calibrated to match the incumbent's average bar count), measures the sigma scale ratio
+     with the same SMV2AE/AI discipline, re-derives the memory window from the bars' own
+     average elapsed-time width (not assumed =460), then tests the rescaled 13-member ensemble
+     under the same AND-rule as every core-challenge spec this wave-class. Old-regime screen
+     is feasible this time (a native 1-minute 2006-2021 substrate was confirmed to exist
+     during SMV2AF gate C). A mechanism-note sub-test checks whether volume-bar turnover lands
+     between the 3m and 5m incumbents' own figures, the specific signature the motivating
+     hypothesis predicts.
    Gets independent red-team verification. On completion: ingest, correct any red-team-flagged
-   issues in the run REPORT (never spec.yaml), update registry (seq 433-437) + CURRENT_TRUTH/
-   INDICATOR_FRONTIER, commit+push. If SMV2AJ PASSES: this is the single highest-priority next
-   step (master rebuild + NT8 parity spec) and should preempt other queued ideas. If it FAILS:
-   fall back to volume bars (expansion-pass EVI rank #2, a new clock mechanism) as the next
-   pick; also SM14's missing realtime-fail-closed code guard remains a flagged, un-actioned
-   risk-hygiene item. Auto-chain — do not stop at close-out, do not ask before launching the
-   next wave unless genuinely blocked.
+   issues in the run REPORT (never spec.yaml), update registry (seq 438-442) + CURRENT_TRUTH/
+   INDICATOR_FRONTIER, commit+push, then freeze the next wave (candidate → R2_CONFIRMATION
+   mirroring SMV2AJ's exact gate structure; no candidate → the next-ranked expansion-pass idea,
+   #3 range/ATR-adjacent ideas having just closed, so #4+ or a fresh expansion pass). Auto-
+   chain — do not stop at close-out, do not ask before launching the next wave unless
+   genuinely blocked.
 2. **DONE**: ES/RTY/YM 1-minute cross-market context substrates all exported, verified, and
    committed (SM1M_ES/RTY/YM_SUBSTRATE, pushed at 3151800). Instrument names resolved cleanly
    as ESU6/RTYU6/YMU6. Engine-3 slate 4 (cross-market lead-lag, ranked candidates in

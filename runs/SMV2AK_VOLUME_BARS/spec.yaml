@@ -1,0 +1,85 @@
+run_id: SMV2AK_VOLUME_BARS
+date_frozen: 2026-08-08
+class: R1_FAMILY_TEST + DIAGNOSTIC   # Mechanism-expansion pass candidate #2 (EVI 5, second-
+  # ranked after the now-closed adaptive-clamp idea): research/system_master/deep_research/
+  # DR_V4_SOLARCORE_EXPANSION_20260808.md. Motivation: SMV2U/W's own inference (5-minute
+  # nearly beat 3-minute via TURNOVER-DAMPING, not faster information -- the real axis is
+  # information-per-bar, not minutes-per-bar) was never directly tested. Volume bars (bar
+  # closes on cumulative volume, not elapsed time) implement that axis directly and are a
+  # GENUINELY DIFFERENT clock mechanism from the 3x-tested fixed-time family (1m/3m/5m, all
+  # closed: 1m dead twice over, 5m failed R2 confirmation, adaptive-ceiling/ATR-blend closed
+  # this session). Volume column already exists in the committed 1-minute substrate
+  # (runs/SM1M_SUBSTRATE) -- no new data export required.
+seq: [438, 439, 440, 441, 442]
+
+sub_438_volume_bar_construction (DIAGNOSTIC, precedes any signal test): build volume bars from
+  the committed 1-minute NQ substrate (runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet):
+  aggregate consecutive 1-minute bars into a volume bar that CLOSES the instant cumulative
+  volume since the volume bar's own open reaches a threshold V (OHLC aggregated normally:
+  open=first 1m open, high=max, low=min, close=last 1m close, volume=sum). SESSION-BOUNDED:
+  volume resets to 0 at every session open (18:00 ET), matching every other bar-construction
+  convention in this program -- a volume bar is NEVER allowed to span a session boundary; the
+  final partial bar of a session (volume < V when the session ends) is closed at the session's
+  last 1-minute bar's close, exactly as-is (not merged forward, not dropped, not padded --
+  disclose its distribution of leftover-volume fractions so a reader can judge materiality).
+  THRESHOLD CALIBRATION: measure the dev-window's mean 1-minute volume per session and the
+  incumbent 3-minute bar's own average volume-per-bar (should be directly computable: total
+  session volume / bars-per-session at 3-minute cadence); set V = that average 3-minute-bar
+  volume, so volume bars run at approximately the SAME AVERAGE BAR COUNT as the incumbent for
+  comparability, but with count VARYING by activity level (more bars in active sessions, fewer
+  in quiet ones) -- report the resulting bar-count distribution per session (mean/p10/p90) and
+  compare directly to the incumbent's fixed ~130 bars/session, and the resulting real-time
+  WIDTH distribution of volume bars (median/p10/p90 elapsed seconds per bar) to characterize
+  how much the clock actually compresses/expands vs fixed 3-minute time.
+  PRE-REGISTERED RULE: freeze V at this single calibration (do not re-tune after seeing
+  sub_440's results).
+
+sub_439_scale_measurement (DIAGNOSTIC, same discipline as SMV2AE sub_418 / SMV2AI sub_430):
+  sigma_volbar = causal trailing-N-volume-bar mean of |Δclose| (N to be chosen as the volume-
+  bar count whose AVERAGE ELAPSED TIME across dev matches the incumbent's 460*3min=1380min
+  memory window -- compute this from sub_438's own bar-width distribution, do not assume it
+  equals 460). Measure R_volbar = the empirical point-scale ratio sigma460(3m) / sigma_volbar
+  over the identical dev calendar (median, p1/p10/p50/p90/p99, per-year stability). PRE-
+  REGISTERED RULE: use the whole-dev-period MEDIAN R_volbar as the single rescale factor for
+  sub_440, regardless of the per-year spread -- do not re-pick after seeing results (same
+  discipline as every prior rescale in this program).
+
+sub_440_ensemble_test (1 arm vs 3m-incumbent control): VMS_volbar = VMS_3m * R_volbar (13
+  members, same relative spacing), clamp bounds [40,1200] ticks UNCHANGED (absolute price-space
+  bounds, not sigma-relative -- same reasoning as every prior rescale), sigma window = N from
+  sub_439, MNQ E10 executor, session flatten. Report standalone net/Sharpe/maxDD/CDaR_0.95/
+  top-10-day-sum/turnover/friction-share vs the 3m-incumbent control; portfolio blend
+  (DAYONLY_DUAL6040 60/40, Solar leg swapped via the DUAL_HTF transform -- reuse
+  runs/SMV2AD_VOLMULT_CEILING/src/common.py's dual_htf()/vm() verbatim, B-MOM leg unchanged).
+  verdict rule (CANDIDATE): standalone Sharpe AND CDaR_0.95 improve vs the 3m control AND
+  top-10-day retention >=95% (same AND-rule as every core-challenge spec this wave-class). No
+  adoption this wave regardless of outcome -- a CANDIDATE earns an R2_CONFIRMATION spec later
+  (SMV2R->SMV2T->SMV2AJ precedent, same gate letters/structure, same 0.85 bootstrap bar).
+
+sub_441_old_regime_screen (DIAGNOSTIC, conditional on the sub_440 arm qualifying as CANDIDATE):
+  a native 1-minute-resolution substrate for 2006-2021 IS available (confirmed this session,
+  SMV2AF gate C: research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet) -- build
+  volume bars on it using the IDENTICAL V threshold from sub_438 (frozen, not re-calibrated on
+  hist, same discipline as every prior old-regime rescale reuse) and rebuild the DUAL-
+  transformed decision object, floor net >= incumbent - $10k AND maxDD <= 1.25x incumbent (same
+  floor used throughout this program). If the standalone arm does not qualify in sub_440, this
+  screen is explicitly N/A (disclosed via status=NONE_QUALIFIED, not silently skipped).
+
+sub_442_mechanism_note (DIAGNOSTIC, always reported): compare volume-bar turnover (E10 target-
+  change frequency, and total contracts traded) directly against the 3m incumbent's, and
+  against SMV2U's own 5-minute-bar turnover figures (read from runs/SMV2U_CLOCK_CHALLENGE/out/)
+  -- if volume bars land turnover somewhere between 3m and 5m (activity-adaptive damping
+  without a fixed slower clock), that is the specific mechanistic signature the motivating
+  hypothesis (SMV2U/W's "turnover-damping not faster information" inference) predicts; report
+  whether this pattern holds or not, regardless of whether sub_440 produces a CANDIDATE.
+
+kill_or_keep: if the sub_440 arm does NOT qualify as a CANDIDATE -> volume bars are
+  CONFIRMED-NOT-BENEFICIAL for this system at this calibration, record in CURRENT_TRUTH, close
+  -- no second bite at THIS SPECIFIC volume threshold without a new mechanism (a genuinely
+  different threshold-selection principle, e.g. dollar-volume or tick-imbalance bars, would be
+  a new mechanism, not a re-test). If it DOES qualify -> queue an R2_CONFIRMATION spec next
+  wave mirroring SMV2AJ's exact gate structure (A dev bootstrap / B chronology / C old-regime
+  on the DUAL-transformed object / D right-tail / E portfolio) -- no adoption here.
+outputs: out/volume_bar_construction.csv, out/bar_width_distribution.csv,
+  out/scale_ratio_volbar.csv, out/ensemble_test.csv, out/portfolio_blend.csv,
+  out/old_regime_screen.csv, out/turnover_comparison.csv, out/gates.csv, REPORT.md
