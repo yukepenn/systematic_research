@@ -1,7 +1,47 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4.1 wave-9 (SMV2AB engine-3 slate 4, cross-market).
+_Last update: 2026-08-08, end of V4.1 wave-11 (SMV2AD ceiling/cohort + SMV2AE 1m rescale).
 Supersedes the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+
+## Wave-11 verdict (specs 2b2f88a; red-team SMV2AD CONFIRMED-with-corrections [2, both
+## applied to the run REPORT — a missing-file deliverable gap and a tautology-framing fix,
+## neither numeric], SMV2AE CONFIRMED with zero corrections) — owner-directed pivot back to
+## genuinely new Solar-core mechanism ideas after the owner flagged wave 6-10 diagnostics as
+## scope drift ("went too far? we only want best nq or mnq strategies"), then re-authorized
+## full autonomy with the standing goal restated.
+**SMV2AD_VOLMULT_CEILING (seq 415-417) — CONFIRMED-OPTIMAL-IN-RANGE, lead CLOSED.** The
+1200t/300pt clamp on the slowest member (VolMult=30) binds 39.2% of Jan-May 2026 bars vs
+9.8%/0.2%/3.9%/18.3% in 2022-2025 (SMV2R sub_381) — more binding now than any full historical
+year, never before acted on. Raising the ceiling (1200/1600/2000/2400t) DOES mechanically
+relieve the bind (10.93%→0.57% at 2400t) and DOES lift Sharpe monotonically (0.709→0.863
+standalone) — but CDaR_0.95 (tail drawdown) worsens at every ceiling tested (+4.9-5.0%): the
+unclamped slow member trades rarer, larger, fatter-tailed trend moves. 0/3 ceiling arms and
+0/2 extended-slow-cohort arms (VolMult 34-50, add-18 or replace-fastest-13) qualify as
+candidates (must improve Sharpe AND CDaR AND retain >=95% top-10-day sum). The current
+1200t/VMS-6-30 design is a genuine local optimum on the Sharpe/CDaR frontier, not a historical
+accident. Closed — no third bite at a *fixed*-value ceiling/cohort change without a new
+mechanism. (Does NOT close the *adaptive*/percentile-ceiling idea — structurally different,
+ranked #1 in the same-wave mechanism-expansion pass below, still open.)
+**SMV2AE_1MIN_RESCALE (seq 418-419) — PASS-SCREEN, queues R2_CONFIRMATION.** SMV2U's two
+prior 1-minute tests reused the 3m VolMult constants VERBATIM on 1m-scale sigma (confirmed by
+code read) and both failed decisively (friction 102-128% of gross). The un-recalibrated axis —
+VolMult's point-scale itself, since 1m |dClose| isn't point-comparable to 3m |dClose| even over
+an identical time window — was measured directly (R=1.7301, tight and regime-stable across 5
+years, medians 1.721-1.742) and applied. Result: net flips from -$3,163/Sharpe -0.018 (unscaled)
+to **net $77,748/Sharpe 0.439**, friction share drops from 1.020 to 0.470. Clears the
+pre-registered screen (Sharpe>0 AND friction<0.60) with a comfortable margin — but still trails
+the 3m incumbent (Sharpe 0.709) on every metric, and NO bootstrap/LOYO/old-regime/portfolio
+battery has been run yet (this was a screen, not a promotion attempt). Queued for R2 next wave.
+**Mechanism-expansion research pass** (no spec, `deep_research/DR_V4_SOLARCORE_EXPANSION_
+20260808.md`): 9 ranked Solar-CORE (not Engine-3) candidates, deduped against every closed
+lead. Top 3 by EVI: (1) percentile/rolling-adaptive clamp ceiling (replaces the now-closed
+FIXED ceiling idea with a genuinely different adaptive one), (2) volume bars as a new clock
+mechanism (distinct from the 3x-killed fixed-time 1m/3m/5m family), (3) ATR/range-based
+threshold estimator blended with sigma460 (captures intrabar wicks sigma460 structurally
+cannot see). Candidates 4-9 ranked lower (thinner data, higher duplication risk vs closed
+leads, or explicitly flagged as possible re-skins of killed ideas — one (#9) requires reviving
+the T2/T3 layer already shown to add zero information and is included only to honestly close
+the question, not as a promising lead).
 
 ## Wave-9 verdict (spec 0da78b6; red-team CONFIRMED, 2 trivial arithmetic corrections applied)
 First cross-market Engine-3 slate — ES/NQ dispersion catch-up, duration-spread shock reaction,

@@ -1,4 +1,27 @@
 
+## SMV2AD + SMV2AE (2026-08-08, seq 415-419) — VolMult ceiling/cohort CLOSED, 1m rescale PASS-SCREEN
+- **Fixed clamp ceiling / fixed slow-cohort extension: CLOSED.** Raising the 1200t ceiling
+  (tested to 2400t) and/or adding VolMult 34-50 members mechanically relieves the clamp bind
+  (which reaches 39.2% of bars in Jan-May 2026, the highest of any year on file) and lifts
+  Sharpe monotonically — but CDaR_0.95 worsens at every cell tested. 0/5 arms cleared the
+  Sharpe-AND-CDaR-AND-95%-retention bar. Current 1200t/VMS-6-30 is a genuine Sharpe/CDaR local
+  optimum, not an accident. No third bite at a FIXED-value version of this idea.
+- **1-minute bars: the multiplier-rescale gap is now closed too, with a live PASS-SCREEN.**
+  Every prior 1m failure (WAVE1/WAVE1C fixed-SM family; SMV2U's two VolMult-family sigma-window
+  conventions) is now superseded by one further finding: rescaling VolMult itself by the
+  measured 3m/1m sigma-scale ratio (R=1.7301, stable 1.72-1.74 across 5 years) flips the
+  time-matched 1m arm from net -$3,163/Sharpe -0.018 to net $77,748/Sharpe 0.439, friction
+  share 1.02→0.47. Still trails the 3m incumbent (Sharpe 0.709) and has NOT been through
+  bootstrap/LOYO/old-regime/portfolio testing — queued as an R2_CONFIRMATION candidate, not
+  adopted. This is the first time any 1-minute construction has cleared a bare economic-
+  viability screen in this program's history.
+- **Mechanism-expansion pass** ranked a genuinely different, not-yet-tested idea #1: an
+  ADAPTIVE (percentile/rolling) clamp ceiling, distinct from the now-closed FIXED-ceiling test
+  above — plugs into the same `resolve_s()` `hi` bound but recomputed from the recent
+  distribution of `k*sigma` rather than a constant. Ranked #2: volume bars as a new clock
+  (distinct from the 3x-killed fixed-time-bar family). Full 9-candidate ranked list:
+  `deep_research/DR_V4_SOLARCORE_EXPANSION_20260808.md`.
+
 ## SMV2G (2026-08-08): HTF mechanism plateau — CONFIRMED (7/8 neighbors improve)
 Identical x1.25 tilt through 8 alternative daily HTF-state definitions (SMA20/100,
 EMA50, Donchian50-mid, ret50/ret100 sign, SMA50-slope, dual SMA50&200): 7/8 improve
