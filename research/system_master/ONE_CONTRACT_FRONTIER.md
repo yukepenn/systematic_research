@@ -57,3 +57,10 @@ Identical signals; friction only: 10×MNQ pays $13.00/RT vs NQ $4.36/RT per 10-M
 (slip identical). Over dev this is $17.2k ≈ all of the Sharpe gap (1.30 vs 1.37 at 350).
 1 MNQ remains the correct risk unit for accounts <$60k; 1 NQ is strictly cheaper per
 unit of exposure when the DD (−$38-47k range) is fundable.
+
+## LOYO addendum (2026-08-08, from saved curves)
+A-dominant vs SM14 reference, net delta by year — 350: 2022 −$2.2k, 2023 +$1.2k,
+2024 +$1.0k, 2025 +$3.9k, 2026 +$3.4k (dSharpe −0.42/+0.24/+0.28/+0.44/+1.06).
+4/5 years positive but magnitude concentrated 2025-26 (the counter-trend-short bleed
+era the DUAL state targets); 2022 gives back ground because halved HTF-UP shorts missed
+early-crash downlegs. Supports CHALLENGER status, not yet FINAL promotion.
