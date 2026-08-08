@@ -1,0 +1,113 @@
+run_id: PRODUCTB_ONECONTRACT_FINAL
+date_frozen: 2026-08-08
+class: DELIVERABLE_BUILD   # Owner addendum (OWNER_ADDENDUM_ONECONTRACT_FINAL_20260808.txt):
+  # Product B is not complete merely because a policy has been selected. Delivers BEST_ONE_NQ
+  # and BEST_ONE_MNQ as separate, fully-implemented, parity-proven NinjaTrader strategies,
+  # live-ready-but-disabled. This spec covers the BUILD + PARITY + METRIC-BATTERY + CAPITAL-MAP
+  # work; it does NOT authorize live enablement (fail-closed remains in every artifact).
+seq: [438b, 439b, 440b]   # non-competing with the concurrent SMV2AK research wave's 438-442
+
+parent_policy: SM14 seq 318 (a=3, b=1 hysteresis), the current ONE_CONTRACT_FINAL holder --
+  M = WSolar*T' + WBmom*B (0.7086/2.83, "old M" frozen winner arithmetic), T' = clip(round(T*m*
+  0.9026),+-13), m=1.25 iff sign(vote)==prior-session SMA50 state, B = frozen W8-1 B-MOM
+  position in {-1,0,+1}. LONG 1 when flat and M>=3; SHORT 1 when flat and M<=-3; exit to flat
+  when retreating through +-1; no new entries 16:30-18:00 ET; forced flat decided at 16:39
+  close. Canonical Python reference: runs/SMV2H_ONECONTRACT/parity_d.py + out/results.csv row
+  seq=355 ("355_SM14_ref_oldM(3,1)": MNQ net $28,676.10/Sharpe 1.056/maxDD $5,963.20; NQ net
+  $303,850.92/Sharpe 1.120/maxDD $58,517.44, dev 2022-01-03..2026-05-29, 1139 sessions).
+  NOTHING about the underlying signal/rule changes in this spec (no alpha changes, per owner
+  addendum) -- this is packaging, parity, and reporting work only.
+
+known_prior_state: src/ninjascript/SolarWaveSMOneLot_v1.cs already implements this exact rule
+  and already has a PASSED Strategy Analyzer parity result for the NQ leg (research/system_
+  master/NINJATRADER_PARITY.md: 99.5% trade-exact, 0.9990 daily corr, net delta 0.13%, dev
+  window 2022-01-01->2026-05-29, NQ 09-26, Lifetime commission, 1-tick slip). This ALREADY
+  meets the owner's parity bars (99.5%+ decision parity / 0.999+ daily corr / <0.5% net diff)
+  for NQ under the non-final file name. What is genuinely missing: (1) MNQ has NEVER been
+  through Strategy Analyzer -- only the Python side has an MNQ-scale number: this is the real
+  gap, not a formality; (2) no clearly-named, separately-versioned FINAL artifacts exist for
+  either instrument; (3) no per-instrument-attachment safety guard exists (the current file is
+  generic -- attaches to whatever chart it's given); (4) parameter effective-logging (checklist
+  item 15) is not implemented; (5) capital maps (historical + stressed) were never built,
+  confirmed by repo-wide search this session; (6) the NQ-scale metric battery in results.csv
+  covers only net/sharpe/maxDD (3 columns), not the full owner-required battery.
+
+sub_438b_final_artifacts: build two files, each a byte-for-byte-behavior-preserving refactor
+  of SolarWaveSMOneLot_v1.cs (NOT a rewrite -- diff against the source to prove no logic
+  changed) plus these additions:
+  - SolarWaveOneContractNQ_Final.cs: adds a runtime guard in State.DataLoaded that raises
+    (via Log(...,LogLevel.Error) + a hard early-return from OnBarUpdate, matching the existing
+    fail-closed pattern's spirit) if the strategy's own execution instrument (BarsArray[0])
+    does not start with "NQ ". EntryLevel/ExitLevel hardcoded to 3.0/1.0 (seq 318, still
+    exposed as NinjaScriptProperty so Strategy Analyzer can display/vary them for research,
+    but defaulting to the frozen adopted values -- NOT re-opening the parameter search).
+  - SolarWaveOneContractMNQ_Final.cs: identical, guard checks "MNQ " instead.
+  - BOTH: add effective-parameter logging (checklist item 15) -- on State.DataLoaded, Print()
+    every NinjaScriptProperty's resolved value once, tagged with the class name and a content
+    hash of this source file (so a live session's log is traceable to an exact build).
+  - BOTH: retain the realtime-fail-closed guard (retrofitted into SolarWaveSMOneLot_v1.cs this
+    session, commit 37dcdd7) verbatim.
+  - Diff each Final file against SolarWaveSMOneLot_v1.cs and confirm the ONLY differences are
+    the instrument guard, the logging addition, and the hardcoded EntryLevel/ExitLevel
+    defaults -- disclose the diff, do not silently drift from the frozen rule.
+
+sub_439b_strategy_analyzer_parity (ORCHESTRATOR-ONLY, NT8/CrossTrade tools, per standing repo
+  rule -- never delegated): compile + write both Final files into NT8; run
+  RunStrategyBacktest for EACH under its own class name, at the SAME window as the already-
+  passed NQ check for direct comparability (from=2022-01-03T06:00:00Z-equivalent per the
+  campaign's ET session-boundary convention, to = the 2026-05-29 session's own end -- resolve
+  the exact UTC "to" boundary using the frozen convention in CLAUDE.md: to = one second before
+  the next 18:00 ET session open, DST-aware), commission template "NinjaTrader Brokerage
+  Lifetime", 1-tick slippage, Standard fill, 3-minute primary bars:
+  - NQ run: SolarWaveOneContractNQ_Final on an NQ 09-26 chart.
+  - MNQ run: SolarWaveOneContractMNQ_Final on an MNQ 09-26 chart (SignalInstrument stays
+    "NQ 09-26" -- signals always derive from NQ per the frozen rule, only the traded/execution
+    instrument differs, matching how SolarWaveSMMaster_v2's own parity run was structured).
+  Reconcile each against the canonical Python reference (parity_d.py's construction, re-run at
+  MNQ commission/point-value scale for the MNQ leg: MNQ_COMM=$0.65/side, MNQ_PV=$2.00, vs the
+  NQ leg's already-established $2.18/$20.00) using the SAME reconciliation methodology
+  parity_d.py already uses (entry-time+direction trade matching, daily corr, net delta,
+  worst daily deltas). PASS BAR (verbatim from the owner addendum, not relaxed): >=99.5%
+  decision parity, >=0.999 daily PnL corr, <0.5% net difference. If either leg misses any bar,
+  report exactly which one, by how much, and why (do not silently pass a marginal miss).
+
+sub_440b_metric_battery_and_capital_map: for BOTH 1 NQ and 1 MNQ, using the (now Analyzer-
+  parity-verified) daily P&L series:
+  - full battery via src/analytics/sm_metrics.py's metrics() function (already implements
+    sharpe/sortino/calmar/max_dd/es5_daily/worst_week/worst_month/worst_quarter/pos_day_frac/
+    pos_week_frac/pos_month_frac/tuw_frac/longest_recovery_sessions/top10_day_share -- reuse
+    verbatim, do not reimplement) PLUS the owner's explicitly-named items not already in that
+    function: trade count (from the parity-verified NT trade list), CDaR_0.95 (block-bootstrap
+    conditional drawdown-at-risk, reuse the house block=5/B=10000/seed=20260808 convention used
+    throughout this program), EDaR (entropic DaR -- if no existing house implementation exists,
+    disclose the formula used, do not invent an unlabeled ad hoc version), right-tail retention
+    (reuse src/analytics/sm_metrics.py's right_tail_retention() against the SM14 seq-355
+    reference trade list as the base).
+  - capital maps (historical + stressed): adapt runs/SMV2F_LEVERAGE_ROBUST/smv2f.py's bootstrap
+    machinery (idx_moving_block/idx_stationary index generators, same NB=2000/seed=20260808) --
+    but in the CAPITAL-NEEDED framing, not the leverage-frontier framing: for stress multiplier
+    m in {1.0, 1.25, 1.5, 2.0} (dollar P&L scaled by m, structure/win-rate held fixed, matching
+    this program's established DD-stress convention) and target DD-fraction thr in {10%, 15%,
+    20%, 25%, 30%}, bootstrap N=2000 paths of the m-scaled daily $ series under >=3 resampling
+    methods (at minimum moving-block L=5 and L=20, plus stationary mean=60, matching smv2f.py's
+    own method set for consistency), compute each path's max dollar drawdown (cumulative-$
+    peak-to-trough, NOT compounded return -- this is a fixed 1-contract product, not a levered
+    one), and report capital_needed = the 95th-percentile bootstrapped max-$-drawdown / thr.
+    Report the RANGE across methods (house convention: "quote the bootstrap band, not the
+    single-path max", per DRAWDOWN_FRONTIER.md's C-P3 disclosure) -- do not collapse to one
+    number. Separate tables for 1 NQ and 1 MNQ (do not assume MNQ = NQ/10, per owner addendum).
+
+outputs: src/ninjascript/SolarWaveOneContractNQ_Final.cs, src/ninjascript/SolarWaveOneContractMNQ_Final.cs,
+  runs/PRODUCTB_ONECONTRACT_FINAL/out/nt_parity_nq.csv, out/nt_parity_mnq.csv,
+  out/metric_battery_nq.csv, out/metric_battery_mnq.csv, out/capital_map_nq.csv,
+  out/capital_map_mnq.csv, REPORT.md (updates to NINJATRADER_PARITY.md, ONE_CONTRACT_FRONTIER.md,
+  LIVE_READINESS_CHECKLIST.md, CURRENT_TRUTH.md follow after this run's results are read, per
+  standing convention -- not written blind here).
+
+hard_constraints (repeated verbatim, non-negotiable): no live/paper order submission of any
+  kind -- Strategy Analyzer backtests only, on NT8's isolated Backtest account. Both Final
+  files ship and remain realtime-fail-closed. No alpha changes (EntryLevel/ExitLevel/weights/
+  clamp values are unchanged from the frozen seq-318 rule). LIVE_READINESS_CHECKLIST.md items
+  remain unchecked -- this run produces evidence for some of them (esp. #15 parameter logging)
+  but does not itself constitute passing the checklist, which per its own header is reserved
+  for a future owner-authorized Live Readiness / Activation Gate.
