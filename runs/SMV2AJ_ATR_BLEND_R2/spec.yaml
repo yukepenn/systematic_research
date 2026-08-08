@@ -1,0 +1,65 @@
+run_id: SMV2AJ_ATR_BLEND_R2
+date_frozen: 2026-08-08
+class: R2_CONFIRMATION   # the live lead from SMV2AI (seq 430-432) -- the first genuinely new
+  # Solar-core mechanism to pass a standalone AND-rule screen since the clamp-ceiling/clock-
+  # challenge series began closing out. Mirrors SMV2R->SMV2T's exact two-stage precedent and
+  # gate lettering/structure verbatim, for consistency and defensibility -- no relaxed bar for
+  # a lead that "looks good."
+seq: [433, 434, 435, 436, 437]
+parent: SMV2AI seq 431 (arm_BLEND_75: S=clamp(VolMult*(0.75*sigma460+0.25*sigma_ATR_eff),
+  40,1200 ticks), sigma_ATR_eff=ATR460/2.025539, 13-member VMS unchanged, clamp unchanged --
+  standalone Sharpe 0.746 vs 0.709 control, CDaR0.95 $25,183 vs $27,162, top10 retention
+  100.2%, portfolio (DAYONLY_DUAL6040) Sharpe 1.297 vs 1.264 champion, CDaR $14,004 vs
+  $14,322; old-regime screen (2006-2021) PASSED WITH MARGIN (net gap +$71,544 vs -$10k floor,
+  maxDD ratio 0.954 vs 1.25x ceiling) -- DISCLOSED PRIOR. Churn concern not confirmed
+  (flip-count +0.09% vs control). This R2 formalizes what SMV2AI's screen could not: bootstrap
+  significance (not just point comparison) and full chronology robustness.
+object_under_test: the DECISION object, not the raw core -- SOLAR_DUAL_HTF built on the ATR-
+  blended 13-member ensemble: T = clip(rha(10*mean(pending over 13 members using
+  sig_arm=0.75*sigma460+0.25*sigma_ATR_eff for the threshold)),+-10), then tilt x1.25 (HTF
+  agree) / c1_50 (short-halving) / x0.9026 / clip +-13 exactly as the incumbent transform
+  (verbatim reuse of runs/SMV2AD_VOLMULT_CEILING/src/common.py's dual_htf()); MNQ execution,
+  session flatten, dev. These statistics (DUAL-transformed AND portfolio-level) are UNSEEN --
+  SMV2AI's raw-target-level and portfolio-point-level results do not pre-commit them, matching
+  SMV2T's own discipline exactly (SMV2T seq 389's spec used identical language for this reason).
+
+gates_all_required (house replacement bar, NOT lowered):
+  A_dev: paired moving-block bootstrap (block=5 daily, B=10000, seed=20260808) on daily diffs
+    of the DUAL-transformed legs (arm_BLEND_75 vs the sigma460-only incumbent): P(dSharpe>0)
+    >= 0.85 AND P(dCDaR_0.95>0) >= 0.85.
+  B_chronology: LOYO dSharpe same sign >= 4/5 years AND fit 2022-24 -> eval 2025-26
+    point-positive (identical convention to every prior core-challenge R2 in this program).
+  C_old_regime: re-verify on the SM06 2006-2021 hist substrate, but at the DUAL-TRANSFORMED
+    object this time (SMV2AI's sub_432 screen used the pre-DUAL-transform reading per its own
+    disclosed methodology reuse of SMV2T's gate-C convention -- confirm which reading SMV2AI
+    actually used by reading its code before assuming, and if it differs from the DUAL-
+    transformed object, rebuild on the transformed object here): net >= incumbent - $10k
+    (E10-executor NQ-scaled convention as SMV2T/SMV2H2 gate B/C) AND maxDD <= 1.25x incumbent.
+    R_ATR_SELECTED=2.025539 reused verbatim from SMV2AI, NOT re-derived on hist (same
+    disclosed methodological choice SMV2AI made, for the same reason -- re-deriving on hist
+    would defeat the purpose of an out-of-sample structural check).
+  D_right_tail: top-10-day retention >= 1.00 on the DUAL-transformed dev legs (SMV2AI showed
+    100.2% on the raw/standalone core; the transformed object must not lose that -- this is
+    the SAME bar SMV2T applied, not relaxed for a lead that already looks promising).
+  E_portfolio: rebuild DAYONLY_DUAL6040 with the ATR-blended DUAL leg (same frozen vm/rerank
+    construction SMV2AI already used at the point level, re-derived scalars documented):
+    portfolio dSharpe AND dCDaR point-positive vs the incumbent champion curve (identical bar
+    to SMV2T gate E -- point-positive, not separately bootstrapped, matching precedent exactly).
+  F_seed_robustness (NEW, not in the SMV2T template -- added because this candidate's edge
+    traces to a continuous blend weight w=0.75 chosen from only 4 pre-registered grid points,
+    a thinner design-space justification than a categorical cohort-removal choice like
+    SMV2T's): re-run gate A's bootstrap at the two IMMEDIATELY ADJACENT untested blend weights
+    w=0.70 and w=0.80 (interpolating sig_arm the same way, no new grid search, just a local
+    sensitivity check) -- report whether P(dSharpe>0) and P(dCDaR>0) stay above 0.75 at both
+    neighbors (a softer bar than gate A's own 0.85, since this is a robustness check not a
+    promotion gate in itself). If w=0.75's result is a narrow, non-robust spike between two
+    much worse neighbors, DISCLOSE this explicitly even if gates A-E all formally pass --
+    per V4's standing rule that a fragile point in an untuned dimension is a red flag the
+    letter of a gate can miss.
+decision: pass ALL of A-E (F is disclosure-only, not a pass/fail gate, per the note above) ->
+  ATR-blended DUAL becomes CHAMPION-CANDIDATE core -> master rebuild + parity spec (Stage 4,
+  matching SMV2T's own decision structure) in a subsequent wave. Fail ANY of A-E -> incumbent
+  sigma460-only core retained; lead closed (recorded; no third bite without a new mechanism,
+  matching the house rule applied to every other closed core challenge this program has run).
+outputs: out/gate_A.csv, out/gate_B.csv, out/gate_C.csv, out/gate_D.csv, out/gate_E.csv,
+  out/gate_F_seed_robustness.csv, out/curves.csv, REPORT.md

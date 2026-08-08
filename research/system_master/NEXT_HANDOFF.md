@@ -1,7 +1,20 @@
-# NEXT_HANDOFF — exact continuation state (2026-08-08, after wave-12 close / wave-13 launch)
+# NEXT_HANDOFF — exact continuation state (2026-08-08, after wave-13 close / wave-14 launch)
 
 _Written per V4.1 §0. If this session ends, the next invocation resumes HERE after the §4
-repository-truth ritual. HEAD at write time: wave-13 specs frozen (see git log), pushed._
+repository-truth ritual. HEAD at write time: wave-14 spec frozen (see git log), pushed._
+
+## *** LIVE LEAD, TOP PRIORITY: arm_BLEND_75 (SMV2AI seq 431, R2 confirmation SMV2AJ in flight) ***
+First genuinely new Solar-core mechanism to pass a standalone AND-rule screen since the clamp/
+clock-challenge series closed out. S=clamp(VolMult*(0.75*sigma460+0.25*sigma_ATR_eff),40,1200t),
+sigma_ATR_eff=ATR460/2.025539. Standalone Sharpe 0.746 vs 0.709 control, CDaR $25,183 vs
+$27,162, portfolio Sharpe 1.297 vs 1.264 champion, old-regime screen passed WITH MARGIN
+(net gap +$71.5k vs -$10k floor). If SMV2AJ's R2 gates A-E all pass, this becomes CHAMPION-
+CANDIDATE core -> master rebuild + parity spec is the natural Stage-4 follow-up.
+
+## Wave-13 close (seq 426-432, both red-teamed, ingested at 637478b)
+SMV2AH_DAY_CIRCUIT_BREAKER: KILLED, 0/16 cells (same-day loss-reactivity is anti-edge, third
+time-scale confirmed after per-trade/cross-day — directly answered the owner's stop-loss
+question). SMV2AI_ATR_BLEND: see live lead above.
 
 ## Wave-12 close (seq 420-425, both red-teamed, ingested at 8f0175e)
 SMV2AF_1MIN_RESCALE_R2: **1-minute Solar CLOSED FOR GOOD** (Gate A/bootstrap passed thinly,
@@ -9,10 +22,7 @@ Gate B/LOYO FAILED 3/5 years, Gate C/old-regime — built on a native 1m 2006-20
 that turned out to exist — showed the construction losing money, Gate D confirmed high
 correlation/no diversification value). SMV2AG_ADAPTIVE_CLAMP: CONFIRMED-NOT-BENEFICIAL,
 CLOSED (0/6 cells; same Sharpe-for-CDaR tradeoff as the fixed-ceiling test). Both clamp-
-ceiling mechanisms (fixed-raise, adaptive-widen) now exhausted. Mid-wave, owner asked about
-stop-loss/day-loss-limit mechanisms — answered directly (audit: neither deployed strategy has
-one in code; every classic exit/stop idea tested here is dead; loss-reactive cooldowns are
-ANTI-EDGE per SM02B; genuine confirmed gap: a same-day circuit breaker was never tested).
+ceiling mechanisms (fixed-raise, adaptive-widen) now exhausted.
 
 ## Owner pivot (2026-08-08, mid-session)
 Owner flagged the smoothness/ML diagnostic run (waves 6-10) as having drifted from the actual
@@ -27,34 +37,27 @@ pause — resume auto-chaining per V4.1 §0, do NOT stop at close-out, do NOT as
 launching the next wave unless genuinely blocked.
 
 ## In flight RIGHT NOW
-1. **Wave-13 workflow**: specs frozen before any read (see git log for the freeze commit):
-   - **SMV2AH_DAY_CIRCUIT_BREAKER** (seq 426-429): tests a genuinely new mechanism class — a
-     PORTFOLIO-LEVEL, SAME-DAY running-P&L circuit breaker (halt for the rest of the session
-     once today's cumulative MTM crosses a calibrated threshold), structurally different from
-     every prior exit/stop idea (all of which were per-trade adverse-excursion stops, all DEAD
-     because Solar's reversal logic already acts as one) and from SM02B's cross-day
-     loss-streak throttle (found ANTI-EDGE). Requires building a genuinely new artifact — an
-     intraday bar-by-bar cumulative MTM series — with a mandatory reconciliation check against
-     existing EOD curves before any breaker logic runs. 2 halt modes (FREEZE vs FLATTEN) × 4
-     percentile-calibrated thresholds × 2 objects (Solar-only, DAYONLY_DUAL6040 portfolio),
-     each cell must beat a matched-placebo (random-bar halt, same trigger count) not just
-     "no breaker" — mirrors SMV2N/V/Z/AA's established policy-test discipline. Disclosed prior
-     risk (not to bias the test): every loss-reactive idea tested in this program so far has
-     been anti-edge; this spec is honestly designed to find out if same-day is different, not
-     to confirm either outcome.
-   - **SMV2AI_ATR_BLEND** (seq 430-432): expansion-pass candidate #3. sigma460 is close-only
-     and structurally blind to intrabar wicks; tests replacing/blending it with a rescaled
-     ATR (true-range) estimator (measure the ATR/sigma460 scale ratio first, SMV2AE-style
-     discipline, then arm_REPLACE + 3 blend weights). Same AND-rule as every clamp/cohort test
-     this wave-class. Different axis from everything closed so far — changes what sigma
-     MEASURES, not the clock or the clamp ceiling.
-   Both get independent red-team verification. On completion: ingest, correct any red-team-
-   flagged issues in the run REPORTs (never spec.yaml), update registry (seq 426-432) +
-   CURRENT_TRUTH/INDICATOR_FRONTIER, commit+push, then immediately freeze the next wave (volume
-   bars — expansion-pass EVI rank #2, a new clock mechanism — is the natural next pick if both
-   wave-13 specs close cleanly; also revisit SM14's missing realtime-fail-closed code guard,
-   flagged this wave as a risk-hygiene item, not yet actioned). Auto-chain — do not stop at
-   close-out, do not ask before launching the next wave unless genuinely blocked.
+1. **Wave-14 workflow**: spec frozen before any read (see git log for the freeze commit):
+   - **SMV2AJ_ATR_BLEND_R2** (seq 433-437): R2_CONFIRMATION of SMV2AI's arm_BLEND_75 lead,
+     mirroring SMV2R->SMV2T's exact two-stage gate structure/lettering (A_dev bootstrap 0.85
+     bar, B_chronology LOYO>=4/5, C_old_regime re-verified at the DUAL-transformed object,
+     D_right_tail >=100% retention, E_portfolio point-positive dSharpe/dCDaR) plus one NEW
+     gate F (seed/neighbor-weight robustness at w=0.70/0.80, disclosure-only not pass/fail,
+     added because w=0.75 came from only a 4-point grid — thinner justification than a
+     categorical choice, so a local sensitivity check is warranted before treating it as
+     settled). Object under test is the DUAL-transformed decision object (HTF tilt applied),
+     NOT the raw target SMV2AI screened — these statistics are unseen. Pass ALL of A-E ->
+     CHAMPION-CANDIDATE core -> master rebuild + parity spec next; fail ANY -> incumbent
+     retained, lead closed same as every other core challenge in this program (no double
+     standard for a lead that looks good).
+   Gets independent red-team verification. On completion: ingest, correct any red-team-flagged
+   issues in the run REPORT (never spec.yaml), update registry (seq 433-437) + CURRENT_TRUTH/
+   INDICATOR_FRONTIER, commit+push. If SMV2AJ PASSES: this is the single highest-priority next
+   step (master rebuild + NT8 parity spec) and should preempt other queued ideas. If it FAILS:
+   fall back to volume bars (expansion-pass EVI rank #2, a new clock mechanism) as the next
+   pick; also SM14's missing realtime-fail-closed code guard remains a flagged, un-actioned
+   risk-hygiene item. Auto-chain — do not stop at close-out, do not ask before launching the
+   next wave unless genuinely blocked.
 2. **DONE**: ES/RTY/YM 1-minute cross-market context substrates all exported, verified, and
    committed (SM1M_ES/RTY/YM_SUBSTRATE, pushed at 3151800). Instrument names resolved cleanly
    as ESU6/RTYU6/YMU6. Engine-3 slate 4 (cross-market lead-lag, ranked candidates in
