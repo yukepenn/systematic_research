@@ -1,0 +1,120 @@
+W8-2 B-FADE — release-day fade. HONESTY CLAUSE: every performance table below
+is IN-SAMPLE CHARACTERIZATION (fade direction was observed on this same dev
+sample in W7-3). NOT confirmation. No promotion from this wave.
+
+[FACT] Calendar rows: 145 | range 2022-01-07 -> 2026-07-29
+[FACT] events: {'NFP': 54, 'CPI': 54, 'FOMC': 37} | times: {'08:30': 108, '14:00': 37}
+
+=== CONFIRMATION SAMPLE SIZE (pre-2022 08:30 releases in calendar): 0 ===
+[FACT] The calendar STARTS 2022-01-07 — it does NOT extend to 2005-2021.
+[DEPENDENCY] The frozen confirmation plan (pre-2022 minute data 2005-2021)
+  therefore needs TWO inputs, not one: (1) SWMinuteExport_v1 1-min data
+  2005+ (already in the blocked queue), AND (2) a historical 08:30 release
+  calendar 2005-2021 (NFP + CPI dates from bls.gov) — NOT yet built.
+[INFERENCE] Expected pre-2022 sample if built: ~12 NFP + ~12 CPI per year
+  x 17 years (2005-2021) ~ 408 release days (~4x the dev n) — an estimate,
+  not a count; the actual calendar must be sourced from BLS archives.
+
+[FACT] Dev-window calendar days: 08:30-release 104 (types: {'CPI': 52, 'NFP': 52}), FOMC 14:00 35, FOMC-only 34, same-day NFP+CPI 0
+
+[FACT] CSV rows read 540232, kept 519833 (< 2026-06-01), range 2022-01-02 18:03:00 -> 2026-05-31 23:57:00
+[FACT] Days simulated: 1134 | skipped: {'no_pre': 9, 'no_entry': 2, 'no_exit': 1, 'zero_sig': 1}
+[FACT] Group counts: {'placebo': 998, 'release': 102, 'fomc_only': 34}
+[FACT] Pre-release bar end-stamp distribution (top): {'08:27': 1134}
+
+==============================================================================
+POOLED fade by group x horizon — IN-SAMPLE CHARACTERIZATION (honesty clause)
+(net C1=2.872t; day-clustered 95% CI, 1000 reps, seed 20260808)
+==============================================================================
+     group    h     n  netC1_t    CI_lo    CI_hi  gross_t   win%
+   release   15   102  +47.255   -5.366  +91.983  +50.127  58.8
+   release   30   102  +42.001  -22.783 +107.474  +44.873  55.9
+   release   60   102  +98.991  +12.155 +183.797 +101.863  56.9
+   placebo   15   998  -15.076  -30.756   -0.283  -12.204  47.0
+   placebo   30   998   -8.181  -29.714  +11.981   -5.309  49.7
+   placebo   60   998  -17.884  -44.008   +6.228  -15.012  48.6
+ fomc_only   15    34  +17.540  -41.112  +72.309  +20.412  58.8
+ fomc_only   30    34  +12.040  -47.140  +74.835  +14.912  50.0
+ fomc_only   60    34  -24.343 -127.773  +76.720  -21.471  47.1
+
+==============================================================================
+RECONCILIATION vs W7-3 continuation (w7e1_minute_summary.csv, pooled release):
+expected fade_net(h) = -cont_net(h) - 2*C1  (flipped sign minus double friction)
+==============================================================================
+     release h=15: W7 cont_net=  -52.999 (n=102) -> expected fade=  +47.255 | this run fade=  +47.255 (n=102) | diff=-6.39e-14 OK
+     release h=30: W7 cont_net=  -47.745 (n=102) -> expected fade=  +42.001 | this run fade=  +42.001 (n=102) | diff=-2.13e-14 OK
+     release h=60: W7 cont_net= -104.735 (n=102) -> expected fade=  +98.991 | this run fade=  +98.991 (n=102) | diff=+8.53e-14 OK
+     placebo h=15: W7 cont_net=   +9.332 (n=998) -> expected fade=  -15.076 | this run fade=  -15.076 (n=998) | diff=-1.78e-14 OK
+     placebo h=30: W7 cont_net=   +2.437 (n=998) -> expected fade=   -8.181 | this run fade=   -8.181 (n=998) | diff=-1.24e-14 OK
+     placebo h=60: W7 cont_net=  +12.140 (n=998) -> expected fade=  -17.884 | this run fade=  -17.884 (n=998) | diff=-7.11e-15 OK
+   fomc_only h=15: W7 cont_net=  -23.284 (n=34) -> expected fade=  +17.540 | this run fade=  +17.540 (n=34) | diff=-1.07e-14 OK
+   fomc_only h=30: W7 cont_net=  -17.784 (n=34) -> expected fade=  +12.040 | this run fade=  +12.040 (n=34) | diff=-1.07e-14 OK
+   fomc_only h=60: W7 cont_net=  +18.599 (n=34) -> expected fade=  -24.343 | this run fade=  -24.343 (n=34) | diff=-3.55e-15 OK
+RECONCILIATION: PASS — exact mirror of W7-3 minus double friction
+
+==============================================================================
+BY EVENT TYPE (release days) — IN-SAMPLE CHARACTERIZATION
+==============================================================================
+      type    h    n  netC1_t    CI_lo    CI_hi   win%
+       CPI   15   52  +23.493  -32.997  +79.845  59.6
+       CPI   30   52  +21.109  -57.644 +111.264  51.9
+       CPI   60   52  +39.263  -66.416 +148.422  51.9
+       NFP   15   50  +71.968   -3.641 +144.395  58.0
+       NFP   30   50  +63.728  -37.742 +164.068  60.0
+       NFP   60   50 +161.108  +30.796 +299.880  62.0
+
+==============================================================================
+BY YEAR (release fade, placebo alongside) — IN-SAMPLE CHARACTERIZATION
+==============================================================================
+  year    h    n  netC1_t    CI_lo    CI_hi   win%   | placebo:    n  netC1_t
+  2022   15   24 +106.420   +2.385 +203.426  79.2   |  225  -22.801
+  2022   30   24  +38.211  -91.800 +174.770  58.3   |  225  -27.259
+  2022   60   24  +98.628  -45.949 +235.814  58.3   |  225  -38.281
+  2023   15   23  +15.563  -84.573 +117.089  47.8   |  226  -13.297
+  2023   30   23  +43.258  -86.363 +163.064  52.2   |  226   -8.173
+  2023   60   23  +75.867  -55.270 +215.218  56.5   |  226  -33.301
+  2024   15   24  +72.420   -1.425 +148.297  70.8   |  228  -19.276
+  2024   30   24  +78.378  -51.592 +197.473  58.3   |  228  -21.898
+  2024   60   24 +135.545  -73.700 +352.279  58.3   |  228  -34.802
+  2025   15   22   -0.099 -114.577 +113.588  40.9   |  226  -21.115
+  2025   30   22  -54.281 -207.607  +91.964  45.5   |  226  +15.955
+  2025   60   22  -49.463 -237.104 +153.479  45.5   |  226  +29.323
+  2026   15    9  +19.128 -102.372 +167.731  44.4   |   93  +24.257
+  2026   30    9 +187.239  +13.261 +397.175  77.8   |   93  +12.934
+  2026   60    9 +424.461  +96.570 +742.131  77.8   |   93   -4.313
+
+==============================================================================
+EQUITY PATH / DRAWDOWN / WORST TRADE / CONCENTRATION (release fade)
+IN-SAMPLE CHARACTERIZATION — $ figures at 1 NQ = $5/tick, context only
+==============================================================================
+
+  h=15min: total net +4820.1t ($+24,100 at 1 NQ) over n=102 trades
+    max drawdown -1208.2t ($-6,041), trough 2025-02-07
+    worst trade -672.9t on 2025-08-01 (NFP) | best +764.1t on 2022-11-04
+    top-5 winners sum +2633.6t = 54.6% of total net, 21.5% of gross wins
+    top-5 dates: 2022-11-04;2025-04-04;2026-05-08;2023-03-10;2025-03-07
+    bottom-5 sum -2452.4t (2025-08-01;2022-05-06;2023-01-12;2024-06-12;2025-01-10)
+
+  h=30min: total net +4284.1t ($+21,420 at 1 NQ) over n=102 trades
+    max drawdown -2742.2t ($-13,711), trough 2025-11-20
+    worst trade -837.9t on 2022-05-06 (NFP) | best +919.1t on 2026-05-08
+    top-5 winners sum +3540.6t = 82.6% of total net, 21.9% of gross wins
+    top-5 dates: 2026-05-08;2024-09-06;2022-02-10;2025-12-16;2023-02-03
+    bottom-5 sum -3272.4t (2022-05-06;2025-08-01;2025-01-10;2023-01-12;2025-04-10)
+
+  h=60min: total net +10097.1t ($+50,485 at 1 NQ) over n=102 trades
+    max drawdown -2733.8t ($-13,669), trough 2025-08-12
+    worst trade -828.9t on 2025-05-13 (CPI) | best +1365.1t on 2026-02-11
+    top-5 winners sum +5363.6t = 53.1% of total net, 22.5% of gross wins
+    top-5 dates: 2026-02-11;2024-09-06;2024-09-11;2026-05-08;2025-04-04
+    bottom-5 sum -3433.4t (2025-05-13;2022-06-10;2025-01-10;2024-08-02;2025-04-10)
+
+[FACT] Artifacts written to research/scalping_lab/artifacts/w8_bfade/:
+  w8bfade_trades.csv, w8bfade_summary.csv, w8bfade_equity.csv,
+  w8bfade_concentration.csv, stdout.txt
+
+VERDICT SCOPE (frozen): CHARACTERIZATION ONLY — no promotion from this wave;
+primary out-of-sample test = pre-2022 minute data (pending SWMinuteExport_v1
+AND a 2005-2021 historical 08:30 release calendar, see dependency above).
+
+W8BFADE DONE

@@ -1,0 +1,154 @@
+[FACT] fills loaded: 38316 (dropped 1457 fills at/after 2026-06-01 guard)
+[FACT] flat-to-flat episodes: 5564; open (unclosed) at data end: 0 -> excluded
+[FACT] all-session verification vs net_v2 (1139 sessions <= 2026-05-31):
+  sum recon $112,814.60 vs sum net_v2 $112,814.60 | max |diff| $0.0000 | sessions |diff|>$1: 0
+[FACT] episodes spanning a session boundary: 0 (asserted) -> no position-carry mismatch to quantify
+[FACT] substrate sessions: 37 (2025-08-14 .. 2026-05-20)
+[FACT] per-session comparison on the 37 substrate dates (recon vs net_v2, $):
+             net_v2  recon_usd  diff
+sess                                
+2025-08-14  -1771.7    -1771.7   0.0
+2025-08-20   1531.8     1531.8   0.0
+2025-09-01  -1033.2    -1033.2   0.0
+2025-09-02   3565.4     3565.4   0.0
+2025-09-05   2130.7     2130.7   0.0
+2025-09-10    195.2      195.2   0.0
+2025-09-11     71.7       71.7   0.0
+2025-09-22   -659.3     -659.3  -0.0
+2025-10-02   -611.1     -611.1   0.0
+2025-10-09    -96.8      -96.8   0.0
+2025-10-27    632.6      632.6   0.0
+2025-10-29  -2048.2    -2048.2   0.0
+2025-11-10   -587.0     -587.0   0.0
+2025-11-17   -846.0     -846.0   0.0
+2025-11-24   2713.9     2713.9   0.0
+2025-11-28     62.7       62.7  -0.0
+2025-12-09  -1280.6    -1280.6  -0.0
+2025-12-22   -373.7     -373.7   0.0
+2026-01-23   -173.1     -173.1  -0.0
+2026-02-06  10747.5    10747.5   0.0
+2026-02-11  -1168.6    -1168.6   0.0
+2026-02-18   -580.4     -580.4  -0.0
+2026-02-20  -1940.1    -1940.1   0.0
+2026-02-23    672.9      672.9   0.0
+2026-03-03   2164.9     2164.9  -0.0
+2026-03-12  -1862.4    -1862.4   0.0
+2026-03-17   -525.9     -525.9   0.0
+2026-03-20   3921.8     3921.8  -0.0
+2026-04-06  -4046.3    -4046.3   0.0
+2026-04-09   -406.5     -406.5   0.0
+2026-04-17    730.5      730.5   0.0
+2026-04-23  -1881.5    -1881.5   0.0
+2026-04-28    721.7      721.7   0.0
+2026-05-06  -1566.7    -1566.7   0.0
+2026-05-11  -3596.0    -3596.0   0.0
+2026-05-19  -5026.4    -5026.4   0.0
+2026-05-20   -716.4     -716.4  -0.0
+[FACT] trades on the 37 substrate sessions: 183 (mean 4.95/session) | mean pnl -3.21t | win rate 0.246 | median dur 102 min
+[FACT] entries matched to grid :00 second exactly: 183/183; trades with any missing feature (first-60s entries / off-grid): 3 -> dropped from feature analyses
+[FACT] feature sample: 180 trades, 37 sessions | mean pnl -4.26t | win rate 0.239
+
+[IN-SAMPLE CHARACTERIZATION] feature quintile -> mean trade pnl (t/1NQ-equiv), win rate
+(quintile edges fixed on the pooled 37-session sample; CIs = day-clustered bootstrap, 1000 reps, seed 20260808)
+  spread60        Q5-Q1    +45.5t  CI[   -65.2,  +225.2] | spearman -0.216 CI[-0.333,-0.089]
+  sflow60         Q5-Q1     -7.1t  CI[   -78.9,   +61.5] | spearman +0.008 CI[-0.148,+0.150]
+  upd60           Q5-Q1    -18.2t  CI[  -102.4,   +67.5] | spearman -0.147 CI[-0.290,-0.009]
+  rv60            Q5-Q1    -63.4t  CI[  -113.8,   -27.8] | spearman -0.255 CI[-0.365,-0.129]  <- CI excludes 0
+  eff60           Q5-Q1     -1.4t  CI[   -47.3,   +50.6] | spearman -0.018 CI[-0.142,+0.103]
+  dist_hi         Q5-Q1    -25.6t  CI[   -74.3,   +41.6] | spearman -0.264 CI[-0.380,-0.133]
+  dist_lo         Q5-Q1    -50.7t  CI[  -137.2,   +36.3] | spearman -0.002 CI[-0.136,+0.141]
+  mins_open       Q5-Q1    -62.6t  CI[  -208.8,   +54.2] | spearman +0.029 CI[-0.128,+0.176]
+  SUPPLEMENTARY sflow60_signed  Q5-Q1    +26.7t  CI[   -36.6,  +100.9] | spearman -0.024 CI[-0.167,+0.121]
+
+[IN-SAMPLE CHARACTERIZATION] full quintile table:
+       feature        q   lo_edge   hi_edge   n  mean_pnl_t    ci_lo   ci_hi  win_rate  mean_maxpos_nq
+      spread60        1     1.599     2.363  36      -8.785  -29.143  19.004     0.194           0.269
+      spread60        2     2.363     2.903  36       5.001  -33.698  49.906     0.306           0.319
+      spread60        3     2.903     3.473  36       5.362  -41.691  67.739     0.222           0.258
+      spread60        4     3.473     4.590  36     -59.578 -122.134   4.891     0.167           0.339
+      spread60        5     4.590    13.917  36      36.703  -61.163 226.396     0.306           0.336
+      spread60    Q5-Q1       NaN       NaN 180      45.488  -65.160 225.198       NaN             NaN
+      spread60 spearman       NaN       NaN 180      -0.216   -0.333  -0.089       NaN             NaN
+       sflow60        1  -196.001   -27.200  36      -3.066  -32.984  41.040     0.278           0.369
+       sflow60        2   -27.200    -7.000  39     -36.682  -78.948   8.685     0.128           0.287
+       sflow60        3    -7.000     4.000  34      32.581  -70.513 215.691     0.176           0.318
+       sflow60        4     4.000    18.000  38       0.033  -61.420  66.670     0.395           0.282
+       sflow60        5    18.000   195.000  33     -10.143  -60.749  43.545     0.212           0.267
+       sflow60    Q5-Q1       NaN       NaN 180      -7.077  -78.908  61.464       NaN             NaN
+       sflow60 spearman       NaN       NaN 180       0.008   -0.148   0.150       NaN             NaN
+         upd60        1   198.999  1582.000  36      -0.876  -60.680  68.104     0.306           0.319
+         upd60        2  1582.000  3368.200  36      -2.437  -57.933  76.612     0.278           0.289
+         upd60        3  3368.200 10384.000  36      24.008  -72.523 196.205     0.167           0.275
+         upd60        4 10384.000 21920.000  36     -22.937  -41.117   0.874     0.222           0.258
+         upd60        5 21920.000 67953.000  36     -19.056  -59.800  33.150     0.222           0.381
+         upd60    Q5-Q1       NaN       NaN 180     -18.179 -102.396  67.537       NaN             NaN
+         upd60 spearman       NaN       NaN 180      -0.147   -0.290  -0.009       NaN             NaN
+          rv60        1     0.707     2.176  36       4.499  -28.121  50.631     0.250           0.269
+          rv60        2     2.176     3.270  36     -19.726  -98.259  57.002     0.194           0.275
+          rv60        3     3.270     5.031  36       8.654  -27.839  59.543     0.389           0.289
+          rv60        4     5.031     6.972  36      44.159  -59.052 216.699     0.194           0.381
+          rv60        5     6.972    21.703  36     -58.884  -79.897 -33.155     0.167           0.308
+          rv60    Q5-Q1       NaN       NaN 180     -63.383 -113.777 -27.798       NaN             NaN
+          rv60 spearman       NaN       NaN 180      -0.255   -0.365  -0.129       NaN             NaN
+         eff60        1    -0.001     0.048  36      -2.895  -42.036  34.363     0.306           0.308
+         eff60        2     0.048     0.097  36      22.582  -64.192 169.612     0.278           0.292
+         eff60        3     0.097     0.139  36     -39.893 -102.326  16.582     0.167           0.339
+         eff60        4     0.139     0.203  36       3.159  -53.359  75.717     0.167           0.303
+         eff60        5     0.203     0.459  36      -4.250  -40.137  37.316     0.278           0.281
+         eff60    Q5-Q1       NaN       NaN 180      -1.355  -47.300  50.556       NaN             NaN
+         eff60 spearman       NaN       NaN 180      -0.018   -0.142   0.103       NaN             NaN
+       dist_hi        1     0.999    94.000  36     -21.044  -79.154  21.830     0.444           0.264
+       dist_hi        2    94.000   225.000  37      -3.660  -32.698  31.620     0.243           0.281
+       dist_hi        3   225.000   384.500  36      83.701  -25.269 276.287     0.222           0.358
+       dist_hi        4   384.500   611.300  35     -34.518  -80.658  36.098     0.143           0.311
+       dist_hi        5   611.300  1421.000  36     -46.632  -88.319  -6.910     0.139           0.308
+       dist_hi    Q5-Q1       NaN       NaN 180     -25.588  -74.312  41.570       NaN             NaN
+       dist_hi spearman       NaN       NaN 180      -0.264   -0.380  -0.133       NaN             NaN
+       dist_lo        1     4.499   110.300  36      17.645  -58.358 100.282     0.306           0.389
+       dist_lo        2   110.300   321.700  36     -35.039  -89.540  19.714     0.167           0.261
+       dist_lo        3   321.700   552.400  36     -21.119  -53.617   8.549     0.278           0.342
+       dist_lo        4   552.400   922.600  36      50.287  -33.304 210.291     0.250           0.283
+       dist_lo        5   922.600  1873.500  36     -33.071  -51.166  -7.113     0.194           0.247
+       dist_lo    Q5-Q1       NaN       NaN 180     -50.716 -137.172  36.311       NaN             NaN
+       dist_lo spearman       NaN       NaN 180      -0.002   -0.136   0.141       NaN             NaN
+     mins_open        1     5.999   138.000  37      41.929  -66.370 195.972     0.351           0.341
+     mins_open        2   138.000   649.200  35       9.945  -53.702 102.468     0.200           0.323
+     mins_open        3   649.200   951.000  38     -41.476  -73.372 -11.937     0.211           0.297
+     mins_open        4   951.000  1092.000  35     -10.426  -48.359  45.633     0.229           0.323
+     mins_open        5  1092.000  1356.000  35     -20.718  -44.943  16.598     0.200           0.237
+     mins_open    Q5-Q1       NaN       NaN 180     -62.647 -208.821  54.247       NaN             NaN
+     mins_open spearman       NaN       NaN 180       0.029   -0.128   0.176       NaN             NaN
+sflow60_signed        1  -166.001   -20.000  37     -17.306  -54.389  24.719     0.243           0.311
+sflow60_signed        2   -20.000    -2.400  35     -18.426  -70.069  22.694     0.229           0.277
+sflow60_signed        3    -2.400     8.000  39      40.856  -50.155 180.763     0.179           0.285
+sflow60_signed        4     8.000    23.000  35     -39.810 -104.064  21.205     0.257           0.309
+sflow60_signed        5    23.000   196.000  34       9.368  -31.298  68.668     0.294           0.344
+sflow60_signed    Q5-Q1       NaN       NaN 180      26.674  -36.618 100.887       NaN             NaN
+sflow60_signed spearman       NaN       NaN 180      -0.024   -0.167   0.121       NaN             NaN
+
+[IN-SAMPLE CHARACTERIZATION] L2 logistic win/loss, chronological session folds (expanding train, scaler fit on train only, C=1.0 fixed - no tuning)
+  fold 2: train n=36 test n=26 (2025-10-02..2025-11-28) AUC=0.481
+  fold 3: train n=62 test n=37 (2025-12-09..2026-02-20) AUC=0.393
+  fold 4: train n=99 test n=41 (2026-02-23..2026-04-09) AUC=0.417
+  fold 5: train n=140 test n=40 (2026-04-17..2026-05-20) AUC=0.538
+  pooled out-of-fold: n=144 base win rate 0.236
+  AUC (pooled OOF) = 0.447  day-clustered CI [0.362,0.530]
+  top-decile (n=14) win rate 0.286, lift +0.050  CI [-0.174,+0.258]
+  top-quintile (n=29) win rate 0.172, lift -0.064  CI [-0.158,+0.099]  (supplementary)
+
+[IN-SAMPLE CHARACTERIZATION] full-sample standardized logistic coefficients (descriptive only):
+rv60        -0.501
+dist_hi     -0.385
+upd60        0.315
+spread60     0.215
+eff60       -0.179
+sflow60     -0.142
+mins_open   -0.098
+dist_lo      0.049
+
+[FACT] artifacts written to research/scalping_lab/artifacts/w8_roleb/
+
+[FACT] ADDENDUM context (from trades_all_sessions.csv / verify_sessions37.csv):
+  all 1139 sessions: 5564 trades, mean pnl +4.06t, win rate 0.233, total $112,814.60
+  37 substrate sessions: net_v2 total $-2,934.60 (14 positive sessions of 37)
+  37-session trades: 183, mean pnl -3.21t, win rate 0.246, median |pnl| 38.2t, min -567t max 2150t

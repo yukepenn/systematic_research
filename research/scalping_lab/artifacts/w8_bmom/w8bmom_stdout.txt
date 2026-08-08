@@ -1,0 +1,69 @@
+[load] bars rows total=540232, kept (<= 2026-05-31)=519833, dropped sealed-holdout rows=20399
+[load] bar time range kept: 2022-01-02 18:03:00 .. 2026-05-31 23:57:00
+[load] RTH bars=145279, RTH sessions=1136 (every session's first RTH bar END-stamped 09:33; its open = 09:30 open)
+[ledger] daily_v1_v2.csv: rows=1183, kept <= 2026-05-31: 1139; column net_v1 (v1 frozen research champion)
+[leakage] PASSED: 300 random (date,slot) manual recomputations, per-slot first-14-obs NaN check, and same-day perturbation test (day 2024-03-15)
+
+===== w14_FROZEN =====
+sessions total=1136, excluded (no band history)=14 [2022-01-03..2022-01-20], included=1122 [2022-01-21..2026-05-29]
+early-closeout sessions (last bar < 15:57)=40, NaN-band decision bars after exclusion=58
+trades=1333, trades/day=1.188, zero-trade days=84
+exits: {'closeout': 1038, 'flip': 295}   sides: {'long': 650, 'short': 683}   net C1 by side (t): {long: +42054.2, short: +21770.4}
+[C1] net/trade=+47.880t (day-clustered CI [+13.059, +85.320]), PF(trade)=1.2148, PF(daily)=1.2605, win=0.5116
+[C1] total=+63824.6t ($+319,123), mean/day=$+284.42 (CI95 [+78.35, +500.06]), annSharpe=1.262, maxDD=$43,325, top5 share=29.89%
+[C2 stress] net/trade=+45.880t (day-clustered CI [+11.059, +83.320]), PF(trade)=1.2049, PF(daily)=1.2482, win=0.5086
+[C2 stress] total=+61158.6t ($+305,793), mean/day=$+272.54 (CI95 [+66.34, +488.34]), annSharpe=1.209, maxDD=$43,485, top5 share=31.18%
+yearly (C1):
+      sessions  trades  trades_per_day  net_c1_ticks  net_c1_usd  net_per_trade_ticks  pf_trade_level  win_rate
+2022   244.000 299.000           1.225    19,973.272  99,866.360               66.800           1.265     0.545
+2023   257.000 313.000           1.218     5,780.064  28,900.320               18.467           1.108     0.492
+2024   259.000 310.000           1.197    10,858.680  54,293.400               35.028           1.182     0.481
+2025   257.000 283.000           1.101    22,094.224 110,471.120               78.071           1.303     0.530
+2026   105.000 128.000           1.219     5,118.384  25,591.920               39.987           1.143     0.516
+corr vs Solar net_v1: rho_full=+0.346530 (N=1122), rho_losing=+0.045930 (N=661 Solar-losing days)
+
+===== w10_neighbor_REPORTED_NEVER_SELECTED =====
+sessions total=1136, excluded (no band history)=10 [2022-01-03..2022-01-14], included=1126 [2022-01-17..2026-05-29]
+early-closeout sessions (last bar < 15:57)=41, NaN-band decision bars after exclusion=0
+trades=1373, trades/day=1.219, zero-trade days=76
+exits: {'closeout': 1050, 'flip': 323}   sides: {'long': 683, 'short': 690}   net C1 by side (t): {long: +33628.4, short: +21438.3}
+[C1] net/trade=+40.107t (day-clustered CI [+5.675, +76.019]), PF(trade)=1.1786, PF(daily)=1.2188, win=0.5091
+[C1] total=+55066.7t ($+275,334), mean/day=$+244.52 (CI95 [+35.04, +462.75]), annSharpe=1.076, maxDD=$49,665, top5 share=34.65%
+[C2 stress] net/trade=+38.107t (day-clustered CI [+3.675, +74.019]), PF(trade)=1.1690, PF(daily)=1.2067, win=0.5069
+[C2 stress] total=+52320.7t ($+261,604), mean/day=$+232.33 (CI95 [+22.69, +450.56]), annSharpe=1.022, maxDD=$49,815, top5 share=36.44%
+yearly (C1):
+      sessions  trades  trades_per_day  net_c1_ticks  net_c1_usd  net_per_trade_ticks  pf_trade_level  win_rate
+2022   248.000 317.000           1.278     9,372.576  46,862.880               29.566           1.109     0.524
+2023   257.000 319.000           1.241     1,929.832   9,649.160                6.050           1.034     0.476
+2024   259.000 316.000           1.220    11,405.448  57,027.240               36.093           1.191     0.487
+2025   257.000 292.000           1.136    25,766.376 128,831.880               88.241           1.357     0.548
+2026   105.000 129.000           1.229     6,592.512  32,962.560               51.105           1.193     0.519
+corr vs Solar net_v1: rho_full=+0.349325 (N=1126), rho_losing=+0.057370 (N=665 Solar-losing days)
+
+===== w20_neighbor_REPORTED_NEVER_SELECTED =====
+sessions total=1136, excluded (no band history)=20 [2022-01-03..2022-01-28], included=1116 [2022-01-31..2026-05-29]
+early-closeout sessions (last bar < 15:57)=40, NaN-band decision bars after exclusion=58
+trades=1327, trades/day=1.189, zero-trade days=87
+exits: {'closeout': 1029, 'flip': 298}   sides: {'long': 658, 'short': 669}   net C1 by side (t): {long: +40779.2, short: +20500.6}
+[C1] net/trade=+46.179t (day-clustered CI [+10.444, +83.664]), PF(trade)=1.2067, PF(daily)=1.2485, win=0.5087
+[C1] total=+61279.9t ($+306,399), mean/day=$+274.55 (CI95 [+63.20, +489.47]), annSharpe=1.204, maxDD=$43,429, top5 share=31.61%
+[C2 stress] net/trade=+44.179t (day-clustered CI [+8.444, +81.664]), PF(trade)=1.1969, PF(daily)=1.2363, win=0.5049
+[C2 stress] total=+58625.9t ($+293,129), mean/day=$+262.66 (CI95 [+51.10, +477.62]), annSharpe=1.151, maxDD=$43,599, top5 share=33.02%
+yearly (C1):
+      sessions  trades  trades_per_day  net_c1_ticks  net_c1_usd  net_per_trade_ticks  pf_trade_level  win_rate
+2022   238.000 287.000           1.206    20,492.736 102,463.680               71.403           1.293     0.537
+2023   257.000 311.000           1.210     5,672.808  28,364.040               18.241           1.108     0.495
+2024   259.000 313.000           1.208    10,585.064  52,925.320               33.818           1.172     0.489
+2025   257.000 284.000           1.105    21,171.352 105,856.760               74.547           1.285     0.518
+2026   105.000 132.000           1.257     3,357.896  16,789.480               25.439           1.088     0.508
+corr vs Solar net_v1: rho_full=+0.366516 (N=1116), rho_losing=+0.073034 (N=659 Solar-losing days)
+
+===== FROZEN PROMOTION GATE (14-day frozen rule, C1) =====
+  PASS  daily_net_c1_pos_with_ci_lo_pos: mean=+284.42 USD/day, CI95=[+78.35, +500.06]
+  PASS  pf_ge_1p10: PF(trade)=1.2148
+  FAIL  rho_full_lt_0p3: rho_full=+0.3465
+  PASS  rho_losing_le_0p1: rho_losing=+0.0459
+  PASS  top5_concentration_lt_40pct: top5_share=29.89%
+GATE VERDICT: NOT_PROMOTED
+
+[artifacts] written to D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\research\scalping_lab\artifacts\w8_bmom
