@@ -22,7 +22,10 @@ Consequences:
 - Latency: decision-to-fill delay grid {0, next-event, 250ms, 500ms, 1s, 2s, 5s}; DATAPROBE01
   confirmed ~4ms timestamp fidelity, so the full grid is honest.
 
-## Two execution models (MANDATE_AMENDMENT_1 §3 — both reported for every candidate)
+## Two execution models (Amendment 1 §3; STATUS per Amendment 3: until W1-0b
+BBO_INTEGRITY_AUDIT passes, **BENCHMARK_C1/C2 is the promotion truth and BBO_EXEC is a
+diagnostic**, because NT8 historical Bid/Ask/Last series do not preserve inter-series
+real-time ordering at shared timestamps.)
 
 **BBO_EXEC (primary executable approximation — uses the confirmed L2 data):**
 signal observable at t → choose latency L from the grid → reconstruct the latest CAUSAL

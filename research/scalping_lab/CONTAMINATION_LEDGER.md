@@ -32,6 +32,18 @@ after `DATA_INVENTORY.md` is complete; entries below record what is already know
    - Instrumentation measurements (spread map, Roll-bounce, sync integrity, L3 semantics —
      no selection content) may use the full development period, never the holdout.
 
+## Sample roles within the development window (Amendment 3, frozen 2026-08-08)
+
+- **TIER-0 DISCOVERY SUBSET = the 40 stratified sessions** already exported (seed 20260807,
+  session_sample_40.csv). All discovery/event-study work runs here.
+- **INTERNAL CONFIRMATION POOL = the remaining ~168 development sessions** (2025-08-10 →
+  2026-05-31 minus the 40). NOT exported, NOT examined for alpha selection; used only to
+  confirm surviving Tier-1 candidates before Tier-2. Indiscriminate export is forbidden;
+  exception: oldest-first RAW ARCHIVAL exports are permitted WITHOUT analysis (server
+  Bid/Ask is a rolling ~1yr window and data vanishes — archiving ≠ examining; any analysis
+  of archived confirmation sessions still requires the candidate to have survived Tier-1).
+- Sealed holdout 2026-06/07 and ≥2026-08 locks unchanged.
+
 ## Known owner-side exposure
 
 Owner has watched Solar equity curves and Analyzer outputs over 2022–2026 (minute-level and
