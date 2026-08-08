@@ -64,3 +64,18 @@ A-dominant vs SM14 reference, net delta by year — 350: 2022 −$2.2k, 2023 +$1
 4/5 years positive but magnitude concentrated 2025-26 (the counter-trend-short bleed
 era the DUAL state targets); 2022 gives back ground because halved HTF-UP shorts missed
 early-crash downlegs. Supports CHALLENGER status, not yet FINAL promotion.
+
+## SMV2H2 confirmation wave (2026-08-08, seq 358-360) — A-DOMINANT CONFIRMATION FAILED
+Preregistered dual gate (paired block bootstrap, block=5 B=10000 seed 20260808):
+- Gate A center (s7): P(dSharpe>0) = 0.717 MNQ / 0.712 NQ; P(dCDaR>0) = 0.639 / 0.632 — all
+  below the 0.85 bar. Every one of the 12 point estimates favors the challenger; the failure is
+  a CONFIDENCE failure on 4.4y of dev data (INFERENCE: underpowered), not a sign reversal.
+- Gate B old-regime (2006-2021, Solar-only, identical replay both policies): A_dom_s7 net
+  $29,709 vs SM14 $46,866 — gap −$17,158 breaches the −$10k non-inferiority floor. The entire
+  gap is 2020-21 melt-up capture; A_dom wins 11/16 years head-to-head with 0.36× the maxDD.
+- Right-tail warning FIRED: A_dom_s7 retains only 77% of SM14's top-10-day PnL (< 90% bar).
+**Verdict: family KILLED per frozen decision rule. SM14 oldM(3,1) RETAINED as
+ONE_CONTRACT_FINAL.** Red-team: CONFIRMED (spec letter-exact, curves reproduce canonical
+outputs to 0.0). Next per V4 §51: ONE new bounded discrete family in a future spec — the
+autopsy directions worth encoding: keep B-MOM priority, but address the top-10-day retention
+loss (the challenger's weakness is missing SM14's biggest winner days, e.g. 2024-08-08).

@@ -1,7 +1,24 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V2 wave-1 (SMV2A-H). Supersedes the "FINAL" framing of
-V1 docs (FINAL_NQ_SYSTEM.md remains as the V1 historical record)._
+_Last update: 2026-08-08, end of V4 wave-2 (SMV2H2/I/J/K + SMV2M master build). Supersedes
+the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains as the V1 historical record)._
+
+## Wave-2 verdicts (all red-team CONFIRMED; specs frozen at 0a9cf3f before any read)
+- **A-dominant one-lot CONFIRMATION FAILED** (gate A P≈0.71/0.63 < 0.85 both instruments;
+  gate B old-regime net floor breached; right-tail retention 77% < 90%). **SM14 retained as
+  ONE_CONTRACT_FINAL.** All 12 point estimates favored the challenger — confidence failed, not sign.
+- **C-P3 leverage disclosure**: at CURRENT champion size, P(2y maxDD > $25k) = 0.14-0.43 across
+  bootstrap methods — the historical −$18k is one path. L* < 1.0; leverage add-ons dead.
+- **60/40 retained** (C-P1 fit optima 0.50-0.55 but eval ordering not preserved — no move).
+- **Killed**: drought-tilt (placebo-indistinguishable), VR + ER trend-quality states (0/12
+  cells), Engine-3 slate 1 (failed-break fade SIGNIFICANTLY NEGATIVE t=−2.35 — sweep-reversal
+  premium does not exist on modern NQ; small-gap fade negative; overnight drift ~zero).
+- **Survivor**: C-P7 windfall give-back pre-test PASSED (fwd-10d −$136/d vs base +$162/d,
+  p=0.0012) → bounded trim policy earns a frozen spec.
+- **SMV2M master**: executable twin of DAYONLY_DUAL6040 = **net $179.3k / Sharpe 1.19 /
+  maxDD −$16.8k dev** (92.2% of fractional research net; flat before 16:45 unlike the research
+  curve). v1 C# had an order-engine arrangement bug (KNOWN_ERRORS #7, evidence preserved);
+  v2 on the proven E10 arrangement — Analyzer parity run in flight.
 
 ## The system, in one paragraph
 Solar (13-member SolarWave ensemble on NQ 3-min, graded 0-10 MNQ by vote) is the return

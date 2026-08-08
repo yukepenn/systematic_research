@@ -1,38 +1,38 @@
-# NEXT_RESEARCH_QUEUE (priority order; refreshed 2026-08-08 end of V2 wave-1)
+# NEXT_RESEARCH_QUEUE (priority order; refreshed 2026-08-08 end of V4 wave-2)
 
-1. **One-contract confirmation wave (SMV2H2)**: preregister ΔSharpe/ΔCDaR bootstrap
-   gate (P≥0.85) for A-dominant(≥5/≥7/≥9) vs SM14; add old-regime stress (2006-2021,
-   Solar-only mode with B silent) and leave-one-year-out chronology. If passed →
-   becomes ONE_CONTRACT_FINAL and gets SolarWaveSMOneLot_v2.cs.
-2. **NT8 parity for OneLot v1** (Track D, blocked on F5 rebuild): Strategy Analyzer
-   run + trade-by-trade reconcile vs canonical replay (NINJATRADER_PARITY.md).
-3. **DAYONLY_DUAL6040 master build**: E10Master_v2 + tilt map + short-halving + BMOM
-   virtual engine (~60-line delta on the F2 path per NINJATRADER_MASTER_SPEC.md).
-4. **Third engine factory** (Track I short-list, each needs preregistered spec):
-   VALUE-1 failed-trend VWAP reacceptance; VOL-1 compression→expansion day filter as
-   B-MOM eligibility state; REL-1 ES/NQ relative state (ES 1-min substrate exists);
-   MOM-6 morning-impulse→afternoon-continuation (distinct from B-MOM's anytime band).
-5. **Winner-drought quantification** (directive §28): waiting-time distribution between
+Wave-2 disposition: SMV2H2 confirmation-failed (SM14 retained); SMV2I C-P1/C-P3/C-P4 no-move/
+disclosure/dead, C-P7 QUALIFIED; SMV2J VR+ER killed; SMV2K engine-3 slate 1 killed (fade
+premium significantly negative). Registry seq at 371. Every item below needs its own frozen
+spec + seq BEFORE any read.
+
+1. **SMV2M parity closeout** (in flight): SolarWaveSMMaster_v2 Analyzer reconcile vs twin;
+   NINJATRADER_PARITY.md entry; executable headline replaces research headline everywhere.
+2. **C-P7 windfall give-back trim — bounded policy test** (only wave-2 survivor): trailing-5d
+   PnL > +2.5σ → scale 0.8 for 5d, suspended when σ̂ pct > 85 (DR pass C P7 form); gates =
+   TUW/CDaR improvement vs 200-path placebo + RTC ≥ 0.97 + leave-2022-out sign. De-clustered
+   events (11 clusters) are the honest N — power is limited; preregister that caveat.
+3. **One-lot next family** (V4 §51: ONE new bounded discrete family): keep B-MOM priority
+   (confirmed useful), fix the confirmed weakness — top-10-day retention (77%). Candidate
+   mechanism: A-dominant + "strong-day override" (Solar participates at lower threshold iff
+   HTF-agree AND B-MOM already long same direction) — must be preregistered, 3 cells max.
+4. **States next pair** (DR pass B sequencing after VR/ER kill): B-H2 Kalman innovation
+   whiteness + B-H4 BOCPD regime age, same JOB1 harness, same controls.
+5. **Engine-3 slate 2**: A-H2 value-area rotation (80%-rule) + A-H9 multi-day balance
+   false-break (swing horizon, Turtle-Soup-style). NOTE from slate 1: sweep-reversal at
+   intraday reference levels is significantly negative — slate 2 mechanisms must be
+   structurally different (acceptance/rotation, multi-day), not intraday sweep mirrors.
+6. **Winner-drought quantification** (queue carryover): waiting-time distribution between
    top-decile Solar winners; DD conditional on drought; does 60/40 shorten TUW tails?
-6. **Component risk contribution** (§23) for DAYONLY_DUAL6040: which leg owns the
-   remaining −$18k DD; marginal CDaR contributions.
-7. **Leverage re-run** for DAYONLY_DUAL6040 exact curve (SMV2F grid).
-8. **Morning-state conditioning** (§27): loss concentration by time-of-day × side ×
-   HTF across ALL years (not just 2026) before any exposure rule is proposed.
-9. **ML trade-quality screen** (§29): logistic P(loss) on causal state features,
-   nested chronological CV, distill-if-real.
-10. Quarterly: MONITOR-01 #2 + SM13 B-MOM decay reading (≥2026-11-01, NOT a blocker).
+7. **Component risk contribution** for DAYONLY_DUAL6040 executable curve: which leg owns the
+   remaining −$16.8k DD; marginal CDaR contributions.
+8. **Capital map** (V4 §14/§54) for SM14 one-lot and the executable master: capital for DD =
+   10/15/20/25/30% at 1.0/1.25/1.5/2.0× DD stress, quoting the C-P3 bootstrap band not the
+   single path.
+9. **Morning-state conditioning** across all years (loss concentration by time × side × HTF).
+10. **ML trade-quality screen** (V4 §29-30 ladder, Level 1 first): logistic P(loss) on causal
+    state features — but note SMV2J killed the two leading trend-quality features; feature set
+    must come from the DD-anatomy axes (time-of-day, side, HTF, consensus, opportunity scale).
+11. Quarterly: MONITOR-01 #2 + SM13 B-MOM decay reading (≥2026-11-01, NOT a blocker).
 
-## Deep-research passes A/B/C landed 2026-08-08 (Track I complete) — consolidated wave-2 picks
-Full slates: deep_research/DR_V2_PASS_{A_AUCTION,B_DSP,C_RISK}.md. All EXTERNAL PRIORS;
-local data decides; every item needs its own frozen spec + registry seq before any read.
-- **W2-1 (curve reads, cheapest)**: C-P1 CDaR/EDaR/Ulcer static blend LP (validates or
-  moves 60/40); C-P3 DD-constrained Kelly cap L*; C-P4 drought-tilt + placebo; C-P7
-  windfall give-back event-study pre-test. [C-P2 normalizer leak-check DONE: no leak —
-  vm scales are frozen constants.]
-- **W2-2 (states, shared harness)**: B-H1 variance-ratio state + B-H3 efficiency ratio
-  (keep one of the cluster); then B-H2 Kalman innovation-whiteness, B-H4 BOCPD regime age.
-- **W2-3 (engine #3 candidates)**: A-H1 failed range-break fade + A-H3 small-gap fade
-  (highest prior × cheapest falsification); A-H5 overnight drift as designated cheap kill;
-  B-H10 OU fade gated by the VR state (cost pre-gate 3× friction BEFORE backtest).
-- **W2-4 (convexity)**: C-P5 long-gamma NQ breakout sleeve (adds right tail; smile test).
+Standing: no leverage recommendations (C-P3: L*<1 at $25k/10% tolerance). 60/40 is the frozen
+champion weight zone. ≥2026-08-01 data VIRGIN.

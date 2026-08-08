@@ -18,3 +18,15 @@ Current champion equal-vol maxDD: **−$18.1k** (DAYONLY_DUAL6040) vs −$40.2k 
 engine #3 diversification (queue #4), winner-drought conditioning (#5), and component
 CDaR attribution (#6). One-contract floor: fractional-portfolio equal-vol DD bounds
 any {-1,0,+1} policy; A-dominant challenger reaches −$38-47k native NQ (vs −$58.5k).
+
+## SMV2I C-P3 disclosure (2026-08-08, seq 362) — THE HEADLINE DD NUMBER IS ONE PATH
+At CURRENT champion size (L=1.0), bootstrap P(any 2-year window maxDD > $25k):
+0.142 (stationary mean-block 20) / 0.430 (moving block 5) / 0.157 (joint-loss 2x oversampled).
+All exceed the 10% comfort cap, so the DD-constrained scale factor L* is BELOW 1.0 under every
+method. FACT: the −$18.1k (research) / −$16.8k (executable twin) historical maxDD is one
+realized path; resampled paths breach $25k with ≥14% probability per 2y window. Consequence:
+all leverage add-ons are dead at this risk tolerance, and any future "DD improved" claim must
+quote the bootstrap band, not the single-path max. (C-P4 drought tilt: DEAD vs placebo.
+C-P1 blend LP: fit optima 0.50-0.55 but eval ordering not preserved -> 60/40 retained.
+C-P7 windfall give-back: PRE-TEST PASSED (fwd10 −$136/d vs base +$162/d, p=0.0012) — the only
+survivor; bounded trim policy gets a frozen spec next wave.)

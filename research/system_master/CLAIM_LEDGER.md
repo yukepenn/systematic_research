@@ -20,3 +20,12 @@ diagnostic. Updated 2026-08-08 (V2 wave-1)._
 | Solar and B-MOM are REGIME_LOCAL (post-2020 fuel) | **E** | SM06/W10 (V1) |
 | No pristine global OOS exists through 2026-07-31 | fact | Directive V2 §10 |
 | Nothing is guaranteed profitable forward | standing | constitution |
+
+## Wave-2 claims (2026-08-08)
+- [FACT] A-dominant one-lot family failed its preregistered confirmation (both gates); SM14 remains ONE_CONTRACT_FINAL.
+- [FACT] Failed-range-break fade on NQ 2022-26 has significantly NEGATIVE after-cost expectancy (t=-2.35, N=3093).
+- [FACT] At current champion size, bootstrap P(2y maxDD > $25k) is 0.14-0.43 depending on method; historical -$18.1k is one path.
+- [FACT] Executable master twin (integer contracts, 16:42 flatten): net $179.3k / Sharpe 1.19 / maxDD -$16.8k dev = the headline until NT8 parity refines it.
+- [INFERENCE] A-dominant's edge is real but unprovable at 0.85 confidence on 4.4y of daily data (all 12 point deltas positive).
+- [INFERENCE] Post-windfall mean reversion of strategy PnL exists (p=0.0012 at 10d) - policy value untested.
+- [FACT] VR and ER add no incremental information about next-session Solar economics (0/12 cells, orthogonal to controls).

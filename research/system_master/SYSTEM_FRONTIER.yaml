@@ -124,3 +124,18 @@
   status: partial  # A-dominant family = CHALLENGER (dominates risk board; formal replacement gate P=0.83<0.85 NOT passed; gate mis-spec logged); SM14 remains FINAL holder
 - id: DAYONLY_DUAL6040
   status: champion_candidate  # 0.6 SOLAR_DUAL_HTF + 0.4 vm(BMOM E2), day-only; equal-vol Shp 1.26 / DD -18.1k / worst-mo -6.9k; supersedes PORT_TILT_532 as working champion
+
+# V4 wave-2 verdicts (2026-08-08, specs 0a9cf3f, all red-team CONFIRMED)
+wave2:
+  one_contract:
+    a_dominant_family: CONFIRMATION-FAILED (gateA 0.71/0.63<0.85; gateB -17.2k<-10k; RT 77%)
+    final_holder: SM14_oldM_3_1 (RETAINED)
+    next: one new bounded discrete family (queue #3)
+  portfolio:
+    champion: DAYONLY_DUAL6040 (60/40 retained; C-P1 eval ordering not preserved)
+    executable_twin: {net_dev: 179289, sharpe: 1.19, maxdd_eod: -16821, cdar5: -14151, worst_mo: -7502}
+    leverage: L_star_below_1.0 at P(DD2y>25k)<=0.10 (0.142/0.430/0.157 across methods) - adds dead
+  killed: [C-P4_drought_tilt, B-H1_variance_ratio, B-H3_efficiency_ratio,
+           E3A_failed_break_fade_SIGNIFICANTLY_NEGATIVE, E3C_small_gap_fade, E3_overnight_drift]
+  qualified: [C-P7_windfall_giveback_pretest_p0.0012]
+  master_build: {v1: order-engine-bug KNOWN_ERRORS#7, v2: parity in flight}
