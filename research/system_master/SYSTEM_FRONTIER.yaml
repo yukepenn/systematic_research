@@ -1,0 +1,80 @@
+# SYSTEM_MASTER machine-readable frontier.
+# Status: pending | active | passed | failed | inconclusive | parked | blocked
+# Specs frozen+committed before result reads. Registry seq continues at 291.
+
+- id: SM01_SUBSTRATE
+  track: 0
+  status: active
+  hypothesis: >
+    INSTRUMENTATION (zero R1 burn). A pure-Python bar->trades member simulator
+    (OnBarClose signal -> next-bar-open fill, 1-tick slip, Lifetime commission,
+    session-close flatten) reproduces the 13 h006/AUDIT02 member ledgers
+    fill-by-fill on 2022-2026 dev; per-trade path anatomy (MAE/MFE/time-to-X
+    from 1-min bars) and member-vote state series are then generated for all
+    tracks. Gate: exact trade-count match and net-to-the-cent per member, or
+    documented boundary diffs only.
+
+- id: SM02_DRAWDOWN_ATLAS
+  track: 1
+  status: pending
+  depends_on: [SM01_SUBSTRATE]
+  hypothesis: >
+    Solar/E10 major drawdowns decompose into recurring causal states
+    observable at or before entry (candidate taxonomy in directive #4);
+    at least one class with >=30% of DD dollars is identifiable ex ante.
+
+- id: SM03_STOP_OVERLAY_FRONTIER
+  track: 2
+  status: pending
+  depends_on: [SM01_SUBSTRATE]
+  hypothesis: >
+    At least one protective overlay family (catastrophe / time / progress /
+    MAE+no-progress stop, with re-entry variants) reduces maxDD or ES5 by
+    >=15% at >=90% right-tail retention and non-inferior logG at matched vol.
+    Killed-axis guard: not H-007 (split exit), not H-011 (resting stops),
+    not timed-exit re-tests; close-basis decision, market-exit execution.
+
+- id: SM04_CONSENSUS_EXPOSURE_SHAPE
+  track: 3
+  status: pending
+  depends_on: [SM01_SUBSTRATE]
+  hypothesis: >
+    The vote->target map (currently linear round(10*mean)) is not the
+    risk-optimal shape; a small frozen set of monotone maps (e.g. dead-band,
+    convex, floor-at-full-consensus) improves logG/Calmar at matched average
+    exposure with right-tail retention >=90%. Guard: distinct from C01T1_EXP
+    (vol-surprise terciles) and C01T1_ML (probability-ranked suppression);
+    consensus itself was never monetized. Uniqueness-inversion warning from
+    T0-6 applies: profit lives in high-concurrency episodes.
+
+- id: SM05_BMOM_PORTFOLIO
+  track: 5
+  status: pending
+  hypothesis: >
+    Adding frozen B-MOM to Solar at fixed risk weights improves dev-window
+    risk-normalized logG, Calmar, worst-month and TUW vs Solar alone, with
+    losing-day corr +0.046 doing the diversification work despite rho_full
+    0.347. Also scored: B1-overnight and (characterization-only) B-FADE.
+
+- id: SM06_ENGINE_FACTORY_W1
+  track: 6
+  status: pending
+  hypothesis: >
+    At least one mechanically-new NQ engine (opening auction / VWAP value
+    state / vol transition / multi-horizon momentum distinct from B-MOM)
+    passes CONVENTIONS gates standalone on dev with losing-day corr <=0.25.
+
+- id: SM07_PORTFOLIO_SYNTHESIS
+  track: 7
+  status: pending
+  depends_on: [SM05_BMOM_PORTFOLIO]
+
+- id: SM08_NT8_MASTER
+  track: 8
+  status: pending
+  depends_on: [SM03_STOP_OVERLAY_FRONTIER, SM07_PORTFOLIO_SYNTHESIS]
+
+- id: SM09_JOINT_HOLDOUT_READ
+  track: final
+  status: blocked
+  note: single read of 2026-06..07 after FINAL_PACKAGE_SPEC.md is frozen.
