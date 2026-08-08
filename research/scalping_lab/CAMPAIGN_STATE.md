@@ -44,7 +44,17 @@
       (afternoons missing — second pass with RTH trading-hours template queued). Server
       Bid/Ask is a ROLLING ~1yr window: oldest quotes can vanish — backfill remaining
       ~168 dev sessions opportunistically, oldest first.
-- [ ] NEXT: capped-session RTH second pass → Layer-1 state grids (250ms/1s/5s) →
+- [x] **W1-0b BBO audit**: spread map CONFIRMED (sync==asof); BBO_EXEC stays diagnostic
+      (same-ms +-1t ambiguity); C1/C2 promotion truth. w10b_bbo_audit_report.md.
+- [x] **Layer-1 1s grids built** (40/40). **Z1 CLOSED standalone** (r~2.0 at micro scale —
+      real persistence, gross +0.7-0.9t/cycle at theta<=40, but net C1 firmly negative;
+      role-B/C re-registration only). **Excursion baselines published**: uncond ~1-2pp
+      over null, post-flip +1-4pp more, break-even gap 25-40pp -> single primitives dead,
+      interactions are the only micro route. artifacts/z1/z1_report.md.
+- [ ] NEXT WAVE (W2): interaction excursion states (impulse x spread-state x flow-confirm,
+      small preregistered set) + H-B5 spike classification + S2a owner seed (STRUCTURAL) +
+      H-B1 anti-chase (role C) + oldest-first archival of confirmation pool.
+- [ ] (done earlier) capped-session RTH second pass → Layer-1 state grids (250ms/1s/5s) →
       I-1 full spread map + I-2 Roll-bounce + I-3-full sync audit → Z1 mid-price DC
       ladder → excursion surfaces P(+A before −B) → H-B5 → S2a.
 - [ ] P2: Freeze split geometry in CONTAMINATION_LEDGER.md (after P1c)
