@@ -1,0 +1,28 @@
+run_id: SM03B_DISASTER_STOP_INTRABAR
+program: system_master
+type: R1_EXPERIMENT
+date_frozen: 2026-08-08
+registry_seq: 301-306
+motivation: >
+  SM03 close-basis trigger is algebraically shadowed by the Solar reversal exit
+  (0-32 triggers). The SM02B CI-negative population (intrabar MAE >= 1.0*S,
+  P(recover)=4.1%, E[remaining] -$14 [-26.8,-0.23], mid band -$43.6
+  [-73.8,-11.3], 0 mid top-1% touches) is reachable only via the intrabar
+  extreme. New trigger input, same execution discipline (completed-bar decision,
+  market exit next bar open) - NOT a resting order, so distinct from killed
+  H-011; reversal threshold S untouched, so distinct from killed H-007.
+rule: >
+  Per member, while in a position, at each 3-min bar close: LONG: if
+  bar Low <= entry_px - m*S_entry then exit next bar open (std slip);
+  SHORT: if bar High >= entry_px + m*S_entry. S_entry frozen at entry trend
+  birth. Re-entry natural V3 (flat until next Type-1 flip). Solar exit takes
+  precedence when both fire on one bar.
+arms:
+  - {seq: 301, scope: mid_only, m: 1.0}
+  - {seq: 302, scope: mid_only, m: 1.25}
+  - {seq: 303, scope: mid_slow, m: 1.0}
+  - {seq: 304, scope: mid_slow, m: 1.25}
+  - {seq: 305, scope: tiered,   m: {fast: 1.5, mid: 1.0, slow: 1.25}}
+  - {seq: 306, scope: all,      m: 1.25}
+evaluation_and_gates: identical to SM03 spec (frozen gates unchanged)
+burn: 6
