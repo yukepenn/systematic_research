@@ -49,3 +49,9 @@ diagnostic. Updated 2026-08-08 (V2 wave-1)._
 - [INFERENCE] 1m-vote disagreement at entry predicts a $78/episode PnL gap (t=-2.09) — unreplicated on a second memory convention, logged as HYPOTHESIS only.
 - [FACT] All six externally-sourced price-structure reversion engines (two slates) are dead on modern NQ; three mechanism-expansion passes (24 candidates) converged independently on calendar-anchored continuation as the correct alternative axis; slate 3 selected on that basis.
 - [INFERENCE] Statistical power is a recurring binding constraint: two independent challenger objects (FAST-cohort removal, A-dominant/HTF-gated one-lot families) show uniformly positive point estimates that fail 0.85-confidence bootstrap gates on ~4.4 years of daily data — this is a property of the sample size, not evidence the challengers are wrong.
+
+## Wave-5 claims (2026-08-08)
+- [FACT] The 5m time-matched clock lead is closed: fails the house 0.85-confidence bar and 4/5-year LOYO bar despite favorable point estimates and passing right-tail retention. 3m incumbent retained, now having survived 5 independent core challenges.
+- [FACT] All 9 Engine-3 candidates tested across 3 slates (6 reversion, 3 continuation) failed; shock-day continuation is significantly negative.
+- [INFERENCE] The recurring pattern (4 independent challenger objects now: FAST-cohort, A-dominant one-lot, HTF-gated one-lot, 5m clock) of positive point estimates failing 0.85-confidence bootstrap gates is a property of the ~4.4-year daily sample size, not evidence the challengers are economically wrong — worth flagging to the owner as a standing statistical-power limitation of the current gate design.
+- [FACT] Engine-3's NQ-only, 3m-bar-horizon search space is exhausted; cross-market (ES/RTY/YM) data is the identified next unlock and requires an export step not yet done.

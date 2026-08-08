@@ -1,7 +1,22 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4.1 wave-4 (SMV2T/U/V + 3 mechanism-expansion passes).
+_Last update: 2026-08-08, end of V4.1 wave-5 (SMV2W clock R2 + SMV2X engine-3 slate 3).
 Supersedes the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+
+## Wave-5 verdicts (specs 7abeb79; both red-team CONFIRMED)
+- **5m clock lead CLOSED**: SMV2W's confirmation FAILED 2 of 4 available gates (dev bootstrap
+  confidence 0.64/0.55 < 0.85; LOYO only 3/5 years < 4/5-year bar) despite passing right-tail
+  retention (0.924) and portfolio point-positivity. Old-regime gate BLOCKED-BY-DATA (5m is not
+  causally derivable from the committed 3m hist substrate — a real data-coverage gap, not a
+  dodge). **3m incumbent RETAINED — 5th consecutive challenge survived** (memory length,
+  cohort structure, MA confirmation, T2/T3 signal layers, now clock).
+- **Engine-3 is exhausted at the NQ-only, 3m-bar horizon**: slate 3 (shock-day continuation,
+  post-FOMC/CPI drift, post-expiration breakout) — ALL THREE KILLED. Combined with slates 1-2,
+  **9 candidates across 3 slates, 0 survivors**. Shock-continuation was even significantly
+  NEGATIVE (−$29.2k, t=−2.22) — trading with a 3-sigma shock loses money at this horizon.
+  Per V4 §51: next step is an ES/RTY/YM data export (mirroring the SM1M NQ 1m export) before
+  any 4th slate — the remaining high-EVI candidates (cross-market lead-lag, 8 of them) all
+  require it and are queued, not dropped.
 
 ## Wave-4 verdicts (specs 547d2d4; all red-team-verified — 3 CONFIRMED, 3 CONFIRMED-with-prose-fixes)
 - **FAST-cohort removal lead CLOSED**: SMV2T's R2 confirmation FAILED 3/5 gates (dev bootstrap

@@ -48,3 +48,15 @@ CONTINUATION as the differentiating axis from the six dead reversion families. S
 NQ substrates without new data infrastructure: shock-day continuation, post-macro-release
 drift continuation, post-expiration gamma-unclamp breakout. The largest untested slice
 (cross-market lead-lag, 8 candidates) requires an ES/RTY/YM export and is queued, not dropped.
+
+## SMV2X slate 3 (seq 396-398) — ALL KILLED; NQ-only Engine-3 search exhausted
+Shock-day continuation is SIGNIFICANTLY NEGATIVE (N=12, t=-2.22, net -$29.2k at the center
+hold) — trading WITH a 3-sigma shock loses money, contrary to the deleveraging-cascade prior.
+Post-FOMC and post-CPI drift are both flat/noise (t=-0.31, t=+0.59). Post-expiration breakout
+is directionally positive but far short of significance (t=0.68-1.25, N=28<40). None of the
+three earn in the champion's joint-loss weeks (all near-zero or mildly anti-complementary vs
+the champion's -$3,206/wk there) — even a passing engine here would not have been attacking
+the actual smoothness lever. FINAL TALLY: 3 slates, 9 candidates (6 reversion in slates 1-2,
+3 continuation in slate 3), 0 survivors. The NQ-only, 3m-bar-horizon search space for Engine-3
+is exhausted per V4 §51's own terms. NEXT: cross-market data export (ES/RTY/YM) is now the
+highest-EVI blocker to clear before any further Engine-3 work.

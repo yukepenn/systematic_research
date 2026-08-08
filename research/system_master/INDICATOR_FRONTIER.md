@@ -54,3 +54,18 @@ incumbent on every axis tested — standalone, portfolio, LOYO, AND with lower t
 earns the program's first genuine R2-confirmation-worthy Solar-core clock challenger. Framed
 correctly per V4.1 §20: until SMV2W resolves, the object is CURRENT ROBUST SOLAR INCUMBENT
 (3m), not yet displaced.
+
+## SMV2W (seq 395) — 5m time-matched clock lead CLOSED; Solar core survives 5/5 challenges
+The strongest core-level challenger the program has produced (screening: standalone Sharpe
+0.793 vs 0.709, portfolio Sharpe 1.156 vs 1.120, LOYO 5/5, lower turnover) failed the SAME
+0.85-confidence bootstrap bar and 4/5-year LOYO bar applied to every other challenger:
+P(dSharpe>0)=0.642, P(dCDaR>0)=0.549, LOYO only 3/5. Old-regime confirmation was structurally
+BLOCKED (5m bars are not derivable from the committed 3m-only hist substrate) rather than run
+around — a genuine data-coverage limit, disclosed as such. Point estimates still favor the
+challenger (net $152.7k vs $138.3k on the raw core); the pattern seen three times now (FAST-
+cohort, A-dominant/HTF-gated one-lot families, now the 5m clock) is that ~4.4 years of daily
+data cannot deliver 0.85 confidence for risk-shaped improvements of this size, even when every
+point estimate is favorable. 3m remains CURRENT ROBUST SOLAR INCUMBENT, having now survived
+five independent challenges (memory 460, cohort structure, MA30/59, T2/T3 signal layers,
+clock) — the language upgrade from "untested baseline" to "repeatedly re-earned incumbent" is
+now justified per V4.1 §20.
