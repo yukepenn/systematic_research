@@ -1,0 +1,42 @@
+run_id: SM01_SUBSTRATE
+program: system_master
+type: INSTRUMENTATION   # zero R1 burn: reconstruction + parity + feature measurement, no new trade rule
+date_frozen: 2026-08-08
+owner_track: 0
+objective: >
+  Build the canonical pure-Python substrate for the SYSTEM_MASTER program:
+  (1) a bar->trades member simulator with exact NT8 conventions
+      (OnBarClose; entry only on Type-1 flip bars when flat; exit when trend
+      flips against position (ExitMultiplier=0 semantics); fills at next bar
+      open +/- 1 tick slip; Lifetime $2.18/side NQ; exit-on-session-close at
+      the 17:00 bar with embedded slip; BarsRequiredToTrade=20;
+      shared sigma460 = trailing mean |dClose| (warmup<30 -> S=179t),
+      S_k = clamp(vm_k * sigma, 40t, 1200t) frozen at trend birth; V/S=90/179);
+  (2) E10 aggregation simulator (target = round(10 * mean member pos), clamp
+      +/-10, net-change fills next bar open, 1t slip/contract, MNQ $0.65/side,
+      session-close flatten);
+  (3) per-trade path anatomy from 1-min bars (MAE/MFE/time-to-thresholds);
+  (4) member-vote state series per 3-min bar.
+parity_gates:
+  GATE_A: per-bar member positions match runs/E10MASTER_V1/out/e10m_v1_bars.csv p6..p30 exactly (540,232 x 13)
+  GATE_B: member fills match research/05_open_axes/h006/*.csv (times, prices, side) with only documented boundary diffs
+  GATE_C: Python E10 daily net matches runs/E10MASTER_V2/out/daily_v1_v2.csv net_v1 to <= $0.01/session (same conventions) or documented differences
+  GATE_D: 1-min vs 3-min substrate overlap alignment audit (back-adjustment offsets by roll segment; sources never mixed)
+data:
+  bars_3m: runs/AUDIT03_BARS/nq_3m_2022_2026.csv
+  bars_1m: runs/B01A_BARS_1M/nq_1m_2022_2026.csv
+  bars_1m_hist: research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet
+  member_ledgers: research/05_open_axes/h006/h006__tf3_sm179_am0_th1_vp460_vm{6..30}_xm0_sc_slip1.csv
+  e10_bars: runs/E10MASTER_V1/out/e10m_v1_bars.csv, runs/E10MASTER_V2/out/e10m_v2_bars.csv
+  e10_daily: runs/E10MASTER_V2/out/daily_v1_v2.csv
+outputs:
+  - runs/SM01_SUBSTRATE/out/parity_report.md
+  - runs/SM01_SUBSTRATE/out/member_trades.parquet      # all 13 members, dev window, with path anatomy
+  - runs/SM01_SUBSTRATE/out/vote_state_3m.parquet      # per-bar vote sum, flip counts, S/sigma states
+  - runs/SM01_SUBSTRATE/out/e10_daily_py.csv
+  - src/analytics/sm01_solarsim.py (committed)
+notes: >
+  Dev window discipline: parity uses full 2022-01..2026-07 engine artifacts
+  (already research-consumed for Solar). All downstream ANALYSIS restricted to
+  sessions <= 2026-05-31 per CONVENTIONS.md. No trade-rule selection occurs in
+  this run.
