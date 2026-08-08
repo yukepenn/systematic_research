@@ -4,17 +4,14 @@ _Written per V4.1 §0. If this session ends, the next invocation resumes HERE af
 repository-truth ritual. HEAD at write time: 547d2d4 (+ wave-3 results at 140f76c, all pushed)._
 
 ## In flight RIGHT NOW
-1. **Wave-4 workflow, 2nd attempt** (`wf_df9b739b-161`, script smv2-wave4-wf_df9b739b-161.js):
-   SMV2T no-FAST R2 (seq 389) + SMV2U clock challenge (390-392) + SMV2V ER-damper (393-394),
-   each red-teamed; PLUS 3 mechanism-expansion passes (D1 cross-market/session, D2 vol/gamma,
-   D3 flow/positioning) deduped against the killed list. Specs frozen at 547d2d4, unread —
-   still fully valid for this attempt.
-   FIRST ATTEMPT (`wf_5742c713-84d`) FAILED CLEANLY: all 6 agents errored on
-   "Fable 5 usage limit" before writing anything (0/6 agents_done, subagent_tokens burned but
-   no out/ artifacts, verified clean tree). Session model was then switched to Sonnet 5 via
-   /model and wave-4 was relaunched unchanged. If wf_df9b739b-161 also fails on a limit/error,
-   check `git status`/`ls runs/SMV2{T,U,V}*/out` for partial artifacts before re-relaunching;
-   the frozen specs are unaffected either way — just keep retrying execution.
+1. **Wave-5 workflow** (`wf_152d91ac-b5d`, script smv2-wave5-wf_152d91ac-b5d.js): SMV2W 5m-clock
+   R2 confirmation (seq 395) + SMV2X engine-3 slate 3 (seq 396-398), both red-teamed. Specs
+   frozen at 7abeb79, unread. Session model = Sonnet 5 (switched from Fable 5 after wave-4's
+   first attempt hit a usage limit; wave-4's SECOND attempt under Sonnet 5 completed cleanly
+   9/9 agents, results fully ingested and pushed at 7abeb79).
+   If wqxmpr96v/wf_152d91ac-b5d fails on a limit/error: check `git status` and
+   `ls runs/SMV2{W,X}*/out` for partial artifacts before relaunching; frozen specs are
+   unaffected either way.
 2. Nothing else pending. NT8 idle. 1m substrate committed (SM1M, 595a31c).
 
 ## On wave-4 completion (the standing loop)
@@ -29,6 +26,15 @@ repository-truth ritual. HEAD at write time: 547d2d4 (+ wave-3 results at 140f76
 5. One-contract frontier stays PAUSED until an expansion pass yields a genuinely new discrete
    mechanism (2 families killed; per-instrument finals per owner addendum).
 6. Commit + push after every block. Auto-chain the next wave; do NOT stop at close-out.
+
+## Wave-4 close (folded into standing verdicts below): FAST-cohort removal lead CLOSED (3/5
+gates fail); ER150-damper policy KILLED; 1m clock fails decisively; 5m bar-matched near-miss;
+**5m time-matched clock (VolPeriod=276) EARNED an R2 confirmation, now running as SMV2W** — the
+strongest Solar-core challenger to date, beats incumbent on standalone Sharpe/CDaR, portfolio
+Sharpe/CDaR, all 5 LOYO folds, AND lower turnover. Do not adopt anything until SMV2W resolves.
+Engine-3 slate 2 obituary closed with 3 mechanism-expansion passes (24 candidates); slate 3
+(SMV2X) selects 3 NQ-only calendar-continuation engines; 8 cross-market candidates queued
+behind a future ES/RTY/YM data export (not yet committed to this repo).
 
 ## Standing verdicts that bind future waves (do not relitigate)
 - SM14 = ONE_CONTRACT_FINAL holder; challengers keep failing 0.85-confidence despite pointwise
