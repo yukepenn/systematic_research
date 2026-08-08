@@ -1,0 +1,29 @@
+run_id: SMV2U_CLOCK_CHALLENGE
+date_frozen: 2026-08-08
+class: R1_FAMILY_TEST + DIAGNOSTIC   # SOLAR_CORE_CHALLENGE part 2 (V4.1 §4-5)
+seq: [390, 391, 392]   # 390=1m clock arms, 391=5m clock arms, 392=multi-timeframe info reads
+substrate: runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet (1,620,044 bars, provenance in
+  build_meta.json); 5m bars aggregated from 1m (18:00-anchored, OHLCV, sessions 18:00->17:00
+  matching the 3m substrate calendar); dev sessions <= 2026-05-31 ONLY.
+construction: 13-member V3 ensemble VERBATIM (verified simulator from SMV2R step-zero) on each
+  clock. TWO frozen memory conventions per clock (no other variants):
+    bar-matched:  VolPeriod=460 bars, SMinTicks=40, SMaxTicks=1200 (mechanism-neighbor)
+    time-matched: VolPeriod = 1380 (1m) / 276 (5m) bars (approx 23h of clock time = incumbent)
+  E10 executor per clock: tgt = clip(rha(10*mean pending),+-10), fills next bar open +-1 tick,
+  MNQ costs, session flatten. 4 challenger arms + 3m incumbent reference.
+reads (per arm): full dd_battery + smoothness columns + turnover + friction share + top-10-day
+  sum + right-tail overlap with incumbent + portfolio contribution (vm-blend with frozen BMOM
+  E2 at 60/40, equal-vol basis, same rerank construction) + LOYO tables.
+verdict_rule: NO adoption from this run. An arm earns an R2 spec only if it beats the 3m
+  incumbent on Sharpe AND CDaR at BOTH the standalone and portfolio level simultaneously.
+  Expected honest outcomes include "1m churns away the edge after costs" and "5m misses early
+  trend" — report friction share to prove WHY, whatever the outcome.
+mtf_info_reads_392 (information only, 3 preregistered reads, no policy):
+  R1: does 1m-clock member-vote sign disagreement with the 3m core (measured at 3m decision
+      bars) predict next-3m-bar adverse move for the positioned side? (failed-start detection)
+  R2: does 1m disagreement at ENTRY bars predict the episode's final PnL? (entry-timing value)
+  R3: does 1m agreement acceleration (d/dt of 1m vote sum over last 15min) add info on
+      next-session DUAL PnL beyond sigma460+HTF (SMV2J harness controls)?
+  Bars: reads use |t_NW|>2; kill/log exactly like prior JOB1 reads.
+outputs: out/clock_arms.csv, out/portfolio_contrib.csv, out/mtf_reads.csv, REPORT.md
+  answering V4.1 §22 Q1/Q2/Q3.

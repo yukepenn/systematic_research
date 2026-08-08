@@ -1,0 +1,27 @@
+run_id: SMV2T_NOFAST_R2
+date_frozen: 2026-08-08
+class: R2_CONFIRMATION   # the single live Solar-core lead from SMV2R sub_383
+seq: [389]
+parent: SMV2R seq 383 (no-FAST removable-candidate: raw-core Sharpe 0.768 vs 0.709, churn
+  halved, top-10 105.9%, CDaR margin thin 1.5%, raw-core boot P(d>0)=0.821 — DISCLOSED PRIOR)
+object_under_test: the DECISION object, not the raw core — SOLAR_DUAL_HTF built on the
+  10-member (no vm6-12) ensemble: T10 = clip(rha(10*mean(pending over 10 members)),+-10), then
+  tilt x1.25 / c1_50 / x0.9026 / clip +-13 exactly as the incumbent transform; MNQ execution,
+  session flatten, dev. These statistics (DUAL-transformed and portfolio-level) are UNSEEN —
+  the raw-core p=0.821 does not pre-commit them.
+gates_all_required (house replacement bar, NOT lowered):
+  A_dev: paired moving-block bootstrap (block=5 B=10000 seed=20260808) on daily diffs of the
+    DUAL-transformed legs: P(dSharpe>0) >= 0.85 AND P(dCDaR_0.95>0) >= 0.85.
+  B_chronology: LOYO dSharpe same sign >= 4/5 years AND fit 2022-24 -> eval 2025-26 point-positive.
+  C_old_regime: rebuild both cores on the SM06 hist substrate (2006-2021, votes per member
+    available via the verified simulator): no-FAST net >= incumbent net - $10k (E10-executor
+    NQ-scaled convention as SMV2H2 gate B) AND maxDD <= 1.25x incumbent.
+  D_right_tail: top-10-day retention >= 1.00 on the DUAL-transformed dev legs (SMV2R showed
+    105.9% on the raw core; the transformed object must not lose that).
+  E_portfolio: rebuild DAYONLY_DUAL6040 with the no-FAST DUAL leg (same frozen vm/rerank
+    construction, re-derived scalars documented): portfolio dSharpe AND dCDaR point-positive
+    vs the incumbent champion curve.
+decision: pass ALL -> no-FAST DUAL becomes CHAMPION-CANDIDATE core -> master rebuild + parity
+  (Stage 4) in a subsequent wave. Fail ANY -> incumbent 13-member core retained; lead closed
+  (recorded; no third bite without a new mechanism).
+outputs: out/gate_A.csv .. out/gate_E.csv, out/curves.csv, REPORT.md

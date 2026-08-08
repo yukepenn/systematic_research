@@ -1,0 +1,25 @@
+run_id: SMV2V_ER_DAMPER
+date_frozen: 2026-08-08
+class: PORTFOLIO_TEST (R1, bounded)   # from SMV2R sub_385 JOB-B surviving hypothesis
+seq: [393, 394]   # 393=policy cells, 394=placebo+chronology
+hypothesis: ER150-top-tercile agreement days (measured path efficiency HIGH and aligned with
+  the ensemble position at session close) are followed by LOWER next-session Solar PnL
+  (SMV2R: -$206/sd, t_NW=-3.27, HTF-controlled). Mechanism candidate: over-extended measured
+  efficiency mean-reverts (short-horizon exhaustion), the same family as the C-P7 information
+  result but conditioned on MARKET state, not PnL state — V4.1 §19 compliant.
+policy: on session t+1 after a top-tercile-agreement session t (expanding tercile ranks,
+  >=12mo burn-in): scale the SOLAR leg of the champion daily curve by s; BMOM leg untouched.
+cells: s in {0.65, 0.75, 0.85}  # 3 cells, center 0.75
+data: leg curves from runs/SMV2Q_DIAGNOSTICS component attribution (LEG_SOLAR/LEG_BMOM daily,
+  reconciled to twin 1.8e-12) + ER150/vote states from the SM01 substrate.
+gates_all_required (identical battery to SMV2N so the two exhaustion policies are comparable):
+  1: CDaR_0.95 AND TUW improve vs unscaled champion
+  2: both improvements > placebo median + 2x IQR (200 random same-count trigger-day paths)
+  3: LOYO >=4/5 + leave-2022-out sign
+  4: RTC >= 0.97 on champion top-decile up-days
+  5: net retention >= 0.97
+  6 (extra, this spec): old-regime same-direction check — ER150-agreement -> next-session E10
+     PnL relationship on 2006-2021 must not REVERSE sign (flat acceptable).
+kill: any gate fails -> family killed (the ER-damper hypothesis is then CLOSED — one bounded
+  policy test per hypothesis, no variants).
+outputs: out/cells.csv, out/placebo.csv, out/chronology.csv, out/oldregime.csv, REPORT.md
