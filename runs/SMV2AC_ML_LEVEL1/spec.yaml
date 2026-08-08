@@ -1,0 +1,75 @@
+run_id: SMV2AC_ML_LEVEL1
+date_frozen: 2026-08-08
+class: MODEL_TEST (Level 1 interpretable, JOB1 information only)  # V4 s30 complexity ladder:
+  # Level 0 (single states) fully exhausted -- daily target: VR/ER/Kalman/BOCPD/flip-rate all
+  # killed (SMV2J/O); weekly-downside target: sigma460+ER150 KEEP but flip-rate/VR KILL
+  # (SMV2Y). This is the licensed next step: a joint Level-1 model on the SAME already-built
+  # features, testing for an INTERACTION the univariate tests structurally cannot see. NO
+  # policy is attempted this wave (V4 s32: predictive diagnostics are not promotion criteria;
+  # SMV2Z/AA already showed the underlying phenomenon -- flagged weeks are high-VARIANCE, not
+  # simply high-loss -- so a naive P(loss)-triggered exposure cut would likely fail the same
+  # way; a policy attempt is deferred to a LATER wave, only if this one finds real incremental
+  # discrimination worth converting into something more sophisticated than a blanket cut).
+seq: [413, 414]  # 413=model fit+nested CV+OOF diagnostics, 414=feature-ablation/interaction read
+
+target: next-week binary joint-loss (SMV2Y's secondary target, reused verbatim: weekly
+  LEG_SOLAR sum <0 AND weekly LEG_BMOM sum <0, from runs/SMV2Q_DIAGNOSTICS/out/leg_daily.csv).
+  50/230 weeks positive (21.7% base rate). Continuous next-week downside (SMV2Y primary
+  target) reported as a SECONDARY correlation check on the same OOF predictions, not a second
+  model.
+
+features (ALL already computed and causal at week t's close; NO new feature engineering):
+  - sigma460 (level, from runs/SMV2J_STATE_HARNESS/out/states_dev.csv)
+  - ER150 (level, same source)
+  - flip_rate (weekly mean, from SMV2Y's own out/target_series.csv construction)
+  - VR_q26_N780 (level, states_dev.csv)
+  - HTF_agree (sign of session close vs trailing-50-session SMA, states_dev.csv 'htf' column)
+  z-scored using EXPANDING statistics only (no full-sample scaling, matching every prior JOB1
+  test in this program).
+
+model: L2-regularized logistic regression (scikit-learn LogisticRegression, penalty='l2',
+  class_weight=None -- do NOT rebalance, the 21.7% base rate is the real economic base rate
+  and rebalancing would bias probability calibration). This is the ONLY model fit this wave
+  (V4 s30 Level 1; do not jump to trees/GAM/anything else without this passing first).
+
+cv_design (V4 s31 ML data hygiene, MANDATORY):
+  - outer: walk-forward expanding-window, 6 folds, minimum 60-week initial training window
+    (>=12mo, matching every prior burn-in convention), 1-week EMBARGO between train-end and
+    test-start (the feature/target horizon is exactly 1 week, so a 1-week embargo prevents any
+    overlap between a training label and a test feature).
+  - inner: for hyperparameter selection (L2 strength C in {0.01,0.1,1.0,10.0} -- 4-cell grid,
+    no finer search), 3-fold chronological CV INSIDE each outer training window only. Outer
+    test folds are touched exactly once, for OOF prediction generation, never for tuning.
+  - determinism: fixed random_state=20260808 everywhere (solver, any CV shuffling -- though
+    folds should be chronological, not shuffled, per the walk-forward design).
+  - total OOF predictions: weeks in outer test folds only (report exact N, expect roughly
+    230 - 60 = ~170 OOF weeks across the 6 folds, minus embargo weeks).
+
+diagnostics (413, NOT promotion criteria per V4 s32 -- reported for context only):
+  OOF AUC-ROC, OOF Brier score, OOF calibration (predicted-vs-realized decile table),
+  coefficient stability across the 6 outer folds (report min/max/sign-consistency per
+  feature), seed-stability check (refit with 3 additional seeds {1,2,3}, report AUC variance).
+
+promotion-relevant test (414, THE actual gate): does the joint model's OOF P(joint-loss)
+  provide MORE discriminative information than the single best univariate state (ER150 alone,
+  the stronger of SMV2Y's two KEEP states) on the SAME OOF weeks? Formal test: likelihood-ratio
+  test comparing the full 5-feature model's OOF log-loss against a 1-feature (ER150-only)
+  logistic baseline fit with the IDENTICAL walk-forward/embargo protocol; also report OOF
+  AUC delta and its sign-stability across folds. PASS bar: full model's OOF log-loss
+  significantly better (paired bootstrap on the per-week log-loss difference, block=4 weeks,
+  B=10000, seed=20260808, P(improvement>0)>=0.85 -- the SAME house confidence bar used
+  throughout this program, not relaxed for being "just an ML diagnostic").
+  Also report: which features carry stable, sign-consistent, non-trivial coefficients across
+  all 6 outer folds (a feature that flips sign or shrinks to ~0 in >=2 folds is NOT a stable
+  contributor, regardless of its full-sample coefficient).
+
+kill_or_keep: if the joint model does NOT beat the ER150-only baseline at the 0.85 bar ->
+  KILL (Level 1 interpretable modeling adds nothing beyond the single best state already
+  found; V4 s30/33's escalation ladder STOPS HERE -- do not proceed to trees/DL on this
+  target without a new reason). If it DOES beat the baseline -> KEEP, and per V4 s32's own
+  rule ("if an interpretable model produces 90-95% of a complex model's benefit, prefer the
+  interpretable model") this Level-1 result becomes the reference; a bounded policy design
+  (informed by SMV2Z/AA's lesson that blanket exposure cuts fail) is queued for a LATER wave,
+  not attempted here.
+outputs: out/oof_predictions.csv, out/fold_coefficients.csv, out/diagnostics.csv,
+  out/promotion_test.csv, REPORT.md
