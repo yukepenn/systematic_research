@@ -4,12 +4,17 @@ _Written per V4.1 §0. If this session ends, the next invocation resumes HERE af
 repository-truth ritual. HEAD at write time: 547d2d4 (+ wave-3 results at 140f76c, all pushed)._
 
 ## In flight RIGHT NOW
-1. **Wave-4 workflow** (`wf_5742c713-84d`): SMV2T no-FAST R2 (seq 389) + SMV2U clock challenge
-   (390-392) + SMV2V ER-damper (393-394), each red-teamed; PLUS 3 mechanism-expansion passes
-   (D1 cross-market/session, D2 vol/gamma, D3 flow/positioning) generating engine-candidate
-   slates deduped against the killed list. Specs frozen at 547d2d4. If the workflow died
-   before results: re-run from the script path in the workflow scripts dir with
-   resumeFromRunId wf_5742c713-84d; check the run dirs' out/ for partial artifacts first.
+1. **Wave-4 workflow, 2nd attempt** (`wf_df9b739b-161`, script smv2-wave4-wf_df9b739b-161.js):
+   SMV2T no-FAST R2 (seq 389) + SMV2U clock challenge (390-392) + SMV2V ER-damper (393-394),
+   each red-teamed; PLUS 3 mechanism-expansion passes (D1 cross-market/session, D2 vol/gamma,
+   D3 flow/positioning) deduped against the killed list. Specs frozen at 547d2d4, unread —
+   still fully valid for this attempt.
+   FIRST ATTEMPT (`wf_5742c713-84d`) FAILED CLEANLY: all 6 agents errored on
+   "Fable 5 usage limit" before writing anything (0/6 agents_done, subagent_tokens burned but
+   no out/ artifacts, verified clean tree). Session model was then switched to Sonnet 5 via
+   /model and wave-4 was relaunched unchanged. If wf_df9b739b-161 also fails on a limit/error,
+   check `git status`/`ls runs/SMV2{T,U,V}*/out` for partial artifacts before re-relaunching;
+   the frozen specs are unaffected either way — just keep retrying execution.
 2. Nothing else pending. NT8 idle. 1m substrate committed (SM1M, 595a31c).
 
 ## On wave-4 completion (the standing loop)
