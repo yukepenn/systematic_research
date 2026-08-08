@@ -20,6 +20,12 @@
 //   1 NQ : net $298,040, Sharpe 1.098, maxDD -$58,887 (commissions cheaper/notional)
 // HISTORICAL research result — not a forward guarantee. Regime monitors apply
 // (MONITOR-01 r-statistic; B-MOM decay floor). HOT-RELOAD: version class per edit.
+// SAFETY: research/backtest only. FAILS CLOSED in realtime (SubmitTarget returns before
+// any order submission when State == State.Realtime). Live enablement is a separate,
+// explicit, owner-authorized decision — see research/system_master/LIVE_READINESS_CHECKLIST.md.
+// This guard was retrofitted 2026-08-08 (SMV2AH audit): earlier revisions of this file had
+// no code-level realtime guard, unlike SolarWaveSMMaster_v2.cs, and relied entirely on
+// operating discipline. Added for defense-in-depth; not itself a claim of live-readiness.
 
 #region Using declarations
 using System;
@@ -211,6 +217,10 @@ namespace NinjaTrader.NinjaScript.Strategies
         }
         private void SubmitTarget(int tgt)
         {
+            // FAIL CLOSED: no realtime order flow, ever (research mandate) — matches
+            // SolarWaveSMMaster_v2.cs's guard. See header SAFETY note (retrofitted 2026-08-08).
+            if (State == State.Realtime)
+                return;
             int c = PhysicalPosition();
             if (tgt == c) return;
             if (tgt == 0) { if (c > 0) ExitLong(0, c, "XL", ""); else ExitShort(0, -c, "XS", ""); }

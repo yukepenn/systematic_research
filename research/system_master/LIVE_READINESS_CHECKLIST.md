@@ -36,3 +36,14 @@ this checklist; passing on one instrument certifies nothing about the other.
 The research program delivers: FINAL HISTORICALLY VALIDATED + NINJATRADER-PARITY-PROVEN +
 LIVE-READY-BUT-DISABLED. The switch from fail-closed to order-capable is out of scope for the
 autonomous program under the current mandate (V4 §0 hard boundary: never enable/deploy).
+
+## Correction (2026-08-08, SMV2AH audit)
+This document's header claim ("every strategy ships REALTIME FAIL-CLOSED") was not accurate
+for `src/ninjascript/SolarWaveSMOneLot_v1.cs` (SM14, the current one-contract incumbent policy)
+before this date — that file had no `State == State.Realtime` guard of its own, unlike
+`SolarWaveSMMaster_v2.cs`, and relied entirely on operating discipline (never attaching it to a
+live account) rather than a code-level safeguard. Retrofitted the same guard into
+`SubmitTarget()` this date, for defense-in-depth. This does not itself constitute passing item
+11 above or any other checklist item — SM14 is still a research/challenger object, not one of
+the named Product B finals, and this checklist's items remain unaddressed pending the eventual
+`SolarWaveOneContractNQ_Final.cs`/`SolarWaveOneContractMNQ_Final.cs` builds.
