@@ -1,0 +1,88 @@
+{
+  "meta": {
+    "seed": 20260808,
+    "B_boot": 10000,
+    "block": 5,
+    "dev_end": "2026-05-31",
+    "kalman": {
+      "qr_grid": [
+        "1e-4",
+        "1e-3",
+        "1e-2"
+      ],
+      "M_grid": [
+        50,
+        100,
+        200
+      ],
+      "lb_lag": 10,
+      "R": 1.0,
+      "Q": "(q/r)*I2",
+      "P0": "1e7*I2",
+      "init": "level=logc[0], trend=0"
+    },
+    "bocpd": {
+      "lambda_grid": [
+        100,
+        250,
+        500
+      ],
+      "rmax": 2000,
+      "prior": {
+        "kappa0": 1.0,
+        "alpha0": 2.0,
+        "mu0": 0.0,
+        "beta0": "var(block returns, first 12mo of each series)"
+      },
+      "blocks": "10x3m within-session, gap in first block, <10-bar remainder dropped"
+    },
+    "dev_bars": 519714,
+    "bocpd_beta0_dev": 5.435244453576873e-06,
+    "bocpd_nblocks_dev": 51956,
+    "dev_first_sess": "2022-01-03",
+    "dev_burn_end": "2023-01-03",
+    "n_regression_sample": 880,
+    "sample_first": "2023-01-03",
+    "sample_last": "2026-05-28",
+    "bocpd_beta0_hist": 3.103480233395556e-07,
+    "bocpd_nblocks_hist": 174623,
+    "hist_burn_end": "2007-01-05",
+    "n_hist_sample": 3872,
+    "bootstrap": "moving-block, joint (y,X) rows, same index draws reused for all 12 cells",
+    "extra_kill_rule": "|corr(state, sigma460)| > 0.7 daily (regression sample) -> cell killed",
+    "best_KAL_cell": "KAL_qr1e-2_M200",
+    "best_BOC_cell": "BOC_lam250",
+    "best_cross_corr": -0.13232574558323024,
+    "cluster_rule_applied": false
+  },
+  "verdicts": {
+    "KAL": {
+      "best_cell": "KAL_qr1e-2_M200",
+      "corr_sigma460_best": 0.052800242395238686,
+      "test1_pass_best": false,
+      "test2_t_pass_best": false,
+      "test2_boot_confirm_best": false,
+      "test3_pass": false,
+      "test4_class_best": "FLAT",
+      "n_cells_sigma_killed": 0,
+      "n_cells_test2_pass": 0,
+      "n_cells_test1_pass": 4,
+      "n_cells_test4_reversal": 1,
+      "verdict": "KILL"
+    },
+    "BOC": {
+      "best_cell": "BOC_lam250",
+      "corr_sigma460_best": -0.15304923084582114,
+      "test1_pass_best": true,
+      "test2_t_pass_best": false,
+      "test2_boot_confirm_best": false,
+      "test3_pass": false,
+      "test4_class_best": "FLAT",
+      "n_cells_sigma_killed": 0,
+      "n_cells_test2_pass": 0,
+      "n_cells_test1_pass": 2,
+      "n_cells_test4_reversal": 0,
+      "verdict": "KILL"
+    }
+  }
+}

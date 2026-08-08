@@ -29,3 +29,14 @@ diagnostic. Updated 2026-08-08 (V2 wave-1)._
 - [INFERENCE] A-dominant's edge is real but unprovable at 0.85 confidence on 4.4y of daily data (all 12 point deltas positive).
 - [INFERENCE] Post-windfall mean reversion of strategy PnL exists (p=0.0012 at 10d) - policy value untested.
 - [FACT] VR and ER add no incremental information about next-session Solar economics (0/12 cells, orthogonal to controls).
+
+## Wave-3 claims (2026-08-08)
+- [FACT] C-P7 give-back policy provides no risk improvement beyond random same-duration de-risking (placebo 76.5th pctl); the post-windfall below-average-PnL information result itself stands.
+- [FACT] All four externally-ranked DSP trend-quality states (VR, ER, Kalman whiteness, BOCPD age) add no incremental information beyond sigma460+HTF.
+- [FACT] Six of six externally-sourced fade/rotation/calendar engine families are dead on modern NQ; VA rotation is significantly negative AND anti-complementary.
+- [FACT] Joint-loss weeks (50/230) carry a causal market-state signature: low ER150 (t=-6.5), high flip rate (t=+3.0). This is the identified smoothness lever.
+- [FACT] Solar vol-memory 460 is a confirmed plateau; SLOW cohort is load-bearing; MA30/59 confirmation destroys 22% of net and 6.2% of right tail.
+- [INFERENCE] Removing the FAST cohort improves the Solar core (Sharpe 0.768 vs 0.709, churn halved, top-10 105.9%) — pending R2 confirmation (thin 1.5% CDaR margin).
+- [INFERENCE] 2026 weakness is one joint-loss episode within normal path variation (r120 percentiles 17th-52nd, none near minima); not decay evidence. No tuning was or will be derived from this read.
+- [FACT] One-contract challengers keep dominating point estimates while failing 0.85-confidence gates on 4.4y of data; two families killed; frontier paused for mechanism expansion.
+- [HYPOTHESIS] ER150-damper: top-tercile path-efficiency agreement predicts lower next-day Solar PnL (t=-3.27) — unexplored policy direction, needs frozen spec.

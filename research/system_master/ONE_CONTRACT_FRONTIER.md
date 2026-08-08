@@ -92,3 +92,15 @@ instrument. The frozen SMV2S spec (in flight) still requires both-instrument pas
 joint replacement per its letter; its per-instrument results feed per-instrument follow-up
 specs if the joint gate fails but one instrument dominates. BEST_ONE_CONTRACT_OVERALL is
 selected only after both instrument products are resolved.
+
+## SMV2S (seq 386-388): HTF-gated dominant KILLED — frontier PAUSED
+Second consecutive family kill. Center thr5: gate A P(dSharpe)=0.64, P(dCDaR)=0.48 (<0.85);
+gate B retention 0.841 vs 0.90 HARD bar (improved from A-dominant's 0.772 — the mechanism
+moved the right lever, not far enough); gate C old-regime gap -$36.1k (2021 melt-up alone
+-$55.7k). AGAIN pointwise better than SM14 everywhere on dev (MNQ Sharpe 1.169 vs 1.056,
+NQ maxDD -$44.8k vs -$58.5k) and AGAIN unprovable at 0.85 confidence. Pattern across both
+killed families (FACT): challengers dominate point estimates but 4.4y of daily data cannot
+deliver 0.85 confidence for risk-shaped improvements of this size; and every Solar-side
+filter loses 2020-21-style melt-up capture in the old regime. Per frozen spec: one-contract
+frontier PAUSES for a mechanism-expansion pass. SM14 remains ONE_CONTRACT_FINAL; per the
+owner addendum the eventual finals are per-instrument (BEST_ONE_NQ / BEST_ONE_MNQ).

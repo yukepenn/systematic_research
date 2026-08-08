@@ -15,3 +15,20 @@ genuine no-signal result, not collinearity. Old regime: zero sign reversals (8 s
 flat). The DR-prior "H1/H3 cluster" was not borne out (corr 0.18). Red-team CONFIRMED.
 Queue advances per DR pass B sequencing: B-H2 Kalman innovation whiteness + B-H4 BOCPD regime
 age are the next JOB1 candidates (separate frozen spec).
+
+## SMV2O + SMV2R state/indicator verdicts (2026-08-08)
+- Kalman innovation whiteness (9 cells) KILLED; BOCPD regime age (3 cells) KILLED. With VR/ER
+  (SMV2J), the ENTIRE ranked DSP JOB1 slate is now dead — none of the four external
+  trend-quality axes adds information beyond sigma460 + HTF on this system.
+- T2/T3 Solar signal layers: KILLED (zero incremental info conditional on positioned ensemble).
+- MA30/59 (owner's question): KILLED in all four jobs — hard confirmation costs 22% of net and
+  6.2% of the right tail; pure lag. The four-job harness is reusable for any future state.
+- SURVIVING HYPOTHESIS (not policy): ER150-top-tercile agreement predicts LOWER next-day E10
+  PnL (-$206/sd, t_NW=-3.27, HTF-controlled) — a DAMPER direction (over-extended efficiency
+  mean-reverts). Needs its own frozen spec before any read is acted on.
+- Clamp architecture: 40t floor irrelevant; 1200t cap ACTIVELY binds slow members (vm30 10.9%
+  of dev bars; partial-2026 highest at 39.2%) — it is a live regularizer, and its binding rate
+  is itself a candidate vol-regime state.
+- Vol memory: 460 = CONFIRMED PLATEAU (230 destructive, 920 equivalent). Owner Q4 answered.
+- Cohorts: SLOW load-bearing; FAST (vm6-12) = REMOVABLE-CANDIDATE (Sharpe 0.768 vs 0.709,
+  churn halved, top-10 105.9%) pending R2 confirmation — the single live Solar-core lead.

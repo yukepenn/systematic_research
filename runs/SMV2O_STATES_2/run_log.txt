@@ -1,0 +1,63 @@
+loading dev substrate ...
+computing dev states (12 cells) ...
+  dev: Kalman filter qr=1e-4 ...
+  dev: Kalman filter qr=1e-3 ...
+  dev: Kalman filter qr=1e-2 ...
+  dev: BOCPD lambda=100 ...
+  dev: BOCPD lambda=250 ...
+  dev: BOCPD lambda=500 ...
+regression sample: 880 sessions 2023-01-03 .. 2026-05-28
+loading hist substrate ...
+computing hist states (12 cells) ...
+  hist: Kalman filter qr=1e-4 ...
+  hist: Kalman filter qr=1e-3 ...
+  hist: Kalman filter qr=1e-2 ...
+  hist: BOCPD lambda=100 ...
+  hist: BOCPD lambda=250 ...
+  hist: BOCPD lambda=500 ...
+hist sample: 3872 sessions 2007-01-05 .. 2021-12-30
+running preregistered harness ...
+KAL_qr1e-4_M50   sigC +0.02  t_NW  +0.83 bootP+ 0.761 sprd   +88.7 inv 1 | hist sprd   +38.8 t +1.00 FLAT
+KAL_qr1e-4_M100  sigC +0.04  t_NW  +0.81 bootP+ 0.768 sprd  +232.5 inv 2 | hist sprd   +22.6 t +0.67 FLAT
+KAL_qr1e-4_M200  sigC +0.02  t_NW  +0.31 bootP+ 0.628 sprd  +105.0 inv 1 | hist sprd   -52.0 t -1.57 REVERSAL
+KAL_qr1e-3_M50   sigC +0.01  t_NW  +0.31 bootP+ 0.589 sprd   -10.9 inv 2 | hist sprd    -4.6 t -0.14 FLAT
+KAL_qr1e-3_M100  sigC +0.05  t_NW  +0.40 bootP+ 0.627 sprd  +214.8 inv 1 | hist sprd   +32.0 t +0.98 FLAT
+KAL_qr1e-3_M200  sigC +0.03  t_NW  +1.08 bootP+ 0.851 sprd  +344.0 inv 2 | hist sprd   +23.4 t +0.68 FLAT
+KAL_qr1e-2_M50   sigC +0.06  t_NW  -0.39 bootP+ 0.343 sprd   -41.2 inv 2 | hist sprd   -35.6 t -0.95 FLAT
+KAL_qr1e-2_M100  sigC +0.07  t_NW  +0.06 bootP+ 0.529 sprd   -58.4 inv 1 | hist sprd   +23.6 t +0.66 FLAT
+KAL_qr1e-2_M200  sigC +0.05  t_NW  +1.33 bootP+ 0.896 sprd  +230.2 inv 2 | hist sprd   +21.7 t +0.70 FLAT
+BOC_lam100       sigC -0.18  t_NW  +1.65 bootP+ 0.935 sprd   -30.1 inv 2 | hist sprd   +14.4 t +0.36 FLAT
+BOC_lam250       sigC -0.15  t_NW  +1.83 bootP+ 0.965 sprd   +11.0 inv 1 | hist sprd   +19.9 t +0.51 FLAT
+BOC_lam500       sigC -0.15  t_NW  +1.72 bootP+ 0.960 sprd  +138.9 inv 1 | hist sprd   +13.5 t +0.34 FLAT
+{
+  "KAL": {
+    "best_cell": "KAL_qr1e-2_M200",
+    "corr_sigma460_best": 0.052800242395238686,
+    "test1_pass_best": false,
+    "test2_t_pass_best": false,
+    "test2_boot_confirm_best": false,
+    "test3_pass": false,
+    "test4_class_best": "FLAT",
+    "n_cells_sigma_killed": 0,
+    "n_cells_test2_pass": 0,
+    "n_cells_test1_pass": 4,
+    "n_cells_test4_reversal": 1,
+    "verdict": "KILL"
+  },
+  "BOC": {
+    "best_cell": "BOC_lam250",
+    "corr_sigma460_best": -0.15304923084582114,
+    "test1_pass_best": true,
+    "test2_t_pass_best": false,
+    "test2_boot_confirm_best": false,
+    "test3_pass": false,
+    "test4_class_best": "FLAT",
+    "n_cells_sigma_killed": 0,
+    "n_cells_test2_pass": 0,
+    "n_cells_test1_pass": 2,
+    "n_cells_test4_reversal": 0,
+    "verdict": "KILL"
+  }
+}
+best cross-corr -0.132 cluster applied: False
+done

@@ -1,7 +1,29 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4 wave-2 (SMV2H2/I/J/K + SMV2M master build). Supersedes
-the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains as the V1 historical record)._
+_Last update: 2026-08-08, end of V4.1 wave-3 (SMV2N/O/P/Q/R/S). Supersedes the "FINAL"
+framing of V1 docs (FINAL_NQ_SYSTEM.md remains as the V1 historical record)._
+
+## Wave-3 verdicts (specs 58dc2d2; 6/6 red-teams: 5 CONFIRMED, 1 CONFIRMED-with-prose-fixes)
+- **C-P7 windfall policy KILLED** (risk reduction indistinguishable from random same-duration
+  de-risking; info result stands). **Kalman + BOCPD KILLED** → the whole ranked DSP JOB1 slate
+  is dead. **Engine-3 slate 2 ALL KILLED** (VA rotation significantly negative AND
+  anti-complementary) → six-for-six reversion families dead; 3 mechanism-expansion passes now
+  REQUIRED. **One-lot family #2 KILLED** (retention 0.84 vs 0.90 hard bar; 2nd consecutive) →
+  one-contract frontier PAUSED for mechanism expansion; SM14 stays FINAL. **T2/T3 and MA30/59
+  KILLED** (MA hard-confirmation costs 22% of net + 6.2% of right tail — pure lag).
+- **Solar core re-earned most of its incumbency** (V4.1 §20): vol memory 460 = CONFIRMED
+  PLATEAU; SLOW cohort load-bearing; clamp floor irrelevant / 1200t cap an active regularizer.
+  ONE live lead: **removing the FAST cohort (vm6-12) improves Sharpe 0.768 vs 0.709 with
+  churn halved and top-10-day retention 105.9%** — R2 confirmation spec next wave (thin CDaR
+  margin flagged). Plus one HYPOTHESIS: ER150-damper (t=−3.27, over-extended efficiency
+  mean-reverts next day).
+- **Smoothness truth (permanent scorecard)**: master exec = 44.1% days / 56.1% weeks / 64.2%
+  months / 83.3% quarters positive; the negative-period cause is IDENTIFIED — 50/230 joint-loss
+  weeks own −$159.6k with a causal signature (LOW path efficiency t=−6.5, HIGH flip rate t=+3.0).
+- **2026 recency (owner question)**: rolling-120 Sharpe percentiles at dev end — BMOM 52nd /
+  MASTER 41st / DUAL 35th / SM14 27th / E10 17th, none near historical minima; Apr-May 2026 was
+  a ~1x/yr-class joint-loss episode; consumed June was +$20.6k. INFERENCE: path variation, not
+  decay evidence. Monitors MONITOR-01/SM13 remain the tripwires.
 
 ## Wave-2 verdicts (all red-team CONFIRMED; specs frozen at 0a9cf3f before any read)
 - **A-dominant one-lot CONFIRMATION FAILED** (gate A P≈0.71/0.63 < 0.85 both instruments;

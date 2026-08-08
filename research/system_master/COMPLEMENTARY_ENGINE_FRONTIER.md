@@ -27,3 +27,13 @@ ranked hypotheses; local data decides.
   after-cost expectancy is negative, so it is not monetizable in this family's form.
 Next per V4 §51: next independent families from DR pass A ranking — H2 value-area rotation
 and/or H9 multi-day balance false-break (swing horizon) get the next frozen spec.
+
+## SMV2P slate 2 (seq 377-379) — ALL KILLED; six-family obituary
+VA rotation: significantly negative (-$294.8/event, t=-2.17, all 9 cells) AND anti-complementary
+in joint-loss weeks. Multi-day false-break: negative, WF-unstable. Month-end flow: ~zero dev,
+dead old-regime. Combined with slate 1: ALL SIX externally-sourced fade/rotation/calendar
+families are dead on modern NQ — the market that pays Solar/B-MOM for breakout-holding
+punishes every reversion form we have tested at these horizons (FACT for these six families;
+INFERENCE for the class). Per frozen verdict rule: THREE new mechanism-expansion passes are
+REQUIRED before any slate 3. The joint-loss state signature (low ER, high flip) from SMV2Q is
+the design target for whatever the passes produce.
