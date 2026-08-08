@@ -4,15 +4,24 @@ _Written per V4.1 §0. If this session ends, the next invocation resumes HERE af
 repository-truth ritual. HEAD at write time: 547d2d4 (+ wave-3 results at 140f76c, all pushed)._
 
 ## In flight RIGHT NOW
-1. **Wave-5 workflow** (`wf_152d91ac-b5d`, script smv2-wave5-wf_152d91ac-b5d.js): SMV2W 5m-clock
-   R2 confirmation (seq 395) + SMV2X engine-3 slate 3 (seq 396-398), both red-teamed. Specs
-   frozen at 7abeb79, unread. Session model = Sonnet 5 (switched from Fable 5 after wave-4's
-   first attempt hit a usage limit; wave-4's SECOND attempt under Sonnet 5 completed cleanly
-   9/9 agents, results fully ingested and pushed at 7abeb79).
-   If wqxmpr96v/wf_152d91ac-b5d fails on a limit/error: check `git status` and
-   `ls runs/SMV2{W,X}*/out` for partial artifacts before relaunching; frozen specs are
-   unaffected either way.
-2. Nothing else pending. NT8 idle. 1m substrate committed (SM1M, 595a31c).
+1. **Wave-6 workflow** (`wf_3aad9fa9-e85`, script smv2-wave6-wf_3aad9fa9-e85.js): SMV2Y
+   joint-loss/weekly-downside viability state test (seq 399-402), red-teamed. Spec frozen at
+   51dbc45, unread. Genuinely new target (next-week portfolio downside / joint-loss status,
+   not next-session Solar PnL) on 4 already-computed states (sigma460/ER150/flip-rate/VR).
+2. **ES 1-minute export in flight** (job `6db86a69aac74f37`, `Tag=es1m_2022_2026`, writing to
+   `Documents/NinjaTrader 8/out/es1m_2022_2026_1m.csv`). Once it lands: convert to
+   `runs/SM1M_ES_SUBSTRATE/out/` parquet (mirror the SM1M NQ pattern exactly, incl.
+   build_meta.json provenance), THEN launch RTY 1m and YM 1m the same way (sequentially, one
+   NT8 job at a time — do not parallelize NT8 calls). This unblocks Engine-3 slate 4
+   (cross-market lead-lag, 8 candidates already ranked in
+   research/system_master/deep_research/DR_V4_EXPANSION_PASSES_20260808.md pass D1 + D2#1).
+   IMPORTANT: NT8/CrossTrade tools are ORCHESTRATOR-ONLY — never delegate this step to a
+   subagent (standing safety boundary; workflow agent prompts explicitly forbid it).
+   Instrument-name convention for the other two: try "RTY 09-26" and "YM 09-26" first (same
+   pattern as ES/NQ); if RunStrategyBacktest returns an instrument-not-found error, use
+   ListNinjaScriptFiles/MarketInfo or CrossTrade's SearchNinjaScriptSymbols to find the exact
+   resolved name before retrying — do not guess repeatedly.
+3. Nothing else pending. 3m/1m NQ substrates committed (SM01/SM1M).
 
 ## On wave-4 completion (the standing loop)
 1. Ingest exec + red-team results (journal.jsonl in the workflow transcript dir).
@@ -27,14 +36,15 @@ repository-truth ritual. HEAD at write time: 547d2d4 (+ wave-3 results at 140f76
    mechanism (2 families killed; per-instrument finals per owner addendum).
 6. Commit + push after every block. Auto-chain the next wave; do NOT stop at close-out.
 
-## Wave-4 close (folded into standing verdicts below): FAST-cohort removal lead CLOSED (3/5
-gates fail); ER150-damper policy KILLED; 1m clock fails decisively; 5m bar-matched near-miss;
-**5m time-matched clock (VolPeriod=276) EARNED an R2 confirmation, now running as SMV2W** — the
-strongest Solar-core challenger to date, beats incumbent on standalone Sharpe/CDaR, portfolio
-Sharpe/CDaR, all 5 LOYO folds, AND lower turnover. Do not adopt anything until SMV2W resolves.
-Engine-3 slate 2 obituary closed with 3 mechanism-expansion passes (24 candidates); slate 3
-(SMV2X) selects 3 NQ-only calendar-continuation engines; 8 cross-market candidates queued
-behind a future ES/RTY/YM data export (not yet committed to this repo).
+## Wave-4/5 close (folded into standing verdicts below): FAST-cohort lead CLOSED; ER150-damper
+KILLED; 1m clock fails decisively; 5m bar-matched near-miss; **5m time-matched clock FAILED its
+R2 confirmation** (SMV2W: gate A confidence 0.64/0.55<0.85, LOYO 3/5<4/5) — 3m incumbent
+RETAINED, having now survived 5 independent core challenges (memory/cohort/MA/T2T3/clock).
+**Engine-3 slate 3 (SMV2X) ALL KILLED** — 9/9 candidates across 3 slates now dead; NQ-only
+3m-bar-horizon search space exhausted; cross-market export now in progress (see item 2 above).
+Wave-6 (SMV2Y) tests a NEW target — joint-loss-week/weekly-downside prediction — not yet
+attempted; this is the correct next axis per V4 s21, distinct from the 4x-killed
+next-session-Solar-PnL target.
 
 ## Standing verdicts that bind future waves (do not relitigate)
 - SM14 = ONE_CONTRACT_FINAL holder; challengers keep failing 0.85-confidence despite pointwise
