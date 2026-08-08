@@ -1,0 +1,68 @@
+run_id: SMV2AA_MIX_SHIFT
+date_frozen: 2026-08-08
+class: DIAGNOSTIC (prerequisite) + PORTFOLIO_TEST (policy, LICENSED ONLY IF diagnostic passes)
+seq: [406, 407, 408, 409]  # 406=leg-asymmetry diagnostic; 407-409=mix-shift policy cells (conditional)
+parent: SMV2Z (seq 403-405): blanket exposure-cut during sigma460+ER150-flagged weeks FAILED
+  DECISIVELY because those weeks hold 30.3% of TOTAL net PnL on 9.9% of days -- they are
+  high-VARIANCE weeks, not simply high-downside weeks. This spec tests a STRUCTURALLY
+  DIFFERENT mechanism: reallocating WEIGHT between the two engines (Solar, B-MOM) during
+  flagged weeks, rather than cutting total exposure -- licensed ONLY if the two legs respond
+  asymmetrically to the flag (if both legs scale up together, a mix-shift cannot help either,
+  and this spec must say so and stop, per V4 s2's "legitimate outcome = no improvement found").
+
+data: LEG_SOLAR/LEG_BMOM daily PnL (runs/SMV2Q_DIAGNOSTICS/out/leg_daily.csv, columns
+  leg_solar/leg_bmom/twin), SMV2Z's own 23 trigger weeks -> 23 receiver (t+1) weeks
+  (runs/SMV2Z_VIABILITY_POLICY/out/policy_daily.csv or run_log.txt -- REUSE the exact flagged
+  week-set, do not recompute the AND-gate). dev <= 2026-05-31.
+
+406_diagnostic (MANDATORY GATE before any policy cell is meaningful):
+  for each leg, compute realized daily vol and mean PnL separately in flagged weeks (t+1) vs
+  unflagged weeks (all other weeks, same dev window):
+    vol_ratio_solar = std(leg_solar | flagged) / std(leg_solar | unflagged)
+    vol_ratio_bmom  = std(leg_bmom  | flagged) / std(leg_bmom  | unflagged)
+    sharpe_solar_flagged = mean(leg_solar|flagged)/std(leg_solar|flagged) * sqrt(252) [and
+      unconditional sharpe_solar_all for comparison]; same for bmom.
+    contribution_share: each leg's share of the 30.3%-of-total-net-PnL figure from SMV2Z
+      (i.e. sum(leg_solar|flagged)/sum(twin|flagged) and the bmom equivalent).
+  license_rule (ALL required to proceed to policy cells):
+    (a) max(vol_ratio_solar, vol_ratio_bmom) / min(...) >= 1.3 (the legs respond asymmetrically
+        -- a genuine differential, not both scaling up together);
+    (b) the RELATIVELY MORE STABLE leg (lower vol_ratio) does NOT have a materially worse
+        flagged-week Sharpe than its own unconditional Sharpe (i.e. shifting toward it during
+        flagged weeks is not shifting into a leg that ALSO gets worse then, just less loudly);
+    (c) both legs individually have >= 15 non-degenerate flagged-week observations (23 weeks
+        available; report actual N, this is a power floor not a redesign trigger).
+  if license_rule fails on (a) or (b): DIAGNOSTIC KILL. Record honestly. Do NOT run policy
+  cells 407-409 -- write REPORT.md explaining why the mechanism does not exist, and stop this
+  spec's execution there (a legitimate, prereg'd stopping point, not incomplete work).
+
+407_409_policy (ONLY IF LICENSED): during flagged weeks (t+1), reweight the champion's
+  Solar/BMOM basis from the incumbent 60/40 toward the diagnostic's identified more-stable
+  leg, on an EQUAL-VOL basis (rescale so TOTAL portfolio vol during the flagged week is
+  approximately unchanged from the unscaled 60/40 -- this is what distinguishes a mix-shift
+  from SMV2Z's exposure-cut; total risk stays on, its composition changes). Three cells,
+  frozen regardless of diagnostic direction (symmetric grid around the incumbent, biased
+  toward whichever leg 406 identifies as relatively defensive):
+    cell A: 75/25 toward the identified-stable leg
+    cell B: 50/50
+    cell C: 40/60 toward the identified-stable leg (most aggressive shift)
+  (if 406 identifies BMOM as relatively stable, weights above apply to BMOM; if Solar, they
+  apply to Solar -- state the resolved direction explicitly in REPORT.md before reporting cells)
+gates_all_required (same battery family as SMV2N/V/Z for comparability, with retention/RTC
+  bars relaxed slightly since this is explicitly NOT a total-exposure cut -- a mix shift that
+  preserves total vol should not be held to the same net-retention bar as a de-risking policy):
+  1: CDaR_0.95 improves vs unscaled champion (TUW improvement is a bonus, not required here --
+     a mix-shift's primary claim is CDaR/tail-risk, not underwater-duration).
+  2: improvement > 200-seed placebo (same-count random-week REWEIGHT, not scale-down, so the
+     placebo must also reweight not scale -- same non-overlap convention as SMV2N/V/Z).
+  3: LOYO >=4/5 dSharpe same sign (dSharpe measured vs the unscaled champion, not required
+     positive in absolute terms -- CDaR improvement is the primary claim).
+  4: net retention >= 0.90 (relaxed from 0.97 -- a mix-shift is expected to cost SOME net since
+     it reduces exposure to whichever leg was about to outperform; the question is whether the
+     CDaR benefit justifies a MODEST cost, not zero cost).
+  5: RTC >= 0.90 on champion top-decile up-days (relaxed from 0.97 for the same reason as gate 4).
+kill: 406 fails -> spec stops (documented). 407-409 run but fail gates -> family killed exactly
+  as before; the mix-shift mechanism itself (not just this specific weight grid) is then closed
+  pending a genuinely different mechanism.
+outputs: out/leg_asymmetry.csv, out/license_decision.json, out/policy_cells.csv (if licensed),
+  out/placebo.csv (if licensed), out/chronology.csv (if licensed), REPORT.md
