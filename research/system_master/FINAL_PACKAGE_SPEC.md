@@ -41,3 +41,8 @@ post-read modifications create new candidates with no holdout claim._
 16:44-flatten variant applies to the Solar leg for live ops (v2 default, −5.35% known);
 MONITOR-01 r-statistic + B-MOM rolling-2y decay floor + B1 top-10-night concentration
 monitor; virgin data ≥2026-08-01 untouched.
+
+---
+**HOLDOUT CONSUMED 2026-08-08** — single read executed per protocol
+(`runs/SM11_HOLDOUT_READ/out/`). No finalist dropped; results are
+HOLDOUT-CHARACTERIZED. 2026-06-01→2026-07-31 may not inform any future selection.

@@ -57,3 +57,9 @@ result as prior knowledge, not claim independent discovery.
   (2026-07-14/15 and 2025-10-14/15, NQ). Raw event dumps only — no conditional statistics,
   no signal evaluation, no P&L. These sessions are NOT considered selection-contaminated,
   but the probe is logged here for completeness.
+
+## 2026-08-08 — SEALED SCALP HOLDOUT CONSUMED (system_master SM11)
+The 2026-06-01→2026-07-31 block was read ONCE under the frozen
+research/system_master/FINAL_PACKAGE_SPEC.md protocol (Tier-3-equivalent joint
+finalist read: Solar baseline, HTF-tilt, B-MOM, B1, two portfolios). It is now
+CONSUMED for all campaigns. >= 2026-08-01 remains virgin (LOCKED_FORWARD).
