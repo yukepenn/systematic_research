@@ -1,0 +1,264 @@
+==============================================================================
+W9-3  B-FADE pre-2022 CONFIRMATION — the real out-of-sample test
+Spec: W9_nq_minute_resolutions.md §W9-3 + decay AMENDMENT (four-way verdict,
+frozen before readout). Rule identical to W8-2. Primary readout: 15-min exit.
+==============================================================================
+
+[FACT] Bars: 6466783 rows raw; 4908286 kept < 2022-01-01 (contamination guard; 1558497 rows >= 2022 dropped unread).
+[FACT] Kept stamp range: 2006-01-05 08:59:00 -> 2021-12-31 17:00:00 (exchange ET, END-stamped).
+
+--- EMPIRICAL STAMP VERIFICATION (3 sample NFP days) ---
+Claim: END-stamped => 09:30-stamped close = price at the 09:30:00 RTH open
+(the W8-2 3-min entry price point); first full RTH minute is stamped 09:31.
+  2006-02-03:
+    08:29  open   5269.50  close   5270.00  vol   100
+    08:30  open   5269.50  close   5269.50  vol    22
+    08:31  open   5269.50  close   5270.50  vol  1319
+    09:29  open   5254.00  close   5254.00  vol   113
+    09:30  open   5254.50  close   5254.00  vol   985
+    09:31  open   5253.50  close   5253.50  vol  2647
+    -> close(09:30)=5254.0 vs open(09:31)=5253.5 (diff -0.50 pt); RTH vol spike 09:31 (2647 vs 985); release vol spike 08:31 (1319 vs 22)
+  2013-07-05:
+    08:29  open   6403.00  close   6403.50  vol   334
+    08:30  open   6403.25  close   6404.50  vol    57
+    08:31  open   6404.50  close   6404.00  vol  1452
+    09:29  open   6393.00  close   6393.50  vol    98
+    09:30  open   6393.50  close   6393.75  vol   345
+    09:31  open   6393.75  close   6392.50  vol  2243
+    -> close(09:30)=6393.75 vs open(09:31)=6393.75 (diff +0.00 pt); RTH vol spike 09:31 (2243 vs 345); release vol spike 08:31 (1452 vs 57)
+  2021-11-05:
+    08:29  open  19724.00  close  19723.25  vol   345
+    08:30  open  19723.00  close  19723.75  vol   106
+    08:31  open  19723.75  close  19713.75  vol  1036
+    09:29  open  19769.25  close  19769.50  vol  1013
+    09:30  open  19769.25  close  19774.75  vol   885
+    09:31  open  19775.00  close  19770.50  vol  5675
+    -> close(09:30)=19774.75 vs open(09:31)=19775.0 (diff +0.25 pt); RTH vol spike 09:31 (5675 vs 885); release vol spike 08:31 (1036 vs 106)
+  VERDICT on stamps: END-stamped confirmed on all 3 days -> entry stamp = 09:30;
+  pre-release stamp = 08:29 (last close strictly before 08:30, guard >= 08:00).
+
+[FACT] Calendar (BLS primary-source, all 08:30 ET): 408 rows 2005-01-07 -> 2021-12-10.
+[FACT] 2005 rows 24 (find no bars — data starts 2006-01-05; dropped).
+[FACT] 2006-2021 release DAYS: 384 (events: {'NFP': 192, 'CPI': 192}; same-day NFP+CPI: 0).
+
+[FACT] Weekdays simulated: 3996 | skip counts (all weekdays): {'weekend': 720, 'no_pre': 30, 'no_entry': 24, 'no_exit': 1, 'zero_sig': 79}
+[FACT] Release calendar days with NO bars at all (exchange holiday): 2 -> ['2017-04-14', '2020-04-10']
+[FACT] Release days NOT traded (itemized): 13
+    2006-03-10       NFP  no_pre_bar
+    2006-05-17       CPI  no_pre_bar
+    2007-04-06       NFP  no_0930_entry_bar
+    2010-04-02       NFP  no_0930_entry_bar
+    2011-01-07       NFP  zero_reaction
+    2012-04-06       NFP  no_0930_entry_bar
+    2012-04-13       CPI  zero_reaction
+    2015-04-03       NFP  no_0930_entry_bar
+    2015-09-16       CPI  zero_reaction
+    2017-04-14       CPI  no_bars_holiday
+    2019-02-13       CPI  zero_reaction
+    2020-04-10       CPI  no_bars_holiday
+    2021-04-02       NFP  no_0930_entry_bar
+  (no_0930_entry_bar days are Good-Friday NFP shortened sessions: CME opened
+   for the release, closed before RTH; zero_reaction days are rule-mandated
+   no-trades, not data losses.)
+
+==============================================================================
+ROLL-GAP GUARD — splice detector (pass-1 tick-sigma variant REJECTED, kept
+only as sensitivity B; see script docstring for the full design record)
+==============================================================================
+[FACT] Days scanned: 4112 (window [08:29,10:30], 1-min fractional returns).
+[FACT] CANDIDATE 8-sigma jumps (local_z > 8 AND same-day isolation_z > 8): 55 days.
+[FACT] Same-day isolation z distribution: p50 3.91, p99 9.09, p99.9 14.87, MAX 19.2 — a true splice (permanent one-minute re-basing on an
+  otherwise ordinary day) would print isolation z >> 20; none exists.
+[FACT] Candidate jump minute stamps: {'08:31': 33, '10:01': 6, '09:31': 3, '09:01': 2, '09:32': 2, '08:30': 1, '09:09': 1, '09:41': 1, '09:30': 1, '09:33': 1, '09:51': 1, '10:11': 1, '08:33': 1, '09:46': 1}
+  -> every candidate sits at a macro stamp (08:31 release reaction burst,
+     09:30/09:31 RTH open, 10:01 US data / Fed announcements) — genuine
+     volatility, not contract-roll artifacts.
+[FACT] Structural splice test: the NT8 back-adjusted merge switches contracts
+  at a roll SESSION BOUNDARY (17:00/18:00 ET). An 08:29->10:30 window lies
+  strictly inside one session and can never span a splice.
+[VERDICT-INPUT] ROLL-GAP EXCLUSIONS: 0 trades (candidates failing the splice test are retained; count reported per spec).
+
+[SENSITIVITY B — rejected pass-1 detector] pooled tick sigma 16.226 t -> threshold 129.8 t; excluded trades: {'15min': 100, '30min': 111, '60min': 126} (recency-biased: a fixed tick bar over a 5x price rise).
+
+[FACT] RELEASE DAYS TRADED (PRIMARY, roll-guard exclusions 0): 371 of 384 calendar days 2006-2021 (expectation was ~380; the gap is 13 itemized days above). Placebo weekdays traded: 3625.
+
+==============================================================================
+POOLED 2006-2021 (PRIMARY) — net C1=2.872t/RT, day-clustered 95% CI, 1000 reps, seed 20260808
+==============================================================================
+           group    h     n   netC1_t     CI_lo     CI_hi   gross_t   win%
+         release   15   371    +1.683    -6.433    +9.644    +4.555  52.6
+         release   30   371    +5.964    -6.527   +19.616    +8.836  49.1
+         release   60   371    +9.220    -6.539   +26.569   +12.092  49.9
+         placebo   15  3625    -1.230    -3.754    +1.176    +1.642  48.8
+         placebo   30  3625    -1.467    -4.484    +1.258    +1.405  48.6
+         placebo   60  3625    -1.905    -5.923    +2.075    +0.967  50.1
+  sensitivity A (extreme-vol candidate days excluded — NOT roll artifacts):
+   release_sensA   15   341    -0.353    -8.685    +8.500    +2.519  51.0
+   release_sensA   30   341    +4.324    -9.196   +18.138    +7.196  47.8
+   release_sensA   60   340    +8.457    -7.824   +26.512   +11.329  49.1
+  sensitivity B (rejected pass-1 tick-sigma filter, recency-biased):
+   release_sensB   15   344    -3.735   -10.278    +2.905    -0.863  50.9
+   release_sensB   30   342    -0.036    -7.764    +8.336    +2.836  48.2
+   release_sensB   60   340    +1.337    -8.057   +11.685    +4.209  49.7
+
+==============================================================================
+SUBPERIOD 2015-2021 (verdict input) + 2006-2014 complement (PRIMARY)
+==============================================================================
+           group    h     n   netC1_t     CI_lo     CI_hi   gross_t   win%
+         release   15   162    -1.483   -18.669   +17.036    +1.389  45.7
+         release   30   162    +5.986   -21.934   +31.149    +8.858  43.2
+         release   60   162   +20.109   -17.039   +60.763   +22.981  50.0
+         placebo   15  1620    -2.050    -7.604    +3.102    +0.822  48.2
+         placebo   30  1620    -2.541    -8.565    +3.766    +0.331  48.5
+         placebo   60  1620    -4.140   -12.522    +3.314    -1.268  49.1
+         release   15   209    +4.138    +0.319    +8.100    +7.010  57.9
+         release   30   209    +5.946    +0.295   +11.412    +8.818  53.6
+         release   60   209    +0.779    -6.026    +7.602    +3.651  49.8
+         placebo   15  2005    -0.568    -1.819    +0.629    +2.304  49.3
+         placebo   30  2005    -0.599    -2.179    +0.912    +2.273  48.8
+         placebo   60  2005    -0.100    -2.276    +1.994    +2.772  50.8
+
+==============================================================================
+BY 4-YEAR ERA (PRIMARY; release with placebo alongside)
+==============================================================================
+           group    h     n   netC1_t     CI_lo     CI_hi   gross_t   win%
+   rel 2006-2009   15    93    +3.547    -1.592    +8.839    +6.419  53.8
+   rel 2006-2009   30    93    +7.558    -0.249   +15.969   +10.430  57.0
+   rel 2006-2009   60    93    +5.257    -4.575   +15.140    +8.129  54.8
+   plc 2006-2009   15   871    -1.140    -2.844    +0.671    +1.732  48.0
+   plc 2006-2009   30   871    -0.476    -2.851    +1.878    +2.396  49.0
+   plc 2006-2009   60   871    +0.242    -2.787    +3.233    +3.114  50.6
+   rel 2010-2013   15    92    +3.237    -2.666    +8.607    +6.109  59.8
+   rel 2010-2013   30    92    +2.867    -4.493   +11.619    +5.739  52.2
+   rel 2010-2013   60    92    -3.665   -14.829    +6.574    -0.793  44.6
+   plc 2010-2013   15   910    -0.674    -2.455    +1.091    +2.198  49.7
+   plc 2010-2013   30   910    -1.441    -3.701    +0.736    +1.431  48.2
+   plc 2010-2013   60   910    -1.597    -4.608    +1.305    +1.275  50.0
+   rel 2014-2017   15    93    -4.764   -14.056    +4.075    -1.892  48.4
+   rel 2014-2017   30    93    -4.453   -16.143    +7.217    -1.581  46.2
+   rel 2014-2017   60    93    -6.431   -20.341    +7.487    -3.559  47.3
+   plc 2014-2017   15   916    -1.322    -3.931    +1.674    +1.550  47.2
+   plc 2014-2017   30   916    -0.755    -4.576    +2.930    +2.117  49.0
+   plc 2014-2017   60   916    -1.692    -6.820    +3.358    +1.180  50.1
+   rel 2018-2021   15    93    +4.730   -25.893   +36.530    +7.602  48.4
+   rel 2018-2021   30    93   +17.848   -26.012   +67.973   +20.720  40.9
+   rel 2018-2021   60    93   +41.580   -15.804  +107.577   +44.452  52.7
+   plc 2018-2021   15   928    -1.770   -10.633    +6.738    +1.102  50.3
+   plc 2018-2021   30   928    -3.124   -13.235    +7.207    -0.252  48.3
+   plc 2018-2021   60   928    -4.433   -18.033    +8.091    -1.561  49.6
+
+==============================================================================
+BY EVENT TYPE (PRIMARY release)
+==============================================================================
+           group    h     n   netC1_t     CI_lo     CI_hi   gross_t   win%
+             CPI   15   186    +1.633    -9.653   +12.731    +4.505  56.5
+             CPI   30   186    -1.410   -18.256   +13.663    +1.462  53.2
+             CPI   60   186    +7.445   -13.488   +27.312   +10.317  48.4
+             NFP   15   185    +1.733   -10.684   +14.427    +4.605  48.6
+             NFP   30   185   +13.377    -5.041   +33.559   +16.249  44.9
+             NFP   60   185   +11.004   -14.092   +39.261   +13.876  51.4
+
+==============================================================================
+BY YEAR (PRIMARY release; all horizons in CSV)
+==============================================================================
+           group    h     n   netC1_t     CI_lo     CI_hi   gross_t   win%
+        rel 2006   15    22    +1.901    -4.828    +7.767    +4.773  63.6
+        rel 2006   30    22    +7.537    +0.853   +14.037   +10.409  68.2
+        rel 2006   60    22    +7.264    -1.600   +15.856   +10.136  68.2
+        rel 2007   15    23    +6.215    -0.220   +12.694    +9.087  56.5
+        rel 2007   30    23    +7.650    -1.918   +18.868   +10.522  65.2
+        rel 2007   60    23    +0.476   -13.313   +14.391    +3.348  52.2
+        rel 2008   15    24    +5.920    -6.497   +19.429    +8.792  50.0
+        rel 2008   30    24   +14.461    -5.127   +39.878   +17.333  45.8
+        rel 2008   60    24   +14.211   -13.917   +44.595   +17.083  50.0
+        rel 2009   15    24    +0.128   -11.795   +12.548    +3.000  45.8
+        rel 2009   30    24    +0.586   -19.539   +18.587    +3.458  50.0
+        rel 2009   60    24    -0.955   -21.465   +19.882    +1.917  50.0
+        rel 2010   15    23    +4.606    -6.700   +17.215    +7.478  56.5
+        rel 2010   30    23    +6.911    -6.748   +19.653    +9.783  60.9
+        rel 2010   60    23    +0.867   -28.918   +25.748    +3.739  56.5
+        rel 2011   15    23    +7.302    -7.699   +19.781   +10.174  73.9
+        rel 2011   30    23   +14.085    -6.440   +36.955   +16.957  73.9
+        rel 2011   60    23    +1.041   -19.265   +20.612    +3.913  43.5
+        rel 2012   15    22    -0.145    -8.873   +10.086    +2.727  54.5
+        rel 2012   30    22    -8.190   -20.738    +5.719    -5.318  27.3
+        rel 2012   60    22   -10.327   -30.056    +9.083    -7.455  31.8
+        rel 2013   15    24    +1.128    -7.330   +10.129    +4.000  54.2
+        rel 2013   30    24    -1.622   -15.498   +12.711    +1.250  45.8
+        rel 2013   60    24    -6.414   -21.539   +10.674    -3.542  45.8
+        rel 2014   15    24    +9.878    -5.375   +26.048   +12.750  66.7
+        rel 2014   30    24   +11.503   -10.296   +34.512   +14.375  45.8
+        rel 2014   60    24    +0.461   -27.003   +26.388    +3.333  50.0
+        rel 2015   15    22   -12.008   -31.832    +9.267    -9.136  36.4
+        rel 2015   30    22   -15.736   -39.879    +8.219   -12.864  45.5
+        rel 2015   60    22   -13.099   -40.016   +14.312   -10.227  45.5
+        rel 2016   15    24   -10.705   -29.083    +6.805    -7.833  45.8
+        rel 2016   30    24    -6.789   -34.169   +21.049    -3.917  50.0
+        rel 2016   60    24    -7.872   -45.668   +26.129    -5.000  54.2
+        rel 2017   15    23    -6.915   -24.140    +8.867    -4.043  43.5
+        rel 2017   30    23    -7.872   -27.573   +12.742    -5.000  43.5
+        rel 2017   60    23    -5.742   -25.095   +13.216    -2.870  39.1
+        rel 2018   15    24    +7.420   -26.334   +43.921   +10.292  45.8
+        rel 2018   30    24    -1.164   -54.973   +47.394    +1.708  37.5
+        rel 2018   60    24   +21.003   -44.925   +82.712   +23.875  58.3
+        rel 2019   15    23   -42.524   -73.140   -18.382   -39.652  26.1
+        rel 2019   30    23   -83.263  -159.308   -24.738   -80.391  26.1
+        rel 2019   60    23  -106.176  -198.574   -35.871  -103.304  26.1
+        rel 2020   15    23    +6.041   -71.525   +90.932    +8.913  52.2
+        rel 2020   30    23   +44.215   -55.358  +159.931   +47.087  34.8
+        rel 2020   60    23  +101.476   -39.050  +272.069  +104.348  65.2
+        rel 2021   15    23   +47.867   -23.701  +118.362   +50.739  69.6
+        rel 2021   30    23  +112.432    +3.599  +225.149  +115.304  65.2
+        rel 2021   60    23  +150.911    +1.648  +304.926  +153.783  60.9
+
+==============================================================================
+CONCENTRATION / WORST TRADE (PRIMARY release; $ at 1 NQ = $5/t, context)
+==============================================================================
+  h=15min: total +624.5 t ($+3,122) on n=371; max DD -2591.7 t
+    worst -422.9 t on 2020-10-13 (CPI)
+    top-5 winners +1993.6 t = 319.2% of total net, 22.5% of gross wins
+    top-5 dates: 2020-11-06;2020-07-14;2021-12-03;2021-03-05;2020-10-02
+    bottom-5 -1655.4 t (2020-10-13;2020-06-05;2021-06-10;2021-06-04;2019-08-13)
+  h=30min: total +2212.5 t ($+11,062) on n=371; max DD -3841.4 t
+    worst -788.9 t on 2019-08-13 (CPI)
+    top-5 winners +3124.6 t = 141.2% of total net, 23.8% of gross wins
+    top-5 dates: 2021-12-03;2020-09-04;2021-03-05;2020-11-06;2020-12-10
+    bottom-5 -2329.4 t (2019-08-13;2021-06-10;2018-10-11;2021-06-04;2020-06-05)
+  h=60min: total +3420.5 t ($+17,102) on n=371; max DD -3513.2 t
+    worst -845.9 t on 2019-08-13 (CPI)
+    top-5 winners +4546.6 t = 132.9% of total net, 26.4% of gross wins
+    top-5 dates: 2020-09-04;2021-12-03;2021-03-05;2021-03-10;2020-10-02
+    bottom-5 -2663.4 t (2019-08-13;2020-03-06;2021-06-04;2019-01-04;2021-06-10)
+
+[FACT] Rolling 3-year (1095D, min 24 trades) mean of PRIMARY release net15:
+  first 2007-01-18 = +2.50 t | min -30.70 t (2020-07-02) | max +7.02 t (2008-09-16) | last 2021-12-10 = +4.04 t
+  share of rolling observations < 0: 0.394
+
+==============================================================================
+RECONCILIATION — 2022+ IN-SAMPLE numbers from committed w8_bfade artifacts
+(context ONLY; never pooled with the 2006-2021 confirmation stats)
+==============================================================================
+                window    h     n   netC1_t     CI_lo     CI_hi
+  w8 2022-2026-05 (IS)   15   102   +47.255    -5.366   +91.983
+    w9 2006-2021 (OOS)   15   371    +1.683    -6.433    +9.644
+  w8 2022-2026-05 (IS)   30   102   +42.001   -22.783  +107.474
+    w9 2006-2021 (OOS)   30   371    +5.964    -6.527   +19.616
+  w8 2022-2026-05 (IS)   60   102   +98.991   +12.155  +183.797
+    w9 2006-2021 (OOS)   60   371    +9.220    -6.539   +26.569
+
+==============================================================================
+AMENDED FOUR-WAY VERDICT (frozen; PRIMARY = 15-min exit, all traded release
+days — roll-gap guard excluded 0 trades)
+==============================================================================
+  full 2006-2021 @15min : net +1.683 t, CI [-6.433, +9.644], n=371 -> net>0 & CI_lo>0: FAIL
+  sub 2015-2021 @15min  : net -1.483 t, CI [-18.669, +17.036], n=162 -> point>0: FAIL; CI_lo>0: FAIL
+  refutation check      : full CI_hi +9.644 < 0 ? no
+  placebo @15min (ctx)  : net -1.230 t, CI [-3.754, +1.176], n=3625 -> flat (CI covers 0): True
+
+  VERDICT: UNCONFIRMED-POSSIBLY-RECENT
+  -> per spec: PARKED, not closed — possibly a post-2020 regime product;
+     resolution only via forward data or Tier-3 holdout with a frozen candidate.
+
+[FACT] Artifacts written to research\scalping_lab\artifacts\w9_bfade: w9bfade_trades.csv, w9bfade_summary.csv, w9bfade_rolling_3y.csv, w9bfade_excluded.csv, w9bfade_concentration.csv, w9bfade_guard_scan.csv, w9bfade_stdout.txt
+
+W9BFADE CONFIRMATION DONE
