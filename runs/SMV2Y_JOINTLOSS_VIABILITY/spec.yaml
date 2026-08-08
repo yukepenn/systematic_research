@@ -1,0 +1,49 @@
+run_id: SMV2Y_JOINTLOSS_VIABILITY
+date_frozen: 2026-08-08
+class: DIAGNOSTIC (JOB1 information only)   # V4 s21 causal edge-viability state; V4.1 s13
+seq: [399, 400, 401, 402]  # 399=sigma460, 400=ER150, 401=flip-rate, 402=VR(q26,N780 -- the best-plateaued dev cell from SMV2J, reused not re-selected)
+parent: SMV2Q (seq 380) found joint-loss weeks (50/230, -$159.6k) differ from all weeks on
+  ER150 (t=-6.5) and flip-rate (t=+3.0) -- but that was an EX-POST/CONCURRENT profile, not a
+  causal forward test. SMV2J/O killed all four states as predictors of NEXT-SESSION SOLAR PnL
+  specifically. THIS spec tests a DIFFERENT target -- next-WEEK portfolio downside / joint-loss
+  status -- using ONLY states already built and verified in the repo (no new data, no new
+  feature engineering). Per V4 s45 this is not a revival of a killed family: same states,
+  materially different dependent variable and horizon (weekly downside, not daily Solar PnL).
+
+target: computed from runs/SMV2M_MASTER_BUILD/out/parity_daily_aligned.csv (NT8 executable
+  curve, merge the 2023-04-05/06 boundary pair) and runs/SMV2Q_DIAGNOSTICS/out/leg_daily.csv
+  (LEG_SOLAR, LEG_BMOM for the joint-loss classification), dev <= 2026-05-31, ISO weeks:
+  primary: continuous next-week champion downside = min(cumulative daily PnL within week t+1,
+    0) -- i.e. the worst intra-week drawdown point, dollars, always <= 0.
+  secondary: binary next-week joint-loss = 1 iff weekly LEG_SOLAR sum < 0 AND weekly LEG_BMOM
+    sum < 0 (SMV2Q's exact definition, reused verbatim).
+
+states (measured using ONLY data through the last session of week t; predicting week t+1):
+  399_sigma460: level of sigma460 at week t's last session (already deployed, dev-frozen scale).
+  400_ER150: Kaufman efficiency ratio, n=150 bars (SMV2R sub385 formula, reused verbatim) at
+    week t's last session.
+  401_flip_rate: mean daily count of vote_pos sign changes over week t (SMV2Q's exact
+    construction, reused verbatim).
+  402_VR_q26_N780: variance ratio, q=26, N=780 (SMV2J's single best-plateaued dev cell by
+    |t_NW| among the 9 killed cells -- reused as the representative VR reading, NOT a fresh
+    grid search; this is the one cell already computed and available, chosen for compute
+    economy, not cherry-picked for this test's outcome).
+
+harness (JOB1 convention, matches SMV2J/O exactly, applied to the NEW target):
+  bucketing: expanding-window quintiles of the state at week t's close (>=12mo burn-in).
+  test_1_monotonicity: quintile mean of next-week downside/joint-loss-rate ordered, allow one
+    inversion max (4/5).
+  test_2_incremental: OLS downside_{t+1} ~ z(state_t) + z(sigma460_t) + HTF_agree_t (controls
+    omitted for the sigma460 state itself, obviously), Newey-West lag 2 (weekly data, shorter
+    lag than the daily 5); confirm with moving-block bootstrap (block=4 weeks, B=10000,
+    seed=20260808) on the state coefficient. Require |t_NW| > 2 for test_2.
+  test_3_plateau: N/A for single-cell states (sigma460/ER150/flip-rate have no grid here); for
+    402 VR, plateau already established as failing in SMV2J -- reported for context only, not
+    a fresh gate.
+  test_4_old_regime: NOT RUN for the joint-loss/portfolio target (B-MOM has no pre-2022
+    substrate). For sigma460/ER150/VR, run the SMV2J-style old-regime check on E10-ONLY next-
+    week downside as a partial proxy (disclosed as a proxy, not full old-regime validation).
+verdict_per_state: KEEP (-> a bounded exposure-reduction policy spec, 0/0.5/1 risk per V4 s21,
+  in a LATER wave) or KILL (recorded, closes this axis of the viability-state search).
+cluster_rule: if |corr(best two KEEP states)| > 0.7 (weekly), keep only the better-plateaued.
+outputs: out/target_series.csv, out/harness_results.csv (4 rows x tests), out/old_regime_proxy.csv, REPORT.md
