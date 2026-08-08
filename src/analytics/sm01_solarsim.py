@@ -163,9 +163,16 @@ def _fill(open_, high, low, side, at_close=None):
 def member_trades(bars: pd.DataFrame, is_up, flip, s_eff, anchor,
                   bars_required: int = 20,
                   comm_side: float = NQ_COMM_SIDE,
-                  point_value: float = NQ_POINT_VALUE) -> tuple[pd.DataFrame, np.ndarray]:
+                  point_value: float = NQ_POINT_VALUE,
+                  stop_mult: float | None = None) -> tuple[pd.DataFrame, np.ndarray]:
     """Simulate the V3 trading layer for one member. Returns (fills, pos)
-    where pos[t] = position held at bar t's close (+1/0/-1)."""
+    where pos[t] = position held at bar t's close (+1/0/-1).
+
+    stop_mult (SM03): if set, an additional protective exit fires at bar close
+    when (entry_px - close)*side >= stop_mult * S_entry, where S_entry is the
+    member S frozen at the entry trend's birth. Fill next bar open, standard
+    slip. Re-entry follows natural V3 semantics (flat until next Type-1 flip).
+    None => exact SM01 parity behavior."""
     n = len(bars)
     close = bars["close"].to_numpy()
     open_ = bars["open"].to_numpy()
@@ -180,6 +187,10 @@ def member_trades(bars: pd.DataFrame, is_up, flip, s_eff, anchor,
     p = 0
     pending = 0  # order to execute at next bar open: +1 enter long, -1 enter short,
                  # +2 exit short (buy to cover), -2 exit long (sell)
+    pending_stop = False  # pending exit is a disaster stop (labeling only)
+    entry_px = np.nan     # px of current position's entry fill
+    s_entry = np.nan      # member S at the entry trend's birth
+    pend_s = np.nan       # S captured when an entry order is created
 
     for t in range(n):
         # 1. execute pending order at this bar's open
@@ -187,20 +198,27 @@ def member_trades(bars: pd.DataFrame, is_up, flip, s_eff, anchor,
             if pending == 1:
                 px = _fill(open_[t], high[t], low[t], +1)
                 p = 1
+                entry_px, s_entry = px, pend_s
                 fills.append((t, times[t], "Long", "Buy", px, p))
             elif pending == -1:
                 px = _fill(open_[t], high[t], low[t], -1)
                 p = -1
+                entry_px, s_entry = px, pend_s
                 fills.append((t, times[t], "Short", "SellShort", px, p))
             elif pending == -2:
                 px = _fill(open_[t], high[t], low[t], -1)
                 p = 0
-                fills.append((t, times[t], "L-SolarExit", "Sell", px, p))
+                fills.append((t, times[t],
+                              "L-DisasterStop" if pending_stop else "L-SolarExit",
+                              "Sell", px, p))
             elif pending == 2:
                 px = _fill(open_[t], high[t], low[t], +1)
                 p = 0
-                fills.append((t, times[t], "S-SolarExit", "BuyToCover", px, p))
+                fills.append((t, times[t],
+                              "S-DisasterStop" if pending_stop else "S-SolarExit",
+                              "BuyToCover", px, p))
             pending = 0
+            pending_stop = False
 
         # 2. OnBarClose decision on this bar
         if t >= bars_required:
@@ -210,10 +228,22 @@ def member_trades(bars: pd.DataFrame, is_up, flip, s_eff, anchor,
                 pending = -2; decided = True
             elif p == -1 and close[t] >= xl:
                 pending = 2; decided = True
+            # SM03B disaster stop: INTRABAR adverse excursion beyond stop_mult *
+            # S_entry, decided at bar close (long: Low <= entry - m*S; short:
+            # High >= entry + m*S). SM03's close-basis form is algebraically
+            # shadowed by the Solar exit and is dead (runs/SM03_DISASTER_STOP).
+            if (not decided and stop_mult is not None and p != 0
+                    and np.isfinite(entry_px)):
+                adverse = (entry_px - low[t]) if p == 1 else (high[t] - entry_px)
+                if adverse >= stop_mult * s_entry:
+                    pending = -2 if p == 1 else 2
+                    pending_stop = True
+                    decided = True
             # NT8 drops market entries submitted on the session's last bar
             # (verified: 2025-06-05 17:00 down-flip produced no 18:03 fill).
             if not decided and p == 0 and flip[t] != 0 and not last_of_sess[t]:
                 pending = 1 if flip[t] > 0 else -1
+                pend_s = s_eff[t]
 
         # 3. session close: flatten AT this bar's close; cancel pending exits
         #    (position is gone) but keep pending entries? NT8 semantics resolved
@@ -226,6 +256,7 @@ def member_trades(bars: pd.DataFrame, is_up, flip, s_eff, anchor,
             p = 0
             if pending in (-2, 2):
                 pending = 0
+                pending_stop = False
         pos[t] = p
         if pending == 1:
             pend_pos[t] = 1
