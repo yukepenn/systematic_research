@@ -46,3 +46,23 @@ pre-2019 (research basis only).
 
 Outputs: `e10_daily_hist.csv` (4,130 sessions), `member_trades_hist.parquet` (~114k
 trades), `vote_state_3m_hist.parquet`, `result.json`.
+
+## SM06b addendum — overshoot ratio + σ-viability (zero burn)
+
+- σ-matched overshoot ratio (θ/σ₁ₘ = 5): r = 1.12–1.33 in EVERY year 2006-2026 — the
+  persistence deviation NEVER disappeared at micro scale. FACT
+  (`out/r_sigma_matched_yearly.csv`; fixed-θ=179t yearly r in `out/r_yearly.csv`.)
+- What changed across regimes is the VOLATILITY LEVEL: per-segment gross scales with σ
+  (θ ∝ σ) while friction is constant. Champion yearly net vs yearly mean σ₃ₘ
+  (`out/sigma_vs_net_yearly.csv`): corr 0.616; ALL 8 years with σ₃ₘ < 1.0 pts are
+  negative (0/8 positive); σ ≥ 3 → 6/7 positive. FACT
+- BUT σ is necessary-not-sufficient: 2018 (σ 2.58) −$6.1k, 2019 (2.11) −$1.6k, and
+  **2026 Jan–May (σ 10.86, highest on record) −$7.6k** — the owner's Feb→Jun 2026
+  drawdown is real in-substrate and occurred in a maximal-σ regime. The aliveness state
+  is ≥2-dimensional. FACT + INFERENCE
+- Design consequence: a σ-floor viability gate (friction-arithmetic, structural,
+  calibrated on 2006-2021 diagnostics — NOT dev-fitted day-level vol conditioning,
+  which stays closed) is a candidate slow-throttle for the final system; it cannot be
+  the whole regime story. HYPOTHESIS → future spec; duplicate-check logged
+  (differs from killed axes: multi-week structural floor derived from cost arithmetic
+  vs. the falsified day-level vol/day-type suppression).
