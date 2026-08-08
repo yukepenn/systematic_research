@@ -20,3 +20,14 @@
 6. **B-MOM daily artifacts carry C1 friction (2.872t/RT)**, a stress convention, not
    the actual NQ commission (0.872t). All B-MOM-containing numbers are therefore
    friction-conservative by ~2t/RT ≈ $10/trade.
+7. **SolarWaveSMMaster_v1 order-engine arrangement bug** (SMV2M, 2026-08-08): v1
+   attached to the MNQ execution instrument as PRIMARY and submitted index-0 orders
+   from signal-series (BIP1) events. In the Analyzer engine the primary Position did
+   not advance between successive signal-bar decisions, and with EntriesPerDirection=100
+   the net-change engine re-entered every bar without bound (238,099 fills, single fills
+   up to qty 1037, meaningless -$163M "net"). SolarWaveSMOneLot_v1 was immune only by
+   accident: it never set EntriesPerDirection, so NT8's default (1) deduplicated the
+   re-entries. RULE: multi-contract net-change masters MUST use the E10Master_v2
+   arrangement — signals on PRIMARY, execution on the ADDED series via Positions[1] —
+   which is parity-proven 0/540,232. v1 evidence preserved in
+   runs/SMV2M_MASTER_BUILD/out/nt8_v1_failed/; corrected class = SolarWaveSMMaster_v2.
