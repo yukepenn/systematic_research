@@ -35,5 +35,32 @@ horizon, named now before the readout) AND placebo flat. If confirmed → Progra
 candidate freeze (then robustness → Tier-3 single holdout read per the standard path).
 If not → the W7-3 reversion was regime/sample noise; B-FADE closed.
 
+## AMENDMENT (2026-08-08, owner non-stationarity directive; committed BEFORE the
+minute export landed — no readout has occurred)
+
+Markets change; 2005-era effects may be dead. Decay-aware verdict layers added:
+
+W9-1 (B1) amended verdict: PROMISING now requires ALL of — (a) full-sample net ≥
++4t/night with CI_lo > 0 [power]; (b) NO significant negative time trend (nightly
+return regressed on time, day-clustered; and the rolling 2-year mean plotted);
+(c) the MOST RECENT 4-year block (2022→2026-05) point estimate > 0 [not CI — that
+was the catch-22 — but the recent point estimate may not be negative]; (d) ρ vs
+Solar < 0.3. A pass driven by pre-2015 data with a dying trend is a FAIL.
+
+W9-3 (B-FADE) amended verdict (replaces the binary rule): CONFIRMED iff 2005-2021
+net C1 > 0 with CI_lo > 0 at 15min AND 2015-2021 subperiod point estimate > 0;
+PARTIALLY-SUPPORTED (park as candidate-with-caveat, weight on recent regime) iff
+2015-2021 alone passes CI_lo > 0 while the full pre-2022 window does not;
+UNCONFIRMED-POSSIBLY-RECENT (parked, NOT closed — the effect may be a post-2020
+regime product; resolution only via forward data or Tier-3 holdout with a frozen
+candidate) iff pre-2022 is flat/negative BUT no significant NEGATIVE fade result;
+REFUTED (closed) only if pre-2022 fade is significantly NEGATIVE (CI_hi < 0) —
+i.e., old data actively contradicts, not merely fails to confirm.
+
+W9-2 (H-D3) unchanged — its window is already recent (2022+ primary).
+
+Standing principle recorded: any Program-B candidate that ever freezes gets a decay
+monitoring protocol (MONITOR-style scheduled re-reads) — no permanence assumption.
+
 Artifacts: `artifacts/w9_*/`. Registry S32-S34. The minute parquet becomes permanent
 substrate: `substrate/minute/NQ/nq1m_2005_202605.parquet` + hash in MANIFEST.
