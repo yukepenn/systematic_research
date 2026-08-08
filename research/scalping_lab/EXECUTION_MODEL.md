@@ -7,11 +7,17 @@ Audited base (Lifetime plan, verified to the cent in E10MASTER_V1 validation):
 | Commission/side | $2.18 | $0.65 |
 | Tick value | $5.00 (0.25 pt) | $0.50 (0.25 pt) |
 | C0 RT (commission only) | $4.36 = 0.872 ticks | $1.30 = 2.6 ticks |
-| **C1 RT (comm + 1 tick slip/exec)** | **$14.36 = 2.872 ticks** | $3.30 = 6.6 ticks |
-| C2 RT (comm + 2 ticks slip/exec) | $24.36 = 4.872 ticks | $5.30 = 10.6 ticks |
+| **C1 RT (comm + 1 tick slip/exec)** | **$14.36 = 2.872 ticks** | $2.30 = 4.6 ticks |
+| C2 RT (comm + 2 ticks slip/exec) | $24.36 = 4.872 ticks | $3.30 = 6.6 ticks |
+
+[CORRECTION 2026-08-08, DR-E audit: the original MNQ C1/C2 cells ($3.30/6.6t and
+$5.30/10.6t) double-counted slippage (used 2t and 4t per exec instead of 1t and 2t).
+Corrected arithmetic: $1.30 + 2×$0.50 = $2.30 = 4.6 MNQ ticks (C1); $1.30 + 4×$0.50
+= $3.30 = 6.6t (C2). NQ cells were always correct. Conclusion unchanged: MNQ C1 4.6t
+still exceeds NQ's 2.872t by 60% — MNQ remains excluded from scalp research economics.]
 
 Consequences:
-- **NQ is the scalp research vehicle.** MNQ friction is 6.6 ticks/RT at C1 — nearly all
+- **NQ is the scalp research vehicle.** MNQ friction is 4.6 ticks/RT at C1 — nearly all
   short-horizon edges die there. MNQ re-enters only at sizing/deployment time.
 - C1 is the PRIMARY screen for market-order strategies. C0 is diagnostic only. C2 is stress.
 - If bid/ask execution is modeled explicitly (Level 2 data permitting): decompose into

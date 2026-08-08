@@ -100,12 +100,32 @@
 - [x] **ES pipeline CONFIRMED** (pilots ESU5/ESH6 full sessions uncapped, L1+L2 →
       substrate/raw/ES/ + MANIFEST). Oldest-first ES archival of discovery sessions
       running (10 jobs queued 2026-08-08; rolling-window vanishing risk).
-- [ ] **Wave W5 (queue)**: W5-1 deep-pullback/clean-entry family (new frozen spec from
-      W4-E contrast; wait-deeper entries + eff/flow alignment); FSS-10 ES conditional
-      lift on NQ structural states (needs ES sechilo build after archival); fast FSS-2
-      (5-30s clocks, distinct from killed 1-min S2a); FSS-6/7 compression/velocity;
-      ML conditional quality (§23) once any base signal exists. Remaining ES exports
-      (27 sessions) + conversion.
+- [x] **DR-E GLOBAL STRATEGY REVIEW (owner-requested, 2026-08-08)**: 4 web-research
+      lanes converge — Zone F externally corroborated dead (per-event edge pool ~0.5t <
+      C1, latency-allocated; retail takers are the documented HFT profit source);
+      friction floor sits at ~30-60min holds (required capture 8.4%@5min vs realistic
+      ~4%); documented retail-accessible edges live at 30min-multiday; cheapest certain
+      win = fractional-Kelly MNQ sizing of R5-E10 (likely over-Kelly today); real
+      second-engine route = cross-ASSET persistence screen (GC/CL) + overnight premium
+      (Solar-orthogonal by construction), all correlation-gated (<0.3). MNQ C1
+      arithmetic corrected (4.6t not 6.6t). deep_research/DR_E_global_strategy_review.md.
+- [ ] **RESTRUCTURED PROGRAM (per DR-E; supersedes prior W5 queue)**:
+      **P0** fractional-Kelly MNQ sizing policy for R5-E10 v2 (immediate, ledger-only).
+      **P1** execution overlays on Solar: patient TIME-TRIGGERED exits test (+0.5-1t/exit
+      hypothesis) + stop/exit realism audit from own tick data.
+      **P2** correlation-gated second-engine search: overnight 16:44->09:30 premium
+      (2005-2026, MNQ prototype); intraday-momentum family (ledger-correlation pre-gate
+      FIRST, predicted reject); cross-asset r-screen GC/CL/RTY/ZN with W2-0-corrected
+      per-instrument nulls + friction conversion.
+      **P3** scalp disposition: ZONE F FORMALLY CLOSED (externally corroborated);
+      30-min horizon-floor gate adopted for all new families; ONE final migration
+      experiment = CLEAN seed at 10-60min holds, 40-80t brackets -> if it fails,
+      declare NO QUALIFIED FAST NQ SCALPING EDGE per mandate par.34. Substrate
+      repurposed: execution lab + Solar role-B/C per-trade micro-state + >=1min ES
+      regime features. Remaining ES/NQ archival continues oldest-first.
+      **P4** closed permanently: seconds ES lead-lag, queue/passive scalp alpha,
+      regime suppression on Solar, pre-FOMC standalone, day-of-week, MNQ scalp
+      economics.
 - [ ] Re-queued (Amendment 4 ordering): S2a frozen run (P7); H-B5 (P8); H-B1 anti-chase
       (role C, P11); oldest-first ARCHIVE_ONLY exports of confirmation pool (§20).
 - [ ] (done earlier) capped-session RTH second pass → Layer-1 state grids (250ms/1s/5s) →
