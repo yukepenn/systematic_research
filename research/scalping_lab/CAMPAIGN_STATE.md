@@ -159,13 +159,18 @@
       falsified, UNRESOLVED list carried, ceiling library/clock-relative + E1
       sample-limited). Full text + reopen rule: reports/ZONE_F_FINAL_VERDICT.md.
       Holdout and confirmation pool never read — intact.
-- [ ] **NEXT (funded program, post-closure)**: Program A — patient time-triggered-exit
-      test on Solar (uses BBO substrate + regenerated signals). Program B — momentum
-      family build spec (W5-B2 gate passed; H-A1 retry terms); B1 overnight 2005+
-      resolution (needs 1-min/L0 minute export); event-FADE new preregistered spec;
-      GC/CL cross-asset r-screen with W2-0-corrected nulls. Roles B/C — per-trade
-      micro-state scoring of Solar trades. Deferred: H-D3@1min, S2a Tier-1 read
-      (minute exporter at next NT8 restart enables both).
+- [x] **OWNER SCOPE RULING (2026-08-08): NQ ONLY this phase** — cross-asset r-screen
+      (GC/CL/RTY/ZN) DEPRIORITIZED ("先把一个做好最到极致"); recorded in W9 spec.
+- [ ] **W8 IN FLIGHT (spec cf7041f)**: B-MOM build (gate passed), B-FADE
+      characterization (honesty clause), A-EXIT patient execution (Arm A/B), ROLE-B
+      per-trade micro-state feasibility.
+- [ ] **W9 QUEUED (spec frozen; NT8 restarted, exporters live)**: NQ 1-min 2005→2026-05
+      export running (nq1m_2005_202605) → W9-1 B1 overnight 2005+ resolution (RT-1
+      prescription, power-adequate verdict), W9-2 H-D3@1min (the ONE reserved
+      reconstruction), W9-3 B-FADE pre-2022 confirmation (needs historical BLS/Fed
+      calendar 2005-2021, compiled from primary sources and committed before readout).
+      s20251117 20M-cap tick re-export also running. S2a Tier-1 read remains barred
+      (candidate did not survive Tier-0; confirmation access not earned).
 - [x] (superseded record) **W5 (three programs, specs frozen before readout — specs/W5_programs_wave.md)**:
       A1 robust sizing FRONTIER (ledger-only, scenario grid, no single fraction as
       truth). B1 overnight 16:44→09:30 first pass (2022-2026 3-min data) + measured
