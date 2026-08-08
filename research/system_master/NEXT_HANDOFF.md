@@ -1,7 +1,15 @@
-# NEXT_HANDOFF — exact continuation state (2026-08-08, after wave-10 close / wave-11 launch)
+# NEXT_HANDOFF — exact continuation state (2026-08-08, after wave-11 close / wave-12 launch)
 
 _Written per V4.1 §0. If this session ends, the next invocation resumes HERE after the §4
-repository-truth ritual. HEAD at write time: 2b2f88a (wave-11 specs frozen, pushed)._
+repository-truth ritual. HEAD at write time: wave-12 specs frozen (see git log), pushed._
+
+## Wave-11 close (seq 415-419, both red-teamed, ingested at b2bb4d4)
+SMV2AD_VOLMULT_CEILING: CONFIRMED-OPTIMAL-IN-RANGE, CLOSED (0/5 arms beat the 1200t/VMS-6-30
+incumbent on Sharpe AND CDaR simultaneously — raising the ceiling always trades one for the
+other). SMV2AE_1MIN_RESCALE: PASS-SCREEN (rescaling VolMult's point-scale by the measured
+3m/1m ratio R=1.7301 flips 1-minute from net -$3.2k/Sharpe -0.018 to net $77.7k/Sharpe 0.439,
+friction share 1.02→0.47 — still well below the 3m incumbent's 0.709 but clears the screen).
+Mechanism-expansion pass produced a 9-candidate ranked list for the Solar CORE (not Engine-3).
 
 ## Owner pivot (2026-08-08, mid-session)
 Owner flagged the smoothness/ML diagnostic run (waves 6-10) as having drifted from the actual
@@ -16,31 +24,33 @@ pause — resume auto-chaining per V4.1 §0, do NOT stop at close-out, do NOT as
 launching the next wave unless genuinely blocked.
 
 ## In flight RIGHT NOW
-1. **Wave-11 workflow** (`wf_dd749b21-786`, script smv2-wave11-wf_dd749b21-786.js), specs
-   frozen at 2b2f88a before any read:
-   - **SMV2AD_VOLMULT_CEILING** (seq 415-417): the 1200t/300pt upper clamp on the slowest
-     member (VolMult=30) binds 39.2% of Jan-May 2026 bars vs 9.8%/0.2%/3.9%/18.3% in
-     2022-2025 (SMV2R sub_381 clamp_audit.csv) — more binding NOW than any full historical
-     year, never acted on. Tests ceiling sweep (1200/1600/2000/2400t) + extended slow cohort
-     (VolMult 34-50, add-18 and replace-fastest-13 variants) + old-regime screen per
-     candidate. R1_FAMILY_TEST — no adoption this wave; qualifying candidate → R2 spec next.
-   - **SMV2AE_1MIN_RESCALE** (seq 418-419): SMV2U's 1-minute tests (both bar-matched and
-     time-matched sigma windows) reused the 3m VMS=[6..30] constants and clamp bounds
-     VERBATIM and both failed (friction 102-128% of gross). The one truly un-recalibrated
-     axis — VolMult's point-scale itself (1m |dClose| not point-comparable to 3m |dClose|) —
-     was never tested. Measures the actual empirical rescale ratio, re-tests with it. Screen
-     gate only (Sharpe>0 AND friction<0.60); fail closes 1-minute definitively (2
-     architectures × every calibration convention now exhausted).
-   - **Mechanism-expansion research pass** (no spec, read-only): ranked list of genuinely new
-     Solar-CORE (not Engine-3) adaptive-mechanism ideas analogous to what VolMult already
-     proved works, explicitly deduped against rejected_ideas.md and every closed lead in
-     CURRENT_TRUTH.md → `research/system_master/deep_research/DR_V4_SOLARCORE_EXPANSION_20260808.md`.
-   Both numerical specs get independent red-team verification in the same workflow. On
-   completion: ingest, correct any red-team-flagged issues in the run REPORTs (never spec.yaml),
-   update registry (seq 415-419) + CURRENT_TRUTH/SCORECARD/FRONTIER docs, commit+push, then
-   immediately freeze the next wave from whatever the expansion pass + SMV2AD/AE verdicts
-   license (R2 confirmation spec(s) if any candidate qualified; otherwise the next-ranked
-   expansion-pass idea). Auto-chain — do not stop at close-out.
+1. **Wave-12 workflow**: specs frozen before any read (see git log for the freeze commit):
+   - **SMV2AF_1MIN_RESCALE_R2** (seq 420-423): R2 confirmation of SMV2AE's PASS-SCREEN. Gate A
+     (dev bootstrap Sharpe significance, 0.85 bar), Gate B (LOYO/chronology, ≥4/5), Gate C
+     (old-regime — likely BLOCKED-BY-DATA, SM06 hist substrate is 3m-only, same wall SMV2W hit
+     for 5m; report explicitly, do not improvise around it), Gate D (DIAGNOSTIC, not gated:
+     correlation of the rescaled-1m arm's daily PnL vs the 3m incumbent's — a priori expectation
+     is HIGH correlation since it's the same mechanism at a finer clock on the same price
+     series; if correlation is instead low, an exploratory 50/50 vol-matched blend is tested for
+     Sharpe/CDaR improvement vs the 3m-only leg, flagged as an R3 candidate if it wins, no
+     adoption either way this wave). No replacement/promotion path exists here by construction
+     (0.439 Sharpe << 3m's 0.709) — outcome is either "1-minute construction validated as real,
+     not noise" + possible diversification lead, or "downgraded to noise-level, 1-minute CLOSED
+     for good across every calibration convention this program can motivate."
+   - **SMV2AG_ADAPTIVE_CLAMP** (seq 424-425): mechanism-expansion pass's #1-ranked idea. Tests
+     a CAUSAL rolling-percentile clamp ceiling (P∈{90,95,99} × N∈{460,920} bars, 6 cells, floor
+     at the incumbent's 1200t so it can only widen, never tighten below it) instead of SMV2AD's
+     now-closed FIXED-value ceiling raise — hypothesis: captures the Sharpe upside from relieving
+     the 2026-concentrated clamp bind without SMV2AD's permanent CDaR cost, since it only widens
+     when the recent realized-threshold distribution actually calls for it. Same AND-rule
+     (Sharpe AND CDaR AND ≥95% top-10 retention) — no adoption this wave, qualifying candidate →
+     R2 spec next.
+   Both get independent red-team verification. On completion: ingest, correct any red-team-
+   flagged issues in the run REPORTs (never spec.yaml), update registry (seq 420-425) +
+   CURRENT_TRUTH/INDICATOR_FRONTIER, commit+push, then immediately freeze the next wave (the
+   next-ranked expansion-pass idea — volume bars as a new clock, EVI rank #2 — is the natural
+   next pick if both wave-12 specs close cleanly). Auto-chain — do not stop at close-out, do
+   not ask before launching the next wave unless genuinely blocked.
 2. **DONE**: ES/RTY/YM 1-minute cross-market context substrates all exported, verified, and
    committed (SM1M_ES/RTY/YM_SUBSTRATE, pushed at 3151800). Instrument names resolved cleanly
    as ESU6/RTYU6/YMU6. Engine-3 slate 4 (cross-market lead-lag, ranked candidates in

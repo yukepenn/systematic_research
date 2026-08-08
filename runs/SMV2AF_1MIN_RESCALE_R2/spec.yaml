@@ -1,0 +1,58 @@
+run_id: SMV2AF_1MIN_RESCALE_R2
+date_frozen: 2026-08-08
+class: R2_CONFIRMATION   # the live lead from SMV2AE's PASS-SCREEN (seq 418-419)
+seq: [420, 421, 422, 423]
+parent: SMV2AE seq 419 (rescaled 1-minute VolMult ensemble, R=1.7301 pre-registered scale
+  ratio: net $77,748 / Sharpe 0.439 / friction share 0.470, vs SMV2U's unscaled -$3,163 /
+  -0.018 / 1.020 — PASS-SCREEN per Sharpe>0 AND friction<0.60, DISCLOSED PRIOR). Still trails
+  the 3m incumbent (Sharpe 0.709) on every headline metric — this is NOT a replacement
+  confirmation. The two live questions this R2 answers: (1) is the standalone 0.439 Sharpe
+  statistically real or noise-level on 4.4y of daily data, and (2) does a 1-minute-clock Solar
+  signal carry any genuinely NEW information relative to the deployed 3-minute-clock signal,
+  or is it (as the a priori expectation would suggest, since it is the SAME mechanism at a
+  finer sample of the SAME price series) simply a noisier, more-expensive-to-trade copy of the
+  same bet with nothing to add at the portfolio level.
+object_under_test: the exact rescaled construction from SMV2AE seq 419 (VMS_1m = VMS_3m *
+  1.730064, clamp [40,1200] ticks unchanged, sigma window 1380 bars time-matched, R
+  frozen/reused verbatim — do NOT re-measure or re-tune R in this spec).
+
+gates:
+  A_dev_significance: paired moving-block bootstrap (block=5 daily, B=10000, seed=20260808) on
+    the rescaled arm's own daily PnL: P(Sharpe>0) >= 0.85 (house bar, not lowered for a screen
+    result). Report the bootstrap distribution's 5th/50th/95th percentile Sharpe, not just the
+    pass/fail.
+  B_chronology: LOYO same-sign Sharpe >= 4/5 years AND fit-2022-24/eval-2025-26 point-positive
+    (identical convention to SMV2T gate B / SMV2W gate).
+  C_old_regime: rebuild on the SM06 2006-2021 hist substrate IF a 1-minute-resolution old-regime
+    substrate exists or is causally derivable from what's committed. FIRST STEP: verify data
+    availability before attempting anything — the SM06 hist substrate is committed at 3-minute
+    resolution only (confirmed precedent: SMV2W's 5-minute R2 hit this exact BLOCKED-BY-DATA
+    wall for the identical reason, since finer bars cannot be causally derived from coarser
+    committed data). If blocked, report BLOCKED-BY-DATA explicitly (per SMV2W's precedent) —
+    do not improvise a workaround (e.g. do NOT approximate 1-minute bars from 3-minute data).
+  D_diversification_diagnostic (DIAGNOSTIC, not a pass/fail gate — this is the economically
+    interesting question): correlation of the rescaled-1m arm's daily PnL vs the deployed
+    3m-incumbent Solar leg's daily PnL, over the full dev window and per-year. ALSO: construct
+    ONE exploratory equal-vol blend (50/50 vol-matched, reusing the same vm()/rerank scalar
+    convention as every portfolio test in this program) of [3m incumbent Solar leg] + [rescaled
+    1m arm] and report its standalone Sharpe/CDaR vs the 3m-only leg alone. A priori
+    expectation (disclose, do not let this bias the reported numbers): HIGH correlation is the
+    likely outcome, since both are the same underlying mechanism sampled at different clocks
+    on the same price series — a high correlation finding is a valid, informative, NEGATIVE
+    result for diversification value, not a failure of this sub-test.
+decision: this wave does NOT attempt a replacement/adoption decision (the rescaled arm's raw
+  Sharpe, 0.439, is well below the 3m incumbent's 0.709 — there is no promotion path here by
+  construction). Decision rule instead: if gates A+B PASS (C's outcome is data-contingent,
+  reported not gated) -> the 1-minute-with-correctly-scaled-VolMult construction is RECORDED AS
+  A GENUINE, VALIDATED (not noise) FINDING in CURRENT_TRUTH -- closing the multi-wave "why not
+  1-minute" question with a real answer (over-tuned threshold scale, now corrected, still
+  economically inferior to 3m) rather than a folk explanation. If gate D shows LOW correlation
+  (|corr| < 0.5, disclosed threshold, decided before results) AND the exploratory blend beats
+  the 3m-only leg on Sharpe AND CDaR -> flag as a NEW portfolio-blend candidate for a future R3
+  spec (no adoption here). If gates A or B FAIL -> the PASS-SCREEN result is downgraded to
+  NOISE-LEVEL / not statistically distinguishable from zero, and the entire 1-minute question
+  (now tested under every calibration convention this program can motivate: fixed-SM family,
+  VolMult unscaled x2, VolMult rescaled) is CLOSED for good, no further bites without a
+  structurally new signal-generation mechanism (not a further recalibration).
+outputs: out/gate_A_bootstrap.csv, out/gate_B_loyo.csv, out/gate_C_old_regime.csv (or
+  out/gate_C_blocked.json), out/gate_D_correlation.csv, out/gate_D_blend.csv, REPORT.md

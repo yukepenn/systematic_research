@@ -1,0 +1,66 @@
+run_id: SMV2AG_ADAPTIVE_CLAMP
+date_frozen: 2026-08-08
+class: R1_FAMILY_TEST + DIAGNOSTIC   # Expansion-pass candidate #1 (highest EVI), from
+  # research/system_master/deep_research/DR_V4_SOLARCORE_EXPANSION_20260808.md, produced this
+  # same wave. STRUCTURALLY DISTINCT from SMV2AD (seq 415-417, CLOSED): SMV2AD tested raising
+  # the clamp ceiling to another FIXED constant (1200->1600/2000/2400t) and found the Sharpe
+  # gain always came with a CDaR cost, because a fixed higher ceiling stays permanently wider
+  # even in calm regimes, adding tail risk unconditionally. This spec tests an ADAPTIVE ceiling
+  # that only widens when the recent realized (VolMult*sigma460) distribution itself says the
+  # regime calls for it, and tightens back down otherwise -- the hypothesis is that this
+  # captures SMV2AD's Sharpe upside (relieving the 2026-concentrated clamp bind, SMV2R sub_381:
+  # 39.2% of Jan-May 2026 bars) without permanently carrying its CDaR downside.
+seq: [424, 425]
+
+simulator: src/analytics/sm01_solarsim.py, UNMODIFIED except member_states()'s resolve_s()
+  upper-bound term, which changes from a fixed hi=smax_ticks*TICK to a per-member, per-bar
+  CAUSAL rolling percentile as defined below. Baseline reference (verified, do not re-derive):
+  S = clamp(VolMult*sigma460, 10.0pt, 300.0pt); the 300.0pt (=1200t) term is what becomes
+  adaptive. Dev window 2022-01-03 -> 2026-05-29, identical to every prior core-challenge run.
+
+mechanism: for each member m, define raw_m(t) = VolMult_m * sigma460(t) (the UNCLAMPED product,
+  computed for every bar regardless of whether it is used that bar -- resolve_s() only
+  re-evaluates S at flip bars, per the incumbent's existing behavior, which is UNCHANGED here;
+  only the ceiling ITSELF becomes adaptive, not the re-evaluation cadence). Adaptive ceiling:
+  ceil_m(t) = the P-th percentile of {raw_m(t-1), raw_m(t-2), ..., raw_m(t-N)} (trailing N bars,
+  STRICTLY causal, bar t's own raw_m(t) excluded from its own ceiling calculation -- avoid any
+  same-bar lookahead). Floor the adaptive ceiling at 300.0pt (1200t) so it can only WIDEN
+  relative to the incumbent, never tighten below it (a strict superset of the incumbent's
+  behavior when P/N are such that the percentile sits above 300pt; degenerates exactly to the
+  incumbent when it doesn't) -- this isolates "does widening help when the regime calls for it"
+  from "does an adaptive ceiling that can also tighten help", which is a different, broader
+  question NOT tested here (disclosed scope limit, not silently expanded).
+  During warmup (t < N + min_count) use the fixed 300.0pt ceiling (matches the existing
+  fallback-during-warmup philosophy already in the code for sigma itself).
+
+sub_424_adaptive_sweep (6 arms, 2x3 grid, 13-member VMS unchanged, smin_ticks=40 fixed):
+  percentile P in {90, 95, 99} x window N in {460, 920} (bars). Six cells total, small
+  preregistered grid (no finer search). Control = incumbent fixed 1200t (reused from SMV2AD's
+  out/e10_daily_dev_control_1200.csv, NOT re-simulated).
+  report per arm: standalone net/Sharpe/maxDD/CDaR_0.95/top-10-day-sum/turnover; effective
+  ceiling distribution actually realized (median/p90/p99 of ceil_m(t) for the slowest member,
+  vm30, over dev, and by year -- does the adaptive ceiling actually widen MORE in 2026 than in
+  calmer years, which is the entire premise); %-bars where the adaptive ceiling differs from
+  the fixed 1200t incumbent ceiling (i.e. %-bars where this construction actually does
+  something different from the incumbent); portfolio blend (DAYONLY_DUAL6040 60/40, Solar leg
+  swapped, B-MOM unchanged, same reuse convention as SMV2AD/SMV2T).
+  verdict rule: an arm is an ADAPTIVE-CEILING-CANDIDATE only if it improves BOTH standalone
+  Sharpe AND standalone CDaR_0.95 vs the 1200t control (the SAME AND-rule as SMV2AD -- no
+  loosening just because this is a different mechanism) AND retains >=95% of the control's
+  top-10-day sum. No adoption this wave regardless of outcome -- a CANDIDATE earns an
+  R2_CONFIRMATION spec later (SMV2R->SMV2T precedent).
+
+sub_425_old_regime_screen (DIAGNOSTIC, conditional on >=1 CANDIDATE from sub_424, IDENTICAL
+  contingency structure to SMV2AD sub_417): rebuild each qualifying candidate on the SM06
+  2006-2021 hist substrate, floor net >= incumbent - $10k AND maxDD <= 1.25x incumbent (SAME
+  floor used throughout this program). If zero candidates qualify, this screen is explicitly
+  N/A (disclosed via status=NONE_QUALIFIED, not silently skipped) -- do not run it speculatively.
+
+kill_or_keep: if ZERO arms across sub_424 qualify -> adaptive clamp ceiling (this specific
+  widen-only construction) is CONFIRMED-NOT-BENEFICIAL, record in CURRENT_TRUTH, close --
+  together with SMV2AD this would mean BOTH the fixed-ceiling-raise AND the adaptive-widen-only
+  ceiling ideas are exhausted, and any future clamp-mechanism idea needs a genuinely different
+  shape (e.g. one that can also tighten, explicitly out of scope here) to be worth a spec. If
+  >=1 arm qualifies -> queue R2_CONFIRMATION next wave per the standard two-stage process.
+outputs: out/adaptive_sweep.csv, out/effective_ceiling_distribution.csv,
+  out/old_regime_screen.csv, out/portfolio_blend.csv, out/gates.csv, REPORT.md
