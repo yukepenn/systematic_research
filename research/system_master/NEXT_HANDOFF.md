@@ -4,17 +4,20 @@ _Written per V4.1 §0. If this session ends, the next invocation resumes HERE af
 repository-truth ritual. HEAD at write time: 547d2d4 (+ wave-3 results at 140f76c, all pushed)._
 
 ## In flight RIGHT NOW
-1. **Wave-7 workflow** (`wf_40edb320-57c`, script smv2-wave7-wf_40edb320-57c.js): SMV2Z bounded
-   exposure-reduction policy (seq 403-405) built on wave-6's finding, red-teamed. Spec frozen
-   at fdd0e65, unread. Wave-6 (SMV2Y) completed CLEANLY and is fully ingested/pushed at
-   2d5d63e: sigma460 + ER150 (both already-computed states) causally predict next-WEEK
-   portfolio downside — the FIRST viability state to pass in this program (16 prior state
-   cells on the next-session-Solar-PnL target all failed). SMV2Z tests the simplest possible
-   policy on that finding: scale exposure when BOTH states sit in their historically-worse
-   top tercile at week close. This is the THIRD downside-policy attempt this program has run
-   (after SMV2N windfall and SMV2V ER-damper, both killed) — if this also fails, the
-   diagnostic-to-policy escalation for this state pair should be marked exhausted, but the
-   underlying SMV2Y information finding stands regardless of the policy's fate.
+1. **Wave-8 workflow** (`wf_2376b0d3-a7e`, script smv2-wave8-wf_2376b0d3-a7e.js): SMV2AA
+   Solar/BMOM mix-shift diagnostic+policy (seq 406-409), red-teamed. Spec frozen at f6fb7d1,
+   unread. Wave-7 (SMV2Z) completed CLEANLY and is fully ingested/pushed at 4eda9af: the
+   blanket exposure-cut policy on the SMV2Y viability states FAILED DECISIVELY (CDaR got
+   WORSE at every cell) because the flagged weeks hold 30.3% of TOTAL net PnL on 9.9% of days
+   — they are high-VARIANCE weeks, not just high-downside weeks. SMV2AA tests a structurally
+   different mechanism: reallocating WEIGHT between Solar/BMOM during flagged weeks (equal-vol
+   basis, total risk stays on) instead of cutting total exposure. It has a MANDATORY
+   prerequisite diagnostic (406, leg-asymmetry) with an explicit honest-stop path — if the two
+   legs respond symmetrically to the flag, the policy cells (407-409) do not run at all, and
+   that is a complete, valid, spec-compliant outcome, not partial work. If BOTH this and the
+   three prior exposure-based attempts (SMV2N/V/Z) end up failing, smoothness-policy work on
+   this diagnostic family should be considered exhausted pending a genuinely new mechanism —
+   but every one of these attempts has produced real, honestly-reported information regardless.
 2. **DONE**: ES/RTY/YM 1-minute cross-market context substrates all exported, verified, and
    committed (SM1M_ES/RTY/YM_SUBSTRATE, pushed at 3151800). Instrument names resolved cleanly
    as ESU6/RTYU6/YMU6. Engine-3 slate 4 (cross-market lead-lag, ranked candidates in
