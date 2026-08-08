@@ -51,3 +51,14 @@ once any base exists.
 - ROLE-B: weak-negative (rv60 axis in-sample; OOF AUC 0.447 null). No filter.
 - W9 in flight: B1 2006+ resolution (decay-aware), H-D3@1min final. W9-3 pending
   calendar. Minute substrate: 6.47M bars 2006-01-05..2026-05-29 (hash dfd017ef).
+
+## PHASE END (2026-08-08): Program B resolution — three parked candidates, zero frozen
+| Candidate | Status | Decisive evidence |
+|---|---|---|
+| B-MOM | PARKED (regime-local) | 2022-26 CI_lo>0 both costs BUT rho 0.347 gate fail AND 16 unseen years show PF 1.013 (no pre-2022 structure); the 2022+ edge shares Solar's regime fuel |
+| B-FADE | PARKED (possibly-recent) | OOS 2006-21 +1.68t = 1/30th of IS +47t; 2006-14 era real then decayed; resolution = forward release days (~2/month) |
+| B1 overnight | PARKED (marginal) | +8.4t/night point, rho 0.015, recent-loaded trend — but bootstrap under-converged (10k-rep CI_lo<0), top-10 nights 53% |
+| H-D3 | CLOSED FINAL | mechanism real (20yr t 2.92), economics unresolvable |
+Forward re-reads: Solar MONITOR-01 #2 >= 2026-11-01; Program-B combined re-read
+(B1/B-FADE/B-MOM on accumulated forward data) >= 2027-08-01. Blocked-on-restart:
+SWScalpTickExport_v3 compile (s20251117 completeness re-export only).

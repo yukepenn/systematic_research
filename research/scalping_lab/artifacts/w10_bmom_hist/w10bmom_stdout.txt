@@ -1,0 +1,108 @@
+W10 B-MOM history run — spec W10_bmom_history.md (frozen e4e73a8); rule = w8_bmom (frozen, reused verbatim); window=14, seed=20260808, n_boot=1000, C1=2.872t, C2=4.872t
+[minute] nq1m_2005_202605.parquet: rows=6466783, range 2006-01-05 08:59:00 .. 2026-05-29 16:59:00 (END-stamped ET; verified: session's first stamp is 18:01, no 18:00 stamps, RTH-open volume on 09:31)
+[split] readout minute rows (< 2022-01-01): 4908286; reconciliation minute rows (2022-01-01 .. 2026-05-31): 1558497 — never pooled
+
+===== A. RECONCILIATION CONTROL: 2022-01 .. 2026-05 vs committed W8-1 =====
+[recon] RTH bars=145279, sessions=1136, range 2022-01-03..2026-05-29, sessions with last stamp < 16:00 (early close)=41
+
+[reconciliation] recon run (substrate 1-min -> 3-min) vs committed w8 artifacts:
+                metric     recon_run  committed_w8  diff
+        sessions_total   1136.000000   1136.000000   0.0
+     sessions_excluded     14.000000     14.000000   0.0
+     sessions_included   1122.000000   1122.000000   0.0
+              n_trades   1333.000000   1333.000000   0.0
+    c1_total_net_ticks  63824.624000  63824.624000   0.0
+      c1_total_net_usd 319123.120000 319123.120000   0.0
+c1_net_per_trade_ticks     47.880438     47.880438   0.0
+           c1_pf_trade      1.214805      1.214805   0.0
+     c1_mean_daily_usd    284.423458    284.423458   0.0
+    c1_daily_ci_lo_usd     78.345837     78.345837   0.0
+    c1_daily_ci_hi_usd    500.059038    500.059038   0.0
+    c2_total_net_ticks  61158.624000  61158.624000   0.0
+[reconciliation] trade-by-trade: matched=1333, w8-only=0, w10-only=0, max |px diff| on matched=0.0
+[reconciliation] trade-count rel diff=0.000000 (threshold 0.005), C1 net rel diff=0.000000 (threshold 0.01) -> PASS
+
+===== B. READOUT: frozen rule on 2006-01 .. 2021-12-31 (confirmation) =====
+[readout] DROPPED 15 sessions whose first RTH stamp != 09:33 (cannot anchor the 09:30 open under the frozen rule):
+    2006-02-08 (first stamp 09:51)
+    2006-03-17 (first stamp 09:45)
+    2006-05-17 (first stamp 14:03)
+    2006-05-29 (first stamp 09:39)
+    2006-05-30 (first stamp 09:42)
+    2006-07-04 (first stamp 09:39)
+    2006-07-18 (first stamp 10:33)
+    2006-09-04 (first stamp 09:36)
+    2007-01-31 (first stamp 10:09)
+    2007-03-26 (first stamp 10:39)
+    2007-05-28 (first stamp 09:36)
+    2007-06-18 (first stamp 11:39)
+    2007-07-04 (first stamp 09:36)
+    2012-03-21 (first stamp 09:48)
+    2013-07-15 (first stamp 11:06)
+[readout] 11 sessions have a thin 09:33 bucket (<3 minutes; open0930 = first traded minute of the bucket): ['2006-01-16', '2006-02-20', '2006-11-23', '2007-02-19', '2007-09-03', '2008-09-01', '2008-11-27', '2009-07-03', '2009-09-07', '2013-01-21', '2020-03-16']
+[readout] RTH bars=522654, sessions=4091, range 2006-01-05..2021-12-31, sessions with last stamp < 16:00 (early close)=140
+[leakage] PASSED: 300 random (date,slot) manual recomputations, per-slot first-14-obs NaN check, and same-day perturbation test (day 2014-01-17)
+[readout] sessions total=4091, excluded (no band history)=14 [2006-01-05..2006-01-24], included=4077 [2006-01-25..2021-12-31]
+[readout] early-closeout sessions (last elig bar != 15:57)=136, NaN-band decision bars after exclusion=93
+[readout] exits: {'closeout': 3794, 'flip': 1200}   sides: long=2511, short=2483
+
+[era readout, C1]
+       scope  sessions  trades  trades_per_day  net_per_trade_ticks  npt_ci_lo_ticks  npt_ci_hi_ticks  pf_trade  mean_daily_usd  daily_ci_lo_usd  daily_ci_hi_usd  ann_sharpe  ci_lo_pos
+full_pre2022      4077    4994           1.225                0.727           -4.478            6.117     1.013           4.453          -27.444           36.898       0.066      False
+     2006-09       995    1291           1.297               -1.821           -6.110            2.327     0.936         -11.813          -40.055           14.838      -0.422      False
+     2010-13      1025    1265           1.234               -0.762           -4.522            2.904     0.971          -4.703          -28.529           17.459      -0.194      False
+     2014-17      1026    1215           1.184                0.375           -5.989            7.230     1.009           2.220          -35.405           41.467       0.056      False
+     2018-21      1031    1223           1.186                5.307          -13.894           25.467     1.040          31.477          -84.912          146.993       0.256      False
+
+[era readout, C2 stress]
+       scope  net_per_trade_ticks  npt_ci_lo_ticks  npt_ci_hi_ticks  pf_trade  mean_daily_usd  daily_ci_lo_usd  daily_ci_hi_usd
+full_pre2022               -1.273           -6.478            4.117     0.978          -7.796          -39.740           24.836
+     2006-09               -3.821           -8.110            0.327     0.870         -24.788          -53.078            2.080
+     2010-13               -2.762           -6.522            0.904     0.900         -17.044          -41.117            5.434
+     2014-17               -1.625           -7.989            5.230     0.962          -9.622          -47.420           29.859
+     2018-21                3.307          -15.894           23.467     1.025          19.615          -96.926          135.446
+
+[yearly, C1]
+      sessions  trades  trades_per_day  net_c1_ticks  net_c1_usd  net_per_trade_ticks  pf_trade_level  win_rate
+year                                                                                                           
+2006   229.000 317.000           1.384    -1,529.424  -7,647.120               -4.825           0.780     0.451
+2007   252.000 347.000           1.377    -1,397.584  -6,987.920               -4.028           0.843     0.432
+2008   259.000 341.000           1.317       796.648   3,983.240                2.336           1.057     0.472
+2009   255.000 286.000           1.122      -220.392  -1,101.960               -0.771           0.968     0.490
+2010   258.000 311.000           1.205    -1,396.192  -6,980.960               -4.489           0.826     0.463
+2011   258.000 328.000           1.271      -802.016  -4,010.080               -2.445           0.926     0.494
+2012   255.000 326.000           1.278       762.728   3,813.640                2.340           1.094     0.460
+2013   254.000 300.000           1.181       471.400   2,357.000                1.571           1.071     0.440
+2014   253.000 306.000           1.209       284.168   1,420.840                0.929           1.026     0.464
+2015   258.000 307.000           1.190      -123.704    -618.520               -0.403           0.992     0.443
+2016   258.000 306.000           1.186      -410.832  -2,054.160               -1.343           0.971     0.448
+2017   257.000 296.000           1.152       705.888   3,529.440                2.385           1.064     0.456
+2018   257.000 319.000           1.241     4,376.832  21,884.160               13.720           1.144     0.464
+2019   258.000 286.000           1.109     2,068.608  10,343.040                7.233           1.108     0.479
+2020   258.000 310.000           1.202    -2,130.320 -10,651.600               -6.872           0.964     0.503
+2021   258.000 308.000           1.194     2,175.424  10,877.120                7.063           1.040     0.500
+
+[rolling] 2-year (504-session) mean daily net C1: first=-29.41 USD (2008-02-01), last=-4.49 USD (2021-12-31), min=-91.78, max=+87.69
+
+[roll-gap] sessions with overnight gap |z|>=8 (full-window or trailing-120): 9
+      sess  gap_pts  z_full  z_roll  flag_8sigma  net_c1_usd
+2010-05-10   78.750   1.660   8.707         True     165.640
+2015-08-24 -259.750  -5.711 -11.595         True   1,685.640
+2020-02-24 -350.250  -7.682  -8.041         True  -1,369.360
+2020-03-09 -555.000 -12.140  -7.507         True  -4,728.720
+2020-03-12 -490.000 -10.725  -5.078         True -15,421.800
+2020-03-13  417.000   9.025   4.049         True  -5,764.360
+2020-03-16 -550.750 -12.048  -4.858         True  -7,298.080
+2020-03-18 -463.250 -10.142  -3.647         True -10,488.720
+2020-03-24  382.500   8.274   2.974         True     405.640
+[roll-gap] SENSITIVITY (non-frozen) excl flagged days: C1 mean/day=+14.99 USD, CI95=[-17.63, +46.69]
+
+===== FROZEN INTERPRETATION =====
+full pre-2022 daily net C1: mean=+4.45 USD/day, CI95=[-27.44, +36.90] -> CI_lo>0: False, CI_hi<0: False
+  era 2006-09: mean=-11.81 USD/day, CI95=[-40.05, +14.84] -> pass=False
+  era 2010-13: mean=-4.70 USD/day, CI95=[-28.53, +17.46] -> pass=False
+  era 2014-17: mean=+2.22 USD/day, CI95=[-35.40, +41.47] -> pass=False
+  era 2018-21: mean=+31.48 USD/day, CI95=[-84.91, +146.99] -> pass=False
+VERDICT: REGIME-LOCAL
+
+[artifacts] written to D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\research\scalping_lab\artifacts\w10_bmom_hist
