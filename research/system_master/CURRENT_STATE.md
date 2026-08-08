@@ -1,6 +1,6 @@
 # SYSTEM_MASTER — Current State
 
-_Updated: 2026-08-08 (program opened)._
+_Updated: 2026-08-08 (end of first execution cycle: 8 tracks executed, finalist package frozen, holdout consumed)._
 
 ## Phase
 
@@ -77,3 +77,16 @@ substrate (SM01), then parallel tracks 1–8.
 - 2026-08-08: SM01 substrate certified (4/4 gates). SM06+SM06b Solar-history read
   (REGIME_LOCAL verdict, frozen rule). Wave SM-W1 launched (atlas, anatomy,
   B-MOM portfolio, deep research).
+
+
+## FINAL STATE (2026-08-08)
+
+- **Winner: PORT_TILT_532** (0.5 tilt-Solar / 0.3 B-MOM / 0.2 B1, dev-frozen scales)
+  — Sharpe 1.222, maxDD −$27.2k, worst month −$8.7k vs Solar 0.709/−$40.2k/−$18.2k;
+  22.5%/yr at P(DD>25%)≤5% vs Solar 11.5%. See FINAL_NQ_SYSTEM.md + RED_TEAM.
+- Promoted: SOLAR_HTF_TILT (SM08), SOLAR+BMOM portfolio plateau (SM05).
+- Closed with evidence: stop/exit frontier, consensus map shapes, trend-day
+  classifiers, day-scale vol transition, loss-reactive throttles.
+- Holdout 2026-06/07 CONSUMED (SM11); ≥2026-08-01 virgin.
+- Remaining engineering: SM12 NT8 master build+parity (spec complete);
+  SM13 B-MOM decay rule preregistration (before 2026-11).
