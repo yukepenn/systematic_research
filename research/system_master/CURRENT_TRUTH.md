@@ -1,8 +1,36 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4.1 wave-13 (SMV2AH day circuit breaker KILLED + SMV2AI ATR
-blend — FIRST NEW CANDIDATE since the clamp/clock challenge series began closing out).
-Supersedes the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+_Last update: 2026-08-08, end of V4.1 wave-14 (SMV2AJ ATR-blend R2 confirmation — CLOSED,
+closest miss of any R2 in this program). Supersedes the "FINAL" framing of V1 docs
+(FINAL_NQ_SYSTEM.md remains the V1 record)._
+
+## Wave-14 verdict (spec 8c030f8; red-team CONFIRMED, 2 prose-only corrections, no numeric/
+## decision impact) — the closest an R2 confirmation has come to passing in this program
+**SMV2AJ_ATR_BLEND_R2 (seq 433-437) — CLOSED, incumbent retained.** R2 confirmation of
+SMV2AI's arm_BLEND_75 lead (75% incumbent sigma460 / 25% properly-rescaled ATR estimator),
+tested at the actual DUAL-transformed decision object (confirmed via direct code read that
+SMV2AI's own old-regime screen tested the raw pre-DUAL target, so this was a genuine unseen
+re-test, not a duplicate). **Result: 1 of 5 required gates fails — Gate A (dev bootstrap),
+and only on its CDaR_0.95 prong** (P(dSharpe>0)=0.932 clearly passes the 0.85 bar; P(dCDaR>0)
+=0.753 falls short). **Gates B (LOYO 4/5, improving into 2025-26), C (old-regime, net gap
++$86,004 vs a −$10k floor, wider than SMV2AI's own raw-level screen), D (right-tail retention
+100.14%), and E (portfolio: dSharpe +0.033/dCDaR +$318, both point-positive, with almost no
+leg-vol sizing confound unlike SMV2T's challenger) all PASS, several with real margin** — this
+is the strongest performance any core-challenge R2 has produced in this program (SMV2T failed
+3/5 gates outright; this failed only 1, and only one prong of it). Gate F (new this wave:
+bootstrap at neighbor blend weights w=0.70/0.80, disclosure-only) showed the point estimates
+form a smooth, non-spiky local hump across w=0.70-0.80, but CDaR bootstrap significance is
+weak across the WHOLE neighborhood, not just at w=0.75 — reinforcing, not contradicting, gate
+A's failure: the mechanism looks real but its tail-risk improvement is not yet statistically
+distinguishable from noise on 4.4 years of daily data. Per the frozen AND-rule, applied with
+no discount for how close this came: **incumbent sigma460-only core retained. Lead CLOSED —
+no third bite without a new mechanism that specifically targets the CDaR-tail effect** (not a
+re-test of the same blend at a different weight). This is a genuinely different failure
+pattern from every other closed core challenge in this program (which mostly failed on
+old-regime melt-up capture or right-tail retention) — the mechanism itself may be real; only
+its statistical confirmation on tail risk specifically fell short.
+
+## Wave-13 verdict (specs d927ec6; red-team CONFIRMED-with-corrections on both — SMV2AH had 2
 
 ## Wave-13 verdict (specs d927ec6; red-team CONFIRMED-with-corrections on both — SMV2AH had 2
 ## narrative corrections [gate-1 object-attribution breakdown, a FLATTEN-worst-day
