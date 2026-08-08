@@ -47,3 +47,18 @@ kind that occurs ~1x/yr in-sample. CONSUMED June 2026: +$20.6k. INFERENCE: 2026 
 one JL episode within normal path variation, not decay evidence; E10 standalone is the weakest
 component (17th pctile) and the composed system is mid-range. The preregistered decay monitors
 (MONITOR-01, SM13 floor) remain the tripwires — no tuning from this read.
+
+## Smoothness policy attempts — 0 for 3, but the reason why is now understood (2026-08-08)
+Three independent, honestly-tested attempts to convert downside/joint-loss information into a
+risk-reduction policy have now failed: SMV2N (windfall give-back, indistinguishable from
+random de-risking), SMV2V (ER150-exhaustion damper on Solar alone, same failure mode), SMV2Z
+(sigma460+ER150 AND-gate portfolio scale, FAILED WORSE than the other two — CDaR got worse,
+not just "not better"). SMV2Z's finding explains the pattern for all three: the market states
+that identify elevated downside risk in this system ALSO identify elevated total variance —
+the flagged periods hold a hugely disproportionate share of total net PnL (30.3% of net on
+9.9% of days in SMV2Z). This is a coherent, causal explanation for why simple exposure-timing
+policies keep failing here, not three unrelated dead ends. Any future smoothness attempt
+should design explicitly around this constraint (e.g., a policy that changes ENGINE MIX during
+flagged weeks rather than cutting total exposure, since mix changes could theoretically retain
+upside participation while changing risk composition) rather than repeating a fourth blanket
+exposure-scaling variant.

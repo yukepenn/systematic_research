@@ -1,0 +1,69 @@
+loaded target_series.csv: 230 weeks, week_key range 202201-202622
+burn_end=2023-01-07 (>=12mo from first week's last session 2022-01-07); n_burn_eligible_weeks=177/230
+STEP0 repro 399_sigma460: match_SMV2Y_quintiles=True
+STEP0 repro 400_ER150: match_SMV2Y_quintiles=True
+STEP0 PASS: expanding-rank machinery reproduces SMV2Y's own quintile cut points exactly (<=1e-6).
+tercile sanity check (cutoff at rp=2/3 sits between Q3/Q4 and Q4/Q5 quintile cutoffs): True (12/12 checkpoints)
+AND-gate trigger weeks (both top tercile at week t's close): 23/177 burn-eligible weeks
+champion curve repro vs SMV2Y meta.json: n=1138 (expect 1138), merged_val=2366.200000 (expect 2366.200000) -> True
+n_scaled_weeks(receiver, t+1)=23 n_scaled_days=113 trigger_week_keys=[202411, 202417, 202437, 202440, 202452, 202502, 202507, 202513, 202514, 202515, 202526, 202535, 202542, 202545, 202547, 202551, 202552, 202607, 202609, 202612, 202614, 202618, 202620]
+placebo: feasible=200/200 (pool_size=153, need=23)
+LOYO gates: {0.5: True, 0.7: True, 0.85: False}
+states_hist.csv 'net' vs SM06 e10_daily_hist.csv 'net' max abs diff over 4130 common sessions: 0.0000000000 (0 => identical source, confirms states_hist.csv net IS the E10-only hist curve smv2y.py section I actually used)
+old-regime proxy: 834 hist weeks, own burn_end=2007-01-06, n_burn_eligible=781
+old-regime proxy AND-gate: n_flag=184 n_baseline=596 flagged_mean=-835.6 baseline_mean=-490.1 diff=-345.5 t=-4.29 p=0.0000 -> SAME_SIGN (gate6_pass=True)
+
+                                         0             1             2
+s                                      0.5           0.7          0.85
+n_days                                1138          1138          1138
+n_weeks                                230           230           230
+n_scaled_weeks                          23            23            23
+n_scaled_days                          113           113           113
+net_unscaled                      177315.1      177315.1      177315.1
+net_policy                       150494.75     161222.89    169268.995
+net_retention                     0.848742      0.909245      0.954623
+cdar95_unscaled               14905.358929  14905.358929  14905.358929
+cdar95_policy                  16390.04375  15369.135357  15001.347232
+dcdar                         -1484.684821   -463.776429    -95.988304
+tuw_unscaled                           131           131           131
+tuw_policy                             131           131           131
+dtuw                                     0             0             0
+maxdd_unscaled                     18894.3       18894.3       18894.3
+maxdd_policy                      20913.45      18973.91      18714.21
+sharpe_unscaled                   1.172045      1.172045      1.172045
+sharpe_policy                     1.111871      1.146346      1.162655
+dsharpe_full                     -0.060173     -0.025699      -0.00939
+rtc                               0.889625      0.933775      0.966887
+rtc_k_days                             114           114           114
+rtc_topdecile_min_pnl               2515.3        2515.3        2515.3
+placebo_n_feasible                     200           200           200
+placebo_dcdar_median             77.413393    116.290714     81.546116
+placebo_dcdar_iqr              1218.020982    736.793482    318.093929
+placebo_dcdar_thresh           2513.455357   1589.877679    717.733973
+placebo_dtuw_median                    0.0           0.0           0.0
+placebo_dtuw_iqr                      18.0         15.75          15.0
+placebo_dtuw_thresh                   36.0          31.5          30.0
+loyo_agree_count                         5             4             3
+loyo_n_years                             5             5             5
+loyo2022_keeps_sign                   True          True          True
+gate1_cdar_improve                   False         False         False
+gate1_tuw_improve                    False         False         False
+gate2_cdar_gt_placebo                False         False         False
+gate2_tuw_gt_placebo                 False         False         False
+gate3_loyo                            True          True         False
+gate4_rtc                            False         False         False
+gate5_retention                      False         False         False
+gate6_oldregime_proxy                 True          True          True
+all_gates_pass                       False         False         False
+house_boot_daily_delta_mean      -23.56797    -14.140782     -7.070391
+house_boot_daily_p_leq_0            0.9547        0.9547        0.9547
+house_boot_daily_ci_lo          -58.931275    -35.358765    -17.679383
+house_boot_daily_ci_hi            2.770483       1.66229      0.831145
+house_boot_weekly_delta_mean   -116.610217     -69.96613    -34.983065
+house_boot_weekly_p_leq_0           0.9497        0.9497        0.9497
+house_boot_weekly_ci_lo        -289.434196   -173.660517    -86.830259
+house_boot_weekly_ci_hi          18.392582     11.035549      5.517774
+
+VERDICT (all 3 cells must pass, no_moves): KILLED
+ALL-CELLS pass: [False, False, False]
+center(s=0.7) all_gates_pass: False

@@ -1,7 +1,22 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4.1 wave-6 (SMV2Y joint-loss viability state). Supersedes
-the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+_Last update: 2026-08-08, end of V4.1 wave-7 (SMV2Z viability-state policy). Supersedes the
+"FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+
+## Wave-7 verdict (spec fdd0e65; red-team CONFIRMED) — the KEY reason smoothness is hard here
+The simplest possible policy on wave-6's finding (cut exposure when sigma460 AND ER150 both
+sit in their historically-worse top tercile) **FAILED DECISIVELY at every scale tested**: CDaR
+got WORSE (not better) at every cell, TUW was unchanged, and net retention/RTC collapsed
+(0.85-0.96 / 0.89-0.97). The mechanism (FACT): the flagged weeks — only 9.9% of all days — hold
+**30.3% of the strategy's TOTAL NET PnL**. The states that flag elevated downside risk ALSO
+flag elevated total variance/opportunity — they are not "bad weeks," they are HIGH-VARIANCE
+weeks, and cutting exposure into them gives back far more upside than it saves in downside.
+This is the THIRD consecutive downside/smoothness policy to fail (after SMV2N windfall,
+SMV2V ER-damper) — three independent, honestly-tested attempts, three failures, each for a
+different underlying reason. The SMV2Y diagnostic finding itself (sigma460/ER150 forecast
+next-week downside) still stands as valid information — it just cannot be cheaply monetized
+into a risk-reduction policy without a disproportionate cost to the right tail. Per V4.1 §21,
+this specific escalation path (sigma460/ER150 pair → exposure policy) is now EXHAUSTED.
 
 ## Wave-6 verdict (spec 51dbc45; red-team CONFIRMED) — FIRST VIABILITY STATE TO PASS
 **sigma460 and ER150 both causally predict next-WEEK portfolio downside** (t_NW=−2.30/−3.05,
