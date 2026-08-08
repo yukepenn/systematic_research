@@ -1,7 +1,53 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4.1 wave-11 (SMV2AD ceiling/cohort + SMV2AE 1m rescale).
-Supersedes the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+_Last update: 2026-08-08, end of V4.1 wave-12 (SMV2AF 1m R2 confirmation + SMV2AG adaptive
+clamp). Supersedes the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+
+## Wave-12 verdict (specs db39d56; red-team CONFIRMED-with-corrections on both — SMV2AF had one
+## factual labeling fix in a comparison table (does not change the conclusion), SMV2AG had zero
+## numeric corrections; both runs' only other gap was a missing REPORT.md, now written)
+**SMV2AF_1MIN_RESCALE_R2 (seq 420-423) — 1-minute Solar is now CLOSED FOR GOOD.** R2
+confirmation of SMV2AE's screen-level pass (rescaled 1m Sharpe 0.439). Gate A (dev bootstrap
+significance) passed by a thin margin (P(Sharpe>0)=0.853 vs 0.85 bar, not corroborated by
+Newey-West t=1.08). Gate B (LOYO chronology) **FAILED**: only 3/5 years same-sign (bar is
+4/5). Gate C (old regime, newly built on a native 1-minute 2006-2021 substrate that turned out
+to exist, a genuine finding of its own) showed the rescaled construction **losing money**
+(net −$20,583, Sharpe −0.119, friction exceeding gross) — worse than even the mediocre,
+already-REGIME_LOCAL 3m incumbent's own historical result. Gate D confirmed the a priori
+expectation of high correlation with the deployed 3m signal (0.897) and found no
+diversification value (a 50/50 blend beats neither Sharpe nor CDaR of the 3m-only leg). Per
+the spec's own rule, a Gate B failure downgrades the screen result to noise-level: **1-minute
+Solar is closed under every calibration convention this program has tried** (fixed-
+StopMultiplier family, VolMult unscaled ×2 sigma-window conventions, VolMult rescaled) — no
+further attempts without a structurally new signal-generation mechanism.
+**SMV2AG_ADAPTIVE_CLAMP (seq 424-425) — CONFIRMED-NOT-BENEFICIAL, lead CLOSED.** The
+mechanism-expansion pass's #1-ranked idea (a causal rolling-percentile clamp ceiling, floored
+at the incumbent 1200t so it can only widen) hit the identical Sharpe-for-CDaR tradeoff SMV2AD
+found for a fixed higher ceiling: every one of 6 cells (P∈{90,95,99}×N∈{460,920}) improved
+Sharpe (+0.11 to +0.14), but only one cell also improved CDaR (+$138, the smallest possible
+win) — and that cell failed the top-10-day retention floor (87.6% vs ≥95%). 0/6 qualify. The
+ceiling genuinely widens more in high-vol periods (2025's tail is the most extreme on file) but
+only as a thin upper-tail effect, not a broad regime shift — explaining why it buys Sharpe
+without reliably buying CDaR. **Both the fixed-raise and adaptive-widen-only clamp-ceiling
+mechanisms are now exhausted**; any future clamp idea needs a genuinely different shape (e.g.
+one that can also tighten) to be worth a spec.
+**Owner follow-up (mid-wave-12, addressed directly, no new autonomous wave launched for it
+yet)**: owner asked what stop-loss/day-loss-limit mechanisms exist and whether they matter.
+Audit confirmed: neither deployed strategy has a resting stop-loss, daily loss limit, or
+kill-switch in code (only session-close flatten + the 16:39-18:00 ET margin-cliff ops rule).
+Every classic stop/exit-engineering idea ever tested in this program (SM03/SM03B disaster
+stops, split exits, resting stops, timed exits, trailing/break-even — `STOP_OVERLAY_FRONTIER.md`)
+is DEAD, because the Solar state machine's own reversal logic already acts as a stop. Loss-
+reactive cooldowns are ANTI-EDGE (SM02B: next-day expectancy is HIGHER after a loss day, not
+lower). Windfall give-back (profit-lock) was KILLED at the policy level (C-P7). **Genuine,
+confirmed-never-tested gap**: a same-day intraday circuit breaker (halt trading for the rest of
+the session after a running-loss threshold) has never been built or backtested here under any
+name — queued for a future wave. **Separately flagged risk-hygiene finding**: `SolarWaveSMMaster_v2.cs`
+is coded realtime-fail-closed (never submits live orders); `SolarWaveSMOneLot_v1.cs` (SM14) has
+no equivalent code-level guard — its fail-closed posture currently rests entirely on the
+LIVE_READINESS_CHECKLIST's operating discipline, not on a safeguard inside the file itself.
+
+## Wave-11 verdict (specs 2b2f88a; red-team SMV2AD CONFIRMED-with-corrections [2, both
 
 ## Wave-11 verdict (specs 2b2f88a; red-team SMV2AD CONFIRMED-with-corrections [2, both
 ## applied to the run REPORT — a missing-file deliverable gap and a tautology-framing fix,
