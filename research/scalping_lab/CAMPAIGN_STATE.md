@@ -51,9 +51,20 @@
       role-B/C re-registration only). **Excursion baselines published**: uncond ~1-2pp
       over null, post-flip +1-4pp more, break-even gap 25-40pp -> single primitives dead,
       interactions are the only micro route. artifacts/z1/z1_report.md.
-- [ ] NEXT WAVE (W2): interaction excursion states (impulse x spread-state x flow-confirm,
-      small preregistered set) + H-B5 spike classification + S2a owner seed (STRUCTURAL) +
-      H-B1 anti-chase (role C) + oldest-first archival of confirmation pool.
+- [x] **AMENDMENT 4 applied (2026-08-08)**: FAST_STRUCTURAL (Zone F: 5-120s holds,
+      8-32t moves) is now PRIMARY priority; four zones M/F/S/A with separate champions;
+      owner-scale clue = ~20t over tens of seconds (economic scale, NOT a strategy spec).
+      Mandatory P0 = Z1_DEFINITION_AND_NULL_AUDIT (omega in z1_dc_ladder.py confirmed by
+      code-read to be TOTAL MOVEMENT ext-to-ext, so the r~2 null is ~2, NOT 1 — the W1-1
+      "persistence" framing is under audit). Verbatim: MANDATE_AMENDMENT_4_FAST_STRUCTURAL.txt.
+- [ ] **Wave W2 (Amendment 4 P0-P2, specs frozen 2026-08-08 BEFORE readouts)**:
+      W2-0 Z1 definition/null audit (specs/W2-0_z1_definition_null_audit.md);
+      W2-1 fast opportunity census + wide excursion surface, 8-32t x 5-300s, matched
+      controls (specs/W2-1_fast_opportunity_census.md). Then P3+ FSS families, S2a run
+      (P7), H-B5 (P8), ES confirmation (P10). Interaction excursion states from the OLD
+      W2 definition are re-queued to W3, now census-informed.
+- [ ] Re-queued (Amendment 4 ordering): S2a frozen run (P7); H-B5 (P8); H-B1 anti-chase
+      (role C, P11); oldest-first ARCHIVE_ONLY exports of confirmation pool (§20).
 - [ ] (done earlier) capped-session RTH second pass → Layer-1 state grids (250ms/1s/5s) →
       I-1 full spread map + I-2 Roll-bounce + I-3-full sync audit → Z1 mid-price DC
       ladder → excursion surfaces P(+A before −B) → H-B5 → S2a.

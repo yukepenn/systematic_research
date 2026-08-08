@@ -1,0 +1,2016 @@
+========================================================================
+OWNER AMENDMENT 4
+FAST STRUCTURAL SCALPING — AUTONOMOUS ALPHA DISCOVERY & STRATEGY PROGRAM
+2026-08-08
+========================================================================
+
+Repository:
+
+D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research
+
+Project:
+
+research/scalping_lab/
+
+This amendment CONTINUES the existing scalping campaign.
+
+DO NOT restart the campaign.
+DO NOT repeat completed infrastructure work.
+DO NOT reopen closed Solar parameter research.
+DO NOT discard MANDATE_V2 or Amendments 1–3.
+
+Archive this directive verbatim as:
+
+research/scalping_lab/MANDATE_AMENDMENT_4_FAST_STRUCTURAL.txt
+
+Where this amendment changes PRIORITY or scientific interpretation,
+this amendment governs.
+
+========================================================================
+0. WHAT WE ARE ACTUALLY TRYING TO DO
+========================================================================
+
+The objective is NOT to prove that microstructure predicts the next tick.
+
+The objective is NOT to study directional change for its own sake.
+
+The objective is NOT to create academically interesting event studies.
+
+The objective is:
+
+    FIND ONE OR MORE REAL, ROBUST, AFTER-COST
+    NQ SHORT-HORIZON TRADING EDGES
+
+that can ultimately become:
+
+    fixed-1-NQ
+    systematic
+    Strategy-Analyzer-runnable
+    inspectable
+    low-drawdown
+    preferably high-win-rate
+    economically meaningful
+
+strategies.
+
+The economically relevant horizon is broader than "next tick."
+
+The owner often observes discretionary opportunities approximately like:
+
+    identifiable market state
+          ↓
+    entry
+          ↓
+    hold tens of seconds
+          ↓
+    several NQ points of movement
+
+A representative example is roughly:
+
+    ~5 NQ points
+    = ~20 ticks
+    over tens of seconds.
+
+THIS IS NOT A STRATEGY SPECIFICATION.
+
+Do not hard-code:
+
+    target = 20 ticks
+    stop = 8 ticks
+
+because the owner mentioned that example.
+
+It is an ECONOMIC-SCALE CLUE.
+
+It tells us the research question is:
+
+    WHICH CAUSAL MARKET STATES CREATE A MEANINGFUL PROBABILITY
+    OF 10–30+ TICK MOVES OVER ~5–120 SECONDS
+    OR A FEW MINUTES?
+
+That is now the primary scalping question.
+
+========================================================================
+1. CURRENT FACTS — DO NOT RE-LITIGATE WITHOUT NEW EVIDENCE
+========================================================================
+
+Current infrastructure:
+
+- scalping_lab exists;
+- mandates / constitution / registry exist;
+- historical only;
+- no live recorder;
+- no Sim101;
+- no Playback execution;
+- no account interaction;
+- no real orders;
+- no paid data;
+- Layer-0 raw tick/BBO substrate exists;
+- Layer-1 1-second causal state grids exist;
+- 40 stratified sessions are frozen Tier-0 DISCOVERY;
+- remaining development sessions are INTERNAL CONFIRMATION;
+- 2026-06-01 → 2026-07-31 is SEALED SCALP HOLDOUT;
+- >= 2026-08-01 is LOCKED FORWARD;
+- NQ historical Last + Bid/Ask millisecond-class data exist for the
+  available ~1-year period;
+- quoted NQ spread appears genuinely around 2–3 ticks in the audited
+  development snapshots;
+- exact trade-time BBO has approximately ±1 tick ambiguity due historical
+  cross-series ordering;
+- therefore BBO_EXEC remains diagnostic / uncertainty-banded;
+- BENCHMARK_C1/C2 remain promotion truth;
+- Roll/bid-ask bounce contaminates raw Last-price micro reversion;
+- predictive labels should prefer MID or an explicitly executable
+  benchmark rather than Last-to-Last bounce.
+
+Do not re-export the current 40 discovery sessions.
+
+Reuse the substrate.
+
+Historical Bid/Ask data may disappear as the provider's rolling history
+advances.
+
+It is allowed to ARCHIVE remaining historical development sessions
+without analyzing their alpha content.
+
+Archive-only != research consumption.
+
+Preserve their role as INTERNAL CONFIRMATION until a frozen candidate
+earns access.
+
+========================================================================
+2. IMMEDIATE SCIENTIFIC CORRECTION — Z1 NULL / DEFINITION AUDIT
+========================================================================
+
+Before building any theoretical claim on Z1's r≈2 result,
+perform:
+
+    Z1_DEFINITION_AND_NULL_AUDIT
+
+This is mandatory.
+
+The existing report states approximately:
+
+    r(theta) = E[omega] / theta ≈ 2
+
+and simultaneously:
+
+    gross flip-to-flip = omega - 2*theta
+
+and interprets:
+
+    martingale null r = 1.
+
+This combination is potentially inconsistent with standard
+Directional-Change terminology.
+
+Standard DC decomposition distinguishes:
+
+    Directional Change event
+    Overshoot event
+    Total Movement = DC + Overshoot.
+
+For Brownian/random-walk style nulls, the expected OVERSHOOT length is
+approximately one threshold.
+
+Therefore a TOTAL MOVEMENT may naturally be approximately two thresholds.
+
+Determine EXACTLY what z1_dc_ladder.py calls omega.
+
+Write formal definitions:
+
+    theta
+    extremum
+    DCC
+    OS
+    TM
+    omega
+
+with a simple worked price-path example.
+
+Then perform at least:
+
+NULL-1:
+    synthetic symmetric random walk
+
+NULL-2:
+    Brownian / Gaussian random walk with matched intraday volatility
+
+NULL-3:
+    empirical intraday volatility preserved but return signs randomized
+    in a leakage-safe way
+
+Run the EXACT Z1 detector on the nulls.
+
+Compare:
+
+    E[OS]/theta
+    E[TM]/theta
+    observed values
+    flip-to-flip economics.
+
+If omega in the current code is TOTAL MOVEMENT:
+
+    r≈2 MUST NOT be described as evidence of persistence
+    merely because it exceeds 1.
+
+If omega is true OVERSHOOT:
+
+    verify the implementation and then compare it against the correct null.
+
+Correct all affected reports if necessary.
+
+Do not hide the correction.
+
+Do not treat a semantic correction as campaign failure.
+
+The DIRECT ECONOMIC Z1 result remains a separate question.
+
+Recompute direct entry-price → exit-price PnL independently from the
+omega algebra as a parity test.
+
+If direct Z1 trading remains C1-negative:
+
+    keep Z1 standalone-alpha CLOSED.
+
+It may still remain eligible as:
+
+    Role B — state/selectivity feature
+    Role C — execution/timing feature.
+
+========================================================================
+3. RESEARCH LANES — KEEP THEM DISTINCT
+========================================================================
+
+Maintain FOUR separate zones:
+
+---------------------------------------------------------------------
+ZONE M — MICRO
+---------------------------------------------------------------------
+
+Approximate horizon:
+
+    sub-second → <10 sec
+
+Purpose:
+
+    entry timing
+    spread/liquidity information
+    flow
+    BBO
+    short impulse
+    execution quality
+    selectivity
+
+Standalone micro alpha is allowed if it exists,
+but it has a low prior because costs are large.
+
+Do not force it to stand alone.
+
+---------------------------------------------------------------------
+ZONE F — FAST_STRUCTURAL_SCALP
+---------------------------------------------------------------------
+
+THIS IS NOW PRIMARY PRIORITY.
+
+Setup clocks may include:
+
+    event/tick
+    1 sec
+    2 sec
+    5 sec
+    10 sec
+    15 sec
+    30 sec
+
+Holding horizons:
+
+    5 sec
+    10 sec
+    20 sec
+    30 sec
+    45 sec
+    60 sec
+    90 sec
+    120 sec
+
+3m / 5m may be reported diagnostically.
+
+Primary economic move scale:
+
+    ~8
+    12
+    16
+    20
+    24
+    32+
+
+ticks.
+
+This lane most closely represents the owner's discretionary scalp scale.
+
+---------------------------------------------------------------------
+ZONE S — STRUCTURAL_SCALP
+---------------------------------------------------------------------
+
+Approximate setup:
+
+    completed 30s / 1m / several-minute structures
+
+Holding horizon:
+
+    ~1–5 minutes
+    occasionally longer only when mechanism requires it.
+
+Includes S2a and value/level structures.
+
+---------------------------------------------------------------------
+ZONE A — ADJACENT_INTRADAY
+---------------------------------------------------------------------
+
+>5 minute ideas.
+
+These may be valuable strategies.
+
+They may NOT silently claim the SCALP_FINAL_CHAMPION title.
+
+Maintain separate champions.
+
+========================================================================
+4. PRIMARY RESEARCH PRINCIPLE
+========================================================================
+
+The failure of:
+
+    unconditional next-tick signal
+
+or:
+
+    unconditional small-scale DC flip-to-flip
+
+DOES NOT reject:
+
+    conditional fast structural scalp.
+
+The likely architecture is:
+
+    STRUCTURAL OPPORTUNITY
+           +
+    CONDITIONAL STATE
+           +
+    PRECISE ENTRY TIMING
+
+rather than:
+
+    one primitive
+           →
+    trade.
+
+Think in terms of conditional market states.
+
+A discretionary trader may implicitly combine:
+
+    impulse
+    location
+    pullback quality
+    path efficiency
+    failed counter-move
+    volatility
+    time of day
+    ES confirmation
+    spread state
+    flow
+    breakout acceptance
+
+without consciously writing them down.
+
+The research mission is to determine whether any such combination can be
+expressed causally and robustly.
+
+========================================================================
+5. BUILD A FAST-STRUCTURAL OPPORTUNITY CENSUS
+========================================================================
+
+Before inventing dozens of trading rules, build a:
+
+    FAST_STRUCTURAL_OPPORTUNITY_CENSUS
+
+on the 40-session DISCOVERY subset.
+
+Identify, as LABELS only, large future moves beginning from candidate
+decision timestamps.
+
+Study economically relevant forward horizons such as:
+
+    5s
+    10s
+    20s
+    30s
+    45s
+    60s
+    90s
+    120s
+    180s
+    300s
+
+and magnitude labels such as:
+
+    >= 8 ticks
+    >= 12 ticks
+    >= 16 ticks
+    >= 20 ticks
+    >= 24 ticks
+    >= 32 ticks
+
+in each direction.
+
+This is NOT yet a strategy.
+
+Use these events to answer:
+
+    What was observably different BEFORE large fast moves?
+
+Build matched controls by:
+
+    time of day
+    volatility regime
+    spread regime
+    broad session state
+
+so we do not merely rediscover:
+
+    "high-volatility periods move more."
+
+Compare causal pre-event state between:
+
+    large upside opportunities
+    large downside opportunities
+    matched non-opportunities.
+
+Possible discovery techniques:
+
+    feature enrichment
+    quantile tables
+    conditional distributions
+    low-dimensional clustering
+    simple logistic models
+    GAM
+    shallow trees
+
+No black-box PnL optimization.
+
+Any discovered pattern must be converted into a simple forward rule,
+preregistered, and THEN tested.
+
+Do not trade based on retrospective opportunity labels.
+
+========================================================================
+6. PRIMARY OUTCOME SURFACES
+========================================================================
+
+For every promising causal state X calculate a broad but controlled
+excursion surface.
+
+Do NOT only study +6/-2.
+
+Include economically relevant pairs such as:
+
+    +8  before -4
+    +12 before -4
+    +16 before -6
+    +20 before -6
+    +20 before -8
+    +24 before -8
+    +32 before -10
+
+and symmetric short-side versions.
+
+These are SEED PAIRS.
+
+Do not brute-force every target/stop pair.
+
+Use MFE/MAE distributions to remove obviously redundant pairs.
+
+Also compute:
+
+    MFE at 5/10/20/30/45/60/90/120 sec
+    MAE at same horizons
+    time-to-MFE
+    time-to-MAE
+    forward MID return
+    path efficiency
+    maximum retracement before MFE
+    probability target first
+    probability adverse level first
+    neither-hit probability.
+
+For every A/B pair derive the true break-even win rate AFTER costs.
+
+Do not quote raw target/stop break-even ignoring commission/slippage.
+
+========================================================================
+7. COST TRUTH
+========================================================================
+
+Fixed NQ research contract:
+
+    Quantity = 1 NQ
+
+Current standard costs:
+
+    commission = $2.18 / side
+    $4.36 round trip
+
+BENCHMARK_C1:
+
+    commission
+    +
+    1 tick slippage per execution
+
+Round-trip benchmark:
+
+    about 2.872 NQ ticks.
+
+BENCHMARK_C2:
+
+    commission
+    +
+    2 ticks slippage per execution.
+
+The current BBO audit suggests quoted spreads often run ~2–3 ticks,
+but exact trade-time reconstruction has ±1 tick ambiguity.
+
+Therefore:
+
+    C1 = standard promotion benchmark
+    C2 = mandatory stress
+    BBO_EXEC = diagnostic with uncertainty band
+
+Do NOT double count:
+
+    observed spread
+    plus generic slippage
+
+without explicitly decomposing them.
+
+For every candidate show:
+
+    gross ticks/trade
+    commission ticks
+    modeled friction
+    net ticks/trade
+    gross-edge/friction ratio.
+
+The preferred strategy should have a meaningful MARGIN above costs.
+
+A result that earns:
+
+    +0.3 net tick/trade
+
+after optimistic assumptions is not robust merely because n is huge.
+
+Maintain:
+
+    ROBUST_MARGIN
+    THIN_MARGIN
+    NO_MARGIN
+
+classifications.
+
+Approximately 4+ net ticks/trade after the standard model is a useful
+quality TARGET for a fast NQ scalp, not a universal hard requirement.
+
+========================================================================
+8. FAST STRUCTURAL FAMILY FACTORY
+========================================================================
+
+The following are SEEDS.
+
+Claude must independently create additional hypotheses from:
+
+    local data
+    /deep research
+    loss anatomy
+    opportunity census
+    market mechanism.
+
+Do NOT treat this as a finite checklist.
+
+---------------------------------------------------------------------
+FSS-1 — IMPULSE → SHALLOW PULLBACK → REBREAK
+---------------------------------------------------------------------
+
+Economic mechanism:
+
+    initiative order flow causes a displacement;
+    counter-flow fails to fully retrace;
+    initiative flow resumes.
+
+Study:
+
+    impulse magnitude
+    impulse duration
+    velocity
+    efficiency
+    pullback depth / impulse
+    pullback duration
+    broken-level retention
+    rebreak timing.
+
+This is one of the highest-priority families.
+
+Do not assume the correct setup clock is 1 second.
+
+Compare a few neighboring representations.
+
+---------------------------------------------------------------------
+FSS-2 — BREAKOUT → ACCEPTANCE → CONTINUATION
+---------------------------------------------------------------------
+
+Do not chase the first touch.
+
+Ask whether:
+
+    break local structure
+    remain accepted beyond it
+    shallow retest
+    continuation
+
+predicts a large enough move.
+
+Potential structural clocks:
+
+    5s
+    15s
+    30s
+    1m.
+
+Use relative local levels.
+
+Avoid arbitrary exact lookbacks unless a plateau exists.
+
+---------------------------------------------------------------------
+FSS-3 — FAILED OPPOSITE PROBE → CONTINUATION
+---------------------------------------------------------------------
+
+Example concept:
+
+    market moving up
+    brief downside probe attempts reversal
+    probe cannot achieve continuation
+    price reclaims micro pivot
+    original direction accelerates.
+
+This differs from simple momentum.
+
+Research whether FAILED counter-moves contain more precision.
+
+---------------------------------------------------------------------
+FSS-4 — FAILED BREAKOUT / SNAPBACK
+---------------------------------------------------------------------
+
+A breakout that is rapidly rejected and reaccepted.
+
+Potential high-win-rate reversion architecture.
+
+Must be proven on future MID, not Last-price bid/ask bounce.
+
+---------------------------------------------------------------------
+FSS-5 — LIQUIDITY SWEEP → RECLAIM
+---------------------------------------------------------------------
+
+Price trades through:
+
+    recent local high/low
+    OR high/low
+    ONH/ONL
+    PDH/PDL
+
+then rapidly returns.
+
+Test:
+
+    continuation vs snapback
+
+rather than assuming every sweep reverses.
+
+Use unadjusted contract prices when absolute historical levels matter.
+
+---------------------------------------------------------------------
+FSS-6 — COMPRESSION → VIOLENT EXPANSION
+---------------------------------------------------------------------
+
+Mechanism:
+
+    reduced local movement
+    liquidity accumulates
+    expansion begins
+    short-lived directional persistence.
+
+Study:
+
+    compression duration
+    realized range
+    breakout efficiency
+    quote-update acceleration
+    trade-rate acceleration.
+
+---------------------------------------------------------------------
+FSS-7 — VELOCITY + LOW RETRACEMENT
+---------------------------------------------------------------------
+
+A very simple momentum-state family.
+
+Question:
+
+    Is a fast move with unusually low counter-movement
+    more predictive than raw return magnitude?
+
+Possible features:
+
+    displacement / total variation
+    ticks per second
+    trades per second
+    maximum retracement ratio.
+
+---------------------------------------------------------------------
+FSS-8 — SPIKE CONTINUATION VS SPIKE REVERSAL
+---------------------------------------------------------------------
+
+Continue H-B5.
+
+Classify spikes by causal preconditions:
+
+    scheduled-news / ordinary
+    spread state
+    prior volatility
+    prior trend
+    speed
+    immediate retracement
+    ES confirmation.
+
+Do not assume spike means continuation OR reversal.
+
+---------------------------------------------------------------------
+FSS-9 — STRUCTURAL LEVEL REACTION
+---------------------------------------------------------------------
+
+Study:
+
+    opening range
+    overnight high / low
+    prior-day high / low
+    VWAP
+    local volume/price acceptance if causally available.
+
+The level itself is not the signal.
+
+Study:
+
+    rejection
+    acceptance
+    failed rejection
+    reclaim
+    breakout + retest.
+
+---------------------------------------------------------------------
+FSS-10 — NQ + ES CONFIRMATION / NON-CONFIRMATION
+---------------------------------------------------------------------
+
+Do NOT chase millisecond arbitrage.
+
+Study retail-relevant horizons:
+
+    seconds → minutes.
+
+Examples:
+
+    NQ impulse + ES same-direction confirmation
+    NQ breakout + ES non-confirmation
+    ES flow pressure before NQ structural trigger
+    relative-strength shock
+    divergence / reconvergence.
+
+ES is an INFORMATION VARIABLE.
+
+We still trade NQ only.
+
+========================================================================
+9. S2a MUST NOW BE RUN, NOT JUST REGISTERED
+========================================================================
+
+S2a already exists:
+
+    completed 1m breakout
+    close-location confirmation
+    1–3 bar pullback
+    broken level retained
+    tick-series rebreak.
+
+Run the frozen S2a first as originally specified.
+
+Do NOT modify it before the first readout.
+
+However classify it correctly:
+
+    STRUCTURAL_SCALP / boundary case
+
+not the entire scalping mission.
+
+After its first frozen result:
+
+if positive:
+    map neighboring structural definitions modestly.
+
+if negative:
+    reject the specific S2a definition.
+
+Do NOT conclude:
+    all breakout-pullback scalping is dead.
+
+A failed 1m S2a does not automatically reject a distinct 5s/15s
+FSS-1 architecture.
+
+========================================================================
+10. MANUAL-SCALE HYPOTHESIS PROGRAM
+========================================================================
+
+The owner's manual behavior is a hypothesis generator.
+
+It is NOT ground truth.
+
+Search the LOCAL repository for already-existing historical manual
+trade/fill exports if such files already exist.
+
+Do NOT connect to an account to retrieve them.
+
+If local historical trade records exist:
+
+use them only to ask:
+
+    What setup archetypes was the owner trading?
+
+Potentially classify:
+
+    continuation
+    pullback
+    breakout
+    failed breakout
+    level reaction
+    reversal
+    opening move
+    event scalp.
+
+Do NOT train directly to imitate historical discretionary decisions.
+
+Do NOT treat profitable manual trades as an OOS label.
+
+If no historical manual records already exist:
+
+do not ask the owner;
+continue using the opportunity census.
+
+========================================================================
+11. FEATURE LIBRARY — CAUSAL ONLY
+========================================================================
+
+Build reusable causal features.
+
+PRICE / PATH:
+
+    return_250ms
+    return_1s
+    return_2s
+    return_5s
+    return_10s
+    return_20s
+    return_30s
+
+    range
+    displacement
+    total variation
+    directional efficiency
+    velocity
+    acceleration
+    max retracement
+    time since local high/low
+    distance from local high/low
+    breakout distance
+    pullback depth
+    pullback duration.
+
+ACTIVITY:
+
+    trades/sec
+    volume/sec
+    trade-size distribution
+    quote-updates/sec
+    acceleration of activity.
+
+TRADE FLOW:
+
+Only if classification is causal and validated:
+
+    signed trade count
+    signed volume
+    flow imbalance
+    flow acceleration
+    persistence.
+
+BBO:
+
+    spread
+    bid move
+    ask move
+    quote age
+    quote-change direction
+    BBO persistence.
+
+Do not use historical size fields as alpha until L3 semantics are actually
+validated.
+
+CONTEXT:
+
+    time of day
+    broad session block
+    realized volatility
+    short-term volatility
+    volatility-of-volatility
+    OR position
+    ONH/ONL distance
+    PDH/PDL distance
+    VWAP distance
+    scheduled event state
+    gap
+    prior session direction.
+
+CROSS-MARKET:
+
+    ES return
+    ES velocity
+    ES flow if causal
+    NQ-ES relative return
+    confirmation / divergence.
+
+Every feature must have:
+
+    exact timestamp semantics
+    causal availability
+    source
+    unit
+    lookback
+    missing-value rule.
+
+========================================================================
+12. SMALL INTERACTIONS, NOT FEATURE SOUP
+========================================================================
+
+After univariate characterization,
+allow small economically motivated intersections.
+
+Examples:
+
+    impulse
+    × low retracement
+
+    impulse
+    × acceptable spread
+    × flow confirmation
+
+    breakout acceptance
+    × ES confirmation
+
+    failed breakout
+    × reclaim
+    × declining opposing flow
+
+    sweep
+    × quick reclaim
+    × low follow-through.
+
+Every additional condition must report:
+
+    Δ event count
+    Δ hit rate
+    Δ expectancy
+    Δ net ticks
+    Δ PF
+    Δ drawdown proxy.
+
+A condition that only makes the historical sample tiny
+is not improvement.
+
+Do not create a 14-filter handcrafted strategy.
+
+========================================================================
+13. HIGH-WIN-RATE RESEARCH IS A FORMAL OBJECTIVE
+========================================================================
+
+Maintain a separate Pareto frontier:
+
+    after-cost expectancy
+    win rate
+    PF
+    average win
+    average loss
+    95/99% loss
+    Sharpe
+    DD
+    trades/day.
+
+The owner values high win probability and frequent realized gains.
+
+Therefore explicitly search for:
+
+    HIGH-CONFIDENCE CONDITIONAL STATES.
+
+But high win rate NEVER dominates expectancy.
+
+Reject:
+
+    80% wins
+    tiny target
+    catastrophic occasional losses.
+
+A 55–65% hit-rate strategy with favorable payoff geometry may be
+far superior.
+
+Calculate true break-even hit rates after friction.
+
+========================================================================
+14. EVENT DEDUPLICATION / EPISODE LOGIC
+========================================================================
+
+Do not create fake sample size by firing the same signal 50 times during
+one move.
+
+Define event episodes.
+
+For each primitive:
+
+    first eligible signal
+    refractory period
+    reset condition
+
+must be explicit.
+
+Report:
+
+    raw events
+    unique episodes
+    unique days
+    effective sample size.
+
+Inference must cluster at least by trading day.
+
+Where appropriate also bootstrap by event episode.
+
+========================================================================
+15. NULLS / PLACEBOS
+========================================================================
+
+Every serious signal must beat relevant nulls.
+
+Use, where appropriate:
+
+    matched random same-time-of-day events
+    matched-volatility events
+    matched-spread events
+    random direction
+    shifted feature
+    shuffled within-day feature
+    future-feature leakage placebo
+    synthetic random walk
+    simple unconditional momentum
+    simple unconditional reversion.
+
+If a sophisticated setup does not outperform a matched simple null:
+
+reject the complexity.
+
+========================================================================
+16. STRATEGY CONVERSION
+========================================================================
+
+Do NOT stop forever at event studies.
+
+Once a state demonstrates economically meaningful forward information:
+
+freeze it.
+
+Then create a simple StrategyV01.
+
+Initial strategy rules:
+
+    fixed 1 NQ
+    one position maximum
+    no pyramiding
+    no averaging down
+    no leverage optimization
+    marketable entry
+    market/stop-market risk exits
+    no passive queue assumptions.
+
+Initially compare:
+
+    fixed-time exit
+    structural invalidation.
+
+Only after MFE/MAE supports it,
+allow a SMALL target/stop family.
+
+No giant stop-target optimization matrix.
+
+========================================================================
+17. NINJATRADER STRATEGY ANALYZER TARGET
+========================================================================
+
+Every serious finalist must eventually become:
+
+    one deterministic NinjaScript Strategy
+    quantity = 1 NQ
+    Strategy Analyzer runnable.
+
+Choose the setup clock based on evidence.
+
+Possible architecture:
+
+FAST STRUCTURAL:
+
+    primary:
+        1s / 5s / 15s / 30s completed bars
+
+    secondary:
+        1 Tick Last execution/trigger series
+
+STRUCTURAL:
+
+    primary:
+        1m completed bars
+
+    secondary:
+        1 Tick Last.
+
+Do not assume OnEachTick is always required.
+
+If setup definition uses completed bars:
+
+    OnBarClose is cleaner.
+
+If signal truly requires forming-bar or BBO event state:
+
+    use OnEachTick / appropriate series.
+
+Orders in historical multi-series research should be modeled on the
+explicit tick execution series when technically appropriate.
+
+Order Fill Resolution:
+
+    Standard
+
+when using explicit tick execution series unless a verified reason says
+otherwise.
+
+No realtime orders.
+
+Research strategy must FAIL CLOSED in State.Realtime.
+
+========================================================================
+18. PYTHON ↔ NINJASCRIPT PARITY
+========================================================================
+
+For each finalist produce a canonical signal ledger:
+
+    timestamp
+    family
+    direction
+    setup_state
+    features
+    trigger
+    expected horizon
+    entry
+    exit
+    MFE
+    MAE
+    exit reason.
+
+Run the same frozen period through:
+
+    Python research implementation
+    NinjaScript Strategy Analyzer implementation.
+
+Require near-exact SIGNAL parity.
+
+Investigate every mismatch.
+
+Do not promote a strategy whose research logic and NinjaScript
+implementation differ silently.
+
+========================================================================
+19. DISCOVERY → CONFIRMATION → HOLDOUT
+========================================================================
+
+Protect the data hierarchy.
+
+TIER 0 — DISCOVERY
+
+    current 40 stratified sessions only.
+
+Purpose:
+
+    event studies
+    opportunity census
+    mechanism discovery
+    coarse state intersections.
+
+TIER 1 — INTERNAL CONFIRMATION
+
+A candidate must be FROZEN first.
+
+Then it earns access to fresh remaining development sessions.
+
+No parameter editing based on individual confirmation days.
+
+If a candidate materially fails:
+
+    reject.
+
+Do not rescue it with confirmation-set tuning.
+
+TIER 2 — ROBUSTNESS
+
+For survivors:
+
+    chronological subperiods
+    walk-forward
+    session decomposition
+    volatility regimes
+    neighboring definitions
+    C1/C2
+    latency
+    concentration.
+
+TIER 3 — SEALED HOLDOUT
+
+Only a genuinely frozen finalist may read:
+
+    2026-06-01 → 2026-07-31.
+
+Single evaluation.
+
+No redesign after viewing holdout
+followed by pretending it remains OOS.
+
+>=2026-08-01 remains untouched.
+
+========================================================================
+20. HISTORICAL ARCHIVE WITHOUT CONTAMINATION
+========================================================================
+
+Because provider BBO history rolls off:
+
+you may export/cache historical remaining development sessions
+before they disappear.
+
+But enforce:
+
+    ARCHIVE_ONLY flag.
+
+Do not:
+
+    compute features
+    calculate returns
+    inspect alpha
+    rank states
+    run strategies
+
+on those files before the candidate is allowed into confirmation.
+
+Record hashes and manifests.
+
+This preserves data without consuming scientific freshness.
+
+========================================================================
+21. PROMOTION METRICS
+========================================================================
+
+For each candidate report:
+
+SIGNAL:
+
+    unique events
+    unique days
+    event frequency/day
+    target-first probability
+    MFE
+    MAE
+    time-to-MFE
+    time-to-MAE
+    forward-return curve.
+
+ECONOMICS:
+
+    gross ticks/trade
+    C1 net ticks/trade
+    C2 net ticks/trade
+    commission
+    PF
+    win rate
+    avg winner
+    avg loser
+    payoff ratio.
+
+RISK:
+
+    true daily PnL
+    Sharpe
+    Calmar
+    max DD
+    expected shortfall
+    worst day
+    worst week
+    consecutive losses
+    TUW.
+
+CONCENTRATION:
+
+    best trade contribution
+    top 1%
+    top day
+    top 5 days
+    top 10 days
+    result excluding best 1/3/5 days.
+
+ROBUSTNESS:
+
+    time of day
+    long/short
+    volatility
+    spread
+    month
+    confirmation period
+    neighboring setup scale
+    latency.
+
+Do not promote based on total net alone.
+
+========================================================================
+22. LATENCY
+========================================================================
+
+Every FAST/MICRO finalist gets:
+
+    next event
+    250ms
+    500ms
+    1s
+    2s
+    5s
+
+where data fidelity supports it.
+
+For 30–120 second strategies:
+
+1 second of entry delay should NOT normally erase the entire alpha.
+
+If it does:
+
+classify:
+
+    LATENCY_FRAGILE.
+
+Report:
+
+    expectancy(delay)
+    hit_rate(delay)
+    trade_count(delay).
+
+========================================================================
+23. ML — ONLY AFTER SIMPLE STATES
+========================================================================
+
+ML is allowed.
+
+Its first job is NOT:
+
+    predict next tick.
+
+Use ML to estimate:
+
+    P(+A before -B | current state)
+    expected MFE
+    expected MAE
+    expected net executable move
+    probability of structural setup success.
+
+Start with:
+
+    logistic regression
+    regularized regression
+    GAM
+    shallow trees
+    gradient boosting.
+
+Evaluate:
+
+    calibration
+    Brier score
+    confidence buckets
+    chronological stability
+    incremental after-cost PnL.
+
+Feature selection occurs inside training only.
+
+If:
+
+    high-confidence bucket
+
+shows substantially better trade economics,
+that can become a selective-entry rule.
+
+Only consider DL/sequence models if:
+
+    simple models establish signal
+    dataset size supports it
+    leakage audit passes
+    incremental economic value remains.
+
+AUC improvement without after-cost improvement = FAIL.
+
+========================================================================
+24. NO PREMATURE SOLAR FILTER
+========================================================================
+
+Do not use:
+
+    vm20
+    R5-E10
+
+to select scalp trades during initial discovery.
+
+That would create hindsight complementarity.
+
+First build standalone scalp alpha.
+
+Freeze it.
+
+Only afterward compare its daily/session PnL to:
+
+    vm20
+    R5-E10.
+
+Then measure:
+
+    overall correlation
+    losing-day correlation
+    Solar bottom-decile days
+    Solar top-decile days
+    drawdown overlap
+    time-in-market overlap.
+
+If a scalp candidate survives independently
+AND diversifies Solar:
+
+promote it as a future portfolio-family candidate.
+
+========================================================================
+25. BROADER SYSTEM OBJECTIVE
+========================================================================
+
+Remember why we are doing this.
+
+Solar / Family A is a right-tail directional-persistence engine.
+
+It is NOT the final systematic system.
+
+A strong scalp family could provide:
+
+    more frequent PnL
+    higher hit rate
+    different market states
+    lower duration
+    different tail structure
+    lower losing-day correlation.
+
+The long-run objective is not:
+
+    highest leverage on Solar.
+
+It is:
+
+    higher PORTFOLIO Sharpe
+    higher geometric growth
+    lower drawdown
+    independent return engines.
+
+Therefore a scalp with somewhat lower standalone net
+but low correlation and strong risk-adjusted performance
+may be extremely valuable.
+
+But standalone edge must be established FIRST.
+
+========================================================================
+26. RESEARCHER AUTONOMY
+========================================================================
+
+Do not ask the owner:
+
+    "Should I test this next?"
+    "Would you like me to continue?"
+    "Should I run S2a?"
+    "Should I inspect the next family?"
+
+You have standing authorization for HISTORICAL RESEARCH.
+
+Use:
+
+    /deep research
+    /dynamic workflow
+    CrossTrade
+    NinjaTrader historical Strategy Analyzer
+    Python
+    NinjaScript
+    local shell
+    reusable research agents
+
+as needed.
+
+Choose the next action by:
+
+    EXPECTED VALUE OF INFORMATION.
+
+If one experiment is blocked:
+
+    continue independent research in parallel.
+
+Only require owner intervention for a genuine tool/platform action that
+cannot be completed historically by available automation.
+
+Do not stop the campaign merely to report status.
+
+========================================================================
+27. DEEP RESEARCH
+========================================================================
+
+Continue external research dynamically when empirical results create
+new questions.
+
+Examples:
+
+If shallow-pullback continuation looks promising:
+    research institutional momentum / pullback mechanisms.
+
+If sweep/reclaim works:
+    research stop-run/liquidity sweep evidence.
+
+If fast breakout works only under high activity:
+    research liquidity-vacuum dynamics.
+
+If ES confirmation matters:
+    research cross-index information transmission.
+
+Every deep-research output must end in:
+
+    mechanism
+    observable
+    horizon
+    expected sign
+    local-data requirement
+    falsification test.
+
+External literature is a hypothesis prior.
+
+Local NQ data decides.
+
+========================================================================
+28. ANTI-HALLUCINATION CONSTITUTION
+========================================================================
+
+This is mandatory.
+
+Every major report must explicitly separate:
+
+FACT
+    directly reproduced from local artifact/code/run.
+
+INFERENCE
+    interpretation supported by facts.
+
+HYPOTHESIS
+    proposed mechanism not yet proven.
+
+EXTERNAL PRIOR
+    literature evidence not yet replicated locally.
+
+Do not blur them.
+
+Never say:
+
+    "edge proven"
+
+from one development subset.
+
+Never say:
+
+    "martingale rejected"
+
+without a correctly specified null.
+
+Never say:
+
+    "overshoot"
+
+without defining exactly what variable is measured.
+
+Never say:
+
+    "BBO fill"
+
+when historical sequencing cannot establish exact contemporaneous BBO.
+
+Never say:
+
+    "OOS"
+
+after a block has been viewed for redesign.
+
+Never say:
+
+    "independent observations"
+
+for thousands of intraday events from a few days.
+
+Never say:
+
+    "microstructure edge"
+
+when the result is bid-ask bounce.
+
+Never say:
+
+    "high win rate strategy"
+
+without payoff/left-tail analysis.
+
+Every surprising mathematical result must receive:
+
+    unit test
+    toy hand-worked example
+    synthetic null test.
+
+Every strategy result must have:
+
+    source commit
+    spec
+    data hash
+    cost assumptions
+    exact run artifact.
+
+Correct previous statements openly if evidence changes them.
+
+========================================================================
+29. MULTIPLE TESTING
+========================================================================
+
+The fast-structural space is enormous.
+
+Maintain append-only tested-config accounting.
+
+Before each selection experiment freeze:
+
+    family
+    event
+    setup scale
+    thresholds
+    target label
+    cost
+    selection metric
+    pass/fail.
+
+Do not count every descriptive table as a trading trial,
+but count anything used to choose a candidate.
+
+Prefer:
+
+    family-level evidence
+    broad parameter regions
+    low-dimensional plateau
+
+over:
+
+    exact historical argmax.
+
+If:
+
+    17 ticks works
+    16 and 18 do not
+
+assume fragility.
+
+========================================================================
+30. CHAMPION SYSTEM
+========================================================================
+
+Maintain separate scalp champions:
+
+SCALP_SIGNAL_REFERENCE
+
+SCALP_FAST_STRUCTURAL_REFERENCE
+
+SCALP_STRUCTURAL_REFERENCE
+
+SCALP_HIGH_WIN_REFERENCE
+
+SCALP_MAX_SHARPE
+
+SCALP_LOW_DD
+
+SCALP_FINAL_CHAMPION
+
+A strategy does not need to win every category.
+
+Current champion can always be challenged.
+
+Do not overwrite historical champion records.
+
+========================================================================
+31. RED TEAM
+========================================================================
+
+Every Tier-2+ candidate requires an adversarial pass.
+
+Ask:
+
+Could this be:
+    bid-ask bounce?
+    bar-close lookahead?
+    same-timestamp leakage?
+    event duplication?
+    one volatility day?
+    one news day?
+    one contract?
+    one session?
+    back-adjustment?
+    roll artifact?
+    spread artifact?
+    cost understatement?
+    latency fantasy?
+    target/stop mining?
+    confirmation-data overfit?
+    selection after hundreds of trials?
+
+Also ask:
+
+Did we just rediscover:
+    high volatility moves more?
+
+Does matched-volatility control remove the effect?
+
+Did a complex rule beat its simple base signal?
+
+Can a simpler rule achieve 90% of the result?
+
+========================================================================
+32. IMMEDIATE EXECUTION ORDER
+========================================================================
+
+Proceed now in this order unless actual evidence makes another ordering
+strictly higher EVI.
+
+P0 — Z1 semantic/null audit
+    define OS vs TM
+    synthetic-null calibration
+    correct reports
+    preserve direct economic conclusion separately.
+
+P1 — Fast Opportunity Census
+    map 10–30+ tick moves over 5–120 sec
+    characterize causal preconditions
+    matched controls.
+
+P2 — Fast excursion baseline
+    broaden from +6/-2 to economically relevant 8–32 tick outcomes.
+
+P3 — FSS-1
+    impulse → shallow pullback → rebreak.
+
+P4 — FSS-2
+    breakout → acceptance → continuation.
+
+P5 — FSS-3
+    failed opposite probe → continuation.
+
+P6 — FSS-4/FSS-5
+    failed break / sweep → reclaim.
+
+P7 — Run frozen S2a
+    1-minute structural breakout/pullback/rebreak.
+
+P8 — H-B5
+    spike continuation vs reversal.
+
+P9 — FSS-6/FSS-7
+    compression/expansion + high-velocity/low-retracement states.
+
+P10 — Cross-index
+    ES confirmation/non-confirmation at retail-relevant horizons.
+
+P11 — Micro role-B/C
+    spread/flow/BBO timing layered ONLY onto already-promising structural
+    setups.
+
+P12 — Convert survivors into fixed-1-NQ NinjaScript StrategyV01.
+
+P13 — Internal confirmation pool.
+
+P14 — robustness / latency / C1/C2 / parity / red team.
+
+P15 — single sealed June/July holdout read for frozen finalists only.
+
+P16 — scalp vs vm20/R5-E10 complementarity analysis.
+
+Parallelize independent paths when efficient.
+
+Do not make P0 block P1/P2 if the implementation teams can proceed
+independently.
+
+========================================================================
+33. WHAT SUCCESS WOULD LOOK LIKE
+========================================================================
+
+An illustrative good outcome could be something like:
+
+    several trades/day
+    10–120 sec holding
+    10–30 tick opportunity size
+    50–65% honest win probability
+    favorable winner/loser ratio
+    several net ticks/trade after C1
+    C2 still economically defensible
+    shallow DD
+    low tail concentration
+    neighboring definitions survive
+    confirmation survives
+    sealed holdout survives.
+
+These numbers are NOT mandatory thresholds.
+
+The data determines the attainable frontier.
+
+Do not optimize toward these examples mechanically.
+
+========================================================================
+34. FINAL DELIVERABLE
+========================================================================
+
+If a qualified strategy emerges, produce:
+
+research/scalping_lab/reports/
+    FAST_STRUCTURAL_FINALISTS.md
+    SCALP_1NQ_REFERENCE.md
+    SCALP_HIGH_WIN_REFERENCE.md
+    SCALP_FINAL_CHAMPION.md
+    SCALP_RED_TEAM.md
+    SCALP_STRATEGY_ANALYZER_RECIPE.md
+    SCALP_SOLAR_COMPLEMENTARITY.md
+    FINAL_RESEARCH_REPORT.md
+
+And actual versioned NinjaScript source.
+
+For the final champion report:
+
+exactly state:
+
+    mechanism
+    strategy
+    setup clock
+    holding distribution
+    entries
+    exits
+    quantity
+    commission
+    slippage
+    C1
+    C2
+    event count
+    trades/day
+    win rate
+    PF
+    avg trade
+    net ticks/trade
+    Sharpe
+    max DD
+    ES
+    worst day
+    consecutive losses
+    concentration
+    latency
+    confirmation result
+    holdout result
+    Strategy Analyzer fingerprint
+    known reasons it may fail.
+
+If no candidate qualifies:
+
+say:
+
+    NO QUALIFIED FAST NQ SCALPING EDGE FOUND
+    IN THE TESTED RESEARCH UNIVERSE.
+
+Do not promote the least-bad strategy.
+
+========================================================================
+35. STOP CONDITIONS
+========================================================================
+
+DO NOT stop because:
+
+    Z1 failed
+    one breakout failed
+    one reversion failed
+    one wave completed
+    one strategy became profitable
+    one pretty report exists.
+
+Continue until:
+
+1. major fast-structural mechanism families have actually been tested;
+2. opportunity census has been exploited;
+3. several distinct structural families have been falsified or promoted;
+4. survivors reach strategy level;
+5. fresh internal confirmation has been used correctly;
+6. finalists survive C1/C2 and latency analysis;
+7. sealed holdout is consumed only for genuinely frozen finalists;
+8. red team has attacked them;
+9. three consecutive well-designed waves fail to improve the Pareto frontier;
+10. remaining high-EVI hypotheses are exhausted or blocked by unavailable
+    historical data.
+
+Then conclude.
+
+========================================================================
+36. START NOW
+========================================================================
+
+Do not ask for confirmation.
+
+Read current local:
+
+MANDATE_V2
+MANDATE_AMENDMENT_1
+MANDATE_AMENDMENT_2
+MANDATE_AMENDMENT_3
+CONSTITUTION.md
+CAMPAIGN_STATE.md
+FRONTIER.yaml
+DATA_SUBSTRATE.md
+EXECUTION_MODEL.md
+HYPOTHESES.md
+REJECTED_IDEAS.md
+W1-0b BBO audit
+Z1 report
+S2a spec
+
+Archive this amendment.
+
+Update state/frontier.
+
+Then immediately execute:
+
+    Z1 definition/null audit
+        ||
+    Fast Opportunity Census
+        ||
+    Fast excursion framework
+
+and proceed autonomously through the queue above.
+
+Do not spend another research wave proving that an unconditional
+next-tick primitive is too small.
+
+We already learned that lesson.
+
+Move up to the actual economic scale of interest:
+
+    structured states
+    seconds-to-minutes
+    multi-point NQ moves
+    cost-surviving execution.
+
+The mission is:
+
+    FIND A REAL SYSTEMATIC SCALP,
+    NOT A MICROSTRUCTURE PAPER.
+
+Stay skeptical.
+Stay causal.
+Stay organized.
+Move fast.
+Kill weak ideas.
+Escalate strong ideas.
+Challenge every champion.
+Do not ask the owner to continue.
+
+========================================================================
+END OWNER AMENDMENT 4
+========================================================================
