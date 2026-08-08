@@ -22,3 +22,17 @@
 9. **ML trade-quality screen** (§29): logistic P(loss) on causal state features,
    nested chronological CV, distill-if-real.
 10. Quarterly: MONITOR-01 #2 + SM13 B-MOM decay reading (≥2026-11-01, NOT a blocker).
+
+## Deep-research passes A/B/C landed 2026-08-08 (Track I complete) — consolidated wave-2 picks
+Full slates: deep_research/DR_V2_PASS_{A_AUCTION,B_DSP,C_RISK}.md. All EXTERNAL PRIORS;
+local data decides; every item needs its own frozen spec + registry seq before any read.
+- **W2-1 (curve reads, cheapest)**: C-P1 CDaR/EDaR/Ulcer static blend LP (validates or
+  moves 60/40); C-P3 DD-constrained Kelly cap L*; C-P4 drought-tilt + placebo; C-P7
+  windfall give-back event-study pre-test. [C-P2 normalizer leak-check DONE: no leak —
+  vm scales are frozen constants.]
+- **W2-2 (states, shared harness)**: B-H1 variance-ratio state + B-H3 efficiency ratio
+  (keep one of the cluster); then B-H2 Kalman innovation-whiteness, B-H4 BOCPD regime age.
+- **W2-3 (engine #3 candidates)**: A-H1 failed range-break fade + A-H3 small-gap fade
+  (highest prior × cheapest falsification); A-H5 overnight drift as designated cheap kill;
+  B-H10 OU fade gated by the VR state (cost pre-gate 3× friction BEFORE backtest).
+- **W2-4 (convexity)**: C-P5 long-gamma NQ breakout sleeve (adds right tail; smile test).
