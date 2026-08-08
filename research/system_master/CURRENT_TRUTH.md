@@ -1,7 +1,47 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4.1 wave-12 (SMV2AF 1m R2 confirmation + SMV2AG adaptive
-clamp). Supersedes the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+_Last update: 2026-08-08, end of V4.1 wave-13 (SMV2AH day circuit breaker KILLED + SMV2AI ATR
+blend — FIRST NEW CANDIDATE since the clamp/clock challenge series began closing out).
+Supersedes the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+
+## Wave-13 verdict (specs d927ec6; red-team CONFIRMED-with-corrections on both — SMV2AH had 2
+## narrative corrections [gate-1 object-attribution breakdown, a FLATTEN-worst-day
+## overgeneralization], SMV2AI had 5 corrections [4 cosmetic/typo, 1 real prose mischaracterization
+## of arm_BLEND_25's CDaR — none change either verdict]; both runs' only other gap was a missing
+## REPORT.md, now written) — **arm_BLEND_75 is the first genuinely new Solar-core mechanism to
+## pass a standalone AND-rule screen since the clamp-ceiling/clock-challenge series began closing.**
+**SMV2AI_ATR_BLEND (seq 430-432) — QUEUE_R2_CONFIRMATION.** sigma460 is close-only and
+structurally blind to intrabar wicks (99.3% of dev bars carry TR > |Δclose|, i.e. real wick
+information sigma460 cannot see). Blending it 75/25 with a properly rescaled ATR (true-range)
+estimator — `sigma_ATR_eff = ATR460/2.0255`, R measured with the same discipline SMV2AE used —
+**uniquely qualifies**: standalone Sharpe 0.746 vs 0.709 control, CDaR₀.₉₅ $25,183 vs $27,162
+(better), top-10-day retention 100.2% (comfortable margins, not borderline). The a priori churn
+concern (ATR is noisier intrabar) is NOT confirmed — flip-count rises only 0.09%. At the
+portfolio level (DAYONLY_DUAL6040 60/40) it also beats the champion (Sharpe 1.297 vs 1.264,
+CDaR $14,004 vs $14,322). **Old-regime screen (2006-2021) passes with real margin, not
+marginally** — net gap +$71,544 vs a −$10k floor, maxDD ratio 0.954 vs a 1.25× ceiling — the
+exact floor that killed 3 of 5 prior core-challenge candidates in this program. Pure-ATR
+replacement (arm_REPLACE, w=0) has the single best standalone CDaR of all 5 arms but fails on
+Sharpe alone; w=0.25/0.50 both fail outright; the w-relationship is non-monotonic, disclosed
+not explained. **No adoption this wave** — queues a full SMV2T-style R2_CONFIRMATION
+(bootstrap significance, LOYO, right-tail, formal portfolio gate) next wave, the natural top
+priority.
+**SMV2AH_DAY_CIRCUIT_BREAKER (seq 426-429) — KILLED, CONFIRMED-NOT-BENEFICIAL.** Directly
+answers the owner's stop-loss/day-loss-limit question from mid-wave-12: a same-day, portfolio-
+level running-P&L circuit breaker (2 halt modes × 4 percentile-calibrated thresholds × 2
+objects, 16 cells) was built and tested for the first time in this program (required new
+intraday bar-by-bar MTM machinery, reconciled exactly against existing EOD curves before any
+breaker logic ran). **0/16 cells qualify.** Decisive failure: in every single cell, the real
+threshold-triggered rule's CDaR is *worse* than a matched placebo that halts the same number of
+sessions at a random bar instead of the actual loss-triggered bar — a reactive rule structurally
+captures less protection than random truncation, because it can only act after the loss has
+already partly happened. This is now the THIRD distinct time-scale where loss-reactivity has
+tested anti-edge in this program (per-trade MAE stops SM03/SM03B — dead, Solar's own reversal
+already acts as one; cross-day streak throttle SM02B — anti-edge; now same-day — anti-edge, for
+a cleaner mechanistic reason). Leg attribution: the deployed portfolio's triggers are genuinely
+mixed (67-83% joint Solar+B-MOM negative days), not chasing one engine's noise.
+
+## Wave-12 verdict (specs db39d56; red-team CONFIRMED-with-corrections on both — SMV2AF had one
 
 ## Wave-12 verdict (specs db39d56; red-team CONFIRMED-with-corrections on both — SMV2AF had one
 ## factual labeling fix in a comparison table (does not change the conclusion), SMV2AG had zero
