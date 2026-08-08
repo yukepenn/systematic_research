@@ -1,6 +1,16 @@
 # ALPHA THROUGHPUT SCOREBOARD (Amendment 5)
 
-Updated: 2026-08-08 (W5 complete)
+Updated: 2026-08-08 (W7 complete — **ZONE F CLOSED per §9/§34, reports/ZONE_F_FINAL_VERDICT.md**)
+
+FINAL Zone-F tallies: 16 trade-rule families tested, 16 negative plateaus (~500 configs);
+ceiling measured 3× (best +3.21pp vs 7-9.1pp needed); FSS-9 VWAP-reclaim +2.9pp =
+conditional-state record; red team discharged (RT-1 four scope conditions honored,
+RT-2 empty-list met after W7). UNRESOLVED carried: B1-overnight, S2a-short, H-D3@1min,
+binding-recovery variant, ES spread/size, L3/L4. Holdout + confirmation pool NEVER read.
+Open program: A (patient-exit test), B (momentum build spec [gate passed], B1 2005+,
+event-FADE new spec, GC/CL r-screen), roles B/C on Solar.
+
+Historical (W5 record below):
 
 | Metric | Value |
 |---|---|

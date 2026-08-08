@@ -148,14 +148,24 @@
       VWAP/value, PDH/PDL/gap, event flags, ES signed flow; all readouts RTH-only so
       08:30 releases structurally untested; names FSS-9 (EVI 1), E1 events (EVI 2),
       ES-signed-flow H-D1 (EVI 3), open-drive (EVI 4), gap-context (EVI 5).
-- [ ] **W7 IN FLIGHT (spec frozen 1d76c14)**: C5b augmented ceiling (+VWAP/PD-levels/
-      event/ES-flow blocks, same-sample), FSS-9 sweep-reclaim at dynamic/prior levels,
-      E1 events (tick descriptive n<=4 + minute-powered 08:30 study with placebo).
-      par.9 verdict AFTER W7: closure iff C5b < 5pp everywhere AND FSS-9 fails plateau,
-      with RT-1's four text conditions; any survivor -> conversion spec instead.
-      Deferred open items (not closure blockers): H-D3@1min retest (needs 1-min
-      exporter), S2a Tier-1 read, B1 2005+ extension, B-momentum build spec (gate
-      passed W5-B2).
+- [x] **W7 COMPLETE + §9 VERDICT RENDERED (2026-08-08)**: C5b augmented ceiling ALSO
+      INSUFFICIENT (best +3.21pp [+0.93,+5.00], blocks add capacity not signal); FSS-9
+      0/120 both offset readings (VWAP-reclaim lift +1.3-2.9pp = campaign conditional
+      record, 3-8pp short); E1 minute-powered continuation significantly NEGATIVE
+      (-53t@15min; fade = post-hoc observation only; Zone-F variant untestable at n=4).
+      **ZONE F FORMALLY CLOSED per Amendment 6 §9 -> Mandate §34:**
+      "NO QUALIFIED FAST NQ SCALPING EDGE FOUND IN THE TESTED RESEARCH UNIVERSE" —
+      with RT-1's four scope conditions (regime 2025-08→2026-05, FSS-6 absent-not-
+      falsified, UNRESOLVED list carried, ceiling library/clock-relative + E1
+      sample-limited). Full text + reopen rule: reports/ZONE_F_FINAL_VERDICT.md.
+      Holdout and confirmation pool never read — intact.
+- [ ] **NEXT (funded program, post-closure)**: Program A — patient time-triggered-exit
+      test on Solar (uses BBO substrate + regenerated signals). Program B — momentum
+      family build spec (W5-B2 gate passed; H-A1 retry terms); B1 overnight 2005+
+      resolution (needs 1-min/L0 minute export); event-FADE new preregistered spec;
+      GC/CL cross-asset r-screen with W2-0-corrected nulls. Roles B/C — per-trade
+      micro-state scoring of Solar trades. Deferred: H-D3@1min, S2a Tier-1 read
+      (minute exporter at next NT8 restart enables both).
 - [x] (superseded record) **W5 (three programs, specs frozen before readout — specs/W5_programs_wave.md)**:
       A1 robust sizing FRONTIER (ledger-only, scenario grid, no single fraction as
       truth). B1 overnight 16:44→09:30 first pass (2022-2026 3-min data) + measured

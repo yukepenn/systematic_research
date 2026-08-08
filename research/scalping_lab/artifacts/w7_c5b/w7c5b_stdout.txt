@@ -1,0 +1,270 @@
+W7-1 C5b augmented predictability ceiling (decisive) | seed=20260808 reps=1000 clock=30s cap=600s minhist=300s es_trade_stale<=5.0s zwin=600s zmin=300
+new blocks: vwap['vwap_dist', 'vwap_slope60', 'vwap_dist_full'] prior_day['pdh_dist', 'pdl_dist', 'pclose_dist', 'on_gap', 'prior_day_ret_sign'] event['min_since_release', 'min_to_release'] es_flow['es_sflow10', 'es_sflow60', 'es_zsflow60'] -> 13 new features; runs: ['base_nq27', 'aug_nq27_new13']
+units: sechilo mid & all distance features in TICKS; grid `last` and the 3-min CSV in POINTS (x4 to ticks). Documented ~1t error: CSV closes are LAST prices, sechilo is union-BBO MID (measured median |last*4 - mid_last| = 1.0t on s20260123).
+HOLDOUT GUARD: 3-min CSV rows 540232 -> 519833 after dropping time >= 2026-06-01 (dev window 2022-01-02 18:03:00 .. 2026-05-31 23:57:00)
+calendar: 145 releases -> 139 after < 2026-06-01 filter (2022-01-07 08:30:00 .. 2026-05-12 08:30:00); events ['CPI', 'FOMC', 'NFP'] at times ['08:30', '14:00']
+sessions: 37  (s20250814 .. s20260520) — same 37-tag list as C5; every tag has a raw-ES partner file
+caveats: NQ s20250902 quote-dead (self-skips, as in C5); es_s20260519 feed truncated mid-afternoon (rows drop via the 5s trade-staleness rule -> excluded from BOTH runs); priors of s20250902/s20251128 are early-close half-days (13:00 close used as prior RTH close — documented, not dropped)
+ASSERTION 1 PASSED: label windows start at t+1s and never overlap the feature second t — perturbing hi/lo at t left all labels unchanged (800 row-label checks on s20260123).
+s20250814 rows: 780 | new-block NaN rows: 14 | offset_s: +3941.0t
+s20250820 rows: 780 | new-block NaN rows: 2 | offset_s: +3946.0t
+s20250901 rows: 420 | new-block NaN rows: 398 | offset_s: +3939.5t
+s20250902 SKIPPED: zero quote-alive RTH seconds (dead quote feed; same handling as census)
+s20250905 rows: 780 | new-block NaN rows: 4 | offset_s: +3922.0t
+s20250910 rows: 780 | new-block NaN rows: 4 | offset_s: +3951.0t
+s20250911 rows: 780 | new-block NaN rows: 32 | offset_s: +3933.0t
+s20250922 rows: 780 | new-block NaN rows: 33 | offset_s: +2980.5t
+s20251002 rows: 780 | new-block NaN rows: 24 | offset_s: +3003.5t
+s20251009 rows: 780 | new-block NaN rows: 6 | offset_s: +2992.5t
+s20251027 rows: 780 | new-block NaN rows: 60 | offset_s: +2990.5t
+s20251029 rows: 780 | new-block NaN rows: 8 | offset_s: +2975.0t
+s20251110 rows: 780 | new-block NaN rows: 4 | offset_s: +3009.5t
+s20251117 rows: 689 | new-block NaN rows: 2 | offset_s: +3030.5t
+s20251124 rows: 780 | new-block NaN rows: 3 | offset_s: +2978.5t
+s20251128 rows: 450 | new-block NaN rows: 2 | offset_s: +2989.5t
+s20251209 rows: 780 | new-block NaN rows: 12 | offset_s: +2989.0t
+s20251222 rows: 780 | new-block NaN rows: 43 | offset_s: +1972.5t
+s20260123 rows: 780 | new-block NaN rows: 2 | offset_s: +1985.5t
+s20260206 rows: 780 | new-block NaN rows: 2 | offset_s: +2017.0t
+s20260211 rows: 780 | new-block NaN rows: 69 | offset_s: +1970.5t
+s20260218 rows: 780 | new-block NaN rows: 4 | offset_s: +1990.5t
+s20260220 rows: 780 | new-block NaN rows: 7 | offset_s: +1975.0t
+s20260223 rows: 780 | new-block NaN rows: 2 | offset_s: +1961.0t
+s20260303 rows: 780 | new-block NaN rows: 378 | offset_s: +1982.0t
+s20260312 rows: 780 | new-block NaN rows: 123 | offset_s: +1953.5t
+s20260317 rows: 780 | new-block NaN rows: 6 | offset_s: +1143.0t
+s20260320 rows: 780 | new-block NaN rows: 2 | offset_s: +1129.0t
+s20260406 rows: 780 | new-block NaN rows: 2 | offset_s: +1101.0t
+s20260409 rows: 780 | new-block NaN rows: 2 | offset_s: +1069.5t
+s20260417 rows: 780 | new-block NaN rows: 4 | offset_s: +1107.0t
+s20260423 rows: 780 | new-block NaN rows: 2 | offset_s: +1206.0t
+s20260428 rows: 780 | new-block NaN rows: 4 | offset_s: +1140.5t
+s20260506 rows: 780 | new-block NaN rows: 14 | offset_s: +1188.5t
+s20260511 rows: 780 | new-block NaN rows: 4 | offset_s: +1095.5t
+s20260519 rows: 780 | new-block NaN rows: 155 | offset_s: +1106.0t
+s20260520 rows: 780 | new-block NaN rows: 2 | offset_s: +1128.0t
+
+=== BASELINE-MATRIX VERIFICATION vs committed C5 dataset ===
+VERIFIED: rebuilt baseline matrix == committed w5c5_dataset.parquet (rows 27299; 27 features allclose; 4 labels identical; per-session rows and neither-counts match w5c5_dataset_summary.csv).
+per-label base rates over decided rows (rebuilt == committed):
+  lab_long_24_8: 0.2525
+  lab_long_32_10: 0.2361
+  lab_short_24_8: 0.2488
+  lab_short_32_10: 0.2328
+
+=== SAME-SAMPLE RULE (new-block NaN drops) ===
+clock rows: 27299 raw | dropped t<300: 0 | dropped NQ-NaN-feature: 0 | C5-equivalent rows: 27299 | dropped new-block-NaN (same-sample rule): 1435 | modeling rows (BOTH runs): 25864
+per-block NaN rows (overlapping): vwap=72, prior_day=0, event=0, es_flow=1365
+drop reasons: vwap_slope60 undefined in the first 60s of RTH (the 09:30:00/09:30:30 clock rows of every session); ES-flow NaN from >5s trade-staleness / z-norm warmup / the truncated es_s20260519 afternoon. Prior-day and event blocks caused ZERO drops (every modeled session 2025-08-14..2026-05-20 has a prior RTH day and a 09:30 bar in the 2022+ CSV; the spec's anticipated first-CSV-session drop does not arise).
+per-session drops:
+  s20250814: 14 (vwap-related 2, es-related 12)
+  s20250820: 2 (vwap-related 2, es-related 0)
+  s20250901: 398 (vwap-related 2, es-related 398)
+  s20250905: 4 (vwap-related 2, es-related 2)
+  s20250910: 4 (vwap-related 2, es-related 2)
+  s20250911: 32 (vwap-related 2, es-related 30)
+  s20250922: 33 (vwap-related 2, es-related 31)
+  s20251002: 24 (vwap-related 2, es-related 22)
+  s20251009: 6 (vwap-related 2, es-related 4)
+  s20251027: 60 (vwap-related 2, es-related 58)
+  s20251029: 8 (vwap-related 2, es-related 6)
+  s20251110: 4 (vwap-related 2, es-related 2)
+  s20251117: 2 (vwap-related 2, es-related 0)
+  s20251124: 3 (vwap-related 2, es-related 1)
+  s20251128: 2 (vwap-related 2, es-related 0)
+  s20251209: 12 (vwap-related 2, es-related 10)
+  s20251222: 43 (vwap-related 2, es-related 41)
+  s20260123: 2 (vwap-related 2, es-related 0)
+  s20260206: 2 (vwap-related 2, es-related 0)
+  s20260211: 69 (vwap-related 2, es-related 67)
+  s20260218: 4 (vwap-related 2, es-related 2)
+  s20260220: 7 (vwap-related 2, es-related 5)
+  s20260223: 2 (vwap-related 2, es-related 0)
+  s20260303: 378 (vwap-related 2, es-related 376)
+  s20260312: 123 (vwap-related 2, es-related 121)
+  s20260317: 6 (vwap-related 2, es-related 4)
+  s20260320: 2 (vwap-related 2, es-related 0)
+  s20260406: 2 (vwap-related 2, es-related 0)
+  s20260409: 2 (vwap-related 2, es-related 0)
+  s20260417: 4 (vwap-related 2, es-related 2)
+  s20260423: 2 (vwap-related 2, es-related 0)
+  s20260428: 4 (vwap-related 2, es-related 2)
+  s20260506: 14 (vwap-related 2, es-related 12)
+  s20260511: 4 (vwap-related 2, es-related 2)
+  s20260519: 155 (vwap-related 2, es-related 153)
+  s20260520: 2 (vwap-related 2, es-related 0)
+  lab_long_24_8: neither-hit excluded 5 (0.02%) | P(target) over decided rows: 0.2526
+  lab_long_32_10: neither-hit excluded 41 (0.16%) | P(target) over decided rows: 0.2374
+  lab_short_24_8: neither-hit excluded 8 (0.03%) | P(target) over decided rows: 0.2495
+  lab_short_32_10: neither-hit excluded 62 (0.24%) | P(target) over decided rows: 0.2340
+
+fold blocks (chronological):
+  block 0: 8 sessions  s20250814 .. s20250922
+  block 1: 8 sessions  s20251002 .. s20251128
+  block 2: 7 sessions  s20251209 .. s20260220
+  block 3: 7 sessions  s20260223 .. s20260409
+  block 4: 7 sessions  s20260417 .. s20260520
+ASSERTION 2 PASSED: in all 4 folds, train/validation session sets are disjoint and every training session is strictly earlier than every validation session.
+
+================ RUN base_nq27: 27 features ================
+
+--- [base_nq27] long_24_8 | logit ---
+  Brier 0.19014 vs baseline 0.18755 (skill -0.0138)
+  base P(target) 0.2499 | top-decile P 0.2492 [0.2327,0.2676] (n_top=2127)
+  LIFT -0.07pp CI [-1.74,+1.80]pp | C1 gap 8.73pp | lift-gap -8.80pp
+  fold lifts (pp): +2.07 +0.77 -2.45 -1.01 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: trades60(91.58e-4), vol60(85.70e-4), rv300(26.41e-4), upd60(20.11e-4), spread60(17.14e-4), tv60(16.78e-4), vol10(11.72e-4), trades10(8.86e-4), rv60(8.14e-4), dist_lo(6.47e-4)
+
+--- [base_nq27] long_24_8 | hgb ---
+  Brier 0.18993 vs baseline 0.18755 (skill -0.0127)
+  base P(target) 0.2499 | top-decile P 0.2311 [0.2159,0.2452] (n_top=2172)
+  LIFT -1.88pp CI [-3.59,-0.15]pp | C1 gap 8.73pp | lift-gap -10.61pp
+  fold lifts (pp): -2.13 -2.73 -1.22 -1.38 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: trades60(3.34e-4), vol10(1.28e-4), secs_since_hi(0.92e-4), spread60(0.78e-4), ret30(0.50e-4), spread(0.39e-4), dist_hi(0.31e-4), ret300(0.28e-4), act_accel(0.21e-4), sflow10(0.12e-4)
+
+--- [base_nq27] long_32_10 | logit ---
+  Brier 0.18197 vs baseline 0.17986 (skill -0.0117)
+  base P(target) 0.2350 | top-decile P 0.2218 [0.2005,0.2473] (n_top=2124)
+  LIFT -1.33pp CI [-3.47,+1.31]pp | C1 gap 7.03pp | lift-gap -8.36pp
+  fold lifts (pp): +0.76 -1.04 -3.98 -1.39 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: trades60(86.15e-4), vol60(75.38e-4), rv60(15.96e-4), upd60(11.47e-4), vol10(11.18e-4), trades10(10.36e-4), spread60(10.25e-4), tv60(7.83e-4), ret10(6.89e-4), range300(5.72e-4)
+
+--- [base_nq27] long_32_10 | hgb ---
+  Brier 0.18307 vs baseline 0.17986 (skill -0.0178)
+  base P(target) 0.2350 | top-decile P 0.2316 [0.2101,0.2544] (n_top=2124)
+  LIFT -0.34pp CI [-2.29,+1.88]pp | C1 gap 7.03pp | lift-gap -7.37pp
+  fold lifts (pp): +1.47 -2.92 -0.55 +0.51 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: range300(2.07e-4), trades60(1.32e-4), eff60(0.87e-4), tod(0.54e-4), spread60(0.48e-4), dist_hi(0.35e-4), ret300(0.29e-4), spread(0.11e-4), ret10(-0.05e-4), nsflow60(-0.07e-4)
+
+--- [base_nq27] short_24_8 | logit ---
+  Brier 0.18958 vs baseline 0.18814 (skill -0.0077)
+  base P(target) 0.2511 | top-decile P 0.2658 [0.2469,0.2912] (n_top=2126)
+  LIFT +1.46pp CI [-0.37,+3.97]pp | C1 gap 9.09pp | lift-gap -7.63pp
+  fold lifts (pp): +1.92 +1.67 +1.35 +0.87 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: trades60(63.93e-4), upd10(29.77e-4), tv60(29.14e-4), rv60(28.22e-4), vol60(27.31e-4), upd60(20.02e-4), rv300(19.88e-4), spread60(13.71e-4), trades10(8.68e-4), sflow60(4.41e-4)
+
+--- [base_nq27] short_24_8 | hgb ---
+  Brier 0.18927 vs baseline 0.18814 (skill -0.0060)
+  base P(target) 0.2511 | top-decile P 0.2652 [0.2483,0.2856] (n_top=2134)
+  LIFT +1.41pp CI [-0.35,+3.29]pp | C1 gap 9.09pp | lift-gap -7.68pp
+  fold lifts (pp): +0.82 -0.64 +3.17 +2.47 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: secs_since_hi(7.96e-4), dist_hi(3.64e-4), sflow60(2.47e-4), ret60(1.82e-4), act_accel(1.52e-4), secs_since_lo(1.37e-4), trades10(0.80e-4), ret5(0.66e-4), nsflow60(0.64e-4), upd10(0.60e-4)
+
+--- [base_nq27] short_32_10 | logit ---
+  Brier 0.18177 vs baseline 0.18034 (skill -0.0079)
+  base P(target) 0.2359 | top-decile P 0.2506 [0.2258,0.2757] (n_top=2123)
+  LIFT +1.47pp CI [-0.88,+3.83]pp | C1 gap 7.37pp | lift-gap -5.90pp
+  fold lifts (pp): -0.03 +2.55 +0.32 +3.07 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: upd10(38.63e-4), trades60(36.21e-4), rv300(25.41e-4), tv60(19.57e-4), spread60(15.50e-4), upd60(14.82e-4), trades10(10.25e-4), vol60(10.15e-4), rv60(5.71e-4), vol10(3.51e-4)
+
+--- [base_nq27] short_32_10 | hgb ---
+  Brier 0.18263 vs baseline 0.18034 (skill -0.0127)
+  base P(target) 0.2359 | top-decile P 0.2291 [0.2043,0.2572] (n_top=2126)
+  LIFT -0.68pp CI [-2.77,+1.73]pp | C1 gap 7.37pp | lift-gap -8.05pp
+  fold lifts (pp): -3.13 -0.27 -0.49 +1.36 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: upd60(3.88e-4), ret30(2.86e-4), rv300(2.19e-4), dist_hi(1.77e-4), tod(1.24e-4), rv60(1.05e-4), sflow10(1.04e-4), ret60(0.76e-4), upd10(0.67e-4), eff60(0.58e-4)
+
+================ RUN aug_nq27_new13: 40 features ================
+
+--- [aug_nq27_new13] long_24_8 | logit ---
+  Brier 0.19594 vs baseline 0.18755 (skill -0.0447)
+  base P(target) 0.2499 | top-decile P 0.2294 [0.2076,0.2444] (n_top=2127)
+  LIFT -2.05pp CI [-4.27,-0.55]pp | C1 gap 8.73pp | lift-gap -10.78pp
+  fold lifts (pp): -2.66 +1.70 -2.05 -5.18 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: dist_lo(156.42e-4), trades60(93.88e-4), vol60(80.15e-4), vwap_dist_full(73.48e-4), pdl_dist(23.41e-4), dist_hi(21.73e-4), on_gap(21.65e-4), rv300(17.35e-4), upd60(15.69e-4), vwap_dist(14.24e-4)
+
+--- [aug_nq27_new13] long_24_8 | hgb ---
+  Brier 0.19178 vs baseline 0.18755 (skill -0.0225)
+  base P(target) 0.2499 | top-decile P 0.2521 [0.2339,0.2686] (n_top=2134)
+  LIFT +0.22pp CI [-1.73,+1.99]pp | C1 gap 8.73pp | lift-gap -8.51pp
+  fold lifts (pp): +1.02 -1.03 +2.80 -1.77 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: trades60(2.52e-4), ret30(0.56e-4), vol10(0.55e-4), act_accel(0.36e-4), vol60(0.34e-4), sflow10(0.28e-4), es_sflow60(0.23e-4), upd60(0.19e-4), eff60(0.14e-4), rv60(0.13e-4)
+
+--- [aug_nq27_new13] long_32_10 | logit ---
+  Brier 0.18763 vs baseline 0.17986 (skill -0.0432)
+  base P(target) 0.2350 | top-decile P 0.2260 [0.2064,0.2418] (n_top=2124)
+  LIFT -0.90pp CI [-2.77,+0.45]pp | C1 gap 7.03pp | lift-gap -7.93pp
+  fold lifts (pp): -0.64 +2.35 -3.98 -1.58 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: dist_lo(213.87e-4), vwap_dist_full(95.76e-4), trades60(84.70e-4), vol60(65.20e-4), dist_hi(49.04e-4), on_gap(41.04e-4), pclose_dist(35.45e-4), vwap_dist(31.04e-4), pdh_dist(10.62e-4), rv60(9.46e-4)
+
+--- [aug_nq27_new13] long_32_10 | hgb ---
+  Brier 0.18724 vs baseline 0.17986 (skill -0.0410)
+  base P(target) 0.2350 | top-decile P 0.2425 [0.2191,0.2663] (n_top=2124)
+  LIFT +0.74pp CI [-1.44,+3.05]pp | C1 gap 7.03pp | lift-gap -6.29pp
+  fold lifts (pp): +3.75 -3.67 +1.47 +1.27 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: range300(4.45e-4), rv300(1.84e-4), tod(1.64e-4), vwap_slope60(1.58e-4), vol60(1.53e-4), eff60(1.12e-4), upd10(1.10e-4), spread60(1.03e-4), vol10(1.02e-4), dist_hi(1.00e-4)
+
+--- [aug_nq27_new13] short_24_8 | logit ---
+  Brier 0.21529 vs baseline 0.18814 (skill -0.1443)
+  base P(target) 0.2511 | top-decile P 0.2738 [0.2454,0.2975] (n_top=2126)
+  LIFT +2.26pp CI [-0.15,+4.22]pp | C1 gap 9.09pp | lift-gap -6.83pp
+  fold lifts (pp): +6.65 +1.48 -0.67 +1.06 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: pdl_dist(225.81e-4), dist_lo(177.12e-4), trades60(49.52e-4), upd10(37.26e-4), on_gap(33.39e-4), vwap_dist(29.16e-4), rv300(19.44e-4), vol60(19.43e-4), tv60(17.41e-4), rv60(17.25e-4)
+
+--- [aug_nq27_new13] short_24_8 | hgb ---
+  Brier 0.19066 vs baseline 0.18814 (skill -0.0134)
+  base P(target) 0.2511 | top-decile P 0.2446 [0.2294,0.2715] (n_top=2126)
+  LIFT -0.66pp CI [-2.09,+1.82]pp | C1 gap 9.09pp | lift-gap -9.75pp
+  fold lifts (pp): -1.58 -2.47 -0.47 +2.00 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: secs_since_hi(7.51e-4), on_gap(3.97e-4), ret60(3.31e-4), pclose_dist(2.81e-4), trades10(1.72e-4), act_accel(1.45e-4), upd10(1.42e-4), ret30(1.31e-4), pdl_dist(1.26e-4), vol10(1.14e-4)
+
+--- [aug_nq27_new13] short_32_10 | logit ---
+  Brier 0.19403 vs baseline 0.18034 (skill -0.0759)
+  base P(target) 0.2359 | top-decile P 0.2680 [0.2433,0.2893] (n_top=2123)
+  LIFT +3.21pp CI [+0.93,+5.00]pp | C1 gap 7.37pp | lift-gap -4.16pp
+  fold lifts (pp): +8.24 +0.11 +1.13 +2.88 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: dist_lo(239.27e-4), pdl_dist(215.60e-4), vwap_dist(88.50e-4), upd10(64.77e-4), trades60(27.24e-4), rv300(27.11e-4), spread60(26.31e-4), tv60(15.75e-4), dist_hi(13.22e-4), pclose_dist(11.12e-4)
+
+--- [aug_nq27_new13] short_32_10 | hgb ---
+  Brier 0.18639 vs baseline 0.18034 (skill -0.0335)
+  base P(target) 0.2359 | top-decile P 0.2355 [0.2196,0.2543] (n_top=2123)
+  LIFT -0.04pp CI [-1.72,+1.82]pp | C1 gap 7.37pp | lift-gap -7.41pp
+  fold lifts (pp): -1.09 +0.30 +1.94 -1.10 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-10: upd60(11.01e-4), dist_lo(4.37e-4), ret60(3.95e-4), upd10(3.84e-4), rv300(3.17e-4), ret30(2.97e-4), secs_since_lo(2.57e-4), trades10(2.35e-4), tod(2.21e-4), es_sflow10(1.36e-4)
+
+=== REPRODUCTION DIAGNOSTIC: baseline [27 NQ feats, same-sample] vs original C5 ===
+(sample: C5 modeling rows 27299 -> same-sample rows 25864; difference = new-block NaN rows: RTH-open vwap_slope60 warmup + ES-flow staleness/warmup incl. the truncated es_s20260519 afternoon)
+  long_24_8    logit lift C5 -0.83pp -> base -0.07pp (d +0.76pp) | skill C5 -0.0109 -> -0.0138 (d -0.0029) | n 22190->21248 | tol_ok=True
+  long_24_8    hgb   lift C5 +1.69pp -> base -1.88pp (d -3.57pp) | skill C5 -0.0180 -> -0.0127 (d +0.0053) | n 22190->21248 | tol_ok=False
+  long_32_10   logit lift C5 -1.41pp -> base -1.33pp (d +0.08pp) | skill C5 -0.0119 -> -0.0117 (d +0.0002) | n 22163->21223 | tol_ok=True
+  long_32_10   hgb   lift C5 +0.36pp -> base -0.34pp (d -0.70pp) | skill C5 -0.0090 -> -0.0178 (d -0.0088) | n 22163->21223 | tol_ok=True
+  short_24_8   logit lift C5 +1.53pp -> base +1.46pp (d -0.07pp) | skill C5 -0.0064 -> -0.0077 (d -0.0012) | n 22189->21243 | tol_ok=True
+  short_24_8   hgb   lift C5 +2.42pp -> base +1.41pp (d -1.01pp) | skill C5 -0.0027 -> -0.0060 (d -0.0033) | n 22189->21243 | tol_ok=True
+  short_32_10  logit lift C5 +1.17pp -> base +1.47pp (d +0.29pp) | skill C5 -0.0082 -> -0.0079 (d +0.0003) | n 22142->21203 | tol_ok=True
+  short_32_10  hgb   lift C5 +0.27pp -> base -0.68pp (d -0.96pp) | skill C5 -0.0147 -> -0.0127 (d +0.0021) | n 22142->21203 | tol_ok=True
+REPRODUCTION DIAGNOSTIC: at least one cell outside W6 tolerance — flagged; the decisive W7-1 readout (baseline vs augmented, same rows) is internal and remains paired, but interpret vs-C5 levels with caution.
+
+=== DELTA top-decile lift: augmented minus baseline — paired session bootstrap ===
+  long_24_8    logit base -0.07pp [-1.74,+1.80] | aug -2.05pp [-4.27,-0.55] | DELTA -1.97pp [-4.94,+0.22] | skill -0.0138->-0.0447 | pass5(aug)=False
+  long_24_8    hgb   base -1.88pp [-3.59,-0.15] | aug +0.22pp [-1.73,+1.99] | DELTA +2.10pp [+0.45,+3.82] | skill -0.0127->-0.0225 | pass5(aug)=False
+  long_32_10   logit base -1.33pp [-3.47,+1.31] | aug -0.90pp [-2.77,+0.45] | DELTA +0.42pp [-2.43,+2.70] | skill -0.0117->-0.0432 | pass5(aug)=False
+  long_32_10   hgb   base -0.34pp [-2.29,+1.88] | aug +0.74pp [-1.44,+3.05] | DELTA +1.08pp [-0.52,+2.63] | skill -0.0178->-0.0410 | pass5(aug)=False
+  short_24_8   logit base +1.46pp [-0.37,+3.97] | aug +2.26pp [-0.15,+4.22] | DELTA +0.80pp [-2.56,+3.51] | skill -0.0077->-0.1443 | pass5(aug)=False
+  short_24_8   hgb   base +1.41pp [-0.35,+3.29] | aug -0.66pp [-2.09,+1.82] | DELTA -2.06pp [-3.63,-0.15] | skill -0.0060->-0.0134 | pass5(aug)=False
+  short_32_10  logit base +1.47pp [-0.88,+3.83] | aug +3.21pp [+0.93,+5.00] | DELTA +1.74pp [-1.51,+5.12] | skill -0.0079->-0.0759 | pass5(aug)=False
+  short_32_10  hgb   base -0.68pp [-2.77,+1.73] | aug -0.04pp [-1.72,+1.82] | DELTA +0.64pp [-1.83,+2.87] | skill -0.0127->-0.0335 | pass5(aug)=False
+
+=== new-feature permutation importance in augmented run (rank of 40; Brier increase x1e4) ===
+  long_24_8    hgb   es_sflow60(r7,0.23), min_to_release(r12,0.00), min_since_release(r13,0.00), prior_day_ret_sign(r14,0.00), on_gap(r18,-0.04), es_zsflow60(r20,-0.06), es_sflow10(r22,-0.07), vwap_dist(r24,-0.11), pdh_dist(r33,-0.68), vwap_dist_full(r35,-0.80), vwap_slope60(r36,-0.82), pdl_dist(r38,-2.12), pclose_dist(r40,-4.19)
+  long_24_8    logit vwap_dist_full(r4,73.48), pdl_dist(r5,23.41), on_gap(r7,21.65), vwap_dist(r10,14.24), pclose_dist(r12,6.90), pdh_dist(r13,6.46), min_since_release(r21,1.78), prior_day_ret_sign(r23,0.98), es_sflow60(r25,0.68), es_zsflow60(r27,0.42), vwap_slope60(r31,0.05), min_to_release(r33,0.00), es_sflow10(r36,-0.64)
+  long_32_10   hgb   vwap_slope60(r4,1.58), pdh_dist(r13,0.67), es_sflow10(r15,0.41), es_sflow60(r18,0.10), prior_day_ret_sign(r20,0.00), min_to_release(r21,0.00), min_since_release(r22,0.00), es_zsflow60(r24,-0.16), pdl_dist(r35,-0.95), on_gap(r36,-1.28), vwap_dist(r37,-1.32), vwap_dist_full(r39,-3.28), pclose_dist(r40,-5.18)
+  long_32_10   logit vwap_dist_full(r2,95.76), on_gap(r6,41.04), pclose_dist(r7,35.45), vwap_dist(r8,31.04), pdh_dist(r9,10.62), pdl_dist(r12,6.34), es_zsflow60(r21,2.14), prior_day_ret_sign(r23,1.67), min_since_release(r24,1.36), es_sflow60(r25,0.87), vwap_slope60(r30,0.33), min_to_release(r32,0.00), es_sflow10(r38,-0.82)
+  short_24_8   hgb   on_gap(r2,3.97), pclose_dist(r4,2.81), pdl_dist(r9,1.26), pdh_dist(r16,0.63), min_since_release(r27,0.00), min_to_release(r28,0.00), prior_day_ret_sign(r29,-0.02), es_zsflow60(r30,-0.02), es_sflow60(r31,-0.17), es_sflow10(r33,-0.23), vwap_slope60(r35,-0.59), vwap_dist(r39,-3.52), vwap_dist_full(r40,-3.91)
+  short_24_8   logit pdl_dist(r1,225.81), on_gap(r5,33.39), vwap_dist(r6,29.16), pclose_dist(r12,12.75), vwap_dist_full(r13,8.47), pdh_dist(r14,7.15), es_zsflow60(r23,1.95), prior_day_ret_sign(r25,1.47), es_sflow10(r26,1.18), es_sflow60(r30,0.56), vwap_slope60(r31,0.53), min_to_release(r33,0.00), min_since_release(r37,-3.98)
+  short_32_10  hgb   es_sflow10(r10,1.36), es_zsflow60(r15,0.41), on_gap(r18,0.24), min_to_release(r22,0.00), min_since_release(r23,-0.01), prior_day_ret_sign(r24,-0.02), vwap_dist(r31,-0.40), es_sflow60(r32,-0.52), pdl_dist(r33,-0.70), pdh_dist(r34,-1.28), vwap_slope60(r38,-1.79), pclose_dist(r39,-6.75), vwap_dist_full(r40,-7.98)
+  short_32_10  logit pdl_dist(r2,215.60), vwap_dist(r3,88.50), pclose_dist(r10,11.12), vwap_dist_full(r12,9.48), es_sflow60(r16,4.58), pdh_dist(r21,2.31), on_gap(r22,2.19), es_zsflow60(r24,1.30), vwap_slope60(r25,1.17), es_sflow10(r27,0.99), prior_day_ret_sign(r29,0.72), min_to_release(r34,-0.00), min_since_release(r37,-0.27)
+block-mean Brier increase x1e4 (augmented run, mean over features in block):
+  long_24_8    hgb   es_flow=0.03, event=0.00, prior_day=-1.40, vwap=-0.58
+  long_24_8    logit es_flow=0.15, event=0.89, prior_day=11.88, vwap=29.25
+  long_32_10   hgb   es_flow=0.12, event=0.00, prior_day=-1.35, vwap=-1.01
+  long_32_10   logit es_flow=0.73, event=0.68, prior_day=19.02, vwap=42.38
+  short_24_8   hgb   es_flow=-0.14, event=0.00, prior_day=1.73, vwap=-2.67
+  short_24_8   logit es_flow=1.23, event=-1.99, prior_day=56.11, vwap=12.72
+  short_32_10  hgb   es_flow=0.42, event=-0.01, prior_day=-1.70, vwap=-3.39
+  short_32_10  logit es_flow=2.29, event=-0.14, prior_day=46.39, vwap=33.05
+
+=== FROZEN VERDICT (spec W7-1) ===
+best augmented lift: short_32_10 logit +3.21pp [+0.93,+5.00] | delta vs baseline +1.74pp [-1.51,+5.12]
+VERDICT: NO augmented cell reaches lift >= 5pp with CI_lo > 0 -> the AUGMENTED information set (census 27 + VWAP + prior-day levels + event flags + ES signed flow) is ALSO insufficient (input to Amendment 6 par.9 closure via W7).
+
+W7C5B DONE

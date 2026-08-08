@@ -1,0 +1,99 @@
+Calendar rows: 145 | events: {'NFP': 54, 'CPI': 54, 'FOMC': 37} | times: {'08:30': 108, '14:00': 37}
+
+==============================================================================
+(a) TICK DESCRIPTIVE — event sessions in the 37-session discovery substrate
+    LABEL: DESCRIPTIVE ONLY. n<=4 -> no kill/pass claims are made or implied.
+==============================================================================
+
+Discovery sessions (sechilo): 37
+Calendar joins (release inside a discovery session):
+      date event time_et       tag
+2025-09-05   NFP   08:30 s20250905
+2025-09-11   CPI   08:30 s20250911
+2025-10-29  FOMC   14:00 s20251029
+2026-02-11   NFP   08:30 s20260211
+
+--- s20250905  NFP 08:30 ET  (window 08:30-09:45) ---
+  ref mid (last pre-event second): 95118.0 ticks = 23779.50 pts
+  path (mid delta from ref, ticks): +10s:-169.0  +30s:-134.5  +60s:-90.0  +120s:+62.5  +300s:+206.5  +600s:+144.0  +900s:+206.5  +1800s:+378.0  +2700s:+416.5  +3600s:+398.0  +4500s:+379.0
+  max excursion: UP +489.0t @ +3627s | DOWN -212.0t @ +15s | window close +378.0t
+  spread_t median by sub-window (min rel event): [-15,0):2.0  [0,1):8.0  [1,5):6.0  [5,15):3.0  [15,45):2.0  [45,75):2.0
+  realized vol (per-minute tick RV): window 41.7 vs pre 07:00-08:15 11.9 (x3.5) vs RTH 09:45-16:00 40.3 (x1.0)
+  quote-alive fraction in window: 1.000
+
+--- s20250911  CPI 08:30 ET  (window 08:30-09:45) ---
+  ref mid (last pre-event second): 95799.5 ticks = 23949.88 pts
+  path (mid delta from ref, ticks): +10s:-240.5  +30s:-22.5  +60s:+73.5  +120s:+44.0  +300s:-272.5  +600s:-197.0  +900s:-99.5  +1800s:+43.5  +2700s:-2.0  +3600s:+114.5  +4500s:-108.5
+  max excursion: UP +191.0t @ +3752s | DOWN -439.5t @ +7s | window close -101.5t
+  spread_t median by sub-window (min rel event): [-15,0):3.0  [0,1):15.0  [1,5):5.0  [5,15):3.0  [15,45):3.0  [45,75):2.0
+  realized vol (per-minute tick RV): window 38.1 vs pre 07:00-08:15 8.9 (x4.3) vs RTH 09:45-16:00 19.6 (x1.9)
+  quote-alive fraction in window: 1.000
+
+--- s20251029  FOMC 14:00 ET  (window 14:00-14:30) ---
+  ref mid (last pre-event second): 105009.0 ticks = 26252.25 pts
+  path (mid delta from ref, ticks): +10s:-11.5  +30s:+70.5  +60s:+70.5  +120s:+30.0  +300s:-67.5  +600s:-41.5  +900s:-117.5  +1200s:-24.5  +1500s:-63.0  +1800s:-16.5
+  max excursion: UP +142.5t @ +24s | DOWN -188.5t @ +320s | window close -17.0t
+  spread_t median by sub-window (min rel event): [-15,0):2.0  [0,1):13.0  [1,5):5.0  [5,15):3.0  [15,30):3.0
+  realized vol (per-minute tick RV): window 48.9 vs RTH 09:30-13:45 (pre-event) 25.4 (x1.9) vs post 14:30-16:00 85.6 (x0.6)
+  quote-alive fraction in window: 1.000
+
+--- s20260211  NFP 08:30 ET  (window 08:30-09:45) ---
+  ref mid (last pre-event second): 100978.5 ticks = 25244.62 pts
+  path (mid delta from ref, ticks): +10s:+246.0  +30s:+289.5  +60s:+173.5  +120s:+273.5  +300s:+455.5  +600s:+365.5  +900s:+399.5  +1800s:+803.0  +2700s:+699.0  +3600s:+692.0  +4500s:+582.5
+  max excursion: UP +883.0t @ +3662s | DOWN --0.5t @ +0s | window close +587.5t
+  spread_t median by sub-window (min rel event): [-15,0):3.0  [0,1):12.0  [1,5):4.0  [5,15):3.0  [15,45):3.0  [45,75):3.0
+  realized vol (per-minute tick RV): window 52.9 vs pre 07:00-08:15 22.6 (x2.3) vs RTH 09:45-16:00 47.1 (x1.1)
+  quote-alive fraction in window: 1.000
+
+[DESCRIPTIVE ONLY — n=4 event sessions (3 pre-RTH 08:30 + 1 FOMC 14:00); no kill/pass verdict is possible or claimed at this n.]
+
+==============================================================================
+(b) MINUTE-POWERED — initial-reaction continuation, 3-min CSV, dev window
+==============================================================================
+CSV rows read 540232, kept 519833 (< 2026-06-01), range 2022-01-02 18:03:00 -> 2026-05-31 23:57:00
+Dev-window calendar days: 08:30-release 104, FOMC 14:00 35, overlap (both same day) 1, FOMC-only 34
+Days simulated: 1134 | skipped: {'no_pre': 9, 'no_entry': 2, 'no_exit': 1, 'zero_sig': 1}
+Group counts: {'placebo': 998, 'release': 102, 'fomc_only': 34}
+Pre-release bar end-stamp distribution (top): {'08:27': 1134}
+
+=== pooled by group x horizon (net C1=2.872t; day-clustered 95% CI, 1000 reps, seed 20260808) ===
+     group    h     n  netC1_t    CI_lo    CI_hi  gross_t   win%
+   release   15   102  -52.999  -97.727   -0.378  -50.127  39.2
+   release   30   102  -47.745 -113.218  +17.039  -44.873  44.1
+   release   60   102 -104.735 -189.541  -17.899 -101.863  43.1
+   placebo   15   998   +9.332   -5.461  +25.012  +12.204  51.0
+   placebo   30   998   +2.437  -17.725  +23.970   +5.309  49.5
+   placebo   60   998  +12.140  -11.972  +38.264  +15.012  50.9
+ fomc_only   15    34  -23.284  -78.053  +35.368  -20.412  41.2
+ fomc_only   30    34  -17.784  -80.579  +41.396  -14.912  47.1
+ fomc_only   60    34  +18.599  -82.464 +122.029  +21.471  52.9
+
+=== release days by year (net C1 ticks) ===
+  year    h    n  netC1_t    CI_lo    CI_hi   win%   | placebo:    n  netC1_t
+  2022   15   24 -112.164 -217.427   -0.595  20.8   |  225  +17.057
+  2022   30   24  -43.955 -177.757 +109.013  41.7   |  225  +21.515
+  2022   60   24 -104.372 -252.295  +42.648  41.7   |  225  +32.537
+  2023   15   23  -21.307 -121.838  +83.881  47.8   |  226   +7.553
+  2023   30   23  -49.002 -169.924  +71.669  47.8   |  226   +2.429
+  2023   60   23  -81.611 -214.047  +42.398  43.5   |  226  +27.557
+  2024   15   24  -78.164 -152.049   -4.603  29.2   |  228  +13.532
+  2024   30   24  -84.122 -204.251  +42.075  41.7   |  228  +16.154
+  2024   60   24 -141.289 -335.254  +55.672  41.7   |  228  +29.058
+  2025   15   22   -5.645 -121.196 +117.678  54.5   |  226  +15.371
+  2025   30   22  +48.537 -104.291 +202.289  54.5   |  226  -21.699
+  2025   60   22  +43.719 -160.174 +217.859  54.5   |  226  -35.067
+  2026   15    9  -24.872 -166.797 +106.920  55.6   |   93  -30.001
+  2026   30    9 -192.983 -399.683   +6.795  22.2   |   93  -18.678
+  2026   60    9 -430.205 -769.561 -102.841  22.2   |   93   -1.431
+
+=== FROZEN VERDICT RULE (spec W7-3b) ===
+  h=15: release net=-52.999 CI_lo=-97.727 -> no; placebo net=+9.332 CI_lo=-5.461 -> comparable=False
+  h=30: release net=-47.745 CI_lo=-113.218 -> no; placebo net=+2.437 CI_lo=-17.725 -> comparable=False
+  h=60: release net=-104.735 CI_lo=-189.541 -> no; placebo net=+12.140 CI_lo=-11.972 -> comparable=False
+VERDICT (b): NEGATIVE — no horizon has net C1 > 0 with CI_lo > 0 absent a comparable placebo effect
+
+Zone-F variant (5-120 s event-anchored tick-resolution scalp at the release):
+  UNTESTABLE-IN-CURRENT-TICK-SAMPLE — the discovery substrate holds only 4
+  event sessions (3 pre-RTH 08:30 + 1 FOMC 14:00); recorded either way per spec.
+
+W7E1 DONE
