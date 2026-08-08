@@ -1,0 +1,38 @@
+run_id: SMV2W_5MCLOCK_R2
+date_frozen: 2026-08-08
+class: R2_CONFIRMATION   # the 5m time-matched clock lead from SMV2U seq 392a earned this
+seq: [395]
+parent: SMV2U seq 391 arm 2 (5m clock, VolPeriod=276 "~23h" time-matched memory). Standalone
+  Sharpe 0.793 vs incumbent 0.709, CDaR $22,521 vs $27,162; portfolio (60/40 vs frozen BMOM E2)
+  Sharpe 1.156 vs 1.120, CDaR $17,922 vs $19,299; LOYO 5/5 sign-stable incl leave-2022-out;
+  friction_share 0.211 (LOWER turnover than the 3m incumbent's 0.326). DISCLOSED PRIOR — this
+  spec applies the house replacement bar the SAME way SMV2T/SMV2S applied it (no double
+  standard because the object looks good).
+object_under_test: the 5m-clock 13-member ensemble (VolPeriod=276 5m bars, SMinTicks=40,
+  SMaxTicks=1200, same E10 executor: clip(rha(10*mean pending),+-10), MNQ costs, session
+  flatten) — AND its DUAL_HTF-transformed + portfolio-composed form (tilt/c1_50/0.9026/clip13
+  identical transform, then 60/40 vs BMOM E2, same vm/rerank construction as the incumbent).
+data: runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet aggregated to 5m (reuse SMV2U's verified
+  aggregation + session-calendar-match code, do not rebuild from scratch); dev <= 2026-05-31.
+gates_all_required (identical bar to SMV2T/SMV2S — no lowering for a "winning" lead):
+  A_dev: paired moving-block bootstrap (block=5 B=10000 seed=20260808) on the DUAL-transformed
+    daily diff vs the incumbent 3m-DUAL curve: P(dSharpe>0) >= 0.85 AND P(dCDaR_0.95>0) >= 0.85.
+  B_chronology: LOYO dSharpe same sign >= 4/5 years AND fit 2022-24 -> eval 2025-26 point-positive
+    (on the DUAL-transformed object, not just the raw core SMV2U already showed).
+  C_old_regime: rebuild the 5m ensemble on the SM06 hist substrate IF a 1m/5m-equivalent hist
+    series can be causally derived from the committed 3m hist substrate (state explicitly: it
+    likely CANNOT — SM06 only stores 3m vote_pend, no sub-3m granularity) -> if infeasible,
+    mark this gate BLOCKED-BY-DATA and require unanimous pass on A/B/D/E to proceed, logging
+    the DATA GAP explicitly as an open risk (old-regime is a stress test, not itself alpha).
+  D_right_tail: top-10-day retention of the 5m-DUAL curve vs the incumbent 3m-DUAL curve >= 0.90.
+  E_portfolio: dSharpe AND dCDaR point-positive at the FULL portfolio level (60/40 with BMOM
+    E2), reusing SMV2U's already-computed portfolio numbers as a cross-check, not a fresh
+    read (they must reconcile before the new bootstrap-based gates are trusted).
+right_tail_note: SMV2U did not report top-10-day retention (out of scope for that spec) — this
+  is a genuinely new read, not a reused number.
+decision: pass all AVAILABLE gates (A/B/D/E; C per its own contingency) -> 5m becomes a
+  CHAMPION-CANDIDATE clock -> Stage 4 implement (master rebuild + parity) in a LATER wave, only
+  after this confirmation; do NOT touch the live master's clock from a Stage-1/2 result alone.
+  fail any available gate -> 3m incumbent clock retained; lead closed (one R2 attempt per lead).
+outputs: out/gate_A.csv, out/gate_B.csv, out/gate_C.csv (or BLOCKED note), out/gate_D.csv,
+  out/gate_E.csv, out/curves.csv, REPORT.md

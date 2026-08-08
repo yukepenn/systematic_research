@@ -1,7 +1,29 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4.1 wave-3 (SMV2N/O/P/Q/R/S). Supersedes the "FINAL"
-framing of V1 docs (FINAL_NQ_SYSTEM.md remains as the V1 historical record)._
+_Last update: 2026-08-08, end of V4.1 wave-4 (SMV2T/U/V + 3 mechanism-expansion passes).
+Supersedes the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+
+## Wave-4 verdicts (specs 547d2d4; all red-team-verified — 3 CONFIRMED, 3 CONFIRMED-with-prose-fixes)
+- **FAST-cohort removal lead CLOSED**: SMV2T's R2 confirmation FAILED 3/5 gates (dev bootstrap
+  confidence 0.80/0.39 < 0.85; old-regime net gap −$16.7k breaches the floor; portfolio-level
+  dCDaR actually worsens by $1,653). 13-member incumbent core RETAINED. No third bite.
+- **ER150-damper policy KILLED**: risk metrics (CDaR/TUW) fail to beat count-matched random
+  damping at every cell; the underlying information result (ER150-agreement → lower next-day
+  Solar PnL, sign-preserved pre-2022) stands as a diagnostic, converts to no policy.
+- **Clock challenge: 1m fails decisively** (friction exceeds gross PnL); **5m bar-matched
+  near-misses** (LOYO only 3/5); **5m time-matched (VolPeriod=276, ~23h memory) EARNS an R2
+  confirmation** — standalone Sharpe 0.793 vs 0.709, portfolio Sharpe 1.156 vs 1.120, CDaR
+  better on both bases, LOYO 5/5 including leave-2022-out, and LOWER turnover than the 3m
+  incumbent. R2 spec SMV2W frozen (same 0.85-confidence bar as every other core challenger —
+  no double standard for a lead that looks good). One live MTF hypothesis logged (not policy):
+  1m-vote disagreement AT ENTRY predicts a −$78/episode PnL gap (t=−2.09), unreplicated on the
+  time-matched convention.
+- **Engine-3 slate 2 obituary closes with 3 mechanism-expansion passes** (24 candidates,
+  archived in full at deep_research/DR_V4_EXPANSION_PASSES_20260808.md). Slate 3 (SMV2X, frozen)
+  selects the 3 highest-EVI NQ-only-computable, calendar-anchored CONTINUATION engines: vol-
+  shock-day continuation, post-FOMC/CPI drift continuation, post-expiration gamma-unclamp
+  breakout. Cross-market candidates (the largest remaining slice) are queued behind an ES/RTY/
+  YM data export — not dropped.
 
 ## Wave-3 verdicts (specs 58dc2d2; 6/6 red-teams: 5 CONFIRMED, 1 CONFIRMED-with-prose-fixes)
 - **C-P7 windfall policy KILLED** (risk reduction indistinguishable from random same-duration

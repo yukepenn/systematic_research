@@ -1,0 +1,66 @@
+run_id: SMV2X_ENGINE3_S3
+date_frozen: 2026-08-08
+class: R1_FAMILY_TEST   # V4 §51: mandatory after slate-2 total failure; 3 expansion passes ran
+seq: [396, 397, 398]
+parent: three mechanism-expansion passes (cross-market/session, vol/gamma, flow/positioning;
+  24 candidates total, EXTERNAL PRIORS) run 2026-08-08 alongside SMV2T/U/V. Selection below
+  picks the 3 candidates that are (a) LOW dedup risk vs the 16-family killed list, (b) have an
+  explicit, mechanistic (not just narrative) fit to the joint-loss-week signature (SMV2Q: low
+  ER150 t=-6.5, high flip rate t=+3.0), and (c) computable from committed NQ OHLCV + a public,
+  hardcodable event calendar — NO cross-market data (ES/RTY/YM) is committed in this repo yet;
+  those candidates (cross-index dispersion, cap-tier catch-up, etc.) are DEFERRED to a future
+  wave that fronts a data-export step, not silently dropped (see NEXT_RESEARCH_QUEUE).
+anti_dup: none of the three below are price-structure fades (PDH/PDL/ONH/ONL/IB, gap, VA,
+  multi-day range) — all are event/calendar-anchored CONTINUATION or breakout engines, the
+  structural feature the expansion passes converged on as the correct differentiation from the
+  six killed reversion families.
+data: NQ 3m bars dev 2022-01..2026-05-31 (sm01_solarsim loader); costs $4.36/RT + 1t/side NET.
+  Event calendars are DETERMINISTIC and hardcoded from public sources (FOMC/CPI dates from
+  federalreserve.gov/bls.gov release schedules; index-option expiration = 3rd Friday of each
+  month, quarterly = Mar/Jun/Sep/Dec) — cite the source list in the executor script header.
+  Complementarity vs champion measured on JOINT-LOSS WEEKS specifically (as slate 1/2 were).
+
+engine_396_shock_continuation:        # D2 pass rank 2, "vol-shock deleveraging cascade"
+  shock: |daily close-to-close log return| > 3 sigma, trailing 60-session realized vol
+    (causal, expanding after 12mo burn-in).
+  economics: on a shock day, enter WITH the shock direction at next 3m session open (09:33),
+    hold 1-3 sessions (test all three as plateau cells), exit at session close on the Nth day.
+  distinctness_from_killed: explicitly CONTINUATION not "post-shock normalization"/mean-
+    reversion — must show positive-sign forward return in the shock direction, not a fade.
+  pass: N >= 40 events, net t_NW >= 2, WF 2022-24 vs 25-26 same sign, plateau across hold
+    {1,2,3} sessions same-sign (center = 2).
+
+engine_397_macro_drift:               # D2 pass rank 5, "post-macro-announcement drift"
+  trigger: FOMC statement (2:00pm ET) OR CPI/NFP/PCE release (8:30am ET), hardcoded 2022-2026
+    dates (~34 FOMC + ~48 CPI/NFP/PCE = ~82 events).
+  economics: enter in the direction of the first 15-30min post-release move (measured 3m
+    bars) at the 30-min mark, hold to session close same day (FOMC) or next 3m bar close after
+    a 60-min settle window (CPI/NFP, pre-open handling: use the first RTH 30min for pre-open
+    releases). Two plateau cells: FOMC-only, CPI/NFP/PCE-only (report separately, not pooled,
+    since mechanisms differ: policy-uncertainty resolution vs data-surprise diffusion).
+  pass: N >= 25 per cell, net t_NW >= 2, WF same sign, direction (continuation of the initial
+    post-release move) is the tested sign — no fade variant.
+
+engine_398_opex_unclamp:              # D2 pass rank 6, "post-expiration vol-expansion breakout"
+  trigger: monthly/quarterly index-option expiration (3rd Friday), hardcoded dates.
+  economics: FLAT during T-3..T (the pinning window, no trade — this engine earns nothing
+    there, consistent with it being a low-ER/compression period); on T+1 (Monday after expiry),
+    enter in the direction of the T+1 3m-bar breakout beyond the T-3..T realized range (first
+    breakout only), hold to T+1 session close or T+3, whichever first (test both as plateau).
+  distinctness_from_killed: deterministic calendar trigger (not a fitted vol-regime state, the
+    thing that makes "vol-transition engine" killed); breakout CONTINUATION after a defined
+    compression window, not a range-reversion fade (differs from killed multi-day false-break
+    and value-area rotation, which fade INTO the range).
+  pass: N >= 40 events (monthly+quarterly combined, ~50 available), net t_NW >= 2, WF same
+    sign, plateau across hold {T+1 only, T+1..T+3}.
+
+complementarity_read (all three): daily/weekly PnL correlation to DAYONLY_DUAL6040 executable
+  curve; mean engine PnL on champion's joint-loss weeks specifically (the SMV2Q-identified 50
+  weeks) vs all weeks — this is the STRATEGIC criterion (V4 §25), reported even for failing
+  engines if N is adequate.
+verdict_rule: per-engine PASS -> Stage 2 characterize (new spec, 12-30 neighbors) in a later
+  wave; FAIL -> killed, recorded. If ALL THREE fail: per V4 §51, defer to the cross-market data
+  export (ES/RTY/YM 1m/3m, mirroring the SM1M NQ export) before a 4th slate, since the
+  calendar/event family is now also exhausted at these horizons.
+outputs: out/e396_events.csv, out/e397_events.csv, out/e398_events.csv,
+  out/jointloss_complementarity.csv, out/calendar_sources.md, REPORT.md

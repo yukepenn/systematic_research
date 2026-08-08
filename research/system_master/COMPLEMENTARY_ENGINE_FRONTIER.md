@@ -37,3 +37,14 @@ punishes every reversion form we have tested at these horizons (FACT for these s
 INFERENCE for the class). Per frozen verdict rule: THREE new mechanism-expansion passes are
 REQUIRED before any slate 3. The joint-loss state signature (low ER, high flip) from SMV2Q is
 the design target for whatever the passes produce.
+
+## Wave-4 mechanism expansion (2026-08-08) — SLATE 3 FROZEN
+Per V4 §51, slate-2's total failure mandated three independent mechanism-expansion passes
+before any slate 3. Ran cross-market/session, vol/gamma, and flow/positioning passes (24
+candidates; full archive: deep_research/DR_V4_EXPANSION_PASSES_20260808.md). All 24 avoid
+price-structure fades — the passes independently converged on calendar/event-anchored
+CONTINUATION as the differentiating axis from the six dead reversion families. Slate 3
+(SMV2X, frozen, seq 396-398) selects the three highest-EVI candidates computable from existing
+NQ substrates without new data infrastructure: shock-day continuation, post-macro-release
+drift continuation, post-expiration gamma-unclamp breakout. The largest untested slice
+(cross-market lead-lag, 8 candidates) requires an ES/RTY/YM export and is queued, not dropped.

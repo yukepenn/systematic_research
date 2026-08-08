@@ -40,3 +40,12 @@ diagnostic. Updated 2026-08-08 (V2 wave-1)._
 - [INFERENCE] 2026 weakness is one joint-loss episode within normal path variation (r120 percentiles 17th-52nd, none near minima); not decay evidence. No tuning was or will be derived from this read.
 - [FACT] One-contract challengers keep dominating point estimates while failing 0.85-confidence gates on 4.4y of data; two families killed; frontier paused for mechanism expansion.
 - [HYPOTHESIS] ER150-damper: top-tercile path-efficiency agreement predicts lower next-day Solar PnL (t=-3.27) — unexplored policy direction, needs frozen spec.
+
+## Wave-4 claims (2026-08-08)
+- [FACT] The FAST-cohort (vm6-12) removal lead is closed: fails the house 0.85-confidence bar and the old-regime non-inferiority floor; worsens portfolio CDaR. 13-member incumbent retained.
+- [FACT] 1-minute Solar clock is untradeable after costs (friction 102-128% of gross).
+- [FACT] 5-minute clock with time-matched (wall-clock, not bar-count) volatility memory beats the 3m incumbent on standalone Sharpe/CDaR, portfolio Sharpe/CDaR, all 5 LOYO folds, and turnover simultaneously — a genuine R2-confirmation-worthy lead (SMV2W frozen, unresolved).
+- [FACT] ER150-agreement predicts lower next-session Solar PnL (info result, sign-preserved pre-2022) but does not convert into a CDaR/TUW-improving execution policy at any tested scale factor — killed at the policy level.
+- [INFERENCE] 1m-vote disagreement at entry predicts a $78/episode PnL gap (t=-2.09) — unreplicated on a second memory convention, logged as HYPOTHESIS only.
+- [FACT] All six externally-sourced price-structure reversion engines (two slates) are dead on modern NQ; three mechanism-expansion passes (24 candidates) converged independently on calendar-anchored continuation as the correct alternative axis; slate 3 selected on that basis.
+- [INFERENCE] Statistical power is a recurring binding constraint: two independent challenger objects (FAST-cohort removal, A-dominant/HTF-gated one-lot families) show uniformly positive point estimates that fail 0.85-confidence bootstrap gates on ~4.4 years of daily data — this is a property of the sample size, not evidence the challengers are wrong.

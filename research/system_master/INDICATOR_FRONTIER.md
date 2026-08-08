@@ -32,3 +32,25 @@ age are the next JOB1 candidates (separate frozen spec).
 - Vol memory: 460 = CONFIRMED PLATEAU (230 destructive, 920 equivalent). Owner Q4 answered.
 - Cohorts: SLOW load-bearing; FAST (vm6-12) = REMOVABLE-CANDIDATE (Sharpe 0.768 vs 0.709,
   churn halved, top-10 105.9%) pending R2 confirmation — the single live Solar-core lead.
+
+## SMV2T (seq 389) — FAST-cohort removal lead CLOSED
+The one live Solar-core lead from SMV2R failed R2 confirmation under the SAME 0.85-confidence
+bootstrap bar applied to every one-contract challenger: dev P(dSharpe>0)=0.80, P(dCDaR>0)=0.39
+(both <0.85); old-regime net gap −$16.7k breaches the −$10k non-inferiority floor; at the
+portfolio level the removal actually WORSENS CDaR by $1,653 (dSharpe positive but small). Wins
+10/16 old-regime years on net (corrected from an initial mis-cite of 9; red-team caught it).
+13-member incumbent RETAINED. Pattern now seen twice (also SMV2S one-contract): point estimates
+favor the challenger but 4.4y of daily data cannot deliver 0.85 confidence for risk-shaped
+improvements of this size — a standing statistical-power caveat for this program's gate design.
+
+## SMV2U clock challenge (seq 390-392) — 3m incumbent survives 1m/5m bar-matched; 5m
+## time-matched earns R2 confirmation (SMV2W, frozen)
+1m clock (both memory conventions) fails decisively: friction consumes 102-128% of gross PnL —
+NQ 1m is not tradeable for this ensemble after realistic costs. 5m bar-matched (mechanism-
+neighbor memory) shows a standalone edge (Sharpe 0.728 vs 0.709) that does NOT survive to the
+portfolio level and has fragile chronology (LOYO 3/5). 5m time-matched (VolPeriod=276 bars ≈
+23h, matching the INCUMBENT's memory in wall-clock time rather than bar count) beats the
+incumbent on every axis tested — standalone, portfolio, LOYO, AND with lower turnover — and
+earns the program's first genuine R2-confirmation-worthy Solar-core clock challenger. Framed
+correctly per V4.1 §20: until SMV2W resolves, the object is CURRENT ROBUST SOLAR INCUMBENT
+(3m), not yet displaced.
