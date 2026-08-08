@@ -1,0 +1,41 @@
+id: SMV2H_ONECONTRACT
+type: R1   # seq 347-357
+frozen: 2026-08-08
+directive: OWNER_DIRECTIVE_V2_20260808 §8, §30, §47
+problem: BEST EXACTLY-ONE-CONTRACT DAY-ONLY NQ SYSTEM, action space {-1,0,+1}, rebuilt
+  from first principles (not merely sign(weighted portfolio)).
+state_inputs:  # all causal, decided at 3-min bar close, fills next bar open +/-1t
+  Tpp: DUAL_HTF Solar target = clip(rha(T * m * s * 0.9026), +/-13);
+       T = round(10*mean pending member pos); m = 1.25 iff sign(T)==HTF(SMA50 prior sess);
+       s = 0.5 iff T<0 and HTF==UP   (SMV2E promoted c1_50 composition)
+  B: frozen B-MOM pending position in {-1,0,+1} (W8-1 signals; execution is E2 by construction)
+  Mp: 0.7086*Tpp + 2.83*B (frozen winner arithmetic, unchanged weights)
+ops_constraints: no entries on decision bars >= 16:30; forced exit decided 16:39 (fill 16:42);
+  resume >= 18:03; session-close backstop. Same as SM14.
+autopsy_first: top-10 DD episodes of SM14 OneLot (canonical replay) attributed by side /
+  engine activity / HTF state BEFORE the new policy read (informs nothing that isn't
+  already preregistered below; recorded for the record).
+policy_cells:  # <= 3 dof per family, all frozen here
+  C_hyst_M':        [{seq: 347, a: 3, b: 1}, {seq: 348, a: 4, b: 1}]   # SM14 form on new M'
+  B_sign_deadband:  [{seq: 349, enter: 3, exit_at: 0}]                  # exit when M' crosses 0
+  A_dominant:       [{seq: 350, bmom_first_solar_min: 5}, {seq: 351, bmom_first_solar_min: 7}]
+                    # pos = B if B!=0 else sign(Tpp) iff |Tpp|>=min
+  E_conflict_flat:  [{seq: 352, solar_min: 5}, {seq: 353, solar_min: 7}]
+                    # 0 if Tpp*B<0; else B if B!=0 else sign(Tpp) iff |Tpp|>=min
+  G_router_htf:     [{seq: 354, desc: HTF-UP shorts need Tpp<0 AND B<0; else C(3,1)}]
+  SM14_reference:   [{seq: 355, desc: old M (no DUAL) a=3 b=1 rerun on canonical executor}]
+  C_hyst_lowDD:     [{seq: 356, a: 5, b: 2}]   # low-DD cell (higher entry bar)
+  A_dominant_tail:  [{seq: 357, bmom_first_solar_min: 9}]  # extreme-consensus-only Solar
+costs: MNQ $0.65/side and NQ $2.18/side, 1t slip capped; both reported for every cell
+gates_frozen:
+  - net > 0 both contract sizes; >= 3/5 dev years positive; H1/H2 same sign
+  - family plateau: promoted cell must have a same-sign neighbor inside its family
+    (or be the family's only preregistered cell, then flagged FRAGILE if promoted)
+  - crisis: >= 60% retention of SM14-reference crisis-20-day net for any policy that
+    reduces short participation
+  - to REPLACE SM14 as ONE_CONTRACT_FINAL: beat seq355 reference on >= 3 of
+    {Sharpe, Calmar, maxDD, worst_month, longest_TUW} with bootstrap P >= 0.85
+evaluation: dev 2022-01..2026-05-31; NO untouched holdout exists for this object (disclosed;
+  validation = chronology + plateau + bootstrap only). Post-2026-05 data NOT read.
+burn: 11
+outputs: [runs/SMV2H_ONECONTRACT/out/*, research/system_master/ONE_CONTRACT_FRONTIER.md]
