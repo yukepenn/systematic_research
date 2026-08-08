@@ -36,3 +36,10 @@ spec + seq BEFORE any read.
 
 Standing: no leverage recommendations (C-P3: L*<1 at $25k/10% tolerance). 60/40 is the frozen
 champion weight zone. ≥2026-08-01 data VIRGIN.
+
+## Owner addendum (2026-08-08, mid-wave-3) — Product B final deliverables
+- BEST_ONE_NQ and BEST_ONE_MNQ must EACH ship as parity-proven NinjaScript finals with capital
+  maps; per-instrument policy divergence explicitly allowed. LIVE_READINESS_CHECKLIST.md created
+  (template; activation gate is owner-authorized, engineering-only, never autonomous).
+- Queue impact: after SMV2S resolves, one-contract confirmation waves continue PER INSTRUMENT;
+  the finals + capital maps + checklist completion become the Product B exit criteria.

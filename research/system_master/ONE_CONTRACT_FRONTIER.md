@@ -79,3 +79,16 @@ ONE_CONTRACT_FINAL.** Red-team: CONFIRMED (spec letter-exact, curves reproduce c
 outputs to 0.0). Next per V4 §51: ONE new bounded discrete family in a future spec — the
 autopsy directions worth encoding: keep B-MOM priority, but address the top-10-day retention
 loss (the challenger's weakness is missing SM14's biggest winner days, e.g. 2024-08-08).
+
+## OWNER ADDENDUM 2026-08-08 — Product B final deliverable definition (binding)
+Product B is complete only when BOTH `BEST_ONE_NQ` and `BEST_ONE_MNQ` exist as separate,
+fully-implemented, Strategy-Analyzer-parity-proven NinjaTrader strategies (final names like
+SolarWaveOneContractNQ_Final.cs / SolarWaveOneContractMNQ_Final.cs), each with the full metric
+battery + historical AND stressed capital maps, LIVE-READY-BUT-DISABLED (realtime fail-closed;
+enablement is a separate explicit owner decision — see LIVE_READINESS_CHECKLIST.md).
+KEY CONSEQUENCE for gate design: NQ and MNQ are separate economic products (friction/rounding/
+discrete-risk differ), so FUTURE confirmation specs may promote DIFFERENT policies per
+instrument. The frozen SMV2S spec (in flight) still requires both-instrument passes for a
+joint replacement per its letter; its per-instrument results feed per-instrument follow-up
+specs if the joint gate fails but one instrument dominates. BEST_ONE_CONTRACT_OVERALL is
+selected only after both instrument products are resolved.

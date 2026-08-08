@@ -1,0 +1,174 @@
+Received 2026-08-08 mid-wave-3, while SMV2N/O/P/Q/R/S were executing. Owner message (verbatim,
+including the Chinese framing preceding the formal addendum):
+
+同时完了也会给我们最好的1contract NQ以及MNQ的可以直接在ninjatrader上跑的策略？甚至我可以直接把他live的
+1 contract 策略？对，**这应该是最终交付物的一部分**，而且我建议我们把要求再写得更死一点：最终不能只告诉
+我们"one-contract 最优规则是什么"，必须真的分别交付 **Best 1 NQ** 和 **Best 1 MNQ** 的 NinjaTrader
+Strategy Analyzer 可复现版本。
+
+V4 本身已经把 Exactly-One-Contract 定义成独立产品：最终 action 只能是 `{-1,0,+1}`，同时维护
+**1 NQ 和 1 MNQ**，不能 pyramiding，也不能偷偷用 fractional exposure。
+
+不过**目前还没到你说的最终状态**。最新一轮中，A-dominant challenger 确认失败，因此当前还是 `SM14` 作为
+one-contract incumbent；失败原因不是点估计更差，而是置信度、旧 regime non-inferiority 和大赢家日保留
+不够，所以接下来还应该继续挑战它，而不是把 SM14 当宇宙最优。
+
+### 最终我希望 Claude 给你的，是这三层
+
+**1 NQ Final**
+
+类似：
+
+    SolarWaveOneContractNQ_Final.cs
+
+里面包含最终确定的：
+
+    Signal logic / Solar state / B-MOM state / Engine3/router if proven / HTF logic /
+    entry/exit / flat timing / commission/slippage assumptions / exactly qty = 1 NQ
+
+然后有：
+
+    Python reference ↕ NinjaTrader Strategy Analyzer
+    99.5%+ decision parity / 0.999+ daily PnL corr / <0.5% unexplained net difference
+
+**1 MNQ Final** 也要单独做。
+
+不能简单说：NQ 策略乘0.1就是 MNQ。因为 NQ 和 MNQ 的 commission / tick economics、friction占机会幅度
+的比例、rounding、one-contract discrete risk 都不同，所以理论上**最优 state policy 甚至可能不完全一样**。
+
+因此最后应该真正得到：
+
+    BEST_ONE_NQ
+    BEST_ONE_MNQ
+    BEST_ONE_CONTRACT_OVERALL
+
+并分别有 historical DD、Sharpe、Calmar、worst month、positive weeks/months、capital map 和
+Strategy Analyzer parity。
+
+至于"那我是不是最后可以直接把 1-contract 策略 live？"——从技术架构上，最终可以做到非常接近"直接启用"
+的程度；但按照我们目前给 Claude 的权限，不可以让它现在直接变成 live strategy。目前 V4 要求所有研究
+NinjaScript **realtime fail-closed**。这是我们故意设计的。
+
+当前流程应该是：
+
+    研究 → 历史 Python validation → NinjaScript implementation → Strategy Analyzer parity →
+    execution / DD / cost red-team → FINAL ONE-CONTRACT NQ / MNQ → LIVE-READY BUT DISABLED
+
+以后如果明确决定 live-enable，应另开一个很短的 **Live Readiness / Activation Gate**，只处理工程问题，
+不再改变 alpha（realtime state initialization / historical→realtime transition / connection loss /
+duplicate-order prevention / restart recovery / position reconciliation / daily loss protection /
+session close / holiday close / contract roll / order rejection / max qty hard cap = 1 / kill
+switch），确认后才把 fail-closed protection 改成可以真实发送订单。
+
+**不建议让 Claude 在研究结束时自动替你 live activate。** 更合理的是 live-ready、默认关闭的 Final
+Strategy，owner 明确决定启用时再做最后一步。
+
+================================================================================
+OWNER ADDENDUM — FINAL ONE-CONTRACT NINJATRADER DELIVERABLES
+================================================================================
+
+The ONE-CONTRACT research product is NOT complete merely because a policy
+has been selected.
+
+Before the global program may call PRODUCT B mature, it must deliver BOTH:
+
+    BEST_ONE_NQ
+    BEST_ONE_MNQ
+
+as fully implemented NinjaTrader strategies.
+
+These are separate economic products.
+
+Do NOT assume MNQ is merely NQ divided by ten.
+
+For each instrument independently report:
+
+    exact frozen state machine
+    exact action mapping {-1,0,+1}
+    quantity hard-capped at exactly one contract
+    exact parameters
+    exact session/flatten behavior
+    commissions
+    slippage/cost assumptions
+    trade count
+    Net
+    Sharpe
+    Sortino
+    Calmar
+    true bar-MTM MaxDD
+    CDaR / EDaR / ES
+    worst week
+    worst month
+    positive-week %
+    positive-month %
+    TUW
+    right-tail retention
+    historical capital map
+    stressed capital map.
+
+Required final source artifacts should be clearly identifiable, e.g.:
+
+    SolarWaveOneContractNQ_Final.cs
+    SolarWaveOneContractMNQ_Final.cs
+
+or equivalent version-controlled final names.
+
+Each must pass:
+
+    Python reference
+        ↕
+    NinjaTrader Strategy Analyzer
+
+with the governing parity gates.
+
+The final NinjaScript must:
+
+    operate as ONE strategy
+    trade exactly one contract maximum
+    never pyramid
+    never average down
+    reconcile target vs actual position deterministically
+    be flat before the verified margin cliff
+    handle holidays / early closes deterministically
+    fail safely on missing data
+    log effective parameters
+    remain REALTIME FAIL-CLOSED by default.
+
+Do NOT auto-enable live trading.
+
+Instead produce a separate:
+
+    LIVE_READINESS_CHECKLIST.md
+
+covering:
+
+    Historical → realtime state transition
+    strategy restart
+    connection loss/reconnect
+    position reconciliation
+    duplicate-order prevention
+    rejected orders
+    partial fills
+    contract roll
+    holiday/early close
+    margin cliff
+    max quantity hard cap = 1
+    kill switch
+    fail-safe flatten semantics.
+
+No alpha changes are permitted during the live-readiness stage.
+
+The objective is:
+
+    FINAL HISTORICALLY VALIDATED
+    + NINJATRADER-PARITY-PROVEN
+    + LIVE-READY-BUT-DISABLED
+
+for BOTH 1 NQ and 1 MNQ.
+
+The owner may later explicitly authorize realtime enablement as a separate
+decision.
+
+================================================================================
+END ADDENDUM
+================================================================================
