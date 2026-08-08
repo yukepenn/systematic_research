@@ -1,0 +1,49 @@
+run_id: SMV2M_MASTER_BUILD
+date_frozen: 2026-08-08
+class: EXECUTION_TEST             # V4 §41; Stage 4 IMPLEMENT (V4 §42) -- NO ALPHA CHANGES
+seq: [371]
+purpose: >
+  Consolidate the current champion DAYONLY_DUAL6040 (0.6 SOLAR_DUAL_HTF + 0.4 vm(BMOM E2),
+  day-only, no B1) into ONE NinjaTrader strategy (SolarWaveSMMaster_v1) with a Python twin,
+  and run Strategy Analyzer parity. P0 in Directive V4 §52. The research champion curve
+  flattens at session close (~17:00); the EXECUTABLE master flattens before the 16:45 margin
+  cliff -- per V4 §16 the executable number becomes the headline. The flatten cost is measured.
+
+frozen_arithmetic:                # derived 2026-08-08 from committed runs/SMV2H_ONECONTRACT/out/rerank_curves.csv
+  research_curve: champion = outer * (0.6*DUAL + 0.4*vmBM*BM); reproduced stored 60_40 column exactly (allclose True)
+  SIG_dual_dev_sigma: 2143.2802   # $/day, std of DUAL leg daily PnL, dev
+  sigma_BM_1NQ: 3548.3402
+  vmBM: 0.604023
+  outer_rescale: 1.214423
+  K_SOLAR: 0.728654               # MNQ contracts per Tpp unit  (= 0.6 * outer)
+  K_BMOM: 2.934159                # MNQ contracts when B = +-1  (= 0.4 * vmBM * outer * 10)
+  consolidated_target: M(t) = rha( K_SOLAR * Tpp(t) + K_BMOM * B(t) ), clamp +-13 (max reachable 12.41)
+  Tpp: clip( rha( T * m * s * 0.9026 ), +-13 );  T = rha(10 * sum(memberPending)/13) clamp +-10;
+       m = 1.25 iff sign(T)!=0 and HTF_state == sign(T);  s = 0.5 iff T < 0 and HTF_state > 0
+  HTF_state: sign(prior-session close - SMA50 of session closes), updated at session end (causal)
+  B: frozen W8-1 B-MOM virtual position in {-1,0,+1} (14d slot bands + RTH VWAP, flat >= 15:57)
+
+ops_rule_frozen:                  # decision-bar times are NT END-stamps (hm = bar end time)
+  - "hm in [16:30:00, 18:00:00): no position INCREASES: if sign(M)==sign(cur) and |M|>|cur| keep cur;
+     if sign(M)!=sign(cur) and M!=0 -> 0 (reductions pass; no reversal entries)"
+  - "hm in [16:39:00, 18:00:00): target 0 (fills ~16:42, flat before 16:45 margin cliff)"
+  - "else target = M; session-close engine exit is the backstop (early closes)"
+  realtime: FAIL CLOSED -- OnBarUpdate returns before any order submission when State==Realtime.
+
+execution_model: MNQ execution series, decisions at 3m bar close, fills next bar open +-1 tick
+  capped by H/L (_fill), commission $0.65/side MNQ ($1.30/RT), Analyzer run with Lifetime
+  commissions + 1-tick slip + Standard fill (same convention as the E10/OneLot parity runs).
+
+gates:
+  twin_vs_research_champion:      # informational budget, NOT pass/fail (rounding + early flatten)
+    expect: daily corr >= 0.998; report net retention (E10 rounding precedent was ~90.6%)
+  nt8_vs_twin_parity:             # PASS/FAIL per V4 §16
+    decision_path_match: ">= 99.5% of bars: NT consolidated target == twin consolidated target"
+    daily_pnl_corr: ">= 0.999"
+    net_difference: "<= 0.5% (after accounting documented holiday-session-template residuals)"
+  fail_action: executable performance becomes headline regardless; parity failure -> debug
+    engineering, never touch alpha constants.
+window: Analyzer 2022-01-01 -> 2026-07-31 (implementation reconcile only; June/July 2026 remains
+  a consumed quasi-holdout for selection purposes; dev metrics reported on <= 2026-05-31)
+outputs: twin.py, twin daily curve + dd_battery (out/), SolarWaveSMMaster_v1.cs (src/ninjascript/),
+  NT8 export ledgers, parity_report in NINJATRADER_PARITY.md, REPORT.md
