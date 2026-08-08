@@ -51,18 +51,34 @@
       role-B/C re-registration only). **Excursion baselines published**: uncond ~1-2pp
       over null, post-flip +1-4pp more, break-even gap 25-40pp -> single primitives dead,
       interactions are the only micro route. artifacts/z1/z1_report.md.
+      **[CORRECTED 2026-08-08 by W2-0: "real persistence" and "gross positive" RETRACTED —
+      null was mis-specified (TM null ~2, not 1) and the gross was trigger-jump algebra;
+      DIRECT gross is negative at every theta. Closure holds a fortiori.]**
 - [x] **AMENDMENT 4 applied (2026-08-08)**: FAST_STRUCTURAL (Zone F: 5-120s holds,
       8-32t moves) is now PRIMARY priority; four zones M/F/S/A with separate champions;
       owner-scale clue = ~20t over tens of seconds (economic scale, NOT a strategy spec).
       Mandatory P0 = Z1_DEFINITION_AND_NULL_AUDIT (omega in z1_dc_ladder.py confirmed by
       code-read to be TOTAL MOVEMENT ext-to-ext, so the r~2 null is ~2, NOT 1 — the W1-1
       "persistence" framing is under audit). Verbatim: MANDATE_AMENDMENT_4_FAST_STRUCTURAL.txt.
-- [ ] **Wave W2 (Amendment 4 P0-P2, specs frozen 2026-08-08 BEFORE readouts)**:
-      W2-0 Z1 definition/null audit (specs/W2-0_z1_definition_null_audit.md);
-      W2-1 fast opportunity census + wide excursion surface, 8-32t x 5-300s, matched
-      controls (specs/W2-1_fast_opportunity_census.md). Then P3+ FSS families, S2a run
-      (P7), H-B5 (P8), ES confirmation (P10). Interaction excursion states from the OLD
-      W2 definition are re-queued to W3, now census-informed.
+- [x] **Wave W2 COMPLETE (2026-08-08, specs frozen 1025569 before readouts)**:
+      **W2-0 null audit — MAJOR CORRECTION**: omega=TOTAL MOVEMENT, null r~2 (matched
+      ~2.13); W1-1 "persistence"/"gross positive" RETRACTED (trigger-jump algebra; the
+      same algebra is +0.67-1.3t on a martingale); DIRECT flip-to-flip gross NEGATIVE at
+      every theta; excursion "mild momentum" corrected to +0.2-0.6pp over matched null.
+      Z1 closure a fortiori. NULL-3 curves = campaign reference nulls; all future DC/
+      excursion claims must cite them. artifacts/z1/z1_null_audit_report.md.
+      **W2-1 census — owner-scale moves ABUNDANT** (median 60s MFE = 20t = 5 NQ pts;
+      ~292 epi/day/dir at H60/M20; t2MFE p50 29s); direction+retention is the whole
+      problem. **Excursion surface: viability gap shrinks with bracket size — +32/-10
+      needs only ~7pp conditional lift at C1** (vs 25pp micro). Pre-state: activity/vol
+      dominates (not a discovery); ONLY directional precursor = CONTRARIAN 5-30s
+      counter-move (ret5/ret10 effect 0.5, up-opps preceded by -5t drops); momentum
+      precursors ~zero. Spread at opportunity moments 2.42t vs 1.79t control (C1
+      optimistic in-state; C2 mandatory). artifacts/census/census_report.md.
+- [ ] **Wave W3 (census-informed)**: W3-1 preregistered SNAPBACK rule family (FSS-4
+      flavored: fast 10-30s counter-move -> fade toward snapback, large asymmetric
+      brackets 24/8 & 32/10; target = clear be_C1 gap ~7-10pp) — spec frozen BEFORE
+      readout; then FSS-1/2/3 (P3-P5), S2a frozen run (P7), H-B5 (P8), ES confirm (P10).
 - [ ] Re-queued (Amendment 4 ordering): S2a frozen run (P7); H-B5 (P8); H-B1 anti-chase
       (role C, P11); oldest-first ARCHIVE_ONLY exports of confirmation pool (§20).
 - [ ] (done earlier) capped-session RTH second pass → Layer-1 state grids (250ms/1s/5s) →

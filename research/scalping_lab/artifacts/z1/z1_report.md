@@ -1,5 +1,20 @@
 # W1-1 Z1 Readout — DC Scale Transfer + Excursion Baselines
 
+> ## ⚠ CORRECTION 2026-08-08 (W2-0 Z1_DEFINITION_AND_NULL_AUDIT, Amendment 4 §2)
+> This report's INTERPRETIVE claims were wrong; the numbers are reproduced exactly but
+> re-baselined. See `z1_null_audit_report.md` (binding). Summary of corrections:
+> 1. ω here is TOTAL MOVEMENT (ext-to-ext), not overshoot. The martingale null for
+>    r = E[ω]/θ is **≈2.0 (and ≈2.13 for the jump-matched null at θ=5), not 1**.
+> 2. "r > 2 ⇒ genuine persistence" is RETRACTED: the only excess over the matched null
+>    is +0.032 at θ=5 (~0.16t at amplitude level), nothing elsewhere.
+> 3. "gross flip-to-flip +0.7–0.9t/cycle" is RETRACTED — it is trigger-jump algebra;
+>    the same algebra is +0.67–1.3t on a sign-randomized MARTINGALE. DIRECT
+>    entry→exit gross is **negative at every θ** (−0.07t @5 → −6.6t @160), and direct
+>    net C1 is −2.9 to −9.5t/cycle — worse than the table below shows.
+> 4. Excursion "mild momentum (+1–2pp over null)" is CORRECTED to +0.2–0.6pp over the
+>    jump-matched null (ruin formula is not the right null for a jump process).
+> 5. The CLOSED verdict SURVIVES a fortiori. Original text preserved below unedited.
+
 Date: 2026-08-08. Spec: `specs/W1-1_Z1_dc_scale_transfer.md` (frozen 7513c6b before any
 tick-level DC statistic was read). Data: 37 L2 discovery sessions, event-level causal MID.
 Tables: `z1_r_curve_by_session.csv`, `z1_excursion.csv`. Code: `src/python/z1_dc_ladder.py`.
