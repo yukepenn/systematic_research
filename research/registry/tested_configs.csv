@@ -46,3 +46,7 @@ seq,date,experiment,run_id,strategy,timeframe,params,window,cost_model,purpose,i
 312-314,2026-08-08,SM10_VOLTRANSITION_ENGINE,SM10_VOLTRANSITION_ENGINE,standalone_daily_engine,1m,compression K=1/2/3 -> 10:00 direction hold to 15:57,2006-01..2026-05 dev-primary,C1 2.872t,system_master,research,FAIL_CI_spans_zero_K1_negative_K2K3
 315,2026-08-08,SM11_HOLDOUT_READ,SM11_HOLDOUT_READ,joint_holdout_read,3m,F1..F5 single read 2026-06..07 per frozen protocol,2026-06-01..2026-07-31,as-frozen,system_master,research,HOLDOUT_CONSUMED_no_finalist_dropped
 316-319,2026-08-08,SM14_ONELOT_DAYMARGIN,SM14_ONELOT_DAYMARGIN,one_lot_hysteresis,3m,sign+hysteresis on frozen M; flat 16:42; a/b grid,2022-01..2026-05,MNQ 0.65+1t / NQ 2.18+1t,system_master,research,PASS_plateau_318_319_adopted
+320,SMV2B,BMOM_E0_signal_close,"frozen W8-1, fill=signal close, C1",dev 2022-202605,net 319123 Sharpe 1.313 maxDD -43325,PASS (reference),2026-08-08
+321,SMV2B,BMOM_E2_next_open,"frozen W8-1, fill=next 3m open (causal), C1",dev,net 319198 Sharpe 1.314 drift +0.01t/trade,PASS - new canonical basis,2026-08-08
+322,SMV2B,BMOM_E3_E2+1t,E2 + 1 tick/side stress,dev,net 305868 Sharpe 1.258,PASS (stress band),2026-08-08
+323,SMV2B,BMOM_E4_E2+2t,E2 + 2 ticks/side stress,dev,net 292538 Sharpe 1.202,PASS (stress band; ~realistic w/ 3t spread),2026-08-08
