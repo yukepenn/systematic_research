@@ -75,10 +75,18 @@
       counter-move (ret5/ret10 effect 0.5, up-opps preceded by -5t drops); momentum
       precursors ~zero. Spread at opportunity moments 2.42t vs 1.79t control (C1
       optimistic in-state; C2 mandatory). artifacts/census/census_report.md.
-- [ ] **Wave W3 (census-informed)**: W3-1 preregistered SNAPBACK rule family (FSS-4
-      flavored: fast 10-30s counter-move -> fade toward snapback, large asymmetric
-      brackets 24/8 & 32/10; target = clear be_C1 gap ~7-10pp) — spec frozen BEFORE
-      readout; then FSS-1/2/3 (P3-P5), S2a frozen run (P7), H-B5 (P8), ES confirm (P10).
+- [x] **W3-1 SNAPBACK REJECTED at Tier-0 (2026-08-08, spec frozen 1b3837d, DoF 8)**:
+      all 24 configs net C1 -2.3 to -2.9t/trade, CIs<0, coherent negative plateau;
+      conditional lift +1-2pp vs needed 7-10pp (census inversion mostly failed — the
+      trigger is a near-permanent state at 300-400 epi/day, not a setup). Measured
+      signal ladder for fast NQ states: micro momentum +0.2-0.6pp; single fast trigger
+      +1-2pp; needed +7-10pp. One-feature fast triggers deprioritized; +1-2pp contrarian
+      lift kept as role-B reference fact. artifacts/w31_snapback/w31_report.md.
+- [ ] **Wave W3 continues (EVI-reordered after W3-1)**: structural/completed-structure
+      setups now highest EVI — S2a frozen run (P7, needs NT8 engine or python 1-min
+      replica), FSS-2 breakout-acceptance & FSS-5 sweep/reclaim with REAL level logic
+      (ONH/ONL/PDH/PDL, unadjusted prices), H-B5 spike classification (P8), FSS-10 ES
+      confirmation (P10, needs ES exports). Then role-B/C layering (P11).
 - [ ] Re-queued (Amendment 4 ordering): S2a frozen run (P7); H-B5 (P8); H-B1 anti-chase
       (role C, P11); oldest-first ARCHIVE_ONLY exports of confirmation pool (§20).
 - [ ] (done earlier) capped-session RTH second pass → Layer-1 state grids (250ms/1s/5s) →
