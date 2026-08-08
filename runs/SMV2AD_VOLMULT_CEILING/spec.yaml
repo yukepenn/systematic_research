@@ -1,0 +1,74 @@
+run_id: SMV2AD_VOLMULT_CEILING
+date_frozen: 2026-08-08
+class: R1_FAMILY_TEST + DIAGNOSTIC   # Owner-directed pivot (2026-08-08): back to genuinely
+  # NEW Solar-core mechanism ideas, motivated by hard evidence already on file, not diagnostics-
+  # for-their-own-sake. Motivation: SMV2R sub_381 (runs/SMV2R_SOLAR_CORE_1/out/clamp_audit.csv)
+  # found the 1200-tick/300pt upper clamp on the SLOWEST member (VolMult=30) binds 10.93% of
+  # bars over the whole dev period (2022 -> partial-2026) but is sharply regime-concentrated:
+  # 9.83% (2022) / 0.16% (2023) / 3.93% (2024) / 18.26% (2025) / 39.21% (Jan-May 2026 partial).
+  # The ceiling is MORE binding right now than in any full historical year on file -- a live,
+  # current-regime fact, not a historical curiosity. This spec asks the two natural questions
+  # that follow: does unclamping the existing slow member help, and does adding a genuinely
+  # slower cohort (beyond VolMult=30) help. NEVER before tested (confirmed by repo search:
+  # DR_V4_EXPANSION_PASSES_20260808.md and rejected_ideas.md contain zero mentions of clamp
+  # ceiling or VolMult-range extension).
+seq: [415, 416, 417]
+
+simulator: src/analytics/sm01_solarsim.py -- member_states()/e10_target()/e10_sim() UNMODIFIED
+  except for the explicit parameter changes below. Baseline constants for reference (verified
+  by direct code read, do not re-derive): VMS = list(range(6,31,2)) = 13 members; S =
+  clamp(VolMult*sigma460, 10.0pt, 300.0pt) i.e. [40,1200] ticks; fallback 44.75pt (=179t*0.25)
+  when sigma460 is NaN (t<30); e10_target uses MEAN(member_pos, axis=1) then round-half-away-
+  from-zero(10*mean), clip +-10 -- this is a MEAN, so member count changes do NOT require any
+  change to mult=10/cap=10 (verified architecturally compatible with adding/removing members).
+  Dev window: 2022-01-03 -> 2026-05-29 (sessions <=2026-05-31), identical to SMV2R/SMV2T/SMV2U.
+
+sub_415_ceiling_sweep (4 arms, existing 13-member VMS UNCHANGED, ONLY smax_ticks varied):
+  arms: smax_ticks in {1200 (=incumbent control), 1600, 2000, 2400}; smin_ticks=40 fixed in
+    every arm. Re-simulate the full 13-member ensemble + E10 executor for each arm.
+  report per arm: standalone net/Sharpe/maxDD/CDaR_0.95/top-10-day-sum/turnover; vm30's
+    %-bars-at-new-ceiling (diminishing-returns check -- does raising the ceiling actually
+    relieve the binding, or does sigma460*30 blow past even 2400t in 2026); portfolio blend
+    (rebuild DAYONLY_DUAL6040 60/40 with this Solar leg swapped in, B-MOM leg UNCHANGED,
+    same vol-matching scalars re-derived and documented).
+  verdict rule: an arm is a CEILING-CANDIDATE only if it improves BOTH standalone Sharpe AND
+    standalone CDaR_0.95 vs the 1200t control AND retains >=95% of the control's top-10-day
+    sum (mirrors SMV2R sub_383's own removable-candidate rule for consistency). No adoption
+    this wave regardless of outcome -- a CEILING-CANDIDATE earns an R2_CONFIRMATION spec later
+    (full bootstrap/LOYO/old-regime/right-tail/portfolio gate battery, SMV2T-style).
+
+sub_416_extended_cohort (2 arms, uses whichever smax_ticks from sub_415 is a CEILING-CANDIDATE;
+    if NONE qualifies, use 2000t as a disclosed reasonable default and flag this explicitly --
+    do not silently skip this sub-test):
+  arm_ADD: 18 members = incumbent 13 (VMS 6..30) + 5 NEW slower members VolMult in
+    {34,38,42,46,50}, same step-4 spacing as the existing 24->26->28->30 tail. Isolates "does a
+    genuinely slower cohort add information" but confounds member-count with slowness.
+  arm_REPLACE: 13 members = drop the 5 FASTEST (VolMult 6,8,10,12,14) + add the same 5 NEW slow
+    members {34,38,42,46,50}, holding member count at 13 -- isolates "shift the cohort slower"
+    from "just add more members" (arm_ADD's confound). NOTE: SMV2T already tested removing
+    VolMult{6-12} alone (4 members, no slow addition) and that FAILED R2 confirmation (dev
+    bootstrap 0.80/0.39<0.85, old-regime gap -$16.7k) -- arm_REPLACE is a DIFFERENT object (drops
+    5 not 4, and adds a slow tail the prior test never had) and is not pre-judged by that result,
+    but the prior failure is disclosed context, not grounds to skip this arm.
+  report: identical battery to sub_415, both arms vs the 1200t/13-member control.
+  verdict rule: identical to sub_415 (Sharpe AND CDaR improve, top-10-day retention >=95%) ->
+    EXTENSION-CANDIDATE -> R2_CONFIRMATION later. No adoption this wave.
+
+sub_417_old_regime_screen (DIAGNOSTIC, non-adoption): for EVERY arm across sub_415/416 that
+  qualifies as a CANDIDATE (ceiling or extension), rebuild it on the SM06 2006-2021 hist
+  substrate (Solar-only, E10-executor NQ-scaled convention, identical to SMV2T gate C) and
+  report net vs incumbent (floor: net >= incumbent - $10k, maxDD <= 1.25x incumbent, SAME
+  floor SMV2T used -- not relaxed). This is reported per-candidate as a screen, not scored
+  as a formal gate this wave (that belongs to the R2_CONFIRMATION spec) -- but MUST be run and
+  disclosed for every candidate found, since 3 of 5 prior core-challenge candidates (FAST-
+  removal, both one-lot dominant families) died specifically on an old-regime melt-up-capture
+  floor, and silently deferring this check would hide the single most common failure mode in
+  this program's own history.
+
+kill_or_keep: if ZERO arms across sub_415/416 qualify as a CANDIDATE -> the 1200t ceiling and
+  6-30 VolMult range are CONFIRMED-OPTIMAL-IN-RANGE (record in CURRENT_TRUTH; close this lead,
+  no third bite without a new mechanism, matching the house rule applied to every other closed
+  core challenge). If >=1 arm qualifies -> queue R2_CONFIRMATION spec(s) next wave per the
+  standard two-stage process (SMV2R->SMV2T precedent) -- do not adopt directly from this wave.
+outputs: out/ceiling_sweep.csv, out/extended_cohort.csv, out/old_regime_screen.csv,
+  out/portfolio_blend.csv, out/gates.csv, REPORT.md

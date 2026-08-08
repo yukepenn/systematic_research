@@ -1,0 +1,66 @@
+run_id: SMV2AE_1MIN_RESCALE
+date_frozen: 2026-08-08
+class: R1_FAMILY_TEST + DIAGNOSTIC   # Owner-directed pivot (2026-08-08), companion to
+  # SMV2AD. Closes a genuine, narrower-than-previously-stated gap: SMV2U (seq 390-392) tested
+  # 1-minute bars with the VMS=[6..30] VolMult constants and [40,1200]-tick clamp REUSED
+  # VERBATIM from the 3-minute incumbent (confirmed by direct code read of step1_clock_arms.py
+  # line 151: "VMS = sm.VMS"), across TWO sigma-window conventions: bar-matched (460 1m bars)
+  # and time-matched (1380 1m bars, chosen because 460*3min=1380min~=23h, matching the
+  # incumbent's real-time memory). BOTH FAILED DECISIVELY (net -$33,045/-$3,163, Sharpe
+  # -0.195/-0.018, friction consumed 128%/102% of gross P&L) -- so the sigma TIME-WINDOW was
+  # already correctly recalibrated once and still failed. The ONE remaining un-recalibrated
+  # axis is the VolMult MULTIPLIER SCALE itself: sigma460 is a trailing mean of |dClose| in
+  # PRICE POINTS, and 1-minute |dClose| is not point-scale-comparable to 3-minute |dClose| even
+  # over an identical real-time window (sub-additivity of absolute price changes under time
+  # aggregation) -- so reusing VMS=[6..30] unscaled on 1m sigma produces a systematically
+  # SMALLER threshold S=VolMult*sigma460 than intended, plausibly explaining the >100% friction
+  # share (small threshold -> frequent flips -> over-trading). This has never been tested.
+  # DISTINCT from the WAVE1/WAVE1C fixed-StopMultiplier family's documented failure mode
+  # (argmax parameter-selection fragility, near-total OOS collapse when a "best" SM is PICKED)
+  # -- VolMult is a data-adaptive FORMULA applied identically across all years, not a fitted
+  # constant, so that specific fragility critique does not automatically transfer; this spec
+  # tests the DIFFERENT, narrower over-trading/threshold-scale hypothesis on its own terms.
+seq: [418, 419]
+
+simulator: same as SMV2AD (src/analytics/sm01_solarsim.py, unmodified except the explicit
+  changes below); reuse SMV2U's committed 1-minute NQ substrate (runs/SM1M_SUBSTRATE/out/
+  nq_1m_2022_2026.parquet) and its time-matched sigma construction (VolPeriod=1380 bars) --
+  do not re-export or re-derive the substrate itself. Dev window identical to SMV2U.
+
+sub_418_scale_measurement (DIAGNOSTIC, precedes any re-simulation): compute R = the empirical
+  point-scale ratio between the incumbent 3m sigma460 series and the 1-minute time-matched
+  sigma1380 series, BOTH recomputed causally over the IDENTICAL dev calendar (inner-joined on
+  session/bar timestamp where the 3m bar's close-time aligns to the corresponding 1m bar).
+  Report R at median, p1, p10, p50, p90, p99 (not just a single point estimate) to check
+  whether one scalar rescale is even a reasonable model of the relationship, plus R computed
+  separately per calendar year (2022-2026) to check regime-stability of the ratio. PRE-
+  REGISTERED RULE (decide before seeing results, avoid ad hoc redesign): use the WHOLE-DEV-
+  PERIOD MEDIAN R as the single rescale factor for sub_419 regardless of the per-year spread;
+  the per-year/percentile breakdown is disclosed context, not grounds to pick a different R
+  after seeing which one "works better" (that would be exactly the kind of post-hoc gate-
+  shopping this program's house rules forbid).
+
+sub_419_rescaled_ensemble (1 arm + comparison to SMV2U's original unscaled result):
+  build VMS_1m = [v*R for v in [6,8,10,...,30]] (13 members, same relative spacing as the
+  incumbent, R from sub_418); clamp bounds UNCHANGED at [40,1200] ticks / [10.0,300.0] pts
+  (these are absolute price-space bounds on S itself, not on VolMult, per the code -- they do
+  NOT get rescaled); sigma window = 1380 bars (time-matched, SMV2U's better-performing arm);
+  fallback constant (179t) and every execution/cost/session-flatten rule UNCHANGED from SMV2U
+  for direct comparability.
+  report: standalone net/Sharpe/maxDD/CDaR/turnover/friction-share (SAME friction-share
+    definition SMV2U used, out/friction_share.csv column reused verbatim), reported ALONGSIDE
+    SMV2U's original unscaled time-matched result (net -$3,163.4, Sharpe -0.018, friction
+    share 1.020) as the primary before/after comparison -- this IS the finding, not a new
+    number in isolation.
+  screen_gate (SCREEN, not a promotion gate -- this wave does not attempt R2 confirmation):
+    PASS-SCREEN if standalone Sharpe > 0 AND friction_share < 0.60 (i.e. rescaling flips the
+    economics from decisively negative to at least plausible) -> queue an R2_CONFIRMATION
+    spec (full bootstrap/LOYO/old-regime/portfolio-contribution battery, SMV2T-style) in a
+    later wave. FAIL-SCREEN otherwise -> 1-minute bars are CLOSED per the house rule applied
+    to every other closed core challenge: 1-minute has now failed under 2 distinct signal
+    architectures (fixed-StopMultiplier family: WAVE1/WAVE1C; VolMult-adaptive family: SMV2U
+    bar-matched, SMV2U time-matched, this rescaled arm) across every calibration convention
+    this program can motivate from first principles -- no further 1-minute tests without a
+    structurally new mechanism (not a further recalibration attempt).
+outputs: out/scale_ratio.csv, out/rescaled_ensemble.csv, out/friction_share.csv,
+  out/comparison_vs_smv2u.csv, REPORT.md
