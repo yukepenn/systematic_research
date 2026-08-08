@@ -134,13 +134,28 @@
       INSUFFICIENT (frozen rule)**. Scoreboard 14/14 killed; waves-without-improvement
       = 3 (par.35.9 met for Zone F). Amendment 6 par.9 checklist: 4/5 families + ceiling
       done; REMAINING: FSS-10 ES conditioning + independent red team.
-- [ ] **W6 queue**: (1) finish ES archival (32/39 done) + build ES sechilo + FSS-10 ES
-      confirmation/non-confirmation at >=1min lags on NQ structural states — the LAST
-      family before the par.9 verdict; (2) independent red-team pass on the Zone-F
-      closure package; (3) B-momentum build spec (correlation gate passed; must satisfy
-      H-A1 retry conditions: new preregistration + mechanically different construction —
-      noise-area/VWAP always-monitoring variant, dev-minute data); (4) if FSS-10 fails
-      and red team concurs -> formal par.34 declaration for Zone F.
+- [x] **W6 COMPLETE (2026-08-08)**: ES substrate finished (39/39 archived + ES sechilo;
+      es_s20260519 capped). **FSS-10 NEGATIVE on all three frozen tests** (spec 58a97a3):
+      T1 max conditioning lift +0.99pp vs 8.73pp gap, CONFIRM cells NEGATIVE
+      (anti-confirmation); T2 ceiling+ES best +1.14pp, ES redundant with NQ library
+      (pipeline reproduced C5 exactly); T3 lead-lag rule 0/12 (-2.7..-3.5t, trigger
+      near-permanent 31% of secs). **RED TEAM (9da3cd0)**: RT-1 = 10 kills SOUND, 4
+      FLAWED (FSS-6 absent-not-falsified; B1 power catch-22 -> UNRESOLVED; S2a primary
+      label unearned, short-side UNRESOLVED; W5-C1 intended mechanism never realized);
+      quantified: tie-rule bias <=+0.06t, close-only extreme +1.3-1.6t still leaves all
+      kills negative; NO flaw flips any sign; 4 text conditions imposed on any par.34
+      declaration. **RT-2 = CLOSURE NOT YET SUPPORTED**: C5 matrix verified to lack
+      VWAP/value, PDH/PDL/gap, event flags, ES signed flow; all readouts RTH-only so
+      08:30 releases structurally untested; names FSS-9 (EVI 1), E1 events (EVI 2),
+      ES-signed-flow H-D1 (EVI 3), open-drive (EVI 4), gap-context (EVI 5).
+- [ ] **W7 IN FLIGHT (spec frozen 1d76c14)**: C5b augmented ceiling (+VWAP/PD-levels/
+      event/ES-flow blocks, same-sample), FSS-9 sweep-reclaim at dynamic/prior levels,
+      E1 events (tick descriptive n<=4 + minute-powered 08:30 study with placebo).
+      par.9 verdict AFTER W7: closure iff C5b < 5pp everywhere AND FSS-9 fails plateau,
+      with RT-1's four text conditions; any survivor -> conversion spec instead.
+      Deferred open items (not closure blockers): H-D3@1min retest (needs 1-min
+      exporter), S2a Tier-1 read, B1 2005+ extension, B-momentum build spec (gate
+      passed W5-B2).
 - [x] (superseded record) **W5 (three programs, specs frozen before readout — specs/W5_programs_wave.md)**:
       A1 robust sizing FRONTIER (ledger-only, scenario grid, no single fraction as
       truth). B1 overnight 16:44→09:30 first pass (2022-2026 3-min data) + measured
