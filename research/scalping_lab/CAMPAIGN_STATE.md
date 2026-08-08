@@ -161,9 +161,16 @@
       Holdout and confirmation pool never read — intact.
 - [x] **OWNER SCOPE RULING (2026-08-08): NQ ONLY this phase** — cross-asset r-screen
       (GC/CL/RTY/ZN) DEPRIORITIZED ("先把一个做好最到极致"); recorded in W9 spec.
-- [ ] **W8 IN FLIGHT (spec cf7041f)**: B-MOM build (gate passed), B-FADE
-      characterization (honesty clause), A-EXIT patient execution (Arm A/B), ROLE-B
-      per-trade micro-state feasibility.
+- [x] **PHASE COMPLETE (2026-08-08). Everything runnable has been run.** W8: B-MOM
+      first-ever CI_lo>0 economics but rho-gate fail; B-FADE characterized; A-EXIT
+      passive track closed (n=31 CI spans 0); ROLE-B weak-negative. W9: B1 marginal
+      (orchestrator declined the bootstrap-fragile freeze), H-D3 CLOSED FINAL,
+      B-FADE OOS = 1/30th of IS -> parked-possibly-recent. W10: B-MOM REGIME-LOCAL
+      (PF 1.013 on 16 unseen years; recon exact) -> parked, rho-relaxation withdrawn.
+      **Program B final: 3 parked candidates (B-MOM, B-FADE, B1), 0 frozen, all
+      forward-monitored.** Remaining work requires: forward data (Program-B re-read
+      >= 2027-08; Solar MONITOR-01 #2 >= 2026-11-01), an NT8 F5 (v3 exporter,
+      completeness only), or new owner direction.
 - [ ] **W9 QUEUED (spec frozen; NT8 restarted, exporters live)**: NQ 1-min 2005→2026-05
       export running (nq1m_2005_202605) → W9-1 B1 overnight 2005+ resolution (RT-1
       prescription, power-adequate verdict), W9-2 H-D3@1min (the ONE reserved
