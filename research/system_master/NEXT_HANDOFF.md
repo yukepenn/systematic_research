@@ -4,21 +4,23 @@ _Written per V4.1 §0. If this session ends, the next invocation resumes HERE af
 repository-truth ritual. HEAD at write time: 547d2d4 (+ wave-3 results at 140f76c, all pushed)._
 
 ## In flight RIGHT NOW
-1. **Wave-9 workflow** (`wf_b0bbf5a0-66d`, script smv2-wave9-wf_b0bbf5a0-66d.js): SMV2AB
-   Engine-3 slate 4, first cross-market candidates (seq 410-412), red-teamed. Spec frozen at
-   0da78b6, unread. Wave-8 (SMV2AA) completed CLEANLY, zero red-team issues, fully
-   ingested/pushed at 5fd1446: the mandatory leg-asymmetry diagnostic KILLED before any policy
-   cell ran — Solar and B-MOM move TOGETHER during the sigma460+ER150-flagged weeks (asymmetry
-   ratio 1.04 vs the 1.3 bar required), confirming a joint-regime-factor whipsaw, not an
-   asymmetric one. This closes the WHOLE smoothness-exposure-timing family (SMV2N, SMV2V,
-   SMV2Z, SMV2AA — 4/4 independently-designed attempts, all honestly killed) with a coherent
-   explanation rather than four unrelated dead ends: you cannot fix these weeks by re-timing
-   or re-weighting the SAME TWO ENGINES, because there is nothing asymmetric between them to
-   exploit during exactly the weeks that matter. Per that synthesis, wave-9 pivots to the
-   correct next lever — a genuinely THIRD, uncorrelated return source — using the ES/RTY/YM
-   cross-market substrates exported earlier this session (SM1M_ES/RTY/YM), now unblocked and
-   committed. Design target is sharper than slates 1-3: does the candidate earn (or stay flat)
-   SPECIFICALLY during the SMV2Z 23 flagged weeks, not just generic bad weeks.
+1. **Wave-10 workflow** (`wf_fa7d024d-6c3`, script smv2-wave10-wf_fa7d024d-6c3.js): SMV2AC
+   Level-1 interpretable ML screen (seq 413-414), red-teamed. Spec frozen at 2bf5a4f, unread.
+   Wave-9 (SMV2AB) completed cleanly (2 trivial arithmetic corrections applied, non-outcome-
+   affecting), fully ingested/pushed at 91d54db: the first cross-market Engine-3 slate (ES/NQ
+   dispersion catch-up, duration-spread shock reaction, quarterly roll basis convergence) ALL
+   KILLED — 12/12 Engine-3 candidates now dead across 4 slates. Key refinement discovered: the
+   23 sigma460+ER150-flagged joint-whipsaw weeks are actually HIGHER-PnL on average for the
+   champion (+$2,465.90/wk vs +$652.10/wk elsewhere) — high-variance weeks that have net
+   helped the champion so far, not simply losing weeks; sharpens (doesn't contradict) the
+   wave-7/8 finding. Per V4's complexity ladder (§30), with all univariate states now
+   exhausted on both targets (daily Solar-PnL and weekly-downside), wave-10 escalates to the
+   licensed next step: a joint Level-1 interpretable model (regularized logistic on the 5
+   already-computed features, walk-forward CV with 1-week embargo per V4 §31 hygiene) testing
+   whether combining features reveals an interaction the univariate JOB1 tests structurally
+   could not see. Promotion gate: beats an ER150-only baseline at the same 0.85-confidence bar
+   used throughout the program, on OOF log-loss. No policy attempted this wave regardless of
+   outcome — informed by SMV2Z/AA's finding that blanket exposure cuts fail on this axis.
 2. **DONE**: ES/RTY/YM 1-minute cross-market context substrates all exported, verified, and
    committed (SM1M_ES/RTY/YM_SUBSTRATE, pushed at 3151800). Instrument names resolved cleanly
    as ESU6/RTYU6/YMU6. Engine-3 slate 4 (cross-market lead-lag, ranked candidates in
