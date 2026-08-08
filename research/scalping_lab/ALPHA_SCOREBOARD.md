@@ -37,3 +37,17 @@ W5 queue (highest EVI): W5-1 deep-pullback/clean-entry family (from W4-E contras
 ret30 −15t + eff60 + flow alignment); FSS-10 ES conditional lift (pipeline confirmed,
 archival running); fast FSS-2 (5–30s clocks); FSS-6/7; ML conditional quality (§23)
 once any base exists.
+
+## Program status (2026-08-08, post-W8)
+- **B-MOM: the first CI_lo>0 economics in the campaign** (PF 1.21, +47.9t/trade, C1 AND
+  C2, positive every year, Sharpe 1.26) — NOT PROMOTED: rho_full 0.347 vs frozen <0.3
+  gate (losing-day rho 0.046 passes). Parked; any correlation-targeting successor needs
+  a new spec.
+- B-FADE: characterized (placebo negative; 60min CI_lo>0 NFP-driven; 2025 failed;
+  concentration heavy). Confirmation = 2006-2021 minute + historical calendar (both in
+  flight). Decay-amended four-way verdict governs.
+- A-EXIT passive track: CLOSED by frozen rule (Arm A points +2.3/+3.5t but n=31 CI
+  spans zero; Arm B negative as predicted).
+- ROLE-B: weak-negative (rv60 axis in-sample; OOF AUC 0.447 null). No filter.
+- W9 in flight: B1 2006+ resolution (decay-aware), H-D3@1min final. W9-3 pending
+  calendar. Minute substrate: 6.47M bars 2006-01-05..2026-05-29 (hash dfd017ef).
