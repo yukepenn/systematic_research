@@ -1,5 +1,10 @@
 # I-1 Spread-State Map & I-2 Roll-Bounce — FULL READOUT (37 L2 sessions)
 
+> STATUS UPDATE 2026-08-08: the I-1 spread map SURVIVED the W1-0b BBO integrity audit
+> (sync-only vs unrestricted reconstruction identical medians) and is CONFIRMED
+> (provisional pending optional Tick Replay T4). Trade-time exact BBO pairing did NOT pass
+> (±1 tick same-ms ambiguity) — see w10b_bbo_audit_report.md.
+
 Date: 2026-08-08 (session basis 08-07). Spec: `specs/W1-0_instrumentation.md`. Inputs:
 Layer-0 substrate, 37 L2 sessions 2025-08-14 → 2026-05-20. Per-session tables:
 `i1_spread_by_session_hour.csv`, `i2_roll_bounce.csv`.
