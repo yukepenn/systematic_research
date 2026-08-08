@@ -1,0 +1,115 @@
+==============================================================================
+W9-1  B1 overnight premium — the 2006+ resolution (amended decay-aware verdict)
+Spec frozen at d7dfdad (incl. decay amendment) BEFORE this readout.
+==============================================================================
+Bars loaded: 6466783 rows raw; 6466783 kept after dev-window truncation at 2026-06-01 00:00:00 (exclusive); 0 rows dropped unread.
+Bar stamp range kept: 2006-01-05 08:59:00 -> 2026-05-29 16:59:00 (exchange ET, END-stamped; verified: evening opens stamp 18:01, closes 17:00)
+Sessions: 5262 (18:00 ET prior day -> 17:00 ET session date; stamp>17:00 => next session date)
+
+Entry construction: last bar <= 16:45 ET, staleness <= 30 min.
+  sessions with an afternoon bar: 5192; accepted entries: 5066; dropped for staleness (early closes): 126
+  entry staleness: exactly 16:45 stamp 4424 | (0,5] min 285 | (5,30] min 357  (the (5,30] block is dominated by pre-Nov-2012 Fridays closing 16:15 ET)
+  (5,30]-stale entries by year: 2006:62, 2007:52, 2008:51, 2009:46, 2010:49, 2011:51, 2012:45, 2016:1
+Sessions with a bar stamped >= 09:30 on the session date: 5244
+
+Nights formed: 5048 (2006-01-06 -> 2026-05-29)
+  weekend/holiday spans (>24h hold): 1023
+  gross per-night sigma (FULL sample): 310.962 t; 8-sigma threshold: 2487.7 t
+  8-sigma roll/outlier nights flagged: 4
+    2024-08-02 16:45:00 -> 2024-08-05 09:30:00: gross -3852.0 t (hold 64.8 h)
+    2025-01-24 16:45:00 -> 2025-01-27 09:30:00: gross -3109.0 t (hold 64.8 h)
+    2025-05-09 16:45:00 -> 2025-05-12 09:30:00: gross +3151.0 t (hold 64.8 h)
+    2026-04-07 16:45:00 -> 2026-04-08 09:30:00: gross +3139.0 t (hold 16.8 h)
+
+--- Per-night expectancy (ticks/night), night-clustered 95% bootstrap CI, 1000 draws, seed 20260808 ---
+                                 group  n_nights  gross_mean_t  net2.0_mean_t  net2.0_ci_lo  net2.0_ci_hi  net2.872_mean_t  net2.872_ci_lo  net2.872_ci_hi  hit_rate_net2.0  std_gross_t  median_net2.0_t
+            ALL nights (unconditional)      5048        10.369          8.369         0.121        16.641            7.497          -0.997          15.421            0.540      310.962            7.000
+            ALL excl. 8-sigma outliers      5044        10.510          8.510         0.302        16.086            7.638          -0.434          15.433            0.540      296.630            7.000
+                       block 2006-2009       975         1.246         -0.754        -3.637         2.163           -1.626          -4.422           1.487            0.515       46.889            2.000
+        block 2006-2009 excl. outliers       975         1.246         -0.754        -3.534         2.289           -1.626          -4.678           1.401            0.515       46.889            2.000
+                       block 2010-2013       991         4.843          2.843        -0.395         6.372            1.971          -1.442           5.588            0.552       57.535            6.000
+        block 2010-2013 excl. outliers       991         4.843          2.843        -0.925         6.334            1.971          -1.507           5.623            0.552       57.535            6.000
+                       block 2014-2017       993         4.461          2.461        -3.728         8.519            1.589          -4.765           7.507            0.544       99.778            7.000
+        block 2014-2017 excl. outliers       993         4.461          2.461        -3.725         8.339            1.589          -4.798           7.760            0.544       99.778            7.000
+                       block 2018-2021       996        20.799         18.799        -2.176        38.304           17.927          -3.000          38.168            0.567      330.012           32.000
+        block 2018-2021 excl. outliers       996        20.799         18.799        -2.004        37.859           17.927          -3.460          38.689            0.567      330.012           32.000
+                    block 2022-2026-05      1093        19.380         17.380       -17.724        51.126           16.508         -19.228          51.208            0.525      577.373           27.000
+     block 2022-2026-05 excl. outliers      1089        20.067         18.067       -13.819        50.648           17.195         -11.953          48.469            0.525      542.085           27.000
+          pre-2015 (exit < 2015-01-01)      2210         3.653          1.653        -0.458         3.893            0.781          -1.512           3.258            0.539       54.241            4.500
+            2015+ (exit >= 2015-01-01)      2838        15.599         13.599        -2.035        28.140           12.727          -2.943          27.983            0.542      411.910           16.000
+                             year 2006       235         2.826          0.826        -2.188         3.898           -0.046          -3.570           3.057            0.511       24.953            2.000
+                             year 2007       246         2.728          0.728        -4.130         6.033           -0.144          -5.624           5.311            0.504       41.502            1.000
+                             year 2008       251        -4.542         -6.542       -15.333         1.828           -7.414         -16.220           0.857            0.486       68.466           -4.000
+                             year 2009       243         4.198          2.198        -2.928         7.088            1.326          -3.740           6.494            0.560       40.156            4.000
+                             year 2010       250         5.252          3.252        -2.901        10.064            2.380          -3.780           8.656            0.548       49.544            4.500
+                             year 2011       251         2.088          0.088        -9.323         8.126           -0.784          -9.383           7.829            0.542       71.599            6.000
+                             year 2012       246         5.329          3.329        -2.996         9.826            2.457          -4.807           9.197            0.549       54.295            6.000
+                             year 2013       244         6.766          4.766        -1.845        11.018            3.894          -2.738          10.550            0.570       52.085            8.000
+                             year 2014       244         8.439          6.439        -1.831        14.681            5.567          -2.278          14.292            0.582       66.288            9.000
+                             year 2015       249         1.647         -0.353       -17.984        15.296           -1.225         -18.043          14.737            0.530      130.612            7.000
+                             year 2016       251        -3.725         -5.725       -18.178         7.937           -6.597         -20.354           8.022            0.482      112.654           -4.000
+                             year 2017       249        11.631          9.631         0.368        18.522            8.759           0.287          17.584            0.582       74.307           14.000
+                             year 2018       248         5.427          3.427       -18.611        25.118            2.555         -20.013          23.434            0.512      172.112            6.000
+                             year 2019       249        16.257         14.257       -10.544        35.811           13.385          -9.603          34.072            0.578      185.344           32.000
+                             year 2020       249        34.755         32.755       -35.209        95.838           31.883         -27.952          92.093            0.586      504.438           53.000
+                             year 2021       250        26.672         24.672       -18.633        66.794           23.800         -15.233          66.671            0.592      343.038           60.000
+                             year 2022       250       -46.836        -48.836      -115.573        26.007          -49.708        -116.989          19.699            0.444      558.622          -63.000
+                             year 2023       246         7.622          5.622       -36.169        47.153            4.750         -32.744          45.627            0.524      329.216           20.000
+                             year 2024       249        69.040         67.040        -0.967       135.749           66.168          -2.163         130.094            0.570      527.788           71.000
+                             year 2025       247        42.607         40.607       -46.130       135.168           39.735         -45.208         136.213            0.563      715.653          101.000
+                             year 2026       101        32.683         30.683      -127.635       174.844           29.811        -126.801         186.440            0.525      792.486           64.000
+                COND prior RTH ret < 0      2286         9.965          7.965        -6.868        21.818            7.093          -6.456          20.792            0.540      342.270            7.000
+COND prior RTH ret < 0, excl. outliers      2283        11.647          9.647        -3.443        22.356            8.775          -4.110          22.262            0.541      319.652            7.000
+        complement: prior RTH ret >= 0      2762        10.703          8.703        -1.742        18.878            7.831          -3.092          17.813            0.541      282.500            7.000
+      SENS: top-10 best nights removed      5038         5.938          3.938        -4.609        11.830            3.066          -4.998          10.989            0.539      294.167            7.000
+
+(prior-RTH conditional defined on nights whose ENTRY session has a >=09:30 bar: 5048/5048 nights)
+Top-10 best nights sum: +22407.0 t = 53.0% of total net +42246.0 t
+
+--- RECONCILIATION vs W5-B1 (3-min substrate, artifacts/w5_b1/w5b1_summary.csv) ---
+W5-B1 frozen ALL row : net(2.0t) mean = +17.211 t/night on n = 1092
+W9 2022+ subset      : net(2.0t) mean = +17.380 t/night on n = 1093 (hit rate 0.5252, median 27.0 t)
+difference = +0.169 t (declared tolerance +/-1.5 t): RECONCILED
+
+--- Time trend: nightly net(2.0t) ~ night index, OLS with HC1-robust t ---
+ALL nights      : slope = +0.006575 t/night-step (+1.657 t/yr-of-nights), HC1 t = +1.686, intercept = -8.224 t
+excl. outliers  : slope = +0.006584 t/night-step (+1.659 t/yr-of-nights), HC1 t = +1.801, intercept = -8.092 t
+significant NEGATIVE trend (slope<0 and t<=-1.96) on ALL nights: False
+Rolling 730D mean of net(2.0t): first 2006-11-03 = +1.085 t; min -29.442 t (2023-10-26); max +64.456 t (2025-10-29); last 2026-05-29 = +50.522 t
+Share of rolling-mean observations below zero: 0.335
+
+Solar ledger: runs\E10MASTER_V2\out\daily_v1_v2.csv — net_v1 (E10MASTER_V1 frozen research champion); 1139 sessions kept < 2026-06-01.
+Overlapping dates (night exit session == Solar sess): 1093 (2022-01-03 -> 2026-05-29)
+
+--- Correlation: overnight nightly P&L (net 2.0t, $/night, 1 NQ) vs Solar daily P&L (net_v1, $) ---
+                             subset    n  pearson_rho  spearman_rho
+                       full overlap 1093       0.0150        0.0721
+     Solar losing days (net_v1 < 0)  644       0.1624        0.1782
+full overlap excl. 8-sigma outliers 1089       0.0492        0.0787
+   Solar losing days excl. outliers  643       0.1879        0.1831
+
+--- AMENDED VERDICT RULE (frozen d7dfdad; ALL four clauses required) ---
+(a) power   : full-sample net(2.0t) = +8.369 t/night (need >= +4.0), CI_lo = +0.121 t (need > 0): PASS
+(b) trend   : slope = +0.006575 t/night-step, HC1 t = +1.686 (FAIL iff slope<0 and t<=-1.96): PASS
+(c) recency : 2022->2026-05 block point estimate = +17.380 t/night (need > 0): PASS
+(d) overlap : Pearson rho vs Solar net_v1 (2022+ overlap) = +0.0150 (need < 0.3): PASS
+VERDICT: PROMISING
+Decay context: pre-2015 mean +1.653 t vs 2015+ mean +13.599 t; a pass driven by pre-2015 with a dying trend = FAIL.
+
+--- Fragility diagnostic (non-verdict): full-sample net(2.0t) CI_lo across seeds ---
+                      diagnostic  ci_lo   ci_hi
+               seed 1, 1000 reps -0.437 +17.282
+               seed 2, 1000 reps -0.561 +17.005
+               seed 3, 1000 reps +0.197 +17.132
+               seed 4, 1000 reps -0.183 +16.639
+               seed 5, 1000 reps +0.055 +17.693
+               seed 6, 1000 reps -0.143 +16.362
+               seed 7, 1000 reps -0.836 +16.707
+               seed 8, 1000 reps -0.439 +16.832
+               seed 9, 1000 reps -0.357 +16.619
+              seed 10, 1000 reps -0.757 +16.572
+frozen seed 20260808, 10000 reps -0.338 +17.059
+CI_lo > 0 in 2/11 diagnostic draws (frozen-rule CI_lo = +0.121 t governs the verdict)
+Plain t-stat of the full-sample mean: +1.912 (mean +8.369 t, sd 310.962 t, n 5048) — the clause-(a) boundary sits inside Monte-Carlo noise of the 95% CI edge.
+
+Artifacts written to research\scalping_lab\artifacts\w9_b1: w9b1_nightly.csv, w9b1_summary.csv, w9b1_blocks.csv, w9b1_trend.csv, w9b1_rolling_2y.csv, w9b1_correlation.csv, w9b1_reconcile_w5.csv, w9b1_ci_fragility.csv, w9b1_stdout.txt
