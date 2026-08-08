@@ -44,7 +44,7 @@ anything, understated). Pre-2012 session structure differs (gap-based session de
 Back-adjustment offsets cancel in the difference-based engine. MNQ scalar anachronistic
 pre-2019 (research basis only).
 
-Outputs: `e10_daily_hist.csv` (4,130 sessions), `member_trades_hist.parquet` (~114k
+Outputs: `e10_daily_hist.csv` (4,130 sessions), `member_trades_hist.parquet` (85,599
 trades), `vote_state_3m_hist.parquet`, `result.json`.
 
 ## SM06b addendum — overshoot ratio + σ-viability (zero burn)
