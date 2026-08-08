@@ -4,20 +4,21 @@ _Written per V4.1 §0. If this session ends, the next invocation resumes HERE af
 repository-truth ritual. HEAD at write time: 547d2d4 (+ wave-3 results at 140f76c, all pushed)._
 
 ## In flight RIGHT NOW
-1. **Wave-8 workflow** (`wf_2376b0d3-a7e`, script smv2-wave8-wf_2376b0d3-a7e.js): SMV2AA
-   Solar/BMOM mix-shift diagnostic+policy (seq 406-409), red-teamed. Spec frozen at f6fb7d1,
-   unread. Wave-7 (SMV2Z) completed CLEANLY and is fully ingested/pushed at 4eda9af: the
-   blanket exposure-cut policy on the SMV2Y viability states FAILED DECISIVELY (CDaR got
-   WORSE at every cell) because the flagged weeks hold 30.3% of TOTAL net PnL on 9.9% of days
-   — they are high-VARIANCE weeks, not just high-downside weeks. SMV2AA tests a structurally
-   different mechanism: reallocating WEIGHT between Solar/BMOM during flagged weeks (equal-vol
-   basis, total risk stays on) instead of cutting total exposure. It has a MANDATORY
-   prerequisite diagnostic (406, leg-asymmetry) with an explicit honest-stop path — if the two
-   legs respond symmetrically to the flag, the policy cells (407-409) do not run at all, and
-   that is a complete, valid, spec-compliant outcome, not partial work. If BOTH this and the
-   three prior exposure-based attempts (SMV2N/V/Z) end up failing, smoothness-policy work on
-   this diagnostic family should be considered exhausted pending a genuinely new mechanism —
-   but every one of these attempts has produced real, honestly-reported information regardless.
+1. **Wave-9 workflow** (`wf_b0bbf5a0-66d`, script smv2-wave9-wf_b0bbf5a0-66d.js): SMV2AB
+   Engine-3 slate 4, first cross-market candidates (seq 410-412), red-teamed. Spec frozen at
+   0da78b6, unread. Wave-8 (SMV2AA) completed CLEANLY, zero red-team issues, fully
+   ingested/pushed at 5fd1446: the mandatory leg-asymmetry diagnostic KILLED before any policy
+   cell ran — Solar and B-MOM move TOGETHER during the sigma460+ER150-flagged weeks (asymmetry
+   ratio 1.04 vs the 1.3 bar required), confirming a joint-regime-factor whipsaw, not an
+   asymmetric one. This closes the WHOLE smoothness-exposure-timing family (SMV2N, SMV2V,
+   SMV2Z, SMV2AA — 4/4 independently-designed attempts, all honestly killed) with a coherent
+   explanation rather than four unrelated dead ends: you cannot fix these weeks by re-timing
+   or re-weighting the SAME TWO ENGINES, because there is nothing asymmetric between them to
+   exploit during exactly the weeks that matter. Per that synthesis, wave-9 pivots to the
+   correct next lever — a genuinely THIRD, uncorrelated return source — using the ES/RTY/YM
+   cross-market substrates exported earlier this session (SM1M_ES/RTY/YM), now unblocked and
+   committed. Design target is sharper than slates 1-3: does the candidate earn (or stay flat)
+   SPECIFICALLY during the SMV2Z 23 flagged weeks, not just generic bad weeks.
 2. **DONE**: ES/RTY/YM 1-minute cross-market context substrates all exported, verified, and
    committed (SM1M_ES/RTY/YM_SUBSTRATE, pushed at 3151800). Instrument names resolved cleanly
    as ESU6/RTYU6/YMU6. Engine-3 slate 4 (cross-market lead-lag, ranked candidates in
