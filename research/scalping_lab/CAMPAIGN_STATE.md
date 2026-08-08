@@ -37,9 +37,16 @@
       2-7% of time** → honest market-order RT ≈ 3-4 ticks; C1 mildly optimistic. Substrate
       architecture adopted (DATA_SUBSTRATE.md, Amendment 2). Session-keying rule learned.
       artifacts/instrumentation/pilot_report.md.
-- [ ] NEXT: one NT8 F5 → SWScalpTickExport_v1 live → 40-session Layer-0 build →
-      I-1/I-2/I-3-full readouts → Layer-1 grids → Z1 + excursion surfaces (P(+A before −B))
-      + H-B5 + S2a. H-B5 3-min screen may run pre-substrate (no engine needed).
+- [x] **LAYER-0 SUBSTRATE BUILT (2026-08-07)**: 40/40 stratified dev sessions exported
+      (341M rows -> 1.05GB zstd parquet, substrate/raw/NQ/, MANIFEST.csv). L2 coverage
+      37/40 (L1-only: s20250811 pre-boundary, s20250924 + s20260430 server holes; L2
+      server depth starts 2025-08-12..14). 13 high-vol sessions truncated at the 12M cap
+      (afternoons missing — second pass with RTH trading-hours template queued). Server
+      Bid/Ask is a ROLLING ~1yr window: oldest quotes can vanish — backfill remaining
+      ~168 dev sessions opportunistically, oldest first.
+- [ ] NEXT: capped-session RTH second pass → Layer-1 state grids (250ms/1s/5s) →
+      I-1 full spread map + I-2 Roll-bounce + I-3-full sync audit → Z1 mid-price DC
+      ladder → excursion surfaces P(+A before −B) → H-B5 → S2a.
 - [ ] P2: Freeze split geometry in CONTAMINATION_LEDGER.md (after P1c)
 - [ ] P3: Event-study factory (Tier-0): first wave candidates = Z1 (DC scale transfer,
       L1-only, tooling exists), S10 (spread state — foundational for all costs), Z2
