@@ -1,0 +1,65 @@
+run_id: SMV2AI_ATR_BLEND
+date_frozen: 2026-08-08
+class: R1_FAMILY_TEST + DIAGNOSTIC   # Expansion-pass candidate #3 (from
+  # deep_research/DR_V4_SOLARCORE_EXPANSION_20260808.md, EVI 4): sigma460 is CLOSE-ONLY by
+  # construction (trailing mean of |Δclose|) and structurally cannot see intrabar wicks --
+  # a fast intrabar spike-and-reversal shows up in sigma460 only via its effect on the NEXT
+  # close-to-close diff, one bar late, and is invisible entirely if price round-trips within
+  # a single 3-minute bar. An ATR-style true-range estimator captures this directly. This is
+  # a DIFFERENT axis from SMV2AD/AG (which changed the clamp CEILING) and from SMV2AE/AF
+  # (which changed the CLOCK) -- this changes what sigma MEASURES, holding the VolMult
+  # mechanism, clamp bounds, and 3-minute clock all fixed.
+seq: [430, 431, 432]
+
+simulator: src/analytics/sm01_solarsim.py member_states()/e10_target()/E10 executor,
+  UNMODIFIED except the sigma input swapped as described below. Baseline reference (verified,
+  do not re-derive): S = clamp(VolMult*sigma460, 10.0pt, 300.0pt); sigma460 = causal trailing-
+  460-bar mean of |Δclose| (min_count=30 warmup). Dev window 2022-01-03 -> 2026-05-29.
+
+sub_430_atr_construction_and_scale_measurement (DIAGNOSTIC, precedes any re-simulation):
+  build ATR460 = causal trailing-460-bar mean of true range, TR_t = max(high_t - low_t,
+  |high_t - close_{t-1}|, |low_t - close_{t-1}|), same warmup/min_count=30 convention as
+  sigma460 for exact comparability. Then measure R_atr = the empirical point-scale ratio
+  ATR460 / sigma460 over the identical dev calendar (median, p1/p10/p50/p90/p99, and per-year,
+  mirroring SMV2AE sub_418's exact methodology -- ATR is structurally >= |Δclose| in
+  expectation since it also captures the high-low range, so R_atr > 1 is expected; this is
+  disclosed, not treated as a result). Define sigma_ATR_eff = ATR460 / R_atr (median-rescaled
+  so its typical magnitude matches sigma460's, isolating "does capturing intrabar range help"
+  from "is a bigger number always going to change behavior"). PRE-REGISTERED RULE: use the
+  whole-dev-period MEDIAN R_atr, identical discipline to SMV2AE sub_418 -- do not re-pick after
+  seeing sub_431's results.
+
+sub_431_replace_and_blend_sweep (4 arms, 13-member VMS unchanged, clamp [40,1200]t unchanged):
+  arm_REPLACE: S = clamp(VolMult * sigma_ATR_eff, 10.0pt, 300.0pt) -- sigma460 entirely
+    replaced by the rescaled ATR estimator.
+  arm_BLEND_25/50/75: S = clamp(VolMult * (w*sigma460 + (1-w)*sigma_ATR_eff), 10.0pt, 300.0pt)
+    for w in {0.75, 0.50, 0.25} (w=weight on the incumbent close-only sigma460; lower w = more
+    ATR-weighted). Three preregistered blend cells, no finer search.
+  control: incumbent (w=1.0, i.e. pure sigma460) -- reuse runs/SMV2AD_VOLMULT_CEILING/out/
+    e10_daily_dev_control_1200.csv verbatim, do not re-simulate.
+  report per arm: standalone net/Sharpe/maxDD/CDaR_0.95/top-10-day-sum/turnover; portfolio
+    blend (DAYONLY_DUAL6040 60/40, Solar leg swapped, B-MOM leg unchanged, same reuse
+    convention as SMV2AD/AG's common.py); ALSO report each arm's flip-count and mean holding
+    period vs control (ATR is structurally noisier intrabar -- check whether this mechanically
+    increases churn independent of any Sharpe/CDaR effect, a confound worth disclosing even if
+    the AND-rule below doesn't require it).
+  verdict rule (CANDIDATE): identical AND-rule to every other core-challenge spec this wave-
+    class (Sharpe AND CDaR_0.95 improve vs the sigma460-only control AND top-10-day retention
+    >=95%). No adoption this wave regardless of outcome; a CANDIDATE earns an R2_CONFIRMATION
+    spec later (SMV2R->SMV2T precedent).
+
+sub_432_old_regime_screen (DIAGNOSTIC, conditional on >=1 CANDIDATE from sub_431, identical
+  contingency structure to SMV2AD/AG/AH): rebuild each qualifying candidate on the SM06
+  2006-2021 hist substrate (3-minute resolution; high/low data required for TR -- VERIFY the
+  committed hist substrate carries OHLC not close-only before attempting, report BLOCKED-BY-
+  DATA if it does not, do not approximate high/low from close-only data). Floor net >=
+  incumbent - $10k AND maxDD <= 1.25x incumbent (same floor used throughout). If zero
+  candidates qualify, explicitly N/A (disclosed via status=NONE_QUALIFIED).
+
+kill_or_keep: if ZERO arms across sub_431 qualify -> ATR/range-blended threshold estimation is
+  CONFIRMED-NOT-BENEFICIAL for this system, record in CURRENT_TRUTH, close -- no third bite at
+  this specific mechanism without a new construction. If >=1 arm qualifies -> queue an
+  R2_CONFIRMATION spec (SMV2T-style full battery) next wave -- no adoption here.
+outputs: out/atr_construction.csv, out/scale_ratio_atr.csv, out/replace_blend_sweep.csv,
+  out/churn_comparison.csv, out/portfolio_blend.csv, out/old_regime_screen.csv, out/gates.csv,
+  REPORT.md

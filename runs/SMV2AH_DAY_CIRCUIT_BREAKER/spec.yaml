@@ -1,0 +1,103 @@
+run_id: SMV2AH_DAY_CIRCUIT_BREAKER
+date_frozen: 2026-08-08
+class: R1_FAMILY_TEST + DIAGNOSTIC   # Owner question (2026-08-08, mid-wave-12): "do we have
+  # a day-loss-limit / cut-loss / circuit-breaker of any kind, and does it matter?" Audit
+  # (this session) confirmed: neither deployed strategy has a resting stop, daily loss limit,
+  # or kill-switch in code (only session-close flatten + the 16:39-18:00 ops rule). EVERY
+  # classic exit/stop idea tested in this program (SM03/SM03B disaster stops, split exits,
+  # resting stops, timed exits, trailing/break-even -- STOP_OVERLAY_FRONTIER.md) is DEAD, all
+  # for the same reason: those are PER-TRADE adverse-excursion stops, and the Solar state
+  # machine's own reversal logic already acts as one (SM03's stops literally never triggered
+  # in most arms because the Solar exit fires first). This spec tests something STRUCTURALLY
+  # DIFFERENT, confirmed never attempted under any name (full repo grep, this session): a
+  # PORTFOLIO-LEVEL, SAME-DAY running-P&L circuit breaker -- once today's cumulative
+  # mark-to-market loss crosses a threshold, halt for the rest of THAT session. This is not a
+  # per-trade MAE stop (SM03's mechanism) and not a cross-day streak throttle (SM02B's
+  # mechanism, found ANTI-EDGE) -- it is a same-day, whole-portfolio, running-loss trigger.
+  # DISCLOSED PRIOR RISK (do not let this bias the test): SM02B found next-DAY expectancy is
+  # HIGHER after a loss day, i.e. loss-reactivity has been anti-edge every time it's been
+  # tested in this program so far. This spec is honestly designed to find out if a same-day
+  # (not cross-day) trigger is different, not to confirm a preferred outcome either way.
+seq: [426, 427, 428, 429]
+
+data: dev window 2022-01-03 -> 2026-05-29, identical to every prior core-challenge run.
+  REQUIRES a genuinely new artifact not built by any prior run: an INTRADAY (bar-by-bar within
+  session) cumulative mark-to-market P&L series, not just the existing end-of-day curves. Build
+  this from the existing 3-minute bar target/fill series (src/analytics/sm01_solarsim.py's E10
+  executor already has bar-level fills and positions -- extend it to mark the OPEN position to
+  each bar's own close price, cumulative-sum realized trade P&L + running unrealized P&L,
+  RESET to zero at every session open). Verify this construction: session-end value of the
+  intraday MTM series must equal the existing end-of-day daily P&L to the cent, for every
+  session in dev -- this is a mandatory integrity check BEFORE any circuit-breaker logic runs
+  (if it does not reconcile exactly, the intraday MTM construction is wrong; fix it, do not
+  proceed on an unverified series).
+  Apply to TWO objects, tested independently: (A) the 3m-incumbent SOLAR_DUAL_HTF standalone
+  leg, (B) the DAYONLY_DUAL6040 60/40 portfolio (reuse the verbatim vm()/blend construction
+  from runs/SMV2AD_VOLMULT_CEILING/src/common.py) -- (B) is the actually-deployed product and
+  the primary read; (A) is reported for mechanism clarity.
+
+sub_426_threshold_calibration (DIAGNOSTIC, precedes any circuit-breaker simulation): compute
+  the empirical distribution of each object's WORST INTRADAY RUNNING DRAWDOWN PER SESSION
+  (min of the intraday cumulative MTM series within each session, not the session's final P&L
+  -- a session can recover from an intraday low to close positive). Report this distribution's
+  1st/2nd/5th/10th percentile (i.e. "how bad does the worst few percent of session-lows get").
+  PRE-REGISTERED RULE (decide before seeing sub_427's results): use these four percentiles
+  (1/2/5/10) AS the four threshold cells for sub_427 -- do not pick a different threshold after
+  seeing which one "works." Report separately for object A and object B (their scales differ).
+
+sub_427_circuit_breaker_sweep (4 thresholds x 2 halt-modes x 2 objects = 16 cells, small
+  preregistered grid, no finer search):
+  thresholds: the four percentile-derived dollar levels from sub_426 (per object, so object A
+    and object B use their OWN calibrated thresholds, not shared dollar figures).
+  halt_modes:
+    FREEZE: once the running intraday MTM first crosses below the threshold in a session, stop
+      INCREASING the net position for the rest of that session (the position can still shrink
+      or flip via the underlying Solar/B-MOM reversal signal itself, i.e. the existing exit
+      logic is not disabled) -- no NEW risk added, existing risk still managed by the normal
+      rule.
+    FLATTEN: once crossed, immediately flatten to zero and take NO further entries for the
+      rest of that session (hard stop, matching the owner's literal framing "stop trading for
+      the rest of the day").
+  mechanism: applied at the 3-minute bar level (the native decision cadence of both objects) --
+    the FIRST bar where cumulative intraday MTM < threshold triggers the mode for all
+    subsequent bars THAT SESSION ONLY; resets every session open exactly like every other
+    session-scoped rule in this program.
+  report per cell: net/Sharpe/maxDD/CDaR_0.95/worst-day/worst-month/top-10-day-sum/%-sessions-
+    triggered/mean-days-lost-to-halt. Compare against a PLACEBO of matched design (matching
+    SMV2N/V/Z/AA's own established convention for this exact class of policy test): for each
+    triggered session, a placebo halts at a RANDOM bar drawn from that session's own bar range
+    instead of the actual threshold-crossing bar (200 placebo paths, same trigger COUNT and
+    same halt_mode, seed=20260808) -- report whether the real threshold-triggered rule beats
+    the placebo's median outcome on CDaR/worst-day (a rule that "helps" only because halting
+    randomly mid-session already helps, regardless of WHEN, is not informative).
+  verdict rule (CANDIDATE): a cell qualifies only if it (i) improves CDaR_0.95 AND worst-day
+    vs the no-circuit-breaker control, (ii) beats its own matched-placebo's median CDaR AND
+    worst-day (not just beats "no breaker" -- must beat "halting randomly this often"), AND
+    (iii) retains >=95% of the control's top-10-day sum (the same right-tail-protection bar
+    used throughout this program -- a circuit breaker that clips winning days along with
+    losing ones is not free). No adoption this wave regardless of outcome; a CANDIDATE earns
+    an R2_CONFIRMATION spec later (SMV2R->SMV2T precedent).
+
+sub_428_old_regime_screen (DIAGNOSTIC, conditional on >=1 CANDIDATE from sub_427, identical
+  contingency structure to SMV2AD/SMV2AG): rebuild each qualifying cell on the SM06 2006-2021
+  hist substrate (3-minute resolution, sufficient here since this mechanism does not require
+  finer bars than the incumbent's own native cadence), floor net >= incumbent - $10k AND maxDD
+  <= 1.25x incumbent (SAME floor used throughout this program). If zero candidates qualify,
+  explicitly N/A (disclosed via status=NONE_QUALIFIED, not silently skipped).
+
+sub_429_mechanism_note (DIAGNOSTIC, always reported regardless of sub_427's outcome): for
+  object B (the portfolio), what fraction of triggered-session halts would have been triggered
+  by the Solar leg's own MTM vs the B-MOM leg's vs both simultaneously -- does a same-day
+  circuit breaker end up mostly reacting to one engine's bad days, which would be informative
+  context even if the policy itself does not qualify as a candidate (mirrors the diagnostic
+  discipline used in SMV2AA's leg-asymmetry check).
+
+kill_or_keep: if ZERO cells across sub_427 qualify as a CANDIDATE -> a same-day intraday
+  circuit breaker (in either halt mode, at any of the four calibrated thresholds) is
+  CONFIRMED-NOT-BENEFICIAL for this system, record in CURRENT_TRUTH, close -- this would be
+  fully consistent with (not contradicted by) SM02B's cross-day anti-edge finding, extending
+  it to same-day. If >=1 cell qualifies -> queue an R2_CONFIRMATION spec (SMV2T-style full
+  bootstrap/LOYO/old-regime/right-tail battery) next wave -- no adoption here.
+outputs: out/intraday_mtm_construction_check.csv (mandatory reconciliation proof),
+  out/threshold_calibration.csv, out/circuit_breaker_sweep.csv, out/placebo_comparison.csv,
+  out/old_regime_screen.csv, out/leg_attribution.csv, out/gates.csv, REPORT.md
