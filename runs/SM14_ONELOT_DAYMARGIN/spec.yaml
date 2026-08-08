@@ -1,0 +1,43 @@
+run_id: SM14_ONELOT_DAYMARGIN
+program: system_master
+type: R1_EXPERIMENT (derived operational variant of the frozen winner)
+date_frozen: 2026-08-08
+registry_seq: 316-319
+motivation: >
+  Owner request 2026-08-08: single-contract (1 MNQ primary / 1 NQ reported),
+  flat before 16:45 ET (day-margin reality), easy to trade. Derivation rule:
+  collapse the WINNER's consolidated MNQ target to a sign-with-hysteresis
+  1-lot rule. B1 leg is dropped by construction (overnight-only); no
+  re-weighting search - the winner's frozen contract arithmetic is used as-is.
+combined_target: >
+  M_t = 0.7086 * Tprime_t + 2.83 * B_t   (MNQ units; frozen winner arithmetic)
+  where Tprime = clip(round(T * m * 0.9026), +/-13), T = round(10*mean member
+  pending pos), m = 1.25 iff sign(vote)==daily-SMA50 state else 1.0 (SM08
+  frozen); B = frozen B-MOM position in {-1,0,+1} (sm_bmom semantics).
+rule: >
+  Decisions at 3-min bar close, fills next bar open +/- 1 tick:
+  LONG 1 when M >= a and flat; SHORT 1 when M <= -a and flat;
+  EXIT to flat when (long and M <= b) or (short and M >= -b);
+  direct flip allowed when opposite entry level is crossed.
+  DAY-MARGIN OPS: no new entries on decision bars with time >= 16:30 ET;
+  forced exit decided at the 16:39 bar close (fill 16:42 open, before the
+  16:45 cutoff); trading resumes at decision bars >= 18:03.
+arms:  # preregistered (a, b) grid; plateau (>=2 adjacent same-sign) required
+  - {seq: 316, a: 2, b: 0}
+  - {seq: 317, a: 3, b: 0}
+  - {seq: 318, a: 3, b: 1}
+  - {seq: 319, a: 4, b: 1}
+costs: MNQ $0.65/side + 1 tick slip/execution (primary); NQ $2.18/side + 1 tick (reported)
+evaluation: >
+  Dev 2022-01..2026-05-31 primary (NOTE: no clean OOS exists for this variant -
+  the 2026-06/07 holdout is CONSUMED and post-06 results are characterization
+  only, reported separately). sm_metrics suite; H1/H2; yearly table; trades/yr;
+  comparison anchors: 1-lot always-in sign(M) without hysteresis, and the
+  DM01 day-margin R5 precedent.
+gates_frozen:
+  - net > 0 after MNQ costs; >= 3/5 dev years positive; H1/H2 same sign
+  - no month > 40% of net; plateau across >= 2 adjacent (a,b) arms
+  - worst-month and maxDD (in $ on 1-MNQ scale) must beat the 1-lot
+    unconditional sign(M) anchor or match it within 10% with fewer trades
+burn: 4
+outputs: [runs/SM14_ONELOT_DAYMARGIN/out/results.csv, runs/SM14_ONELOT_DAYMARGIN/out/report.md, src/ninjascript/SolarWaveSMOneLot_v1.cs]
