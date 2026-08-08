@@ -54,7 +54,26 @@ substrate (SM01), then parallel tracks 1–8.
   both registries).
 - NT8 engine available via CrossTrade MCP for final parity runs only; all research in Python.
 
+## Key program facts established so far
+
+- **SM01 (substrate)**: pure-Python member+E10 simulator certified against NT8 —
+  GATE_A 4 diffs / 7.02M member-bar positions (boundary only), GATE_B 8/13 members
+  fill-perfect (rest boundary-only), GATE_C daily corr 0.9999968 vs audited champion,
+  GATE_D cross-source alignment exact zero. 34,147 dev trades + path anatomy + vote
+  states in `runs/SM01_SUBSTRATE/out/`.
+- **SM06 (Solar history)**: frozen champion on unseen 2006-2021 = **REGIME_LOCAL**
+  (net −$9.0k/16yr, 4/16 years positive, 2006-09 & 2010-13 CI_hi<0, profit only
+  2018-21). Solar and B-MOM are BOTH current-regime engines (symmetric evidence).
+  Overlay calibration is dev-only; 2006-2017 = adversarial stress window.
+- **SM06b**: σ-matched overshoot r > 1.1 in every year 2006-2026 (persistence never
+  vanished); regime driver is σ LEVEL (friction floor: 0/8 years positive below
+  σ₃ₘ=1.0); but σ is necessary-not-sufficient (2018/2019/2026-YTD negative at high σ).
+  **2026 Feb→Jun DD confirmed in-substrate: champion −$7.6k Jan-May 2026 at record σ.**
+
 ## Log
 
 - 2026-08-08: Program opened. Evidence map built (12 readers). Scaffold + CONVENTIONS
   frozen and committed before any new result read. Registry sequence resumes at 291.
+- 2026-08-08: SM01 substrate certified (4/4 gates). SM06+SM06b Solar-history read
+  (REGIME_LOCAL verdict, frozen rule). Wave SM-W1 launched (atlas, anatomy,
+  B-MOM portfolio, deep research).
