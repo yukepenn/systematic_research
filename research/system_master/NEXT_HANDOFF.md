@@ -1,26 +1,46 @@
-# NEXT_HANDOFF — exact continuation state (2026-08-08, after wave-3 close / wave-4 launch)
+# NEXT_HANDOFF — exact continuation state (2026-08-08, after wave-10 close / wave-11 launch)
 
 _Written per V4.1 §0. If this session ends, the next invocation resumes HERE after the §4
-repository-truth ritual. HEAD at write time: 547d2d4 (+ wave-3 results at 140f76c, all pushed)._
+repository-truth ritual. HEAD at write time: 2b2f88a (wave-11 specs frozen, pushed)._
+
+## Owner pivot (2026-08-08, mid-session)
+Owner flagged the smoothness/ML diagnostic run (waves 6-10) as having drifted from the actual
+goal ("went too far? we only want best nq or mnq strategies") and directed a step-back:
+investigate why 1-minute bars / non-90-179 params were abandoned (done, foreground Explore
+agent, see wave-11 motivation below), then explicitly re-authorized full autonomous chaining
+("我给你所有权限，不要问我问题了") with the standing goal restated: maximize risk-adjusted
+growth (Sharpe/DD), single NQ/MNQ finals should be flat before 16:45 (already true for both
+current deliverables), keep proposing genuinely NEW mechanism ideas (not just diagnostics),
+"other indicators", "other bar intervals" explicitly invited. This supersedes the earlier
+pause — resume auto-chaining per V4.1 §0, do NOT stop at close-out, do NOT ask before
+launching the next wave unless genuinely blocked.
 
 ## In flight RIGHT NOW
-1. **Wave-10 workflow** (`wf_fa7d024d-6c3`, script smv2-wave10-wf_fa7d024d-6c3.js): SMV2AC
-   Level-1 interpretable ML screen (seq 413-414), red-teamed. Spec frozen at 2bf5a4f, unread.
-   Wave-9 (SMV2AB) completed cleanly (2 trivial arithmetic corrections applied, non-outcome-
-   affecting), fully ingested/pushed at 91d54db: the first cross-market Engine-3 slate (ES/NQ
-   dispersion catch-up, duration-spread shock reaction, quarterly roll basis convergence) ALL
-   KILLED — 12/12 Engine-3 candidates now dead across 4 slates. Key refinement discovered: the
-   23 sigma460+ER150-flagged joint-whipsaw weeks are actually HIGHER-PnL on average for the
-   champion (+$2,465.90/wk vs +$652.10/wk elsewhere) — high-variance weeks that have net
-   helped the champion so far, not simply losing weeks; sharpens (doesn't contradict) the
-   wave-7/8 finding. Per V4's complexity ladder (§30), with all univariate states now
-   exhausted on both targets (daily Solar-PnL and weekly-downside), wave-10 escalates to the
-   licensed next step: a joint Level-1 interpretable model (regularized logistic on the 5
-   already-computed features, walk-forward CV with 1-week embargo per V4 §31 hygiene) testing
-   whether combining features reveals an interaction the univariate JOB1 tests structurally
-   could not see. Promotion gate: beats an ER150-only baseline at the same 0.85-confidence bar
-   used throughout the program, on OOF log-loss. No policy attempted this wave regardless of
-   outcome — informed by SMV2Z/AA's finding that blanket exposure cuts fail on this axis.
+1. **Wave-11 workflow** (`wf_dd749b21-786`, script smv2-wave11-wf_dd749b21-786.js), specs
+   frozen at 2b2f88a before any read:
+   - **SMV2AD_VOLMULT_CEILING** (seq 415-417): the 1200t/300pt upper clamp on the slowest
+     member (VolMult=30) binds 39.2% of Jan-May 2026 bars vs 9.8%/0.2%/3.9%/18.3% in
+     2022-2025 (SMV2R sub_381 clamp_audit.csv) — more binding NOW than any full historical
+     year, never acted on. Tests ceiling sweep (1200/1600/2000/2400t) + extended slow cohort
+     (VolMult 34-50, add-18 and replace-fastest-13 variants) + old-regime screen per
+     candidate. R1_FAMILY_TEST — no adoption this wave; qualifying candidate → R2 spec next.
+   - **SMV2AE_1MIN_RESCALE** (seq 418-419): SMV2U's 1-minute tests (both bar-matched and
+     time-matched sigma windows) reused the 3m VMS=[6..30] constants and clamp bounds
+     VERBATIM and both failed (friction 102-128% of gross). The one truly un-recalibrated
+     axis — VolMult's point-scale itself (1m |dClose| not point-comparable to 3m |dClose|) —
+     was never tested. Measures the actual empirical rescale ratio, re-tests with it. Screen
+     gate only (Sharpe>0 AND friction<0.60); fail closes 1-minute definitively (2
+     architectures × every calibration convention now exhausted).
+   - **Mechanism-expansion research pass** (no spec, read-only): ranked list of genuinely new
+     Solar-CORE (not Engine-3) adaptive-mechanism ideas analogous to what VolMult already
+     proved works, explicitly deduped against rejected_ideas.md and every closed lead in
+     CURRENT_TRUTH.md → `research/system_master/deep_research/DR_V4_SOLARCORE_EXPANSION_20260808.md`.
+   Both numerical specs get independent red-team verification in the same workflow. On
+   completion: ingest, correct any red-team-flagged issues in the run REPORTs (never spec.yaml),
+   update registry (seq 415-419) + CURRENT_TRUTH/SCORECARD/FRONTIER docs, commit+push, then
+   immediately freeze the next wave from whatever the expansion pass + SMV2AD/AE verdicts
+   license (R2 confirmation spec(s) if any candidate qualified; otherwise the next-ranked
+   expansion-pass idea). Auto-chain — do not stop at close-out.
 2. **DONE**: ES/RTY/YM 1-minute cross-market context substrates all exported, verified, and
    committed (SM1M_ES/RTY/YM_SUBSTRATE, pushed at 3151800). Instrument names resolved cleanly
    as ESU6/RTYU6/YMU6. Engine-3 slate 4 (cross-market lead-lag, ranked candidates in
