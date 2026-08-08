@@ -1,0 +1,75 @@
+run_id: SMV2AB_ENGINE3_S4
+date_frozen: 2026-08-08
+class: R1_FAMILY_TEST   # V4 s51: cross-market data now unblocked; this is the natural next
+  # Engine-3 slate after NQ-only search space exhausted (SMV2K/P/X, 9/9 killed) AND the
+  # smoothness-exposure-timing family exhausted (SMV2N/V/Z/AA, 4/4 killed with the joint-
+  # regime-factor explanation). Sharper design target than slates 1-3 (V4.1 s14 + this
+  # session's synthesis): earn (or stay flat) SPECIFICALLY during the sigma460+ER150-flagged
+  # joint-whipsaw weeks (SMV2Z's own 23-week flagged set), not just generic bad weeks.
+seq: [410, 411, 412]   # 410=cap-tier dispersion catch-up, 411=duration-spread shock reaction, 412=quarterly roll-week basis convergence
+parent: DR_V4 pass D1 (cross-market/session) ranks 1, 2, 7 -- selected as the three most
+  mechanistically distinct, lowest-dedup-risk cross-market candidates (full ranked list:
+  research/system_master/deep_research/DR_V4_EXPANSION_PASSES_20260808.md). Rank 1 and rank 5
+  were flagged as near-duplicates by the pass itself -- rank 1 selected, rank 5 dropped. Rank
+  6 (weekend lag) sits close to the killed overnight-drift family -- dropped. Rank 3/4 weaker
+  per the pass's own assessment or thin-sample -- dropped.
+
+data:
+  nq: sm01_solarsim.load_bars_3m() dev <= 2026-05-31 (existing loader, NQ 3m signal series)
+  es: runs/SM1M_ES_SUBSTRATE/out/es_1m_2022_2026.parquet -> aggregate to 3m OHLCV (18:00-
+    anchored, verify session calendar matches the NQ 3m substrate's sess_dates before use)
+  rty: runs/SM1M_RTY_SUBSTRATE/out/rty_1m_2022_2026.parquet -> aggregate to 3m OHLCV, same convention
+  ym: runs/SM1M_YM_SUBSTRATE/out/ym_1m_2022_2026.parquet -> aggregate to 3m OHLCV, same convention
+  costs: $4.36/RT + 1 tick/side NQ (traded instrument always NQ/MNQ; ES/RTY/YM are signal-only,
+    NEVER traded -- V4 s0/s36 hard boundary). All economics NET.
+  jl_flag_set: runs/SMV2Z_VIABILITY_POLICY/out/policy_daily.csv (scaled==True) OR
+    run_log.txt's trigger_week_keys -- the exact 23 sigma460+ER150-flagged weeks. REUSE
+    verbatim, do not recompute.
+
+engine_410_cap_tier_dispersion_catchup:      # D1 rank 1
+  event: 15-min ES AND NQ returns agree in sign with |z|>1.5 (trailing 20-session vol) AND
+    volume z>1 (both instruments); measured on 3m-bar-aligned 15-min windows during RTH+
+    extended hours (all session hours, not RTH-only -- dispersion can trigger overnight).
+  economics: enter NQ in the direction of the ES/NQ consensus move at the next 3m bar open IF
+    RTY's own concurrent 15-min return has NOT yet moved with the same sign at |z|>0.5 (i.e.
+    RTY is the "laggard" -- confirms the catch-up setup); exit at 60min or session close,
+    whichever first. NQ traded, RTY/ES used only to trigger.
+  pass: N >= 60 events, net t_NW(session) >= 2, WF 2022-24 vs 25-26 same sign, plateau across
+    z-threshold {1.25,1.5,1.75} same-sign (center 1.5).
+
+engine_411_duration_spread_shock_reaction:   # D1 rank 2
+  event: a >=2-sigma 30-min NQ move (trailing 20-session 30-min-return vol) that occurs
+    WITHOUT a proportional YM move (YM concurrent 30-min |z| < 0.75) -- interpreted as a
+    rate-duration-sensitive shock hitting NQ disproportionately (NDX duration beta context
+    from the deep-research pass, used only as economic rationale, not as a tradeable series).
+  economics: enter NQ WITH the shock direction at the next 3m bar open (continuation, not
+    fade -- consistent with this program's established finding that fading breaks loses);
+    hold 60/120min (2 plateau cells), exit at target horizon or session close.
+  pass: N >= 40 events, net t_NW >= 2, WF same sign, plateau across the YM-quiet threshold
+    {0.5,0.75,1.0} same-sign (center 0.75).
+
+engine_412_quarterly_roll_basis_convergence: # D1 rank 7
+  event: NQ/MNQ quarterly futures roll week (the week containing the 3rd-Friday quarterly
+    expiration, Mar/Jun/Sep/Dec -- reuse the WOM-3FRI calendar logic and Good-Friday exclusion
+    from SMV2X's calendars.py verbatim); measure whether the ES-vs-RTY/YM cross-market spread
+    shows a differential drift during the roll week (liquidity migrates front-to-back fastest
+    in the deepest markets, ES/NQ, creating a transient basis effect vs the thinner RTY/YM).
+  economics: enter NQ in the direction of the ES-vs-(RTY+YM)/2 spread's roll-week drift at the
+    roll week's Monday open; exit at the actual NQ contract roll session close (or Friday
+    close if earlier). Day-count from the roll calendar, ~16-17 cycles in dev window (N is a
+    disclosed power floor, not a redesign trigger if it comes in low).
+  pass: N >= 12 (disclosed floor given the sparse calendar), net t_NW >= 2, WF same sign
+    (report even if underpowered -- do not silently drop the WF read for a small-N engine).
+
+joint_whipsaw_targeting (all three, THE sharper V4.1 s14 read for this slate): daily/weekly
+  PnL of each engine specifically DURING the 23 SMV2Z-flagged weeks vs all other weeks; this
+  is now the PRIMARY strategic read (not secondary as in slates 1-3) given wave-7/8's finding
+  that this exact state pair identifies weeks where the existing two-engine system cannot
+  help itself. An engine earning (or flat) specifically there, even with a modest standalone
+  Sharpe, is the target outcome per V4 s25.
+verdict_rule: per-engine PASS -> Stage 2 (12-30 neighbors, new spec) in a later wave; FAIL ->
+  killed. If all three fail: per V4 s51, run additional cross-market candidates from the
+  ranked D1/D2#1 list (rank 3, 4, 6 remain unexplored) before declaring cross-market
+  exhausted -- do not fall back to a 4th NQ-only slate, which is already closed.
+outputs: out/e410_events.csv, out/e411_events.csv, out/e412_events.csv,
+  out/jointwhipsaw_complementarity.csv, out/session_calendar_check.csv, REPORT.md
