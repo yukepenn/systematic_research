@@ -1,0 +1,44 @@
+run_id: SM06_SOLAR_HISTORY
+program: system_master
+type: DIAGNOSTIC_READ   # frozen champion rule on never-touched pre-2022 history; zero tuning; interpretation rule frozen BEFORE read
+date_frozen: 2026-08-08
+objective: >
+  Run the EXACT SM01-certified 13-member substrate + E10 aggregation
+  (unchanged code, unchanged parameters, StartUp=false, sigma460, clamp
+  40-1200t, VolMult 6..30, round(10*mean pending) MNQ, session-close flatten,
+  same cost model) on 2006-01 -> 2021-12-31, from
+  research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet
+  resampled to 3-min via the GATE_D-verified exact aggregator.
+  Report full sm_metrics by year, by 4-year block (2006-09, 2010-13, 2014-17,
+  2018-21), and pooled; plus member-level NQ 1-contract economics; plus the
+  same vote/anatomy substrate files for the historical window.
+interpretation_rule_frozen:
+  STRUCTURAL: pooled pre-2022 E10 daily net > 0 AND day-clustered bootstrap
+    (block=5, B=10000, seed 20260808) CI_lo > 0 AND >= 10 of 16 years positive.
+  REGIME_SENSITIVE_POSITIVE: pooled net > 0, CI_lo <= 0, and NO 4-year block
+    with CI_hi < 0.
+  CONTRADICTED: pooled CI_hi < 0.
+  REGIME_LOCAL: anything else.
+consequences_frozen: >
+  No verdict changes the champion or any dev-window result. STRUCTURAL or
+  REGIME_SENSITIVE_POSITIVE licenses using pre-2022 trades for stop-overlay
+  HISTORICAL stress calibration; REGIME_LOCAL/CONTRADICTED restricts overlay
+  calibration to dev only and hardens the current-regime framing of the whole
+  program. Verdict feeds SOLAR_DRAWDOWN_ATLAS regime section.
+caveats_preregistered: >
+  (1) Pre-2012 Globex hours/holiday sessions differ; session detection is
+  gap-based; early-close sessions retained with their true last bar.
+  (2) Back-adjusted price offsets are additive; the engine is difference-based
+  (sigma, thresholds) so offsets cancel; price-LEVEL-dependent quantities
+  (e.g. % returns) are not used. (3) Modern cost model held constant
+  (anachronistic-conservative direction unknown for 2006-2010 commissions;
+  slippage 1 tick likely optimistic pre-2010 in thin hours - stress at slip-2
+  reported). (4) MNQ did not exist pre-2019: research-basis point-value
+  scalar only. (5) 2006-01 warmup: first 20 sessions excluded from yearly
+  stats (BarsRequiredToTrade + sigma warmup).
+burn: 0
+outputs:
+  - runs/SM06_SOLAR_HISTORY/out/e10_daily_hist.csv
+  - runs/SM06_SOLAR_HISTORY/out/member_trades_hist.parquet
+  - runs/SM06_SOLAR_HISTORY/out/vote_state_3m_hist.parquet
+  - runs/SM06_SOLAR_HISTORY/out/report.md
