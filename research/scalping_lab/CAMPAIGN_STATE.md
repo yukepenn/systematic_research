@@ -109,7 +109,25 @@
       second-engine route = cross-ASSET persistence screen (GC/CL) + overnight premium
       (Solar-orthogonal by construction), all correlation-gated (<0.3). MNQ C1
       arithmetic corrected (4.6t not 6.6t). deep_research/DR_E_global_strategy_review.md.
-- [ ] **RESTRUCTURED PROGRAM (per DR-E; supersedes prior W5 queue)**:
+- [x] **AMENDMENT 6 applied (2026-08-08)**: DR-E closure conclusions WITHDRAWN (Zone-F
+      formal closure, 30-min floor, "certain win" Kelly, "orthogonal by construction"
+      overnight) — external evidence reclassified as PRIOR. Three programs run in
+      PARALLEL: A Family-A exploitation (bounded), B independent engine discovery
+      (largest objective), C bounded fast-scalp frontier + predictability-ceiling test.
+      Zone-F closure only per Amendment 6 §9 (5 families + ceiling + red team).
+      Verbatim: MANDATE_AMENDMENT_6_NO_PREMATURE_CLOSURE.txt.
+- [ ] **W5 (three programs, specs frozen before readout — specs/W5_programs_wave.md)**:
+      A1 robust sizing FRONTIER (ledger-only, scenario grid, no single fraction as
+      truth). B1 overnight 16:44→09:30 first pass (2022-2026 3-min data) + measured
+      correlation vs Solar ledger. B2 intraday-momentum correlation pre-gate (existing
+      H-A1 P&L vs Solar ledger). C1 W5-1 CLEAN/deep entry (depth×efficiency×flow +
+      recovery-tick entry — mechanically distinct from killed W3-1 raw fade).
+      C2 fast FSS-2 (15s/30s completed-bar breakout-acceptance — distinct from killed
+      1-min S2a). C3 FSS-3 failed-opposite-probe state machine. C4 FSS-6/7 compression
+      →expansion + velocity/low-retracement. C5 predictability-ceiling test (logistic/
+      GAM/GBM, day-aware chronological folds, lift vs the 7-10pp gap — measurement,
+      not strategy). FSS-10 ES queued behind ES substrate completion (archival running).
+- [x] (superseded record) **RESTRUCTURED PROGRAM (per DR-E; supersedes prior W5 queue)**:
       **P0** fractional-Kelly MNQ sizing policy for R5-E10 v2 (immediate, ledger-only).
       **P1** execution overlays on Solar: patient TIME-TRIGGERED exits test (+0.5-1t/exit
       hypothesis) + stop/exit realism audit from own tick data.

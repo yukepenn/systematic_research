@@ -1,5 +1,26 @@
 # DR-E — GLOBAL STRATEGY REVIEW (owner-requested, 2026-08-08)
 
+> ## ⚠ PARTIALLY WITHDRAWN 2026-08-08 (OWNER AMENDMENT 6)
+> The PRIORS in this review stand; four of its CLOSURE-GRADE conclusions were overreach
+> and are corrected:
+> 1. "ZONE F FORMALLY CLOSED" → WITHDRAWN. Latency-race evidence bounds microsecond
+>    race/queue alpha, NOT 10–120s conditional structural states; day-trader statistics
+>    are priors on discretionary retail, not tests of our hypotheses. Status: prior
+>    materially downgraded, lane OPEN for a bounded final frontier + one
+>    predictability-ceiling test (Amendment 6 §7C/§8; closure only per §9).
+> 2. Universal "30–60min friction floor" gate → WITHDRAWN. The capture-rate arithmetic
+>    assumed Solar's ~4% capture efficiency transfers to selective states — unsupported.
+>    It remains a useful heuristic, not a gate; every family earns or fails on its own
+>    after-cost conditional expectancy.
+> 3. Kelly sizing as "certain win" → CORRECTED. Sizing creates no alpha; deliverable is
+>    a robust sizing FRONTIER under estimation uncertainty, right-tail concentration,
+>    and edge-degradation scenarios — never a single fraction as truth.
+> 4. Overnight "orthogonal by construction" → CORRECTED. Non-overlapping holding clocks
+>    do not imply P&L orthogonality; correlation must be measured against the Solar
+>    ledger. Program structure per Amendment 6: A (Family-A exploitation, bounded) ∥
+>    B (independent engine discovery, the largest objective) ∥ C (bounded fast-scalp
+>    frontier). Original text preserved below unedited.
+
 Four external-evidence research lanes (retail scalp viability; slower intraday anomalies;
 portfolio construction around the proven Solar engine; cost/horizon engineering) run with
 web access, synthesized against every local fact this program has measured. Full lane
