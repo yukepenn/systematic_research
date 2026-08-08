@@ -70,3 +70,16 @@ themselves converged on as the correct differentiation from the six dead reversi
 Cross-market candidates (D1 entirely, D2#1) are the next-highest-EVI slate but require an ES/
 RTY/YM data export first (mirroring the SM1M NQ 1-minute export done this session) — queued,
 not dropped.
+
+## Cross-market data export completed (2026-08-08, same day)
+ES/RTY/YM 1-minute bars, 2022-01..2026-07-31, exported via SWMinuteExport_v1 through the true
+NT8 Strategy Analyzer engine (same provenance chain as the NQ 1m export):
+- `runs/SM1M_ES_SUBSTRATE/out/es_1m_2022_2026.parquet` — 1,620,385 bars (ESU6)
+- `runs/SM1M_RTY_SUBSTRATE/out/rty_1m_2022_2026.parquet` — 1,568,111 bars (RTYU6)
+- `runs/SM1M_YM_SUBSTRATE/out/ym_1m_2022_2026.parquet` — 1,595,378 bars (YMU6)
+All three verified against their NT8 job traces (resolved-instrument name + loaded-bar count)
+before conversion; raw CSVs kept outside the repo, parquet + build_meta.json committed.
+**These are READ-ONLY CONTEXT instruments.** NQ/MNQ remain the only traded instruments in this
+program (V4 §0 hard boundary; V4 §36 explicitly authorizes cross-market context data). This
+unblocks Engine-3 slate 4 (cross-market lead-lag/dispersion candidates from pass D1 + D2#1,
+listed above) — a frozen spec for slate 4 is the next Engine-3 step, not yet written.
