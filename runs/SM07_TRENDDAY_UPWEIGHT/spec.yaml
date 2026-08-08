@@ -1,0 +1,31 @@
+run_id: SM07_TRENDDAY_UPWEIGHT
+program: system_master
+type: R1_EXPERIMENT (freeze-on-history, single dev read)
+date_frozen: 2026-08-08
+registry_seq: 307-309
+motivation: >
+  DR_SM_B EVI-5: morning trend-day classifier concentrates exposure on the
+  top-10-day right tail; up-weight-only => structurally tail-safe. 2006-2021
+  minute history was never mined for exposure rules => clean freeze-then-test
+  geometry (W10 protocol). Solar's profit is right-tail days; E10's top-10-day
+  share ~ large. Killed-axis check: distinct from day-level vol/day-type
+  SUPPRESSION (closed); this is up-weight-only (m>=1) on a morning-observable
+  state, mirror-image of suppression; distinct from killed H-A1 (last-30-min
+  momentum) and B-MOM (all-day band-break SAR).
+procedure_frozen: >
+  PHASE 1 (history 2006-2021 ONLY): define trend-day label = |close-open| of
+  RTH >= 0.7 * 20d-median RTH range AND close in top/bottom 25% of day range.
+  Screen THREE candidate morning classifiers (constants chosen on history,
+  committed before any dev read):
+    C1 gap-state: |open_0930 - close_prev| / 20d median range >= g*
+    C2 initial-balance: (H-L of 09:30-10:30) / 20d median range <= b* AND
+       close_1030 outside prior-day value proxy (prior RTH mid +/- 25% range)
+    C3 combined: C1 OR (C2 with direction = sign(close_1030 - open_0930))
+  Freeze g*, b* as the history-optimal round values (0.05 grid), commit.
+  PHASE 2 (single dev read): E10 exposure multiplier 1.3x from the 10:30 bar
+  onward (never below 1.0, never above 1.3) on classified days, matched
+  average exposure vs base, arms = C1/C2/C3 (seq 307/308/309).
+gates_frozen: same machinery as SM04 (matched-exposure logG AND Sharpe > base,
+  P(d<=0)<0.10 on dmean, H1/H2 same sign, top-10-day retention >= 0.90 - note
+  up-weight-only makes <1.0 retention nearly impossible; report >= 1.0).
+burn: 3

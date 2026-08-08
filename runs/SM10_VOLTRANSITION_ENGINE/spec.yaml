@@ -1,0 +1,24 @@
+run_id: SM10_VOLTRANSITION_ENGINE
+program: system_master
+type: R1_EXPERIMENT (new standalone engine family)
+date_frozen: 2026-08-08
+registry_seq: 312-314
+motivation: >
+  Track 6 engine factory: volatility-transition mechanism at DAY scale.
+  Killed-axis check: FSS-6 compression was SECONDS-scale and ruled
+  absent-not-falsified in 2025-26; daily-scale compression->expansion is a
+  different clock class, never tested locally. External prior: NR7/inside-day
+  expansion literature (DR_SM_B).
+rule_family: >
+  Compression state (frozen): session RTH range < q25 of trailing 20 sessions
+  for K consecutive sessions. Next session: enter at 09:30+30min in the
+  direction of the 09:30->10:00 move IF |move| >= 0.25 * 20d median range;
+  exit 15:57 flat (no overnight). 1 NQ, C1=2.872t primary, C2 stress.
+  Arms: K=1 (seq 312), K=2 (seq 313), K=3 (seq 314).
+evaluation: >
+  DEV-primary (2022-01..2026-05); 2006-2021 reported as TRANSITION/HISTORICAL
+  diagnostic (this family may legitimately be structural - it is not
+  Solar-mechanism-dependent). Standalone CONVENTIONS gates (positive after C1,
+  C2 survives, >=3/5 years, split-half, no month>40%, losing-day corr vs
+  SOLAR <= +0.25); portfolio increment vs SOLAR+BMOM if standalone passes.
+burn: 3

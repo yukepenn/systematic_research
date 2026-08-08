@@ -1,0 +1,21 @@
+run_id: SM08_HTF_TILT
+program: system_master
+type: R1_EXPERIMENT
+date_frozen: 2026-08-08
+registry_seq: 310-311
+motivation: >
+  Directive Q8/Q9 (does a higher timeframe / MA confirmation add incremental
+  information CONDITIONAL on Solar?). Killed-axis check: thesis-era kill was
+  strict MA alignment GATES as entry filters (binary veto); C01 T0-1 tested
+  crisis SHORT-gating. This is an up-weight-only EXPOSURE TILT on agreement,
+  both sides, no veto - mechanically distinct; and it directly answers the
+  owner's MA question with the incremental-information protocol.
+rule: >
+  HTF state = sign(close - SMA_n(daily closes)) computed on SESSION closes,
+  lagged one session (causal). Arms: n=50 (seq 310), n=200 (seq 311).
+  E10 target multiplier: 1.25x on bars where sign(vote_pend) == HTF sign;
+  1.0x otherwise (never below 1.0). Matched average exposure vs base.
+gates_frozen: same as SM04/SM07 machinery. Negative/absent effect closes the
+  MA-confirmation axis for exposure purposes (Q9 answer NO); it may not be
+  re-tuned with other MA lengths (2-point plateau requirement across n).
+burn: 2
