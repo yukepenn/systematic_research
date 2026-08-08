@@ -22,3 +22,12 @@ arms, NT8 Analyzer parity run._
 - **Slippage sensitivity**: every +1t/side costs the one-lot NQ strategy ≈ $6.6k/yr at
   ~1,970 round trips / 4.4yr (≈450 RT/yr × $10/RT... computed: 450×$5/t×2 sides ≈
   $4.5k/yr per tick). The system survives C2 (2×C1) on all promoted objects.
+
+## Data-gap overnight-hold risk (SMV2M finding, 2026-08-08)
+IsExitOnSessionCloseStrategy exits N seconds before the SESSION TEMPLATE end. If the data
+series has a gap that removes the end-of-session bars (observed: 2023-04-05, bars stop 14:03),
+the engine cannot exit — the book is carried to the next available liquidity (here: overnight,
+4 MNQ, closed 2023-04-06 10:15). One episode in 4.6y, deterministic, Δ ≈ $407. The Python twin
+assumes flat at the last available bar, so this is a twin-vs-engine behavioral difference on
+gap days, not a modeling error in either. Any capital/margin analysis must count this tail:
+"day-only" is conditional on the data/session template delivering the flatten window.

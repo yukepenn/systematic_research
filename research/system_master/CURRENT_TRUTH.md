@@ -15,10 +15,13 @@ the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains as the V1 historical 
   premium does not exist on modern NQ; small-gap fade negative; overnight drift ~zero).
 - **Survivor**: C-P7 windfall give-back pre-test PASSED (fwd-10d −$136/d vs base +$162/d,
   p=0.0012) → bounded trim policy earns a frozen spec.
-- **SMV2M master**: executable twin of DAYONLY_DUAL6040 = **net $179.3k / Sharpe 1.19 /
-  maxDD −$16.8k dev** (92.2% of fractional research net; flat before 16:45 unlike the research
-  curve). v1 C# had an order-engine arrangement bug (KNOWN_ERRORS #7, evidence preserved);
-  v2 on the proven E10 arrangement — Analyzer parity run in flight.
+- **SMV2M master PARITY PASSED**: SolarWaveSMMaster_v2 (one consolidated strategy, fail-closed
+  realtime) reconciled vs the true Strategy Analyzer engine — decision-path 99.99% ex the 23
+  documented holiday-template days, daily corr 0.9992, net +0.33% ex-holiday. **EXECUTABLE
+  HEADLINE (dev): net $177,315 / Sharpe 1.17 / maxDD −$18,894 / CDaR −$14,905 / worst month
+  −$7,523** — these replace the research fractional numbers (V4 §16). Genuinely flat before the
+  16:45 margin cliff (the research curve never was). New residual class documented: data-gap
+  overnight hold (1 episode/4.6y, Δ≈$407). v1 arrangement bug = KNOWN_ERRORS #7.
 
 ## The system, in one paragraph
 Solar (13-member SolarWave ensemble on NQ 3-min, graded 0-10 MNQ by vote) is the return

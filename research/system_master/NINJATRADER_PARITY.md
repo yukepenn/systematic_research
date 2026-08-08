@@ -41,3 +41,17 @@ stamps the fill bar OPEN (constant 3-min offset, prices identical).
 **Status upgrade: SolarWaveSMOneLot_v1 = EXECUTABLE, ANALYZER-PARITY-VERIFIED.**
 (The strategy type resolved in the live AppDomain, i.e., it is present in the NT8
 Strategies list now.) NT run artifacts: `runs/SMV2H_ONECONTRACT/out/nt_trades_full.csv`.
+
+## SolarWaveSMMaster_v2 (DAYONLY_DUAL6040 consolidated master) — PASSED 2026-08-08
+Full window 2022-01 → 2026-07, NQ 09-26 signals / MNQ 09-26 execution, Lifetime commissions,
+1-tick slip, Standard fill, true Strategy Analyzer engine (NT8 8.1.8.1 via CrossTrade).
+- Decision-path: 99.36% raw → 99.99% excluding the 23 documented holiday-template days.
+- Daily PnL corr 0.9992 (dev, all days); net diff +0.33% full-window ex-holiday.
+- EXECUTABLE HEADLINE (dev): net $177,315 / Sharpe 1.17 / maxDD −$18,894 / CDaR5 −$14,905 /
+  worst month −$7,523 — replaces the research fractional numbers everywhere (V4 §16).
+- New documented residual class: data-gap overnight hold (1 episode 2023-04-05, 4 MNQ,
+  Δ ≈ $407) — engine session-close exit targets the template end, which a data gap can remove.
+- v1 arrangement bug recorded as KNOWN_ERRORS #7; evidence in runs/SMV2M_MASTER_BUILD/out/nt8_v1_failed/.
+Artifacts: runs/SMV2M_MASTER_BUILD/{REPORT.md, parity.py, out/}. Strategy source synced to the
+NT8 Strategies folder (F5 pending for Custom.dll registration; Analyzer runs used the loaded
+in-memory type).
