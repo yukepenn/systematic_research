@@ -1,0 +1,86 @@
+W5-C2 fast FSS-2 | sessions=37 | seed=20260808 | clocks=[15, 30] acc=[1, 2] brackets=[(24, 8), (32, 10)] | lookback=20 bars, CL>=0.7, entry window=120s, cap=300s, cool=60s
+s20250814 done
+s20250820 done
+s20250901 done
+s20250902 done
+s20250905 done
+s20250910 done
+s20250911 done
+s20250922 done
+s20251002 done
+s20251009 done
+s20251027 done
+s20251029 done
+s20251110 done
+s20251117 done
+s20251124 done
+s20251128 done
+s20251209 done
+s20251222 done
+s20260123 done
+s20260206 done
+s20260211 done
+s20260218 done
+s20260220 done
+s20260223 done
+s20260303 done
+s20260312 done
+s20260317 done
+s20260320 done
+s20260406 done
+s20260409 done
+s20260417 done
+s20260423 done
+s20260428 done
+s20260506 done
+s20260511 done
+s20260519 done
+s20260520 done
+
+=== W5-C2 pooled — per (clock, acceptance, dir, bracket); costs C1=2.872t, C2=4.872t; CI = day-clustered session bootstrap (1000 reps, seed 20260808) ===
+  K acc   dir   A   B |  trig   brk  accd  epi   e/d days |  P(tgt)  BE_C1 cap |   netC1   CI_lo   CI_hi |   netC2 PASS
+ 15   1  long  24   8 |  2598  1459  1058  816 22.67   36 |  0.2355 0.3397   5 |  -3.317  -4.029  -2.555 |  -5.317 fail
+ 15   1  long  32  10 |  2598  1431  1037  802 22.28   36 |  0.2156 0.3065   9 |  -3.745  -4.949  -2.710 |  -5.745 fail
+ 15   1 short  24   8 |  2285  1339   918  679 18.86   36 |  0.2257 0.3397   1 |  -3.656  -4.437  -2.840 |  -5.656 fail
+ 15   1 short  32  10 |  2285  1326   907  669 18.58   36 |  0.2162 0.3065   3 |  -3.725  -4.826  -2.612 |  -5.725 fail
+ 15   2  long  24   8 |  2598  1420   864  615 17.08   36 |  0.2622 0.3397   1 |  -2.457  -3.552  -1.307 |  -4.457 fail
+ 15   2  long  32  10 |  2598  1403   853  608 16.89   36 |  0.2292 0.3065   6 |  -3.154  -4.359  -1.902 |  -5.154 fail
+ 15   2 short  24   8 |  2285  1333   737  505 14.03   36 |  0.2321 0.3397   1 |  -3.451  -4.567  -2.448 |  -5.451 fail
+ 15   2 short  32  10 |  2285  1322   733  503 13.97   36 |  0.2008 0.3065   5 |  -4.281  -5.469  -3.119 |  -6.281 fail
+ 30   1  long  24   8 |  1406   864   617  438 12.17   36 |  0.2506 0.3397   3 |  -2.777  -3.842  -1.631 |  -4.777 fail
+ 30   1  long  32  10 |  1406   850   610  435 12.08   36 |  0.2297 0.3065   4 |  -3.144  -4.483  -1.549 |  -5.144 fail
+ 30   1 short  24   8 |  1209   782   524  347  9.64   36 |  0.2261 0.3397   2 |  -3.627  -4.919  -2.314 |  -5.627 fail
+ 30   1 short  32  10 |  1209   779   523  346  9.61   36 |  0.2122 0.3065   2 |  -3.947  -5.671  -2.348 |  -5.947 fail
+ 30   2  long  24   8 |  1406   828   497  314  8.72   36 |  0.2540 0.3397   3 |  -2.683  -4.125  -1.137 |  -4.683 fail
+ 30   2  long  32  10 |  1406   821   493  314  8.72   36 |  0.2355 0.3065   4 |  -2.918  -4.611  -1.322 |  -4.918 fail
+ 30   2 short  24   8 |  1209   751   412  254  7.06   36 |  0.2362 0.3397   0 |  -3.313  -4.946  -1.505 |  -5.313 fail
+ 30   2 short  32  10 |  1209   750   411  253  7.03   36 |  0.2262 0.3065   1 |  -3.376  -5.754  -0.762 |  -5.376 fail
+(trig = raw trigger bars; brk = breakouts considered by the sequential sim; accd = acceptances completed; BE_C1 = P(tgt) needed to break even at C1; PASS = net_c1>0 AND CI_lo>-0.5t)
+
+=== funnel: entry-phase attrition per config ===
+  K=15 acc=1  long +24/-8: brk=1459 -> accepted=1058 -> entered= 816 (entry rate 77.1%; no-cross=241, dead-cross=1)
+  K=15 acc=1  long +32/-10: brk=1431 -> accepted=1037 -> entered= 802 (entry rate 77.3%; no-cross=234, dead-cross=1)
+  K=15 acc=1 short +24/-8: brk=1339 -> accepted= 918 -> entered= 679 (entry rate 74.0%; no-cross=236, dead-cross=3)
+  K=15 acc=1 short +32/-10: brk=1326 -> accepted= 907 -> entered= 669 (entry rate 73.8%; no-cross=235, dead-cross=3)
+  K=15 acc=2  long +24/-8: brk=1420 -> accepted= 864 -> entered= 615 (entry rate 71.2%; no-cross=248, dead-cross=1)
+  K=15 acc=2  long +32/-10: brk=1403 -> accepted= 853 -> entered= 608 (entry rate 71.3%; no-cross=244, dead-cross=1)
+  K=15 acc=2 short +24/-8: brk=1333 -> accepted= 737 -> entered= 505 (entry rate 68.5%; no-cross=231, dead-cross=1)
+  K=15 acc=2 short +32/-10: brk=1322 -> accepted= 733 -> entered= 503 (entry rate 68.6%; no-cross=229, dead-cross=1)
+  K=30 acc=1  long +24/-8: brk= 864 -> accepted= 617 -> entered= 438 (entry rate 71.0%; no-cross=179, dead-cross=0)
+  K=30 acc=1  long +32/-10: brk= 850 -> accepted= 610 -> entered= 435 (entry rate 71.3%; no-cross=175, dead-cross=0)
+  K=30 acc=1 short +24/-8: brk= 782 -> accepted= 524 -> entered= 347 (entry rate 66.2%; no-cross=176, dead-cross=1)
+  K=30 acc=1 short +32/-10: brk= 779 -> accepted= 523 -> entered= 346 (entry rate 66.2%; no-cross=176, dead-cross=1)
+  K=30 acc=2  long +24/-8: brk= 828 -> accepted= 497 -> entered= 314 (entry rate 63.2%; no-cross=183, dead-cross=0)
+  K=30 acc=2  long +32/-10: brk= 821 -> accepted= 493 -> entered= 314 (entry rate 63.7%; no-cross=179, dead-cross=0)
+  K=30 acc=2 short +24/-8: brk= 751 -> accepted= 412 -> entered= 254 (entry rate 61.7%; no-cross=158, dead-cross=0)
+  K=30 acc=2 short +32/-10: brk= 750 -> accepted= 411 -> entered= 253 (entry rate 61.6%; no-cross=158, dead-cross=0)
+
+=== plateau view: net_c1 across (K, acc) grid, per dir/bracket ===
+ long +24/-8: K15a1:-3.32  K15a2:-2.46  K30a1:-2.78  K30a2:-2.68
+ long +32/-10: K15a1:-3.74  K15a2:-3.15  K30a1:-3.14  K30a2:-2.92
+short +24/-8: K15a1:-3.66  K15a2:-3.45  K30a1:-3.63  K30a2:-3.31
+short +32/-10: K15a1:-3.72  K15a2:-4.28  K30a1:-3.95  K30a2:-3.38
+
+passing configs (frozen rule net_c1>0 AND CI_lo>-0.5t): 0 / 16
+
+W5C2 DONE

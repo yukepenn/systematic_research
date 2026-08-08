@@ -1,0 +1,215 @@
+W5-C5 predictability-ceiling | seed=20260808 reps=1000 clock=30s cap=600s minhist=300s
+pyGAM importable: False  -> GAM skipped (per spec: only if present)
+sessions: 37  (s20250814 .. s20260520)
+ASSERTION 1 PASSED: label windows start at t+1s and never overlap the feature second t — perturbing hi/lo at t left all labels unchanged (800 row-label checks on s20260123).
+s20250814 rows: 780
+s20250820 rows: 780
+s20250901 rows: 420
+s20250902 SKIPPED: zero quote-alive RTH seconds (dead quote feed; same handling as census)
+s20250905 rows: 780
+s20250910 rows: 780
+s20250911 rows: 780
+s20250922 rows: 780
+s20251002 rows: 780
+s20251009 rows: 780
+s20251027 rows: 780
+s20251029 rows: 780
+s20251110 rows: 780
+s20251117 rows: 689
+s20251124 rows: 780
+s20251128 rows: 450
+s20251209 rows: 780
+s20251222 rows: 780
+s20260123 rows: 780
+s20260206 rows: 780
+s20260211 rows: 780
+s20260218 rows: 780
+s20260220 rows: 780
+s20260223 rows: 780
+s20260303 rows: 780
+s20260312 rows: 780
+s20260317 rows: 780
+s20260320 rows: 780
+s20260406 rows: 780
+s20260409 rows: 780
+s20260417 rows: 780
+s20260423 rows: 780
+s20260428 rows: 780
+s20260506 rows: 780
+s20260511 rows: 780
+s20260519 rows: 780
+s20260520 rows: 780
+
+clock rows: 27299 raw | dropped t<300: 0 | dropped NaN-feature: 0 | modeling rows: 27299
+  lab_long_24_8: neither-hit excluded 35 (0.13%) | P(target) over decided rows: 0.2525
+  lab_long_32_10: neither-hit excluded 119 (0.44%) | P(target) over decided rows: 0.2361
+  lab_short_24_8: neither-hit excluded 47 (0.17%) | P(target) over decided rows: 0.2488
+  lab_short_32_10: neither-hit excluded 175 (0.64%) | P(target) over decided rows: 0.2328
+
+fold blocks (chronological):
+  block 0: 8 sessions  s20250814 .. s20250922
+  block 1: 8 sessions  s20251002 .. s20251128
+  block 2: 7 sessions  s20251209 .. s20260220
+  block 3: 7 sessions  s20260223 .. s20260409
+  block 4: 7 sessions  s20260417 .. s20260520
+ASSERTION 2 PASSED: in all 4 folds, train/validation session sets are disjoint and every training session is strictly earlier than every validation session.
+
+--- long_24_8 | logit ---
+  Brier 0.18955 vs baseline 0.18751 (skill -0.0109)
+  base P(target) 0.2498 | top-decile P 0.2416 [0.2289,0.2581] (n_top=2219)
+  LIFT -0.83pp CI [-2.37,+0.97]pp | C1 gap 8.73pp | lift-gap -9.56pp
+  fold lifts (pp): +0.53 +0.35 -2.69 -1.59 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-8: trades60(86.64e-4), vol60(78.52e-4), upd60(22.42e-4), rv300(16.39e-4), tv60(15.04e-4), rv60(14.01e-4), trades10(8.67e-4), vol10(6.19e-4)
+  calibration (bin: mean-pred -> realized, n):
+    b0: 0.2078 -> 0.2447 (n=2219)
+    b1: 0.2355 -> 0.2465 (n=2219)
+    b2: 0.2447 -> 0.2582 (n=2219)
+    b3: 0.2515 -> 0.2434 (n=2219)
+    b4: 0.2577 -> 0.2618 (n=2219)
+    b5: 0.2641 -> 0.2438 (n=2219)
+    b6: 0.2721 -> 0.2573 (n=2219)
+    b7: 0.2830 -> 0.2533 (n=2219)
+    b8: 0.3007 -> 0.2402 (n=2219)
+    b9: 0.3644 -> 0.2492 (n=2219)
+
+--- long_24_8 | hgb ---
+  Brier 0.19088 vs baseline 0.18751 (skill -0.0180)
+  base P(target) 0.2498 | top-decile P 0.2668 [0.2532,0.2806] (n_top=2234)
+  LIFT +1.69pp CI [+0.21,+3.21]pp | C1 gap 8.73pp | lift-gap -7.04pp
+  fold lifts (pp): +0.36 +1.08 +2.99 +2.40 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-8: vol10(1.67e-4), trades60(1.53e-4), ret30(0.67e-4), vol60(0.65e-4), secs_since_hi(0.53e-4), eff60(0.47e-4), nsflow60(0.12e-4), sflow60(0.12e-4)
+  calibration (bin: mean-pred -> realized, n):
+    b0: 0.1196 -> 0.2663 (n=2219)
+    b1: 0.2246 -> 0.2511 (n=2218)
+    b2: 0.2415 -> 0.2389 (n=2198)
+    b3: 0.2476 -> 0.2545 (n=2240)
+    b4: 0.2525 -> 0.2493 (n=2190)
+    b5: 0.2571 -> 0.2419 (n=2249)
+    b6: 0.2629 -> 0.2379 (n=2219)
+    b7: 0.2713 -> 0.2395 (n=2217)
+    b8: 0.2847 -> 0.2656 (n=2221)
+    b9: 0.3296 -> 0.2533 (n=2219)
+
+--- long_32_10 | logit ---
+  Brier 0.18152 vs baseline 0.17939 (skill -0.0119)
+  base P(target) 0.2342 | top-decile P 0.2201 [0.2026,0.2373] (n_top=2217)
+  LIFT -1.41pp CI [-3.21,+0.36]pp | C1 gap 7.03pp | lift-gap -8.44pp
+  fold lifts (pp): +0.17 +0.71 -3.24 -3.35 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-8: trades60(71.90e-4), vol60(60.79e-4), rv60(21.76e-4), trades10(12.94e-4), upd60(12.09e-4), tv60(8.72e-4), vol10(7.76e-4), ret10(7.39e-4)
+  calibration (bin: mean-pred -> realized, n):
+    b0: 0.1775 -> 0.2350 (n=2217)
+    b1: 0.2169 -> 0.2301 (n=2216)
+    b2: 0.2276 -> 0.2338 (n=2216)
+    b3: 0.2344 -> 0.2405 (n=2216)
+    b4: 0.2402 -> 0.2365 (n=2216)
+    b5: 0.2461 -> 0.2373 (n=2217)
+    b6: 0.2531 -> 0.2401 (n=2216)
+    b7: 0.2626 -> 0.2329 (n=2216)
+    b8: 0.2787 -> 0.2292 (n=2216)
+    b9: 0.3371 -> 0.2264 (n=2217)
+
+--- long_32_10 | hgb ---
+  Brier 0.18100 vs baseline 0.17939 (skill -0.0090)
+  base P(target) 0.2342 | top-decile P 0.2378 [0.2253,0.2509] (n_top=2334)
+  LIFT +0.36pp CI [-0.77,+1.44]pp | C1 gap 7.03pp | lift-gap -6.67pp
+  fold lifts (pp): +1.31 -1.31 +1.15 -0.05 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-8: tod(3.50e-4), dist_hi(2.71e-4), trades60(2.69e-4), vol60(1.09e-4), nsflow60(1.08e-4), upd10(0.71e-4), sflow60(0.55e-4), rv300(0.52e-4)
+  calibration (bin: mean-pred -> realized, n):
+    b0: 0.1602 -> 0.2453 (n=2214)
+    b1: 0.2017 -> 0.2279 (n=2216)
+    b2: 0.2186 -> 0.2222 (n=2219)
+    b3: 0.2290 -> 0.2324 (n=2216)
+    b4: 0.2369 -> 0.2292 (n=2216)
+    b5: 0.2440 -> 0.2355 (n=2217)
+    b6: 0.2514 -> 0.2347 (n=2216)
+    b7: 0.2597 -> 0.2480 (n=2137)
+    b8: 0.2716 -> 0.2230 (n=2139)
+    b9: 0.3116 -> 0.2432 (n=2373)
+
+--- short_24_8 | logit ---
+  Brier 0.18923 vs baseline 0.18802 (skill -0.0064)
+  base P(target) 0.2509 | top-decile P 0.2662 [0.2454,0.2924] (n_top=2220)
+  LIFT +1.53pp CI [-0.36,+3.86]pp | C1 gap 9.09pp | lift-gap -7.56pp
+  fold lifts (pp): +1.56 +2.27 +1.26 +1.03 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-8: trades60(65.21e-4), tv60(28.26e-4), vol60(26.94e-4), rv60(25.43e-4), rv300(20.72e-4), upd10(18.95e-4), upd60(16.02e-4), spread60(10.71e-4)
+  calibration (bin: mean-pred -> realized, n):
+    b0: 0.1643 -> 0.2506 (n=2219)
+    b1: 0.2085 -> 0.2456 (n=2219)
+    b2: 0.2244 -> 0.2375 (n=2219)
+    b3: 0.2324 -> 0.2501 (n=2219)
+    b4: 0.2385 -> 0.2610 (n=2218)
+    b5: 0.2441 -> 0.2438 (n=2219)
+    b6: 0.2503 -> 0.2519 (n=2219)
+    b7: 0.2579 -> 0.2578 (n=2219)
+    b8: 0.2691 -> 0.2465 (n=2219)
+    b9: 0.3086 -> 0.2641 (n=2219)
+
+--- short_24_8 | hgb ---
+  Brier 0.18853 vs baseline 0.18802 (skill -0.0027)
+  base P(target) 0.2509 | top-decile P 0.2751 [0.2518,0.2970] (n_top=2232)
+  LIFT +2.42pp CI [+0.15,+4.63]pp | C1 gap 9.09pp | lift-gap -6.67pp
+  fold lifts (pp): +4.66 -0.04 +2.00 +2.94 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-8: dist_hi(2.90e-4), secs_since_hi(2.59e-4), ret60(1.17e-4), sflow60(0.77e-4), trades10(0.74e-4), vol60(0.73e-4), ret300(0.63e-4), ret30(0.60e-4)
+  calibration (bin: mean-pred -> realized, n):
+    b0: 0.2125 -> 0.2449 (n=2201)
+    b1: 0.2286 -> 0.2597 (n=2218)
+    b2: 0.2345 -> 0.2458 (n=2238)
+    b3: 0.2401 -> 0.2605 (n=2196)
+    b4: 0.2454 -> 0.2668 (n=2241)
+    b5: 0.2501 -> 0.2455 (n=2212)
+    b6: 0.2554 -> 0.2305 (n=2174)
+    b7: 0.2636 -> 0.2351 (n=2271)
+    b8: 0.2763 -> 0.2461 (n=2219)
+    b9: 0.3142 -> 0.2740 (n=2219)
+
+--- short_32_10 | logit ---
+  Brier 0.18200 vs baseline 0.18052 (skill -0.0082)
+  base P(target) 0.2361 | top-decile P 0.2479 [0.2273,0.2687] (n_top=2215)
+  LIFT +1.17pp CI [-0.83,+3.13]pp | C1 gap 7.37pp | lift-gap -6.20pp
+  fold lifts (pp): +0.59 +1.42 +0.42 +2.31 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-8: trades60(47.18e-4), rv300(32.00e-4), upd10(24.19e-4), spread60(21.74e-4), tv60(18.40e-4), vol60(14.90e-4), trades10(11.05e-4), upd60(8.05e-4)
+  calibration (bin: mean-pred -> realized, n):
+    b0: 0.1399 -> 0.2244 (n=2215)
+    b1: 0.1835 -> 0.2326 (n=2214)
+    b2: 0.2000 -> 0.2344 (n=2214)
+    b3: 0.2084 -> 0.2331 (n=2214)
+    b4: 0.2151 -> 0.2453 (n=2214)
+    b5: 0.2217 -> 0.2376 (n=2214)
+    b6: 0.2291 -> 0.2362 (n=2214)
+    b7: 0.2385 -> 0.2294 (n=2214)
+    b8: 0.2531 -> 0.2249 (n=2214)
+    b9: 0.3028 -> 0.2632 (n=2215)
+
+--- short_32_10 | hgb ---
+  Brier 0.18318 vs baseline 0.18052 (skill -0.0147)
+  base P(target) 0.2361 | top-decile P 0.2388 [0.2215,0.2575] (n_top=2215)
+  LIFT +0.27pp CI [-1.42,+1.97]pp | C1 gap 7.37pp | lift-gap -7.10pp
+  fold lifts (pp): -1.49 +1.60 +0.97 +0.11 | pass>=5pp:False pass>=7pp-stable:False
+  perm importance top-8: secs_since_hi(9.65e-4), dist_hi(7.02e-4), upd60(6.75e-4), ret30(4.72e-4), trades10(4.13e-4), ret60(2.81e-4), rv300(2.69e-4), sflow10(1.64e-4)
+  calibration (bin: mean-pred -> realized, n):
+    b0: 0.1613 -> 0.2352 (n=2215)
+    b1: 0.1951 -> 0.2385 (n=2214)
+    b2: 0.2100 -> 0.2377 (n=2213)
+    b3: 0.2208 -> 0.2479 (n=2215)
+    b4: 0.2293 -> 0.2245 (n=2214)
+    b5: 0.2367 -> 0.2404 (n=2213)
+    b6: 0.2457 -> 0.2316 (n=2215)
+    b7: 0.2582 -> 0.2378 (n=2212)
+    b8: 0.2796 -> 0.2392 (n=2216)
+    b9: 0.3516 -> 0.2284 (n=2215)
+
+=== SUMMARY vs frozen interpretation ===
+      label model   base_P    top_P      lift   lift_lo  lift_hi  c1_gap  pass_5pp  pass_7pp_stable
+  long_24_8 logit 0.249842 0.241550 -0.008292 -0.023744 0.009680  0.0873     False            False
+  long_24_8   hgb 0.249842 0.266786  0.016944  0.002052 0.032143  0.0873     False            False
+ long_32_10 logit 0.234174 0.220117 -0.014057 -0.032115 0.003643  0.0703     False            False
+ long_32_10   hgb 0.234174 0.237789  0.003615 -0.007706 0.014378  0.0703     False            False
+ short_24_8 logit 0.250890 0.266216  0.015326 -0.003561 0.038623  0.0909     False            False
+ short_24_8   hgb 0.250890 0.275090  0.024200  0.001452 0.046339  0.0909     False            False
+short_32_10 logit 0.236112 0.247856  0.011743 -0.008284 0.031290  0.0737     False            False
+short_32_10   hgb 0.236112 0.238826  0.002714 -0.014156 0.019715  0.0737     False            False
+
+best lift: short_24_8 hgb +2.42pp CI [+0.15,+4.63]pp vs C1 gap 9.09pp
+FROZEN VERDICT: NO label/model reaches top-decile lift >=5pp with CI excluding 0 -> information set declared INSUFFICIENT (input to Amendment 6 par.9 closure).
+
+W5C5 DONE

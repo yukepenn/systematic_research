@@ -1,0 +1,48 @@
+==============================================================================
+W5-B1 Overnight 16:44->09:30 premium, first pass (frozen spec)
+==============================================================================
+Bars loaded: 540232 rows raw file; 519833 rows kept after dev-window truncation at 2026-06-01 00:00:00 (exclusive); 20399 sealed rows dropped unread.
+Bar stamp range kept: 2022-01-02 18:03:00 -> 2026-05-31 23:57:00 (exchange ET, end-stamped)
+Sessions: 1140 (18:00 ET prior day -> 17:00 ET session date)
+Sessions with a 16:45-stamped bar (entry available): 1095 (45 sessions without: early closes / partial sessions)
+Sessions with a bar stamped >= 09:30 on the session date: 1137
+
+Nights formed: 1092 (entry 16:45 close -> next-session first >=09:30 bar close)
+  weekend/holiday spans (>24h hold): 224
+  gross per-night sigma: 577.611 t; 8-sigma outlier threshold: 4620.9 t
+  outlier nights (|gross| > 8 sigma): 0
+
+--- Per-night expectancy (ticks/night), day-clustered 95% bootstrap CI, 10000 draws, seed 20260808 ---
+                                 group  n_nights  gross_mean_t  net2.0_mean_t  net2.0_ci_lo  net2.0_ci_hi  net2.872_mean_t  net2.872_ci_lo  net2.872_ci_hi  hit_rate_net2.0  std_gross_t  median_net2.0_t
+            ALL nights (unconditional)      1092        19.211         17.211       -17.008        50.968           16.339         -18.657          49.939            0.525      577.611           27.000
+            ALL excl. 8-sigma outliers      1092        19.211         17.211       -17.138        50.600           16.339         -17.513          49.980            0.525      577.611           27.000
+                             year 2022       249       -47.843        -49.843      -118.089        20.043          -50.715        -120.073          20.768            0.442      559.519          -65.000
+                             year 2023       246         7.622          5.622       -35.199        46.201            4.750         -35.588          46.250            0.524      329.216           20.000
+                             year 2024       249        69.040         67.040         1.222       130.945           66.168          -1.977         130.032            0.570      527.788           71.000
+                             year 2025       247        42.607         40.607       -48.351       128.474           39.735         -49.995         127.926            0.563      715.653          101.000
+                             year 2026       101        32.683         30.683      -120.686       186.557           29.811        -122.278         185.941            0.525      792.486           64.000
+        post-2024 (exit >= 2025-01-01)       348        39.727         37.727       -37.655       113.954           36.855         -41.005         113.454            0.552      737.629           92.500
+              post-2024 excl. outliers       348        39.727         37.727       -36.687       114.980           36.855         -41.344         112.836            0.552      737.629           92.500
+                COND prior RTH ret < 0       500        30.366         28.366       -27.776        84.059           27.494         -29.157          83.825            0.530      642.485           36.000
+COND prior RTH ret < 0, excl. outliers       500        30.366         28.366       -27.542        84.956           27.494         -29.060          83.047            0.530      642.485           36.000
+        complement: prior RTH ret >= 0       592         9.789          7.789       -33.507        49.581            6.917         -35.633          48.782            0.520      516.888           21.000
+
+(prior-RTH conditional defined on nights whose ENTRY session has a >=09:30 bar: 1092/1092 nights; ret = entry-day 16:45 close minus entry-day first >=09:30 bar close)
+
+Solar ledger: runs\E10MASTER_V2\out\daily_v1_v2.csv — using net_v1 (E10MASTER_V1, frozen research champion per runs/E10MASTER_V2/results.md); 1139 sessions kept <= dev cutoff.
+Overlapping dates (night exit session == Solar sess): 1092
+
+--- Correlation: overnight nightly P&L (net 2.0t, $/night, 1 NQ) vs Solar daily P&L (net_v1, $) ---
+                             subset    n  pearson_rho  spearman_rho
+                       full overlap 1092       0.0149        0.0717
+     Solar losing days (net_v1 < 0)  644       0.1624        0.1782
+full overlap excl. 8-sigma outliers 1092       0.0149        0.0717
+   Solar losing days excl. outliers  644       0.1624        0.1782
+
+--- FROZEN VERDICT RULE ---
+unconditional net(2.0t) mean = +17.211 t/night (need >= +4.0): PASS
+CI_lo = -17.008 t (need > 0): FAIL
+|rho_full| = 0.0149 (need < 0.3): PASS
+VERDICT: NOT PROMISING  (2005+ extension only if PROMISING)
+
+Artifacts written to research\scalping_lab\artifacts\w5_b1: w5b1_nightly.csv, w5b1_summary.csv, w5b1_correlation.csv, w5b1_stdout.txt

@@ -1,17 +1,21 @@
 # ALPHA THROUGHPUT SCOREBOARD (Amendment 5)
 
-Updated: 2026-08-08 (W4 complete)
+Updated: 2026-08-08 (W5 complete)
 
 | Metric | Value |
 |---|---|
-| Families tested (trade-rule level) | 8 (H-A1, H-D3@3min, Z1-standalone, FSS-4-snapback, FSS-1±passive, S2a-v01, FSS-5±mirror, H-B5-rule) |
-| Families killed | 8 |
+| Families tested (trade-rule level) | 14 (+W5: clean-deep-entry, fast-FSS-2, FSS-3, FSS-6, FSS-7, B1-overnight) |
+| Families killed | 14 |
 | Candidates alive (Tier-0 positive) | 0 |
 | Candidates in internal confirmation | 0 |
 | StrategyV01 built | 0 |
-| Best C1 net ticks/trade so far | none positive (best: −1.01 [W4-C neighbor ONL pierce4 W120 24/8, CI straddles 0]) |
+| Best C1 net ticks/trade so far | none positive |
+| **Predictability ceiling (C5)** | **INSUFFICIENT: best top-decile lift +2.42pp [+0.15,+4.63] vs 7.0–9.1pp gap; all Brier skills negative** |
+| Open gates passed | B2 momentum-family correlation gate (ρ_full +0.134, ρ_losing −0.065) → build spec permitted |
+| Sizing frontier (A1) | safe c=0.15 across all 6 scenarios; full-Kelly ≈ $54k/NQ; c=0.15 ⇒ ~1 MNQ/$36k |
 | Sealed holdout reads consumed | 0 |
-| Waves without Pareto improvement | 2 (W3, W4) |
+| Waves without Pareto improvement | 3 (W3, W4, W5) — stop-condition §35.9 now met for Zone F |
+| Amendment 6 §9 closure checklist | families ✓ ×4 of 5 (FSS-10 ES pending), ceiling ✓, plateau ✓, no conditional state ✓, red team PENDING |
 
 Reference constants: viability gap at C1 ≈ 7–10pp on 24–32t brackets; in-state spread
 2.42t; NULL-3 curves = persistence nulls; path toll: P(−4 before +8) ≈ 0.63, median

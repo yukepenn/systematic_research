@@ -1,0 +1,27 @@
+=== [1] FSS-6 trigger re-derivation (sliding_window_view, all 37 sessions) ===
+sessions with trigger-set mismatch vs main run: 0 / 37
+FUNNEL (RTH quote-alive seconds, all sessions): dec=818965, compression(range<=8t)=336 (0.041%), compression AND |ret10|>=6t=5, full trigger long=2 short=3
+
+FSS-6 trigger events (all):
+  s20250901 2025-09-01 10:10:02 short mid=93950.0 comp=[93952.0,93959.0] rng=7.0t ret10=-6.0t
+  s20250901 2025-09-01 10:40:29 short mid=93951.0 comp=[93953.0,93961.0] rng=8.0t ret10=-8.0t
+  s20250901 2025-09-01 11:43:18  long mid=94018.5 comp=[94009.5,94016.5] rng=7.0t ret10=+6.0t
+  s20250901 2025-09-01 11:55:46 short mid=93989.0 comp=[93992.5,94000.0] rng=7.5t ret10=-6.5t
+  s20250901 2025-09-01 12:39:05  long mid=94011.5 comp=[93998.0,94005.5] rng=7.5t ret10=+9.5t
+cross-check vs by_session CSV n_trig: long 2 == 2: True | short 3 == 3: True
+
+=== [3] FSS-7 pure-Python re-simulation (independent code path) ===
+  s20260303 FSS7 +24/-8  long: resim n=169 tgt=55 adv=114 cap=0 gross=+408.0 | csv n=169 tgt=55 adv=114 cap=0 gross=+408.0 | MATCH=True
+  s20260303 FSS7 +24/-8 short: resim n=179 tgt=47 adv=132 cap=0 gross=+72.0 | csv n=179 tgt=47 adv=132 cap=0 gross=+72.0 | MATCH=True
+  s20260303 FSS7 +32/-10  long: resim n=178 tgt=45 adv=133 cap=0 gross=+110.0 | csv n=178 tgt=45 adv=133 cap=0 gross=+110.0 | MATCH=True
+  s20260303 FSS7 +32/-10 short: resim n=158 tgt=43 adv=115 cap=0 gross=+226.0 | csv n=158 tgt=43 adv=115 cap=0 gross=+226.0 | MATCH=True
+  s20260519 FSS7 +24/-8  long: resim n=177 tgt=52 adv=125 cap=0 gross=+248.0 | csv n=177 tgt=52 adv=125 cap=0 gross=+248.0 | MATCH=True
+  s20260519 FSS7 +24/-8 short: resim n=164 tgt=45 adv=119 cap=0 gross=+128.0 | csv n=164 tgt=45 adv=119 cap=0 gross=+128.0 | MATCH=True
+  s20260519 FSS7 +32/-10  long: resim n=173 tgt=42 adv=131 cap=0 gross=+34.0 | csv n=173 tgt=42 adv=131 cap=0 gross=+34.0 | MATCH=True
+  s20260519 FSS7 +32/-10 short: resim n=155 tgt=36 adv=119 cap=0 gross=-38.0 | csv n=155 tgt=36 adv=119 cap=0 gross=-38.0 | MATCH=True
+FSS-7 independent re-simulation: ALL MATCH = True
+
+=== [4] pooled CSV cross-foot from by-session CSV ===
+cross-foot failures: 0 / 8 rows
+
+VERIFY DONE

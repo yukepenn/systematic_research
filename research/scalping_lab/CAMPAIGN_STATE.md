@@ -116,7 +116,32 @@
       (largest objective), C bounded fast-scalp frontier + predictability-ceiling test.
       Zone-F closure only per Amendment 6 §9 (5 families + ceiling + red team).
       Verbatim: MANDATE_AMENDMENT_6_NO_PREMATURE_CLOSURE.txt.
-- [ ] **W5 (three programs, specs frozen before readout — specs/W5_programs_wave.md)**:
+- [x] **W5 COMPLETE (2026-08-08, 8 parallel agents, specs 2e73b2b)**:
+      **A1 sizing frontier**: safe c=0.15 across ALL 6 stress scenarios (P(DD>40%)<5%);
+      full-Kelly capital ≈ $54k per 1 NQ (dev Sharpe 0.680); c=0.15 ⇒ ~1 MNQ per $36k,
+      geo 6.6%/yr empirical; c=1.0 ⇒ 27%/yr but P(DD>40%)=97%. No single c = truth.
+      **B1 overnight NOT PROMISING**: +17.2t/night net but CI [−17,+51] spans zero
+      (σ=578t/night); ρ vs Solar 0.015 — orthogonality real, edge unproven; 2005+ not
+      triggered. **B2 gate PASSED (prediction wrong in the good direction)**: momentum
+      family ρ_full +0.134, ρ_losing −0.065 → BUILD SPEC PERMITTED (must be mechanically
+      different from killed H-A1 construction; monthly ρ 0.335 noted).
+      **C program: ALL KILLED + CEILING INSUFFICIENT** — C1 clean/deep 0/24 (recovery
+      gate never binds; max lift +1.64pp); C2 fast FSS-2 0/16 (breakout-continuation now
+      dead at 15s/30s/60s/1min clocks); C3 FSS-3 0/36 (lift negative ALL cells, setup
+      near-vacuous); C4 FSS-6 non-occurrence + FSS-7 zero lift on 18,962 episodes;
+      **C5 ceiling: best top-decile lift +2.42pp [+0.15,+4.63] vs 7.0-9.1pp gap, all
+      Brier skills negative, models learn vol not direction → information set declared
+      INSUFFICIENT (frozen rule)**. Scoreboard 14/14 killed; waves-without-improvement
+      = 3 (par.35.9 met for Zone F). Amendment 6 par.9 checklist: 4/5 families + ceiling
+      done; REMAINING: FSS-10 ES conditioning + independent red team.
+- [ ] **W6 queue**: (1) finish ES archival (32/39 done) + build ES sechilo + FSS-10 ES
+      confirmation/non-confirmation at >=1min lags on NQ structural states — the LAST
+      family before the par.9 verdict; (2) independent red-team pass on the Zone-F
+      closure package; (3) B-momentum build spec (correlation gate passed; must satisfy
+      H-A1 retry conditions: new preregistration + mechanically different construction —
+      noise-area/VWAP always-monitoring variant, dev-minute data); (4) if FSS-10 fails
+      and red team concurs -> formal par.34 declaration for Zone F.
+- [x] (superseded record) **W5 (three programs, specs frozen before readout — specs/W5_programs_wave.md)**:
       A1 robust sizing FRONTIER (ledger-only, scenario grid, no single fraction as
       truth). B1 overnight 16:44→09:30 first pass (2022-2026 3-min data) + measured
       correlation vs Solar ledger. B2 intraday-momentum correlation pre-gate (existing
