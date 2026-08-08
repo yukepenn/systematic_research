@@ -1,0 +1,32 @@
+run_id: SM04_CONSENSUS_SHAPE
+program: system_master
+type: R1_EXPERIMENT
+date_frozen: 2026-08-08
+registry_seq: 297-300
+motivation: >
+  Consensus (|vote_pend|) is the strongest surviving feature (C01 T0-6 5/5
+  fold-stable; SM02B: win rate and mean net monotone in consensus; 10-13
+  bucket = 13.3% of trades, 35.9% of net, 39.0% of top-1%). The E10 target map
+  is linear in the vote; the map SHAPE was never tested. Killed-axis check:
+  differs from C01T1_EXP (vol-surprise terciles), C01T1_ML (probability-ranked
+  suppression), H-013 member reweighting (all members stay equal-weight; only
+  the aggregate vote->target map changes). A priori tail arithmetic: the
+  down-weighted low-consensus state holds 14.9% of top-1% vs 42.2% of trades,
+  so relative down-weighting passes the C01 share gate by construction; the
+  binding gate is absolute top-1%/top-10-day retention.
+arms:   # target maps on member pending mean m_bar (sum = 13*m_bar); member trades UNCHANGED
+  - {seq: 297, id: U1_boost,    map: "round(10*m_bar) + 2*sign(sum) if |sum|>=11, cap +/-12"}
+  - {seq: 298, id: U2_tilt,     map: "round(10*m_bar*(0.7+0.6*|sum|/13))"}
+  - {seq: 299, id: U3_convex,   map: "sign(m_bar)*round(10*|m_bar|^1.5)"}
+  - {seq: 300, id: D1_deadband, map: "0 if |sum|<=2 else round(10*m_bar)  # falsification arm"}
+evaluation: >
+  E10 sim with each map; every variant rescaled to BASE mean |target| (matched
+  average exposure) and separately to matched dev vol; sm_metrics suite;
+  right-tail gates; H1/H2; block bootstrap dSharpe/dlogG vs base.
+gates_frozen:
+  - top-1pct retention >= 90% AND top-10 E10-day retention >= 90% (at matched exposure)
+  - matched-exposure logG and Sharpe both > base with P(d<=0) < 0.10
+  - H1/H2 same sign
+  - promote at most ONE map and only if a second map of the same monotone family also improves (plateau-in-shape-space)
+burn: 4
+outputs: [runs/SM04_CONSENSUS_SHAPE/out/results.csv, runs/SM04_CONSENSUS_SHAPE/out/report.md]

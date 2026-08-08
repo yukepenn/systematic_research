@@ -1,0 +1,38 @@
+run_id: SM03_DISASTER_STOP
+program: system_master
+type: R1_EXPERIMENT
+date_frozen: 2026-08-08
+registry_seq: 291-296
+motivation: >
+  SM02B anatomy: the ONLY stop population with CI-negative remaining expectancy
+  is adverse excursion >= 1.0*S (P(recover)=4.1%), holding 42% of gross-loss
+  mass, touching 1.2% of pooled top-1% trades (0% mid-band). Pure
+  time-to-progress and loss-reactive throttles are dead (measured). Targets the
+  LEFT_TAIL_EXCESS DD family (36.6% of dev DD depth: E01/E05/E08).
+rule: >
+  Per member, while in a position, at each 3-min bar close: if
+  (entry_px - close)*side >= m * S_entry (S_entry = member S frozen at the
+  entry trend's birth), submit market exit; fill next bar open with standard
+  1-tick slip. Re-entry: natural V3 semantics (flat until next Type-1 flip;
+  the next flip is necessarily opposite-direction, so no same-trend re-entry
+  exists — this differs mechanically from the killed C2 Type-3 re-entry sleeve
+  and from H-007 split thresholds: the reversal threshold S is UNTOUCHED and
+  the stop is strictly wider than or equal to S).
+arms:   # band scope x m; fast=vm6-12, mid=vm14-22, slow=vm24-30
+  - {seq: 291, scope: mid_only,   m: 1.0}
+  - {seq: 292, scope: mid_only,   m: 1.25}
+  - {seq: 293, scope: mid_slow,   m: 1.0}
+  - {seq: 294, scope: mid_slow,   m: 1.25}
+  - {seq: 295, scope: tiered,     m: {fast: 1.5, mid: 1.0, slow: 1.25}}
+  - {seq: 296, scope: all,        m: 1.5}
+evaluation: >
+  Full E10 re-simulation (member pend positions -> round(10*mean) target).
+  Dev window (<= 2026-05-31), sm_metrics suite, matched-vol logG comparison.
+gates_frozen:
+  - top-1pct member-trade retention >= 90% AND top-10 E10-day retention >= 90%
+  - at least one of maxDD / ES5 / worst-month improves >= 5% vs base
+  - matched-vol logG >= base logG - 0.01
+  - H1/H2 delta same sign; promote only if >= 2 adjacent arms in the same scope agree
+  - HISTORICAL stress (2006-2021 diagnostic): stop must not worsen historical maxDD > 10%
+burn: 6
+outputs: [runs/SM03_DISASTER_STOP/out/results.csv, runs/SM03_DISASTER_STOP/out/report.md]
