@@ -41,6 +41,13 @@ UNIFIED_STATE_MAP.md` and each family's own `REPORT.md`.
 
 | U4B (short-side signal-gated early-flatten) | Act on U4's cleanest-in-campaign-history predictive state (giveback_ratio at first-M-decay checkpoint) as an actual trading rule | **NOT PROMOTED** | none (3-cell grid, all fail) | `runs/U4B_SHORT_DECAY_DERISK/REPORT.md` | Predictive label does not survive the transition to actionable rule: all 3 thresholds {1.5,1.75,2.0} lose net vs control full-history AND 2022-2025-only AND LOYO, and make maxDD/CDaR95 WORSE not better (no metric improves). Post-construction right-tail check: damage concentrates in 2 of the top-20 all-time short winners (-$7,291 combined) vs only +$1,842 improvement across bottom-20 losers -- same asymmetric-damage pattern that closed R1's original grid | Short-side de-risk axis closed at the giveback-conditioned-exit level; would need a genuinely different (non-giveback) mechanism to reopen |
 
+## Wave 2 (opened 2026-08-09, MASTER DIRECTIVE v2 + addendum) — in progress
+
+| Family | Hypothesis | Status | Notes |
+|---|---|---|---|
+| U1B/U6B/U8/U9 | Session-conditioned hold policy / Product-A scale-rate / path organization / microstructure provenance | **RUNNING** | Launched in parallel per `CONTINUOUS_EVOLUTION_WAVE2_EVI.md`; results pending |
+| SHADOW01 (setup compatibility) | Do recent shadow/virtual-opportunity outcomes predict the next opportunity's expected value | **CLOSED — null not practically rejected** | `runs/SHADOW01_SETUP_COMPATIBILITY/REPORT.md` — statistically real (bootstrap CI excludes 0, 5/5-year stable) but economically negligible (ΔR² 5-10x below R4/R5's own modest findings); no construction attempted |
+
 ## Campaign stop condition (directive sec40 [MEGA RESEARCH DIRECTIVE] / sec60 [SYSTEM ARCHITECTURE SCIENCE DIRECTIVE])
 
 **MET, 2026-08-09** for the SYSTEM ARCHITECTURE SCIENCE campaign (SA0 → R3 → R2B → R4 → R5 → R6 →
