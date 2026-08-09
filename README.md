@@ -135,6 +135,19 @@ forbids silently changing the record.
 > this section describes as pending is evidently already complete and already live on the
 > public remote. Left below unedited per the "append, don't rewrite" convention — it remains
 > an accurate record of what happened and when.
+>
+> **⚠️ CORRECTION to the update immediately above (2026-08-09, Wave 17, V3-R5 —
+> `runs/W17_C4_COMPLIANCE/REPORT.md`). The 2026-08-09 update overstated its conclusion and is
+> downgraded here.** `git rev-list --objects --all` enumerates objects reachable in the
+> **local** clone; it cannot test what the GitHub **remote** still serves. GitHub retains
+> unreachable objects and serves them by direct SHA until a support-requested garbage
+> collection — exactly the residual risk the original section below describes. A local
+> reachability check therefore cannot overturn a claim about remote retention. The supported
+> finding is: **the blob is not reachable via normal history traversal; REMOTE RETENTION IS
+> UNVERIFIED.** Additionally, a fact never previously recorded anywhere in this repo:
+> `gh repo view` reports the repository is currently **PUBLIC** (0 forks, 0 stars), i.e. the
+> 2026-08-07 "set private" state described below no longer holds. Both points are parked in
+> [`OWNER_QUEUE.md`](OWNER_QUEUE.md) §OQ-1; no irreversible action has been taken.
 
 `SolarWaveRK/RenkoKings_SolarWaveRK_NT8.dll` (4.5 MB) was committed in `35901db`
 (2026-08-06 22:16) and pushed to a **public** repository. This violated the campaign's own hard
