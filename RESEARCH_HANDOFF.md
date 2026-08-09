@@ -7,6 +7,17 @@ Read this before starting any new research wave. Kept short on purpose — see
 CURRENT MODE: RESEARCH
 ```
 
+> **UPDATE 2026-08-09 (later same day) — CONTINUOUS SYSTEM EVOLUTION phase OPEN, wave 1 CLOSED.**
+> Per the owner's follow-on directive, research does not stop at zero promotions -- it continues
+> via an EVI-ranked loop. Wave 1 (`U0` shared state infra, `U2` data audit, `H0` Product-A health,
+> `U1` session heterogeneity, `U3` hold/exposure, `U4` short mechanism, `U5` soft weighting, `U6`
+> Product-A path-dependence, `U7` 2026-regime explanation, plus `U4B`, the top-EVI follow-on
+> construction) is CLOSED, zero promotions, both baselines still UNCHANGED. Synthesis + EVI
+> ranking of what's next: `research/system_master/CONTINUOUS_EVOLUTION_WAVE1_SYNTHESIS.md`. Full
+> navigation: `research/system_master/RESEARCH_FRONTIER.md`. Do not re-run any of these families
+> unchanged. Superseded by nothing -- this phase has no stop condition; see that synthesis doc
+> for the next queued hypothesis.
+>
 > **UPDATE 2026-08-09 — SYSTEM ARCHITECTURE SCIENCE + ALPHA OPTIMIZATION campaign CLOSED, same
 > day, after this file's original text below.** SA0 (full structural/failure-mode decomposition),
 > R3 (SelTime-as-state), R2B (pullback-reclaim), R4 (slope/impulse), R5 (OHLCV microstructure

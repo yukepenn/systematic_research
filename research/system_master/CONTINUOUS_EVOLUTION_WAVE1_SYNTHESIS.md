@@ -65,3 +65,14 @@ parallel throughput.
 
 U1's cross-product hierarchical idea, U3's two-dimensional refinement, and U6's scale-rate idea
 remain **NOT YET TESTED / NOT AUTHORIZED**, recorded here for the next EVI cycle once U4B closes.
+
+## U4B result (addendum, same day)
+
+**NOT PROMOTED.** All 3 grid cells lose net and worsen (not improve) maxDD/CDaR95 vs control,
+full-history and 2022-2025-only and LOYO alike — no fragile-needle ambiguity, a consistent
+plateau of failure. Post-construction right-tail check found the damage concentrated in just 2
+of the top-20 all-time short winners (-$7,291 combined) against only +$1,842 of improvement
+across the bottom-20 losers — the same asymmetric-damage signature that closed R1's original
+giveback-exit grid. Full detail: `runs/U4B_SHORT_DECAY_DERISK/REPORT.md`. The short-side
+de-risk axis is closed at the giveback-conditioned-exit level of construction; U1's, U3's, and
+U6's ideas (ranked #2-#4) remain queued, unaffected by this result, for the next EVI cycle.
