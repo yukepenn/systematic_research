@@ -119,12 +119,14 @@
 <div class="wrap">
 
   <header class="mast">
-    <div class="eyebrow"><span>Owner status</span><span>Wave 18 · MEGA PROMPT V7</span><span>2026-08-09</span><span>registry seq 463</span></div>
-    <h1>Two mechanism tests. Two failures. And the first honest map of where the money in this system actually comes from.</h1>
-    <p class="standfirst">V7 removed the four gates that had kept mechanism research from starting, so it started.
-    Both hypotheses failed — but each failed for a specific, measurable reason, and one of those reasons points
-    directly at the only surface of the strategy core this program has never touched. Separately: every object in
-    the program is now margin-compliant, and the June–July window you asked me to protect was already spent.</p>
+    <div class="eyebrow"><span>Owner status</span><span>Wave 18 · MEGA PROMPT V7</span><span>2026-08-09</span><span>registry seq 467</span></div>
+    <h1>Two mechanism tests, two failures — and a review that took away the consolation prize I had written for myself.</h1>
+    <p class="standfirst">V7 removed the four gates that had kept mechanism research from starting, so it started. Both
+    hypotheses failed. I then hedged both failures, and the independent reviews took both hedges apart: one by running
+    the follow-up experiments I had queued instead of running, the other by showing my "it replicated" prong rested on
+    the one instrument that generated the hypothesis. Three retractions, all mine. Separately, and unambiguously good:
+    every object in the program is now margin-compliant, and the June–July window you asked me to seal turned out to
+    have been spent the day before you asked.</p>
   </header>
 
   <div class="strip">
@@ -134,6 +136,8 @@
     <span>M1 and M5, both closed negative</span>
     <b>SHIFT SIGNAL LIVE</b>
     <span>ten consecutive alpha hypotheses closed with no promotion</span>
+    <b>3 RETRACTIONS</b>
+    <span>from independent review, all of my own claims</span>
   </div>
 
   <section>
@@ -225,37 +229,54 @@
       09:33). That premise test was pre-registered with a falsification bar of 1.5×. It was not close.</p>
     </div>
 
-    <div class="note warn">
-      <h3>M1 failed — and the reason is that the fix could not reach the place it was aimed at</h3>
+    <div class="note bad">
+      <h3>M1 failed, and the review closed the door I had left open</h3>
       <p>Applying a session-mean-1 seasonal factor to the volatility estimate failed all three gates: Sharpe 0.558 vs
-      0.709, drawdown-tail $35,498 vs $27,162, and right-tail retention <strong>80.5%</strong> against a 95% floor.</p>
-      <p>The cause is mechanical and I measured it rather than guessing. The threshold is resampled <strong>only when a
-      trend flips</strong>, and flips cluster in exactly the loud parts of the day — so the factor in force at the
-      moment that matters averages <strong>1.54</strong>, not 1.00. The result is not a re-allocation of threshold
-      across the day at all; it is a <strong>64% widening of the threshold everywhere</strong>, which collapsed flips by
-      46% in every cohort including the overnight one it was supposed to tighten. My own spec asserted this was "a pure
-      re-allocation." That assertion was wrong, and it was knowable in advance from the state machine's own semantics.</p>
-      <p>Which makes the null <em>conditional</em>, not final — and points somewhere specific. Every core challenge this
-      program has ever run varied what the volatility estimate <em>measures</em>, what clock it is measured on, or where
-      its clamp sits. <strong>None has ever varied when the threshold is sampled.</strong> That is the ranked lead into
-      Wave 19.</p>
+      0.709, drawdown-tail $35,498 vs $27,162, right-tail retention 80.5% against a 95% floor.</p>
+      <p>The cause is mechanical and I measured it. The threshold is resampled <strong>only when a trend flips</strong>,
+      and flips cluster in the loud parts of the day — so the factor in force at the moment that matters averages
+      <strong>1.54</strong>, not 1.00. The result was not a re-allocation of threshold across the day; it was a
+      <strong>39–64% widening of the threshold everywhere</strong>. My own spec asserted it was "a pure re-allocation."
+      Wrong, and knowable in advance from the state machine's semantics.</p>
+      <p>I then called the null "conditional" and queued two de-confounded constructions for Wave 19.
+      <strong>The reviewer ran both — they take eight seconds each — and both are worse.</strong> Exposure-neutral:
+      Sharpe 0.411, tail $40,759. Per-bar resampling in both arms, which is the clean test: ΔSharpe −0.303, probability
+      of improvement 0.116. <strong>The axis closes unconditionally and the Wave-19 lead I proposed is withdrawn.</strong>
+      Two further retractions came with it: this was in effect an <em>exposure</em> change (a third less exposure for a
+      quarter less profit — net per unit of exposure barely moved), and the failure is not "wide-margin" at all — ΔSharpe
+      −0.150 sits in [−0.64, +0.33], and <strong>three-quarters of the damage is in the last 106 sessions</strong>, with
+      M1 actually beating the incumbent in 2024 and 2025.</p>
+    </div>
+
+    <div class="note bad">
+      <h3>M5: the ATR blend does not replicate — and my first write-up of it overstated the result</h3>
+      <p>Wave 14 closed this candidate having failed one prong of one gate — drawdown-tail probability
+      <strong>0.753</strong> against a 0.85 bar — and blamed a shortage of data. This wave rebuilt the identical
+      construction, weight frozen, on <strong>ES, RTY and YM</strong> over the same era, pooling with a bootstrap that
+      resamples the same dates across all four instruments so their dependence is preserved exactly.</p>
+      <p>I reported that the Sharpe effect replicated (0.911) while the tail effect did not (0.784).
+      <strong>The reviewer showed the passing prong was carried by NQ — the instrument that generated the hypothesis
+      in the first place.</strong> On the three instruments that did <em>not</em> generate it, the prongs are
+      <strong>0.8223</strong> and <strong>0.7108</strong> — both below the bar — and not one of them clears 0.85 on
+      either prong individually. The corrected statement is that <strong>neither effect replicates</strong>, which is a
+      stronger closure than the one I wrote. Verdict PARTIAL stands, and PARTIAL was pre-registered as not a pass.</p>
+      <p>Two things not to misread. <strong>ES, RTY and YM all lose money</strong> under this construction (Sharpe
+      −0.045, −0.633, −0.563) — the system does not travel, only the paired increment was ever under test, and nothing
+      proposes trading them. And the reviewer tested <strong>eight alternative ways of pooling</strong>: none flips the
+      verdict, and the only rule that would pass is post-hoc deletion of the instrument that failed — which is exactly
+      what pre-registration exists to prevent.</p>
     </div>
 
     <div class="note warn">
-      <h3>M5 killed the "we just lacked statistical power" excuse for the ATR blend</h3>
-      <p>Wave 14 closed the ATR-blend candidate having failed one prong of one gate — the drawdown-tail probability at
-      <strong>0.753</strong> against a 0.85 bar — and blamed 4.4 years of daily data. This wave rebuilt the identical
-      construction, weight frozen, on <strong>ES, RTY and YM</strong> over the same era, and pooled the evidence with a
-      bootstrap that resamples the same dates across all four instruments so the dependence is preserved exactly.</p>
-      <p>The Sharpe effect replicated: pooled probability <strong>0.911</strong>. The tail effect did not: pooled
-      <strong>0.784</strong>. Roughly four times the effective evidence — the instruments' mechanism increments turn out
-      to be nearly independent (cross-correlation 0.029, versus 0.677 for their raw P&amp;L, giving an effective sample
-      size of 3.68 of 4) — moved that prong by 0.031 and it still did not clear the bar. The power hypothesis has now
-      been tested and rejected. <strong>Verdict PARTIAL, which was pre-registered as not a pass.</strong> The lead stays
-      closed, now on two independent grounds.</p>
-      <p>One thing not to misread: <strong>ES, RTY and YM all lose money</strong> under this construction (Sharpe −0.045,
-      −0.633, −0.563). The system does not travel; only the paired increment does. They are replication samples and
-      nothing here proposes trading them.</p>
+      <h3>Both mechanism results are carried by the same 9% of the sample</h3>
+      <p>Independent runs, different substrates, same 106 sessions. M1's failure is <strong>74.5%</strong> concentrated
+      in 2026-01-02 → 2026-05-29; dropping those same sessions moves M5's pooled probabilities from 0.911 / 0.784 to
+      <strong>0.766 / 0.655</strong>. On yearly sign agreement every instrument in M5 — including NQ — is only
+      <strong>3 of 5</strong>, below the 4-of-5 bar this program applied to a different candidate one wave earlier.</p>
+      <p>Neither spec pre-registered a chronology check, and that is a design defect in both. It is now a standing rule
+      that future mechanism specs must carry one alongside the primary statistic. This also means the two failures this
+      wave are less about the mechanisms than they look, and more about a recent regime that neither construction
+      handles — which is itself the more interesting question.</p>
     </div>
 
     <div class="note">
@@ -289,19 +310,23 @@
         <thead><tr><th>Item</th><th>Question</th><th>Verdict</th><th class="n">Seq</th></tr></thead>
         <tbody>
           <tr><td class="c">M1 · R1</td><td>Does normalising the threshold for intraday volatility seasonality help?</td>
-              <td><span class="pill p-fail">Fails 0/3</span> premise confirmed at 11× spread, but the fix cannot reach its target — it widens the threshold 64% instead. Null is <em>conditional</em>.</td><td class="n">459</td></tr>
+              <td><span class="pill p-fail">Fails 0/3</span> and, after review, <strong>closed unconditionally</strong> — both de-confounded constructions are worse</td><td class="n">459</td></tr>
           <tr><td class="c">D4</td><td>Where in the trading day does the money come from?</td>
               <td><span class="pill p-acc">Answered</span> RTH is 34.6% of bars and 81.2% of P&amp;L; the evening quarter loses $10,989</td><td class="n">459</td></tr>
           <tr><td class="c">M5 · R2</td><td>Does the ATR blend replicate on ES/RTY/YM in the same era?</td>
-              <td><span class="pill p-fail">Partial = not a pass</span> Sharpe replicates (0.911), tail does not (0.784) at ~4× the evidence</td><td class="n">460</td></tr>
+              <td><span class="pill p-fail">Partial = not a pass</span> and after review <strong>neither prong replicates</strong>: new-instrument-only probabilities 0.822 and 0.711</td><td class="n">460</td></tr>
           <tr><td class="c">E-1</td><td>Was Jun–Jul 2026 ever consumed by this campaign?</td>
               <td><span class="pill p-fail">Premise false</span> consumed 2026-08-08 by SM11; nothing left to seal</td><td class="n">461</td></tr>
           <tr><td class="c">§F</td><td>What is the true warmup requirement?</td>
               <td><span class="pill p-acc">Measured</span> Solar 2–4 sessions; tilt 51 sessions is what binds. Standing rule written.</td><td class="n">462</td></tr>
           <tr><td class="c">§12</td><td>Propagate the flatten fixes to the flagship</td>
               <td><span class="pill p-pass">Pass</span> 39 → 0 breaches; 99.81% of fills identical; all 86 differences fall on early closes</td><td class="n">463</td></tr>
-          <tr><td class="c">O1</td><td>Blind repair of the objective's two sign-flipping defects</td>
-              <td><span class="pill p-open">In progress</span> Track E; O2 retro-scoring stays blocked until it lands</td><td class="n">—</td></tr>
+          <tr><td class="c">Red team ×2</td><td>Can either mechanism result be broken?</td>
+              <td><span class="pill p-acc">Confirmed with corrections</span> 29 defects, <strong>3 retractions</strong>. What survived: the causal estimator (rebuilt from scratch, exact to 519,714 bars), M5's full reproduction to $0.0000000000, and eight alternative pooling rules that all fail.</td><td class="n">464–465</td></tr>
+          <tr><td class="c">Standing</td><td>Why do both results hinge on the last 106 sessions?</td>
+              <td><span class="pill p-open">Open question</span> logged as a standing caution; chronology gates now mandatory in mechanism specs</td><td class="n">466</td></tr>
+          <tr><td class="c">O1</td><td>Blind repair of the objective's sign-flipping defects</td>
+              <td><span class="pill p-open">Repaired, still blocked</span> λ was 73.1% of correct — but the repair moves the score <em>up</em> and its author flagged the choice as the most favourable available, so retro-scoring waits for an independent review of that one decision</td><td class="n">467</td></tr>
         </tbody>
       </table>
     </div>
@@ -315,9 +340,12 @@
       <li><strong>Open — NT8 Strategy Analyzer re-parity (V1-R4).</strong> Three objects changed and none has been
       re-certified. Until it runs, no object may be called parity-proven. This is the largest outstanding engineering
       item and it gates deployment readiness, not research.</li>
-      <li><strong>Open — the objective function.</strong> Two sign-flipping defects found by red team in Wave 17 are
-      being repaired blind (fix and justify before scoring anything). The retro-scoring pass over the closed candidate
-      set stays blocked until that is done, which is the correct outcome.</li>
+      <li><strong>Open — the objective function.</strong> The blind repair is done: the risk-aversion constant was
+      <strong>73.1% of correct</strong>, and one of the three defects behind a single line of code flips the score's
+      sign on a test fixture. But the repair moves the score <em>up</em>, and the agent that made it flagged, unprompted,
+      that the choice it made was the most favourable of the four it considered. So retro-scoring stays blocked — not on
+      "the objective is broken" any more, but on "the decision that raised the number has not been checked by anyone
+      else." That check is the first item of Wave 19.</li>
       <li><strong>Open — remaining propagation:</strong> <code>SolarWaveSMOneLot_v1</code>; the intraday-path capital
       map; the MNQ bar-by-bar fill audit on the rebuilt object.</li>
       <li><strong>Blocked — repository visibility and vendor-blob remote retention.</strong> The repo is currently
@@ -336,9 +364,12 @@
     the multiple-testing position is unchanged and the trial count rose: deflated Sharpe <strong>0.45–0.55</strong>
     against a 0.90 bar, and a Harvey–Liu-adjusted Sharpe of <strong>0.000</strong> on the incumbent's key comparison.</p>
     <p><strong>Ten consecutive alpha hypotheses have now closed without a promotion.</strong> Under the standing rules
-    that is a signal to change what is being searched rather than to search harder in the same space, and this wave
-    produced the first concrete direction in a while: the strategy core's threshold-<em>sampling</em> rule, which no
-    experiment in this program has ever varied. That is where Wave 19 goes.</p>
+    that is a signal to change what is being searched rather than to search harder in the same space. I proposed a
+    direction for Wave 19 — the strategy core's threshold-<em>sampling</em> rule — and then the review tested it and it
+    was worse, so <strong>I am withdrawing it rather than carrying a lead the evidence has already killed.</strong>
+    What actually survives as a pointer is narrower and more honest: the day's P&amp;L is concentrated in regular trading
+    hours while a quarter of the clock loses money, and both of this wave's failures are concentrated in the same recent
+    106 sessions. Those are the two things worth aiming at next, and neither is a threshold re-weighting.</p>
     <p>E-1 also settles a question that had been left ambiguous: <strong>there is no clean historical out-of-sample
     window anywhere</strong> — not for the Solar baseline, and as of 2026-08-08 not for B-MOM or B1 either. The only
     genuinely virgin data is from 2026-08-01, it is nine days old, and it accrues at one quarter per quarter no matter
@@ -355,10 +386,11 @@
     <code>runs/W18E_PRODUCTA_C4/</code> · <code>runs/W18_XINST_BARS/</code> ·
     <code>research/system_master/HOLDOUT_DETERMINATION_20260809.md</code> ·
     <code>research/system_master/WARMUP_STANDARD.md</code> · <code>CURRENT_TRUTH.md</code> ·
-    <code>research/registry/tested_configs.csv</code> seq 459–463.</div>
-    <div>Both Track-R results were independently red-teamed; verdicts are filed verbatim under each run's
-    <code>red_team/</code> and corrections are ingested into the run reports. The Product A compliance run was not
-    red-teamed — it proposes no promotion — and says so in its own report.</div>
+    <code>research/registry/tested_configs.csv</code> seq 459–467.</div>
+    <div>Both Track-R results were independently red-teamed with instructions to break them: 29 defects, 3 retractions,
+    neither verdict refuted. Verdicts are filed verbatim under each run's <code>red_team/</code> and every correction is
+    ingested into the run report and into this page — the originals are annotated, never rewritten. The Product A
+    compliance run was not red-teamed, because it proposes no promotion, and says so in its own report.</div>
     <div>Every figure traces to a committed artifact. Research and backtesting only — no order was placed, modified or
     cancelled; no account was touched; the vendor assembly was not modified.</div>
   </footer>
