@@ -1,8 +1,67 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, Product B one-contract final deliverable (NQ parity PASSED, MNQ
-parity pending). Supersedes the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the
-V1 record)._
+_Last update: 2026-08-09, Wave-16 (MEGA PROMPT V5 rev2, owner directive) W0 verification
+IN PROGRESS — see the section immediately below, which supersedes the Product B framing
+from 2026-08-08 for BEST_ONE_MNQ specifically. Multiple-testing ledger: registry at seq 448._
+
+## Wave-16 W0 verification — IN PROGRESS (MEGA PROMPT V5 rev2, seq 443-448 so far)
+**HEADLINE: BEST_ONE_MNQ has a confirmed critical bug and is NOT currently a valid C4-
+compliant deliverable.** Empirical audit of the real NT8 trades (`nt_trades_mnq.csv`, 1,561
+trades) shows **67.7% of MNQ exits land at exactly 17:00 ET** (zero exits 16:27-17:00) —
+the coded `hm>=163900` forced-flatten branch in `SolarWaveOneContractMNQ_Final.cs` computes
+the correct target (0) but the resulting order is not filling before the session-close
+backstop (`ExitOnSessionCloseSeconds=30`, bar-end-stamped ~17:00). This means 2/3 of MNQ
+trades ride through the ENTIRE 16:45-17:00 NinjaTrader-initial-margin window the C4 hard
+constraint exists to avoid. Root cause not yet isolated (suspect: cross-series order
+routing, same bug class as `SolarWaveSMMaster_v1`'s KNOWN_ERRORS #7 arrangement bug that v2
+fixed) — **not fixed yet, no blind patch attempted**. Every BEST_ONE_MNQ number reported to
+date (net $28,900.70, Sharpe 0.921, the whole metric battery and capital map in
+`runs/PRODUCTB_ONECONTRACT_FINAL/`) reflects this broken policy and must be treated as
+**provisional, not the compliant Product B MNQ deliverable**, until fixed and re-parity'd.
+
+**BEST_ONE_NQ, by contrast, is confirmed COMPLIANT**: the identical `hm>=163900` branch
+(byte-identical code to MNQ's) fires and fills correctly — 668/1,975 exits cluster exactly
+at 16:42 ET, and only 16/1,975 (0.81%) exit after 16:45, at scattered odd late-evening
+times (19:57-23:30) that don't fit the "early-close backstop" explanation either — flagged
+as a small open residual, not blocking (existing NQ parity-PASS stands unchanged; the
+flatten mechanism it was measured on has not changed).
+
+**16:39 vs the broker's 16:45 deadline**: not an error. `research/operational/
+day_margin_variant/MARGIN_RULES.md` recommends an internal deadline ~16:38-16:40 ET (a
+5-7 minute order-routing buffer ahead of the hard 16:45:00 external deadline); 16:39 is the
+nearest 3-minute-bar boundary to that recommendation. Live-fetched NinjaTrader margin pages
+(2026-08-09) confirm the existing repo's NQ/MNQ day-vs-initial margin figures exactly
+(NQ $1,000→$43,433.67, MNQ $100→$4,343.38) and confirm the commission schedule is dated
+2026-07-01 and updated quarterly, as the owner stated — the live filtered NQ/MNQ commission
+table itself did not render via fetch, so the existing $2.18/$0.65-per-side convention is
+neither independently confirmed nor contradicted this wave (V4a still open).
+
+**V2 (overshoot ratio r, the MONITOR-01 statistic)**: NO ALARM on any window. Trailing-120-
+session r = 1.2235 (all bands 1.2165-1.2492, comfortably above the 1.05 alarm floor);
+matches the existing trailing-4-quarter reading (`monitor01_reading001.md`, dated
+2026-08-07 — one day old, not "15 waves" as the prompt inferred, a premise correction worth
+recording) and the full-history baseline exactly. Edge intact by this measure.
+
+**V3 (repo exposure)**: `README.md` §6b is STALE. It states the vendor-DLL history rewrite
+was never performed and risk is "contained, not erased." Direct git-history search finds
+**zero `.dll` objects anywhere in `main`'s reachable history** (the only branch, local and
+identical to the public `origin/main` — confirmed by a clean non-force push succeeding);
+the original blob-adding commit hash no longer exists locally, consistent with a completed
+`git filter-repo` rewrite. The remediation the old root `NEXT_HANDOFF.md` described as
+"pending only the owner's force-push" **already happened and is already live on the public
+remote**. No history rewrite performed or needed this wave.
+
+**Still open from Wave-16 W0** (not yet done, not fabricated): the MNQ flatten bug fix +
+rebuild + re-parity (top priority — blocks V1a's "re-run parity" requirement and blocks
+everything in W2-W4 that touches BEST_ONE_MNQ); V1e (holiday early-close enumeration); V1f
+(event-day 4x-margin exposure share + leverage ceiling); V1g (intraday-path capital
+headroom, needs O1a machinery); V4 (full friction-share ledger for Product A); V4a (exact
+live NQ/MNQ commission confirmation — owner offered to supply); V5 (MNQ 2025-04-07/09/11
+fill audit); O1/O1a (new primary objective function); all of W1-W4. Continuing autonomously
+per the directive's auto-chain instruction.
+
+## Product B one-contract final deliverable (runs/PRODUCTB_ONECONTRACT_FINAL/, orchestrator-
+## executed directly, no alpha changes) — 2026-08-08 framing, MNQ status SUPERSEDED above
 
 ## Product B one-contract final deliverable (runs/PRODUCTB_ONECONTRACT_FINAL/, orchestrator-
 ## executed directly, no alpha changes)

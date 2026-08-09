@@ -1,0 +1,36 @@
+run_id: W16_V0_HYGIENE
+experiment: MEGA_PROMPT_V5_REV2_WAVE16_W0
+type: verification_hygiene_not_a_trial
+date: 2026-08-09
+owner_directive: "MEGA PROMPT -- V5 program directive, rev 2 (owner-authored, 2026-08-08)"
+note: >
+  Written AFTER the underlying investigation, not before -- this run departs from the
+  campaign's normal "spec before results" discipline on purpose. The owner's directive
+  itself framed W0 as blocking read/verify work in direct response to live mid-turn
+  addenda (session-close discrepancy, overshoot ratio, repo exposure), not a planned
+  experiment with a pre-registerable hypothesis. Disclosed here rather than silently
+  retrofitted to look preregistered. Zero alpha changes; nothing here consumes the
+  multiple-testing budget (matches how prior V0/hygiene checks in this campaign have been
+  treated, e.g. SW00_BASELINE_PARITY_COST).
+scope:
+  - V1: empirical flatten-time audit, BEST_ONE_NQ and BEST_ONE_MNQ, on already-exported
+    real NT8 Strategy Analyzer trades (runs/PRODUCTB_ONECONTRACT_FINAL/out/nt_trades_*.csv)
+  - V1b: diagnostic on trades opened in the final N minutes before session close
+    (proxy for "before flatten"; see REPORT.md for the exact framing used)
+  - V2: overshoot ratio r, trailing-120-session window, theta=179 1-min basis, same
+    engine and band definition as the existing MONITOR-01 reading #1
+  - V3: git-history search for the vendor DLL blob; local/remote history comparison
+  - V4a (partial): live NinjaTrader margin + commission page verification
+inputs:
+  - runs/PRODUCTB_ONECONTRACT_FINAL/out/nt_trades_nq.csv (already-committed NT8 output)
+  - runs/PRODUCTB_ONECONTRACT_FINAL/out/nt_trades_mnq.csv (already-committed NT8 output)
+  - runs/B01A_BARS_1M/nq_1m_2022_2026.csv (already-committed 1-min bar substrate)
+  - src/ninjascript/SolarWaveOneContractNQ_Final.cs, ...MNQ_Final.cs (code read, not run)
+  - git log/rev-list of this repository (local + origin/main)
+  - https://ninjatrader.com/pricing/margins/ , /pricing/commissions/ (live fetch, 2026-08-09)
+not_in_scope_this_run:
+  - V1e (holiday early-close enumeration), V1f (event-day margin multiplier), V1g
+    (intraday-path capital headroom), V4 (full friction ledger), V5 (MNQ fill audit),
+    O1/O1a, and all of W1-W4 -- explicitly deferred, not silently dropped.
+outputs: src/v1_flatten_audit.py, src/v2_r120.py (reproduction scripts, deterministic
+  from already-committed inputs, no network calls except the two disclosed WebFetch reads)

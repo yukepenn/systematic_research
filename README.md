@@ -127,6 +127,15 @@ forbids silently changing the record.
 
 ### 6b. Vendor-binary exposure — disclosed in full
 
+> **⚠️ Status update (2026-08-09, `runs/W16_V0_HYGIENE/REPORT.md` §V3, not a rewrite of the
+> section below):** the "CONTAINED, NOT ERASED" / "has NOT been performed" framing here is
+> now stale. A direct git-history search finds **zero `.dll` objects anywhere in the current
+> repository history** (branch `main`, local and public `origin/main` identical); the
+> original blob-adding commit hash no longer exists locally. The `git filter-repo` rewrite
+> this section describes as pending is evidently already complete and already live on the
+> public remote. Left below unedited per the "append, don't rewrite" convention — it remains
+> an accurate record of what happened and when.
+
 `SolarWaveRK/RenkoKings_SolarWaveRK_NT8.dll` (4.5 MB) was committed in `35901db`
 (2026-08-06 22:16) and pushed to a **public** repository. This violated the campaign's own hard
 boundary — *never redistribute vendor binaries*. It was found by the 2026-08-07 audit, not by
