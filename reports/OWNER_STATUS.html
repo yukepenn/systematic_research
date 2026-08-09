@@ -246,11 +246,13 @@
           <tr><td class="c">V1d</td><td>Is a <code>no_new_entry_after</code> parameter needed?</td>
               <td><span class="pill p-pass">Not a problem</span> removing the 16:30 block entirely adds 3 entries across 1,139 sessions</td><td class="n">—</td></tr>
           <tr><td class="c">V1f</td><td>Does 4× event-day margin bind achievable leverage?</td>
-              <td><span class="pill p-hold">No — clearly</span> drawdown-based sizing needs 20–90× more capital than even 4× margin; margin binds on 0 of 60 rows. B6 stays optional, <em>not</em> promoted</td><td class="n">—</td></tr>
+              <td><span class="pill p-hold">Not for Product B</span> drawdown-based sizing needs 20–90× more capital than 4× day margin. Red team: if 4× applies to <em>initial</em> rather than day margin, Product A binds in 15 of 60 rows — the flat "no crossover" claim was conditional on an unnamed assumption. B6 stays optional</td><td class="n">456</td></tr>
           <tr><td class="c">V4 / V4a</td><td>Friction share of the 3-minute incumbent</td>
-              <td><span class="pill p-acc">Measured</span> commission/gross: A 0.119, NQ 0.028, MNQ 0.066; breakeven commission multiples 8.4× / 36.2× / 15.2×</td><td class="n">—</td></tr>
+              <td><span class="pill p-acc">Measured</span> commission/gross: A 0.119, NQ 0.028, MNQ 0.066; breakeven multiples 8.4× / 36.2× / 15.2×. Slippage measured, not assumed (1 tick adverse, 527/527 fills). Cycle-count bug corrected: 4,711 → 4,805</td><td class="n">454</td></tr>
           <tr><td class="c">O1 / O1a</td><td>Replace the deadlocked Sharpe∧CDaR∧top-10 triple</td>
-              <td><span class="pill p-acc">Built</span> expected log growth at pre-registered leverage minus a bootstrap ruin penalty, on the intraday path; legacy triple demoted to diagnostics</td><td class="n">—</td></tr>
+              <td><span class="pill p-open">Built, not yet usable</span> red team found two sign-flipping defects (asymmetric bootstrap aggregation; λ calibrated on the wrong growth convention). Construction stands; the scalar does not. <strong>O2 retro-scoring is blocked until fixed</strong> — correctly so</td><td class="n">457</td></tr>
+          <tr><td class="c">Red team</td><td>Four independent attempts to break the companion analyses</td>
+              <td><span class="pill p-open">4 × confirmed-with-corrections</span> 0 refuted; 46 defects logged, 2 headline-flipping, 1 real code bug, 1 retracted narrative. No compliance result challenged</td><td class="n">454–457</td></tr>
           <tr><td class="c">V3-R5</td><td>Repo exposure</td>
               <td><span class="pill p-open">Corrected</span> remote retention unverified; repo is <strong>public</strong></td><td class="n">—</td></tr>
         </tbody>
@@ -259,12 +261,24 @@
   </section>
 
   <section>
-    <h2>The disclosure you should look at hardest</h2>
-    <div class="note warn">
-      <h3>The partial 2026 year is flat-to-negative for both one-contract objects</h3>
-      <p>Reported because it is unflattering, not because it changes a decision. Recency tiers in this program are
-      <strong>disclosure only and never selection</strong> — no object, parameter, or ranking is or may be chosen on them.</p>
+    <h2>Recency disclosure — and a claim I withdrew after red team</h2>
+    <div class="note bad">
+      <h3>Retracted: I framed the 2026 partial year as an edge collapse. That is not supported.</h3>
+      <p>An earlier version of this page put BEST_ONE_NQ's 2026 slice (−$46.60 over 106 sessions) forward as the number
+      to look at hardest, reading it as the gross edge falling to the friction floor. Independent adversarial review
+      killed that reading and it is withdrawn. The −$46.60 is <strong>0.001 standard errors from zero</strong>; dropping
+      the single best trade of 185 takes it to −$13,307, dropping the single worst takes it to <strong>+$6,623</strong>.
+      Per-trade gross means are not individually distinguishable from zero in <em>any</em> year (Welch 2022-vs-2026:
+      t = 0.89). What survives is arithmetic, not evidence: the slice is small and near zero, and at the coded
+      commission rate its breakeven multiple is 0.94×.</p>
+      <p>Related silence, also corrected: Product A's ledger extends 45 sessions past the dev window
+      (2026-06→07, net <strong>+$34,997</strong>) — running opposite to the collapse story. Excluding it from a
+      dev-window ledger was right; reporting the exclusion without its magnitude was not. It is far too short for any
+      magnitude claim, and it is research-consumed, so it is not clean out-of-sample either.</p>
     </div>
+    <p style="font-size:14.5px;color:var(--ink-2);">Recency tiers are <strong>disclosure only and never
+    selection</strong> — no object, parameter, or ranking is or may be chosen on them. The table is kept because the
+    numbers are real; the narrative that was attached to it is not.</p>
     <div class="scroll">
       <table>
         <thead><tr><th>Slice</th><th class="n">Sessions</th><th class="n">BEST_ONE_NQ net</th><th class="n">Sharpe</th><th class="n">BEST_ONE_MNQ net</th><th class="n">Sharpe</th></tr></thead>

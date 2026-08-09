@@ -72,6 +72,35 @@ reachable via normal history traversal; remote retention UNVERIFIED*. Also newly
 and never previously recorded: the repository is currently **PUBLIC** (0 forks, 0 stars).
 Parked in `OWNER_QUEUE.md` §OQ-1; no irreversible action taken.
 
+**8a. RED TEAM (seq 454-457; full verdicts in `runs/W17_C4_COMPLIANCE/red_team/`).** Four
+independent adversarial reviews, all **CONFIRMED-WITH-CORRECTIONS**, none REFUTED, 46 defects
+logged. No compliance result was challenged — the C4 audit and the 0-breach outcomes were
+measured by the orchestrator on NT8's own execution ledgers, outside these reviewers' scope.
+Three corrections change what should be believed:
+- **RETRACTED — the "2026 edge collapse" narrative.** BEST_ONE_NQ's 2026 partial net of
+  −$46.60 is **0.001 SE from zero**; dropping the best trade of 185 gives −$13,307, dropping
+  the worst gives **+$6,623**. No yearly per-trade gross mean is distinguishable from zero
+  (Welch 2022-vs-2026 t = 0.89). The claim is withdrawn from `OWNER_STATUS.html` and here.
+  Related silence also corrected: 45 excluded post-dev sessions run **+$34,997**, opposite to
+  the retracted story (far too short to claim anything, and research-consumed, not clean OOS).
+- **O1 IS NOT YET FIT TO SCORE ANYTHING**, and therefore **O2 retro-scoring is BLOCKED** —
+  correctly. Two sign-flipping defects: `P_ruin` taken as the max over three bootstrap methods
+  while `CE_g` is their arithmetic mean (asymmetry never pre-registered), and λ calibrated on a
+  non-compounded growth convention while multiplying a compounded one. Construction,
+  pre-registration and intraday machinery stand; the scalar does not.
+- **V1f's "no crossover exists" is conditional on an unnamed assumption.** It applied 4× to
+  *day* margin. Under 4× × *initial* margin Product A binds in **15 of 60** capital-map rows
+  (min 0.503×); both Product B objects still clear. The Product B verdict survives; Product A's
+  does not under the alternative reading.
+- **Governance gap, and it was mine**: all four companion analyses were delivered into a run
+  dir whose frozen spec covers only the C4 fix, and none was pre-registered. Recorded as such
+  in registry rows 454-457 rather than tidied away. None proposes a promotion, so no alpha
+  budget was consumed.
+- **Standing data caution**: the NQ and MNQ 3-minute grids are not interchangeable — 13 NQ /
+  11 MNQ dev sessions have internal gaps, and counting non-17:00 sessions *by bar shape* gives
+  44, not 43. The 43-early-close figure is correct as a **calendar** statement and the C4 audit
+  is unaffected (it keys on the session-close clock, not bar counts).
+
 **8. Companion analyses, each independently red-teamed** — `V4_FRICTION.md` (friction share:
 Product A 0.119 / BEST_ONE_NQ 0.028 / BEST_ONE_MNQ 0.066 commission-only, plus the house
 `FS_house` definition and a commission sensitivity band, since the exact Lifetime all-in rate
