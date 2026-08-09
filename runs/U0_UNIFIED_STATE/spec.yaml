@@ -1,0 +1,70 @@
+run_id: U0_UNIFIED_STATE
+family: U0 (unified Product-A/Product-B causal state table)
+directive: "CONTINUOUS SYSTEM EVOLUTION -- UNIFIED PRODUCT A/B ALPHA + POLICY DISCOVERY, 2026-08-09, sec4/sec60"
+date_frozen: 2026-08-09
+author: autonomous research campaign (continuation, post SYSTEM_SCIENCE_20260809 closure)
+
+purpose: >
+  Foundational, shared, causal, bar-level state table for EVERY subsequent family in the
+  CONTINUOUS SYSTEM EVOLUTION phase (U1 session heterogeneity, U3 hold/exposure, U4 short-side,
+  U5 soft weighting, U6 Product-A path-dependence, U7 2026-regime explanation). Not itself a
+  candidate or promotion gate -- a research instrument. Treats Product A and Product B as two
+  policies reading the SAME latent state (directive sec2), so state/feature discovery happens
+  ONCE here, not separately per family.
+
+scope: >
+  Every 3-minute bar, health-extended window (2022-01-03 .. 2026-07-31 -- see window_policy
+  below). Both Product B decision state (position in {-1,0,1}, T/Tp/HTF_tilt/B/M, hysteresis
+  thresholds, C4 windows, Solar13 votes) AND Product A decision state (continuous target
+  exposure M_A/bar_pos_A, same Solar13/B-MOM/HTF drivers with Product-A's own KSOLAR/KBMOM/
+  TILTRESCALE/TILTMULT/SHORTHALF mapping) are built from the SAME underlying Solar13/B-MOM/HTF
+  arrays -- one causal state layer, two policy read-outs, exactly matching the directive's
+  conceptual model (sec2).
+
+window_policy: >
+  CANONICAL dev window remains 2022-01-03..2026-05-29 (frozen, used for every formal promotion
+  comparison in this and prior campaigns). This table EXTENDS forward to 2026-07-31 using bar
+  data already loaded by sm01_solarsim.load_bars_3m() and already read once for a different
+  purpose in SM11_HOLDOUT_READ (CURRENT_TRUTH.md Wave-18: "nothing left to seal" for that window)
+  -- same non-locked-forward justification SA0's current_health/ layer already used and disclosed.
+  Data >=2026-08-01 remains sealed per research/operational/LOCKED_FORWARD.md and is NOT read
+  here. Every downstream family using this table must report canonical-window results and
+  extended-window (observational, current-regime) results SEPARATELY (directive sec34) -- the
+  table itself carries an is_health_only_bar column so this split is mechanical, not manual.
+
+data_reuse: >
+  Zero new CrossTrade/NT8 calls. Reuses SA0's substrate.py / PA0's pa0_substrate.py /
+  SA0 current_health/health_substrate.py formulas verbatim (T/Tp/tilt_state/B/M for Product B;
+  KSOLAR/KBMOM/TILTRESCALE/TILTMULT/SHORTHALF mapping for Product A). Reuses P0's ledger-building
+  pattern (runs/P0_TRADESTATE_AUTOPSY/src/build_ledger.py: Solar13 vote/dispersion/fast/slow,
+  session VWAP distance, roll_hi20/lo20, MFE/MAE/giveback via block segmentation) extended to the
+  health window. Reuses R4's causal_slope / CLV formulas and R5's vol_surprise / failed_breakout_
+  rejection / vwap_disp_atr / short_term_vol_ratio / direction_x_volume / vol_compression_ratio
+  formulas verbatim, generalized from entry-bar-only to EVERY bar (needed for path-dependent
+  families U3/U4/U6). Every reused formula is checked byte-for-byte against its source at
+  construction time; the correctness gate (Product B NQ/MNQ certified net + Product A certified
+  net, sliced back to the canonical window) is the proof.
+
+new_columns_this_run: >
+  Product A leg (target_exposure_A, bar_pos_A, bar_pnl_A_dollars, A action-state); M_change
+  (bar-to-bar M delta) and M_slope_20 (causal 20-bar OLS slope of M, R4-style but applied to the
+  decision score itself, at every bar); CLV and CLV_aligned at every bar (not just entries);
+  direction_x_volume / vol_surprise / vwap_disp_atr / short_term_vol_ratio / vol_compression_ratio
+  / failed_breakout_rejection at every bar; trend_efficiency_20 (|close[t]-close[t-20]| / sum
+  |diffs| over the same 20 bars -- Kaufman-style causal efficiency ratio); session-phase columns
+  (minutes_since_session_open [18:00 ET anchor], minutes_to_session_close [17:00 ET next-session
+  anchor], minutes_since_RTH_open / minutes_to_RTH_close [09:33/16:00 ET, signed, causal], and a
+  coarse phase label ETH_ASIA/ETH_EUROPE/US_PREMARKET/RTH_OPEN/RTH_MID/RTH_CLOSE/POST_RTH derived
+  from STANDARD, PUBLICLY-DOCUMENTED global futures session conventions -- Asia ~19:00-03:00 ET,
+  London/Europe ~03:00-08:00 ET, US premarket 08:00-09:30 ET, RTH open transition 09:30-10:00 ET,
+  RTH midday 10:00-15:30 ET, RTH close transition 15:30-16:00 ET, post-RTH 16:00-18:00 ET -- NOT
+  fit to this system's PnL, per directive sec29's explicit prohibition on backtest-selected phase
+  boundaries); Product-B action-state (ENTRY/HOLD/EXIT/REVERSAL/FLAT) and Product-A action-state
+  (SCALE_IN/SCALE_DOWN/FLIP/HOLD/FLAT) derived from position deltas.
+
+explicitly_not_in_scope_this_run:
+  - Any new parameter optimization, weight replacement, or candidate construction.
+  - Genuine order-flow/tick data (U2's own separate audit, not merged into this table this run).
+  - Any NT8/CrossTrade call.
+
+promotion_gate: none (shared research instrument; downstream families each carry their own gate)
