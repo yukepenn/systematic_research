@@ -1,0 +1,488 @@
+family: U9_TRUE_MICROSTRUCTURE
+date: 2026-08-09
+track: C   # infrastructure/provenance, per CONTINUOUS_EVOLUTION_WAVE2_EVI.md's own scoping
+type: infrastructure_and_provenance_only
+authorized_by: >
+  CONTINUOUS_EVOLUTION_WAVE2_EVI.md (2026-08-09) row "U9 — true microstructure provenance +
+  prequential infrastructure": "scoped to provenance-proving and prequential-framework design
+  ONLY this wave (directive sec34's gate must pass before any alpha feature is tested) — not a
+  promise of an eventual overlay, an honest infrastructure investment."
+
+hypothesis: >
+  research/scalping_lab's tick/BBO substrate, while chronology-incompatible with this campaign's
+  LOYO/year-by-year promotion standard for a Track-L candidate (U2_DATA_AUDIT/REPORT.md, CLOSED
+  — DOCUMENT AND SKIP, ~12mo vs 4.4yr dev window), may still support a genuinely prequential
+  (rolling-origin, expanding-history, forward-only-scored) Track-C evaluation design — a
+  fundamentally different evidentiary standard that does not require multi-year chronology,
+  only enough independent forward blocks to make a defensible verdict about generalization
+  WITHIN the data's own span.
+
+empirical_motivation: >
+  U2 (runs/U2_DATA_AUDIT/REPORT.md, 2026-08-09) found the tick/BBO substrate compatible in
+  principle but chronology-incompatible with Track-L LOYO; recorded it as "a bounded future
+  diagnostic... once the tick substrate itself accumulates 2-3 more years." Wave-1 synthesis
+  (CONTINUOUS_EVOLUTION_WAVE1_SYNTHESIS.md fact 7) independently reconfirmed "presently blocked
+  purely by coverage depth, not by mechanism or provenance." Separately, research/scalping_lab's
+  own campaign (an independent, more advanced consumer of this exact substrate) has since run
+  DATAPROBE01 (2026-08-07) and a full internal Tier-0..Tier-3 alpha program (W1-W10) on it,
+  producing facts this family's provenance gate must inherit rather than re-derive blindly
+  (e.g., L2 BBO status moved from OPEN to CONFIRMED after U2 was written).
+
+distinction_from_closed_work: >
+  U2 asked and answered "can this data clear a Track-L LOYO/multi-year chronology gate" — NO,
+  and that verdict is NOT reopened or contradicted here. This family asks a different question:
+  "can a rolling-origin (prequential) design be built that is honestly powered by the coverage
+  that actually exists." Track-C's own evidentiary bar (per this campaign's evidence-track
+  convention) does not require multi-year LOYO; it requires enough independent forward-only
+  blocks, correctly clustered, to avoid mistaking within-block autocorrelation for statistical
+  power. This family produces ONLY that design (frozen, unexercised) plus the provenance
+  determination it rests on — no feature, no P&L, no candidate.
+
+data_reuse: >
+  100% reuse of research/scalping_lab/substrate/{raw,grid1s,sechilo}/ and
+  research/scalping_lab/{DATA_INVENTORY.md,DATA_SUBSTRATE.md,CAMPAIGN_STATE.md,
+  CONTAMINATION_LEDGER.md,EXECUTION_MODEL.md} plus runs/DATAPROBE01/{results.md,spec.md} and
+  artifacts/instrumentation/pilot_report.md (all already on disk, that campaign's own work).
+  No new NT8/CrossTrade export was run. No new file was written to research/scalping_lab/ by
+  this family. All facts below marked "verified on disk" were independently re-checked against
+  the actual parquet files in substrate/, not assumed from the docs.
+
+evidence_track: C
+construction_slate: NONE — explicitly no candidate, no feature, no threshold, this run.
+metrics: NONE COMPUTED this run — see prequential_design.required_reporting for what a FUTURE
+  alpha family must compute and report.
+tail_gates: NOT APPLICABLE this run — no candidate exists to check. prequential_design section
+  documents what a future family's right-tail check must look like, since it forks on
+  construction type (standalone scalp signal vs. Product-A/B conditioning overlay).
+falsification_condition: >
+  This family's own PASS/PARTIAL/FAIL provenance dispositions (below) should be revisited if:
+  (a) L3 semantics are later resolved by a dedicated delta-vs-level test (scalping_lab's own
+  open item) — could upgrade L3 from PARTIAL; (b) the "confirmation pool" (~165 additional
+  2025-08-10..2026-05-31 sessions per CONTAMINATION_LEDGER.md) is exported, materially changing
+  the block/session counts in prequential_design below — the design must be re-derived from
+  actual coverage at that time, not patched in place; (c) any future L4 depth recording appears
+  (would require a new provenance pass, currently none exists and none is expected without paid
+  data, which remains barred).
+
+# =====================================================================================
+# STEP 1 — PROVENANCE GATE (per-layer, exhaustive, all facts verified on disk 2026-08-09
+# unless explicitly marked "per <file>, not independently re-verified")
+# =====================================================================================
+provenance_gate:
+  instrument_and_contracts:
+    finding: >
+      NQ (primary) and ES (secondary, context-market) via NinjaTrader hosted historical
+      servers. Single UNADJUSTED contract per session (SWScalpTickExport_v1), NOT this
+      campaign's back-adjusted continuous merge. Verified on disk: no anomalous intra-session
+      price jump found (max |tick-to-tick| move in a near-expiry session, s20250922, 2025-09-22
+      = 7.00 pts = 28 ticks, unremarkable); price levels sane and monotone with the known NQ
+      uptrend across the window (23,587-23,804 in Aug-2025 -> 28,795-29,398 by May-2026).
+      Cross-session contract identity is NOT recorded as an explicit column in any parquet
+      layer (raw/grid1s/sechilo) — corroborated externally instead via
+      artifacts/instrumentation/pilot_report.md line 3 ("3 NQ pilot sessions... three different
+      contracts") and DATA_INVENTORY.md's cache census (NQ 09-25/12-25/03-26/06-26/09-26
+      sequence). Minor traceability gap: a future family should not assume it can recover which
+      exact contract-month backed any given session file without re-deriving it from the NT8
+      cache; recommend logging the contract symbol explicitly if MANIFEST.csv is ever
+      regenerated.
+    MNQ: present 2025-12 onward only (03-26/06-26/09-26 contracts) — MNQ tick coverage is
+      SHORTER than NQ's; not further used here (this campaign's own EXECUTION_MODEL.md already
+      excludes MNQ from scalp research economics: C1 friction 4.6t vs NQ's 2.872t).
+
+  coverage:
+    tick_BBO_substrate_materialized: >
+      40 distinct trading sessions, STRATIFIED (not continuous), 2025-08-11 .. 2026-05-20
+      (session_sample_40.csv, seed 20260807 — that campaign's own draw, reused verbatim here).
+      Verified on disk via substrate/raw/NQ/*.parquet + substrate/MANIFEST.csv (54 file rows =
+      40 base sessions + 13 "_rth" companion re-exports for capped sessions + 1 duplicate
+      MANIFEST row for s20250814).
+    monthly_session_density (verified by grouping the 40 session dates):
+      2025-08: 3
+      2025-09: 7
+      2025-10: 4
+      2025-11: 4
+      2025-12: 2
+      2026-01: 1
+      2026-02: 5
+      2026-03: 4
+      2026-04: 6
+      2026-05: 4   # partial month — substrate stops 2026-05-20, not full May
+    interpretation: >
+      This is NOT daily coverage across ~205 dev sessions — only 40 of the ~205
+      2025-08-10..2026-05-31 development sessions have been materialized into
+      raw/grid1s/sechilo parquet so far (the "Tier-0 discovery subset" per that campaign's own
+      Amendment 3). The remaining ~165 sessions are an "internal confirmation pool" that exists
+      only as NinjaTrader server-side history, not yet exported to disk. Monthly density is
+      highly uneven (1 to 7 sessions/month) — this directly shapes the block design below (a
+      naive fixed calendar-month block would leave a 1-session month, useless for any
+      within-block clustering estimate).
+    ES_coverage: 39 of the 40 NQ session-dates have a matching ES export (missing: s20250811,
+      the very first NQ session — ES pipeline confirmed slightly later per CAMPAIGN_STATE.md).
+    holdout_and_seal_cross_check: >
+      Materialized coverage (through 2026-05-20) is comfortably inside BOTH governing
+      boundaries: scalping_lab's own stricter scalp holdout (2026-06-01..2026-07-31, per
+      CONTAMINATION_LEDGER.md "SPLIT GEOMETRY — FROZEN 2026-08-07") and this campaign's
+      LOCKED_FORWARD.md (>=2026-08-01). No substrate/raw|grid1s|sechilo file exists for any
+      session on/after 2026-06-01 — verified by directory listing, not just doc claim (absence
+      IS the enforcement mechanism per DATA_SUBSTRATE.md, confirmed true on disk).
+      ONE DISCLOSED EXCEPTION, not part of the committed substrate: DATAPROBE01's raw
+      capability-probe CSV dumps (research/scalping_lab/runs/DATAPROBE01/out{,_depthcheck}/,
+      and runs/EXPORT01/{es20260715,p20260506,p20260123,p20250910_on}/) — gitignored,
+      on-disk-only per LARGE_FILES_NOTE.md — touched sessions dated 2026-07-14/15 (INSIDE the
+      scalp holdout) purely to characterize timestamp resolution / event counts / volume
+      fidelity (Tier -1 capability probe, "reads NO strategy profitability", no conditional
+      statistics, no P&L). This was disclosed and ruled non-contaminating by scalping_lab's OWN
+      CONTAMINATION_LEDGER.md (2026-08-07 amendment entry) before this family ever touched the
+      repo. This family independently confirms that ruling is reasonable (no feature-outcome
+      relationship was computed by DATAPROBE01) but, out of caution, the frozen design below
+      explicitly EXCLUDES 2026-07-14 and 2026-07-15 from any future scored block, as a hygiene
+      margin beyond what was strictly required.
+    also_disclosed: >
+      scalping_lab's CONTAMINATION_LEDGER.md records that the 2026-06-01..2026-07-31 window WAS
+      read once at the BAR level (not tick level) by system_master's own SM11/FINAL_PACKAGE_SPEC
+      protocol (Solar baseline / HTF-tilt / B-MOM / B1 / portfolios) and is "now CONSUMED for all
+      campaigns" at that resolution — this refers to U0's health-only extension window (minute/
+      3-min NQ bars), NOT the tick/BBO substrate, which (per the absence check above) was never
+      tick-exported for this window. The two consumption events are independent and do not
+      compound: tick-level scalp holdout remains genuinely unconsumed.
+
+  timezone_and_resolution:
+    finding: >
+      VERIFIED ON DISK (not just per docs): all three layers use naive (no explicit tz)
+      millisecond-quantized datetime64[ns] timestamps whose session boundaries fall exactly at
+      18:00.000 / 16:59:59.xxx, matching this campaign's ET session convention (18:00->17:00 ET)
+      — a UTC convention would show session opens at 22:00/23:00. Sub-second quantization
+      confirmed at ~4ms granularity independently by DATAPROBE01 (250 distinct sub-ms values =
+      1000/4). U0's own 3-minute bar table (runs/U0_UNIFIED_STATE/out/u0_state_table.parquet)
+      was cross-checked in this family and is ALSO naive-ET, bars timestamped at their own close
+      on exact minute%3==0 boundaries (verified: min(time.dt.minute % 3) == max == 0 across all
+      540,232 rows) — the two data sources share one timestamp convention, materially
+      simplifying alignment (see causal_alignment_feasibility below).
+
+  field_semantics:
+    bip_column: >
+      VERIFIED ON DISK: bip in {0,1,2} = {Last,Bid,Ask} — confirmed by cross-tabulating raw
+      parquet bip value_counts() against MANIFEST.csv's own trades/bid_ev/ask_ev columns for
+      matching sessions (exact match, e.g. s20260123: bip=0 count 461,233 == MANIFEST
+      "trades" 461233; bip=1 count 4,930,008 == "bid_ev"; bip=2 count 4,960,210 == "ask_ev").
+    per_tick_volume: real, non-degenerate (DATAPROBE01: min 1, max 50, mean 1.10, 0% zero-vol).
+    L3_size_field: >
+      Volume field on Bid/Ask series (mean ~1.8-2, p99 6-7) is POPULATED but semantically
+      AMBIGUOUS between (a) displayed best-level size, (b) size delta, (c) update-aggregation
+      count. scalping_lab's own I-4 pilot (artifacts/instrumentation/pilot_report.md,
+      2026-08-07) found 53-68% of consecutive same-side quote events carry an UNCHANGED price
+      (fires on size/queue updates, not only price moves) and ruled: "L3 upgraded from UNKNOWN
+      to PLAUSIBLE-size — usable only for coarse size features until a dedicated delta-vs-level
+      test; queue-position modeling stays out of scope." This family did not re-run that test
+      (out of scope, would require constructing a feature) and inherits this exact ruling.
+
+  BBO_availability: >
+    UPDATE TO U2's FINDING (U2_DATA_AUDIT/REPORT.md said "L2 (BBO) OPEN / probe-in-progress" —
+    that was accurate AS OF U2's own writing but is now STALE). Per
+    research/scalping_lab/runs/DATAPROBE01/results.md (2026-08-07, same-campaign, written
+    BEFORE U2 but apparently not yet cross-read by U2) and DATA_INVENTORY.md's current status
+    line ("L2 CONFIRMED... same ~12-month depth"): historical 1-tick Bid/Ask series download on
+    demand via AddDataSeries(MarketDataType.Bid/Ask, Tick, 1); event rate ~15x trade frequency;
+    L2 depth matches L1 depth back to at least 2025-10 (assumed to 2025-08 pending a spot check
+    that campaign itself flagged as pending, not yet closed out). VERIFIED ON DISK by this
+    family: 37 of 40 materialized sessions have bid_ev>0 and ask_ev>0; the exact 3 exceptions
+    (s20250811, s20250924, s20260430 — all bip=0-only, bid_ev=ask_ev=0) match CAMPAIGN_STATE.md's
+    own named list of "L1-only: pre-boundary / server holes" verbatim — independent confirmation,
+    not just doc trust.
+
+  depth_availability: >
+    CONFIRMED BLOCKED_BY_DATA, matching U2. research/scalping_lab's own db\replay\ cache is
+    empty (checked by that campaign across multiple waves, most recently reconfirmed in
+    DATAPROBE01/results.md's L4 row); paid data acquisition is barred by both campaigns'
+    mandates. Not independently re-checked by this family (nothing new to check — the negative
+    finding is already exhaustively established and re-checking an empty folder adds no
+    information).
+
+  missingness_duplicates_gaps: >
+    Spot-checked (per this directive's explicit instruction, not assumed clean) across the 40
+    grid1s/NQ session files (built from merged main+_rth raw exports) plus targeted raw-parquet
+    checks:
+      1. DUPLICATE ROWS (not just duplicate TIMESTAMPS, which DATAPROBE01 already documented at
+         46%/61%): a NEW finding from this family's own inspection — 13-53% of raw event rows
+         (bip,time,price,volume all identical), varying by session and bip-type, are EXACT
+         duplicates; of a 2,000-row spot sample, 95.5% of these are IMMEDIATELY adjacent to an
+         identical predecessor row (back-to-back repeats), consistent with an exporter-side
+         duplication artifact (e.g. OnMarketData firing twice) rather than genuine independent
+         same-ms market prints. CONSEQUENCE: any feature built directly from raw tick/quote
+         EVENT COUNTS (not price/OHLC, which are unaffected since duplicate rows carry identical
+         values) must de-duplicate consecutive identical rows first, or it will substantially
+         over-count real information content. Not previously documented in scalping_lab's own
+         docs at this level of specificity as far as this family found.
+      2. GRID1S SESSION-CLOSE COVERAGE: 6 of 40 grid1s files do not reach the nominal
+         16:59:59 close. Individually diagnosed:
+         - s20250901 (ends 12:59:59) and s20251128 (ends 13:14:59): GENUINE EXCHANGE EARLY
+           CLOSES (Labor Day 2025-09-01 and the day after Thanksgiving 2025-11-28 respectively)
+           — not a data defect, expected market behavior.
+         - s20250924 and s20260430 (end 16:59:58, i.e. 1 second short): immaterial, last print
+           landed one second before the nominal boundary.
+         - s20251117 (ends 15:14:24, ~105min short): BOTH the main file (12M-cap, truncated
+           13:52:20) and its _rth companion (12M-cap, truncated 15:14:24) hit their row caps —
+           genuine afternoon gap. Already flagged by scalping_lab itself: CAMPAIGN_STATE.md's W9
+           queue item "s20251117 20M-cap tick re-export also running" — independent
+           corroboration this is a known, being-fixed issue, not a new discovery.
+         - s20260519 (ends 16:27:08, ~33min short): BOTH main (capped, truncated 11:22:57) and
+           _rth companion (ALSO capped, truncated 16:27:08) hit their row caps — genuine ~33min
+           gap at the very session close. NOT flagged elsewhere as far as this family found —
+           this is a fresh finding. Notably, the missing window (16:27-17:00 ET) overlaps this
+           campaign's own C4 pre-close mechanism window (entry_blocked_c4/forced_flat_c4,
+           30min/21min-before-close per UNIFIED_STATE_MAP.md) — a future family using this
+           session near the close should exclude it or flag it, not silently treat the gap as
+           "flat/no signal."
+      3. RAW-TO-GRID MERGE BEHAVIOR (verified, not assumed): for the 11 OTHER capped sessions
+         with a working _rth companion (e.g. s20260220), grid1s correctly continues past the raw
+         main file's cap with live trade/quote activity through 16:59:59 — confirming the
+         Layer-1 build pipeline already performs the main+_rth stitch/dedup correctly. A future
+         family should prefer grid1s/sechilo over raw/ directly unless it needs true tick
+         granularity, in which case it must replicate this exact merge (and the fact that the
+         overlapping RTH-morning window covered by BOTH main and _rth files must be
+         deduplicated, not concatenated raw).
+      4. LAYER COVERAGE DELTAS: grid1s retains all 40 sessions (NaN bid/ask/mid for the 3
+         L1-only ones); sechilo DROPS those same 3 sessions entirely (37/40) — verified by
+         set-difference on file lists, exact match to the L1-only list above.
+      5. UNDOCUMENTED SCALE CONVENTION (new finding): sechilo's price fields (mid_last/
+         mid_high/mid_low) are NOT in raw price units — they are grid1s's `mid` multiplied by
+         4 (i.e., NQ's 0.25-pt tick size expressed as an integer tick-count; NQ tick size
+         verified on disk as the minimum nonzero raw price increment = 0.25). Verified by
+         session-level join: sechilo.mid_last/4 vs grid1s.mid, corr=0.9999995, max abs diff
+         across a full session = 1.625 points (consistent with second-bucket-edge timing noise,
+         not a scale mismatch). Same 4x convention verified for ES's sechilo layer (ES tick size
+         is also 0.25). CONSEQUENCE: any future construction reusing BOTH grid1s and sechilo
+         must apply this scale factor explicitly or silently produce nonsense (a 4x price-level
+         error) when the two are combined.
+
+  causal_alignment_feasibility_to_U0_3min_bars: >
+    FEASIBLE, method described (NOT implemented — construction is out of scope this run).
+    Verified: U0's bars are timestamped at their own CLOSE, on exact 3-minute boundaries
+    (minute%3==0), naive-ET, matching the tick substrate's own timestamp convention exactly
+    (see timezone_and_resolution above). grid1s already provides strictly-causal 1-second
+    snapshots ("All features CAUSAL (computed from data <= t)" per DATA_SUBSTRATE.md, spot-
+    verified true in this family's own inspection: grid1s row at second s reflects only events
+    with time<=s). HOW a future family would align them: for U0 bar with time=T (covering the
+    half-open interval (T-3min, T]), aggregate the 180 grid1s rows with time in (T-3min, T]
+    into whatever summary statistic the feature needs (e.g. mean spread, terminal mid, realized
+    signed flow over the window) — this produces a feature "as of T" that is causal by
+    construction. Per this campaign's own standing decision-lag convention (STANDING RIGOR:
+    "decision computed from bar t's own M/close becomes pend, only takes effect... at bar t+1"),
+    any such feature attached to bar T must not influence a decision until bar T+1, exactly
+    mirroring how M/T/Tp are already lagged in U0. Scope limitation to flag for that future
+    family: this alignment is only possible on the ~40 (soon more) session-DATES the tick
+    substrate actually covers — a small, non-random (stratified-sampled), ~3.6%-of-U0's-window
+    subset of U0's full 2022-2026 session count. A microstructure-conditioning OVERLAY on
+    Product A/B (as opposed to a standalone scalp-native construction using its own trades)
+    would therefore face a thin/non-random-overlap problem structurally similar to the one that
+    already sank U2's Track-L attempt — this is flagged explicitly as an open design fork for
+    whichever future family picks this up (see prequential_design.scope_fork_for_future_family).
+
+  per_layer_disposition:
+    L1_last_trade_ticks: >
+      PROVENANCE PASS. Coverage, timezone, resolution, field semantics, contract convention all
+      independently verified on disk; missingness fully characterized and causally explained
+      (2 genuine holiday early closes, 2 real export-cap gaps of which 1 is already being fixed
+      by the source campaign, 2 trivial 1-second shortfalls). One actionable caveat (duplicate-
+      row de-dup required before any event-COUNT feature); price/OHLC-based features unaffected.
+    L2_BBO_quotes: >
+      PROVENANCE PASS, with caveats. Confirmed same depth as L1 (37/40 sessions), causally
+      well-behaved via grid1s. Two inherited caveats from scalping_lab's own work (not
+      re-derived here, cited): (a) same-millisecond cross-series ORDERING between Last/Bid/Ask
+      is not guaranteed (~4ms sync ambiguity) — that campaign's own W1-0b BBO audit already
+      ruled BBO_EXEC stays diagnostic-only, C1/C2 remains promotion truth, and this family
+      inherits that ruling rather than re-litigating it; (b) subject to the same duplicate-row
+      caveat as L1, at a higher observed rate (16-71% in this family's spot checks).
+    L3_top_of_book_sizes: >
+      PROVENANCE PARTIAL. Field exists, populated, non-degenerate, but semantics remain
+      unresolved between size-level and size-delta/update-count (scalping_lab's own I-4 finding,
+      inherited verbatim: "PLAUSIBLE-size, coarse only"). Usable for coarse size-bucket features
+      only; NOT usable for queue-position or exact-size microstructure theory without the
+      dedicated delta-vs-level test that campaign has flagged but not yet run. A future family
+      MAY design coarse L3 features under this PARTIAL disposition but must carry the caveat
+      forward explicitly, not silently treat L3 as confirmed.
+    L4_multilevel_depth: >
+      PROVENANCE FAIL. No depth/replay recordings exist; paid data barred; already exhaustively
+      confirmed empty by the source campaign across multiple waves. Not revisitable without a
+      change to the paid-data mandate.
+
+# =====================================================================================
+# STEP 2 — FROZEN PREQUENTIAL EVALUATION DESIGN
+# Applies to L1 and L2 (PASS/PASS-with-caveats); L3 may use the SAME block/clustering
+# design IF restricted to coarse size-bucket features per its PARTIAL disposition above.
+# Frozen BEFORE any feature-outcome relationship was inspected (none was, this run — see
+# no_alpha_confirmation at the bottom).
+# =====================================================================================
+prequential_design:
+  scope: >
+    Designed for a STANDALONE scalp-native construction (its own tick/BBO-derived entries,
+    exits, and trade blocks) built and evaluated entirely within the substrate described above.
+    See scope_fork_for_future_family for the DIFFERENT, thinner-evidence case of a
+    Product-A/B conditioning overlay.
+
+  evaluation_shape: >
+    EXPANDING-ORIGIN, calendar-MONTH blocks with a floor-3-sessions merge rule (chosen over a
+    fixed-session-count block because the directive requires a calendar unit, and over a
+    fixed-window rolling design because expanding-origin is strictly more data-efficient given
+    how few sessions exist in any single month — a fixed rolling window would waste sessions in
+    sparse months for no benefit). This is the literal shape the governing directive itself
+    suggested ("expanding history -> score next non-overlapping month -> roll forward"), patched
+    with one explicit, principled rule to handle the ACTUAL non-uniform monthly density found in
+    step 1 (1-7 sessions/month) rather than assuming uniform daily coverage.
+
+  merge_rule: >
+    A calendar month with fewer than 3 materialized sessions is merged forward into the
+    following month's block (chosen over merging backward so a thin recent month doesn't retroactively
+    change an already-scored block). Applied once to current coverage: 2025-12 (2 sessions) merges
+    with 2026-01 (1 session) -> one combined "2025-12+2026-01" block of 3 sessions. No other
+    month falls below the floor.
+
+  frozen_block_table (derived from the exact 40-session coverage found in step 1; MUST be
+      re-derived, not reused verbatim, if the confirmation pool is exported and materially
+      changes session counts per block):
+    - block: 1 (TRAINING SEED ONLY — never scored, no prior block exists to train from)
+      calendar: "2025-08"
+      sessions: 3
+      role: seed
+    - block: 2
+      calendar: "2025-09"
+      sessions: 7
+      role: scored
+    - block: 3
+      calendar: "2025-10"
+      sessions: 4
+      role: scored
+    - block: 4
+      calendar: "2025-11"
+      sessions: 4
+      role: scored
+    - block: 5
+      calendar: "2025-12+2026-01"
+      sessions: 3
+      role: scored
+    - block: 6
+      calendar: "2026-02"
+      sessions: 5
+      role: scored
+    - block: 7
+      calendar: "2026-03"
+      sessions: 4
+      role: scored
+    - block: 8
+      calendar: "2026-04"
+      sessions: 6
+      role: scored
+    - block: 9
+      calendar: "2026-05"
+      sessions: 4
+      role: "scored, STUB — partial calendar month (substrate stops 2026-05-20); do not compute
+        month-over-month growth-rate metrics on this block as if it were a full month; only
+        session-normalized statistics (mean/median per session) are valid here"
+    totals: "9 blocks (1 seed + 8 scored), 37 sessions scored cumulatively, spanning 9 calendar
+      months (Aug-2025..May-2026, one merged pair)"
+
+  minimum_blocks_for_defensible_verdict: >
+    >= 6 SCORED out-of-sample blocks, spanning >= 5 distinct calendar months and >= 25 sessions
+    collectively, before ANY promotion-relevant statistic (pct-positive-blocks, worst-block,
+    etc.) is treated as more than PROVISIONAL. Current substrate clears this (8 scored blocks /
+    37 sessions / 9 months) but NOT comfortably — the floor-3 merge rule was necessary to reach
+    it, and a future family with a model requiring more than block-1's 3 sessions of warmup
+    (very plausible for anything beyond a trivial rule) will have FEWER effective scored blocks
+    than this nominal count and MUST re-verify the >=6/>=25 bar against its own actual effective
+    start block, not assume this spec's 8 applies unconditionally. If a future model needs its
+    first N blocks purely for training, its own defensible-verdict floor is >= 6 blocks AFTER
+    that training runway — with only 8 nominal blocks total, a model needing more than ~2 blocks
+    of warmup will fail this bar on the CURRENT substrate and must wait for the confirmation
+    pool to be exported.
+
+  within_block_clustering_handling: >
+    Unit of independence = SESSION, never tick, never quote-event, never sub-session hour.
+    Rationale, grounded in this family's own step-1 findings: (a) 13-71% duplicate raw rows
+    depending on session/bip-type: naive event-count weighting massively overstates effective
+    sample size; (b) DATAPROBE01's own 46-61% duplicate-TIMESTAMP finding independently
+    confirms the same pathology at a coarser level; (c) that campaign's own extensive Z1/DC/
+    excursion work already established strong within-session price-path dependence at tick
+    scale (persistence null r~2, not 1) — ticks within a session are NOT exchangeable draws.
+    Procedure, mandatory for any future construction:
+      1. All feature/outcome construction may use any within-session granularity (down to raw
+         tick/BBO events), but MUST collapse to exactly ONE row per SESSION (a session-level
+         summary: e.g. session net edge in the incumbent cost convention, session hit-rate,
+         session trade/block count) before any cross-session statistic is computed.
+      2. Block-level statistic = an explicitly-stated aggregation (equal-weighted mean across
+         sessions is the default; session-duration-weighted is a documented alternative, must
+         be named, not silently swapped) of that block's session-level summaries.
+      3. The cross-block VERDICT treats the resulting sequence of 8 (or however many, per the
+         re-verified minimum above) block-level numbers as the actual inferential sample. Use
+         block-level nonparametric methods only: sign test / rank-based percentile summaries
+         (pct-positive-blocks, median-block, worst-block) as PRIMARY evidence; if a
+         significance test is wanted, use a block-level bootstrap that resamples WHOLE BLOCKS
+         with replacement (never sessions alone, never ticks) given only 8-9 total blocks — do
+         not report a normal-theory CI or t-stat computed as if 8 blocks were a large-N sample.
+      4. EXPLICITLY FORBIDDEN: pooling all ticks/quotes/sessions into one dataset and computing
+         a single global t-stat/Sharpe treating each tick (or even each session) as an
+         independent draw. This is precisely the "millions of ticks != millions of independent
+         observations" pathology this directive named, and this design disallows it by
+         construction (mandatory session-then-block collapse before any pooling).
+
+  required_reporting_for_a_future_alpha_family (verbatim per governing directive, restated
+      with this family's own block-count requirement layered on top):
+    - forward-only stitched net (in the incumbent BENCHMARK_C1 cost convention per
+      research/scalping_lab/EXECUTION_MODEL.md — C1 is that campaign's own PRIMARY promotion
+      screen, C2 the stress test, BBO_EXEC diagnostic-only; inherit this convention rather than
+      re-deriving a new one, for cross-campaign comparability)
+    - Sharpe, Sortino, MaxDD, CDaR95 — computed on the BLOCK-level P&L series (8 or however many
+      numbers), not the tick- or session-level series
+    - pct-positive-blocks, pct-positive-months (distinct from pct-positive-blocks whenever a
+      block spans >1 month, i.e. the merged Dec+Jan block)
+    - worst-block, median-block (dollar and per-session-normalized)
+    - turnover (trades/session, to make cost-sensitivity legible)
+    - right-tail-capture (see right_tail_check_fork below — the exact reference population
+      forks on construction type)
+    - number of independent SESSIONS, DAYS, and BLOCKS used — tick count must NOT be reported
+      as a sample-size proxy anywhere in the promotion argument
+    - explicit statement of which sessions (if any) were excluded and why (e.g. this spec's own
+      2026-07-14/15 hygiene exclusion, or a session with a session-close data gap like
+      s20260519)
+
+  scope_fork_for_future_family: >
+    Two structurally different uses exist and must be DECLARED before construction, since they
+    have different evidentiary weight under this design:
+      (A) STANDALONE scalp-native strategy: its own entries/exits/trade blocks built purely from
+          tick/BBO data. This is what the block/clustering design above was built for. Right-
+          tail check: build the construction's OWN top-20/bottom-20 winning-block list (there is
+          no pre-existing "top-20" for a strategy that doesn't exist yet) and check what fraction
+          would be touched/damaged by any filtering rule, exactly per this campaign's standing
+          right-tail-preservation gate, applied to the NEW construction's own blocks.
+      (B) A microstructure-derived CONDITIONING/soft-weighting feature on the EXISTING Product-A/
+          B decision (matching this campaign's own U5/R4/R5 "soft information" framing). This
+          case is evidentially WEAKER than (A): causal alignment to U0's bars is feasible (see
+          causal_alignment_feasibility_to_U0_3min_bars above) but only for the ~40
+          (currently)/~3.6%-of-U0's-window session-dates the tick substrate actually covers — a
+          small, NON-RANDOM (stratified-sampled) overlap. This reintroduces a thinner version of
+          exactly the coverage problem that sank U2's Track-L attempt, even though the
+          PREQUENTIAL block design (not LOYO) is being used. A future family choosing (B) must
+          treat its verdict as provisional on this thin overlap and should not claim the same
+          strength of evidence as (A) even if the block-level statistics look identical. Right-
+          tail check for (B): the EXISTING system_master top-20 sign(position_B)/
+          sign(target_exposure_A) all-time winning blocks, restricted to whichever of those
+          blocks' dates happen to fall inside the tick substrate's ~40-session coverage (likely
+          very few — must be reported as a fraction, e.g. "N of the top-20 blocks have ANY
+          overlap with tick-covered dates", not silently skipped).
+
+  frozen_session_exclusions:
+    - "2026-07-14, 2026-07-15": >
+        hygiene exclusion (not a contamination finding) — inside scalping_lab's own scalp
+        holdout, touched only by DATAPROBE01's non-alpha capability probe, already ruled
+        non-contaminating by that campaign's own ledger; excluded here anyway as a margin of
+        caution for any future scored block.
+    - "s20260519 near-close window (16:27-17:00 ET only, not the whole session)": >
+        genuine ~33min data gap found in step 1, overlapping this campaign's own C4 pre-close
+        mechanism window — flag, do not silently treat as flat/no-signal if a future
+        construction's logic touches that window on that date.
+
+no_alpha_confirmation: >
+  Explicitly confirmed: no feature-outcome correlation, no P&L computation, no candidate
+  construction, no threshold selection, and no outcome variable of any kind was computed or
+  inspected by this family. All work above is schema/coverage/timestamp/field-semantics/file-
+  count inspection only. This family produces ONLY the provenance determination and this frozen
+  design, both intended for a future, separately preregistered U9-alpha family to consume.
