@@ -72,6 +72,35 @@ reachable via normal history traversal; remote retention UNVERIFIED*. Also newly
 and never previously recorded: the repository is currently **PUBLIC** (0 forks, 0 stars).
 Parked in `OWNER_QUEUE.md` §OQ-1; no irreversible action taken.
 
+**8b. START-STATE SENSITIVITY (seq 458) — a methodological finding that changes how every
+recency-tier number in this program must be read.** Prompted by the owner asking why their own
+Strategy Analyzer run shows a profitable 2026 while this wave reported ≈ −$47. Both are right;
+they are different objects.
+
+| `SolarWaveOneContractNQ_Final`, identical config | net | trades |
+|---|---:|---:|
+| FRESH run 2026-01-01 → 2026-05-29 | **+$7,426.36** | 174 |
+| SLICED from the full 2022-2026 continuation, same end date | **−$46.60** | 185 |
+| FRESH run 2026-01-01 → 2026-07-31 | **+$66,941.40** | 260 |
+
+Two separate effects, and the second was not anticipated:
+1. **Window.** Jun-Jul 2026 alone contributes **+$59,515.04** over 86 trades. The dev window
+   stops at 2026-05-29, so nothing in this wave's tables ever saw it. The owner's UI run to
+   2026-08-07 ($78,024.60) additionally picks up an Aug 1-7 sliver (~+$11,083) that is
+   **LOCKED-FORWARD virgin data** and was deliberately not touched here.
+2. **Start state.** On the *identical* Jan→May window the fresh run and the slice differ by
+   **$7,473 and 11 trades**, purely because a run beginning 2026-01-01 has no history:
+   `sigma460` warms from scratch (~460 bars ≈ 23h), `tiltState` needs 50 prior session closes,
+   and B-MOM needs 14 RTH days of slot history. For roughly the first quarter of a fresh run
+   the strategy operates on immature state.
+
+**Consequence:** every recency-tier row in `V4_FRICTION.md` is a **continuation** number and
+will NOT reproduce in the Strategy Analyzer from a same-year start. This must be stated
+wherever those tiers are shown. It also further weakens the already-retracted 2026 collapse
+claim — that figure is not even invariant to how the backtest is started.
+**Still unexplained:** the $2,575 gap between the owner's $78,024.60 and a from-scratch
+reproduction of $75,449.60 on the nominally identical 2026-01-01→2026-08-07 window.
+
 **8a. RED TEAM (seq 454-457; full verdicts in `runs/W17_C4_COMPLIANCE/red_team/`).** Four
 independent adversarial reviews, all **CONFIRMED-WITH-CORRECTIONS**, none REFUTED, 46 defects
 logged. No compliance result was challenged — the C4 audit and the 0-breach outcomes were

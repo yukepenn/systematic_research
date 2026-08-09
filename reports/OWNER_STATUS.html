@@ -295,9 +295,26 @@
       </table>
     </div>
     <p style="font-size:14px;color:var(--ink-3);">Figures are on the pre-fix objects, which is the basis the full metric
-    battery was built on; the compliance rebuild moves NQ's full-dev net by −$209.36. In the 2026 partial slice
-    BEST_ONE_NQ's breakeven commission multiple falls to <strong>0.94×</strong> — i.e. at the coded rate that slice is
-    already fractionally under water.</p>
+    battery was built on; the compliance rebuild moves NQ's full-dev net by −$209.36.</p>
+
+    <div class="note warn">
+      <h3>Why your own Strategy Analyzer shows 2026 in profit — both numbers are right</h3>
+      <p>Two separate effects, and the second one surprised me.</p>
+      <p><strong>Window.</strong> Every row above stops at the dev boundary, 2026-05-29. June–July 2026 alone is worth
+      <strong>+$59,515</strong> over 86 trades, and it is outside every table in this program. A UI run to 2026-08-07
+      additionally picks up an Aug 1–7 sliver (≈ +$11,083) that is <em>locked-forward virgin data</em> — I deliberately
+      did not touch it.</p>
+      <p><strong>Start state, which I had not accounted for.</strong> On the <em>identical</em> Jan→May window, the same
+      object run fresh from 2026-01-01 returns <strong>+$7,426.36 over 174 trades</strong>, while the same window sliced
+      out of the full 2022–2026 run returns <strong>−$46.60 over 185 trades</strong>. Same code, same end date,
+      $7,473 and 11 trades apart. A run that begins on 2026-01-01 has no history: <code>sigma460</code> warms up from
+      scratch over ~460 bars, the tilt state needs 50 prior session closes, and B-MOM needs 14 RTH days of
+      time-of-day history. For roughly the first quarter of a fresh run the strategy is operating on immature state.</p>
+      <p><strong>So: every recency row above is a <em>continuation</em> number and will not reproduce in the Strategy
+      Analyzer from a same-year start.</strong> Comparing a sliced year against a UI run started that January compares
+      two different objects. This is also a third reason the retracted 2026 claim could not carry weight — that figure
+      is not even invariant to how the backtest is started.</p>
+    </div>
   </section>
 
   <section>
