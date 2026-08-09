@@ -1,5 +1,13 @@
 # START_HERE — the NQ system program in 5 minutes
 
+> **⚠️ Banner added 2026-08-09 (FINAL OPTIMIZATION DIRECTIVE close-out).** The "OneLot" row
+> below (`SolarWaveSMOneLot_v1.cs`) names an OLDER, pre-C4-compliance object. The current FINAL
+> one-contract holders are `SolarWaveOneContractNQ_v4.cs` (NQ) and `SolarWaveOneContractMNQ_v4.cs`
+> (MNQ) — see **`BASELINE_MODELS.md`** for the single canonical identity/formula/parameters/
+> performance record of all 3 current objects (Product A included). Read that file first for
+> "what exactly ships today"; this file's body below is kept for its historical framing of how
+> the program's concepts (Solar, tilt, c1_50, B-MOM) fit together, which is still accurate.
+
 _2026-08-08. If a claim here conflicts with an older doc, CURRENT_TRUTH.md +
 SUPERSEDED_CONCLUSIONS.md win. Nothing is "production ready" or "OOS proven"._
 

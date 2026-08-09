@@ -59,7 +59,13 @@ past seq 442), `operational/` (live-ops rules: margin flatten, monitor protocol,
 data seal — still binding).
 
 **Campaign #3 (SYSTEM_MASTER, active):** `system_master/`. This is where nearly all current
-work lives. Its own reading order (per its `START_HERE.md`):
+work lives. **As of 2026-08-09 (FINAL OPTIMIZATION DIRECTIVE close-out), the 3 shipped
+objects' identity/architecture/formula/parameters/performance/capital-map/invalidation-criteria
+live in one place: `BASELINE_MODELS.md`.** For "what are the final objects and exactly how do
+they work", start there, not in the per-wave frontier docs below. For "what is the campaign
+doing right now / what changed most recently", `FINAL_OWNER_DECISION_20260809.md` is the
+closing status report — read it before `CURRENT_TRUTH.md` if you only have time for one file.
+Its own reading order (per its `START_HERE.md`):
 `START_HERE.md → CURRENT_TRUTH.md → SYSTEM_SCORECARD.md → NEXT_HANDOFF.md`, plus
 `CLAIM_LEDGER.md` / `SUPERSEDED_CONCLUSIONS.md` / `KNOWN_ERRORS_AND_CORRECTIONS.md` for
 what-changed-and-why, and `CONVENTIONS.md` for the binding statistical/evaluation rules used
