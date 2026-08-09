@@ -75,3 +75,21 @@ correctly (variance-timing / tail-shaping, not loss-avoidance). Remaining unexpl
 cross-market candidates from the wave-4 expansion passes (D1 ranks 3/4/6, D2 rank 1) are the
 next EVI-justified step before declaring the cross-market axis exhausted (research/system_master/
 deep_research/DR_V4_EXPANSION_PASSES_20260808.md has the full ranked list and dedup notes).
+
+## ENGINE3_SLATE5_CROSSMARKET (2026-08-09, seq 479) — ALL 3 KILLED; 15/15 total, axis exhausted
+D1 rank 3 (Europe/YM -> US/NQ session lead): directionally positive at all 3 YMZ grid cells
+($438.57/$445.40/$302.56) but N never clears 40 (max 46) and t_nw never exceeds 1.00 -- a mild,
+statistically unconvincing effect. D1 rank 4 (NDX-100 annual special-rebalance, 3rd-Friday
+December): pre-registered cheap kill, only 4 events in the dev window (N<=4 by construction),
+mean -$558.11, run to formally clear the ledger item, not informative either way. D1 rank 6
+(weekend information-diffusion lag, Friday 3-instrument consensus -> Monday NQ): technically
+beats its own mandatory any-gap head-to-head control (-$65.73 vs -$362.02) but is itself flat
+(t_nw -0.18) -- not tradeable; the any-gap control's own mild negative tilt (t_nw -1.91) is a
+noted-but-unpursued incidental finding (weekday consensus-gaps mildly fade, not continue).
+D2 rank 1 (cross-index dispersion catch-up) was explicitly NOT selected -- ruled a near-duplicate
+of slate 4's already-killed e410 dispersion-catchup mechanism, not tested. **FINAL TALLY: 5
+slates, 15 candidates, 0 survivors.** Per the FINAL OPTIMIZATION DIRECTIVE's explicit 3-candidate
+bound, no slate 6 opens this wave. The cross-market Engine-3 axis (ES/RTY/YM, no new data
+infrastructure) is exhausted; any future attempt needs either a materially new data source
+(options/dealer positioning -- not in this repo) or a genuinely new mechanism class, not a
+re-spec of any of the 15 killed candidates.
