@@ -1,6 +1,21 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-09, **Wave-19** (MEGA PROMPT V7 + the owner directive of the same day).
+_Last update: 2026-08-09, **FINAL OPTIMIZATION DIRECTIVE close-out** (supersedes Wave-19 below
+for anything it touches). 18 constructions tested across 8 named research families (S0 TOD
+autopsy, S1 arm_ER/arm_TOD, S2 SelTime, M3 entry/exit-S, M4 anchor, A1/A2 ATR audit, P4 churn
+selectivity, D-WINNER missed-winner/give-back) plus a bounded 3-candidate Engine-3 slate
+(cross-market axis now 15/15 failed cumulative) and an X1/X2 execution/friction audit.
+**0 promotions.** S2_SELTIME is the sole CANDIDATE to clear its own gates but was explicitly
+NOT adopted (red-team-downgraded mechanism claim; see `runs/S2_SELTIME/REPORT.md`). All 3
+baseline objects (Product A, BEST_ONE_NQ, BEST_ONE_MNQ) are unchanged from pre-wave. NT8 parity
+(V1-R4) attempted and NOT certified -- blocked by an MCP tooling limitation, with one completed
+sub-window spot-check showing a real, unexplained-in-full 23% discrepancy on Product A
+(`runs/V1R4_NT8_PARITY/REPORT.md`). Registry now at seq 481. **Full detail: `BASELINE_MODELS.md`
+(the 3 objects) and `FINAL_OWNER_DECISION_20260809.md` (the closing status report) -- both are
+now the authoritative entry points and supersede this file's own per-topic figures wherever they
+overlap.**
+
+_Wave-19 header, retained: Last update: 2026-08-09, **Wave-19** (MEGA PROMPT V7 + the owner directive of the same day).
 Registry at seq 471. Wave 19 consumed **ZERO** alpha budget - its primary work was the D7
 diagnostic, which sec15 leaves uncapped - so both hypotheses remain available and the
 multiple-testing position is unchanged from Wave 18. Read the Wave-19 section first; it
