@@ -1,15 +1,16 @@
-# START_HERE — the NQ system program in 5 minutes
+# START_HERE — historical campaign notes (superseded as a current-entry point)
 
-> **⚠️ Banner added 2026-08-09 (FINAL OPTIMIZATION DIRECTIVE close-out).** The "OneLot" row
-> below (`SolarWaveSMOneLot_v1.cs`) names an OLDER, pre-C4-compliance object. The current FINAL
-> one-contract holders are `SolarWaveOneContractNQ_v4.cs` (NQ) and `SolarWaveOneContractMNQ_v4.cs`
-> (MNQ) — see **`BASELINE_MODELS.md`** for the single canonical identity/formula/parameters/
-> performance record of all 3 current objects (Product A included). Read that file first for
-> "what exactly ships today"; this file's body below is kept for its historical framing of how
-> the program's concepts (Solar, tilt, c1_50, B-MOM) fit together, which is still accurate.
+**Current entry point: [`/README.md`](../../README.md) and [`/BASELINE_MODELS.md`](../../BASELINE_MODELS.md)
+(repo root).** This file is retired from that role as of 2026-08-09 — its body below is one
+wave stale (predates DEFECT 3, the `_v4`/`_v5` versions, and full-history parity certification)
+and is kept only for its still-accurate historical framing of how the program's underlying
+concepts (Solar, tilt, c1_50, B-MOM) fit together conceptually. Do not treat anything below as
+current-state fact; check `/BASELINE_MODELS.md` for that.
 
-_2026-08-08. If a claim here conflicts with an older doc, CURRENT_TRUTH.md +
-SUPERSEDED_CONCLUSIONS.md win. Nothing is "production ready" or "OOS proven"._
+## Historical campaign notes (2026-08-08, one wave stale — read `/BASELINE_MODELS.md` for current state)
+
+_If a claim here conflicts with an older doc, CURRENT_TRUTH.md + SUPERSEDED_CONCLUSIONS.md win.
+Nothing is "production ready" or "OOS proven"._
 
 ## The objects
 - **Solar (E10)**: 13 copies of one dual-anchor trend rule (SolarWave V3 adaptive,

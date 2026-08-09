@@ -1,23 +1,33 @@
 # MAP — repo orientation (start here for anything not already in `CLAUDE.md`)
 
-_Written 2026-08-09. Describes structure, not results — results live in the docs this file
-points to, and those change; this file's own job is to stay a stable pointer, not to duplicate
-content that will drift out of sync with it. If anything below and `CURRENT_TRUTH.md` disagree,
-believe `CURRENT_TRUTH.md`._
+_Written 2026-08-09, updated same day (repo consolidation, parity campaign close-out). Describes
+structure, not results — results live in the docs this file points to, and those change; this
+file's own job is to stay a stable pointer, not to duplicate content that will drift out of sync
+with it. If anything below and `/BASELINE_MODELS.md` (repo root) disagree, believe
+`/BASELINE_MODELS.md` for the 3 current objects and `CURRENT_TRUTH.md` for everything else._
+
+## Start here
+
+`README.md` (repo root) is now the current project landing page — read it first. It points to
+`/BASELINE_MODELS.md` (the 3 canonical objects), `research/system_master/CURRENT_TRUTH.md`
+(current state snapshot), `research/system_master/FINAL_OWNER_DECISION_20260809.md` (closing
+status report), and `RESEARCH_HANDOFF.md` (repo root — what a new research wave should read
+before starting). The rest of this file is deeper structural orientation, not a substitute.
 
 ## This repo holds four research campaigns, run one after another
 
 | # | Campaign | Status | Entry point |
 |---|---|---|---|
-| 1 | **Solar Wave** — recover the vendor indicator, find the raw edge | CLOSED 2026-08-07 | `README.md` (root) |
+| 1 | **Solar Wave** — recover the vendor indicator, find the raw edge | CLOSED 2026-08-07 | `research/SOLAR_WAVE_CAMPAIGN_README.md` (moved from root 2026-08-09, content unchanged — root `README.md` is now the whole-repo landing page, not campaign #1's) |
 | 2 | **Post-campaign audit** — independent re-verification of #1 | CLOSED 2026-08-07 | `research/audit/AUDIT_EXECUTIVE.md` |
-| 3 | **SYSTEM_MASTER** — portfolio construction + one-contract product | **ACTIVE** | `research/system_master/CURRENT_TRUTH.md` |
+| 3 | **SYSTEM_MASTER** — portfolio construction + one-contract product | **ACTIVE (engineering/parity CLOSED, back in research mode)** | `/BASELINE_MODELS.md` (repo root), then `research/system_master/CURRENT_TRUTH.md` |
 | 4 | **Scalping Lab** — short-horizon scalp-alpha search, parallel to #3 | phase complete, dormant | `research/scalping_lab/CAMPAIGN_STATE.md` |
 
-**If you only read one file: `research/system_master/CURRENT_TRUTH.md`.** It is the single
-running log of the active campaign, updated after every wave, and the only doc in the repo
-guaranteed not to lag behind the actual state of the research. Everything else — including this
-file — can go stale; that one is append-only and current by construction.
+**If you only read one file for the 3 current objects: `/BASELINE_MODELS.md` (repo root).** For
+"what's true right now" beyond the 3 objects themselves: `research/system_master/CURRENT_TRUTH.md`
+— the single running log of the active campaign, updated after every wave, and the only doc in
+the repo guaranteed not to lag behind the actual state of the research. Everything else —
+including this file — can go stale; that one is append-only and current by construction.
 
 Two filename collisions to know about, both intentional (different campaigns, not a mistake):
 `NEXT_HANDOFF.md` exists at repo root (campaign #1/#2, closed) **and** inside
@@ -30,10 +40,13 @@ frontier per campaign, not three copies of the same thing.
 
 ```
 CLAUDE.md          Agent rulebook — hard safety boundary, frozen baseline, conventions. Read first, always.
+README.md          Whole-repo landing page (rewritten 2026-08-09 — current systems, not campaign #1)
+BASELINE_MODELS.md  THE canonical record of the 3 current objects (moved to root 2026-08-09)
+RESEARCH_HANDOFF.md What a new research wave should read before starting (added 2026-08-09)
 MAP.md             This file.
-README.md          Campaign #1's own entry point (closed; banner added pointing here)
 NEXT_HANDOFF.md     Campaign #1/#2's resume state (closed; banner added)
-research/           All research content — see below
+research/           All research content — see below (includes SOLAR_WAVE_CAMPAIGN_README.md,
+                     campaign #1's own entry point, moved from root 2026-08-09)
 runs/                Immutable experiment directories: spec.yaml (frozen before results) + out/
 src/analytics/       Python simulators/analytics — canonical, reused across campaigns
 src/ninjascript/      The actual NT8 strategy source (.cs files) — what's really deployed/backtested
@@ -59,12 +72,14 @@ past seq 442), `operational/` (live-ops rules: margin flatten, monitor protocol,
 data seal — still binding).
 
 **Campaign #3 (SYSTEM_MASTER, active):** `system_master/`. This is where nearly all current
-work lives. **As of 2026-08-09 (FINAL OPTIMIZATION DIRECTIVE close-out), the 3 shipped
-objects' identity/architecture/formula/parameters/performance/capital-map/invalidation-criteria
-live in one place: `BASELINE_MODELS.md`.** For "what are the final objects and exactly how do
-they work", start there, not in the per-wave frontier docs below. For "what is the campaign
-doing right now / what changed most recently", `FINAL_OWNER_DECISION_20260809.md` is the
-closing status report — read it before `CURRENT_TRUTH.md` if you only have time for one file.
+work lives. **As of 2026-08-09, the 3 shipped objects' identity/architecture/formula/parameters/
+performance/capital-map/invalidation-criteria live in one place at repo root:
+[`/BASELINE_MODELS.md`](../BASELINE_MODELS.md).** (Moved there this same day — the copy still at
+`research/system_master/BASELINE_MODELS.md` is now a one-line redirect stub, not the canonical
+copy.) For "what are the final objects and exactly how do they work", start there, not in the
+per-wave frontier docs below. For "what is the campaign doing right now / what changed most
+recently", `FINAL_OWNER_DECISION_20260809.md` is the closing status report — read it before
+`CURRENT_TRUTH.md` if you only have time for one file.
 Its own reading order (per its `START_HERE.md`):
 `START_HERE.md → CURRENT_TRUTH.md → SYSTEM_SCORECARD.md → NEXT_HANDOFF.md`, plus
 `CLAIM_LEDGER.md` / `SUPERSEDED_CONCLUSIONS.md` / `KNOWN_ERRORS_AND_CORRECTIONS.md` for

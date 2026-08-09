@@ -1,5 +1,44 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+## SNAPSHOT (2026-08-09, repo consolidation pass — read this, skip the chronology below unless you need it)
+
+**CURRENT BASELINES**: Product A = `SolarWaveSMMaster_v4.cs`. BEST_ONE_NQ = `SolarWaveOneContractNQ_v5.cs`.
+BEST_ONE_MNQ = `SolarWaveOneContractMNQ_v5.cs`. Canonical record: `/BASELINE_MODELS.md` (repo root).
+
+**CURRENT PARITY STATUS**: event-level decision mechanism proven correct for all 3 (DEFECT 3 —
+a hardcoded-clock BMOM end-of-session flatten shared across all 3 objects — found via live-NT8
+forensics and fixed). Full-history net-profit certification complete for all 3 (7-block chunked
+harness, no gaps): BEST_ONE_NQ +4.13% vs Python (fully reconciled to two disclosed, non-defect
+conventions), BEST_ONE_MNQ +4.41% (same), Product A +10.91% (directionally consistent with the
+same conventions, not yet leg-proven to the dollar). See `runs/V1R4_NT8_PARITY/
+FULL_HISTORY_CERTIFICATION.md`.
+
+**CURRENT PERFORMANCE** (Python reference, full dev window 2022-01-03→2026-05-29): Product A net
+$177,924.40 (Sharpe 1.1770, Sortino 2.3371, Calmar 2.2896, EOD MaxDD $17,192.90, CDaR95
+$14,323.08). BEST_ONE_NQ net $301,915.92. BEST_ONE_MNQ net $28,587.10. Full battery for all 3:
+`/BASELINE_MODELS.md`.
+
+**CURRENT KNOWN LIMITATIONS**: Product A's full-history residual (+10.91%) not yet reduced to an
+exact leg-level proof (continuous multi-contract FIFO sizing makes that materially more expensive
+than for the binary one-contract objects). MNQ's older, independent 5-named-session gap is
+CLOSED (traced to a different, already-superseded object; does not apply to current `_v5`).
+
+**CURRENT RESEARCH STATUS**: S2_SELTIME adjudicated NOT PROMOTED for all 3 (own frozen R2 rule,
+independently verified). All 8 named FINAL OPTIMIZATION DIRECTIVE families + Engine-3 cross-market
+slate closed with disposition. No standing open-ended research queue.
+
+**CURRENT NEXT PHASE**: `ENGINEERING / PARITY CAMPAIGN: CLOSED.` `PROJECT MODE: RESEARCH.` See
+`/RESEARCH_HANDOFF.md` (repo root) for what's explicitly open and what should not simply be
+rerun unchanged. No live-trading authorization exists or is implied.
+
+---
+
+_Full wave-by-wave chronology follows below, newest first, retained for audit history. The
+snapshot above is the current-truth summary; nothing below should be read as more current than
+it._
+
+---
+
 _Last update: 2026-08-09, **DEFECT 3 FOUND AND FIXED — EVENT-LEVEL FIRST-DIVERGENCE FORENSICS**
 (same-day continuation, supersedes the S2 R2/parity section below for anything it touches). The
 BEST_ONE_NQ ~18.8% Q1-2025 residual was driven to its exact first divergence via a leg-by-leg

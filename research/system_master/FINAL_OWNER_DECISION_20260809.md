@@ -24,6 +24,52 @@ document is the entry point, not a duplicate._
 > versions; nothing else in this document's substantive findings (§2 S2 verdict, §4 safety, §6
 > capital map, §11 no-open-queue) changes.
 
+> **FINAL CLOSE-OUT UPDATE 2026-08-09 (third continuation — full-history chunked certification +
+> repo consolidation).** Answers the 8 standing close-out questions directly; supersedes anything
+> below that conflicts.
+>
+> 1. **Final current objects**: `SolarWaveSMMaster_v4.cs` (Product A), `SolarWaveOneContractNQ_v5.cs`
+>    (BEST_ONE_NQ), `SolarWaveOneContractMNQ_v5.cs` (BEST_ONE_MNQ). Canonical record moved to repo
+>    root: `/BASELINE_MODELS.md`.
+> 2. **Full-history parity certified?** Event-level decision mechanism: YES, all 3, proven exact
+>    against live NT8 output across the complete 2022-01-03→2026-05-29 window (0 divergent legs
+>    for BEST_ONE_NQ/MNQ; same shared, fixed code in Product A). Full-history NET-PROFIT
+>    certification: YES for coverage (all 7 chunks ran, no gaps) — BEST_ONE_NQ (+4.13%) and
+>    BEST_ONE_MNQ (+4.41%) are reconciled EXACTLY to two disclosed, non-defect conventions;
+>    Product A (+10.91%) is directionally consistent with the same conventions but not proven to
+>    the dollar. See `runs/V1R4_NT8_PARITY/FULL_HISTORY_CERTIFICATION.md`.
+> 3. **Engineering defects fixed**: DEFECT 3 — the BMOM leg's end-of-RTH flatten was a hardcoded
+>    clock (`hm >= 155700`), never migrated to session-relative when the earlier C2/C3 work fixed
+>    the entry-block/forced-flat overlay; on a holiday session ending before 15:57 ET, it never
+>    fires, so a stale BMOM position survives into the overnight session. Shared byte-for-byte
+>    across all 3 objects; fixed with a one-line, non-signal change. Separately: all 5
+>    historically-named MNQ sessions (2025-04-07/09/11, 2025-11-18, 2026-04-08) reopened against
+>    current `_v5` and found to show exact decision agreement — the old 0.8996 correlation gap
+>    traced to a DIFFERENT, already-superseded object (`SolarWaveOneContractMNQ_Final`), not a
+>    live defect.
+> 4. **Exact executable/current metrics**: full battery now in `/BASELINE_MODELS.md` for all 3,
+>    including Product A's previously-missing exact battery (Sharpe 1.1770, Sortino 2.3371,
+>    Calmar 2.2896, EOD MaxDD $17,192.90, CDaR95 $14,323.08, full dev window).
+> 5. **What remains unresolved**: Product A's full-history net-profit residual is not yet reduced
+>    to an exact leg-level proof (continuous multi-contract FIFO sizing, materially more expensive
+>    to construct than the binary one-contract objects' proof). This is a precision gap, not a
+>    correctness question — no unexplained decision-level divergence exists anywhere in the tested
+>    history for any of the 3 objects.
+> 6. **Is the parity campaign CLOSED?** Yes.
+> 7. **Is the project back in RESEARCH MODE?** Yes.
+> 8. **What research is explicitly allowed next?** See `/RESEARCH_HANDOFF.md` (repo root) — new,
+>    materially-different hypotheses in time/session selectivity, trade timing, hold/exit
+>    mechanics, microstructure, volatility/liquidity conditioning, a genuinely orthogonal Engine
+>    #3, or execution-aware alpha. Do NOT simply rerun S2_SELTIME's exact frozen rule or any of the
+>    8 closed FINAL OPTIMIZATION DIRECTIVE families unchanged. No live-trading authorization exists
+>    or is implied by any of the above.
+>
+> Repo consolidation performed the same pass: `BASELINE_MODELS.md` moved to repo root (stub left
+> at the old path), `README.md` rewritten as the whole-repo landing page (old Solar Wave content
+> preserved at `research/SOLAR_WAVE_CAMPAIGN_README.md`), `CURRENT_TRUTH.md` given a compact
+> snapshot section, `START_HERE.md` retired to historical-notes status, `RESEARCH_HANDOFF.md`
+> added at repo root, `MAP.md` updated to match.
+
 ## 0. Object list — current as of this update
 
 The 3 final baseline objects, current versions (supersedes the `_v3`/`_v4` names used in the rest
