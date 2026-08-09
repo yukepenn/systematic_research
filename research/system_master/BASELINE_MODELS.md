@@ -31,6 +31,21 @@ directly refuted. **All 3 baselines below are therefore UNCHANGED from before th
 campaign's finding is that the incumbents are robust to this round of adversarial search, not
 that they improved.
 
+**UPDATE 2026-08-09 (same-day continuation, S2 R2 promotion adjudication + parity forensics).**
+S2's own frozen verdict rule required a capital-map + parity R2 before any promotion decision —
+that step had never actually run; it has now been run in full for all 3 products, independently
+adversarially verified (3-agent parallel workflow, no bug found), and resolved: **NOT PROMOTED to
+any of the 3 baselines** (`runs/S2_SELTIME/R2_PRODUCT_A.md`, `R2_ONE_NQ.md`, `R2_ONE_MNQ.md`) —
+Product A fails gate_A/gate_B and narrowly fails gate_C; BEST_ONE_NQ/MNQ pass gate_A alone but
+fail gate_B/gate_C decisively, traced to a real, mechanistically-understood right-tail cost (a
+legitimately-suppressed +$7,625 winning entry on 2025-04-09's tariff-crash volatility). Separately,
+a priority-zero forensic check RESOLVED the previously-reported 23% Product A parity discrepancy
+as a warmup-state artifact (see each object's PARITY STATUS field below) — Product A is now
+CERTIFIED for the spot-checked window; BEST_ONE_NQ/MNQ improved substantially but remain NOT
+CERTIFIED pending a smaller, un-root-caused residual. All 3 baselines remain architecturally
+UNCHANGED — this update closes two open process items with real evidence, it does not alter any
+shipped object.
+
 ---
 
 ## BASELINE A — Product A (best combined NQ system, ensembles/leverage authorized)
@@ -38,11 +53,20 @@ that they improved.
 ### Identity
 - **Name**: `SolarWaveSMMaster_v3` (internal codename DAYONLY_DUAL6040).
 - **File**: `src/ninjascript/SolarWaveSMMaster_v3.cs` (512 lines).
-- **Lifecycle**: candidate/champion composition, **not a formally promoted final** — NT8 parity
-  not certified (`runs/V1R4_NT8_PARITY/`, this wave: a Q1-2025 spot-check shows a 23% net
-  discrepancy against a pre-C4-fix Python twin, root cause plausible but unconfirmed; full
-  multi-year certification blocked by an MCP tooling limitation, not by a code defect). Filename
-  stays `_v3`, not `_Final`, precisely because certification is outstanding.
+- **Lifecycle**: candidate/champion composition, **not a formally promoted final** — S2_SELTIME's
+  R2 promotion adjudication (`runs/S2_SELTIME/R2_PRODUCT_A.md`) closed 2026-08-09: **NOT
+  PROMOTED** (fails gate_A and gate_B, narrowly fails gate_C on this product's own numbers) — the
+  object is unchanged by that adjudication. Filename stays `_v3`, not `_Final`, because full
+  multi-year parity certification is outstanding (see PARITY STATUS below).
+- **PARITY STATUS**: CERTIFIED (spot-check window only). The previously-reported 23% Q1-2025
+  discrepancy is RESOLVED — root-caused to a warmup-state artifact (the original test fresh-
+  started NT8 at 2025-01-01 against a Python twin with full 2022+ continuation state); a
+  9-month-warmup re-test converges to 0.71% residual, clearing the 1% tolerance. Full
+  multi-year certification remains open (CrossTrade long-job ceiling, not a known defect).
+- **PARITY CERTIFICATE**: `runs/V1R4_NT8_PARITY/PRODUCT_A_CERTIFICATE.md`
+- **LAST VERIFIED**: 2026-08-09 (Q1-2025 spot-check, post-NT8-restart)
+- **SOURCE VERSION**: `_v3`, 23,988 bytes, confirmed byte-identical between repo and deployed NT8
+  copy this wave.
 - **Traded instrument**: MNQ (execution leg); NQ is the read-only signal/decision leg. Two-series
   NinjaScript arrangement (`AddDataSeries`), signal on primary, execution on series[1].
 
@@ -177,11 +201,20 @@ schedule, not derived from a formula that self-updates.
 ### Identity
 - **Name**: `SolarWaveOneContractNQ_v4` (internal codename SM14 hysteresis(3,1)).
 - **File**: `src/ninjascript/SolarWaveOneContractNQ_v4.cs` (507 lines).
-- **Lifecycle**: FINAL holder for the one-contract NQ slot, C4-compliant (0/16 breaches). NT8
-  parity **not certified** (V1R4 open, this wave — full multi-year run blocked by MCP tooling,
-  not attempted at the shorter-window level for this specific object this wave; the last PASSED
-  parity run, 99.49% trade-exact / corr 0.9990 / net Δ0.13%, was on the now-superseded pre-C4-fix
-  `_Final` object, not on `_v4` — does not carry over without re-checking).
+- **Lifecycle**: FINAL holder for the one-contract NQ slot, C4-compliant (0/16 breaches). S2's R2
+  adjudication (`runs/S2_SELTIME/R2_ONE_NQ.md`) closed 2026-08-09: **NOT PROMOTED** (passes gate_A
+  on pooled Sharpe/CDaR alone, but fails gate_B and gate_C decisively — a real, mechanistically-
+  traced right-tail cost, not just weak evidence). Object unchanged by that adjudication.
+- **PARITY STATUS**: NOT CERTIFIED. Warmup-corrected re-test (same methodology as Product A's
+  certificate) substantially narrows the picture — trade count now matches almost exactly (106
+  Python round trips vs 107 NT8 trades on the Q1-2025 window) — but an un-root-caused ~18.8%
+  dollar residual remains, tentatively classified FILL/ORDER_TIMING, not SIGNAL. The prior
+  pre-C4-fix `_Final` object's 99.49%/0.9990/0.13% PASSED result does not carry over to `_v4`
+  without re-checking (a genuinely different object, per V1-R3's own naming rule).
+- **PARITY CERTIFICATE**: `runs/V1R4_NT8_PARITY/ONE_NQ_CERTIFICATE.md`
+- **LAST VERIFIED**: 2026-08-09 (Q1-2025 warmup-corrected spot-check, post-NT8-restart)
+- **SOURCE VERSION**: `_v4`, 23,793 bytes, confirmed byte-identical between repo and deployed NT8
+  copy this wave.
 - **Traded instrument**: NQ directly (both signal and execution legs are NQ; two-series
   arrangement exists for architectural symmetry with the MNQ sibling, not because a different
   instrument is involved).
@@ -294,8 +327,18 @@ M3 already closed that axis). (3) Same B-MOM-decay and margin-schedule risks as 
 - **File**: `src/ninjascript/SolarWaveOneContractMNQ_v4.cs` (530 lines).
 - **Lifecycle**: FINAL holder for the one-contract MNQ slot, C4-compliant (0/1077 breaches; the
   large denominator is the far higher historical breach-rate the pre-fix object had, per
-  `W17_C4_COMPLIANCE`, not a defect count in `_v4` itself). NT8 parity **not certified** (V1R4
-  open).
+  `W17_C4_COMPLIANCE`, not a defect count in `_v4` itself). S2's R2 adjudication (`runs/
+  S2_SELTIME/R2_ONE_MNQ.md`) closed 2026-08-09: **NOT PROMOTED** — same pattern as BEST_ONE_NQ
+  (identical decision sequence), gate_A passes alone, gate_B/gate_C fail decisively.
+- **PARITY STATUS**: NOT CERTIFIED. Same warmup-driven improvement as BEST_ONE_NQ (shared decision
+  sequence, confirmed `np.array_equal` over the full dev window this wave), residual ~15.5% on
+  the Q1-2025 window, un-root-caused. ADDITIONALLY carries the older, still-open daily-correlation
+  gap (0.8996, <0.999 bar) from `PRODUCTB_ONECONTRACT_FINAL/REPORT.md`, narrowed to 5 named
+  sessions not yet re-investigated this wave — two independent, additive open items, not one.
+- **PARITY CERTIFICATE**: `runs/V1R4_NT8_PARITY/ONE_MNQ_CERTIFICATE.md`
+- **LAST VERIFIED**: 2026-08-09 (Q1-2025 warmup-corrected spot-check, post-NT8-restart)
+- **SOURCE VERSION**: `_v4`, 25,693 bytes, confirmed byte-identical between repo and deployed NT8
+  copy this wave.
 - **Traded instrument**: MNQ. Signal = NQ (primary series), execution = MNQ (added series[1]) —
   the SAME cross-series arrangement as Baseline A, fixed from the KNOWN_ERRORS #7 defect (the
   pre-fix object had signal and execution on the wrong series and NEVER voluntarily exited a
