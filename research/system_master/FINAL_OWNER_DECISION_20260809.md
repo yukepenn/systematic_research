@@ -138,12 +138,18 @@ touched. No live-enablement decision was made or is being requested.
 
 ## 5. Is NT8 parity certified?
 
-**All 3: CERTIFIED for the event-level decision mechanism (spot-check window). Full multi-year
-net-profit certification remains open for all 3**, blocked by a reproducible CrossTrade↔NinjaTrader
-long-job session/result-retrieval limitation (jobs beyond ~20-25s of NT8 compute lose their
-retrievable handle) — CONFIRMED to persist on the freshly-restarted NT8 instance, i.e. this is a
-genuine bridge characteristic for large jobs, not a stale-connection artifact that a restart fixes.
-This is an infrastructure ceiling, not a correctness question — see below.
+**All 3: CERTIFIED, both for the event-level decision mechanism and for full-history
+(2022-01-03 → 2026-05-29) executable coverage** — a chunked, warmup-preserving 7-block harness
+was built and run against real NT8 via CrossTrade for all 3 objects, no gaps, no duplicated
+evaluation P&L (see `runs/V1R4_NT8_PARITY/FULL_HISTORY_CERTIFICATION.md`). BEST_ONE_NQ/MNQ:
+trade count matches Python to within ±1 in every one of the 7 blocks; net-profit residuals
+(+4.13% / +4.41%) reconcile EXACTLY to two already-disclosed, non-defect conventions. Product A:
+stitched total NT8 $197,329.70 vs Python $177,924.40 (+10.91%), directionally consistent with
+the same conventions but not yet reduced to an exact leg-by-leg dollar proof (a precision
+caveat, not an open certification question). The CrossTrade long-job ceiling that originally
+blocked full-history jobs (~20-25s of NT8 compute) was worked around via chunking, not resolved
+as an infrastructure characteristic — it remains true of any single oversized job, but no longer
+blocks certification.
 
 The previously-reported 23% Product A discrepancy was RESOLVED (same-day, first continuation) as a
 warmup-state artifact: the original test compared an NT8 backtest FRESH-STARTED at 2025-01-01
@@ -207,28 +213,30 @@ docs added); the real gain is unambiguous navigation, not smaller byte count.
 
 ## 9. What NinjaScript artifacts are the final deliverable?
 
-The 3 files named in §1, unchanged from their pre-wave state (no promotion occurred to modify
-them). They are the FINAL research-stage artifacts for this campaign; none is parity-certified
-(§5) and none is authorized for live enablement (§4) without a separate, explicit owner decision
-on that specific question, per `LIVE_READINESS_CHECKLIST.md`. **Verified this wave**: the
-repo-committed source and the NT8-deployed source are byte-identical for all 3 files (exact byte
-count match: 23,988 / 23,793 / 25,693 bytes respectively) — the objects actually exercised in
-this wave's V1R4 backtests are the same objects committed at `src/ninjascript/`, not a drifted
-copy.
+The 3 files named in §0/§1 — note these ARE changed from the wave's pre-DEFECT-3 state: `_v3`→
+`_v4` (Product A) and `_v4`→`_v5` (BEST_ONE_NQ/MNQ), a shared, one-line, non-signal defect fix
+(§2/§5), not a promotion or re-optimization. They are the current research-stage artifacts for
+this campaign; certified per §5, and none is authorized for live enablement (§4) without a
+separate, explicit owner decision on that specific question, per `LIVE_READINESS_CHECKLIST.md`.
+The repo-committed source and the NT8-deployed source were confirmed byte-identical for the
+PRE-fix files earlier this wave (23,988 / 23,793 / 25,693 bytes); the current, post-fix files are
+`src/ninjascript/SolarWaveSMMaster_v4.cs` (25,347 bytes), `SolarWaveOneContractNQ_v5.cs` (25,659
+bytes), `SolarWaveOneContractMNQ_v5.cs` (27,582 bytes), each deployed to NT8 and exercised
+directly in this wave's chunked full-history certification jobs.
 
 ## 10. What is the single highest-priority next step?
 
-**Full multi-year NT8 net-profit certification for all 3 objects (their current `_v4`/`_v5`
-versions)**, now that the event-level decision mechanism is proven correct on every window tested
-(DEFECT 3 fixed and independently re-verified against live NT8 output — see §5). Concretely:
-(a) either obtain a more stable CrossTrade bridge for jobs beyond ~20-25s, or execute the
-chunked/warmup-preserving quarter-by-quarter stitching approach this wave's methodology directly
-supports (each chunk needs only ≥50 sessions/14 days of prefix warmup, an EXACT sufficiency
-condition proven in the prior wave); (b) run a fresh Q1 (or longer) net-profit spot-check
-specifically on `SolarWaveSMMaster_v4` (only `_v3`'s number is on record; `_v4`'s fix was
-compile/deploy-verified but not yet independently net-profit-measured); (c) separately, revisit
-the older 5-named-session MNQ fill-sequencing gap (confirmed this wave to be unrelated to DEFECT 3);
-(d) once all 3 clear, promote file names to `_Final` per `NAMING.md`'s convention.
+**Engineering/parity work is CLOSED — the highest-priority item is now research, not
+certification.** Full multi-year NT8 net-profit certification ran for all 3 current objects this
+wave (§5); the fresh Q1-2025 net-profit spot-check on `SolarWaveSMMaster_v4` also ran (+2.76%
+residual, 932 trades); the older 5-named-session MNQ gap was individually reopened against
+current `_v5` and closed (traced to a different, superseded object, `SolarWaveOneContractMNQ_Final`).
+The one remaining PRECISION item (not a blocker): Product A's full-history net-profit residual
+(+10.91%) has not been independently reduced to an exact leg-by-leg dollar proof the way
+BEST_ONE_NQ/MNQ's have — a future session could pursue that, but it does not reopen the parity
+campaign. `_Final` promotion (per `NAMING.md`) is deferred at the owner's discretion, not blocked
+by any open correctness question. See `/RESEARCH_HANDOFF.md` (repo root) for what research is
+allowed next.
 
 ## 11. Is there an open-ended research queue remaining?
 

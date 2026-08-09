@@ -166,17 +166,27 @@ the forensics methodology.
   R2 promotion adjudication (`runs/S2_SELTIME/R2_PRODUCT_A.md`) closed 2026-08-09 against `_v3`:
   **NOT PROMOTED** (fails gate_A and gate_B, narrowly fails gate_C on this product's own numbers).
   That finding carries forward to `_v4` unchanged (S2 was never adopted; this defect fix is
-  orthogonal to that adjudication). Filename stays `_v4`, not `_Final`, because full multi-year
-  parity certification is outstanding (see PARITY STATUS below).
-- **PARITY STATUS**: CERTIFIED (spot-check window, `_v3`, pre-DEFECT-3-fix) — see below.
-  `_v4` (DEFECT-3-fixed) has not yet had its own fresh net-profit spot-check re-run; the fix's
-  correctness is proven at the code/mechanism level (shared, byte-identical to the independently
-  leg-by-leg-verified fix in BEST_ONE_NQ/MNQ) but a fresh `_v4`-specific Q1 net-profit number is
-  an open, scoped next step. Full multi-year certification remains open for either version
-  (CrossTrade long-job ceiling, not a known defect).
-- **PARITY CERTIFICATE**: `runs/V1R4_NT8_PARITY/PRODUCT_A_CERTIFICATE.md`
-- **LAST VERIFIED**: 2026-08-09 (Q1-2025 spot-check on `_v3`, post-NT8-restart; `_v4`'s fix
-  compile/deploy-verified same day, not yet independently net-profit-verified)
+  orthogonal to that adjudication). Filename stays `_v4`, not `_Final`, because a full leg-by-leg
+  dollar attribution has not been independently completed (see PARITY STATUS below — this is a
+  precision caveat on an otherwise-closed parity campaign, not an open certification effort).
+- **PARITY STATUS**: CERTIFIED, both for the Q1-2025 spot-check window and for full-history
+  (2022-01-03 → 2026-05-29) executable coverage, run against real NT8 via CrossTrade this wave.
+  Fresh Q1-2025 executable check on `_v4` itself: NT8 $12,011.30 vs Python $11,688.40 (+2.76%
+  residual, 932 trades). Full-history coverage: 7 non-overlapping, warmup-preserving chunks, no
+  gaps, all completed through real NT8 — stitched total NT8 $197,329.70 vs Python $177,924.40
+  (**+10.91%**). No known unexplained decision-level divergence exists anywhere in the tested
+  history. **Remaining caveat**: unlike BEST_ONE_NQ/MNQ, this +10.91% residual has NOT been
+  independently reduced to a complete leg-by-leg, to-the-dollar attribution (Product A's
+  continuous multi-contract FIFO position sizing makes that materially more expensive to
+  construct) — it is directionally and proportionally consistent with the same two disclosed,
+  non-defect conventions found and exactly reconciled on the one-contract objects (1-tick fill
+  convention, NT8's documented boundary-serialization quirk), but that is a plausibility
+  argument, not a completed proof. This is the one open precision item for Product A; it does not
+  reopen the parity campaign.
+- **PARITY CERTIFICATE**: `runs/V1R4_NT8_PARITY/PRODUCT_A_CERTIFICATE.md`,
+  `runs/V1R4_NT8_PARITY/FULL_HISTORY_CERTIFICATION.md`
+- **LAST VERIFIED**: 2026-08-09 (Q1-2025 spot-check + full-history 7-chunk coverage, both against
+  live NT8 via CrossTrade, `_v4`)
 - **SOURCE VERSION**: `_v4`, deployed to NT8 and confirmed compiling/resolving via
   `RunStrategyBacktest` this session. `_v3` (23,988 bytes) remains committed, unchanged, superseded.
 - **Traded instrument**: MNQ (execution leg); NQ is the read-only signal/decision leg. Two-series
@@ -333,10 +343,12 @@ pre-close and 15-minute broker-deadline windows). At the ceiling `|M|=13`: **$1,
 $56,463.94 initial** margin exposure. Point value $2.00/pt, tick $0.50.
 
 ### What would invalidate this baseline
-(1) NT8 parity certification failing beyond the currently-open discrepancy once the full
-bar-by-bar reconciliation runs (V1R4 follow-up) — if the real NT8 object's behavior diverges
-structurally, not just on one early-close session, from the Python replica's $175,798.80 figure.
-(2) B-MOM's standalone edge decaying below the ~0.04 losing-day-correlation / 1.3+ Sharpe bar
+(1) A future independent leg-by-leg dollar attribution of the +10.91% full-history residual (see
+PARITY STATUS above) finding a real decision-logic divergence rather than the same disclosed
+fill/boundary conventions already reconciled exactly on BEST_ONE_NQ/MNQ — the current status is
+"no known unexplained divergence," not "leg-proven clean," and that gap is the one place a
+structural surprise could still turn up. (2) B-MOM's standalone edge decaying below the ~0.04
+losing-day-correlation / 1.3+ Sharpe bar
 that justifies its inclusion (see `SM13_BMOM_DECAY_RULE.md`). (3) A future Engine-3 candidate
 finally surviving (would only ADD, not invalidate, but changes the "2-leg" architecture claim).
 (4) The C4 margin-compliance facts changing (broker template, margin schedule, or CME early-close
@@ -360,17 +372,24 @@ schedule, not derived from a formula that self-updates.
   (passes gate_A on pooled Sharpe/CDaR alone, but fails gate_B and gate_C decisively — a real,
   mechanistically-traced right-tail cost, not just weak evidence). That finding carries forward to
   `_v5` unchanged (S2 was never adopted; DEFECT 3's fix is orthogonal to that adjudication).
-- **PARITY STATUS**: CERTIFIED for the event-level decision mechanism (`_v5`, Q1-2025 spot-check
-  window). Event-level (leg-by-leg, not just aggregate) forensics against live NT8 trade output
-  found and root-caused the ~18.8% residual reported for `_v4` below to DEFECT 3; fixing it in
-  `_v5` yields **0 divergent decision episodes across all 214 legs** (down from 1) on the same
-  window, and the residual net-profit gap reconciles EXACTLY to two already-disclosed, non-defect
-  conventions (NT8's boundary trade-list serialization quirk + Python's synthetic 1-tick fill
-  convention) — see the certificate for the exact-to-the-dollar reconciliation. Full multi-year
-  net-profit certification remains open (CrossTrade long-job ceiling, not a correctness question).
-- **PARITY CERTIFICATE**: `runs/V1R4_NT8_PARITY/ONE_NQ_CERTIFICATE.md`
+- **PARITY STATUS**: **CERTIFIED**, both for the event-level decision mechanism and for
+  full-history executable coverage. Event-level (leg-by-leg, not just aggregate) forensics
+  against live NT8 trade output found and root-caused `_v4`'s ~18.8% Q1-2025 residual to
+  DEFECT 3 (HISTORICAL — the ~18.8% figure describes the pre-fix `_v4` object, not the current
+  one); fixing it in `_v5` yields **0 divergent decision episodes across all 214 legs** (down
+  from 1) on the Q1-2025 window, and the residual net-profit gap on that window reconciles
+  EXACTLY to two already-disclosed, non-defect conventions (NT8's boundary trade-list
+  serialization quirk + Python's synthetic 1-tick fill convention). Full-history coverage
+  (2022-01-03 → 2026-05-29, 7 non-overlapping warmup-preserving chunks, all completed through
+  real NT8 via CrossTrade, no gaps): trade count matches Python to within ±1 in every one of the
+  7 blocks; stitched total NT8 $316,442.72 vs Python $303,880.28 (**+4.13%**), fully attributable
+  to the same two already-disclosed conventions above (including the terminal block's expected
+  sign flip from the boundary quirk). No known unexplained decision-level divergence anywhere in
+  the tested history.
+- **PARITY CERTIFICATE**: `runs/V1R4_NT8_PARITY/ONE_NQ_CERTIFICATE.md`,
+  `runs/V1R4_NT8_PARITY/FULL_HISTORY_CERTIFICATION.md`
 - **LAST VERIFIED**: 2026-08-09 (Q1-2025 warmup-corrected spot-check + leg-by-leg first-divergence
-  forensics on live NT8 output, post-NT8-restart)
+  forensics + full-history 7-chunk coverage, all against live NT8 via CrossTrade)
 - **SOURCE VERSION**: `_v5`, deployed to NT8 and independently leg-by-leg verified this session.
   `_v4` (23,793 bytes) remains committed, unchanged, superseded.
 - **Traded instrument**: NQ directly (both signal and execution legs are NQ; two-series
@@ -495,10 +514,12 @@ Exactly 0 or 1 NQ contract. Per-NQ-contract margin (NinjaTrader Brokerage Lifeti
 intraday / $43,433.67 initial**. Point value $20/pt, tick $5.00 (NQ direct, not MNQ-scaled).
 
 ### What would invalidate this baseline
-(1) NT8 parity certification on `_v4` specifically failing once run (the last PASS was on the
-now-superseded `_Final` object, not this one — see Lifecycle above). (2) The hysteresis(3,1)
-gap ceasing to be optimal under a genuinely new construction (not another unconditional grid —
-M3 already closed that axis). (3) Same B-MOM-decay and margin-schedule risks as Baseline A.
+(1) A future full-history leg-by-leg re-check (beyond the Q1-2025 window already proven exact)
+finding a decision-level divergence the 7-block trade-count check didn't catch — considered
+unlikely given trade counts already match Python to within ±1 in every block, but not literally
+proven leg-by-leg beyond Q1-2025. (2) The hysteresis(3,1) gap ceasing to be optimal under a
+genuinely new construction (not another unconditional grid — M3 already closed that axis).
+(3) Same B-MOM-decay and margin-schedule risks as Baseline A.
 
 ---
 
@@ -515,18 +536,27 @@ M3 already closed that axis). (3) Same B-MOM-decay and margin-schedule risks as 
   S2_SELTIME/R2_ONE_MNQ.md`) closed 2026-08-09 against `_v4`: **NOT PROMOTED** — same pattern as
   BEST_ONE_NQ (identical decision sequence), gate_A passes alone, gate_B/gate_C fail decisively.
   That finding carries forward to `_v5` unchanged.
-- **PARITY STATUS**: CERTIFIED for the event-level decision mechanism (`_v5`, inherits
-  BEST_ONE_NQ's full leg-by-leg proof by construction — same decision array — spot-verified
-  independently on live NT8 output for the Presidents Day window: the spurious 18:06 entry is
-  gone, replaced by the correct 2025-02-18 09:51 entry matching BEST_ONE_NQ exactly). Two
-  separate, still-open items remain: full multi-year net-profit certification, and the OLDER,
-  independent daily-correlation gap (0.8996, <0.999 bar) from `PRODUCTB_ONECONTRACT_FINAL/
-  REPORT.md`, narrowed to 5 named sessions — checked against DEFECT 3's own 11-session trigger
-  list this wave and CONFIRMED NOT the same issue (zero date overlap), so it remains a genuinely
-  separate, unresolved, MNQ-specific open item.
-- **PARITY CERTIFICATE**: `runs/V1R4_NT8_PARITY/ONE_MNQ_CERTIFICATE.md`
-- **LAST VERIFIED**: 2026-08-09 (Q1-2025 warmup-corrected spot-check + DEFECT 3 fix spot-verified
-  on live NT8 output, post-NT8-restart)
+- **PARITY STATUS**: **CERTIFIED**, for the event-level decision mechanism, for full-history
+  executable coverage, AND for the five historically-named sessions below. `_v5` inherits
+  BEST_ONE_NQ's full leg-by-leg proof by construction (same decision array), independently
+  spot-verified on live NT8 output for the Presidents Day window: the spurious 18:06 entry is
+  gone, replaced by the correct 2025-02-18 09:51 entry matching BEST_ONE_NQ exactly. Full-history
+  coverage (2022-01-03 → 2026-05-29, 7 non-overlapping warmup-preserving chunks, all completed
+  through real NT8 via CrossTrade, no gaps): trade count matches Python to within ±1 in every
+  block; stitched total NT8 $30,052.60 vs Python $28,783.40 (**+4.41%**), fully attributable to
+  the same two disclosed conventions as BEST_ONE_NQ. **The 5 historically-named sessions
+  (2025-04-07, 2025-04-09, 2025-04-11, 2025-11-18, 2026-04-08) were individually reopened against
+  the CURRENT `_v5` object using real NT8 trade data this wave: all five show exact
+  timestamp/side decision-level agreement, with only the standard, already-disclosed 1-tick fill
+  convention remaining — this gap is CLOSED for `_v5`.** The OLDER 0.8996 daily-correlation
+  finding that originally narrowed to these 5 sessions belongs to `SolarWaveOneContractMNQ_Final`
+  — HISTORICAL, a materially different, already-superseded object with a confirmed cross-series
+  order-arrangement defect (100% forced exits, zero voluntary exits) — it does not apply to and
+  was never reproduced on the current `_v5` object.
+- **PARITY CERTIFICATE**: `runs/V1R4_NT8_PARITY/ONE_MNQ_CERTIFICATE.md`,
+  `runs/V1R4_NT8_PARITY/FULL_HISTORY_CERTIFICATION.md`
+- **LAST VERIFIED**: 2026-08-09 (Q1-2025 warmup-corrected spot-check + DEFECT 3 fix + full-history
+  7-chunk coverage + all 5 named-session reopens, all against live NT8 via CrossTrade)
 - **SOURCE VERSION**: `_v5`, deployed to NT8 and spot-verified this session. `_v4` (25,693 bytes)
   remains committed, unchanged, superseded.
 - **Traded instrument**: MNQ. Signal = NQ (primary series), execution = MNQ (added series[1]) —
@@ -537,11 +567,14 @@ M3 already closed that axis). (3) Same B-MOM-decay and margin-schedule risks as 
 ### Architecture, formula, and parameters
 **Byte-identical to Baseline B-NQ's** (WSolar=0.7086, WBmom=2.83, TiltSma=50, TiltMult=1.25,
 TiltRescale=0.9026, EntryLevel=3.0, ExitLevel=1.0), verified by direct diff. Only the traded
-instrument (and its commission/tick/point-value economics) differs. **This equality is flagged
-as an open item because MNQ has not yet been independently re-tested on its own economics after
-the genuine-price rebuild below — not because identical parameters are inherently wrong.** If
-MNQ is independently verified and the evidence still supports SM14 hyst(3,1), identical
-parameters are an expected, acceptable outcome.
+instrument (and its commission/tick/point-value economics) differs. This is a deliberate
+structural prior (`theta_NQ = theta_MNQ`, see "Product B — shared decision core" above), not an
+untested assumption: MNQ has now been independently exercised on its own genuine-price economics
+this wave — full-history executable coverage against real NT8 (7 chunks, +4.41% vs Python,
+reconciled) and all 5 historically-named sessions individually reopened against current `_v5` —
+and the evidence continues to support identical parameters. A future, separately preregistered,
+chronology-robust study could still find execution-economic grounds for a decision-layer
+deviation, but none is authorized or underway.
 
 ### Entry/exit and position sizing
 Identical hysteresis(3,1) logic to Baseline B-NQ; identical hard ±1-contract cap (this time 1
@@ -579,15 +612,23 @@ Python twin computation showed net $28,705.20 — a 0.41% difference from the fi
 class of twin-code-path difference as BEST_ONE_NQ's; the table above is this wave's independently
 re-verified figure and is authoritative going forward.
 
-### Data-quality status (resolved + open, both disclosed precisely)
-**Resolved**: the genuine MNQU6 3-minute price series was exported and the Python reference
-rebuilt on it (`runs/PRODUCTB_ONECONTRACT_FINAL/rebuild_mnq_reference.py`) — net discrepancy vs
-an NQ-scaled proxy improved **0.78% → 0.38%**, clearing the <0.5% bar. The price basis is fixed.
-**Open, narrower**: daily P&L correlation vs. the NQ-signal object is **0.8996**, below the
-≥0.999 bar, unchanged by the price-basis fix — attributed to fill-sequencing on 5 named
-sessions (**2025-04-07, 2025-04-09, 2025-04-11, 2025-11-18, 2026-04-08**, three clustering in
-April 2025), not a broad reference problem. This diagnosis predates the `_v4` C4 rebuild and has
-not been re-confirmed on `_v4` byte-for-byte — carried under V1R4/V5, not assumed to transfer.
+### Data-quality status — RESOLVED for the current `_v5` object (2026-08-09, this wave)
+**Resolved (earlier wave)**: the genuine MNQU6 3-minute price series was exported and the Python
+reference rebuilt on it (`runs/PRODUCTB_ONECONTRACT_FINAL/rebuild_mnq_reference.py`) — net
+discrepancy vs an NQ-scaled proxy improved **0.78% → 0.38%**, clearing the <0.5% bar. The price
+basis is fixed.
+
+**HISTORICAL — does not apply to current `_v5`**: an earlier wave measured daily P&L correlation
+vs. the NQ-signal object at **0.8996** (below the ≥0.999 bar), attributed to fill-sequencing on 5
+named sessions (2025-04-07, 2025-04-09, 2025-04-11, 2025-11-18, 2026-04-08). That measurement was
+taken against `SolarWaveOneContractMNQ_Final`, a materially different, already-superseded object
+with a confirmed cross-series order-arrangement defect (100% of exits were managed reversals or
+session-close backstops — zero voluntary exits, per `PRODUCTB_ONECONTRACT_FINAL/REPORT.md`).
+**This wave, all 5 named sessions were individually reopened against the CURRENT `_v5` object
+using real NT8 trade data**: every one shows exact timestamp/side decision agreement, with only
+the standard 1-tick fill convention remaining. **The 5-session gap is CLOSED for `_v5`.** The old
+0.8996 figure is retained here only as historical provenance for why the 5 sessions were
+originally flagged, not as current status.
 
 ### Robustness summary
 Same as Baseline B-NQ's — no family this wave targeted MNQ-specific mechanics.
@@ -599,10 +640,10 @@ mandate exists for: an order of magnitude less day-margin than the NQ sibling, a
 point value.
 
 ### What would invalidate this baseline
-(1) The 5-named-session fill-sequencing gap, once root-caused, turning out to reflect a genuine
-NinjaScript defect rather than a benign data/timing artifact — would require a rebuild before
-re-certifying. (2) NT8 parity failing on `_v4` once run. (3) An independent MNQ-native
-re-optimization (not yet attempted, and not authorized without fresh preregistration) finding a
-materially different EntryLevel/ExitLevel pair — would not invalidate the CURRENT choice's
-validity as tested, but would supersede it if it passed the same gate discipline this campaign
-uses everywhere else. (4) Same B-MOM-decay and margin-schedule risks as the other two baselines.
+(1) A future re-examination finding that the 5-named-session gap (now closed for `_v5`, see
+Data-quality status above) was not actually fully explained by the `_Final`-object arrangement
+defect — would require reopening that finding. (2) An independent MNQ-native re-optimization (not
+yet attempted, and not authorized without fresh preregistration) finding a materially different
+EntryLevel/ExitLevel pair — would not invalidate the CURRENT choice's validity as tested, but
+would supersede it if it passed the same gate discipline this campaign uses everywhere else.
+(3) Same B-MOM-decay and margin-schedule risks as the other two baselines.

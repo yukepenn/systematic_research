@@ -82,9 +82,9 @@ directly transferable if a future session wants to extend it to Product A).
 tolerance. No further root-cause work performed this wave (the gap is small enough that pursuing
 it further has low expected value relative to the other open items).
 
-## What remains open
+## What remained open after this wave's FIRST pass (HISTORICAL — closed by the third continuation below)
 
-**Full multi-year (2022-2026) certification** could not be completed this wave: `RunStrategyBacktest`
+**Full multi-year (2022-2026) certification** could not be completed at this point in the wave: `RunStrategyBacktest`
 jobs beyond ~20-25 seconds of NT8 compute time (empirically, beyond roughly a 12-month, 2-series,
 ~120,000-bar window) hit a reproducible CrossTrade-side session/result-retrieval failure —
 `GetMcpJob` returns `"MCP server \"crosstrade\" session expired"` even immediately after a fresh

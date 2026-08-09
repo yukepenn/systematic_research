@@ -14,7 +14,13 @@
 > own tick/contract economics as expected). **STATUS: CERTIFIED** for the event-level mechanism
 > (inherits BEST_ONE_NQ's full leg-by-leg proof by construction, since the decision sequence is the
 > same array). Full multi-year net-profit certification and the separate 5-named-session gap below
-> remain open.
+> remain open **as of this banner** — both were subsequently closed the same day; see
+> "Full-history chunked certification + 5-session reopen" and "Final verdict" near the end of this
+> file for CURRENT status. Everything between this banner and that section (Identity through "What
+> remains open (post-fix)") describes the pre-fix `_v4` object and this wave's early-pass findings
+> — kept as the diagnostic record, not current status.
+
+## ORIGINAL/EARLY-PASS CONTENT (superseded by "Full-history chunked certification" and "Final verdict" below — kept for the diagnostic trail, not current status)
 
 ## Identity
 
@@ -61,19 +67,15 @@ scattered/thin-print forward-filled bars (2022-06-09, 2024-04-22, 2026-05-29 -- 
 so this wave's warmup work and that older open item are independent, additive open questions, not
 the same issue re-appearing.
 
-## What remains open (post-fix)
+## What remained open after this wave's FIRST pass (HISTORICAL — both items closed by the third continuation below)
 
-(1) The pre-existing 5-named-session fill-sequencing gap from the earlier campaign (2025-04-07,
-2025-04-09, 2025-04-11, 2025-11-18, 2026-04-08) — **checked against DEFECT 3's own 11-session
-trigger list this wave and confirmed NOT the same issue** (zero date overlap; DEFECT 3's triggers
-are 2022-02-21, 2023-04-05, 2023-11-24, 2024-05-27, 2024-07-03, 2024-11-29, 2024-12-24, 2025-02-17,
-2025-06-19, 2025-07-03, 2026-01-19). This remains a genuinely separate, still-open, MNQ-specific
-open item — not re-investigated this wave (time did not permit reaching it this pass, per the
-directive's own priority ordering: the higher-value, cross-object DEFECT 3 finding came first).
-(2) Full multi-year net-profit certification, same CrossTrade long-job limitation as the other two
-certificates — an infrastructure ceiling, not a correctness question.
+(1) The pre-existing 5-named-session fill-sequencing gap from the earlier campaign — confirmed
+NOT explained by DEFECT 3 (zero date overlap), and at this point in the wave not yet
+individually re-investigated. (2) Full multi-year net-profit certification, blocked at this point
+by the CrossTrade long-job limitation. **Both were closed later the same day** — see immediately
+below.
 
-## Full-history chunked certification + 5-session reopen (2026-08-09, third continuation)
+## Full-history chunked certification + 5-session reopen (2026-08-09, third continuation — CURRENT STATUS)
 
 All 4.5 years now covered via 7 chunked NT8 jobs (see `FULL_HISTORY_CERTIFICATION.md`); NT8
 $30,052.60 vs Python $28,783.40 (+4.41%), same 2 disclosed mechanisms as BEST_ONE_NQ. Separately,
@@ -88,9 +90,11 @@ apply to `_v5`.
 
 ## Final verdict
 
-**CERTIFIED for the event-level decision mechanism** (inherits BEST_ONE_NQ's full leg-by-leg proof
-by construction — same decision array, spot-verified independently on live NT8 output for the
-Presidents Day window). Full multi-year net-profit certification and the separate, still-open
-5-named-session fill-sequencing gap remain explicit open items for a future session. `_v4`
-(unfixed) is superseded; `_v5` is the new incumbent for this object pending BASELINE_MODELS.md's
-own promotion review.
+**CERTIFIED**: for the event-level decision mechanism (inherits BEST_ONE_NQ's full leg-by-leg
+proof by construction — same decision array, spot-verified independently on live NT8 output for
+the Presidents Day window); for full-history executable coverage (all 7 chunks, no gaps, NT8
+$30,052.60 vs Python $28,783.40, +4.41%, fully reconciled to the same two disclosed conventions
+as BEST_ONE_NQ); and for all 5 historically-named sessions (exact decision agreement on current
+`_v5`, closing the old 0.8996 gap — traced to a different, superseded object). No known
+unexplained decision-level divergence exists anywhere in the tested history. `_v4` (unfixed) is
+superseded; `_v5` is the current incumbent for this object.

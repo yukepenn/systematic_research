@@ -17,7 +17,9 @@
 > already-understood, non-defect factors — see "Post-fix reconciliation" below. See
 > `runs/V1R4_NT8_PARITY/src/one_nq_event_forensics.py` / `one_nq_resync_align.py` for the forensics
 > code and `out/one_nq_events/` for the raw event logs. **STATUS: CERTIFIED** for the event-level
-> mechanism (full multi-year net-profit certification remains open — see below).
+> mechanism. (Full multi-year net-profit certification was still open when this banner was
+> written; it was completed later the same day — see "Full-history chunked certification" and
+> "Final verdict" near the end of this file for current status.)
 
 ## Post-fix reconciliation (exact, to the dollar)
 
@@ -98,16 +100,13 @@ Standard-resolution fill could plausibly diverge more on a leaner-margin, higher
 like this one than on Product A's larger, more graded target). **Not proven** -- this is the
 recommended starting hypothesis for a future session's continuation, not a closed finding.
 
-## What remains open (post-fix)
+## What remained open after this wave's FIRST pass (HISTORICAL — closed by the third continuation below)
 
-Full multi-year net-profit certification (all 4.5 years, not just a Q1 spot-check) remains open,
-blocked by the same CrossTrade long-job limitation documented in `REPORT.md` — this is an
-infrastructure ceiling, not a signal-correctness question, and the event-level mechanism is now
-proven correct on every tested window. The concrete next step for a future session: chunked
-warmup-preserving quarterly stitching (per FINAL_OWNER_DECISION §10) to accumulate a full-history
-net-profit comparison, now that the decision layer itself is known to be exact.
+At this point in the wave, full multi-year net-profit certification (all 4.5 years, not just a Q1
+spot-check) was still open, blocked by the CrossTrade long-job limitation documented in
+`REPORT.md`. **This was closed later the same day** — see immediately below.
 
-## Full-history chunked certification (2026-08-09, third continuation, same wave)
+## Full-history chunked certification (2026-08-09, third continuation, same wave — CURRENT STATUS)
 
 All 4.5 years (2022-01-03 → 2026-05-29) now covered via 7 chunked NT8 jobs, no gaps, no
 duplicated evaluation P&L. Trade count matches Python to within 1 in every single block. Full
@@ -117,11 +116,11 @@ non-defect conventions found on the Q1-2025 window.
 
 ## Final verdict
 
-**CERTIFIED for the event-level decision mechanism** (Q1-2025 spot-check window, fixed object
-`SolarWaveOneContractNQ_v5`): 0 divergent decision episodes out of 214 legs, and the residual
-dollar gap reconciles exactly to two already-disclosed, non-defect conventions (NT8's boundary
-trade-list serialization quirk and Python's synthetic 1-tick fill-price convention). **Full
-multi-year net-profit certification remains a separate, open item** pending a stable chunked
-CrossTrade harness — this is scoped, understood, and not blocked by any unresolved correctness
-question. `_v4` (unfixed) is superseded; `_v5` is the new incumbent for this object pending
-BASELINE_MODELS.md's own promotion review (see CURRENT_TRUTH.md).
+**CERTIFIED**: for the event-level decision mechanism (Q1-2025 spot-check window, fixed object
+`SolarWaveOneContractNQ_v5`, 0 divergent decision episodes out of 214 legs, residual dollar gap
+reconciled exactly to two already-disclosed, non-defect conventions); and for full-history
+executable coverage (all 7 chunks, 2022-01-03 → 2026-05-29, no gaps, trade count matching Python
+to within ±1 in every block, NT8 $316,442.72 vs Python $303,880.28, +4.13%, fully consistent with
+the same two disclosed conventions). No known unexplained decision-level divergence exists
+anywhere in the tested history. `_v4` (unfixed) is superseded; `_v5` is the current incumbent for
+this object (see `/BASELINE_MODELS.md`, repo root).
