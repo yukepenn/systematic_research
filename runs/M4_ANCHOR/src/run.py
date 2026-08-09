@@ -125,6 +125,7 @@ for mode in ("HILO_RAW", "CLOSE_CONFIRMED"):
 
 grid_df = pd.DataFrame(list(results.values()))
 grid_df.to_csv(os.path.join(OUT, "gates.csv"), index=False)
-pd.DataFrame([{"mode": k, **v} for k, v in flip_totals.items()]).to_csv(os.path.join(OUT, "flip_decomposition.csv"), index=False)
+pd.DataFrame([{"mode": k, "n_flips_total": v, "n_flips_vs_control_pct": v / ctrl_flips_total * 100}
+              for k, v in flip_totals.items()]).to_csv(os.path.join(OUT, "flip_decomposition.csv"), index=False)
 json.dump({k: v["VERDICT"] for k, v in results.items()}, open(os.path.join(OUT, "verdict.json"), "w"), indent=2)
 print("\n=== M4 DONE ===", flush=True)
