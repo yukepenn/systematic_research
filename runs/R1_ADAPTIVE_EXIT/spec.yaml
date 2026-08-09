@@ -1,0 +1,89 @@
+run_id: R1_ADAPTIVE_EXIT
+family: "R1 -- adaptive exit / giveback / loss containment (MEGA RESEARCH DIRECTIVE sec10,
+  highest-priority construction family)"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: "2026-08-09"
+nature: "Bounded construction + full chronology/robustness/tail battery. Reuses P0's evidence;
+  does not reopen P0's own diagnostic (P0_TRADESTATE_AUTOPSY, closed)."
+
+motivation: >
+  runs/P0_TRADESTATE_AUTOPSY/REPORT.md, Parts 2-3 (this same wave): the owner's literal
+  April-2026 hypothesis (Solar reversed while B-MOM/M kept a stale hold) was REFUTED for both
+  named trades (BMOM never engaged, flat 0.0, in either), but a stronger, generalizable
+  mechanism was found and independently confirmed on the full 1,978-block population: positions
+  are held through a slow, monotonic decay of the SAME signal that justified entry, giving back
+  open profit before the incumbent's own coarse EXIT_LEVEL threshold fires. giveback_ratio =
+  (MFE - net_pnl)/MFE has Spearman corr -0.656 with loser net P&L; 100% of bottom-decile losers
+  have giveback_ratio > 1.0 vs 0.0% of top-decile winners -- a near-total separation. This
+  supersedes the directive's own R1-C framing (B-MOM veto release) with the evidence actually
+  found; R1-A (age x giveback) and R1-B (score decay + giveback) are the live hypotheses here,
+  not R1-C, which is disclosed as REFUTED-AS-STATED, not silently dropped (sec7's own
+  instruction: "do not assume it is true... measure it").
+
+reference_object: >
+  BEST_ONE_NQ / Product-B shared decision core, `one_contract_decisions()` (verbatim import from
+  runs/S2_SELTIME/src/r2_battery.py, not re-derived) as the CONTROL. Per directive sec2/sec32,
+  the SAME candidate decision sequence is priced on both NQ and MNQ execution economics before
+  any promotion judgement; per directive sec3, Product B is the primary lab -- Product A
+  translation is explicitly deferred to a later, separate preregistration if a mechanism
+  survives here (directive sec31).
+
+mechanism: >
+  A pure ADDITIONAL early-exit overlay layered on the incumbent's own decision loop -- entry
+  logic, ENTRY_LEVEL, and reversal logic are UNCHANGED. While a position is held (p != 0), the
+  running giveback_ratio = (MFE_t - runpnl_t) / MFE_t (MFE_t = running max of cumulative trade
+  P&L so far, causal) is tracked online, computed exactly as in P0 but recomputed for the
+  CANDIDATE's own trajectory (not copied from the incumbent's ledger, since changing exit timing
+  changes the trajectory itself, including any subsequent re-entries). If, at a bar where
+  MFE_t >= MFE_FLOOR (a minimum-profit floor so the rule cannot fire on economically trivial
+  swings) AND giveback_ratio_t >= GIVEBACK_THRESH (optionally AND decay_frac_t >= DECAY_CONFIRM,
+  the CONFIRM variant), the overlay forces tgt=0 for that bar (early flatten) regardless of what
+  the incumbent's own M-based logic would have chosen. The bar AFTER an overlay-forced flatten
+  resumes the incumbent's own p==0 entry logic unmodified (may re-enter same or opposite side
+  next bar exactly as the base object would from flat).
+
+allowed_parameter_grid: >
+  2 designs (GIVEBACK_ONLY, GIVEBACK_PLUS_DECAY_CONFIRM) x 3 GIVEBACK_THRESH values
+  {0.50, 0.65, 0.80} x 2 MFE_FLOOR values {$300, $600} = 12 candidates. Thresholds chosen with
+  reference to P0's own measured winner-population giveback_ratio distribution (top-decile
+  winners: p90=0.34, p95=0.41, p99=0.54, max=0.64) -- 0.65 and 0.80 sit at/above the observed
+  winner ceiling (conservative arms); 0.50 is deliberately AGGRESSIVE (below the p90 winner
+  boundary) to quantify the winner-damage tradeoff explicitly, not to be favored a priori.
+  DECAY_CONFIRM fixed at decay_frac >= 0.30 (P0: bottom-decile-loser median decay_frac 0.57,
+  top-decile-winner median 0.10 -- 0.30 sits between). No other parameter is swept. This is the
+  full grid; no post-hoc threshold selection outside it is permitted without a new child spec.
+
+primary_metrics: [net, sharpe, sortino, calmar, maxDD_eod, CDaR95, worst_day, worst_month,
+  n_trades, avg_trade, win_rate, turnover]
+tail_metrics: >
+  top-10/top-20 incumbent-day retention, top-1%/top-5% incumbent-trade retention, largest-20
+  incumbent losers (removed/reduced/unchanged), largest-20 incumbent winners (changed/unchanged),
+  P&L after removing top-10 incumbent days, P&L after removing top-1% incumbent trades.
+chronology_tests: [full_history, year_by_year, LOYO, old_regime(2022-2023) vs
+  recent_regime(2024-2026), 2026 stub]
+cost_stress: "2-tick adverse-slip stress vs the standing 1-tick research convention, on any
+  candidate that survives the primary + tail gates."
+
+falsification_condition: >
+  A candidate is REJECTED if it improves Sharpe/Sortino/MaxDD/CDaR only by degrading top-decile
+  winner retention (per directive sec25's hard constraint), OR if the improvement does not
+  survive year-by-year / LOYO chronology, OR if it is smaller than the 2-tick cost-stress noise
+  floor.
+
+promotion_gate: >
+  A candidate may be PROPOSED FOR PROMOTION only if: (a) improves at least 2 of
+  {Sharpe, Sortino, Calmar, CDaR95} vs the BEST_ONE_NQ incumbent control on the SAME candidate
+  decision sequence; (b) does not reduce top-10-incumbent-day retention or top-1%-incumbent-
+  trade retention below 90%; (c) the SAME decision sequence, priced on genuine MNQ economics,
+  does not show a materially divergent verdict (directive sec32 -- shared-core discipline, no
+  silent NQ/MNQ parameter split); (d) survives year-by-year and LOYO chronology (sign-consistent
+  improvement, not one-regime-concentrated); (e) survives 2-tick cost stress; (f) passes an
+  independent adversarial lookahead/implementation audit by an agent that did not write the
+  construction code. Missing ANY gate => NOT PROMOTED, disposition recorded, no partial credit.
+
+stop_condition: >
+  All 12 candidates run once, gated once. No iterative re-tuning on the same population after
+  seeing results (directive sec20's binding preregistration rule) -- a follow-up idea after
+  seeing R1's own results requires a new child spec (e.g. R1B_...), not silent grid mutation
+  here.
