@@ -1,0 +1,71 @@
+run_id: P0_TRADESTATE_AUTOPSY
+family: "P0 -- Product-B incumbent trade-state ledger + April-2026 giant-loser autopsy
+  (opening task of the post-parity RESEARCH campaign, MEGA RESEARCH DIRECTIVE 2026-08-09)"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: "2026-08-09"
+nature: "Descriptive/diagnostic infrastructure. No gates, no promotion, no construction --
+  this run BUILDS the reusable ledger and answers the owner's specific April-2026
+  hypothesis; any mechanism it motivates is preregistered separately (R1)."
+
+reference_object: >
+  BEST_ONE_NQ / Product-B shared decision core (SolarWaveOneContractNQ_v5, current incumbent
+  per /BASELINE_MODELS.md). The physical (lagged) position sequence and bar-level mark-to-market
+  P&L are NOT rebuilt from scratch here: they are loaded verbatim from
+  runs/S2_SELTIME/out/r2/{barpos_NQ_incumbent.npy, barpnl_NQ_incumbent.npy}, which this
+  campaign's own V1R4_NT8_PARITY forensics independently proved decision-identical to live NT8
+  (0 divergent legs across 214 Q1-2025 legs; full-history trade-count agreement to within +/-1
+  in every one of 7 chunked blocks; net-profit reconciled to the dollar net of two disclosed,
+  non-defect conventions). Using this array instead of issuing a fresh CrossTrade backtest call
+  for a purely descriptive task is a deliberate choice consistent with directive sec28 ("do not
+  run NT8 for every exploratory idea") -- it is not a new, unverified proxy.
+
+signal_layer: >
+  T (Solar E10 aggregate), B (BMOM position), tilt_state (HTF), M (combined score),
+  entry_blocked_c4 -- loaded verbatim from runs/V1R4_NT8_PARITY/out/one_nq_events/sig_*.npy,
+  built by build_signal_trace.py using the exact formula r2_battery.py's one_contract_decisions()
+  uses (WSOLAR=0.7086, WBMOM=2.83, TILTRESCALE=0.9026, TILTMULT=1.25, ENTRY_LEVEL=3.0,
+  EXIT_LEVEL=1.0), already independently adversarially verified this campaign. Not re-derived.
+
+window: "full dev window, 2022-01-03 .. 2026-05-29 (519,714 bars), matching every other family
+  this wave -- includes the April-2026 window the owner inspected."
+
+ledger_fields: >
+  Per-bar: timestamp, session date, time-of-day (hm), NQ OHLC, volume, position, entry
+  timestamp/price/age(bars,minutes), T, T' (post-tilt Solar), HTF/tilt_state, B, M, EntryLevel,
+  ExitLevel, 13-member ensemble vote state (# bullish, # bearish, fast member [VM=6] state, slow
+  member [VM=30] state), running trade P&L ($), MFE/MAE ($ and approx. points), giveback ($ and
+  ratio), sigma460 (ATR-like proxy, points), bar range, range/sigma460, session-cumulative VWAP
+  distance. All fields are causal (computed only from bar t and earlier); no field uses
+  information not available at bar t's close.
+
+april_targets: >
+  Owner manually flagged two short-loser examples from Strategy Analyzer, described only by
+  approximate date: "2026-04-06/2026-04-07" and "2026-04-12/2026-04-13". This run does NOT
+  assume specific timestamps -- it identifies the exact trade(s) from the ledger whose
+  entry/exit dates match each named pair, using the independently-verified leg CSV
+  (runs/V1R4_NT8_PARITY/out/one_nq_events/python_NQ_legs_full.csv) as the source of exact trade
+  IDs/timestamps, then produces a >=20-bar-before-through-exit bar-by-bar trace for each.
+
+hypothesis_under_test: >
+  "Solar evidence may already have reversed bullish while B-MOM / slower aggregate state kept
+  the combined score inside the short-hold region" (owner's own words, explicitly to be tested,
+  not assumed). Falsifiable operationalization: for each flagged trade, does a majority-Solar-
+  reversal (>=7/13 members opposite the held side, or T' sign opposite the held side) occur
+  materially before the eventual exit, while B (BMOM) and M remain inside the "keep holding"
+  region (for a short: M > EXIT_LEVEL i.e. not yet <= EXIT_LEVEL=1.0)?
+
+generalization: >
+  After the two named examples, the SAME state variables are computed for every incumbent
+  position-block in the full dev window (16,000+), bucketed into top 1/5/10% losers, top
+  1/5/10% winners, and ordinary trades, to test whether the flagged mechanism (if real) is
+  general or specific to these two trades. No new hypothesis is spawned from this run; a
+  positive finding is handed to R1 for preregistered construction.
+
+constraints:
+  no_promotion_this_run: "descriptive only, per directive sec19 (diagnostic phase precedes any
+    construction) and CLAUDE.md's own workflow discipline."
+  no_crosstrade_calls: "all data reused from already-certified arrays; zero new NT8/CrossTrade
+    jobs issued by this run."
+  no_new_alpha_construction: "any mechanism found here is preregistered as its own child run
+    (R1_ADAPTIVE_EXIT or similar) before any parameter is tested for a trading rule."
