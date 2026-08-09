@@ -1,0 +1,55 @@
+run_id: R5_MICROSTRUCTURE_PROXY
+family: "R5 -- data inventory + OHLCV-derived microstructure-like proxies (SYSTEM ARCHITECTURE
+  SCIENCE MEGA DIRECTIVE sec24-26)"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: 2026-08-09
+
+data_inventory: >
+  Honest inventory per directive sec24. This campaign's price data (the same file every prior
+  family in SYSTEM_MASTER uses) has EXACTLY: time, open, high, low, close, volume,
+  first_bar_of_session, sess_id, sess_date, is_last_of_sess. NO tick trades, NO bid/ask, NO
+  spread, NO depth, NO direct trade-direction/imbalance fields. `research/scalping_lab/` (a
+  SEPARATE, unrelated campaign per CLAUDE.md) has L1/L2/tick data, but that data is scoped to
+  that campaign and not reused here -- consistent with RESEARCH_FRONTIER.md's existing
+  disclosure on this exact point. This run does NOT pretend to have microstructure; every
+  feature below is an honest OHLCV-derived proxy, explicitly labeled as such.
+
+reference_object: >
+  Product-B ledger (P0/SA0 substrate, 1,978 entries), reusing already-computed columns where
+  available (volume, vwap_dist_pts, range_over_atr, roll_hi20/roll_lo20 already in
+  runs/P0_TRADESTATE_AUTOPSY/out/ledger_full.parquet).
+
+R5_features_tested:
+  volume_surprise: "entry-bar volume / trailing 20-bar average volume (causal), a proxy for
+    unusual participation, NOT genuine order-flow."
+  failed_breakout_rejection: "did the entry bar's high/low exceed the prior 20-bar extreme (a
+    breakout attempt) but close back inside it (rejection)? Causal, uses roll_hi20/roll_lo20
+    already in the ledger."
+  vwap_displacement_atr: "vwap_dist_pts (already in ledger) normalized by sigma460, oriented to
+    trade direction."
+  short_term_vol_ratio: "5-bar realized range / sigma460 -- a short-horizon vol-regime-change
+    proxy, distinct from the already-tested vol_tercile (which uses the full 460-bar sigma
+    itself, not a short/long ratio)."
+  direction_x_volume: "sign of the entry bar's own directional move x volume_surprise."
+  vol_compression_expansion: "ratio of trailing-20-bar realized range to trailing-100-bar
+    realized range (low ratio = compression); tested for predictive value on SUBSEQUENT trade
+    outcome, not merely descriptive."
+
+method: >
+  Same information-addition framework as R4 (directive sec35): raw Spearman vs net_pnl,
+  residualized Spearman after removing M-strength x vol-tercile bucket means, OLS R^2
+  improvement over the M_abs+vol baseline, year-by-year sign stability. No black-box model
+  (directive sec36). Any promising feature gets an explicit right-tail pre-check (does a naive
+  threshold on it exclude top-20 all-time winners?) BEFORE any construction is considered, per
+  the lesson already applied in R3/R4 this same campaign.
+
+falsification_condition: >
+  Features with no stable (multi-year), incremental (survives residualization) relationship to
+  outcome are closed as REDUNDANT / NO INFORMATION, individually, not as a bloc -- each proxy is
+  its own falsifiable sub-test.
+
+construction_gate: >
+  Same as R4: only if stable, incremental, right-tail-safe evidence is found, and only as a
+  bounded, disclosed candidate -- no session-specific parameter farm (directive sec19), no
+  black-box filter (sec36).
