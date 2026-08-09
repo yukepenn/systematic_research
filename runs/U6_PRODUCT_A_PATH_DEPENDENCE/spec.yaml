@@ -1,0 +1,109 @@
+run_id: U6_PRODUCT_A_PATH_DEPENDENCE
+family: "U6 -- Product-A path-dependent exposure science (CONTINUOUS SYSTEM EVOLUTION directive,
+  U6 task order, 2026-08-09)"
+depends_on: >
+  U0_UNIFIED_STATE (runs/U0_UNIFIED_STATE/out/u0_state_table.parquet, correctness-gated against
+  the 3 certified canonical nets -- Product A $177,924.40). PA0_PRODUCT_A_STRUCTURE/REPORT.md
+  (scale-in contracts ~7x more valuable than fresh entries, 1-3-contract band net-negative but
+  mechanically inseparable from later scale-in, +-13 clamp dead code, shorts weaker than longs --
+  all reused BY REFERENCE, not re-derived). runs/PA0_PRODUCT_A_STRUCTURE/src/02_exposure_path.py
+  read first for its exact forward-20-bar-P&L-per-contract-changed methodology (contracts_changed
+  = ABS(position delta), NOT signed) -- this run's own per-contract target reuses that convention
+  exactly for direct comparability with PA0's published +$2.03 (fresh) / +$14.43 (scale-in)
+  numbers. R4_SLOPE_IMPULSE/R5_MICROSTRUCTURE_PROXY (residualized-Spearman / bucket-mean-removal /
+  OLS-DeltaR^2 diagnostic pattern and the standing top-20-all-time-winner right-tail check
+  convention -- reused, not reinvented).
+
+hypothesis: >
+  PA0 found WHAT (scale-in > fresh entry, low-exposure band net-negative in isolation) but not
+  WHY. This family asks: (1) which causal state feature(s), present at scale-in bars, explain the
+  scale-in-vs-entry value gap? (2) at the moment a block first enters a low-exposure state
+  (|target_exposure_A|<=3), is there ANY information available before the scale-up decision that
+  distinguishes blocks that will later scale to high conviction (>=7 contracts) from blocks that
+  stay low for the rest of their life? (3) right-tail check: what fraction of the historically
+  best blocks started in the low-exposure state PA0 flagged as net-negative in isolation?
+
+scope: >
+  Diagnostic run only. No candidate construction, no parameter changes, no NT8/CrossTrade calls,
+  no modification of Product A (SolarWaveSMMaster_v4) or Product B. Reads
+  runs/U0_UNIFIED_STATE/out/u0_state_table.parquet ONLY as the state/P&L source (no other run's
+  ledger re-read). Writes only under runs/U6_PRODUCT_A_PATH_DEPENDENCE/. Does not touch U0's files
+  or any other run directory. Runs no git command (orchestrating session commits after review of
+  all parallel U-families together).
+
+feature_list_causal_state: >
+  Evaluated AS OF the bar in question (all columns in u0_state_table.parquet are already built
+  causally per UNIFIED_STATE_MAP.md's correctness discipline -- no new look-ahead risk introduced
+  here): |M_A_raw| (conviction magnitude), M_A_raw magnitude vs the SAME block's own entry-bar
+  M_A_raw magnitude (rising-conviction-since-entry, point 1 only), M_slope_20 aligned to the
+  trade's own direction (sign(target_exposure_A)*M_slope_20), vote_dispersion, B (B-MOM engagement)
+  aligned to trade direction, HTF_tilt_state agreement with trade direction (ordinal: agree=+1 /
+  neutral=0 / disagree=-1), age_bars_A, session_phase / is_rth, sigma460_atr_proxy_pts.
+
+plan:
+  step0_build_features: >
+    Shared substrate script: load u0_state_table.parquet, construct the causal feature list above
+    once, construct block-level net_pnl (last run_pnl_A_dollars per nonzero block_id_A, i.e.
+    cumulative bar_pnl_A_dollars -- verified equal by direct check), construct the PA0-consistent
+    forward-20-bar-P&L-per-contract-changed target at every ENTRY/SCALE_IN bar (contracts_changed
+    = abs(target_exposure_A[t]-target_exposure_A[t-1]); fwd20 = sum(bar_pnl_A_dollars[t:t+20])).
+    Correctness cross-check: reproduce PA0's own FRESH (+$2.03/contract) and SCALE_IN
+    (+$14.43/contract) headline means on the canonical window before proceeding (PA0 used the
+    identical U0-underlying substrate, byte-exact-gated, so these must match closely).
+  step1_scale_in_mechanism: >
+    (a) Descriptive comparison of every causal feature's distribution at ENTRY vs SCALE_IN bars
+    (mean/median/Mann-Whitney rank test). (b) Mediation-style OLS test: baseline
+    fwd20_pnl_per_contract ~ 1 + is_scale_in (raw scale-in premium, cross-checked against PA0's
+    12.40 = 14.43-2.03); then + each candidate feature in turn, reporting how much the
+    is_scale_in coefficient shrinks (fraction "explained" by that feature) and the feature's own
+    coefficient sign/ΔR^2. (c) Within-SCALE_IN-only residualized Spearman (bucket = |M_A_raw|
+    tercile x sigma460 tercile, same R4/R5 pattern) for each feature against
+    fwd20_pnl_per_contract, to find incremental information beyond the generic
+    conviction-magnitude effect already implied by scaling in at all.
+  step2_low_exposure_trajectory: >
+    Population: every block_id_A whose FIRST bar (age_bars_A==1, i.e. the entry/flip bar itself --
+    per the directive's own resolution of "first bar of the block generally") has
+    |target_exposure_A|<=3. Outcome: does the block's max(|target_exposure_A|) over its full life
+    reach >=7 (low-to-high) vs stay <=3 for the whole block (stayed-low)? (4-6-max blocks reported
+    as a third, unlabeled middle group, excluded from the primary two-group test per the
+    directive's literal a/b framing.) Test: for every causal feature (list above, minus age_bars_A
+    which is degenerate/constant==1 at this bar and is dropped), evaluated ONLY at that first bar
+    -- Mann-Whitney U rank test (scipy.stats.mannwhitneyu) low-to-high vs stayed-low, plus a
+    2000-resample bootstrap 95% CI on the raw mean difference, plus a continuous-outcome Spearman
+    (feature vs eventual max(|target_exposure_A|) across all qualifying blocks) as a robustness
+    cross-check on the same binary test. No composite/combined discriminant score is built (would
+    itself be a small classifier) -- every feature is tested and reported on its own margin only.
+  step3_right_tail_check: >
+    Rank all nonzero, canonical-window (is_health_only_bar==False at block start) blocks by
+    block-level net_pnl. Report what fraction of the top-20 started in the |target_exposure_A|<=3
+    state at their own first bar (directive's explicit prior: likely most/all, confirm or refute
+    with the actual number). Bottom-20 losers reported alongside for symmetry/context, matching
+    R5's tail-check convention. No elimination of low-exposure entries is proposed regardless of
+    outcome (directive's explicit instruction).
+  step4_chronology: >
+    Year-by-year (2022/2023/2024/2025-canonical, then 2026-canonical-Jan-May separately) stability
+    of step2's strongest surviving separation, using each qualifying block's own start-bar year /
+    is_health_only_bar flag to assign it (never split a block across the boundary). The
+    June-July-2026 health-only extension (is_health_only_bar==True at block start) reported fully
+    separately, observational only, never blended into the chronology verdict, per U0's own
+    mechanical split and this campaign's standing discipline.
+  step5_verdict: >
+    Can low-exposure trajectories be causally distinguished BEFORE the scale-up? Yes/no with the
+    actual separation strength (effect sizes + p-values from step2, not vague prose). If yes:
+    describe, in PROSE ONLY (no code, no construction), what a future Product-A improvement idea
+    might look like, explicitly labeled NOT YET TESTED / NOT AUTHORIZED FOR CONSTRUCTION THIS RUN.
+    If no (the more likely outcome per PA0's own framing that this may be "the acquisition cost of
+    entering later high-conviction trends"), state that plainly as a genuine negative result.
+
+construction_gate: >
+  No candidate is constructed in this run under any circumstance. A finding supporting a
+  distinguishable-before-scale-up hypothesis produces a PROSE proposal for a future family, not
+  code, matching U1's identical discipline.
+
+non_goals:
+  - No modification of Product A (SolarWaveSMMaster_v4) or Product B in any way.
+  - No proposal to filter, block, or shrink any low-exposure (1-3 contract) entry.
+  - No black-box/ML classifier of any kind -- Spearman, OLS via np.linalg.lstsq, Mann-Whitney U,
+    and simple percentile bootstrap only.
+  - No modification of U0 or any file outside this run directory.
+  - No git operations.
