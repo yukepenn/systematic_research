@@ -1,0 +1,55 @@
+run_id: D_WINNER_AUTOPSY
+family: "D-WINNER-1/2 -- missed-winner and give-back autopsy (FINAL OPTIMIZATION DIRECTIVE, family 7 of 8)"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: "2026-08-09"
+nature: "Descriptive/diagnostic, same status as S0_TOD_AUTOPSY -- no gates, no promotion by
+  itself. Purpose is to surface a candidate mechanism (as S0 -> S2) or to confirm none of the
+  remaining budget is worth spending here."
+reference_system: "SOLAR_E10 control (unmodified incumbent, the same object used as control
+  throughout S0/S1/S2/M3/M4/P4 this wave) -- for direct comparability with every prior finding."
+
+# ---------------------------------------------------------------- D-WINNER-1: missed winners
+missed_winner:
+  opportunity_definition: >
+    A classical zigzag over the raw NQ close-price series (session-stitched, no session
+    splitting -- the underlying price path is continuous data; the system's own session-close
+    flattening is a property of the SYSTEM, not the opportunity set being measured against).
+    A pivot registers when price reverses by >= MIN_REVERSAL_PTS from the running extreme.
+  threshold_selection: >
+    MIN_REVERSAL_PTS=100 points, picked from a swing-COUNT diagnostic alone (out/
+    zigzag_threshold_diagnostic.json), BEFORE any system position/PnL was consulted: it is the
+    smallest of {50,100,150,200,300} that keeps the swing population to a few thousand (3,835)
+    so that "top 50" and "top 200" are genuinely tail cuts (top 1.3% / top 5.2%), not a majority
+    of the population. Not tuned to any capture-rate or PnL outcome.
+  ranking: "rank swings by |price move| in points, descending; report top 50 and top 200 separately."
+  frozen_taxonomy:
+    CAPTURED_FULL: "system bar_pos sign matches the swing direction on >=80% of the swing's bars"
+    CAPTURED_PARTIAL: "system bar_pos sign matches the swing direction on 20-80% of the swing's bars"
+    MISSED_WRONG_SIDE: "matches on <20% of bars AND system net-positioned opposite the swing on >=50% of bars"
+    MISSED_FLAT: "matches on <20% of bars AND system flat (bar_pos==0) on >=50% of bars"
+    MIXED_OTHER: "anything not covered above -- catch-all, count disclosed, not silently folded in"
+  output: "per-swing table (start/end time, size, taxonomy label, $ P&L the system actually
+    realized during the swing's bar span) for top 50 and top 200; taxonomy count/share summary."
+
+# ---------------------------------------------------------------- D-WINNER-2: give-back
+give_back:
+  unit_of_analysis: "position-blocks (maximal runs of constant nonzero bar_pos), verbatim
+    S0_TOD_AUTOPSY's position_blocks() construction -- same MFE/MAE/net_pnl fields, reused not
+    reimplemented, for direct numerical comparability with S0's own numbers."
+  population: "top decile of WINNING position-blocks (net_pnl>0) by net_pnl, i.e. top 10% of
+    winners -- 'top-decile winners' per the directive's literal wording."
+  metric: "give_back_ratio = (MFE - net_pnl) / MFE, in [0,1] for MFE>0 (always true for a
+    winning block since MFE=max(cum pnl path)>=cum[-1]=net_pnl). 0 = exited at the peak,
+    1 = gave back the entire open profit before/at close."
+  output: "distribution of give_back_ratio across the top-decile-winner population (mean, median,
+    p90), plus a breakdown by tod_block (S0's own partition, for direct cross-reference) and by
+    n_bars (short vs long-held blocks)."
+
+# ---------------------------------------------------------------- constraints
+constraints:
+  no_promotion_this_wave: "This run produces findings, not a candidate construction. Any
+    follow-up hypothesis it motivates gets its own spec, frozen separately, per the standing
+    discipline (S0 -> S2) -- not folded into this diagnostic's own verdict."
+  cost_and_window: "MNQ E10 executable economics, full ETH session, dev window 2022-01-01 to
+    2026-05-31 (matching every other family this wave)."
