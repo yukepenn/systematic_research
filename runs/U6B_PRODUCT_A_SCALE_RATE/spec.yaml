@@ -1,0 +1,147 @@
+run_id: U6B_PRODUCT_A_SCALE_RATE
+family: U6B (Product-A scale-RATE conditioned on state quality -- 2nd-highest-EVI candidate from
+  CONTINUOUS_EVOLUTION_WAVE2_EVI.md, Track L, CORE evidence track, POLICY-LAYER hypothesis)
+directive: "CONTINUOUS SYSTEM EVOLUTION wave 2, 2026-08-09 (EVI-selected, run in parallel with U1B/U8/U9)"
+date_frozen: 2026-08-09
+author: autonomous research campaign (continuation, wave-2 EVI selection)
+
+hypothesis: >
+  U6 (runs/U6_PRODUCT_A_PATH_DEPENDENCE/REPORT.md) found the Product-A scale-in value premium is
+  >100% mediated by |M_A_raw| conviction magnitude, and that sigma460_atr_proxy_pts /
+  htf_agree_code / vote_dispersion(aligned) distinguish low-to-high vs stayed-low trajectories at
+  the FIRST bar (pooled p<1e-6, stable 4-5/5 years, rank-biserial <=0.17) -- but 70-75% of BOTH
+  the best (14/20) and worst (15/20) all-time blocks started in the same low-exposure state, so a
+  filter/shrink rule on ENTRY is CLOSED, not to be retested. This family asks the one residual
+  question U6's own report explicitly left open: can the SPEED of movement toward the incumbent's
+  OWN target be conditioned on state quality -- never blocking or shrinking the eventual target,
+  only pacing arrival -- in a way that is structurally safer against the exact right-tail failure
+  mode that killed the entry-filter framing?
+
+empirical_motivation: >
+  U6 Part 2's three features (sigma460, htf_agree_code, vote_dispersion_aligned) are read at the
+  FIRST bar of a trajectory to predict its EVENTUAL max|exposure|. A rate limiter reframes the
+  same features as a bar-by-bar gate on THIS bar's increment rather than a one-time verdict on
+  the whole trajectory: even a low-quality first bar still reaches the incumbent's exact target
+  eventually (given persistent M), it just takes more bars to get there. This sidesteps U6 Part
+  3's disqualifying finding (both tails start low-exposure) because no low-exposure entry is ever
+  blocked or shrunk -- only slowed, IF and only while state quality reads "low" on the specific
+  bars requesting a scale-UP.
+
+distinction_from_closed_work: >
+  NOT a reopening of U6 (diagnostic only, no construction) or U5 (Product-A soft weighting on
+  vwap_disp_atr, killed as a sunk-P&L confound -- this family uses none of U5's features and
+  never multiplies exposure by a continuous weight, it caps a discrete per-bar step). NOT a
+  reopening of R1/U4B (giveback-conditioned EXIT rules on decay/reversal) -- this rule only ever
+  touches bars that are ADDING risk, never touches exits, holds, or scale-downs. NOT a reopening
+  of U3/U3B (session-conditioned hold/exposure continuation) -- no session-phase feature is used
+  here at all.
+
+data_reuse: >
+  Zero new CrossTrade/NT8 calls. Reuses U0's shared state substrate exactly: imports
+  SA0/current_health's health_substrate.py (T, B, HTF_tilt_state=tilt_state, entry_blocked_c4,
+  forced_flat_c4, PEND, open/high/low/close, is_last_of_sess, sess_date, CANONICAL_END,
+  HEALTH_END) verbatim, then re-implements product_a_exec with ONE inserted rate-limiting step
+  (generalizing pa0_substrate.py's product_a_exec / U0's product_a_exec_generalized the same way
+  U0 itself generalized PA0's canonical-only-window function to the extended window -- byte-
+  identical formulas for KSOLAR/KBMOM/TILTRESCALE/TILTMULT/SHORTHALF/rha/M_a/tgt/C4-gating, only
+  the NEW step is added). The vote_dispersion-tercile threshold (see construction) is read
+  directly off runs/U0_UNIFIED_STATE/out/u0_state_table.parquet's own action_A/target_exposure_A/
+  HTF_tilt_state/vote_dispersion columns (the INCUMBENT's own unmodified path) -- fixed once,
+  before any candidate is simulated, never re-derived per candidate (non-circular). Right-tail
+  check reuses the EXACT top-20/bottom-20 canonical Product-A blocks U6 already published
+  (runs/U6_PRODUCT_A_PATH_DEPENDENCE/out/step3_top20_blocks.csv / step3_bottom20_blocks.csv,
+  identified by t_idx_start/t_idx_end) -- no new block selection.
+
+evidence_track: L (Track L -- LOYO/chronology-testable, uses only the causal, already-certified
+  2022-2026 substrate; not a Track-C/prequential family)
+
+construction: >
+  ONE preregistered composite "quality" signal, evaluated only at bars where the incumbent's own
+  (C4-gated) computed target `tgt` would constitute a scale-UP -- defined precisely as: p==0 and
+  tgt!=0 (fresh ENTRY), OR sign(tgt)==sign(p) and |tgt|>|p| (SCALE_IN) -- matching U0's own
+  action_A ENTRY/SCALE_IN labels exactly. FLIP, SCALE_DOWN, EXIT, HOLD, and FLAT bars are governed
+  by the unmodified incumbent logic in every candidate cell, per the mechanism's own asymmetric
+  design (de-risking and non-scale-up moves are never rate-limited).
+
+  At each such scale-up bar, change_sign = sign(tgt) (equivalently sign(tgt-p) -- identical in
+  both ENTRY and SCALE_IN by construction). quality = "high" if:
+    htf_agree_code_local == 1   [ = 1 iff HTF_tilt_state(t) == change_sign and HTF_tilt_state(t)!=0 ]
+  OR
+    vote_dispersion_aligned(t) >= VOTE_THRESH   [ vote_dispersion_aligned = vote_dispersion(t) *
+    change_sign; vote_dispersion(t) = n_bullish(t) - n_bearish(t) across the 13-member Solar13
+    ensemble, U0's own column, unmodified ]
+  else "low". VOTE_THRESH is the top-tercile (67th percentile) cutoff of vote_dispersion_aligned,
+  computed ONCE from u0_state_table's own canonical-window (is_health_only_bar==False) ENTRY/
+  SCALE_IN population under the INCUMBENT's own path (not the candidate's, not re-derived per
+  grid cell) -- reported as an exact number in the results, held fixed across both grid cells and
+  the health-only extension.
+
+  Mechanism (asymmetric): when quality=="low" at a scale-up bar, the bar's move is capped at
+  fraction f of the gap (tgt - p) rather than jumping to tgt in one bar:
+    gap = tgt - p
+    step_mag = max(1, floor(f * |gap|))    [ minimum step of 1 contract -- DISCLOSED DEVIATION,
+    see below ]
+    tgt_final = p + sign(gap) * step_mag
+  When quality=="high", or the bar is not a scale-up bar at all (SCALE_DOWN/EXIT/HOLD/FLIP/FLAT),
+  tgt_final = tgt unchanged (100% of the gap in one bar, exactly the incumbent). tgt_final then
+  becomes `pend` exactly as the incumbent's own loop already does (fills at t+1's OHLC, C4 gating
+  already applied upstream to `tgt` before this step runs -- forced-flat and entry-blocked take
+  priority exactly as the incumbent, per the mechanism's own instruction).
+
+  DISCLOSED DEVIATION -- minimum step of 1: a literal `floor(f*|gap|)` with no floor would give 0
+  whenever |gap|==1 and f<1 (e.g. every single-contract low-quality scale-up, which U0's own
+  action-state counts show is common -- most ENTRY bars start from 0 with a small |tgt|). A
+  0-contract step on every bar of a persistent low-quality signal would silently turn the rate
+  limiter into a PERMANENT BLOCK on unit-size scale-ups, directly violating this family's own
+  design principle ("never blocks... only paces arrival") and reintroducing exactly the right-
+  tail failure mode U6 Part 3 closed the filter framing over. Flooring the step at a minimum of 1
+  contract whenever a scale-up is due is the minimal fix that preserves "always eventually
+  arrives, only paced" while still respecting f exactly whenever |gap|>=2. This is reported and
+  quantified (what fraction of rate-limited bars hit this floor) in the results, not silently
+  applied.
+
+  Because `tgt` (and therefore the step) is recomputed FRESH every bar from that bar's own M_a
+  (the incumbent has no notion of a "held" target separate from live recomputation), the glide
+  path is naturally responsive: consecutive low-quality bars with a persistently large M
+  accumulate exposure gradually toward the (possibly moving) target; a target that itself shrinks
+  or flips before the glide completes is honored immediately, since HOLD/SCALE_DOWN/EXIT/FLIP
+  bars are never rate-limited.
+
+grid: >
+  Small, preregistered: f in {0.5, 0.7} (2 cells). CONTROL = f=None (rate limiter fully disabled,
+  byte-identical to the incumbent's own product_a_exec / U0's product_a_exec_generalized) is the
+  correctness-gate call, run first and required to reproduce the certified canonical-window net
+  ($177,924.40) before any candidate cell is trusted, per CLAUDE.md's CORRECTNESS GATE.
+
+validation_battery: >
+  Full battery (net/Sharpe/Sortino/Calmar/maxDD_eod/CDaR95/worst_day/worst_month/pos_day_pct) via
+  smv2_common.dd_battery, on genuine NQ-priced Product-A economics (PV=$2/pt applied directly to
+  NQ OHLC, PA0's own convention -- no MNQ price series is used for Product A anywhere in this
+  campaign, verified in pa0_substrate.py/UNIFIED_STATE_MAP.md); 2022-2025-only net delta
+  (candidate minus control, confined to sess_date<=2025-12-31, the R2V1/R2B promotion standard --
+  full-history improvement concentrated in one recent period is automatic non-promotion); full
+  battery recomputed on the SAME 2022-2025-only slice for both candidate and control (LOYO --
+  drop 2026 entirely, per directive); year-by-year 2022/2023/2024/2025/2026(Jan-May, canonical
+  only); right-tail check on U6's own published top-20/bottom-20 canonical blocks (both a pre-
+  construction overlap diagnostic -- what fraction of each block's own scale-up bars would read
+  quality=="low" under this rule -- and a post-construction windowed $ comparison -- candidate's
+  vs control's actual bar_pnl_A summed over each block's exact t_idx_start..t_idx_end range);
+  turnover/cost (count of position-changing bars, total |contracts| traded, total commission
+  dollars, candidate vs control); June-July-2026 health-only extension (is_health_only_bar==True)
+  reported separately, observationally, never blended into any promotion comparison, using the
+  SAME fixed VOTE_THRESH derived from canonical-window data only.
+
+promotion_gate: >
+  Standard campaign bar (directive sec50): mechanism + incremental information + chronology +
+  current-regime relevance + right-tail preservation + left-tail improvement + cost robustness +
+  parameter plateau (both grid cells directionally consistent, not an isolated needle) +
+  NQ-genuine economics. NOT PROMOTED if it fails on net/Sharpe/DD or shows right-tail damage,
+  exactly like U4B's disposition; flagged explicitly for adversarial re-verification instead if it
+  looks genuinely promising on all axes per the owner's own instruction.
+
+falsification_condition: >
+  This family is falsified (NOT PROMOTED) if EITHER grid cell shows: (a) full-history net/Sharpe
+  below control, OR (b) 2022-2025-only delta negative or a wash (<1% of control's 2022-2025 net,
+  the R2V1/R2B disqualifying pattern), OR (c) maxDD_eod/CDaR95 worse than control without a
+  compensating net/Sharpe improvement that survives (a)+(b), OR (d) net damage to the top-20/
+  bottom-20 all-time blocks' combined windowed $ that exceeds any full-history net improvement.
