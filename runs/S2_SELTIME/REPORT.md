@@ -1,5 +1,14 @@
 # S2_SELTIME Arm A — RESULTS
 
+> ⚠ **CORRECTED 2026-08-09 (same day), after red team.** Every gate number below is verified
+> correct — CONFIRMED, no headline-flipping defect. But the CANDIDATE label is a statement about
+> this run's frozen pre-registration, not about the mechanism being market-structure-specific or
+> understood. **A 24-window full-day sweep (in the RED-TEAM INGESTION section near the end) shows
+> 19/24 windows produce a positive effect and several beat this run's decision cell — the "genuinely
+> different, market-structure-justified mechanism" framing below does NOT hold up and must not be
+> cited without that correction.** Read the ingestion section before citing this run's mechanism
+> claims (its gate results and numbers are unaffected and can be cited as-is).
+
 Run against `spec.yaml` (frozen `3c6f6cd`), Arm A only — Arm B was screened out and never
 consumed an alpha-budget slot (spec §0). Control cross-check: 1,139/1,139 exact match. Code:
 `src/run.py`.
@@ -83,3 +92,93 @@ contradicting it.
    should carry pending red team.
 
 Mandatory red team (V7 §G) queued next — this result could change a promotion decision.
+
+---
+
+# RED-TEAM INGESTION — appended 2026-08-09. **Point 1 of "What this hands forward" above is
+WITHDRAWN as stated. All gate numbers are CONFIRMED correct. Read this before citing this run's
+mechanism.**
+
+Verdict verbatim at `red_team/RED_TEAM_s2_seltime.md`, unedited. Every gate/pre-check number in
+this report was independently re-derived (three separate re-implementations, a 2,000-trial fuzz
+test of the eligibility state machine, a full independent pipeline rebuild) and reproduces exactly
+— **no headline-flipping defect, no coding bug found anywhere.** The corrections are entirely in
+this report's *narrative interpretation*, which is exactly the part likely to be cited going
+forward, so they are treated with full weight below.
+
+## 1. WITHDRAWN — "genuinely different mechanism... market-structure-justified" is not
+demonstrated, and a direct test argues against it.
+
+The reviewer applied the identical `apply_entry_eligibility()` rule to **24 other 6-hour windows**
+spanning the full day (hourly steps) on the same control series. **19 of 24 windows produce a
+positive ΔSharpe; several beat the decision cell on every gate-A metric** (best: 14:00-20:00,
+ΔSharpe +0.130 vs the decision cell's +0.047, spanning the RTH close and the evening Asia open —
+no low-liquidity story at all). **The decision cell ranks 11th of 24 by ΔSharpe — essentially the
+sweep's median, not an outlier.** At least 8 of 24 windows pass gate A's full three-prong test.
+
+**This does not mean the result is vacuous** — the reviewer checked the strongest competitor
+(14:00-20:00) against gate B's chronology bar and it **fails** (3/5 years positive, not 4/5). So
+the full A+B+C+D battery does discriminate; gate A alone does not. But no test in this run checked
+whether 02:00-08:00 is *uniquely* selected by the full battery among plausible alternatives — that
+test was never run, and the report asserted a market-structure-specific mechanism instead of
+demonstrating one.
+
+**Corrected statement**: this looks structurally like it could be a generic new-commitment-
+suppression / whipsaw-reduction effect — present at many times of day, not preferentially at
+low-liquidity ones — that happens to also clear chronology at this particular window, rather than
+a window-specific market mechanism. Downgraded from "established" to "open question pending a
+B/C/D sweep across alternative windows," which is now the natural next step before any
+capital-map/parity R2.
+
+## 2. WITHDRAWN — "removing a similarly-sized dollar loss every year" is false.
+
+The claim conflated the *window's* stable aggregate loss (S0's pre-check, confirmed exactly:
+−$4.8k to −$6.5k/year, 5/5 years) with the *eligibility rule's own captured benefit*, which is a
+much narrower and unstable quantity: **−$2,552 (2022, the rule makes it WORSE) / +$246 / +$4,834 /
++$464 / +$4,328 (2026 stub)** — negative in one of five years, ranging over $7,386, with **89%+ of
+the entire multi-year benefit concentrated in 2 of 18 calendar quarters** (2024-Q3, which straddles
+the D7 boundary itself, and 2026-Q2, the tail of the already-flagged-unusual stub). Pooled captured
+fraction of the window's own loss: only 25.3%.
+
+## 3. TESTED AND REFUTED — the hedged variance-mechanism hypothesis does not hold.
+
+REPORT.md's §"What is and is not stable" proposed, properly hedged as untested, that rising
+post-D7 daily P&L variance might mechanically amplify a stable dollar benefit into a larger Sharpe
+gain. Directly tested: the arm/control **daily-P&L variance ratio barely moves** between periods
+(1.0003 pre-D7 → 0.9916 post-D7, a 0.87pp shift) — there is no meaningful variance-channel effect.
+The Sharpe swing is **essentially 100% a mean effect** (arm mean $1.27/day worse than control
+pre-D7, $17.37/day better post-D7), consistent with the quarter-concentration in point 2. The
+proposed mechanical direction was also backwards from Sharpe=μ/σ algebra (a larger σ dampens,
+rather than amplifies, a fixed mean shift's Sharpe contribution). Mark this hypothesis TESTED AND
+NOT SUPPORTED, not open, in any future citation.
+
+## 4-6. Disclosure-level, no correction needed to the numbers
+
+Gate D's four boundary perturbations are nested/monotonic in width around the same center, not
+independent replications — the existing "3 of 4" disclosure is honest but a weaker stability signal
+than 3 independent alternative windows would be (already-marginal result, now understood to be
+even more marginal in spirit). Commit-timing gap (2m33s, spec→result) checked for leakage and
+cleared — both pre-checks independently reproduce exactly from raw data, which would be an odd
+thing to get right if fabricated after the fact. Gate C's 91.6% top-20 retention traced to exactly
+2 large, partially-offsetting bars on one session (2025-04-09) — confirmed benign, not diluted
+broad-based risk.
+
+## What survives untouched
+
+**All four gate results (A/B/C/D), the exposure disclosure, the bootstrap, and the D7-split table
+are independently re-verified correct to full precision — no coding defect anywhere.** Both S0→S2
+handoff pre-checks (Solar EUROPE_PREUS 5/5-years-negative; BMOM AFTERNOON 3/5-years-negative,
+screened out) reproduce to the cent. The frozen verdict rule was applied correctly: **CANDIDATE
+stands as a true statement about this run's specific frozen pre-registration** — it is not a false
+positive. What it may not do, until a window-specificity sweep is run, is stand as evidence of a
+market-structure-specific mechanism distinct from a generic whipsaw-reduction effect.
+
+## Revised guidance for any capital-map/parity R2
+
+1. Run gates B/C/D (not just A) across a modest sweep of alternative windows before treating
+   02:00-08:00 as uniquely selected.
+2. Cite the actual year-by-year and quarter-by-quarter dollar benefit (point 2 above), not a
+   "similarly-sized loss removed" framing.
+3. Drop the variance-mechanism hypothesis; the mean-shift concentration in 2024-Q3/2026-Q2 is the
+   honest description of where the benefit comes from, and its overlap with D7's own boundary and
+   the flagged-unusual stub is itself worth investigating before relying on the pooled number.
