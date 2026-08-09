@@ -1,0 +1,58 @@
+run_id: V1R4_NT8_PARITY
+family: "V1-R4 -- NT8 Strategy Analyzer re-parity for the 3 current C4-compliant objects
+  (Track E, standing item since FINAL_CAMPAIGN_BASELINE.md sec 4-5; not one of the 8 research
+  families, does not block Track R, run after Track R closes per the addendum's explicit order)"
+frozen_before_results: true
+date_frozen: "2026-08-09"
+objects_under_test:
+  - {name: "Product A", class: SolarWaveSMMaster_v3, py_reference_net: 175798.80, py_reference_trades: 16241}
+  - {name: "BEST_ONE_NQ", class: SolarWaveOneContractNQ_v4, py_reference_net: 303239.64, py_reference_trades: 1976}
+  - {name: "BEST_ONE_MNQ", class: SolarWaveOneContractMNQ_v4, py_reference_net: 28705.20, py_reference_trades: 1976}
+py_reference_source: "research/system_master/FINAL_CAMPAIGN_BASELINE.md sec 1-3 (Python replica
+  metrics on the frozen dev window). BEST_ONE_MNQ's Python reference number is the pre-existing
+  documented figure; a known open item (daily-correlation gap, ~0.8996 vs >=0.999, narrowed to
+  5 named sessions) already carries a standing caveat and is NOT re-litigated by this run -- see
+  disclosure clause below."
+
+# ---------------------------------------------------------------- NT8 backtest configuration
+# Matches the ONLY prior CERTIFIED parity run's exact, proven configuration
+# (research/solar_wave_parity/type1_2023_2025/parity_report.md) -- no new interpretive choice.
+nt8_config:
+  instrument: "NQ 09-26"          # primary/chart series for all 3 objects (all 3 attach to NQ;
+                                    # MNQ, where traded, is the ADDED series inside the .cs file)
+  bars_period: {period_type: Minute, value: 3}
+  from_utc: "2022-01-01T06:00:00Z"     # verbatim AUDIT03_BARS provenance (the same pull that
+                                        # produced the Python reference's own nq_3m_2022_2026.csv)
+  to_utc: "2026-05-29T21:59:59Z"       # dev window's last session 2026-05-29, EDT rule (D
+                                        # 21:59:59Z), per the certified parity run's own derived
+                                        # rule -- one second before the 18:00 ET open on 2026-05-29
+  fill: {type: Standard, commission_template: "NinjaTrader Brokerage Lifetime"}
+  slippage_ticks_override: "NONE -- the certified precedent run used no override and achieved
+    exact-to-the-penny parity; the Python replica's own 1-tick synthetic slip is a Python-side
+    approximation of what NT8's real Standard-fill engine already produces natively, not
+    something to be added on top of NT8's own engine."
+  account: "default isolated Backtest account, $100k USD (unchanged from precedent); Sim101 never touched"
+  trading_hours: "instrument default (CME index futures ETH), no override"
+
+# ---------------------------------------------------------------- pre-registered pass/fail bar
+promotion_standard:
+  net_profit_tolerance: "|NT8_net - py_net| / |py_net| <= 1.0% -- looser than the RK Replica
+    precedent's exact-to-the-penny result because these 3 objects are materially more complex
+    (multi-series alignment, tilt/HTF state, B-MOM leg, day-only overlay, C4 flatten schedule)
+    and have NEVER been certified even once at any tolerance; a first-pass 1% band is the
+    disclosed bar, not a moved goalpost -- tightening it is a LEGITIMATE follow-up (V5), not
+    required for this run's own PASS/FAIL determination."
+  trade_count_tolerance: "exact match preferred; a difference of 1 trade is tolerated ONLY if
+    attributable to the same documented data-boundary serialization quirk as the RK Replica
+    precedent (a position still open at the data boundary being invisible to NT8's own
+    TradesCount/serialized list, CLAUDE.md 'Conventions that bite') -- any other count mismatch
+    is a FAIL requiring root-cause diagnosis, not dismissal."
+  known_caveat_not_relitigated: "BEST_ONE_MNQ's known daily-correlation gap (~0.8996 vs >=0.999,
+    5 named sessions) is a SEPARATE, already-diagnosed open item from FINAL_CAMPAIGN_BASELINE.md
+    sec 3 -- if this run's net-profit/trade-count comparison passes its own tolerance bar above,
+    that is a genuine result on its own terms (aggregate parity), not a claim that the daily-
+    correlation gap is resolved; if it does NOT pass, the two issues will be disentangled before
+    concluding the discrepancy is the SAME known issue."
+  disposition_rule: "CERTIFIED (parity PASS) if both tolerances clear; NOT CERTIFIED (parity FAIL,
+    root-cause required per the addendum's 'no unexplained failures' rule) otherwise. No
+    threshold in this section may be adjusted after the NT8 job results are read."
