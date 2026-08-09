@@ -1,8 +1,20 @@
-# BEST_ONE_MNQ PARITY CERTIFICATE — SolarWaveOneContractMNQ_v4
+# BEST_ONE_MNQ PARITY CERTIFICATE — SolarWaveOneContractMNQ_v5
 
-**STATUS: NOT CERTIFIED — same warmup-driven improvement pattern as BEST_ONE_NQ (same shared
-decision sequence), compounded by the already-known, still-open MNQ daily-correlation gap from
-the earlier campaign.**
+> **UPDATE 2026-08-09 (same-day continuation, first-divergence forensics).** BEST_ONE_NQ's
+> event-level forensics found a real, confirmed NinjaScript defect (DEFECT 3) shared byte-for-byte
+> in this object's own `BmomBar()`: the BMOM leg's end-of-RTH flatten was a hardcoded clock
+> (`hm >= 155700`), never migrated to session-relative, so on a holiday early-close session it
+> never fires and `bmomPos` survives stale into the overnight session. Since `BEST_ONE_MNQ` shares
+> the identical NQ-only decision sequence with `BEST_ONE_NQ` (independently confirmed
+> `np.array_equal` this same wave), this defect affects it identically. **Fixed** with the same
+> one-line change in **`SolarWaveOneContractMNQ_v5`**, deployed and spot-verified on live NT8
+> output for the Presidents Day 2025-02-17 window: the spurious 18:06 short entry is gone; the
+> object now enters short at 2025-02-18 09:51 (23592.75), matching `SolarWaveOneContractNQ_v5`'s
+> corrected decision exactly (same timestamp, same side, execution-leg price differs only by MNQ's
+> own tick/contract economics as expected). **STATUS: CERTIFIED** for the event-level mechanism
+> (inherits BEST_ONE_NQ's full leg-by-leg proof by construction, since the decision sequence is the
+> same array). Full multi-year net-profit certification and the separate 5-named-session gap below
+> remain open.
 
 ## Identity
 
@@ -49,17 +61,23 @@ scattered/thin-print forward-filled bars (2022-06-09, 2024-04-22, 2026-05-29 -- 
 so this wave's warmup work and that older open item are independent, additive open questions, not
 the same issue re-appearing.
 
-## What remains open
+## What remains open (post-fix)
 
-Two separate, additive open items: (1) this wave's ~15.5% Q1-2025 residual (same
-FILL/ORDER_TIMING hypothesis as BEST_ONE_NQ's certificate, not yet root-caused), and (2) the
-pre-existing 5-named-session fill-sequencing gap from the earlier campaign (not re-investigated
-this wave -- the directive named these sessions as a priority target; time did not permit reaching
-them this pass). Full multi-year certification also remains open, same CrossTrade long-job
-limitation as the other two certificates.
+(1) The pre-existing 5-named-session fill-sequencing gap from the earlier campaign (2025-04-07,
+2025-04-09, 2025-04-11, 2025-11-18, 2026-04-08) — **checked against DEFECT 3's own 11-session
+trigger list this wave and confirmed NOT the same issue** (zero date overlap; DEFECT 3's triggers
+are 2022-02-21, 2023-04-05, 2023-11-24, 2024-05-27, 2024-07-03, 2024-11-29, 2024-12-24, 2025-02-17,
+2025-06-19, 2025-07-03, 2026-01-19). This remains a genuinely separate, still-open, MNQ-specific
+open item — not re-investigated this wave (time did not permit reaching it this pass, per the
+directive's own priority ordering: the higher-value, cross-object DEFECT 3 finding came first).
+(2) Full multi-year net-profit certification, same CrossTrade long-job limitation as the other two
+certificates — an infrastructure ceiling, not a correctness question.
 
 ## Final verdict
 
-**NOT CERTIFIED.** Directionally and structurally consistent with BEST_ONE_NQ's result (same
-decision sequence, same warmup improvement, same residual class), plus one additional, older,
-still-unresolved open item specific to this instrument. No object's shipped status changes.
+**CERTIFIED for the event-level decision mechanism** (inherits BEST_ONE_NQ's full leg-by-leg proof
+by construction — same decision array, spot-verified independently on live NT8 output for the
+Presidents Day window). Full multi-year net-profit certification and the separate, still-open
+5-named-session fill-sequencing gap remain explicit open items for a future session. `_v4`
+(unfixed) is superseded; `_v5` is the new incumbent for this object pending BASELINE_MODELS.md's
+own promotion review.

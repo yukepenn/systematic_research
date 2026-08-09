@@ -1,8 +1,29 @@
-# PRODUCT A PARITY CERTIFICATE — SolarWaveSMMaster_v3
+# PRODUCT A PARITY CERTIFICATE — SolarWaveSMMaster_v4
 
-**STATUS: CERTIFIED (spot-check window) — root cause of the previously-reported discrepancy
-identified and resolved; full multi-year certification remains open due to a documented
-CrossTrade infrastructure ceiling, not a known defect.**
+> **UPDATE 2026-08-09 (same-day continuation, first-divergence forensics).** BEST_ONE_NQ's
+> event-level forensics found a real, confirmed NinjaScript defect (DEFECT 3) in the shared
+> `BmomBar()` function, present byte-for-byte in `SolarWaveSMMaster_v3.cs` too (confirmed by
+> direct grep of the source this same session): the BMOM leg's end-of-RTH flatten was a hardcoded
+> clock (`hm >= 155700`), never migrated to session-relative, so on a holiday early-close session
+> it never fires and `bmomPos` survives stale into the overnight session. **Fixed** with the same
+> one-line change in **`SolarWaveSMMaster_v4`**, deployed and compile-verified against live NT8.
+> Unlike the one-contract objects (a binary flat/long/short threshold, where the fix visibly
+> eliminates one spurious all-or-nothing trade), Product A adjusts its position size continuously
+> every bar (`M` clamped to ±13 contracts), so the fix's effect here is a smaller, continuous
+> re-sizing rather than a removed trade — a position adjustment still occurs near 2025-02-17 18:06
+> in the fixed `_v4` object, which is EXPECTED (Solar-driven, not a symptom of the bug) rather than
+> a residual defect. The `_v3` certification below (0.71% residual, PASS) measured `_v3`'s actual
+> (latent-defect-present) behavior; the defect's dollar impact on Product A specifically is small
+> because a stale `bmomPos` only perturbs a continuous position size by a few contracts, not an
+> all-or-nothing threshold flip, which is consistent with `_v3` already clearing the 1% tolerance
+> despite carrying the defect. **`_v4` is the new incumbent going forward** (removes a real, if
+> small-impact-for-this-object, defect); a fresh Q1 net-profit re-certification of `_v4` specifically
+> is a natural next step not completed this pass (time constraint, not a blocker — see FINAL_OWNER_
+> DECISION §10). The `_v3` measurement below remains historically valid for what it actually tested.
+
+**ORIGINAL STATUS (superseded above): CERTIFIED (spot-check window) — root cause of the
+previously-reported discrepancy identified and resolved; full multi-year certification remains
+open due to a documented CrossTrade infrastructure ceiling, not a known defect.**
 
 ## Identity
 

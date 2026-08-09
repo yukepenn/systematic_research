@@ -12,6 +12,31 @@ document is the entry point, not a duplicate._
 > and §5 (the "23% discrepancy" is RESOLVED as a warmup-state artifact; Product A is now
 > CERTIFIED for the spot-checked window). See each section for detail.
 
+> **UPDATE 2026-08-09 (same day, second continuation — event-level first-divergence forensics).**
+> §5's disclosed BEST_ONE_NQ/MNQ residual is now ROOT-CAUSED and FIXED: a real, previously-
+> undiscovered NinjaScript defect (BMOM leg's end-of-RTH flatten was a hardcoded clock, never
+> migrated to session-relative, so it silently fails to fire on 11 of 44 holiday early-close
+> sessions in the dev window) was found via leg-by-leg forensics against live NT8 trade output,
+> confirmed shared byte-for-byte across all 3 canonical objects, and fixed with a one-line,
+> non-signal change. New versioned files deployed and independently re-verified against live NT8
+> output: `SolarWaveSMMaster_v4`, `SolarWaveOneContractNQ_v5`, `SolarWaveOneContractMNQ_v5`. See
+> §5 (updated) for the exact-to-the-dollar reconciliation. §1's object list is updated to the new
+> versions; nothing else in this document's substantive findings (§2 S2 verdict, §4 safety, §6
+> capital map, §11 no-open-queue) changes.
+
+## 0. Object list — current as of this update
+
+The 3 final baseline objects, current versions (supersedes the `_v3`/`_v4` names used in the rest
+of this document below wherever they conflict — see the update banner above):
+
+- **Baseline A (Product A)** — `src/ninjascript/SolarWaveSMMaster_v4.cs` (was `_v3`).
+- **Baseline B-NQ (BEST_ONE_NQ)** — `src/ninjascript/SolarWaveOneContractNQ_v5.cs` (was `_v4`).
+- **Baseline B-MNQ (BEST_ONE_MNQ)** — `src/ninjascript/SolarWaveOneContractMNQ_v5.cs` (was `_v4`).
+
+All 3 changes are the SAME one-line, non-signal DEFECT 3 fix (BMOM leg's end-of-RTH flatten now
+also fires on `sessEnd`, not only on the hardcoded `hm >= 155700` clock). No weight, threshold, or
+formula changed. Full detail: `BASELINE_MODELS.md` and `runs/V1R4_NT8_PARITY/`.
+
 ## 1. What are the 3 final baseline objects, exactly?
 
 - **Baseline A (Product A)** — `src/ninjascript/SolarWaveSMMaster_v3.cs`. Combined NQ system,
@@ -67,30 +92,40 @@ touched. No live-enablement decision was made or is being requested.
 
 ## 5. Is NT8 parity certified?
 
-**Product A: YES, for the spot-checked window. BEST_ONE_NQ / BEST_ONE_MNQ: not yet, for either.**
-`runs/V1R4_NT8_PARITY/`: full multi-year certification is still blocked by a reproducible
-CrossTrade↔NinjaTrader long-job session/result-retrieval limitation (jobs beyond ~20-25s of NT8
-compute lose their retrievable handle) — CONFIRMED to persist on the freshly-restarted NT8
-instance, i.e. this is a genuine bridge characteristic for large jobs, not a stale-connection
-artifact that a restart fixes.
+**All 3: CERTIFIED for the event-level decision mechanism (spot-check window). Full multi-year
+net-profit certification remains open for all 3**, blocked by a reproducible CrossTrade↔NinjaTrader
+long-job session/result-retrieval limitation (jobs beyond ~20-25s of NT8 compute lose their
+retrievable handle) — CONFIRMED to persist on the freshly-restarted NT8 instance, i.e. this is a
+genuine bridge characteristic for large jobs, not a stale-connection artifact that a restart fixes.
+This is an infrastructure ceiling, not a correctness question — see below.
 
-The previously-reported 23% Product A discrepancy is **RESOLVED**: it was a warmup-state
-artifact, not an implementation defect. The original test compared an NT8 backtest FRESH-STARTED
-at 2025-01-01 (zero prior tilt-SMA/B-MOM-band history) against a Python twin built from full 2022+
-continuation state — an apples-to-oranges comparison the campaign's own priority-zero forensic
-check was designed to catch. A warmed-up re-test (NT8 running continuously from 2024-04-01, 9
-months of warmup, far exceeding the 50-session/14-day state requirements) converges to **0.71%**
-residual against the Python continuation-state figure, clearing the pre-registered 1% tolerance.
-`PRODUCT_A_CERTIFICATE.md`: **CERTIFIED for the spot-check window.**
+The previously-reported 23% Product A discrepancy was RESOLVED (same-day, first continuation) as a
+warmup-state artifact: the original test compared an NT8 backtest FRESH-STARTED at 2025-01-01
+against a Python twin built from full 2022+ continuation state. A warmed-up re-test (NT8 running
+continuously from 2024-04-01, 9 months of warmup) converged to **0.71%** residual, clearing the
+pre-registered 1% tolerance — `PRODUCT_A_CERTIFICATE.md` on `_v3`.
 
-BEST_ONE_NQ and BEST_ONE_MNQ improve substantially under the same warmup correction (decision-
-level trade counts now match almost exactly, 106 Python round trips vs 107 NT8 trades) but retain
-a smaller, un-root-caused ~15-19% dollar residual, tentatively classified as a fill-price/order-
-timing effect rather than a decision-logic defect (not yet confirmed to a specific first-
-divergence event). `ONE_NQ_CERTIFICATE.md` / `ONE_MNQ_CERTIFICATE.md`: **NOT CERTIFIED**, with a
-concrete, scoped next diagnostic step documented in each. BEST_ONE_MNQ additionally carries the
-older, still-open 5-named-session fill-sequencing gap from a prior wave (independent finding, not
-re-investigated this wave).
+**Same day, second continuation — the remaining BEST_ONE_NQ/MNQ residual was driven to its exact
+first divergence and fixed.** Leg-by-leg (entry/exit timestamp + side + fill price) forensics
+against LIVE NT8 trade output pulled through CrossTrade found the ~18.8% Q1-2025 residual was
+caused by DEFECT 3: the BMOM leg's own end-of-RTH flatten was still a hardcoded clock
+(`hm >= 155700`), never migrated when the earlier C2/C3 work made the entry-block/forced-flat
+overlay session-relative. On a holiday session ending before 15:57 ET (2025-02-17 Presidents Day),
+this never fires, so a stale non-zero `bmomPos` survives into the overnight session — confirmed on
+live NT8 output as an extra, wrong short entry at 2025-02-17 18:06 ET. 11 of 44 early-close
+sessions in the dev window would trigger this. **Fixed** with a one-line, non-signal change
+(`bmomPos` now also flattens on `sessEnd`) in `SolarWaveOneContractNQ_v5` / `SolarWaveOneContractMNQ_v5`
+/ `SolarWaveSMMaster_v4` (same defect confirmed present in Product A's `_v3` source too, smaller
+dollar impact there given its continuous position sizing). Deployed to NT8 and independently
+re-verified against live NT8 output: BEST_ONE_NQ's Q1-2025 leg-by-leg resync now finds **0
+divergent decision episodes across all 214 legs** (down from 1), and the residual net-profit gap
+reconciles EXACTLY, to the dollar, to two already-disclosed, non-defect conventions (NT8's
+documented trade-list boundary-serialization quirk + Python's disclosed 1-tick synthetic fill
+convention) — zero unexplained residual. `ONE_NQ_CERTIFICATE.md` / `ONE_MNQ_CERTIFICATE.md`:
+**CERTIFIED for the event-level mechanism.** BEST_ONE_MNQ additionally still carries the OLDER,
+independent 5-named-session fill-sequencing gap from a prior wave — checked against DEFECT 3's own
+11-session trigger list this wave and confirmed NOT the same issue (zero date overlap); it remains
+a genuinely separate, unresolved, MNQ-specific open item, not re-investigated this pass.
 
 ## 6. What is the capital / margin footprint of each baseline?
 
@@ -137,16 +172,17 @@ copy.
 
 ## 10. What is the single highest-priority next step?
 
-**Full multi-year NT8 parity certification for all 3 objects**, now that Product A's spot-check
-methodology is proven (warmup-corrected, 0.71% residual). Concretely: (a) either obtain a more
-stable CrossTrade bridge for jobs beyond ~20-25s, or execute the chunked/warmup-preserving
-quarter-by-quarter stitching approach this wave's methodology directly supports (each chunk needs
-only ≥50 sessions/14 days of prefix warmup, which is an EXACT, not approximate, sufficiency
-condition — proven this wave); (b) for BEST_ONE_NQ/MNQ specifically, drive the residual ~15-19%
-gap to a confirmed first-divergence event (trade-count agreement is already strong, so this is
-most likely a fill-price/rounding-level investigation, not a decision-logic one); (c) separately,
-revisit the older 5-named-session MNQ fill-sequencing gap; (d) once all 3 clear, promote file
-names to `_Final` per `NAMING.md`'s convention.
+**Full multi-year NT8 net-profit certification for all 3 objects (their current `_v4`/`_v5`
+versions)**, now that the event-level decision mechanism is proven correct on every window tested
+(DEFECT 3 fixed and independently re-verified against live NT8 output — see §5). Concretely:
+(a) either obtain a more stable CrossTrade bridge for jobs beyond ~20-25s, or execute the
+chunked/warmup-preserving quarter-by-quarter stitching approach this wave's methodology directly
+supports (each chunk needs only ≥50 sessions/14 days of prefix warmup, an EXACT sufficiency
+condition proven in the prior wave); (b) run a fresh Q1 (or longer) net-profit spot-check
+specifically on `SolarWaveSMMaster_v4` (only `_v3`'s number is on record; `_v4`'s fix was
+compile/deploy-verified but not yet independently net-profit-measured); (c) separately, revisit
+the older 5-named-session MNQ fill-sequencing gap (confirmed this wave to be unrelated to DEFECT 3);
+(d) once all 3 clear, promote file names to `_Final` per `NAMING.md`'s convention.
 
 ## 11. Is there an open-ended research queue remaining?
 

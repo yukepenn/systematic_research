@@ -1,6 +1,38 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-09, **S2 R2 PROMOTION ADJUDICATION + CROSSTRADE PARITY** (supersedes the
+_Last update: 2026-08-09, **DEFECT 3 FOUND AND FIXED — EVENT-LEVEL FIRST-DIVERGENCE FORENSICS**
+(same-day continuation, supersedes the S2 R2/parity section below for anything it touches). The
+BEST_ONE_NQ ~18.8% Q1-2025 residual was driven to its exact first divergence via a leg-by-leg
+(entry/exit timestamp + side + fill price, not just aggregate net profit) comparison against LIVE
+NT8 trade output pulled through CrossTrade. Root cause: a real, previously-undiscovered
+NinjaScript defect shared byte-for-byte across all 3 canonical objects' `BmomBar()` function --
+the BMOM leg's own end-of-RTH flatten was still a HARDCODED CLOCK (`hm >= 155700`), never migrated
+when the earlier C2/C3 work made the entry-block/forced-flat overlay session-relative. On a
+holiday session ending before 15:57 ET (2025-02-17 Presidents Day: CME halts 13:00-18:00, matches
+the raw data exactly), `hm` never reaches 155700, so a non-zero `bmomPos` survives stale into the
+following overnight session -- confirmed on live NT8 output as an extra, wrong short entry at
+2025-02-17 18:06 ET (M=-4.25 with the stale `bmomPos=-1`, vs the correct M=-1.42 at `bmomPos=0`).
+11 of 44 early-close sessions in the dev window have `bmomPos != 0` at the truncation boundary and
+would trigger this. **Fixed** with a one-line, non-signal change (`bmomPos` now also flattens on
+`sessEnd`) in new versioned files `SolarWaveSMMaster_v4`, `SolarWaveOneContractNQ_v5`,
+`SolarWaveOneContractMNQ_v5`, deployed to NT8 and independently re-verified against LIVE NT8
+output: BEST_ONE_NQ's Q1-2025 leg-by-leg resync now finds **0 divergent decision episodes across
+all 214 legs** (down from 1), and the residual net-profit gap reconciles EXACTLY, to the dollar,
+to two already-understood, non-defect conventions (NT8's documented boundary trade-list
+serialization quirk + Python's disclosed synthetic 1-tick fill convention) -- zero unexplained
+residual. BEST_ONE_MNQ confirmed identically on live NT8 output (shared decision sequence).
+Product A's instance of the same defect confirmed present in `_v3`'s source via direct grep and
+fixed in `_v4` (smaller dollar impact there: continuous position sizing dampens a stale
+`bmomPos`'s effect vs the one-contract objects' binary threshold). Full multi-year net-profit
+certification remains open (CrossTrade long-job ceiling) but the event-level decision MECHANISM is
+now proven correct, not merely "improved" -- see each object's updated certificate in
+`runs/V1R4_NT8_PARITY/`. This is a genuine implementation-defect fix (one boolean OR clause), not
+a re-optimization: every signal weight/threshold/formula is byte-identical to the pre-fix files.
+Also this same session: 7 clearly-superseded stale NinjaScript files removed from the live NT8
+Documents folder (repo history unaffected, nothing deleted from git).
+
+_S2 R2 PROMOTION ADJUDICATION + CROSSTRADE PARITY header, retained: Last update 2026-08-09
+(supersedes the
 FINAL OPTIMIZATION DIRECTIVE close-out below for anything it touches). The owner restarted
 NinjaTrader 8 and identified a process gap: S2_SELTIME's own frozen verdict rule required a
 capital-map + parity R2 before any promotion decision, and that step had never actually run
