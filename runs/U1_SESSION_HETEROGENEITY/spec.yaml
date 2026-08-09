@@ -1,0 +1,91 @@
+run_id: U1_SESSION_HETEROGENEITY
+family: U1 (session-phase heterogeneity of the state->economics mapping)
+directive: "CONTINUOUS SYSTEM EVOLUTION directive, U1 task order (2026-08-09)"
+depends_on: U0_UNIFIED_STATE (runs/U0_UNIFIED_STATE/out/u0_state_table.parquet, correctness-gated
+  against the 3 certified canonical nets), R3_SELTIME_STATE (runs/R3_SELTIME_STATE/REPORT.md --
+  entry-eligibility-layer time-of-day CLOSED, mechanistic hold-time-vs-entry-quality finding),
+  P0_TRADESTATE_AUTOPSY/R4_SLOPE_IMPULSE/R5_MICROSTRUCTURE_PROXY (block-level entry-table
+  construction pattern and OLS/residualized-Spearman diagnostic style, reused here on U0 columns
+  directly rather than re-deriving a ledger).
+
+hypothesis: >
+  Does the MAPPING from shared state (M / M_A_raw, volatility) to forward economics materially
+  change by session phase (RTH vs ETH, or the 7-way session_phase categorical), tested as an
+  INTERACTION / HETEROGENEITY question -- not as a blanket eligibility window? This is explicitly
+  NOT a re-run of R3/S2's closed "block trading in a clock window" question.
+
+explicit_non_reopen: >
+  S2_SELTIME's exact frozen construction (block all new entries/flips 02:00-08:00 ET) and R3's
+  state-conditioned variant of it are CLOSED, NOT PROMOTED. This run does not re-test that window
+  or any binary time-of-day eligibility filter. If this run's own results touch that window, they
+  are contrasted explicitly against R3's finding (bar-level bleed in that window is a HOLD-TIME
+  phenomenon, not an entry-quality one), not re-litigated.
+
+what_is_already_known: >
+  R3 found entries commenced in EUROPE_PREUS (02:00-08:00 ET) are net POSITIVE (+$79,924.82
+  pooled, 4/5 years) while that window's BAR-LEVEL P&L is negative (-$14,868.96 pooled) --
+  because most of the window's bar-time is spent holding positions entered elsewhere. R4/R5 found
+  two modest-but-real incremental entry-quality signals (impulse CLV, direction_x_volume) using
+  an M-strength-tercile x vol-tercile residualization pattern, both right-tail-checked and neither
+  tail-safe enough to construct. This run reuses that residualization pattern but conditions on
+  session_phase/is_rth instead of a new OHLCV feature.
+
+scope: >
+  Diagnostic run only. No candidate construction, no parameter changes, no NT8/CrossTrade calls.
+  Reads runs/U0_UNIFIED_STATE/out/u0_state_table.parquet ONLY (no other run's ledger re-read; U0
+  is the single certified shared-state source per UNIFIED_STATE_MAP.md). Writes only under
+  runs/U1_SESSION_HETEROGENEITY/. Does not touch U0's files or any other run directory. Runs no
+  git command (orchestrating session commits after review).
+
+plan:
+  test1_action_type_x_time: >
+    Product B: block-level ENTRY table (group by block_id_B on position_B!=0 rows, net_pnl = last
+    run_pnl_B_dollars in the block -- the same convention P0/R4/R5's block_level_summary.csv
+    uses) x session_phase/is_rth. Separately, REVERSAL bars (n=92, its own block-starting action)
+    x session_phase, reported descriptively given small n. Separately, HOLD bars: forward-1-bar
+    and forward-5-bar realized bar_pnl_B_nq_dollars (causal continuation-value proxy, a lightweight
+    preview of U3) x session_phase. SCALE-IN/DOWN is a Product-A-only action type (Product B is
+    single-lot {-1,0,+1}) -- covered in test6, not forced into Product B's table here.
+  test2_interaction_ols: >
+    Interpretable OLS only (np.linalg.lstsq, matching R4/R5's pattern -- no black-box model).
+    (a) net_pnl ~ M_abs + vol_tercile_code + is_rth + M_abs:is_rth on the Product-B entry table.
+    (b) net_pnl ~ M_abs + vol_tercile_code + C(session_phase) + M_abs:C(session_phase), manual
+    dummy encoding (one baseline phase dropped). Report interaction coefficient(s), implied
+    effect size, n.
+  test3_residualized_bucket_rth_eth: >
+    Bucket entries by M-strength tercile x vol tercile (same bucketing R4/R5 used), residualize
+    net_pnl against the bucket mean, compare mean residual RTH vs ETH within each bucket. Report
+    n per (bucket x RTH/ETH) cell; explicitly flag cells with n too small to be meaningful rather
+    than reporting a noisy number as reliable.
+  test4_right_tail_check: >
+    Same discipline as R3/R4/R5's own right-tail veto check: do the top-20 all-time winning
+    Product-B blocks concentrate in, or get excluded by, any session_phase/RTH-ETH split that
+    tests 1-3 suggest might look promising?
+  test5_chronology: >
+    Year-by-year (2022/2023/2024/2025/2026-canonical-Jan-May) stability of whatever heterogeneity
+    survives tests 1-4, reported separately from the June-July-2026 health-only extension
+    (is_health_only_bar==True), per U0's own mechanical canonical/extended split -- never blended.
+  test6_product_a_lightweight: >
+    Lightest version of tests 1-3 for Product A's ENTRY (trip-level net_pnl, same block_id_A
+    convention) and SCALE_IN (forward-1/5-bar bar_pnl_A_dollars, same proxy as test1's HOLD
+    analysis) action states, by session_phase/is_rth. Uses M_A_raw (Product A's own continuous
+    score) as the strength variable, not the shared M column, since M_A_raw is Product A's
+    documented pre-round/clamp decision input (UNIFIED_STATE_MAP.md Product A row).
+  test7_verdict: >
+    Per-relationship (not blanket) H0/H1 verdict with effect size and reasoning for every
+    interaction tested above. If ANY relationship supports H1 (real, chronologically-stable,
+    tail-safe heterogeneity), describe in PROSE (not code) the smallest hierarchical adjustment
+    idea (global parameter + tiny session-conditioned delta) worth testing in a FUTURE, separately
+    preregistered family -- explicitly labeled NOT YET TESTED / NOT AUTHORIZED FOR CONSTRUCTION
+    THIS RUN.
+
+construction_gate: >
+  No candidate is constructed in this run under any circumstance -- diagnostic only, per the
+  owner's explicit task framing. A finding supporting H1 produces a PROPOSAL for a future family,
+  not code.
+
+non_goals:
+  - No binary time-of-day block/filter of any kind (forbidden explicitly by the task).
+  - No re-test of S2/R3's exact 02:00-08:00 ET window as a "new" idea.
+  - No modification of U0 or any file outside this run directory.
+  - No git operations.
