@@ -1,0 +1,40 @@
+run_id: R4_SLOPE_IMPULSE
+family: "R4 -- regression/value-line slope + explosive candle/impulse residual-information
+  tests (SYSTEM ARCHITECTURE SCIENCE MEGA DIRECTIVE sec22-23)"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: 2026-08-09
+
+nature: >
+  Information-addition tests (directive sec35): does feature X add information CONDITIONAL ON
+  the incumbent's own state (M magnitude, Solar consensus, volatility), or is it redundant with
+  what the incumbent already knows? Compare Outcome ~ incumbent-state vs Outcome ~ incumbent-
+  state + X via (a) residualized Spearman correlation (does X correlate with the part of net_pnl
+  the existing state buckets do NOT already explain) and (b) linear-regression R^2 improvement
+  (interpretable OLS, not a black-box classifier, per directive sec36's prohibition).
+
+reference_object: >
+  Product-B ledger (runs/P0_TRADESTATE_AUTOPSY/out/ledger_full.parquet, block_level_summary.csv,
+  1,978 entries), SA0_SYSTEM_STRUCTURE/src/substrate.py for the verified decision/pricing layer.
+
+R4A_slope: >
+  Causal linear-regression slope of close price over a 20-bar (1h) lookback window, computed at
+  each entry bar (uses only bars up to and including the entry bar -- no lookahead), normalized
+  by sigma460 (ATR proxy) for regime comparability. Tested against net_pnl directly, and
+  residualized against the existing M-strength/consensus/vol tercile bucket structure.
+
+R4B_impulse: >
+  At the entry (crossing) bar: range/ATR (bar_range / sigma460), body/ATR
+  (|close-open| / sigma460), close-location-value (CLV = (close-low)/(high-low), causal, uses
+  only the entry bar's own completed OHLC). Same residualized test as R4A.
+
+falsification_condition: >
+  If neither slope nor impulse shows a stable (multi-year, not sign-flipping), incremental
+  (survives residualization against existing state) relationship to outcome, R4 closes CLOSED --
+  REDUNDANT WITH INCUMBENT STATE, no construction attempted, per directive sec22's own
+  instruction ("If not: CLOSE IT AS REDUNDANT. Do not trade it.").
+
+construction_gate: >
+  A candidate is constructed ONLY IF a genuinely incremental, stable, multi-year relationship
+  is found AND passes the same right-tail-preservation pre-check every other family in this
+  campaign has been held to.
