@@ -1,9 +1,16 @@
 # FINAL OWNER DECISION — 2026-08-09
 
-_Closing report for the FINAL EXECUTION + FINAL OPTIMIZATION DIRECTIVE and its REPO
-CONSOLIDATION ADDENDUM. Answers the owner's standing questions directly; full detail lives in
-`BASELINE_MODELS.md` (the 3 baselines) and the individual `runs/*/REPORT.md` files (every tested
-construction). This document is the entry point, not a duplicate._
+_Closing report for the FINAL EXECUTION + FINAL OPTIMIZATION DIRECTIVE, its REPO CONSOLIDATION
+ADDENDUM, and the same-day FINAL S2 PROMOTION ADJUDICATION + CROSSTRADE/NT8 PARITY DIRECTIVE.
+Answers the owner's standing questions directly; full detail lives in `BASELINE_MODELS.md` (the
+3 baselines) and the individual `runs/*/REPORT.md` files (every tested construction). This
+document is the entry point, not a duplicate._
+
+> **UPDATE 2026-08-09 (same day, after the owner restarted NinjaTrader 8).** Two items below were
+> reopened and closed with real evidence: §2/§3 (S2's own frozen verdict rule required a
+> capital-map + parity R2 that had never actually run — now run, NOT PROMOTED for all 3 products)
+> and §5 (the "23% discrepancy" is RESOLVED as a warmup-state artifact; Product A is now
+> CERTIFIED for the spot-checked window). See each section for detail.
 
 ## 1. What are the 3 final baseline objects, exactly?
 
@@ -21,11 +28,20 @@ Full formulas, frozen parameters, architecture diagrams, and capital maps: `BASE
 ## 2. Did anything get promoted or change this wave?
 
 **No.** 18 constructions were tested across 8 pre-registered research families plus a bounded
-3-candidate Engine-3 slate; **0 were promoted.** S2_SELTIME is the one CANDIDATE that survived
-its own gates, but was explicitly not adopted (red-team-downgraded mechanism claim, dollar
-benefit concentrated in 2/18 quarters, proposed variance mechanism refuted). All 3 baselines are
-byte-identical to their pre-wave state. The finding of this wave is **robustness under
-adversarial search**, not improvement.
+3-candidate Engine-3 slate; **0 were promoted.** S2_SELTIME's own frozen verdict rule required a
+follow-up: a capital-map + parity R2, applied SEPARATELY to Product A / BEST_ONE_NQ / BEST_ONE_MNQ,
+before any promotion decision — that step had never actually run when the campaign first closed
+at "0 promotions" (a process gap, since corrected). It has now run in full, independently
+adversarially verified (3-agent parallel workflow, no bug found): **NOT PROMOTED for all 3
+products** (`runs/S2_SELTIME/R2_PRODUCT_A.md`, `R2_ONE_NQ.md`, `R2_ONE_MNQ.md`). Product A fails
+gate_A (CDaR worsens) and gate_B (3/5 years), narrowly fails gate_C. BEST_ONE_NQ/MNQ pass gate_A
+on pooled Sharpe/CDaR alone but fail gate_B decisively (2/5 years) and gate_C decisively (62-72%
+right-tail retention, traced to a real, legitimately-suppressed +$7,625 winning entry on
+2025-04-09's tariff-crash volatility) — exactly the "pooled Sharpe is larger, but does not survive
+the full battery" case this program's promotion standard exists to catch. **All 3 baselines remain
+byte-identical to their pre-wave state.** The finding of this wave, now confirmed at the actual-
+product level rather than only the isolated diagnostic level, is **robustness under adversarial
+search**, not improvement.
 
 ## 3. What was tested and rejected, in one table?
 
@@ -33,7 +49,7 @@ adversarial search**, not improvement.
 |---|---|
 | S0 time-of-day autopsy | descriptive; found EUROPE_PREUS (02:00-08:00 ET) worst block |
 | S1 (arm_ER, arm_TOD) | both CONFIRMED-NOT-BENEFICIAL |
-| S2 SelTime | CANDIDATE, not adopted (see §2) |
+| S2 SelTime | CANDIDATE at the diagnostic level; R2 promotion adjudication now run and closed: NOT PROMOTED for all 3 products (see §2) |
 | M3 entry/exit-S decoupling | CONFIRMED-NOT-BENEFICIAL |
 | M4 anchor placement | CONFIRMED-NOT-BENEFICIAL |
 | A1/A2 ATR drawdown audit | modest real tail benefit, mechanism test FALSIFIES |
@@ -51,15 +67,30 @@ touched. No live-enablement decision was made or is being requested.
 
 ## 5. Is NT8 parity certified?
 
-**No, for any of the 3 objects — this is the single most important open item.** `runs/
-V1R4_NT8_PARITY/`: full multi-year certification was blocked by a reproducible MCP-tooling
-session-expiry limitation (documented in that run's REPORT.md, confirmed 4x, not a code defect).
-The one sub-window spot-check that DID complete (Product A, Q1 2025) shows a real 23% net
-discrepancy against a Python twin, with a plausible but unconfirmed cause (a CME early-close
-session inside that window plus a formula mismatch between the Python twin used and the current
-`_v3` object). **This needs a follow-up session with stable NT8/MCP tooling before any of the 3
-objects can be called certified.** It does not indicate a newly discovered defect in the shipped
-objects themselves — none was ever certified before this wave either.
+**Product A: YES, for the spot-checked window. BEST_ONE_NQ / BEST_ONE_MNQ: not yet, for either.**
+`runs/V1R4_NT8_PARITY/`: full multi-year certification is still blocked by a reproducible
+CrossTrade↔NinjaTrader long-job session/result-retrieval limitation (jobs beyond ~20-25s of NT8
+compute lose their retrievable handle) — CONFIRMED to persist on the freshly-restarted NT8
+instance, i.e. this is a genuine bridge characteristic for large jobs, not a stale-connection
+artifact that a restart fixes.
+
+The previously-reported 23% Product A discrepancy is **RESOLVED**: it was a warmup-state
+artifact, not an implementation defect. The original test compared an NT8 backtest FRESH-STARTED
+at 2025-01-01 (zero prior tilt-SMA/B-MOM-band history) against a Python twin built from full 2022+
+continuation state — an apples-to-oranges comparison the campaign's own priority-zero forensic
+check was designed to catch. A warmed-up re-test (NT8 running continuously from 2024-04-01, 9
+months of warmup, far exceeding the 50-session/14-day state requirements) converges to **0.71%**
+residual against the Python continuation-state figure, clearing the pre-registered 1% tolerance.
+`PRODUCT_A_CERTIFICATE.md`: **CERTIFIED for the spot-check window.**
+
+BEST_ONE_NQ and BEST_ONE_MNQ improve substantially under the same warmup correction (decision-
+level trade counts now match almost exactly, 106 Python round trips vs 107 NT8 trades) but retain
+a smaller, un-root-caused ~15-19% dollar residual, tentatively classified as a fill-price/order-
+timing effect rather than a decision-logic defect (not yet confirmed to a specific first-
+divergence event). `ONE_NQ_CERTIFICATE.md` / `ONE_MNQ_CERTIFICATE.md`: **NOT CERTIFIED**, with a
+concrete, scoped next diagnostic step documented in each. BEST_ONE_MNQ additionally carries the
+older, still-open 5-named-session fill-sequencing gap from a prior wave (independent finding, not
+re-investigated this wave).
 
 ## 6. What is the capital / margin footprint of each baseline?
 
@@ -106,12 +137,16 @@ copy.
 
 ## 10. What is the single highest-priority next step?
 
-**V1-R4 NT8 parity certification**, specifically: (a) get a stable NT8/MCP bridge (this wave's
-tooling could not sustain jobs longer than ~30-40 seconds), (b) build a proper `_v3`/`_v4`-exact
-Python twin (this wave's spot-check used a known pre-C4-fix formula for Product A), (c) re-run
-the full multi-year comparison for all 3 objects, (d) if it passes, promote the file names to
-`_Final` per `NAMING.md`'s convention; if it doesn't, root-cause and fix before any further
-research work is considered.
+**Full multi-year NT8 parity certification for all 3 objects**, now that Product A's spot-check
+methodology is proven (warmup-corrected, 0.71% residual). Concretely: (a) either obtain a more
+stable CrossTrade bridge for jobs beyond ~20-25s, or execute the chunked/warmup-preserving
+quarter-by-quarter stitching approach this wave's methodology directly supports (each chunk needs
+only ≥50 sessions/14 days of prefix warmup, which is an EXACT, not approximate, sufficiency
+condition — proven this wave); (b) for BEST_ONE_NQ/MNQ specifically, drive the residual ~15-19%
+gap to a confirmed first-divergence event (trade-count agreement is already strong, so this is
+most likely a fill-price/rounding-level investigation, not a decision-logic one); (c) separately,
+revisit the older 5-named-session MNQ fill-sequencing gap; (d) once all 3 clear, promote file
+names to `_Final` per `NAMING.md`'s convention.
 
 ## 11. Is there an open-ended research queue remaining?
 
@@ -122,4 +157,8 @@ exhausted at 15/15 (no slate 6 authorized without a new data source or mechanism
 surfaced one disclosed-but-not-pursued future candidate (duration-conditioned profit give-back)
 that is NOT queued — it would need its own fresh preregistration in a future wave, same as any
 other new idea. **There is no standing autonomous research queue after this document; the next
-action is the parity/tooling item in §10, not new alpha search.**
+action is the parity/tooling item in §10, not new alpha search.** (S2's R2 promotion adjudication,
+run this same day, was closing an ALREADY-AUTHORIZED item from S2's own frozen spec — not new
+alpha discovery, and no window re-optimization occurred: the 02:00-08:00 ET decision cell was
+tested exactly as originally frozen, at each product's own real commitment layer, per
+`runs/S2_SELTIME/r2_spec.yaml`'s explicit no-reoptimization clause.)

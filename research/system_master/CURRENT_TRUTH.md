@@ -1,19 +1,36 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-09, **FINAL OPTIMIZATION DIRECTIVE close-out** (supersedes Wave-19 below
-for anything it touches). 18 constructions tested across 8 named research families (S0 TOD
-autopsy, S1 arm_ER/arm_TOD, S2 SelTime, M3 entry/exit-S, M4 anchor, A1/A2 ATR audit, P4 churn
-selectivity, D-WINNER missed-winner/give-back) plus a bounded 3-candidate Engine-3 slate
-(cross-market axis now 15/15 failed cumulative) and an X1/X2 execution/friction audit.
-**0 promotions.** S2_SELTIME is the sole CANDIDATE to clear its own gates but was explicitly
-NOT adopted (red-team-downgraded mechanism claim; see `runs/S2_SELTIME/REPORT.md`). All 3
-baseline objects (Product A, BEST_ONE_NQ, BEST_ONE_MNQ) are unchanged from pre-wave. NT8 parity
-(V1-R4) attempted and NOT certified -- blocked by an MCP tooling limitation, with one completed
-sub-window spot-check showing a real, unexplained-in-full 23% discrepancy on Product A
-(`runs/V1R4_NT8_PARITY/REPORT.md`). Registry now at seq 481. **Full detail: `BASELINE_MODELS.md`
-(the 3 objects) and `FINAL_OWNER_DECISION_20260809.md` (the closing status report) -- both are
-now the authoritative entry points and supersede this file's own per-topic figures wherever they
-overlap.**
+_Last update: 2026-08-09, **S2 R2 PROMOTION ADJUDICATION + CROSSTRADE PARITY** (supersedes the
+FINAL OPTIMIZATION DIRECTIVE close-out below for anything it touches). The owner restarted
+NinjaTrader 8 and identified a process gap: S2_SELTIME's own frozen verdict rule required a
+capital-map + parity R2 before any promotion decision, and that step had never actually run
+before the campaign closed at "0 promotions". It has now run in full, separately for Product A /
+BEST_ONE_NQ / BEST_ONE_MNQ, independently adversarially verified (3-agent parallel workflow, no
+bug found) -- **NOT PROMOTED for all 3** (`runs/S2_SELTIME/R2_PRODUCT_A.md`, `R2_ONE_NQ.md`,
+`R2_ONE_MNQ.md`): Product A fails gate_A/gate_B and narrowly fails gate_C; BEST_ONE_NQ/MNQ pass
+gate_A alone but fail gate_B/gate_C decisively, traced to a real, mechanistically-understood
+right-tail cost (a legitimately-suppressed +$7,625 winning entry on 2025-04-09's tariff-crash
+volatility). Separately, a priority-zero forensic check RESOLVED the previously-reported 23%
+Product A parity discrepancy as a warmup-state artifact (the original test compared an NT8
+cold-start against a Python continuation-state run) -- a 9-month-warmup re-test converges to
+0.71% residual. **Product A is now CERTIFIED for the spot-checked window**
+(`runs/V1R4_NT8_PARITY/PRODUCT_A_CERTIFICATE.md`); BEST_ONE_NQ/MNQ improved substantially
+(trade counts now match almost exactly) but remain NOT CERTIFIED pending a smaller, un-root-caused
+~15-19% residual (`ONE_NQ_CERTIFICATE.md`, `ONE_MNQ_CERTIFICATE.md`). The CrossTrade long-job
+session/result-retrieval ceiling (~20-25s of NT8 compute) is CONFIRMED to persist on the
+freshly-restarted instance -- a genuine bridge characteristic, not a stale-connection artifact.
+Registry now at seq 483. All 3 baseline objects remain architecturally UNCHANGED.
+
+_FINAL OPTIMIZATION DIRECTIVE close-out header, retained: Last update 2026-08-09. 18
+constructions tested across 8 named research families (S0 TOD autopsy, S1 arm_ER/arm_TOD, S2
+SelTime, M3 entry/exit-S, M4 anchor, A1/A2 ATR audit, P4 churn selectivity, D-WINNER missed-
+winner/give-back) plus a bounded 3-candidate Engine-3 slate (cross-market axis 15/15 failed
+cumulative) and an X1/X2 execution/friction audit. 0 promotions at that point (S2's own R2 not
+yet run -- see the section above, which supersedes this)._
+
+**Full detail: `BASELINE_MODELS.md` (the 3 objects) and `FINAL_OWNER_DECISION_20260809.md` (the
+closing status report) -- both are now the authoritative entry points and supersede this file's
+own per-topic figures wherever they overlap.**
 
 _Wave-19 header, retained: Last update: 2026-08-09, **Wave-19** (MEGA PROMPT V7 + the owner directive of the same day).
 Registry at seq 471. Wave 19 consumed **ZERO** alpha budget - its primary work was the D7
