@@ -80,7 +80,7 @@ extrapolated 2026 FOMC dates.
 shutdown-window NFP dates moves Product A's NFP-session net from +$3,613 to +$1,108 and
 BEST_ONE_NQ's from −$2,078 to −$5,064 — both remain statistically null. Dropping the 3
 extrapolated 2026 FOMC dates moves Product A's FOMC-session net from −$22,792 (35 sessions) to
-−$23,628 (32 sessions) and the placebo p from 0.0070 to 0.0046 — the FOMC finding does **not**
+−$23,628 (32 sessions) and the placebo p from 0.0072 to 0.0028 — the FOMC finding does **not**
 depend on the unverifiable dates.
 
 ### Session mapping
@@ -139,14 +139,21 @@ the confirmed exit defect, so that is the **least** trustworthy of the three sig
 
 ### 2b. Decomposition — the effect is FOMC, and only FOMC
 
-| calendar | Product A net (mean $/sess) | BEST_ONE_NQ | BEST_ONE_MNQ | Product A placebo p |
+| calendar | Product A net (mean $/sess) | BEST_ONE_NQ | BEST_ONE_MNQ | placebo p — A / B-NQ / B-MNQ |
 |---|---|---|---|---|
-| FOMC only (35) | **−$22,792 (−$651)** | −$32,600 (−$931) | −$5,277 (−$151) | 0.0070 |
-| FOMC 2022-25 recall only (32) | **−$23,628 (−$738)** | −$31,703 (−$991) | −$5,182 (−$162) | 0.0046 |
-| NFP only (53) | +$3,613 (+$68) | −$2,078 (−$39) | −$3,789 (−$71) | 0.395 |
-| NFP ex-shutdown (49) | +$1,108 (+$23) | −$5,064 (−$103) | −$3,226 (−$66) | 0.335 |
+| FOMC only (35) | **−$22,792 (−$651)** | −$32,600 (−$931) | −$5,277 (−$151) | 0.0072 / 0.0275 / 0.0057 |
+| FOMC 2022-25 recall only (32) | **−$23,628 (−$738)** | −$31,703 (−$991) | −$5,182 (−$162) | 0.0028 / 0.0224 / 0.0048 |
+| NFP only (53) | +$3,613 (+$68) | −$2,078 (−$39) | −$3,789 (−$71) | 0.393 / 0.276 / 0.046 |
+| NFP ex-shutdown (49) | +$1,108 (+$23) | −$5,064 (−$103) | −$3,226 (−$66) | 0.335 / 0.242 / 0.063 |
 | CPI (53, RULE_APPROX) | −$3,562 (−$67) | −$14,725 (−$278) | −$868 (−$16) | — |
 | PCE (52, RULE_APPROX) | **+$14,620 (+$281)** | **+$49,539 (+$953)** | +$3,971 (+$76) | — |
+
+Placebo p-values are one-sided (P(random equal-sized session set nets this low or lower), 10,000
+draws, RNG re-seeded per call so the value depends only on the series and the event set). They
+are **uncorrected for multiplicity**: 8 calendars × 3 real objects were evaluated, and the three
+objects share one signal so they are ≈ one test, not three. A Bonferroni-style reading of the
+FOMC result across the 8 calendars leaves it around the 0.02–0.06 level, i.e. suggestive, not
+established.
 
 Practically the entire CORE effect is the 35 FOMC sessions. NFP is null. **PCE sessions are
 strongly POSITIVE for every object** — reported here with the same prominence as the negatives.
@@ -164,7 +171,7 @@ session), not as tail risk.
 |---|---|---|---|
 | Product A | −$22,520 | **+$14,993** | +8.46% |
 | BEST_ONE_NQ | −$36,767 | **+$6,708** | +2.21% |
-| BEST_ONE_MNQ | −$8,408 | −$1,595 | −5.52% (placebo p 0.109) |
+| BEST_ONE_MNQ | −$8,408 | −$1,595 | −5.52% (placebo p 0.108) |
 
 The sessions immediately adjacent to CORE event sessions are strongly *positive*, enough to flip
 the sign for two of three objects. Two readings, both true: (a) the effect is confined to the

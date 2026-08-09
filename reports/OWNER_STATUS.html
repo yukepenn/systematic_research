@@ -1,0 +1,332 @@
+<title>Owner status — NQ/MNQ systematic research</title>
+<style>
+  :root{
+    --paper:#F6F7F9; --panel:#FFFFFF; --ink:#151A21; --ink-2:#4A5462; --ink-3:#79838F;
+    --rule:#DDE2E8; --rule-2:#EDF0F3;
+    --accent:#0E6E8C; --accent-soft:#E4F1F6;
+    --pass:#1B6B45; --pass-soft:#E3F1EA;
+    --fail:#A62B21; --fail-soft:#FBE7E5;
+    --open:#8A5A00; --open-soft:#FBF0DC;
+    --hold:#535B67; --hold-soft:#ECEEF1;
+    --mono:ui-monospace,"SF Mono","Cascadia Mono","Segoe UI Mono",Menlo,Consolas,monospace;
+    --sans:"Segoe UI Variable Text","Segoe UI",Inter,-apple-system,BlinkMacSystemFont,Roboto,system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#0F1318; --panel:#161C23; --ink:#E6EAEF; --ink-2:#A6B0BC; --ink-3:#78838F;
+      --rule:#28313B; --rule-2:#1E252D;
+      --accent:#54B6D6; --accent-soft:#132A33;
+      --pass:#5BC08D; --pass-soft:#12261D;
+      --fail:#F0857A; --fail-soft:#2B1614;
+      --open:#DCA94A; --open-soft:#2A2113;
+      --hold:#9AA4B0; --hold-soft:#1D232A;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0F1318; --panel:#161C23; --ink:#E6EAEF; --ink-2:#A6B0BC; --ink-3:#78838F;
+    --rule:#28313B; --rule-2:#1E252D;
+    --accent:#54B6D6; --accent-soft:#132A33;
+    --pass:#5BC08D; --pass-soft:#12261D;
+    --fail:#F0857A; --fail-soft:#2B1614;
+    --open:#DCA94A; --open-soft:#2A2113;
+    --hold:#9AA4B0; --hold-soft:#1D232A;
+  }
+  :root[data-theme="light"]{
+    --paper:#F6F7F9; --panel:#FFFFFF; --ink:#151A21; --ink-2:#4A5462; --ink-3:#79838F;
+    --rule:#DDE2E8; --rule-2:#EDF0F3;
+    --accent:#0E6E8C; --accent-soft:#E4F1F6;
+    --pass:#1B6B45; --pass-soft:#E3F1EA;
+    --fail:#A62B21; --fail-soft:#FBE7E5;
+    --open:#8A5A00; --open-soft:#FBF0DC;
+    --hold:#535B67; --hold-soft:#ECEEF1;
+  }
+
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+       font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px;margin:0 auto;padding:44px 22px 96px;
+        display:flex;flex-direction:column;gap:38px;}
+  h1,h2,h3{text-wrap:balance;margin:0;}
+  a{color:var(--accent);}
+
+  /* masthead */
+  .mast{border-bottom:2px solid var(--ink);padding-bottom:16px;
+        display:flex;flex-direction:column;gap:10px;}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;
+           text-transform:uppercase;color:var(--ink-3);
+           display:flex;flex-wrap:wrap;gap:8px 18px;}
+  h1{font-size:clamp(25px,4.2vw,36px);font-weight:650;letter-spacing:-.018em;line-height:1.15;}
+  .standfirst{color:var(--ink-2);font-size:16.5px;max-width:70ch;}
+
+  /* the deadline strip — the subject of this whole wave */
+  .strip{background:var(--panel);border:1px solid var(--rule);border-radius:3px;
+         padding:16px 18px;display:flex;flex-wrap:wrap;gap:6px 26px;align-items:baseline;}
+  .strip b{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.02em;}
+  .strip span{font-size:14px;color:var(--ink-2);}
+
+  section{display:flex;flex-direction:column;gap:14px;}
+  h2{font-size:12px;font-family:var(--mono);letter-spacing:.15em;text-transform:uppercase;
+     color:var(--ink-3);padding-bottom:7px;border-bottom:1px solid var(--rule);}
+  p{margin:0;max-width:78ch;}
+  .lede{font-size:17px;}
+
+  /* product cards */
+  .cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));}
+  .card{background:var(--panel);border:1px solid var(--rule);border-radius:3px;
+        padding:16px 17px 15px;display:flex;flex-direction:column;gap:11px;}
+  .card.pass{border-top:3px solid var(--pass);}
+  .card.fail{border-top:3px solid var(--fail);}
+  .card h3{font-size:14.5px;font-weight:640;letter-spacing:-.005em;}
+  .card .cls{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);word-break:break-all;}
+  .figs{display:flex;flex-direction:column;gap:5px;}
+  .fig{display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+       border-bottom:1px dotted var(--rule);padding-bottom:4px;}
+  .fig:last-child{border-bottom:none;}
+  .fig .k{font-size:13px;color:var(--ink-2);}
+  .fig .v{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums;font-weight:600;}
+  .pill{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;
+        font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+        padding:3px 9px;border-radius:2px;font-weight:650;}
+  .p-pass{background:var(--pass-soft);color:var(--pass);}
+  .p-fail{background:var(--fail-soft);color:var(--fail);}
+  .p-open{background:var(--open-soft);color:var(--open);}
+  .p-hold{background:var(--hold-soft);color:var(--hold);}
+  .p-acc{background:var(--accent-soft);color:var(--accent);}
+
+  /* tables */
+  .scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;background:var(--panel);}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;}
+  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--rule-2);vertical-align:top;}
+  thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+           color:var(--ink-3);border-bottom:1px solid var(--rule);white-space:nowrap;font-weight:600;}
+  tbody tr:last-child td{border-bottom:none;}
+  td.n{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  td.c{font-family:var(--mono);font-size:12px;white-space:nowrap;}
+  .neg{color:var(--fail);}
+  .pos{color:var(--pass);}
+
+  /* callouts */
+  .note{background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--accent);
+        border-radius:3px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;}
+  .note.warn{border-left-color:var(--open);}
+  .note.bad{border-left-color:var(--fail);}
+  .note h3{font-size:14.5px;font-weight:640;}
+  .note p{font-size:14.5px;color:var(--ink-2);}
+  ul{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:7px;
+     font-size:14.5px;color:var(--ink-2);max-width:78ch;}
+  li strong{color:var(--ink);font-weight:620;}
+  code{font-family:var(--mono);font-size:.88em;background:var(--rule-2);
+       padding:1px 5px;border-radius:2px;}
+  footer{border-top:1px solid var(--rule);padding-top:16px;color:var(--ink-3);font-size:13px;
+         display:flex;flex-direction:column;gap:7px;}
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="eyebrow"><span>Owner status</span><span>Wave 17 · MEGA PROMPT V6</span><span>2026-08-09</span><span>registry seq 453</span></div>
+    <h1>Both one-contract products are margin-compliant for the first time. The flagship is not.</h1>
+    <p class="standfirst">Wave 17 was verification and repair, not search. It added <strong>zero</strong> new alpha
+    hypotheses, so nothing about the edge's statistical standing changed. What changed is that two deliverables
+    that were quietly violating your broker's intraday-margin deadline no longer do — and one that still does
+    has been measured.</p>
+  </header>
+
+  <div class="strip">
+    <b>16:45 ET</b><span>intraday margin ends — 15 min before the 17:00 close</span>
+    <b>16:39</b><span>internal flatten decision, fills 16:42</span>
+    <b>18:00 ET</b><span>intraday margin resumes at the product open</span>
+  </div>
+
+  <section>
+    <h2>The bottom line — current best, with real numbers</h2>
+    <div class="cards">
+
+      <div class="card pass">
+        <h3>Product B · BEST_ONE_NQ</h3>
+        <div class="cls">SolarWaveOneContractNQ_v4</div>
+        <span class="pill p-pass">C4 compliant · 0 breaches</span>
+        <div class="figs">
+          <div class="fig"><span class="k">Net, dev 2022-01→2026-05</span><span class="v">$303,239.64</span></div>
+          <div class="fig"><span class="k">Round turns</span><span class="v">1,976</span></div>
+          <div class="fig"><span class="k">Daily Sharpe <em>(pre-fix basis)</em></span><span class="v">1.117</span></div>
+          <div class="fig"><span class="k">Commission share of gross</span><span class="v">0.028</span></div>
+          <div class="fig"><span class="k">Margin breaches, before → after</span><span class="v">16 → 0</span></div>
+          <div class="fig"><span class="k">Cost of compliance</span><span class="v neg">−$209.36</span></div>
+        </div>
+      </div>
+
+      <div class="card pass">
+        <h3>Product B · BEST_ONE_MNQ</h3>
+        <div class="cls">SolarWaveOneContractMNQ_v4</div>
+        <span class="pill p-pass">C4 compliant · 0 breaches</span>
+        <div class="figs">
+          <div class="fig"><span class="k">Net, dev 2022-01→2026-05</span><span class="v">$28,705.20</span></div>
+          <div class="fig"><span class="k">Round turns</span><span class="v">1,976</span></div>
+          <div class="fig"><span class="k">Daily Sharpe <em>(pre-fix basis)</em></span><span class="v">0.921</span></div>
+          <div class="fig"><span class="k">Commission share of gross</span><span class="v">0.066</span></div>
+          <div class="fig"><span class="k">Margin breaches, before → after</span><span class="v">1,077 → 0</span></div>
+          <div class="fig"><span class="k">vs canonical Python reference</span><span class="v pos">+0.09%</span></div>
+        </div>
+      </div>
+
+      <div class="card fail">
+        <h3>Product A · combined NQ system</h3>
+        <div class="cls">SolarWaveSMMaster_v2 · DAYONLY_DUAL6040</div>
+        <span class="pill p-fail">39 margin breaches · fix not yet propagated</span>
+        <div class="figs">
+          <div class="fig"><span class="k">Net, dev</span><span class="v">$177,315</span></div>
+          <div class="fig"><span class="k">Daily Sharpe</span><span class="v">1.172</span></div>
+          <div class="fig"><span class="k">Max drawdown (EOD)</span><span class="v">−$18,894</span></div>
+          <div class="fig"><span class="k">Commission share of gross</span><span class="v">0.119</span></div>
+          <div class="fig"><span class="k">Normal-session flatten</span><span class="v pos">clean, 962/962</span></div>
+          <div class="fig"><span class="k">Breaches: early closes + 1 gap</span><span class="v neg">38 + 1</span></div>
+        </div>
+      </div>
+
+    </div>
+    <p style="font-size:14px;color:var(--ink-3);">Neither <code>_v4</code> object is parity-certified yet, so both keep the
+    <code>_v4</code> suffix rather than <code>_Final</code>. They must not be treated as certified deliverables until
+    V1-R4 re-parity passes. Nothing here has been traded, deployed, or connected to an account, and all three objects
+    still fail closed in realtime.</p>
+  </section>
+
+  <section>
+    <h2>What changed this wave</h2>
+
+    <div class="note bad">
+      <h3>BEST_ONE_MNQ never submitted a single voluntary exit order — in 4.4 years</h3>
+      <p>A pre-registered, falsifiable prediction was tested against the execution ledger rather than the trade list:
+      if the suspected cause were real, essentially every MNQ exit would have to be either a managed auto-reversal or an
+      engine backstop. Measured: <strong>100.0%</strong> — 30.9% reversals, 67.6% at the 17:00 session close, 1.4% at
+      holiday early closes. Zero voluntary exits, against an NQ control of 95.6%. Two-thirds of its positions rode
+      through the whole 16:45–17:00 margin window. The cause is the cross-series order arrangement your repo already
+      documented as defective in <code>KNOWN_ERRORS #7</code>; the rebuild adopts the parity-proven arrangement instead.</p>
+    </div>
+
+    <div class="note warn">
+      <h3>Holiday early closes were never modelled — and this hit all three objects, including the "clean" ones</h3>
+      <p>43 early-close sessions sit inside the dev window (~10/yr: 31 at 13:00 ET, 9 at 13:15, 2 Good Fridays at 09:15,
+      and 2025-01-09's Day of Mourning at 09:30). The flatten was hardcoded to the normal clock, so on those days it
+      never fired and only the 30-second engine backstop closed the position — about 14.5 minutes <em>inside</em> the
+      margin window. The schedule is now session-relative, which on a normal close evaluates to exactly the old 16:30
+      and 16:39, leaving all 1,095 normal sessions unchanged by construction.</p>
+    </div>
+
+    <div class="note">
+      <h3>Two premises in your directive turned out to be wrong, and one of the errors was mine</h3>
+      <p><strong>V1h.</strong> The 16 NQ trades exiting "after 16:45" are not overnight positions. Every one is entered
+      between 18:06 and 20:24 ET and closed the same evening, inside the window where intraday margin has already
+      resumed. Under a correct exposure test BEST_ONE_NQ had <strong>0</strong> normal-session breaches, not 16. The
+      Wave-16 test that produced that claim — "exit time-of-day &gt; 16:45" — was simply wrong, and it was mine.
+      Worth keeping separately: all 16 are losses totalling about −$33.5k, which is a diagnostic lead, not a margin issue.</p>
+      <p><strong>V3.</strong> Wave 16's conclusion that the vendor DLL is gone from the public remote was overstated. A
+      local <code>git rev-list</code> cannot test what GitHub still serves by direct SHA. Downgraded to
+      "not reachable via normal traversal; remote retention unverified" — see the blocked list.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Wave ledger — every item, with its verdict</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Item</th><th>Question</th><th>Verdict</th><th class="n">Seq</th></tr></thead>
+        <tbody>
+          <tr><td class="c">V1-R1</td><td>Does the flagship share the MNQ flatten defect?</td>
+              <td><span class="pill p-pass">No</span> 962 positions at 16:39 → 962 fills at 16:42; zero holding at 16:45</td><td class="n">449</td></tr>
+          <tr><td class="c">V1-R2</td><td>What actually breaks BEST_ONE_MNQ?</td>
+              <td><span class="pill p-acc">Established</span> the KNOWN_ERRORS #7 arrangement; the finer mechanism is <em>not</em> discriminable from the artifacts and the claim is narrowed accordingly</td><td class="n">450</td></tr>
+          <tr><td class="c">V1h</td><td>Are the 16 late NQ exits overnight positions?</td>
+              <td><span class="pill p-fail">Premise false</span> all are same-evening trades inside the post-18:00 window</td><td class="n">451</td></tr>
+          <tr><td class="c">V1e</td><td>How are holiday early closes handled?</td>
+              <td><span class="pill p-open">Real breach</span> 43 sessions; A 39, NQ 16, MNQ 1,077 breaches</td><td class="n">451</td></tr>
+          <tr><td class="c">V1-R3</td><td>Rebuild under a compliance-only criterion</td>
+              <td><span class="pill p-fail">v2 failed</span> NQ 0 breaches, MNQ 1 (2023-04-05 data gap). Bar was exactly 0, so recorded as fail</td><td class="n">452</td></tr>
+          <tr><td class="c">W17B</td><td>Execution-series flatten watchdog</td>
+              <td><span class="pill p-pass">Both pass</span> 0 breaches; NQ bit-identical, MNQ differs in 1 fill of 3,952</td><td class="n">453</td></tr>
+          <tr><td class="c">V1d</td><td>Is a <code>no_new_entry_after</code> parameter needed?</td>
+              <td><span class="pill p-pass">Not a problem</span> removing the 16:30 block entirely adds 3 entries across 1,139 sessions</td><td class="n">—</td></tr>
+          <tr><td class="c">V1f</td><td>Does 4× event-day margin bind achievable leverage?</td>
+              <td><span class="pill p-hold">No — clearly</span> drawdown-based sizing needs 20–90× more capital than even 4× margin; margin binds on 0 of 60 rows. B6 stays optional, <em>not</em> promoted</td><td class="n">—</td></tr>
+          <tr><td class="c">V4 / V4a</td><td>Friction share of the 3-minute incumbent</td>
+              <td><span class="pill p-acc">Measured</span> commission/gross: A 0.119, NQ 0.028, MNQ 0.066; breakeven commission multiples 8.4× / 36.2× / 15.2×</td><td class="n">—</td></tr>
+          <tr><td class="c">O1 / O1a</td><td>Replace the deadlocked Sharpe∧CDaR∧top-10 triple</td>
+              <td><span class="pill p-acc">Built</span> expected log growth at pre-registered leverage minus a bootstrap ruin penalty, on the intraday path; legacy triple demoted to diagnostics</td><td class="n">—</td></tr>
+          <tr><td class="c">V3-R5</td><td>Repo exposure</td>
+              <td><span class="pill p-open">Corrected</span> remote retention unverified; repo is <strong>public</strong></td><td class="n">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>The disclosure you should look at hardest</h2>
+    <div class="note warn">
+      <h3>The partial 2026 year is flat-to-negative for both one-contract objects</h3>
+      <p>Reported because it is unflattering, not because it changes a decision. Recency tiers in this program are
+      <strong>disclosure only and never selection</strong> — no object, parameter, or ranking is or may be chosen on them.</p>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Slice</th><th class="n">Sessions</th><th class="n">BEST_ONE_NQ net</th><th class="n">Sharpe</th><th class="n">BEST_ONE_MNQ net</th><th class="n">Sharpe</th></tr></thead>
+        <tbody>
+          <tr><td>Full dev 2022-01→2026-05</td><td class="n">1,139</td><td class="n">$303,449</td><td class="n">1.117</td><td class="n">$28,901</td><td class="n">0.921</td></tr>
+          <tr><td>2022</td><td class="n">258</td><td class="n">$115,029</td><td class="n">1.871</td><td class="n">$9,878</td><td class="n">1.424</td></tr>
+          <tr><td>2023</td><td class="n">258</td><td class="n">$26,731</td><td class="n">0.720</td><td class="n">$6,347</td><td class="n">1.447</td></tr>
+          <tr><td>2024</td><td class="n">259</td><td class="n">$72,277</td><td class="n">1.396</td><td class="n">$2,550</td><td class="n">0.411</td></tr>
+          <tr><td>2025</td><td class="n">258</td><td class="n">$89,460</td><td class="n">1.137</td><td class="n">$13,544</td><td class="n">1.487</td></tr>
+          <tr><td><strong>2026 (partial)</strong></td><td class="n">106</td><td class="n neg">−$47</td><td class="n neg">−0.001</td><td class="n neg">−$3,418</td><td class="n neg">−0.909</td></tr>
+          <tr><td>Trailing 2y <em>(disclosure)</em></td><td class="n">517</td><td class="n">$130,170</td><td class="n">0.881</td><td class="n">$10,992</td><td class="n">0.640</td></tr>
+          <tr><td>Trailing 1y <em>(disclosure)</em></td><td class="n">259</td><td class="n">$54,220</td><td class="n">0.780</td><td class="n">$4,526</td><td class="n">0.581</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:14px;color:var(--ink-3);">Figures are on the pre-fix objects, which is the basis the full metric
+    battery was built on; the compliance rebuild moves NQ's full-dev net by −$209.36. In the 2026 partial slice
+    BEST_ONE_NQ's breakeven commission multiple falls to <strong>0.94×</strong> — i.e. at the coded rate that slice is
+    already fractionally under water.</p>
+  </section>
+
+  <section>
+    <h2>Open, and blocked on you</h2>
+    <ul>
+      <li><strong>Open — V1-R4 re-parity.</strong> Both <code>_v4</code> objects need a full Strategy Analyzer parity
+      run before they may be renamed <code>_Final</code> or presented as certified. The old NQ PASS was certified on the
+      old configuration and does not carry over.</li>
+      <li><strong>Open — propagate the fix to Product A.</strong> <code>SolarWaveSMMaster_v2</code> and
+      <code>SolarWaveSMOneLot_v1</code> still carry the early-close defect (39 breaches). Required by the propagation rule.</li>
+      <li><strong>Open — V1g, V5, O2, and all of W1–W4.</strong> Intraday-path capital map; the MNQ bar-by-bar fill audit
+      (deliberately deferred, because the fix changed the trade set it would have run on); retro-scoring under the new
+      objective; then the diagnostics and mechanism programme.</li>
+      <li><strong>Blocked — repository visibility and vendor-blob remote retention.</strong> The repo is currently
+      <strong>public</strong> (0 forks, 0 stars) and contains a licensed vendor's reverse-engineered indicator math.
+      Erasing an unreachable blob from GitHub needs a support-requested garbage collection. Reported only; no
+      irreversible action taken. <code>OWNER_QUEUE.md</code> §OQ-1.</li>
+      <li><strong>Blocked — exact Lifetime all-in NQ/MNQ commission.</strong> The coded $4.36 / $1.30 round turn is
+      verified as what the backtests actually charge, but not as what you actually pay; the live filtered table would not
+      render. A sensitivity band is used instead of a guess. <code>OWNER_QUEUE.md</code> §OQ-2.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Deflation-adjusted view, and what is honestly claimed</h2>
+    <p class="lede">Wave 17 consumed <strong>zero</strong> alpha budget — compliance, diagnostics, execution and
+    verification work is uncapped and adds no hypotheses — so the multiple-testing position is
+    <strong>unchanged</strong>: deflated Sharpe 0.45–0.55 against a 0.90 bar, and a Harvey–Liu-adjusted Sharpe of
+    <strong>0.000</strong> on the incumbent's key comparison.</p>
+    <p>There is no clean historical out-of-sample window left — everything through 2026-07-31 was examined during
+    discovery — no forward data is being waited on, and out-of-regime data is restricted to mechanism direction only.
+    <strong>Nothing in this program establishes that future profitability is achievable.</strong> The honest claim is
+    narrower: this process raises the probability of future success relative to a naively optimised system. The
+    distribution remains extremely right-skewed — the top 1% of trades account for 160% of net profit, and removing
+    the ten best days takes net from $198k to $72k.</p>
+  </section>
+
+  <footer>
+    <div>Evidence: <code>runs/W17_C4_COMPLIANCE/</code> · <code>runs/W17B_C4_WATCHDOG/</code> ·
+    <code>research/system_master/CURRENT_TRUTH.md</code> · <code>OWNER_QUEUE.md</code> ·
+    <code>research/registry/tested_configs.csv</code> seq 449–453.</div>
+    <div>Every figure traces to a committed artifact. Research and backtesting only — no order was placed, modified or
+    cancelled; no account was touched; the vendor assembly was not modified.</div>
+  </footer>
+
+</div>
