@@ -1,11 +1,120 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-09, **Wave-18** (MEGA PROMPT V7). Registry at seq 462.
+_Last update: 2026-08-09, **Wave-19** (MEGA PROMPT V7 + the owner directive of the same day).
+Registry at seq 471. Wave 19 consumed **ZERO** alpha budget - its primary work was the D7
+diagnostic, which sec15 leaves uncapped - so both hypotheses remain available and the
+multiple-testing position is unchanged from Wave 18. Read the Wave-19 section first; it
+supersedes several Wave-18 statements below._
+
+_Wave-18 header, retained: Last update 2026-08-09, **Wave-18** (MEGA PROMPT V7). Registry at seq 462.
 Wave 18 consumed **both** permitted alpha hypotheses (§15 cap = 2): M1 and M5. Both closed
 negative. Ten consecutive alpha hypotheses have now closed without a promotion — the §15
 shift signal is **live** and is addressed in the Wave-18 section below. The deflation-adjusted
 view of the incumbent is **unchanged** (standing: DSR 0.45–0.55 against a 0.90 bar;
 Harvey–Liu-adjusted Sharpe of the incumbent's key comparison = 0.000)._
+
+## Wave-19 verdict (MEGA PROMPT V7 + owner directive of 2026-08-09, seq 468-471)
+
+**Owner directive R2 reprioritised the wave: the 106-session concentration is the headline, not
+a footnote, and the primary work is a DIAGNOSTIC (uncapped, alpha budget 0), not a mechanism
+test.** That was the right call and it produced the most consequential finding of the last three
+waves. **Zero alpha budget consumed. Both hypotheses remain available.**
+
+**1. D7 — the corrected top line, AFTER a red team that came back at the edge of REFUTED.**
+The market variables do not merely fail to explain the concentration; **they point the wrong
+way.** Regressing the Solar leg's daily net on the seven-variable market panel, fitted 2022-2025:
+
+| | $/session |
+|---|---:|
+| in-sample mean actual (2022-2025) | +110.68 |
+| 2026 stub **predicted** from market variables | **+172.14** |
+| 2026 stub **actual** | **−72.05** |
+
+The stub should have been a mildly *better*-than-average period. It was the worst on record. It
+is also **not a multivariate outlier** (Mahalanobis D² 11.29, **93.7th** percentile against a 95th
+bar) and **not novel** (nearest analog **2025-04-25 .. 2025-09-19**, 88.6th percentile, robust at
+every window length 40-180 and under four distributional summaries). **Every regime-story reading
+of the concentration is now excluded, not merely unsupported.**
+
+**2. THE finding that changes how both Wave-18 failures must be read: the INCUMBENT is degraded
+in the stub too.** Solar leg Sharpe **−0.387**, BEST_ONE_NQ **+0.073**, ES −1.046, YM −1.020.
+In-stub challenger comparisons are therefore **low-power against a degraded reference**, not
+evidence of challenger fragility. Corroborating: M1 was **helping** between the market break and
+the stub (**+$8,073**), and YM — whose negative sign decided M5's 2-of-3 count — is **+$20,066**
+in that same interval. M5's sign count was never a stable property.
+This section is unaffected by the red team: `daily_from_fills` reconciles **exactly** to both
+committed NT8 nets ($175,798.80 and $303,239.64), with flat-at-close and the roll rule verified.
+
+**3. D1 — member collapse REJECTED.** Participation ratio 2026 = **3.52** of 13 against
+3.37/3.61/3.93/3.78 for 2022-2025; survives bootstrap bands and equal-sample-size comparison; the
+metric calibrates correctly (1.00 collapsed, 13.00 diverse). Mean |target| in 2026 is the
+**highest** of any year, so exposure does not shrink either. **Correction from the red team:** the
+report's supporting sentence used the *conditional* all-agree statistic (which conditions on an
+event holding on 2.7% of bars); on the unconditional definition 2026 is **second highest, +23%
+over 2025** — the direction the collapse hypothesis predicts. The rejection stands on the
+participation ratio alone.
+
+**4. The clamp figure is now pinned down, and the standing number was the wrong one.** Three
+definitions were in circulation differing ~3×. The directives' figure (9.8/0.2/3.9/18.3/**39.2**%)
+is the **widest member's** uncapped-30×σ460 rate — reproduced to two decimals, and unique among
+28 candidate definitions tested. The ensemble-level rate is **12.94%**, and "any member pinned" is
+**50.6%**. Quoting the widest member's rate as "the clamp binding rate" overstates the
+ensemble effect roughly threefold. **Standing caution.**
+
+**5. TWO HEADLINES WITHDRAWN, and one was true by construction.** (a) `EDGE = 0.10` in the frozen
+changepoint spec placed the **entire 2026 stub outside the candidate set** — the stub starts at
+index 1033, the last admissible index is 1024 — so "no changepoint in 2026" could not have come
+out any other way. The conclusion survives (argmax unchanged at 2% and 5% edges) but *evaluated
+at* the 2026 boundary three tests would detect, and "the argmax is elsewhere" is not "nothing
+happened here". (b) "A monotone trend, not a break" is contradicted by BIC, which prefers **STEP**
+for v6 by **73.8** and v6b by **29.3** — and the report's own yearly table shows both variables
+*rising* into 2023, so "monotonically" was false on the face of the table it printed.
+**(c) A real index bug:** PC1 and v2 were fitted on 1,120 rows and mapped back through the
+1,139-row panel, so the estimated boundary is **2024-08-05, not 2024-07-09** (v2: 2025-01-24, not
+2024-12-27). **And the boundary is weakly identified** — leave-one-variable-out moves it **545
+days** against a 49-day CI. The successor spec must split on calendar years plus the 2026-01-02
+convention and treat 2024-08-05 as a candidate, never as authoritative.
+
+**6. Product A's stub resilience is NOT diversification, and that claim is withdrawn.** Decomposed
+from the committed per-bar ledger: the Solar leg *inside* Product A is **+$6,079 / Sharpe +0.456**
+in the stub (positive — not the same object as the plain E10 control), B-MOM adds **+$8,886**, and
+of the ~$9k gap versus the plain control **+$7,243 is the short-halving overlay** — a fitted
+in-sample constant — against **+$1,721** from the tilt. Two mechanisms of comparable size, one of
+them not diversification. What survives is the narrower claim that B-MOM contributes positively
+where Solar does not.
+
+**7. R3 — the O1 aggregation choice was reviewed BLIND, and the reviewer AGREED.** It was given
+the six conventions and the mathematics only: not told which was chosen, not told which raises a
+score, not told a score existed, and forbidden to read any repo file. It independently chose the
+**equal-weight mixture applied to both terms** — the repair's own choice — via decomposition
+invariance and the observation that under min/max rules Monte-Carlo error becomes candidate-
+dependent *bias*, so the rule's severity would be set by the number of bootstrap paths run.
+**But it stated unprompted that the mathematics is only partly decisive**: the admissible set is
+{mixture, Γ-minimax} and the choice rests on a classification that is not a theorem. **R3's
+fallback therefore binds as policy: every score reports BOTH conventions, and any object whose
+verdict flips is INCONCLUSIVE.** Product A's daily objective is **+0.124** under one and
+**−0.126** under the other — **it flips, so it is INCONCLUSIVE and may not be quoted as a single
+number.** O2 is unblocked on the aggregation question subject to that, and to four underspecified
+items the reviewer raised (chiefly: is the fixed fraction optimised per candidate, which would
+inject a selection bias no aggregation rule touches).
+
+**8. R4 — the seal claim is now proven rather than asserted.** `src/analytics/seal_audit.py` is a
+standing per-wave check: manifest in, max timestamp per artifact out, classified DEV / CONSUMED /
+BREACH. **Wave 18: 21 artifacts, 0 locked-forward breaches, CLEAN. W19D7: 8 artifacts, CLEAN.**
+It also sharpened the claim — two artifacts carry contents to 2026-07-31 and were *loaded then
+sliced* to dev before any computation, which is permitted and was previously unstated.
+
+**9. R1 carried forward as a standing statement:** this program has **no clean historical
+out-of-sample data anywhere, for any sleeve** — not the Solar baseline, and since 2026-08-08 not
+B-MOM or B1 either. The only virgin data is ≥2026-08-01 and it accrues one quarter per quarter.
+
+**Wave-20 lead, and it is the only quasi-OOS check constructible for this question:** do M1 and
+M5 also break in the named **2025-04-25 .. 2025-09-19** analog? Proposed, not run, not scored.
+
+**Still open:** V1-R4 re-parity for all three objects; `SolarWaveSMOneLot_v1` propagation; V1g;
+V5; the successor selectivity spec; O2 under the two binding conditions above.
+
+---
 
 ## Wave-18 verdict (MEGA PROMPT V7, seq 459-462; runs/W18R1_M1_VOLSEASON + runs/W18R2_M5_XINST)
 
