@@ -1,0 +1,50 @@
+run_id: X1X2_EXECUTION_FRICTION_AUDIT
+family: "X1/X2 -- execution clock and friction audit (FINAL OPTIMIZATION DIRECTIVE, last of the
+  8 named research families; also serves Track E's standing friction-audit requirement)"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: "2026-08-09"
+nature: "Robustness/disclosure AUDIT, same status as S0/A1/D_WINNER -- no gates, no promotion,
+  no new construction proposed. Answers: how much of the measured edge depends on (X1) trading
+  promptly on the decided target, and (X2) the specific 1-tick-slip/$0.65-side friction
+  assumption -- inputs the final BASELINE_MODELS.md 'what would invalidate this baseline'
+  section needs directly."
+reference_system: "SOLAR_E10 control (unmodified incumbent), same object used as control
+  throughout every family this wave, for direct comparability."
+confirmed_baseline_mechanics: >
+  sm01_solarsim.e10_sim / W18R1 common.e10_exec both already implement a 1-BAR decision-to-fill
+  lag as the frozen baseline (target decided at bar t's close, traded at bar t+1's open, 1-tick
+  adverse slip capped by the fill bar's range) -- NOT a zero-lag fill. X1 tests ADDITIONAL lag
+  beyond this already-realistic baseline, not a same-bar/zero-lag comparison.
+
+# ---------------------------------------------------------------- X1: execution clock (decision lag)
+X1_decision_lag:
+  construction: "T_lag_k = T shifted forward by k EXTRA bars (T_lag_k[t] = T[t-k], T_lag_k[t]=0
+    for t<k) before being handed to e10_exec -- i.e. the system trades as if it recognized and
+    acted on the same signal k bars (k*3 minutes) later than the frozen baseline."
+  grid: "k in {0 (baseline, no extra lag), 1, 2, 4, 8} bars (0, 3, 6, 12, 24 minutes of EXTRA
+    lag on top of the already-realistic 1-bar decide-then-fill baseline)."
+  output: "net/Sharpe/CDaR at each k, expressed as a degradation curve -- the question is HOW
+    FAST the edge decays with added latency, not a pass/fail gate."
+
+# ---------------------------------------------------------------- X2: friction stress
+X2_friction_stress:
+  construction: "Independently stress each friction input against the frozen MNQ executable
+    baseline ($0.65/side commission, 1-tick=$0.50 adverse slip via sm.TICK doubling under a
+    try/finally monkey-patch, same pattern as W19R1's XINST convention):
+      (a) slip_ticks in {1 (baseline), 2, 3, 4} at baseline commission
+      (b) comm_side_mult in {1x=$0.65 (baseline), 1.5x=$0.975, 2x=$1.30, 3x=$1.95} at baseline slip
+      (c) ONE joint stress scenario: slip_ticks=2 AND comm_side_mult=1.5x together (a plausible
+          'thin liquidity / wider spread' combined scenario, not a further grid)."
+  breakeven_metric: "For each axis (a)/(b), linearly interpolate between grid points to estimate
+    the friction MULTIPLE at which net Sharpe crosses zero (the 'breakeven friction multiple') --
+    a single disclosure number for the final baseline documentation's invalidation criteria."
+  output: "net/Sharpe/CDaR at each grid point + the two breakeven-multiple estimates + the joint
+    stress scenario's numbers."
+
+constraints:
+  no_promotion_this_wave: "Descriptive only. Findings feed the final owner report and
+    BASELINE_MODELS.md disclosure sections, not a new gated construction."
+  cost_and_window: "MNQ E10 executable economics baseline ($0.65/side, $2.00 point value,
+    sm.TICK=0.25), full ETH session, dev window 2022-01-01 to 2026-05-31 (matching every other
+    family this wave)."
