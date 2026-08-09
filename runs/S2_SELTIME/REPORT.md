@@ -182,3 +182,42 @@ market-structure-specific mechanism distinct from a generic whipsaw-reduction ef
 3. Drop the variance-mechanism hypothesis; the mean-shift concentration in 2024-Q3/2026-Q2 is the
    honest description of where the benefit comes from, and its overlap with D7's own boundary and
    the flagged-unusual stub is itself worth investigating before relying on the pooled number.
+
+---
+
+# WINDOW-SPECIFICITY SWEEP — run same day, directly per the red team's explicit recommendation
+(`src/window_sweep.py`, `out/window_sweep_full_battery.csv`, `out/window_sweep_summary.json`)
+
+Same 24-window, hourly-step, 6-hour-width sweep the red team used for gate A, extended here to
+run the **full preregistered battery (A+B+C)** on every window — the test the red team named as
+"the single most useful thing a follow-up could add." Not a new hypothesis or re-optimization: no
+threshold or construction changed, only the window swept, on the already-frozen
+`apply_entry_eligibility` rule.
+
+**Gate A alone is not selective — 13 of 24 windows (54%) pass it**, matching the red team's finding
+almost exactly (decision cell ranks 11th of 24 by ΔSharpe, ΔSharpe +0.0471, reproducing the red
+team's own number to 4 decimals). **But the full A+B+C battery is highly selective: only 2 of 24
+windows (8.3%) survive it — `19:00–01:00` (ΔSharpe +0.033) and the decision cell itself,
+`02:00–08:00` (ΔSharpe +0.047).** Every RTH and afternoon window fails at least one of gate B
+(chronology) or gate C (tail preservation); the strongest gate-A performers by raw magnitude
+(`14:00–20:00` +0.130, `09:00–15:00` −0.257) both fail decisively once the full battery is applied.
+
+**This partially rehabilitates, and partially still limits, the mechanism claim.** Both surviving
+windows fall inside the broad overnight/pre-US low-liquidity super-session (18:00–08:00 ET) and
+zero RTH-adjacent windows survive at all — this is corroborating, not refuting, evidence for a
+session-structure story at the coarse (low-liquidity-hours) level, and answers the red team's D1
+concern that the full battery might be indiscriminate: it isn't. **But the two survivors are not
+contiguous** (`19:00–01:00` and `02:00–08:00` leave a 01:00–02:00 gap uncovered), so the specific
+02:00–08:00 boundary is not uniquely privileged within the low-liquidity zone — a plausible reading
+is that the mechanism operates somewhere in the broad overnight/pre-US window, and S0's specific
+02:00–08:00 boundary (drawn from the coarser 7-block partition, not fit to this sweep) captures
+part of it well but should not be treated as the precise, only correct boundary.
+
+**Revised final characterization**: S2 Arm A is a **CANDIDATE, corroborated at the coarse
+session-structure level (low-liquidity overnight/pre-US hours, not RTH) by an 8.3%-selective full
+battery**, but the exact 02:00–08:00 boundary itself is not shown to be uniquely optimal within
+that zone, and the dollar-benefit concentration (2 of 18 quarters) and refuted variance hypothesis
+from the red-team ingestion above still apply. This is a meaningfully stronger position than the
+red team's ingestion alone left it in, and a meaningfully weaker one than the original REPORT.md's
+unqualified "market-structure-justified... genuinely different mechanism" framing claimed. Both
+corrections stand together as this run's final state.
