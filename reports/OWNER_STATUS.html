@@ -48,7 +48,6 @@
   h1,h2,h3{text-wrap:balance;margin:0;}
   a{color:var(--accent);}
 
-  /* masthead */
   .mast{border-bottom:2px solid var(--ink);padding-bottom:16px;
         display:flex;flex-direction:column;gap:10px;}
   .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;
@@ -57,7 +56,6 @@
   h1{font-size:clamp(25px,4.2vw,36px);font-weight:650;letter-spacing:-.018em;line-height:1.15;}
   .standfirst{color:var(--ink-2);font-size:16.5px;max-width:70ch;}
 
-  /* the deadline strip — the subject of this whole wave */
   .strip{background:var(--panel);border:1px solid var(--rule);border-radius:3px;
          padding:16px 18px;display:flex;flex-wrap:wrap;gap:6px 26px;align-items:baseline;}
   .strip b{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.02em;}
@@ -69,7 +67,6 @@
   p{margin:0;max-width:78ch;}
   .lede{font-size:17px;}
 
-  /* product cards */
   .cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));}
   .card{background:var(--panel);border:1px solid var(--rule);border-radius:3px;
         padding:16px 17px 15px;display:flex;flex-direction:column;gap:11px;}
@@ -92,7 +89,6 @@
   .p-hold{background:var(--hold-soft);color:var(--hold);}
   .p-acc{background:var(--accent-soft);color:var(--accent);}
 
-  /* tables */
   .scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;background:var(--panel);}
   table{border-collapse:collapse;width:100%;font-size:13.5px;}
   th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--rule-2);vertical-align:top;}
@@ -104,11 +100,11 @@
   .neg{color:var(--fail);}
   .pos{color:var(--pass);}
 
-  /* callouts */
   .note{background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--accent);
         border-radius:3px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;}
   .note.warn{border-left-color:var(--open);}
   .note.bad{border-left-color:var(--fail);}
+  .note.good{border-left-color:var(--pass);}
   .note h3{font-size:14.5px;font-weight:640;}
   .note p{font-size:14.5px;color:var(--ink-2);}
   ul{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:7px;
@@ -123,23 +119,40 @@
 <div class="wrap">
 
   <header class="mast">
-    <div class="eyebrow"><span>Owner status</span><span>Wave 17 · MEGA PROMPT V6</span><span>2026-08-09</span><span>registry seq 453</span></div>
-    <h1>Both one-contract products are margin-compliant for the first time. The flagship is not.</h1>
-    <p class="standfirst">Wave 17 was verification and repair, not search. It added <strong>zero</strong> new alpha
-    hypotheses, so nothing about the edge's statistical standing changed. What changed is that two deliverables
-    that were quietly violating your broker's intraday-margin deadline no longer do — and one that still does
-    has been measured.</p>
+    <div class="eyebrow"><span>Owner status</span><span>Wave 18 · MEGA PROMPT V7</span><span>2026-08-09</span><span>registry seq 463</span></div>
+    <h1>Two mechanism tests. Two failures. And the first honest map of where the money in this system actually comes from.</h1>
+    <p class="standfirst">V7 removed the four gates that had kept mechanism research from starting, so it started.
+    Both hypotheses failed — but each failed for a specific, measurable reason, and one of those reasons points
+    directly at the only surface of the strategy core this program has never touched. Separately: every object in
+    the program is now margin-compliant, and the June–July window you asked me to protect was already spent.</p>
   </header>
 
   <div class="strip">
-    <b>16:45 ET</b><span>intraday margin ends — 15 min before the 17:00 close</span>
-    <b>16:39</b><span>internal flatten decision, fills 16:42</span>
-    <b>18:00 ET</b><span>intraday margin resumes at the product open</span>
+    <b>ALL THREE OBJECTS C4-COMPLIANT</b>
+    <span>Product A joined this wave: 39 breaches → 0</span>
+    <b>ALPHA BUDGET 2 / 2 SPENT</b>
+    <span>M1 and M5, both closed negative</span>
+    <b>SHIFT SIGNAL LIVE</b>
+    <span>ten consecutive alpha hypotheses closed with no promotion</span>
   </div>
 
   <section>
     <h2>The bottom line — current best, with real numbers</h2>
     <div class="cards">
+
+      <div class="card pass">
+        <h3>Product A · combined NQ system</h3>
+        <div class="cls">SolarWaveSMMaster_v3 · DAYONLY_DUAL6040</div>
+        <span class="pill p-pass">C4 compliant · 0 breaches</span>
+        <div class="figs">
+          <div class="fig"><span class="k">Net, dev 2022-01→2026-05</span><span class="v">$175,798.80</span></div>
+          <div class="fig"><span class="k">Trades</span><span class="v">16,241</span></div>
+          <div class="fig"><span class="k">Profit factor</span><span class="v">1.1367</span></div>
+          <div class="fig"><span class="k">Daily Sharpe <em>(v2 basis)</em></span><span class="v">1.172</span></div>
+          <div class="fig"><span class="k">Margin breaches, before → after</span><span class="v">39 → 0</span></div>
+          <div class="fig"><span class="k">Cost of compliance</span><span class="v neg">−$1,516.30</span></div>
+        </div>
+      </div>
 
       <div class="card pass">
         <h3>Product B · BEST_ONE_NQ</h3>
@@ -169,59 +182,103 @@
         </div>
       </div>
 
-      <div class="card fail">
-        <h3>Product A · combined NQ system</h3>
-        <div class="cls">SolarWaveSMMaster_v2 · DAYONLY_DUAL6040</div>
-        <span class="pill p-fail">39 margin breaches · fix not yet propagated</span>
-        <div class="figs">
-          <div class="fig"><span class="k">Net, dev</span><span class="v">$177,315</span></div>
-          <div class="fig"><span class="k">Daily Sharpe</span><span class="v">1.172</span></div>
-          <div class="fig"><span class="k">Max drawdown (EOD)</span><span class="v">−$18,894</span></div>
-          <div class="fig"><span class="k">Commission share of gross</span><span class="v">0.119</span></div>
-          <div class="fig"><span class="k">Normal-session flatten</span><span class="v pos">clean, 962/962</span></div>
-          <div class="fig"><span class="k">Breaches: early closes + 1 gap</span><span class="v neg">38 + 1</span></div>
-        </div>
-      </div>
-
     </div>
-    <p style="font-size:14px;color:var(--ink-3);">Neither <code>_v4</code> object is parity-certified yet, so both keep the
-    <code>_v4</code> suffix rather than <code>_Final</code>. They must not be treated as certified deliverables until
-    V1-R4 re-parity passes. Nothing here has been traded, deployed, or connected to an account, and all three objects
-    still fail closed in realtime.</p>
+    <p><strong>None of the three is parity-certified.</strong> V1-R4 re-parity has not run for any <code>_v3</code>
+    or <code>_v4</code> object, so all three keep version suffixes rather than <code>_Final</code>, and none may be
+    described as certified. Nothing in this program establishes that future profitability is achievable.</p>
   </section>
 
   <section>
     <h2>What changed this wave</h2>
 
     <div class="note bad">
-      <h3>BEST_ONE_MNQ never submitted a single voluntary exit order — in 4.4 years</h3>
-      <p>A pre-registered, falsifiable prediction was tested against the execution ledger rather than the trade list:
-      if the suspected cause were real, essentially every MNQ exit would have to be either a managed auto-reversal or an
-      engine backstop. Measured: <strong>100.0%</strong> — 30.9% reversals, 67.6% at the 17:00 session close, 1.4% at
-      holiday early closes. Zero voluntary exits, against an NQ control of 95.6%. Two-thirds of its positions rode
-      through the whole 16:45–17:00 margin window. The cause is the cross-series order arrangement your repo already
-      documented as defective in <code>KNOWN_ERRORS #7</code>; the rebuild adopts the parity-proven arrangement instead.</p>
+      <h3>The June–July 2026 window you asked me to seal was spent the day before you asked</h3>
+      <p>V7 §E asked whether this campaign's own discovery ever touched Jun–Jul 2026, and said the question "has
+      never been answered." It was answered on <strong>2026-08-08</strong> by a run built for exactly that purpose.
+      <code>runs/SM11_HOLDOUT_READ</code> read <strong>2026-06-01 → 2026-07-31</strong>, 45 sessions, and scored and
+      published six finalists on it — F1 SOLAR +$60,150 through F5 PORT_TILT_532 +$45,833 — with per-finalist daily
+      vectors committed. I verified the pre-registration order from git rather than trusting the report: the protocol
+      was committed at 03:58:02 and the results at 04:00:03 the same morning. You authorised the read in advance.</p>
+      <p>So §E-2 is inapplicable: <strong>there is nothing left to seal.</strong> One nuance worth keeping — the
+      consumption was characterization, never selection, and I found no artifact anywhere where a June/July number
+      changed a ranking. The window is degraded, not worthless. But a reader who has seen +$60,150 cannot un-see it,
+      which is why the campaign marked it spent rather than arguing it was still clean.</p>
+    </div>
+
+    <div class="note good">
+      <h3>Two-thirds of the trading day produces one-fifth of the money, and one-quarter of it loses</h3>
+      <p>This is the D4 diagnostic, and it is the most useful thing this wave produced. Incumbent P&amp;L by
+      time-of-day cohort over the full dev window:</p>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Cohort (ET)</th><th class="n">Share of bars</th><th class="n">Share of P&amp;L</th><th class="n">Net</th><th class="n">Local vol ÷ threshold</th></tr></thead>
+          <tbody>
+            <tr><td>EVENING 18:00–23:59</td><td class="n">26.0%</td><td class="n neg">−9.2%</td><td class="n neg">−$10,989</td><td class="n">0.61</td></tr>
+            <tr><td>OVERNIGHT 00:00–08:59</td><td class="n">39.4%</td><td class="n">+28.0%</td><td class="n">+$33,379</td><td class="n">0.79</td></tr>
+            <tr><td>RTH 09:00–16:59</td><td class="n">34.6%</td><td class="n pos">+81.2%</td><td class="n pos">+$96,619</td><td class="n">1.56</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The last column is why. The decision threshold is derived from a 460-bar volatility mean — and 460 three-minute
+      bars is exactly one 23-hour session, so the threshold carries <em>no</em> time-of-day information at all while the
+      volatility it is meant to normalise swings <strong>11-fold</strong> across the day (0.372 at midnight, 4.105 at
+      09:33). That premise test was pre-registered with a falsification bar of 1.5×. It was not close.</p>
     </div>
 
     <div class="note warn">
-      <h3>Holiday early closes were never modelled — and this hit all three objects, including the "clean" ones</h3>
-      <p>43 early-close sessions sit inside the dev window (~10/yr: 31 at 13:00 ET, 9 at 13:15, 2 Good Fridays at 09:15,
-      and 2025-01-09's Day of Mourning at 09:30). The flatten was hardcoded to the normal clock, so on those days it
-      never fired and only the 30-second engine backstop closed the position — about 14.5 minutes <em>inside</em> the
-      margin window. The schedule is now session-relative, which on a normal close evaluates to exactly the old 16:30
-      and 16:39, leaving all 1,095 normal sessions unchanged by construction.</p>
+      <h3>M1 failed — and the reason is that the fix could not reach the place it was aimed at</h3>
+      <p>Applying a session-mean-1 seasonal factor to the volatility estimate failed all three gates: Sharpe 0.558 vs
+      0.709, drawdown-tail $35,498 vs $27,162, and right-tail retention <strong>80.5%</strong> against a 95% floor.</p>
+      <p>The cause is mechanical and I measured it rather than guessing. The threshold is resampled <strong>only when a
+      trend flips</strong>, and flips cluster in exactly the loud parts of the day — so the factor in force at the
+      moment that matters averages <strong>1.54</strong>, not 1.00. The result is not a re-allocation of threshold
+      across the day at all; it is a <strong>64% widening of the threshold everywhere</strong>, which collapsed flips by
+      46% in every cohort including the overnight one it was supposed to tighten. My own spec asserted this was "a pure
+      re-allocation." That assertion was wrong, and it was knowable in advance from the state machine's own semantics.</p>
+      <p>Which makes the null <em>conditional</em>, not final — and points somewhere specific. Every core challenge this
+      program has ever run varied what the volatility estimate <em>measures</em>, what clock it is measured on, or where
+      its clamp sits. <strong>None has ever varied when the threshold is sampled.</strong> That is the ranked lead into
+      Wave 19.</p>
+    </div>
+
+    <div class="note warn">
+      <h3>M5 killed the "we just lacked statistical power" excuse for the ATR blend</h3>
+      <p>Wave 14 closed the ATR-blend candidate having failed one prong of one gate — the drawdown-tail probability at
+      <strong>0.753</strong> against a 0.85 bar — and blamed 4.4 years of daily data. This wave rebuilt the identical
+      construction, weight frozen, on <strong>ES, RTY and YM</strong> over the same era, and pooled the evidence with a
+      bootstrap that resamples the same dates across all four instruments so the dependence is preserved exactly.</p>
+      <p>The Sharpe effect replicated: pooled probability <strong>0.911</strong>. The tail effect did not: pooled
+      <strong>0.784</strong>. Roughly four times the effective evidence — the instruments' mechanism increments turn out
+      to be nearly independent (cross-correlation 0.029, versus 0.677 for their raw P&amp;L, giving an effective sample
+      size of 3.68 of 4) — moved that prong by 0.031 and it still did not clear the bar. The power hypothesis has now
+      been tested and rejected. <strong>Verdict PARTIAL, which was pre-registered as not a pass.</strong> The lead stays
+      closed, now on two independent grounds.</p>
+      <p>One thing not to misread: <strong>ES, RTY and YM all lose money</strong> under this construction (Sharpe −0.045,
+      −0.633, −0.563). The system does not travel; only the paired increment does. They are replication samples and
+      nothing here proposes trading them.</p>
     </div>
 
     <div class="note">
-      <h3>Two premises in your directive turned out to be wrong, and one of the errors was mine</h3>
-      <p><strong>V1h.</strong> The 16 NQ trades exiting "after 16:45" are not overnight positions. Every one is entered
-      between 18:06 and 20:24 ET and closed the same evening, inside the window where intraday margin has already
-      resumed. Under a correct exposure test BEST_ONE_NQ had <strong>0</strong> normal-session breaches, not 16. The
-      Wave-16 test that produced that claim — "exit time-of-day &gt; 16:45" — was simply wrong, and it was mine.
-      Worth keeping separately: all 16 are losses totalling about −$33.5k, which is a diagnostic lead, not a margin issue.</p>
-      <p><strong>V3.</strong> Wave 16's conclusion that the vendor DLL is gone from the public remote was overstated. A
-      local <code>git rev-list</code> cannot test what GitHub still serves by direct SHA. Downgraded to
-      "not reachable via normal traversal; remote retention unverified" — see the blocked list.</p>
+      <h3>A figure in my own Wave-17 write-up has no source, and it might mean I read sealed data</h3>
+      <p>Reported directly because the record cannot resolve it. Yesterday's summary cited "a from-scratch reproduction
+      of <strong>$75,449.60</strong>" on a window ending <strong>2026-08-07</strong> — inside the locked-forward seal.
+      A repo-wide search finds no artifact containing that number and no run with that end date. Either a backtest was
+      run into the sealed window and never committed, or the figure was recorded in error.</p>
+      <p>Nothing was deleted. The figure is marked <strong>unverified, do not cite</strong>; the "$2,575 gap" is
+      withdrawn as a research question; a precautionary entry now sits in a new locked-forward access ledger. The
+      $78,024.60 was your own Strategy Analyzer number and is not a repo read. Wave 18 itself read nothing at or after
+      2026-08-01 on any instrument.</p>
+    </div>
+
+    <div class="note">
+      <h3>And a correction to what I told you yesterday about warmup</h3>
+      <p>I attributed the start-state gap mainly to the 460-bar volatility window. Measured, that is wrong: the Solar
+      core re-synchronises from a cold start in <strong>2 to 4 sessions</strong>, because it is a self-synchronising
+      state machine and its volatility estimate uses an expanding mean rather than going undefined. What actually binds
+      is the <strong>higher-timeframe tilt at 51 sessions</strong> — a 50-session moving average, lagged one session,
+      which simply does not exist before then. So a fresh run started 2026-01-01 has <strong>no tilt at all for roughly
+      half</strong> the January–May window. The conclusion you were given — that a sliced year and a fresh-start year
+      are different objects — stands, and is stronger than the reason I gave for it.</p>
     </div>
   </section>
 
@@ -231,131 +288,77 @@
       <table>
         <thead><tr><th>Item</th><th>Question</th><th>Verdict</th><th class="n">Seq</th></tr></thead>
         <tbody>
-          <tr><td class="c">V1-R1</td><td>Does the flagship share the MNQ flatten defect?</td>
-              <td><span class="pill p-pass">No</span> 962 positions at 16:39 → 962 fills at 16:42; zero holding at 16:45</td><td class="n">449</td></tr>
-          <tr><td class="c">V1-R2</td><td>What actually breaks BEST_ONE_MNQ?</td>
-              <td><span class="pill p-acc">Established</span> the KNOWN_ERRORS #7 arrangement; the finer mechanism is <em>not</em> discriminable from the artifacts and the claim is narrowed accordingly</td><td class="n">450</td></tr>
-          <tr><td class="c">V1h</td><td>Are the 16 late NQ exits overnight positions?</td>
-              <td><span class="pill p-fail">Premise false</span> all are same-evening trades inside the post-18:00 window</td><td class="n">451</td></tr>
-          <tr><td class="c">V1e</td><td>How are holiday early closes handled?</td>
-              <td><span class="pill p-open">Real breach</span> 43 sessions; A 39, NQ 16, MNQ 1,077 breaches</td><td class="n">451</td></tr>
-          <tr><td class="c">V1-R3</td><td>Rebuild under a compliance-only criterion</td>
-              <td><span class="pill p-fail">v2 failed</span> NQ 0 breaches, MNQ 1 (2023-04-05 data gap). Bar was exactly 0, so recorded as fail</td><td class="n">452</td></tr>
-          <tr><td class="c">W17B</td><td>Execution-series flatten watchdog</td>
-              <td><span class="pill p-pass">Both pass</span> 0 breaches; NQ bit-identical, MNQ differs in 1 fill of 3,952</td><td class="n">453</td></tr>
-          <tr><td class="c">V1d</td><td>Is a <code>no_new_entry_after</code> parameter needed?</td>
-              <td><span class="pill p-pass">Not a problem</span> removing the 16:30 block entirely adds 3 entries across 1,139 sessions</td><td class="n">—</td></tr>
-          <tr><td class="c">V1f</td><td>Does 4× event-day margin bind achievable leverage?</td>
-              <td><span class="pill p-hold">Not for Product B</span> drawdown-based sizing needs 20–90× more capital than 4× day margin. Red team: if 4× applies to <em>initial</em> rather than day margin, Product A binds in 15 of 60 rows — the flat "no crossover" claim was conditional on an unnamed assumption. B6 stays optional</td><td class="n">456</td></tr>
-          <tr><td class="c">V4 / V4a</td><td>Friction share of the 3-minute incumbent</td>
-              <td><span class="pill p-acc">Measured</span> commission/gross: A 0.119, NQ 0.028, MNQ 0.066; breakeven multiples 8.4× / 36.2× / 15.2×. Slippage measured, not assumed (1 tick adverse, 527/527 fills). Cycle-count bug corrected: 4,711 → 4,805</td><td class="n">454</td></tr>
-          <tr><td class="c">O1 / O1a</td><td>Replace the deadlocked Sharpe∧CDaR∧top-10 triple</td>
-              <td><span class="pill p-open">Built, not yet usable</span> red team found two sign-flipping defects (asymmetric bootstrap aggregation; λ calibrated on the wrong growth convention). Construction stands; the scalar does not. <strong>O2 retro-scoring is blocked until fixed</strong> — correctly so</td><td class="n">457</td></tr>
-          <tr><td class="c">Red team</td><td>Four independent attempts to break the companion analyses</td>
-              <td><span class="pill p-open">4 × confirmed-with-corrections</span> 0 refuted; 46 defects logged, 2 headline-flipping, 1 real code bug, 1 retracted narrative. No compliance result challenged</td><td class="n">454–457</td></tr>
-          <tr><td class="c">V3-R5</td><td>Repo exposure</td>
-              <td><span class="pill p-open">Corrected</span> remote retention unverified; repo is <strong>public</strong></td><td class="n">—</td></tr>
+          <tr><td class="c">M1 · R1</td><td>Does normalising the threshold for intraday volatility seasonality help?</td>
+              <td><span class="pill p-fail">Fails 0/3</span> premise confirmed at 11× spread, but the fix cannot reach its target — it widens the threshold 64% instead. Null is <em>conditional</em>.</td><td class="n">459</td></tr>
+          <tr><td class="c">D4</td><td>Where in the trading day does the money come from?</td>
+              <td><span class="pill p-acc">Answered</span> RTH is 34.6% of bars and 81.2% of P&amp;L; the evening quarter loses $10,989</td><td class="n">459</td></tr>
+          <tr><td class="c">M5 · R2</td><td>Does the ATR blend replicate on ES/RTY/YM in the same era?</td>
+              <td><span class="pill p-fail">Partial = not a pass</span> Sharpe replicates (0.911), tail does not (0.784) at ~4× the evidence</td><td class="n">460</td></tr>
+          <tr><td class="c">E-1</td><td>Was Jun–Jul 2026 ever consumed by this campaign?</td>
+              <td><span class="pill p-fail">Premise false</span> consumed 2026-08-08 by SM11; nothing left to seal</td><td class="n">461</td></tr>
+          <tr><td class="c">§F</td><td>What is the true warmup requirement?</td>
+              <td><span class="pill p-acc">Measured</span> Solar 2–4 sessions; tilt 51 sessions is what binds. Standing rule written.</td><td class="n">462</td></tr>
+          <tr><td class="c">§12</td><td>Propagate the flatten fixes to the flagship</td>
+              <td><span class="pill p-pass">Pass</span> 39 → 0 breaches; 99.81% of fills identical; all 86 differences fall on early closes</td><td class="n">463</td></tr>
+          <tr><td class="c">O1</td><td>Blind repair of the objective's two sign-flipping defects</td>
+              <td><span class="pill p-open">In progress</span> Track E; O2 retro-scoring stays blocked until it lands</td><td class="n">—</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
   <section>
-    <h2>Recency disclosure — and a claim I withdrew after red team</h2>
-    <div class="note bad">
-      <h3>Retracted: I framed the 2026 partial year as an edge collapse. That is not supported.</h3>
-      <p>An earlier version of this page put BEST_ONE_NQ's 2026 slice (−$46.60 over 106 sessions) forward as the number
-      to look at hardest, reading it as the gross edge falling to the friction floor. Independent adversarial review
-      killed that reading and it is withdrawn. The −$46.60 is <strong>0.001 standard errors from zero</strong>; dropping
-      the single best trade of 185 takes it to −$13,307, dropping the single worst takes it to <strong>+$6,623</strong>.
-      Per-trade gross means are not individually distinguishable from zero in <em>any</em> year (Welch 2022-vs-2026:
-      t = 0.89). What survives is arithmetic, not evidence: the slice is small and near zero, and at the coded
-      commission rate its breakeven multiple is 0.94×.</p>
-      <p>Related silence, also corrected: Product A's ledger extends 45 sessions past the dev window
-      (2026-06→07, net <strong>+$34,997</strong>) — running opposite to the collapse story. Excluding it from a
-      dev-window ledger was right; reporting the exclusion without its magnitude was not. It is far too short for any
-      magnitude claim, and it is research-consumed, so it is not clean out-of-sample either.</p>
-    </div>
-    <p style="font-size:14.5px;color:var(--ink-2);">Recency tiers are <strong>disclosure only and never
-    selection</strong> — no object, parameter, or ranking is or may be chosen on them. The table is kept because the
-    numbers are real; the narrative that was attached to it is not.</p>
-    <div class="scroll">
-      <table>
-        <thead><tr><th>Slice</th><th class="n">Sessions</th><th class="n">BEST_ONE_NQ net</th><th class="n">Sharpe</th><th class="n">BEST_ONE_MNQ net</th><th class="n">Sharpe</th></tr></thead>
-        <tbody>
-          <tr><td>Full dev 2022-01→2026-05</td><td class="n">1,139</td><td class="n">$303,449</td><td class="n">1.117</td><td class="n">$28,901</td><td class="n">0.921</td></tr>
-          <tr><td>2022</td><td class="n">258</td><td class="n">$115,029</td><td class="n">1.871</td><td class="n">$9,878</td><td class="n">1.424</td></tr>
-          <tr><td>2023</td><td class="n">258</td><td class="n">$26,731</td><td class="n">0.720</td><td class="n">$6,347</td><td class="n">1.447</td></tr>
-          <tr><td>2024</td><td class="n">259</td><td class="n">$72,277</td><td class="n">1.396</td><td class="n">$2,550</td><td class="n">0.411</td></tr>
-          <tr><td>2025</td><td class="n">258</td><td class="n">$89,460</td><td class="n">1.137</td><td class="n">$13,544</td><td class="n">1.487</td></tr>
-          <tr><td><strong>2026 (partial)</strong></td><td class="n">106</td><td class="n neg">−$47</td><td class="n neg">−0.001</td><td class="n neg">−$3,418</td><td class="n neg">−0.909</td></tr>
-          <tr><td>Trailing 2y <em>(disclosure)</em></td><td class="n">517</td><td class="n">$130,170</td><td class="n">0.881</td><td class="n">$10,992</td><td class="n">0.640</td></tr>
-          <tr><td>Trailing 1y <em>(disclosure)</em></td><td class="n">259</td><td class="n">$54,220</td><td class="n">0.780</td><td class="n">$4,526</td><td class="n">0.581</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p style="font-size:14px;color:var(--ink-3);">Figures are on the pre-fix objects, which is the basis the full metric
-    battery was built on; the compliance rebuild moves NQ's full-dev net by −$209.36.</p>
-
-    <div class="note warn">
-      <h3>Why your own Strategy Analyzer shows 2026 in profit — both numbers are right</h3>
-      <p>Two separate effects, and the second one surprised me.</p>
-      <p><strong>Window.</strong> Every row above stops at the dev boundary, 2026-05-29. June–July 2026 alone is worth
-      <strong>+$59,515</strong> over 86 trades, and it is outside every table in this program. A UI run to 2026-08-07
-      additionally picks up an Aug 1–7 sliver (≈ +$11,083) that is <em>locked-forward virgin data</em> — I deliberately
-      did not touch it.</p>
-      <p><strong>Start state, which I had not accounted for.</strong> On the <em>identical</em> Jan→May window, the same
-      object run fresh from 2026-01-01 returns <strong>+$7,426.36 over 174 trades</strong>, while the same window sliced
-      out of the full 2022–2026 run returns <strong>−$46.60 over 185 trades</strong>. Same code, same end date,
-      $7,473 and 11 trades apart. A run that begins on 2026-01-01 has no history: <code>sigma460</code> warms up from
-      scratch over ~460 bars, the tilt state needs 50 prior session closes, and B-MOM needs 14 RTH days of
-      time-of-day history. For roughly the first quarter of a fresh run the strategy is operating on immature state.</p>
-      <p><strong>So: every recency row above is a <em>continuation</em> number and will not reproduce in the Strategy
-      Analyzer from a same-year start.</strong> Comparing a sliced year against a UI run started that January compares
-      two different objects. This is also a third reason the retracted 2026 claim could not carry weight — that figure
-      is not even invariant to how the backtest is started.</p>
-    </div>
-  </section>
-
-  <section>
-    <h2>Open, and blocked on you</h2>
+    <h2>Open, and what is blocked on you</h2>
     <ul>
-      <li><strong>Open — V1-R4 re-parity.</strong> Both <code>_v4</code> objects need a full Strategy Analyzer parity
-      run before they may be renamed <code>_Final</code> or presented as certified. The old NQ PASS was certified on the
-      old configuration and does not carry over.</li>
-      <li><strong>Open — propagate the fix to Product A.</strong> <code>SolarWaveSMMaster_v2</code> and
-      <code>SolarWaveSMOneLot_v1</code> still carry the early-close defect (39 breaches). Required by the propagation rule.</li>
-      <li><strong>Open — V1g, V5, O2, and all of W1–W4.</strong> Intraday-path capital map; the MNQ bar-by-bar fill audit
-      (deliberately deferred, because the fix changed the trade set it would have run on); retro-scoring under the new
-      objective; then the diagnostics and mechanism programme.</li>
+      <li><strong>Nothing this wave requires a decision from you.</strong> Everything below is either in progress or
+      parked with a workaround.</li>
+      <li><strong>Open — NT8 Strategy Analyzer re-parity (V1-R4).</strong> Three objects changed and none has been
+      re-certified. Until it runs, no object may be called parity-proven. This is the largest outstanding engineering
+      item and it gates deployment readiness, not research.</li>
+      <li><strong>Open — the objective function.</strong> Two sign-flipping defects found by red team in Wave 17 are
+      being repaired blind (fix and justify before scoring anything). The retro-scoring pass over the closed candidate
+      set stays blocked until that is done, which is the correct outcome.</li>
+      <li><strong>Open — remaining propagation:</strong> <code>SolarWaveSMOneLot_v1</code>; the intraday-path capital
+      map; the MNQ bar-by-bar fill audit on the rebuilt object.</li>
       <li><strong>Blocked — repository visibility and vendor-blob remote retention.</strong> The repo is currently
       <strong>public</strong> (0 forks, 0 stars) and contains a licensed vendor's reverse-engineered indicator math.
       Erasing an unreachable blob from GitHub needs a support-requested garbage collection. Reported only; no
       irreversible action taken. <code>OWNER_QUEUE.md</code> §OQ-1.</li>
       <li><strong>Blocked — exact Lifetime all-in NQ/MNQ commission.</strong> The coded $4.36 / $1.30 round turn is
-      verified as what the backtests actually charge, but not as what you actually pay; the live filtered table would not
-      render. A sensitivity band is used instead of a guess. <code>OWNER_QUEUE.md</code> §OQ-2.</li>
+      verified as what the backtests charge, not as what you pay. A sensitivity band is used instead of a guess.
+      <code>OWNER_QUEUE.md</code> §OQ-2.</li>
     </ul>
   </section>
 
   <section>
     <h2>Deflation-adjusted view, and what is honestly claimed</h2>
-    <p class="lede">Wave 17 consumed <strong>zero</strong> alpha budget — compliance, diagnostics, execution and
-    verification work is uncapped and adds no hypotheses — so the multiple-testing position is
-    <strong>unchanged</strong>: deflated Sharpe 0.45–0.55 against a 0.90 bar, and a Harvey–Liu-adjusted Sharpe of
-    <strong>0.000</strong> on the incumbent's key comparison.</p>
-    <p>There is no clean historical out-of-sample window left — everything through 2026-07-31 was examined during
-    discovery — no forward data is being waited on, and out-of-regime data is restricted to mechanism direction only.
-    <strong>Nothing in this program establishes that future profitability is achievable.</strong> The honest claim is
-    narrower: this process raises the probability of future success relative to a naively optimised system. The
-    distribution remains extremely right-skewed — the top 1% of trades account for 160% of net profit, and removing
-    the ten best days takes net from $198k to $72k.</p>
+    <p class="lede">Wave 18 spent <strong>both</strong> permitted alpha hypotheses and neither produced a candidate, so
+    the multiple-testing position is unchanged and the trial count rose: deflated Sharpe <strong>0.45–0.55</strong>
+    against a 0.90 bar, and a Harvey–Liu-adjusted Sharpe of <strong>0.000</strong> on the incumbent's key comparison.</p>
+    <p><strong>Ten consecutive alpha hypotheses have now closed without a promotion.</strong> Under the standing rules
+    that is a signal to change what is being searched rather than to search harder in the same space, and this wave
+    produced the first concrete direction in a while: the strategy core's threshold-<em>sampling</em> rule, which no
+    experiment in this program has ever varied. That is where Wave 19 goes.</p>
+    <p>E-1 also settles a question that had been left ambiguous: <strong>there is no clean historical out-of-sample
+    window anywhere</strong> — not for the Solar baseline, and as of 2026-08-08 not for B-MOM or B1 either. The only
+    genuinely virgin data is from 2026-08-01, it is nine days old, and it accrues at one quarter per quarter no matter
+    how much research effort is applied to it. That is precisely why cross-instrument replication was worth running,
+    and why its result carries weight.</p>
+    <p><strong>Nothing in this program establishes that future profitability is achievable.</strong> The honest claim
+    stays narrower: this process raises the probability of future success relative to a naively optimised system. The
+    distribution remains extremely right-skewed — the top 1% of trades account for 160% of net profit, and removing the
+    ten best days takes net from $198k to $72k.</p>
   </section>
 
   <footer>
-    <div>Evidence: <code>runs/W17_C4_COMPLIANCE/</code> · <code>runs/W17B_C4_WATCHDOG/</code> ·
-    <code>research/system_master/CURRENT_TRUTH.md</code> · <code>OWNER_QUEUE.md</code> ·
-    <code>research/registry/tested_configs.csv</code> seq 449–453.</div>
+    <div>Evidence: <code>runs/W18R1_M1_VOLSEASON/</code> · <code>runs/W18R2_M5_XINST/</code> ·
+    <code>runs/W18E_PRODUCTA_C4/</code> · <code>runs/W18_XINST_BARS/</code> ·
+    <code>research/system_master/HOLDOUT_DETERMINATION_20260809.md</code> ·
+    <code>research/system_master/WARMUP_STANDARD.md</code> · <code>CURRENT_TRUTH.md</code> ·
+    <code>research/registry/tested_configs.csv</code> seq 459–463.</div>
+    <div>Both Track-R results were independently red-teamed; verdicts are filed verbatim under each run's
+    <code>red_team/</code> and corrections are ingested into the run reports. The Product A compliance run was not
+    red-teamed — it proposes no promotion — and says so in its own report.</div>
     <div>Every figure traces to a committed artifact. Research and backtesting only — no order was placed, modified or
     cancelled; no account was touched; the vendor assembly was not modified.</div>
   </footer>

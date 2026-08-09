@@ -729,3 +729,134 @@ DRAWDOWN_RECONCILIATION / BMOM_EXECUTION_AUDIT / B1_ABLATION / LONG_SHORT_FRONTI
 LEVERAGE_ROBUSTNESS / ONE_CONTRACT_FRONTIER / DAY_ONLY_FRONTIER / SYSTEM_SCORECARD /
 KNOWN_ERRORS_AND_CORRECTIONS / SUPERSEDED_CONCLUSIONS / NEXT_RESEARCH_QUEUE (all in
 this directory). Machine state: SYSTEM_FRONTIER.yaml. Specs+outputs: runs/SMV2*.
+
+> ### CORRECTION APPENDED 2026-08-09, same day, after red team (seq 464-465). Three retractions from item 1 above.
+>
+> The M1 red team returned **CONFIRMED-WITH-CORRECTIONS** with **17 defects, 2 of them
+> headline-flipping**, and it did the one thing a review of this program had not done before: it
+> *ran the follow-up experiments I had queued instead of running*. Full verdict verbatim at
+> `runs/W18R1_M1_VOLSEASON/red_team/RED_TEAM_m1_volseason.md`; ingestion and my own independent
+> verification of the load-bearing numbers in that run's REPORT.
+>
+> **(a) RETRACTED — "the null is CONDITIONAL" and the Wave-19 lead built on it.** Both
+> de-confounded constructions were run and both are **worse**, not better. Exposure-neutral
+> `f / E[f|flip]` (flips restored to 67,765 vs the control's 58,701): Sharpe **0.411**, CDaR
+> **$40,759**, 0/3. Per-bar `S` resampling in *both* arms — the clean re-allocation test, with
+> mean `s_eff` confirmed unchanged: ΔSharpe **−0.303**, P(ΔSharpe>0) = **0.116**. Intraday
+> seasonal normalization of the Solar threshold is therefore **CLOSED UNCONDITIONALLY** across
+> all three constructions. **Item 7 below is withdrawn**: "vary when `S` is sampled" is not an
+> untouched surface and is not a Wave-19 lead — it was tested and it is worse. The root-cause
+> *diagnosis* is unaffected and is in fact strengthened (per-bar resampling moves flips **+8.1%**
+> and re-allocates as predicted: EVENING +181%, OVERNIGHT +39%, RTH −31%).
+>
+> **(b) RETRACTED — the §5 axis declaration.** `arm_FULL` cuts mean ensemble exposure
+> **−30.9%**, raises the flat fraction 18.9% → 35.3%, and cuts contracts/day 43.9 → 25.7, while
+> net falls 26.8%. **Net per unit of exposure is essentially unchanged.** M1 was a de-risking
+> rule implemented through a threshold, whatever the spec declared. This is independent support
+> for §5's presumption that the exposure axis is exhausted.
+>
+> **(c) RETRACTED — the strength of the failure.** ΔSharpe **−0.150** has a block-bootstrap
+> 5–95% of **[−0.637, +0.331]** with **P(ΔSharpe>0) = 0.303** (my own run, seed 20260808;
+> the reviewer got 0.277). **74.5% of the −$31,902 gap is the 106-day 2026 stub**, and
+> `arm_FULL` **beats** the incumbent in 2024 (0.967 vs 0.770) and 2025 (1.290 vs 1.206). The
+> verdict stands under the pre-registered AND rule, but not "with wide margins" — (a) is what
+> closes the axis, not this.
+>
+> **Further corrections to numbers in item 1:** "member flips fall 46% **in every cohort**" is
+> false — −46% is the total; per cohort it is **−32.6% / −19.7% / −57.5%**. The **+64%** mean-`S`
+> figure is time-in-trend weighted and therefore partly an *effect* of the flip collapse;
+> flip-weighted it is **+38.9%** (79.58 → 110.52 points). The **80.5% top-10 retention** is a
+> date-matching artifact — on its own dates `arm_FULL`'s top ten sum to **100.9%** of the
+> control's. Newly measured and previously unreported: **81% of the loss sits in the OVERNIGHT
+> cohort**, the one the mechanism was designed to fix, and member-bars pinned at the 1,200-tick
+> clamp ceiling rise **4.0% → 29.7%**.
+>
+> **What the reviewer could not break:** the causal seasonal estimator, re-implemented from
+> scratch with a different algorithm — **max absolute difference 0.0 across all 519,714 bars**.
+> Gates reproduce to the last decimal; the control rebuild matches SMV2AD to the cent including
+> contracts; no other merge in the codebase carries the dtype bug (all 16 sites audited);
+> `arm_HALF`'s disclosure-only status leaked nowhere.
+>
+> **Net effect on the §15 shift signal (item 7):** the signal is still live at ten closures, but
+> the direction proposed in item 7 is dead. What survives as evidence for Wave 19 is the **D4
+> cohort structure** (RTH 34.6% of bars / 81.2% of P&L; the evening quarter loses $10,989) and
+> the finding that exposure and net scale together almost exactly. No replacement lead is
+> asserted here; asserting one on no evidence is what item 7 did wrong.
+
+> ### CORRECTION APPENDED 2026-08-09, after the M5 red team and the O1 blind repair (seq 466-467).
+>
+> **M5 red team: CONFIRMED-WITH-CORRECTIONS, 12 defects, 1 headline-flipping. The reviewer
+> rebuilt all four instruments × two arms from raw bars in a fresh process and matched every
+> committed daily curve to max |deviation| = $0.0000000000.** Verdict verbatim at
+> `runs/W18R2_M5_XINST/red_team/RED_TEAM_m5_xinst.md`.
+>
+> **(d) RETRACTED — "the Sharpe effect replicates".** The pooled statistic includes **NQ, the
+> cell that generated the hypothesis**. On the three NEW instruments alone the prongs are
+> **0.8223** and **0.7108**, *both* below 0.85, and **no new instrument clears 0.85 on either
+> prong individually** (ES 0.833/0.698, RTY 0.820/0.797, YM 0.390/0.361). Including the
+> generating cell was pre-registered and disclosed, so this is a framing error, not a protocol
+> breach — but the correct statement is that **neither prong replicates**, which is a stronger
+> closure than the split reported in item 3 above.
+>
+> **(e) The M5 result lives in the same 106-day 2026 stub that M1's does.** Dropping the last
+> 106 sessions moves the pooled prongs from 0.9108/0.7841 to **0.7661/0.6547**. Every instrument
+> including NQ is only **3 of 5** on yearly ΔSharpe sign — below the **4 of 5** LOYO bar this
+> program applied to SMV2AF one wave earlier — and *which* instruments agree is period-dependent
+> (2022-23: ES+RTY; 2024-26: ES+YM+NQ; only ES is stable). The spec should have pre-registered a
+> chronology gate alongside the sign count and did not. **Two independent Track-R results in one
+> wave are both carried by the same final 9% of the sample. That is now a standing caution.**
+>
+> **(f) Two "identical construction" claims corrected.** (i) The clamp is specified in ticks and
+> the *rule* is identical, but the *object* is not: it binds on **13.5% of ES member-bars vs 2.9%
+> on NQ**, floors ES's VolMult-6 member on 71.96% of bars, and leaves the two arms bit-identical
+> on 13.3% of ES member-bars. (ii) RTY and YM carry an **undisclosed contiguous eight-session
+> hole** (2023-04-05 truncated at 14:03, 04-06..04-14 absent, resuming 04-16) creating a ~50σ
+> splice that perturbs sigma460 by +11% and ATR460 by +5.8% — *different* amounts, so the pairing
+> breaks for ~460 bars. My pre-registered substrate gate (coverage ≥ 0.95) **structurally cannot
+> see an 8-session hole**. Excising it changes no verdict and in fact helps RTY; the gate design
+> is what is at fault.
+>
+> **(g) The "0.753 → 0.784" comparison was not like-for-like** (dollar-CDaR on the DUAL leg vs a
+> pooled ratio on the raw leg) and is withdrawn as phrased. Like-for-like, NQ moved
+> **0.753 → 0.7547** — nowhere — and the NEW-only pooled figure is **0.7108**. The conclusion it
+> supported (the power hypothesis is rejected) survives on better grounds.
+>
+> **What the M5 reviewer could not break:** the `sm.TICK` per-instrument patch (bit-exact rebuild;
+> and it is load-bearing — a stale `TICK` would have flipped YM's sign and produced a false 3-of-3);
+> the turnover/friction alternative explanation (Δcommission is 2-4 orders of magnitude smaller
+> than Δnet; ES traded *more* and improved anyway; it is a pure mean effect); **ESS 3.68**
+> (Spearman 4.005, and the correlation of the bootstrap estimators themselves gives 3.63/3.66);
+> and the pooling rule — **eight alternatives were tested and none flips the verdict**; only
+> post-hoc deletion of YM passes, which is precisely what the pre-registration exists to prevent.
+> The as-run rule is the **most generous** of the honest set, so the verdict is if anything too
+> kind.
+>
+> ---
+>
+> **O1 BLIND REPAIR — done, and O2 stays BLOCKED, now for a different reason.**
+> `src/analytics/primary_objective_v2.py` + `test_primary_objective_v2.py` (34/34, all fixtures
+> synthetic, no candidate P&L loaded), with the argument written first in
+> `runs/W17_C4_COMPLIANCE/O1_REPAIR_PREREGISTRATION.md`. **D1** resolved as an equal-weight
+> mixture applied to *both* terms (the mixture is `J(F̄)` for one namable model; no max-based rule
+> is `J(F)` for any `F`), with `J_worst = min_m J_m` always returned alongside a mandatory
+> `model_determined_sign` flag. **D4**: λ **1.0 → 1.367725** — the shipped value was **73.1% of
+> correct** — after two corrections, the compounded-vs-non-compounded convention *and* a
+> horizon double-count the Wave-17 red team had missed. **D9** was three defects, not one, and
+> one of them flips J's sign on a synthetic fixture.
+>
+> **The repair moves the daily objective UP, +0.0210 → +0.1241**, because the D1 fix (+0.161)
+> dominates the λ fix (−0.058). The repairing agent disclosed, unprompted, that **the rule it
+> chose is the most favourable of the four options it considered and that it could not be blind
+> to this**, because v1 publishes every component. Applying §13 rule 11 — *something looks too
+> good, assume a bug first* — **O2 retro-scoring remains BLOCKED**, no longer on "the objective
+> is broken" but on "the aggregation choice that raised the score has not been independently
+> reviewed." That review is the first Track-E item of Wave 19. The **O1a finding survives and is
+> cleaner**: daily **+0.124** vs intraday **−0.140** on the same mixture. Note also that
+> `model_determined_sign` fires for Product A (J = +0.124 while J_worst = −0.126), so under the
+> repaired output contract **Product A's daily objective may not be quoted as a single number at
+> all**.
+>
+> Governance defect, mine: `primary_objective_v2.py` was committed at `3e02b2f` as a side effect
+> of a broad `git add -A` while the repair was still in flight, i.e. **the module was in the repo
+> before its written justification was**. The pre-registration is committed now. Nothing imports
+> v2 and O2 has not run, so no result was produced from the un-justified state.

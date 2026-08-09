@@ -1,5 +1,11 @@
 # W18R1_M1_VOLSEASON — **arm_FULL FAILS all three gates.** The premise is right; the implementation of it, through the frozen state machine, is not.
 
+> ⚠ **THE SECOND HALF OF THE TITLE IS WITHDRAWN (2026-08-09, post red team).** The reviewer ran
+> both de-confounded constructions this report queued as future work, and **both are worse**.
+> The axis closes **unconditionally**, not "pending a better implementation". The title and body
+> are left in place per C7 — nothing is rewritten — but read **RED-TEAM INGESTION** at the foot
+> of this file before anything else.
+
 Wave 18 of the SYSTEM_MASTER campaign, MEGA PROMPT V7. Track R. Spec frozen and committed at
 `d0b9f92` before any code existed. Alpha budget consumed: 1 of 2.
 
@@ -145,3 +151,150 @@ Neither may be run without its own frozen spec carrying a written mechanistic ar
 Commissioned per V7 §G (Track-R numerical result bearing on a promotion decision). Verdict
 filed verbatim under `red_team/`; corrections are ingested into this REPORT and never into the
 frozen spec.
+
+---
+
+# RED-TEAM INGESTION — appended 2026-08-09. **Two headline-flipping corrections. Read this before anything above.**
+
+Verdict: **CONFIRMED-WITH-CORRECTIONS.** 17 defects — 2 headline-flipping, 7 material,
+6 disclosure, 2 cosmetic. Full verdict filed verbatim at
+`red_team/RED_TEAM_m1_volseason.md`; nothing in it was edited. Corrections are ingested here
+and never into the frozen spec (C6). I verified the three load-bearing findings myself before
+accepting them (`src/diagnostics_post.py`, `out/redteam_verification.json`,
+`out/yearly_breakdown.csv`) rather than taking the reviewer at face value.
+
+## 1. RETRACTED — "the null is CONDITIONAL". It is not. The axis closes unconditionally.
+
+The section above hedges the null on the S-freeze confound and queues two de-confounded
+constructions as future work. **The reviewer ran both.** They take eight seconds each, and I
+should have run them rather than queueing them.
+
+| construction | Sharpe | CDaR₀.₉₅ | gates |
+|---|---:|---:|:--:|
+| control (sigma460) | 0.709 | $27,162 | — |
+| `arm_FULL` (as run) | 0.558 | $35,498 | 0/3 |
+| `f / E[f given flip]` — exposure-neutral by construction; flips restored to 67,765 vs control's 58,701 | **0.411** | **$40,759** | **0/3** |
+| per-bar `S` resampling in BOTH arms — the clean re-allocation test; mean `s_eff` confirmed unchanged (114.97 vs 109.49) | ΔSharpe **−0.303** | ΔCDaR **+$19,353**, P(ΔSharpe>0) = **0.116** | fails |
+
+**Removing the confound makes the mechanism WORSE, not better.** Both of the "structurally
+different constructions" I queued for a later wave are therefore **CLOSED here, on evidence**,
+and they must not be carried into Wave 19 as a ranked lead. Intraday seasonal normalization of
+the Solar threshold is dead on this substrate, full stop — not "dead pending a better
+estimator".
+
+The reviewer's counterfactual also **strengthens** the root-cause diagnosis well beyond the
+evidence I offered: with per-bar `S` resampling the flip count moves **+8.1%** instead of
+−45.9%, and re-allocates exactly as the mechanism predicted — EVENING **+181%**, OVERNIGHT
+**+39%**, RTH **−31%**. The diagnosis was right; the conclusion I drew from it was not.
+
+## 2. RETRACTED — the §5 axis declaration. In effect this WAS an exposure change.
+
+The spec declares (and the section above repeats) that nothing in M1 touches position size.
+Measured, `arm_FULL`:
+
+| | control | arm_FULL | Δ |
+|---|---:|---:|---:|
+| mean ensemble absolute target | 2.741 | 1.894 | **−30.9%** |
+| fraction of bars flat | 18.9% | 35.3% | +16.4 pts |
+| contracts/day | 43.9 | 25.7 | −41% |
+| net | $119,009 | $87,107 | −26.8% |
+
+Net falls **26.8%** against **31%** less exposure — **net per unit of exposure is essentially
+unchanged.** A threshold change that removes a third of the exposure is a de-risking rule
+implemented through a threshold, whatever its stated intent. That is the axis §5 presumes
+exhausted, and this result is entirely consistent with that presumption. The declaration was
+made in good faith and it was wrong in effect; the honest reading is that M1 tested the
+exposure axis by accident, twice over (this, and the 64% threshold widening).
+
+## 3. RETRACTED — "fails all three prongs with wide margins."
+
+The section above says no uncertainty quantification was needed because the margins were wide.
+That was wrong, and it repeats the exact error the Wave-17 red team caught on the 2026 claim.
+My own bootstrap (block=5, B=10,000, seed=20260808), independent of the reviewer's:
+
+- **ΔSharpe = −0.150, 5–95% [−0.637, +0.331], P(ΔSharpe>0) = 0.303.** Not distinguishable
+  from zero. (The reviewer reports 0.277 on their own construction; same conclusion.)
+- **74.5% of the −$31,902 gap sits in the 106-day 2026 stub.** `arm_FULL` **beats** the
+  incumbent in 2024 (Sharpe 0.967 vs 0.770) and in 2025 (1.290 vs 1.206); 2023 and 2026 carry
+  the whole deficit.
+- A structurally uniform mechanism cannot produce a gap 75%-concentrated in 9% of the days.
+  I measured a **mechanism** and presented it as a **P&L attribution**.
+
+The verdict itself is unchanged — the AND rule is a point-estimate screen on pre-registered
+definitions and `arm_FULL` fails all three as defined — but its **strength** is much weaker
+than the report claimed, and correction 1 is what actually closes the axis, not this.
+
+## 4. The top-10 retention gate is a date-matching artifact; the number to quote is 100.9%
+
+`arm_FULL`'s own ten best days sum to **$119,005** against the control's **$117,986** —
+**100.9%**. The 80.5% figure comes from re-reading `arm_FULL`'s P&L **on the control's dates**.
+The gate is the house-frozen definition and the verdict stands under it, but "M1 destroys
+right-tail capture" is **not** what the data says: it says M1's big days land on different
+days. This figure was sitting unremarked in the run's own `metrics.csv`.
+
+## 5. The best headline in the run, and I never stated it
+
+**81% of the loss is in the OVERNIGHT cohort — the one the mechanism was designed to fix**
+(+$33,379 → +$7,548). The intervention did its most damage precisely where its author expected
+its benefit. That is a cleaner and more damning statement of the failure than anything in the
+original write-up.
+
+## 6. The premise test is close to tautological, and the 1.5 bar was a straw man
+
+Across slots, `corr(r_s, mean|Δclose|) = 0.9985` — `r_s` is very nearly the raw volatility
+profile divided by a near-constant, so the "premise test" largely re-measures the thing it was
+meant to test independently. A pure-noise series with the same variance profile reproduces
+**9.79×** of the 11.04× headline. Intraday volatility seasonality in index futures was never in
+dispute; a falsification bar of 1.5 could not have failed. **The D4 profile stands as a
+descriptive result** — the cohort P&L table is measured, not inferred — but it should never
+have been framed as a stringent test of anything.
+
+## 7. Corrections to specific numbers
+
+- **"flips fall 46% in every cohort"** (as written in `CURRENT_TRUTH.md`) is wrong. The −46% is
+  the total; per cohort it is **−32.6% / −19.7% / −57.5%**. The REPORT above states both
+  correctly; the truth-doc summary compressed them into a false claim.
+- **"mean S +64%"** is weighted by time-in-trend and is therefore partly an *effect* of the flip
+  collapse rather than a cause of it. **Flip-weighted — the threshold the machine actually
+  chooses — it is 79.58 → 110.52 points, +38.9%.** Both are now in
+  `out/root_cause_S_freeze.csv`.
+- **Clamp contamination, quantified for the first time:** member-bars pinned at the 1,200-tick
+  ceiling rise from **4.0% to 29.7%**. Nearly a third of `arm_FULL`'s decisions are made at the
+  clamp, not by the mechanism — a further confound nobody had measured.
+- **The SMV2AD analogy is imperfect** and the report overstates it: clamp-widening *raised*
+  Sharpe in SMV2AD, whereas this lowers it. Related, not identical.
+
+## 8. Process defects, and they are mine
+
+- `root_cause_S_freeze.csv` and `warmup_convergence.csv` were produced by inline shell commands
+  with no committed script. Fixed: `src/diagnostics_post.py` regenerates both, plus the
+  verification above. `control_crosscheck.json` likewise carried a key the committed script did
+  not emit, because I fixed the dtype bug inline before fixing the script.
+- `REPORT.md` did not exist when the reviewer began, though `CURRENT_TRUTH.md` and the registry
+  already cited it as where the C6 correction was filed. It was written afterwards. The
+  citation was true when the reader got there and false when it was made.
+
+## 9. What the reviewer tried to break and could NOT
+
+The causality of the seasonal estimator, which was the highest-value target. It was
+re-implemented from scratch with a structurally different algorithm and compared bar-for-bar:
+**maximum absolute difference 0.0 across all 519,714 bars**, zero bars differing by more than
+1e-12. Session boundaries, the 60-session warmup (exactly 27,440 bars), the 43 early closes,
+the 13 gapped sessions, unobserved slots and `E[f] = 1` all check out. Gates reproduce to the
+last decimal. The control rebuild matches SMV2AD to the cent including contract counts. The
+dtype fix is real and **no other merge in the codebase has the same latent bug** — all 16 sites
+were audited. `arm_HALF`'s disclosure-only status was honoured with no leakage into any
+conclusion.
+
+## Revised disposition
+
+**Intraday seasonal normalization of the Solar decision threshold is CLOSED, unconditionally**,
+across all three constructions tested (multiplicative session-mean-1, exposure-neutral
+flip-normalised, and per-bar resampled). No further bite without a mechanism that is not a
+re-weighting of the same threshold. **The "when is S sampled" lead that this report proposed
+for Wave 19 is withdrawn** — the reviewer already tested it and it is worse.
+
+What survives, and it is not nothing: the **D4 cohort structure** (RTH is 34.6% of bars and
+81.2% of P&L; the evening quarter loses $10,989), the **clamp-contamination measurement**, and
+the finding that the incumbent's exposure and its net scale together almost exactly — which is
+independent support for §5's presumption that the exposure axis is exhausted.

@@ -435,6 +435,68 @@ def case_M9_scale_invariance():
           f"{a['primary']['objective_J']:.9f} vs {b['primary']['objective_J']:.9f}")
 
 
+# ======================================================================================
+# O1a intraday leg — exercised on a SYNTHETIC intraday frame
+# ======================================================================================
+def synth_intraday(n_sess=250, seed=23):
+    """Fabricated per-session cumulative-from-open MTM whose last bar equals the day's P&L.
+
+    Bar counts vary per session so that padding, the padding-fraction disclosure and the
+    short-session counter are all exercised.
+    """
+    rng = np.random.default_rng(seed)
+    dates = pd.bdate_range("2023-01-03", periods=n_sess)
+    daily = rng.normal(120.0, 1500.0, size=n_sess)
+    rows = []
+    for i, (d, x) in enumerate(zip(dates, daily)):
+        b = int(rng.integers(40, 101))
+        if i % 25 == 0:
+            b = 20                                     # a deliberate short session
+        inc = rng.normal(0.0, 400.0, size=b)
+        cum = np.cumsum(inc)
+        w = np.arange(1, b + 1) / b
+        cum = cum - cum[-1] * w + x * w                # bridge: cum[-1] == x exactly
+        last = np.zeros(b, dtype=bool)
+        last[-1] = True
+        rows.append(pd.DataFrame({"sess_id": i, "sess_date": d,
+                                  "intraday_mtm": cum, "is_last_of_sess": last}))
+    idf = pd.concat(rows, ignore_index=True)
+    end = idf[idf["is_last_of_sess"]]
+    s = pd.Series(end["intraday_mtm"].to_numpy(float),
+                  index=pd.to_datetime(end["sess_date"].to_numpy()))
+    return s, idf
+
+
+def case_I1_intraday_leg():
+    s, idf = synth_intraday()
+    r = PO.primary_objective(s, leverage=1.0, n_boot=100, horizon_sessions=252,
+                             intraday_path=idf, intraday_col="intraday_mtm")
+    recon = r["integrity"]["intraday_vs_daily_sessionend_maxabs_logdiff"]
+    ge = all(r["ruin"]["intraday"][m] >= r["ruin"]["daily_close"][m] - 1e-12
+             for m in PO.DEFAULT_METHODS)
+    ok = (recon is not None and recon < 1e-12 and ge and
+          np.isfinite(r["primary"]["objective_J_intraday_barrier"]) and
+          0.0 < r["integrity"]["intraday_padding_fraction"] < 1.0 and
+          r["integrity"]["intraday_short_sessions_vs_modal"][
+              "n_sessions_below_90pct_of_modal"] >= 10 and
+          r["tail"]["gap"]["cdar_matched_ratio_mixture"] > 0)
+    check("I1 intraday leg reconciles, is >= daily, and reports the D13/D15 disclosures", ok,
+          f"recon {recon:.1e}; padding {r['integrity']['intraday_padding_fraction']:.3f}; "
+          f"mixture CDaR ratio {r['tail']['gap']['cdar_matched_ratio_mixture']:.3f}")
+
+
+def case_I2_intraday_plus_min_unit_refused():
+    s, idf = synth_intraday(n_sess=60)
+    try:
+        PO.primary_objective(s, n_boot=20, horizon_sessions=60, min_unit=0.1,
+                             intraday_path=idf, intraday_col="intraday_mtm")
+        check("I2 min_unit + intraday is REFUSED (v1 silently mis-paired the two legs)",
+              False, "no exception")
+    except NotImplementedError as e:
+        check("I2 min_unit + intraday is REFUSED (v1 silently mis-paired the two legs)",
+              True, str(e)[:70])
+
+
 def main():
     t0 = time.time()
     print("primary_objective_v2 self-test  (ALL FIXTURES SYNTHETIC)\n" + "-" * 78)
@@ -479,6 +541,8 @@ def main():
     case_M7_ruin_time_reported(r)
     case_M8_fixed_contracts_runs()
     case_M9_scale_invariance()
+    case_I1_intraday_leg()
+    case_I2_intraday_plus_min_unit_refused()
 
     n_fail = sum(1 for _, ok in RESULTS if not ok)
     print("-" * 78)

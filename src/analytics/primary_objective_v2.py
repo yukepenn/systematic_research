@@ -881,6 +881,27 @@ def primary_objective(pnl_path,
         recon = float(np.abs(sess_net_log - loginc).max()) if len(sess_net_log) == n else None
         out["integrity"]["intraday_construction"] = info
         out["integrity"]["intraday_vs_daily_sessionend_maxabs_logdiff"] = recon
+        # D15 (disclosed, not fixed): the session grid is padded to the longest session and
+        # cum/peak freeze during the padding, so each short session's END-of-day drawdown is
+        # repeated inside the BAR-LEVEL CDaR sample. The frequency-matched headline is immune.
+        out["integrity"]["intraday_padding_fraction"] = (
+            float(1.0 - info["total_bars"] / info["padded_bars"])
+            if info.get("padded_bars") else None)
+        # D13 (disclosed, not fixed): short sessions. Bar counts alone cannot separate a
+        # calendar early close from a data hole, so this is a COUNT, not a verdict.
+        try:
+            _cnt = idf.groupby(intraday_sess_col).size().to_numpy()
+            _modal = float(np.median(_cnt))
+            out["integrity"]["intraday_short_sessions_vs_modal"] = {
+                "modal_bars": _modal,
+                "n_sessions_below_90pct_of_modal": int((_cnt < 0.9 * _modal).sum()),
+                "min_bars": int(_cnt.min()),
+                "_note": ("wave-17 red team D13: 43 of these are calendar early closes and "
+                          "at least 16 are unexplained data holes in the upstream committed "
+                          "artifact. Fewer observation points UNDERSTATE intraday risk."),
+            }
+        except Exception:
+            out["integrity"]["intraday_short_sessions_vs_modal"] = None
         if recon is not None and recon > 1e-9:
             out["integrity"]["warnings"].append(
                 f"intraday session-end log returns disagree with the daily series by "
@@ -952,6 +973,13 @@ def primary_objective(pnl_path,
             float(min(ratios)) if ratios else None)
         out["tail"]["gap"]["cdar_matched_ratio_n_methods_over_bar"] = (
             int(sum(1 for r in ratios if r >= 1.20)))
+        # D1-consistent companion: the ratio evaluated UNDER THE MIXTURE, i.e. a ratio of
+        # mixture means rather than a mean (or an extremum) of per-method ratios. This is the
+        # only version of the CDaR gap that is a functional of a single probability model.
+        _num = float(np.mean([tail_intra[m]["cdar_frac_daymax_matched"] for m in methods]))
+        _den = float(np.mean([tail_daily[m]["cdar_frac_arith"] for m in methods]))
+        out["tail"]["gap"]["cdar_matched_ratio_mixture"] = (
+            float(_num / _den) if _den > 0 else None)
         out["tail"]["gap"]["_D2_note"] = (
             "v1 called max(ratios) the 'worst method'. It is the most favourable method for "
             "the O1a hypothesis. v2 reports max, min and how many of the three clear the "
