@@ -1,0 +1,126 @@
+run_id: U8_PATH_ORGANIZATION
+family: "U8 -- path organization / entropy (CONTINUOUS SYSTEM EVOLUTION Wave-2 EVI ranking,
+  research/system_master/CONTINUOUS_EVOLUTION_WAVE2_EVI.md, Track L, DIAGNOSTIC ONLY this run)"
+depends_on: >
+  U0_UNIFIED_STATE (runs/U0_UNIFIED_STATE/out/u0_state_table.parquet, correctness-gated against
+  all 3 certified canonical nets). R4_SLOPE_IMPULSE/REPORT.md (residualized-Spearman / bucket-
+  mean-removal / OLS-DeltaR^2 diagnostic pattern, right-tail-check convention -- reused, not
+  reinvented; R4 already found ZERO residual information from a plain causal price slope, this
+  family tests a mechanistically DIFFERENT hypothesis: path ORGANIZATION, not direction/momentum).
+  U3_HOLD_EXPOSURE_CONTINUATION/src (forward-fixed-window continuation-value and reversal-within-N
+  hazard construction, reused verbatim in spirit for outcomes b/c). U6_PRODUCT_A_PATH_DEPENDENCE/
+  src/u6_substrate.py (forward-20-bar-P&L-per-contract-changed target at SCALE_IN bars, reused
+  verbatim in spirit for outcome d). U5_SOFT_WEIGHTING/REPORT.md (forward-only-vs-block-total
+  sunk-P&L-confound lesson -- every outcome below is either an entry-bar-vs-block-net-pnl pairing
+  where the feature strictly precedes ALL of the block's own P&L (outcome a, like R4), or an
+  explicitly FORWARD-ONLY window (outcomes b/c/d) -- no outcome in this family regresses a
+  mid-block/mid-trade feature against a whole-trade total that already contains sunk P&L).
+
+hypothesis: >
+  Solar13+HTF+B-MOM already encode substantial multi-horizon trend/momentum information (R4: zero
+  residual information from a causal price slope, mechanistically explained by Solar13 already
+  being a multi-horizon directional-change ensemble). This family tests a DIFFERENT mechanism:
+  direction/momentum != path ORGANIZATION -- how "clean" (few sign reversals, long persistent
+  runs, low ordinal-pattern entropy) vs "choppy/random" the recent price path has been,
+  independent of its net direction. U0 already has trend_efficiency_20/range_efficiency_20
+  (Kaufman-style net-move-over-total-movement magnitude ratios) which are ADJACENT but not
+  identical to sign-sequence/ordinal-entropy organization measures -- Step 0 below tests that
+  adjacency directly before anything else.
+
+scope: >
+  Diagnostic run only, per orchestrator instruction ("Track L, DIAGNOSTIC ONLY this run"). No
+  candidate construction, no parameter changes, no NT8/CrossTrade calls, no modification of
+  Product A (SolarWaveSMMaster_v4) or Product B (SolarWaveOneContractNQ_v5/MNQ_v5). Reads
+  runs/U0_UNIFIED_STATE/out/u0_state_table.parquet ONLY as the state/P&L source (no other run's
+  ledger re-read). Writes only under runs/U8_PATH_ORGANIZATION/. Runs no git command.
+
+features_causal_preregistered: >
+  Exactly 3 feature constructions x 2 causal windows (10-bar ~30min, 20-bar ~1hr), 6 columns
+  total, no other window swept:
+  (1) reversal_rate_W(t): fraction of bar-to-bar sign(ret_1) flips in the trailing W-bar window
+      ending at t inclusive. transition[i] = 1{sign(ret_1[i]) != sign(ret_1[i-1])} (sign in
+      {-1,0,1}, zero-return bars are their own category, standard convention, causal, uses U0's
+      own ret_1 column only). reversal_rate_W(t) = rolling_sum(transition, W-1)(t) / (W-1).
+  (2) run_persistence_W(t): mean length of same-sign ret_1 runs within the trailing W-bar window
+      ending at t inclusive = W / (1 + rolling_sum(transition, W-1)(t)) (number of complete+
+      partial runs in a window of W points = 1 + number of internal transitions).
+  (3) perm_entropy_W(t): normalized Bandt-Pompe permutation entropy (embedding dimension m=3,
+      delay=1, standard construction -- Bandt & Pompe 2002, non-proprietary, not a reverse-
+      engineering of any vendor indicator) of the CLOSE price sequence over the trailing W-bar
+      window ending at t inclusive. Ordinal pattern of each length-3 subsequence (close[i-2],
+      close[i-1], close[i]) computed via stable-sort ranks (ties broken by earlier index gets
+      lower rank, the standard BP convention); W-2 such subsequences per window map onto one of
+      3!=6 pattern classes; Shannon entropy of the window's pattern-class distribution, normalized
+      by log2(6) so perm_entropy_W in [0,1] (0 = perfectly repetitive ordinal structure, 1 =
+      maximally disordered).
+  All three are causal (window [t-W+1, t] only, nothing at or after t+1), row-order continuous
+  (not reset per session -- matches U0's own M_slope_20/ret_20/trend_efficiency_20 convention and
+  U4's reversal_freq_20/40 precedent).
+
+step0_redundancy_check: >
+  MANDATORY FIRST (per this campaign's standing "if it merely restates an existing feature, CLOSE
+  it" rule). Raw Spearman correlation, bar level, canonical window (is_health_only_bar==False),
+  of all 6 new features against U0's own trend_efficiency_20 and range_efficiency_20 (12
+  correlations). Any |rho|>0.7 is flagged REDUNDANT and treated as restating existing information
+  (its own residual-info test is still run for completeness and reported, but flagged prominently).
+
+residual_information_test: >
+  Bucket-residualize against (|M| tercile x sigma460 vol tercile) computed at the same bar the
+  feature is measured at (Product-B outcomes a/b/c use |M|; Product-A outcome d uses |M_A_raw|,
+  matching U6's own convention for that product's conviction magnitude) -- identical R4/R5/U6
+  framework (bucket_mean_pnl subtracted, resid_pnl = outcome - bucket_mean; OLS baseline =
+  M_abs + vol_tercile_code, extended = baseline + feature; np.linalg.lstsq only, no black-box
+  model). PRIMARY window per feature for the required 3x4=12-cell table is the 20-bar (~1hr)
+  version (matches U0's own comparison-window efficiency columns for direct comparability); the
+  10-bar (~30min) version is computed and reported alongside as a robustness cross-check, not a
+  13th/14th column added to the required cell count.
+  Four outcome definitions, each evaluated for all 3 (20-bar) features:
+    (a) entry value: net_pnl of ALL Product-B blocks (long+short, canonical+health-only reported
+        separately), feature measured at the block's own entry bar (age_bars_B==1) -- the feature
+        strictly precedes all of the block's own P&L, matching R4's exact block-entry pairing (no
+        sunk-P&L confound possible, per U5's own lesson).
+    (b) hold continuation: forward-5-bar realized P&L (bar_pnl_B_nq_dollars summed over t+1..t+5,
+        U3's own forward_fixed construction) evaluated at every action_B=='HOLD' bar, feature
+        measured at that same HOLD bar (causal, forward-only outcome).
+    (c) reversal hazard: binary label = 1 if, within bars t+1..t+10 (inclusive) after a HOLD bar
+        t with position_B[t]=s (nonzero), EITHER action_B=='REVERSAL' occurs OR sign(M)=-s at any
+        bar in that window (M crosses against the held position) -- else 0. Same HOLD-bar
+        population as (b). Spearman/OLS on a 0/1 outcome is a standard, interpretable linear-
+        probability-model test (not a classifier).
+    (d) Product-A scale value: forward-20-bar bar_pnl_A_dollars summed and divided by
+        |target_exposure_A delta| (contracts_changed), U6's own exact fwd20_pnl_per_contract
+        construction, evaluated ONLY at action_A=='SCALE_IN' bars (not ENTRY, per orchestrator
+        instruction), feature measured at that same SCALE_IN bar.
+  Report raw + residualized Spearman, OLS delta-R^2, and year-by-year (2022/2023/2024/2025,
+  2026-canonical-Jan-May separately) sign-stability for every one of the 12 required cells, no
+  cell skipped. 2026-06/07 health-only extension reported as a separate, observational-only row,
+  never blended into the sign-stability count, per U0's own mechanical split.
+
+right_tail_check: >
+  For whichever single (feature x outcome) combination among the 12 required cells shows the
+  strongest |residualized Spearman|: check that feature's value distribution (at the same bar-type
+  the outcome uses: entry bar for (a), HOLD bars for (b)/(c), SCALE_IN bars for (d)) across the
+  top-20 all-time winning canonical-window blocks (Product-B: sign(position_B) blocks for
+  outcomes a/b/c; Product-A: sign(target_exposure_A) blocks for outcome d) -- same discipline as
+  every other family this campaign has run (R1/R3/R4/R5/U3/U4/U5/U6).
+
+verdict_condition: >
+  If ANY of the 12 cells shows real (survives residualization), chronologically-stable (same sign
+  4-5/5 years, not counting the observational 2026 extension), non-redundant (Step 0 |rho|<=0.7),
+  right-tail-safe (no naive-threshold exclusion of large winners) residual information: flag it
+  explicitly with numbers as a candidate for a FUTURE construction family (NOT built this run --
+  diagnostic only, per orchestrator's own scope directive). If every cell is null, redundant, or
+  right-tail-unsafe: close plainly, per directive "If it merely restates Solar: CLOSE IT."
+
+construction_gate: >
+  No candidate is constructed in this run under any circumstance, regardless of finding strength.
+  A positive finding produces a PROSE description of what a future family might test, explicitly
+  labeled NOT YET TESTED / NOT AUTHORIZED FOR CONSTRUCTION THIS RUN -- matching U1/U3/U6's
+  identical discipline.
+
+non_goals:
+  - No modification of Product A or Product B in any way.
+  - No sweep beyond the 2 preregistered windows (10-bar, 20-bar).
+  - No black-box/ML classifier of any kind -- Spearman, OLS via np.linalg.lstsq only.
+  - No modification of U0 or any file outside this run directory.
+  - No git operations.
