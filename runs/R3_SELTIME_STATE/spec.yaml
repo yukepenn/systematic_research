@@ -1,0 +1,68 @@
+run_id: R3_SELTIME_STATE
+family: R3 (liquidity-conditioned eligibility / time as continuous state)
+directive: "SYSTEM ARCHITECTURE SCIENCE MEGA DIRECTIVE sec17-19"
+date_frozen: 2026-08-09
+depends_on: SA0_SYSTEM_STRUCTURE (STRUCTURE_MAP.md, REPORT.md sec16 regime buckets), S2_SELTIME
+  (CLOSED, NOT PROMOTED -- runs/S2_SELTIME/spec.yaml, R2_ONE_NQ.md), P0_TRADESTATE_AUTOPSY ledger.
+
+hypothesis: >
+  Does time-of-day carry INCREMENTAL information after accounting for signal quality (M
+  strength), Solar consensus, B-MOM engagement, and volatility state -- i.e. is a smarter,
+  state-conditioned eligibility rule viable where S2's blanket 02:00-08:00 ET block was not?
+
+explicit_non_reopen: >
+  S2's exact frozen construction (block ALL new entries/flips 02:00-08:00 ET, unconditionally) is
+  CLOSED, NOT PROMOTED (runs/S2_SELTIME/R2_ONE_NQ.md: passes gate_A pooled Sharpe/CDaR alone, but
+  fails gate_B [2/5 years] and gate_C right-tail retention [62-72%] decisively -- traced to a
+  real, legitimately-suppressed +$7,625 winning entry on 2025-04-09's tariff-crash volatility).
+  This run does NOT re-test that exact window or a shifted version of it as a "new" idea. Any
+  candidate constructed here must condition on STATE (M strength / consensus / vol / B-MOM), not
+  merely on a clock boundary, to count as a materially different hypothesis per RESEARCH_HANDOFF.md.
+
+what_is_already_known: >
+  S2's own pre-screen (spec.yaml sec0) found EUROPE_PREUS Solar P&L negative in 5/5 years, tight
+  range ($4,847-$6,461/yr) -- NOT a one-year artifact, a genuinely persistent bad block. R2's
+  adjudication found the blanket rule's failure mode is specifically RIGHT-TAIL damage (a real
+  winner suppressed), not a chronology problem. SA0's sec16 regime science (already run) found:
+  evening entries have the BEST per-trade mean ($294) despite S0's bar-level finding that the
+  clock-share of evening hours is a POOR aggregate block -- i.e. per-entry conditional means and
+  aggregate bar-level P&L shares are measuring different things, and this run must not conflate
+  them. SA0's sec6 also found B-MOM engagement is the single strongest conditional split found in
+  the whole SA0 run (engaged +$483.53 vs not-engaged -$738.52 mean).
+
+plan:
+  diagnostic_1_within_window_state_breakdown: >
+    Restrict to ENTRY events whose entry hm falls in 02:00-08:00 ET (S2's own window, reused only
+    as a REFERENCE region to explain its own pooled result, not re-tested as a candidate). Cross-
+    tabulate entry outcome by M-strength tercile, consensus tercile, vol tercile, B-MOM engaged,
+    long/short, YEAR. Ask: is the badness uniform across this window, or concentrated in a
+    narrower state? Compare the same state cuts OUTSIDE the window to separate "time matters" from
+    "bad states happen to cluster in this window."
+  diagnostic_2_full_clock_state_interaction: >
+    Full 24-hour clock (fine time buckets, not just S2's one window), M-strength/consensus/vol/
+    B-MOM interaction, year-by-year stability of any interaction cell that stands out. Broad,
+    interpretable bins only (per directive sec19 -- no minute-level optimization).
+  diagnostic_3_explain_S2_failure: >
+    Directly test the hypothesis: were EUROPE_PREUS's bad trades concentrated in weak-M entries,
+    low-consensus reversals, high-vol exhausted trades, or session-handoff transitions? Measure,
+    do not assume.
+  construction_gate: >
+    A candidate is constructed ONLY IF a state-conditioned cell shows: (a) broad/multi-year
+    negative expectancy (5/5 or 4/5 years, matching S2's own bar for "not a one-year artifact"),
+    (b) does not touch the identified top-tail winners (SA0's top-20/P0's already-identified
+    right-tail trades), (c) is a SIMPLE, interpretable rule (max 1-2 conditions, per directive
+    sec19 "1-2 simple conditional eligibility mechanisms" cap). If no cell clears this bar, R3
+    closes CONFIRMED-NOT-BENEFICIAL / INCONCLUSIVE with the diagnostic evidence recorded -- no
+    rule is forced into existence to fill the slot.
+  if_constructed: >
+    Any candidate must pass the SAME battery R2V1 used (year-by-year, LOYO especially the 2026
+    stub, block bootstrap, exact tail mapping, 2-tick cost stress) BEFORE any promotion language
+    is used -- per directive sec41's binding chronology-is-a-gate rule, learned directly from R2's
+    2026-stub-only failure.
+
+promotion_gate: >
+  Same as R2V1's 9-point gate, adapted: (a) real mechanistically-understood incremental edge;
+  (b) 2022-2025-only delta not hidden behind full-history headline; (c) LOYO retains improvement,
+  esp. LOYO-2026; (d) bootstrap confidence; (e) right-tail preserved AND left-tail improved;
+  (f) 2-tick cost stress; (g) NQ/MNQ shared-core viability; (h)/(i) NT8 parity only if the above
+  survive (per directive sec47, do not spend NT8 budget on a dead idea).
