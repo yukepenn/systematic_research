@@ -1,0 +1,58 @@
+family: U5_SOFT_WEIGHTING
+opened: 2026-08-09
+owner: continuous-system-evolution / U-series (U0 shared state map consumer)
+
+scope: >
+  Soft residual-information weighting on Product A. Tests whether features already found by
+  R4 (clv_signed, aligned) and R5 (vwap_disp_atr aligned, short_term_vol_ratio,
+  rejected_upper/lower_break aligned) -- all flagged "real but tail-unsafe-as-a-hard-filter" or
+  "modest, deferred lead" in the closed R4/R5 reports -- carry information about the EVENTUAL
+  outcome of a Product-A SCALE_IN action specifically (the economically important action class
+  per PA0 sec31: scale-in contracts ~7x more valuable than fresh entries). Explicitly excludes
+  direction_x_volume (R5: fully tail-blind on BOTH tails, 45%/45%, disqualified as a lead of any
+  kind, not just as a hard filter).
+
+purpose: >
+  Stage 1 (mandatory): diagnostic-only test of residual predictive information at the SCALE_IN
+  bar for the block's eventual outcome (run_pnl_A_dollars at block end, secondary MFE_A_dollars /
+  giveback_ratio_A at block end), using the same bucket-residualized-Spearman + OLS-delta-R^2
+  framework as R4/R5 (bucket = |M| tercile x vol tercile, computed at the scale-in bar), plus a
+  right-tail check against the top-20 (and bottom-20) Product-A blocks by net_pnl. Stage 2
+  (conditional): ONLY if Stage 1 shows a real, multi-year-stable, tail-safe relationship -- one
+  small preregistered soft-weighting construction (broad tercile multiplier {0.75x,1.0x,1.25x} on
+  the SIZE OF THE SCALE-IN INCREMENT ONLY, never the base entry, never touching C4/forced-flat/
+  clamp logic), validated (not promoted) through the standing battery: full-history, 2022-2025-only
+  delta (R2V1/R2B promotion standard), year-by-year, post-construction right-tail check, and
+  June-July-2026 extension reported separately per the health-only-bar split.
+
+data_reuse: >
+  Reads runs/U0_UNIFIED_STATE/out/u0_state_table.parquet directly (columns: action_A, block_id_A,
+  age_bars_A, target_exposure_A, run_pnl_A_dollars, MFE_A_dollars, giveback_ratio_A, M,
+  sigma460_atr_proxy_pts, clv_signed, vwap_disp_atr, short_term_vol_ratio, rejected_upper_break,
+  rejected_lower_break, is_health_only_bar, year, sess_date). Does NOT rebuild U0. For Stage 2
+  construction only, imports runs/PA0_PRODUCT_A_STRUCTURE/src/pa0_substrate.py's product_a_exec
+  formula structure (read first, modify increment-sizing step only) and
+  src/analytics/smv2_common.py's dd_battery for the metric battery -- reuse, not re-derivation.
+
+methodology: >
+  Interpretable statistics only (Spearman correlation, OLS via np.linalg.lstsq, bucket
+  residualization) -- no ML models, matches R4/R5/PA0 precedent exactly. Canonical window
+  (is_health_only_bar==False, through 2026-05-29) is the primary analysis window throughout;
+  the June-July-2026 health-only extension is reported separately, observational only, never
+  blended into any chronology verdict or gate decision.
+
+constraints:
+  - Diagnostic/measurement pass only. Does not change, or recommend changing, Product A
+    (SolarWaveSMMaster_v4) or Product B. Zero NT8/CrossTrade calls.
+  - Right-tail preservation checked directly (top-20 AND bottom-20 Product-A blocks by
+    block-final net_pnl) before any feature is described as usable, per standing campaign
+    discipline (R1/R3/R4/R5/PA1 precedent).
+  - Chronology reported year-by-year (2022-2025 canonical + 2026 canonical-partial), 2026
+    health-only extension (Jun-Jul) reported as a separate observational data point.
+  - If Stage 1 is weak/inconsistent/tail-dangerous: STOP, report as the finding, no forced
+    construction (standing rule: never continue parameter-searching until something wins).
+  - If Stage 2 runs: explicit gate-by-gate disposition, NOT a promotion claim either way.
+  - No git commands run from within this family's scripts; orchestrating session commits.
+  - All outputs written under runs/U5_SOFT_WEIGHTING/ only.
+
+deliverable: runs/U5_SOFT_WEIGHTING/REPORT.md

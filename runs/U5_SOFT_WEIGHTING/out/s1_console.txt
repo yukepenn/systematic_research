@@ -1,0 +1,412 @@
+[U5-S1] loading U0 state table (needed columns only) ...
+[U5-S1] loaded 540,232 rows
+[U5-S1] canonical window rows: 519,714   extended (2026-06/07) rows: 20,518
+[U5-S1] building block-level eventual-outcome table (canonical window) ...
+[U5-S1] 4,809 trading blocks (canonical)
+[U5-S1] SCALE_IN bars (canonical): 8,137
+[U5-S1] SCALE_IN rows with a resolvable block outcome: 8,137 / 8,137
+
+====================================================================================================
+PRIMARY OUTCOME: block_final_pnl (run_pnl_A_dollars at block end)
+====================================================================================================
+  clv_aligned     n= 8137  raw_rho=+0.1003  resid_rho=+0.0674  R2_base=0.07574  R2_ext=0.07755  dR2=+0.00181  coef_sign=+
+  vwap_aligned    n= 8137  raw_rho=+0.3293  resid_rho=+0.2124  R2_base=0.07574  R2_ext=0.11745  dR2=+0.04171  coef_sign=+
+  stvr            n= 8137  raw_rho=+0.0389  resid_rho=-0.0205  R2_base=0.07574  R2_ext=0.07641  dR2=+0.00066  coef_sign=-
+  bad_rejection   n= 8137  raw_rho=-0.0139  resid_rho=-0.0135  R2_base=0.07574  R2_ext=0.07580  dR2=+0.00005  coef_sign=-
+
+====================================================================================================
+ROBUSTNESS: FORWARD-ONLY OUTCOME (block_final_pnl - run_pnl_A_dollars AS OF THE SCALE-IN BAR)
+rules out 'this block had already banked its profit by the time of a late scale-in' confound
+====================================================================================================
+  clv_aligned     n= 8137  raw_rho=-0.0057  resid_rho=-0.0094  dR2=+0.00002
+  vwap_aligned    n= 8137  raw_rho=+0.0231  resid_rho=+0.0026  dR2=+0.00057
+  stvr            n= 8137  raw_rho=+0.0064  resid_rho=-0.0018  dR2=+0.00002
+  bad_rejection   n= 8137  raw_rho=-0.0023  resid_rho=-0.0033  dR2=+0.00023
+  clv_aligned forward-only year-stability: same sign in 4/5 years -> [-0.0106, 0.0115, -0.0023, -0.0259, -0.0442]
+  vwap_aligned forward-only year-stability: same sign in 2/5 years -> [0.0563, 0.0172, -0.0232, -0.0435, -0.0301]
+  stvr forward-only year-stability: same sign in 1/5 years -> [0.0507, -0.0458, -0.0248, -0.0207, -0.0046]
+  bad_rejection forward-only year-stability: same sign in 3/5 years -> [-0.0408, -0.0, -0.0129, 0.0428, 0.033]
+
+====================================================================================================
+SECONDARY OUTCOMES: block_final_mfe, block_final_giveback_ratio (raw + residualized Spearman only)
+====================================================================================================
+  block_final_mfe              x clv_aligned     n= 8137  raw_rho=+0.1173  resid_rho=+0.0539
+  block_final_mfe              x vwap_aligned    n= 8137  raw_rho=+0.2552  resid_rho=+0.0945
+  block_final_mfe              x stvr            n= 8137  raw_rho=+0.0574  resid_rho=-0.0098
+  block_final_mfe              x bad_rejection   n= 8137  raw_rho=-0.0163  resid_rho=-0.0248
+  block_final_giveback_ratio   x clv_aligned     n= 8056  raw_rho=-0.1331  resid_rho=-0.0395
+  block_final_giveback_ratio   x vwap_aligned    n= 8056  raw_rho=-0.3465  resid_rho=-0.0477
+  block_final_giveback_ratio   x stvr            n= 8056  raw_rho=-0.0571  resid_rho=+0.0735
+  block_final_giveback_ratio   x bad_rejection   n= 8056  raw_rho=+0.0299  resid_rho=+0.0298
+
+====================================================================================================
+YEAR-BY-YEAR STABILITY (residualized Spearman vs block_final_pnl, canonical years only)
+====================================================================================================
+
+clv_aligned (same sign as first year in 5/5 years):
+ year    n  rho_resid
+ 2022 2166     0.0575
+ 2023 1779     0.0974
+ 2024 1823     0.0799
+ 2025 1658     0.0543
+ 2026  711     0.0404
+
+vwap_aligned (same sign as first year in 5/5 years):
+ year    n  rho_resid
+ 2022 2166     0.2483
+ 2023 1779     0.2222
+ 2024 1823     0.2298
+ 2025 1658     0.1567
+ 2026  711     0.1709
+
+stvr (same sign as first year in 1/5 years):
+ year    n  rho_resid
+ 2022 2166     0.0150
+ 2023 1779    -0.0780
+ 2024 1823    -0.0234
+ 2025 1658    -0.0256
+ 2026  711    -0.0355
+
+bad_rejection (same sign as first year in 4/5 years):
+ year    n  rho_resid
+ 2022 2166    -0.0383
+ 2023 1779    -0.0081
+ 2024 1823    -0.0331
+ 2025 1658     0.0342
+ 2026  711    -0.0081
+
+====================================================================================================
+RIGHT-TAIL CHECK: top-20 / bottom-20 Product-A blocks by block_final_pnl (canonical)
+====================================================================================================
+
+Top-20 blocks by block_final_pnl:
+            block_final_pnl  block_final_exposure  block_n_bars
+block_id_A                                                     
+7221               18352.15                    -7           115
+6089               17871.45                     5           151
+6079               16869.55                    -7           107
+279                11597.75                     7           278
+672                10445.60                    -8           397
+570                 9806.25                    -7           277
+5894                8996.10                    -4           452
+7001                8982.80                    -4           113
+7626                8904.80                     6           421
+616                 8476.95                    -1           280
+5842                8342.50                    -7           139
+7949                8099.25                     5           398
+5854                7753.70                    -4           140
+7821                7649.85                     5           354
+4773                7575.05                    -6           126
+5486                7343.25                     1           178
+8178                7268.55                     5           412
+7665                7050.25                    -6           138
+6073                6737.35                     3           121
+7366                6563.90                    -5           141
+
+Bottom-20 blocks by block_final_pnl:
+            block_final_pnl  block_final_exposure  block_n_bars
+block_id_A                                                     
+7234               -4934.45                    -3           145
+611                -3819.50                    -2           107
+937                -3502.85                    -1           345
+286                -3386.90                    -2           202
+6025               -3359.65                    -3           100
+961                -3204.85                     5           240
+7898               -3101.45                     3            43
+128                -3058.35                    -3           409
+689                -3042.80                    -4           179
+5901               -2929.10                    -1            20
+6000               -2838.70                     2           109
+6099               -2837.20                     4            71
+6093               -2800.40                     4            29
+7709               -2741.80                     4            21
+6423               -2710.55                     1           410
+4735               -2690.30                     1           103
+7858               -2663.70                     4           132
+168                -2595.55                     3           127
+605                -2547.65                    -1           290
+4982               -2509.65                    -3           192
+
+Population tercile cut-points (SCALE_IN sample): {'clv_aligned': (-0.38888888888888884, 0.34426229508196715), 'vwap_aligned': (6.462036048476965, 12.343194249010084), 'stvr': (2.784375327259398, 4.429760532718657)}
+
+TOP-20 winners: 20 blocks, 167 SCALE_IN events within them
+    clv_aligned   :  25.7% of scale-in events are BOTTOM TERCILE (pop cut <-0.3889)
+    vwap_aligned  :  15.6% of scale-in events are BOTTOM TERCILE (pop cut <6.4620)
+    stvr          :  28.1% of scale-in events are BOTTOM TERCILE (pop cut <2.7844)
+    bad_rejection :  29.3% of scale-in events show the aligned-bad rejection flag
+    -> blocks where ALL scale-ins are bottom-tercile clv_aligned: 0/20
+    -> blocks where ALL scale-ins are bottom-tercile vwap_aligned: 0/20
+    -> blocks where ALL scale-ins are bottom-tercile stvr: 0/20
+
+BOTTOM-20 losers: 20 blocks, 115 SCALE_IN events within them
+    clv_aligned   :  42.6% of scale-in events are BOTTOM TERCILE (pop cut <-0.3889)
+    vwap_aligned  :  62.6% of scale-in events are BOTTOM TERCILE (pop cut <6.4620)
+    stvr          :  38.3% of scale-in events are BOTTOM TERCILE (pop cut <2.7844)
+    bad_rejection :  26.1% of scale-in events show the aligned-bad rejection flag
+    -> blocks where ALL scale-ins are bottom-tercile clv_aligned: 3/20
+    -> blocks where ALL scale-ins are bottom-tercile vwap_aligned: 3/20
+    -> blocks where ALL scale-ins are bottom-tercile stvr: 3/20
+
+[U5-S1] Stage 1 diagnostic complete.
+{
+  "n_scalein_canonical": 8137,
+  "n_trading_blocks_canonical": 4809,
+  "primary_results": {
+    "clv_aligned": {
+      "n": 8137,
+      "rho_raw": 0.10030734943154485,
+      "rho_resid": 0.06740171380087949,
+      "r2_base": 0.07574194241132393,
+      "r2_ext": 0.07755010985921629,
+      "delta_r2": 0.0018081674478923615,
+      "coef_sign": "+"
+    },
+    "vwap_aligned": {
+      "n": 8137,
+      "rho_raw": 0.32934414262985745,
+      "rho_resid": 0.21235407975576628,
+      "r2_base": 0.07574194241132393,
+      "r2_ext": 0.11744765577893457,
+      "delta_r2": 0.04170571336761064,
+      "coef_sign": "+"
+    },
+    "stvr": {
+      "n": 8137,
+      "rho_raw": 0.03889053024570042,
+      "rho_resid": -0.02048765696433633,
+      "r2_base": 0.07574194241132393,
+      "r2_ext": 0.07640599414185811,
+      "delta_r2": 0.0006640517305341875,
+      "coef_sign": "-"
+    },
+    "bad_rejection": {
+      "n": 8137,
+      "rho_raw": -0.01385211324098136,
+      "rho_resid": -0.013471493146647688,
+      "r2_base": 0.07574194241132393,
+      "r2_ext": 0.0757955332690936,
+      "delta_r2": 5.3590857769680866e-05,
+      "coef_sign": "-"
+    }
+  },
+  "forward_only_results": {
+    "clv_aligned": {
+      "n": 8137,
+      "rho_raw": -0.005683543561735846,
+      "rho_resid": -0.009381999499422512,
+      "delta_r2": 1.876778800502521e-05
+    },
+    "vwap_aligned": {
+      "n": 8137,
+      "rho_raw": 0.023116707629342474,
+      "rho_resid": 0.002609180712525077,
+      "delta_r2": 0.0005672311765504423
+    },
+    "stvr": {
+      "n": 8137,
+      "rho_raw": 0.006370505173138627,
+      "rho_resid": -0.0018228298155374093,
+      "delta_r2": 1.8449620277638523e-05
+    },
+    "bad_rejection": {
+      "n": 8137,
+      "rho_raw": -0.0023322973778595974,
+      "rho_resid": -0.003327219005379047,
+      "delta_r2": 0.00023472294484205847
+    }
+  },
+  "forward_only_year_by_year": {
+    "clv_aligned": [
+      {
+        "year": 2022,
+        "n": 2166,
+        "rho_resid": -0.010643480952406673
+      },
+      {
+        "year": 2023,
+        "n": 1779,
+        "rho_resid": 0.01151123807758481
+      },
+      {
+        "year": 2024,
+        "n": 1823,
+        "rho_resid": -0.002278196958792529
+      },
+      {
+        "year": 2025,
+        "n": 1658,
+        "rho_resid": -0.025890309929157928
+      },
+      {
+        "year": 2026,
+        "n": 711,
+        "rho_resid": -0.0442038946498585
+      }
+    ],
+    "vwap_aligned": [
+      {
+        "year": 2022,
+        "n": 2166,
+        "rho_resid": 0.05634836225459316
+      },
+      {
+        "year": 2023,
+        "n": 1779,
+        "rho_resid": 0.01716164329864623
+      },
+      {
+        "year": 2024,
+        "n": 1823,
+        "rho_resid": -0.023225330873673723
+      },
+      {
+        "year": 2025,
+        "n": 1658,
+        "rho_resid": -0.04345334622638034
+      },
+      {
+        "year": 2026,
+        "n": 711,
+        "rho_resid": -0.03008657835220683
+      }
+    ],
+    "stvr": [
+      {
+        "year": 2022,
+        "n": 2166,
+        "rho_resid": 0.05066198414922531
+      },
+      {
+        "year": 2023,
+        "n": 1779,
+        "rho_resid": -0.045782758981278135
+      },
+      {
+        "year": 2024,
+        "n": 1823,
+        "rho_resid": -0.024768451255229345
+      },
+      {
+        "year": 2025,
+        "n": 1658,
+        "rho_resid": -0.02071921962503155
+      },
+      {
+        "year": 2026,
+        "n": 711,
+        "rho_resid": -0.004640348610412773
+      }
+    ],
+    "bad_rejection": [
+      {
+        "year": 2022,
+        "n": 2166,
+        "rho_resid": -0.04080446776199657
+      },
+      {
+        "year": 2023,
+        "n": 1779,
+        "rho_resid": -2.0114074451776183e-05
+      },
+      {
+        "year": 2024,
+        "n": 1823,
+        "rho_resid": -0.012940402576623954
+      },
+      {
+        "year": 2025,
+        "n": 1658,
+        "rho_resid": 0.04276900725538109
+      },
+      {
+        "year": 2026,
+        "n": 711,
+        "rho_resid": 0.03296205142827076
+      }
+    ]
+  },
+  "secondary_results": {
+    "block_final_mfe": {
+      "clv_aligned": {
+        "n": 8137,
+        "rho_raw": 0.11728175453301984,
+        "rho_resid": 0.05388694204283139
+      },
+      "vwap_aligned": {
+        "n": 8137,
+        "rho_raw": 0.2552407477680343,
+        "rho_resid": 0.09453474348786278
+      },
+      "stvr": {
+        "n": 8137,
+        "rho_raw": 0.05738583717696403,
+        "rho_resid": -0.009847661812294886
+      },
+      "bad_rejection": {
+        "n": 8137,
+        "rho_raw": -0.01629347889269584,
+        "rho_resid": -0.02484833106016925
+      }
+    },
+    "block_final_giveback_ratio": {
+      "clv_aligned": {
+        "n": 8056,
+        "rho_raw": -0.1331297414890481,
+        "rho_resid": -0.03953751309384564
+      },
+      "vwap_aligned": {
+        "n": 8056,
+        "rho_raw": -0.3465335074535708,
+        "rho_resid": -0.04765519874191094
+      },
+      "stvr": {
+        "n": 8056,
+        "rho_raw": -0.05712908532637805,
+        "rho_resid": 0.07347919678155145
+      },
+      "bad_rejection": {
+        "n": 8056,
+        "rho_raw": 0.029920009499888184,
+        "rho_resid": 0.02981727626338338
+      }
+    }
+  },
+  "tercile_cutpoints": {
+    "clv_aligned": [
+      -0.38888888888888884,
+      0.34426229508196715
+    ],
+    "vwap_aligned": [
+      6.462036048476965,
+      12.343194249010084
+    ],
+    "stvr": [
+      2.784375327259398,
+      4.429760532718657
+    ]
+  },
+  "top20_tail_check": {
+    "label": "TOP-20 winners",
+    "n_blocks": 20,
+    "n_scalein_events": 167,
+    "clv_aligned_pct_bottom_tercile": 0.25748502994011974,
+    "vwap_aligned_pct_bottom_tercile": 0.15568862275449102,
+    "stvr_pct_bottom_tercile": 0.281437125748503,
+    "bad_rejection_pct": 0.2934131736526946,
+    "clv_aligned_n_blocks_all_scaleins_bad": 0,
+    "vwap_aligned_n_blocks_all_scaleins_bad": 0,
+    "stvr_n_blocks_all_scaleins_bad": 0
+  },
+  "bottom20_tail_check": {
+    "label": "BOTTOM-20 losers",
+    "n_blocks": 20,
+    "n_scalein_events": 115,
+    "clv_aligned_pct_bottom_tercile": 0.4260869565217391,
+    "vwap_aligned_pct_bottom_tercile": 0.6260869565217392,
+    "stvr_pct_bottom_tercile": 0.3826086956521739,
+    "bad_rejection_pct": 0.2608695652173913,
+    "clv_aligned_n_blocks_all_scaleins_bad": 3,
+    "vwap_aligned_n_blocks_all_scaleins_bad": 3,
+    "stvr_n_blocks_all_scaleins_bad": 3
+  }
+}
