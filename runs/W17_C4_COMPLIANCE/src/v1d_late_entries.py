@@ -460,6 +460,29 @@ def main():
     pd.concat(tables, ignore_index=True).to_csv(
         os.path.join(OUT, "v1d_census.csv"), index=False)
 
+    # ---- PART 1b: the boundary bucket Wave 16's "> 0" filter silently discarded --------
+    hdr("PART 1b -- EVENTS AT OR AFTER THE SESSION CLOSE (minutes_before_close <= 0)")
+    print("Wave 16's census used (min_before_close > 0), which drops any entry stamped")
+    print("exactly AT the close. Reported here explicitly rather than left out.")
+    for label, path in [("BEST_ONE_NQ", P_NQ_TR), ("BEST_ONE_MNQ", P_MNQ_TR)]:
+        t = pd.read_csv(path, parse_dates=["entry_time"])
+        rr = attach_close(t.entry_time, sess)
+        print("  %-13s entries with mb <= 0 : %d" % (label, int((rr.min_before_close <= 0).sum())))
+    z = ea.copy()
+    z["mb"] = r_all.min_before_close.values
+    z["ctod"] = r_all.close_tod.values
+    zz = z[z.mb <= 0]
+    print("  PRODUCT A     events with mb <= 0 : %d" % len(zz))
+    print(zz[["fill", "decide", "kind", "cur", "tgt", "mb", "ctod"]].to_string(index=False))
+    print("\n  Of these, the 6 stamped 2024-04-21 18:06-18:21 with mb ~ -2950 are a DATA")
+    print("  ARTIFACT, not trades near a close: the NQ signal series has Sunday-evening bars")
+    print("  from 18:03 that the MNQ execution series does not (that session's MNQ fbos is at")
+    print("  18:27), so they map back to the previous Friday close. They are the same 8 bars")
+    print("  where phys[i+1] != tgt_ops[i]. The 2 GENUINE ones are risk increases stamped")
+    print("  exactly at an EARLY close (2022-02-21 13:00 -4->-7 MNQ, 2025-12-24 13:15 0->-1).")
+    print("  Both are inside V1e's already-counted early-close breach set; both are removed")
+    print("  by the W17 C2 session-relative rule (PART 2e).")
+
     # ---------------- PART 2 ----------------
     hdr("PART 2 -- MECHANISM.  (a) the coded 16:30 block, or (b) the signal itself?")
     MA, MB, TpB, TppA, checks = rebuild_signals(bars)

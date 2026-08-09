@@ -1,0 +1,385 @@
+
+==============================================================================
+PART 0 -- REAL SESSION CALENDAR (from mnq_3m_raw.csv fbos, NOT assumed 17:00)
+==============================================================================
+MNQ 3-min bars in dev window : 519869
+sessions (fbos count)        : 1139
+
+session close time-of-day:
+close_tod
+09:15       2
+09:30       1
+13:00      31
+13:15       9
+16:57       1
+17:00    1095
+
+EARLY-CLOSE sessions: 43   (spec V1e says 43)
+close_tod
+09:15     2
+09:30     1
+13:00    31
+13:15     9
+
+NOTE: 1 session(s) close at 16:57 -- this is the DATA END (2026-05-29 16:57:00), not an early close; excluded from the early-close set.
+
+CROSS-CHECK against the NQ signal series (smm_v2_bars.sess_end): 1139 session ends
+time
+09:15       2
+09:30       1
+13:00      31
+13:15       9
+14:03       1
+17:00    1095
+DISAGREEMENT: the NQ signal series shows one extra 'session end' at 2023-04-05 14:03 where MNQ has a full 460-bar 17:00 session. That is an NQ signal-series DATA GAP (bars jump 14:03 -> 20:03), not a real early close. The MNQ-derived calendar is used as truth for close times.
+
+==============================================================================
+PART 1 -- SESSION-AWARE LATE-ENTRY CENSUS (each session's OWN close)
+==============================================================================
+Convention: entry stamp = NT8 execution time = CLOSE of the bar the market order
+filled on. Calculate.OnBarClose => decision bar is 3 min earlier and the economic
+fill price is that bar's OPEN, also 3 min earlier. Counts below use the STAMP;
+subtract 3 minutes for the decision, add 3 to minutes-before-close for exposure.
+
+--- BEST_ONE_NQ (Product B, 1 NQ) : 1975 entries total
+ N_min  n_entries  n_normal_close  n_early_close  sessions_affected_pct
+     5          0               0              0               0.000000
+    10          0               0              0               0.000000
+    15          0               0              0               0.000000
+    20          0               0              0               0.000000
+    30          3               3              0               0.263389
+    45         17              17              0               1.492537
+    60        152             152              0              13.345040
+wave-16 naive-17:00 counts   : [0, 0, 0, 0, 3, 17, 152]
+session-aware counts         : [0, 0, 0, 0, 3, 17, 152]
+delta (session-aware - naive): [0, 0, 0, 0, 0, 0, 0]
+entry-stamp histogram, final 60 min:
+entry_time
+16:00    105
+16:03      9
+16:06     18
+16:09      1
+16:12      2
+16:15      1
+16:18      1
+16:21      3
+16:24      5
+16:27      4
+16:30      3
+entries on EARLY-CLOSE sessions: 23 ; closest to an early close: 132 min
+
+--- BEST_ONE_MNQ (Product B, 1 MNQ) : 1561 entries total
+ N_min  n_entries  n_normal_close  n_early_close  sessions_affected_pct
+     5          0               0              0               0.000000
+    10          0               0              0               0.000000
+    15          0               0              0               0.000000
+    20          0               0              0               0.000000
+    30          1               1              0               0.087796
+    45          6               6              0               0.526778
+    60         98              98              0               8.604039
+wave-16 naive-17:00 counts   : [0, 0, 0, 0, 1, 6, 98]
+session-aware counts         : [0, 0, 0, 0, 1, 6, 98]
+delta (session-aware - naive): [0, 0, 0, 0, 0, 0, 0]
+entry-stamp histogram, final 60 min:
+entry_time
+16:00    72
+16:03     7
+16:06    11
+16:09     1
+16:12     1
+16:15     1
+16:18     1
+16:21     1
+16:27     2
+16:30     1
+entries on EARLY-CLOSE sessions: 23 ; closest to an early close: 132 min
+
+--- PRODUCT A (SolarWaveSMMaster_v2, scaling allocator, MNQ execution)
+risk-increasing events: open=3478 increase=8164 reversal=1335  (total 12977)
+ N_min  n_entries  n_normal_close  n_early_close  sessions_affected_pct
+     5          0               0              0               0.000000
+    10          0               0              0               0.000000
+    15          3               0              3               0.263389
+    20          4               0              4               0.351185
+    30         14               8              6               1.229148
+    45        101              93              8               8.867428
+    60        621             612              9              54.521510
+  open      by N: [0, 0, 1, 1, 3, 29, 95]
+  increase  by N: [0, 0, 2, 3, 8, 65, 298]
+  reversal  by N: [0, 0, 0, 0, 3, 7, 228]
+entry-stamp histogram, final 60 min:
+t
+08:51      1
+12:00      1
+12:15      1
+12:30      1
+12:42      1
+13:00      3
+16:00    327
+16:03     48
+16:06     76
+16:09     39
+16:12     29
+16:15     21
+16:18     17
+16:21     18
+16:24     17
+16:27     13
+16:30      8
+events on EARLY-CLOSE sessions: 181 ; closest to an early close: 0 min
+
+CROSS-CHECK from smm_v2_fills.csv (25825 executions): fills within N min of the session's own close
+  N<=5   fills=1     of which entry-side (L/S)=0
+  N<=10  fills=3     of which entry-side (L/S)=0
+  N<=15  fills=7     of which entry-side (L/S)=3
+  N<=20  fills=934   of which entry-side (L/S)=4
+  N<=30  fills=989   of which entry-side (L/S)=14
+  N<=45  fills=1170  of which entry-side (L/S)=101
+  N<=60  fills=2794  of which entry-side (L/S)=621
+
+==============================================================================
+PART 1b -- EVENTS AT OR AFTER THE SESSION CLOSE (minutes_before_close <= 0)
+==============================================================================
+Wave 16's census used (min_before_close > 0), which drops any entry stamped
+exactly AT the close. Reported here explicitly rather than left out.
+  BEST_ONE_NQ   entries with mb <= 0 : 0
+  BEST_ONE_MNQ  entries with mb <= 0 : 0
+  PRODUCT A     events with mb <= 0 : 8
+               fill              decide     kind  cur  tgt      mb  ctod
+2022-02-21 13:00:00 2022-02-21 12:57:00 increase   -4   -7     0.0 13:00
+2024-04-21 18:06:00 2024-04-21 18:03:00     open    0    1 -2946.0 17:00
+2024-04-21 18:09:00 2024-04-21 18:06:00     open    0    1 -2949.0 17:00
+2024-04-21 18:12:00 2024-04-21 18:09:00     open    0    1 -2952.0 17:00
+2024-04-21 18:15:00 2024-04-21 18:12:00     open    0    1 -2955.0 17:00
+2024-04-21 18:18:00 2024-04-21 18:15:00     open    0    1 -2958.0 17:00
+2024-04-21 18:21:00 2024-04-21 18:18:00     open    0    1 -2961.0 17:00
+2025-12-24 13:15:00 2025-12-24 13:12:00     open    0   -1     0.0 13:15
+
+  Of these, the 6 stamped 2024-04-21 18:06-18:21 with mb ~ -2950 are a DATA
+  ARTIFACT, not trades near a close: the NQ signal series has Sunday-evening bars
+  from 18:03 that the MNQ execution series does not (that session's MNQ fbos is at
+  18:27), so they map back to the previous Friday close. They are the same 8 bars
+  where phys[i+1] != tgt_ops[i]. The 2 GENUINE ones are risk increases stamped
+  exactly at an EARLY close (2022-02-21 13:00 -4->-7 MNQ, 2025-12-24 13:15 0->-1).
+  Both are inside V1e's already-counted early-close breach set; both are removed
+  by the W17 C2 session-relative rule (PART 2e).
+
+==============================================================================
+PART 2 -- MECHANISM.  (a) the coded 16:30 block, or (b) the signal itself?
+==============================================================================
+Signal reconstruction fidelity against the ledger's own columns:
+  TppA_matches_ledger        1.000000
+  tgt_rawA_matches_ledger    1.000000
+
+VALIDATION of the Product B replay against the REAL NT8 trade list:
+  real entries                 : 1975
+  replayed entries             : 1976
+  timestamp-exact matches      : 1975  (100.00% of real)
+  in replay only               : 1   (expected ~1: a position still open at data end)
+  in real only                 : 0
+
+  baseline (block ON, forced-flat ON)
+    total entries over 1,139 sessions : 1976
+    entries within N min of own close : [0, 0, 0, 0, 3, 17, 152]   (N = [5, 10, 15, 20, 30, 45, 60])
+    stamps within 45 min:
+      fill
+      16:15    1
+      16:18    1
+      16:21    3
+      16:24    5
+      16:27    4
+      16:30    3
+
+  16:30 ENTRY BLOCK REMOVED
+    total entries over 1,139 sessions : 1979
+    entries within N min of own close : [0, 0, 0, 0, 6, 20, 155]   (N = [5, 10, 15, 20, 30, 45, 60])
+    stamps within 45 min:
+      fill
+      16:15    1
+      16:18    1
+      16:21    3
+      16:24    5
+      16:27    4
+      16:30    3
+      16:33    2
+      16:36    1
+
+  BLOCK + 16:39 FORCED-FLAT BOTH REMOVED
+    total entries over 1,139 sessions : 1982
+    entries within N min of own close : [1, 2, 3, 3, 9, 23, 158]   (N = [5, 10, 15, 20, 30, 45, 60])
+    stamps within 45 min:
+      fill
+      16:15    1
+      16:18    1
+      16:21    3
+      16:24    5
+      16:27    4
+      16:30    3
+      16:33    2
+      16:36    1
+      16:45    1
+      16:54    1
+      16:57    1
+
+  >>> WORK DONE BY HYPOTHESIS (a), the coded 16:30 entry block:
+      3 extra entries over 1,139 sessions (1976 -> 1979, +0.152%)
+  >>> WORK DONE BY BOTH LATE-SESSION OPS RULES TOGETHER:
+      6 extra entries over 1,139 sessions (1976 -> 1982, +0.304%)
+
+  PRODUCT A counterfactual (risk-increasing events within N min of own close):
+    with 16:30/16:39 ops clamp : [0, 0, 3, 4, 14, 101, 621]   (total 12969)
+    ops clamp REMOVED entirely : [7, 16, 31, 38, 78, 165, 685]   (total 13037)
+
+==============================================================================
+PART 2b -- IS THE SIGNAL QUIET LATE IN THE SESSION?  (three separate questions)
+==============================================================================
+Reference rates:
+  RTH 09:33-15:54 : P(|M|>=3)=0.5827  P(M changed)=0.1400  P(T changed)=0.1428  P(upcross)=0.0121
+  overnight 18:03-09:30 : P(|M|>=3)=0.1905  P(M changed)=0.0400  P(T changed)=0.0411  P(upcross)=0.0029
+
+Per-bar rates through the close (Product B allocator M = 0.7086*Tp + 2.83*B):
+          n  P_absM_ge_3  P_M_changed  P_T_changed  P_upcross_3  P_B_nonzero  P_flat  P_flat_and_ge3
+tod                                                                                                 
+15:45  1095       0.5963       0.0995       0.1023       0.0100       0.9352  0.2858          0.0018
+15:48  1095       0.5890       0.1178       0.1251       0.0027       0.9352  0.2877          0.0018
+15:51  1095       0.5817       0.1781       0.1817       0.0082       0.9379  0.2868          0.0046
+15:54  1095       0.5836       0.1516       0.1598       0.0128       0.9379  0.2858          0.0037
+15:57  1095       0.4311       0.9470       0.2037       0.1032       0.0000  0.2858          0.0959
+16:00  1095       0.4338       0.1763       0.1826       0.0192       0.0000  0.3753          0.0082
+16:03  1095       0.4438       0.1845       0.1963       0.0247       0.0000  0.3808          0.0146
+16:06  1095       0.4411       0.0895       0.0950       0.0046       0.0000  0.3763          0.0009
+16:09  1095       0.4384       0.0721       0.0776       0.0046       0.0000  0.3845          0.0018
+16:12  1095       0.4329       0.0594       0.0639       0.0018       0.0000  0.3854          0.0009
+16:15  1095       0.4320       0.0530       0.0557       0.0018       0.0000  0.3863          0.0009
+16:18  1095       0.4301       0.0521       0.0530       0.0055       0.0000  0.3872          0.0027
+16:21  1094       0.4333       0.0484       0.0494       0.0064       0.0000  0.3848          0.0046
+16:24  1094       0.4305       0.0347       0.0356       0.0046       0.0000  0.3821          0.0037
+16:27  1094       0.4324       0.0320       0.0329       0.0027       0.0000  0.3821          0.0027
+16:30  1095       0.4329       0.0329       0.0356       0.0046       0.0000  0.3817          0.0018
+16:33  1095       0.4374       0.0292       0.0292       0.0046       0.0000  0.3836          0.0027
+16:36  1095       0.4365       0.0192       0.0192       0.0000       0.0000  0.3863          0.0027
+16:39  1095       0.4356       0.0210       0.0228       0.0000       0.0000  0.3890          0.0027
+16:42  1095       0.4374       0.0210       0.0219       0.0018       0.0000  1.0000          0.4374
+16:45  1095       0.4347       0.0146       0.0164       0.0000       0.0000  1.0000          0.4347
+16:48  1095       0.4347       0.0183       0.0192       0.0009       0.0000  1.0000          0.4347
+16:51  1095       0.4356       0.0174       0.0174       0.0018       0.0000  1.0000          0.4356
+16:54  1095       0.4365       0.0137       0.0137       0.0009       0.0000  1.0000          0.4365
+16:57  1095       0.4365       0.0137       0.0137       0.0009       0.0000  1.0000          0.4365
+17:00  1095       0.0000       0.8941       0.8941       0.0000       0.0000  1.0000          0.0000
+
+Window totals over 1,139 sessions:
+  RTH 09:33-15:54                      bars=143089  |M|>=3 on 58.3% ; M moved on 14.05% ; upcrossings=1749 (1.222%/bar)
+  16:00-16:27 (entries ALLOWED)        bars=10947   |M|>=3 on 43.5% ; M moved on 8.02% ; upcrossings=83 (0.758%/bar)
+  16:30-16:36 (blocked by entryBlocked) bars=3285    |M|>=3 on 43.6% ; M moved on 2.71% ; upcrossings=10 (0.304%/bar)
+  16:39-17:00 (blocked by forced-flat) bars=8760    |M|>=3 on 38.1% ; M moved on 12.67% ; upcrossings=7 (0.080%/bar)
+
+==============================================================================
+PART 2c -- THE 16:00 SPIKE: B-MOM's HARDCODED 15:57 SHUTDOWN
+==============================================================================
+BmomBar() zeroes bmomPos at hm>=155700 and never revives it until the next 09:33,
+so B == 0 on EVERY bar from 15:57 to the close. B carries weight 2.83 -- 94% of the
+3.0 entry threshold -- so removing it is a large, deterministic, once-a-day jump in M.
+
+  sessions examined                                 : 1095
+  B was non-zero on the preceding 15:54 bar          : 1027
+  |M|>=3 at 15:57 with B zeroed (actual)             : 472
+  |M|>=3 at 15:57 if B had NOT been zeroed           : 642
+  crossings CREATED purely by the B shutdown         : 111 (10.1% of sessions)
+  P(upcross) at the 15:57 bar vs the RTH average     : 0.1032 vs 0.0121 (8.5x)
+  REAL BEST_ONE_NQ entries stamped 16:00            : 105
+  of which the 15:57 B shutdown created the crossing: 102 (97%)
+  (the remainder were already above threshold at 15:54 but flat, or crossed on Tp)
+
+==============================================================================
+PART 2e -- WITH W17 C2 APPLIED (session-relative 30/21 min instead of 16:30/16:39)
+==============================================================================
+Product B (one lot), entries within N min of the session's OWN close:
+  as built (hardcoded 16:30/16:39) : [0, 0, 0, 0, 3, 17, 152]
+  with C2 (sessionEnd-30/-21)      : [0, 0, 0, 0, 3, 17, 152]   (N = [5, 10, 15, 20, 30, 45, 60])
+Product A, risk-increasing events within N min of the session's OWN close:
+  as built (hardcoded 16:30/16:39) : [0, 0, 3, 4, 14, 101, 621]
+  with C2 (sessionEnd-30/-21)      : [0, 0, 0, 0, 9, 96, 616]   (N = [5, 10, 15, 20, 30, 45, 60])
+
+The existing entry block IS a no_new_entry_after rule. Expressed session-relative
+by C2 it is exactly no_new_entry_after = sessionEnd - 30 minutes, on EVERY session
+including the 43 early closes. Nothing below 30 minutes survives it, on any object.
+
+==============================================================================
+PART 2f -- PRODUCT B's ZERO NEAR EARLY CLOSES: is it protection or small n?
+==============================================================================
+On an early-close session neither hardcoded rule fires, so entries are NOT blocked
+near the close. Observed count is nonetheless 0. Test it against the clock-matched
+hazard from NORMAL sessions at the SAME wall-clock times:
+  BEST_ONE_NQ   close 13:00: normal-session rate 0.0621/sess x 31 early sessions -> expected 1.93
+  BEST_ONE_NQ   close 13:15: normal-session rate 0.0703/sess x 9 early sessions -> expected 0.63
+  BEST_ONE_NQ   close 09:15: normal-session rate 0.1160/sess x 2 early sessions -> expected 0.23
+  BEST_ONE_NQ   close 09:30: normal-session rate 0.1096/sess x 1 early sessions -> expected 0.11
+  BEST_ONE_NQ   TOTAL expected in the final 60 min of the 43 early closes = 2.90 ; OBSERVED 0 ; P(0 | Poisson) = 0.055
+  BEST_ONE_MNQ  close 13:00: normal-session rate 0.0329/sess x 31 early sessions -> expected 1.02
+  BEST_ONE_MNQ  close 13:15: normal-session rate 0.0329/sess x 9 early sessions -> expected 0.30
+  BEST_ONE_MNQ  close 09:15: normal-session rate 0.0986/sess x 2 early sessions -> expected 0.20
+  BEST_ONE_MNQ  close 09:30: normal-session rate 0.0904/sess x 1 early sessions -> expected 0.09
+  BEST_ONE_MNQ  TOTAL expected in the final 60 min of the 43 early closes = 1.60 ; OBSERVED 0 ; P(0 | Poisson) = 0.201
+
+INTERPRETATION: the zero on early-close sessions is NOT evidence of protection --
+43 sessions is simply too few for a ~1-in-15-sessions hazard to show up. Do not
+read it as a mechanism. The mechanism claims below rest on the 1,095 normal
+sessions and on the counterfactual replays, not on this zero.
+
+==============================================================================
+PART 2d -- WHY T FREEZES: realised 3-min move vs the member stop distances
+==============================================================================
+Member m flips only when price travels S_m = clamp(VolMult_m * sigma, 40..1200 ticks)
+from its anchor, with VolMult in {6,8,...,30} and sigma = a causal 460-bar mean of
+|close-to-close|. Pooled sigma over the dev window = 6.50 NQ points, so
+S ranges about 39 to 195 points (clamped to [10, 300] points).
+
+mean |3-min close change| by time of day (MNQ, points):
+  RTH 09:33-15:54 : 11.01
+tod
+15:45     9.40
+15:48     9.90
+15:51    14.40
+15:54    10.90
+15:57    14.16
+16:00    12.00
+16:03    12.78
+16:06     8.34
+16:09     6.84
+16:12     6.14
+16:15     5.85
+16:18     5.83
+16:21     5.57
+16:24     4.84
+16:27     4.14
+16:30     4.16
+16:33     4.38
+16:36     3.89
+16:39     3.64
+16:42     3.31
+16:45     3.06
+16:48     3.41
+16:51     3.45
+16:54     3.20
+16:57     3.19
+17:00     3.57
+
+So in the final half hour a typical bar moves ~3.6 points against a 39-195 point
+stop distance sized on the whole-day sigma. Member flips therefore stop happening,
+T stops moving, and with B already pinned to 0, M is frozen.
+
+==============================================================================
+PART 3 -- VERDICT INPUTS
+==============================================================================
+late-entry counts, session-aware, all three objects, N=45:
+  BEST_ONE_NQ (Product B, 1 NQ)      n=17
+  BEST_ONE_MNQ (Product B, 1 MNQ)    n=6
+  PRODUCT_A all risk-increasing      n=101
+  PRODUCT_A open                     n=29
+  PRODUCT_A increase                 n=65
+  PRODUCT_A reversal                 n=7
+
+counterfactual entry counts with the coded blocks removed (Product B NQ):
+  baseline                     1976
+  16:30 block removed          1979  (+3)
+  block + forced-flat removed  1982  (+6)

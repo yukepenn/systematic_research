@@ -1,8 +1,97 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-09, Wave-16 (MEGA PROMPT V5 rev2, owner directive) W0 verification
-IN PROGRESS — see the section immediately below, which supersedes the Product B framing
-from 2026-08-08 for BEST_ONE_MNQ specifically. Multiple-testing ledger: registry at seq 448._
+_Last update: 2026-08-09, **Wave-17** (MEGA PROMPT V6). Registry at seq 453.
+Wave 17 added **ZERO new alpha hypotheses** — every item was compliance, diagnostic,
+execution or verification work, which §15 leaves uncapped and which costs no alpha budget.
+The deflation-adjusted view of the incumbent is therefore **unchanged** from Wave 16
+(standing: DSR 0.45–0.55 against a 0.90 bar; Harvey–Liu-adjusted Sharpe of the incumbent's
+key comparison = 0.000). Wave 17 supersedes several Wave-16 statements below — read this
+section first._
+
+## Wave-17 verdict (MEGA PROMPT V6, seq 449-453; runs/W17_C4_COMPLIANCE + runs/W17B_C4_WATCHDOG)
+
+**Product B is now C4-compliant for the first time, and Product A is not yet.**
+
+| object | net (dev) | trades | C4 breaches before → after | status |
+|---|---:|---:|---:|---|
+| `SolarWaveOneContractNQ_v4` | **$303,239.64** | 1,976 | 16 → **0** | PASS, not yet parity-certified |
+| `SolarWaveOneContractMNQ_v4` | **$28,705.20** | 1,976 | 1,077 → **0** | PASS, not yet parity-certified |
+| Product A `SolarWaveSMMaster_v2` | $177,315 (unchanged) | — | **39, still open** | fix not yet propagated |
+
+**1. V1-R1 — the flagship was never audited; it is now, and it is clean on normal sessions.**
+`SolarWaveSMMaster_v2`: 962 positions open at the 16:39 decision bar → 962 flatten fills at
+16:42 → **zero** bars holding at 16:42, at 16:45, or anywhere in 16:45-17:00. Product A does
+NOT share the MNQ defect and its $177,315 / Sharpe 1.17 headline is **not** provisional on
+that ground. It does carry the early-close defect (39 breaches) — see 4.
+
+**2. V1-R2 — the MNQ root cause, established on the execution ledger.** A pre-registered
+falsifiable prediction was tested: if `SubmitTarget` short-circuits, ~100% of MNQ exits must
+be reversals or engine backstops. Measured **100.0%** (30.9% reversals + 67.6% at 17:00 +
+1.4% at early-close session ends); **zero voluntary exits ever**, against an NQ control of
+1,888 (95.6%). Hypotheses (b) wrong-series `hm` and (c) no fill bar were **refuted by
+measurement**. The established cause is the **arrangement** recorded in KNOWN_ERRORS #7.
+Narrowed claim, stated in the REPORT: the finer mechanism (stale position read vs unfilled
+order) is NOT discriminated by any artifact in hand, and the fix does not depend on it.
+
+**3. V1h — THE DIRECTIVE'S PREMISE IS FALSE, and the Wave-16 framing that produced it was
+mine.** The 16 NQ trades exiting after 16:45 are not overnight positions: all 16 are entered
+18:06-20:24 and exited 18:39-23:30 the **same evening**, inside the post-18:00 window where
+intraday margin has resumed. Correct exposure test → `BEST_ONE_NQ` had **0** normal-session
+breaches, not 16. "Exit time-of-day > 16:45" was simply the wrong test. Non-compliance aside,
+all 16 are losses totalling ≈ −$33.5k — a real pattern, and a D2/D4 diagnostic lead.
+
+**4. V1e — the real breach, previously undocumented, hitting all three objects.** 43 holiday
+early-close sessions in dev (~10/yr: 31 at 13:00 ET, 9 at 13:15, 2 at 09:15 Good Friday, 1 at
+09:30 = the 2025-01-09 Day of Mourning). The hardcoded `hm >= 163900` never fires on them, so
+only the 30-second engine backstop closes the position — ~14.5 minutes **inside** the
+initial-margin window. Fixed by making the schedule session-relative
+(`sessionEnd − 30 min` / `− 21 min`, which equal 16:30 / 16:39 on a normal close, so all 1,095
+normal sessions are unchanged by construction).
+
+**5. The cost of compliance, reported and accepted.** NQ: **−$209.36 (−0.07%)** over 4.4
+years. Per §13 rule 7 that is the price of the constraint; the 21-minute buffer was not moved
+to recover it. MNQ post-fix is a **NEW OBJECT** and its $28,705.20 is not comparable to the
+broken object's $28,900.70. Independent corroboration nobody optimised for: MNQ's trade count
+is now **1,976, identical to NQ's** as the frozen rule requires, and its net sits **+0.09%**
+from the canonical Python reference ($28,676.10) where the broken object was −0.78% off with
+daily corr 0.8996. The reference did not move; the object moved toward it.
+
+**6. Two self-caught defects, reported rather than quietly fixed.** (i) The first C4 audit
+reported a phantom breach: position had been rebuilt from the ledger's `target` column, which
+is not updated when the **engine** closes a position — now rebuilt from order actions.
+(ii) `_v3`'s watchdog was a **silent no-op** and reproduced `_v2` to the cent; caught only
+because the inertness prediction had been pre-registered as falsifiable. Cause: `Time`,
+`Close` and `CurrentBar` are **BarsInProgress-relative**, so `Time[0]` inside the BIP-1
+handler read the execution series, not the decision series. **Same error class as the original
+MNQ bug** — code correct in one series arrangement, silently wrong in another, no exception,
+no log line.
+
+**7. V3-R5 — Wave 16's repo-exposure conclusion was overstated; corrected.** A local
+`git rev-list` cannot test what the GitHub **remote** serves. Supported finding: *not
+reachable via normal history traversal; remote retention UNVERIFIED*. Also newly established
+and never previously recorded: the repository is currently **PUBLIC** (0 forks, 0 stars).
+Parked in `OWNER_QUEUE.md` §OQ-1; no irreversible action taken.
+
+**8. Companion analyses, each independently red-teamed** — `V4_FRICTION.md` (friction share:
+Product A 0.119 / BEST_ONE_NQ 0.028 / BEST_ONE_MNQ 0.066 commission-only, plus the house
+`FS_house` definition and a commission sensitivity band, since the exact Lifetime all-in rate
+is unconfirmed → `OWNER_QUEUE.md` §OQ-2); `O1_OBJECTIVE.md` (O1/O1a expected-log-growth
+objective with bootstrap ruin penalty, pre-registered before any number was computed);
+`V1F_EVENTDAY.md` (event-day 4X margin as a forward leverage constraint, with an explicit
+provenance tier on every calendar date and 15 rows marked UNVERIFIED rather than guessed);
+`V1D_CLOSURE.md` (**V1d = NOT-A-PROBLEM**: removing the 16:30 block entirely adds 3 entries
+across 1,139 sessions, so there is no distribution to fit a cutoff to).
+
+**Still open after Wave 17** (not fabricated, not silently dropped): V1-R4 full NT8 re-parity
+for both `_v4` objects — until it passes they stay `_v4`, not `_Final`, and must not be
+presented as certified; propagation of the early-close + watchdog fixes to Product A
+(39 breaches) and to `SolarWaveSMOneLot_v1`; V1g intraday-path capital map; V5 MNQ bar-by-bar
+fill audit (deferred deliberately — the fix changed the trade set, so it must run on the new
+object); O2 retro-scoring; and all of W1–W4.
+
+## Wave-16 W0 verification (MEGA PROMPT V5 rev2, seq 443-448) — SUPERSEDED IN PART BY WAVE 17
+_Items 3 (V1h premise), the "0.81% residual" framing, and the V3 conclusion above are
+corrected by the Wave-17 section. Left unedited below per the append-don't-rewrite convention._
 
 ## Wave-16 W0 verification — IN PROGRESS (MEGA PROMPT V5 rev2, seq 443-448 so far)
 **HEADLINE: BEST_ONE_MNQ has a confirmed critical bug and is NOT currently a valid C4-

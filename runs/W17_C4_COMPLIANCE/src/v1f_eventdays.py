@@ -199,10 +199,14 @@ def cpi_release(rel_y, rel_m):
 # BEA Personal Income & Outlays. RULE_APPROX: the last Friday of the release month.
 # Hit-rate measured below against checkpoints and reported; known to fail in
 # Nov/Dec (holiday pull-forward) and occasionally Feb.
+# NOTE: the checkpoint set below deliberately includes Aug/Nov/Dec, the months where the
+# last-Friday anchor is EXPECTED to fail (holiday pull-forward / BEA schedule), so that the
+# measured hit-rate is not flattered by a convenient sample.
 PCE_CHECKPOINTS = {
     (2023, 1): date(2023, 1, 27), (2023, 2): date(2023, 2, 24), (2023, 3): date(2023, 3, 31),
     (2023, 4): date(2023, 4, 28), (2023, 5): date(2023, 5, 26), (2023, 6): date(2023, 6, 30),
-    (2023, 7): date(2023, 7, 28), (2023, 9): date(2023, 9, 29), (2023, 10): date(2023, 10, 27),
+    (2023, 7): date(2023, 7, 28), (2023, 8): date(2023, 8, 31), (2023, 9): date(2023, 9, 29),
+    (2023, 10): date(2023, 10, 27), (2023, 11): date(2023, 11, 30), (2023, 12): date(2023, 12, 22),
 }
 
 
@@ -369,9 +373,14 @@ def product_a_daily(merge_pair=False):
 # ===========================================================================
 # SECTION C -- ATTRIBUTION
 # ===========================================================================
-def attribute(daily, ev_sessions, label, rng):
+def attribute(daily, ev_sessions, label, seed=SEED):
     """daily: Series indexed by session date (dev window, all sessions).
-    ev_sessions: set of session dates flagged as scheduled-event sessions."""
+    ev_sessions: set of session dates flagged as scheduled-event sessions.
+
+    The placebo RNG is re-seeded per call so the result depends only on (series, event set)
+    and never on how many other calendars happened to be evaluated first -- and so the same
+    placebo index draws are used across objects (a paired comparison)."""
+    rng = np.random.default_rng(seed)
     s = daily.copy()
     n = len(s)
     is_ev = s.index.isin(ev_sessions)
@@ -586,7 +595,6 @@ def capital_grid_table(cmap, inst, contracts_per_unit, label, caps):
 # MAIN
 # ===========================================================================
 def main():
-    rng = np.random.default_rng(SEED)
     report = {}
 
     # ---------- A. calendar ----------
@@ -620,7 +628,9 @@ def main():
     approx_ev, approx_drop = to_sessions(APPROX)
     all_ev, all_drop = to_sessions(ALL)
     fomc_ev, _ = to_sessions(cal[cal["series"] == "FOMC"])
+    fomc_rec_ev, _ = to_sessions(cal[(cal["series"] == "FOMC") & (cal["tier"] == "RECALL")])
     nfp_ev, _ = to_sessions(cal[cal["series"] == "NFP"])
+    nfp_rule_ev, _ = to_sessions(cal[(cal["series"] == "NFP") & (cal["tier"] != "UNVERIFIED")])
     print(f"CORE  (RULE+RECALL = FOMC + NFP): {len(core_ev)} sessions (non-session dates dropped: {core_drop})")
     print(f"+APPROX (adds CPI+PCE rule dates): {len(approx_ev)} (dropped: {approx_drop})")
     print(f"ALL   (adds UNVERIFIED):          {len(all_ev)} (dropped: {all_drop})")
@@ -678,9 +688,11 @@ def main():
     rows = []
     for label, s in objs.items():
         for calname, evs in [("CORE_FOMC_NFP", core_ev), ("FOMC_only", fomc_ev),
-                             ("NFP_only", nfp_ev), ("PLUS_APPROX_cpi_pce", approx_ev),
+                             ("FOMC_2022_2025_recall_only", fomc_rec_ev),
+                             ("NFP_only", nfp_ev), ("NFP_no_shutdown", nfp_rule_ev),
+                             ("PLUS_APPROX_cpi_pce", approx_ev),
                              ("ALL_incl_unverified", all_ev), ("DILATED_core_pm1", dil)]:
-            r = attribute(s, evs, label, rng)
+            r = attribute(s, evs, label)
             r["calendar"] = calname
             rows.append(r)
     att = pd.DataFrame(rows)
@@ -701,7 +713,7 @@ def main():
                  "bottom1pct_p_onesided", "bottom5pct_event_hits", "bottom5pct_expected",
                  "bottom5pct_p_onesided", "placebo_pnl_share_p_low"]
     for cn in ["CORE_FOMC_NFP", "PLUS_APPROX_cpi_pce", "ALL_incl_unverified", "DILATED_core_pm1",
-               "FOMC_only", "NFP_only"]:
+               "FOMC_only", "FOMC_2022_2025_recall_only", "NFP_only", "NFP_no_shutdown"]:
         print(f"\n--- attribution ({cn}) ---")
         print(att[att["calendar"] == cn][keep_cols].to_string(index=False))
     print("\n--- per year (CORE) ---")
@@ -725,18 +737,52 @@ def main():
           f"{a_peak_ev} MNQ on CORE event sessions")
     report["product_a_peak_contracts"] = {"all": a_peak, "event_sessions": a_peak_ev}
 
+    # --- DOES THE MULTIPLIER EVEN TOUCH US? exposure at the release instant -----------
+    # A flat book needs no margin. Measure Product A's physical size at, and around, the
+    # release: BLS/BEA releases at 08:30 ET, FOMC decision at 14:00 ET. Margin is raised
+    # from 15 min before, so the window measured is [T-15min, T+60min].
+    bars["hm"] = bars["time"].dt.hour * 100 + bars["time"].dt.minute
+    expo = []
+    for tag, evset, T, lo, hi in [("FOMC_1400", fomc_ev, 1400, 1345, 1500),
+                                  ("NFP_0830", nfp_ev, 830, 815, 930)]:
+        g = bars[bars["sess"].isin(evset)]
+        at_T = g[g["hm"] == T]
+        win = g[(g["hm"] >= lo) & (g["hm"] <= hi)]
+        wmax = win.groupby("sess")["phys"].apply(lambda x: x.abs().max())
+        expo.append(dict(window=tag, n_event_sessions=len(evset),
+                         n_sessions_with_bar_at_T=int(len(at_T)),
+                         frac_nonflat_at_T=float((at_T["phys"] != 0).mean()),
+                         mean_abs_pos_at_T=float(at_T["phys"].abs().mean()),
+                         max_abs_pos_at_T=int(at_T["phys"].abs().max()),
+                         frac_sessions_nonflat_in_window=float((wmax > 0).mean()),
+                         mean_max_abs_pos_in_window=float(wmax.mean()),
+                         max_abs_pos_in_window=int(wmax.max())))
+    expo = pd.DataFrame(expo)
+    print("\n--- Product A exposure at the release instant (drives whether 4X bites) ---")
+    print(expo.to_string(index=False))
+    expo.to_csv(f"{OUT}/v1f_release_exposure_productA.csv", index=False)
+    report["release_exposure_productA"] = json.loads(expo.to_json(orient="records"))
+
     # --- early-close (initial-margin-breach) sessions that are ALSO event sessions ----
     from sm01_solarsim import load_bars_3m
     ab = load_bars_3m()
     ab = ab[pd.to_datetime(ab["sess_date"]) <= pd.Timestamp("2026-05-31")]
     lastbar = ab[ab["is_last_of_sess"]].copy()
     lastbar["hm"] = lastbar["time"].dt.hour * 100 + lastbar["time"].dt.minute
-    early = pd.to_datetime(lastbar.loc[lastbar["hm"] < 1700, "sess_date"].astype(str))
-    early_set = set(early)
+    sub = lastbar[lastbar["hm"] < 1700]
+    hm_counts = sub["hm"].value_counts().sort_index().to_dict()
+    # 2023-04-05 ends at 14:03 -- that is the DATA-GAP pseudo-session behind the
+    # 2023-04-05/06 bucketing artifact, NOT a scheduled holiday early close. Excluding it
+    # gives 43 = 31@13:00 + 9@13:15 + 2@09:15 + 1@09:30, reproducing spec.yaml's V1e count.
+    genuine = sub[sub["hm"].isin([1300, 1315, 915, 930])]
+    early_set = set(pd.to_datetime(genuine["sess_date"].astype(str)))
     overlap = sorted(early_set & core_ev)
-    print(f"early-close sessions in dev window: {len(early_set)}; "
+    print(f"sessions with last bar < 17:00: {len(sub)} {hm_counts}; genuine holiday early "
+          f"closes = {len(early_set)} (spec.yaml V1e says 43); "
           f"also CORE event sessions: {len(overlap)} -> {[str(d.date()) for d in overlap]}")
-    report["early_close_x_event"] = {"n_early_close": len(early_set),
+    report["early_close_x_event"] = {"n_lastbar_before_1700": int(len(sub)),
+                                     "hm_counts": {int(k): int(v) for k, v in hm_counts.items()},
+                                     "n_genuine_early_close": len(early_set),
                                      "n_overlap_core": len(overlap),
                                      "overlap": [str(d.date()) for d in overlap]}
 
@@ -799,6 +845,7 @@ def main():
               f"{OUT}/v1f_event_attribution_by_year.csv",
               f"{OUT}/v1f_event_attribution_by_series.csv",
               f"{OUT}/v1f_capital_map_productA.csv",
+              f"{OUT}/v1f_release_exposure_productA.csv",
               f"{OUT}/v1f_leverage_binding.csv", f"{OUT}/v1f_capital_grid.csv",
               f"{OUT}/v1f_leverage_summary.csv", f"{OUT}/v1f_summary.json"]:
         print(" ", p)

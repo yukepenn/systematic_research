@@ -145,6 +145,8 @@ def build_product_b(name, path, grid, pv, rt, provisional):
     e_low = tr["entry_time"].map(grid["low"])
     x_open = tr["exit_time"].map(grid["open"])
     x_close = tr["exit_time"].map(grid["close"])
+    x_high = tr["exit_time"].map(grid["high"])
+    x_low = tr["exit_time"].map(grid["low"])
     x_islast = tr["exit_time"].map(grid["is_last"]).astype(float).fillna(0.0).astype(bool)
     n_miss = int(e_open.isna().sum() + x_open.isna().sum())
     # trade lists carry no fill label, so the session-close backstop is identified as "the exit
@@ -176,6 +178,10 @@ def build_product_b(name, path, grid, pv, rt, provisional):
         "n_zero_slip_entries_explained_by_bar_range_cap": int((
             (tr["slip_entry_ticks"] == 0) &
             (((tr["dir"] == 1) & (e_open == e_high)) | ((tr["dir"] == -1) & (e_open == e_low)))).sum()),
+        "n_zero_slip_exits": int((tr["slip_exit_ticks"] == 0).sum()),
+        "n_zero_slip_exits_explained_by_bar_range_cap": int((
+            (tr["slip_exit_ticks"] == 0) &
+            (((tr["dir"] == 1) & (x_base == x_low)) | ((tr["dir"] == -1) & (x_base == x_high)))).sum()),
         "n_trades_entry_session_ne_exit_session": n_cross,
         "n_trades_outside_dev": int((~tr["in_dev"]).sum()),
         "first_sess": str(tr["sess"].min()), "last_sess": str(tr["sess"].max()),
