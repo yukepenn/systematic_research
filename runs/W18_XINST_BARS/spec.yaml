@@ -1,0 +1,60 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE any export is read.
+# INSTRUMENTATION EXPORT, NOT A TRIAL: no P&L is produced or read by this run.
+# Mirrors runs/AUDIT03_BARS/spec.yaml exactly in method; only the instruments differ.
+run_id: W18_XINST_BARS
+experiment_id: SYSTEM_MASTER_W18
+hypothesis_id: n/a (substrate prerequisite for W18R2_M5_XINST cross-instrument replication)
+family: infrastructure
+parent_candidate: n/a
+date_frozen: 2026-08-09
+timestamp_before_execution: commit timestamp authoritative
+strategy_class: AuditBarExport1 (existing, unmodified; src/ninjascript/AuditBarExport1.cs; trades nothing)
+engine_version: NT8 8.1.8.1 via CrossTrade RunStrategyBacktest (engine nt8_strategy_analyzer)
+vendor_dependency: none
+
+why_this_export_exists: >
+  MEGA PROMPT V6 §4 ranks cross-instrument replication WITHIN THE SAME ERA as the strongest
+  available substitute for a clean historical out-of-sample window, and V6 §9 M5 requires the
+  closed arm_BLEND_75 ATR-blend lead to be re-examined by exactly that method. No 2022-2026
+  3-minute OHLC substrate exists in this repo for any instrument other than NQ
+  (research/08_es_portability/ holds campaign-#1-era ES *result* CSVs, not bars, and not this
+  era). This run creates the missing substrate and nothing else. Per C2 the exported
+  instruments are MECHANISM-REPLICATION SAMPLES ONLY and are never a traded leg of any
+  product; nothing in this repo may propose trading them.
+
+instruments:
+  - "ES 09-26"
+  - "RTY 09-26"
+  - "YM 09-26"
+timeframe: {period_type: Minute, value: 3, market_data_type: Last}
+data_boundaries: {from_utc: "2022-01-01T06:00:00Z", to_utc: "2026-05-29T21:59:59Z"}
+trading_hours: instrument default (CME index futures ETH), same convention as AUDIT03_BARS
+commission_model: n/a (no trades)
+slippage_model: n/a
+fill_model: n/a
+contract_convention: >
+  Front-quarter 09-26 with the install's global back-adjusted merge policy, identical to the
+  "NQ 09-26" convention frozen in CLAUDE.md. NOTE the dev window ends 2026-05-29 here whereas
+  AUDIT03_BARS ran to 2026-07-31; that is deliberate — see runs/W18_HOLDOUT_DETERMINATION.
+
+pass_criteria: >
+  For each instrument: file written, timestamps strictly monotone, no duplicate timestamps,
+  bar count within 15% of NQ's dev-window count on the same calendar, and >= 95% of NQ dev
+  session dates present. Any instrument failing these is reported BLOCKED-BY-DATA and
+  EXCLUDED from M5 by name — it is NOT silently dropped and NOT approximated.
+reject_criteria: >
+  Instrument does not resolve, or history does not reach 2022-01, or the grid fails the
+  monotonicity/duplicate checks. Reported, not worked around.
+
+known_hazard_carried_forward: >
+  Wave-17 red team established that the NQ and MNQ 3-minute grids are NOT interchangeable
+  (13 NQ / 11 MNQ dev sessions carry internal gaps; counting session shape by bar count gives
+  44 non-17:00 sessions, not the calendar's 43). The same must be assumed across instruments.
+  M5 therefore aligns instruments on SESSION DATE, never on bar index, and every per-instrument
+  result is computed on that instrument's own grid.
+
+selection_metric: none
+research_family_budget: 0 trials (instrumentation; counts_as_trial: no)
+degrees_of_freedom: 0
+selection_relevance: none
+outputs: es_3m_2022_2026.csv, rty_3m_2022_2026.csv, ym_3m_2022_2026.csv, EXPORT_LOG.md
