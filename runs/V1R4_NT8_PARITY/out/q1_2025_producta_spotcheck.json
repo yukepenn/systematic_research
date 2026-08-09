@@ -1,0 +1,32 @@
+{
+  "purpose": "Spot-check comparison for Product A (SolarWaveSMMaster_v3) over Q1 2025 only -- the largest sub-window that completed within the MCP session's stability ceiling.",
+  "nt8": {
+    "strategy_class": "SolarWaveSMMaster_v3",
+    "instrument_requested": "NQ 09-26",
+    "instrument_resolved": "NQU6",
+    "from": "2025-01-01T06:00:00Z",
+    "to": "2025-03-31T21:59:59Z",
+    "bars_loaded": 28664,
+    "commission_template": "NinjaTrader Brokerage Lifetime",
+    "fill_type": "Standard",
+    "NetProfit": 9047.799999998475,
+    "TradesCount": 1020,
+    "ProfitFactor": 1.0942231830810911,
+    "GrossProfit": 105072.99999999939,
+    "GrossLoss": -96025.20000000091,
+    "TotalCommission": 1487.1999999999755
+  },
+  "python_twin": {
+    "source": "runs/SMV2M_MASTER_BUILD/twin.py, sliced to 2025-01-02..2025-03-31 from twin_daily.csv",
+    "caveat": "twin.py implements the PRE-C4-FIX hardcoded-clock ops rule (hm>=163000/163900), not _v3's session-relative rule -- a known, disclosed source of divergence on early-close sessions.",
+    "n_sessions": 63,
+    "net": 11781.499999998108,
+    "n_fills": 1417
+  },
+  "discrepancy": {
+    "absolute": 2733.700000000363,
+    "relative_to_python": 0.23205722480210273
+  },
+  "candidate_cause": "2025-01-09 (National Day of Mourning, CME early close at 09:30 ET) falls inside this window; runs/W17_C4_COMPLIANCE/REPORT.md documents this exact session as one where the hardcoded-clock rule's minute-based conditions never engage, while the v3 session-relative rule correctly does. Not confirmed as the full explanation -- no bar-by-bar reconciliation was performed this wave.",
+  "pass_fail": "FAIL against the pre-registered 1% net-profit tolerance in spec.yaml"
+}
