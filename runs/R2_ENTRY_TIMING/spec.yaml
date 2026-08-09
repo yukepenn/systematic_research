@@ -1,0 +1,58 @@
+run_id: R2_ENTRY_TIMING
+family: "R2 -- entry timing / pullback / confirmation (MEGA RESEARCH DIRECTIVE sec12,
+  second-priority construction family)"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: "2026-08-09"
+nature: "Diagnostic-first (directive sec19 PHASE D). No construction/promotion in this run
+  unless the diagnostic finds a broad, monotonic, chronologically-stable relationship."
+
+motivation: >
+  Owner's own question (sec12): is immediate threshold crossing always the highest-quality
+  entry, or does requiring confirmation improve entry quality? S2_SELTIME already demonstrated
+  the danger of suppressing rare right-tail entries via a blanket time-based block (directive
+  sec12/13's standing warning, esp. missing 2025-04-09). R2-A/B/C must be tested as CONDITIONAL
+  persistence/confirmation, not a universal delay.
+
+reference_object: >
+  Product-B shared decision core (pos_incumbent / M / T, reused from
+  runs/P0_TRADESTATE_AUTOPSY/out/ledger_full.parquet -- already reconciled exactly to the
+  certified $301,915.92). Entries = bars where position transitions 0 -> nonzero (1,978 total
+  position-blocks catalogued in P0's out/block_level_summary.csv).
+
+diagnostic_R2A_score_persistence: >
+  For every entry event, M at entry (M_entry), overshoot = |M_entry| - ENTRY_LEVEL(3.0),
+  1-bar-forward M (M_entry+1) and 2-bar-forward M (M_entry+2) are looked up directly from the
+  already-computed M array (a market-conditional fact, independent of the strategy's own
+  position -- no lookahead bias in using "what M does next" as a descriptive covariate of an
+  entry that already happened). "reverted" = sign(M) no longer beyond +-ENTRY_LEVEL within 1/2
+  bars. Correlate persistence and overshoot with the block's own net_pnl / MFE / decile bucket
+  (already computed by P0). Diagnostic only; no filtering rule applied to history yet.
+
+diagnostic_R2B_pullback_reclaim: >
+  For a subset of entries with a clean pre-entry price reference (most recent local pivot before
+  the crossing bar, defined causally from `roll_hi20`/`roll_lo20` already in the P0 ledger),
+  measure whether price pulls back toward the entry level before continuing, normalized by
+  sigma460 (ATR proxy). Descriptive correlation with outcome only.
+
+diagnostic_R2C_conditional_delay: >
+  Does the (dis)value of persistence/confirmation depend on signal strength (overshoot),
+  volatility (range_over_atr), Solar consensus (n_bullish/n_bearish), or B-MOM agreement
+  (sign(B)==sign(T))? Tested as INTERACTION terms in the same conditional-buckets framework, not
+  a universal rule.
+
+tail_preservation_check: >
+  For ANY entry-delay/confirmation idea that reaches construction, explicitly trace whether it
+  would have delayed or missed 2025-04-09 or any other top-20 incumbent trend-day/trade (directive
+  sec13). Missing a top-tier incumbent winner is disqualifying regardless of aggregate metrics.
+
+promotion_gate: "Same structure as R1 sec (a)-(f); only reached if the diagnostic phase finds a
+  broad, monotonic, chronologically-stable, NOT already-explained-by-existing-filters
+  relationship. Construction is NOT preregistered in this file; a positive diagnostic finding
+  requires its own bounded child spec before any parameter is tested as a trading rule."
+
+falsification_condition: >
+  If persistence/overshoot/pullback show no material, monotonic, chronologically-stable relation
+  to outcome (or the relation is fully explained by variables already inside M/EntryLevel), R2 is
+  closed CONFIRMED-NOT-BENEFICIAL or INCONCLUSIVE with no construction attempted, per directive
+  sec19's own diagnostic-first discipline ("kill quickly if redundant").
