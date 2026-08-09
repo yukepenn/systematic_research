@@ -1,0 +1,105 @@
+run_id: U7_2026_TIMING_REGIME
+family: U7 (2026 entry-timing-regime explanation)
+directive: "CONTINUOUS SYSTEM EVOLUTION directive, U7 task order (2026-08-09)"
+depends_on: >
+  U0_UNIFIED_STATE (runs/U0_UNIFIED_STATE/out/u0_state_table.parquet, correctness-gated against
+  the 3 certified canonical nets -- read-only, no other run's ledger re-read). R2_ENTRY_TIMING
+  (runs/R2_ENTRY_TIMING/R2V1_VERDICT.md -- confirm_bars=2 fixed 2-bar delay, full-history
+  headline +$26,121.60 but 2022-2025-only delta -$4,431.36, LOYO-2026 confirms, mechanism is
+  93% pure-delay net COST -$81,630 offset by 7.1% redirected/cancelled entries net BENEFIT
+  +$106,847). R2B_PULLBACK_RECLAIM (runs/R2B_PULLBACK_RECLAIM/R2B_VERDICT.md -- price-path
+  pullback/reclaim gating, full-history +$23,383.20 but 2022-2025-only delta -$4,550.92,
+  LOYO-2026 confirms; pullback magnitude (ATR units, 6-bar window) monotonically predicts outcome,
+  Spearman -0.32). Both mechanisms independently show "no edge 2022-2025, all edge from the
+  106-session 2026-01-02..2026-05-29 stub" -- CLOSED, NOT PROMOTED, no third entry-delay rule
+  authorized. research/system_master/CURRENT_TRUTH.md Wave-19 D7 diagnostic (already found, via a
+  DIFFERENT 7-variable market panel + Mahalanobis distance, that the 2026 stub is NOT a
+  multivariate outlier (93.7th pct) and its nearest historical analog is 2025-04-25..2025-09-19,
+  88.6th pct, robust across window lengths 40-180) -- cross-referenced, not re-derived, in step 3.
+
+hypothesis: >
+  WHY did two mechanistically distinct entry-timing candidates (fixed persistence delay / adaptive
+  price-path reclaim) both show a real benefit concentrated almost entirely in the 106-session
+  2026-01-02..2026-05-29 stub and ~zero-to-negative benefit across 2022-2025? Identify which
+  state-variable regime shift (volatility, trend persistence, reversal frequency, gap behavior,
+  session-phase entry mix, conviction-building speed, consensus strength, participation) most
+  plausibly explains the mechanism-level interaction, then test whether that shift's level recurs
+  anywhere in 2022-2025 (a genuine historical analog) and whether the same entry-timing benefit
+  shows up there too.
+
+explicit_non_reopen: >
+  This run is EXPLICITLY FORBIDDEN from constructing a third entry-delay/reclaim rule of any kind.
+  No candidate is built, no parameter is tuned, no NinjaScript/CrossTrade object is touched. This
+  is diagnostic/explanatory only -- answering WHY, not "try again with a new confirm rule."
+
+scope: >
+  Diagnostic run only. No candidate construction, no parameter changes, no NT8/CrossTrade calls,
+  no modification of Product A or Product B. Reads runs/U0_UNIFIED_STATE/out/u0_state_table.parquet
+  ONLY as its state-variable source (no other run's ledger re-read). Writes only under
+  runs/U7_2026_TIMING_REGIME/. Does not touch U0's files, R2/R2B's files, or any other run
+  directory. Runs no git command (orchestrating session commits after review).
+
+periods: >
+  P0 = 2022-2025 (is_health_only_bar==False & year<2026), the baseline both R2V1 and R2B measured
+  "no edge" against. P1 = the 106-session 2026 canonical stub (year==2026 & is_health_only_bar==
+  False, 2026-01-02..2026-05-29) -- THE period where R2V1/R2B's edge concentrated; this is the
+  primary comparison target. P2 = is_health_only_bar==True (45 sessions, 2026-06-01..2026-07-31,
+  the health-only extension) -- reported separately and observationally per U0's mechanical split,
+  never blended with P0 or treated as part of the already-adjudicated "2026 stub." P1 union P2 is
+  also reported as "year==2026" per the task's explicit request, clearly labeled as a union of a
+  dev-window slice and an observational-only slice, not a single homogeneous sample.
+
+plan:
+  step1_distribution_shift: >
+    Bar-level and entry-block-level (block_id_B, action_B=='ENTRY') distributional comparison of
+    sigma460_atr_proxy_pts, trend_efficiency_20, range_efficiency_20, a reversal-frequency proxy
+    (sign(M) flip count per session; action_B=='REVERSAL' count per session), causal session-open
+    gap (|open - prior session close| at each session's first bar, in points and ATR units),
+    session_phase distribution of entries, clv_signed, vwap_disp_atr, M_slope_20, M_change,
+    vote_dispersion, vol_surprise -- P0 vs P1, P0 vs P2, P0 vs (P1+P2), reported as mean/median/std
+    plus a standardized effect size (pooled-std mean difference) and the P1/P2 median's percentile
+    rank within the P0 distribution. No filter/rule construction.
+  step2_rank_explanations: >
+    Rank candidate state-variable shifts by (a) standardized effect size and (b) direct
+    mechanistic linkage to what R2V1/R2B's constructions actually do (delay-then-commit,
+    pullback-then-reclaim) -- explicitly including two mechanism-specific proxies computed at the
+    ENTRY-block level: (i) quick-reversal rate = fraction of ENTRY blocks with block duration
+    (age_bars_B at block end) <= 2 bars, directly the population R2V1's confirm_bars=2 rule would
+    cancel/redirect; (ii) 6-bar-window pullback magnitude in ATR units (MAE_B_dollars at
+    age_bars_B==6 or block end if shorter, divided by sigma460_atr_proxy_pts * PV_NQ at the entry
+    bar), directly R2B's own diagnostic variable. Trace the causal story for the top-ranked
+    variable(s), not just report correlation.
+  step3_historical_analog: >
+    Using the top 1-2 ranked variables, compute a monthly (or quarterly, if monthly is too sparse)
+    level across 2022-2025 and find the period(s) whose level is closest to P1's level (nearest
+    Euclidean/absolute distance in standardized units) -- a genuine nearest-analog search, not
+    cherry-picked. For entries falling in the analog period(s), run a lightweight diagnostic
+    proxy of R2V1's mechanism (per-ENTRY-block delta = captured P&L if the first 2 bars of
+    participation are skipped and blocks shorter than 3 bars are given 0 instead of their full
+    outcome -- NOT the full validated confirm_bars=2 state machine) and report whether the analog
+    period's proxy benefit resembles P1's or resembles P0's. Cross-reference against D7's own
+    already-established analog (2025-04-25..2025-09-19, found via a different market-variable
+    panel) for corroboration/contrast -- not re-derived from scratch.
+  step4_verdict: >
+    Name the most plausible mechanism with evidence, state whether it generalizes to the analog
+    period(s) found in step 3 (yes/no/inconclusive with actual numbers), and give an explicit
+    advisory-only recommendation on whether a FUTURE state-conditioned (not blanket-window)
+    entry-timing family would be justified. No construction happens in this run regardless of the
+    answer.
+
+standing_rigor: >
+  Interpretable statistics only (Spearman, OLS via np.linalg.lstsq if needed, bucket
+  residualization, standardized effect sizes) -- no black-box ML, per directive sec26-27.
+  Right-tail preservation: any state-conditioned finding that looks like it could motivate a
+  future filter is checked against the top-20 all-time winning Product-B blocks before being
+  described as usable, reporting what fraction would be affected. Chronology: year-by-year
+  (2022/2023/2024/2025/2026-canonical) stability reported for any finding; June-July-2026
+  (P2/is_health_only_bar==True) is observational-only, never blended into a chronology verdict.
+
+non_goals:
+  - No entry-delay, pullback-reclaim, or any other entry-timing rule construction of any kind.
+  - No modification of Product A (SolarWaveSMMaster_v4) or Product B (SolarWaveOneContractNQ_v5/
+    MNQ_v5).
+  - No NT8/CrossTrade calls.
+  - No modification of U0 or any file outside runs/U7_2026_TIMING_REGIME/.
+  - No git operations.
