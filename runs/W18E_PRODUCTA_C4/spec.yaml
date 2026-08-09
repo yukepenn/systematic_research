@@ -1,0 +1,95 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE any code is written.
+run_id: W18E_PRODUCTA_C4
+experiment_id: SYSTEM_MASTER_W18
+hypothesis_id: §12 PROPAGATION — the C2/C3 flatten fixes promoted for Product B in Waves 17/17B
+  must reach Product A. Carried on the still-open list since Wave 17.
+family: compliance
+track: E (engineering) — MEGA PROMPT V7 §B. Runs ALONGSIDE Track R, never in front of it.
+date_frozen: 2026-08-09
+alpha_budget_consumed: 0 (compliance work; §15 leaves it uncapped)
+
+# ---------------------------------------------------------------------------
+# WHAT IS ALREADY ESTABLISHED (do not re-derive; measured in Wave 17)
+# ---------------------------------------------------------------------------
+established_before_this_spec:
+  - Product A `SolarWaveSMMaster_v2` is COMPLIANT on all 1,138 normal sessions: 962 positions
+    open at the 16:39 decision bar → 962 flatten fills at 16:42 → zero bars holding at 16:42,
+    at 16:45, or anywhere in 16:45–17:00. (runs/W17_C4_COMPLIANCE/REPORT.md V1-R1.)
+  - Product A carries **39 C4 breaches**: 38 on holiday early closes + the 2023-04-05 data-gap
+    session. Cause: the flatten schedule is hardcoded to the normal session clock
+    (`hm >= 163900`), which never fires on an early-close session, so only NT8's
+    `ExitOnSessionCloseSeconds = 30` backstop closes the position — ~14.5 minutes INSIDE the
+    initial-margin window that opens 15 minutes before the early close.
+  - Product A already uses the correct series arrangement (signal on the primary series,
+    execution as the added series at index 1, position via `Positions[1]`, orders at
+    `barsInProgressIndex 1`). It does NOT share the MNQ defect. No arrangement change is needed
+    or authorized here.
+  - The identical fix has already been built, measured and verified on both Product B objects:
+    `SolarWaveOneContract{NQ,MNQ}_v4`, 0 breaches, with the watchdog proven inert on normal
+    data by measurement (1 differing fill in 3,952 on MNQ, 0 in 3,952 on NQ).
+
+# ---------------------------------------------------------------------------
+# AUTHORIZED CHANGES — exactly two, both already proven on Product B
+# ---------------------------------------------------------------------------
+change_C2_session_relative_flatten: >
+  Replace the hardcoded `hm >= 163900 && hm < 180000` (force target 0) and
+  `hm >= 163000 && hm < 180000` (no increases/reversals) with session-relative equivalents
+  computed from a `SessionIterator` over the PRIMARY series:
+    entryBlocked = nowTs >= sessionEnd.AddMinutes(-30)
+    forceFlat    = nowTs >= sessionEnd.AddMinutes(-21)
+  On a 17:00 close these evaluate to exactly 16:30 and 16:39, so **all 1,138 normal sessions
+  are unchanged by construction**, not by hope. `SessionIterator.ActualSessionEnd` honours the
+  trading-hours template including holiday early closes.
+change_C3_execution_series_watchdog: >
+  Add a `BarsInProgress == 1` handler that grants the EXECUTION series its own flatten
+  authority, gated on decision-series staleness (> 15 min) and on being inside the forced-flat
+  window, and which can only ever move the target toward FLAT. Verbatim in form from
+  `SolarWaveOneContractMNQ_v4`, INCLUDING the v3→v4 correction: use `Times[0][0]` and
+  `CurrentBars[0]`, never the unindexed `Time[0]`/`CurrentBar`, which are BarsInProgress-
+  relative and silently read the wrong series inside a BIP-1 handler.
+nothing_else_changes: >
+  KSolar 0.728654, KBmom 2.934159, TiltRescale 0.9026, TiltSma 50, TiltMult 1.25,
+  ShortHalf 0.5, BmomBandDays 14, VolPeriod 460, clamp [40,1200] ticks, StopMultiplier 179,
+  13 members, EntriesPerDirection 100, DefaultQuantity 1, exec instrument "MNQ 09-26",
+  IsExitOnSessionCloseStrategy true / ExitOnSessionCloseSeconds 30 (backstop retained),
+  and the realtime FAIL-CLOSED guard (`if (State == State.Realtime) return;` before any
+  submission) — which stays, per C5, and is extended to the new BIP-1 handler.
+new_class_name: SolarWaveSMMaster_v3 (per CLAUDE.md's hot-reload rule, the class is versioned)
+
+# ---------------------------------------------------------------------------
+# SUCCESS CRITERION — compliance, NEVER P&L
+# ---------------------------------------------------------------------------
+pass_criteria: >
+  **ZERO** C4 breaches on the full dev window (1,139 sessions), measured by
+  runs/W17_C4_COMPLIANCE/src/c4_audit.py on `SolarWaveSMMaster_v3`'s own NT8 execution ledger,
+  with position rebuilt from ORDER ACTIONS (not from the `target` column — that was the Wave-17
+  phantom-breach defect). A C4 breach is a holding interval intersecting
+  [session_close − 15 min, 18:00 ET) for that session's ACTUAL close.
+  The bar is ZERO, not "materially fewer".
+secondary_falsification_test (pre-registered, and the more informative one): >
+  On the 1,138 sessions with no early close and no data gap, v3 must reproduce v2's trade count
+  and net P&L. If net moves by more than the early-close episodes can account for, the change is
+  doing something it should not and must be REJECTED. A "no change" result is not automatically
+  a safe result — Wave 17B's `_v3` reproduced `_v2` to the cent because its watchdog was a
+  SILENT NO-OP, and that was caught only because this prediction had been stated as falsifiable.
+  The inertness must therefore be demonstrated per-fill, not inferred from a matching total.
+pnl_handling (V6 §13 rule 7, applied without consultation): >
+  P&L delta is REPORTED, never used to select. If full early-close compliance costs money, that
+  cost is the true price of the C4 constraint and is ACCEPTED. The 21-minute buffer is not
+  moved to recover it. This is not negotiable and is not re-litigated in the report.
+
+# ---------------------------------------------------------------------------
+# WHAT THIS RUN DOES NOT CLAIM
+# ---------------------------------------------------------------------------
+explicitly_out_of_scope: >
+  - NOT parity certification. V1-R4 re-parity is a separate open item; until it passes, v3 is
+    `_v3`, not `_Final`, and must never be presented as certified (NAMING.md).
+  - NOT a performance claim. Nothing here says anything about future profitability.
+  - `SolarWaveSMOneLot_v1` propagation remains open and is NOT covered by this spec.
+red_team: >
+  NOT commissioned, per V7 §G proportionality: this is engineering work that proposes no
+  promotion, and its headline is a compliance count measured on NT8's own execution ledger.
+  It gets a self-check and THIS DISCLOSURE that it was not independently reviewed. That budget
+  belongs in Track R.
+outputs: out/fills_v2_baseline.csv, out/fills_v3.csv, out/c4_audit_v3.json,
+  out/inertness_diff.csv, REPORT.md
