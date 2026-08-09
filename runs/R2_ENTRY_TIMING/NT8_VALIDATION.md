@@ -58,6 +58,13 @@ net-profit residual, on a real 13-month window spanning both regimes already use
 incumbent's own certificates. This substantially de-risks the Python-side R2 finding — it is not
 a Python-only artifact.
 
+> **UPDATE 2026-08-09: this executable-parity PASS is retained and still stands, but the R2
+> candidate itself is NOT PROMOTED** — see `R2V1_VERDICT.md`. Parity was never the issue; the
+> Python-side chronology (LOYO-2026 in particular) showed the underlying edge this NinjaScript
+> object faithfully implements does not exist outside the 2026 stub. Full-history NT8
+> certification and an MNQ sibling are correctly NOT built, per the promotion gate's own
+> ordering rule (don't spend that budget on a candidate chronology already rejected).
+
 ## What this does NOT establish yet (still required before promotion, unchanged from REPORT.md)
 
 - Full multi-year chunked NT8 certification (only one 13-month window checked here, not the

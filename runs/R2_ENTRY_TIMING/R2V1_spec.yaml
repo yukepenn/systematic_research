@@ -1,0 +1,94 @@
+run_id: R2_ENTRY_TIMING/R2V1
+family: "R2V1 -- formal validation/adjudication child spec for the single fixed R2 candidate,
+  per owner directive 2026-08-09 'CONTINUE -- FINISH R2 BEFORE R3'"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: "2026-08-09"
+nature: "Validation/adjudication, not construction. This spec does NOT open a new parameter
+  search; it formally adjudicates the ALREADY-CONSTRUCTED candidate from R2_ENTRY_TIMING/
+  construct.py against the full promotion-gate discipline."
+
+candidate:
+  name: "confirm_bars = 2 entry-confirmation overlay"
+  ninjascript: "src/ninjascript/SolarWaveOneContractNQ_v6_R2CONFIRM.cs (challenger, deployed and
+    early-NT8-validated in R2_ENTRY_TIMING/NT8_VALIDATION.md; not yet the incumbent)"
+  fixed: true
+  no_further_tuning: >
+    ConfirmBars is FIXED at 2 for this adjudication. It is NOT re-optimized here.
+    ConfirmBars=1 is used ONLY as an already-tested neighboring reference point (sec9 of the
+    owner directive: "structurally graded or isolated point" check), never as an alternate
+    candidate selected after seeing validation results. No ConfirmBars in {0,3,4,5,...} is
+    tested in this campaign.
+
+incumbent:
+  name: "BEST_ONE_NQ / BEST_ONE_MNQ shared Product-B decision core"
+  ninjascript: "SolarWaveOneContractNQ_v5.cs / SolarWaveOneContractMNQ_v5.cs (current incumbent,
+    UNCHANGED, remains the control throughout this validation)"
+
+process_disclosure: >
+  The original construction pass (runs/R2_ENTRY_TIMING/src/construct.py) ran BEFORE a child spec
+  was frozen -- already disclosed as a process gap in REPORT.md. The tail-attribution and
+  cost-stress script (src/tail_and_cost_stress.py) was likewise written AFTER observing the
+  construction result. An independent adversarial agent (no stake in the outcome) reproduced the
+  construction from scratch and got identical numbers, which preserves the EVIDENTIARY value of
+  those first-pass results (they are not fabricated or cherry-picked post hoc), but they do not
+  satisfy this campaign's own preregistration discipline. THIS spec (R2V1), frozen before any of
+  the NEW validation work below is run (entry-attempt mapping, chronology/LOYO, bootstrap, exact
+  tail mapping), is the clean preregistered validation stage. The candidate itself (ConfirmBars=2)
+  is not changed by freezing this spec -- it is the same object already deployed to NT8.
+
+priority_zero_n_cancelled_investigation: >
+  construct.py's own n_cancelled counter reports 0 for both confirm=1 and confirm=2, apparently
+  inconsistent with diagnose.py's finding that 77/1978 (confirm=1 persistence definition) entries
+  revert within 1 bar. MUST be resolved before the candidate's mechanism narrative is accepted.
+  Method: for EVERY incumbent new-commitment-from-flat event (1,978 total, from
+  runs/P0_TRADESTATE_AUTOPSY/out/ledger_full.parquet block boundaries), run a FRESH-RESTART
+  simulation of the confirm=2 state machine starting unarmed at that bar (using the market-
+  conditional M array only, independent of the candidate's own actual simulated trajectory,
+  which diverges from the incumbent's flat/armed timing after the first divergence). Classify
+  each into an exhaustive, mutually-exclusive taxonomy (defined precisely in
+  src/entry_mapping.py, disclosed there since the owner's own A-F list is not fully mutually
+  exclusive as literally written -- e.g. "cancelled" (C) and "never entered before session
+  reset" (E) overlap without a precise tie-break rule). Report counts/dollars per category, and
+  separately reconcile this counterfactual mapping against the REAL candidate simulated
+  trajectory's own confirmed/cancelled events to explain the discrepancy. Fix the diagnostic
+  counter if it is wrong; do NOT change candidate behavior regardless of the outcome.
+
+chronology_battery: [year_by_year, quarter_by_quarter, LOYO_per_year, rolling_60_session,
+  rolling_120_session, rolling_252_session, 2022_2025_only_vs_2026_stub_separately]
+bootstrap: "circular block bootstrap on paired daily delta_t = candidate_t - incumbent_t, using
+  this repo's established block/seed convention (smv2_common.boot_ci_mean, block=5,
+  seed=20260809, matching S2_SELTIME R2's own convention for direct comparability), reporting
+  P(delta net>0), P(delta Sharpe>0) via a Sharpe-of-delta-series proxy, P(delta CDaR
+  improvement>0), median + 5/25/75/95th percentiles."
+tail_mapping: "exact incumbent top-20 / bottom-20 TRADE-level mapping (not span-buffered) with
+  candidate delay/PnL-change per trade, plus top-10/20 DAY retention and top-1% trade retention,
+  plus the standing 2025-04-09 explicit check."
+cost_stress: "formalize the already-observed 2-tick result as a committed R2V1 artifact (already
+  exists in tail_and_cost_stress_results.json from the first pass; re-verified here, not
+  re-invented)."
+
+promotion_gate: >
+  PROMOTED requires ALL of: (a) a real, mechanistically-understood incremental edge (not an
+  artifact of the n_cancelled=0 anomaly); (b) chronology that does not depend materially on the
+  2026 stub alone (2022-2025-only delta must itself be directionally positive or, if negative,
+  the 2026 dependency must be explicitly disclosed and separately adjudicated, not hidden behind
+  the full-history headline); (c) LOYO retains improvement with each year removed, especially
+  LOYO-2026; (d) block-bootstrap P(delta net>0) and P(delta CDaR improvement>0) both clear this
+  campaign's own established confidence bar (see S2_SELTIME R2 precedent for the bar actually
+  used); (e) right-tail preserved (>=90% top-decile retention, exact mapping) AND left-tail
+  genuinely improved, not merely relabeled; (f) survives 2-tick cost stress; (g) NQ+MNQ
+  shared-core viability (no independent MNQ re-optimization); (h) early NT8 executable parity
+  (already PASSED, retained, not rerun) plus event-level (arm/cancel/confirm/reset) semantic
+  agreement between Python and NinjaScript; (i) full-history NT8 certification ONLY IF all of
+  (a)-(h) pass first (do not spend that budget on a candidate chronology is about to kill).
+  Missing (b) or (c) materially (2026-dependent AND chronologically fragile) is sufficient for
+  NOT PROMOTED regardless of headline Sharpe/net, per the owner directive's explicit sec14
+  instruction not to promote from headline numbers alone.
+
+verdict_categories: [PROMOTED, NOT_PROMOTED, INCONCLUSIVE]
+stop_condition: >
+  Exactly one verdict assigned at the end of this run. PROMOTED triggers the campaign stop rule
+  (R3-R6 do not run this campaign). NOT_PROMOTED or INCONCLUSIVE: v5 incumbents remain
+  untouched, v6_R2CONFIRM archived as rejected/inconclusive research evidence, campaign
+  continues automatically to R3.

@@ -1,8 +1,18 @@
 # R2 — entry timing / pullback / confirmation — RESULTS
 
-**Disposition: VALIDATING — a real, well-evidenced, independently-audited candidate found.
-NOT YET PROMOTED. Early NT8/CrossTrade executable validation (directive sec28-29) is the
-required next step before any further robustness spend or promotion adjudication.**
+> **UPDATE 2026-08-09 (same-day continuation, formal R2V1 adjudication): SUPERSEDED —
+> FINAL VERDICT: NOT PROMOTED.** See `R2V1_VERDICT.md` for the complete, binding adjudication.
+> Deeper investigation (exact entry-attempt mapping + LOYO) found the full-history improvement
+> reported below is driven ENTIRELY by the 2026 stub: the 2022-2025-only delta is -$4,431.36 (a
+> wash, not an improvement), and LOYO-2026 confirms this exactly. The `n_cancelled=0` anomaly
+> flagged in this file's original text is resolved (instrumentation gap, not a real behavioral
+> fact — see R2V1_VERDICT.md sec1). Everything below this banner is the ORIGINAL first-pass
+> finding, kept for the evidentiary record, not current status.
+
+**ORIGINAL DISPOSITION (superseded above): VALIDATING — a real, well-evidenced,
+independently-audited candidate found. NOT YET PROMOTED. Early NT8/CrossTrade executable
+validation (directive sec28-29) is the required next step before any further robustness spend
+or promotion adjudication.**
 
 ## Diagnostic phase (R2-A, per frozen `spec.yaml`)
 
