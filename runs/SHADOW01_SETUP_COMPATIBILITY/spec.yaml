@@ -1,0 +1,85 @@
+run_id: SHADOW01_SETUP_COMPATIBILITY
+family: SHADOW01 (raw-opportunity / shadow-setup serial-dependence diagnostic)
+directive: "CONTINUOUS SYSTEM EVOLUTION MASTER DIRECTIVE v2 addendum B, 2026-08-09 (external idea scouting)"
+date_frozen: 2026-08-09
+author: autonomous research campaign (continuation, wave-2 mid-flight addendum)
+
+purpose: >
+  DIAGNOSTIC ONLY. Test whether recent RAW-SETUP (shadow/virtual opportunity) outcomes contain
+  information about the next setup's expected value -- a possible strategy-regime / setup-
+  compatibility state, distinct from the already-closed "pause after N losses" streak-filter
+  idea (addendum sec B, explicitly NOT what this tests). The null hypothesis is that setup
+  outcomes have no useful memory; this family is authorized to close cleanly on that null.
+
+not_a_reopening_of_closed_work: >
+  This is NOT R1's giveback-conditioned exit (different question: serial dependence BETWEEN
+  opportunities, not within-trade exit timing), NOT R2/R2B's entry-delay/pullback (different
+  question: does recent history predict the NEXT opportunity's value, not whether THIS entry
+  should be delayed), and NOT R4's slope test (different question: setup-sequence memory, not a
+  price-transformation indicator). Per addendum sec C, explicitly confirmed distinct.
+
+opportunity_event_definition (addendum B1 -- frozen here, the correctness-critical design
+choice, built directly by the orchestrating session rather than delegated, matching this
+campaign's standing practice for state-machine-adjacent substrates): >
+  A "raw opportunity" is any bar where Product-B's OWN hysteresis state machine
+  (runs/SA0_SYSTEM_STRUCTURE/src/substrate.py's build_pos_seq, reused byte-for-byte) would
+  generate a NEW commit -- either a flat-to-enter transition (p==0, |M| crosses ENTRY_LEVEL) or
+  a same-bar reversal (p!=0, M crosses the OPPOSITE ENTRY_LEVEL) -- evaluated with
+  entry_blocked_c4 forced to False (never veto an entry) so the RAW signal is captured
+  independent of the C4 entry-selectivity overlay, while forced_flat_c4 and session-close
+  forcing remain ACTIVE (these are execution-structural exit constraints, not opportunity
+  selectivity, and removing them would make the shadow exit unrealistic). This produces exactly
+  one continuous alternate ("shadow") position path with the SAME one-position-at-a-time
+  invariant as the real incumbent -- avoiding duplicate/repeated signals from the same state
+  episode by construction (there is no separate "event generator" that could double-count; the
+  state machine itself enforces at most one open shadow position, exactly like the real one).
+  Each contiguous nonzero-sign run of the shadow path is one shadow event: event_start (bar),
+  side, M/Tp/HTF_tilt/B at event_start, session_phase, deterministic incumbent-style exit (the
+  SAME M-crossing/forced-flat/session-close exit logic, unmodified), realized shadow net_pnl
+  (NQ point-proxy, matching R1's own within-family convention -- this is a DIAGNOSTIC label, not
+  a priced trade). For every shadow event, also record whether the REAL incumbent (with
+  entry_blocked_c4 active) was actually in the same side at event_start ("was_executed") --
+  this directly answers B1's "whether incumbent actually executed / why/why not" requirement.
+
+data_reuse: >
+  Zero new CrossTrade/NT8 calls. Reuses SA0's substrate.py verbatim (T/Tp/tilt_state/B/M
+  formulas, ENTRY_LEVEL/EXIT_LEVEL constants) for the canonical window. Reuses
+  runs/U0_UNIFIED_STATE/out/u0_state_table.parquet's session_phase/organization-adjacent columns
+  (trend_efficiency_20, range_efficiency_20, vote_dispersion, sigma460_atr_proxy_pts) for the
+  conditioning/redundancy tests in the follow-on diagnostic stage (B3-B6), aligned to shadow
+  events by t_idx.
+
+correctness_gate: >
+  The shadow path, restricted to bars where entry_blocked_c4 was actually False throughout a
+  shadow event's full lifetime (i.e. the C4 override never mattered for that specific event),
+  must reproduce IDENTICAL position/side/exit behavior to the real incumbent's own build_pos_seq
+  output for that same span -- verified by direct bar-level comparison, not just aggregate net.
+  This is the proof that entry_blocked_c4 is the ONLY behavioral difference introduced.
+
+evidence_class: >
+  Diagnostic / research-label only (per addendum B2: "a shadow opportunity does not alter the
+  real/incumbent position path"). Overlapping-shadow-event inference uses session/day/
+  opportunity-block clustering, never treats sequential virtual trades as independent
+  observations for significance testing (addendum B2).
+
+planned_analyses (addendum B3-B6, diagnostic only, no construction this stage): >
+  Recent shadow-state variables (tiny preregistered set, addendum B3): last-opportunity signed
+  outcome, recent W/L sequence (last 3), rolling shadow expectancy (last 10 events), rolling
+  median outcome, rolling MFE, rolling MAE, loss severity, follow-through speed (bars to MFE),
+  reversal/failure rate, right-tail arrival rate. Test E[V_next | recent shadow state] for
+  meaningful, stable divergence (addendum B4) via chronology/cross-fitting, year-by-year where
+  sample supports it, rolling blocks, session-block bootstrap, conditional on M/session/
+  volatility/organization (addendum B4-B5: a real result must add information BEYOND these,
+  not merely proxy current regime). Interaction with U8's organization-transition feature is
+  explicitly DEFERRED (addendum B6) until each is independently diagnosed.
+
+explicitly_not_in_scope_this_stage:
+  - Any streak-filter construction (addendum B7 -- explicitly forbidden without a preceding
+    diagnostic establishing a broad, stable, causal relationship).
+  - Any A/B independent-optimization split (addendum B8 -- shared latent setup stream only).
+  - Any use of vendor virtual-trade/streak/probability claims as evidence (addendum B9 --
+    hypothesis generators only, our own causal data decides).
+  - Product-A translation (addendum B8, deferred until Product-B diagnostic is complete).
+
+promotion_gate: none (diagnostic; a construction stage would require its own separate
+  preregistration per addendum B7, not authorized here)
