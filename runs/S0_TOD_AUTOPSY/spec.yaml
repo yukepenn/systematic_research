@@ -1,0 +1,132 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE any code or result.
+# Frozen BEFORE W19R1_SELECTIVITY is run or read, on the owner's explicit instruction that S0's
+# session blocks, metrics and taxonomy must not be designed with any hindsight from W19R1's P&L.
+run_id: S0_TOD_AUTOPSY
+experiment_id: SYSTEM_MASTER_FINAL_DIRECTIVE
+hypothesis_id: none — this is a DIAGNOSTIC (directive §5 "S0 — TIME-OF-DAY AUTOPSY FIRST"),
+  uncapped under §15, consumes no alpha budget, precedes S1/S2.
+family: time_structure_autopsy
+track: R (research) — descriptive, no promotion, no gate, no verdict.
+date_frozen: 2026-08-09
+
+# ---------------------------------------------------------------------------
+# 0. WHAT THIS IS AND IS NOT
+# ---------------------------------------------------------------------------
+purpose: >
+  A purely descriptive map of where the incumbent's entries, exits, P&L, risk contribution and
+  churn fall across the trading day. This is NOT a test of any rule, NOT a selectivity policy, and
+  produces NO verdict. It exists to give S2 (true SelTime family) a market-structure-justified
+  partition to condition on, and to feed D-WINNER-1/2 with a first pass at where risk concentrates.
+explicitly_forbidden: >
+  (1) Choosing or adjusting block boundaries after looking at any P&L, Sharpe, or win-rate number.
+  (2) Selecting individual profitable 3-minute slots as a rule (per-slot profile is retained for
+      visualization ONLY, per directive §5 S0, and may not be read as a selection criterion).
+  (3) Converting any finding here directly into a trading rule. That is S2's job, under S2's own
+      promotion standard, not this run's.
+  (4) Reading W19R1_SELECTIVITY's results before this spec is frozen and committed. Sequencing:
+      this file is committed FIRST; only after that commit does any W19R1 code get executed or
+      read.
+
+# ---------------------------------------------------------------------------
+# 1. THE PARTITION — fixed from market/session structure, BEFORE any P&L is read
+# ---------------------------------------------------------------------------
+partition_basis: >
+  Boundaries are drawn from well-known, publicly documented index-futures market-microstructure
+  landmarks (Globex reopen, the Asia session, the London/Frankfurt open, the 08:30 ET US
+  macro-data release slot, the 09:30 ET NYSE cash open and opening range, the classic NY "lunch"
+  liquidity trough, the afternoon session, and the final approach to the 17:00 ET close). None of
+  these boundaries were fit, adjusted, or selected using this program's own P&L, win rate, or any
+  other outcome statistic — they are the same landmarks a market-structure textbook would name
+  before ever seeing this strategy's trade blotter. This is the frozen, only partition used; it is
+  not revisited if the results are unflattering.
+blocks_et:
+  EVENING_ASIA:     ["18:00", "02:00"]   # Globex reopen through the Asia session
+  EUROPE_PREUS:     ["02:00", "08:00"]   # London/Frankfurt open through pre-US data window
+  US_OPEN:          ["08:00", "10:00"]   # 08:30 macro releases + 09:30 NYSE cash open + opening range
+  LATE_MORNING:     ["10:00", "12:00"]
+  LUNCH:            ["12:00", "13:30"]   # classic NY lunch liquidity trough
+  AFTERNOON:        ["13:30", "15:45"]
+  CLOSING_APPROACH: ["15:45", "17:00"]   # last ~75 min; contains the existing day-only 16:30/16:39
+                                          # entry-block/flatten window (C4), which is an operational
+                                          # margin rule, NOT a discovered-alpha boundary — this run
+                                          # measures around it, does not treat it as a finding.
+note_on_day_only_overlay: >
+  Product A / BEST_ONE_NQ / BEST_ONE_MNQ already block new entries inside CLOSING_APPROACH's last
+  ~30 min and force-flatten in its last ~21 min (C4 compliance, not alpha). This run reports the
+  FULL-SESSION incumbent (ETH, no day-only overlay) primarily, so that CLOSING_APPROACH's own
+  descriptive numbers are not mechanically hollowed out by an unrelated compliance rule; the
+  day-only object is reported as a secondary column for context.
+retained_but_not_actionable: >
+  Per-3-minute-slot (480 slots) descriptive profile is computed and saved for visualization only
+  (directive §5 S0 explicit instruction). No individual slot may be selected as a rule from this
+  run under any circumstance.
+
+# ---------------------------------------------------------------------------
+# 2. OBJECTS COVERED
+# ---------------------------------------------------------------------------
+objects:
+  - SOLAR_E10: the unmodified 13-member Solar ensemble E10 target (control, same object W18R1/
+    W19R1 use as their control), full ETH session, canonical dev window.
+  - BMOM: frozen W8-1 B-MOM leg, same ledger used throughout SYSTEM_MASTER
+    (runs/SMV2B_BMOM_EXEC_AUDIT/out/ledger_E2_next_open.parquet).
+  - PRODUCT_A: the current C4-compliant DAYONLY_DUAL6040 combination (SolarWaveSMMaster_v3 logic,
+    reproduced in Python from FINAL_CAMPAIGN_BASELINE.md §1), for the day-only secondary column.
+window: canonical dev window, 2022-01-03 -> 2026-05-29 (CONVENTIONS.md). No pre-2022 or
+  post-dev-end data read in this run.
+
+# ---------------------------------------------------------------------------
+# 3. METRICS PER BLOCK (directive §5 S0 list, verbatim)
+# ---------------------------------------------------------------------------
+per_block_metrics:
+  - n_entries, n_exits                          # position-open and position-close events located
+                                                  # in this block (event = bar where net signed
+                                                  # position transitions from/through zero, or where
+                                                  # |position| changes at all for the "activity"
+                                                  # variant — both reported, labelled separately)
+  - gross_pnl, net_pnl, commissions_slippage
+  - sharpe_contribution                          # this block's bars' contribution to full-sample
+                                                  # daily Sharpe numerator, disclosed as a decomposition,
+                                                  # not a standalone per-block Sharpe (blocks are far
+                                                  # shorter than a session and per-block "Sharpe" on
+                                                  # bar returns is not comparable to a daily Sharpe)
+  - win_rate, avg_win, avg_loss                  # computed on POSITION-BLOCKS (see MAE/MFE note)
+                                                  # that OPEN inside this time block
+  - flip_rate                                    # member-level flips (sum across 13 members) whose
+                                                  # bar falls in this block, and separately the E10
+                                                  # target's own change-rate in this block
+  - path_efficiency                              # |net displacement| / |total absolute travel| of
+                                                  # close price within this block, session-by-session,
+                                                  # averaged — a market-structure descriptor, not a
+                                                  # strategy statistic
+  - MAE_MFE                                      # per position-block that OPENS in this time block:
+                                                  # max adverse / max favorable excursion in $ before
+                                                  # that block closes (position-block defined as a
+                                                  # maximal run of bars with constant nonzero E10
+                                                  # target sign; "if available" per directive — this
+                                                  # is the available construction given the E10
+                                                  # target is continuously rebalanced, not discrete
+                                                  # round-trip trades)
+  - solar_pnl, bmom_pnl, combined_pnl            # attributed by bar-time, not by session
+  - long_pnl, short_pnl                          # split by E10 target sign at the bar
+  - top_winner_participation                     # this block's share of bars/dollars within the
+                                                  # top 50 single-bar P&L moves (link to D-WINNER-1,
+                                                  # descriptive only here)
+  - worst1pct_worst5pct_contribution             # this block's share of net P&L on the worst 1%
+                                                  # and worst 5% SESSION days (by full-day net),
+                                                  # i.e. "on the worst days, which blocks did the
+                                                  # damage"
+  - maxDD_CDaR_episode_contribution              # this block's share of P&L during the episodes
+                                                  # that make up the full-sample maxDD drawdown path
+                                                  # and the CDaR_0.95 tail-episode set
+
+# ---------------------------------------------------------------------------
+# 4. OUTPUTS
+# ---------------------------------------------------------------------------
+outputs: out/block_profile_solar.csv, out/block_profile_bmom.csv,
+  out/block_profile_combined.csv, out/block_profile_producta_dayonly.csv,
+  out/slot_profile_3min.csv (visualization only), out/mae_mfe_by_block.csv,
+  out/worst_days_attribution.csv, out/dd_episode_attribution.csv, REPORT.md
+red_team: NOT mandatory (V7 §G — this is a diagnostic proposing no promotion; a self-check and
+  disclosure that it was not independently reviewed is sufficient), but a lightweight
+  internal-consistency self-check is required (totals across blocks must reconcile to the known
+  full-sample net/Sharpe/flip-count figures already on record).

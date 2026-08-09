@@ -85,18 +85,40 @@ BEST_ONE_NQ's** (verified by direct diff — WSolar, WBmom, TiltSma, TiltMult, T
 EntryLevel, ExitLevel all match exactly). Only the traded instrument (and its commission/tick
 economics) differs.
 
-**This is the exact condition the new directive rules out going forward** (§15: "Do not force NQ
-and MNQ to use identical final parameters if genuine instrument-specific evidence supports
-otherwise" / "never fill at NQ price × economic scale"). It is flagged here as an open item, not
-silently carried forward as acceptable.
+This is flagged here as an open item — MNQ has not yet been *independently tested* on its own
+economics — not as a defect in the parameters themselves.
 
 **Metrics**: net **$28,705.20**, same 1,976 trades (frozen-rule requirement), 0/1077 C4 breaches.
 
-**Open data-quality gap**: the Python reference used for every MNQ number to date fills at
-NQ-scaled prices, not genuine MNQU6 prints. A genuine-price reference run produced daily correlation
-**0.8996** against the ≥0.999 parity bar (root cause undiagnosed; `GetBars` attempts for real MNQ
-history returned empty). BEST_ONE_MNQ cannot be *separately optimized* on genuine economics until
-this is resolved — Track E, does not block Track R for NQ-side research.
+**Open data-quality gap**: see CORRECTION immediately below — the paragraph originally written
+here overclaimed. Resolved point: genuine MNQU6 price basis. Open point: daily-correlation /
+fill-sequencing on a handful of named sessions.
+
+> **CORRECTION — appended 2026-08-09, same day, before any downstream document cited this
+> section.** Two errors above, both owner-caught before they could propagate. Original text left
+> intact per C7; corrected here.
+>
+> **1. Data status was stale.** The NQ-scaled-price gap was already closed in an earlier wave.
+> `runs/PRODUCTB_ONECONTRACT_FINAL/` (`rebuild_mnq_reference.py`) exported a genuine 519,869-row
+> MNQU6 3-minute price series and rebuilt the Python reference on it. Net delta improved
+> **+0.78% -> +0.38%**, clearing the <0.5% bar — the price basis WAS the majority of the net-side
+> gap and IS fixed (`CURRENT_TRUTH.md:103`, `runs/PRODUCTB_ONECONTRACT_FINAL/REPORT.md:13-15`).
+> **What remains open is different and narrower**: daily P&L correlation is **unchanged at
+> 0.8996** even after the genuine-price rebuild (< the >=0.999 bar) — the price-basis fix did not
+> touch it. This is attributed to fill-sequencing on a handful of high-activity sessions
+> (**2025-04-07, 2025-04-09, 2025-04-11, 2025-11-18, 2026-04-08** — three of five cluster in
+> April 2025). The repo's own prescribed next step is **a targeted audit of those specific
+> sessions**, not another broad reference rebuild (`CURRENT_TRUTH.md:108,114`). This diagnosis was
+> run against the pre-C4-fix `SolarWaveOneContractMNQ_Final.cs`; whether it still holds
+> byte-for-byte on the current `_v4` object is unconfirmed and stays under V1-R4/V5 — do not
+> assume it transfers without re-checking, but do not re-derive it from scratch either.
+>
+> **2. "Identical parameters = rule violation" overstated the directive.** The owner's actual
+> objection is copying NQ's parameters to MNQ *without independent verification* — if MNQ is
+> independently tested on its own genuine economics and the evidence still supports the same SM14
+> hyst(3,1) parameters, identical parameters are an acceptable, expected-to-be-common outcome, not
+> a defect. The real open item is the missing independent test, not the current equality of the
+> numbers. Corrected in this section's lead paragraph above.
 
 ## 4. Executable filenames and compile/parity status
 
@@ -171,8 +193,12 @@ O1 blind-review agreement (470); D7 red team (471).
 - **V1-R4** — NT8 re-parity for all three current objects. Track E, open.
 - **`SolarWaveSMOneLot_v1` C4-fix propagation** — open.
 - **V1g** — intraday-path capital map. Open since Wave 17.
-- **V5** — MNQ bar-by-bar fill audit against genuine MNQU6 prices. Open, blocks BEST_ONE_MNQ
-  separate optimization.
+- **V5** — MNQ bar-by-bar fill-sequencing audit. **Corrected same day**: genuine MNQU6 prices
+  already exist and closed the net-delta gap (0.78%→0.38%); what's actually open is the
+  correlation shortfall (0.8996, unmoved by the price fix), narrowed to five named sessions
+  (2025-04-07/09/11, 2025-11-18, 2026-04-08). V5 is a targeted audit of those sessions, not a
+  data-acquisition task. Blocks MNQ-specific *independent* parameter verification, not NQ-side
+  research.
 - **O2 retro-scoring** — unblocked on the aggregation question, conditional on reporting both
   {mixture, Γ-minimax} and treating flips as INCONCLUSIVE; four items the blind reviewer raised
   (chiefly: is the fixed fraction `f` optimised per candidate, a possible selection-bias channel)
