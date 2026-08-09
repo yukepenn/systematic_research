@@ -1,0 +1,118 @@
+run_id: ENGINE3_SLATE5_CROSSMARKET
+family: "Bounded complementary NQ Engine campaign, max 3 candidates (FINAL OPTIMIZATION
+  DIRECTIVE family 8 of 8) -- Engine-3 slate 5"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: "2026-08-09"
+
+# ---------------------------------------------------------------- prior-history read (required before coding)
+prior_history_read:
+  source: "research/system_master/COMPLEMENTARY_ENGINE_FRONTIER.md (canonical ledger),
+    research/system_master/deep_research/DR_V4_EXPANSION_PASSES_20260808.md (24-candidate
+    ranked list across passes D1/D2/D3), research/registry/rejected_ideas.md,
+    runs/SMV2AB_ENGINE3_S4/{spec.yaml,REPORT.md,smv2ab.py}."
+  finding: "12 of 12 Engine-3 candidates across 4 prior slates (SMV2K, SMV2P, SMV2X, SMV2AB)
+    have FAILED. Slate 4's own closing note names the next EVI-justified, non-duplicate
+    candidates explicitly: 'D1 ranks 3/4/6, D2 rank 1 remain unexplored.'"
+  dedup_check:
+    D2_rank_1_dispersion: "Cross-index dispersion catch-up (NQ<->RTY/ES<->RTY) is a NEAR-DUPLICATE
+      of D1#5's 'generalized 3-of-4 dispersion catch-up', which slate 4's e410 (cap-tier
+      dispersion catch-up, ES+NQ consensus / RTY laggard) already tested and KILLED (t=1.71,
+      WF sign-flip). NOT selected here -- would be a cosmetic reskin of a killed mechanism, the
+      exact thing this directive prohibits."
+    D1_rank_6_weekend_lag: "Flagged by the ledger itself as sitting close to the killed
+      overnight-drift/small-gap-fade family and requiring 'a head-to-head control before being
+      trusted.' Selected here WITH that control built in (candidate 3 below)."
+    D3_rank_8_russell_reconstitution: "Rejected by its own pass for too few events (4-5).
+      NDX-100 rebalance (candidate 2 below) is a DIFFERENT index/flow but inherits the same
+      structural low-event-count risk -- disclosed and pre-registered as a designated cheap-kill
+      candidate (same convention as slate 1's overnight-drift cheap kill), not silently dropped."
+  selected_3: "D1 rank 3 (Europe->US session lead), D1 rank 4 (NDX-100 passive rebalance flow),
+    D1 rank 6 (weekend information-diffusion lag, with an explicit overnight-drift control).
+    All three require ES/RTY/YM only (already exported, SM1M_{ES,RTY,YM}_SUBSTRATE, reused via
+    slate 4's own committed merged_3m_dev.parquet -- no new data infrastructure)."
+
+# ---------------------------------------------------------------- standing requirement (frontier ledger, unchanged)
+promotion_standard_inherited: "positive after-cost standalone expectancy (CI_lo>0 at C1 =
+  $2.18/side NQ), losing-day correlation <=0.25 vs SOLAR_DUAL_HTF control, mechanically distinct
+  information hypothesis (satisfied by construction/dedup check above), plateau not argmax,
+  right-tail gate (top-1% of trades must not exceed 60% of total net, else it is a lottery not
+  an edge -- same bar used implicitly by the b02_gap_escalation kill in rejected_ideas.md)."
+substrate: "runs/SMV2AB_ENGINE3_S4/out/merged_3m_dev.parquet (already-committed, verified NQ/ES/
+  RTY/YM 3m inner-joined table, ES exact session match, RTY/YM matching except the disclosed
+  2023-04-06..04-14 gap) -- reused verbatim, not rebuilt."
+window: "dev window as inherited in the merged table: sessions <= 2026-05-31."
+economics: "NQ direct, PV=$20/pt, tick=0.25, COMM_RT=$4.36 (Lifetime), 1-tick adverse slip via
+  sm01_solarsim._fill -- identical convention to slate 4."
+nw_lag: 5
+wf_split: "2024-12-31 (house convention, matches slate 4)."
+bootstrap: "paired moving-block, block=5, B=10000, seed=20260809 (this wave's convention)."
+
+# ---------------------------------------------------------------- candidate 1: Europe -> US session lead
+candidate_1_europe_lead:
+  hypothesis: "YM (Dow), heavier-weighted toward multinationals with material European revenue
+    exposure, prices European-session news into its own bars during the 02:00-08:00 ET window
+    (S0's own EUROPE_PREUS block) before NQ's more domestically/tech-weighted constituents fully
+    react at the US session's morning session. A YM move during EUROPE_PREUS that NQ has not yet
+    echoed by 08:00 ET predicts NQ continuation in YM's direction through the morning."
+  construction: "At the 08:00 ET decision bar (S0's EUROPE_PREUS/US_OPEN boundary), compute the
+    session-open-to-decision-bar log return for YM (r_ym) and NQ (r_nq). Signal fires when
+    |z(r_ym)| > YMZ (trailing 20-session z-score, session-causal, matches slate 4's zscore())
+    AND |z(r_nq)| < NQZ_QUIET (NQ has not yet caught up). Direction = sign(r_ym). Entry: NQ
+    open of the decision bar; Exit: NQ session close (matches the campaign's universal
+    exit-on-close convention -- no intraday time-cap needed since the target IS the rest of the
+    session)."
+  grid: "YMZ in {1.0, 1.25, 1.5}, NQZ_QUIET fixed at 0.5 (not swept -- the free economic
+    parameter is the YM shock size, not the NQ-quiet bar)."
+  gates: ["N>=40", "t_nw>=2", "WF_2022_24 vs WF_2025_26 same sign", "plateau: all 3 YMZ cells same sign"]
+
+# ---------------------------------------------------------------- candidate 2: NDX-100 passive rebalance
+candidate_2_ndx_rebalance:
+  hypothesis: "The Nasdaq-100's annual special-rebalance methodology (effective the 3rd Friday
+    of December since 2011) forces passive-fund buying/selling concentrated in the days around
+    the effective date, producing abnormal NQ price/volume behavior distinct from ordinary
+    quarterly expiration (which e412 already tested via the ES/RTY/YM roll-basis mechanism, a
+    DIFFERENT construction -- this candidate looks at NQ's OWN price action directly, not a
+    cross-instrument spread)."
+  construction: "Event = the 3rd-Friday December session each dev year (2022-2025, 4 candidate
+    events -- 2026 excluded, dev window ends 2026-05-31). Entry: NQ open 1 session before the
+    event (T-1); direction = sign(NQ's own 5-session pre-event return, causal, momentum-
+    continuation framing consistent with candidate 1/this campaign's dominant finding that
+    breakouts continue, per COMPLEMENTARY_ENGINE_FRONTIER's own recorded FACT). Exit: NQ close
+    of T+1 (the session after the event)."
+  designated_cheap_kill: "N<=4 by construction -- pre-registered BELOW the campaign's own N>=12
+    power floor (matches e412's own floor) BEFORE the code runs. This candidate is expected to
+    fail on power alone, run anyway for completeness per the ledger's own instruction to clear
+    this specific candidate, and reported as a fast/cheap kill exactly like slate 1's overnight-
+    drift test -- not treated as informative evidence either way given the sample size."
+  gates: ["N>=12 (will almost certainly fail by construction, disclosed above)", "t_nw>=2 if N permits"]
+
+# ---------------------------------------------------------------- candidate 3: weekend information-diffusion lag
+candidate_3_weekend_lag:
+  hypothesis: "A weekend (Friday close -> Monday open) allows more genuine multi-day information
+    accumulation than an ordinary single overnight gap, so a BROAD-MARKET Friday consensus move
+    (ES, NQ, and YM agreeing in sign) predicts Monday NQ continuation more strongly than an
+    ordinary weekday gap does -- distinguishing this from the already-KILLED small-gap-fade
+    family (which used NQ's own gap alone, any weekday, fade not continuation direction)."
+  construction: "Friday-consensus signal: sign(r_es_fri)==sign(r_nq_fri)==sign(r_ym_fri) on the
+    Friday session's full-session return (all 3 must agree); direction = that common sign.
+    Entry: NQ open of the following Monday session (or the next trading session if Monday is a
+    holiday); Exit: NQ close of that same entry session."
+  head_to_head_control_REQUIRED_BY_LEDGER: "Run the IDENTICAL construction (3-instrument
+    consensus gap, momentum direction) on EVERY weekday-to-weekday session gap in the dev window
+    (not just Friday->Monday), producing a CONTROL_ANY_GAP series. The weekend candidate is only
+    informative if its per-event mean/t_nw is NOT explained by the generic any-gap effect --
+    report both series' gates side by side; the weekend claim requires the weekend-only mean to
+    exceed the any-gap-control mean (i.e. a genuine weekend-specific increment), not merely a
+    positive sign shared by both (which would mean this is just the already-partially-explored
+    generic consensus-gap-continuation effect, not a weekend-specific one)."
+  gates: ["N>=40", "t_nw>=2", "WF same sign", "weekend mean > any-gap control mean (the head-to-head requirement above)"]
+
+constraints:
+  bounded: "Exactly 3 candidates this slate, per the directive's explicit cap. No slate 6 this
+    wave regardless of outcome -- if all 3 fail, the cross-market Engine-3 axis is exhausted for
+    this campaign's remaining named-family budget; a genuinely new data source or mechanism
+    class would be required before any future attempt, not a re-spec of these three."
+  no_retuning_after_read: "Every threshold above (YMZ grid, NQZ_QUIET, N floors, WF split,
+    bootstrap seed) is fixed before src/run.py is written. No cell/threshold may be adjusted
+    after seeing a result."
