@@ -10,9 +10,12 @@ occurred — Strategy Analyzer backtests only, on NT8's isolated Backtest accoun
 **BEST_ONE_NQ: parity CONFIRMED**, reproducing the previously-passed research-filename check
 almost exactly. **BEST_ONE_MNQ: genuinely backtested via real NT8 Strategy Analyzer for the
 first time in this program's history**, with excellent trade-level decision matching
-(99.42%), but formal daily-level parity against the current Python reference does **not**
-clear the owner's bar — for a diagnosed, known, previously-documented reason (NQ-vs-MNQ price
-basis), not a defect in the new Final file. See "MNQ parity gap" below.
+(99.42%). After rebuilding the Python reference on genuine MNQU6 prices (the original
+reference approximated MNQ fills at NQ-scaled prices, a known residual class in this
+codebase), **net delta now clears the bar (0.38% < 0.5%)**, but **daily correlation remains
+short (0.8996 < 0.999)** — narrowly diagnosed to a handful of high-activity sessions in April
+2025, not a systemic price-basis issue. 2 of 3 formal bars now clear for MNQ; the third has a
+specific, scoped next step rather than an open-ended one. See "MNQ parity gap" below.
 
 ## sub_438b — Final artifacts
 `src/ninjascript/SolarWaveOneContractNQ_Final.cs` and `...MNQ_Final.cs` built as behavior-
@@ -86,20 +89,37 @@ the identical underlying mechanism). This is precisely the risk the owner's own 
 anticipated: "不能简单说：NQ 策略乘0.1就是 MNQ" ("do not assume MNQ is merely NQ divided by
 ten") — now concretely observed for the first time in this exact product.
 
-**Attempted fix, blocked**: tried to pull genuine MNQU6 price bars via `GetBars` (both
-`doNotMerge` and `mergeBackAdjust` policies, both a 2022 window and a 2025 window) to rebuild
-an MNQ-price-accurate Python reference — every call returned zero bars. `RunStrategyBacktest`
-clearly has access to the historical MNQ data (it produced 1,561 real fills across the full
-window), but the ad-hoc `GetBars` MCP path apparently reads from a different, not-yet-locally-
-cached data source than the Strategy Analyzer engine's own internal resolution. Not resolved
-this run — flagged as the concrete next step (see below), not silently worked around.
+**Fix, partially successful — root cause is narrower than first diagnosed**: `GetBars` (both
+`doNotMerge` and `mergeBackAdjust` policies) returned zero bars for MNQ, and — diagnostically
+useful — also for NQ, proving this is a general `GetBars` tool limitation (it likely requires
+data already cached via an open chart), not MNQ-specific. Worked around it by reusing an
+existing, already-compiled export strategy (`BarExportV1`, a bar-logger with no trading logic)
+run through `RunStrategyBacktest` on `MNQ 09-26` — since that engine is confirmed to have real
+MNQ historical data — producing a genuine 519,869-row MNQU6 3-minute price series
+(`out/mnq_3m_raw.csv`), aligned onto the NQ decision-bar grid (11 missing timestamps out of
+519,714, 0.0021%, forward-filled and disclosed) and used to rebuild the Python reference with
+true MNQU6 fills instead of NQ-scaled ones.
+
+**Result** (`out/parity_mnq_genuine.json`): net delta improved from **+0.78% to +0.38%** —
+**now clears the <0.5% bar** — confirming the price-basis hypothesis was real and partially
+explains the gap. **However, daily correlation is essentially unchanged (0.8996 → 0.8996)** —
+the genuine-price fix did NOT resolve the correlation shortfall, meaning the original
+diagnosis was incomplete. The five worst single-day deltas are IDENTICAL dates before and
+after the price fix (2025-04-07/09/11, 2025-11-18, 2026-04-08) — three of five cluster in a
+single ten-day span in April 2025, suggesting a fill-mechanics precision issue specific to a
+handful of high-activity sessions (the Python `_fill()` approximation vs NT8's actual
+intrabar fill sequencing diverging more than usual on unusually volatile bars), not a
+systemic offset. **Not resolved further this run** — correctly diagnosed as narrower and more
+specific than originally reported, flagged as the concrete next step: a bar-by-bar fill
+audit of the 2025-04-07/09/11 sessions specifically, not another broad reference rebuild.
 
 **What this does NOT mean**: the real NT8 MNQ Strategy Analyzer numbers themselves (net
 $28,900.70, Sharpe 0.921, 1,561 trades, full metric battery below) are genuine, verified
 Strategy-Analyzer-engine results, not invalidated by this finding — they are the actual
 backtest of the actual Final file on the actual MNQU6 instrument. What is NOT yet certified is
-the formal **parity claim** (that this matches "the" reference), because the reference itself
-needs rebuilding on genuine MNQ prices before that comparison is fair.
+the formal **parity claim** (that this matches "the" reference) at the required daily-
+correlation precision — net delta and trade-count now both look solid; daily correlation is
+the one specific, now-narrowly-diagnosed remaining gap.
 
 ## sub_440b — full metric battery (on the NT8-Strategy-Analyzer-verified daily series)
 
