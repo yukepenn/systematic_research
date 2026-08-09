@@ -1,5 +1,10 @@
 # W19R1_SELECTIVITY — SUPERSEDED BEFORE EXECUTION. Nothing was run; nothing is deleted.
 
+> **NOTE added 2026-08-09, 89 minutes after this file was written (red-team-flagged staleness):**
+> this file's claim was true when written but is no longer true of the directory it sits in — the
+> spec below WAS later run, unmodified, per a same-day owner directive that superseded the
+> reprioritization that produced this file. See `REPORT.md` for the executed run and results.
+
 **Dated 2026-08-09.** This spec was frozen and committed at `d4926a4`. **No code was written
 against it, no data was read, no result was produced.** It is superseded before execution by
 owner directive R2/R5 of the same day, which reprioritises Wave 19 to put the D7 regime

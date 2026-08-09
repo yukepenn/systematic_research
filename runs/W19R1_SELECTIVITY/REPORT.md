@@ -1,5 +1,12 @@
 # W19R1_SELECTIVITY — RESULTS
 
+> ⚠ **CORRECTED 2026-08-09 (same day), after red team.** The "Headline" section immediately below
+> claims the cross-instrument cohort disclosure outranks the gate verdicts. **That specific claim
+> is WITHDRAWN — see the "RED-TEAM INGESTION" section near the end of this file before citing
+> anything about cohort structure from this run.** The gate verdicts themselves (both arms
+> CONFIRMED-NOT-BENEFICIAL) are unaffected and independently re-verified. Original text below left
+> intact per C7.
+
 Run against `spec.yaml` (frozen `d4926a4`) **exactly as written, unmodified**, per owner directive
 "FINAL OPTIMIZATION DIRECTIVE" §5 S1 ("Run the already-frozen W19R1 spec unchanged first. Do not
 rewrite history."). The D7-boundary split required by the same directive is reported below as a
@@ -153,7 +160,87 @@ arm_TOD: gate_0 PASS, gate_A FAIL, gate_B FAIL, gate_C non-binding -> CONFIRMED-
 
 No adoption this wave. Alpha budget: 2 of 2 consumed (arm_ER, arm_TOD), per spec header.
 
-## What this run actually establishes, for the successor (S2 / Priority 4)
+---
+
+# RED-TEAM INGESTION — appended 2026-08-09. **The cross-instrument cohort headline above is
+WITHDRAWN. The gate verdicts are NOT affected. Read this before citing the "Headline" section above.**
+
+Verdict verbatim at `red_team/RED_TEAM_w19r1_selectivity.md`, unedited. Every claim below was
+independently re-derived by the reviewer with its own scripts, not by re-running `run.py`.
+
+## 1. WITHDRAWN — the "RTH worst / OVERNIGHT best on ES/RTY/YM, doesn't match D4" headline.
+
+The arithmetic was correct (bit-for-bit reproduced independently), but the finding is not robust
+to two choices genuinely left open by this run's own frozen spec text:
+
+- **Aggregation-order ambiguity.** "Rank-normalised average of that fraction" can mean average-
+  then-rank (what the code does, Reading A: RTH worst) or rank-then-average (Reading B: **EVENING
+  worst — matching D4**). The reviewer argues Reading B is the more defensible reading, since
+  ranking a 3-element list *after* averaging makes the word "rank" nearly decorative — all the
+  robustness rank statistics exist to provide is lost at the averaging step.
+- **Look-ahead instability.** Refitting the identical (Reading A) construction on 2022-2025 only
+  (excluding the 106-session 2026 stub — exactly what would have been knowable pre-stub) **flips
+  the ranking completely**: RTH goes from worst to best, OVERNIGHT from best to worst. Root cause:
+  ES's own control P&L sign-flips across the stub (+$58.8k pre-stub → −$39.8k full-window), and
+  because all three of ES/RTY/YM are unprofitable in aggregate over the full window (a fact this
+  run silently inherited from `W18R2_M5_XINST` and never stated), the fraction-of-total-P&L
+  statistic is close to a division-by-near-zero operation — unlike D4's NQ table, which is
+  well-conditioned because NQ's control is comfortably profitable.
+
+**Four equally-defensible methods for "which cohort is worst on ES/RTY/YM" were tested
+(shipped Reading A, Reading A pre-stub, Reading B, raw pooled dollars); every one of EVENING,
+OVERNIGHT, and RTH is "worst" under at least one and "best" under at least one other.** Corrected
+statement: *this run's cross-instrument construction is too fragile — to a reading choice already
+implicit in its own spec text, and to a 9%, look-ahead-only-available slice of the fitting window —
+to determine whether D4's NQ cohort structure generalises. No confident claim survives in either
+direction.* **This also withdraws this run's guidance to S2** ("D4's cohort split... not something
+requiring cross-instrument confirmation to use") — the attempt was inconclusive, not negative, and
+S2 (which was in fact built from S0's independent descriptive pass, not from this finding — no
+downstream propagation occurred) should not treat this run as having settled the question either way.
+
+## 2. MATERIAL — Gate B's stated mechanism for arm_TOD's trim failure was wrong.
+
+§3 above attributed the trimmed-sample gate-B failure to "CDaR concentrated in the stub." Recomputed
+directly: **CDaR passes the AND-rule's CDaR leg in both the full sample and the trimmed sample**
+(shrinks $1,862→$1,141 when the stub is excised, but was never the failing leg). **Sharpe is the
+failing leg both times and barely moves when the stub is excised** (−0.0089→−0.0087). What actually
+flips the result is dropping **2025 alone** (ΔSharpe swings to +0.047), the same year §3 separately
+names as "an order of magnitude larger than any other year's delta" two paragraphs later — the report
+had the right suspect and attributed the wrong mechanism to it. arm_ER's "closed, no boundary rescues
+it" conclusion was independently re-verified across six sub-period slices and needs no correction.
+
+## 3. MATERIAL — the mandatory bootstrap disclosure was computed but never written up.
+
+`out/bootstrap.json` is correct (block-bootstrap mechanics independently verified sound — the
+wraparound indexing is the standard circular block bootstrap, not a bug). It was never mentioned in
+this REPORT.md's prose — the exact omission the frozen spec named Wave 18 for, recurring. For the
+record: **arm_TOD's P(ΔSharpe>0) = 0.461 — a near-coin-flip**, materially softer than the
+deterministic AND-rule's clean-looking FAIL; P(ΔCDaR_ratio>0) = 0.856 is genuinely robust. arm_ER:
+0.248 / 0.246, consistent with a clean fail.
+
+## 4-6. Disclosure-level, fixed
+
+`out/gates.csv` (a named spec output) was never written by `run.py` — regenerated post-hoc from the
+saved daily CSVs and committed alongside this ingestion; all four cells match the values already
+quoted in §§1-4 above to full precision. `SUPERSEDED.md` is stale (states "nothing was run" — true
+when written, false 89 minutes later once the owner's same-day redirection overrode it) — a pointer
+to this REPORT.md has been added at its top. Gate C's "internal consistency" NQ-vs-main-row
+assertion is a deterministic config-wiring check, not independent statistical validation of the
+ER150/transform math (both compute from the same objects with no RNG involved) — real as a wiring
+guard, described too strongly above.
+
+## What survives untouched
+
+**The gate verdicts themselves — arm_ER and arm_TOD both CONFIRMED-NOT-BENEFICIAL — are correct and
+independently re-verified with no coding defect found anywhere in the gate 0/A/B/C machinery, the
+causal exposure-neutrality transform (stress-tested with a hand-built synthetic session series), or
+the control cross-check.** Only the mandatory cross-instrument disclosure — explicitly the part
+flagged as outranking the gates — is withdrawn. What actually reaches S2 from this run: nothing
+directly (S2 was built from S0, independently), and the standing lesson is that a "share of total
+P&L" statistic needs a profitable, well-conditioned denominator to be trustworthy — worth carrying
+into any future cross-instrument construction.
+
+## What this hands forward
 
 1. **arm_ER (ER150 selectivity) is closed** — fails cleanly, no boundary nuance rescues it, and the
    cross-instrument replication actively contradicts it (0/3, wrong sign on the KNOWN cell too on
