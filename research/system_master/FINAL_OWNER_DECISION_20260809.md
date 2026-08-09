@@ -89,8 +89,9 @@ HEAD (recoverable via git history, never force-pushed or rewritten). `BASELINE_M
 the single canonical entry point for the 3 objects, superseding older per-topic frontier docs
 where they conflict. A cold-navigation test (a fresh agent given only the entry-point docs) is
 recorded in `COLD_NAVIGATION_TEST_20260809.md`. Token-budget audit (before/after doc count, line
-count, byte count): see `TOKEN_BUDGET_AUDIT_BEFORE.json` and the AFTER figures in the
-consolidation commit message.
+count, byte count): see `TOKEN_BUDGET_AUDIT_BEFORE.json` (both snapshots, with a disclosed
+methodology caveat) — net raw size is roughly flat (2 misleading docs removed, 2 new canonical
+docs added); the real gain is unambiguous navigation, not smaller byte count.
 
 ## 9. What NinjaScript artifacts are the final deliverable?
 
