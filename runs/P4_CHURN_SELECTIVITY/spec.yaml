@@ -1,0 +1,87 @@
+run_id: P4_CHURN_SELECTIVITY
+family: "Priority 4 -- ER150/flip-state selectivity (FINAL OPTIMIZATION DIRECTIVE, family 6 of 8)"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: "2026-08-09"
+
+# ---------------------------------------------------------------- 0. why this is not a duplicate
+distinctness_check:
+  vs_arm_ER_S1:
+    arm_ER_mechanism: >
+      S1's arm_ER (runs/W19R1_SELECTIVITY) is a CONTINUOUS multiplicative exposure reweight,
+      applied to EVERY bar regardless of state: T' = RHA(T * g_final(ER150_t)), g_raw in a narrow
+      band around 1.0. It never blocks an entry outright and never depends on same-session flip
+      count. CONFIRMED-NOT-BENEFICIAL, closed.
+    P4_mechanism: >
+      P4 is a DISCRETE, STATE-GATED entry-eligibility rule: it only ever *suppresses* a NEW
+      directional commitment (a state transition, exact same definition as S2_SELTIME's
+      is_new_commitment), and only while the ensemble is measured to be in a pre-defined
+      HIGH-CHURN state. Outside that state, and for any bar that does not represent a new
+      commitment, P4 is a no-op (T'=T exactly). This is architecturally identical in FORM to
+      S2_SELTIME's eligibility gate (which is already a CANDIDATE, corroborated at the coarse
+      level) but SUBSTITUTES THE TRIGGER: S2 blocks by time-of-day; P4 blocks by a directly
+      data-driven churn state (same-session rolling flip count), never by clock time.
+    conclusion: "Genuinely distinct construction from arm_ER. Proceeding."
+  vs_M3:
+    M3_mechanism: >
+      M3 (runs/M3_ENTRY_EXIT_S) widened the ENTRY threshold at the MEMBER level (per-member S
+      multiplier) UNCONDITIONALLY, for every bar, for the whole dev window. Every unconditional
+      cell in the 3x3 grid failed (best cell an isolated ridge point, not a plateau, not
+      chronologically robust). CONFIRMED-NOT-BENEFICIAL, closed.
+    P4_mechanism: >
+      P4 does not touch the member-level S/anchor mechanic at all (member_states/member_trades
+      run completely unmodified, verbatim sm01_solarsim). It operates only at the E10 aggregation
+      layer, and only CONDITIONALLY (gated by measured churn state), never unconditionally.
+    conclusion: "Genuinely distinct construction from M3. Proceeding."
+  central_constraint: >
+    Per directive: "never reduce contract count after a loss -- selectivity not sizing." P4's
+    churn-state trigger is built EXCLUSIVELY from same-session member flip counts (a structural,
+    prospective, P&L-blind measurement of ensemble disagreement) -- it never reads realized P&L,
+    equity, drawdown, or trade outcome at any point in its construction. This is a selectivity
+    rule (does a new commitment clear a stricter agreement bar), not a sizing/de-risking rule
+    (nothing here ever reduces size conditional on a prior loss). The already-closed generic
+    de-risking/cooldown/loss-throttling family is NOT being reopened.
+
+# ---------------------------------------------------------------- 1. churn-state definition
+# Frozen BEFORE any P&L was examined -- chosen from the flip-count distribution alone (same
+# discipline as S0's landmark-based session blocks: descriptive statistics, not outcome-fit).
+churn_state:
+  raw_signal: "flip_per_bar = count of the 13 members with flip[t] != 0 (a trend-birth event)"
+  rolling_window_bars: 20   # 20 x 3min = 60 minutes, reset to empty at every session start
+                            # ("same-session flip count" per directive's literal wording)
+  diagnostic_distribution_W20: {mean: 2.24, p50: 1, p75: 3, p90: 6, p95: 9, max: 53}
+  threshold_rule: "HIGH_CHURN_t := rolling_flip_count_t >= 3   (the empirical 75th percentile at W=20)"
+  rationale: >
+    75th percentile is the same convention this campaign already uses for other non-outcome-fit
+    cutoffs (e.g. gate thresholds). No P&L series was computed or inspected before this threshold
+    was fixed -- only the flip-count histogram itself (see runs/P4_CHURN_SELECTIVITY/out/
+    churn_diagnostic.json for the exact numbers this was picked from).
+  secondary_disclosure_only: >
+    ER150 (S1's score) is reported alongside HIGH_CHURN as a correlation cross-check, to show P4's
+    trigger is not merely a relabeling of S1's already-closed score. Not used in construction.
+
+# ---------------------------------------------------------------- 2. construction
+construction:
+  is_new_commitment: "identical to S2_SELTIME: cur!=0 and (prev==0 or sign(cur)!=sign(prev))"
+  rule: >
+    For each bar t with is_new_commitment(t) True AND HIGH_CHURN_t True: require
+    |mean_pend_t| >= REQUIRED_FRAC (mean_pend_t = mean of the 13 members' pend_pos in [-1,1],
+    i.e. the pre-round E10 input) before accepting the commitment; if the bar fails this stricter
+    bar, T'_t = 0 (suppressed -- flat, exactly S2's convention) instead of T_t. All other bars
+    (HIGH_CHURN False, or not a new commitment) pass through unmodified: T'_t = T_t.
+  default_baseline_required_frac: "0.05 (the ordinary round-to-nearest-integer-of-10 bar; unconditional control)"
+  grid: "REQUIRED_FRAC in {0.20, 0.30, 0.40} -- i.e. requiring 2, 3, or 4 (of 10) net agreement
+         units before a NEW commitment is accepted during a HIGH_CHURN bar. Churn-state definition
+         (window=20, threshold>=3) is FIXED across the grid, not swept -- only REQUIRED_FRAC varies,
+         mirroring M3's grid discipline (vary the free economic parameter, not the state definition)."
+
+# ---------------------------------------------------------------- 3. gates (same battery pattern as M3/S2)
+gates:
+  gate_A: "Sharpe improves AND CDaR_0.95 improves AND top-10-day retention >=95% vs control, per cell"
+  gate_B: "yearly Sharpe-delta sign agreement >=4/5 years AND survives excising the final 106 sessions"
+  gate_C_plateau: "at least 2 of the 3 REQUIRED_FRAC cells beat control on gate_A (directional plateau, not an isolated ridge point -- M3's exact failure mode)"
+  gate_D_disclosure: "flip/false-block decomposition: how many suppressed commitments would have been winners vs losers (symmetric outcome disclosure, not a selection criterion)"
+  promotion_standard: "CANDIDATE only if gate_A AND gate_B AND gate_C_plateau all pass on the SAME cell(s)"
+
+cost_and_window: "MNQ E10 executable economics ($0.65/side, $2.00 point value), full ETH session, dev window 2022-01-01 to 2026-05-31, calendar-year splits for gate_B (2022-2026, partial 2026)."
+bootstrap: "paired moving-block, block=5, B=10000, seed=20260809 (Wave 19 convention) -- used only for gate_D disclosure, not for promotion itself (gate_A/B/C are the promotion gates, all deterministic)."
