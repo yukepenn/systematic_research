@@ -1,3 +1,11 @@
+> **UPDATE 2026-08-09 (SYSTEM ARCHITECTURE SCIENCE + ALPHA OPTIMIZATION campaign, same day, after
+> the text below).** A full structural/failure-mode decomposition (SA0) plus 6 further research
+> families (R3/R2B/R4/R5/R6/PA0-PA1) ran to completion — **zero promotions, all 3 objects below
+> remain byte-identical, UNCHANGED.** Closing report: `research/system_master/
+> SYSTEM_SCIENCE_20260809.md`. Current-regime health monitoring (new):
+> `research/system_master/CURRENT_EDGE_HEALTH.md` — Product B assessed HEALTHY on the latest
+> available data, no edge-decay evidence found.
+
 # BASELINE_MODELS — the single canonical record of the 3 shipped objects
 
 _Written 2026-08-09, at the close of the FINAL OPTIMIZATION DIRECTIVE campaign. This file is
