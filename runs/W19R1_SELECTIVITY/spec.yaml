@@ -1,0 +1,161 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE any code or result.
+run_id: W19R1_SELECTIVITY
+experiment_id: SYSTEM_MASTER_W19
+hypothesis_id: M2 (MEGA PROMPT V6 §9 M2, "ER150/flip-rate as a SELECTIVITY signal holding
+  contract count identical") + B11 (V6 §10, "cross-instrument confirmation as a selectivity
+  gate", promoted to top of the backlog)
+family: solar_allocation_selectivity
+track: R (research) — V7 §B hard floor for Wave 19
+date_frozen: 2026-08-09
+alpha_budget_consumed: 2 of the 2 permitted this wave (§15) — arm_ER and arm_TOD.
+  No third hypothesis may be added to this wave under any circumstances.
+
+# ---------------------------------------------------------------------------
+# 0. WHY THIS SHAPE, AND WHAT WAVE 18 FORCED
+# ---------------------------------------------------------------------------
+design_constraints_inherited_from_wave_18: >
+  Wave 18 produced three findings that dictate this spec's construction, and ignoring any of
+  them would repeat a mistake already made:
+
+  (i) M1's red team established that a threshold change which reduces exposure by 30.9% while
+      reducing net by 26.8% is an EXPOSURE change wearing a selectivity costume — net per unit
+      of exposure barely moved. §5 presumes that axis exhausted. THEREFORE this run's arms are
+      constructed to hold total exposure APPROXIMATELY CONSTANT BY CONSTRUCTION, with the
+      realised exposure ratio reported as a mandatory disclosure and a pre-registered
+      invalidation bar (below). A selectivity test that quietly de-risks is not a selectivity
+      test.
+
+  (ii) Standing caution seq 466: both of Wave 18's Track-R results were carried by the same
+      final 106 dev sessions. THEREFORE a chronology gate is pre-registered ALONGSIDE the
+      primary statistic, not after it, and a candidate that fails chronology fails outright
+      regardless of its full-sample numbers.
+
+  (iii) M5's red team established that a pooled statistic including the cell that generated the
+      hypothesis is not replication. THEREFORE the cross-instrument confirmation here is
+      reported NEW-INSTRUMENTS-ONLY as the binding figure, with the NQ cell shown separately
+      and labelled KNOWN.
+
+# ---------------------------------------------------------------------------
+# 1. THE COMMON CONSTRUCTION — one framework, two pre-registered scores
+# ---------------------------------------------------------------------------
+framework: >
+  Let T_t be the incumbent's unmodified E10 target at bar t (round(10 × mean member pos),
+  clamped ±10) — UNCHANGED, computed by the frozen code path. Let s_t be a causal selectivity
+  score in [0,1]. Define
+
+      T'_t = RHA( T_t × g(s_t) ),  clamped to ±10
+
+  where g(s) = 1 + BETA × (s − s̄_causal), BETA = 0.5 FROZEN, and s̄_causal is the expanding
+  causal mean of s over all bars strictly before the current session. g is then rescaled once
+  per session by the causal exposure-neutrality factor
+      k(d) = (Σ|T| over prior sessions) / (Σ|T × g| over prior sessions)
+  so that, on the evidence available before session d, the transform is exposure-neutral. All
+  three of BETA, the linear form of g, and the expanding-causal calibration are FIXED HERE and
+  are not swept. There is no grid anywhere in this run.
+
+why_BETA_is_0.5_and_not_searched: >
+  BETA = 0.5 makes g range over [1 − 0.5·s̄, 1 + 0.5·(1 − s̄)] — roughly ±0.25 around 1 for a
+  score with mean 0.5 — i.e. a re-weighting large enough to be detectable at the integer-contract
+  granularity of a ±10 target but small enough that the clamp is rarely the binding constraint.
+  Wave 18 measured what happens when a transform pushes a strategy into its clamp: arm_FULL's
+  clamp-pinned member-bars went 4.0% → 29.7% and the mechanism stopped being the thing under
+  test. Clamp-pinning of |T'| is reported here as a mandatory disclosure for exactly that reason.
+  BETA is a magnitude choice made on that mechanical argument, before any result, and is not
+  revisited.
+
+# ---------------------------------------------------------------------------
+# 2. THE TWO SCORES — both pre-registered, both causal
+# ---------------------------------------------------------------------------
+arm_ER (hypothesis 1 of 2):
+  score: >
+    Kaufman efficiency ratio over 150 bars:
+      ER150_t = |close_t − close_{t−150}| / Σ_{i=t−149..t} |Δclose_i|,  in [0,1] by construction.
+    s_t = ER150_t directly. No transformation, no winsorisation, no percentile mapping — the
+    raw ER is already a bounded [0,1] score and any mapping would be a free choice.
+  mechanistic_argument: >
+    The Solar core is a directional-change detector. Its edge, if it has one, is in trending
+    price; in mean-reverting price its flips are whipsaw, which is precisely the joint-loss
+    structure D6/SMV2Y documented. ER150 measures directly and causally how much of the last 150
+    bars' total travel was net directional — high ER is trend, low ER is chop. Weighting exposure
+    toward high-ER conditions and away from low-ER conditions, AT CONSTANT TOTAL EXPOSURE, is a
+    pure selectivity statement: it does not change how much the system trades, only when it
+    concentrates. 150 bars ≈ 7.5 hours, deliberately shorter than sigma460's 23-hour session
+    scale so that it carries information sigma460 structurally cannot.
+
+arm_TOD (hypothesis 2 of 2):
+  score: >
+    s_t = a causal time-of-day score derived from CROSS-INSTRUMENT evidence ONLY — never from
+    NQ's own P&L. Specifically: for each 3-minute slot, compute on ES, RTY and YM the fraction
+    of the ensemble's session-level P&L earned in that slot's coarse cohort, and set s_t to the
+    rank-normalised average of that fraction across the three instruments. NQ contributes
+    NOTHING to the score's construction.
+  why_it_is_built_this_way (this is the whole point): >
+    Wave 18's D4 found that on NQ the EVENING cohort is 26.0% of bars and −9.2% of P&L. Fitting
+    a time-of-day gate to that finding would be selecting a rule on the same data that produced
+    the observation — the textbook overfit this program's own multiple-testing ledger exists to
+    punish. Building the score from ES/RTY/YM instead makes NQ's D4 result an OUT-OF-SAMPLE
+    CONFIRMATION of the score rather than its source. If the cohort structure is a real property
+    of index-futures intraday flow it will be present on all four; if it is an NQ artifact the
+    score will be uninformative on NQ and the arm will fail, which is the correct outcome.
+    C2 COMPLIANCE: ES/RTY/YM are used here as CONTEXT INPUTS to a score, never as a traded leg.
+    Nothing in this run proposes trading them.
+  regime_doctrine: >
+    The cross-instrument P&L used to build the score is 2022-2026 only. No pre-2022 data is read
+    in this run, for any purpose.
+
+control: the unmodified incumbent (g ≡ 1). Rebuilt in-run from the same code path as the arms
+  and cross-checked against runs/SMV2AD_VOLMULT_CEILING/out/e10_daily_dev_control_1200.csv
+  before any gate is read, exactly as W18R1 did (that check passed to the cent, 1,139/1,139).
+
+# ---------------------------------------------------------------------------
+# 3. GATES — all pre-registered, all binding, chronology included from the start
+# ---------------------------------------------------------------------------
+gate_0_exposure_neutrality (INVALIDATION, checked FIRST): >
+  Realised total exposure Σ|T'| must be within ±5% of the control's Σ|T|, and mean contracts/day
+  within ±5%. An arm outside that band is NOT scored on P&L at all — it is recorded as
+  INVALID-NOT-A-SELECTIVITY-TEST and reported as such. This exists because Wave 18 shipped a
+  "selectivity" result that was an exposure result, and the only way to not repeat that is to
+  make it impossible to score.
+gate_A_legacy_triple: Sharpe improves AND CDaR_0.95 improves AND top-10-day retention >= 95%.
+  Retention is computed BOTH on the control's dates (the frozen house definition, which is the
+  binding one) AND on the arm's own dates (the disclosure the W18R1 red team showed is needed —
+  the two differed by 20 points there). Both are reported; the house definition decides.
+gate_B_chronology (NEW, mandatory per standing caution seq 466): >
+  Yearly ΔSharpe sign agreement >= 4 of 5 calendar years (2022, 2023, 2024, 2025, 2026-partial),
+  the same LOYO bar SMV2AF was failed on. AND: the full-sample verdict must survive dropping the
+  final 106 sessions — if excising the 2026 stub flips gate A, the arm FAILS, full stop.
+gate_C_cross_instrument (B11): >
+  The arm is rebuilt on ES, RTY and YM. Binding figure = NEW-INSTRUMENTS-ONLY sign agreement
+  (>= 2 of 3 on point ΔSharpe AND point ΔCDaR ratio). The NQ cell is reported separately and
+  labelled KNOWN, and does NOT enter the count. For arm_TOD this gate is partly circular by
+  construction (the score is built from those instruments) — that circularity is DECLARED HERE,
+  gate C is therefore recorded as NON-BINDING FOR arm_TOD, and arm_TOD is judged on gates 0, A
+  and B only. Stating this before the run is the only honest way to use the same instruments for
+  both purposes.
+verdict: >
+  A CANDIDATE must pass gate 0, gate A, gate B, and (arm_ER only) gate C. Anything less is
+  CONFIRMED-NOT-BENEFICIAL. No adoption this wave regardless of outcome; a CANDIDATE earns a
+  full R2 in a later wave, scored under both the legacy triple and the repaired O1.
+
+# ---------------------------------------------------------------------------
+# 4. DISCLOSURES REQUIRED WHETHER OR NOT ANYTHING PASSES
+# ---------------------------------------------------------------------------
+mandatory_disclosures:
+  - realised exposure ratio and contracts/day vs control, per arm (gate 0's evidence).
+  - fraction of bars where |T'| is clamp-pinned at ±10, per arm, vs control's 4.0% baseline.
+  - block-bootstrap P(ΔSharpe>0) and P(ΔCDaR>0) with the 5-95% band. Wave 18 shipped a headline
+    with no uncertainty and had to retract its strength; that does not happen twice.
+  - the yearly table, always, including when the verdict is a fail.
+  - recency tiers labelled CONTINUATION per §F.
+  - for arm_TOD: the cross-instrument cohort table the score was built from, so a reader can see
+    whether NQ's D4 structure is or is not present on ES/RTY/YM. **If it is NOT present, that is
+    the headline finding of this run and it must be stated as such**, because it would mean D4's
+    cohort split is an NQ-specific artifact and the program has been reasoning from it wrongly.
+old_regime: NOT run. Conditional on a CANDIDATE existing, and then only as a USE-A right-tail
+  capture ratio per V6 §3, never a magnitude.
+red_team: MANDATORY (V7 §G). Both arms. Verdicts verbatim under red_team/; corrections into
+  REPORT.md, never into this spec (C6). The reviewer will be instructed explicitly to run any
+  de-confounding experiment this run queues rather than merely flagging it — that is what made
+  Wave 18's reviews decisive.
+outputs: out/scores.npy, out/exposure_check.csv, out/daily_*.csv, out/gates.csv,
+  out/yearly.csv, out/bootstrap.json, out/xinst.csv, out/tod_source_cohorts.csv, REPORT.md
