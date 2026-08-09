@@ -1,0 +1,103 @@
+run_id: W17B_C4_WATCHDOG
+experiment: MEGA_PROMPT_V6_WAVE17_W0_V1R3_CONTINUATION
+type: compliance_fix_not_an_alpha_trial
+date_frozen: 2026-08-09
+owner_directive: "MEGA PROMPT -- V6 AUTONOMOUS PROGRAM DIRECTIVE (owner-authored, 2026-08-09)"
+supersedes_run: W17_C4_COMPLIANCE   # CLOSED, not amended -- see below
+
+# ---------------------------------------------------------------------------
+# WHY A NEW SPEC INSTEAD OF AN AMENDMENT.
+# V6 §13 rule 8: "You want to change a frozen spec mid-run. You may not. Close the run,
+# record what was wrong, freeze a new spec." W17_C4_COMPLIANCE is therefore CLOSED with its
+# real, published verdict (NQ_v2 PASS at 0 breaches; MNQ_v2 FAIL at 1) and this run opens
+# fresh. Nothing in W17's spec, report, code or ledgers is edited.
+#
+# WHAT WAS WRONG WITH THE W17 SPEC, stated plainly:
+# It authorised exactly two changes and assumed both objects' flatten obligations could be
+# discharged from the SIGNAL series alone. That assumption is false for a cross-series
+# object. On 2023-04-05 the NQ signal series has a data gap and stops at 14:03 while the
+# traded MNQ leg has bars through 17:00. NQ_v2 is unaffected (its traded leg IS the series
+# that stopped, so NT8's own session-close exit closed it at 14:03). MNQ_v2's traded leg
+# outlived its decision series, no bar event could fire the flatten, and the position sat
+# through 16:45. One session in 1,139 -- and the pre-registered bar was exactly 0, so it
+# failed. That residual is the same engine-level phenomenon already documented for Product A
+# in runs/SMV2M_MASTER_BUILD/REPORT.md ("on data-gap days the executable can carry overnight
+# risk; deterministic, engine-native, and rare, but not zero"), which this wave measures at
+# exactly 1 normal-session breach for SolarWaveSMMaster_v2 on the same date.
+# ---------------------------------------------------------------------------
+
+hypothesis_free: true
+alpha_budget_consumed: 0   # §15: compliance/execution work is uncapped and costs no alpha
+
+objects_to_build:
+  - name: SolarWaveOneContractNQ_v3
+    supersedes: SolarWaveOneContractNQ_v2
+  - name: SolarWaveOneContractMNQ_v3
+    supersedes: SolarWaveOneContractMNQ_v2
+  # _v3 per the HOT-RELOAD rule in CLAUDE.md (version the class on every edit; NT8 can
+  # resolve a stale compiled type). Still not _Final: NAMING.md reserves that for
+  # parity-PASSED artifacts, and re-parity (V1-R4) has not run.
+
+change_authorized_in_this_spec:   # exactly ONE
+  C3_execution_series_flatten_watchdog:
+    applies_to: both objects
+    change: >
+      Give the EXECUTION series its own flatten authority. On a bar event of the execution
+      series, if the position is non-zero and that series' own session clock is at or past
+      (its session end - 21 minutes), submit flat -- independently of whether the signal
+      series produced a bar. Implemented with a second SessionIterator bound to the
+      execution series. No decision, signal, allocator, threshold, entry or exit rule is
+      touched; the watchdog can only ever move the position toward FLAT, never open, size
+      up, or reverse a position.
+    rationale: >
+      The 16:45 obligation is a property of the TRADED leg's margin, not of the signal
+      leg's data availability. A flatten that can only be triggered by the signal series is
+      structurally unable to honour it when the two series' data disagree. This is the same
+      class of asymmetry that produced the original MNQ bug, so removing it is a
+      correctness fix, not a tuning choice.
+    expected_effect_on_normal_sessions: >
+      NONE. On every session where the signal series has a bar at (sessionEnd - 21min), the
+      decision path already sets target 0 at that bar and the watchdog finds the position
+      already flat by the execution series' own corresponding bar. Predicted: NQ_v3 and
+      MNQ_v3 reproduce v2's trade counts and net P&L on all 1,138 non-gap sessions. THIS
+      PREDICTION IS RECORDED BEFORE THE RUN AND IS FALSIFIABLE: if net P&L moves by more
+      than the single 2023-04-05 episode can account for, the watchdog is doing something
+      it should not and the change must be rejected, not kept.
+  explicitly_not_changed:
+    - every signal / allocator / threshold / hysteresis constant
+    - the 30-minute entry block and 21-minute flatten offsets (frozen, not searched)
+    - the realtime fail-closed guard, the instrument guards, IsExitOnSessionCloseStrategy
+
+success_criterion:            # PRE-REGISTERED. Compliance only. NEVER P&L.
+  primary: >
+    ZERO holding intervals intersecting the per-session initial-margin window
+    [session_close - 15 minutes, 18:00 ET product open), for BOTH objects, across the full
+    dev window, measured by runs/W17_C4_COMPLIANCE/src/c4_audit.py on each object's own NT8
+    execution ledger (position reconstructed from ORDER ACTIONS, not the target column).
+  pass_bar: exactly 0. Unchanged from W17.
+  secondary_falsification: >
+    Net P&L and trade count on the 1,138 non-gap sessions must be UNCHANGED from v2. A
+    change there falsifies "the watchdog is inert on normal data" and the object is rejected.
+  pnl_treatment: >
+    Reported, never a selection input. §13 rule 7: if compliance costs P&L, that is the cost
+    of the constraint and it is accepted. The 21-minute buffer is not moved to recover P&L.
+
+residual_risk_acknowledged: >
+  A watchdog cannot help if BOTH series lack bars across the deadline. In that case NT8's own
+  session-close exit is the only remaining mechanism and it fires 30 seconds before the
+  template close. That residual is engine-level, not addressable in strategy code, and is
+  recorded rather than papered over. Measure and report how many dev sessions have that
+  property.
+
+mandatory_followups:
+  - V1-R4 full NT8 Strategy Analyzer re-parity for both objects before either may be renamed
+    _Final or presented as a certified deliverable.
+  - Propagate C2 (early-close-aware flatten) and C3 (watchdog) to Product A
+    (SolarWaveSMMaster_v2, 39 measured breaches) and to SolarWaveSMOneLot_v1, per the §12
+    propagation rule. Scheduled as its own run; not folded into this one.
+
+outputs:
+  - src/ninjascript/SolarWaveOneContractNQ_v3.cs
+  - src/ninjascript/SolarWaveOneContractMNQ_v3.cs
+  - runs/W17B_C4_WATCHDOG/out/{nq_v3,mnq_v3}_fills.csv
+  - runs/W17B_C4_WATCHDOG/REPORT.md
