@@ -44,3 +44,21 @@ ingestion this wave). Future readers are the intended audience for this note.
 
 Cleanup is judged sufficient to close the consolidation phase. No further file-level action
 taken as a result of this test.
+
+---
+
+## RE-CHECK — same day, after the S2 R2 promotion adjudication + CrossTrade parity update
+
+A fresh agent, same 5-file protocol, was asked 8 new questions specific to the same-day update
+(S2 promotion status, per-object parity status/root-cause, whether trading logic changed, and
+whether `BASELINE_MODELS.md` and `FINAL_OWNER_DECISION_20260809.md` agree with each other).
+
+**Result: PASS, no contradictions found.** All 8 questions answered unambiguously and correctly
+cross-cited; the agent specifically checked `BASELINE_MODELS.md` against
+`FINAL_OWNER_DECISION_20260809.md` for numeric/status disagreement (parity status, residual
+percentages, trade counts, byte counts, gate outcomes) and found none. The one repeated,
+already-accepted friction point: `START_HERE.md`'s own body text (dated 2026-08-08) does not
+mention S2 or the same-day update at all, and only stays correct because its top banner defers
+to `BASELINE_MODELS.md` — a reader must follow that pointer rather than trust the body prose
+beneath it. This is the same disclosed, accepted trade-off as the original test (never
+silently rewriting historical body text), not a new gap. No further action taken.
