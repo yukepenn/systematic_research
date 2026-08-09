@@ -221,3 +221,29 @@ from the red-team ingestion above still apply. This is a meaningfully stronger p
 red team's ingestion alone left it in, and a meaningfully weaker one than the original REPORT.md's
 unqualified "market-structure-justified... genuinely different mechanism" framing claimed. Both
 corrections stand together as this run's final state.
+
+---
+
+# R2 PROMOTION ADJUDICATION — CLOSED 2026-08-09. **VERDICT: NOT PROMOTED to any of the 3
+canonical products.**
+
+This CANDIDATE's own frozen verdict rule (above) required a capital-map + parity R2 applied
+separately to Product A and Product B before any promotion decision. That step had never actually
+been run when the FINAL OPTIMIZATION campaign closed at "0 promotions" -- a process gap, not a
+verdict on S2 itself. It has now been run in full, independently adversarially verified (3
+parallel reviewers, one per product, all CONFIRMED no bug), with the exact frozen 02:00-08:00 ET
+rule integrated at each product's own real commitment layer (Product A: the Solar E10 leg before
+tilt/B-MOM recombination; BEST_ONE_NQ/MNQ: inside the hysteresis(3,1) position state machine).
+Full results: `R2_PRODUCT_A.md`, `R2_ONE_NQ.md`, `R2_ONE_MNQ.md`, `r2_spec.yaml`, `src/
+r2_battery.py`, `src/r2_metrics.py`, `out/r2/`.
+
+**All three: NOT PROMOTED.** Product A fails gate A (CDaR gets worse) and gate B (3/5 years) and
+narrowly fails gate C (top-20 retention 88.1% vs 90%). BEST_ONE_NQ and BEST_ONE_MNQ both pass
+gate A on pooled Sharpe/CDaR but fail gate B decisively (2/5 years) and gate C decisively (62-72%
+tail retention) -- the discrete one-contract position layer is far more exposed to suppressed-
+entry tail loss than the smoother E10 aggregate: on 2025-04-09's tariff-crash volatility, S2
+legitimately suppressed a real +$7,625 winning entry inside the blocked window, accounting for a
+material share of the tail-retention shortfall. Bootstrap confidence is weak across all three
+(P(Δmean>0) = 0.58-0.65, well below any "strong evidence" bar this program has used). No object's
+shipped definition changes as a result -- this closes the process gap with a real, well-evidenced
+answer rather than a default assumption.
