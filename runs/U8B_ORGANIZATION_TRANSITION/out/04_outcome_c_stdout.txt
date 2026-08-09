@@ -1,0 +1,33 @@
+HOLD bars: 203252  (canonical 192723, health-only 10529)
+baseline P(hazard_10=1) canonical = 0.0413
+
+--- (c) reversal-hazard: perm_entropy_transition vs hazard_10 ---
+  n=192723  raw Spearman=-0.0073  residualized Spearman=-0.0023
+  OLS R^2 baseline=0.03082  extended=0.03088  delta=+0.00006  (feature coef sign -)
+  year-by-year (residualized): 2022=-0.0025(n=44527), 2023=0.0020(n=40835), 2024=0.0032(n=42522), 2025=-0.0039(n=44554), 2026-canonical(Jan-May29)=-0.0277(n=20285)
+  sign-stability: 3/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=10529, observational, not blended): raw=-0.0331 resid=-0.0122
+
+--- (c) reversal-hazard: reversal_rate_transition vs hazard_10 ---
+  n=192723  raw Spearman=-0.0072  residualized Spearman=-0.0073
+  OLS R^2 baseline=0.03082  extended=0.03087  delta=+0.00004  (feature coef sign -)
+  year-by-year (residualized): 2022=-0.0156(n=44527), 2023=0.0042(n=40835), 2024=-0.0143(n=42522), 2025=-0.0008(n=44554), 2026-canonical(Jan-May29)=-0.0174(n=20285)
+  sign-stability: 4/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=10529, observational, not blended): raw=-0.0403 resid=-0.0239
+
+--- (c) reversal-hazard: run_persistence_transition vs hazard_10 ---
+  n=192723  raw Spearman=0.0056  residualized Spearman=0.0003
+  OLS R^2 baseline=0.03082  extended=0.03086  delta=+0.00003  (feature coef sign +)
+  year-by-year (residualized): 2022=-0.0000(n=44527), 2023=-0.0092(n=40835), 2024=0.0087(n=42522), 2025=-0.0054(n=44554), 2026-canonical(Jan-May29)=0.0214(n=20285)
+  sign-stability: 2/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=10529, observational, not blended): raw=0.0455 resid=0.0173
+
+--- STAGE 2 (interaction) (c) reversal-hazard: perm_entropy_transition x |M| interaction ---
+  n=192723  R^2 additive=0.03088  R^2 with interaction=0.03104  delta R^2(interaction)=+0.00015
+  interaction coef (perm_entropy_transition:|M|) = 0.00897  se=0.00162  t=5.524518294651984
+
+--- STAGE 2 (interaction) (c) reversal-hazard: reversal_rate_transition x |M| interaction ---
+  n=192723  R^2 additive=0.03087  R^2 with interaction=0.03089  delta R^2(interaction)=+0.00003
+  interaction coef (reversal_rate_transition:|M|) = 0.00412  se=0.00176  t=2.3337503511657554
+
+outcome (c) complete.

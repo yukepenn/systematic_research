@@ -1,0 +1,135 @@
+Product-B block table: n=2064
+
+====================================================================================================
+OUTCOME (a) MFE (bigger eventual MFE = better)  (outcome_col=mfe_final)
+====================================================================================================
+
+--- (a) MFE (bigger eventual MFE = better): perm_entropy_transition vs mfe_final ---
+  n=1978  raw Spearman=-0.0601  residualized Spearman=-0.0631
+  OLS R^2 baseline=0.05359  extended=0.05516  delta=+0.00157  (feature coef sign -)
+  year-by-year (residualized): 2022=-0.0573(n=443), 2023=-0.0747(n=453), 2024=-0.0645(n=443), 2025=-0.0756(n=453), 2026-canonical(Jan-May29)=-0.0351(n=186)
+  sign-stability: 5/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=86, observational, not blended): raw=0.0387 resid=0.0280
+
+--- (a) MFE (bigger eventual MFE = better): reversal_rate_transition vs mfe_final ---
+  n=1978  raw Spearman=-0.0783  residualized Spearman=-0.0756
+  OLS R^2 baseline=0.05359  extended=0.05664  delta=+0.00305  (feature coef sign -)
+  year-by-year (residualized): 2022=-0.0704(n=443), 2023=-0.0798(n=453), 2024=-0.0778(n=443), 2025=-0.0662(n=453), 2026-canonical(Jan-May29)=-0.1373(n=186)
+  sign-stability: 5/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=86, observational, not blended): raw=-0.0079 resid=-0.0288
+
+--- (a) MFE (bigger eventual MFE = better): run_persistence_transition vs mfe_final ---
+  n=1978  raw Spearman=0.0712  residualized Spearman=0.0656
+  OLS R^2 baseline=0.05359  extended=0.05505  delta=+0.00145  (feature coef sign +)
+  year-by-year (residualized): 2022=0.0578(n=443), 2023=0.0588(n=453), 2024=0.0576(n=443), 2025=0.0743(n=453), 2026-canonical(Jan-May29)=0.1278(n=186)
+  sign-stability: 5/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=86, observational, not blended): raw=-0.0318 resid=-0.0113
+
+--- STAGE 2 (interaction) (a) MFE (bigger eventual MFE = better): perm_entropy_transition x |M| interaction ---
+  n=1978  R^2 additive=0.05516  R^2 with interaction=0.05558  delta R^2(interaction)=+0.00042
+  interaction coef (entry_perm_entropy_transition:|M|) = 331.42738  se=353.05869  t=0.9387317014521911
+
+--- STAGE 2 (interaction) (a) MFE (bigger eventual MFE = better): reversal_rate_transition x |M| interaction ---
+  n=1978  R^2 additive=0.05664  R^2 with interaction=0.05918  delta R^2(interaction)=+0.00254
+  interaction coef (entry_reversal_rate_transition:|M|) = -923.92310  se=400.21084  t=-2.308590902146641
+
+====================================================================================================
+OUTCOME (b) MAE magnitude (lower = better)  (outcome_col=mae_abs)
+====================================================================================================
+
+--- (b) MAE magnitude (lower = better): perm_entropy_transition vs mae_abs ---
+  n=1978  raw Spearman=0.0650  residualized Spearman=0.0460
+  OLS R^2 baseline=0.15134  extended=0.15350  delta=+0.00217  (feature coef sign +)
+  year-by-year (residualized): 2022=0.1087(n=443), 2023=0.0827(n=453), 2024=0.0440(n=443), 2025=0.0174(n=453), 2026-canonical(Jan-May29)=-0.0684(n=186)
+  sign-stability: 4/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=86, observational, not blended): raw=0.0049 resid=0.0208
+
+--- (b) MAE magnitude (lower = better): reversal_rate_transition vs mae_abs ---
+  n=1978  raw Spearman=0.0685  residualized Spearman=0.0598
+  OLS R^2 baseline=0.15134  extended=0.15351  delta=+0.00217  (feature coef sign +)
+  year-by-year (residualized): 2022=0.0186(n=443), 2023=0.1212(n=453), 2024=0.0843(n=443), 2025=0.0618(n=453), 2026-canonical(Jan-May29)=-0.0106(n=186)
+  sign-stability: 4/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=86, observational, not blended): raw=-0.0270 resid=-0.0307
+
+--- (b) MAE magnitude (lower = better): run_persistence_transition vs mae_abs ---
+  n=1978  raw Spearman=-0.0622  residualized Spearman=-0.0578
+  OLS R^2 baseline=0.15134  extended=0.15280  delta=+0.00146  (feature coef sign -)
+  year-by-year (residualized): 2022=-0.0230(n=443), 2023=-0.1170(n=453), 2024=-0.0527(n=443), 2025=-0.0929(n=453), 2026-canonical(Jan-May29)=0.0358(n=186)
+  sign-stability: 4/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=86, observational, not blended): raw=0.0658 resid=0.0633
+
+--- STAGE 2 (interaction) (b) MAE magnitude (lower = better): perm_entropy_transition x |M| interaction ---
+  n=1978  R^2 additive=0.15350  R^2 with interaction=0.15358  delta R^2(interaction)=+0.00008
+  interaction coef (entry_perm_entropy_transition:|M|) = -57.94134  se=136.51958  t=-0.42441779508176747
+
+--- STAGE 2 (interaction) (b) MAE magnitude (lower = better): reversal_rate_transition x |M| interaction ---
+  n=1978  R^2 additive=0.15351  R^2 with interaction=0.15376  delta R^2(interaction)=+0.00025
+  interaction coef (entry_reversal_rate_transition:|M|) = -118.14914  se=155.03202  t=-0.7620951180059334
+
+====================================================================================================
+OUTCOME (d) bars-to-MFE (lower = faster follow-through)  (outcome_col=bars_to_mfe)
+====================================================================================================
+
+--- (d) bars-to-MFE (lower = faster follow-through): perm_entropy_transition vs bars_to_mfe ---
+  n=1978  raw Spearman=-0.0392  residualized Spearman=-0.0518
+  OLS R^2 baseline=0.00988  extended=0.01247  delta=+0.00259  (feature coef sign -)
+  year-by-year (residualized): 2022=-0.0354(n=443), 2023=0.0136(n=453), 2024=-0.0566(n=443), 2025=-0.1198(n=453), 2026-canonical(Jan-May29)=-0.0449(n=186)
+  sign-stability: 4/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=86, observational, not blended): raw=-0.0015 resid=-0.0019
+
+--- (d) bars-to-MFE (lower = faster follow-through): reversal_rate_transition vs bars_to_mfe ---
+  n=1978  raw Spearman=-0.0364  residualized Spearman=-0.0513
+  OLS R^2 baseline=0.00988  extended=0.01254  delta=+0.00266  (feature coef sign -)
+  year-by-year (residualized): 2022=-0.0183(n=443), 2023=0.0026(n=453), 2024=-0.0448(n=443), 2025=-0.0929(n=453), 2026-canonical(Jan-May29)=-0.1265(n=186)
+  sign-stability: 4/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=86, observational, not blended): raw=0.0321 resid=0.0809
+
+--- (d) bars-to-MFE (lower = faster follow-through): run_persistence_transition vs bars_to_mfe ---
+  n=1978  raw Spearman=0.0401  residualized Spearman=0.0464
+  OLS R^2 baseline=0.00988  extended=0.01273  delta=+0.00285  (feature coef sign +)
+  year-by-year (residualized): 2022=0.0140(n=443), 2023=-0.0114(n=453), 2024=0.0381(n=443), 2025=0.0976(n=453), 2026-canonical(Jan-May29)=0.1182(n=186)
+  sign-stability: 4/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=86, observational, not blended): raw=-0.0747 resid=-0.1111
+
+--- STAGE 2 (interaction) (d) bars-to-MFE (lower = faster follow-through): perm_entropy_transition x |M| interaction ---
+  n=1978  R^2 additive=0.01247  R^2 with interaction=0.01248  delta R^2(interaction)=+0.00001
+  interaction coef (entry_perm_entropy_transition:|M|) = 1.17809  se=10.49792  t=0.11222133916793403
+
+--- STAGE 2 (interaction) (d) bars-to-MFE (lower = faster follow-through): reversal_rate_transition x |M| interaction ---
+  n=1978  R^2 additive=0.01254  R^2 with interaction=0.01267  delta R^2(interaction)=+0.00013
+  interaction coef (entry_reversal_rate_transition:|M|) = 6.08843  se=11.92154  t=0.510708362041246
+
+====================================================================================================
+OUTCOME (e) P(top-decile winner)  (outcome_col=top_decile_winner)
+====================================================================================================
+
+--- (e) P(top-decile winner): perm_entropy_transition vs top_decile_winner ---
+  n=1978  raw Spearman=-0.0237  residualized Spearman=-0.0216
+  OLS R^2 baseline=0.01323  extended=0.01412  delta=+0.00089  (feature coef sign -)
+  year-by-year (residualized): 2022=0.0236(n=443), 2023=-0.0200(n=453), 2024=-0.0181(n=443), 2025=-0.0356(n=453), 2026-canonical(Jan-May29)=-0.0239(n=186)
+  sign-stability: 4/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=86, observational, not blended): raw=-0.0111 resid=-0.0536
+
+--- (e) P(top-decile winner): reversal_rate_transition vs top_decile_winner ---
+  n=1978  raw Spearman=-0.0517  residualized Spearman=-0.0207
+  OLS R^2 baseline=0.01323  extended=0.01526  delta=+0.00203  (feature coef sign -)
+  year-by-year (residualized): 2022=-0.0539(n=443), 2023=-0.0104(n=453), 2024=0.0050(n=443), 2025=-0.0291(n=453), 2026-canonical(Jan-May29)=-0.1320(n=186)
+  sign-stability: 4/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=86, observational, not blended): raw=-0.1027 resid=-0.1301
+
+--- (e) P(top-decile winner): run_persistence_transition vs top_decile_winner ---
+  n=1978  raw Spearman=0.0370  residualized Spearman=0.0072
+  OLS R^2 baseline=0.01323  extended=0.01471  delta=+0.00148  (feature coef sign +)
+  year-by-year (residualized): 2022=0.0521(n=443), 2023=-0.0091(n=453), 2024=-0.0203(n=443), 2025=0.0195(n=453), 2026-canonical(Jan-May29)=0.1117(n=186)
+  sign-stability: 3/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=86, observational, not blended): raw=0.0161 resid=0.0799
+
+--- STAGE 2 (interaction) (e) P(top-decile winner): perm_entropy_transition x |M| interaction ---
+  n=1978  R^2 additive=0.01412  R^2 with interaction=0.01433  delta R^2(interaction)=+0.00020
+  interaction coef (entry_perm_entropy_transition:|M|) = 0.02568  se=0.04018  t=0.6390781199787136
+
+--- STAGE 2 (interaction) (e) P(top-decile winner): reversal_rate_transition x |M| interaction ---
+  n=1978  R^2 additive=0.01526  R^2 with interaction=0.01614  delta R^2(interaction)=+0.00087
+  interaction coef (entry_reversal_rate_transition:|M|) = -0.06037  se=0.04560  t=-1.324003256504906
+
+outcomes (a)/(b)/(d)/(e) complete.

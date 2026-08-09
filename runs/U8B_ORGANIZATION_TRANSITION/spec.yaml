@@ -1,0 +1,183 @@
+run_id: U8B_ORGANIZATION_TRANSITION
+family: "U8B -- path organization TRANSITION (Track L, DIAGNOSTIC ONLY this run). Follow-on to
+  U8_PATH_ORGANIZATION (CLOSED as redundant/weak on organization LEVEL), per the owner's same-day
+  addendum sharpening the hypothesis from level to change."
+
+depends_on: >
+  U8_PATH_ORGANIZATION (runs/U8_PATH_ORGANIZATION/out/u8_bars_with_features.parquet -- already
+  byte-exact-gated against U0, already contains perm_entropy_10/20, reversal_rate_10/20,
+  run_persistence_10/20 at bar level for the full canonical+extension window; REUSED verbatim,
+  not recomputed). U0_UNIFIED_STATE (runs/U0_UNIFIED_STATE/out/u0_state_table.parquet --
+  additional columns M_change, M_slope_20, is_rth, MFE_B_dollars, MAE_B_dollars pulled directly,
+  joined on t_idx). U8's stats_lib.py (bucket-residualized Spearman + OLS delta-R^2 framework,
+  reused verbatim). U1_SESSION_HETEROGENEITY/src/03_test2_interaction_ols.py (explicit
+  np.linalg.lstsq interaction-term OLS pattern, reused verbatim in spirit). U6_PRODUCT_A_PATH_DEPENDENCE
+  (fwd20_pnl_per_contract construction at SCALE_IN bars, reused verbatim, copied from U8's own
+  outcome-d script which itself copied it from U6). SHADOW01_SETUP_COMPATIBILITY/src/
+  01_build_shadow_events.py (bars_to_mfe = argmax of the within-block cumulative P&L path
+  convention, reused in spirit but applied to U0's own REAL run_pnl_B_dollars running path, not
+  a close-derived proxy, since the real path is already certified and available here).
+  P0_TRADESTATE_AUTOPSY/out/block_level_summary.csv (checked first for a reusable bars_to_mfe-like
+  timing field per orchestrator instruction -- it has MFE_dollars but no timing-to-peak column,
+  so SHADOW01's argmax convention is used instead, applied to U0's real per-bar running P&L).
+  U5_SOFT_WEIGHTING/REPORT.md (sunk-P&L confound lesson, checked against as part of the
+  too-good-to-be-true gate below).
+
+hypothesis: >
+  U8 tested organization LEVEL (perm_entropy_20, reversal_rate_20, run_persistence_20 measured at
+  a single 20-bar or 10-bar window) and found small, right-tail-unsafe residual information beyond
+  incumbent state. This family tests a DIFFERENT, more specific hypothesis: not level, but
+  organization TRANSITION -- whether the recent (10-bar) path is becoming MORE organized/
+  persistent relative to the longer preceding (20-bar) path, and specifically whether that
+  transition interacts with the incumbent's own momentum/conviction magnitude (|M| for Product B,
+  |M_A_raw| for Product A). A path that is *becoming* more organized right now, conditional on the
+  system already being in a high-conviction state, is mechanistically distinct from either (a)
+  organization level alone (U8, closed) or (b) momentum's own rate of change (M_change/
+  M_slope_20, already in U0) -- Step 0 below tests both adjacencies directly before anything else.
+
+scope: >
+  Diagnostic run only, per orchestrator instruction ("Track L, DIAGNOSTIC ONLY this run"). No
+  candidate construction, no parameter changes to Product A (SolarWaveSMMaster_v4) or Product B
+  (SolarWaveOneContractNQ_v5/MNQ_v5), no NT8/CrossTrade calls. Reads
+  runs/U8_PATH_ORGANIZATION/out/u8_bars_with_features.parquet and
+  runs/U0_UNIFIED_STATE/out/u0_state_table.parquet ONLY as state/feature/P&L sources. Writes only
+  under runs/U8B_ORGANIZATION_TRANSITION/. Runs no git command.
+
+features_causal_preregistered: >
+  Exactly 3 transition features, built ONLY from U8's own already-verified, already-causal
+  10-bar and 20-bar level columns -- no new window introduced, no recomputation from scratch:
+  (1) perm_entropy_transition(t)  = perm_entropy_10(t)  - perm_entropy_20(t)   (negative = the
+      recent path is LESS random / more ordinally-organized than the longer window it sits inside)
+  (2) reversal_rate_transition(t) = reversal_rate_10(t) - reversal_rate_20(t)  (negative = fewer
+      sign-flips recently = the path is becoming more persistent)
+  (3) run_persistence_transition(t) = run_persistence_10(t) - run_persistence_20(t) (positive =
+      longer same-sign runs recently = becoming more persistent) -- expected to be the near-mirror
+      of (2) by construction (U8 already found reversal_rate_W and run_persistence_W are exact
+      rank-inverses, rho=-1, at any SINGLE window W; the transition (difference-of-two-windows)
+      versions are not guaranteed to be an exact -1 rank-inverse of each other the same way, so
+      this is verified empirically in Step 0 below, not assumed). All three are causal (both the
+      10-bar and 20-bar inputs are causal, window [t-W+1,t] only; a difference of two causal
+      quantities measured at the same t is itself causal, nothing at or after t+1 is used).
+
+step0_redundancy_check: >
+  MANDATORY FIRST, two parts, both must be reported before any outcome test:
+  (A) LEVEL adjacency: raw Spearman, bar level, canonical window (is_health_only_bar==False), of
+      all 3 transition features against U8's own perm_entropy_20 and reversal_rate_20 (6
+      correlations) -- transition could simply restate "currently low/high organization" rather
+      than genuine change.
+  (B) MOMENTUM-RATE-OF-CHANGE adjacency: raw Spearman of all 3 transition features against U0's
+      own M_change and M_slope_20 (6 correlations) -- transition features could simply be
+      restating momentum's own rate of change rather than a genuinely orthogonal organization
+      signal, since both are "how fast is something changing" constructions.
+  (C) mirror check: raw Spearman between reversal_rate_transition and run_persistence_transition
+      (empirical, not assumed exact -1 as it is at a single window).
+  Any |rho|>0.7 against (A) or (B) is flagged REDUNDANT explicitly (its own outcome tests are
+  still run and reported for completeness, per U8's own convention, but flagged prominently).
+
+incumbent_interaction_hypothesis: >
+  The addendum's own central question: does organization TRANSITION, CONDITIONAL ON incumbent
+  momentum/conviction (|M| for Product B, |M_A_raw| for Product A), predict:
+    (a) stronger follow-through (bigger eventual MFE) -- Product-B block level, feature at block
+        entry bar (age_bars_B==1), outcome = that block's own FINAL MFE_B_dollars (U0's own
+        running-max-of-cumulative-real-P&L-within-block column, read at the block's last bar --
+        matches U8 outcome (a)'s exact entry-vs-final-block-value pairing, feature strictly
+        precedes all of the block's own P&L, no sunk-P&L confound).
+    (b) lower MAE -- same population/pairing as (a), outcome = mae_abs = -1 * that block's FINAL
+        MAE_B_dollars (U0's own running-min-of-cumulative-real-P&L-within-block column, negated to
+        a non-negative magnitude so "lower mae_abs" reads as "smaller drawdown" in both directions
+        of the correlation).
+    (c) lower reversal hazard -- Product-B HOLD-bar population, hazard_10 binary label (1 if
+        within t+1..t+10 a REVERSAL occurs or M crosses against the held position), IDENTICAL
+        construction to U8 outcome (c) (copied verbatim), feature measured at the same HOLD bar.
+    (d) faster time-to-MFE -- Product-B block level, same population as (a)/(b), outcome =
+        bars_to_mfe = argmax index (0-offset from block entry) of the block's own real
+        run_pnl_B_dollars path -- checked runs/P0_TRADESTATE_AUTOPSY/out/block_level_summary.csv
+        FIRST per orchestrator instruction (has MFE_dollars but no comparable timing-to-peak
+        column, so not reused directly); built instead via SHADOW01's own argmax convention,
+        applied to U0's real (not close-derived-proxy) per-bar running P&L, which is more accurate
+        than SHADOW01's own construction since the real certified path is already available here.
+    (e) higher large-winner probability -- Product-B block level, same population as (a)/(b)/(d),
+        binary outcome = 1 if block's net_pnl (U8's own last-row run_pnl_B_dollars convention) is
+        >= the 90th percentile of net_pnl across CANONICAL blocks (threshold frozen on canonical
+        rows only, applied unchanged to extension rows, matching qcut_frozen's own convention).
+    (f) better Product-A incremental scale value -- IDENTICAL construction to U8 outcome (d) /
+        U6's own fwd20_pnl_per_contract, copied verbatim: forward-20-bar bar_pnl_A_dollars summed
+        and divided by |target_exposure_A delta|, evaluated ONLY at action_A=='SCALE_IN' bars,
+        feature = organization_transition measured at that same SCALE_IN bar, m_abs = |M_A_raw|.
+
+methodology: >
+  IDENTICAL framework to R4/R5/U5/U8, both stages required for every cell (not one or the other):
+  STAGE 1 (bucket-residualized, U8's stats_lib.run_cell reused verbatim): bucket-residualize
+  against (|M| tercile x sigma460-vol tercile) computed at the same bar the feature is measured
+  at (terciles fit on canonical rows only, qcut_frozen), THEN raw + residualized Spearman and OLS
+  baseline (|M| + vol_tercile_code) vs extended (+ feature) delta-R^2, year-by-year (2022-2025 +
+  2026-canonical-Jan-May29) sign-stability, 2026-06/07 health-only extension reported separately
+  (never blended into sign-stability).
+  STAGE 2 (explicit interaction term, U1's 03_test2_interaction_ols.py pattern reused verbatim in
+  spirit): np.linalg.lstsq OLS of outcome ~ intercept + |M| + vol_tercile_code + feature (additive
+  model, R^2_additive) vs outcome ~ intercept + |M| + vol_tercile_code + feature +
+  feature:|M| (interaction model, R^2_interaction); report the interaction coefficient (sign,
+  magnitude, naive t-stat) and delta-R^2_interaction = R^2_interaction - R^2_additive. This
+  isolates whether the feature's effect on the outcome itself DEPENDS on |M| level, distinct from
+  Stage 1's test of whether the feature adds information after conditioning on an |M|xvol bucket.
+  Both stages run for EACH of the 6 outcomes (a)-(f) x each of the 3 transition features (18
+  Stage-1 cells reported in full, matching U8's "report every cell including nulls" convention;
+  Stage-2 interaction cells run for the 2 features flagged non-mirror-redundant in Step 0(C), i.e.
+  perm_entropy_transition and reversal_rate_transition as the representative of the {reversal_rate,
+  run_persistence}_transition mirror pair -- run_persistence_transition's Stage-2 result is not
+  separately reported beyond Step 0(C)'s mirror confirmation, per orchestrator instruction "do not
+  double-count in your conclusions").
+
+session_interaction: >
+  Addendum's own explicit emphasis. For whichever single (feature x outcome) cell shows the
+  strongest |residualized Spearman| among all 18 Stage-1 cells: repeat that cell's Stage-1 test
+  split by U0's own is_rth column (RTH vs ETH), report BOTH halves' n / raw+residualized Spearman
+  / OLS delta-R^2 separately -- not one blended number.
+
+right_tail_check: >
+  For the same single strongest cell used in session_interaction: check that feature's value
+  distribution (at the bar-type the outcome uses: entry bar for a/b/d/e, HOLD bar for c, SCALE_IN
+  bar for f) across the top-20 all-time winning canonical-window blocks (Product-B: sign
+  (position_B) blocks ranked by net_pnl for outcomes a/b/c/d/e; Product-A: sign(target_exposure_A)
+  blocks ranked by net_pnl for outcome f) vs bottom-20 vs population base rate -- identical
+  discipline to R1/R3/R4/R5/U3/U4/U5/U6/U8.
+
+chronology: >
+  Year-by-year (2022-2026-canonical) sign-stability of the strongest relationship (already
+  produced by Stage 1's run_cell for every cell, reported in full for the winning cell), plus the
+  2026-06/07 health-only extension reported as a separate, observational-only figure, never
+  blended into the sign-stability count -- matches U0's own mechanical canonical/extension split.
+
+too_good_to_be_true_gate: >
+  This family reads U0's and U8's already-verified, already-byte-exact-gated bar-level and
+  running-P&L columns only -- it does not build any new position path, pricing, or backtest
+  engine, so the standard net-dollar correctness gate does not apply. However: if any single
+  (feature x outcome) cell (Stage 1 OR Stage 2) shows an OLS delta-R^2 > 0.02 (an order of
+  magnitude above everything found in R4/R5/U5/U6/U8 so far, all of which topped out around
+  0.005), STOP and specifically check for a sunk-P&L / already-realized-outcome confound (re-read
+  runs/U5_SOFT_WEIGHTING/REPORT.md for exactly this failure mode) before reporting it as a real
+  finding. Outcomes (a)/(b)/(d)/(e) pair an entry-bar feature against a fully-forward block-final
+  value (matches U8 outcome (a)'s already-cleared pattern, feature strictly precedes the outcome);
+  outcomes (c)/(f) are forward-only windows starting at t+1 (matches U8 outcomes (c)/(d)'s already-
+  cleared pattern) -- no outcome in this family regresses a feature against a quantity that already
+  contains realized P&L as of the bar the feature is measured on.
+
+verdict_condition: >
+  If organization-TRANSITION information disappears after conditioning on incumbent state (Step 0
+  redundancy, OR Stage 1/Stage 2 results all null/tiny), CLOSE U8B AS REDUNDANT/WEAK, exactly as
+  U8 was closed. If the relationship (either the plain Stage-1 residualized effect, or specifically
+  the Stage-2 interaction-with-|M| effect) is strong, chronologically stable, non-redundant, AND
+  right-tail-safe: say so explicitly with numbers and describe ONE simple policy translation for a
+  FUTURE family in prose only (no code, no backtest) -- explicitly labeled NOT YET TESTED / NOT
+  AUTHORIZED FOR CONSTRUCTION THIS RUN, matching U1/U3/U4/U6's own identical discipline.
+
+construction_gate: >
+  No candidate is constructed in this run under any circumstance, regardless of finding strength.
+
+non_goals:
+  - No modification of Product A or Product B in any way.
+  - No new causal window introduced beyond the 10-bar/20-bar pair U8 already preregistered and
+    computed -- transition features are differences of those two windows only.
+  - No black-box/ML classifier of any kind -- Spearman, OLS via np.linalg.lstsq only.
+  - No modification of U0 or U8 or any file outside runs/U8B_ORGANIZATION_TRANSITION/.
+  - No git operations.

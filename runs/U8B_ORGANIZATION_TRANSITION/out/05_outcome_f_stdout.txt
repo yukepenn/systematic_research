@@ -1,0 +1,33 @@
+Product-A SCALE_IN events: 8481  (canonical 8137, health-only 344)
+baseline fwd20_pnl_per_contract mean (canonical) = $14.43  (cross-check vs U6/PA0/U8's own +$14.43 SCALE_IN headline)
+
+--- (f) Product-A scale value: perm_entropy_transition vs fwd20_pnl_per_contract ---
+  n=8137  raw Spearman=-0.0329  residualized Spearman=-0.0301
+  OLS R^2 baseline=0.00339  extended=0.00400  delta=+0.00062  (feature coef sign -)
+  year-by-year (residualized): 2022=-0.0284(n=2166), 2023=-0.0262(n=1779), 2024=-0.0219(n=1823), 2025=-0.0538(n=1658), 2026-canonical(Jan-May29)=-0.0141(n=711)
+  sign-stability: 5/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=344, observational, not blended): raw=-0.0862 resid=-0.0879
+
+--- (f) Product-A scale value: reversal_rate_transition vs fwd20_pnl_per_contract ---
+  n=8137  raw Spearman=-0.0330  residualized Spearman=-0.0320
+  OLS R^2 baseline=0.00339  extended=0.00414  delta=+0.00076  (feature coef sign -)
+  year-by-year (residualized): 2022=-0.0520(n=2166), 2023=-0.0312(n=1779), 2024=-0.0324(n=1823), 2025=-0.0099(n=1658), 2026-canonical(Jan-May29)=-0.0271(n=711)
+  sign-stability: 5/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=344, observational, not blended): raw=-0.0540 resid=-0.0556
+
+--- (f) Product-A scale value: run_persistence_transition vs fwd20_pnl_per_contract ---
+  n=8137  raw Spearman=0.0265  residualized Spearman=0.0262
+  OLS R^2 baseline=0.00339  extended=0.00389  delta=+0.00050  (feature coef sign +)
+  year-by-year (residualized): 2022=0.0497(n=2166), 2023=0.0275(n=1779), 2024=0.0184(n=1823), 2025=0.0100(n=1658), 2026-canonical(Jan-May29)=0.0156(n=711)
+  sign-stability: 5/5 years same sign as overall residualized rho
+  2026-06/07 HEALTH-ONLY extension (n=344, observational, not blended): raw=0.0530 resid=0.0543
+
+--- STAGE 2 (interaction) (f) Product-A scale value: perm_entropy_transition x |M_A_raw| interaction ---
+  n=8137  R^2 additive=0.00400  R^2 with interaction=0.00409  delta R^2(interaction)=+0.00008
+  interaction coef (perm_entropy_transition:|M|) = 19.40677  se=23.35553  t=0.8309282214538107
+
+--- STAGE 2 (interaction) (f) Product-A scale value: reversal_rate_transition x |M_A_raw| interaction ---
+  n=8137  R^2 additive=0.00414  R^2 with interaction=0.00513  delta R^2(interaction)=+0.00099
+  interaction coef (reversal_rate_transition:|M|) = -80.60974  se=28.39519  t=-2.838851882864461
+
+outcome (f) complete.
