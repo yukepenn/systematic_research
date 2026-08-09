@@ -1,0 +1,48 @@
+# STRUCTURE_MAP — canonical architecture matrix for Product B (SA0)
+
+Written 2026-08-09 per the SYSTEM ARCHITECTURE SCIENCE + ALPHA OPTIMIZATION MEGA DIRECTIVE sec4.
+Scope: Product B shared decision core (BEST_ONE_NQ/BEST_ONE_MNQ, `theta_NQ=theta_MNQ`). Every
+number below is empirically measured this run (`runs/SA0_SYSTEM_STRUCTURE/`), not read off the
+code alone. Product A gets its own PA0 structure map later in the priority queue — its Solar13/
+HTF/B-MOM building blocks are identical constructions and these findings transfer directly, but
+its continuous-sizing/clamp/short-halving layer does not exist here.
+
+Full evidence, all scripts, all raw output: `runs/SA0_SYSTEM_STRUCTURE/`. Narrative synthesis:
+`runs/SA0_SYSTEM_STRUCTURE/REPORT.md`.
+
+| component | purpose | input | output | causal horizon | marginal contribution (NQ net, full dev window) | interaction contribution | failure mode | prior research status | remaining uncertainty |
+|---|---|---|---|---|---|---|---|---|---|
+| **Solar13 ensemble** | volatility-normalized directional-change trend detection at 13 horizons (VM 6..30 step 2) | 3-min NQ OHLC, causal sigma460 | signed per-member state → `T` | intraday-to-multiday (VM-dependent) | Solar-only (WBmom=0) arm nets **$134,499** vs FULL **$301,916** (44.6% of FULL); removing it entirely is not directly measurable (T feeds Tp feeds everything) | drives both Solar×HTF and Solar×B-MOM interactions (below); mean pairwise member correlation 0.39, but **adjacent VMs correlate 0.77**, far VMs (6 vs 30) correlate 0.025 — redundancy is local, not global | short-duration failed entries (age<3h blocks net **-$990/-$997** mean vs long-duration **+$621/+$1,922** mean); low-consensus entries (bottom vote-dispersion tercile) net $27.66/trade vs high-consensus $284.47/trade | closed axis: M3 (entry/exit-S decoupling, CONFIRMED-NOT-BENEFICIAL), original SM campaign (single-VM overfits, PBO 0.48-0.90) | leave-one-member-out is non-monotonic in VM (removing VM12 **improves** net +$27,869; removing VM20-30 **costs** $43k-$64k each) — the "slow members matter most" pattern is real but not a clean monotonic story; not investigated further this run |
+| **HTF tilt** | scale up (1.25x) when Solar agrees with prior-session SMA50 trend | prior-session closes, `shift(1)` | multiplier `m` on `Tp` | 50-session (SMA window) | **+$8,289** NQ net vs NO_HTF_TILT ablation (2.7% of FULL); Sharpe 1.113 vs 1.103, CDaR95 $44,518 vs $42,092 (HTF *raises* tail risk slightly along with net) | net added to **longs +$31,051**, net added to **shorts -$21,912** — HTF is a long-side amplifier and a short-side drag on net dollars; entries where Solar/HTF agree have mean pnl $212 vs disagree $87 (weak, not decisive) | fires on only 34.97% of all bars, 44.64% of entries — most of the time the tilt multiplier is inactive (m=1.0) | closed axis (SMA length frozen, not reoptimized this wave) | small, real, not free — the short-side net cost is new information this run, not previously isolated at the ablation level |
+| **B-MOM leg** | independent RTH VWAP/time-of-day-band breakout, {-1,0,+1} | RTH 3-min bars, 14-day trailing band history | `B` | intraday (resets flat every session) | BMOM-only (WSolar=0) arm nets **$0.00** — see structural fact below; **raw B-MOM traded standalone 1:1 (lagged 1 bar, matches the independently-certified `SMV2B_BMOM_EXEC_AUDIT` figure of Sharpe 1.20-1.37) nets $320,023, Sharpe 1.258, maxDD $43,180** — comparable to or better risk-adjusted than the FULL combined system | FULL vs SOLAR_ONLY bar-level decomposition: B-MOM changes the FULL decision on 10.7% of all bars (7.77% enables entry/hold, 2.96% prevents/exits); on fresh-entry bars specifically, B-MOM is decisive (enabled an entry Solar alone would not have taken) **30.4% of the time** | entries where B-MOM is engaged during the trade: mean pnl **+$483.53**, win rate 48%; not engaged: mean pnl **-$738.52**, win rate 26% — B-MOM engagement is one of the strongest single discriminators found this run | closed axis (SM13_BMOM_DECAY_RULE governs standing decay bar; not reoptimized) | **structural fact, newly quantified this run**: `\|WBMOM·B\| ≤ 2.83 < EntryLevel(3.0)` always — B-MOM's own weighted score can mathematically never independently cross the entry threshold. It is architecturally a tiebreaker/amplifier on an already-near-threshold Solar score, never an independent trigger, despite having a strong standalone Sharpe (1.26) if it WERE traded on its own terms |
+| **Score mixing** `M = WSolar·T' + WBmom·B` | combine the two legs into one continuous score | `T'`, `B` | `M` | instantaneous | local ±10-15% weight perturbation (sec10): net ranges $264k-$332k across the tested neighborhood, no single point is an isolated needle — decision-flip rate rises smoothly with perturbation size (0.1%-3.3% of bars) | see B-MOM row — the two legs are additive by construction, so "interaction" is entirely in how their sum crosses `EntryLevel`/`ExitLevel` | WBmom×1.15 arm is WORSE than WBmom×1.10 (non-monotonic: $332,488 → $293,218) — a mild local irregularity, not evidence of a cliff | not previously measured at this granularity | current weights sit on a broad plateau, not a fragile point — directive sec10's fragility concern is NOT supported by this neighborhood scan |
+| **Hysteresis(3,1)** | wide dead-band prevents chatter at ±1-contract sizing | `M`, prior position `p` | target position `{-1,0,+1}` | 1 bar (state machine) | vs NO_HYSTERESIS_GAP (Entry=Exit=3.0): **+$54,053** NQ net (301,916 vs 247,863), **2,098 fewer trades** (3,868 vs 5,966), **~$4,574 estimated commission saved** | 7.24% of all bars hold a DIFFERENT position under the gap vs no-gap policy — the gap's effect is concentrated, not pervasive | connects directly to the April-2026 autopsy: on the two flagged losing blocks (3743, 3757), the NO-GAP policy would have lost **less** over the same span (-$279 and -$1,574 vs the incumbent's -$2,032 and -$2,727) — the gap widens these two specific losses, a real (small) cost of the same mechanism that on average saves $54k | closed axis (M3 already tested unconditional gap widening — CONFIRMED-NOT-BENEFICIAL); this run adds the FIRST clean no-gap-vs-gap dollar/trade-count attribution | the April losses are a genuine, disclosed cost of hysteresis, not a bug — net effect is strongly positive, this is the expected two-sided nature of a dead-band |
+| **C4 day-only overlay** | CME/broker margin-compliance forced flatten (21-min pre-close) | session-relative clock | forced exit | ≤21 min | not separately ablated this run (compliance-mandatory, not optional) | **exit-reason attribution (new this run): C4-forced exits win 75% of the time (mean +$2,124), M-driven "voluntary" exits win only 24% of the time (mean -$890)** — the forced flatten is, empirically, a favorable exit discipline, not merely a compliance tax | none observed — C4 exits are net beneficial | closed axis (W17_C4_COMPLIANCE) | this run's exit-reason finding (C4 exits >> voluntary exits) is new and load-bearing for sec11/sec41 hysteresis discussion — natural M-threshold exits let more P&L round-trip down before releasing than the mandatory early flatten does |
+| **NQ/MNQ execution adapters** | price the SAME decision sequence on 2 instruments | `pos_seq`, instrument OHLC/commission | fills, dollars | per-bar | not decision-relevant (theta_NQ=theta_MNQ by construction); all ablation deltas above hold directionally on MNQ too (not tabulated per-ablation this run, spot-checked on FULL/CONTROL only) | n/a | n/a | certified (V1R4_NT8_PARITY) | none |
+
+## Reversal / entry-type structural note (feeds sec38/sec41)
+
+`REVERSAL` exits (immediate flip to the opposite side, no flat bar) are a small (4.4% of blocks)
+but severely damaging category: mean **-$2,315**, win rate **12%**, vs `FLAT_EXIT`'s mean **+$275**,
+win rate **43%**. `giveback_ratio` (negative-or-undefined MFE bucket, meaning the position was
+never meaningfully profitable) accounts for **903 of 1,151 loser blocks (78.5%)** and **100% of
+the win-rate-0% bucket** — this is the SAME mechanism P0 already generalized (Spearman -0.656),
+now cross-tabulated against exit type and confirmed structurally coherent, not restated.
+
+## One-paragraph mechanistic summary (directive sec50 format)
+
+Solar creates the base directional signal and ~45% of standalone net dollars when isolated, with
+real but non-monotonic member-level redundancy concentrated among adjacent VMs. B-MOM contributes
+mainly by **amplifying/redirecting entries** at the moment Solar is already near threshold — it
+mathematically cannot trigger alone, yet has a strong-enough standalone Sharpe (1.26) that its
+current sub-threshold role is a genuine architectural choice, not the only viable one. HTF
+contributes a modest, long-favoring net edge with a small associated short-side cost. Hysteresis
+costs real money on a specific minority of trades (including the flagged April losses) but saves
+much more overall by preventing churn. Short failures are NOT concentrated in one narrow cause —
+they are structurally weaker on every risk metric (Sharpe 0.18 vs longs' 1.54) while simultaneously
+carrying a much higher tail-dollar concentration (short top-10% blocks = 19.8x the average share vs
+longs' 2.0x), consistent with a crisis-insurance framing, not a simple "suppress shorts" framing.
+The right tail requires long holding duration (blocks >7.5h net +$1,922 mean vs <1h blocks -$990
+mean) and high initial consensus. Time-of-day contributes only mildly and non-monotonically
+conditional on other state (see `runs/SA0_SYSTEM_STRUCTURE/out/sec16_*.csv`) — this motivates R3
+rather than answering it.
