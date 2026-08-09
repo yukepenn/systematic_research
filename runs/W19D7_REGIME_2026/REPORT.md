@@ -1,5 +1,13 @@
 # W19D7 — **There is no 2026 regime break.** The market's break is in mid-2024, the profile change is a three-year trend, and the incumbent is degraded in the stub too.
 
+> ⚠ **HEADLINES 1 AND 2 ARE WITHDRAWN (2026-08-09, post red team), AND THE ESTIMATED BOUNDARY IS
+> 2024-08-05, NOT 2024-07-09.** The changepoint procedure's frozen 10% edge exclusion placed the
+> entire 2026 stub outside the candidate set, so "no changepoint in 2026" was true by
+> construction; a BIC comparison prefers a STEP over a trend for both profile variables; and an
+> off-by-19 index bug shifted PC1's date. The title and body are left exactly as written per C7 —
+> nothing is rewritten — but read **RED-TEAM INGESTION** at the foot of this file first. The
+> corrected top-line finding is *stronger* than the original, not weaker.
+
 Wave 19, Track R, **diagnostic — alpha budget 0**. Spec frozen and committed at `c345ada`
 before any code existed. Owner directive R2.
 
@@ -228,3 +236,189 @@ MANDATORY per the frozen spec, and commissioned. The reviewer is instructed to h
 language, attack the changepoint significance with alternative null models, test whether the
 boundary survives variable selection, and **run** any de-confounding experiment it identifies
 rather than flagging it — the practice that made Wave 18's reviews decisive.
+
+---
+
+# RED-TEAM INGESTION — appended 2026-08-09. **Two of the five headline lines are WITHDRAWN. Read this before anything above.**
+
+Verdict: **CONFIRMED-WITH-CORRECTIONS, at the edge of REFUTED.** 18 defects — **3 headline-flipping**,
+8 material, 6 disclosure, 1 cosmetic. Verdict verbatim at `red_team/RED_TEAM_d7_regime.md`,
+unedited. The reviewer did what the brief asked and what makes these reviews decisive: it *ran*
+the de-confounding experiments rather than flagging them. I re-verified every load-bearing claim
+myself before accepting it.
+
+## 1. WITHDRAWN — headline 1. The procedure **could not** have placed a break in 2026.
+
+`src/panel.py:20` freezes `EDGE = 0.10`, so with n = 1,139 the last admissible changepoint index
+is **1,024**. The 2026 stub begins at index **1,033**. **The entire 106-session window sits
+outside the candidate set before any data is read.** Verified independently:
+
+```
+n 1139   EDGE 0.10 -> admissible [113, 1025]
+index of 2026-01-02 = 1033   last admissible = 1024
+STUB ENTIRELY OUTSIDE CANDIDATE SET: True
+```
+
+"No market variable places a changepoint in 2026" was therefore **true by construction**, and
+the report stated it as an empirical finding. That is the single worst defect in this run and it
+is mine: the edge exclusion was frozen in the spec on a legitimate statistical ground (the CUSUM
+statistic blows up at the boundary) without anyone noticing it deleted the exact region under
+investigation.
+
+**The conclusion survives, for a reason the report never gave.** The reviewer re-ran at 2% and
+5% edges and **every argmax is unchanged** — so no variable's best changepoint is in 2026 even
+when 2026 is admissible.
+
+**But a sharper correction comes with it.** Evaluated *at* the 2026 boundary rather than at the
+argmax, the same statistic gives v6 **9.89** (crit 4.10), PC1 **5.87** (3.64), v6b **4.49**
+(3.39). Three tests would "detect" a break there. **"The argmax is elsewhere" is not "nothing
+happened here"**, and the report conflated them.
+
+## 2. WITHDRAWN — headline 2. The model comparison says STEP, not trend.
+
+The report asserts a "monotone three-year trend, not a break" and offers the ramp-fitted-by-a-step
+argument to explain PC1's mid-2024 estimate. It never tested it. The reviewer did, and so did I:
+
+| variable | BIC step | BIC trend | preferred |
+|---|---:|---:|---|
+| v6 profile Spearman | −5249.13 | −5175.32 | **STEP by 73.8** |
+| v6b profile peak/trough | 3715.09 | 3744.42 | **STEP by 29.3** |
+| v1 realised vol | −5744.77 | −5602.35 | **STEP by 142.4** |
+
+(The reviewer reports 66.8 and 22.3 under its own BIC parameterisation; same direction, same
+magnitude class.) A ramp-null simulation puts v6's estimate at the **93rd percentile** of where a
+step estimator lands on a genuine ramp — i.e. v6 does not look like a ramp. PC1 and v6b are
+consistent with the ramp reading; **v6, the strongest detection, is not.**
+
+And the word "monotonically" is contradicted **by the report's own yearly table two lines below
+it**: v6 runs 0.4446 → **0.4866** → 0.4505 → 0.3928 → 0.3370 and v6b runs 10.66 → **11.12** →
+9.85 → 8.46 → 7.79. Both *rise* into 2023 before falling. The trend claim holds for 2023-2026 and
+was overstated as a description of the whole window.
+
+## 3. WITHDRAWN — the Product A "diversification" interpretation.
+
+The report attributes Product A's stub performance (+0.659 Sharpe, +$11,657, against the Solar
+leg's −0.387 and −$7,638) to the 60/40 diversification. The reviewer decomposed it from the
+committed per-bar ledger (`smm_v3_bars.csv`: T / Tpp / B / phys) using the exact aggregation in
+`SolarWaveSMMaster_v3.cs:348`:
+
+- **The Solar leg *inside* Product A is +$6,079 / Sharpe +0.456 in the stub — positive**, not
+  negative. It is not the same object as the plain E10 control.
+- B-MOM contributes **+$8,886**.
+- Of the ~$9k gap versus the plain E10 control, **+$7,243 comes from the short-halving overlay
+  alone** (−$2,885 → +$4,358) against **+$1,721 from the tilt**.
+
+The short-halving constant is a **fitted in-sample parameter**, not a diversification effect. So
+the correct statement is: *Product A's stub resilience is roughly half a fitted overlay and half
+a genuinely uncorrelated second engine, and the report attributed all of it to the second engine.*
+The narrower claim that survives — B-MOM contributes positively in a window where Solar does not
+— stands, but it is one of two mechanisms of comparable size, not the explanation.
+
+## 4. A real index bug: the estimated boundary is **2024-08-05**, not 2024-07-09.
+
+`panel.py:135-137` drops NaN rows before fitting PC1 (`Zf = Z.dropna()`), and `:154-156` maps the
+resulting index back through the **full 1,139-row panel**. `v2_vol_of_vol` has 19 leading NaNs
+from its 20-session rolling window, so the offset is exactly **19**. Verified:
+
+| series | reported | **corrected** |
+|---|---|---|
+| PC1 | 2024-07-09 | **2024-08-05** (CI 2024-07-11 .. 2024-08-28) |
+| v2 vol-of-vol | 2024-12-27 | **2025-01-24** |
+
+The six variables with no NaNs are unaffected. **`REPORT.md`'s instruction to the successor spec
+mandates the wrong date**, and two rows of the challenger-difference table flip sign at the
+corrected boundary. Corrected here; the frozen spec is untouched per C6.
+
+## 5. The detection rate is inflated, and there is no family-wise correction
+
+The block-5 bootstrap null is **under-sized**. On no-change synthetic series with the same
+autocorrelation, the exact procedure's false-positive rate is **0.30 at ρ = 0.7** and **0.99 at
+ρ = 0.98**. `v2_vol_of_vol` — a 20-session rolling standard deviation with lag-1 autocorrelation
+0.98 — detects only at block lengths below 10 and **fails Bonferroni**. Under a HAC-corrected
+null, only **v6 and v6b** survive of the four shifts the report cites at the period split.
+
+Eight tests were run at individual 95% bars with **no family-wise correction anywhere**. That is
+a gap in the frozen spec, not an implementation error, and it is recorded as such. "Six of eight
+detect" should be read as **two robust detections plus four that do not survive correction.**
+
+## 6. The boundary is not robust to variable selection
+
+Leave-one-variable-out re-estimation of the PC1 changepoint moves it by up to **545 days** —
+dropping either v6 or v6b sends it to **February 2023** — against a location CI only **49 days**
+wide. A quantity whose CI is 49 days and whose leave-one-out spread is 545 days is **weakly
+identified**, and the report presented it as an estimate without saying so.
+
+**Consequence for the successor spec, which supersedes what `REPORT.md` §"Consequences" says:**
+the successor should split at the calendar year boundaries and at the 2026-01-02 convention,
+report 2024-08-05 as a **weakly-identified** candidate boundary, and must not treat any single
+estimated date as authoritative.
+
+## 7. The "all-13-agree" statistic was the wrong one
+
+`REPORT.md` says all-13-agree is "at its *lowest*" in 2026 (0.808). That is the **conditional**
+statistic — conditioned on all 13 members being non-zero, which holds on only **2.7%** of bars.
+On the spec's own **unconditional** definition it is **2.21% in 2026 — the second highest, +23%
+over 2025 — which is the direction the member-collapse hypothesis predicts.**
+
+**The rejection still stands**, on the participation ratio alone (3.52 in 2026 against
+3.37/3.61/3.93/3.78, and the reviewer confirmed it survives bootstrap bands and an
+equal-sample-size comparison, with the metric calibrating correctly at 1.00 for a fully collapsed
+ensemble and 13.00 for a fully diverse one). But the supporting sentence was wrong and pointed
+the opposite way from the honest statistic.
+
+## 8. Two things the report should have found and did not — and the second is stronger than anything it did claim
+
+**(a) My own pre-registered null had a second half that was never computed.** The spec requires a
+test of whether "the period's standardized feature vector is an outlier against the rest of the
+dev window". Mahalanobis D² of the stub window's mean vector = **11.29**, the **93.7th
+percentile** among all 106-session windows — **not an outlier at the 95% bar.** (The reviewer gets
+11.62 / 93.6th on its own centering; same conclusion.) The null's second half therefore also
+returns *not unusual*, and the report omitted a test it had promised.
+
+**(b) The market variables point the WRONG WAY.** Regressing the Solar leg's daily net on the
+seven panel variables, fitted on 2022-2025 and used to predict the stub:
+
+| | $/session |
+|---|---:|
+| in-sample mean actual (2022-2025) | **+110.68** |
+| stub **predicted** from market variables | **+172.14** |
+| stub **actual** | **−72.05** |
+
+**The panel says the stub should have been better than average, and it was the worst period on
+record.** That is a materially stronger result than "unexplained": the market state is not merely
+uninformative about the concentration, it is *mildly favourable*, and the strategy lost money in
+it anyway. Every regime-story reading is now excluded, not just unsupported.
+
+## 9. What the reviewer tried to break and could NOT
+
+- **`daily_from_fills` reconciles EXACTLY** — $175,798.80 for Product A and $303,239.64 for
+  BEST_ONE_NQ against the committed NT8 nets — with flat-at-close verified (net quantity exactly
+  zero at all 1,139 / 1,078 session ends) and the `hour >= 18` roll rule verified (no fill at
+  18:00). The entire §(d) incumbent-decomposition table is sound, which is the highest-severity
+  thing that could have failed and did not.
+- **The v6 circularity attack failed completely.** Four alternative reference profiles, including
+  one built from 2022 alone, reproduce the same yearly pattern. The trend is not an artifact of
+  2022-2025 sessions contributing to their own reference.
+- **The clamp identification is correct and unique among 28 candidate definitions tested.**
+- **NOT NOVEL holds** at every window length from 40 to 180 sessions and under four distributional
+  summaries — not just the mean-vector summary the run used.
+- **Member-collapse rejection survives** bootstrap bands and equal-sample-size comparison.
+- Location-CI coverage measured at **0.80-0.885** against a nominal 0.90 — mildly under-covering,
+  disclosed rather than corrected.
+
+## Revised disposition
+
+**Headline 5 (not novel) and headline 4's factual core (the incumbent is degraded in the stub) are
+untouched and are what this run establishes.** Headlines 1 and 2 are withdrawn as stated;
+headline 3's rejection stands on a different statistic than the one cited.
+
+**The corrected top-line finding is stronger than the original.** Not "no market break where the
+P&L broke", which was an artifact of the candidate set, but: **the 2026 stub is not a multivariate
+outlier (93.7th percentile, below the bar), is not novel (a named 2025 analog), and by a
+regression on its own market variables should have been a mildly *better*-than-average period —
+and it was the worst on record.** The concentration is not merely unexplained by market structure;
+it runs opposite to what market structure predicts.
+
+The one honest caveat on all of this, which the reviewer also raises: the panel explains little,
+the detections are mostly not robust, and a seven-variable description of a market is a thin
+instrument. "The variables point the wrong way" is a statement about *these* variables.
