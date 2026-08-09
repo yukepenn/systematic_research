@@ -1,0 +1,202 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE any result is read.
+run_id: W18R1_M1_VOLSEASON
+experiment_id: SYSTEM_MASTER_W18
+hypothesis_id: M1 (MEGA PROMPT V6 §9 M1, "intraday volatility seasonality normalization",
+  declared highest-priority mechanism test) WITH D4 MERGED IN per MEGA PROMPT V7 §C-2
+family: solar_core_threshold_estimation
+track: R (research) — MEGA PROMPT V7 §B
+date_frozen: 2026-08-09
+class: R1_FAMILY_TEST + DIAGNOSTIC
+alpha_budget_consumed: 1 of the 2 permitted this wave (§15). The other is W18R2_M5_XINST.
+seq: assigned at registry write; this spec is frozen first.
+
+# ---------------------------------------------------------------------------
+# 0. WHY THIS RUNS NOW, AND WHY IT IS SCORED ON THE LEGACY TRIPLE
+# ---------------------------------------------------------------------------
+scoring_basis_preregistration: >
+  MEGA PROMPT V7 §C-1 repeals V6 §6's rule that the O1 objective must be repaired before any
+  mechanism test runs. This run is therefore screened on the LEGACY TRIPLE — Sharpe AND
+  CDaR_0.95 AND top-10-day retention >= 95% — exactly as the fifteen prior waves were, and is
+  retro-scored under O1 later, with BOTH reported. The reasoning, pre-registered here as V7
+  requires so that it is not a post-hoc choice: the legacy triple is a strict AND rule and is
+  therefore CONSERVATIVE. Screening on a conservative rule and re-scoring later with a
+  different objective is a two-stage filter that cannot inflate false positives; it can only
+  cost candidates that the AND rule wrongly rejects — which is the known failure mode O1 exists
+  to fix, and which is recorded rather than hidden. If arm_FULL fails the triple and O1 later
+  scores it as a pass, that flip is recorded as a DISCLOSURE and re-queued for a fresh R2; it
+  is NOT retroactively promoted (V6 §6 O2 rule, applied here by analogy).
+
+# ---------------------------------------------------------------------------
+# 1. THE MECHANISM ARGUMENT — written before any number is computed
+# ---------------------------------------------------------------------------
+mechanistic_argument: >
+  sigma460 is the causal trailing mean of |Δclose| over 460 three-minute bars. 460 × 3 min =
+  1,380 min = 23 hours = EXACTLY ONE CME index-futures session (18:00 → 17:00 ET). sigma460 is
+  therefore, by construction, a whole-session average and carries ZERO time-of-day information:
+  two bars in the same session receive the same volatility estimate whether one falls in the
+  Asia lull and the other at the 09:30 cash open.
+
+  But realized 3-minute volatility inside that session is strongly seasonal — the cash open,
+  the 08:30/10:00 ET data prints, and the 15:00-16:00 cash close are structurally different
+  environments from 20:00-02:00 ET. Since the member's decision threshold is
+  S = clamp(VolMult × sigma460, 40t, 1200t), S is approximately CONSTANT across a session while
+  the local bar volatility it is meant to normalize is not.
+
+  Two consequences, both testable and both falsifiable by step 1 alone:
+    (i)  In the overnight lull, S is too WIDE relative to local volatility: a genuine
+         directional change of normal overnight magnitude never crosses the threshold, so the
+         member holds a stale trend and flips late.
+    (ii) At the RTH open and close, S is too NARROW relative to local volatility: ordinary
+         session noise crosses the threshold and the member churns.
+
+  The fix is to give sigma a time-of-day shape it currently lacks: a causal seasonal factor
+  f(slot) NORMALIZED SO ITS SESSION MEAN IS 1 (V6 §9 M1's explicit requirement), applied as
+  sigma_adj(t) = sigma460(t) × f(slot(t)).
+
+  Because E[f] = 1 by construction, the AVERAGE threshold over a session is unchanged. This is
+  a pure RE-ALLOCATION of threshold across the trading day, not a net loosening or tightening.
+
+axis_declaration_required_by_V6_§5: >
+  This is the SELECTIVITY / TIME-STRUCTURE axis, NOT the exposure axis. §5 presumes the
+  exposure axis exhausted and requires a written novel mechanistic argument before any idea
+  that scales, gates or throttles position size. No term in this proposal touches position
+  size: the ensemble target remains round(10 × mean member pos) clamped ±10, the clamp bounds
+  [40, 1200] ticks are unchanged, VolMult {6,8,...,30} is unchanged, there is no leverage
+  multiplier, no P&L conditioning, no regime gate and no de-risking rule. The ONLY thing that
+  changes is WHEN a member believes a directional change has occurred.
+
+not_a_re_run_of_a_closed_idea (§17 check, stated explicitly): >
+  Closed and NOT re-opened here: clamp CEILING (SMV2AD fixed, SMV2AG adaptive — both exhausted);
+  the CLOCK (SMV2AE/AF 1-minute, SMV2AK volume bars — closed); what sigma MEASURES
+  (SMV2AI/AJ ATR true-range blend — closed, and separately re-examined by W18R2 on new
+  evidence, not by re-testing a weight). M1 changes none of these: it changes the TIME PROFILE
+  of an unchanged sigma460 estimator on an unchanged 3-minute clock with unchanged clamp
+  bounds. No prior run in this program has varied the intraday shape of the threshold.
+
+motivating_observation_labelled_as_post_hoc: >
+  Wave 17 (V1h) found that all 16 of BEST_ONE_NQ's evening-entry trades (entered 18:06-20:24
+  ET) are LOSSES, totalling ≈ −$33.5k. That is the cohort where the threshold is most
+  mis-scaled relative to local volatility under the argument above. This observation was made
+  AFTER the fact and is recorded here as MOTIVATION ONLY — it is not evidence for M1 and does
+  not enter any gate. Step 1 tests the premise directly and prospectively.
+
+# ---------------------------------------------------------------------------
+# 2. STEP 1 — D4, merged in per V7 §C-2. A RESULT IN ITS OWN RIGHT.
+# ---------------------------------------------------------------------------
+step1_D4_intraday_profile:
+  status: DIAGNOSTIC — reported whatever it shows, including if it falsifies M1's premise.
+  substrate: runs/AUDIT03_BARS/nq_3m_2022_2026.csv, sliced to dev (sess_date <= 2026-05-29).
+  slot_definition: >
+    slot = the bar's END timestamp time-of-day in exchange (ET) time at 3-minute granularity.
+    Time-of-day, NOT bar index within session — bar index is corrupted by the 13 NQ dev
+    sessions with internal gaps and by the 43 holiday early closes (both established in
+    Wave 17). Every per-slot statistic reports its own bar count so thin slots are visible.
+  outputs_required:
+    - v_s = mean |Δclose| by slot over dev; and the normalized profile f_dev = v_s / mean(v),
+      reported with its peak/trough ratio and its bar count per slot.
+    - THE FALSIFIABLE PREMISE TEST: r_s = mean over bars in slot s of (|Δclose_t| / sigma460_t).
+      M1's premise is that r_s is strongly non-flat. Pre-registered falsification: if
+      max(r_s)/min(r_s) over slots with >= 200 bars is < 1.5, the premise is REJECTED, that is
+      reported as the headline finding, and step 2 is still run and reported as a null
+      (it is not cancelled — a null on a rejected premise is itself information).
+    - Incumbent behaviour by slot, all from the UNMODIFIED control: member flip count,
+      ensemble entries, ensemble exits, target-change count, realized bar-level P&L (from
+      e10_exec's bar_pnl path), and P&L per target-change.
+    - The three coarse cohorts named for readability, defined once here and not re-cut after
+      seeing results: EVENING 18:00-23:59, OVERNIGHT 00:00-08:59, RTH 09:00-16:59 ET.
+
+# ---------------------------------------------------------------------------
+# 3. STEP 2 — THE MECHANISM. ONE DECISION CELL.
+# ---------------------------------------------------------------------------
+step2_estimator:
+  f_causal: >
+    Estimated ONCE PER SESSION at the session boundary, from sessions STRICTLY BEFORE the
+    current one. raw_s(d) = mean of |Δclose| in slot s over all bars in sessions < d.
+    f_s(d) = raw_s(d) / W(d), where W(d) is the OCCURRENCE-WEIGHTED mean of raw_s(d) over all
+    slots seen so far — i.e. W(d) = (total |Δclose| over all prior bars) / (total prior bars).
+    This makes E[f] = 1 under the historical slot distribution, which is the "session mean = 1"
+    normalization V6 §9 M1 requires, computed in the only way that is well defined when
+    sessions have different slot sets (early closes, data gaps).
+  warmup: >
+    f ≡ 1 (i.e. EXACTLY the incumbent) until 60 complete prior sessions exist. 60 is fixed by
+    argument, not search: it is the smallest count giving >= ~50 observations per slot on a
+    460-slot grid, below which per-slot means are dominated by sampling noise. It is NOT swept.
+  estimator_choice_justification: >
+    EXPANDING, not rolling. (a) A rolling window would require choosing a length — a tuned
+    parameter, which §17 forbids. Expanding has zero free parameters beyond the warmup floor.
+    (b) Intraday seasonality is a STRUCTURAL property of the trading day (cash-session hours,
+    scheduled release times), far more stable than the volatility LEVEL, so there is no drift
+    argument favouring a short window. (c) Expanding is strictly causal and monotonically
+    better-estimated over time. This choice is made here, before any result, and is not revised.
+  application: sigma_adj(t) = sigma460(t) × f_{slot(t)}(sess_date(t)); then
+    S = clamp(VolMult × sigma_adj, 40 ticks, 1200 ticks) — clamp bounds UNCHANGED.
+  everything_else_held_fixed: >
+    src/analytics/sm01_solarsim.py member_states()/member_trades()/e10_target() UNMODIFIED;
+    13 members VMS {6,8,...,30}; 3-minute clock; BarsRequiredToTrade 20; StartUp false;
+    ThresholdMode 1; EntrySignalType 1; exit-on-session-close; 1-tick slip capped by bar range;
+    MNQ E10 executor at $0.65/side, point value 2.0 (runs/SMV2AI_ATR_BLEND/src/common.py
+    e10_exec, verbatim). ONLY the sigma array fed to member_states() differs.
+
+arms:
+  control: incumbent sigma460, w=1, f≡1. Rebuilt in-run from the same code path as the arms
+    (NOT reused from a committed CSV) so that any difference is attributable to f alone; the
+    rebuild is then cross-checked against runs/SMV2AD_VOLMULT_CEILING/out/
+    e10_daily_dev_control_1200.csv and any discrepancy is reported before gates are read.
+  arm_FULL: sigma_adj = sigma460 × f.  <<< THE ONLY DECISION CELL >>>
+  arm_HALF: sigma_adj = sigma460 × f^0.5.  DISCLOSURE ONLY.
+    Purpose: answer "is the effect monotone in the strength of the adjustment?", which is a
+    robustness question about arm_FULL, not a search. PRE-REGISTERED AND BINDING: arm_HALF
+    CANNOT be promoted, cannot become the candidate, and cannot be substituted for arm_FULL
+    even if it scores better. If it does score better that fact is reported as a disclosure and
+    as an argument that the effect is NOT robust.
+
+# ---------------------------------------------------------------------------
+# 4. VERDICT RULE — fixed before execution
+# ---------------------------------------------------------------------------
+verdict_rule: >
+  arm_FULL is a CANDIDATE iff, standalone on the dev daily curve vs the rebuilt control, ALL
+  THREE hold: Sharpe(FULL) > Sharpe(control) AND CDaR_0.95(FULL) < CDaR_0.95(control) AND
+  top-10-day retention >= 95% (sum of the 10 best control days, recomputed on FULL's curve on
+  the SAME dates, divided by the control's top-10 sum). Identical AND-rule to every other
+  core-challenge screen in this program.
+no_adoption_this_wave: >
+  Regardless of outcome. A CANDIDATE earns a full R2_CONFIRMATION spec (bootstrap significance
+  at the 0.85 bar, LOYO chronology, right-tail capture, formal portfolio gate) in a later wave.
+  A pass here is a SCREEN result and must never be reported as a promotion.
+also_reported_but_not_gates:
+  - portfolio level: DAYONLY_DUAL6040 60/40 with the Solar leg swapped and the B-MOM leg
+    UNCHANGED (build_portfolio_6040, verbatim).
+  - churn: per-member flip count and mean holding period vs control. The mechanism is expected
+    to RAISE overnight flips and LOWER RTH flips; the net direction is not predicted. Reported
+    as a mechanism check, not a gate.
+  - the recency-tiered disclosure V6 §3 mandates: full dev / trailing 2yr / trailing 1yr, as
+    DISCLOSURE NOT SELECTION, each labelled a CONTINUATION number per V7 §F.
+
+old_regime_screen:
+  status: CONDITIONAL on arm_FULL qualifying. If it does not qualify, N/A, disclosed.
+  form_required_by_V6_§3: >
+    RIGHT-TAIL CAPTURE RATIO on 2006-2021, reported as a capture ratio and as SIGN/DIRECTION
+    only (USE A). NO magnitude estimate, no net-P&L floor, no Sharpe, no drawdown, no capital
+    or leverage number may be derived from pre-2022 data. Any old-regime figure printed in the
+    report carries the label MECHANISM-EVIDENCE-ONLY, NOT A PERFORMANCE ESTIMATE.
+  data_precondition: the 2006-2021 substrate must carry per-bar close at 3-minute resolution
+    (high/low NOT required — M1 uses |Δclose| only). If absent, report BLOCKED-BY-DATA; do not
+    approximate.
+
+# ---------------------------------------------------------------------------
+# 5. HONESTY / RED TEAM
+# ---------------------------------------------------------------------------
+red_team: >
+  MANDATORY (V7 §G: this is a Track-R numerical result that could change a promotion
+  decision). An independent adversarial review is commissioned on the completed analysis with
+  instructions to break it, and its verdict is filed verbatim under red_team/ with corrections
+  ingested into REPORT.md — never into this spec (C6).
+kill_or_keep: >
+  If arm_FULL fails the triple, intraday seasonal normalization of the threshold is recorded
+  CONFIRMED-NOT-BENEFICIAL at the screen level for THIS estimator, and no second bite is taken
+  without a structurally different seasonal construction (e.g. one that conditions on the
+  scheduled-release calendar rather than on the clock). A re-run at a different warmup floor or
+  a different window length does NOT count as structurally different and is prohibited.
+outputs: out/d4_slot_profile.csv, out/d4_premise_test.csv, out/d4_incumbent_by_slot.csv,
+  out/f_causal.npy, out/daily_control.csv, out/daily_arm_FULL.csv, out/daily_arm_HALF.csv,
+  out/gates.csv, out/churn.csv, out/portfolio.csv, out/recency_tiers.csv, REPORT.md

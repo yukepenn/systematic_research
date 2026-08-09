@@ -1,0 +1,177 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE any result is read.
+run_id: W18R2_M5_XINST
+experiment_id: SYSTEM_MASTER_W18
+hypothesis_id: M5 (MEGA PROMPT V6 §9 M5, "ATR blend revival by cross-instrument replication")
+family: solar_core_threshold_estimation
+track: R (research) — MEGA PROMPT V7 §B
+date_frozen: 2026-08-09
+class: REPLICATION TEST — evidence, NOT a promotion vehicle
+alpha_budget_consumed: 1 of the 2 permitted this wave (§15). The other is W18R1_M1_VOLSEASON.
+substrate_run: runs/W18_XINST_BARS (spec frozen and committed separately, BEFORE export)
+
+# ---------------------------------------------------------------------------
+# 0. WHY THIS IS PERMITTED, GIVEN THE LEAD WAS CLOSED
+# ---------------------------------------------------------------------------
+§17_compliance_argument: >
+  Wave 14 (SMV2AJ) closed arm_BLEND_75 with the explicit condition: "no third bite without a
+  new mechanism that specifically targets the CDaR-tail effect (NOT a re-test of the same blend
+  at a different weight)". This run is NOT a re-test at a different weight and NOT a search:
+  the weight is FROZEN at w = 0.75 and no other weight is computed anywhere in this run. What
+  changes is the EVIDENCE TYPE, not any parameter.
+
+  V6 §4 ranks cross-instrument replication WITHIN THE SAME ERA as the STRONGEST available
+  substitute for a clean historical out-of-sample window, and V6 §9 M5 names this exact test.
+  Wave 14's own verdict was that the mechanism failed one prong of one gate — P(ΔCDaR>0)=0.753
+  against a 0.85 bar, with P(ΔSharpe>0)=0.932 passing — and concluded, verbatim, "the mechanism
+  itself may be real; only its statistical confirmation on tail risk specifically fell short."
+  Adding instruments adds statistical power WITHOUT adding a single parameter degree of
+  freedom. That is the only legitimate way to attack a power-limited failure, and it is the
+  reason this is a replication test and not a re-run.
+
+  C2 COMPLIANCE: ES, RTY and YM are MECHANISM-REPLICATION SAMPLES ONLY. Nothing in this run
+  proposes trading them, sizing them, or including them in any product. The tradable universe
+  remains NQ/MNQ.
+
+what_a_pass_buys (pre-registered, binding): >
+  NOT promotion, and NOT adoption. A REPLICATES verdict re-queues arm_BLEND_75 for a fresh
+  R2_CONFIRMATION on NQ at the 0.85 bar in a later wave, scored under the repaired O1 objective
+  as well as the legacy triple. Presenting a replicated mechanism as a promoted one is
+  explicitly prohibited by §17 ("presenting a re-scored closed candidate as a new discovery").
+what_a_fail_buys: >
+  The Wave-14 closure is UPGRADED from "failed one prong of one gate on one instrument" to
+  "does not replicate out-of-instrument in the same era", which is a materially stronger and
+  more useful negative, and closes the ATR/range family for good.
+
+# ---------------------------------------------------------------------------
+# 1. THE OBJECT — frozen, identical across instruments
+# ---------------------------------------------------------------------------
+challenger: >
+  arm_BLEND_75 exactly as constructed in runs/SMV2AI_ATR_BLEND/src/common.py:
+    sigma_blend = 0.75 * sigma460 + 0.25 * sigma_ATR_eff
+    sigma_ATR_eff = ATR460 / R
+    ATR460 = causal trailing-460-bar mean of TR_t = max(h-l, |h-c_{t-1}|, |l-c_{t-1}|), with
+             the SAME warmup/min_count=30 convention as sigma_series (expanding for t<=460).
+    R      = the whole-dev-window MEDIAN of ATR460/sigma460, MEASURED ON THAT INSTRUMENT'S OWN
+             DEV DATA.
+control: incumbent sigma460 only (w = 1.0), same code path, same instrument.
+
+R_is_not_a_degree_of_freedom (stated before execution): >
+  R is a units/scale correction, not a tuned parameter: ATR is structurally >= |Δclose| in
+  expectation because it also captures the intrabar range, so a raw swap would change the
+  threshold's MAGNITUDE and confound "does capturing intrabar range help" with "is a bigger
+  number always going to change behaviour". Re-measuring R per instrument is the SAME RULE
+  applied to new data — the rule is "the whole-dev median", fixed here, computed once per
+  instrument, never re-picked after seeing any result. Carrying NQ's R onto ES/RTY/YM would be
+  the actual error, since the ratio depends on each instrument's own tick/range microstructure.
+  R is reported per instrument as a disclosure.
+
+instrument_scaling: >
+  The state machine is scale-invariant: VolMult multiplies sigma in the instrument's own price
+  points, so S is in points and the flip test compares point moves. The only scale-dependent
+  term is the clamp, which is specified in TICKS ([40, 1200]) and therefore scales correctly
+  with each instrument's own tick size (NQ 0.25, ES 0.25, RTY 0.10, YM 1.00). No rescaling
+  constant is introduced. VMS {6,8,...,30}, 13 members, 3-minute clock, BarsRequiredToTrade 20,
+  StartUp false, ThresholdMode 1, EntrySignalType 1, exit-on-session-close, 1-tick slip capped
+  by the fill bar's range — all UNCHANGED from the frozen NQ construction.
+
+execution_layer: >
+  e10_target (round(10 × mean member pos), clamp ±10) and the e10_exec executor, verbatim, on
+  the instrument's own bars, using that instrument's own point value (NQ 20, ES 50, RTY 50,
+  YM 5) for the full-size contract. The ±10 target is executed on the full-size contract on
+  every instrument, so the DOLLAR magnitudes are not comparable across instruments — which is
+  exactly why the combination statistics below are scale-free by construction.
+
+cost_model (stated, not invented): >
+  1-tick adverse slippage capped by the fill bar's range (the frozen house rule), plus a
+  commission of $2.18/side/contract applied to EVERY instrument. That $2.18 is the NQ Lifetime
+  rate; it is NOT the correct rate for ES/RTY/YM and is NOT claimed to be. It is applied
+  IDENTICALLY to both arms on the same instrument, so it cancels almost entirely from the
+  paired comparison. Per V6 §7 V4a ("do not invent rates") no per-instrument rate is guessed.
+  A zero-commission sensitivity is reported for every cell to demonstrate that no verdict is
+  cost-driven. If the two cost bases disagree on any instrument's SIGN, that is reported as a
+  failure of the test on that instrument, not resolved by choosing the friendlier basis.
+
+# ---------------------------------------------------------------------------
+# 2. INSTRUMENT SET — fixed before results
+# ---------------------------------------------------------------------------
+instruments: [NQ, ES, RTY, YM]
+  # NQ is the KNOWN cell (Wave 14 already measured it). It is included so the pooled statistic
+  # is computed over the full evidence base and so the pipeline is validated against a known
+  # answer, NOT as an independent replication. Its per-instrument row is labelled KNOWN and is
+  # excluded from the "how many NEW instruments replicated" count.
+exclusion_rule: >
+  Any instrument failing runs/W18_XINST_BARS pass_criteria is excluded BY NAME, with the
+  failure reported, BEFORE any P&L is computed. Instruments are never dropped after seeing a
+  result, and no instrument is added after seeing a result.
+window: 2022-01-03 .. 2026-05-29 dev only. Sessions after 2026-05-29 are not loaded on any
+  instrument. Nothing from 2006-2021 is read in this run.
+run_once: >
+  ONE execution. No re-runs, no seed changes, no weight variations, no alternative combination
+  rules. If a bug is found the run is CLOSED and a new spec is frozen (§13 rule 8).
+
+# ---------------------------------------------------------------------------
+# 3. THE STATISTICS — scale-free, and pre-registered
+# ---------------------------------------------------------------------------
+per_instrument_statistics:
+  dSharpe: Sharpe(BLEND75) − Sharpe(CONTROL). Sharpe is scale-invariant, so this is directly
+    comparable across instruments.
+  dCDaR_ratio: (CDaR_0.95(CONTROL) − CDaR_0.95(BLEND75)) / CDaR_0.95(CONTROL). A RATIO, not a
+    dollar difference, so it is scale-free. Positive = challenger better.
+  significance: paired moving-block bootstrap, block = 5 daily, B = 10000, seed = 20260808 —
+    identical construction to runs/SMV2AJ_ATR_BLEND_R2/src/gate_A.py path_stats(), reused
+    verbatim. Reported as P(dSharpe>0) and P(dCDaR_ratio>0) per instrument.
+  also reported per instrument (disclosure, not gates): net, top-10-day retention, flip count,
+    turnover, R, and the zero-commission sensitivity.
+
+dependence_handling (V6 §9 M5 requires dependence be MODELLED or a bounded ESS reported —
+  this spec does BOTH):
+  1_measure: >
+     Pearson correlation matrix of the DAILY DIFFERENCE series d_i = (BLEND75 − CONTROL) daily
+     net, per instrument, on the intersection session calendar. The diff series — not raw P&L —
+     is what carries the mechanism signal, so its cross-instrument correlation is the honest
+     dependence measure. If it turns out to be as high as the raw P&L correlation, that itself
+     is the finding and must be reported as such.
+  2_ESS: >
+     ESS = k^2 / (1' R 1) with k = number of instruments and R the correlation matrix above.
+     This is the standard variance-of-the-mean-of-correlated-estimators identity
+     (Var(mean) = 1'Σ1/k^2, which equals σ^2/ESS under equal variances). Reported explicitly.
+     PRE-REGISTERED DISCLOSURE RULE: if ESS < 2.0, the report must state in its headline that
+     the replication carries less than two instruments' worth of independent information.
+  3_pooled_test: >
+     A cross-instrument paired block bootstrap that resamples THE SAME date blocks across ALL
+     instruments simultaneously (same block index array applied to every instrument's aligned
+     daily series). This preserves the cross-sectional dependence exactly and requires no
+     estimate of it. Statistic: the equal-weight mean across instruments of dSharpe, and the
+     equal-weight mean of dCDaR_ratio. Same block=5, B=10000, seed=20260808.
+
+verdict_rule (fixed before execution):
+  REPLICATES iff BOTH:
+    (a) SIGN AGREEMENT: >= 2 of the 3 NEW instruments (ES, RTY, YM) show point dSharpe > 0 AND
+        point dCDaR_ratio > 0. (NQ is KNOWN and excluded from this count.)
+    (b) POOLED SIGNIFICANCE over all available instruments: P(mean dSharpe > 0) >= 0.85 AND
+        P(mean dCDaR_ratio > 0) >= 0.85 from the joint-date bootstrap.
+  PARTIAL: exactly one of (a) or (b) holds.
+  FAILS TO REPLICATE: neither holds.
+  The 0.85 bar is the house-standard R2 bar and is NOT lowered for this run. Note explicitly:
+  a PARTIAL is NOT a pass and does NOT re-queue the R2.
+
+# ---------------------------------------------------------------------------
+# 4. WHAT THIS TEST CANNOT DO — stated in advance
+# ---------------------------------------------------------------------------
+known_limitations_declared_before_results: >
+  - Cross-instrument replication is a substitute for out-of-sample evidence, NOT an equivalent.
+    ES/RTY/YM over 2022-2026 share the same macro regime, the same sessions, the same
+    scheduled releases and most of the same order flow as NQ. A shared-regime artifact would
+    replicate across all four. This test cannot distinguish "the mechanism is real" from "the
+    2022-2026 US index-futures regime rewards this construction".
+  - The instruments are NOT independent. That is why the ESS is reported and why the pooled
+    test resamples joint dates rather than treating instruments as independent samples.
+  - Nothing here establishes anything about future profitability, on any instrument (§18).
+  - Costs on ES/RTY/YM are assumed, not known (see cost_model).
+
+red_team: MANDATORY (V7 §G — Track-R numerical result bearing on a promotion decision).
+  Independent adversarial review filed verbatim under red_team/; corrections into REPORT.md,
+  never into this spec (C6).
+outputs: out/substrate_check.csv, out/R_per_instrument.csv, out/per_instrument.csv,
+  out/curves_<INST>.csv, out/dep_corr.csv, out/ess.json, out/pooled.json,
+  out/zero_commission_sensitivity.csv, out/verdict.json, REPORT.md
