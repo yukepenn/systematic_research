@@ -5,6 +5,22 @@ not be completed this wave. This is reported honestly rather than forced to a fa
 the addendum's own "no unexplained failures" rule -- the failure here is disclosed, its likely
 partial cause is identified, and the remaining work is scoped for a follow-up.
 
+> **UPDATE 2026-08-09 (same-day continuation, after the owner restarted NinjaTrader) -- the
+> "material open discrepancy" below is RESOLVED as a warmup-state artifact, not a defect.**
+> The original Q1-2025 spot-check ran NT8 fresh-starting at 2025-01-01 (zero prior tilt/B-MOM-
+> band history) against a Python twin built from full 2022+ continuation state -- an
+> apples-to-oranges comparison. A warmed-up re-test (NT8 running continuously from 2024-04-01,
+> 9 months of warmup, far exceeding the 50-session/14-day state requirements) converges to
+> within **0.71%** of the Python continuation-state figure for Product A -- clearing the 1%
+> tolerance. BEST_ONE_NQ/MNQ improve substantially too (trade counts now match almost exactly,
+> 106 vs 107) but retain a smaller, un-root-caused ~15-19% residual. Full certificates, per
+> object: `PRODUCT_A_CERTIFICATE.md` (CERTIFIED, spot-check window), `ONE_NQ_CERTIFICATE.md`
+> and `ONE_MNQ_CERTIFICATE.md` (both NOT CERTIFIED, open residual documented). The long-job
+> CrossTrade<->NinjaTrader session/result-retrieval limitation described below is CONFIRMED to
+> persist on the freshly-restarted NT8 instance (same failure mode before and after restart) --
+> it is a genuine bridge characteristic for jobs beyond ~20-25s of NT8 compute, not a stale-
+> connection artifact, and full multi-year certification remains open for that reason alone.
+
 ## What blocked the full run: a reproducible MCP session-expiry ceiling
 
 `RunStrategyBacktest` against the full canonical dev window (2022-01-01 to 2026-05-29, ~1,130
