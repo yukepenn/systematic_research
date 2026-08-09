@@ -1,0 +1,197 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE any code or result.
+run_id: W19D7_REGIME_2026
+experiment_id: SYSTEM_MASTER_W19
+hypothesis_id: D7 — "what changed in Jan-May 2026". Owner directive R2 (2026-08-09), which
+  reprioritises Wave 19 to put this diagnostic AHEAD of the mechanism tests.
+family: diagnostic / regime characterization
+track: R (research)
+date_frozen: 2026-08-09
+alpha_budget_consumed: **0**. §15 leaves diagnostics uncapped. This run proposes no candidate,
+  screens nothing, and cannot promote anything. It does not compete with the wave's two
+  permitted hypotheses; it precedes them.
+
+# ---------------------------------------------------------------------------
+# 0. THE QUESTION — pre-registered as a QUESTION, not as an answer
+# ---------------------------------------------------------------------------
+observation_that_motivates_this (all measured, all in Wave 18, none of it new here): >
+  Two unrelated mechanisms, on different substrates, both broke on the same 9% of the sample:
+    - 74.5% of M1's damage falls in 2026-01-02 .. 2026-05-29 (106 sessions), and M1 BEATS the
+      incumbent in 2024 (Sharpe 0.967 vs 0.770) and 2025 (1.290 vs 1.206);
+    - dropping those same 106 sessions moves M5's pooled probabilities 0.911/0.784 -> 0.766/0.655;
+    - yearly ΔSharpe sign agreement is 3/5 for EVERY instrument in M5, NQ included, below the
+      4/5 bar this program failed a different candidate on one wave earlier;
+    - the clamp binding rate across 2022-2026 is 9.8% / 0.2% / 3.9% / 18.3% / 39.2% (standing
+      figure, not measured here) — the 2026 value is an order of magnitude above 2023's.
+  Two unrelated mechanisms failing on the same window is not a property of those mechanisms.
+  It is a property of that window — OR of nothing at all, and this run must be able to return
+  the second answer.
+
+the_question: >
+  Is there an identifiable change in the MARKET in early 2026, characterised from market
+  variables alone; where does its boundary actually sit; and is the incumbent degraded there
+  too, or only its challengers?
+
+# ---------------------------------------------------------------------------
+# 1. FALSIFICATION — stated first, because a null here is the likeliest outcome
+# ---------------------------------------------------------------------------
+preregistered_null: >
+  If the market-variable characterisation in §3 shows nothing unusual about Jan-May 2026 —
+  i.e. no variable's changepoint statistic clears its own bootstrap significance bar, and the
+  period's standardized feature vector is not an outlier against the rest of the dev window —
+  then the finding is: **"the concentration is UNEXPLAINED; no market-structure change is
+  detectable at this resolution."** That is a real and useful result and it is reported as the
+  headline with the same prominence a positive finding would get.
+  **A regime story will NOT be manufactured to fit a P&L pattern.** Specifically prohibited in
+  this run: choosing the boundary to maximise any P&L contrast; selecting which market variables
+  to report after seeing which ones look shifted; describing a shift as "the cause" of the
+  concentration on the strength of co-occurrence alone.
+what_this_run_can_and_cannot_establish: >
+  It can establish DESCRIPTION and TIMING. It cannot establish CAUSATION: a market change
+  co-occurring with a P&L pattern is co-occurrence, and with one episode in the record there is
+  no way to distinguish "this market state breaks these mechanisms" from "these mechanisms broke
+  and this market state happens to be concurrent". Any causal language in the report is a defect
+  and the red team is instructed to hunt for it.
+
+# ---------------------------------------------------------------------------
+# 2. (a) WHERE IS THE BOUNDARY? — estimated, not assumed
+# ---------------------------------------------------------------------------
+boundary_estimation:
+  why_not_2026-01-01: >
+    2026-01-01 is a calendar artifact inherited from how the yearly tables were cut. Nothing
+    establishes that the break sits there. It may sit earlier, later, or nowhere.
+  method (FROZEN, no tuning): >
+    Session-frequency panel of the §3 market variables, each standardized on its own full-dev
+    mean and sd. Single-changepoint mean-shift model fitted by maximising the CUSUM statistic
+    over all candidate locations in the interior 10%-90% of the sample (edge exclusion fixed at
+    10% to avoid the well-known boundary blow-up of the statistic; not swept). Fitted
+    (i) per variable, and (ii) on the first principal component of the standardized panel.
+  significance: >
+    Moving-block bootstrap (block = 5 sessions, B = 10,000, seed 20260809) of the series under
+    the NO-CHANGE null, giving the null distribution of the max-CUSUM statistic. A changepoint
+    is DETECTED only if the observed statistic exceeds its own 95th null percentile. Location
+    uncertainty is reported as the 5-95% interval of the argmax across bootstrap replicates of
+    the fitted model.
+  reported: >
+    Per variable: changepoint date, p-value against the null, and the location CI. Plus the PC1
+    changepoint with the same three. **If fewer than half the variables detect at all, the
+    report states that the data cannot locate a boundary**, and every downstream split uses the
+    calendar 2026-01-02 boundary explicitly LABELLED as a convention rather than a finding.
+  no_second_changepoint_search: one changepoint per series, fitted once. Searching for multiple
+    breakpoints would be a model-selection exercise and is out of scope for this pass.
+
+# ---------------------------------------------------------------------------
+# 3. (b) CHARACTERISATION — MARKET VARIABLES ONLY. The D5 rule, and why it binds here.
+# ---------------------------------------------------------------------------
+d5_rule_statement: >
+  V6 §8 D5 forbids building a regime characterisation from strategy P&L, for the reason that
+  applies with full force here: the whole observation being explained IS a P&L pattern, so any
+  P&L-derived feature would define the regime as "the period where the strategy did badly" and
+  the analysis would be circular by construction. **No variable in §3.1 touches any strategy's
+  P&L, position, target, trade list or fill.** They are functions of the price series alone.
+variables (all computed per session from the committed NQ 3-minute bars, dev window only):
+  v1_realised_vol: sqrt(sum of squared 3-min log returns) per session, annualised.
+  v2_vol_of_vol: rolling 20-session standard deviation of v1.
+  v3_range_to_close_ratio: mean(true range) / mean(|Δclose|) over the session's bars — the same
+    quantity M5 measured as R, here as a market descriptor: how much of the bar's travel is
+    intrabar wick versus close-to-close displacement.
+  v4_return_autocorrelation: lag-1 autocorrelation of the session's 3-minute log returns.
+  v5_mean_excursion_length: mean number of bars between successive PRICE directional changes,
+    where a directional change is a reversal exceeding k × (that session's own realised
+    per-bar volatility), with **k = 3.0 FROZEN**. This is a pure price statistic — it uses no
+    strategy state, no VolMult, no clamp, no ensemble, and no P&L. It is deliberately NOT the
+    Solar flip.
+  v6_profile_shape: the session's 3-minute volatility-by-slot profile, summarised as
+    (a) its Spearman correlation with the pooled 2022-2025 profile, and (b) its peak/trough
+    ratio over slots with sufficient support. Motivated by W18R1's finding that the pooled
+    profile spans 11x; this asks whether the SHAPE moved, not whether it exists.
+  v7_clamp_binding_rate: fraction of member-bars where clamp(VolMult × sigma460) is pinned at
+    the 1200-tick ceiling. **SEMI-STRATEGY, and labelled as such wherever it appears**: it is a
+    function of the market's sigma460 and the frozen constants {VolMult, 1200t} only, and of no
+    P&L, position or trade — but it is not a pure market variable and is therefore EXCLUDED from
+    the §2 changepoint panel and the §5 analog search, and reported separately.
+comparison_reported: per-variable table by calendar year and by the §2 boundary split, with
+  bootstrap CIs on each period mean, and the standardized distance of the 2026 period from the
+  2022-2025 pooled distribution.
+
+# ---------------------------------------------------------------------------
+# 4. (c) D1 — EFFECTIVE ENSEMBLE DIVERSITY, computed INSIDE this diagnostic (V7 §C-2)
+# ---------------------------------------------------------------------------
+d1_scope_note: >
+  D1 uses member POSITIONS, which are strategy state. That does not violate the D5 rule, which
+  binds the §3 regime CHARACTERISATION specifically and for a circularity reason that does not
+  apply here: D1 asks a structural question (has the ensemble collapsed to fewer effective
+  members?) whose answer is not defined in terms of profit. No P&L enters D1.
+d1_metrics (by year and by the §2 boundary split):
+  - effective number of members = (Σλ_i)² / Σλ_i² on the eigenvalues of the 13×13 correlation
+    matrix of member bar-positions (participation ratio). 13 = fully diverse, 1 = fully collapsed.
+  - fraction of bars on which all 13 members agree in sign.
+  - fraction of member-bars pinned at the 1200-tick clamp ceiling (v7 above, per member).
+  - distribution of |ensemble target| and the fraction of bars at the ±10 cap.
+  - mean member holding period.
+hypothesis_being_tested_here (declared, so a null is legible): >
+  If the 39.2% clamp binding rate in 2026 has collapsed effective diversity, the participation
+  ratio should fall materially in 2026 versus 2022-2025 and the all-agree fraction should rise.
+  If both are flat, the clamp is binding without collapsing the ensemble, and the
+  member-collapse explanation is REJECTED. Either outcome is reported.
+
+# ---------------------------------------------------------------------------
+# 5. (d) IS THE INCUMBENT ALSO DEGRADED, OR ONLY THE CHALLENGERS?
+# ---------------------------------------------------------------------------
+why_this_distinction_has_never_been_drawn_and_matters: >
+  If the INCUMBENT is degraded in the same window, the wave-18 concentration is a statement
+  about the strategy family as a whole meeting a hostile period, and challenger comparisons in
+  that window are low-power rather than adverse. If the incumbent is FINE and only challengers
+  break, the concentration is a statement about the challengers, and the mechanism nulls are
+  stronger than Wave 18 reported. These have opposite implications for how Wave 18's two
+  failures should be read, and neither has been established.
+objects_decomposed (all on the continuation basis per §F, all sliced, never re-run fresh):
+  - the 13-member E10 Solar leg (the M1 control curve),
+  - Product A `SolarWaveSMMaster_v3`,
+  - `BEST_ONE_NQ` (`SolarWaveOneContractNQ_v4`),
+  - and, as the cross-instrument control, the ES/RTY/YM CONTROL curves already built in W18R2.
+reported: net, Sharpe, CDaR_0.95 and trade count by year and by the §2 split, each with a
+  block-bootstrap CI, plus the incumbent-vs-challenger DIFFERENCE decomposition for M1 and M5 in
+  and out of the boundary period.
+explicit_statement_required: the report must answer, in one sentence and without hedging,
+  whether the incumbent is degraded in the boundary period.
+
+# ---------------------------------------------------------------------------
+# 6. (e) IS THIS PERIOD NOVEL, OR HAS IT HAPPENED BEFORE?
+# ---------------------------------------------------------------------------
+analog_search:
+  method (FROZEN): >
+    Rolling 106-session windows over the dev window, stepped 1 session. Each window is
+    summarised by the mean standardized §3.1 market-variable vector (v1-v6; v7 excluded as
+    semi-strategy). Distance = Euclidean in that standardized space. Report the 5 nearest
+    earlier windows to 2026-01-02..2026-05-29 by distance, named by their date range.
+  novelty test: >
+    The 2026 window's nearest-neighbour distance is compared against the distribution of
+    nearest-neighbour distances of all other windows. If it sits above the 95th percentile the
+    period is reported NOVEL; otherwise it is reported as having a NAMED ANALOG, and the analog
+    is named. **Restricted to 2022-2026 only** — no pre-2022 data is read in this run, for any
+    purpose, so no old-regime labelling question arises.
+  what a named analog would buy: >
+    A prior occurrence is the only route to out-of-sample evidence about this period's effect
+    that this program can construct, since no clean OOS exists anywhere (owner directive R1).
+    If an analog exists, checking whether the same mechanisms also broke there is the natural
+    Wave-20 test — proposed, not run here, and not scored here.
+
+# ---------------------------------------------------------------------------
+# 7. GOVERNANCE
+# ---------------------------------------------------------------------------
+seal_check: >
+  `src/analytics/seal_audit.py` is run over this run's full read manifest BEFORE the report is
+  written, and its verdict is pasted into the report and appended to the LOCKED-FORWARD ACCESS
+  LEDGER (owner directive R4). Any artifact whose contents extend past 2026-05-29 is listed by
+  name with the slice that was applied to it.
+red_team: >
+  MANDATORY. Not because this run promotes anything — it cannot — but because it will shape the
+  design of every subsequent mechanism spec and change how Wave 18's two failures are read,
+  which is decision-bearing under V7 §G. The reviewer is instructed explicitly to (1) hunt for
+  causal language, (2) attempt to break the changepoint significance with alternative null
+  models, (3) test whether the boundary is robust to variable selection, and (4) RUN any
+  de-confounding experiment it identifies rather than merely flagging it — the practice that
+  made Wave 18's reviews decisive.
+outputs: out/panel.csv, out/changepoints.csv, out/changepoint_bootstrap.json, out/variables_by_period.csv,
+  out/d1_diversity.csv, out/incumbent_decomposition.csv, out/analogs.csv, out/seal_audit.csv,
+  REPORT.md

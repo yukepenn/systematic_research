@@ -180,3 +180,45 @@ the ledger is redirected to the window that **does** — the only virgin data th
 No other access to ≥2026-08-01 is known. Wave 18 read nothing at or after 2026-08-01 on any
 instrument: `runs/W18_XINST_BARS` exports stop at 2026-05-29 by spec, and both Track-R runs
 slice to `sess_date <= 2026-05-29`.
+
+---
+
+## SEAL AUDIT — standing per-wave check, opened 2026-08-09 (owner directive R4)
+
+R4 is right that "Wave 18 read nothing at or after 2026-08-01" was an assertion, and that after
+an uncited 2026-08-07 figure surfaced in the Wave-17 write-up an assertion is not good enough.
+It is now measured. `src/analytics/seal_audit.py` takes a per-wave manifest of every artifact
+read or written, reports the maximum timestamp in each, and classifies it DEV / CONSUMED /
+LOCKED-FORWARD BREACH. One line per artifact, mechanical, ~1 second. It runs every wave from
+here on and its verdict is pasted into that wave's report.
+
+### Wave 18 — **VERDICT: CLEAN.** 21 artifacts audited, **0 locked-forward breaches.**
+
+Full table at `runs/W18_SEAL_AUDIT/seal_audit.csv`; manifest at `runs/W18_SEAL_AUDIT/manifest.txt`.
+
+The audit did sharpen the claim, which is the point of running it. **Two artifacts carry
+contents extending into the CONSUMED window** and were loaded (then sliced) rather than avoided:
+
+| artifact | max timestamp | what happened |
+|---|---|---|
+| `runs/AUDIT03_BARS/nq_3m_2022_2026.csv` | **2026-07-31 16:57** | loaded whole by `load_bars_3m`, then sliced `sess_date <= 2026-05-29` before any computation, in both Track-R runs |
+| `runs/SMV2M_MASTER_BUILD/out/nt8/smm_v2_fills.csv` | **2026-07-31 16:42** | the Product A v2 baseline ledger; `c4_audit.py` slices at its own `DEV_END`, and the inertness diff slices explicitly |
+
+That is category (b) in this document's own taxonomy — *loaded but sliced away before any
+metric* — which is permitted and was already the established practice, but it had not been
+stated. Everything else in Wave 18 tops out at **2026-05-29**, including all three ES/RTY/YM
+exports, which were bounded at the source by `runs/W18_XINST_BARS/spec.yaml`.
+
+**The precise corrected claim: Wave 18 read no data at or after 2026-08-01 on any instrument,
+and loaded two artifacts whose contents reach 2026-07-31, slicing both to the dev window before
+any number was computed.**
+
+### LOCKED-FORWARD ACCESS LEDGER — updated
+
+| date | window read | reason | authority | status |
+|---|---|---|---|---|
+| 2026-08-09 | 2026-01-01 → 2026-08-07 (**suspected**, see record defect 2 above) | unknown; possibly a from-scratch reproduction during Wave 17 | **none identified** | ⚠ UNRESOLVED — logged precautionarily; the figure it produced is marked DO-NOT-CITE and has been used for nothing |
+| 2026-08-09 | Wave 18, all artifacts | standing seal audit | owner directive R4 | ✅ **CLEAN** — 0 breaches of 21 artifacts; 2 CONSUMED-window reads disclosed above |
+
+The suspected Wave-17 access remains the only unresolved entry, and it remains unresolvable from
+the record. It is not re-litigated; it is carried.
