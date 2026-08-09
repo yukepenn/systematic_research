@@ -1,0 +1,61 @@
+run_id: R2B_PULLBACK_RECLAIM
+family: "R2B -- true pullback -> reclaim entry pattern (SYSTEM ARCHITECTURE SCIENCE MEGA
+  DIRECTIVE sec21)"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: 2026-08-09
+
+audit_of_prior_evidence: >
+  runs/R2_ENTRY_TIMING/spec.yaml PLANNED a "diagnostic_R2B_pullback_reclaim" section (measure
+  whether price pulls back toward the entry level before continuing, normalized by sigma460) but
+  runs/R2_ENTRY_TIMING/src/diagnose.py NEVER IMPLEMENTED it -- only R2-A (score persistence/
+  overshoot) was actually built and run; R2-B and R2-C were named in spec but not executed, and
+  R2's own construction (confirm_bars, a FIXED N-bar delay regardless of price path) is a
+  materially different mechanism from a price-path pullback/reclaim pattern. Per directive
+  sec21's explicit instruction ("If this precise mechanism was already fairly tested, do not
+  rerun it. Document prior evidence instead."): CONFIRMED NOT PREVIOUSLY TESTED. R2B is
+  authorized as a new, genuinely different hypothesis.
+
+hypothesis: >
+  Does requiring a PRICE-PATH pattern (qualifying M crossing -> shallow adverse pullback ->
+  directional reclaim of the trigger level) before committing improve entry quality, WITHOUT
+  universally delaying strong breakouts that never pull back? This is conceptually distinct from
+  R2's closed fixed-delay mechanism (confirm_bars): a clean breakout with no pullback must be
+  allowed to enter immediately or near-immediately, not be punished by a fixed wait.
+
+reference_object: >
+  Same Product-B ledger as R2/R2V1 (runs/P0_TRADESTATE_AUTOPSY/out/ledger_full.parquet, 1,978
+  entries in block_level_summary.csv). Reuses runs/SA0_SYSTEM_STRUCTURE/src/substrate.py for the
+  decision-layer/pricing substrate (same verified onelot_exec, build_pos_seq).
+
+diagnostic_plan: >
+  For each of the 1,978 entries, over a bounded forward window (K=6 bars, 18 minutes -- matches
+  R2's own tested confirm_bars horizon scale), measure: pullback_atr (max adverse price
+  excursion from the entry-bar trigger close, in sigma460/ATR-proxy units, clipped at 0 if price
+  never moves adverse), reclaim_bar (first bar, if any, where price closes back at/above the
+  trigger level after a pullback), M persistence during the pullback (does M stay beyond
+  +-ENTRY_LEVEL throughout). Correlate pullback_atr and reclaim occurrence with the entry's
+  eventual net_pnl, MFE, and top/bottom-decile membership. Descriptive only -- no filtering rule
+  applied to history in this phase.
+
+right_tail_precheck: >
+  For the top-20 winners specifically: do they show a qualifying pullback at all, or do they run
+  straight through (no adverse excursion)? A rule that only enters AFTER a pullback+reclaim
+  pattern, with NO fallback for the no-pullback case, would silently exclude clean breakouts --
+  directive sec21 explicitly prohibits this ("must NOT universally delay strong breakouts").
+  Any construction therefore requires an explicit no-pullback-observed fallback (enter at or near
+  the original crossing bar if price never pulls back), not just a reclaim-gated rule.
+
+construction_gate: >
+  A candidate is constructed ONLY IF the diagnostic shows a genuine, monotonic, chronologically-
+  stable relationship between pullback/reclaim pattern and outcome that is NOT already explained
+  by variables already inside M/EntryLevel (same falsification bar as R2-A). If found, the
+  candidate must include the no-pullback fallback described above, and must pass the full R2V1-
+  style battery (year-by-year, LOYO especially 2026, bootstrap, exact tail mapping, 2-tick cost
+  stress) before any promotion language -- the campaign's own R2V1 experience is the standing
+  precedent for why headline numbers alone are insufficient.
+
+falsification_condition: >
+  If pullback_atr/reclaim show no material, monotonic, chronologically-stable relation to
+  outcome (or are redundant with overshoot/persistence, already tested and inconclusive in
+  R2-A), R2B closes CONFIRMED-NOT-BENEFICIAL or INCONCLUSIVE with no construction attempted.
