@@ -7,6 +7,17 @@ Read this before starting any new research wave. Kept short on purpose — see
 CURRENT MODE: RESEARCH
 ```
 
+> **UPDATE 2026-08-09 — SYSTEM ARCHITECTURE SCIENCE + ALPHA OPTIMIZATION campaign CLOSED, same
+> day, after this file's original text below.** SA0 (full structural/failure-mode decomposition),
+> R3 (SelTime-as-state), R2B (pullback-reclaim), R4 (slope/impulse), R5 (OHLCV microstructure
+> proxies), R6 (Engine-3 audit), PA0/PA1 (Product A structure/sizing) all closed, zero
+> promotions. Closing report: `research/system_master/SYSTEM_SCIENCE_20260809.md`. Current-regime
+> health: `research/system_master/CURRENT_EDGE_HEALTH.md` (Product B HEALTHY, no decay evidence).
+> Do not re-run any of these 7 families unchanged — see `research/system_master/
+> RESEARCH_FRONTIER.md` for exactly what's closed and what (if anything) is left as a disclosed,
+> deferred lead for a future wave. The rest of this file (below) is the PRE-this-campaign state,
+> retained for history, not current status.
+
 ## Current baselines
 
 - **Product A**: `src/ninjascript/SolarWaveSMMaster_v4.cs`

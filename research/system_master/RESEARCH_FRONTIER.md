@@ -22,10 +22,10 @@ a report: one row per family, kept current after every run. Full evidence lives 
 
 ## Campaign stop condition (directive sec40 [MEGA RESEARCH DIRECTIVE] / sec60 [SYSTEM ARCHITECTURE SCIENCE DIRECTIVE])
 
-Not yet met. Continue through SA0 → R3 → R2B → R4 → R5 → R6 → PA0 → PA1 → SYN until either a
-candidate is PROMOTED, or every family closes as REJECTED / CONFIRMED-NOT-BENEFICIAL /
-INCONCLUSIVE / CLOSED. No families beyond this list without new information per the standing
-discipline.
+**MET, 2026-08-09.** SA0 → R3 → R2B → R4 → R5 → R6 → PA0/PA1 all closed to a disposition; zero
+promotions. Final closing report: `research/system_master/SYSTEM_SCIENCE_20260809.md`. Both
+Product A and Product B baselines are UNCHANGED. No family beyond this list is authorized without
+new information per the standing discipline.
 
 ## Standing constraints (do not re-litigate)
 

@@ -1,5 +1,22 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+## SNAPSHOT UPDATE (2026-08-09, SYSTEM ARCHITECTURE SCIENCE + ALPHA OPTIMIZATION campaign CLOSED)
+
+**Supersedes the snapshot below for anything it touches.** The post-parity research campaign
+(P0/R1/R2/R2V1, then the SYSTEM ARCHITECTURE SCIENCE MEGA DIRECTIVE's SA0/R3/R2B/R4/R5/R6/PA0/PA1)
+ran to completion this same day. **Zero promotions. Both Product A (`SolarWaveSMMaster_v4`) and
+Product B (`SolarWaveOneContractNQ_v5`/`SolarWaveOneContractMNQ_v5`) remain UNCHANGED.** Full
+closing report: `research/system_master/SYSTEM_SCIENCE_20260809.md`. Architecture matrix:
+`research/system_master/STRUCTURE_MAP.md`. Current-regime health (addendum):
+`research/system_master/CURRENT_EDGE_HEALTH.md` — Product B assessed **HEALTHY** on the latest
+available (non-locked) data, one WATCH flag (rolling-120 Sharpe, mechanically explained), no
+decay evidence found; the short-side weakness that motivated the owner's April review is
+temporally localized to Jan-May 2026 and reversed in the newly-available June-July data. Every
+tested construction this pass either failed its own chronology/right-tail gate or was deferred as
+a disclosed, not-yet-actionable lead — see `research/system_master/RESEARCH_FRONTIER.md` for the
+per-family table. Project remains in RESEARCH MODE; no live-trading authorization exists or is
+implied.
+
 ## SNAPSHOT (2026-08-09, repo consolidation pass — read this, skip the chronology below unless you need it)
 
 **CURRENT BASELINES**: Product A = `SolarWaveSMMaster_v4.cs`. BEST_ONE_NQ = `SolarWaveOneContractNQ_v5.cs`.
