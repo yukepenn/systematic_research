@@ -1,0 +1,102 @@
+run_id: SA0_SYSTEM_STRUCTURE
+family: SA0 (complete system structure / failure-mode science)
+directive: "SYSTEM ARCHITECTURE SCIENCE + ALPHA OPTIMIZATION MEGA DIRECTIVE, 2026-08-09, sec3-sec16"
+date_frozen: 2026-08-09
+author: autonomous research campaign (continuation of the post-parity research campaign)
+
+purpose: >
+  Explanatory / diagnostic stage, NOT a candidate optimization grid (directive sec3). Answer:
+  why does the current system (Product B decision core, shared by BEST_ONE_NQ/BEST_ONE_MNQ)
+  work, where does it fail, and which components are load-bearing vs redundant. No promotion
+  gate is attached to anything in this run -- findings here MOTIVATE R3-R6/PA0-PA1 preregistrations,
+  they do not themselves authorize any candidate.
+
+scope: >
+  Product B shared decision core only (BEST_ONE_NQ/BEST_ONE_MNQ theta_NQ=theta_MNQ). Product A
+  gets its own dedicated PA0 run later in the priority queue (directive sec29) -- not duplicated
+  here, though Product A's B-MOM/tilt/Solar13 building blocks are the SAME construction and this
+  run's Solar13/HTF/B-MOM findings (sec7-9) transfer directly.
+
+data_reuse: >
+  Zero new CrossTrade/NT8 calls. Reuses already-certified arrays verbatim: pos_incumbent /
+  barpnl from runs/S2_SELTIME/out/r2/ (same source BASELINE_MODELS.md's exact battery cites),
+  sig_T/sig_B/sig_tilt_state/sig_M/sig_entry_blocked_c4 from runs/V1R4_NT8_PARITY/out/one_nq_events/,
+  the P0 trade-state ledger (runs/P0_TRADESTATE_AUTOPSY/out/ledger_full.parquet, reconciles
+  exactly to $301,915.92), and the P0 block-level summary (runs/P0_TRADESTATE_AUTOPSY/out/
+  block_level_summary.csv, 1,978 position-blocks). R1's construct.py substrate (T/Tp/tilt_state/
+  B/M/entry_blocked_c4/forced_flat_c4 arrays, onelot_exec pricing) is imported, not re-derived.
+
+planned_analyses:
+  sec4_architecture_matrix: >
+    Canonical component table (purpose/input/output/causal horizon/marginal contribution/
+    interaction contribution/failure mode/prior research status/remaining uncertainty) for every
+    Product-B component. Written directly into STRUCTURE_MAP.md, quantified from the analyses
+    below, not from code reading alone.
+  sec5_structural_ablation: >
+    Bounded, semantically-clean control set only (no arbitrary combinations): FULL incumbent
+    (control), Solar-only (WBmom=0), B-MOM-only (WSolar=0), Solar+B-MOM without HTF tilt
+    (m forced to 1.0), FULL without the hysteresis dead-band (EntryLevel=ExitLevel=3.0, i.e. no
+    gap between commit and release thresholds). Priced on BOTH NQ and MNQ genuine economics via
+    R1's onelot_exec, full dev window. Net/Sharpe/MaxDD/CDaR/trade count/long-short split/
+    year-by-year/right-tail contribution/losing-day correlation vs FULL for each.
+  sec6_interaction_science: >
+    Conditional expectancy of P0's 1,978 position-blocks by (Solar T sign x B-MOM engaged),
+    (Solar T sign x HTF tilt agreement), (B-MOM x HTF), (vote_dispersion x hysteresis-implied
+    hold), (entry M strength x time-of-day), (entry M strength x sigma460 vol regime). Paired
+    event analysis, not causal language.
+  sec7_solar13_ensemble_science: >
+    Pairwise member agreement / effective diversity from the 13-member PEND array (rebuilt via
+    common.build_pend, same VMS=6..30 step 2 construction). Vote dispersion around entries/exits/
+    giant winners/giant losers. Leave-one-member-out T reconstruction (13 variants, each dropping
+    one member) -- explanatory only, NOT 13 new weights. Fast/middle/slow tercile sub-ensembles.
+  sec8_htf_science: >
+    HTF tilt as a conditioning variable: net/DD edge added, long vs short split, entry/hold/
+    reversal decomposition, year-by-year consistency, forward expectancy when Solar and HTF
+    disagree. SMA50 length stays frozen (no re-optimization).
+  sec9_bmom_science: >
+    B-MOM standalone event expectancy, incremental expectancy conditional on Solar/HTF, agreement
+    vs disagreement, persistence, contribution to giant winners/losers, time-of-day distribution,
+    year-by-year. Distinguish entry/hold/reversal/magnitude-only contribution explicitly.
+  sec10_score_mixing_sensitivity: >
+    Local neighborhood only (WSolar/WBmom perturbed +/-10% and +/-15%, a small pre-registered
+    grid, NOT a weight search) -- decision-flip rate and net/Sharpe stability, to characterize
+    plateau vs isolated-needle fragility. No replacement of current weights regardless of result.
+  sec11_hysteresis_science: >
+    Entries/churn prevented, exits/reversals delayed, winner PnL preserved vs loser PnL enlarged,
+    transaction costs saved, using the no-gap ablation (sec5) as the explanatory contrast. Explicit
+    connection to the April-2026 autopsy trades (already found: B-MOM flat 0.0 in both, giveback/
+    decay is the generalized mechanism, P0 REPORT.md).
+  sec12_failure_mode_atlas: >
+    Reusable classification of all 1,978 Product-B position-blocks on: long/short, winner/loser,
+    top-tail/ordinary, entry time-of-day, position age, entry M, MAE, MFE, giveback_ratio, exit
+    reason (M-driven vs C4-driven vs session-close backstop), HTF state, B-MOM engagement, Solar
+    vote_dispersion. Descriptive clustering into interpretable failure modes only where the data
+    actually supports a cluster -- no forced taxonomy.
+  sec13_april2026_deep_explanation: >
+    For the 2 already-identified trades (P0 REPORT.md block 3743 / block 3757, literal B-MOM-veto
+    hypothesis already REFUTED there), full state trace (M/T/B/HTF/vote structure/MFE-MAE timing/
+    conviction decay) plus matched historical-control search (similar entry M, time-of-day,
+    volatility, HTF, initial excursion) among the other 1,976 blocks, comparing paths to determine
+    whether early-available information could have distinguished these losers from similar winners.
+  sec14_long_short_asymmetry: >
+    Full battery (net/Sharpe/trade count/win rate/avg win/avg loss/MaxDD contribution/CDaR
+    contribution/top-tail contribution/year-by-year/time-of-day/vol regime/holding time/MAE-MFE)
+    split by position sign, Product B (both NQ and MNQ economics).
+  sec15_matched_case_failure_science: >
+    For each of the top-20 loser blocks (already identified in R2V1's tail mapping and P0's
+    generalization diagnostics), find historically similar entries (causal entry-state features
+    only) that became large winners / ordinary winners / ordinary losers; ask what separates them
+    controlling for incumbent state.
+  sec16_regime_science: >
+    Small, interpretable regime buckets (realized vol tercile, trend-efficiency tercile, overnight
+    vs RTH, time-of-day quartile, Solar consensus strength tercile) -- descriptive performance
+    breakdown only, no new tradable rule constructed here.
+
+explicitly_not_in_scope_this_run:
+  - Any new parameter optimization or weight replacement (sec10/sec11 are diagnostic only).
+  - Product A (separate PA0 run, directive sec29).
+  - R3 (smarter SelTime) -- follows SA0 per directive sec49 priority order, own run dir.
+  - Any NT8/CrossTrade call -- zero needed, all data already certified.
+  - A tradable candidate of any kind -- this run's output is understanding, not a strategy.
+
+promotion_gate: none (explanatory/diagnostic run; no candidate is constructed or adjudicated here)
