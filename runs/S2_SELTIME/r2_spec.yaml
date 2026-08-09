@@ -1,0 +1,122 @@
+run_id: S2_SELTIME_R2
+family: "S2 CANDIDATE -> capital-map + parity-adjacent R2 promotion adjudication, applied
+  separately to Product A / BEST_ONE_NQ / BEST_ONE_MNQ, per spec.yaml's own frozen verdict rule
+  (line 97-104) and per the FINAL S2 PROMOTION ADJUDICATION directive."
+frozen_before_results: true
+date_frozen: "2026-08-09"
+
+starting_status: "S2_SELTIME Arm A is CANDIDATE -- R2 PROMOTION ADJUDICATION OWED. Not PROMOTED,
+  not REJECTED. This was never actually adjudicated before the FINAL OPTIMIZATION campaign closed
+  at '0 promotions' -- that closure was a process gap, not a verdict on S2 itself. This spec closes
+  that gap."
+
+# ---------------------------------------------------------------- frozen rule, source of truth
+frozen_rule_source_of_truth: "runs/S2_SELTIME/src/run.py apply_entry_eligibility() (lines 27-44),
+  verbatim, unchanged -- reused as an imported function, not re-derived, in every product's R2
+  implementation below."
+frozen_window: "blocked = (since_1800_hours >= 8.0) & (since_1800_hours < 14.0), i.e. exactly
+  02:00-08:00 ET. IDENTICAL to the frozen decision-cell boundary. NOT reoptimized. The 19:00-01:00
+  window-sweep survivor is cited as corroborating context only (per the ingestion's own
+  'low-liquidity super-session' finding) and is NEVER substituted, merged, or tested as an
+  alternative candidate in this R2 -- that would be a new SelTime hypothesis, not adjudication of
+  the one already-frozen candidate, and is explicitly out of scope per the owner's directive."
+frozen_semantics: "A NEW commitment (flat->nonzero, or a sign flip) relative to the MODIFIED
+  (realised) prior state is suppressed to 0/flat while inside the blocked window. Exits to flat,
+  and continuation in the same direction, ALWAYS pass through unmodified, in or out of the window.
+  This must be evaluated sequentially against the REALISED (post-eligibility) state, not the raw
+  underlying signal -- exactly as the frozen function already does."
+
+# ---------------------------------------------------------------- per-product mechanistic interpretation, frozen BEFORE any P&L
+interpretation_product_A:
+  layer: "Applied to T -- Product A's own Solar E10 leg target (clamp(round(10*mean(13 member
+    pending pos)), +-10)), the SAME T symbol used in Product A's own published formula
+    (BASELINE_MODELS.md). NOT applied to the final blended M or to B (B-MOM), which are untouched."
+  downstream_recombination: "T' = apply_entry_eligibility(T, blocked). Tilt/c1_50 (m, s) are then
+    computed FROM T' (the realised, post-eligibility signal), exactly mirroring how the incumbent
+    computes m/s from T today -- m/s are properties of 'what the strategy is actually doing this
+    bar', not of a hypothetical unsuppressed target. Tpp' = clamp(round(T'*m'*s'*TiltRescale),
+    +-13). M' = round(KSolar*Tpp' + KBmom*B) -- B-MOM's own leg B is completely unmodified, since
+    S2 was validated on Solar's EUROPE_PREUS loss pattern specifically and was never tested against
+    BMOM's behaviour in that window (directive explicitly preserves B-MOM unchanged). The existing
+    C4 day-only overlay (session-relative entry-block/forced-flat near session close) is applied to
+    M' exactly as it is applied to M today -- S2's window (02:00-08:00 ET) and C4's window
+    (~16:30-16:45 ET) are temporally disjoint, so no interaction/precedence question arises."
+  rationale: "Minimal, single-degree-of-freedom change (exactly what the directive requires):
+    every other component (B-MOM, tilt mechanism itself, KSolar/KBmom, TiltRescale, C4 schedule)
+    is untouched. This is the ONLY placement consistent with 'preserve...B-MOM...all weights...
+    sizing formula' -- applying S2 to the final M would let it also suppress BMOM-driven
+    transitions, which is a different, untested, unauthorised construction."
+
+interpretation_one_NQ:
+  layer: "Applied at the ONE-CONTRACT POSITION layer (p in {-1,0,+1}), INTEGRATED into the
+    hysteresis(3,1) state-machine loop itself, not as a post-hoc filter on an independently
+    precomputed position series -- required because hysteresis is itself stateful (entry/exit
+    thresholds depend on the CURRENT REALISED position), so eligibility suppression must feed back
+    into the state before the next bar's hysteresis decision, exactly as Product A's sequential
+    p'_{t-1} dependency already requires."
+  exact_loop: >
+    p (state) starts at 0. Each bar, compute the UNCHANGED M = WSolar*T'+WBmom*B (T' here is
+    BEST_ONE_NQ's own tilt-adjusted Solar leg, UNCHANGED by S2 -- S2 acts only at the position
+    layer for this object, per the directive's explicit 'one-contract commitment layer' framing).
+    Compute tgt via the existing UNCHANGED hysteresis rule (flat->+-1 at EntryLevel=3.0, exit at
+    ExitLevel=1.0, reversal at the opposite EntryLevel) and the existing UNCHANGED C4 overlay.
+    THEN: if tgt represents a NEW commitment relative to p (p==0 and tgt!=0, OR sign(tgt)!=sign(p))
+    AND the bar is inside the S2 blocked window: force tgt=0 (suppress) instead. Otherwise tgt
+    passes through unmodified (this covers ALL exits-to-flat and same-direction holds, in or out
+    of the window, exactly matching the frozen exit-side-unrestricted clause). p is then advanced
+    to this (possibly overridden) tgt for the next bar's hysteresis decision.
+  what_is_never_touched: "EntryLevel, ExitLevel, WSolar, WBmom, TiltSma/TiltMult/TiltRescale, the
+    Solar member ensemble, the C4 entry-block/forced-flat schedule, the 16:45 mandatory close. S2
+    can suppress an ENTRY or a REVERSAL only; it can NEVER suppress an exit-to-flat, and it can
+    NEVER be the reason a position exceeds +-1 contract (hysteresis already enforces the cap)."
+
+interpretation_one_MNQ:
+  layer: "IDENTICAL construction and IDENTICAL suppression events to BEST_ONE_NQ's, because the
+    CURRENT SHIPPED ARCHITECTURE (BASELINE_MODELS.md, confirmed again here) uses NQ as the sole
+    SIGNAL series for BOTH one-contract objects -- MNQ is the EXECUTION-only leg. There is no
+    MNQ-native signal to derive an independent decision sequence from; inventing one would be an
+    unauthorised new construction, not an application of the frozen S2 rule to the actual shipped
+    object. 'Do not infer MNQ's SelTime decision from NQ' (directive section 4C) is read here as:
+    do not skip MNQ's own INDEPENDENT P&L/capital/DD verdict by assuming NQ's R2 result
+    automatically transfers -- not as license to fabricate a different decision sequence the real
+    object does not have."
+  independent_verdict_requirement: "P&L, commission, tick/point-value, capital, and DD are computed
+    on MNQ's OWN genuine economics and genuine MNQU6 price series (the already-completed rebuild
+    at runs/PRODUCTB_ONECONTRACT_FINAL/rebuild_mnq_reference.py -- REUSED, not rebuilt, per the
+    directive's explicit instruction). BEST_ONE_MNQ's R2 verdict is decided independently on its
+    own numbers and may differ from BEST_ONE_NQ's (promote one, not the other, or neither, or
+    both) -- the directive explicitly permits any combination."
+
+# ---------------------------------------------------------------- R2 battery (directive section 5-6, verbatim scope)
+battery_categories: [return, drawdown, right_tail, trading_behavior, chronology, robustness, capital_map]
+promotion_standard: "REUSE the existing campaign conventions verbatim -- gate_A legacy triple
+  (Sharpe improves AND CDaR0.95 improves AND top-10-day retention >=95%), gate_B chronology
+  (>=4/5 years same sign AND survives excising the final 106 sessions), gate_C tail preservation
+  (top-1% trade/bar retention >=90%, top-20-move retention >=90%, long-share drift <=15pp), plus
+  this run's OWN new capital-map criterion (section 6 below). No threshold is invented or loosened
+  after seeing a result -- these are the SAME numeric bars S2's own spec.yaml already used."
+capital_map_criterion: "For each product, disclose (not gate on a single number): realised
+  exposure ratio (mean |position| or |contracts| vs incumbent), EOD maxDD, intraday-proxy CDaR,
+  and -- for Product A only, since it is the sole graded-sizing object -- the empirical maximum
+  realised |M| under S2 vs incumbent (S2 can only suppress entries, so this is provably <= the
+  incumbent's own max, but the DEGREE matters for the promotion narrative). A promotion requires
+  the capital-map picture to be AT LEAST NEUTRAL (not worse) alongside a genuine return/risk
+  improvement -- a small Sharpe gain bought with materially WORSE realised drawdown/capital
+  behaviour does not promote even if gate_A's Sharpe/CDaR POOLED numbers pass, per directive
+  section 6's explicit 'make the decision on actual product economics' instruction."
+
+verdict_labels: ["PROMOTED", "NOT PROMOTED", "INCONCLUSIVE"]
+verdict_rule: >
+  PROMOTED requires gate_A AND gate_B AND gate_C to pass on THIS product's own numbers (not
+  inherited from the diagnostic control), AND the capital-map picture to be neutral-or-better, AND
+  the D7-boundary/quarter-concentration caveat and the refuted-mechanism caveat to be disclosed
+  and weighed, not omitted. INCONCLUSIVE is used only if the evidence is genuinely mixed in a way
+  no reasonable application of the existing gates resolves (not as a hedge to avoid a hard call).
+  Per the directive: imperfect mechanistic understanding alone does not block promotion if the
+  product-level evidence is robust; conversely a merely-larger pooled Sharpe does not itself
+  promote if chronology/tail/capital/concentration evidence is weak.
+
+no_reoptimization_clause: "The window is fixed at 02:00-08:00 ET in every product's R2. No start/
+  end perturbation, no merge with 19:00-01:00, no 18:00-08:00 test, no session-specific parameter
+  search. Gate D's existing +-30/+-60min perturbation evidence (already run, already disclosed in
+  REPORT.md) is CARRIED FORWARD as context, not re-run or re-optimized here."
