@@ -1,0 +1,92 @@
+run_id: U3_HOLD_EXPOSURE_CONTINUATION
+family: "U3 -- hold/exposure continuation-value science (CONTINUOUS SYSTEM EVOLUTION phase)"
+directive: "CONTINUOUS SYSTEM EVOLUTION -- UNIFIED PRODUCT A/B ALPHA + POLICY DISCOVERY, 2026-08-09"
+date_frozen: 2026-08-09
+author: autonomous research campaign (U3 subagent)
+
+purpose: >
+  R3 (runs/R3_SELTIME_STATE/REPORT.md) proved the 02:00-08:00 ET bar-level bleed it diagnosed is a
+  HOLD-TIME phenomenon (positions entered elsewhere, carried through a low-liquidity window), not
+  an entry-quality one, and explicitly left a HOLD/exposure-layer mechanism as future work
+  requiring its own preregistration. R1 (runs/R1_ADAPTIVE_EXIT/REPORT.md) already falsified one
+  specific hold-time state variable (giveback_ratio, as a hard early-flatten trigger) -- this run
+  studies hold/continuation value as its own object using a materially different lens: bar-level
+  observation units (not block-level), a small interpretable state set (side, M-strength,
+  M-decay, consensus, B-MOM engagement, vol, session_phase, age, giveback, CLV, breakout
+  rejection), forward realized value over multiple horizons, and explicit session-transition
+  conditioning. Purely DIAGNOSTIC/MEASUREMENT -- no candidate authorized this run.
+
+scope: >
+  HOLD-state bars only: action_B=='HOLD' for Product B (192,723 canonical bars), action_A in
+  {'HOLD','SCALE_IN'} for Product A (387,378 canonical bars -- SCALE_IN included per directive
+  because PA0 already established scale-in bars are a continuation/conviction-increase event, not
+  a fresh entry, so they belong in the "already holding, what happens next" population, not the
+  entry population). Canonical window (is_health_only_bar==False, 2022-01-03..2026-05-29) is the
+  basis for every chronology/promotion-relevant claim; June-July-2026 health-only extension
+  (is_health_only_bar==True) is reported strictly separately, observational only, never blended.
+
+reference_object: >
+  runs/U0_UNIFIED_STATE/out/u0_state_table.parquet (540,232 rows x 79 cols, single shared causal
+  state layer, correctness-gated against certified canonical nets per UNIFIED_STATE_MAP.md).
+  Product-B leg priced on genuine NQ bars throughout (bar_pnl_B_nq_dollars); Product-A leg genuine
+  NQ-priced throughout (no MNQ proxy needed, per UNIFIED_STATE_MAP.md's disclosed-approximation
+  note). Top-20-all-time-winner cross-check for Product B reuses
+  runs/P0_TRADESTATE_AUTOPSY/out/block_level_summary.csv (block_id/net_pnl), verified to match
+  U0's own run_pnl_B_dollars at each block's last non-EXIT bar byte-for-byte on a sample block
+  (block_id_B==2870: $41,337.82 both sources) before use; Product-A top-20 computed directly from
+  U0 (block_id_A's last non-EXIT run_pnl_A_dollars), no prior artifact existed for this leg.
+
+methods: >
+  Interpretable statistics only, per standing rigor: bucket mean/median/n + one-sample t-stat
+  (vs 0) as the "simple significance gut-check", Spearman correlation for continuous-state leads,
+  OLS via np.linalg.lstsq for any R^2-improvement claim -- no black-box ML, matching R3/R4/R5's
+  own convention. Forward realized value = sum of bar_pnl_{B_nq,A}_dollars over the forward
+  window, computed via a prefix-sum (cumulative-sum) array indexed by row position (t_idx is a
+  verified exact row-position index, monotonic +1 throughout, gate-checked before use) -- NOT a
+  backtest lookahead bug: this labels an OBSERVATION bar with a DESCRIPTIVE future outcome for
+  measurement purposes only, the exact convention R1's giveback labels and R4/R5's net_pnl labels
+  already use in this campaign. Two forward-value constructions: (a) fixed horizons N in
+  {1,2,5,10,20} bars, unrestricted (may run past a session boundary into the next session's
+  bars -- this is intentional, it measures "what actually happens to the P&L stream over the next
+  N bars", not "what happens before an artificial cutoff"); (b) bounded to the current session
+  (sum from t+1 through the last bar of the SAME sess_date only) -- the explicit
+  "until-session-boundary" horizon the directive asks for. State buckets (terciles, age bins,
+  clipped giveback ratio) are fit ONLY on the canonical-window HOLD population and then applied
+  unchanged to the health-only extension, so extension-window numbers are never used to define the
+  buckets themselves.
+
+state_set: >
+  side (sign of position_B / target_exposure_A); M_abs tercile (weak/mid/strong); M_slope_20
+  aligned-to-side tercile (decaying/flat/growing -- decay proxy); M_change aligned-to-side sign;
+  vote_dispersion tercile; B-MOM engagement (B!=0 boolean); sigma460_atr_proxy_pts vol tercile;
+  session_phase (7-level, already-existing non-fit categorical); age_bars bucket (new 2-10 /
+  young 11-40 / mature 41-120 / old 121+, matching the observed age_bars quartile structure);
+  giveback_ratio tercile (clipped at 5.0 for bucket-edge stability, raw value retained
+  unclipped in the output table); clv_signed aligned-to-side tercile; breakout-rejection aligned
+  to side (rejected_upper_break if long, rejected_lower_break if short).
+
+right_tail_check: >
+  Mandatory per standing rigor before describing any bucket finding as "usable": for whichever
+  leg's finding is strongest, check what fraction of that leg's top-20 all-time-winning BLOCKS
+  (by final block net_pnl) have HOLD bars landing in the "worst" bucket of the finding. Report the
+  fraction plainly; do not describe a finding as a filter candidate if the fraction is large
+  (matching the >=15-40% disqualification bar R3/R4/R5/PA0 already established in this campaign).
+
+falsification_condition: >
+  If no state variable shows both (i) a chronologically stable (same-sign in >=4/5 canonical
+  years) relationship to forward continuation value at a useful horizon (5-bar or
+  until-session-boundary) AND (ii) survives the right-tail check without disqualification, U3
+  closes with a plain "no genuine tail-safe hold/continuation signal found" verdict -- point 5 of
+  the parent task explicitly permits and expects this outcome; no finding is to be forced.
+
+construction_gate: >
+  NONE authorized this run regardless of outcome. This is a measurement-instrument pass only, per
+  the parent task's explicit instruction (point 5: describe a candidate mechanism in PROSE ONLY if
+  warranted, NOT as constructed code, labeled NOT YET TESTED / NOT AUTHORIZED FOR CONSTRUCTION).
+  Zero NT8/CrossTrade calls. Zero changes to Product A (SolarWaveSMMaster_v4) or Product B
+  (SolarWaveOneContractNQ_v5/MNQ_v5).
+
+data_reuse: >
+  Reads runs/U0_UNIFIED_STATE/out/u0_state_table.parquet only (no rebuild). Reuses
+  runs/P0_TRADESTATE_AUTOPSY/out/block_level_summary.csv for the Product-B top-20 cross-check
+  (read-only). Writes exclusively under runs/U3_HOLD_EXPOSURE_CONTINUATION/. No git operations.
