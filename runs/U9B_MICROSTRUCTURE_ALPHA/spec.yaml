@@ -1,0 +1,78 @@
+run_id: U9B_MICROSTRUCTURE_ALPHA
+family: U9B (first genuine order-flow/microstructure alpha test, Track C)
+directive: "CONTINUOUS SYSTEM EVOLUTION MASTER DIRECTIVE v2, sec33/39 -- consumes U9's frozen infrastructure"
+date_frozen: 2026-08-09
+author: autonomous research campaign (continuation, wave-2 follow-on)
+
+purpose: >
+  The FIRST test in this entire multi-month campaign of genuine order-flow/microstructure
+  information (not an OHLCV-derived proxy) against Product B/A's decision layer. Consumes
+  runs/U9_TRUE_MICROSTRUCTURE's frozen provenance findings (L1/L2 PROVENANCE PASS on 37/40
+  sessions) and frozen prequential design (session-level block clustering) rather than
+  re-deriving them. Motivated by the EVI pattern this wave established: every OHLCV-derived
+  residual-information family (R4 slope, R5 microstructure-PROXY, U5 soft-weighting, U8/U8B
+  organization level+transition) has now failed on right-tail safety or magnitude, and the
+  session/hold-layer construction axis has failed 3 independent times (U3/U1B/U4B) -- genuine
+  order-flow is the clearest remaining NEW information class per directive sec70.
+
+scope: >
+  Product-B ENTRY events and Product-A SCALE_IN events (per U0's own action_B/action_A columns)
+  falling on the 37 scalping_lab sessions with confirmed L1+L2 provenance (excludes s20250811,
+  s20250924, s20260430 -- U9's own documented "L1-only server holes"). This is necessarily a
+  SMALL, exploratory sample (~9 months, ~37 sessions) -- explicitly NOT held to the 4.4-year
+  Track-L chronology bar; held instead to U9's own frozen Track-C prequential/block-clustered
+  standard.
+
+data_reuse: >
+  research/scalping_lab/substrate/grid1s/NQ/*.parquet (that campaign's own already-built,
+  already-verified 1-second causal snapshot grid: last, trades, vol, sflow [signed flow],
+  bid/ask/mid, spread_t, ret1s_t -- Layer 1 per that campaign's DATA_SUBSTRATE.md, reused
+  read-only, zero re-export). runs/U0_UNIFIED_STATE/out/u0_state_table.parquet for event
+  identification (action_B/action_A, block_id, outcomes) and runs/U9_TRUE_MICROSTRUCTURE's own
+  provenance/prequential-design findings. Zero new CrossTrade/NT8 calls.
+
+feature_construction (small, preregistered, single causal window per directive sec36 -- NOT a
+swept parameter): >
+  For each qualifying event at bar-close timestamp T, aggregate grid1s rows in the CAUSAL window
+  [T-60s, T] (60 seconds, economically motivated as "immediately pre-decision order flow",
+  inclusive of T since the incumbent's own M/T decision is already computed from bar T's own
+  close -- using microstructure data up to and including the same timestamp is consistent with
+  every other causal feature in this campaign, not a lookahead expansion):
+    avg_spread_ticks = mean(spread_t)
+    signed_flow_sum = sum(sflow)  -- net signed volume, buy vs sell pressure
+    trade_intensity = mean(trades)  -- per-second trade count
+    quote_intensity = mean(bid_upd + ask_upd)  -- per-second quote-update count
+    microprice_dev = mean(mid - last)  -- adverse-selection-direction proxy
+    ret1s_vol = std(ret1s_t)  -- short-term realized vol from tick returns
+  All six aligned to trade/scale direction (multiplied by event side) where directionally
+  meaningful (signed_flow_sum, microprice_dev), left raw where not (spread/intensity/vol are
+  magnitude features). Sessions with 0% BBO coverage (3 of 40) are excluded entirely, not
+  imputed.
+
+evidence_class: >
+  Track C, SHORT-HISTORY PREQUENTIAL EVIDENCE per directive sec78's labeling requirement --
+  never to be described as CORE or long-history certified. Uses U9's own frozen expanding-origin
+  monthly-block design; session is the unit of independence; block-level bootstrap only, no
+  tick-pooled significance.
+
+planned_analyses: >
+  Redundancy check first (do these features merely proxy sigma460/vol_surprise/vwap_disp_atr,
+  all already in U0 -- if so, CLOSE as redundant, consistent with every prior family's Step 0).
+  Residualized-correlation + OLS ΔR² test (same framework as R4/R5/U8) of each feature against
+  block outcome (Product-B entries) and fwd20_pnl_per_contract (Product-A scale-ins), bucket-
+  residualized by |M| tercile x vol tercile within this small sample (explicitly caveat if
+  tercile bucketing is unstable at this n). Right-tail check against whatever top-decile events
+  exist in this small sample (explicitly caveated for small-n if <20 available). Block-level
+  (session-level) bootstrap significance, per U9's frozen design -- never a naive pooled t-stat
+  treating events as independent within a session.
+
+explicitly_not_in_scope_this_run:
+  - Any candidate construction, parameter change to Product A/B, or promotion claim -- diagnostic
+    only, per directive sec39's own "may become ADAPTIVE_OVERLAY... requires... " gate, which
+    this run does not attempt to clear.
+  - Extrapolating any finding here to the pre-2025-08 history (data does not exist there).
+  - Treating this small sample's result as equivalent-strength evidence to any Track-L finding.
+
+promotion_gate: none (first-look diagnostic; even a strong result here would require the FULL
+  directive sec77 Adaptive-track gate -- multiple forward blocks, block consistency, cost/
+  parameter stability, implementability -- in a dedicated future family, not this one)
