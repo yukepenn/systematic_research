@@ -1,0 +1,121 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE any code or result.
+run_id: S2_SELTIME
+experiment_id: SYSTEM_MASTER_FINAL_DIRECTIVE
+hypothesis_id: SelTime Arm A (directive §5 S2) — fixed broad-time NEW-ENTRY eligibility.
+family: time_structure_seltime
+track: R (research) — directive §5 hard requirement, alpha budget 1 of 2 this wave (Arm B
+  screened out before freezing, see §0 below — its slot is NOT consumed).
+date_frozen: 2026-08-09
+depends_on: S0_TOD_AUTOPSY (committed 87c31bd) — S0's blocks, run BEFORE this spec was designed,
+  supply the only candidate windows considered here. No window not already in S0's frozen
+  7-block partition is introduced.
+
+# ---------------------------------------------------------------------------
+# 0. WHY ARM A ONLY — ARM B SCREENED OUT AT THE S0->S2 HANDOFF, BEFORE FREEZING
+# ---------------------------------------------------------------------------
+arm_B_disclosure: >
+  S0 flagged a striking pooled divergence: BMOM's worst block (AFTERNOON, 13:30-15:45 ET,
+  -$44,253) is Solar's best (+$53,330). Directive §5 Arm B requires eligibility be "justified by
+  repeated chronology, not one pooled P&L curve" BEFORE it is proposed as a candidate, not merely
+  gated after running. A year-by-year pre-check (descriptive only, no fitting) of BMOM's
+  AFTERNOON P&L: 2022 -$14,502, 2023 +$2,688, 2024 +$7,180, 2025 -$30,693, 2026 -$8,927 -- only
+  3 of 5 years negative, and the pooled total is dominated by a single year (2025, -$30,693, more
+  than the full pooled -$44,253). This FAILS the repeated-chronology precondition on its face.
+  Running Arm B anyway would very likely produce a foregone, uninformative fail and would waste a
+  frozen-arm slot on a candidate already known to be weak. Per §20 rule 4 ("diagnostics do not
+  automatically license policy") and the cheap-falsification instruction, **Arm B is not frozen
+  this wave**. This decision, and the exact numbers behind it, are recorded here rather than
+  silently dropped (V6 append-don't-rewrite spirit) — a future wave MAY revisit BMOM
+  eligibility with a genuinely different candidate window if one clears this same pre-check.
+arm_A_prescreen: >
+  Same pre-check applied to Arm A's candidate BEFORE freezing (not a gate, a screening bar to
+  even propose a test): Solar's EUROPE_PREUS (02:00-08:00 ET) net P&L by year: 2022 -$4,847,
+  2023 -$6,461, 2024 -$6,069, 2025 -$5,988, 2026(stub) -$5,550. **5 of 5 years negative**, tight
+  range (-$4,847 to -$6,461, no single year dominates). This clears the repeated-chronology
+  precondition decisively — the strongest possible pre-check result. Arm A is frozen on this
+  basis.
+
+# ---------------------------------------------------------------------------
+# 1. THE CONSTRUCTION — Arm A, fixed broad-time entry eligibility
+# ---------------------------------------------------------------------------
+window: EUROPE_PREUS, 02:00-08:00 ET. IDENTICAL to S0's frozen block boundary. Not optimized,
+  not perturbed to find a better cell (a ROBUSTNESS check against +-30/+-60 min perturbation is
+  run and reported per directive's promotion standard, but the DECISION CELL uses the exact S0
+  boundary and only the exact-boundary cell is eligible for a verdict).
+rule: >
+  Let T_t be the incumbent's unmodified E10 target (UNCHANGED, same object as W19R1/S0's
+  control). Define the modified position sequentially, bar by bar:
+      p'_0 = 0
+      at each bar t: if T_t and p'_{t-1} have OPPOSITE signs (a flip) or p'_{t-1}==0 and T_t!=0
+                     (a fresh entry from flat) -- i.e. T_t represents a NEW DIRECTIONAL
+                     COMMITMENT relative to the CURRENTLY REALISED (modified) position --
+                     AND the bar falls inside the eligibility-blocked window:
+                         p'_t = 0   (new entry / flip suppressed)
+                     else:
+                         p'_t = T_t (continuation in the same direction, any exit to 0, or any
+                                     entry/flip OUTSIDE the window, all pass through UNCHANGED)
+  This is sequential on the MODIFIED position p', not on the original T, so a suppressed entry
+  correctly stays suppressed for as long as T continues to demand the same blocked direction,
+  and re-evaluates the instant T exits to 0 or the window ends.
+  Existing positions established BEFORE the window began, and continuing in the SAME direction
+  during the window, are NEVER touched (this is the frozen exit logic clause: exits and
+  same-direction continuation are exit-side behavior, not new entries, and are explicitly out of
+  S2's scope per directive §5 Arm D, which is a SEPARATE, not-yet-authorized arm).
+  No optimization anywhere in this rule: the window is S0's, BETA/threshold-free (this is a hard
+  eligibility gate, not a continuous rescaling), and no per-hour free parameter exists.
+control: the unmodified incumbent (p' ≡ T everywhere). Cross-checked against the frozen
+  reference curve before any gate is read (same check as W18R1/W19R1).
+
+# ---------------------------------------------------------------------------
+# 2. GATES — directive §5 "SELTIME PROMOTION STANDARD", operationalised
+# ---------------------------------------------------------------------------
+gate_0_exposure_change_disclosure (NOT invalidation here, DISCLOSURE): >
+  Unlike W19R1's arms, Arm A is DELIBERATELY an exposure-reducing rule inside one window by
+  construction (that is what "eligibility" means) -- gate 0's invalidation framing from W19R1
+  does not apply verbatim. Instead, realised total exposure Sigma|p'| vs Sigma|T| and mean
+  contracts/day are DISCLOSED (not gated), specifically to distinguish "this helps because it
+  removes a bad window" (legitimate selectivity) from "this helps only because it de-risks
+  overall" (the M1 failure mode) -- report the ratio and let the reader judge, since directive
+  §5 explicitly authorises entry-eligibility changes as a distinct question from M1's exhausted
+  generic-de-risking family.
+gate_A_legacy_triple: Sharpe improves AND CDaR_0.95 improves AND top-10-day retention >= 95%
+  (house definition = control's top-10 dates; arm's-own-dates version also disclosed).
+gate_B_chronology: Yearly DeltaSharpe sign agreement >= 4 of 5 calendar years AND the full-sample
+  verdict must survive dropping the final 106 sessions (same standing caution as W19R1).
+gate_C_tail_preservation (directive §5 SELTIME PROMOTION STANDARD, mandatory, NEW here): >
+  top-1%-trade contribution retained >= 90%; largest-20-single-bar-move participation retained
+  >= 90%; no conversion toward long-only beta (long_pnl/short_pnl split must not move by more
+  than 15 percentage points of its control share).
+gate_D_boundary_stability (directive §5 "if 09:57-11:06 wins but 09:45-11:15 does not, kill it",
+  DISCLOSURE not a hard gate since only one boundary was pre-registered as the decision cell): >
+  Re-run the identical rule with the window widened/narrowed by +-30 and +-60 minutes on each
+  side (4 perturbations total: 01:30-08:30, 02:30-07:30, 01:00-09:00, 03:00-07:00). Report
+  Sharpe/CDaR deltas for each. If the decision cell's gate_A result does not hold direction
+  (sign of ΔSharpe and ΔCDaR) across at least 3 of the 4 perturbations, the result is a clock
+  fit, not a session mechanism, and the verdict is downgraded to REGIME-LOCAL / NOT PROMOTED
+  regardless of the decision cell's own gate outcome.
+verdict: >
+  CANDIDATE requires gate_A AND gate_B AND gate_C to pass, AND gate_D's stability check to hold
+  (>=3/4 perturbations same-direction). Anything less is CONFIRMED-NOT-BENEFICIAL or, if gate_D
+  alone fails while A/B/C pass, REGIME-LOCAL/CLOCK-FIT (a distinct, disclosed outcome per
+  directive §19's Pareto/near-miss taxonomy). No adoption into Product A/B this wave regardless
+  of outcome — a CANDIDATE earns a full capital-map + parity R2 in a later step, per §14/§15 of
+  the final directive (applied separately to Product A and Product B, since Product B has no
+  graded-sizing degree of freedom to fall back on).
+
+# ---------------------------------------------------------------------------
+# 3. DISCLOSURES
+# ---------------------------------------------------------------------------
+mandatory_disclosures:
+  - exposure ratio and contracts/day vs control (gate 0, disclosure).
+  - block-bootstrap P(DeltaSharpe>0) and P(DeltaCDaR>0), block=5, B=10000, seed=20260809.
+  - yearly table always, including on failure.
+  - D7-boundary split (2024-08-05 candidate + calendar-year convention), per the standing
+    requirement carried from W19R1's addendum.
+  - recency tiers, labelled CONTINUATION.
+  - trade-count / turnover change vs control (an eligibility rule can only reduce or hold
+    turnover in the blocked window; confirm this mechanically, not assumed).
+red_team: MANDATORY (V7 §G) — this result could change a promotion decision.
+outputs: out/daily_control.csv, out/daily_armA.csv, out/gates.csv, out/yearly.csv,
+  out/bootstrap.json, out/boundary_perturbation.csv, out/exposure_disclosure.csv,
+  out/d7_split.csv, REPORT.md
