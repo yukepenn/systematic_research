@@ -1,0 +1,157 @@
+run_id: W17_C4_COMPLIANCE
+experiment: MEGA_PROMPT_V6_WAVE17_W0_V1R3
+type: compliance_fix_not_an_alpha_trial
+date_frozen: 2026-08-09
+owner_directive: "MEGA PROMPT -- V6 AUTONOMOUS PROGRAM DIRECTIVE (owner-authored, 2026-08-09)"
+governing_sections: ["§2 C4", "§7 V1-R1/V1-R2/V1-R3/V1-R4/V1h/V1e", "§13 rule 6", "§13 rule 7"]
+
+# ---------------------------------------------------------------------------
+# THIS SPEC IS FROZEN BEFORE ANY CODE IS TOUCHED AND BEFORE ANY POST-FIX
+# NUMBER IS READ.  Per V1-R3 the fixed objects are NEW OBJECTS, not corrected
+# old ones; their metrics are NOT comparable to the pre-fix headlines.
+# ---------------------------------------------------------------------------
+
+motivation_established_before_this_spec:
+  v1_r1_product_a: >
+    AUDITED AND COMPLIANT ON NORMAL SESSIONS. SolarWaveSMMaster_v2's execution ledger
+    (runs/SMV2M_MASTER_BUILD/out/nt8/smm_v2_{bars,fills}.csv, 540,231 decision bars /
+    26,881 executions) shows tgt_ops==0 on 1138/1138 16:39 bars, phys!=0 on 962 of them,
+    962 flatten fills at 16:42, and ZERO bars with phys!=0 at 16:42 / 16:45 or anywhere in
+    the 16:45-17:00 window. Product A does NOT share the MNQ_Final defect. The $177,315 /
+    Sharpe 1.17 headline is not provisional on this ground.
+  v1_r2_root_cause: >
+    ESTABLISHED, and it is hypothesis (a) from the directive. SolarWaveOneContractMNQ_Final
+    runs its whole decision inside a `BarsInProgress == 1` (NQ signal) event but reads the
+    BARE `Position` property (== the PRIMARY/MNQ series) in PhysicalPosition(), and submits
+    orders to index 0. This is the arrangement already documented as a defect in
+    KNOWN_ERRORS_AND_CORRECTIONS.md #7 ("v1 attached to the MNQ execution instrument as
+    PRIMARY and submitted index-0 orders from signal-series (BIP1) events... the primary
+    Position did not advance between successive signal-bar decisions"). c therefore reads 0
+    on essentially every decision bar, so `if (tgt == c) return;` short-circuits EVERY
+    flatten (tgt==0==c) and NO voluntary exit order is ever submitted.
+    Falsifiable prediction stated and TESTED BEFORE this spec: if true, ~100% of MNQ exits
+    must be either a managed auto-reversal or an engine session-close backstop.
+    MEASURED: 483 reversals (30.9%) + 1,056 at 17:00 (67.6%) + 22 at holiday early-close
+    session ends (1.4%) = 100.0%. ZERO strategy-submitted voluntary exits.
+    Competing hypotheses REFUTED by data, not by argument:
+      (b) `hm` from the wrong series -- REFUTED: entryBlocked uses the same `hm` and
+          demonstrably works (last entries at 16:30 for both NQ and MNQ = a 16:27 decision).
+      (c) no execution-series bar to fill against -- REFUTED: MNQ has 1,096 bars at 16:39
+          and 1,096 at 16:42; the NQ and MNQ time-of-day grids are identical (460 slots
+          each, zero set difference), and there are 0 NQ-16:39 dates lacking an MNQ-16:42 bar.
+    The bare-`Position` read is safe in SolarWaveOneContractNQ_Final only by coincidence:
+    there BarsArray[0] and BarsArray[1] are the SAME instrument, so the primary position IS
+    the traded position.
+  v1h_premise_correction: >
+    THE DIRECTIVE'S V1h PREMISE IS FALSE, and the Wave-16 framing that produced it was mine.
+    The 16 NQ trades with exit time-of-day > 16:45 are NOT overnight positions: every one is
+    entered between 18:06 and 20:24 ET and exited between 18:39 and 23:30 ET the same
+    evening, i.e. entirely inside the post-18:00 product-open window where intraday margin
+    has already resumed. Under a correct exposure test (does the holding interval intersect
+    [session_close - 15min, 18:00)?) BEST_ONE_NQ has 0/1,975 normal-session breaches, not
+    16. "Exit time-of-day > 16:45" was the wrong test; it mis-flags evening entries at the
+    START of a session. Separately worth recording: all 16 are losses totalling ~-$33.5k.
+  v1e_the_real_breach: >
+    NEW AND PREVIOUSLY UNDOCUMENTED, and it affects ALL THREE objects including the two that
+    are compliant on normal sessions. 43 holiday early-close sessions exist in the dev window
+    (31 at 13:00 ET, 9 at 13:15, 2 at 09:15 Good Friday, 1 at 09:30 = the 2025-01-09 National
+    Day of Mourning), ~10/yr. The flatten rule is hardcoded to the NORMAL session clock
+    (hm >= 163900), so on an early-close session it NEVER fires and the position is closed
+    only by the ExitOnSessionCloseSeconds=30 engine backstop -- which fires 30 seconds before
+    the early close, i.e. ~14.5 minutes INSIDE the initial-margin window that opens 15 minutes
+    before that close. Measured breaches: Product A 38, BEST_ONE_NQ 16, BEST_ONE_MNQ 21.
+    NOTE: these 16 NQ trades are a DIFFERENT set from the 16 in v1h_premise_correction --
+    the two sets are disjoint (measured overlap: 0). The coincidence of counts is accidental
+    and is recorded here so no future reader conflates them.
+
+# ---------------------------------------------------------------------------
+hypothesis_free: true   # this is a compliance fix; no alpha hypothesis is added
+alpha_budget_consumed: 0   # per §15, compliance/execution work is uncapped and costs no alpha
+
+objects_to_build:
+  - name: SolarWaveOneContractNQ_v2
+    supersedes: SolarWaveOneContractNQ_Final
+  - name: SolarWaveOneContractMNQ_v2
+    supersedes: SolarWaveOneContractMNQ_Final
+  # _v2 not _Final: NAMING.md reserves _Final for an object that has PASSED Strategy
+  # Analyzer parity. These have not. Re-designation only after V1-R4 parity passes.
+
+changes_authorized_in_this_spec:   # exactly two, both compliance-only
+  C1_series_arrangement:
+    applies_to: SolarWaveOneContractMNQ_v2 only
+    change: >
+      Adopt the parity-proven E10Master_v2 / SolarWaveSMMaster_v2 arrangement mandated by
+      KNOWN_ERRORS #7: SIGNAL instrument on the PRIMARY series (BarsInProgress 0), EXECUTION
+      instrument as the ADDED series (index 1), position read via Positions[1], orders
+      submitted with barsInProgressIndex 1. The execution-instrument guard moves from
+      Instrument (primary) to BarsArray[1].Instrument. ATTACH-TO changes from an MNQ chart
+      to an NQ chart with ExecInstrument="MNQ 09-26".
+    rationale: >
+      §13 rule 5 (two reasonable paths -> take the lower multiple-testing cost and the more
+      falsifiable outcome). The alternative -- keep MNQ primary and read Positions[0]
+      explicitly -- is novel and unproven in this repo; this arrangement is parity-proven
+      0/540,232 decision bars on Master v2 and is the arrangement KNOWN_ERRORS #7 states as
+      a RULE. No signal, allocator, threshold or state-machine constant changes.
+    signal_math_delta_expected: NONE (identical arithmetic, identical inputs)
+  C2_early_close_aware_flatten:
+    applies_to: both objects
+    change: >
+      Replace the two hardcoded session-clock constants with session-relative equivalents
+      derived from the ACTUAL session end of the bar being decided:
+        entry block  : hm >= 163000            ->  Time >= sessionEnd - 30 min
+        forced flat  : hm >= 163900            ->  Time >= sessionEnd - 21 min
+      On a normal 17:00 ET close these evaluate to exactly 16:30 and 16:39, so behaviour on
+      all 1,095 normal sessions is UNCHANGED BY CONSTRUCTION. Only the 43 early-close
+      sessions change. The 21-minute figure preserves the existing 6-minute decision buffer
+      ahead of the 15-minute broker deadline (MARGIN_RULES.md §3.1 recommends a 5-7 minute
+      order-routing buffer); it is NOT a new tuned parameter and is NOT to be searched.
+    rationale: >
+      BROKER FACT (§7): holiday early closes do not extend intraday margin; initial margin is
+      required 15 minutes before the EARLY close. A clock-hardcoded rule cannot satisfy that.
+  explicitly_not_changed:
+    - every signal / allocator / threshold / hysteresis constant (VolMults, 179, 460, 40,
+      1200, TiltSma 50, TiltMult 1.25, TiltRescale 0.9026, WSolar 0.7086, WBmom 2.83,
+      BmomBandDays 14, EntryLevel 3.0, ExitLevel 1.0)
+    - the realtime fail-closed guard (C5)
+    - IsExitOnSessionCloseStrategy / ExitOnSessionCloseSeconds (kept as a backstop)
+    - the 16:39-equivalent buffer length (21 min) -- frozen, not searched
+
+# ---------------------------------------------------------------------------
+success_criterion:            # PRE-REGISTERED. Compliance only. NEVER P&L.
+  primary: >
+    ZERO holding intervals intersecting the per-session initial-margin window
+    [session_close - 15 minutes, 18:00 ET product open), across all 1,139 dev sessions,
+    for BOTH objects, measured on the real NT8 Strategy Analyzer trade list.
+  measurement: runs/W17_C4_COMPLIANCE/src/c4_audit.py (the same exposure test used above)
+  pass_bar: exactly 0 breaches. Not "fewer". Not "materially fewer".
+  pnl_treatment: >
+    The net-P&L delta versus the pre-fix objects is REPORTED IN FULL and is NEVER a selection
+    input. Per §13 rule 7 and the directive's own V1-R3 text: if the compliant version earns
+    less -- which is the expected direction, since the broken MNQ object was capturing the
+    final hour of 1,056 sessions -- that is the true cost of the constraint and is ACCEPTED.
+    Under no circumstance is the 21-minute buffer moved later to recover P&L.
+  comparability: >
+    Post-fix MNQ is a NEW OBJECT. Its numbers are not comparable to the $28,900.70 headline
+    and must never be presented as a corrected version of it.
+
+mandatory_followups:
+  - V1-R4: full NT8 Strategy Analyzer re-parity for BOTH objects. The existing BEST_ONE_NQ
+      PASS (99.49% trade-exact, corr 0.9990, net delta 0.13%) was certified on the OLD
+      configuration and does NOT carry over, even though normal-session behaviour is
+      unchanged by construction -- the object is new, so the certification is new.
+  - Product A: SolarWaveSMMaster_v2 and SolarWaveSMOneLot_v1 carry the SAME early-close
+      defect (C2), though NOT the arrangement defect (C1). State this explicitly in the
+      REPORT. Propagation of C2 to Product A is required by §12's propagation rule and is
+      scheduled in this run if NT8 compilation is available, else parked in OWNER_QUEUE.md.
+
+known_blocking_risk: >
+  Building either object requires NT8 to rebuild NinjaTrader.Custom.dll. WriteNinjaScriptFile
+  makes a best-effort reflection trigger and may return compile_engine="file_only", in which
+  case an owner F5 / NT8 restart is needed. Per §16 that does NOT halt the wave: the source is
+  committed, the item is parked in OWNER_QUEUE.md, and work continues on everything else.
+
+outputs:
+  - src/ninjascript/SolarWaveOneContractNQ_v2.cs
+  - src/ninjascript/SolarWaveOneContractMNQ_v2.cs
+  - runs/W17_C4_COMPLIANCE/src/c4_audit.py
+  - runs/W17_C4_COMPLIANCE/REPORT.md
