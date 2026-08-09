@@ -1,0 +1,71 @@
+run_id: U4_SHORT_MECHANISM
+family: U4 (short-side mechanism science)
+directive: "CONTINUOUS SYSTEM EVOLUTION -- UNIFIED PRODUCT A/B ALPHA + POLICY DISCOVERY, 2026-08-09, sec4/sec60, U4 branch"
+date_frozen: 2026-08-09
+author: autonomous research campaign (continuation, post SYSTEM_SCIENCE_20260809 closure)
+
+purpose: >
+  Diagnostic/measurement-instrument pass on WHY the short side of Product B
+  (SolarWaveOneContractNQ_v5/MNQ_v5) and Product A (SolarWaveSMMaster_v4) is structurally
+  weaker than the long side (SA0 sec14: Sharpe 0.18 vs 1.54 for B; PA0: Sharpe 0.40 vs 1.38
+  for A), and specifically whether some OBSERVABLE causal state distinguishes crisis/trend
+  shorts worth holding from snapback-prone exhausted shorts worth de-risking faster. Explicit
+  goal per directive: find WHICH state separates these, not conclude "never short." Extends
+  SA0 sec15's entry-only nearest-neighbor matched-control test (which found NO separation,
+  matched-winner-rate 43% vs unconditional 41.8%) to a MULTI-CHECKPOINT trace along each
+  trade's own path (entry / +15min / +30min / first M-decay signal / first fast-Solar reversal
+  / pre-worst-bar) -- the new thing SA0 sec15 could not resolve with entry-only matching.
+
+scope: >
+  Product-B short blocks (block_id_B where position_B==-1) and Product-A short blocks
+  (block_id_A where target_exposure_A<0), read from the already-certified, already-correctness-
+  gated `runs/U0_UNIFIED_STATE/out/u0_state_table.parquet` (540,232 bars, 2022-01-03..2026-07-31).
+  Canonical-window (is_health_only_bar==False, through 2026-05-29) results are the primary/only
+  formal findings; the 2026-06-01..2026-07-31 health-only extension is reported separately,
+  observational only, per directive sec34 -- never blended into any chronology verdict or
+  separation statistic. Data >=2026-08-01 remains sealed (research/operational/LOCKED_FORWARD.md)
+  and is not read (U0 itself already excludes it).
+
+data_reuse: >
+  Zero new CrossTrade/NT8 calls. Zero new backtest engine or pricing logic -- every dollar
+  figure, block boundary, MFE/MAE/giveback, and action-state label is read directly from U0's
+  already-certified columns. This family adds only NEW DESCRIPTIVE FEATURES computed causally
+  on top of U0's existing causal columns (all using only data at-or-before the row's own bar):
+  prior-selloff magnitude (sign-flipped ret_20/close_slope_20_atr, already causal in U0),
+  downtrend age (consecutive prior bars with M<0 / fast_member<0, new causal run-length feature
+  built here), recent V-reversal frequency (count of sign(M) flips in the trailing 20/40 bars
+  before a given bar, new causal rolling feature built here). P0's exact two named April-2026
+  short blocks (block_id 3743 / 3757 in P0's own S2_SELTIME-substrate numbering, entries
+  2026-04-06 21:42:00 and 2026-04-12 18:06:00, `runs/P0_TRADESTATE_AUTOPSY/out/
+  block_level_summary.csv`) are matched into U0's own block_id_B numbering by exact entry
+  timestamp match, not by assuming the integer block_id carries over.
+
+analysis_plan: >
+  (1) Build short-focused entry-state feature tables for Product-B and Product-A short blocks.
+  (2) Multi-checkpoint matched analysis: trace state at entry / +15min(5 bars) / +30min(10 bars)
+  / first M_change-against-position bar / first fast_member-against-position bar / bar-before-
+  worst-single-bar-move, for the bottom-20 short losers, top-20 short winners, and the two
+  P0-matched blocks (both products); compare loser vs winner checkpoint distributions.
+  (3) Right-tail check: does any checkpoint-based separation found in (2), read as a hard filter,
+  exclude any of the largest all-time short winners (both products)? This is the most important
+  check in the family given the standing right-tail-blindness pattern (R4 CLV, R5 direction_x_
+  volume, R1, R3 weak-M-tercile all independently failed this same check).
+  (4) Chronology (2022/2023/2024/2025/2026-canonical, reported year by year) + June-July-2026
+  health-only extension reported separately, for whichever checkpoint finding is strongest.
+  (5) Verdict: promote a NOT-YET-TESTED de-risk-speed policy idea (prose only) ONLY if a state
+  survives (2)+(3)+(4); otherwise report "no separation found" as the finding itself.
+
+explicitly_not_in_scope_this_run:
+  - Any change to Product A (SolarWaveSMMaster_v4) or Product B (SolarWaveOneContractNQ_v5/
+    MNQ_v5) construction, weights, or thresholds.
+  - Any backtested/constructed trading rule -- verdict section (if reached) is prose-only,
+    explicitly labeled NOT YET TESTED.
+  - Any NT8/CrossTrade MCP call.
+  - Any git operation (add/commit/push) -- orchestrating session commits after reviewing all
+    parallel U-families together.
+  - Black-box ML of any kind -- interpretable statistics only (Spearman, OLS via
+    np.linalg.lstsq, bucket residualization, nearest-neighbor/bucket matching), per directive
+    sec26-27.
+
+promotion_gate: none this run (diagnostic; a future family would need its own preregistration
+  if this one surfaces a usable state, per directive's own standing discipline)
