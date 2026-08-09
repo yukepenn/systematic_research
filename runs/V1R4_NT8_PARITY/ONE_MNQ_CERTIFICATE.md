@@ -73,6 +73,19 @@ directive's own priority ordering: the higher-value, cross-object DEFECT 3 findi
 (2) Full multi-year net-profit certification, same CrossTrade long-job limitation as the other two
 certificates — an infrastructure ceiling, not a correctness question.
 
+## Full-history chunked certification + 5-session reopen (2026-08-09, third continuation)
+
+All 4.5 years now covered via 7 chunked NT8 jobs (see `FULL_HISTORY_CERTIFICATION.md`); NT8
+$30,052.60 vs Python $28,783.40 (+4.41%), same 2 disclosed mechanisms as BEST_ONE_NQ. Separately,
+all 5 historically-named sessions (2025-04-07, 2025-04-09, 2025-04-11, 2025-11-18, 2026-04-08)
+were reopened against real, current `_v5` NT8 output: **every one shows exact leg-level
+decision agreement** (matching timestamps and sides, only the standard 1-tick fill difference).
+The OLD 0.8996 daily-correlation finding was traced to `SolarWaveOneContractMNQ_Final.cs` — a
+materially different, already-superseded object with a confirmed cross-series order-arrangement
+defect (100% forced exits, zero voluntary exits, per `PRODUCTB_ONECONTRACT_FINAL/REPORT.md`) —
+not something that reproduces on the current object. This closes the 5-session gap: it does not
+apply to `_v5`.
+
 ## Final verdict
 
 **CERTIFIED for the event-level decision mechanism** (inherits BEST_ONE_NQ's full leg-by-leg proof

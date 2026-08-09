@@ -107,6 +107,14 @@ proven correct on every tested window. The concrete next step for a future sessi
 warmup-preserving quarterly stitching (per FINAL_OWNER_DECISION §10) to accumulate a full-history
 net-profit comparison, now that the decision layer itself is known to be exact.
 
+## Full-history chunked certification (2026-08-09, third continuation, same wave)
+
+All 4.5 years (2022-01-03 → 2026-05-29) now covered via 7 chunked NT8 jobs, no gaps, no
+duplicated evaluation P&L. Trade count matches Python to within 1 in every single block. Full
+detail: `runs/V1R4_NT8_PARITY/FULL_HISTORY_CERTIFICATION.md`. Net-profit totals: NT8 $316,442.72
+vs Python $303,880.28 (+4.13%), fully consistent with (not proven beyond) the same 2 disclosed,
+non-defect conventions found on the Q1-2025 window.
+
 ## Final verdict
 
 **CERTIFIED for the event-level decision mechanism** (Q1-2025 spot-check window, fixed object

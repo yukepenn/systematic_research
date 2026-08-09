@@ -185,15 +185,52 @@ one-contract-constrained.
 | C4 day-only overlay | CME/broker initial-margin compliance on the 43 holiday early-close sessions | `runs/W17_C4_COMPLIANCE/`: 39 real breaches under the pre-fix hardcoded clock, 0 under the session-relative fix | a single hardcoded 16:30/16:39 clock (fails on early closes, the exact defect this fixes) |
 | S2_SELTIME EUROPE_PREUS entry block | **NOT adopted** — see §0 | red-team-downgraded CANDIDATE, benefit not shown mechanism-specific or dollar-stable | — |
 
-### Performance battery
-Canonical dev window 2022-01-03 → 2026-05-29. **Python replica**: net **$175,798.80**, 16,241
-trades, C4-compliant (0/39 breaches). Full Sharpe/maxDD/CDaR battery **not restated for v3**
-anywhere in the repo — the last complete battery (Sharpe 1.17, maxDD −$18,894, CDaR₀.₉₅
-−$14,905) is on v2 (pre-C4-fix) and must not be quoted as v3's own number. A separate,
-differently-scoped Python twin (`SMV2M_MASTER_BUILD/twin.py`, the pre-C4-fix hardcoded-clock
-formula, used for this wave's Q1-2025 NT8 spot-check) shows Sharpe 1.19 / maxDD $16,821 /
-CDaR₅ $14,151 over the full dev window — cited here as a secondary cross-check, not a
-replacement for the v3-exact battery, which remains an open item.
+### Performance battery — CURRENT `_v4` EXACT BATTERY (2026-08-09, this wave, closes the prior gap)
+Canonical dev window 2022-01-03 → 2026-05-29, 1,139 sessions. Source: `runs/S2_SELTIME/out/r2/
+daily_A_incumbent.csv` — the SAME Python twin used for this wave's S2 R2 adjudication, which
+already implements the DEFECT-3-fixed, data-driven `bmom_pos_series()` (flat_hm-based EOD
+flatten), i.e. this battery IS `_v4`'s exact current logic, not a stale `_v2`/`_v3` number:
+
+| metric | value |
+|---|---:|
+| Net profit | **$177,924.40** |
+| Sharpe | **1.1770** |
+| Sortino | 2.3371 |
+| Calmar | 2.2896 |
+| EOD MaxDD | $17,192.90 |
+| CDaR95 (top 5% avg drawdown) | $14,323.08 |
+| Worst day | −$7,408.60 |
+| Worst month | −$7,495.50 |
+| Worst quarter | −$14,596.30 |
+| Worst rolling 60-session | −$14,890.10 |
+| Longest time-under-water | 133 sessions (median recovery 4, p95 recovery 62.4) |
+| Positive day / week / month % | 44.2% / 56.1% / 62.3% |
+| Top-10-day P&L sum | $111,142.60 (62.5% of net) |
+| Turnover | 36,794 total contracts, 32.3 avg contracts/session |
+| Capital needed (1× stress, 20% DD threshold, bootstrap) | $254,709 |
+| 2-tick cost stress | Sharpe still positive under stress (d_sharpe_stressed +0.0207 vs the
+  S2 arm in the R2 comparison — see `runs/S2_SELTIME/R2_PRODUCT_A.md` for the full stress table) |
+
+This is the number to cite for Product A going forward — it supersedes the previously-disclosed
+gap ("not restated for v3") and the v2/pre-C4-fix figures below, retained only as historical
+cross-checks, never as `_v4`'s own number.
+
+**Historical, superseded reference points (do not quote as current):** v2 (pre-C4-fix) full
+battery: Sharpe 1.17, maxDD −$18,894, CDaR₀.₉₅ −$14,905. A separate, differently-scoped Python
+twin (`SMV2M_MASTER_BUILD/twin.py`, the pre-C4-fix hardcoded-clock formula, used for the original
+Q1-2025 NT8 spot-check) showed Sharpe 1.19 / maxDD $16,821 / CDaR₅ $14,151 over the full dev
+window — neither is `_v4`'s own number; both are superseded by the table above.
+
+**Fresh NT8 executable check on `_v4` (2026-08-09, this wave):** Q1-2025 net-profit spot-check
+(NT8 warmed from 2024-04-01, entry-time trade filter): NT8 $12,011.30 vs the same Python twin's
+Q1-restricted net $11,688.40 — **2.76% residual**, wider than `_v3`'s originally-certified 0.71%
+on a differently-scoped comparison. Not yet driven to a full leg-by-leg proof (Product A's
+continuous multi-contract position sizing makes that materially more expensive to construct than
+it was for the binary one-contract objects), but the trade count (932 in this one quarter alone,
+~10× BEST_ONE_NQ's) makes the same already-quantified 1-tick fill-price convention (worth ~$0.50
+per MNQ leg) plausible as the full explanation on its own — a $322.90 gap over ~1,800+ legs is
+within that envelope. Disclosed as an open item, not smoothed over: full leg-level proof for
+Product A specifically is a scoped next step, not completed this pass.
 **2026-stub (106 sessions)**: Solar leg alone +$6,079 / Sharpe +0.456; of Product A's ~$9k
 resilience edge over the plain control there, +$7,243 is the fitted c1_50 constant (not
 diversification) and +$1,721 is the tilt.

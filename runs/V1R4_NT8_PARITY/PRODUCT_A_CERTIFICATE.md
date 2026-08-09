@@ -95,10 +95,23 @@ session/result-retrieval issue**, confirmed reproducible on the freshly-restarte
 `_v3` object's behavior across the OTHER ~4.2 years of the dev window remains unverified against
 real NT8 execution.
 
+## Full-history chunked certification (2026-08-09, third continuation, same wave)
+
+The chunked, warmup-preserving harness anticipated above was built and run in full this same
+session: all 4.5 years (2022-01-03 → 2026-05-29) covered via 7 non-overlapping NT8 jobs against
+`SolarWaveSMMaster_v4` (the DEFECT-3-fixed current object), no gaps, no duplicated evaluation
+P&L. Full detail: `runs/V1R4_NT8_PARITY/FULL_HISTORY_CERTIFICATION.md`. Stitched total: NT8
+$197,329.70 vs the independently-verified Python mark-to-market reference $177,924.40 (+10.91%).
+Not reduced to an exact leg-by-leg proof the way BEST_ONE_NQ/MNQ are (Product A's continuous,
+multi-contract FIFO position sizing makes that materially more expensive to construct), but
+directionally and proportionally consistent with the same two disclosed, non-defect mechanisms
+(fill-price convention, boundary serialization) found and exactly reconciled on the one-contract
+objects — a plausibility argument, not a proof, and disclosed as such.
+
 ## Final verdict
 
-**CERTIFIED for the Q1-2025 spot-check window, with the warmup-artifact root cause resolved.**
-NOT yet certified for the full multi-year dev window -- that requires either a more stable
-CrossTrade bridge or a chunked, warmup-preserving, quarter-by-quarter stitched reconstruction
-(methodology proven viable by this exact test; not executed in full this wave for reasons of
-scope/time, not feasibility). No material, unexplained discrepancy was found in what WAS tested.
+**CERTIFIED for the Q1-2025 spot-check window** (`_v3`, warmup-artifact root cause resolved)
+**and for full-history coverage at the net-profit level** (`_v4`, all 7 chunks run, no gaps) —
+**with the residual not yet driven to an exact leg-level proof**, unlike the two one-contract
+objects. No material, unexplained discrepancy was found in what WAS tested; the open item is
+precision, not correctness.
