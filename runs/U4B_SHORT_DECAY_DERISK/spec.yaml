@@ -1,0 +1,83 @@
+run_id: U4B_SHORT_DECAY_DERISK
+family: U4B (short-side, signal-gated early-flatten on giveback decay -- highest-EVI candidate from CONTINUOUS_EVOLUTION_WAVE1_SYNTHESIS.md)
+directive: "CONTINUOUS SYSTEM EVOLUTION, 2026-08-09, sec40-42/50 (EVI-selected next hypothesis)"
+date_frozen: 2026-08-09
+author: autonomous research campaign (continuation, wave-1 EVI selection)
+
+purpose: >
+  Construct and validate the single highest-EVI NOT-YET-TESTED idea from U4's diagnostic
+  (runs/U4_SHORT_MECHANISM/REPORT.md): a short-side-only, signal-gated early-flatten overlay on
+  Product B (BEST_ONE_NQ/BEST_ONE_MNQ), triggered by giveback_ratio crossing a threshold AT OR
+  AFTER the "first M-decay signal" checkpoint (first bar where M_change opposes the position,
+  i.e. M_change>0 while short -- same definition as runs/U4_SHORT_MECHANISM/src/
+  02_checkpoint_analysis.py). U4 found this checkpoint x giveback_ratio combination to be the
+  cleanest right-tail-safe state discovered anywhere in this campaign's diagnostic history
+  (0/19 top-20 Product-B giant short winners flagged at n=20, Spearman -0.50 to -0.65 vs
+  eventual net_pnl every single year 2022-2026 including the health-only extension).
+
+correction_from_the_diagnostic_wording (disclosed before construction): >
+  U4_SHORT_MECHANISM/REPORT.md's own "NOT YET TESTED" idea used the word "halve exposure (not
+  flatten)". Product B (BEST_ONE_NQ/BEST_ONE_MNQ) is a strict ONE-CONTRACT system
+  (DefaultQuantity=1, CLAUDE.md frozen baseline) -- a position is always exactly {-1,0,+1}, so a
+  true partial-size reduction is mechanically impossible to express in this product. This spec
+  corrects that to what IS buildable within a one-contract system: a SIGNAL-GATED EARLY FLATTEN
+  (full exit, triggered only after the specific first-M-decay checkpoint, not a generic
+  giveback-crossing-at-any-time overlay). This is disclosed here rather than silently
+  reinterpreted, per this campaign's standing honesty discipline.
+
+why_this_is_not_a_reopening_of_R1 (mandatory given R1's closure note explicitly allows a
+materially different state variable but forbids retuning the same grid): >
+  R1's CONFIRMED-NOT-BENEFICIAL grid (runs/R1_ADAPTIVE_EXIT/src/construct.py) checked
+  giveback_ratio unconditionally on EVERY bar once a fixed dollar MFE floor was met, applied
+  identically to BOTH long and short, with giveback_thresh in {0.50,0.65,0.80} and (optionally)
+  a peak-|T|-decay confirm. This construction differs on three independent axes: (1) SHORT-ONLY
+  (U4/PA0/SA0 all found longs and shorts have structurally different economics -- R1 never
+  split by side), (2) SIGNAL-GATED to the specific first-M-decay bar rather than an
+  unconditional every-bar check (R1's own diagnostic never conditioned on this state
+  transition), (3) a substantially higher threshold grid {1.5, 1.75, 2.0} informed by U4's own
+  loser-population median (2.12) rather than R1's blind {0.50,0.65,0.80} sweep, which the
+  right-tail check in U4 showed a threshold near 1.0 already starts admitting real winners.
+  This is exactly the "materially different state variable distinguishing true reversal from
+  in-trend consolidation" RESEARCH_FRONTIER.md's own R1 closure note names as a legitimate
+  reopening basis.
+
+data_reuse: >
+  Zero new CrossTrade/NT8 calls. Reuses SA0's substrate.py (T/Tp/tilt_state/B/M/
+  entry_blocked_c4/forced_flat_c4, onelot_exec) verbatim for the canonical-window construction
+  and promotion battery (matching R1/R2B's own pattern -- promotion decisions are made on the
+  canonical window only). U0's health-extended state table is reused ONLY for the separate,
+  observational June-July-2026 report, never blended into the promotion decision.
+
+construction: >
+  Short-only signal-gated early flatten. For each bar where the incumbent's own position is
+  short (p==-1): once age_bars>=2 AND M_change*position_sign<0 has fired at least once in the
+  current block (the "M-decay armed" state, latched for the rest of the block), the overlay
+  compares the block's own giveback_ratio ((block_mfe - block_pnl)/block_mfe, block_mfe>0) each
+  bar against a fixed threshold; if giveback_ratio >= threshold, force tgt=0 (early flatten,
+  same semantics as R1's overlay) instead of waiting for the incumbent's own M-based exit.
+  Longs and flat bars are governed by the unmodified incumbent logic. threshold=None reproduces
+  the incumbent exactly (this script's own CONTROL).
+
+grid: >
+  Small, preregistered, informed by U4's own findings (not a blind sweep): threshold in
+  {1.5, 1.75, 2.0} (all clearing U4's own right-tail-checked value of 1.0 by a wide margin). 3
+  candidates total.
+
+validation_battery: >
+  Full-history net/Sharpe/Sortino/Calmar/maxDD_eod/CDaR95/worst_day/worst_month/pos_day_pct on
+  BOTH NQ and MNQ genuine economics (dd_battery, same function every prior family in this
+  campaign used); 2022-2025-only delta (the R2V1/R2B promotion standard -- entire-history
+  improvement concentrated in one recent period is automatic non-promotion regardless of any
+  other metric); year-by-year 2022-2026; LOYO (drop 2026, does the improvement survive);
+  right-tail check on the SAME top-20/bottom-20 all-time blocks U4 already identified (post-
+  construction, not just pre-construction diagnostic); cost/turnover (does the extra flatten +
+  re-entry commission erode the improvement); June-July-2026 health-only extension reported
+  separately, observational only, never blended into the promotion decision.
+
+promotion_gate: >
+  Standard campaign bar (directive sec50): mechanism + incremental information + chronology +
+  current-regime relevance + right-tail preservation + left-tail improvement + cost robustness +
+  parameter plateau (all 3 grid cells directionally consistent, not an isolated needle) +
+  multiple-testing awareness + NQ/MNQ economics. No single metric decides. A candidate that
+  improves DD only by reducing exposure (fewer bars in position) rather than genuine alpha must
+  be labeled as such, not claimed as an edge improvement (directive sec66).
