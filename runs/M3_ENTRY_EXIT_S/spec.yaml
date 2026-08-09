@@ -1,0 +1,96 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE any code or result.
+run_id: M3_ENTRY_EXIT_S
+experiment_id: SYSTEM_MASTER_FINAL_DIRECTIVE
+hypothesis_id: directive §6 M3 — entry-S != exit-S at the member state-machine level.
+family: state_machine_shape
+track: R (research) — alpha budget 1 of 2 this wave.
+date_frozen: 2026-08-09
+
+# ---------------------------------------------------------------------------
+# 0. A MECHANISTIC FACT ABOUT THE INCUMBENT THAT THIS SPEC DEPENDS ON, VERIFIED BEFORE
+#    FREEZING (empirically, on a 5,000-bar sample, not fitted to any P&L outcome)
+# ---------------------------------------------------------------------------
+incumbent_reentry_mechanics: >
+  `sm01_solarsim.member_trades` already contains a FLAT state per member (pos can be 0), and
+  empirically a fast member (VolMult=10) is flat 58.7% of bars on a 5,000-bar sample. The exit
+  check (`p==1 and close[t]<=xl`) and the re-entry check (`p==0 and flip[t]!=0`) are mutually
+  exclusive WITHIN THE SAME BAR (`decided` flag) — so when a trend flip fires while a position is
+  open, ONLY the exit is queued that bar; the member does NOT reverse directly into the opposite
+  side. It only re-enters at bar `t+1` if `flip[t+1]!=0` — i.e. THIS SAME flip pulse cannot both
+  close the old position and open the new one; the member must wait for the NEXT flip pulse to
+  re-enter, and if price chops back before that next pulse, it can even re-enter in the SAME
+  direction it just exited (verified in the 5,000-bar sample: bar 40 long, 153 exit, 220 long
+  again — not short — because the intervening flip at 152 only closed the position, and the next
+  flip at 219 happened to be another up-flip). **This is an existing, load-bearing vendor-faithful
+  property, not a bug, and not something this spec introduces.** It means the incumbent ALREADY
+  has a "harder to establish a new directional state" gap between exit and re-entry — M3's
+  question is whether WIDENING that gap (via a genuinely separate, larger entry threshold) while
+  independently controlling the exit threshold improves the trade-off, not whether to invent the
+  gap from nothing.
+
+# ---------------------------------------------------------------------------
+# 1. THE CONSTRUCTION
+# ---------------------------------------------------------------------------
+mechanism: >
+  Split the single per-trend S into two independently-scaled series, both derived from the SAME
+  causal sigma460 base (no new estimator, no new data source):
+    S_entry(t) = clamp(ENTRY_MULT * VolMult * sigma460[t], 40t, 1200t)   -- governs the underlying
+      is_up/anchor/flip state machine (member_states), i.e. WHEN a new trend is recognized at all,
+      which in turn governs WHEN a member is even eligible to re-enter (per §0's mechanics).
+    S_exit(t)  = clamp(EXIT_MULT  * VolMult * sigma460[t], 40t, 1200t)   -- governs ONLY the
+      position-exit check inside member_trades (`xl = anchor -+ S_exit`), i.e. HOW FAR price must
+      move against an open position before it is closed. Frozen at the SAME bar as S_entry (both
+      captured together at trend birth) so the two never desynchronize mid-trend.
+  ENTRY_MULT=1.0, EXIT_MULT=1.0 MUST reproduce `sm01_solarsim.member_states`/`member_trades`
+  EXACTLY (bit-identical fills, positions, P&L) — verified as a hard assertion before any grid
+  cell is scored (§4).
+grid: >
+  Bounded, preregistered, 3x3 = 9 cells (a plateau search, not a peak search, per directive §6):
+  ENTRY_MULT in {1.0, 1.25, 1.5}  (>=1 only — "harder to establish", never easier)
+  EXIT_MULT  in {0.75, 1.0, 1.25} (both tighter and looser than incumbent, since directive frames
+    exit as "preserving or improving", not fixed at 1.0)
+  (1.0, 1.0) is the control cell, included in the grid for the parity assertion, not a separate run.
+  No cell outside this 3x3 grid is run under any circumstance this wave.
+scope: applied at the MEMBER level, across all 13 incumbent VolMult values, then aggregated
+  through the UNCHANGED E10 layer (round(10*mean(member pos)), clamp +-10) — the aggregation
+  itself is not touched by this hypothesis.
+
+# ---------------------------------------------------------------------------
+# 2. GATES
+# ---------------------------------------------------------------------------
+gate_A_legacy_triple: Sharpe improves AND CDaR_0.95 improves AND top-10-day retention >= 95%
+  (house = control's dates).
+gate_B_chronology: yearly ΔSharpe sign agreement >= 4/5 AND survives excising final 106 sessions.
+gate_C_plateau (directive §6, mandatory): the best cell must not be isolated — at least 3 of its
+  up-to-8 grid neighbors (Chebyshev-adjacent cells in the 3x3 grid) must ALSO individually pass
+  gate_A's Sharpe-and-CDaR direction (not necessarily the full AND-rule with top10, just sign
+  agreement on both prongs). An isolated single-cell optimum is REJECTED regardless of its own
+  gate_A/B result, per directive: "If the optimum is an isolated cell, reject it."
+gate_D_decomposition (directive §6, mandatory disclosure, not a pass/fail gate): flip count,
+  false-reversal rate (a flip immediately followed by an opposite flip within 5 bars), trade
+  count, winner participation (top-50-bar retention), top-10-day retention, winner give-back
+  (peak-MTM-to-exit ratio on top-decile position-blocks), maxDD/CDaR, trade expectancy — every
+  cell, every year, pre/post the D7 boundary (2024-08-05, disclosed as a candidate boundary per
+  the standing weak-identification caution).
+verdict: CANDIDATE requires gate_A AND gate_B AND gate_C on the best cell. No adoption this wave;
+  a CANDIDATE earns a capital-map + parity R2 later. If the best cell is isolated (gate_C fails),
+  record REGIME-LOCAL/ISOLATED-OPTIMUM, not CONFIRMED-NOT-BENEFICIAL (the mechanism may still be
+  real but not exploitable at any specific pair).
+
+# ---------------------------------------------------------------------------
+# 3. WHAT THIS IS NOT
+# ---------------------------------------------------------------------------
+not_M4: does not touch the anchor definition (still close-based). Not combined with ATR or the
+  high/low anchor per §17 program discipline ("no two weak things combined until they pass").
+not_allocator_hysteresis: the SM14 (3,1) allocator hysteresis is a SEPARATE, ensemble/E10-level
+  concept and is untouched here — this spec operates entirely inside member_states/member_trades,
+  before the E10 aggregation.
+
+# ---------------------------------------------------------------------------
+# 4. VALIDATION
+# ---------------------------------------------------------------------------
+parity_assertion: ENTRY_MULT=1.0, EXIT_MULT=1.0 cell reproduces the unmodified incumbent
+  bit-for-bit (fills, pos array, daily P&L) — hard assert, run STOPS if this fails.
+red_team: MANDATORY (V7 §G) if any cell reaches CANDIDATE.
+outputs: out/grid_metrics.csv, out/gates.csv, out/decomposition.csv, out/yearly_by_cell.csv,
+  out/parity_assertion.json, REPORT.md
