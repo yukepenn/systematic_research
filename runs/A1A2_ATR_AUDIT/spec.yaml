@@ -1,0 +1,96 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE any code or result.
+run_id: A1A2_ATR_AUDIT
+experiment_id: SYSTEM_MASTER_FINAL_DIRECTIVE
+hypothesis_id: directive §7 A1 (drawdown complementarity) + A2 (where ATR adds information).
+family: atr_reframing
+track: R (research) — DIAGNOSTIC pair, not a new alpha hypothesis (reuses the CLOSED, frozen
+  ATR-75/25 construction exactly as-is; asks a different question of the SAME evidence). Alpha
+  budget 0 — directive §19/§21 classifies ATR as PARETO/near-miss, not reopening the weight
+  search; A3 (§ below) is the only piece that could consume budget, and only if licensed.
+
+# ---------------------------------------------------------------------------
+# 0. WHAT IS AND IS NOT BEING REOPENED
+# ---------------------------------------------------------------------------
+closed_status_unchanged: >
+  ATR 75/25 (SMV2AI/AJ_ATR_BLEND, W18R2_M5_XINST) is CLOSED as a Sharpe/CDaR-improving weight —
+  Gate A prong 2 (P(ΔCDaR>0)=0.753 < 0.85 bar) FAILS, and cross-instrument replication also fails
+  (new-instruments-only 0.8223/0.7108). w=0.75 is FROZEN, taken exactly as published in
+  `runs/SMV2AJ_ATR_BLEND_R2/`. No refit, no new weight, no new instrument re-derivation anywhere
+  in this spec. This run reuses `runs/SMV2AJ_ATR_BLEND_R2/out/curves.csv` (portfolio-level,
+  DAYONLY_DUAL6040) and rebuilds the Solar-only leg from the same run's saved raw targets
+  (`tgt_control_raw_dev.npy`, `tgt_blend75_raw_dev.npy`) — no re-simulation of the blend itself.
+new_question: >
+  Not "does ATR improve headline Sharpe/CDaR" (answered, closed, no). Instead: (A1) does ATR
+  actually help on the SPECIFIC paths the owner cares about — worst days/weeks, drawdown episodes,
+  joint Solar+BMOM loss weeks — or does it merely raise average-case Sharpe elsewhere while being
+  irrelevant or harmful exactly where it matters? (A2) using ONLY non-P&L market-state variables,
+  is ATR's advantage (wherever it exists) concentrated precisely where close-to-close sigma460
+  understates true intrabar noise? A2 is a genuine falsification test, not a rhetorical one — it
+  can come back "no", and if it does, A3 does not run (§3).
+
+# ---------------------------------------------------------------------------
+# 1. A1 — DRAWDOWN COMPLEMENTARITY AUDIT (directive §7 A1, full list)
+# ---------------------------------------------------------------------------
+a1_construction: >
+  DUAL_CONTROL / DUAL_BLEND75 daily curves from `SMV2AJ_ATR_BLEND_R2/out/curves.csv` (already
+  computed, not re-simulated). Solar-only leg reconstructed via `sm01_solarsim.e10_target` +
+  `e10_exec` on the saved raw target arrays (no re-simulation of member states/sigma/ATR).
+a1_metrics: >
+  daily ΔPnL, weekly ΔPnL; performance on DUAL_CONTROL's worst 1% and worst 5% days (by
+  DUAL_CONTROL's own ranking, not the blend's); performance during DUAL_CONTROL's drawdown
+  episodes (contiguous EOD-drawdown-positive runs) and its CDaR_0.95 tail-episode session set;
+  performance during JOINT Solar+BMOM loss weeks (weeks where BOTH the Solar leg's own weekly net
+  AND BMOM's own weekly net are negative — the exact "joint-loss" condition the program's
+  unifying diagnosis names, `SYSTEM_SCORECARD.md:66-78`); maxDD path overlap (do the two curves'
+  drawdown episodes coincide in time, or does ATR's own path diverge into new episodes);
+  time-under-water; recovery time; CES (mean of the worst 5% single-day losses, already CDaR's
+  definition, cross-referenced); fraction of DUAL_CONTROL's large-loss days (below its 10th
+  percentile) improved vs worsened by the blend; whether any improvement traces to fewer flips,
+  smaller losses, better exits, or altered winners (member-level flip-count diff, not inferred);
+  top-winner retention specifically INSIDE the stress periods above (not full-sample, which is
+  already known from the closed gate D).
+
+# ---------------------------------------------------------------------------
+# 2. A2 — WHERE DOES ATR ADD INFORMATION (directive §7 A2, non-PnL variables only)
+# ---------------------------------------------------------------------------
+a2_variables (all computed from bars/sigma460/ATR arrays, NEVER from strategy P&L — the D5 rule,
+  same discipline D7 used): >
+  intrabar range / |Δclose| ratio (the literal quantity ATR-vs-sigma460 measures — R =
+  ATR/sigma460, already saved per W18R2's construction); wickiness ((high-low) - |close-open|,
+  normalised by range); flip rate (member-level, per session); path efficiency (as S0's
+  definition, reused verbatim); time-of-day (S0's 7-block partition, reused, NOT re-derived);
+  volatility state (sigma460 percentile, expanding); clamp binding rate (ensemble-level, as
+  reconciled in Wave 19); D7 pre/post split (2024-08-05 candidate boundary, calendar-year
+  convention alongside).
+a2_test: >
+  For each session, define `R_dev = ATR/sigma460 - 1` (how much intrabar noise exceeds
+  close-to-close noise that session, mean over the session's bars). Split sessions into
+  HIGH_R_DEV (top tercile) / MID / LOW_R_DEV (bottom tercile) by this PURELY MARKET variable.
+  Compare DUAL_BLEND75 − DUAL_CONTROL daily ΔPnL across the three terciles. THE MECHANISM CLAIM,
+  pre-registered: if ATR helps, the improvement should concentrate in HIGH_R_DEV sessions. A
+  roughly FLAT improvement across terciles, or improvement concentrated in LOW_R_DEV, FALSIFIES
+  the mechanism (ATR would be adding value for a reason OTHER than correcting understated
+  intrabar noise, which the directive says should make the NQ-only result "more suspicious", not
+  license a conditional rule).
+falsification_pregistered: >
+  If A2's HIGH_R_DEV tercile does NOT show the largest positive mean ΔPnL of the three (with
+  bootstrap uncertainty reported, not just the point estimate), A2 returns NO and A3 (§3) does
+  NOT run this wave — record the closed status as reinforced, not merely unrevisited.
+
+# ---------------------------------------------------------------------------
+# 3. A3 — CONDITIONAL ATR (directive §7 A3, ONLY IF A2 LICENSES IT)
+# ---------------------------------------------------------------------------
+a3_gate: A3 is written and run ONLY if A2's falsification test above passes (HIGH_R_DEV tercile
+  shows the largest, bootstrap-supported positive ΔPnL). If it does, the conditional rule is: use
+  the ATR blend ONLY on HIGH_R_DEV sessions (tercile threshold frozen from A2's OWN market-only
+  split, not re-optimized), sigma460 alone otherwise. At most this ONE bounded conditional spec.
+  If A2 fails, this section is not executed and the run closes at A1+A2.
+
+outputs: out/a1_worst_days.csv, out/a1_worst_weeks.csv, out/a1_dd_episodes.csv,
+  out/a1_joint_loss_weeks.csv, out/a1_summary.json, out/a2_tercile_test.csv,
+  out/a2_bootstrap.json, out/a3_conditional.csv (only if A2 licenses it), REPORT.md
+red_team: NOT mandatory (V7 §G — diagnostic proposing no promotion unless A3 runs and passes,
+  in which case red team becomes mandatory for A3's cell only). Self-check required: A1's
+  DUAL_CONTROL curve must reproduce `SMV2AJ_ATR_BLEND_R2/out/curves.csv`'s DUAL_CONTROL column
+  exactly (it is not re-simulated, only re-read, so this is a file-integrity check, not a parity
+  proof).
