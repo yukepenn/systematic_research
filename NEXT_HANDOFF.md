@@ -1,3 +1,8 @@
+> **⚠️ This is the ORIGINAL campaign's audit handoff (2026-08-07), not a live resume point.**
+> For the current campaign's exact resume state see
+> **`research/system_master/NEXT_HANDOFF.md`** (same filename, different campaign — easy to
+> open the wrong one). Repo orientation: **[`MAP.md`](MAP.md)**.
+
 # NEXT_HANDOFF — POST_CAMPAIGN_AUDIT_01 + post-audit waves complete; CONVERGENCE
 
 _2026-08-07. Superseding note: after the audit passed, three further preregistered

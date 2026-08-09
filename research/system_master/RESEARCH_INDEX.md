@@ -1,5 +1,15 @@
 # RESEARCH_INDEX — map of the evidence base (2026-08-08)
 
+> **⚠️ Staleness note (added 2026-08-09, no rows below edited):** this index was written early
+> in wave-1 (registry seq ~357) and its "V2 wave-1" / "V1 record" split has NOT been updated for
+> waves 2-15 (seq now 442+). Some entries below are themselves now wrong as a result — e.g.
+> `CONVENTIONS.md` and `SM13_BMOM_DECAY_RULE.md` are listed under "V1 record (superseded
+> framing)" but are in fact still ACTIVE, binding documents (verified directly against this
+> session's own wave-11-15 work, which cites both). **Do not trust this file's categorization
+> over `CURRENT_TRUTH.md`** — if the two disagree about whether something is current, believe
+> `CURRENT_TRUTH.md`. Left uncorrected here rather than silently re-edited, per the "append,
+> don't rewrite" convention — see `MAP.md` at repo root for a version-independent map instead.
+
 ## Read first
 START_HERE.md → CURRENT_TRUTH.md → SYSTEM_SCORECARD.md
 

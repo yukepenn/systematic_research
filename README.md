@@ -1,3 +1,11 @@
+> **⚠️ This describes the ORIGINAL Solar Wave campaign only (closed 2026-08-07).**
+> Two further campaigns have run since and are now the active work:
+> **`research/system_master/CURRENT_TRUTH.md`** (SYSTEM_MASTER — portfolio + one-contract
+> construction, active, updated continuously) and **`research/scalping_lab/CAMPAIGN_STATE.md`**
+> (short-horizon scalp search, phase complete). For overall repo orientation start at
+> **[`MAP.md`](MAP.md)**. This file is kept exactly as the original campaign left it — its own
+> content below is accurate for what it covers, just not the whole repo anymore.
+
 # NQ Solar Wave campaign — START HERE
 
 _Status: **CLOSED** at the formal stop condition, 2026-08-07. Last integrity audit: 2026-08-07._
