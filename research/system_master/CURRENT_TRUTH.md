@@ -1,7 +1,26 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4.1 wave-15 (SMV2AK volume bars — CLOSED). Supersedes the
-"FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+_Last update: 2026-08-08, Product B one-contract final deliverable (NQ parity PASSED, MNQ
+parity pending). Supersedes the "FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the
+V1 record)._
+
+## Product B one-contract final deliverable (runs/PRODUCTB_ONECONTRACT_FINAL/, orchestrator-
+## executed directly, no alpha changes)
+Built `SolarWaveOneContractNQ_Final.cs` / `SolarWaveOneContractMNQ_Final.cs` (behavior-
+preserving SM14 seq-318 refactor). **BEST_ONE_NQ: Strategy Analyzer parity PASSED** (99.49%
+trade-exact, daily corr 0.9990, net Δ 0.13% — reproduces the prior research-filename check
+almost exactly). **BEST_ONE_MNQ: genuinely backtested via real Strategy Analyzer for the
+first time ever** (net $28,900.70/Sharpe 0.921/1,561 trades), trade-level match excellent
+(99.42%), but formal parity against the current Python reference misses the bar (daily corr
+0.8996, net Δ 0.78%) — diagnosed, not a Final-file defect: the Python reference used for EVERY
+prior "1 MNQ" number in this entire program fills at NQ-scaled prices, not genuine MNQU6
+prints (a known residual class, documented precedent in EVIDENCE_MAP_RAW.md for a different
+product). Full metric battery (Sharpe/Sortino/Calmar/CDaR/ES/EDaR/worst-week/month/quarter/
+TUW/positive-%) and capital maps (historical + 1.25/1.5/2.0x stress, bootstrap band across 3
+methods) computed for both instruments on the real NT8 numbers. Fixing MNQ's reference needs
+genuine MNQ price data — attempted via GetBars this run, returned empty, root cause
+undiagnosed, flagged as the concrete next step. BEST_ONE_CONTRACT_OVERALL not yet selected
+(MNQ unresolved). Full detail: `runs/PRODUCTB_ONECONTRACT_FINAL/REPORT.md`.
 
 ## Wave-15 verdict (spec 6633114; red-team CONFIRMED-with-corrections — 3 disclosure-
 ## completeness corrections, zero numeric — verdict unaffected)

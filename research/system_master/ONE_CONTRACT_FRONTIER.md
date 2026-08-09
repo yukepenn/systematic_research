@@ -93,6 +93,25 @@ joint replacement per its letter; its per-instrument results feed per-instrument
 specs if the joint gate fails but one instrument dominates. BEST_ONE_CONTRACT_OVERALL is
 selected only after both instrument products are resolved.
 
+## Product B final deliverable progress (2026-08-08, runs/PRODUCTB_ONECONTRACT_FINAL/)
+`SolarWaveOneContractNQ_Final.cs` and `SolarWaveOneContractMNQ_Final.cs` built (behavior-
+preserving refactor of the SM14 seq-318 rule, no alpha change; execution-instrument guard +
+parameter logging + 1-contract hard cap added). NQ Strategy Analyzer parity **PASSED**
+(99.49% trade-exact, corr 0.9990, net Δ 0.13% — matches SolarWaveSMOneLot_v1's own prior
+passed check almost exactly). MNQ was run through Strategy Analyzer for the **first time
+ever** in this program (net $28,900.70, Sharpe 0.921, 1,561 trades — trade-level match 99.42%)
+but formal parity against the current Python reference **misses** the bar (daily corr 0.8996,
+net Δ 0.78%) — diagnosed cause: the Python reference used for every prior "1 MNQ" figure in
+this program (including this page's own SM14-reference row below) fills MNQ at NQ-scaled
+prices, not genuine MNQU6 price prints, a known residual class (EVIDENCE_MAP_RAW.md's
+E10Master precedent: "MNQU6 and NQU6 carry different back-adjust offsets... never mix the two
+bases without this tolerance"). This is the first time this approximation has been visible for
+SM14 specifically, since MNQ was never actually backtested before. Full metric battery +
+capital maps computed on the real NT8 numbers for both instruments regardless (see REPORT.md).
+**Next step**: rebuild the MNQ Python reference on genuine MNQ price data (blocked this run —
+`GetBars` returned empty for MNQ 09-26 despite `RunStrategyBacktest` clearly having the data;
+root cause not yet diagnosed).
+
 ## SMV2S (seq 386-388): HTF-gated dominant KILLED — frontier PAUSED
 Second consecutive family kill. Center thr5: gate A P(dSharpe)=0.64, P(dCDaR)=0.48 (<0.85);
 gate B retention 0.841 vs 0.90 HARD bar (improved from A-dominant's 0.772 — the mechanism
