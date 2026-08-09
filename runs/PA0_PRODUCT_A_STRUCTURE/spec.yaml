@@ -1,0 +1,59 @@
+run_id: PA0_PRODUCT_A_STRUCTURE
+family: "PA0/PA1 -- Product A structural decomposition + sizing research (SYSTEM ARCHITECTURE
+  SCIENCE MEGA DIRECTIVE sec29-34)"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: 2026-08-09
+
+scope: >
+  Product A (SolarWaveSMMaster_v4, continuous M in [-13,13] MNQ contracts). First dedicated
+  Product-A structural study of this campaign -- prior post-parity work (SA0, R1-R6) was Product
+  B only, per directive sec29's explicit instruction. Solar13/HTF/B-MOM building blocks are the
+  SAME construction as Product B (SA0's findings on member diversity, HTF net contribution, and
+  B-MOM's structural tiebreaker role transfer directly and are NOT re-derived here) -- this run
+  is scoped to what is GENUINELY DIFFERENT about Product A: continuous sizing, the c1_50
+  short-halving overlay, rounding, the +-13 clamp, and exposure-transition dynamics.
+
+reference_object: >
+  Verbatim reuse of runs/S2_SELTIME/src/r2_battery.py's product_a_exec() function (KSolar=
+  0.728654, KBmom=2.934159, TiltRescale=0.9026, TiltMult=1.25, ShortHalf=0.5) -- the same Python
+  twin BASELINE_MODELS.md cites for Product A's exact current battery (net $177,924.40, Sharpe
+  1.1770). Correctness gate: this run's own substrate must reproduce that net exactly before any
+  analysis proceeds.
+
+PA0_sec30_alpha_vs_sizing: >
+  Decompose Product A's performance into: (a) DECISION ALPHA -- a sign-only, 1-contract proxy
+  (trade sign(M) at exactly 1 MNQ contract, same entry/exit timing) that isolates directional
+  correctness from position sizing; (b) SIZING CONTRIBUTION -- the incremental effect of scaling
+  beyond 1 contract (M's actual magnitude); (c) ROUNDING/CLAMP CONTRIBUTION -- compare the actual
+  rounded-and-clamped M against a hypothetical continuous (unrounded, unclamped) exposure at the
+  same KSolar/KBmom weights, holding decision logic fixed. Risk-normalized comparisons (Sharpe,
+  Sharpe-per-unit-average-|exposure|) throughout, not raw dollar comparisons alone (directive's
+  explicit caution against calling lower dollar DD "better alpha" when it is merely less exposure).
+
+PA0_sec31_exposure_path: >
+  Classify every position-change bar into transition classes: 0->+k (fresh long), +k->larger +k
+  (scale in), +k->smaller +k but still + (scale out), +->0 (flat exit), +->- (reversal), and the
+  mirrored short-side classes. For each class: frequency, incremental bar-level P&L, churn cost
+  (commission), year-by-year. Explicitly test: are initial contracts more valuable than later
+  scale-in contracts (compare P&L attributable to the first unit of exposure vs incremental
+  units)? Does late scale-in occur near local exhaustion? Is the +-13 cap binding usefully or
+  harmfully (frequency and P&L of bars where |M|>=13)?
+
+PA0_sec33_long_short_asymmetry: >
+  Same long/short battery Product B received in SA0 (net/Sharpe/trade count/win rate/MaxDD
+  contribution/CDaR contribution/year-by-year), applied to Product A's continuous exposure
+  (long = bar_pos>0, short = bar_pos<0).
+
+PA1_sizing_candidate_gate: >
+  Per directive sec32: "Keep alpha score fixed. Only if diagnostics support it, test a tiny
+  preregistered family of simple exposure mappings." A candidate is constructed ONLY IF PA0's
+  own diagnostics show a clear, actionable, multi-year-stable inefficiency in the current
+  linear-rounding sizing mapping (e.g. late scale-in demonstrably occurring near exhaustion, or
+  the clamp demonstrably binding harmfully) -- not merely because sizing research is generically
+  interesting. If no such finding, PA1 closes without construction, same discipline as R4/R5/R6.
+
+explicitly_not_in_scope: >
+  Re-deriving Solar13/HTF/B-MOM findings already established in SA0 (reused by reference).
+  Any live-trading implication. A full leg-by-leg NT8 re-certification (Product A's parity
+  status is unchanged by this diagnostic work).
