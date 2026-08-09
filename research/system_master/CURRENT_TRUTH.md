@@ -1,5 +1,120 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+_Last update: 2026-08-09, **Wave-18** (MEGA PROMPT V7). Registry at seq 462.
+Wave 18 consumed **both** permitted alpha hypotheses (§15 cap = 2): M1 and M5. Both closed
+negative. Ten consecutive alpha hypotheses have now closed without a promotion — the §15
+shift signal is **live** and is addressed in the Wave-18 section below. The deflation-adjusted
+view of the incumbent is **unchanged** (standing: DSR 0.45–0.55 against a 0.90 bar;
+Harvey–Liu-adjusted Sharpe of the incumbent's key comparison = 0.000)._
+
+## Wave-18 verdict (MEGA PROMPT V7, seq 459-462; runs/W18R1_M1_VOLSEASON + runs/W18R2_M5_XINST)
+
+**The first wave in this program's V6/V7 era to run mechanism tests. Both failed, and both
+failed informatively.** V7 §B's hard floor (≥1 Track-R spec frozen and run per wave) is met
+with two.
+
+**1. M1 — intraday volatility seasonality. arm_FULL FAILS 0/3 gates. The premise was
+confirmed; the implementation of it was not.** The pre-registered falsification test was
+decisively *not* triggered: `r_s = mean(|Δclose|/sigma460)` by 3-minute time-of-day slot spans
+**0.372 (00:00 ET) to 4.105 (09:33 ET), an 11.04× spread** against a 1.5 bar, across 460 slots
+each with ≥200 bars. The incumbent's threshold really is mis-scaled by an order of magnitude
+across the day. But `arm_FULL` (sigma_adj = sigma460 × f, E[f]=1) fails every gate: Sharpe
+0.5577 vs 0.7092, CDaR₀.₉₅ $35,498 vs $27,162, top-10-day retention **80.5%** vs a 95% floor.
+
+**Root cause, measured rather than asserted, and it invalidates the spec's own claim.**
+`S` is resampled **only at trend birth**, and flips concentrate in high-`f` slots:
+**E[f | flip bar] = 1.536** against **E[f | all bars] = 1.000**. So mean `S` rises from 122.4
+to 201.3 points (**+64%**) and member flips fall **46% in every cohort**, including overnight
+where the mechanism was meant to *tighten*. The spec's statement that "because E[f]=1 this is a
+pure re-allocation, the average threshold is unchanged" is **FALSE** — correction filed in the
+run REPORT, never in the frozen spec (C6). `arm_FULL` is, by accident, partly a repeat of the
+already-closed clamp-widening axis (SMV2AD/AG). **The null is therefore CONDITIONAL** on this
+estimator and this application point, and saying otherwise would be dishonest.
+
+**2. D4 (merged into M1 per V7 §C-2) — a selectivity result in its own right.** Incumbent P&L
+by cohort: EVENING (18:00–23:59 ET) **26.0% of bars, −9.2% of P&L, net −$10,989**; OVERNIGHT
+(00:00–08:59) 39.4% / +28.0%; RTH (09:00–16:59) 34.6% / **+81.2%**. Two-thirds of the clock
+produces one-fifth of the money and the evening third loses. Independent of M1.
+
+**3. M5 — ATR-blend cross-instrument replication. PARTIAL, which is pre-registered as NOT a
+pass.** `arm_BLEND_75` (w = 0.75 frozen, no weight search) rebuilt on ES/RTY/YM 2022-2026 with
+NQ as a KNOWN control. Sign agreement **2 of 3** new instruments (ES +0.0377/+5.75%, RTY
++0.0334/**+0.35%**, YM −0.0094/−1.84%) passes; pooled joint-date block bootstrap gives
+P(mean ΔSharpe>0) = **0.9108 PASS** but P(mean ΔCDaR_ratio>0) = **0.7841 FAIL** against 0.85.
+
+**The important number:** Wave 14 closed this lead having failed the *same prong* at **0.753**
+on NQ alone, and diagnosed it as a power problem. Adding three instruments and **ESS 3.68 of 4**
+of genuinely independent evidence moved that prong only to **0.784**. The power hypothesis has
+now been tested and rejected. `arm_BLEND_75` stays CLOSED on two independent grounds and the
+ATR/range family is closed for good.
+
+**Two things a reader must carry from M5.** (i) **ES, RTY and YM all LOSE money** under this
+construction (Sharpe −0.045 / −0.633 / −0.563 vs NQ's +0.838) — only the paired *increment*
+replicates, the system does not port, and per C2 none of them may ever be a traded leg.
+(ii) The **diff-series** cross-correlation is **0.029** while raw P&L correlates at **0.677** —
+the mechanism's increment is nearly independent across instruments, which is why ESS is 3.68
+and why the CDaR failure carries real weight.
+
+**4. E-1 — the June/July 2026 window is CONSUMED, and V7 §E's premise is false.** Reported
+directly per §18. `runs/SM11_HOLDOUT_READ` read exactly **2026-06-01 → 2026-07-31** on
+**2026-08-08**, 45 sessions, six finalists scored and published (F1 SOLAR +$60,150 …
+F5 PORT_TILT_532 +$45,833), with per-finalist daily vectors committed and registry seq 315. The
+pre-registration order was verified independently by git, not taken on trust
+(`FINAL_PACKAGE_SPEC.md` added at 03:58:02, SM11's report at 04:00:03 the same morning). The
+campaign self-declares consumption in ~10 further artifacts, and the owner authorised the read
+ex ante. **V7 §E-2 is therefore inapplicable — there is nothing left to seal.** Full evidence:
+`research/system_master/HOLDOUT_DETERMINATION_20260809.md`. Scope correction carried there:
+`LOCKED_FORWARD.md` is a campaign-#1/#2 artifact and on its own establishes only that the
+window was already dirty *before* SYSTEM_MASTER started; SM11 is what consumed it for
+SYSTEM_MASTER, **including for B-MOM and B1**, which `CONVENTIONS.md:23-28` had correctly noted
+were still clean until then.
+
+**5. §F warmup standard — and a correction to my own Wave-17 statement.** Measured, the Solar
+leg re-synchronizes from a cold start in **2, 3 and 4 sessions** (fresh runs at 2023-01-03 /
+2024-01-02 / 2025-01-02, target vectors compared bar-for-bar against the continuation;
+0.16%/0.21%/0.62% of bars disagree). **Not ~460 bars.** §8b below attributes the start-state
+gap primarily to `sigma460` warming over ~460 bars; that is wrong for the Solar core, because
+`member_states` is a self-synchronizing directional-change machine and `sigma_series` uses an
+**expanding** mean for t ≤ 460 so sigma is never absent, only noisier. **The binding constraint
+is the HTF tilt**: `sign(session close − SMA50)` with `shift(1)` is undefined until **51
+complete prior sessions**, and it is exact rather than asymptotic. This re-explains the Wave-17
+gap correctly — a fresh 2026-01-01 run has **no tilt for its first 51 sessions**, about half the
+Jan→May window. Standing rule: `research/system_master/WARMUP_STANDARD.md` (continuation basis
+mandatory; discard ≥60 sessions from any fresh run; every Strategy Analyzer comparison must
+state both start date and warmup convention).
+
+**6. A record defect found while answering E-1, reported not tidied.** §8b below cites "a
+from-scratch reproduction of **$75,449.60** on the nominally identical 2026-01-01→2026-08-07
+window". A repo-wide search finds **no committed artifact** supporting that figure and **no run
+with a `to` date of 2026-08-07**. Either a backtest was run into the locked-forward window and
+never committed, or the figure was recorded in error; the record cannot discriminate. The
+figure is **not deleted** (C7) but is marked **UNVERIFIED — DO NOT CITE**, the "$2,575 gap" is
+withdrawn as an open research question, and a precautionary entry has been opened in the new
+LOCKED-FORWARD ACCESS LEDGER in `HOLDOUT_DETERMINATION_20260809.md`. Registry seq 458 itself
+stops at 2026-07-31 and is clean; the defect is confined to the §8b prose.
+
+**7. §15 shift signal is LIVE.** With M1 and M5 closed, ten consecutive alpha hypotheses have
+closed without a promotion. Per §15 that is a signal to change what is being searched, not to
+search harder in the same space. The two highest-information findings of this wave both point
+the same way and neither is an exposure idea: **D4's cohort structure** (the evening third of
+the clock loses money and is 26% of bars) is a *selectivity* target, and **M1's root cause**
+(the threshold is set once at trend birth and then frozen) says the Solar core's
+**S-resampling rule**, not its sigma estimator, is the untouched surface. Every closed
+core-challenge in this program has varied what sigma *measures* (ATR blend), what clock it is
+measured on (1m, volume bars), or where the clamp sits (fixed, adaptive). **None has varied
+when `S` is sampled.** That is the ranked lead going into Wave 19.
+
+**Still open after Wave 18** (unchanged from Wave 17 unless noted): V1-R4 full NT8 re-parity for
+both `_v4` objects — until it passes they stay `_v4`, not `_Final`; propagation of the
+early-close + watchdog fixes to Product A (39 breaches) and `SolarWaveSMOneLot_v1`; V1g
+intraday-path capital map; V5 MNQ bar-by-bar fill audit; O1 blind repair (in progress this wave,
+Track E) and the O2 retro-scoring it blocks. **Withdrawn from the open list:** the $2,575
+reconciliation (see 6).
+
+---
+
+_Wave-17 section follows. Registry was at seq 453 at that time._
+
 _Last update: 2026-08-09, **Wave-17** (MEGA PROMPT V6). Registry at seq 453.
 Wave 17 added **ZERO new alpha hypotheses** — every item was compliance, diagnostic,
 execution or verification work, which §15 leaves uncapped and which costs no alpha budget.
@@ -100,6 +215,29 @@ wherever those tiers are shown. It also further weakens the already-retracted 20
 claim — that figure is not even invariant to how the backtest is started.
 **Still unexplained:** the $2,575 gap between the owner's $78,024.60 and a from-scratch
 reproduction of $75,449.60 on the nominally identical 2026-01-01→2026-08-07 window.
+
+> **CORRECTION APPENDED 2026-08-09 (Wave 18, seq 461-462). Two defects in the paragraphs
+> above. Nothing is deleted; read the original text with these corrections attached.**
+>
+> **(a) The $75,449.60 figure has no provenance and the "$2,575 gap" is withdrawn.** A
+> repo-wide search finds no committed artifact containing it and no run with a `to` date of
+> 2026-08-07. Either a backtest was run into the LOCKED-FORWARD window (≥2026-08-01) and never
+> committed, or the number was recorded in error — the record cannot discriminate. Status:
+> **UNVERIFIED — DO NOT CITE**. It is removed from the open-questions list, because chasing a
+> figure with no provenance is not research. A precautionary entry is open in the
+> LOCKED-FORWARD ACCESS LEDGER in `HOLDOUT_DETERMINATION_20260809.md`. The $78,024.60 is the
+> owner's own Strategy Analyzer number, supplied conversationally, and is not a repo read.
+>
+> **(b) The stated cause of the start-state gap is wrong for the Solar core.** "sigma460 warms
+> from scratch (~460 bars)" implies the Solar leg is the slow part. Measured, it converges in
+> **2–4 sessions** (seq 462): `member_states` is a self-synchronizing directional-change machine
+> and `sigma_series` uses an **expanding** mean for t ≤ 460, so sigma is never absent, only
+> noisier — 460 is the window length, not the convergence time. The binding constraint is the
+> **HTF tilt at 51 sessions** (`sign(session close − SMA50)` with `shift(1)`), which is exact
+> rather than asymptotic. A fresh 2026-01-01 run therefore has **no tilt at all** for roughly
+> half the Jan→May window. The *conclusion* of §8b — that a sliced year and a fresh-start year
+> are different objects, and that every recency tier is a CONTINUATION number — **stands
+> unchanged and is if anything strengthened**. Standing rule: `WARMUP_STANDARD.md`.
 
 **8a. RED TEAM (seq 454-457; full verdicts in `runs/W17_C4_COMPLIANCE/red_team/`).** Four
 independent adversarial reviews, all **CONFIRMED-WITH-CORRECTIONS**, none REFUTED, 46 defects
