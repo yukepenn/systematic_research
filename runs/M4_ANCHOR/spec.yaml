@@ -1,0 +1,73 @@
+# IMMUTABLE preregistered run spec — written and committed BEFORE any code or result.
+run_id: M4_ANCHOR
+experiment_id: SYSTEM_MASTER_FINAL_DIRECTIVE
+hypothesis_id: directive §6 M4 — high/low anchor vs close anchor.
+family: state_machine_shape
+track: R (research) — alpha budget 2 of 2 this wave (paired with M3).
+date_frozen: 2026-08-09
+
+# ---------------------------------------------------------------------------
+# 0. WHAT THIS IS NOT REDISCOVERING — PRIOR RESULT, READ BEFORE FREEZING
+# ---------------------------------------------------------------------------
+prior_result: >
+  H-008 (pre-SYSTEM_MASTER, original campaign): raw High/Low anchor REJECTED, Sharpe 0.527,
+  "the ladder chases wicks" (`CAMPAIGN_STATE.md:143-144`, `research/frontier.yaml:168-169`). A
+  close-CONFIRMED variant PASSED standalone but was judged redundant with an existing rule in
+  that campaign's architecture. This spec is NOT a fresh idea — it is a replication of a rejected
+  and a passed-but-redundant construction under the CURRENT SYSTEM_MASTER architecture (13-member
+  VMS 6-30 ensemble, current dev window, current E10/dual-HTF/B-MOM aggregation, none of which
+  existed in the same form when H-008 ran). Replication under changed surrounding architecture is
+  legitimate; searching for a new blend weight until one passes is not, and none is done here.
+
+# ---------------------------------------------------------------------------
+# 1. THREE CELLS, NO BLEND-WEIGHT SWEEP
+# ---------------------------------------------------------------------------
+cells: >
+  CONTROL (incumbent, close anchor): anchor tracks running max(close) while up / min(close) while
+    down; reversal test is close[t] < anchor-S (up) / close[t] > anchor+S (down). Unchanged.
+  HILO_RAW (replicates H-008's raw construction): anchor tracks running max(high) while up /
+    min(low) while down ("true excursion origin" per directive §6); reversal test uses the SAME
+    intrabar series — low[t] < anchor-S (up) / high[t] > anchor+S (down). Anchor resets to the
+    triggering intrabar extreme (low/high) at flip, matching the incumbent's own
+    reset-to-triggering-price convention.
+  CLOSE_CONFIRMED (the directive's "at most one blended form" — a MECHANISTIC blend, not a
+    numeric weight): anchor origin uses intrabar extrema (SAME as HILO_RAW: max(high)/min(low)),
+    but the reversal test is CONFIRMED by CLOSE (close[t] < anchor-S / close[t] > anchor+S), not
+    by the intrabar touch. This is the two things directive §6 separately names — "where S is
+    measured from" (intrabar) and avoiding "meaningless reversals" (close confirmation) — combined
+    with NO numeric weight to choose or sweep. Anchor resets to close[t] at flip (matching
+    incumbent semantics: reset to the price that triggered confirmation).
+  No fourth cell. No weight parameter anywhere in this spec.
+scope: member level, all 13 incumbent VolMult values, unchanged E10 aggregation. S itself
+  (VolMult x sigma460, clamped 40-1200t) is COMPLETELY UNCHANGED — this spec touches ONLY where
+  the anchor is placed and what confirms a reversal, never how large S is (directive's explicit
+  distinction from ATR: "ATR changes how large S is. High/low anchor changes where S is measured
+  from"). Not combined with ATR or M3's entry/exit split this wave (directive: "no two weak
+  things combined until they pass").
+
+# ---------------------------------------------------------------------------
+# 2. GATES (same battery as M3, for direct comparability)
+# ---------------------------------------------------------------------------
+gate_A_legacy_triple: Sharpe improves AND CDaR_0.95 improves AND top-10-day retention >= 95%.
+gate_B_chronology: yearly ΔSharpe sign agreement >= 4/5 AND survives excising final 106 sessions.
+gate_C_tail_preservation: top-1%-bar retention >= 90%, top-20-move retention >= 90%, long-share
+  drift <= 15 percentage points (same construction as S2's gate C).
+gate_D_flip_decomposition (disclosure, not pass/fail): flip count vs control, false-reversal rate
+  (opposite flip within 5 bars), per year, pre/post D7 boundary — directly tests directive §6's
+  "may reduce meaningless reversals without suppressing genuine trends" claim mechanically, not
+  just via the P&L outcome.
+verdict: CANDIDATE requires gate_A AND gate_B AND gate_C on whichever of HILO_RAW/CLOSE_CONFIRMED
+  is being scored (each cell judged independently against CONTROL — this is not a grid search, no
+  plateau gate applies since there is no continuous parameter). If HILO_RAW fails (expected, per
+  H-008) that does not preclude CLOSE_CONFIRMED passing, and vice versa. No adoption this wave.
+
+# ---------------------------------------------------------------------------
+# 3. VALIDATION
+# ---------------------------------------------------------------------------
+parity_assertion: CONTROL cell (unchanged anchor logic, implemented via the same code path shape
+  as HILO_RAW/CLOSE_CONFIRMED for apples-to-apples comparison) reproduces
+  `sm01_solarsim.member_states`/`member_trades` bit-for-bit — hard assert, run STOPS if it fails.
+red_team: MANDATORY (V7 §G) if either cell reaches CANDIDATE.
+outputs: out/parity_assertion.json, out/daily_control.csv, out/daily_hilo_raw.csv,
+  out/daily_close_confirmed.csv, out/gates.csv, out/yearly.csv, out/flip_decomposition.csv,
+  REPORT.md
