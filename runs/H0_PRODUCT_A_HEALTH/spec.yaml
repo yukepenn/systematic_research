@@ -1,0 +1,71 @@
+run_id: H0_PRODUCT_A_HEALTH
+family: "H0 -- Product-A current-regime health, future-readiness (mirrors CURRENT_EDGE_HEALTH.md's
+  Product-B panel; SYSTEM_MASTER continuous-evolution phase, post-U0)"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: 2026-08-09
+
+scope: >
+  DIAGNOSTIC ONLY. Build the Product-A equivalent of research/system_master/CURRENT_EDGE_HEALTH.md
+  (Product B's current-health panel) -- same structure, same rigor, same epistemic discipline
+  (canonical vs current-regime windows kept mechanically separate; percentile-based health flags
+  with thresholds fixed BEFORE computing the current reading). Also builds a Product-A-vs-Product-B
+  current-health comparison doc (correlation, tail overlap, exposure-state overlap, matched
+  mechanistic examples, diversification verdict). No candidate construction, no parameter changes,
+  no recommendation to alter either product. Zero NT8/CrossTrade calls.
+
+data_reuse: >
+  100% reuse of runs/U0_UNIFIED_STATE/out/u0_state_table.parquet (540,232 bars, 2022-01-03 ..
+  2026-07-31, already correctness-gated on ingestion -- U0_UNIFIED_STATE/out/u0_recon.json). No
+  new backtest engine, no new decision logic, no new pricing convention. Product-A columns used:
+  target_exposure_A, M_A_raw, action_A, block_id_A, age_bars_A, run_pnl_A_dollars, MFE_A_dollars,
+  MAE_A_dollars, giveback_A_dollars, giveback_ratio_A, bar_pnl_A_dollars. Product-B columns (doc 2
+  only): bar_pnl_B_nq_dollars, position_B, action_B, block_id_B, MFE_B_dollars, MAE_B_dollars,
+  giveback_B_dollars. Identity/regime columns: sess_date, year, is_health_only_bar, session_phase,
+  is_rth, M, B, HTF_tilt_state, T.
+
+two_windows: >
+  Canonical dev window 2022-01-03..2026-05-29 (is_health_only_bar==False, 1,139 sessions) is the
+  ONLY window used for any figure that must reconcile against a certified/promotion-gated number
+  (PA0's REPORT.md, BASELINE_MODELS.md's $177,924.40). Health-only extension 2026-06-01..2026-07-31
+  (is_health_only_bar==True, 45 sessions) is OBSERVATIONAL ONLY, reported separately, never blended
+  silently into a canonical figure. Every windowed table in the output reports both, plus a full-
+  history (canonical + extension) row explicitly labeled as such.
+
+correctness_gate: >
+  Before any analysis: groupby sess_date sum of bar_pnl_A_dollars restricted to
+  is_health_only_bar==False must equal $177,924.40 (tolerance $1) -- U0's own build-time gate,
+  re-asserted here independently against the parquet file this run actually reads. STOP if it
+  fails; do not proceed on a broken join.
+
+deliverable_1: >
+  research/system_master/CURRENT_EDGE_HEALTH_PRODUCT_A.md. Session-level P&L + dd_battery
+  (Sharpe/Sortino/Calmar/maxDD_eod/CDaR5/worst_day/worst_month/pos_day_pct) for FULL-HISTORY /
+  PRE-2026 / 2026-YTD(thru Jul-31) / LATEST-20 / LATEST-60 / LATEST-120 / ANALOGS, each a separate
+  row. Monthly + quarterly 2026 net P&L. Rolling 20/60/120-session dashboard (net, Sharpe,
+  expectancy/trip, trip win-rate, avg-win/avg-loss, turnover, long/short split, current DD +
+  underwater duration) with historical-percentile context on every rolling reading. Exposure-band
+  P&L contribution + scale-in vs fresh-entry contribution, reconciled against PA0's sec31 findings
+  (scale-in ~7x fresh, monotonic band ordering) on the canonical window, and tested for continuation
+  vs breakage in the June-July extension. Tail-arrival (top-10/20-day net share, giant-winner block
+  frequency) with historical-percentile context. 8 edge-health indicators, thresholds fixed before
+  computing readings (reusing CURRENT_EDGE_HEALTH.md's own percentile scale: >50th HEALTHY, 25-50th
+  NORMAL_WEAK_REGIME, 10-25th WATCH, 5-10th POSSIBLE_DECAY, <5th STRUCTURAL_BREAK_EVIDENCE; non-
+  percentile indicators use their own stated-in-advance logic). One overall assessment, skeptical
+  tone, no promotional framing.
+
+deliverable_2: >
+  research/system_master/PRODUCT_A_VS_B_CURRENT_HEALTH.md. Session-level daily-return correlation
+  (full-history + rolling-60) between Product A and Product B-NQ. Losing-day conditional
+  probability, drawdown-episode overlap, tail-day (top/bottom 20) overlap. Bar-level
+  sign(target_exposure_A) vs position_B agreement/active-disagreement rate (both nonzero bars
+  only). 4-6 concrete matched sess_date examples (A-wins/B-loses, B-wins/A-loses, both-lose-badly)
+  with mechanistic one-paragraph explanations grounded in the actual state (M, T, B-MOM, HTF tilt)
+  on those sessions. A "what actually diversifies" verdict backed by the above evidence, not
+  assertion.
+
+explicitly_not_in_scope: >
+  Any candidate construction or parameter change to Product A or Product B. Any live-trading
+  implication. NT8/CrossTrade re-certification. Modifying runs/U0_UNIFIED_STATE/ or any file
+  outside this run dir and the two named .md deliverables. Any git operation (the orchestrating
+  session commits this work).
