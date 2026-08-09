@@ -1,8 +1,32 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
-_Last update: 2026-08-08, end of V4.1 wave-14 (SMV2AJ ATR-blend R2 confirmation — CLOSED,
-closest miss of any R2 in this program). Supersedes the "FINAL" framing of V1 docs
-(FINAL_NQ_SYSTEM.md remains the V1 record)._
+_Last update: 2026-08-08, end of V4.1 wave-15 (SMV2AK volume bars — CLOSED). Supersedes the
+"FINAL" framing of V1 docs (FINAL_NQ_SYSTEM.md remains the V1 record)._
+
+## Wave-15 verdict (spec 6633114; red-team CONFIRMED-with-corrections — 3 disclosure-
+## completeness corrections, zero numeric — verdict unaffected)
+**SMV2AK_VOLUME_BARS (seq 438-442) — CONFIRMED-NOT-BENEFICIAL, CLOSED.** Expansion-pass EVI
+rank #2: bars closing on cumulative volume instead of elapsed time, motivated by SMV2U/W's
+inference that 5-minute nearly beat 3-minute via turnover-damping. Result: **fails all three
+AND-rule legs decisively** — Sharpe 0.431 vs 0.709 (worse), CDaR₀.₉₅ $34,250 vs $27,162
+(worse), top-10-day retention 94.2% (<95%). Portfolio-level also fails to beat the champion.
+**The motivating hypothesis itself is contradicted, not just the outcome**: volume-bar
+turnover (39.2/day) is HIGHER than the 3m incumbent's (33.0/day), the opposite direction from
+both 5-minute arms (damped to 19.6-20.3/day) — root cause is a right-skewed bar-width
+distribution (median 1.0 min, well below the 3-minute cadence, despite a mean width close to
+the calibration target). A genuinely informative negative finding about *why*, not just
+*that*, this didn't work. No second bite at this V without a genuinely new threshold-
+selection mechanism (dollar-volume/tick-imbalance bars would count as new).
+**Program state**: three of the mechanism-expansion pass's top candidates are now closed this
+session (adaptive clamp #1, ATR-blend #3 — closest miss yet, volume bars #2), plus the
+same-day circuit breaker (owner's direct question). Remaining ranked ideas (#4-9) are
+flagged lower-EVI/higher-duplication-risk by the expansion pass itself. **Concurrently**:
+Product B one-contract final deliverable (BEST_ONE_NQ/BEST_ONE_MNQ) is in progress —
+runs/PRODUCTB_ONECONTRACT_FINAL/spec.yaml frozen, both Final NinjaScript files built and
+syntax-verified, blocked on an NT8 NinjaScript Editor F5 (owner action required) before
+Strategy Analyzer parity can run for either instrument.
+
+## Wave-14 verdict (spec 8c030f8; red-team CONFIRMED, 2 prose-only corrections, no numeric/
 
 ## Wave-14 verdict (spec 8c030f8; red-team CONFIRMED, 2 prose-only corrections, no numeric/
 ## decision impact) — the closest an R2 confirmation has come to passing in this program

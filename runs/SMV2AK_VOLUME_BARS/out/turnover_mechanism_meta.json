@@ -1,0 +1,9 @@
+{
+  "hypothesis": "volume-bar turnover lands BETWEEN 3m incumbent's and 5m arms' (activity-adaptive damping without a fixed slower clock)",
+  "tgt_changes_per_day_3m_incumbent": 33.01931518876207,
+  "tgt_changes_per_day_volume_bars": 39.23266022827041,
+  "tgt_changes_per_day_5m_bar_matched": 20.3441615452151,
+  "tgt_changes_per_day_5m_time_matched": 19.618086040386306,
+  "pattern_holds_volbar_between_3m_and_5m": false,
+  "finding": "PATTERN DOES NOT HOLD at this calibration: volume-bar turnover (39.23 tgt-changes/day) is HIGHER than the 3m incumbent's (33.02/day), i.e. in the OPPOSITE direction from both 5m arms (20.34 / 19.62/day, both well BELOW the 3m incumbent). Total contracts traded tell the same story (54650 for volume bars vs 49964 for the 3m control, MORE not fewer). The activity-adaptive-damping mechanism this spec's motivating hypothesis predicted (fewer, wider bars in quiet periods -> less churn) is contradicted by this V calibration's bar-width distribution: sub_438 found volume bars are heavily right-skewed (median elapsed width 1.00min, well BELOW the 3-minute fixed cadence, because V was calibrated to the incumbent's AVERAGE 3m-bar volume and volume itself is right-skewed intra-session -- most bars close in <=1 minute during normal/elevated activity, with only the quiet tail stretching out to the p90=10min width). The mean width (3.68min) is close to 3.00min as calibrated, but the MEDIAN bar is far narrower than 3 minutes, so on a typical (median) bar the volume clock trades MORE often than the fixed 3-minute clock, not less -- net effect is higher churn, not damping."
+}
