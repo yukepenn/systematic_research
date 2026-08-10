@@ -75,6 +75,8 @@ Local OHLCV-derived residual-information avenues show a consistent, cross-valida
 signature (right-tail-unsafe or too-small) across 8 independently-constructed feature families —
 sharply diminishing EVI for more of the SAME kind of single-feature test, not literal exhaustion.
 
+| EXP01 (Product-A marginal exposure shape) | After controlling for conviction, is the incremental value of exposure levels 1-13 linear, concave, or convex | **CLOSED — no stable shape, reassuring null** | `runs/EXP01_MARGINAL_EXPOSURE_SHAPE/REPORT.md` | Pooled curvature term statistically significant (t=4.92) but R²=0.00006, driven substantially by a boundary effect at the max exposure level (11, small n); year-by-year only 3/5 significant + same sign, 2024/2026 flip | No evidence the incumbent's linear KSOLAR/KBMOM mapping is mis-calibrated |
+
 ## Campaign stop condition (directive sec40 [MEGA RESEARCH DIRECTIVE] / sec60 [SYSTEM ARCHITECTURE SCIENCE DIRECTIVE])
 
 **MET, 2026-08-09** for the SYSTEM ARCHITECTURE SCIENCE campaign (SA0 → R3 → R2B → R4 → R5 → R6 →
