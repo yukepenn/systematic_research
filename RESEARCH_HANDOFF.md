@@ -7,7 +7,25 @@ Read this before starting any new research wave. Kept short on purpose — see
 CURRENT MODE: RESEARCH
 ```
 
-> **UPDATE 2026-08-09 (latest) — Master Directive v3 / Wave 4 CLOSED.** Waves 1-3 of the
+> **UPDATE 2026-08-10 (latest) — Master Directive v4 / Wave 5 CLOSED.** U6B's final adjudication
+> (genuine-MNQ repricing, capital frontier, intraday DD/ruin, forward-readiness, independent
+> adversarial review) concluded **NOT PROMOTED** — the review found this wave's own earlier O2
+> pass had overstated its case (the "survives both aggregation conventions" claim decomposed to
+> one bootstrap method's boundary noise) plus single-day dependence and a trade-size confound in
+> the quality signal. `SolarWaveSMMaster_v4` remains unchanged. AUCTION02 froze a Product-A rate-
+> limiter policy from AUCTION01's confirmed value-state finding and tested it via a one-shot,
+> pre-registered opening of 8 of 168 AMENDMENT_3-protected sessions (owner-authorized small batch,
+> full protocol in `runs/W5_PROTECTED_CONFIRMATION/`): the underlying diagnostic replicated in
+> sign on 12/12 cells and its strongest single cell (far-from-value → large adverse move) cleared
+> significance for both products — but the constructed policy itself showed a small negative delta
+> on only 23 in-domain bars, so it is **NOT PROMOTED** (information confirmed, action mapping
+> failed — not a closed information class; 160 of 168 protected sessions remain untouched). O2's
+> own numeric-provenance was independently audited and corrected (3 canonical docs additively
+> annotated), and `CAPITAL_FRONTIER.md`/`FORWARD_READINESS.md`/`FAILURE_CRITERIA.md` now cover
+> both current baselines. **Zero promotions this wave. Both baselines unchanged.** Full synthesis:
+> `research/system_master/WAVE5_SYNTHESIS.md`.
+>
+> **UPDATE 2026-08-09 — Master Directive v3 / Wave 4 CLOSED.** Waves 1-3 of the
 > CONTINUOUS SYSTEM EVOLUTION phase closed 22 research artifacts (`U0/U2/H0/U1/U3/U4/U5/U6/U7/
 > U4B/SHADOW01/U1B/U6B/U8/U9/U9B/U8B/LEV01/LEV02/SKEW01/PORT01/EXP01`); see
 > `research/system_master/CONTINUOUS_EVOLUTION_WAVE3_SYNTHESIS.md`. Wave 4 corrected a governance
