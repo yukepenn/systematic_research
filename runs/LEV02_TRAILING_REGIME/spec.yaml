@@ -1,0 +1,62 @@
+run_id: LEV02_TRAILING_REGIME
+family: LEV02 (causal trailing leverage-effect regime -- non-confounded follow-on to LEV01)
+directive: "CONTINUOUS SYSTEM EVOLUTION, self-generated per EVI loop (directive sec57/68), owner-confirmed continuation"
+date_frozen: 2026-08-09
+author: autonomous research campaign (continuation)
+
+purpose: >
+  LEV01 confirmed NQ genuinely exhibits the leverage effect (Test 1, robust, t=-4.73, 5/5 years)
+  but its hypothesized TRADE-LEVEL unification mechanism (Test 2) was refuted by a clean
+  sunk-P&L confound -- 100% of Product-B blocks resolved within the same window used to measure
+  "post-entry" volatility response, so the "forward" predictor was not actually forward. LEV02
+  asks a DIFFERENT, non-confounded question: does a STRICTLY BACKWARD-LOOKING (trailing) measure
+  of how strong the leverage effect has been recently -- fully known/observable in real time
+  BEFORE any new trade begins -- predict Product B/A's FORWARD performance? This is a genuine
+  regime-indicator test (directive sec50's "P(State) vs E[PnL|State]" framing, and sec20's
+  "regime/edge-state model" suggestion), materially distinct from LEV01's own Test 2 because the
+  predictor and outcome windows are now guaranteed non-overlapping by construction.
+
+not_a_reopening_of_closed_work: >
+  Distinct from LEV01 Test 2 (confounded, forward-window predictor overlapping trade
+  resolution) -- LEV02's predictor is measured using ONLY sessions that already fully resolved
+  BEFORE the trade/session being predicted, with an explicit buffer. Distinct from U7 (found
+  volatility LEVEL rose over 2022-2026) -- LEV02 tests volatility ASYMMETRY (the leverage-effect
+  coefficient itself), a materially different, more specific state variable. Distinct from
+  U8/U8B/SKEW01 (organization/entropy/skewness) -- this is a market-structure regime measure,
+  not a path-shape feature.
+
+data_reuse: >
+  Zero new CrossTrade/NT8 calls. Reuses runs/LEV01_VOLATILITY_ASYMMETRY/out/session_series.csv
+  (session_ret_atr, vol_change, sigma460 -- already built and verified) and
+  runs/U0_UNIFIED_STATE/out/u0_state_table.parquet for Product-B/A outcomes.
+
+construction (causal, buffer-guarded): >
+  At each session s, `trailing_asymmetry[s]` = (mean vol_change over sessions in
+  [s-W-BUFFER, s-BUFFER] where session_ret_atr<0) minus (mean vol_change over the same window
+  where session_ret_atr>=0), using W=120 sessions (~6 months, matching this campaign's own
+  rolling-window convention e.g. current-health's 60/120-session dashboards) and BUFFER=5
+  sessions (matching LEV01's own FWD_K, ensuring every session's own vol_change label is fully
+  realized -- i.e. session s-BUFFER's forward-vol measurement window ends at s-BUFFER+5 <= s,
+  strictly before or at the observation point, never after). trailing_asymmetry[s] is therefore
+  100% knowable using only information available AS OF session s -- verified explicitly by
+  construction, not just asserted.
+
+planned_analyses: >
+  Test whether trailing_asymmetry[s] (the regime state, known at session s) predicts: (a)
+  Product-B block outcomes for entries occurring ON OR AFTER session s (net_pnl, by side); (b)
+  Product-A scale-in forward outcomes on or after session s; (c) session-level aggregate P&L for
+  Product B/A over the next 20 sessions. Bucket-residualize against contemporaneous sigma460
+  level (a HIGH-asymmetry regime could simply proxy a high-volatility regime, already tested and
+  found to matter via U7 -- must show incremental information beyond vol LEVEL). Right-tail
+  check, chronology (year-by-year + June-July-2026 extension separate), and an explicit
+  too-good-to-be-true gate re-verification (given LEV01's own history of a near-identical-looking
+  false positive) before any finding is reported as real.
+
+explicitly_not_in_scope_this_run:
+  - Any candidate construction or parameter change to Product A/B.
+  - Claiming causality beyond "the regime state correlates with forward outcomes" -- this is a
+    conditional-expectancy diagnostic, not a proven causal mechanism.
+
+promotion_gate: none (diagnostic; a regime-conditioned policy would require the directive's own
+  sec45 "double proof" standard -- causally observable regime AND historical-analog
+  generalization -- in a dedicated future family, not this one)
