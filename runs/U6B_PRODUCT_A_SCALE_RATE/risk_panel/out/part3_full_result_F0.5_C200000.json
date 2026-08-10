@@ -1,0 +1,431 @@
+{
+  "label": "F0.5_C200000",
+  "module": "primary_objective_v2",
+  "spec": {
+    "PREREGISTERED_IN": "runs/W17_C4_COMPLIANCE/O1_OBJECTIVE.md section 1 as repaired by runs/W17_C4_COMPLIANCE/O1_REPAIR_PREREGISTRATION.md",
+    "capital_dollars": 200000.0,
+    "target_leverage": 1.0,
+    "leverage_mode": "fixed_fraction",
+    "leverage_applied_as": "constant multiplier in RETURN space; contract count reset each session open in proportion to equity",
+    "ruin_definition_R1": "drawdown from running high-water mark reaches 25% (== the capital map's funded DD budget), ABSORBING",
+    "ruin_dd_frac": 0.25,
+    "absorbing": true,
+    "horizon_sessions": 504,
+    "horizon_years": 2.0,
+    "aggregation_rule": "equal_weight_mixture_over_headline_methods",
+    "aggregation_rule_note": "J = J(Fbar) with Fbar the equal-weight mixture of the three pre-registered resampling schemes. With equal n_boot this is identically 'pool all 3*n_boot resampled paths and compute CE_g and P_ruin on the pool'. The SAME rule is applied to BOTH terms. min_m J_m (Gamma-minimax) is reported alongside as aggregation.J_worst; a sign disagreement between them sets aggregation.model_determined_sign and the scalar must then not be quoted alone.",
+    "lambda_ruin_per_yr": 1.367725221489008,
+    "lambda_source": "derived",
+    "lambda_derived_value": 1.367725221489008,
+    "lambda_derivation": "lambda = (H_f - H)/H * g_ref, H_f = 10 yr franchise horizon, H = evaluation horizon in years, g_ref in the SAME growth convention as CE_g (compounded for fixed_fraction, non-compounded for fixed_contracts). The forfeited horizon is H_f - H (NOT H_f - H/2): the barrier is absorbing, so growth lost between the ruin time and the end of the window is already inside CE_g, and charging it again in lambda double-counts.",
+    "lambda_g_ref_used": 0.341931305372252,
+    "lambda_g_ref_convention": "compounded (fixed-fraction)",
+    "franchise_horizon_years": 10.0,
+    "bootstrap_methods_headline": [
+      "moving5",
+      "moving20",
+      "stationary60"
+    ],
+    "bootstrap_methods_diagnostic": [
+      "iid"
+    ],
+    "n_boot": 2000,
+    "seed": 20260808,
+    "cdar_alpha": 0.95,
+    "ann": 252,
+    "min_unit": null,
+    "min_unit_degeneracy_bar": 0.05,
+    "no_look_ahead": "all statistics are functions of the realized in-sample series; block resampling draws only from realized observations"
+  },
+  "input": {
+    "n_sessions": 1139,
+    "date_min": "2022-01-03 00:00:00",
+    "date_max": "2026-05-29 00:00:00",
+    "net_dollars": 178988.70000000065,
+    "load_flags": {
+      "source": "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\runs\\U6B_PRODUCT_A_SCALE_RATE\\out\\F0.5_daily_GENUINE_MNQ.csv",
+      "dated": true,
+      "n_truncated_post_dev": 45,
+      "truncated_from": "2026-07-31",
+      "warnings": [
+        "truncated 45 post-dev sessions (> 2026-05-29) -- dev window only"
+      ]
+    }
+  },
+  "integrity": {
+    "warnings": [
+      "truncated 45 post-dev sessions (> 2026-05-29) -- dev window only"
+    ],
+    "n_days_equity_nonpositive": 0,
+    "intraday_construction": {
+      "n_sessions": 1139,
+      "max_bars": 460,
+      "total_bars": 519714,
+      "padded_bars": 523940,
+      "n_bars_equity_nonpositive": 0,
+      "bars_per_session_min": 170,
+      "bars_per_session_max": 460
+    },
+    "intraday_vs_daily_sessionend_maxabs_logdiff": 1.3877787807814457e-17,
+    "intraday_padding_fraction": 0.0080658090621063,
+    "intraday_short_sessions_vs_modal": {
+      "modal_bars": 460.0,
+      "n_sessions_below_90pct_of_modal": 45,
+      "min_bars": 170,
+      "_note": "wave-17 red team D13: 43 of these are calendar early closes and at least 16 are unexplained data holes in the upstream committed artifact. Fewer observation points UNDERSTATE intraday risk."
+    }
+  },
+  "ruin": {
+    "definition": "drawdown from running high-water mark reaches 25% (== the capital map's funded DD budget), ABSORBING",
+    "daily_close": {
+      "moving5": 0.0125,
+      "moving20": 0.001,
+      "stationary60": 0.0,
+      "iid": 0.0465,
+      "headline_mixture_over_three": 0.0045,
+      "worst_of_three": 0.0125,
+      "worst_method": "moving5",
+      "spread_max_minus_min_over_three": 0.0125,
+      "_note": "HEADLINE IS THE MIXTURE (D1). The worst-of-three value is reported because the band matters, but it is NOT the headline and it is not mixed with a growth term from a different method. iid is a DIAGNOSTIC method, not one of the three headline methods."
+    },
+    "mean_first_ruin_years_given_ruin": 1.4272486772486774,
+    "_ruin_time_note": "O1_OBJECTIVE.md section 1.5 assumed ruin lands 'near the middle' of the H-year window and used it to set lambda. v2's lambda does not depend on this quantity (see LAMBDA_DERIVATION); it is measured here so the old assumption is auditable.",
+    "R2_margin_floor": {
+      "floor_dollars_per_unit_4x_stress": 4400.0,
+      "binding": false,
+      "p_hit": null,
+      "_note": "in fixed_fraction mode margin/equity is CONSTANT, so R2 is a static feasibility test (L <= C / floor), not a crossing event",
+      "static_feasible_max_leverage": 45.45454545454545
+    },
+    "R3_cp3_comparability": {
+      "dollar_cap": 25000.0,
+      "per_method": {
+        "moving5": {
+          "p_maxdd_gt_cap": 0.4505,
+          "p95_maxdd_dollar": 44270.00999999851,
+          "capital_needed_at_thr_unit": 177080.03999999404,
+          "capital_needed_at_thr_at_leverage": 177080.03999999404,
+          "capital_needed_at_thr": 177080.03999999404
+        },
+        "moving20": {
+          "p_maxdd_gt_cap": 0.206,
+          "p95_maxdd_dollar": 31777.824999999404,
+          "capital_needed_at_thr_unit": 127111.29999999762,
+          "capital_needed_at_thr_at_leverage": 127111.29999999762,
+          "capital_needed_at_thr": 127111.29999999762
+        },
+        "stationary60": {
+          "p_maxdd_gt_cap": 0.067,
+          "p95_maxdd_dollar": 26048.525000002162,
+          "capital_needed_at_thr_unit": 104194.10000000865,
+          "capital_needed_at_thr_at_leverage": 104194.10000000865,
+          "capital_needed_at_thr": 104194.10000000865
+        },
+        "iid": {
+          "p_maxdd_gt_cap": 0.644,
+          "p95_maxdd_dollar": 55144.749999995794,
+          "capital_needed_at_thr_unit": 220578.99999998318,
+          "capital_needed_at_thr_at_leverage": 220578.99999998318,
+          "capital_needed_at_thr": 220578.99999998318
+        }
+      },
+      "_note": "P(max $ drawdown over the horizon > cap) at this leverage, on the un-compounded cumsum path -- directly comparable to the published C-P3 disclosure"
+    },
+    "p_equity_nonpositive": {
+      "per_method": {
+        "moving5": 0.0,
+        "moving20": 0.0,
+        "stationary60": 0.0,
+        "iid": 0.0
+      },
+      "_note": "fixed_fraction (continuous): fraction of resampled paths containing a day where 1 + L*x/C <= 0. fixed_fraction with min_unit: fraction of paths whose STEPPED granular equity actually reached <= 0 (v1 wrongly reported the continuous test here). fixed_contracts: fraction of paths whose equity reached <= 0. This is TRUE bankruptcy and must not be conflated with R1 ruin."
+    },
+    "intraday": {
+      "moving5": 0.02,
+      "moving20": 0.0015,
+      "stationary60": 0.0005,
+      "iid": 0.0635,
+      "headline_mixture_over_three": 0.007333333333333333,
+      "worst_of_three": 0.02,
+      "spread_max_minus_min_over_three": 0.0195
+    },
+    "gap": {
+      "per_method_abs": {
+        "moving5": 0.0075,
+        "moving20": 0.0005,
+        "stationary60": 0.0005,
+        "iid": 0.017
+      },
+      "per_method_rel": {
+        "moving5": 0.5999999999999999,
+        "moving20": 0.5,
+        "stationary60": null,
+        "iid": 0.3655913978494625
+      },
+      "headline_abs": 0.0028333333333333335,
+      "headline_rel": 0.6296296296296298,
+      "MATERIALITY_BAR": "abs >= 0.02 OR rel >= 0.20 (pre-registered)",
+      "material": true,
+      "_note": "v2 evaluates the pre-registered bar on the MIXTURE headline, consistently with D1. The per-method gaps are all reported so a reader can apply the bar under any single method."
+    }
+  },
+  "growth": {
+    "per_method": {
+      "moving5": {
+        "g_ann_mean": 0.17851055491619086,
+        "g_ann_median": 0.17620982272348618,
+        "g_ann_q05": 0.00918986757752122,
+        "g_ann_q95": 0.3570288353993342,
+        "g_ann_nonabsorbing_mean": 0.17919341944803815
+      },
+      "moving20": {
+        "g_ann_mean": 0.18111121093260923,
+        "g_ann_median": 0.17988883922772997,
+        "g_ann_q05": 0.04479810568412024,
+        "g_ann_q95": 0.31967131748714456,
+        "g_ann_nonabsorbing_mean": 0.18127285946709443
+      },
+      "stationary60": {
+        "g_ann_mean": 0.1810707928609208,
+        "g_ann_median": 0.18065500761402165,
+        "g_ann_q05": 0.07298947117146905,
+        "g_ann_q95": 0.29944128180659413,
+        "g_ann_nonabsorbing_mean": 0.1810707928609208
+      },
+      "iid": {
+        "g_ann_mean": 0.17910243046963295,
+        "g_ann_median": 0.18182736854346424,
+        "g_ann_q05": -0.027788364670336053,
+        "g_ann_q95": 0.3793657002488917,
+        "g_ann_nonabsorbing_mean": 0.18209992867579733
+      }
+    },
+    "ce_log_growth_ann_mixture_over_three": 0.1802308529032403,
+    "pooled_quantiles": {
+      "g_ann_pooled_mean": 0.1802308529032403,
+      "g_ann_pooled_median": 0.1792101757109702,
+      "g_ann_pooled_q05": 0.040980577044757424,
+      "g_ann_pooled_q95": 0.3265658591572888
+    },
+    "historical_single_path": {
+      "g_ann_log": 0.18419096270543023,
+      "g_ann_pct_equivalent": 20.22453852080532,
+      "max_dd_frac": 0.08698339103823793,
+      "cdar_frac": 0.07046847783334576,
+      "ruin_hit": false,
+      "_note": "ONE realized path. Not a distribution. Not evidence about the future."
+    },
+    "per_method_intraday_absorbing": {
+      "moving5": {
+        "g_ann_mean": 0.17795707299291116,
+        "g_ann_median": 0.17619832601632623,
+        "g_ann_q05": 0.005771811678046523,
+        "g_ann_q95": 0.35702883539933733
+      },
+      "moving20": {
+        "g_ann_mean": 0.18107001016964147,
+        "g_ann_median": 0.1798888392277296,
+        "g_ann_q05": 0.043807152902224825,
+        "g_ann_q95": 0.3196713174871507
+      },
+      "stationary60": {
+        "g_ann_mean": 0.18103849040829786,
+        "g_ann_median": 0.18065500761402054,
+        "g_ann_q05": 0.07298947117146871,
+        "g_ann_q95": 0.2994412818065983
+      },
+      "iid": {
+        "g_ann_mean": 0.17794916649015136,
+        "g_ann_median": 0.1814089331107388,
+        "g_ann_q05": -0.03461085012188449,
+        "g_ann_q95": 0.3793657002488908
+      }
+    }
+  },
+  "tail": {
+    "daily_close": {
+      "moving5": {
+        "cdar_frac": 0.10834780482167775,
+        "cdar_frac_arith": 0.1083139307613777,
+        "cdar_dollar_at_capital": 21662.78615227554,
+        "maxdd_frac_mean": 0.12389659111475414,
+        "maxdd_frac_p95": 0.20217652159399258,
+        "_cdar_note": "D11: `cdar_frac` keeps v1's per-path convention (log-space in the continuous path, arithmetic elsewhere); `cdar_frac_arith` is the arithmetic mean of drawdown FRACTIONS in every path and is the one dollarized here"
+      },
+      "moving20": {
+        "cdar_frac": 0.08661665851850577,
+        "cdar_frac_arith": 0.08659151913750299,
+        "cdar_dollar_at_capital": 17318.303827500597,
+        "maxdd_frac_mean": 0.10130463845953418,
+        "maxdd_frac_p95": 0.15192825641204608,
+        "_cdar_note": "D11: `cdar_frac` keeps v1's per-path convention (log-space in the continuous path, arithmetic elsewhere); `cdar_frac_arith` is the arithmetic mean of drawdown FRACTIONS in every path and is the one dollarized here"
+      },
+      "stationary60": {
+        "cdar_frac": 0.07555935621732016,
+        "cdar_frac_arith": 0.07554073678534409,
+        "cdar_dollar_at_capital": 15108.147357068818,
+        "maxdd_frac_mean": 0.0879329046901,
+        "maxdd_frac_p95": 0.12620909124292387,
+        "_cdar_note": "D11: `cdar_frac` keeps v1's per-path convention (log-space in the continuous path, arithmetic elsewhere); `cdar_frac_arith` is the arithmetic mean of drawdown FRACTIONS in every path and is the one dollarized here"
+      },
+      "iid": {
+        "cdar_frac": 0.1307093914463999,
+        "cdar_frac_arith": 0.13066614272933133,
+        "cdar_dollar_at_capital": 26133.228545866266,
+        "maxdd_frac_mean": 0.14724885999301657,
+        "maxdd_frac_p95": 0.24625321298721337,
+        "_cdar_note": "D11: `cdar_frac` keeps v1's per-path convention (log-space in the continuous path, arithmetic elsewhere); `cdar_frac_arith` is the arithmetic mean of drawdown FRACTIONS in every path and is the one dollarized here"
+      }
+    },
+    "intraday": {
+      "moving5": {
+        "cdar_frac_bar_level": 0.12073409004872994,
+        "cdar_frac_daymax_matched": 0.12547617729804847,
+        "cdar_dollar_daymax_at_capital": 25095.235459609692,
+        "maxdd_frac_mean": 0.14093533337282405,
+        "maxdd_frac_p95": 0.21896212800854523
+      },
+      "moving20": {
+        "cdar_frac_bar_level": 0.09958667327505696,
+        "cdar_frac_daymax_matched": 0.10454531916704479,
+        "cdar_dollar_daymax_at_capital": 20909.06383340896,
+        "maxdd_frac_mean": 0.11906811462144656,
+        "maxdd_frac_p95": 0.17011026021893688
+      },
+      "stationary60": {
+        "cdar_frac_bar_level": 0.09491638520045877,
+        "cdar_frac_daymax_matched": 0.09959201216106779,
+        "cdar_dollar_daymax_at_capital": 19918.40243221356,
+        "maxdd_frac_mean": 0.11226600082744487,
+        "maxdd_frac_p95": 0.1570578325435727
+      },
+      "iid": {
+        "cdar_frac_bar_level": 0.1427154861869049,
+        "cdar_frac_daymax_matched": 0.1472075502600261,
+        "cdar_dollar_daymax_at_capital": 29441.510052005222,
+        "maxdd_frac_mean": 0.16346146658967484,
+        "maxdd_frac_p95": 0.2592127906898609
+      }
+    },
+    "gap": {
+      "cdar_matched_ratio_per_method": {
+        "moving5": 1.1584491156034238,
+        "moving20": 1.2073390120461112,
+        "stationary60": 1.3183881492189784,
+        "iid": 1.1265929121743459
+      },
+      "cdar_barlevel_ratio_per_method": {
+        "moving5": 1.1146681613348022,
+        "moving20": 1.1500742135834148,
+        "stationary60": 1.2564927116103242,
+        "iid": 1.0922147329513907
+      },
+      "maxdd_ratio_per_method": {
+        "moving5": 1.1375238987995115,
+        "moving20": 1.1753471157098887,
+        "stationary60": 1.27672344298305,
+        "iid": 1.1101034439073223
+      },
+      "MATERIALITY_BAR": "matched CDaR ratio >= 1.20 (pre-registered)",
+      "cdar_matched_ratio_max_over_methods": 1.3183881492189784,
+      "cdar_matched_ratio_min_over_methods": 1.1584491156034238,
+      "cdar_matched_ratio_n_methods_over_bar": 2,
+      "cdar_matched_ratio_mixture": 1.2187766914643927,
+      "_D2_note": "v1 called max(ratios) the 'worst method'. It is the most favourable method for the O1a hypothesis. v2 reports max, min and how many of the three clear the 1.20 bar, and takes no verdict here -- see the repair pre-registration, D2."
+    }
+  },
+  "aggregation": {
+    "rule": "equal_weight_mixture_over_headline_methods",
+    "rule_note": "J = J(Fbar) with Fbar the equal-weight mixture of the three pre-registered resampling schemes. With equal n_boot this is identically 'pool all 3*n_boot resampled paths and compute CE_g and P_ruin on the pool'. The SAME rule is applied to BOTH terms. min_m J_m (Gamma-minimax) is reported alongside as aggregation.J_worst; a sign disagreement between them sets aggregation.model_determined_sign and the scalar must then not be quoted alone.",
+    "methods": [
+      "moving5",
+      "moving20",
+      "stationary60"
+    ],
+    "ce_log_growth_ann": 0.1802308529032403,
+    "p_ruin": 0.0045,
+    "J": 0.17407608940653976,
+    "J_by_method": {
+      "moving5": 0.16141398964757825,
+      "moving20": 0.17974348571112023,
+      "stationary60": 0.1810707928609208
+    },
+    "J_worst": 0.16141398964757825,
+    "J_worst_method": "moving5",
+    "J_best": 0.1810707928609208,
+    "J_best_method": "stationary60",
+    "model_determined_sign": false,
+    "n_pooled_paths": 6000,
+    "monte_carlo_se_NOT_a_CI_on_the_process": 0.0017862615614142358,
+    "_se_note": "Monte-Carlo error of the pooled mean only. It shrinks as n_boot grows while the estimate stays conditioned on ONE realized sample; it is NOT a confidence interval for the underlying process.",
+    "_identity": "with equal n_boot per method the pooled mean equals the arithmetic mean over methods, and J equals the mean of J_by_method"
+  },
+  "primary": {
+    "objective_J": 0.17407608940653976,
+    "ce_log_growth_ann": 0.1802308529032403,
+    "p_ruin": 0.0045,
+    "p_ruin_basis": "daily_close",
+    "aggregation_rule": "equal_weight_mixture_over_headline_methods",
+    "lambda_ruin_per_yr": 1.367725221489008,
+    "formula": "J = CE_g - lambda * P_ruin, both terms under the same mixture model",
+    "J_worst_over_methods": 0.16141398964757825,
+    "model_determined_sign": false,
+    "monte_carlo_se_NOT_a_CI_on_the_process": 0.0017862615614142358,
+    "n_pooled_paths": 6000,
+    "objective_J_by_lambda": {
+      "0.0": 0.1802308529032403,
+      "0.5": 0.1779808529032403,
+      "1.0": 0.1757308529032403,
+      "1.367725221489008": 0.17407608940653976,
+      "2.0": 0.1712308529032403,
+      "5.0": 0.15773085290324032
+    },
+    "objective_J_intraday_barrier": 0.1699918728993641,
+    "ce_log_growth_ann_intraday_barrier": 0.18002185785695016,
+    "p_ruin_intraday_barrier": 0.007333333333333333,
+    "J_worst_over_methods_intraday_barrier": 0.150602568563131,
+    "_intraday_note": "objective_J_intraday_barrier applies the SAME barrier but checks it at every 3-minute bar instead of only at the close. It is the leverage-relevant number if margin pressure is what binds."
+  },
+  "aggregation_intraday": {
+    "rule": "equal_weight_mixture_over_headline_methods",
+    "rule_note": "J = J(Fbar) with Fbar the equal-weight mixture of the three pre-registered resampling schemes. With equal n_boot this is identically 'pool all 3*n_boot resampled paths and compute CE_g and P_ruin on the pool'. The SAME rule is applied to BOTH terms. min_m J_m (Gamma-minimax) is reported alongside as aggregation.J_worst; a sign disagreement between them sets aggregation.model_determined_sign and the scalar must then not be quoted alone.",
+    "methods": [
+      "moving5",
+      "moving20",
+      "stationary60"
+    ],
+    "ce_log_growth_ann": 0.18002185785695016,
+    "p_ruin": 0.007333333333333333,
+    "J": 0.1699918728993641,
+    "J_by_method": {
+      "moving5": 0.150602568563131,
+      "moving20": 0.17901842233740795,
+      "stationary60": 0.18035462779755335
+    },
+    "J_worst": 0.150602568563131,
+    "J_worst_method": "moving5",
+    "J_best": 0.18035462779755335,
+    "J_best_method": "stationary60",
+    "model_determined_sign": false,
+    "n_pooled_paths": 6000,
+    "monte_carlo_se_NOT_a_CI_on_the_process": 0.002078361122696562,
+    "_se_note": "Monte-Carlo error of the pooled mean only. It shrinks as n_boot grows while the estimate stays conditioned on ONE realized sample; it is NOT a confidence interval for the underlying process.",
+    "_identity": "with equal n_boot per method the pooled mean equals the arithmetic mean over methods, and J equals the mean of J_by_method"
+  },
+  "legacy_diagnostics_NOT_GATES": {
+    "_flag": "REPORTED DIAGNOSTIC ONLY -- NOT A GATE, NOT A SELECTION INPUT",
+    "daily_sharpe_ann": 1.1857849900918431,
+    "cdar_0.95_dollar": 14217.430357142921,
+    "max_dd_dollar": 17390.80000000249,
+    "top10_day_share": 0.6209084707582031,
+    "top10_day_retention_vs_baseline": null,
+    "net_dollar": 178988.70000000065,
+    "n_sessions": 1139,
+    "capital_map_rule_capital_needed_at_thr": {
+      "moving5": 177080.03999999404,
+      "moving20": 127111.29999999762,
+      "stationary60": 104194.10000000865
+    },
+    "_D8_note": "these are computed at the EVALUATION horizon (horizon_sessions), not at the full-sample length that O1_OBJECTIVE.md section 5.3 quoted. The two conventions give different capital-map bands; D8 is disclosed, not resolved, in the repair pre-registration."
+  }
+}

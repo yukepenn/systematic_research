@@ -1,0 +1,184 @@
+[load] CONTROL: n=1184 range=[2022-01-03, 2026-07-31] net=$213,657.50
+[load] F0.5: n=1184 range=[2022-01-03, 2026-07-31] net=$214,107.60
+[load] F0.7: n=1184 range=[2022-01-03, 2026-07-31] net=$214,503.70
+[gate] all series confirmed < 2026-08-01. Canonical cutoff <= 2026-05-29, health-only extension 2026-06-01..2026-07-31.
+
+====================================================================================================
+SECTION 1: FULL HISTORY (canonical, 2022-01-03 .. 2026-05-29), with Sharpe bootstrap CI
+====================================================================================================
+[sec1] CONTROL: n=1139 net=$178,687.40 sharpe=1.1819 CI95=[0.3196,2.0362] sortino=2.3490 calmar=2.3160 maxDD_eod=$17,069.90 CDaR95=$14,254.11
+[sec1] F0.5: n=1139 net=$178,988.70 sharpe=1.1858 CI95=[0.3168,2.0474] sortino=2.3689 calmar=2.2771 maxDD_eod=$17,390.80 CDaR95=$14,217.43
+[sec1] F0.7: n=1139 net=$179,302.30 sharpe=1.1873 CI95=[0.3180,2.0446] sortino=2.3654 calmar=2.3367 maxDD_eod=$16,977.30 CDaR95=$14,187.36
+
+====================================================================================================
+SECTION 2: 2022-2025-ONLY (LOYO/wash-test slice)
+====================================================================================================
+[sec2] CONTROL: n=1033 net=$167,884.20 sharpe=1.2616 CI95=[0.3941,2.1824]
+[sec2] F0.5: n=1033 net=$168,743.40 sharpe=1.2701 CI95=[0.4174,2.2084]
+[sec2] F0.7: n=1033 net=$168,867.80 sharpe=1.2705 CI95=[0.4079,2.2010]
+[sec2] F0.5 delta vs CONTROL (2022-2025, genuine MNQ) = $859.20 (0.5118%)
+[sec2] F0.7 delta vs CONTROL (2022-2025, genuine MNQ) = $983.60 (0.5859%)
+
+====================================================================================================
+SECTION 3: 2026 RESEARCH-CONSUMED (Jan-May canonical + Jun-Jul health-only extension)
+====================================================================================================
+[sec3] CONTROL 2026_canonical_JanMay: n=106 net=$10,803.20 sharpe=0.6110 CI95=[-2.5538,3.5601] too_thin=False
+[sec3] CONTROL 2026_health_only_ext_JunJul: n=45 net=$34,970.10 sharpe=3.4228 CI95=[-1.1283,7.6022] too_thin=False
+[sec3] CONTROL 2026_combined_research_consumed: n=151 net=$45,773.30 sharpe=1.6208 CI95=[-0.7675,3.9332] too_thin=False
+[sec3] F0.5 2026_canonical_JanMay: n=106 net=$10,245.30 sharpe=0.5802 CI95=[-2.5627,3.5550] too_thin=False
+[sec3] F0.5 2026_health_only_ext_JunJul: n=45 net=$35,118.90 sharpe=3.4526 CI95=[-1.1161,7.6036] too_thin=False
+[sec3] F0.5 2026_combined_research_consumed: n=151 net=$45,364.20 sharpe=1.6104 CI95=[-0.7593,3.8918] too_thin=False
+[sec3] F0.7 2026_canonical_JanMay: n=106 net=$10,434.50 sharpe=0.5905 CI95=[-2.5683,3.5548] too_thin=False
+[sec3] F0.7 2026_health_only_ext_JunJul: n=45 net=$35,201.40 sharpe=3.4556 CI95=[-1.0981,7.6016] too_thin=False
+[sec3] F0.7 2026_combined_research_consumed: n=151 net=$45,635.90 sharpe=1.6183 CI95=[-0.7705,3.9091] too_thin=False
+
+====================================================================================================
+SECTION 4: YEAR-BY-YEAR (reuse u6b_mnq_year_by_year.csv, ADD bootstrap CI per year)
+====================================================================================================
+[sec4] loaded existing D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\U6B_PRODUCT_A_SCALE_RATE\out\u6b_mnq_year_by_year.csv: 15 rows (reused verbatim, not recomputed)
+[sec4] CONTROL 2022: n=258 sharpe=1.2731 CI95=[-0.7845,3.0494]
+[sec4] CONTROL 2023: n=258 sharpe=0.8265 CI95=[-1.1755,2.5027]
+[sec4] CONTROL 2024: n=259 sharpe=1.2735 CI95=[-0.7084,2.9453]
+[sec4] CONTROL 2025: n=258 sharpe=1.6026 CI95=[-0.3729,3.2440]
+[sec4] CONTROL 2026: n=106 sharpe=0.6110 CI95=[-2.5538,3.5601]
+[sec4] F0.5 2022: n=258 sharpe=1.2699 CI95=[-0.7874,3.0212]
+[sec4] F0.5 2023: n=258 sharpe=0.8036 CI95=[-1.1792,2.4838]
+[sec4] F0.5 2024: n=259 sharpe=1.2870 CI95=[-0.7172,2.9654]
+[sec4] F0.5 2025: n=258 sharpe=1.6345 CI95=[-0.3508,3.2733]
+[sec4] F0.5 2026: n=106 sharpe=0.5802 CI95=[-2.5627,3.5550]
+[sec4] F0.7 2022: n=258 sharpe=1.2695 CI95=[-0.7845,3.0293]
+[sec4] F0.7 2023: n=258 sharpe=0.8096 CI95=[-1.1863,2.4951]
+[sec4] F0.7 2024: n=259 sharpe=1.2879 CI95=[-0.7105,2.9521]
+[sec4] F0.7 2025: n=258 sharpe=1.6325 CI95=[-0.3457,3.2809]
+[sec4] F0.7 2026: n=106 sharpe=0.5905 CI95=[-2.5683,3.5548]
+
+====================================================================================================
+SECTION 5: QUARTER-BY-QUARTER (canonical window, NEW cut, computed directly)
+====================================================================================================
+[sec5] 54 candidate-quarter rows written (18 distinct quarters x 3 candidates)
+quarter  n_sessions      net    sharpe  possibly_partial_quarter
+ 2022Q1          64  11999.9  1.217198                     False
+ 2022Q2          64  13578.1  1.200781                     False
+ 2022Q3          66   9477.0  1.203738                     False
+ 2022Q4          64  13080.0  1.524463                     False
+ 2023Q1          64  -3277.4 -0.696254                     False
+ 2023Q2          65   5137.8  0.964304                     False
+ 2023Q3          65   7311.6  1.312532                     False
+ 2023Q4          64   7570.1  1.613336                     False
+ 2024Q1          63  -3361.2 -0.753997                     False
+ 2024Q2          65  12103.5  2.315790                     False
+ 2024Q3          66   9112.1  1.025315                     False
+ 2024Q4          65  14310.8  2.397811                     False
+ 2025Q1          63  11829.0  1.063789                     False
+ 2025Q2          64  17451.2  1.333072                     False
+ 2025Q3          66   8488.4  1.581329                     False
+ 2025Q4          65  33073.3  2.561617                     False
+ 2026Q1          63  25370.5  2.166791                     False
+ 2026Q2          43 -14567.3 -2.579207                      True
+
+====================================================================================================
+SECTION 6: LOYO (leave-one-year-out, 2022-2025)
+====================================================================================================
+[sec6] cross-check against u6b_mnq_repricing_recon.json's own full-2022-2025 genuine-MNQ delta (reused, not recomputed):
+       F0.5: genuine_delta_2022_2025 = $859.20 (0.5118%)
+       F0.7: genuine_delta_2022_2025 = $983.60 (0.5859%)
+[sec6] own recomputation of the same full-4-year net (sanity match): CONTROL=$167,884.20 F0.5=$168,743.40 F0.7=$168,867.80
+       F0.5: own_delta=$859.20 vs recon=$859.20 [MATCH]
+       F0.7: own_delta=$983.60 vs recon=$983.60 [MATCH]
+[sec6] LOYO drop 2022: F0.5 delta vs CONTROL (remaining 3yr, n=775) = $979.60 (0.8180%)
+[sec6] LOYO drop 2022: F0.7 delta vs CONTROL (remaining 3yr, n=775) = $1,151.40 (0.9615%)
+[sec6] LOYO drop 2023: F0.5 delta vs CONTROL (remaining 3yr, n=775) = $1,341.90 (0.8878%)
+[sec6] LOYO drop 2023: F0.7 delta vs CONTROL (remaining 3yr, n=775) = $1,339.30 (0.8861%)
+[sec6] LOYO drop 2024: F0.5 delta vs CONTROL (remaining 3yr, n=774) = $651.10 (0.4797%)
+[sec6] LOYO drop 2024: F0.7 delta vs CONTROL (remaining 3yr, n=774) = $711.80 (0.5245%)
+[sec6] LOYO drop 2025: F0.5 delta vs CONTROL (remaining 3yr, n=775) = $-395.00 (-0.4070%)
+[sec6] LOYO drop 2025: F0.7 delta vs CONTROL (remaining 3yr, n=775) = $-251.70 (-0.2594%)
+[sec6] LOYO direction consistency: 6/8 drop-one-year cells positive (F0.5+F0.7 x 4 dropped years = 8 cells)
+
+====================================================================================================
+SECTION 7+8: ROLLING 20/60/120/252-SESSION WINDOWS -- distribution + worst observed
+====================================================================================================
+[sec7] CONTROL w=20: net dist min/p25/med/p75/max = [-12796.  -1033.   2412.   6686.  35703.]  sharpe dist = [-5.923 -0.579  1.167  2.778  7.94 ]
+[sec7] CONTROL w=60: net dist min/p25/med/p75/max = [-15846.   3348.   9586.  15247.  39766.]  sharpe dist = [-3.014  0.502  1.361  1.999  4.748]
+[sec7] CONTROL w=120: net dist min/p25/med/p75/max = [-4058. 11027. 17547. 27369. 58559.]  sharpe dist = [-0.468  0.882  1.261  1.633  3.025]
+[sec7] CONTROL w=252: net dist min/p25/med/p75/max = [ 9588. 22778. 33386. 54459. 97706.]  sharpe dist = [0.359 0.949 1.23  1.509 2.173]
+[sec7] F0.5 w=20: net dist min/p25/med/p75/max = [-12822.  -1000.   2350.   6644.  35694.]  sharpe dist = [-6.008 -0.554  1.173  2.798  7.771]
+[sec7] F0.5 w=60: net dist min/p25/med/p75/max = [-16426.   3213.   9531.  15316.  40244.]  sharpe dist = [-2.87   0.497  1.376  2.01   4.734]
+[sec7] F0.5 w=120: net dist min/p25/med/p75/max = [-4450. 11134. 17437. 27438. 59673.]  sharpe dist = [-0.514  0.894  1.274  1.633  3.072]
+[sec7] F0.5 w=252: net dist min/p25/med/p75/max = [ 9831. 22665. 33510. 54880. 99268.]  sharpe dist = [0.369 0.943 1.24  1.522 2.209]
+[sec7] F0.7 w=20: net dist min/p25/med/p75/max = [-12783.  -1001.   2378.   6645.  35680.]  sharpe dist = [-5.978 -0.523  1.17   2.764  7.923]
+[sec7] F0.7 w=60: net dist min/p25/med/p75/max = [-16242.   3275.   9693.  15364.  39943.]  sharpe dist = [-2.945  0.496  1.37   2.004  4.773]
+[sec7] F0.7 w=120: net dist min/p25/med/p75/max = [-4304. 11164. 17520. 27582. 59449.]  sharpe dist = [-0.497  0.884  1.264  1.634  3.103]
+[sec7] F0.7 w=252: net dist min/p25/med/p75/max = [ 9788. 22721. 33370. 55035. 99020.]  sharpe dist = [0.367 0.947 1.233 1.517 2.202]
+[sec8] worst rolling windows (Sharpe metric):
+candidate  window metric  worst_value window_start window_end  overlaps_extension
+  CONTROL      20 sharpe    -5.922728   2025-07-03 2025-07-30               False
+  CONTROL      60 sharpe    -3.014081   2024-01-10 2024-04-03               False
+  CONTROL     120 sharpe    -0.468354   2023-02-09 2023-07-26               False
+  CONTROL     252 sharpe     0.359223   2022-06-06 2023-05-25               False
+     F0.5      20 sharpe    -6.007533   2026-04-03 2026-04-30               False
+     F0.5      60 sharpe    -2.870467   2024-01-10 2024-04-03               False
+     F0.5     120 sharpe    -0.513955   2023-02-09 2023-07-26               False
+     F0.5     252 sharpe     0.369281   2022-06-06 2023-05-25               False
+     F0.7      20 sharpe    -5.977631   2025-07-03 2025-07-30               False
+     F0.7      60 sharpe    -2.944999   2024-01-10 2024-04-03               False
+     F0.7     120 sharpe    -0.497078   2023-02-09 2023-07-26               False
+     F0.7     252 sharpe     0.367386   2022-06-06 2023-05-25               False
+
+====================================================================================================
+SECTION 9+10: TAIL CONCENTRATION + WINNER RETENTION (reuse LEGACY-priced right-tail files)
+====================================================================================================
+[sec9] LOADED (reused, not recomputed) LEGACY-priced right-tail block files: top20 n=20, bottom20 n=20. KNOWN LIMITATION (disclosed): these two files are LEGACY NQ-proxy pricing, NOT genuine-MNQ-repriced -- u6b_mnq_repricing_recon.json's own exposure-path-identity finding (price affects fills only, never the scale-up/quality decision) means the BLOCK IDENTITIES and bar-count/quality-fraction columns are pricing-invariant and trustworthy as-is, but the $ delta columns (F0.5_window_delta/F0.7_window_delta) carry legacy fill economics, not genuine-MNQ fill economics. Treated as a minor known limitation of this specific reused table, not silently presented as genuine-MNQ truth.
+[sec9/10] top20_winners: n_blocks=20 total_control_pnl=$194,687.05 | F0.5_delta=$0.00 (improved=0, damaged=0, unchanged=20) | F0.7_delta=$0.00 (improved=0, damaged=0, unchanged=20)
+[sec9/10] bottom20_losers: n_blocks=20 total_control_pnl=$-61,275.40 | F0.5_delta=$-34.50 (improved=1, damaged=2, unchanged=17) | F0.7_delta=$-34.50 (improved=1, damaged=2, unchanged=17)
+
+====================================================================================================
+SECTION 11: CURRENT-REGIME BEHAVIOR (2026 evidence vs full-history pattern)
+====================================================================================================
+[sec11] F0.5: 2022-2025 delta=$859.20 | 2026 Jan-May delta=$-557.90 | 2026 Jun-Jul(ext) delta=$148.80 | consistent_sign=False
+[sec11] F0.7: 2022-2025 delta=$983.60 | 2026 Jan-May delta=$-368.70 | 2026 Jun-Jul(ext) delta=$231.30 | consistent_sign=False
+
+====================================================================================================
+BONUS SECTION: PO2 owner-utility (J/CE_g/P_ruin) + leverage_curve sweep, canonical window
+====================================================================================================
+[po2] CONTROL: J_mixture=0.0594 J_worst=-0.2146 CE_g=0.3051/yr P_ruin=0.1797 verdict=INCONCLUSIVE(model-determined sign)
+[po2] F0.5: J_mixture=0.0620 J_worst=-0.2007 CE_g=0.3063/yr P_ruin=0.1787 verdict=INCONCLUSIVE(model-determined sign)
+[po2] F0.7: J_mixture=0.0621 J_worst=-0.2079 CE_g=0.3065/yr P_ruin=0.1787 verdict=INCONCLUSIVE(model-determined sign)
+
+[po2] leverage_curve sweep (J/CE_g/P_ruin shape over L in default grid), per candidate:
+[po2-lev] CONTROL:
+ leverage         J  ce_log_growth_ann  p_ruin_daily_close
+     0.00  0.000000           0.000000            0.000000
+     0.25  0.093478           0.093478            0.000000
+     0.50  0.172747           0.179813            0.005167
+     0.75  0.190121           0.255316            0.047667
+     1.00  0.059407           0.305142            0.179667
+     1.25 -0.224993           0.316854            0.396167
+     1.50 -0.578155           0.291263            0.635667
+     2.00 -1.174448           0.143583            0.963667
+     3.00 -1.293505           0.073536            0.999500
+[po2-lev] F0.5:
+ leverage         J  ce_log_growth_ann  p_ruin_daily_close
+     0.00  0.000000           0.000000            0.000000
+     0.25  0.093659           0.093659            0.000000
+     0.50  0.174076           0.180231            0.004500
+     0.75  0.192167           0.255994            0.046667
+     1.00  0.061982           0.306349            0.178667
+     1.25 -0.224363           0.318168            0.396667
+     1.50 -0.582459           0.291517            0.639000
+     2.00 -1.171167           0.145724            0.962833
+     3.00 -1.290259           0.076783            0.999500
+[po2-lev] F0.7:
+ leverage         J  ce_log_growth_ann  p_ruin_daily_close
+     0.00  0.000000           0.000000            0.000000
+     0.25  0.093822           0.093822            0.000000
+     0.50  0.174395           0.180550            0.004500
+     0.75  0.192689           0.256516            0.046667
+     1.00  0.062142           0.306509            0.178667
+     1.25 -0.224116           0.318415            0.396667
+     1.50 -0.582277           0.291927            0.639167
+     2.00 -1.171707           0.145640            0.963167
+     3.00 -1.291772           0.075269            0.999500
+
+
+DONE. All outputs written to D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\U6B_PRODUCT_A_SCALE_RATE\forward_readiness\out
