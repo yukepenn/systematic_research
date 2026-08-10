@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "task": "EQV02 -- Product B full-history array equality: CURRENT_FORM (real M-hysteresis(3,1)+forceFlat/entryBlocked) vs CANONICAL_FORM (Q_B=Tp+4*bmomPos, hysteresis(5,1), same gates)",
+    "gated_on": "research/system_master/EQV01_BEHAVIORAL_CANONICALIZATION/REPORT.md (Product B: 729/729 EXACT_EQUIVALENCE, forceFlat/entryBlocked=False)",
+    "constants": {
+      "TiltSma": 50,
+      "TiltMult": 1.25,
+      "TiltRescale": 0.9026,
+      "WSolar": 0.7086,
+      "WBmom": 2.83,
+      "EntryLevel": 3.0,
+      "ExitLevel": 1.0,
+      "BmomBandDays": 14,
+      "EntryBlockMinutesBeforeClose": 30,
+      "ForcedFlatMinutesBeforeClose": 21,
+      "BarsRequiredToTrade": 20,
+      "VolPeriod": 460,
+      "SMinTicks": 40.0,
+      "SMaxTicks": 1200.0,
+      "canonical_form": {
+        "Q_B_entry": 5.0,
+        "Q_B_exit": 1.0,
+        "bmom_coef": 4.0
+      }
+    },
+    "data_source": "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\runs\\AUDIT03_BARS\\nq_3m_2022_2026.csv",
+    "data_range": [
+      "2022-01-02 18:03:00",
+      "2026-07-31 16:57:00"
+    ],
+    "n_bars_full_history": 540232,
+    "canonical_window_utc": [
+      "2023-01-01 06:00:00+00:00",
+      "2025-02-02 22:59:59+00:00"
+    ],
+    "canonical_window_et": [
+      "2023-01-01 01:00:00",
+      "2025-02-02 17:59:59"
+    ],
+    "n_bars_canonical_window": 245943,
+    "n_sessions_canonical_window": 539,
+    "mnq_sibling": "SolarWaveOneContractMNQ_v5.cs diffed byte-for-byte against SolarWaveOneContractNQ_v5.cs this session: decision-layer formulas/thresholds/control-flow (member ensemble, BmomBar, tiltState, T/mm/Tp/M, Q_B, hysteresis, forceFlat/entryBlocked) are byte-identical; the only diffs are which BarsArray index plays signal vs execution role (an instrument-wiring difference, not a decision-logic difference). Spot-checked via diff this session, not independently re-run bar-by-bar; relies on this diff plus prior sessions' verification for the MNQ object itself.",
+    "reuse_note": "sumNext (13-member ensemble) reused from the campaign's own validated sm01_solarsim.py/common.py port, spot-checked against the .cs this session. tiltState and bmomPos and the full forceFlat/entryBlocked/hysteresis overlay were freshly, independently bar-by-bar ported directly from the .cs in THIS script, per task instruction to give the operational overlay real (not formality-pass) scrutiny."
+  },
+  "domain_check": {
+    "eqv01_domain": "sumNext in [-13,13] x tiltState in {-1,0,1} x bmomPos in {-1,0,1} x priorPos in {-1,0,1} (729 states)",
+    "all_historical_states_within_domain": true,
+    "violations": []
+  },
+  "canonical_window_comparison_operational": {
+    "label": "CANONICAL_WINDOW_OPERATIONAL",
+    "n_bars": 245943,
+    "n_mismatched_bars": 0,
+    "pct_match": 1.0,
+    "raw_array_hash_equal": true,
+    "hash_current_pos": "1aad09c3c69cab3926765ddc7dd81b19a1b9b8da73c9368cf58e7c086c30dafd",
+    "hash_canonical_pos": "1aad09c3c69cab3926765ddc7dd81b19a1b9b8da73c9368cf58e7c086c30dafd",
+    "event_sequence_equal": true,
+    "hash_current_events": "0806cfd40e58577896b3344fb2809af6b12fc04d66849f7c0937f55ed02bcca2",
+    "hash_canonical_events": "0806cfd40e58577896b3344fb2809af6b12fc04d66849f7c0937f55ed02bcca2",
+    "n_events_current": 1830,
+    "n_events_canonical": 1830,
+    "first_mismatch": null
+  },
+  "full_history_comparison_operational": {
+    "label": "FULL_HISTORY_OPERATIONAL_2022_2026",
+    "n_bars": 540232,
+    "n_mismatched_bars": 0,
+    "pct_match": 1.0,
+    "raw_array_hash_equal": true,
+    "hash_current_pos": "2c501558387c6e85e70ec2c11df2187ccbd706d27a22b17adb299bea6b7b325b",
+    "hash_canonical_pos": "2c501558387c6e85e70ec2c11df2187ccbd706d27a22b17adb299bea6b7b325b",
+    "event_sequence_equal": true,
+    "hash_current_events": "aa659a75911f4bba10c48c9cb9bc2b9a765feb7b64fc1e547898840702656e66",
+    "hash_canonical_events": "aa659a75911f4bba10c48c9cb9bc2b9a765feb7b64fc1e547898840702656e66",
+    "n_events_current": 4036,
+    "n_events_canonical": 4036,
+    "first_mismatch": null
+  },
+  "canonical_window_comparison_raw_gates_off": {
+    "label": "CANONICAL_WINDOW_RAW_GATES_OFF",
+    "n_bars": 245943,
+    "n_mismatched_bars": 0,
+    "pct_match": 1.0,
+    "raw_array_hash_equal": true,
+    "hash_current_pos": "7eb63fb960af7c0d8ba626c69e8f340d5a7df6378708052f0ead4f3c8db96678",
+    "hash_canonical_pos": "7eb63fb960af7c0d8ba626c69e8f340d5a7df6378708052f0ead4f3c8db96678",
+    "event_sequence_equal": true,
+    "hash_current_events": "91253d4e422ec6700d7bffbd20fb4666ad87ef2cd29bf07f078bc580752778d0",
+    "hash_canonical_events": "91253d4e422ec6700d7bffbd20fb4666ad87ef2cd29bf07f078bc580752778d0",
+    "n_events_current": 1832,
+    "n_events_canonical": 1832,
+    "first_mismatch": null
+  },
+  "full_history_comparison_raw_gates_off": {
+    "label": "FULL_HISTORY_RAW_GATES_OFF_2022_2026",
+    "n_bars": 540232,
+    "n_mismatched_bars": 0,
+    "pct_match": 1.0,
+    "raw_array_hash_equal": true,
+    "hash_current_pos": "a4d75a20d5346fcaddaf14c489cbc5c915f7eccce6a15caf296b874b9b4635ec",
+    "hash_canonical_pos": "a4d75a20d5346fcaddaf14c489cbc5c915f7eccce6a15caf296b874b9b4635ec",
+    "event_sequence_equal": true,
+    "hash_current_events": "1012d448c1f740e5f215c3c94911caa50b9d2167a2b9d7c9d1b3fcf747753c60",
+    "hash_canonical_events": "1012d448c1f740e5f215c3c94911caa50b9d2167a2b9d7c9d1b3fcf747753c60",
+    "n_events_current": 4054,
+    "n_events_canonical": 4054,
+    "first_mismatch": null
+  },
+  "canonical_window_mismatch_detail": [],
+  "full_history_mismatch_detail_first25": [],
+  "overlay_coverage_stats": {
+    "canonical_window": {
+      "n_bars": 245943,
+      "n_entryBlocked_bars": 5929,
+      "n_forceFlat_bars": 4312,
+      "n_entryBlocked_not_forceFlat_bars": 1617
+    },
+    "full_history": {
+      "n_bars": 540232,
+      "n_entryBlocked_bars": 13024,
+      "n_forceFlat_bars": 9472,
+      "n_entryBlocked_not_forceFlat_bars": 3552
+    },
+    "current_form_exit_events_during_entryBlocked_full_history": 722
+  },
+  "tiltState_ge_vs_gt_warmup_divergence": {
+    "ge_convention_(shared_health_substrate)_first_nonzero_eligible_at_session_index_0based": 50,
+    "gt_convention_(productB_real_code, this_script)_first_nonzero_eligible_at_session_index_0based": 51,
+    "n_sessions_of_divergence_window": 1,
+    "divergence_window_bar_range": [
+      23299,
+      23759
+    ],
+    "divergence_window_time_range": [
+      "2022-03-14T17:00:00.000000000",
+      "2022-03-15T17:00:00.000000000"
+    ],
+    "falls_within_canonical_window": false
+  },
+  "known_2023_04_05_data_gap": {
+    "description": "NQ 09-26 3-min feed gap 2023-04-05 14:03->20:03 ET, previously disclosed in runs/W17_C4_COMPLIANCE/src/v1d_late_entries.py PART 0. NT8's own IsFirstBarOfSession/IsLastBarOfSession misreads it as an early session close; this script's session grouping (driven off the same first_bar_of_session/is_last_of_sess columns) reproduces that real incumbent behavior rather than diverging from it. Affects CURRENT_FORM and CANONICAL_FORM identically (shared forceFlat/entryBlocked/sessEnd inputs) so cannot by itself cause a mismatch between the two forms.",
+    "falls_within_canonical_window": true,
+    "bars_around_gap": [
+      {
+        "time": "2023-04-05 13:30:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 13:33:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 13:36:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 13:39:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 13:42:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 13:45:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 13:48:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 13:51:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 13:54:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 13:57:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 14:00:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 14:03:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "True"
+      },
+      {
+        "time": "2023-04-05 20:03:00",
+        "first_bar_of_session": "1",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 20:06:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      },
+      {
+        "time": "2023-04-05 20:09:00",
+        "first_bar_of_session": "0",
+        "is_last_of_sess": "False"
+      }
+    ]
+  }
+}

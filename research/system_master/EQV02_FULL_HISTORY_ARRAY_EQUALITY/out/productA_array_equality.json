@@ -1,0 +1,543 @@
+{
+  "task": "EQV02 Product A -- full-history array equality (CURRENT_FORM vs CANONICAL_FORM), including the operational overlay layer never tested by EQV01",
+  "generated": "2026-08-10",
+  "gated_on": "research/system_master/EQV01_BEHAVIORAL_CANONICALIZATION/REPORT.md (Product A: 243/243 EXACT_EQUIVALENCE, finite-state)",
+  "source_files_reused_by_import_not_modified": [
+    "research/system_master/GRID01_SOLAR_RESOLUTION_CONVERGENCE/src/grid_core.py",
+    "src/analytics/sm01_solarsim.py (member_states/member_trades, via grid_core/common.py)",
+    "src/analytics/sm_bmom.py (rth_3m/BAND_DAYS, via grid_core.bmom_pos_series)",
+    "runs/W18R1_M1_VOLSEASON/src/common.py (build_pend, via grid_core)"
+  ],
+  "cs_source_verified": {
+    "file": "src/ninjascript/SolarWaveSMMaster_v4.cs",
+    "decoder_formula_lines": "357-364",
+    "operational_overlay_lines": "366-397",
+    "constants_lines": "94-95 (EntryBlockMinutesBeforeClose=30, ForcedFlatMinutesBeforeClose=21), 130-131 (TiltSma=50, TiltMult=1.25, TiltRescale=0.9026, ShortHalf=0.5, KSolar=0.728654, KBmom=2.934159)"
+  },
+  "constants_used": {
+    "KSolar": 0.728654,
+    "KBmom": 2.934159,
+    "TiltRescale": 0.9026,
+    "TiltMult": 1.25,
+    "ShortHalf": 0.5,
+    "K_canonical": 0.73,
+    "Q_coef_canonical": 4,
+    "EntryBlockMinutesBeforeClose": 30,
+    "ForcedFlatMinutesBeforeClose": 21,
+    "PV_MNQ_A": 2.0,
+    "COMM_MNQ_A": 0.65
+  },
+  "windows": {
+    "primary_claude_canonical": {
+      "start": "2023-01-01",
+      "end": "2025-02-02",
+      "convention": "session date (last-bar-of-session ET calendar date) in [start,end] inclusive -- matches CLAUDE.md's 'To=D means last session ENDING <= D' convention"
+    },
+    "secondary_fuller_history": {
+      "start": "2022-01-02",
+      "end": "2026-07-31",
+      "note": "entire already-loaded, non-locked-forward array; data file itself ends 2026-07-31T16:57, strictly before the 2026-08-01 LOCKED_FORWARD boundary"
+    }
+  },
+  "n_bars_total": 540232,
+  "n_sessions_total": 1184,
+  "domain_check": {
+    "eqv01_claimed_domain": {
+      "sumNext_range": [
+        -13,
+        13
+      ],
+      "tiltState_values": [
+        -1,
+        0,
+        1
+      ],
+      "bmomPos_values": [
+        -1,
+        0,
+        1
+      ],
+      "total_enumerated_states": 243
+    },
+    "n_bars_checked": 540232,
+    "observed_sumNext_range": [
+      -13,
+      13
+    ],
+    "observed_tiltState_values": [
+      -1,
+      0,
+      1
+    ],
+    "observed_bmomPos_values": [
+      -1,
+      0,
+      1
+    ],
+    "n_distinct_states_actually_visited": 243,
+    "n_domain_violations": 0,
+    "domain_violation_examples_capped_25_each": [],
+    "verdict": "ALL_HISTORICAL_STATES_WITHIN_EQV01_DOMAIN",
+    "T_recompute_cross_check_vs_grid_core_T": {
+      "note": "T independently recomputed here from sumNext=PEND.sum(axis=1) via the exact clip(-10,10,round_away(sumNext/13*10)) formula, then compared to grid_core's own e10_target(PEND) output -- a from-scratch cross-check, not a trust assumption.",
+      "match": true,
+      "n_mismatch": 0
+    }
+  },
+  "current_form_cross_checks": {
+    "tgtRaw_vs_grid_core_product_a_exec_M_a": true,
+    "grid_core_dev_window_net": 177924.3999999992,
+    "certified_dev_window_net": 177924.4,
+    "grid_core_gate_passed": true
+  },
+  "identity_check_T_Tpp_bmomPos_shared_between_forms": {
+    "T_is_shared_array": true,
+    "Tpp_is_shared_array": true,
+    "bmomPos_is_shared_array": true,
+    "note": "CURRENT_FORM and CANONICAL_FORM both read T, Tpp, bmomPos from the identical numpy arrays constructed once in step 2 above -- there is no separate CANONICAL_FORM computation of these upstream quantities to diverge from."
+  },
+  "raw_target_historical_margin_analysis": {
+    "purpose": "Same near-miss diagnostic as EQV01's own script, evaluated on the REAL historical M_current values (not the enumerated domain) -- the tightest margin any actual historical bar came to a rounding-direction flip.",
+    "min_safety_margin_across_all_historical_bars": 0.0059099999999983055,
+    "all_bars_positive_margin_i.e_zero_flips": true,
+    "worst_bar": {
+      "bar": 7251,
+      "time": "2022-01-24T15:36:00.000000000",
+      "sess_date": "2022-01-24",
+      "sumNext": 13,
+      "tiltState": 0.0,
+      "bmomPos": 1.0,
+      "T": 10,
+      "Tpp": 9,
+      "M_current": 9.492045000000001,
+      "tgtRaw": 9,
+      "Q_A": 13,
+      "target_A_raw": 9.49,
+      "target_A": 9
+    },
+    "worst_bar_index_and_time": {
+      "bar": 7251,
+      "time": "2022-01-24T15:36:00.000000000"
+    },
+    "eqv01_enumerated_worst_case_margin_for_reference": 0.00591
+  },
+  "overlay_simulator_selfcheck_vs_certified_net": {
+    "certified_dev_window_net": 177924.4,
+    "this_script_simulate_overlay_current_form_dev_net": 177924.3999999992,
+    "match_within_1usd": true,
+    "grid_core_product_a_exec_dev_net_cross_check": 177924.3999999992,
+    "bar_pos_matches_grid_core_bar_pos": true
+  },
+  "raw_target_mismatches": {
+    "n_total_mismatches_full_history": 0,
+    "examples_capped_50": []
+  },
+  "operational_target_mismatches": {
+    "n_total_mismatches_full_history": 0,
+    "examples_capped_50": []
+  },
+  "physical_position_mismatches": {
+    "n_total_mismatches_full_history": 0
+  },
+  "window_reports": {
+    "primary_claude_canonical": {
+      "label": "primary_claude_canonical_2023-01-01_to_2025-02-02",
+      "n_bars": 245943,
+      "date_range": [
+        "2023-01-03",
+        "2025-01-31"
+      ],
+      "raw_target_array": {
+        "exact_matches": 245943,
+        "mismatches": 0,
+        "exact_match_rate_pct": 100.0,
+        "sha256_current_tgtRaw": "f1178da9cf0462c789b39eea0f1805a31690f9ec1373858b1dfc9c086144f70f",
+        "sha256_canonical_target_A": "f1178da9cf0462c789b39eea0f1805a31690f9ec1373858b1dfc9c086144f70f",
+        "bit_identical": true
+      },
+      "operational_target_array": {
+        "exact_matches": 245943,
+        "mismatches": 0,
+        "exact_match_rate_pct": 100.0,
+        "sha256_current": "88ec854ae993dc7fb0b6026cdac8f5d2a425f0b4965faad796c8e80b05a29aa2",
+        "sha256_canonical": "88ec854ae993dc7fb0b6026cdac8f5d2a425f0b4965faad796c8e80b05a29aa2",
+        "bit_identical": true
+      },
+      "physical_position_array_bonus": {
+        "exact_matches": 245943,
+        "mismatches": 0,
+        "exact_match_rate_pct": 100.0,
+        "sha256_current": "64ad55639dca688b5171a4329ca71c26a3d682477187138cb48e82c7c092de43",
+        "sha256_canonical": "64ad55639dca688b5171a4329ca71c26a3d682477187138cb48e82c7c092de43",
+        "bit_identical": true
+      },
+      "exposure_change_events": {
+        "n_events_current": 11292,
+        "n_events_canonical": 11292,
+        "full_event_sequence_identical_incl_timestamps": true,
+        "sha256_full_event_sequence_current": "8afe22f333a9af6cd87032c8e0841939e6bda93acf609a797cb79446aaeebba2",
+        "sha256_full_event_sequence_canonical": "8afe22f333a9af6cd87032c8e0841939e6bda93acf609a797cb79446aaeebba2",
+        "sha256_quantity_sequence_only_current": "cd303a2f101d755755859785acc51b81e8c2be0a1d82088807ed5c86ae8f793e",
+        "sha256_quantity_sequence_only_canonical": "cd303a2f101d755755859785acc51b81e8c2be0a1d82088807ed5c86ae8f793e",
+        "quantity_sequence_bit_identical": true,
+        "total_abs_quantity_traded_current": 16786,
+        "total_abs_quantity_traded_canonical": 16786,
+        "first_5_events_current": [
+          {
+            "bar": 117796,
+            "time": "2023-01-02 18:15:00",
+            "sess_date": "2023-01-03",
+            "quantity": -2,
+            "resulting_position": -2
+          },
+          {
+            "bar": 117797,
+            "time": "2023-01-02 18:18:00",
+            "sess_date": "2023-01-03",
+            "quantity": -2,
+            "resulting_position": -4
+          },
+          {
+            "bar": 117816,
+            "time": "2023-01-02 19:15:00",
+            "sess_date": "2023-01-03",
+            "quantity": -2,
+            "resulting_position": -6
+          },
+          {
+            "bar": 117817,
+            "time": "2023-01-02 19:18:00",
+            "sess_date": "2023-01-03",
+            "quantity": -1,
+            "resulting_position": -7
+          },
+          {
+            "bar": 117833,
+            "time": "2023-01-02 20:06:00",
+            "sess_date": "2023-01-03",
+            "quantity": -1,
+            "resulting_position": -8
+          }
+        ],
+        "last_5_events_current": [
+          {
+            "bar": 363697,
+            "time": "2025-01-31 15:09:00",
+            "sess_date": "2025-01-31",
+            "quantity": -1,
+            "resulting_position": -6
+          },
+          {
+            "bar": 363712,
+            "time": "2025-01-31 15:54:00",
+            "sess_date": "2025-01-31",
+            "quantity": 2,
+            "resulting_position": -4
+          },
+          {
+            "bar": 363714,
+            "time": "2025-01-31 16:00:00",
+            "sess_date": "2025-01-31",
+            "quantity": 3,
+            "resulting_position": -1
+          },
+          {
+            "bar": 363716,
+            "time": "2025-01-31 16:06:00",
+            "sess_date": "2025-01-31",
+            "quantity": -1,
+            "resulting_position": -2
+          },
+          {
+            "bar": 363728,
+            "time": "2025-01-31 16:42:00",
+            "sess_date": "2025-01-31",
+            "quantity": 2,
+            "resulting_position": 0
+          }
+        ],
+        "first_5_events_canonical": [
+          {
+            "bar": 117796,
+            "time": "2023-01-02 18:15:00",
+            "sess_date": "2023-01-03",
+            "quantity": -2,
+            "resulting_position": -2
+          },
+          {
+            "bar": 117797,
+            "time": "2023-01-02 18:18:00",
+            "sess_date": "2023-01-03",
+            "quantity": -2,
+            "resulting_position": -4
+          },
+          {
+            "bar": 117816,
+            "time": "2023-01-02 19:15:00",
+            "sess_date": "2023-01-03",
+            "quantity": -2,
+            "resulting_position": -6
+          },
+          {
+            "bar": 117817,
+            "time": "2023-01-02 19:18:00",
+            "sess_date": "2023-01-03",
+            "quantity": -1,
+            "resulting_position": -7
+          },
+          {
+            "bar": 117833,
+            "time": "2023-01-02 20:06:00",
+            "sess_date": "2023-01-03",
+            "quantity": -1,
+            "resulting_position": -8
+          }
+        ],
+        "last_5_events_canonical": [
+          {
+            "bar": 363697,
+            "time": "2025-01-31 15:09:00",
+            "sess_date": "2025-01-31",
+            "quantity": -1,
+            "resulting_position": -6
+          },
+          {
+            "bar": 363712,
+            "time": "2025-01-31 15:54:00",
+            "sess_date": "2025-01-31",
+            "quantity": 2,
+            "resulting_position": -4
+          },
+          {
+            "bar": 363714,
+            "time": "2025-01-31 16:00:00",
+            "sess_date": "2025-01-31",
+            "quantity": 3,
+            "resulting_position": -1
+          },
+          {
+            "bar": 363716,
+            "time": "2025-01-31 16:06:00",
+            "sess_date": "2025-01-31",
+            "quantity": -1,
+            "resulting_position": -2
+          },
+          {
+            "bar": 363728,
+            "time": "2025-01-31 16:42:00",
+            "sess_date": "2025-01-31",
+            "quantity": 2,
+            "resulting_position": 0
+          }
+        ]
+      }
+    },
+    "secondary_fuller_history": {
+      "label": "secondary_fuller_history_2022-01-02_to_2026-07-31",
+      "n_bars": 540232,
+      "date_range": [
+        "2022-01-03",
+        "2026-07-31"
+      ],
+      "raw_target_array": {
+        "exact_matches": 540232,
+        "mismatches": 0,
+        "exact_match_rate_pct": 100.0,
+        "sha256_current_tgtRaw": "408b1264e724e77d987fad6ed63886a608a0666055b6af6e1d1f198894793373",
+        "sha256_canonical_target_A": "408b1264e724e77d987fad6ed63886a608a0666055b6af6e1d1f198894793373",
+        "bit_identical": true
+      },
+      "operational_target_array": {
+        "exact_matches": 540232,
+        "mismatches": 0,
+        "exact_match_rate_pct": 100.0,
+        "sha256_current": "67327bb58d8e6da3421f0e50d5aa20a533491a98b2e9fb533e2c5987d2782507",
+        "sha256_canonical": "67327bb58d8e6da3421f0e50d5aa20a533491a98b2e9fb533e2c5987d2782507",
+        "bit_identical": true
+      },
+      "physical_position_array_bonus": {
+        "exact_matches": 540232,
+        "mismatches": 0,
+        "exact_match_rate_pct": 100.0,
+        "sha256_current": "fe717bacdf6dfb52620d12d1702830ff72ca462b73a6b213e6f3f871c164526d",
+        "sha256_canonical": "fe717bacdf6dfb52620d12d1702830ff72ca462b73a6b213e6f3f871c164526d",
+        "bit_identical": true
+      },
+      "exposure_change_events": {
+        "n_events_current": 25441,
+        "n_events_canonical": 25441,
+        "full_event_sequence_identical_incl_timestamps": true,
+        "sha256_full_event_sequence_current": "908bffadaa13a6cc0795cc516b43834b03ef99bda76bd9895bc71573bb2ad250",
+        "sha256_full_event_sequence_canonical": "908bffadaa13a6cc0795cc516b43834b03ef99bda76bd9895bc71573bb2ad250",
+        "sha256_quantity_sequence_only_current": "a3d43d8c4abecb930e4334a4eade8deb407f26d6c77f7348130d98b4db6495f2",
+        "sha256_quantity_sequence_only_canonical": "a3d43d8c4abecb930e4334a4eade8deb407f26d6c77f7348130d98b4db6495f2",
+        "quantity_sequence_bit_identical": true,
+        "total_abs_quantity_traded_current": 38470,
+        "total_abs_quantity_traded_canonical": 38470,
+        "first_5_events_current": [
+          {
+            "bar": 40,
+            "time": "2022-01-02 20:03:00",
+            "sess_date": "2022-01-03",
+            "quantity": 7,
+            "resulting_position": 7
+          },
+          {
+            "bar": 60,
+            "time": "2022-01-02 21:03:00",
+            "sess_date": "2022-01-03",
+            "quantity": -1,
+            "resulting_position": 6
+          },
+          {
+            "bar": 63,
+            "time": "2022-01-02 21:12:00",
+            "sess_date": "2022-01-03",
+            "quantity": -1,
+            "resulting_position": 5
+          },
+          {
+            "bar": 80,
+            "time": "2022-01-02 22:03:00",
+            "sess_date": "2022-01-03",
+            "quantity": 1,
+            "resulting_position": 6
+          },
+          {
+            "bar": 144,
+            "time": "2022-01-03 01:15:00",
+            "sess_date": "2022-01-03",
+            "quantity": -1,
+            "resulting_position": 5
+          }
+        ],
+        "last_5_events_current": [
+          {
+            "bar": 540143,
+            "time": "2026-07-31 12:33:00",
+            "sess_date": "2026-07-31",
+            "quantity": 1,
+            "resulting_position": -7
+          },
+          {
+            "bar": 540162,
+            "time": "2026-07-31 13:30:00",
+            "sess_date": "2026-07-31",
+            "quantity": 4,
+            "resulting_position": -3
+          },
+          {
+            "bar": 540212,
+            "time": "2026-07-31 16:00:00",
+            "sess_date": "2026-07-31",
+            "quantity": 3,
+            "resulting_position": 0
+          },
+          {
+            "bar": 540213,
+            "time": "2026-07-31 16:03:00",
+            "sess_date": "2026-07-31",
+            "quantity": -1,
+            "resulting_position": -1
+          },
+          {
+            "bar": 540225,
+            "time": "2026-07-31 16:39:00",
+            "sess_date": "2026-07-31",
+            "quantity": 1,
+            "resulting_position": 0
+          }
+        ],
+        "first_5_events_canonical": [
+          {
+            "bar": 40,
+            "time": "2022-01-02 20:03:00",
+            "sess_date": "2022-01-03",
+            "quantity": 7,
+            "resulting_position": 7
+          },
+          {
+            "bar": 60,
+            "time": "2022-01-02 21:03:00",
+            "sess_date": "2022-01-03",
+            "quantity": -1,
+            "resulting_position": 6
+          },
+          {
+            "bar": 63,
+            "time": "2022-01-02 21:12:00",
+            "sess_date": "2022-01-03",
+            "quantity": -1,
+            "resulting_position": 5
+          },
+          {
+            "bar": 80,
+            "time": "2022-01-02 22:03:00",
+            "sess_date": "2022-01-03",
+            "quantity": 1,
+            "resulting_position": 6
+          },
+          {
+            "bar": 144,
+            "time": "2022-01-03 01:15:00",
+            "sess_date": "2022-01-03",
+            "quantity": -1,
+            "resulting_position": 5
+          }
+        ],
+        "last_5_events_canonical": [
+          {
+            "bar": 540143,
+            "time": "2026-07-31 12:33:00",
+            "sess_date": "2026-07-31",
+            "quantity": 1,
+            "resulting_position": -7
+          },
+          {
+            "bar": 540162,
+            "time": "2026-07-31 13:30:00",
+            "sess_date": "2026-07-31",
+            "quantity": 4,
+            "resulting_position": -3
+          },
+          {
+            "bar": 540212,
+            "time": "2026-07-31 16:00:00",
+            "sess_date": "2026-07-31",
+            "quantity": 3,
+            "resulting_position": 0
+          },
+          {
+            "bar": 540213,
+            "time": "2026-07-31 16:03:00",
+            "sess_date": "2026-07-31",
+            "quantity": -1,
+            "resulting_position": -1
+          },
+          {
+            "bar": 540225,
+            "time": "2026-07-31 16:39:00",
+            "sess_date": "2026-07-31",
+            "quantity": 1,
+            "resulting_position": 0
+          }
+        ]
+      }
+    }
+  },
+  "verdict": {
+    "domain_verdict": "ALL_HISTORICAL_STATES_WITHIN_EQV01_DOMAIN",
+    "canonical_window_verdict": "EXACT_EQUIVALENCE",
+    "fuller_history_verdict": "EXACT_EQUIVALENCE",
+    "backstop_events_current_form": {
+      "n": 0,
+      "examples": []
+    },
+    "backstop_events_canonical_form": {
+      "n": 0,
+      "examples": []
+    },
+    "interpretation": "Every historical bar's (sumNext,tiltState,bmomPos) falls inside EQV01's enumerated 243-state domain (see domain_check), so EQV01's finite-state proof mechanically covers every bar's RAW decoder output by construction. This script's contribution is (a) confirming that mechanical implication empirically bar-by-bar rather than trusting it, and (b) running the operational overlay's real, TIME-SEQUENCED, path-dependent position walk (never tested by EQV01's single-step enumeration) against real session clocks and real historical fills, on BOTH forms through the identical simulate_overlay() code path -- confirming the equivalence survives statefulness, not just the stateless decoder step."
+  },
+  "runtime_seconds": 13.6
+}
