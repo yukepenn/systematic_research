@@ -1,0 +1,48 @@
+{
+  "total_dollar_residual_examined": 1203.5,
+  "per_period_residual": {
+    "P1": 216.0,
+    "P2": 106.0,
+    "P3": 26.5,
+    "P4": 76.5,
+    "P5": 146.5,
+    "P6": 80.5,
+    "P7": 263.0,
+    "P8": 139.5,
+    "P9": 149.0
+  },
+  "bucket_totals": {
+    "genuine_mnq_vs_proxy_price_basis": 67.0,
+    "fill_timing": 0.0,
+    "bar_boundary_serialization": 0.0,
+    "same_bar_transition": 0.0,
+    "one_tick_convention": 1136.5,
+    "commission": 0.0,
+    "session_close_handling": 0.0,
+    "rounding": 0.0,
+    "unexplained": 0.0
+  },
+  "n_legs_total": 1371,
+  "n_legs_by_match_type": {
+    "exact": 1371
+  },
+  "n_legs_qty_mismatch": 0,
+  "extrapolation": {
+    "full_history_certified_residual": 19405.3,
+    "full_history_certified_residual_source": "runs/V1R4_NT8_PARITY/FULL_HISTORY_CERTIFICATION.md L59-68",
+    "n_sessions_full": 1139,
+    "n_sessions_sample": 55,
+    "turnover_full": 36794.0,
+    "turnover_sample": 2296.0,
+    "genuine_mnq_price_basis_full_history_EXACT": 763.0,
+    "genuine_mnq_price_basis_source": "runs/PRICE01_PRODUCT_A_GENUINE_MNQ/REPORT.md (exact, not extrapolated)",
+    "one_tick_convention_rate_per_contract_turnover": 0.495,
+    "one_tick_convention_turnover_scaled_PRIMARY": 18212.71,
+    "one_tick_convention_sessioncount_scaled_UPPER": 23535.88,
+    "total_explained_turnover_scaled": 18975.71,
+    "total_explained_turnover_scaled_pct": 97.8,
+    "total_explained_sessioncount_scaled": 24298.88,
+    "total_explained_sessioncount_scaled_pct": 125.2,
+    "caveat": "Turnover-scaling is the primary estimate because one_tick_convention's dollar impact is a near-deterministic linear function of turnover (qty * $0.50/contract, verified in-sample: rate is within 1%% of the theoretical $0.50 max). Session-count scaling is shown as an explicit upper bound because the 9 periods were deliberately selected for turnover/exposure/reversal EXTREMES, not randomly, so they over-represent high-turnover sessions (+29%% turnover/session vs full history) -- this is a genuine extrapolation with real uncertainty, not a proof, for the one_tick_convention bucket specifically; the price-basis bucket uses PRICE01's own exact full-history figure, not an extrapolation. Chunks E2 (2022-09-01..2023-05-01) and E4 (2024-01-01..2024-09-01) are not independently represented in the 9 periods (disclosed in 00_period_selection.md); if either chunk has a structurally different tick-clip rate this extrapolation would be off."
+  }
+}

@@ -107,6 +107,18 @@ boundary-serialization quirk), same as BEST_ONE_NQ/MNQ's fully-dollar-reconciled
 (+4.13% / +4.41%) — but Product A's has not been reduced to an exact leg-level proof the way
 the one-contract objects' have. See `runs/V1R4_NT8_PARITY/FULL_HISTORY_CERTIFICATION.md`.
 
+> **UPDATE 2026-08-10 — EXEC01 leg-level proof completed.** Per the structural-invariance campaign's
+> P5, `runs/EXEC01_PRODUCT_A_DOLLAR_ATTRIBUTION/REPORT.md` leg-by-leg reconciled Product A across 9
+> deliberately-selected representative periods (55 sessions, high turnover/exposure/reversal
+> extremes, chosen before opening any NT8 record): **1,371/1,371 order-level legs matched 1:1, zero
+> unexplained dollars.** 100% of the sample residual attributes to the same two already-disclosed
+> conventions above (94.4% one-tick fill convention, 5.6% genuine-MNQ price basis) — no decision-
+> layer defect found in any leg examined. Extrapolated to the full history: ~97.8% of the +10.91%
+> residual explained. This does not fully supersede the "not leg-verified beyond Q1-2025" line above
+> (9 representative periods + extrapolation, not every session), but it materially closes the gap
+> and sets a conservative forward bar: any future Product-A challenger whose Python-research PnL
+> improvement is smaller than ~$430/0.24% must not be promoted on Python evidence alone (sec70).
+
 ## Do not reopen unchanged
 
 - **S2_SELTIME's exact frozen rule** (block new commitments/reversals 02:00-08:00 ET) — fully
