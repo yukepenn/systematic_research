@@ -1,0 +1,128 @@
+run_id: WIN01_WINNER_EXIT_RELAXATION
+family: "WIN01 -- winner-qualified exit relaxation (Master v3 sec26-31). Opposite direction from
+  every prior exit-research family (U4B, R2 confirmation-exit, H-007, SM03/SM03B all tested
+  tightening/de-risking and repeatedly harmed convex winners). Question: once a trade has proven
+  itself (already-realized favorable excursion), is the incumbent's hysteresis exiting winners
+  too early?"
+frozen_before_code: true
+frozen_before_results: true
+date_frozen: "2026-08-09"
+
+prior_art_check: >
+  D3/B9 (owner-recalled prior diagnostics) do not exist anywhere in this repo -- new construction,
+  no prior art to reconcile. STOP_OVERLAY_FRONTIER.md's "Break-even/trailing variants CLOSED by
+  inheritance" verdict does NOT cover this question: its two predicates are H-007 (tested
+  exit/reversal ratio only in {0.26,0.50,0.70,0.85,1.00} -- only TIGHTER than or equal to
+  baseline, never looser) and SM03B (a loss-side disaster stop, winner retention used only as a
+  pass/fail constraint, never as the treatment variable). Sanctioned, open per OWNER_DIRECTIVE
+  item 7 / V4 -- legitimate non-duplicative research.
+
+substrate_reuse:
+  product_b: "runs/SA0_SYSTEM_STRUCTURE/current_health/src/health_substrate.py (HS) -- imported
+    directly for M/entry_blocked_c4/forced_flat_c4/bars/prices/COMM_NQ/PV_NQ/COMM_MNQ/PV_MNQ/
+    ENTRY_LEVEL(3.0)/EXIT_LEVEL(1.0)/CANONICAL_END. build_pos_seq + onelot_exec are the reference
+    baseline; the intervention is a merged single-pass rewrite of the same two functions (decision
+    + execution interleaved so a causal running block P&L is available to the decision step) --
+    verified byte-identical to the original when qualification is set unreachable (see correctness
+    gate below)."
+  product_a: "runs/PA0_PRODUCT_A_STRUCTURE/src/pa0_substrate.py's product_a_exec formula
+    (KSOLAR/KBMOM/TILTRESCALE/TILTMULT/SHORTHALF), generalized the same way U0/PRICE01 already
+    generalize it (accepts arbitrary O/H/L/C price arrays so both LEGACY_RESEARCH_PROXY [NQ OHLC]
+    and GENUINE_MNQ_EXECUTION_ECONOMICS [genuine MNQ OHLC through 2026-05-29, PRODUCTB_ONECONTRACT_
+    FINAL/out/mnq_3m_raw.csv, same alignment pattern as PRICE01] can be reported per sec13/77)."
+
+winner_qualification_rule_FROZEN:
+  causal_signal: "Running block MFE in dollars, tracked ONLINE inside the merged decision+exec
+    loop from bar-level mark-to-market P&L within the currently-open sign-block (identical
+    definition to U0's segment_and_mfe_mae: mfe_block = running-max(max(cumulative bar pnl since
+    block start, 0)) -- a pure function of already-realized bars, zero look-ahead). Resets to 0
+    whenever the position's SIGN changes (flat, reversal, or forced session-close), matching the
+    u0_state_table block_id_B/block_id_A segmentation convention exactly."
+  product_b_threshold: "MFE_B_dollars (running, online) >= $1,000 (NQ 1-lot). Chosen from the
+    ACTUAL block-level MFE distribution in u0_state_table.parquet's canonical window (1,978
+    nonzero-sign blocks): median block MFE = $1,172.82, and $1,000 sits at the 54.6th percentile
+    -- a round number placed near the median so roughly half of all blocks are eligible, giving
+    real statistical power while still requiring the trade to have moved meaningfully in its
+    favor before anything is relaxed. Descriptive fact used only to justify reachability, not
+    fit to any intervention outcome: blocks that reach $1,000 MFE end up net winners 68.2% of the
+    time (736/1,079) vs 41.8% for all blocks; mean giveback_ratio at exit for MFE>=$1,000 blocks
+    is 0.853 -- i.e. on average 85% of a qualified block's own peak favorable excursion is already
+    being given back by the time the incumbent's hysteresis flattens it. That giveback-at-exit
+    fact is the empirical motivation for this family, not a look-ahead input into the rule."
+  product_a_threshold: "MFE_A_dollars (running, online, same definition) >= $1,000 -- identical
+    dollar bar to Product B for direct cross-product comparability (disclosed: Product-A's block
+    composition differs structurally -- median block MFE is only $77.35 because most A blocks are
+    small scale-in/out blips, so $1,000 sits at the 86.7th percentile for A, a stricter bar than
+    for B; this is reported, not adjusted, because the question is 'does the SAME proven-itself
+    standard help,' not 'find A's own median')."
+
+relaxation_construction_FROZEN:
+  product_b: "Discrete {-1,0,1}, baseline EXIT_LEVEL=1.0 (position flattens when M crosses back
+    through +-1.0). Once winner-qualified in the current block, the flatten trigger for THAT block
+    only uses a LOWER (relaxed) exit level instead of 1.0 -- i.e. M must fall further before the
+    position is released. Reversal trigger (M crosses -+ENTRY_LEVEL=3.0), C4 windows
+    (entry_blocked_c4/forced_flat_c4), and end-of-session forced flatten are ALL LEFT COMPLETELY
+    UNCHANGED -- only the ordinary exit_level comparison branch is modified. Two cells, chosen
+    directly from the directive's own suggested values (both genuinely distinct: baseline gives up
+    the position at M<=1.0; RELAX_050 requires M<=0.5 (holds through the [0.5,1.0] M-band the
+    baseline treats as flat); RELAX_000 requires M<=0.0 (holds through the [0.0,1.0] M-band,
+    i.e. until M actually crosses to the OPPOSITE side of neutral)):
+      - WINB_RELAX_050: relaxed_exit_level = 0.5
+      - WINB_RELAX_000: relaxed_exit_level = 0.0"
+  product_a: "Continuous target exposure -13..+13 (rha-rounded M-implied score, C4-partial-size-
+    gated). Once winner-qualified in the current block, the PER-BAR decrease in |target_exposure_A|
+    (same-sign decay only -- SCALE_DOWN action, never applies to sign flips/forced_flat/entry_
+    blocked-window behavior, which stay completely unchanged per directive) is throttled by ONE of
+    two distinct mechanisms, chosen from the ACTUAL per-bar decrease distribution (8,015 SCALE_DOWN
+    events, canonical window): median decrease is already 1 contract/bar (75th pct = 1, 90th = 3,
+    99th = 4, max = 8) -- so a cap materially affects only the right tail of single-bar decays:
+      - WINA_CAP1: cap the per-bar |exposure| decrease at 1 contract (glide the rest of any
+        multi-contract single-bar decay out over subsequent bars instead of snapping immediately;
+        affects the ~25% of SCALE_DOWN events with |decrease|>1).
+      - WINA_FLOOR050: |target_exposure_A| may not decay below 50% of the block's own running peak
+        |exposure| (peak tracked online/causally) until the raw M-implied target actually reaches
+        0 or flips sign -- a materially stronger relaxation than the 1-contract cap, included
+        specifically to see whether the cap's small effect is a dosage problem or a mechanism
+        problem. Both mechanisms are absolutely overridden by forced_flat_c4, entry_blocked_c4's
+        existing partial-size gate, and end-of-session flatten -- C4 safety is untouched."
+
+correctness_gate: "Before any relaxation cell is evaluated: (1) the merged Product-B decision+exec
+  loop with qualification threshold set unreachable (+inf) and relaxed_exit_level=EXIT_LEVEL must
+  reproduce the certified canonical net EXACTLY ($301,915.92 NQ, sliced to <=2026-05-29,
+  is_health_only_bar==False) -- proves the refactor introduced no behavior change on its own.
+  (2) The generalized Product-A exec with the cap/floor mechanism set to a no-op (threshold +inf)
+  must reproduce $177,924.40 (LEGACY, NQ-price) exactly. If either gate fails, STOP and report why
+  before evaluating any candidate."
+
+battery:
+  right_tail: "Top-20 / bottom-20 all-time blocks by run_pnl at block exit, control vs each
+    candidate, reported for both products; explicit count of how many of control's top/bottom-20
+    blocks are extended/truncated/resequenced by each candidate."
+  chronology: "Year-by-year 2022-2026 net; 2022-2025-only delta vs control reported as %% of
+    control's 2022-2025 net (wash threshold <1%%); LOYO (drop one year, recompute delta) where
+    meaningful; 2026 health-only extension (2026-06-01..2026-07-31) reported SEPARATELY, never
+    blended into the promotion read."
+  opportunity_occupancy: "MANDATORY (sec30). Bar-level attribution vs control: AGREE bars (same
+    position, by construction identical bar P&L) excluded from the decomposition; DIFFER bars
+    split into (a) pure extension bars (control flat, candidate still holding the qualified
+    block) -> summed per-block into 'added winner $' (block's extension segment nets positive) vs
+    'added loser $' (nets negative, incl. cases where extension turns a would-be winner into a
+    worse outcome); (b) occupancy-blocked bars (control holds/trades something candidate cannot
+    because candidate is still occupied by the extended block) -> 'later-entry / reversal
+    opportunity cost', with the REVERSAL subset (control's action_B=='REVERSAL' bars) and the C4
+    subset (forced_flat_c4 bars) flagged and summed separately. Exit-reason tagging per extended
+    block (C4_FORCED vs M_RELAXED_EXIT vs REVERSAL vs SESSION_CLOSE) to test the C4 interaction
+    explicitly (baseline fact: C4-forced exits win 75% of the time historically)."
+  cost_stress: "Commission multiplier 1x (baseline, $2.18/side NQ, $0.65/side MNQ-leg-A) / 1.5x /
+    2x on the SAME candidate position paths (execution mechanics only, not the decision layer) --
+    does the candidate's edge-over-control survive higher friction, and does relaxation's own
+    trade-count change (fewer or more round trips vs control) make it more or less friction-
+    sensitive than the incumbent."
+  product_a_dual_truth: "Both LEGACY_RESEARCH_PROXY (NQ OHLC fill, matches pa0_substrate.py/U0
+    verbatim) and GENUINE_MNQ_EXECUTION_ECONOMICS (genuine MNQ OHLC through 2026-05-29) reported;
+    GENUINE is primary for ranking per sec13/77."
+
+promotion_bar: "Same standing bar as every other family this wave: 2022-2025 delta vs control
+  must exceed the 1%% wash threshold, right-tail must show genuine added tail (not merely later-
+  entry-cost-shifted P&L), and the opportunity-occupancy attribution must NOT show the added tail
+  is fully offset by occupancy/reversal-blocking cost. No promotion without all three."
