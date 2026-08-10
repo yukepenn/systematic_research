@@ -1,0 +1,287 @@
+{
+  "task": "EQV03 Product A -- PnL equality (CURRENT_FORM vs CANONICAL_FORM), fed from EQV02's already-proven-identical operational target arrays, under legacy NQ-proxy and genuine MNQ pricing",
+  "generated": "2026-08-10",
+  "gated_on": {
+    "eqv01": "research/system_master/EQV01_BEHAVIORAL_CANONICALIZATION/REPORT.md (Product A: 243/243 EXACT_EQUIVALENCE, finite-state)",
+    "eqv02": "research/system_master/EQV02_FULL_HISTORY_ARRAY_EQUALITY/REPORT.md + out/productA_array_equality.json (Product A: full-history EXACT_EQUIVALENCE, raw target / operational target / physical position / exposure-event arrays, canonical + fuller windows)"
+  },
+  "execution_convention_source": "research/system_master/EQV02_FULL_HISTORY_ARRAY_EQUALITY/src/01_productA_full_history.py simulate_overlay() -- itself a verbatim-structure copy of grid_core.product_a_exec / U0's product_a_exec_generalized / runs/PRICE01_PRODUCT_A_GENUINE_MNQ/src/01_dual_truth_repricing.py's product_a_exec_generalized inner loop",
+  "price_bases_tested": [
+    "legacy_nq_proxy (NQ OHLC, MNQ $2/pt applied directly to NQ price levels)",
+    "genuine_mnq (genuine MNQU6 OHLC, PRICE01 alignment pattern, NQ-proxy fallback for bars with no genuine MNQ quote)"
+  ],
+  "constants_used": {
+    "KSolar": 0.728654,
+    "KBmom": 2.934159,
+    "TiltRescale": 0.9026,
+    "TiltMult": 1.25,
+    "ShortHalf": 0.5,
+    "K_canonical": 0.73,
+    "Q_coef_canonical": 4,
+    "PV_MNQ_A": 2.0,
+    "COMM_MNQ_A": 0.65
+  },
+  "windows": {
+    "primary_claude_canonical": {
+      "start": "2023-01-01",
+      "end": "2025-02-02"
+    },
+    "secondary_fuller_history": {
+      "start": "2022-01-02",
+      "end": "2026-07-31"
+    }
+  },
+  "n_bars_total": 540232,
+  "n_mnq_genuine_bars": 519703,
+  "reproduction_check_vs_eqv02_recorded_hashes": {
+    "primary_claude_canonical": {
+      "raw_target_current_matches_eqv02": true,
+      "raw_target_canonical_matches_eqv02": true,
+      "my_sha256_current": "f1178da9cf0462c789b39eea0f1805a31690f9ec1373858b1dfc9c086144f70f",
+      "eqv02_sha256_current": "f1178da9cf0462c789b39eea0f1805a31690f9ec1373858b1dfc9c086144f70f",
+      "my_sha256_canonical": "f1178da9cf0462c789b39eea0f1805a31690f9ec1373858b1dfc9c086144f70f",
+      "eqv02_sha256_canonical": "f1178da9cf0462c789b39eea0f1805a31690f9ec1373858b1dfc9c086144f70f"
+    },
+    "secondary_fuller_history": {
+      "raw_target_current_matches_eqv02": true,
+      "raw_target_canonical_matches_eqv02": true,
+      "my_sha256_current": "408b1264e724e77d987fad6ed63886a608a0666055b6af6e1d1f198894793373",
+      "eqv02_sha256_current": "408b1264e724e77d987fad6ed63886a608a0666055b6af6e1d1f198894793373",
+      "my_sha256_canonical": "408b1264e724e77d987fad6ed63886a608a0666055b6af6e1d1f198894793373",
+      "eqv02_sha256_canonical": "408b1264e724e77d987fad6ed63886a608a0666055b6af6e1d1f198894793373"
+    }
+  },
+  "ops_and_position_vs_eqv02_recorded_hashes": {
+    "primary_claude_canonical": {
+      "ops_current_matches_eqv02": true,
+      "ops_canonical_matches_eqv02": true,
+      "pos_current_matches_eqv02": true,
+      "pos_canonical_matches_eqv02": true
+    },
+    "secondary_fuller_history": {
+      "ops_current_matches_eqv02": true,
+      "ops_canonical_matches_eqv02": true,
+      "pos_current_matches_eqv02": true,
+      "pos_canonical_matches_eqv02": true
+    }
+  },
+  "price_invariance_of_decision_layer": {
+    "current_form_ops_identical_across_price_bases": true,
+    "canonical_form_ops_identical_across_price_bases": true,
+    "current_form_pos_identical_across_price_bases": true,
+    "canonical_form_pos_identical_across_price_bases": true
+  },
+  "backstop_events": {
+    "current_legacy": 0,
+    "canonical_legacy": 0,
+    "current_genuine": 0,
+    "canonical_genuine": 0
+  },
+  "pnl_comparisons": {
+    "legacy_nq_proxy": {
+      "primary_claude_canonical": {
+        "label": "legacy_nq_proxy / CLAUDE.md canonical window (2023-01-01..2025-02-02)",
+        "n_bars": 245943,
+        "n_sessions": 539,
+        "bar_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "56f4e92daeddf0d927a4c305d6ed082d183ff23ca378d326f074b6227bd43477",
+          "sha256_canonical": "56f4e92daeddf0d927a4c305d6ed082d183ff23ca378d326f074b6227bd43477"
+        },
+        "daily_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "5ff68df2d7f61e632e5a59db96c0274f5c12bd8f75f9d418eb1058812819b424",
+          "sha256_canonical": "5ff68df2d7f61e632e5a59db96c0274f5c12bd8f75f9d418eb1058812819b424"
+        },
+        "net_total": {
+          "current": 49703.6000000053,
+          "canonical": 49703.6000000053,
+          "diff": 0.0,
+          "bit_identical": true
+        },
+        "mismatch_examples_capped_25": []
+      },
+      "certified_dev_window": {
+        "label": "legacy_nq_proxy / Product A certified dev window (..2026-05-31)",
+        "n_bars": 519714,
+        "n_sessions": 1139,
+        "bar_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "e7198d3b6faba5a1af5694d5e346555bf8adc4db3d0bb18542eaa1da9deb3bff",
+          "sha256_canonical": "e7198d3b6faba5a1af5694d5e346555bf8adc4db3d0bb18542eaa1da9deb3bff"
+        },
+        "daily_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "9086019bcd3d61e3d234efcb06053641edae1a5f24cb9334e33e248bd8103e7d",
+          "sha256_canonical": "9086019bcd3d61e3d234efcb06053641edae1a5f24cb9334e33e248bd8103e7d"
+        },
+        "net_total": {
+          "current": 177924.3999999992,
+          "canonical": 177924.3999999992,
+          "diff": 0.0,
+          "bit_identical": true
+        },
+        "mismatch_examples_capped_25": []
+      },
+      "secondary_fuller_history": {
+        "label": "legacy_nq_proxy / fuller history",
+        "n_bars": 540232,
+        "n_sessions": 1184,
+        "bar_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "e977e243d1ccf8a4174401e93eb46306a3734dfa0a2061a9aceb158d99cd7f86",
+          "sha256_canonical": "e977e243d1ccf8a4174401e93eb46306a3734dfa0a2061a9aceb158d99cd7f86"
+        },
+        "daily_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "c55a9bff68ebf04f5ae4020d9f078974aaee60d616be6dd2e49352560a0b271f",
+          "sha256_canonical": "c55a9bff68ebf04f5ae4020d9f078974aaee60d616be6dd2e49352560a0b271f"
+        },
+        "net_total": {
+          "current": 212894.4999999953,
+          "canonical": 212894.4999999953,
+          "diff": 0.0,
+          "bit_identical": true
+        },
+        "mismatch_examples_capped_25": []
+      }
+    },
+    "genuine_mnq": {
+      "primary_claude_canonical": {
+        "label": "genuine_mnq / CLAUDE.md canonical window (2023-01-01..2025-02-02)",
+        "n_bars": 245943,
+        "n_sessions": 539,
+        "bar_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "ab49b70b02f85d52f249a52bef5e3c1cd769f543584044074e9b2708b804b0fb",
+          "sha256_canonical": "ab49b70b02f85d52f249a52bef5e3c1cd769f543584044074e9b2708b804b0fb"
+        },
+        "daily_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "0fc8cf4e92162557e18f7baf2c2e7109ebb6dbabe981c2aa4f4c51733c096c96",
+          "sha256_canonical": "0fc8cf4e92162557e18f7baf2c2e7109ebb6dbabe981c2aa4f4c51733c096c96"
+        },
+        "net_total": {
+          "current": 49172.6000000053,
+          "canonical": 49172.6000000053,
+          "diff": 0.0,
+          "bit_identical": true
+        },
+        "mismatch_examples_capped_25": []
+      },
+      "certified_dev_window": {
+        "label": "genuine_mnq / Product A certified dev window (..2026-05-31)",
+        "n_bars": 519714,
+        "n_sessions": 1139,
+        "bar_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "1359048f0fd70160659ee3327edfaf36b4eaa0ec9c0b1938e5278b0493ffef62",
+          "sha256_canonical": "1359048f0fd70160659ee3327edfaf36b4eaa0ec9c0b1938e5278b0493ffef62"
+        },
+        "daily_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "2a8b472f62da4a526125ca5e8eed9ef5e7ff82e53f4d05402ba1555e779b2ed2",
+          "sha256_canonical": "2a8b472f62da4a526125ca5e8eed9ef5e7ff82e53f4d05402ba1555e779b2ed2"
+        },
+        "net_total": {
+          "current": 178687.399999999,
+          "canonical": 178687.399999999,
+          "diff": 0.0,
+          "bit_identical": true
+        },
+        "mismatch_examples_capped_25": []
+      },
+      "secondary_fuller_history": {
+        "label": "genuine_mnq / fuller history",
+        "n_bars": 540232,
+        "n_sessions": 1184,
+        "bar_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "43384a08e46387b211900b7f532f129a95c8be4f36f1360d5e743d1c2b71c026",
+          "sha256_canonical": "43384a08e46387b211900b7f532f129a95c8be4f36f1360d5e743d1c2b71c026"
+        },
+        "daily_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "67ff47be86ed797233dfd515e0c6eab4f38bded3d720d12b435c51cd59bab4ad",
+          "sha256_canonical": "67ff47be86ed797233dfd515e0c6eab4f38bded3d720d12b435c51cd59bab4ad"
+        },
+        "net_total": {
+          "current": 213657.4999999948,
+          "canonical": 213657.4999999948,
+          "diff": 0.0,
+          "bit_identical": true
+        },
+        "mismatch_examples_capped_25": []
+      }
+    }
+  },
+  "certified_figure_crosscheck": {
+    "note": "The certified $177,924.40 / $178,687.40 figures are Product A's OWN 'canonical dev window' (2022-01-03..2026-05-31, BASELINE_MODELS.md + health_substrate.py CANONICAL_END + grid_core.py DEV_END) -- NOT the CLAUDE.md 2023-01-01..2025-02-02 date range EQV02 borrowed for its array-equality window label. Both are reported below; only the dev-window figures are checked against the certified $ amounts.",
+    "legacy_dev_window_vs_certified_177924_40": {
+      "current_form": 177924.3999999992,
+      "canonical_form": 177924.3999999992,
+      "certified": 177924.4,
+      "current_within_1usd": true,
+      "canonical_within_1usd": true
+    },
+    "genuine_mnq_dev_window_vs_price01_178687_40": {
+      "current_form": 178687.399999999,
+      "canonical_form": 178687.399999999,
+      "certified": 178687.4,
+      "current_within_1usd": true,
+      "canonical_within_1usd": true
+    },
+    "claude_md_canonical_window_net_for_reference_only_no_certified_figure_exists": {
+      "current_form": 49703.6000000053,
+      "canonical_form": 49703.6000000053,
+      "note": "No campaign-certified $ figure exists for this specific narrower date range for Product A -- reported for transparency only, not used as a pass/fail gate."
+    },
+    "legacy_extended_vs_price01_212894_50": {
+      "current_form": 212894.4999999953,
+      "canonical_form": 212894.4999999953,
+      "certified": 212894.5,
+      "current_within_1usd": true,
+      "canonical_within_1usd": true
+    },
+    "genuine_mnq_extended_vs_price01_213657_50": {
+      "current_form": 213657.4999999948,
+      "canonical_form": 213657.4999999948,
+      "certified": 213657.5,
+      "current_within_1usd": true,
+      "canonical_within_1usd": true
+    }
+  },
+  "verdict": {
+    "eqv02_gate": "PASS -- both EQV02 canonical_window_verdict and fuller_history_verdict are EXACT_EQUIVALENCE",
+    "reproduction_of_eqv02_arrays": "PASS",
+    "certified_figure_crosscheck": "PASS",
+    "pnl_equality_current_vs_canonical": "EXACT_EQUIVALENCE (bit-identical)",
+    "overall": "PASS -- PnL is bit-identical between CURRENT_FORM and CANONICAL_FORM under both price bases, and matches campaign-certified net figures",
+    "interpretation": "Since EQV02 already proved the operational target arrays are SHA256-identical between CURRENT_FORM and CANONICAL_FORM (both windows), and PnL is a deterministic function of (target array, price array, execution convention) via the shared simulate_overlay() loop, bit-identical PnL was the expected and required outcome -- confirmed here explicitly, not assumed, under BOTH the legacy NQ-proxy and genuine-MNQ price bases, with cross-checks against the campaign's independently-certified net figures passing in all four (form x basis) combinations before this comparison was trusted."
+  },
+  "runtime_seconds": 13.5
+}

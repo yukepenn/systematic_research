@@ -1,0 +1,248 @@
+{
+  "task": "EQV03 Product B -- PnL equality (CURRENT_FORM vs CANONICAL_FORM), fed from EQV02's already-proven-identical position arrays, canonical NQ pricing/commission",
+  "generated": "2026-08-10",
+  "gated_on": {
+    "eqv01": "research/system_master/EQV01_BEHAVIORAL_CANONICALIZATION/REPORT.md (Product B: 729/729 EXACT_EQUIVALENCE, finite-state)",
+    "eqv02": "research/system_master/EQV02_FULL_HISTORY_ARRAY_EQUALITY/REPORT.md + out/productB_array_equality.json (Product B: full-history, time-sequenced hysteresis-walk EXACT_EQUIVALENCE, operational + raw-gates-off, canonical + fuller windows)"
+  },
+  "execution_convention": {
+    "fill": "Standard: sm01_solarsim._fill(), 1-tick (0.25pt) adverse slip capped by the fill bar's own range, verbatim reuse",
+    "commission": "$2.18/contract/side => $4.36/round-trip (canonical NQ, matches CLAUDE.md frozen NinjaTrader Brokerage Lifetime commission)",
+    "point_value": "$20.0/pt (direct NQ economics, one literal NQ contract, not MNQ-scaled)",
+    "position_cap": "+/-1 contract (Product B's own structural cap, inherited from EQV02's hysteresis arrays)",
+    "session_close_flatten": "guaranteed by EQV02's forceFlat construction (force_flat true at every literal last bar of every session); defensive backstop included, verified never to fire in the operational configuration",
+    "decode_to_fill_lag": "one bar -- target decided using bar t's own signal fills at bar (t+1)'s open (Standard fill); matches the SAME convention used by Product A's PRICE01/simulate_overlay and Product B's own prior runs/S2_SELTIME/src/r2_battery.py harness (see module docstring section on timing for full justification)"
+  },
+  "execution_convention_source": "Fill/commission/PV mechanics: runs/PRICE01_PRODUCT_A_GENUINE_MNQ/src/01_dual_truth_repricing.py's product_a_exec_generalized, adapted for Product B's own PV_NQ/COMM_NQ (sm01_solarsim.py NQ_POINT_VALUE/NQ_COMM_SIDE) instead of MNQ. Decode-to-fill lag timing: also independently confirmed against runs/S2_SELTIME/src/r2_battery.py's one_contract_decisions()+onelot_exec(), Product B's own prior execution harness in this campaign.",
+  "windows": {
+    "primary_claude_canonical": {
+      "start": "2023-01-01",
+      "end": "2025-02-02"
+    },
+    "secondary_fuller_history": {
+      "start": "2022-01-02 18:03:00",
+      "end": "2026-07-31 16:57:00"
+    },
+    "certified_dev_window": {
+      "start": "2022-01-03",
+      "end": "2026-05-29"
+    }
+  },
+  "n_bars_total": 540232,
+  "n_sessions_total": 1184,
+  "reproduction_check_vs_eqv02_recorded_hashes": {
+    "canonical_window_operational": {
+      "current_matches_eqv02": true,
+      "canonical_matches_eqv02": true
+    },
+    "full_history_operational": {
+      "current_matches_eqv02": true,
+      "canonical_matches_eqv02": true
+    },
+    "canonical_window_raw_gates_off": {
+      "current_matches_eqv02": true,
+      "canonical_matches_eqv02": true
+    },
+    "full_history_raw_gates_off": {
+      "current_matches_eqv02": true,
+      "canonical_matches_eqv02": true
+    }
+  },
+  "forms_hash_equal_at_position_array_level": {
+    "canonical_window_operational": true,
+    "full_history_operational": true,
+    "canonical_window_raw_gates_off": true,
+    "full_history_raw_gates_off": true
+  },
+  "session_close_flatten_precondition": {
+    "force_flat_true_at_every_last_bar": true,
+    "operational_position_already_zero_at_every_last_bar": true
+  },
+  "fills_and_contracts": {
+    "current_operational": {
+      "n_fills": 4036,
+      "total_contracts": 4128
+    },
+    "canonical_operational": {
+      "n_fills": 4036,
+      "total_contracts": 4128
+    },
+    "current_raw_gates_off": {
+      "n_fills": 4054,
+      "total_contracts": 4146
+    },
+    "canonical_raw_gates_off": {
+      "n_fills": 4054,
+      "total_contracts": 4146
+    }
+  },
+  "backstop_events": {
+    "current_operational": 0,
+    "canonical_operational": 0,
+    "current_raw_gates_off": 716,
+    "canonical_raw_gates_off": 716
+  },
+  "pnl_comparisons": {
+    "operational": {
+      "primary_claude_canonical": {
+        "label": "operational / canonical window",
+        "n_bars": 245943,
+        "n_sessions": 539,
+        "bar_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "c4f37f25fe7ae48d9ee5a6645c635ecad7ebc5843a99bdfd7a07bd0c12b7b366",
+          "sha256_canonical": "c4f37f25fe7ae48d9ee5a6645c635ecad7ebc5843a99bdfd7a07bd0c12b7b366"
+        },
+        "daily_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "04bdc81d8c59e538655ded75ef460664c444ae742120a5fd8c50827ad7a2a75d",
+          "sha256_canonical": "04bdc81d8c59e538655ded75ef460664c444ae742120a5fd8c50827ad7a2a75d"
+        },
+        "net_total": {
+          "current": 83363.3999999957,
+          "canonical": 83363.3999999957,
+          "diff": 0.0,
+          "bit_identical": true
+        },
+        "mismatch_examples_capped_25": []
+      },
+      "secondary_fuller_history": {
+        "label": "operational / fuller history",
+        "n_bars": 540232,
+        "n_sessions": 1184,
+        "bar_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "89845302c6d342fd941bcf1938420ef9263cd4eadc36c23b45220d52a67b4629",
+          "sha256_canonical": "89845302c6d342fd941bcf1938420ef9263cd4eadc36c23b45220d52a67b4629"
+        },
+        "daily_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "91ff23e9e1e99181956f30eb8ac318aa8c1371cabf473185143147a9c7618141",
+          "sha256_canonical": "91ff23e9e1e99181956f30eb8ac318aa8c1371cabf473185143147a9c7618141"
+        },
+        "net_total": {
+          "current": 360590.9599999865,
+          "canonical": 360590.9599999865,
+          "diff": 0.0,
+          "bit_identical": true
+        },
+        "mismatch_examples_capped_25": []
+      },
+      "certified_dev_window": {
+        "label": "operational / certified dev window (2022-01-03..2026-05-29)",
+        "n_bars": 519714,
+        "n_sessions": 1139,
+        "bar_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "1df346a1a98a51fa9c57f22c989ed605285b02dc951d14ec5565cd02e2cd7525",
+          "sha256_canonical": "1df346a1a98a51fa9c57f22c989ed605285b02dc951d14ec5565cd02e2cd7525"
+        },
+        "daily_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "1e4861d49292c44bed26918776dd3636a03eb1303d32bc804dbcffc0e7fffe4b",
+          "sha256_canonical": "1e4861d49292c44bed26918776dd3636a03eb1303d32bc804dbcffc0e7fffe4b"
+        },
+        "net_total": {
+          "current": 301915.9199999885,
+          "canonical": 301915.9199999885,
+          "diff": 0.0,
+          "bit_identical": true
+        },
+        "mismatch_examples_capped_25": []
+      }
+    },
+    "raw_gates_off": {
+      "primary_claude_canonical": {
+        "label": "raw-gates-off / canonical window",
+        "n_bars": 245943,
+        "n_sessions": 539,
+        "bar_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "87d7fd702caac88b27cb2b539779824dde67c107a6f8124e1e92570f795906e1",
+          "sha256_canonical": "87d7fd702caac88b27cb2b539779824dde67c107a6f8124e1e92570f795906e1"
+        },
+        "daily_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "4f9156b6f907272c305bd24c9e7597b9ce1f133f3da39572b21877020a9f937a",
+          "sha256_canonical": "4f9156b6f907272c305bd24c9e7597b9ce1f133f3da39572b21877020a9f937a"
+        },
+        "net_total": {
+          "current": 92809.0399999952,
+          "canonical": 92809.0399999952,
+          "diff": 0.0,
+          "bit_identical": true
+        },
+        "mismatch_examples_capped_25": []
+      },
+      "secondary_fuller_history": {
+        "label": "raw-gates-off / fuller history",
+        "n_bars": 540232,
+        "n_sessions": 1184,
+        "bar_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "3ca5f81a30389958c4e5670582408632f9c5c8d9274eaa6a42bd4a7a0ab72a56",
+          "sha256_canonical": "3ca5f81a30389958c4e5670582408632f9c5c8d9274eaa6a42bd4a7a0ab72a56"
+        },
+        "daily_pnl": {
+          "bit_identical": true,
+          "n_mismatches": 0,
+          "max_abs_diff": 0.0,
+          "sha256_current": "227d382edfadd48bc63e9a3fb3d657bd95505f37efc4b208700387cac5cae0fa",
+          "sha256_canonical": "227d382edfadd48bc63e9a3fb3d657bd95505f37efc4b208700387cac5cae0fa"
+        },
+        "net_total": {
+          "current": 389366.7199999861,
+          "canonical": 389366.7199999861,
+          "diff": 0.0,
+          "bit_identical": true
+        },
+        "mismatch_examples_capped_25": []
+      }
+    }
+  },
+  "certified_figure_crosscheck": {
+    "certified_figure": 301915.92,
+    "certified_source": "BASELINE_MODELS.md line ~497 (\"CURRENT EXACT BATTERY\", 2026-08-09) / runs/S2_SELTIME/out/r2/daily_NQ_incumbent.csv net_dollars=301915.91999998846 / runs/O2_OWNER_UTILITY_READJUDICATION/out/ProductB_NQ_full_result.json input.net_dollars -- all three independently confirm the SAME figure over the SAME 1,139-session dev window (2022-01-03 to 2026-05-29).",
+    "window_used_for_comparison": {
+      "start": "2022-01-03",
+      "end": "2026-05-29",
+      "n_sessions": 1139
+    },
+    "this_script_current_form_net": 301915.9199999885,
+    "this_script_canonical_form_net": 301915.9199999885,
+    "gap_current_form_vs_certified": -0.0,
+    "gap_canonical_form_vs_certified": -0.0,
+    "gap_pct_current_form": -0.0,
+    "within_5pct": true,
+    "note": "Reasonableness cross-check only, not a bit-identity gate -- see section-7 docstring for the two disclosed, pre-existing methodology differences (tiltState convention, bmomPos port) between the certified figure's harness (r2_battery.py) and this script's EQV02-reused, more-.cs-faithful arrays that plausibly explain the gap."
+  },
+  "verdict": {
+    "eqv02_gate": "PASS -- EQV02's own recorded verdicts are clean EXACT_EQUIVALENCE (domain clean, 0 mismatches, hash-equal) for all 4 (window x gates) configurations",
+    "reproduction_of_eqv02_arrays": "PASS",
+    "session_close_flatten_precondition": "PASS",
+    "operational_backstop_never_fired": "PASS",
+    "pnl_equality_current_vs_canonical": "EXACT_EQUIVALENCE (bit-identical, all configs/windows)",
+    "certified_figure_crosscheck": "REASONABLE (within 5%, gap attributed to disclosed harness differences, not a bug)",
+    "overall": "PASS -- PnL is bit-identical between CURRENT_FORM and CANONICAL_FORM (the required gate), reproduction of EQV02's own arrays verified byte-for-byte, session-close-flatten precondition holds, and the net total is within a reasonable, attributable range of the campaign's certified dev-window figure",
+    "interpretation": "Since EQV02 already proved Product B's position arrays are SHA256-identical between CURRENT_FORM and CANONICAL_FORM (operational AND raw-gates-off configurations, both windows), and PnL is a deterministic function of (position array, price array, execution convention) via the ONE shared exec_lagged() loop, bit-identical PnL was the expected and required outcome -- confirmed here explicitly, not assumed, across both configurations and all three windows, with the reproduction-vs-EQV02 gate, the session-close-flatten precondition, and the certified-figure reasonableness check all passing before this comparison was trusted."
+  },
+  "runtime_seconds": 11.6
+}
