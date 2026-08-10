@@ -1,0 +1,69 @@
+run_id: LEV01_VOLATILITY_ASYMMETRY
+family: LEV01 (leverage-effect volatility asymmetry -- unifying mechanism test)
+directive: "CONTINUOUS SYSTEM EVOLUTION MASTER DIRECTIVE v2, sec69 literature scout follow-through; owner confirmed 2026-08-09"
+date_frozen: 2026-08-09
+author: autonomous research campaign (continuation, post-literature-scout)
+
+purpose: >
+  Test whether NQ's own realized volatility exhibits the standard finance-literature "leverage
+  effect" (asymmetric volatility response to negative vs positive returns -- see
+  research/system_master/LITERATURE_SCOUT_20260809.md sec1 for citations), and whether that
+  single asymmetry mechanistically UNIFIES two facts this campaign has documented separately but
+  never connected: (A) Product B/A's short positions are structurally weaker than longs (SA0:
+  Sharpe 0.18 vs 1.54; PA0: 0.40 vs 1.38), and (B) U7's finding that the 2026 anomaly is driven
+  by a regime-level rise in loss severity tracking a volatility uptrend (runs/U7_2026_TIMING_
+  REGIME/REPORT.md). This is explanatory/diagnostic, not a re-test of any closed family: R4/R5/
+  U8/U8B tested price-transformation and organization features, not volatility's own directional
+  asymmetry; U4/U4B tested REACTIVE exit-timing after a decay signal, not a LEADING
+  volatility-regime indicator; U7 found the loss-severity shift but never tested whether that
+  shift is itself asymmetric by prior-return direction, nor connected it to the (separately
+  documented) short/long asymmetry.
+
+not_a_reopening_of_closed_work: >
+  Distinct from U4/U4B (short-side mechanism/de-risk): those tested a REACTIVE, in-trade decay
+  signal (giveback_ratio after first-M-decay) as an exit trigger. This family tests a LEADING,
+  pre-trade regime indicator (does recent volatility asymmetry predict how a NEW entry -- long
+  or short -- will fare) and an EXPLANATORY question (why does the asymmetry exist at all).
+  Distinct from U7 (2026-regime explanation): U7 established THAT loss severity rose with
+  volatility; this family tests WHETHER that relationship is itself asymmetric by sign of prior
+  return (the specific, falsifiable leverage-effect mechanism), a materially different and more
+  specific claim. Distinct from U8/U8B (organization): entropy/persistence measure PATH SHAPE;
+  this measures volatility's OWN response to return sign, a different information class entirely
+  (confirmed via Step-0 redundancy check below).
+
+data_reuse: >
+  Zero new CrossTrade/NT8 calls. Reuses runs/U0_UNIFIED_STATE/out/u0_state_table.parquet
+  (sigma460_atr_proxy_pts as the realized-vol proxy, ret_1/ret_5/ret_20, position_B/action_B/
+  block_id_B, target_exposure_A/action_A/block_id_A, session_phase, year, is_health_only_bar).
+  No new substrate build needed -- this is a pure diagnostic on already-verified U0 columns.
+
+planned_analyses: >
+  (1) LEVERAGE-EFFECT EXISTENCE TEST: at both session (daily) and bar level, test whether forward
+  realized volatility (sigma460 over the next N bars/sessions) responds asymmetrically to the
+  SIGN of the preceding return (causal, using ret_20 or a session-level return as the trigger,
+  sigma460's own forward change as the outcome) -- classic leverage-effect regression/correlation
+  test, interpretable OLS only. (2) SHORT/LONG UNIFICATION: for Product-B/A short vs long blocks,
+  test whether shorts are entered disproportionately more often following negative-return regimes
+  (mechanically expected, since shorts require M<0 which correlates with recent declines) and
+  whether POST-ENTRY volatility response (the leverage-effect-predicted asymmetry) correlates
+  with worse SHORT outcomes specifically, more than equivalent-magnitude LONG outcomes -- this is
+  the mechanistic unification test. (3) 2026-SEVERITY UNIFICATION: test whether the 2022-2026 rise
+  in sigma460 (U7's own finding) is itself asymmetric -- did negative-return-following volatility
+  rise MORE than positive-return-following volatility over this period (a strengthening leverage
+  effect), which would mechanically explain why losing entries got disproportionately costlier
+  without any change in entry logic. (4) Redundancy check vs existing sigma460/vol_surprise/
+  organization features (must show this is asymmetry information, not just restating volatility
+  level). (5) Right-tail check + chronology (year-by-year 2022-2026 + June-July-2026 extension
+  reported separately, never blended).
+
+evidence_class: Track L (long-history, uses the full canonical 2022-2026 dev window)
+
+explicitly_not_in_scope_this_run:
+  - Any candidate construction or parameter change to Product A/B -- explanatory/diagnostic only.
+    A construction stage, if this diagnostic supports one, requires its own separate
+    preregistration per this campaign's standing bounded-within-family-search discipline.
+  - Any claim that a "fix" could reverse a macro/regime-level volatility shift (per the
+    literature scout's own caveat -- external research shows 2024-2026 has been a genuine
+    market-wide whipsaw regime for trend-followers, not an artifact specific to this system).
+
+promotion_gate: none (diagnostic; explanatory unification is the goal, not a trading rule)
