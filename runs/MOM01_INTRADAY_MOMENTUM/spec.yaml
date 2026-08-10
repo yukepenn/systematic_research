@@ -1,0 +1,96 @@
+run_id: MOM01_INTRADAY_MOMENTUM
+family: MOM01
+parent_family: GAMMA00_DEALER_GAMMA_FEASIBILITY   # spun off from the literature scout
+opened: 2026-08-09
+status_at_freeze: SPEC_FROZEN_BEFORE_RESULTS
+
+motivation: >
+  Baltussen, Da, Lammers, Martens (JFE 2021) "Hedging Demand and Market Intraday Momentum":
+  rest-of-day return (rROD, open to T-30min-before-close) positively, robustly predicts the
+  last-30-minute return (rLH) across 60+ futures 1974-2020. NQ directly included, one of the
+  strongest effects of the 17 equity-index futures tested (their Table B1: beta_ROD=6.36,
+  t=7.97, R2_OOS=3.76%). Mechanism: dynamic hedging demand concentrated near the close. GAMMA00
+  read this paper in full as part of a five-angle dealer-gamma literature review and spun this
+  off as its own family because it needs no new data and is a genuinely distinct external
+  mechanism (not another internal OHLCV threshold).
+
+data_source: runs/U0_UNIFIED_STATE/out/u0_state_table.parquet (540,232 3-min bars x 79 cols,
+  2022-01-03..2026-07-31, already certified against SA0/PA0 canonical nets). No new bar data
+  loaded; no new backtest engine; no vendor reference used.
+
+canonical_window: is_health_only_bar == False (2022-01-03..2026-05-29), matching this campaign's
+  standard dev window. Health-only extension (2026-06-01..2026-07-31, is_health_only_bar==True)
+  reported separately per directive sec34/point-5, never blended into the headline result.
+
+construction (STEP 1, causal by construction, no lookahead):
+  - Per RTH session (is_rth==True bars only), require exactly one bar at each of:
+      minutes_since_rth_open == 3.0   -> p_open  = that bar's OPEN price (the 09:30:00 ET print;
+                                          bar timestamps mark bar END, so the bar covering
+                                          09:30-09:33 opens exactly at 09:30:00)
+      minutes_to_rth_close   == 30.0  -> p_1530  = that bar's CLOSE price (bar covering
+                                          15:27-15:30, closes exactly at 15:30:00 ET)
+      minutes_to_rth_close   == 0.0   -> p_close = that bar's CLOSE price (bar covering
+                                          15:57-16:00, closes exactly at 16:00:00 ET -- this bar
+                                          is is_rth==True even though the session_phase column
+                                          mislabels it POST_RTH; a known, disclosed boundary
+                                          quirk of the phase column, not used for the price pull)
+  - Sessions missing any of the three marks (early/short/gapped RTH sessions -- expected ~44 of
+    1,181 total RTH sessions from a first pass) are DROPPED, not imputed.
+  - rROD = ln(p_1530 / p_open)   [open -> T-30min, matches Baltussen's construction]
+  - rLH  = ln(p_close / p_1530)  [T-30min -> close, the "last half hour" return]
+  - At the p_1530 bar, also pull M, T, Tp, B, HTF_tilt_state, vwap_dist_pts, close_slope_20,
+    close_slope_20_atr, ret_1, ret_5, ret_20, sigma460_atr_proxy_pts, position_B, block_id_B for
+    steps 3-4 (all causally available by 15:30:00, before rLH's own window begins).
+
+step_2_test: OLS rLH ~ 1 + rROD across all qualifying sessions in the canonical window. Report
+  slope, t-stat, R^2, Pearson/Spearman corr. Year-by-year (2022,2023,2024,2025, partial-2026
+  Jan-May within canonical) sign/magnitude stability. Cross-check sign/rough magnitude against
+  Baltussen et al.'s NQ figure (beta_ROD=6.36, t=7.97) -- flag prominently if sign disagrees.
+
+step_3_test (redundancy): Pearson + Spearman corr of rROD against M_1530, Tp_1530, B_1530,
+  vwap_dist_pts_1530, close_slope_20_1530, close_slope_20_atr_1530, ret_20_1530, ret_5_1530.
+  Redundancy threshold per shared directive: |corr| > 0.6-0.7 against M/T specifically is called
+  "highly redundant" and reported plainly as such, not spun as novel.
+
+step_4_test (forward value of Product B's own last-30-min action, conditional on rROD beyond M):
+  Outcome = window_pnl_B = sum of bar_pnl_B_nq_dollars over RTH bars with
+  0 <= minutes_to_rth_close <= 30 (i.e. the actual $ Product B earned in its own last-30-minute
+  window, whatever action it took -- hold, hold-then-forced-flat via C4, or stay flat). Predictor
+  set: baseline = M_1530 (+ sigma460_atr_proxy_pts_1530 bucket, mirroring R4/R5's M-strength x
+  vol-tercile bucket-residualization); extended = baseline + rROD. Report bucket-residualized
+  Spearman of rROD (and side-aligned rROD = rROD * sign(position_B_1530)) against residual
+  window_pnl_B, OLS delta-R^2 (extended - baseline), and year-by-year sign stability. Restrict
+  headline to sessions with position_B_1530 != 0 (a position is actually at stake); full sample
+  (incl. flat sessions) reported as a robustness check.
+  Note (pre-registered, not post-hoc): entry_blocked_c4 spans the ENTIRE RTH_CLOSE window
+  (T-30min to close) and forced_flat_c4 fires at T-21min, both already certified in
+  health_substrate.py (ENTRY_LEVEL/EXIT_LEVEL hysteresis, WSOLAR/WBMOM combination). This means
+  position_B can only HOLD-then-be-flattened or stay FLAT in this window -- it can never newly
+  enter or reverse. So Product B structurally can only capture the first ~9 minutes of rLH's
+  30-minute window (15:30-~15:39) before C4 flattens it, not the full rLH. This is flagged
+  explicitly as a structural mismatch between the literature's rLH window and what this system's
+  C4 rule lets Product B actually realize -- reported, not papered over.
+
+too_good_to_be_true_gate: rROD's measurement window (09:30-15:30) does not overlap rLH's window
+  (15:30-16:00) by construction (step 2). window_pnl_B's window (15:30-16:00) does not overlap
+  rROD's window either (step 4). M_1530/position_B_1530 are causal (available at 15:30:00,
+  before rLH or window_pnl_B realize). No other overlap between a predictor's measurement window
+  and its outcome's realization window is expected; explicitly re-checked before reporting any
+  strong result.
+
+disposition_rule (decided before results, per campaign discipline):
+  - If step 2 fails to replicate (wrong sign, t-stat not significant, R^2 negligible) in this
+    data -> CLEAN_NULL, report the literature disagreement plainly.
+  - Else if step 3 shows |corr(rROD, M_1530)| > 0.6-0.7 -> CLOSED_EXACT_CONSTRUCTION /
+    redundant-with-existing-state, cite the correlation, no further construction this pass.
+  - Else if step 4 shows a non-redundant, causally-clean, year-stable incremental effect on
+    Product B's own last-30-min P&L -> OPEN_FOR_INTERACTION (diagnostic lead for a future policy
+    construction pass; this pass does NOT build a trading policy, per standing
+    diagnostic-before-construction practice).
+  - Else (replicates in step 2 but step 4 shows no exploitable incremental value given C4's
+    structure) -> report as a genuine-but-currently-inert finding, disposition
+    NO_LARGE_EFFECT_DETECTED, and note explicitly that this is about Product B's OWN
+    last-30-minute action, not a claim that the rROD->rLH effect itself is absent from NQ.
+
+no_construction: per the owning directive, this is diagnostic-only. No trading policy, filter,
+  or sizing rule is built or backtested this pass regardless of outcome.

@@ -1,0 +1,138 @@
+family: ADD01_PARTICIPATION_EXPANSION
+directive_ref: "OWNER directive Master v3 sec19-24"
+date_frozen: "2026-08-09"
+question: >
+  Has Product B been over-selective? Does lowering the entry barrier (EntryLevel, currently
+  3.0 in the SM14 hysteresis(3,1) decision rule: EntryLevel=3.0, ExitLevel=1.0,
+  WSolar=0.7086, WBmom=2.83, no pyramiding) create positive incremental participation value
+  without destroying capital efficiency?
+
+substrate:
+  state_table: runs/U0_UNIFIED_STATE/out/u0_state_table.parquet  # 540,232 bars x 79 cols
+  canon_slice: "is_health_only_bar == False -> 519,714 bars, 2022-01-03..2026-05-29"
+  decision_logic_source: runs/SA0_SYSTEM_STRUCTURE/current_health/src/health_substrate.py
+  key_functions: [build_pos_seq, onelot_exec]
+  key_constants: {ENTRY_LEVEL: 3.0, EXIT_LEVEL: 1.0, WSOLAR: 0.7086, WBMOM: 2.83,
+                  COMM_NQ: 2.18, PV_NQ: 20.0, COMM_MNQ: 0.65, PV_MNQ: 2.0}
+
+frozen_confirmed_priors_do_not_rederive:
+  - "SM14 hysteresis(3,1) is the Product-B baseline; no pyramiding"
+  - "|WBmom*B| <= 2.83 < EntryLevel(3.0) always under baseline -- B-MOM alone can never
+     trigger an entry; it only amplifies/redirects an already-near-threshold Solar+HTF score"
+  - "Lowering EntryLevel below 2.83 is a qualitatively different regime (B-MOM could then
+     trigger unilaterally) -- must be disclosed if the grid crosses it, not necessarily avoided"
+  - "This exact question (lowering EntryLevel) was confirmed genuinely untested and
+     non-duplicative vs ONE_CONTRACT_FRONTIER.md, DAY_ONLY_FRONTIER.md, LONG_SHORT_FRONTIER.md,
+     B1_ABLATION.md, COMPLEMENTARY_ENGINE_FRONTIER.md (all prior threshold work raised the bar
+     to 4-5, moved the opposite direction)"
+  - "Two prior 'touch the core decision mechanism' proposals (A-dominant routing, HTF-gated
+     dominant routing) were both killed by the frozen Gate A/B/C -- reuse that exact gate here,
+     do not invent a new one"
+
+step0_correctness_gate:
+  method: >
+    Reconstruct position_B bar-for-bar from the table's own M / entry_blocked_c4 /
+    forced_flat_c4 columns using health_substrate.build_pos_seq(entry_level=3.0,
+    exit_level=1.0) verbatim (session-last-bar flag rebuilt from sess_date grouping: a bar is
+    "last" if the next canon bar's sess_date differs). Execute with onelot_exec (NQ leg, real
+    _fill imported from sm01_solarsim -- 1-tick adverse slip capped by the fill bar's range).
+  must_pass_exactly_before: "evaluating any EntryLevel intervention"
+  pass_criteria:
+    - "reconstructed position sequence == table's own position_B column, bar-for-bar, on all
+       519,714 canon bars"
+    - "reconstructed NQ net == certified canonical net $301,915.92 (within $1)"
+    - "table's own bar_pnl_B_mnq_dollars sums to certified canonical MNQ net $28,587.10"
+  disclosed_scope_limit: >
+    MNQ leg not independently re-derived (this table exposes NQ OHLC only; genuine-MNQ pricing
+    for the canonical window already lives in bar_pnl_B_mnq_dollars per UNIFIED_STATE_MAP.md).
+    NQ leg (exact end-to-end) is the binding gate.
+
+step1_reachable_M_enumeration:
+  method: >
+    M = WSOLAR*Tp + WBMOM*B, Tp integer in [-13,13], B in {-1,0,1}. np.unique(round(M,6))
+    restricted to canon bars with M in [2.0,3.0) (long side; short side by construction is the
+    exact negative mirror). For each distinct value T found: count canon bars where
+    position_B==0 (baseline-flat / not currently entry-eligible), M in [T,3.0) [or mirrored for
+    short], not entry_blocked_c4, not forced_flat_c4 -- these are the bars that would become
+    NEWLY entry-eligible if EntryLevel were lowered to T vs baseline 3.0.
+  preregistration_rule: >
+    Choose AT MOST 2 tiers directly from the enumerated reachable grid (not arbitrary round
+    numbers) such that: (a) they are genuinely non-degenerate in resulting bar-population
+    (reject near-empty cells), and (b) collectively they bracket the WBmom-alone-trigger
+    boundary at exactly 2.83 flagged by the prior audit -- one tier must stay strictly above
+    2.83 (baseline's "B-MOM cannot trigger alone" fact preserved) and one tier must sit at/below
+    2.83 (regime explicitly crossed, must be disclosed per instruction, not avoided).
+  tier_selection_must_be_fixed_before_reading_stageA_economics: true
+
+step2_stageA_sidecar_construction:
+  method: >
+    For each tier T: alt_pos_seq = build_pos_seq(M, entry_level=T, exit_level=1.0) -- same
+    exit_level / entry_blocked_c4 / forced_flat_c4 as baseline, ONLY entry_level changes.
+    Partition alt_pos_seq's contiguous nonzero runs (same-sign-run block definition consistent
+    with block_id_B: a same-bar sign flip / reversal starts a new block) into DISJOINT (baseline
+    position_B == 0 for every bar of the block) vs OVERLAPPING (baseline nonzero somewhere in
+    the block). Stage-A sleeve = alt_pos_seq restricted to disjoint blocks only, 0 elsewhere.
+    Incumbent position_B is read-only throughout -- never modified, never re-simulated. This is
+    a diagnostic-only parallel "what if" sleeve per sec22-23, not an integrated candidate.
+  execution: >
+    onelot_exec (real _fill from sm01_solarsim) applied to the Stage-A sleeve position array
+    only. NQ leg: exact real OHLC, COMM_NQ=$2.18, PV_NQ=$20. MNQ leg: NQ-OHLC-as-proxy (genuine
+    MNQ OHLC not exposed in this table for arbitrary new hypothetical position paths -- same
+    disclosed-approximation class UNIFIED_STATE_MAP.md already accepts for health-only bars),
+    COMM_MNQ=$0.65, PV_MNQ=$2.
+  overlap_diagnostic_not_assumption: >
+    Directive sec22 expects overlap with incumbent to be "near-zero by construction" -- this is
+    to be measured and reported, NOT assumed; if it is not near-zero, disclose the actual
+    overlap rate and explain the mechanism rather than silently filtering it away.
+  reporting_battery: >
+    n additional opportunities (disjoint episode count), overlap-block count/rate, net after
+    full costs (NQ exact + MNQ proxy, both reported), Sharpe/Sortino/Calmar-like daily battery
+    (smv2_common.dd_battery), avg/median trade, win rate, long/short split, session_phase split,
+    yearly split, top-20/bottom-20 episode tails, daily-P&L correlation with incumbent, sleeve
+    P&L specifically on the incumbent's own worst-20 eod-drawdown days.
+
+right_tail_audit_mandatory_per_shared_context_item4:
+  method: >
+    Report incumbent's own top-20/bottom-20 canon-window position blocks by run_pnl_B_dollars
+    at exit (from block_id_B groupby, last value per block). Report how many of these 40 blocks
+    are excluded/changed/delayed/resequenced by the Stage-A candidate.
+  expected_mechanical_result: >
+    0/40, because Stage A never writes to position_B -- confirm this is actually true (not just
+    assumed) via the same bar-for-bar equality check used in the step0 correctness gate.
+
+chronology_per_shared_context_item5:
+  - "year-by-year 2022-2026(partial), reported separately, never blended"
+  - "2022-2025-only Stage-A net reported as % of control's 2022-2025 net; campaign's standing
+     wash threshold is <1% = a wash/fail"
+  - "LOYO only if the year-by-year split shows a mixed/ambiguous sign; skip with justification
+     if the sign is already uniform across all years"
+  - "2026 extension (if any) reported separately from canon-window promotion arithmetic --
+     N/A here since canon window itself only reaches 2026-05-29 (partial 2026, not the
+     health-only extension) and Stage A never reached a promotion decision"
+
+gate_for_any_stageB_promotion_reused_verbatim_not_invented:
+  gate_A: "dev bootstrap P(dSharpe>0) >= 0.85 AND P(dCDaR>0) >= 0.85"
+  gate_B: "old-regime (2022-2025 canon proxy) non-inferiority floor of -$10k vs control"
+  gate_C: "right-tail retention >= 90% of incumbent's top-10-day P&L"
+
+stop_rule_per_directive_sec23: >
+  If Stage A shows weak/negative/degenerate expectancy (not merely a null/wash), STOP and
+  report that as the finding. Do NOT build a Stage-B integrated {-1,0,1} policy. A clean,
+  honest Stage-A-only negative report is an acceptable, valuable outcome for this pass; do not
+  compromise rigor to force a Stage-B result if Stage A does not plausibly support one.
+
+promotion_disposition_rule_fixed_before_results: >
+  PROMOTION_CANDIDATE only if Stage A shows strong positive risk-adjusted expectancy, low/
+  negative correlation with incumbent, and clears Gate B as a floor check before even
+  considering Stage B. USEFUL_STATE_ONLY / DATA_LIMITED / NO_LARGE_EFFECT_DETECTED / CLEAN_NULL
+  if the Stage-A signal is ambiguous, small-sample, or genuinely near-zero. CLOSED_EXACT_
+  CONSTRUCTION if Stage A is clearly dead (large-sample negative expectancy, uniform sign
+  across years/session-phases, mechanistically explained, no plausible Stage-B rescue).
+
+too_good_to_be_true_gate_applied_in_reverse: >
+  Since results were strongly negative rather than surprisingly positive, the relevant check
+  was for a bug that could artificially manufacture false losses (wrong fill side, off-by-one
+  in the hysteresis state machine, leakage into blocked bars). Verified via: (a) exact
+  correctness-gate reproduction of the certified baseline net using the identical mechanics;
+  (b) manual inspection of the single worst episode's raw OHLC/volume to confirm it corresponds
+  to a real, identifiable market event (2022-09 CPI print day) rather than a data artifact.
