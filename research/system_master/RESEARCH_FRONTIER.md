@@ -61,6 +61,20 @@ UNIFIED_STATE_MAP.md` and each family's own `REPORT.md`.
 
 | SKEW01 (return-skewness forecasting) | Does causal short-window return skewness (2nd literature-scout idea) forecast reversal hazard / continuation beyond incumbent state | **CLOSED — weak, tail-unsafe, not redundant, not confounded** | `runs/SKEW01_RETURN_SKEWNESS/REPORT.md` | Genuinely new feature (max ρ=0.182 vs organization/vol/efficiency), clean too-good-to-be-true gate (max ΔR²=0.00088 across 8 cells). But uniformly weak, 3/4 outcomes chronologically unstable; the one 5/5-year-stable cell has near-zero explanatory power and fails right-tail worse than any prior family (18/20 top winners excluded, incl. the single largest, $41,337.82) | External literature not corroborated at preregistered windows; no candidate |
 
+| LEV02 (causal trailing regime) | Non-confounded follow-on to LEV01 Test 2 -- does a strictly backward-looking leverage-effect regime measure predict forward performance | **CLOSED — clean null** | `runs/LEV02_TRAILING_REGIME/REPORT.md` | Raw Spearman ~0.005-0.006 both products, unstable year-by-year sign, regime t=-1.07. Confirms LEV01 Test 2's t=4.45 finding was entirely the sunk-P&L confound, not a partially-masked real signal | Leverage effect remains a confirmed market fact with no usable trading-relevant regime signal for this system |
+| PORT01 (A+B portfolio synthesis) | Not alpha search -- given current A/B, what does combining them buy in risk terms | **SYNTHESIS COMPLETE** | `runs/PORT01_AB_PORTFOLIO_SYNTHESIS/REPORT.md` | Combined maxDD exactly equals the naive sum of standalone maxDDs at every capital normalization (0.0% diversification benefit, correlation 0.887) — precisely quantifies H0's own qualitative finding. Documents Product A's capital footprint (peak 1.10, mean 0.60 NQ-equivalent contracts) for the first time | Capital efficiency requires genuinely new lower-correlation alpha, not combining current A+B |
+
+## Frontier audit (directive sec82) — 2026-08-09
+
+**Bar for "information frontier exhausted" NOT MET** — see `research/system_master/
+FRONTIER_AUDIT_20260809.md` for the full sec82 checklist. Cross-market conditioning (needs a
+specific motivating mechanism), a second literature scout pass (untried topics: auction
+spillovers, intraday liquidity cycles), and directive-named diagnostics not yet run
+(action-value/Q-function framework, Product-A marginal exposure value shape) remain open.
+Local OHLCV-derived residual-information avenues show a consistent, cross-validated failure
+signature (right-tail-unsafe or too-small) across 8 independently-constructed feature families —
+sharply diminishing EVI for more of the SAME kind of single-feature test, not literal exhaustion.
+
 ## Campaign stop condition (directive sec40 [MEGA RESEARCH DIRECTIVE] / sec60 [SYSTEM ARCHITECTURE SCIENCE DIRECTIVE])
 
 **MET, 2026-08-09** for the SYSTEM ARCHITECTURE SCIENCE campaign (SA0 → R3 → R2B → R4 → R5 → R6 →
