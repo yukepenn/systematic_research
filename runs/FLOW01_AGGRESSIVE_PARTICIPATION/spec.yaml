@@ -1,0 +1,110 @@
+run_id: FLOW01_AGGRESSIVE_PARTICIPATION
+family: "FLOW01 -- aggressive-participation / in-position decision-checkpoint microstructure test (addendum C0-C7)"
+directive: "FLOW01_AGGRESSIVE_PARTICIPATION addendum C0-C7, consuming U9's frozen prequential design"
+date_frozen: 2026-08-09
+author: autonomous research campaign (continuation, wave-2 follow-on)
+
+purpose: >
+  NOT a repeat of U9B (runs/U9B_MICROSTRUCTURE_ALPHA/), which tested only ENTRY/scale-in EVENTS
+  (n=62 Product-B entries, n=232 Product-A scale-ins) and found a small-sample null (strongest
+  cell raw rho=-0.130 fails session-block-bootstrap significance). This family tests
+  microstructure state at DECISION CHECKPOINTS WHILE ALREADY IN A POSITION -- hold vs flatten
+  vs reverse -- at every ~3-min bar with position_B != 0, yielding two orders of magnitude more
+  decision checkpoints than U9B's 62 entry events.
+
+scope: >
+  Product-B (NQ leg) only. Every U0 bar with position_B != 0 on the 37 scalping_lab sessions
+  with confirmed L1+L2 (tick+BBO) provenance per runs/U9_TRUE_MICROSTRUCTURE/REPORT.md
+  (excludes s20250811, s20250924, s20260430 -- U9's own documented "L1-only server holes").
+  Small, exploratory Track-C sample (33 sessions actually contribute a checkpoint; 63 distinct
+  trades / block_id_B) -- held to U9's own frozen prequential/block-clustered standard, NOT the
+  4.4-year Track-L chronology bar.
+
+data_reuse: >
+  research/scalping_lab/substrate/grid1s/NQ/*.parquet (1-second causal snapshot: last, trades,
+  vol, sflow [tick-rule signed flow], bid/ask/mid, spread_t, ret1s_t), reused read-only, zero
+  re-export -- governance wall respected, no session outside the existing 40-on-disk was
+  requested or touched. runs/U0_UNIFIED_STATE/out/u0_state_table.parquet for checkpoint
+  identification (position_B, action_B, block_id_B, bar_pnl_B_nq_dollars) and context features
+  (sigma460_atr_proxy_pts, vol_surprise, vwap_disp_atr, M). runs/U9_TRUE_MICROSTRUCTURE's frozen
+  prequential design (session is the unit of independence; session-block bootstrap only) and
+  runs/U9B_MICROSTRUCTURE_ALPHA/src/01_build_event_features.py's exact 60s causal-window /
+  session-exclusion pattern, reused rather than re-derived. Zero new CrossTrade/NT8 calls.
+
+correctness_gate: >
+  This family builds no new pos_seq/exec path (reads U0's already-certified bar_pnl_B_nq_dollars
+  column read-only, exactly as U9/U9B did). Sanity check performed before any feature-outcome
+  relationship was computed: full canonical-window sum of bar_pnl_B_nq_dollars reproduces the
+  certified Product-B NQ net exactly ($301,915.92) -- see out/build_sanity.json. PASSED.
+
+feature_construction (5 preregistered features, single 60s causal window ending at each
+checkpoint's own bar close -- reusing U9B's exact avg_spread_ticks / quote_intensity / ret1s_vol
+definitions where they overlap, LOWER-CONFIDENCE TIER per addendum C2 since sflow is a tick-rule
+classification on Last-trade prints, not a trade-capacity-tagged aggressor flag): >
+    signed_flow_aligned_60s = sum(sflow in (T-60s,T]) * sign(position_B)  -- aggressive-flow
+      imbalance aligned to the CURRENT position side (positive = flow supportive of the held
+      position; lower-confidence tier, see above)
+    flow_persistence_60s = rolling lag-60s autocorrelation of the 1-second sflow series,
+      estimated from ~120 paired (sflow[t], sflow[t-60]) observations spanning the trailing 180s
+      (3 successive 60s sub-windows) ending at T -- direction-invariant by construction, not
+      side-aligned
+    avg_spread_ticks_60s = mean(spread_t) over (T-60s,T]  [reused verbatim from U9B]
+    quote_intensity_60s = mean(bid_upd + ask_upd) over (T-60s,T]  [reused verbatim from U9B]
+    ret1s_vol_60s = std(ret1s_t) over (T-60s,T]  [reused verbatim from U9B]
+  Usability filter: window must contain >=30 of the possible 60 one-second rows (matches U9B's
+  own "at least half the window present" threshold).
+
+checkpoint_universe: >
+  ALL U0 bars with position_B != 0 on the 37 sessions = 6,221 raw checkpoints (6,188 with a
+  usable >=30-row feature window). Two PREREGISTERED, non-mutually-exclusive analysis groups
+  (per addendum C6/Step 3):
+    HOLD group: action_B == 'HOLD' at the checkpoint bar (continuing an existing position) --
+      n=6,125 usable checkpoints / 63 distinct trades / 33 distinct sessions.
+    PRE_EXIT group: checkpoint bar immediately precedes an actual EXIT or REVERSAL action
+      (contiguous next bar, same session) -- n=61 usable checkpoints / 61 distinct trades / 33
+      distinct sessions (one checkpoint per trade by construction; 63 total pre-exit
+      checkpoints exist, 2 dropped for an unusable feature window).
+
+outcome_definition: >
+  Forward markout ONLY (never final/realized trade P&L as predictor, per directive): fwd1_pnl =
+  bar_pnl_B_nq_dollars at checkpoint t_idx+1; fwd3_pnl = sum of bar_pnl_B_nq_dollars over
+  t_idx+1..t_idx+3. Both require the forward window to stay within the SAME session as the
+  checkpoint (else NaN) -- in practice this never truncated any checkpoint in this substrate
+  (100% of both fwd1_pnl and fwd3_pnl were computable), since Product-B is forced flat well
+  before every session's close. bar_pnl_B_nq_dollars already reflects the actual signed position
+  path (no additional side-alignment applied to the outcome).
+
+evidence_class: >
+  Track C, SHORT-HISTORY PREQUENTIAL EVIDENCE per this campaign's own labeling convention --
+  never CORE or long-history certified. Uses U9's frozen expanding-origin/session-clustered
+  design; session is the unit of independence for the PRIMARY significance test.
+
+planned_analyses (addendum C7 mandatory, frozen before results were inspected): >
+  (1) Redundancy check vs existing U0 OHLCV-derived features (sigma460_atr_proxy_pts,
+      vol_surprise, vwap_disp_atr) -- close as redundant if any |rho|>0.7.
+  (2) Checkpoint-level pooled raw Spearman + OLS Delta-R^2 controlling for |M|, for each of
+      {HOLD, PRE_EXIT} x {fwd1_pnl, fwd3_pnl} x 5 features = 20 cells. EXPLICITLY labeled
+      non-independent-observation evidence (checkpoint n != independent n) -- reported for
+      completeness only, never as the significance test.
+  (3) Trade-collapsed robustness check (one row per block_id_B: mean feature, mean outcome) as
+      an additional, more independence-respecting cut -- ADDED as a robustness step per this
+      family's own design, disclosed as exploratory (not itself part of the original 20-cell
+      preregistered slate) and immediately subjected to the too-good-to-be-true gate below if
+      it produces anything numerically large.
+  (4) Right-tail check (top-20/bottom-20) on the strongest checkpoint-level-pooled cell.
+  (5) DUAL clustered bootstrap (1000 resamples each) for EVERY cell: session-block (PRIMARY,
+      per U9's frozen design -- session is the unit of independence) AND trade-block (block_id_B,
+      SECONDARY per addendum C7's explicit "cluster by trade AND session" instruction). A cell
+      is only treated as a candidate signal if BOTH clustered CIs exclude zero.
+  (6) Too-good-to-be-true gate: any cell/cut that looks strong is checked for a sunk-P&L or
+      trend-persistence confound before being reported as signal.
+
+explicitly_not_in_scope_this_run:
+  - Any candidate/policy construction, hold/flatten/reverse rule, or promotion claim --
+    diagnostic only.
+  - Extrapolation beyond the 37-session substrate's own span (2025-08-14..2026-05-20).
+  - Requesting, exporting, or processing any scalping_lab session outside the 40 already on disk
+    (governance wall respected throughout).
+
+promotion_gate: none (diagnostic-only; even a strong result here would require the full
+  Adaptive-track gate in a dedicated future family, not this one).

@@ -1,0 +1,169 @@
+run_id: AUCTION01_VALUE_STATE
+family: AUCTION01_VALUE_STATE (addendum D0-D7)
+information_class: NQ_VOLUME_AT_PRICE
+date_frozen: 2026-08-09
+status: diagnostic-only, no trading policy this pass (per addendum)
+
+# ---------------------------------------------------------------------------
+# STEP 0 (mandatory gate, addendum D1-D2) — frozen BEFORE any construction
+# ---------------------------------------------------------------------------
+step0_gate:
+  question: >
+    Does research/scalping_lab/substrate/grid1s/NQ/*.parquet, or the underlying
+    research/scalping_lab/substrate/raw/NQ/*.parquet, contain genuine trade-at-price
+    volume (individual trade prints: price+size+timestamp) or only a 1-second
+    OHLC-style aggregate?
+  method: >
+    Read build_grid1s.py (Layer-1 aggregator) and SWScalpTickExport_v1/v3.cs
+    (NinjaScript exporter that produced the raw substrate). Directly inspect
+    raw/NQ/s20251002.parquet row-by-row structure: dtypes, per-row volume
+    distribution, and within-1-second price multiplicity for bip==0 (Last) rows.
+  finding: >
+    grid1s/NQ/*.parquet is a LOSSY 1-second aggregate: build_grid1s.py computes
+    only last-price, trade-COUNT, and volume-SUM per 1-second bucket
+    (g["last"]/g["trades"]/g["vol"] via .last()/.size()/.sum() on a 1s floor
+    groupby) -- it discards the intra-second price distribution entirely. Taken
+    alone, grid1s would fail addendum D1 (cannot build true POC from it; would
+    require faking POC via close/typical price, explicitly prohibited).
+    HOWEVER raw/NQ/*.parquet (the layer grid1s is built FROM) DOES preserve
+    genuine trade-at-price data: bip==0 (Last) rows are individual trade prints
+    from SWScalpTickExport (Calculate.OnEachTick, primary series comment
+    "Last/Bid/Ask 1-tick events", same Tick=1 granularity as the explicit
+    Bid/Ask AddDataSeries calls). Direct inspection of s20251002.parquet
+    confirms this empirically: 413,850 Last rows at millisecond timestamps,
+    volume distribution is single-print-sized (median=1, mean=1.09, IQR=[1,1],
+    NOT a monotonically-accumulating within-bar total), and 28,699/43,545
+    seconds (66%) contain MORE THAN ONE distinct traded price within that
+    second (up to 57 distinct prices in a single second; e.g. second
+    2025-10-01T18:00:00 alone shows prints at 25009.25, 25007.25, 25006.75,
+    25006.00, 25004.75 -- five different price levels). This is structurally
+    impossible for a 1-second-aggregate-only source and is the expected
+    signature of genuine per-trade prints.
+  verdict: >
+    PASS. Genuine trade-at-price volume (price+size+timestamp per trade,
+    millisecond resolution) is available in raw/NQ/*.parquet, even though it
+    does NOT survive into grid1s/NQ/*.parquet. Construction proceeds using
+    raw/NQ/*.parquet as the POC source, with output aligned onto the existing
+    1-second grid (last-observation-per-second + ffill, matching
+    build_grid1s.py's own convention) so it can be merged with the rest of the
+    substrate (grid1s microstructure columns, sechilo mid_last/high/low, U0
+    causal state) on a common time index.
+
+# ---------------------------------------------------------------------------
+# Substrate / governance
+# ---------------------------------------------------------------------------
+substrate:
+  session_universe: >
+    37 sessions with confirmed L1+L2 (BBO) provenance -- the file list in
+    research/scalping_lab/substrate/sechilo/NQ/*.parquet (which already
+    excludes the 3 documented zero-BBO sessions 20250811, 20250924,
+    20260430), matching U9B's EXCLUDE_SESSIONS convention exactly.
+  governance: >
+    No session outside the existing 40-on-disk set is requested, exported, or
+    processed. Only research/scalping_lab/substrate/{grid1s,raw,sechilo}/NQ/*.parquet
+    are read. The ~168-session internal confirmation pool is untouched.
+  poc_source: raw/NQ/*.parquet, bip==0 (Last trade prints) only.
+  tick_size: 0.25 (NQ).
+  timestamp_convention: >
+    All scalping_lab substrate timestamps and U0's `time` column are on the
+    same ET session clock (sanity-checked: s20251002 raw ticks span
+    2025-10-01T18:00:00.024 .. 2025-10-02T16:59:59.852; U0 sess_date=2025-10-02
+    rows span time 2025-10-01T18:03:00 .. 2025-10-02T17:00:00 -- same session,
+    same clock, no tz conversion needed).
+
+# ---------------------------------------------------------------------------
+# Construction (addendum D3): causal running POC / VWAP
+# ---------------------------------------------------------------------------
+construction:
+  running_poc_algorithm: >
+    Per session, sort Last-trade prints by time. tick_id = round(price/0.25).
+    cum_vol_at_price = groupby(tick_id)[volume].cumsum() (running volume traded
+    at each price level, using only prints up to and including the current
+    one -- causal by construction, no future information). running_max_vol =
+    cum_vol_at_price.cummax() (running max over ALL price levels' cumulative
+    volume so far -- valid because cum_vol_at_price is monotone non-decreasing
+    per bucket, so a global running max over the touched-bucket's updated
+    value at each row equals the true cross-bucket running max). A trade row
+    sets a new POC record iff cum_vol_at_price[i] >= running_max_vol[i] (i.e.
+    this row's bucket just reached-or-exceeded the previous global max);
+    poc_tick is forward-filled from these record rows. This is an exact
+    (not approximate) causal running-POC computation, O(n log n) per session.
+  running_vwap: expanding cumsum(price*volume)/cumsum(volume) per session.
+  concentration_measure: >
+    poc_share_t = running_max_vol_t / cum_total_vol_t (in [0,1]; primary
+    concentration/"value-state" measure). Secondary: value_dist_ticks_t =
+    (last_price_t - poc_price_t)/0.25 (signed distance of current trade price
+    from the running POC).
+  value_area: >
+    NOT computed (full 70% value-area band requires the entire per-bucket
+    running distribution ranked at every timestep, which is not reducible to
+    the same O(n) running-max trick and was out of scope for this diagnostic
+    pass given time budget). This is a disclosed simplification vs the
+    addendum's "value-area" wording -- poc_share is used as the concentration
+    proxy instead. Flagged for a future pass if this diagnostic clears.
+  downsample_to_1s_grid: >
+    Last-observation-per-second (ffill through gaps), matching
+    build_grid1s.py's own convention exactly, so the POC/VWAP layer can be
+    time-joined onto grid1s (last, mid, sflow, bid_upd, ask_upd), sechilo
+    (mid_last, mid_high, mid_low), and U0 (M, position_B, action_B via
+    merge_asof(direction='backward') keyed on time, strictly causal: only the
+    latest U0 3-minute bar AT OR BEFORE t is used).
+
+# ---------------------------------------------------------------------------
+# Decision points
+# ---------------------------------------------------------------------------
+decision_points:
+  filter: >
+    RTH [09:30, 16:00) ET AND trailing-60s(bid_upd+ask_upd) > 0 -- matches the
+    house convention already established in W4/W5-C1 (avoids overnight/thin
+    microstructure artifacts feeding a POC-based diagnostic).
+  sampling_cadence: >
+    Every 30 seconds within qualifying decision seconds (reduces
+    near-duplicate overlapping observations / compute; session-block
+    bootstrap below is what actually delivers correct clustered inference,
+    not the sampling density).
+  n_target: ~37 sessions x ~780 decision points/session (RTH=23,400s / 30s)
+    before the liquidity filter; actual n reported from the data.
+
+# ---------------------------------------------------------------------------
+# Diagnostics (addendum D4-D6)
+# ---------------------------------------------------------------------------
+diagnostics:
+  D4_concentration_predicts_absolute_expansion:
+    predictors: [poc_share_t, abs(value_dist_ticks_t)]
+    outcome: >
+      abs_markout_H_ticks = |mid_last(t+H) - mid_last(t)| / 0.25, for
+      H in {15s, 60s, 300s}. Secondary outcome: realized_range_H_ticks =
+      (max(mid_high over (t,t+H]) - min(mid_low over (t,t+H])) / 0.25.
+    statistic: Spearman rho, pooled across all decision points (all sessions).
+    inference: session-block bootstrap, 1000 reps, resample the 37 sessions
+      with replacement, recompute pooled rho each rep, report [2.5,97.5]
+      percentile CI. Matches U9B / W5-C1's established convention.
+  D6_poc_migration_conditioned_on_incumbent_direction:
+    predictor: >
+      poc_migration_60s_ticks = poc_price_t - poc_price_{t-60s}; classified
+      up (>=+1 tick), down (<=-1 tick), flat (else). Conditioning variable:
+      sign(position_B_t) from U0 (causal asof).
+    cells: >
+      For position_B_t=+1: {migration=up} vs {migration=flat_or_down}.
+      For position_B_t=-1 (mirrored): {migration=down} vs {migration=flat_or_up}.
+      (i.e. "migrating in the incumbent's favor" vs "not").
+    outcomes (in the position's directional frame, side=sign(position_B_t)):
+      signed_markout_H_ticks = side*(mid_last(t+H)-mid_last(t))/0.25;
+      continuation_prob_H = P(signed_markout_H > 0);
+      MFE_H_ticks, MAE_H_ticks (side-adjusted, from sechilo mid_high/mid_low
+      over (t,t+H]).
+    statistic: mean difference between the two cells, per horizon.
+    inference: same session-block bootstrap (1000 reps) on the difference.
+  too_good_to_be_true_gate: >
+    Applied to any |rho|>0.15 (D4) or any D6 cell difference whose bootstrap
+    CI excludes 0 AND whose magnitude would matter against the campaign's
+    established C1 execution-cost hurdle (2.872 ticks RT, from W5-C1/census):
+    re-verify no lookahead in the POC/VWAP construction (by inspection of the
+    cumsum/cummax algorithm -- provably causal, see construction section
+    above) and no U0-state leakage (merge_asof direction='backward' only).
+  scope_note: >
+    Diagnostic-only. No entries/exits/holds are constructed or evaluated
+    against cost this pass -- effect sizes are contextualized against the
+    2.872-tick cost hurdle for interpretability only, per the addendum's
+    explicit "no trading policy this pass" instruction.

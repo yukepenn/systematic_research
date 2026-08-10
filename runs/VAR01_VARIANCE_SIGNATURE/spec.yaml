@@ -1,0 +1,128 @@
+run_id: VAR01_VARIANCE_SIGNATURE
+family: VAR01_VARIANCE_SIGNATURE
+directive: "Master v3 sec37-43"
+date_frozen: "2026-08-09"
+status: FROZEN_BEFORE_RESULTS
+
+purpose: >
+  Structural-science test (not an indicator grid): build a MULTI-SCALE realized-variance
+  signature from Solar13's own substrate, explicitly tied to Solar13's fast/mid/slow VolMult
+  cohort structure, and test whether the variance-SPREAD (long-horizon RV minus short-horizon
+  RV, per unit time) is (a) persistent/autocorrelated and (b) explains incumbent Product-B
+  forward P&L better than sigma460 alone. Must NOT duplicate the already-killed single-horizon
+  Lo-MacKinlay Variance Ratio (SMV2J: 0/12 cells vs next-session PnL; SMV2Y: same VR series
+  0/12 cells vs next-week downside too) -- this construction differs by (i) using MULTIPLE
+  simultaneous horizons rather than one q/N pair, (ii) measuring realized-variance LEVEL
+  (regime/amplitude) rather than the serial-correlation-ratio VR statistic, (iii) horizons are
+  derived from Solar13's own empirically-measured fast/slow member hold-time structure, not
+  arbitrary round numbers chosen independently of the system under study.
+
+prior_reading (mandatory, done before construction):
+  - research/system_master/deep_research/DR_V2_PASS_B_DSP.md "H1. Rolling Variance Ratio state"
+    (RANK 1, never executed as multi-scale; single-horizon version later run as SMV2J)
+  - research/system_master/deep_research/DR_SM_A_academic.md "A-5. Intra-session variance
+    ratio" (CLEAR-WITH-CONSTRAINTS verdict; intraday-causal requirement noted and respected here)
+  - research/system_master/INDICATOR_FRONTIER.md SMV2J/SMV2O/SMV2Y entries (VR 0/12 cells twice,
+    against two different targets -- next-session AND next-week; confirmed no-signal, not
+    collinearity, |corr| <= 0.14 vs deployed controls)
+  - research/system_master/STRUCTURE_MAP.md (Solar13 ensemble row; VM 6..30 step 2, adjacent-VM
+    corr 0.77 vs far-VM corr 0.025 -- redundancy is LOCAL, motivating a small number of
+    genuinely-separated horizons, not a dense grid)
+  - runs/SA0_SYSTEM_STRUCTURE/src/02_ensemble.py cohort definition: FAST=VM{6,8,10,12},
+    MID=VM{14,16,18,20,22}, SLOW=VM{24,26,28,30} (reused verbatim)
+  - INDICATOR_FRONTIER.md SMV2R/SMV2T: FAST cohort (VM6-12) is a live "removable-candidate"
+    lead that FAILED R2 confirmation (13-member incumbent retained) -- i.e. FAST members are
+    NOT safely dismissed as noise; their own characteristic timescale is real information this
+    family should respect, not discard.
+
+substrate: runs/U0_UNIFIED_STATE/out/u0_state_table.parquet (540,232 bars x 79 cols, 3-min NQ,
+  2022-01-03..2026-07-31). Canonical dev window only (is_health_only_bar == False, 519,714 bars,
+  2022-01-03..2026-05-29) used for all statistics below; no bar >= 2026-08-01 touched (sealed).
+
+correctness_gate:
+  check: sum(bar_pnl_B_nq_dollars) over dev window must equal certified Product-B NQ net
+  expected: 301915.92
+
+horizon_derivation (empirical, computed from u0_state_table's fast_member/slow_member columns
+  BEFORE any variance construction -- these are descriptive facts about the existing certified
+  substrate, not a new backtest):
+  - fast_member (VM6, PEND[:,0]) sign-run length on dev window: median 17 bars (51 min), mean
+    31.8 bars (95 min)
+  - slow_member (VM30, PEND[:,-1]) sign-run length on dev window: median 185 bars (555 min /
+    9.25h), mean 310.3 bars (930 min / 15.5h)
+  - sigma460's own VolPeriod = 460 bars = 1380 min = 23h ~= 1 session (the existing control's
+    native window)
+
+frozen_horizons (bars, 3-min; SMALL preregistered set, chosen from the above, not arbitrary):
+  SHORT:   5 bars  (~15 min)  -- sub-fast-member scale, intra-leg noise floor
+  FAST:   20 bars  (~60 min)  -- matches fast_member (VM6) empirical median hold (51 min)
+  SLOW:  310 bars  (~930 min / 15.5h) -- matches slow_member (VM30) empirical MEAN hold
+  SESSION: 460 bars (~23h)    -- matches sigma460's own VolPeriod exactly (round-number anchor
+                                  explicitly licensed by the directive's own example list)
+
+deseasonalization (disclosed approximation): per-bar log return r[t] = log(close[t]) -
+  log(close[t-1]); first bar of each session (sess_date change) flagged and EXCLUDED (set NaN,
+  overnight/roll gap, not an intraday move). r2[t] = r[t]^2 (for non-excluded bars).
+  Causal seasonal profile: for each of the 7 session_phase buckets, a TRAILING (expanding,
+  shift(1), same-phase-only, chronological) mean of r2 is computed -- strictly uses only
+  earlier same-phase bars, never future data. seasonal_mult[t] = trailing_phase_mean[t] /
+  trailing_grand_mean[t] (grand mean = trailing expanding mean of r2 across all bars, shift(1)).
+  r2_adj[t] = r2[t] / seasonal_mult[t]. Approximation disclosed: this corrects the AVERAGE
+  diurnal level per phase-bucket, not finer within-phase time-of-day structure; first ~90
+  trading days produce noisy seasonal estimates (no explicit burn-in trim applied -- flagged as
+  a limitation, not corrected, given time budget).
+
+variance_construction: RV_H[t] = trailing mean of r2_adj over the last H valid (non-NaN,
+  non-overnight) observations ending at bar t (require >= 0.8*H valid obs else NaN). Strictly
+  causal (t and earlier only).
+
+primary_spread (PREREGISTERED, the one explicitly tied to Solar13's fast/slow cohort structure):
+  SPREAD_FAST_SLOW[t] = ln(RV_SLOW[t]) - ln(RV_FAST[t])
+secondary_spread (robustness only, round-number anchor pair, NOT used for the primary verdict):
+  SPREAD_SHORT_SESSION[t] = ln(RV_SESSION[t]) - ln(RV_SHORT[t])
+
+step3_tests (frozen before computing):
+  persistence:
+    - daily: session-close snapshot of SPREAD_FAST_SLOW, lag-1 autocorrelation (dev window)
+    - bar-level: ACF of SPREAD_FAST_SLOW at lag=FAST(20) and lag=SLOW(310) bars
+  incremental_value (matching R4/R5/EXP01/ICT0102 methodology -- bucket-residualize + Delta-R^2,
+    OLS with HAC/Newey-West-style robust SE given overlapping-window construction):
+    target: forward-H-bar Product-B PnL, H in {FAST=20, SESSION=460}, sum(bar_pnl_B_nq_dollars)
+      over (t, t+H], evaluated on a NON-OVERLAPPING subsample (every H-th bar) to avoid
+      overlap-induced autocorrelation inflating apparent significance; unconditional on
+      position_B (tests whether the ENVIRONMENT predicts near-future strategy P&L, not merely
+      marginal value while already positioned -- matches the SMV2J framing directly, at bar
+      instead of session granularity)
+    baseline_model: fwdPnL_H ~ const + sigma460_tercile_dummies(2)
+    extended_model: fwdPnL_H ~ const + sigma460_tercile_dummies(2) + SPREAD_FAST_SLOW_z
+    report: R^2_base, R^2_ext, Delta-R^2, spread coefficient + HAC t-stat, bucket-residualized
+      Spearman(SPREAD, resid_y | sigma460 tercile), year-by-year sign stability of the
+      residualized Spearman correlation (same as R4/EXP01 precedent)
+    sigma460_tercile: in-sample pd.qcut(3) on the regression subsample -- same convention as the
+      R4/EXP01/ICT0102 precedent scripts (not a causal expanding percentile; disclosed, matches
+      precedent exactly so results are comparable)
+
+step4_conditional: fast-vs-slow Solar13 cohort differential value test (does SPREAD_FAST_SLOW
+  predict which of the fast_member/slow_member column's own forward value is better) -- ONLY
+  run if step3 shows real (economically + statistically + chronologically stable) residual
+  value beyond sigma460. If step3 is a clean null, step4 is explicitly skipped per directive
+  ("do not force Step 4") and the family closes as a complete, valid, honestly-reported result.
+
+pass_bar (informal, consistent with the DSP JOB1 harness's own bar, scaled down for a
+  diagnostic-only single-family test, not a policy promotion):
+  - persistence: |lag-1 daily autocorrelation| worth discussing if > 0.15
+  - incremental value: Delta-R^2 economically meaningful only if it approaches or exceeds prior
+    passing states in this program's own history (SMV2Y's ER150/sigma460 next-week result was
+    the first state to ever pass this program's bar; VAR01 is judged against that same
+    concrete precedent, not an abstract threshold) AND HAC |t| > 2 AND same-sign year-by-year
+    majority (>= 4/5 dev years, matching R4's stability convention)
+
+scope_discipline: >
+  No entries/exits/holds are constructed or modified by this family at Step 2-3 -- it is a pure
+  descriptive-state + forward-value test on the ALREADY-CERTIFIED Product-B decision sequence.
+  Right-tail audit and full deployment battery (chronology/LOYO/too-good-to-be-true) apply ONLY
+  if/when a real candidate policy is proposed (step4 or beyond); not triggered by a clean null
+  at step3.
+
+data_boundary: dev window (2022-01-03..2026-05-29) only. Health-only extension
+  (2026-06-01..2026-07-31) and sealed >=2026-08-01 data are NOT read by this family.
