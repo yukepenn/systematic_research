@@ -1,0 +1,59 @@
+run_id: O2_NUMERIC_PROVENANCE_AUDIT
+family: O2_NUMERIC_PROVENANCE_AUDIT
+directive: Master Directive v4 sec30
+date: 2026-08-09
+type: documentation_audit
+purpose: >
+  Repo-wide search for every canonical/current document that quotes the old
+  hand-arithmetic Product-A owner-utility figures (J=+0.1241 mixture /
+  J=-0.1259 Gamma-minimax, and their rounded forms +0.124/-0.126) as if they
+  were current primary_objective_v2 module output, following the finding in
+  runs/O2_OWNER_UTILITY_READJUDICATION/REPORT.md that these figures were hand
+  arithmetic on already-published v1 per-method components, not actual v2
+  module output. Real v2 module output on the same series: J=+0.0549
+  (mixture) / J=-0.2220 (Gamma-minimax), per
+  runs/O2_OWNER_UTILITY_READJUDICATION/out/o2_scoring_summary.csv.
+inputs:
+  - context_finding: runs/O2_OWNER_UTILITY_READJUDICATION/REPORT.md
+  - context_data: runs/O2_OWNER_UTILITY_READJUDICATION/out/o2_scoring_summary.csv
+method: >
+  ripgrep (via Grep tool) over the entire repo for the literal figures and
+  near variants ("0.1241", "0.1259", "+0.124", "-0.126", "J=+0.12", "J=-0.13"
+  and case variants with spaces around "="), restricted on the second pass to
+  *.md/*.txt/*.yaml/*.yml (the class of file the directive asked to check;
+  the unrestricted first pass showed the same digit substrings occur
+  incidentally, and heavily, inside numeric CSV/JSON backtest-output columns
+  that have nothing to do with the owner-utility objective -- those are not
+  "documents" in the sense the directive means and were excluded after
+  inspection). A follow-up literal-phrase search for "daily objective" across
+  the same file-type set was run to catch any citing document that might
+  have used different rounding and so missed the numeric patterns; it
+  surfaced no new files.
+reproduce_commands:
+  - |
+    # Pass 1 (repo-wide, all file types) -- context/sanity only, very noisy:
+    rg -n "0\.1241|0\.1259|\+0\.124|-0\.126|J=\+0\.12|J=-0\.13" .
+  - |
+    # Pass 2 (the pass whose file list this audit is based on):
+    rg -n "0\.1241|0\.1259|\+0\.124|-0\.126|J=\+0\.12|J=-0\.13|J = \+0\.12|J = -0\.13" \
+       -g "*.md" -g "*.txt" -g "*.yaml" -g "*.yml" .
+  - |
+    # Follow-up phrase check for missed rounding variants:
+    rg -n "daily objective" -g "*.md" -g "*.txt" -g "*.yaml" -g "*.yml" .
+outputs:
+  - out/classification_table.csv
+files_edited_for_correction:
+  - BASELINE_MODELS.md
+  - research/system_master/CURRENT_TRUTH.md
+  - research/system_master/FINAL_CAMPAIGN_BASELINE.md
+files_reviewed_no_edit_needed:
+  - runs/O2_OWNER_UTILITY_READJUDICATION/REPORT.md
+  - runs/W17_C4_COMPLIANCE/O1_OBJECTIVE.md
+  - runs/W17_C4_COMPLIANCE/O1_REPAIR_PREREGISTRATION.md
+  - runs/W17_C4_COMPLIANCE/O1_BLIND_REVIEW_OUTCOME.md
+  - research/system_master/RESEARCH_FRONTIER.md
+safety_boundary_compliance: >
+  No data dated >= 2026-08-01 read, exported, or computed on. No AMENDMENT_3
+  protected pool touched. No trading/order/deployment actions taken. This run
+  is a text-search-and-documentation-correction pass only; no backtests were
+  executed and no research/scalping_lab tick or grid data was read.

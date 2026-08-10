@@ -1,0 +1,61 @@
+{
+  "note": "Machine-readable evidence for the DOM01 collector build pass. Reproduce: call mcp__crosstrade__CompileNinjaScript(in_memory=true, name=\"Dom01DepthRecorder_v1\", source=<contents of ninjascript/Dom01DepthRecorder_v1.cs>), poll mcp__crosstrade__GetMcpJob(job_id), then mcp__crosstrade__WriteNinjaScriptFile(kind=\"indicator\", name=\"Dom01DepthRecorder_v1\", overwrite=true, source=<same source>).",
+  "step1_get_connections": {
+    "called": "mcp__crosstrade__GetConnections(refresh=true)",
+    "timestamp_utc": "2026-08-09T21:06:24Z (Simulation established_at from response)",
+    "connections": [
+      {"name": "Kinetick – End Of Day (Free)", "provider": "Provider7", "status": "Disconnected", "priceStatus": "Disconnected"},
+      {"name": "Live", "provider": "Unknown", "status": "Disconnected", "priceStatus": "Disconnected"},
+      {"name": "Playback", "provider": "Playback", "status": "Disconnected", "priceStatus": "Disconnected"},
+      {"name": "Simulated Data Feed", "provider": "Simulator", "status": "Disconnected", "priceStatus": "Disconnected"},
+      {"name": "Simulation", "provider": "Provider31", "status": "Connected", "priceStatus": "Connected", "user": "rainazur", "establishedAt": "2026-08-09T21:06:24.4681086Z"}
+    ]
+  },
+  "step2_reflection_lookups": {
+    "MarketDepthEventArgs": {
+      "full_name": "NinjaTrader.Data.MarketDepthEventArgs",
+      "properties": ["Instrument", "IsReset", "MarketDataType", "MarketMaker", "Operation", "Position", "Price", "Time", "Volume"],
+      "note": "No order-id / queue-rank field exists on this type -- confirms MBP not MBO, and confirms no queue priority, by direct reflection against this NT8 install (not assumed)."
+    },
+    "Operation_enum": {"full_name": "NinjaTrader.Cbi.Operation", "enum_values": ["Add", "Update", "Remove"]},
+    "MarketDataType_enum": {"full_name": "NinjaTrader.Data.MarketDataType", "enum_values": ["Ask", "Bid", "Last", "DailyHigh", "DailyLow", "DailyVolume", "LastClose", "Opening", "OpenInterest", "Settlement", "Unknown"]},
+    "OnMarketDepth_signature": "protected void OnMarketDepth(MarketDepthEventArgs marketDepthUpdate)  -- present on NinjaTrader.NinjaScript.IndicatorBase (confirmed by SearchNinjaScriptSymbols)",
+    "OnMarketData_signature": "protected void OnMarketData(MarketDataEventArgs marketDataUpdate)  -- present on NinjaTrader.NinjaScript.IndicatorBase",
+    "OnConnectionStatusUpdate_signature": "protected void OnConnectionStatusUpdate(ConnectionStatusEventArgs connectionStatusUpdate)  -- present on NinjaTrader.NinjaScript.IndicatorBase",
+    "ConnectOptions_DisableL2Data": "NinjaTrader.Cbi.ConnectOptions.DisableL2Data : bool -- confirmed present by reflection; the collector logs this per-connection at DataLoaded as a direct, queryable depth-entitlement signal."
+  },
+  "step3_compile_in_memory": {
+    "tool": "mcp__crosstrade__CompileNinjaScript",
+    "args": {"in_memory": true, "name": "Dom01DepthRecorder_v1"},
+    "job_id": "239b8afff5884f1b",
+    "status": "completed",
+    "started_at": "2026-08-10T03:11:24.1994724Z",
+    "finished_at": "2026-08-10T03:11:24.8124766Z",
+    "elapsed_ms": 613.0042,
+    "result": {
+      "compiled": true,
+      "errors": [],
+      "warnings": [],
+      "referenced_asm": 133,
+      "dropped_for_dedupe": ["NinjaTrader.Vendor", "CrossTrade", "NinZaATR_NT8", "NinZaHelperMFI_NT8", "NinZaHelperRSI_NT8", "NinZaHelperSMMA_NT8", "NinZaHelperStochastic_NT8", "NinZaResources_NT8", "RenkoKings_SolarWaveRK_NT8"]
+    }
+  },
+  "step4_write_ninjascript_file": {
+    "tool": "mcp__crosstrade__WriteNinjaScriptFile",
+    "args": {"kind": "indicator", "name": "Dom01DepthRecorder_v1", "overwrite": true, "trigger_compile": true},
+    "response": {
+      "path": "C:\\Users\\Yuke Zhang\\Documents\\NinjaTrader 8\\bin\\Custom\\Indicators\\Dom01DepthRecorder_v1.cs",
+      "bytes_written": 24914,
+      "compile_triggered": false,
+      "compile_engine": "file_only",
+      "note": "File written (compile_engine=file_only). This is an expected fallback per the tool's own documentation, not an error: the reflection-based auto-recompile trigger was unavailable this call, so NT8 has not yet rebuilt NinjaTrader.Custom.dll against this file. Owner must press F5 in the NinjaScript Editor (or restart NT8) before the indicator is available to attach to a chart."
+    }
+  },
+  "step5_file_listing_confirmation": {
+    "tool": "mcp__crosstrade__ListNinjaScriptFiles",
+    "args": {"kind": "indicator", "filter": "Dom01"},
+    "result": {"path": "C:\\Users\\Yuke Zhang\\Documents\\NinjaTrader 8\\bin\\Custom\\Indicators\\Dom01DepthRecorder_v1.cs", "bytes": 24917, "mtime": "2026-08-10T03:12:37.8537884Z"}
+  },
+  "runtime_context": {"nt8_version": "8.1.8.1", "crosstrade_addon_version": "v1.13.9"},
+  "disposition": "Compile-verified (in-memory, 0 errors/0 warnings, against the live NT8 8.1.8.1 AppDomain with 133 referenced assemblies). File placed in NT8's real NinjaScript source folder. NOT yet compiled through NT8's own native Custom.dll build path -- that step (F5 or restart) is an owner action, listed in REPORT.md. The indicator was never attached to a chart, never started, never connected to any account -- compile/build verification only, per task scope."
+}

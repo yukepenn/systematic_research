@@ -330,7 +330,15 @@ resilience edge over the plain control there, +$7,243 is the fitted c1_50 consta
 diversification) and +$1,721 is the tilt.
 **O1a daily objective**: INCONCLUSIVE (+0.124 equal-weight-mixture vs −0.126 Γ-minimax; both
 conventions mathematically admissible, per the binding fallback this may not be quoted as one
-number).
+number). **[SUPERSEDED 2026-08-09: the +0.124/−0.126 figures above are HAND ARITHMETIC on
+already-published v1 per-method components (`runs/W17_C4_COMPLIANCE/O1_REPAIR_PREREGISTRATION.md`),
+not `primary_objective_v2` module output — that module had never been run end-to-end on real P&L
+until `runs/O2_OWNER_UTILITY_READJUDICATION/`. Running the real module on the certified Product-A
+legacy-proxy daily series gives J=+0.0549 (mixture) / J=−0.2220 (Γ-minimax) — same sign pattern,
+still INCONCLUSIVE, but materially different magnitude. See
+`runs/O2_OWNER_UTILITY_READJUDICATION/REPORT.md` and
+`runs/O2_OWNER_UTILITY_READJUDICATION/out/o2_scoring_summary.csv`. Cite the v2 module figures, not
+this hand-computed pair, going forward.]**
 
 ### Robustness summary (this wave's 8-family sweep, all against this exact object's control)
 | axis | result |

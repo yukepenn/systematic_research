@@ -48,7 +48,14 @@ and must not be quoted as v3's number without restating.
 **Objective-function status**: O1a daily objective is **INCONCLUSIVE** — +0.124 under the
 equal-weight-mixture aggregation convention, −0.126 under Γ-minimax. The blind review (R3) confirmed
 both conventions are mathematically admissible; per the binding fallback, an object whose verdict
-flips across them may not be quoted as a single number.
+flips across them may not be quoted as a single number. **[SUPERSEDED 2026-08-09: the +0.124/−0.126
+pair above is HAND ARITHMETIC on already-published v1 per-method components
+(`runs/W17_C4_COMPLIANCE/O1_REPAIR_PREREGISTRATION.md`), not actual `primary_objective_v2` module
+output — the module had never been executed end-to-end on real P&L until
+`runs/O2_OWNER_UTILITY_READJUDICATION/`. The real module output on the same Product-A series is
+J=+0.0549 (mixture) / J=−0.2220 (Γ-minimax) — same sign pattern, still INCONCLUSIVE, materially
+different magnitude. See `runs/O2_OWNER_UTILITY_READJUDICATION/REPORT.md` and
+`runs/O2_OWNER_UTILITY_READJUDICATION/out/o2_scoring_summary.csv`.]**
 
 **2026-stub behavior** (106 sessions, 2026-01-02 → dev end): Solar leg *inside* Product A is
 **+$6,079 / Sharpe +0.456** — positive, not the same object as the plain E10 control. Of Product

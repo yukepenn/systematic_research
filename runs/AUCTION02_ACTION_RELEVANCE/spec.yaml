@@ -1,0 +1,289 @@
+run_id: AUCTION02_ACTION_RELEVANCE
+family: "AUCTION02 -- action-relevance of AUCTION state (value_dist_ticks/poc_share) on the
+  incumbent's ALREADY-CHOSEN direction (Master Directive v4 sec12-17)"
+directive: "Master Directive v4 sec12-17, discovery-only pass on the 37/40-session discovery set"
+date_frozen: 2026-08-09
+status: >
+  FROZEN POLICY SPEC for a LATER, SEPARATE confirmation-pool test. This spec was produced on the
+  DISCOVERY set only (37 BBO-confirmed / 40 raw sessions in research/scalping_lab/substrate/
+  {grid1s,raw,sechilo}/NQ, 2025-08-14..2026-05-20). The ~168-session AMENDMENT_3 protected
+  confirmation pool was NOT read, requested, enumerated, or in any way examined while producing
+  this spec -- confirmed clean by construction (every script under src/ opens only
+  runs/U0_UNIFIED_STATE/out/u0_state_table.parquet and runs/AUCTION01_VALUE_STATE/out/
+  poc_1s_full.parquet, both already-built discovery-only substrates; no new tick/BBO/NT8 read
+  occurred in this family). Nothing dated >=2026-08-01 was touched (max session tag used:
+  20260520).
+
+# =============================================================================
+# WHAT SURVIVED (headline, see REPORT.md for full evidence)
+# =============================================================================
+disposition_summary: >
+  Step 1 found a real, small, causally-clean, non-time-of-day-confounded, sign-stable SIGNED
+  relationship: at bars where Product A (target_exposure_A!=0) or Product B (position_B!=0)
+  already has a nonzero direction, a LARGER causal running-POC distance (|value_dist_ticks|,
+  far tercile) predicts (a) a WORSE forward markout in that already-chosen direction
+  (session+trade-block CI excludes zero for Product A at the 3-bar horizon; consistent
+  negative sign, 2/2 chronological half-stable, at every tested horizon {1,3,20} for both
+  products) and (b) a higher probability of BOTH a large aligned move and a large adverse move,
+  with the adverse-move probability increase larger than the aligned one (both products, both
+  session- and trade-block CIs exclude zero at the 3-bar horizon). Step 2 found this is NOT
+  redundant with U6B's own quality state at Product-A scale-up bars (rho=-0.069, p=0.37,
+  n=171) and adds real incremental R^2 at the 20-bar horizon (dR2=+0.075, coefficient
+  session-block CI [-0.586,-0.111] excludes zero). Step 4's two a priori interaction candidates
+  (Auction x U6B-quality; Auction x |M|-magnitude) both showed session-block CIs on the
+  interaction coefficient (b3) spanning zero -- NEITHER combination candidate is frozen. Step 3
+  (Product-B action layer) identifies "HOLD persistence" as the EVI-selected candidate (it is
+  what Step 1's own Product-B test already is) but the evidence does not clear this family's own
+  dual-CI-excludes-zero bar as cleanly as Product A's headline cell -- per Step 3's own explicit
+  allowance, NO Product-B construction is built; Auction remains Product-A-only this pass.
+  ONE Product-A construction is frozen below (primary f=0.5, sensitivity f=0.7), mirroring
+  U6B's own rate-limiter mechanism exactly, driven by value_dist_ticks instead of htf_agree/
+  vote_dispersion. The discovery-phase effect size (dR2 0.002-0.02 on the primary signed_markout
+  cells) is SMALL -- comparable to or smaller than U6B's own effect, which failed U6B's
+  1%-of-control wash threshold at construction. This spec is written so the confirmation pool
+  gets a fair, non-rigged test, not a foregone conclusion in either direction.
+
+# =============================================================================
+# CRITICAL, DISCLOSED SCOPE LIMITATION (read before running the confirmation)
+# =============================================================================
+coverage_limitation: >
+  value_dist_ticks requires genuine per-trade tick prints (raw/NQ), which exist for only
+  37 (discovery) + up to ~168 (protected pool) sessions total -- a small, RECENT slice of
+  Product A's full ~900+-session, 2022-2026 canonical trading history. U6B's own report puts the
+  full-history scale-up-bar population at 12,085-12,603 bars; this discovery pass's tick-covered
+  scale-up-bar population is 346 bars (37 sessions) pre-RTH/liquidity-filter, 171 post-filter --
+  roughly 2.8% of all-time scale-up bars, rising to a still-minority ~15% (rough extrapolation)
+  once the protected pool's ~168 sessions are added. CONSEQUENCE: this construction can only ever
+  bind during tick-covered dates; on every other bar in Product A's history (the large majority),
+  value_dist_ticks is UNAVAILABLE by construction and the mechanism below is defined to fall back
+  to unrestricted (=CONTROL) behavior -- never to a restrictive default. A full-history
+  net/Sharpe/DD battery in the style of U6B's own promotion gate is NOT MEANINGFUL here and is
+  explicitly NOT part of this spec's validation battery; see validation_battery/primary_endpoints
+  below for what IS meaningful given this coverage limit.
+
+binding_separation: >
+  Unmodified per sec-binding-separation: incumbent M / Product-A's own computed target
+  (target_exposure_A, via product_a_exec_generalized) remains the ONLY directional source.
+  Auction state (value_dist_ticks) NEVER inverts, originates, blocks, or shrinks the target --
+  it only paces the SPEED of a single bar's move toward an unmodified target, exactly as U6B's
+  own mechanism does. Solar13/HTF/B-MOM/target sign/core target formula are byte-identical to
+  the incumbent; KSOLAR/KBMOM/TILTRESCALE/TILTMULT/SHORTHALF/rha/M_a/tgt/C4-gating are untouched.
+
+# =============================================================================
+# Data reuse / governance (frozen, mechanical)
+# =============================================================================
+data_reuse:
+  discovery_substrate_used: >
+    runs/U0_UNIFIED_STATE/out/u0_state_table.parquet (read-only, columns: t_idx, time,
+    sess_date, hm, is_health_only_bar, position_B, action_B, block_id_B, target_exposure_A,
+    action_A, block_id_A, M, M_A_raw, HTF_tilt_state, vote_dispersion, sigma460_atr_proxy_pts,
+    open/high/low/close, session_phase, minutes_since_session_open, bar_pnl_A_dollars,
+    bar_pnl_B_nq_dollars) merged via merge_asof(direction='backward', by=session, tolerance=2s)
+    onto runs/AUCTION01_VALUE_STATE/out/poc_1s_full.parquet (poc_share, value_dist_ticks,
+    bid_upd, ask_upd -- the causal running-POC layer built by
+    runs/AUCTION01_VALUE_STATE/src/02_build_poc_substrate.py's causal_running_poc() from
+    raw/NQ per-trade prints; TICK=0.25). Build script:
+    runs/AUCTION02_ACTION_RELEVANCE/src/01_build_action_substrate.py; output:
+    runs/AUCTION02_ACTION_RELEVANCE/out/action_substrate.parquet (13,064 in-direction rows,
+    37 sessions).
+  session_universe: >
+    37 BBO-confirmed sessions in research/scalping_lab/substrate/sechilo/NQ (identical to
+    AUCTION01/COMBO01/FLOW01/U9B's own list; excludes 20250811/20250924/20260430, documented
+    zero/partial-BBO holes). Session tags 20250814..20260520 -- entirely inside the canonical
+    window (is_health_only_bar==False confirmed by assertion in the build script), far short of
+    the 2026-08-01 sealed boundary.
+  correctness_gate_passed: >
+    Canonical-window sum of u0_state_table's own bar_pnl_B_nq_dollars = $301,915.92 (certified)
+    and bar_pnl_A_dollars = $177,924.40 (certified), both reproduced exactly before any other
+    column was trusted (asserted in 01_build_action_substrate.py).
+  protected_pool_untouched: >
+    Confirmed by construction: no script in this family opens any file under
+    research/scalping_lab/substrate/{raw,grid1s,sechilo}/NQ directly except
+    runs/AUCTION01_VALUE_STATE/out/poc_1s_full.parquet (an already-built, already-reported,
+    discovery-only derivative). The 01_build_action_substrate.py script additionally reads the
+    session file LIST (not contents) of sechilo/NQ purely to assert its own 37-session universe
+    matches AUCTION01's, and asserts max(tag) <= 20260520 -- no session outside the 40 already on
+    disk was requested, exported, or examined.
+
+# =============================================================================
+# Frozen construction (Product A ONLY; mirrors U6B's rate-limiter mechanism exactly, per
+# runs/U6B_PRODUCT_A_SCALE_RATE/spec.yaml's own construction discipline)
+# =============================================================================
+construction:
+  bar_selection: >
+    Identical to U6B: at each bar, using the incumbent's own C4-gated computed target `tgt`
+    (product_a_exec_generalized's own output, unmodified), is_scaleup = (tgt!=0) AND
+    ((p==0) OR (sign(tgt)==sign(p) AND abs(tgt)>abs(p))) -- fresh ENTRY or same-sign SCALE_IN.
+    FLIP/SCALE_DOWN/EXIT/HOLD/FLAT bars are NEVER touched by this mechanism, in every candidate
+    cell, exactly as U6B's own asymmetric design (de-risking and non-scale-up moves are never
+    rate-limited).
+  auction_signal: >
+    At each is_scaleup bar, value_dist_ticks_t = (last_traded_price_t - poc_price_t)/0.25, where
+    poc_price_t is the causal running point-of-control (causal_running_poc(), see
+    runs/AUCTION01_VALUE_STATE/src/02_build_poc_substrate.py, verbatim reuse -- tick_id =
+    round(price/0.25), cum_vol_at_price = groupby(tick_id)[volume].cumsum(), running_max =
+    cum_vol_at_price.cummax(), record whenever cum_vol_at_price>=running_max, forward-filled),
+    computed from genuine per-trade Last prints (bip==0 rows) in raw/NQ, gridded to 1s, THEN
+    matched onto the Product-A execution bar's own timestamp via
+    pandas.merge_asof(direction='backward', by=session, tolerance=2s) -- identical mechanics to
+    COMBO01's own merge (runs/COMBO01_MULTIMODAL_SYNERGY/src/01_build_merged_substrate.py).
+  domain_restriction: >
+    value_dist_ticks is only trusted -- and the rate limiter only ever activates -- inside RTH
+    [09:30,16:00) ET AND a trailing-60s(bid_upd+ask_upd)>0 liquidity gate (reconstructed from
+    poc_1s_full's own bid_upd/ask_upd columns exactly as COMBO01 did), matching the exact domain
+    AUCTION01's own D4 finding was confound-checked inside. OUTSIDE this domain (pre-market/
+    overnight/thin-liquidity bars, OR any bar on a date with no tick coverage at all --
+    i.e. essentially all of Product A's pre-Aug-2025 and non-tick-covered history):
+    quality_low_auction = FALSE by definition (fail-safe default = unrestricted = CONTROL
+    behavior; the mechanism NEVER restricts when its own input is unavailable).
+  frozen_cut_point: >
+    CUT_FAR_TICKS = 315.3333333333333 -- the 67th-percentile (tercile) cutoff of
+    |value_dist_ticks| computed ONCE, non-circularly, from this discovery pass's OWN Product-A
+    scale-up-bar (ENTRY+SCALE_IN), RTH+liquid+matched population (n=171, 55 trades, 33 sessions)
+    -- BEFORE any outcome was touched for this cut computation (matches AUCTION01/COMBO01's own
+    preregistration discipline). This number is FIXED for the confirmation pool -- it must be
+    reused verbatim, never re-derived on the protected-pool population (non-circular, matching
+    U6B's own VOTE_THRESH=6.0 discipline exactly).
+  quality_state: >
+    quality_low_auction = (domain_restriction satisfied) AND (|value_dist_ticks_t| >=
+    CUT_FAR_TICKS). Binary, single-threshold (top tercile only triggers pacing; near+mid
+    terciles, and all out-of-domain bars, read quality_low_auction=FALSE i.e. full speed) --
+    simpler than U6B's own OR-of-two-signals composite because this family has one auction
+    predictor, not two independent quality signals; disclosed as an intentional simplification,
+    not an oversight.
+  mechanism: >
+    Byte-identical in shape to U6B's own (runs/U6B_PRODUCT_A_SCALE_RATE/src/
+    01_construct_and_validate.py's product_a_exec_ratelimited, minus the trigger condition):
+    at an is_scaleup bar with quality_low_auction==TRUE, gap = tgt - p;
+    step_mag = max(1, floor(f * abs(gap))) [minimum-step-of-1 floor, DISCLOSED DEVIATION,
+    identical justification to U6B: a literal floor(f*|gap|) with no floor would silently turn
+    single-contract low-quality scale-ups -- the majority of Product-A moves, per U6B's own
+    finding that 85.6-88.3% of its own rate-limited bars hit this exact floor -- into a permanent
+    block, reintroducing the exact right-tail failure mode U6 Part 3 already closed the
+    filter-framing over]; tgt_final = p + sign(gap) * step_mag. When quality_low_auction==FALSE
+    (near/mid tercile, OR out-of-domain, OR not a scale-up bar), tgt_final = tgt unchanged (100%
+    of the gap in one bar, exactly CONTROL). tgt_final becomes `pend` exactly as the incumbent's
+    own loop already does; C4/forced-flat gating happens upstream of this step, exactly as U6B.
+  grid: >
+    f in {0.5 (PRIMARY), 0.7 (SENSITIVITY)} -- IDENTICAL grid to U6B's own preregistered {0.5,
+    0.7}, chosen deliberately for direct comparability across the two independently-triggered
+    rate limiters (U6B's htf_agree/vote_dispersion-driven one vs. this family's
+    value_dist_ticks-driven one), not re-optimized. CONTROL = f=None (rate limiter fully
+    disabled, byte-identical to the incumbent's own product_a_exec_generalized) is the
+    correctness-gate call and must reproduce the certified canonical Product-A net ($177,924.40
+    legacy-pricing convention, matching U6B's own gate) exactly before any candidate cell is
+    trusted.
+  auction_x_u6b_interaction: >
+    NOT combined into this frozen construction. Step 4 tested (discovery-only, n=171,
+    session-block bootstrap) whether an Auction-far x U6B-quality-low interaction term added
+    explanatory power beyond either alone; b3 (interaction coefficient) session-block CI
+    [-163.4, 49.0] at H=3 and [-204.2, 543.3] at H=20 -- both span zero. This candidate is
+    explicitly NOT frozen (DATA_LIMITED, not a confident null, n=171) and is flagged as a
+    follow-up for a future pass with more data (e.g. once the confirmation pool itself is
+    available), not baked into this spec's mechanism.
+
+# =============================================================================
+# Confirmation-pool procedure (mechanical, no further judgment calls)
+# =============================================================================
+confirmation_procedure:
+  step_a_diagnostic_replication: >
+    On the protected pool's own sessions (same causal alignment method, same TICK=0.25, same
+    RTH+liquid domain restriction, same is_scaleup bar-selection), recompute: (i) session+trade
+    block-bootstrapped Spearman rho of value_dist_ticks_abs vs signed_markout_{1,3,20} for both
+    Product A (target_exposure_A!=0) and Product B (position_B!=0) in-direction populations,
+    using the SAME frozen tercile cut methodology (recompute the pool's OWN marginal tercile cut
+    for this diagnostic-replication step only -- this is a like-for-like re-diagnosis, NOT the
+    frozen policy trigger, which always uses CUT_FAR_TICKS=315.33 verbatim); (ii)
+    P(large_aligned_move)/P(large_adverse_move) far-vs-near tercile mean-diff at H=3, both
+    products, using the pool's own MFE/MAE pooled-median thresholds (recomputed on the pool, not
+    reused, since "large" is inherently sample-relative); (iii) report whether the DISCOVERY
+    pass's signs (negative signed_markout rho; positive, adverse>aligned large-move-probability
+    diffs) replicate in sign, and whether previously-marginal cells (Product A H=1/H=20,
+    Product B all horizons) now clear the dual-CI-excludes-zero bar with the added sessions.
+  step_b_redundancy_replication: >
+    Recompute Step 2's redundancy check (Spearman rho of |value_dist_ticks| vs U6B's own
+    quality_high_u6b, using VOTE_THRESH=6.0 verbatim, never re-derived) at Product-A scale-up
+    bars on the pool. Report whether |rho|<0.2 (this discovery pass's rho=-0.069) still holds.
+  step_c_constructed_pnl: >
+    Run CONTROL/F0.5/F0.7 (product_a_exec_ratelimited-style mechanism above) on the FULL
+    canonical Product-A bar history, but report the net/Sharpe/maxDD_eod/CDaR95 DELTA
+    (candidate minus control) summed ONLY over bars falling on tick-covered session dates
+    (discovery 37 + protected pool sessions) -- explicitly NOT a full-history battery, per the
+    disclosed coverage_limitation above. Also report turnover (fill count, total |contracts|,
+    commission delta) over the same restricted date set.
+  step_d_right_tail_check: >
+    Intersect U6's own published top-20/bottom-20 canonical Product-A blocks
+    (runs/U6_PRODUCT_A_PATH_DEPENDENCE/out/step3_top20_blocks.csv /
+    step3_bottom20_blocks.csv, by t_idx_start/t_idx_end) with the tick-covered date set. If the
+    intersection is empty (expected, given coverage_limitation -- those blocks were identified
+    across the full 2022-2026 history and are unlikely to fall inside a <1-year recent window),
+    report N/A explicitly rather than fabricating a check. If any block does overlap, report the
+    candidate-vs-control windowed $ delta on that block exactly as U6B did.
+
+# =============================================================================
+# Primary endpoints (exact, mechanical)
+# =============================================================================
+primary_endpoints:
+  - "Product A, H=3, signed_markout: session-block AND trade-block bootstrap CI on Spearman rho
+     (value_dist_ticks_abs vs signed_markout_3_A), replicated sign and CI-excludes-zero status."
+  - "Product A and Product B, H=3, P(large_aligned_move) and P(large_adverse_move): far-vs-near
+     tercile dual-clustered mean-diff, replicated sign and CI-excludes-zero status."
+  - "Redundancy: Spearman rho(|value_dist_ticks|, quality_high_u6b) at Product-A scale-up bars,
+     replicated |rho|<0.2."
+  - "Constructed net/Sharpe/maxDD_eod delta (F0.5 and F0.7 vs CONTROL), summed over tick-covered
+     dates only."
+
+# =============================================================================
+# Falsification condition (exact, preregistered)
+# =============================================================================
+falsification_condition: >
+  This candidate is FALSIFIED / NOT PROMOTED if, on the confirmation pool, EITHER grid cell
+  (F0.5 or F0.7) shows: (a) constructed net (step_c) delta over the tick-covered date set is
+  negative or a wash (<1% of CONTROL's own net over that same restricted date set -- same
+  1%-wash convention U6B used, applied to the coverage-restricted, not full-history, net since a
+  full-history comparison is not meaningful here per coverage_limitation), OR (b) the diagnostic
+  replication (step_a) shows the SIGN of the Product-A H=3 signed_markout relationship flips
+  (i.e. far-from-value now predicts BETTER, not worse, continuation) with a CI that excludes the
+  discovery pass's own sign, OR (c) redundancy replication (step_b) shows |rho|>=0.4 against
+  U6B's quality_high_u6b (i.e. the signal turns out to be substantially redundant with an
+  already-open challenger on the larger sample, undermining the non-redundancy case this spec is
+  built on), OR (d) any right-tail overlap found in step_d shows net damage exceeding any
+  full-window improvement, OR (e) quality_low_auction's realized rate on the pool differs from
+  this discovery pass's 33.3% (by tercile construction) by more than 2x (i.e. <16.7% or >66.7%),
+  indicating the frozen cut point does not transport to the larger sample.
+
+# =============================================================================
+# What was explicitly tested and NOT frozen
+# =============================================================================
+not_frozen:
+  - "Product-B construction (Step 3): 'HOLD persistence' identified as the EVI-selected
+     candidate frame (matches what Step 1's own Product-B test already is), but evidence does
+     not clear the dual-CI-excludes-zero bar as cleanly as Product A's headline cell (Product-B
+     signed_markout CIs are directionally consistent, 2/2 half-stable, but never fully exclude
+     zero at any single horizon under dual clustering). Per Step 3's own explicit allowance, NO
+     Product-B mapping is constructed this pass -- diagnostic only."
+  - "poc_share as a primary or standalone trigger: entangled with sigma460_atr_proxy_pts
+     (rho=-0.736 Product A, rho=-0.737 Product B, this discovery pass -- reproducing COMBO01's
+     rho=-0.705 finding almost exactly). value_dist_ticks is used exclusively as the policy
+     trigger; poc_share remains sensitivity/mechanism-check only, per COMBO01's own precedent."
+  - "Candidate 1 (Auction x U6B-quality interaction) and Candidate 2 (Auction x |M|-magnitude
+     interaction): both tested in Step 4, neither cleared session-block-CI-excludes-zero on the
+     interaction coefficient. Not frozen; flagged as follow-ups, not evidence of a real interaction."
+
+explicitly_not_in_scope_this_run:
+  - "Any change to Solar13/HTF/B-MOM/target sign/core target formula, or to U6B itself."
+  - "Any read, export, enumeration, or examination of the AMENDMENT_3 protected confirmation
+     pool (~168 sessions) -- this task's entire purpose is to produce this spec BEFORE that pool
+     is touched."
+  - "Any data dated >=2026-08-01 (sealed per research/operational/LOCKED_FORWARD.md) -- not
+     applicable; this family's substrate spans 2025-08-14..2026-05-20 entirely."
+  - "A directional (signed) Auction signal -- value_dist_ticks conditions SPEED only, never
+     direction, per binding_separation."
+
+promotion_gate: >
+  None yet -- this is a discovery-phase frozen spec awaiting the confirmation-pool test
+  described above. Verdict taxonomy on confirmation: PROMOTED (falsification_condition not
+  triggered on either grid cell, AND an independent adversarial reviewer confirms, matching
+  U6B's own sec18 promotion bar) / NOT_PROMOTED (falsification_condition triggered) /
+  DATA_LIMITED (protected pool coverage still too thin to resolve -- possible given this
+  discovery pass's own tick-covered scale-up-bar population is only 171 rows).

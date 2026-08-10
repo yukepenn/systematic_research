@@ -216,7 +216,12 @@ verdict flips is INCONCLUSIVE.** Product A's daily objective is **+0.124** under
 **−0.126** under the other — **it flips, so it is INCONCLUSIVE and may not be quoted as a single
 number.** O2 is unblocked on the aggregation question subject to that, and to four underspecified
 items the reviewer raised (chiefly: is the fixed fraction optimised per candidate, which would
-inject a selection bias no aggregation rule touches).
+inject a selection bias no aggregation rule touches). **[SUPERSEDED 2026-08-09: the +0.124/−0.126
+pair above is HAND ARITHMETIC on already-published v1 per-method components, not actual
+`primary_objective_v2` module output — see `runs/O2_OWNER_UTILITY_READJUDICATION/REPORT.md`. The
+real module output on the certified Product-A series is J=+0.0549 (mixture) / J=−0.2220
+(Γ-minimax) — same sign pattern, still INCONCLUSIVE, materially different magnitude. Source:
+`runs/O2_OWNER_UTILITY_READJUDICATION/out/o2_scoring_summary.csv`.]**
 
 **8. R4 — the seal claim is now proven rather than asserted.** `src/analytics/seal_audit.py` is a
 standing per-wave check: manifest in, max timestamp per artifact out, classified DEV / CONSUMED /
@@ -1089,3 +1094,13 @@ this directory). Machine state: SYSTEM_FRONTIER.yaml. Specs+outputs: runs/SMV2*.
 > of a broad `git add -A` while the repair was still in flight, i.e. **the module was in the repo
 > before its written justification was**. The pre-registration is committed now. Nothing imports
 > v2 and O2 has not run, so no result was produced from the un-justified state.
+>
+> **[SUPERSEDED 2026-08-09: the +0.1241/−0.1259 (rounded +0.124/−0.126) pair disclosed above was
+> HAND ARITHMETIC on the already-published v1 per-method components — `primary_objective_v2` had
+> still never been run end-to-end on real candidate P&L at the time this was written. It has now
+> been run, in `runs/O2_OWNER_UTILITY_READJUDICATION/`: the real module output on the certified
+> Product-A legacy-proxy daily series is J=+0.0549 (mixture) / J=−0.2220 (Γ-minimax) — same sign
+> pattern (still INCONCLUSIVE), but materially different magnitude from the hand-computed pair
+> above. See `runs/O2_OWNER_UTILITY_READJUDICATION/REPORT.md` and
+> `runs/O2_OWNER_UTILITY_READJUDICATION/out/o2_scoring_summary.csv`. Do not cite the hand-computed
+> pair as current v2 output going forward.]**

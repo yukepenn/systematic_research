@@ -1,0 +1,69 @@
+run_id: EVIDENCE01_REPORT_TRACEABILITY
+family: EVIDENCE01_REPORT_TRACEABILITY (Master Directive v4 sec29)
+date_frozen: 2026-08-09
+status: pure verification -- no construction, no candidate, does not modify any audited run's own files
+purpose: >
+  Wave 4 repeatedly built REPORT.md files from subagent-returned text rather than the
+  orchestrating session independently recomputing headline numbers. Verify this did not
+  introduce any actual errors, on a 4-run sample: 2 mandatory (U6B_PRODUCT_A_SCALE_RATE,
+  AUCTION01_VALUE_STATE) + 2 selected via a fixed, disclosed, non-cherry-picked method.
+
+# ---------------------------------------------------------------------------
+# STEP 1 -- family selection method (frozen before STEP 2 was run)
+# ---------------------------------------------------------------------------
+step1_selection:
+  source: research/system_master/TESTING_LEDGER.csv (40 data rows)
+  mandatory_excluded: [U6B_PRODUCT_A_SCALE_RATE, AUCTION01_VALUE_STATE]
+  infrastructure_excluded_rule: >
+    Every row whose hypothesis_class column literal value == "infrastructure" (mechanical
+    filter on an existing CSV column, not a per-row judgment call). This yields exactly 6
+    rows: U0_UNIFIED_STATE, WAVE1_SYNTHESIS, WAVE2_EVI, WAVE4_TRUTH_AUDIT,
+    DATA02_MICROSTRUCTURE_INVENTORY, WAVE4_FRONTIER_O2_GAMMA_AUDIT -- of which 3
+    (WAVE4_TRUTH_AUDIT, DATA02_MICROSTRUCTURE_INVENTORY, WAVE4_FRONTIER_O2_GAMMA_AUDIT)
+    are exactly the directive's own named examples of "pure infrastructure/audit-only"
+    rows, and the other 3 have no runs/<family>/ directory on disk (WAVE1_SYNTHESIS,
+    WAVE2_EVI) or, for U0_UNIFIED_STATE, exist only as a state-table-construction
+    confirmation with no standalone tested hypothesis / headline number of its own.
+  candidate_pool_size: 32 (40 - 2 mandatory - 6 infrastructure)
+  sort: Python default alphabetical sort of the 32 family-name strings
+  sampling: "random.seed(20260809); random.sample(sorted_list, 2)"
+  picks: [ICT0102_EVENT_SEQUENCE, U6_PRODUCT_A_PATH_DEPENDENCE]
+  full_sorted_list_and_picks: out/step1_selection.json
+  reproduce: python runs/EVIDENCE01_REPORT_TRACEABILITY/src/01_select_families.py
+
+# ---------------------------------------------------------------------------
+# STEP 2/3 -- independent recomputation targets (one per audited run)
+# ---------------------------------------------------------------------------
+step2_3_recompute_targets:
+  U6B_PRODUCT_A_SCALE_RATE:
+    - CONTROL canonical net (expected $177,924.40)
+    - F0.5 / F0.7 canonical net
+    - 2022-2025-only delta vs control for F0.5 and F0.7 (the preregistered wash-threshold test)
+    source_artifacts: [out/u6b_summary.json, out/u6b_year_by_year.csv]
+  AUCTION01_VALUE_STATE:
+    - D4 pooled Spearman rho, poc_share vs range_60, and sample n
+    source_artifacts: [out/diagnostics_summary.json, out/decision_outcomes.parquet]
+  ICT0102_EVENT_SEQUENCE:
+    - correctness-gate canonical B-NQ net (expected $301,915.92)
+    - ICT02 full 6-feature-block delta-R^2 vs M/vol baseline
+    - ICT01 SWEEP+MSS delta-R^2 vs SWEEP-ONLY (the addendum's specific required question)
+    source_artifacts: [runs/U0_UNIFIED_STATE/out/u0_state_table.parquet, out/ict02_features.csv,
+                        out/ict01_events.csv, out/ict02_summary.json, out/ict01_summary.json]
+  U6_PRODUCT_A_PATH_DEPENDENCE:
+    - Part 3 right-tail check (the report's own Verdict section names this "the load-bearing
+      constraint"): top-20 / bottom-20 all-time block net_pnl range and fraction of each tail
+      that started in a 1-3-contract exposure state
+    source_artifacts: [out/u6_block_table.csv]
+  reproduce: python runs/EVIDENCE01_REPORT_TRACEABILITY/src/02_recompute_headline_numbers.py
+  results: out/step2_3_recompute_results.json
+
+# ---------------------------------------------------------------------------
+# Governance
+# ---------------------------------------------------------------------------
+governance:
+  scope: >
+    Pure verification. Does not modify any of the 4 audited runs' own files (REPORT.md,
+    spec.yaml, out/, src/) -- only reads them. No data >=2026-08-01 touched (all 4 audited
+    runs' canonical windows end 2026-05-31/2026-07-31, well inside the unsealed
+    development window).
+  disposition: CLEAN -- all 4 runs' headline numbers reproduce exactly (see out/step2_3_recompute_results.json)
