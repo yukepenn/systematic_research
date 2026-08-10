@@ -1,0 +1,54 @@
+run_id: PORT01_AB_PORTFOLIO_SYNTHESIS
+family: PORT01 (Product A + Product B risk-normalized portfolio synthesis)
+directive: "directive sec53-54/80 (A/B portfolio value); self-generated pivot given 12/12 CONTINUOUS EVOLUTION alpha-search hypotheses closed without a promotable candidate"
+date_frozen: 2026-08-09
+author: autonomous research campaign (continuation)
+
+purpose: >
+  Twelve independent CONTINUOUS SYSTEM EVOLUTION hypotheses (H0/U1/U3/U4/U5/U6/U7/U4B/SHADOW01/
+  U1B/U6B/U8/U9/U9B/U8B/LEV01/LEV02/SKEW01) have now been tested with zero promotable candidates
+  -- a consistent pattern of real-but-unsafe, real-but-tiny, confounded, or clean-null results
+  across every locally-derivable and several externally-motivated information classes. Per
+  directive sec82's own audit, this does NOT yet meet the "information frontier exhausted" bar
+  (cross-market conditioning remains untested pending a specific motivating mechanism; more
+  scalping_lab data will accumulate for a future U9-alpha retest), but the marginal EVI of
+  another single-feature residual-information test is now low given how consistently that class
+  of hypothesis has failed. This family pivots to a DIFFERENT KIND of question directive
+  sec53-54/80 explicitly authorizes: not "is there more alpha to find" but "given what Product A
+  and Product B actually are today, what is the best risk-normalized way to run them together."
+  This requires no new signal search -- it is portfolio construction applied to already-
+  certified, already-analyzed daily P&L series.
+
+not_alpha: >
+  Per directive sec53's own explicit caution ("do not call leverage mixing alpha"), this family
+  produces NO trading-rule candidate and makes NO promotion claim. Any drawdown/CDaR improvement
+  found from combining A and B is explicitly a DIVERSIFICATION/SIZING property of already-
+  existing, already-unchanged objects -- not a new edge.
+
+data_reuse: >
+  Zero new CrossTrade/NT8 calls, zero new feature construction. Reuses runs/H0_PRODUCT_A_HEALTH's
+  own already-certified session-level P&L series (Product A, Product B-NQ) plus a freshly
+  aggregated Product B-MNQ session series (from runs/U0_UNIFIED_STATE/out/u0_state_table.parquet's
+  own bar_pnl_B_mnq_dollars column, already byte-exact-gated against the certified MNQ net).
+
+planned_analyses: >
+  Standalone risk/return battery (dd_battery) for Product A, Product B-NQ, Product B-MNQ,
+  canonical window. Combined portfolios at capital-normalized weights (accounting for each
+  object's actual margin/capital footprint -- Product B is a strict 1-contract NQ/MNQ object,
+  Product A ranges 0-13 MNQ contracts, so naive dollar-summing over-weights Product A's capital
+  intensity; report both naive-dollar-sum AND a capital-normalized weighting using each object's
+  own historical peak margin usage as the normalizer). Joint drawdown/CDaR, tail-day overlap
+  (already computed in H0, reused not recomputed), rolling correlation stability. Explicit
+  decomposition: how much of any combined-portfolio DD improvement is diversification (real) vs
+  simply averaging two already-uncorrelated-in-part series (a sizing/capital-allocation
+  artifact, not alpha) -- per directive sec53's own required distinction.
+
+explicitly_not_in_scope_this_run:
+  - Any new alpha/feature search -- this is portfolio construction only.
+  - Any candidate construction, parameter change, or promotion claim for Product A or B
+    themselves.
+  - Proposing a specific capital allocation as an actionable recommendation without the owner's
+    own capital constraints as input -- this reports the TRADE-OFFS transparently, it does not
+    prescribe one answer.
+
+promotion_gate: none (synthesis/reporting only)
