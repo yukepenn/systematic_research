@@ -77,6 +77,21 @@ unification of short-asymmetry + 2026-severity) ranks higher: it explains TWO al
 empirical facts with one literature-grounded mechanism, rather than proposing a wholly new
 untested feature class.
 
+## Addendum — second pass (auction spillovers, intraday liquidity U-shape), same day
+
+Per `FRONTIER_AUDIT_20260809.md` condition (d), searched the two directive-sec69 topics the
+first pass hadn't covered. Findings: opening/closing auction research is dominated by
+single-name-equity/ETF/index-fund rebalancing mechanics (Russell reconstitution, closing-auction
+notional share growth) with no clear NQ-futures-specific, testable mechanism distinct from what
+this campaign already captures via session-phase state. The classic intraday U-shaped liquidity/
+volatility/spread pattern (Brock-Kleidon 1992 market-closure theory, confirmed across CBOT corn
+futures, CSI 300 index futures, and NASDAQ equities) is real and well-established — but this
+system's own `session_phase` state (RTH_OPEN/RTH_MID/RTH_CLOSE/etc.) already implicitly
+encodes it, and U1's own interaction test already found `M_abs × session_phase` significant
+specifically at RTH_OPEN and RTH_MID (t=−2.22, −2.66) — the mechanism this literature describes
+is not a genuinely NEW, untested angle; it corroborates work already done (U1/U1B/U3), not a
+distinct next hypothesis. **No new candidate hypothesis generated from this second pass.**
+
 ## Sources
 
 - [Leverage Effect and Volatility Asymmetry (ResearchGate)](https://www.researchgate.net/publication/326894634_Leverage_Effect_and_Volatility_Asymmetry)
