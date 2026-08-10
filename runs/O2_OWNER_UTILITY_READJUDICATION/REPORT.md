@@ -48,6 +48,18 @@ requirement, not one shared $100k figure. Flagged as the clear next step, not re
 
 ## The one genuine new finding: U6B's improvement over control survives BOTH aggregation conventions
 
+**[SUPERSEDED 2026-08-09: this heading overstates the finding.** U6B's independent adversarial
+review (`runs/U6B_PRODUCT_A_SCALE_RATE/adversarial_review/REPORT.md`) decomposed the
+Γ-minimax/mixture delta by individual bootstrap method and found the positive reading below is
+**entirely** the `moving5` method (ΔJ=+0.0149); the other two methods (`moving20`: −0.0015,
+`stationary60`: −0.0037) show the candidate *worse* than control. The `moving5` improvement itself
+traces to only 18 net path-flips out of 2,000 bootstrap paths (0.9%), every one landing within
+~1.5 percentage points of the exact 25%-of-capital ruin threshold — boundary-threshold noise, not
+a systematic mechanism. "Survives both conventions" should read "positive under one of three
+underlying resampling methods, driven by threshold-boundary noise" — a materially weaker claim.
+U6B's final disposition is **NOT PROMOTED**, closed on the merits. See the adversarial review for
+the full decomposition.]**
+
 Product A's own absolute utility is INCONCLUSIVE (mixture positive, Γ-minimax negative) — but the
 **delta** between U6B's candidates and control is **positive under both conventions**:
 
