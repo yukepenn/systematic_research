@@ -7,6 +7,19 @@ Read this before starting any new research wave. Kept short on purpose — see
 CURRENT MODE: RESEARCH
 ```
 
+> **UPDATE 2026-08-09 (latest) — Master Directive v3 / Wave 4 OPEN.** Waves 1-3 of the
+> CONTINUOUS SYSTEM EVOLUTION phase are now CLOSED (22 research artifacts: `U0/U2/H0/U1/U3/U4/
+> U5/U6/U7/U4B/SHADOW01/U1B/U6B/U8/U9/U9B/U8B/LEV01/LEV02/SKEW01/PORT01/EXP01`), zero promotions,
+> both baselines unchanged. See `research/system_master/CONTINUOUS_EVOLUTION_WAVE3_SYNTHESIS.md`
+> for that closure. Wave 4 corrects a governance error (many prior closures are transforms of the
+> SAME NQ_OHLCV path, not independent proofs) and opens new fronts: SPEC01 (CLOSED, not a defect),
+> PRICE01 (Product-A genuine-MNQ dual-truth infra, done), O2 (owner-utility re-adjudication),
+> ADD01/WIN01/SOFT01/VAR01 (participation/exit/weighting/variance-signature architecture
+> questions), GAMMA00 (dealer-gamma literature+data feasibility), and a same-day addendum opening
+> a multimodal microstructure program (DATA02/FLOW01/AUCTION01/DOM01/ICT01-02/COMBO01/ENGINE-C).
+> Full plan: `research/system_master/CONTINUOUS_EVOLUTION_WAVE4_PLAN.md`. Do not re-run any closed
+> family unchanged; this phase has no stop condition.
+>
 > **UPDATE 2026-08-09 (later same day) — CONTINUOUS SYSTEM EVOLUTION phase OPEN, wave 1 CLOSED.**
 > Per the owner's follow-on directive, research does not stop at zero promotions -- it continues
 > via an EVI-ranked loop. Wave 1 (`U0` shared state infra, `U2` data audit, `H0` Product-A health,
