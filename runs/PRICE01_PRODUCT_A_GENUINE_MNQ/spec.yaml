@@ -1,0 +1,48 @@
+family: PRICE01_PRODUCT_A_GENUINE_MNQ
+directive: "CONTINUOUS SYSTEM EVOLUTION -- Master Directive v3 / Wave 4+, sec13"
+frozen_before_results: true
+date: 2026-08-09
+information_class: EXECUTION
+
+hypothesis: >
+  Wave-4 truth audit confirmed a real methodological gap: the Python research substrate for
+  Product A (pa0_substrate.py, and U0's product_a_exec_generalized which copies it verbatim)
+  prices Product A end-to-end on NQ's OWN OHLC, with MNQ's $2/point value multiplier applied
+  directly to NQ price levels (LEGACY_RESEARCH_PROXY) -- never genuine MNQ OHLC -- despite
+  genuine MNQU6 3-min price data existing in this repo through 2026-05-29
+  (runs/PRODUCTB_ONECONTRACT_FINAL/out/mnq_3m_raw.csv), and despite the identical proxy pattern
+  already being caught and fixed for Product B (rebuild_mnq_reference.py). This run builds the
+  dual-truth comparison directive sec13 requires: LEGACY_RESEARCH_PROXY (unchanged, still the
+  certified $177,924.40 canonical net -- do not silently change canonical historical metrics)
+  vs GENUINE_MNQ_EXECUTION_ECONOMICS (same byte-identical decision sequence, genuine MNQ fills).
+
+method: >
+  Re-run product_a_exec_generalized (verbatim formula, matched against pa0_substrate.py/U0) twice
+  on the identical T/tilt_state/B/entry_blocked_c4/forced_flat_c4 decision inputs -- once against
+  NQ OHLC (legacy), once against genuine MNQ OHLC aligned via the identical reindex pattern U0
+  used for Product B's MNQ leg (canonical window genuine throughout; June-July 2026 extension
+  uses NQ-proxy MNQ, same disclosed approximation as U0). Explicitly verify the target-exposure
+  sequence is IDENTICAL between the two runs (price should only affect fill economics, not the
+  signal-driven decision) -- if this assertion fails, stop and investigate before reporting
+  anything, since it would mean price is leaking into the decision layer.
+
+primary_outcomes:
+  - canonical-window net: legacy vs genuine, dollar and percent difference
+  - extended-window (through 2026-07-31) net: legacy vs genuine
+  - year-by-year net: legacy vs genuine
+  - cross-check against V1R4_NT8_PARITY/FULL_HISTORY_CERTIFICATION.md's previously-unresolved
+    Product-A NT8-vs-Python gap (+10.91%/+$19,405.30, previously attributed entirely to fill-slip
+    + boundary-serialization, explicitly flagged there as "not proven to the dollar" for Product
+    A) -- does genuine MNQ pricing explain a material share of that gap?
+
+falsification_criterion: >
+  n/a for promotion (this is infrastructure, not a trading candidate) -- but the run FAILS its
+  own correctness bar if the target-exposure-identity assertion does not hold, or if genuine-MNQ
+  daily P&L series cannot be reconstructed and saved for downstream candidate repricing.
+
+promotion_rule: >
+  Not applicable -- infrastructure only. LEGACY_RESEARCH_PROXY remains the certified baseline
+  number every prior CONTINUOUS SYSTEM EVOLUTION finding was built against (unchanged). Per
+  sec13/sec77: for NEW Product-A candidates going forward, report BOTH conventions; genuine MNQ
+  economics is primary for execution-sensitive ranking; if verdict changes materially between the
+  two, stop and investigate before promoting.
