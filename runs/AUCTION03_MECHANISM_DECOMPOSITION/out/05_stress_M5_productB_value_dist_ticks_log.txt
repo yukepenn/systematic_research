@@ -1,0 +1,128 @@
+[load] discovery: 2786 product-B in-direction analysis_ok rows, 31 sessions, 47 trade blocks
+[load] confirmation: 522 product-B in-direction analysis_ok rows, 5 sessions, 7 trade blocks
+
+==============================================================================
+STEP 1: BASELINE REPRODUCTION (build-correctness gate)
+==============================================================================
+[discovery] H=1: controlled_effect=-7.348623t (official -7.348623t, match=True) | raw_diff=-6.390544t (official -6.390544t, match=True) | dual_sig=True sess_CI=[-16.977, -1.369] trade_CI=[-17.574, -1.198]
+[discovery] H=3: controlled_effect=-22.012848t (official -22.012848t, match=True) | raw_diff=-15.857069t (official -15.857069t, match=True) | dual_sig=True sess_CI=[-43.471, -6.214] trade_CI=[-43.945, -6.455]
+[discovery] H=20: controlled_effect=-90.208011t (official -90.208011t, match=True) | raw_diff=-53.030539t (official -53.030539t, match=True) | dual_sig=True sess_CI=[-176.971, -10.614] trade_CI=[-186.386, -10.962]
+[confirmation] H=1: controlled_effect=-12.130783t (official -12.130783t, match=True) | raw_diff=-3.568966t (official -3.568966t, match=True) | dual_sig=False sess_CI=[-62.36, 17.566] trade_CI=[-69.932, 9.221]
+[confirmation] H=3: controlled_effect=-32.114034t (official -32.114034t, match=True) | raw_diff=+1.488506t (official +1.488506t, match=True) | dual_sig=False sess_CI=[-184.115, 50.511] trade_CI=[-180.116, 30.894]
+[confirmation] H=20: controlled_effect=-22.039766t (official -22.039766t, match=True) | raw_diff=+11.201149t (official +11.201149t, match=True) | dual_sig=False sess_CI=[-638.254, 407.557] trade_CI=[-642.571, 334.61]
+BUILD-CORRECTNESS GATE: PASS (all point estimates reproduce official m5_action_value_residual.json to 1e-6)
+
+==============================================================================
+STEP 2: LEAVE-ONE-SESSION-OUT (point estimates, no bootstrap -- sign-stability diagnostic)
+==============================================================================
+[discovery] H=1: LOSO n=31/31 sessions | full-sample controlled_effect=-7.349t | LOSO range=[-9.326, -5.617]t, mean=-7.344t, std=0.604t | sign-stable (same sign as full sample): 31/31 (100.0%)
+[discovery] H=3: LOSO n=31/31 sessions | full-sample controlled_effect=-22.013t | LOSO range=[-25.425, -18.198]t, mean=-21.990t, std=1.415t | sign-stable (same sign as full sample): 31/31 (100.0%)
+[discovery] H=20: LOSO n=31/31 sessions | full-sample controlled_effect=-90.208t | LOSO range=[-115.513, -78.646]t, mean=-90.040t, std=6.946t | sign-stable (same sign as full sample): 31/31 (100.0%)
+[confirmation] H=1: LOSO n=5/5 sessions | full-sample controlled_effect=-12.131t | LOSO range=[-34.245, -6.334]t, mean=-15.451t, std=9.847t | sign-stable (same sign as full sample): 5/5 (100.0%)
+[confirmation] H=3: LOSO n=5/5 sessions | full-sample controlled_effect=-32.114t | LOSO range=[-101.569, -22.833]t, mean=-42.753t, std=29.841t | sign-stable (same sign as full sample): 5/5 (100.0%)
+[confirmation] H=20: LOSO n=5/5 sessions | full-sample controlled_effect=-22.040t | LOSO range=[-372.106, +139.462]t, mean=-53.619t, std=171.130t | sign-stable (same sign as full sample): 2/5 (40.0%)
+
+==============================================================================
+STEP 3: REMOVE SINGLE MOST-INFLUENTIAL SESSION / TOP-3 MOST-INFLUENTIAL SESSIONS (discovery)
+==============================================================================
+Top 5 most-influential sessions (removing them weakens the deterioration finding most, ranked by mean relative LOSO delta across H1/H3/H20):
+  20260220: relative_influence=+0.1734
+  20260206: relative_influence=+0.0989
+  20251124: relative_influence=+0.0929
+  20260320: relative_influence=+0.0913
+  20260519: relative_influence=+0.0789
+single most-influential session: 20260220
+top-3 most-influential sessions: ['20260220', '20260206', '20251124']
+[discovery, remove_top1=['20260220']] H=1: controlled_effect=-5.617t (full-sample was -7.349t) | n_sessions=30 | sess_CI=[-13.262, -0.23] trade_CI=[-13.945, -0.001] | dual_sig=True
+[discovery, remove_top1=['20260220']] H=3: controlled_effect=-18.198t (full-sample was -22.013t) | n_sessions=30 | sess_CI=[-37.376, -4.817] trade_CI=[-41.458, -3.543] | dual_sig=True
+[discovery, remove_top1=['20260220']] H=20: controlled_effect=-80.175t (full-sample was -90.208t) | n_sessions=30 | sess_CI=[-169.567, 11.332] trade_CI=[-176.318, -0.587] | dual_sig=False
+[discovery, remove_top3=['20260220', '20260206', '20251124']] H=1: controlled_effect=-3.132t (full-sample was -7.349t) | n_sessions=28 | sess_CI=[-10.529, 2.683] trade_CI=[-11.436, 4.124] | dual_sig=False
+[discovery, remove_top3=['20260220', '20260206', '20251124']] H=3: controlled_effect=-12.271t (full-sample was -22.013t) | n_sessions=28 | sess_CI=[-31.361, 3.388] trade_CI=[-34.927, 3.546] | dual_sig=False
+[discovery, remove_top3=['20260220', '20260206', '20251124']] H=20: controlled_effect=-53.172t (full-sample was -90.208t) | n_sessions=28 | sess_CI=[-168.388, 50.718] trade_CI=[-160.909, 52.506] | dual_sig=False
+
+==============================================================================
+STEP 4: MEDIAN SPLIT BY SESSION-MEAN sigma460_atr_proxy_pts (realized-vol proxy, discovery)
+==============================================================================
+low-vol sessions (n=16, sigma460 range [4.12,7.77]): ['20250814', '20250820', '20250905', '20250910', '20250911', '20250922', '20251002', '20251009', '20251029', '20251209', '20251222', '20260123', '20260211', '20260409', '20260417', '20260428']
+high-vol sessions (n=15, sigma460 range [8.27,15.92]): ['20251117', '20251124', '20260206', '20260218', '20260220', '20260223', '20260303', '20260312', '20260317', '20260320', '20260406', '20260423', '20260506', '20260519', '20260520']
+[discovery, low_vol] H=1: controlled_effect=-4.466t | n=1320, n_sessions=16, n_trade_blocks=24 | sess_CI=[-17.467, 0.529] trade_CI=[-15.563, 1.146] | dual_sig=False
+[discovery, low_vol] H=3: controlled_effect=-13.139t | n=1320, n_sessions=16, n_trade_blocks=24 | sess_CI=[-38.994, -0.313] trade_CI=[-43.902, 4.415] | dual_sig=False
+[discovery, low_vol] H=20: controlled_effect=-32.548t | n=1320, n_sessions=16, n_trade_blocks=24 | sess_CI=[-121.45, 22.481] trade_CI=[-130.582, 35.167] | dual_sig=False
+[discovery, high_vol] H=1: controlled_effect=-9.089t | n=1466, n_sessions=15, n_trade_blocks=23 | sess_CI=[-24.76, 0.466] trade_CI=[-27.03, 0.196] | dual_sig=False
+[discovery, high_vol] H=3: controlled_effect=-27.420t | n=1466, n_sessions=15, n_trade_blocks=23 | sess_CI=[-61.533, -3.115] trade_CI=[-66.939, -3.602] | dual_sig=True
+[discovery, high_vol] H=20: controlled_effect=-114.497t | n=1466, n_sessions=15, n_trade_blocks=23 | sess_CI=[-258.44, 13.194] trade_CI=[-279.988, 12.1] | dual_sig=False
+
+==============================================================================
+STEP 5: SPLIT BY NQ CONTRACT-MONTH (ground truth from runlist_40.csv / ELIGIBLE_SESSION_MANIFEST)
+==============================================================================
+Discovery product-B sessions per contract-month:
+  NQ 03-26: 9 sessions, n_rows=919, dates=['20251222', '20260123', '20260206', '20260211', '20260218', '20260220', '20260223', '20260303', '20260312']
+  NQ 06-26: 10 sessions, n_rows=928, dates=['20260317', '20260320', '20260406', '20260409', '20260417', '20260423', '20260428', '20260506', '20260519', '20260520']
+  NQ 09-25: 5 sessions, n_rows=490, dates=['20250814', '20250820', '20250905', '20250910', '20250911']
+  NQ 12-25: 7 sessions, n_rows=449, dates=['20250922', '20251002', '20251009', '20251029', '20251117', '20251124', '20251209']
+Confirmation product-B sessions per contract-month:
+  NQ 03-26: 2 sessions, n_rows=156, dates=['20260217', '20260302']
+  NQ 06-26: 1 sessions, n_rows=110, dates=['20260422']
+  NQ 09-25: 2 sessions, n_rows=256, dates=['20250819', '20250912']
+[discovery, contract=NQ 03-26] H=1: controlled_effect=-8.308t | n=919, n_sessions=9, n_trade_blocks=13 | sess_CI=[-33.455, 5.338] trade_CI=[-31.481, 6.405] | dual_sig=False
+[discovery, contract=NQ 03-26] H=3: controlled_effect=-27.397t | n=919, n_sessions=9, n_trade_blocks=13 | sess_CI=[-91.948, 4.966] trade_CI=[-91.662, 11.199] | dual_sig=False
+[discovery, contract=NQ 03-26] H=20: controlled_effect=-67.237t | n=919, n_sessions=9, n_trade_blocks=13 | sess_CI=[-286.378, 117.881] trade_CI=[-292.052, 135.203] | dual_sig=False
+[discovery, contract=NQ 06-26] H=1: controlled_effect=-8.797t | n=928, n_sessions=10, n_trade_blocks=16 | sess_CI=[-16.53, 11.86] trade_CI=[-20.273, 9.801] | dual_sig=False
+[discovery, contract=NQ 06-26] H=3: controlled_effect=-21.883t | n=928, n_sessions=10, n_trade_blocks=16 | sess_CI=[-43.003, 38.15] trade_CI=[-52.619, 22.825] | dual_sig=False
+[discovery, contract=NQ 06-26] H=20: controlled_effect=-114.090t | n=928, n_sessions=10, n_trade_blocks=16 | sess_CI=[-201.802, 116.249] trade_CI=[-219.539, 121.425] | dual_sig=False
+[discovery, contract=NQ 09-25] H=1: controlled_effect=-9.014t | n=490, n_sessions=5, n_trade_blocks=10 | sess_CI=[-17.746, -4.98] trade_CI=[-32.142, 2.131] | dual_sig=False
+[discovery, contract=NQ 09-25] H=3: controlled_effect=-23.114t | n=490, n_sessions=5, n_trade_blocks=10 | sess_CI=[-52.198, -13.31] trade_CI=[-76.965, 21.693] | dual_sig=False
+[discovery, contract=NQ 09-25] H=20: controlled_effect=-76.008t | n=490, n_sessions=5, n_trade_blocks=10 | sess_CI=[-181.316, -39.163] trade_CI=[-298.405, 145.868] | dual_sig=False
+[discovery, contract=NQ 12-25] H=1: controlled_effect=-13.595t | n=449, n_sessions=7, n_trade_blocks=8 | sess_CI=[-60.239, 30.181] trade_CI=[-74.536, 24.473] | dual_sig=False
+[discovery, contract=NQ 12-25] H=3: controlled_effect=-29.449t | n=449, n_sessions=7, n_trade_blocks=8 | sess_CI=[-109.13, 54.123] trade_CI=[-147.863, 43.631] | dual_sig=False
+[discovery, contract=NQ 12-25] H=20: controlled_effect=-126.975t | n=449, n_sessions=7, n_trade_blocks=8 | sess_CI=[-168.208, 20.066] trade_CI=[-183.552, 23.999] | dual_sig=False
+[confirmation, contract=NQ 03-26] H=1: controlled_effect=-31.391t (POINT ESTIMATE ONLY, n_sessions=2 too small for a bootstrap CI -- descriptive, not a significance test) | n=156, n_trade_blocks=3
+[confirmation, contract=NQ 03-26] H=3: controlled_effect=-89.078t (POINT ESTIMATE ONLY, n_sessions=2 too small for a bootstrap CI -- descriptive, not a significance test) | n=156, n_trade_blocks=3
+[confirmation, contract=NQ 03-26] H=20: controlled_effect=-203.409t (POINT ESTIMATE ONLY, n_sessions=2 too small for a bootstrap CI -- descriptive, not a significance test) | n=156, n_trade_blocks=3
+[confirmation, contract=NQ 06-26] H=1: controlled_effect=-34.098t (POINT ESTIMATE ONLY, n_sessions=1 too small for a bootstrap CI -- descriptive, not a significance test) | n=110, n_trade_blocks=1
+[confirmation, contract=NQ 06-26] H=3: controlled_effect=-68.625t (POINT ESTIMATE ONLY, n_sessions=1 too small for a bootstrap CI -- descriptive, not a significance test) | n=110, n_trade_blocks=1
+[confirmation, contract=NQ 06-26] H=20: controlled_effect=-95.362t (POINT ESTIMATE ONLY, n_sessions=1 too small for a bootstrap CI -- descriptive, not a significance test) | n=110, n_trade_blocks=1
+[confirmation, contract=NQ 09-25] H=1: controlled_effect=-16.087t (POINT ESTIMATE ONLY, n_sessions=2 too small for a bootstrap CI -- descriptive, not a significance test) | n=256, n_trade_blocks=3
+[confirmation, contract=NQ 09-25] H=3: controlled_effect=-31.321t (POINT ESTIMATE ONLY, n_sessions=2 too small for a bootstrap CI -- descriptive, not a significance test) | n=256, n_trade_blocks=3
+[confirmation, contract=NQ 09-25] H=20: controlled_effect=-92.596t (POINT ESTIMATE ONLY, n_sessions=2 too small for a bootstrap CI -- descriptive, not a significance test) | n=256, n_trade_blocks=3
+
+==============================================================================
+STEP 6: PREDICTOR-CONFOUND CORRELATION CHECK (abs_value_dist_ticks vs |M|, sigma460, trade-age, block-duration)
+==============================================================================
+[discovery] row-level corr(abs_value_dist_ticks, X):
+    m_abs: pearson=+0.1208, spearman=+0.1261
+    sigma460_atr_proxy_pts: pearson=+0.3069, spearman=+0.2794
+    _bar_seq_in_block: pearson=-0.2354, spearman=-0.2164
+    _block_duration_bars: pearson=-0.2405, spearman=-0.2094
+[discovery] session-mean-level corr(abs_value_dist_ticks, X) (n_sessions=31):
+    m_abs: pearson=+0.1427
+    sigma460_atr_proxy_pts: pearson=+0.4327
+    _bar_seq_in_block: pearson=-0.2706
+    _block_duration_bars: pearson=-0.2706
+[confirmation] row-level corr(abs_value_dist_ticks, X):
+    m_abs: pearson=+0.3192, spearman=+0.2963
+    sigma460_atr_proxy_pts: pearson=+0.8409, spearman=+0.7371
+    _bar_seq_in_block: pearson=+0.2189, spearman=+0.1096
+    _block_duration_bars: pearson=+0.4104, spearman=+0.2803
+[confirmation] session-mean-level corr(abs_value_dist_ticks, X) (n_sessions=5):
+    m_abs: pearson=+0.4650
+    sigma460_atr_proxy_pts: pearson=+0.8466
+    _bar_seq_in_block: pearson=+0.3964
+    _block_duration_bars: pearson=+0.3964
+
+==============================================================================
+STEP 7: INDEPENDENT LOOKAHEAD SPOT-CHECK (raw trade prints, t-or-earlier only, product-B decision points)
+==============================================================================
+[lookahead-check] 20250901: no product-B analysis_ok rows, skipping session
+[lookahead-check] 20251209 @ 2025-12-09 09:30:00: poc_price manual=25703.75 vs stored=25703.75 (exact match=True) | last: strict-causal(<=t)=25618.00, stored(grid1s)=25618.25, window[t,t+1)_last=25618.25 (stored==fwd-window: True) | value_dist_ticks: strict-causal=-343.00t vs stored=-342.00t (look-ahead bias=+1.00t) -> BIAS DETECTED
+[lookahead-check] 20251209 @ 2025-12-09 11:36:00: poc_price manual=25643.50 vs stored=25643.50 (exact match=True) | last: strict-causal(<=t)=25709.00, stored(grid1s)=25708.50, window[t,t+1)_last=25708.5 (stored==fwd-window: True) | value_dist_ticks: strict-causal=+262.00t vs stored=+260.00t (look-ahead bias=-2.00t) -> BIAS DETECTED
+[lookahead-check] 20260406 @ 2026-04-06 09:51:00: poc_price manual=24308.00 vs stored=24308.00 (exact match=True) | last: strict-causal(<=t)=24380.50, stored(grid1s)=24380.75, window[t,t+1)_last=24380.75 (stored==fwd-window: True) | value_dist_ticks: strict-causal=+290.00t vs stored=+291.00t (look-ahead bias=+1.00t) -> BIAS DETECTED
+[lookahead-check] 20260406 @ 2026-04-06 10:51:00: poc_price manual=24305.00 vs stored=24305.00 (exact match=True) | last: strict-causal(<=t)=24276.50, stored(grid1s)=24276.75, window[t,t+1)_last=24277.25 (stored==fwd-window: False) | value_dist_ticks: strict-causal=-114.00t vs stored=-113.00t (look-ahead bias=+1.00t) -> BIAS DETECTED
+Lookahead spot-check (product B decision points, n=4): poc_price exact causal match 4/4 | value_dist_ticks exact causal match (0 bias) 0/4 | max |look-ahead bias| = 2.00t vs product-B tercile_scale discovery=621.2t / confirmation=1033.5t (bias is 0.3% of the discovery tercile scale, 0.2% of the confirmation tercile scale, in the worst observed check)
+Root cause (matches the product-A finding at this same script path): grid1s's 1-second buckets are labeled by window START and aggregate trades in [T,T+1), so the 'last' price merged into value_dist_ticks can reflect a trade up to ~1s AFTER its own timestamp label. poc_price (the dominant, slower-moving driver of far/near tercile membership) is exactly causal in every check above. This is inherited from the campaign's existing grid1s substrate (research/scalping_lab), not introduced by AUCTION01/02/03 code.
+
+==============================================================================
+SUMMARY
+==============================================================================
+
+Wrote D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\AUCTION03_MECHANISM_DECOMPOSITION\out\05_stress_M5_productB_value_dist_ticks.json

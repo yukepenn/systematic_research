@@ -1,0 +1,64 @@
+====================================================================================================
+[check] baseline reproduction, discovery H=60 far: mean=7.8292t (target 7.8292) session_CI=[1.1502033952165551, 16.229943622082846] (target [1.1502,16.2299]) trade_CI=[0.4435304275422293, 16.590969643426927] (target [0.4435,16.5910]) n=5902 (target 5902) n_sess_clusters=28 (target 28)
+[check] baseline reproduction, confirmation H=60 far: mean=1.9980t (target 1.9980) session_CI=[-7.155263157894737, 133.48387096774192] (target [-7.1553,133.4839]) trade_CI=[-6.146596858638744, 133.48387096774192] (target [-6.1466,133.4839]) n=1010 (target 1010) n_sess_clusters=3 (target 3)
+[check] EXACT match to m2m3_signed_decomposition.json reported numbers -- proceeding with attacks.
+====================================================================================================
+[A1/A2] discovery session influence ranking (most mean-reduction-if-removed first):
+              sum  count        mean  new_mean_if_removed  baseline_mean  drop_in_mean
+sess_tag                                                                              
+20260220  15586.0    360   43.294444             5.525442        7.82921      2.303768
+20251029   5344.0     48  111.333333             6.980526        7.82921      0.848684
+20260312   6060.0    179   33.854749             7.015202        7.82921      0.814009
+20251117   4952.0     61   81.180328             7.063174        7.82921      0.766036
+20251124   4072.0    104   39.153846             7.267334        7.82921      0.561877
+20260428   5056.0    284   17.802817             7.325027        7.82921      0.504184
+20251009   3682.0    156   23.602564             7.400975        7.82921      0.428236
+20260417   3104.0     95   32.673684             7.422766        7.82921      0.406445
+20260520   3976.0    235   16.919149             7.452268        7.82921      0.376943
+20260406   2406.0     32   75.187500             7.462010        7.82921      0.367200
+20250910   3566.0    189   18.867725             7.464029        7.82921      0.365181
+20260211   2200.0     58   37.931034             7.530459        7.82921      0.298752
+20260317   2226.0    153   14.549020             7.650374        7.82921      0.178836
+20260423   2896.0    261   11.095785             7.678071        7.82921      0.151139
+20251209    862.0     19   45.368421             7.707972        7.82921      0.121238
+20251002    386.0      3  128.666667             7.767757        7.82921      0.061453
+20250814    374.0      7   53.428571             7.775064        7.82921      0.054147
+20260519   3634.0    495    7.341414             7.873867        7.82921     -0.044657
+20260123    590.0    307    1.921824             8.153351        7.82921     -0.324141
+20250905   -784.0    242   -3.239669             8.302473        7.82921     -0.473263
+20260223  -2498.0    159  -15.710692             8.480933        7.82921     -0.651723
+20260506  -2466.0    183  -13.475410             8.510928        7.82921     -0.681718
+20250820  -1348.0    358   -3.765363             8.577922        7.82921     -0.748712
+20260409   -794.0    468   -1.696581             8.649614        7.82921     -0.820403
+20260206  -4028.0    199  -20.241206             8.808697        7.82921     -0.979487
+20260320  -3440.0    406   -8.472906             9.033479        7.82921     -1.204268
+20260303  -4030.0    486   -8.292181             9.275849        7.82921     -1.446639
+20260218  -5376.0    355  -15.143662             9.299441        7.82921     -1.470231
+[A1/A2] confirmation session influence ranking:
+             sum  count        mean  new_mean_if_removed  baseline_mean  drop_in_mean
+sess_tag                                                                             
+20260217  4138.0     31  133.483871            -2.165475        1.99802      4.163495
+20260422  3318.0    219   15.150685            -1.643489        1.99802      3.641509
+20260302 -5438.0    760   -7.155263            29.824000        1.99802    -27.825980
+[A1] discovery, drop ['20260220']: mean 7.829t -> 5.525t, dual_sig=False, sign=+
+[A2] discovery, drop ['20260220', '20251029', '20260312']: mean 7.829t -> 3.616t, dual_sig=False, sign=+
+[A1] confirmation, drop ['20260217']: mean 1.998t -> -2.165t, dual_sig=False, sign=-
+[A3] discovery LOSO over 28 sessions: recomputed mean range [5.525, 9.299]t, median=7.693t, sign flips to negative in 0/28 removals, still dual-significant in 27/28 removals
+[A3] confirmation LOSO over 3 sessions (of only 3 total contributing far rows): recomputed mean range [-2.165, 29.824]t, sign flips to negative in 2/3 removals
+[A4] discovery session-range vol proxy (ticks): median=4388.0, hi-vol sessions=18, lo-vol sessions=18
+[A4] hi-vol half: mean=4.038t n=4609 sess_CI=[-3.88124827378585, 14.68248701799515] trade_CI=[-4.0206078289934455, 14.180520084916433] dual_sig=False
+[A4] lo-vol half: mean=21.343t n=1293 sess_CI=[12.158447796408048, 38.68159724384926] trade_CI=[11.117408100790321, 39.16254483220065] dual_sig=True
+[A5] approx contract-quarter buckets (roll cutoffs: 2025-09-11, 2025-12-11, 2026-03-12), sessions contributing far rows per bucket: {'H6(Mar26)': 7, 'M6(Jun26)': 11, 'U5(Sep25)': 4, 'Z5(Dec25)': 6}
+[A5] H6(Mar26): mean=1.270t n=1924 n_sessions=7 sess_CI=[-12.658481127785358, 21.273098519652883] trade_CI=[-13.406867856293797, 22.356530293525047] dual_sig=False
+[A5] M6(Jun26): mean=8.118t n=2791 n_sessions=11 sess_CI=[1.194289304446766, 17.554772240209726] trade_CI=[0.6990361196189939, 16.867992493016484] dual_sig=True
+[A5] U5(Sep25): mean=2.271t n=796 n_sessions=4 sess_CI=[-3.5533333333333332, 20.102040816326532] trade_CI=[-8.49925705794948, 13.649491053553554] dual_sig=False
+[A5] Z5(Dec25): mean=49.355t n=391 n_sessions=6 sess_CI=[29.64472823497301, 94.47004990422421] trade_CI=[16.870770883695943, 131.80795044122573] dual_sig=True
+[A6] discovery: corr(|D_t|,|M|)=0.1188, mean|M| by tercile={'near': 4.9530124581628865, 'mid': 5.211906792522672, 'far': 5.5266607929515414}
+[A6] confirmation: corr(|D_t|,|M|)=0.3126, mean|M| by tercile={'near': 4.192560661764706, 'mid': 4.331874757281554, 'far': 5.053398613861386}
+[A6] OLS check: raw far-near diff=7.053t, far-dummy coef controlling for |M|=7.424t (|M| coef=-0.646)
+[A7] 20260519 t0=2026-05-19 10:24:00 : independent recompute raw_markout=412.0, stored=412.0, match=True
+[A7] 20260519 t0=2026-05-19 10:52:30 : independent recompute raw_markout=316.0, stored=316.0, match=True
+[A7] 20251029 t0=2025-10-29 14:54:00 : independent recompute raw_markout=286.0, stored=286.0, match=True
+[A7] 20260218 t0=2026-02-18 10:48:00 : independent recompute raw_markout=116.0, stored=116.0, match=True
+[A7] 20260409 t0=2026-04-09 14:10:00 : independent recompute raw_markout=-16.0, stored=-16.0, match=True
+[write] D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\AUCTION03_MECHANISM_DECOMPOSITION\out\05_stress_M2M3_far_tercile_reversion.json

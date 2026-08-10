@@ -1,0 +1,851 @@
+{
+  "spec_note": "AUCTION03 mechanism decomposition part 1: signed value-reversion vs signed value-discovery. See module docstring for the signed_markout_H construction caveat (position-direction- vs raw-price-signed) that was found and corrected before reporting; 'position_direction_corrected' variant is primary/canonical, 'as_specified' variant is the literal task formula on the stored column, kept for full transparency.",
+  "c1_cost_hurdle_ticks_roundtrip": 2.872,
+  "nboot": 1000,
+  "rng_seed": 20260810,
+  "governance": {
+    "discovery_filter": {
+      "raw_rows": 27299,
+      "raw_sessions": 36,
+      "filtered_rows": 27299,
+      "filtered_sessions": 36,
+      "listed_dates_absent_from_file": [
+        "20250902"
+      ],
+      "sessions_in_file_dropped_as_outside_list": []
+    },
+    "confirmation_filter": {
+      "raw_rows": 4680,
+      "raw_sessions": 6,
+      "filtered_rows": 4680,
+      "filtered_sessions": 6,
+      "listed_dates_absent_from_file": [
+        "20251125",
+        "20260512"
+      ],
+      "sessions_in_file_dropped_as_outside_list": []
+    }
+  },
+  "tercile_edges_abs_value_dist_ticks": {
+    "discovery": [
+      1.0,
+      102.0,
+      278.0,
+      1755.0
+    ],
+    "confirmation": [
+      1.0,
+      169.0,
+      557.333333333333,
+      1702.0
+    ]
+  },
+  "rows_dropped_zero_distance": {
+    "discovery": 60,
+    "confirmation": 6
+  },
+  "corr_signD_signPositionB_by_sample": {
+    "discovery": 0.38183513022192794,
+    "confirmation": 0.5647569996426486
+  },
+  "sign_stable_discovery_vs_confirmation": {
+    "reversion": "NOT STABLE (sign flips between discovery and confirmation at >=1 horizon) -- H=15: discovery=+(3.657t) confirmation=-(-1.014t) DIFFERS; H=60: discovery=+(7.829t) confirmation=+(1.998t) SAME; H=300: discovery=+(30.062t) confirmation=-(-6.089t) DIFFERS",
+    "discovery": "NOT STABLE (sign flips between discovery and confirmation at >=1 horizon) -- H=15: discovery=-(-3.657t) confirmation=+(1.014t) DIFFERS; H=60: discovery=-(-7.829t) confirmation=-(-1.998t) SAME; H=300: discovery=-(-30.062t) confirmation=+(6.089t) DIFFERS"
+  },
+  "results": {
+    "discovery": {
+      "sample": "discovery",
+      "n_sessions": 36,
+      "n_decision_points_nonzero_D": 27239,
+      "by_horizon": [
+        {
+          "horizon": 15,
+          "n_analysis": 16685,
+          "n_dropped_outcome_nan": 10554,
+          "n_dropped_flat_position_B": 10554,
+          "n_dropped_session_boundary": 0,
+          "corr_signD_signPositionB": 0.3819164768779785,
+          "variants": {
+            "as_specified": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  -1.4098177761249535,
+                  -1.0149916712937257,
+                  1.3184281842818428
+                ],
+                "surface_n_near_mid_far": [
+                  5378,
+                  5403,
+                  5904
+                ],
+                "far_mean_ticks": 1.3184281842818428,
+                "far_n": 5904,
+                "far_session_block_ci": [
+                  -2.002947899361029,
+                  4.712944474475965
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -2.156067127313351,
+                  4.894008877257799
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  1.4098177761249535,
+                  1.0149916712937257,
+                  -1.3184281842818428
+                ],
+                "surface_n_near_mid_far": [
+                  5378,
+                  5403,
+                  5904
+                ],
+                "far_mean_ticks": -1.3184281842818428,
+                "far_n": 5904,
+                "far_session_block_ci": [
+                  -4.712944474475965,
+                  2.002947899361029
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -4.894008877257799,
+                  2.1560671273133507
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 5904,
+                "p_discovery_gt_0": 0.49203929539295393,
+                "p_eq_0": 0.011178861788617886,
+                "p_reversion_gt_0": 0.4967818428184282
+              }
+            },
+            "position_direction_corrected": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  1.546671625139457,
+                  -0.9875994817693874,
+                  3.6571815718157183
+                ],
+                "surface_n_near_mid_far": [
+                  5378,
+                  5403,
+                  5904
+                ],
+                "far_mean_ticks": 3.6571815718157183,
+                "far_n": 5904,
+                "far_session_block_ci": [
+                  0.6560844870139112,
+                  7.457715391914022
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  0.6634955738256764,
+                  7.380797794071408
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": true,
+                "far_economically_relevant_vs_C1": true
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -1.546671625139457,
+                  0.9875994817693874,
+                  -3.6571815718157183
+                ],
+                "surface_n_near_mid_far": [
+                  5378,
+                  5403,
+                  5904
+                ],
+                "far_mean_ticks": -3.6571815718157183,
+                "far_n": 5904,
+                "far_session_block_ci": [
+                  -7.457715391914023,
+                  -0.6560844870139113
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -7.38079779407141,
+                  -0.6634955738256766
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": true,
+                "far_economically_relevant_vs_C1": true
+              },
+              "continuation_prob_far": {
+                "n_far": 5904,
+                "p_discovery_gt_0": 0.47628726287262874,
+                "p_eq_0": 0.011178861788617886,
+                "p_reversion_gt_0": 0.5125338753387534
+              }
+            }
+          }
+        },
+        {
+          "horizon": 60,
+          "n_analysis": 16683,
+          "n_dropped_outcome_nan": 10556,
+          "n_dropped_flat_position_B": 10554,
+          "n_dropped_session_boundary": 2,
+          "corr_signD_signPositionB": 0.38183513022192794,
+          "variants": {
+            "as_specified": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  -2.7850502045370025,
+                  -3.0349805663520266,
+                  1.624534056252118
+                ],
+                "surface_n_near_mid_far": [
+                  5378,
+                  5403,
+                  5902
+                ],
+                "far_mean_ticks": 1.624534056252118,
+                "far_n": 5902,
+                "far_session_block_ci": [
+                  -5.831448749813758,
+                  9.449316101071398
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -5.774812705053763,
+                  10.1338400495406
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  2.7850502045370025,
+                  3.0349805663520266,
+                  -1.624534056252118
+                ],
+                "surface_n_near_mid_far": [
+                  5378,
+                  5403,
+                  5902
+                ],
+                "far_mean_ticks": -1.624534056252118,
+                "far_n": 5902,
+                "far_session_block_ci": [
+                  -9.449316101071398,
+                  5.831448749813756
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -10.133840049540602,
+                  5.774812705053763
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 5902,
+                "p_discovery_gt_0": 0.4954252795662487,
+                "p_eq_0": 0.006777363605557438,
+                "p_reversion_gt_0": 0.4977973568281938
+              }
+            },
+            "position_direction_corrected": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  0.7761249535143175,
+                  -2.693688691467703,
+                  7.8292104371399525
+                ],
+                "surface_n_near_mid_far": [
+                  5378,
+                  5403,
+                  5902
+                ],
+                "far_mean_ticks": 7.8292104371399525,
+                "far_n": 5902,
+                "far_session_block_ci": [
+                  1.1502033952165551,
+                  16.229943622082846
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  0.4435304275422293,
+                  16.590969643426927
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": true,
+                "far_economically_relevant_vs_C1": true
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -0.7761249535143175,
+                  2.693688691467703,
+                  -7.8292104371399525
+                ],
+                "surface_n_near_mid_far": [
+                  5378,
+                  5403,
+                  5902
+                ],
+                "far_mean_ticks": -7.8292104371399525,
+                "far_n": 5902,
+                "far_session_block_ci": [
+                  -16.229943622082846,
+                  -1.150203395216556
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -16.590969643426927,
+                  -0.44353042754223027
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": true,
+                "far_economically_relevant_vs_C1": true
+              },
+              "continuation_prob_far": {
+                "n_far": 5902,
+                "p_discovery_gt_0": 0.48407319552694,
+                "p_eq_0": 0.006777363605557438,
+                "p_reversion_gt_0": 0.5091494408675026
+              }
+            }
+          }
+        },
+        {
+          "horizon": 300,
+          "n_analysis": 16675,
+          "n_dropped_outcome_nan": 10564,
+          "n_dropped_flat_position_B": 10554,
+          "n_dropped_session_boundary": 10,
+          "corr_signD_signPositionB": 0.38150933327479325,
+          "variants": {
+            "as_specified": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  2.1725548531052437,
+                  -3.4351286322413475,
+                  -2.511367492365117
+                ],
+                "surface_n_near_mid_far": [
+                  5378,
+                  5403,
+                  5894
+                ],
+                "far_mean_ticks": -2.511367492365117,
+                "far_n": 5894,
+                "far_session_block_ci": [
+                  -31.16024609993946,
+                  26.552906512002533
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -31.32359346215131,
+                  27.496845306282424
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -2.1725548531052437,
+                  3.4351286322413475,
+                  2.511367492365117
+                ],
+                "surface_n_near_mid_far": [
+                  5378,
+                  5403,
+                  5894
+                ],
+                "far_mean_ticks": 2.511367492365117,
+                "far_n": 5894,
+                "far_session_block_ci": [
+                  -26.55290651200254,
+                  31.16024609993945
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -27.49684530628243,
+                  31.323593462151305
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 5894,
+                "p_discovery_gt_0": 0.496946046827282,
+                "p_eq_0": 0.002544960977265015,
+                "p_reversion_gt_0": 0.500508992195453
+              }
+            },
+            "position_direction_corrected": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  1.1870583860171067,
+                  -0.8728484175458079,
+                  30.062097047845267
+                ],
+                "surface_n_near_mid_far": [
+                  5378,
+                  5403,
+                  5894
+                ],
+                "far_mean_ticks": 30.062097047845267,
+                "far_n": 5894,
+                "far_session_block_ci": [
+                  1.908680911871929,
+                  63.76893917794764
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  0.18264731530226902,
+                  64.15322245240964
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": true,
+                "far_economically_relevant_vs_C1": true
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -1.1870583860171067,
+                  0.8728484175458079,
+                  -30.062097047845267
+                ],
+                "surface_n_near_mid_far": [
+                  5378,
+                  5403,
+                  5894
+                ],
+                "far_mean_ticks": -30.062097047845267,
+                "far_n": 5894,
+                "far_session_block_ci": [
+                  -63.76893917794765,
+                  -1.90868091187193
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -64.15322245240964,
+                  -0.18264731530228537
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": true,
+                "far_economically_relevant_vs_C1": true
+              },
+              "continuation_prob_far": {
+                "n_far": 5894,
+                "p_discovery_gt_0": 0.47455039022734985,
+                "p_eq_0": 0.002544960977265015,
+                "p_reversion_gt_0": 0.5229046487953851
+              }
+            }
+          }
+        }
+      ]
+    },
+    "confirmation": {
+      "sample": "confirmation",
+      "n_sessions": 6,
+      "n_decision_points_nonzero_D": 4674,
+      "by_horizon": [
+        {
+          "horizon": 15,
+          "n_analysis": 3128,
+          "n_dropped_outcome_nan": 1546,
+          "n_dropped_flat_position_B": 1546,
+          "n_dropped_session_boundary": 0,
+          "corr_signD_signPositionB": 0.5647569996426486,
+          "variants": {
+            "as_specified": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  0.8327205882352942,
+                  -1.5922330097087378,
+                  -4.24950495049505
+                ],
+                "surface_n_near_mid_far": [
+                  1088,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": -4.24950495049505,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -29.741935483870968,
+                  1.8904109589041096
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -29.741935483870968,
+                  11.03896103896104
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": true
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -0.8327205882352942,
+                  1.5922330097087378,
+                  4.24950495049505
+                ],
+                "surface_n_near_mid_far": [
+                  1088,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": 4.24950495049505,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -1.8904109589041096,
+                  29.741935483870968
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -11.03896103896104,
+                  29.741935483870968
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": true
+              },
+              "continuation_prob_far": {
+                "n_far": 1010,
+                "p_discovery_gt_0": 0.501980198019802,
+                "p_eq_0": 0.015841584158415842,
+                "p_reversion_gt_0": 0.48217821782178216
+              }
+            },
+            "position_direction_corrected": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  1.1378676470588236,
+                  -4.14368932038835,
+                  -1.0138613861386139
+                ],
+                "surface_n_near_mid_far": [
+                  1088,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": -1.0138613861386139,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -4.978947368421053,
+                  75.6774193548387
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -4.376950780312125,
+                  75.6774193548387
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -1.1378676470588236,
+                  4.14368932038835,
+                  1.0138613861386139
+                ],
+                "surface_n_near_mid_far": [
+                  1088,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": 1.0138613861386139,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -75.6774193548387,
+                  4.978947368421053
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -75.6774193548387,
+                  4.376950780312125
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 1010,
+                "p_discovery_gt_0": 0.499009900990099,
+                "p_eq_0": 0.015841584158415842,
+                "p_reversion_gt_0": 0.48514851485148514
+              }
+            }
+          }
+        },
+        {
+          "horizon": 60,
+          "n_analysis": 3128,
+          "n_dropped_outcome_nan": 1546,
+          "n_dropped_flat_position_B": 1546,
+          "n_dropped_session_boundary": 0,
+          "corr_signD_signPositionB": 0.5647569996426486,
+          "variants": {
+            "as_specified": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  9.992647058823529,
+                  4.14757281553398,
+                  -4.7267326732673265
+                ],
+                "surface_n_near_mid_far": [
+                  1088,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": -4.7267326732673265,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -85.61290322580645,
+                  15.150684931506849
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -85.61290322580645,
+                  18.206278026905828
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": true
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -9.992647058823529,
+                  -4.14757281553398,
+                  4.7267326732673265
+                ],
+                "surface_n_near_mid_far": [
+                  1088,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": 4.7267326732673265,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -15.150684931506849,
+                  85.61290322580645
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -18.206278026905828,
+                  85.61290322580645
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": true
+              },
+              "continuation_prob_far": {
+                "n_far": 1010,
+                "p_discovery_gt_0": 0.49405940594059405,
+                "p_eq_0": 0.007920792079207921,
+                "p_reversion_gt_0": 0.498019801980198
+              }
+            },
+            "position_direction_corrected": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  -6.448529411764706,
+                  -10.94368932038835,
+                  1.998019801980198
+                ],
+                "surface_n_near_mid_far": [
+                  1088,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": 1.998019801980198,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -7.155263157894737,
+                  133.48387096774192
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -6.146596858638744,
+                  133.48387096774192
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  6.448529411764706,
+                  10.94368932038835,
+                  -1.998019801980198
+                ],
+                "surface_n_near_mid_far": [
+                  1088,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": -1.998019801980198,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -133.48387096774192,
+                  7.155263157894737
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -133.48387096774192,
+                  6.146596858638744
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 1010,
+                "p_discovery_gt_0": 0.48514851485148514,
+                "p_eq_0": 0.007920792079207921,
+                "p_reversion_gt_0": 0.5069306930693069
+              }
+            }
+          }
+        },
+        {
+          "horizon": 300,
+          "n_analysis": 3128,
+          "n_dropped_outcome_nan": 1546,
+          "n_dropped_flat_position_B": 1546,
+          "n_dropped_session_boundary": 0,
+          "corr_signD_signPositionB": 0.5647569996426486,
+          "variants": {
+            "as_specified": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  14.202205882352942,
+                  34.83495145631068,
+                  -30.386138613861387
+                ],
+                "surface_n_near_mid_far": [
+                  1088,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": -30.386138613861387,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -341.8709677419355,
+                  42.8310502283105
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -341.8709677419355,
+                  49.56053811659193
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": true
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -14.202205882352942,
+                  -34.83495145631068,
+                  30.386138613861387
+                ],
+                "surface_n_near_mid_far": [
+                  1088,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": 30.386138613861387,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -42.8310502283105,
+                  341.8709677419355
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -49.56053811659193,
+                  341.8709677419355
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": true
+              },
+              "continuation_prob_far": {
+                "n_far": 1010,
+                "p_discovery_gt_0": 0.501980198019802,
+                "p_eq_0": 0.0,
+                "p_reversion_gt_0": 0.498019801980198
+              }
+            },
+            "position_direction_corrected": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  -12.886029411764707,
+                  -38.71844660194175,
+                  -6.089108910891089
+                ],
+                "surface_n_near_mid_far": [
+                  1088,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": -6.089108910891089,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -38.77894736842105,
+                  449.741935483871
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -36.38743455497382,
+                  449.741935483871
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": true
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  12.886029411764707,
+                  38.71844660194175,
+                  6.089108910891089
+                ],
+                "surface_n_near_mid_far": [
+                  1088,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": 6.089108910891089,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -449.741935483871,
+                  38.77894736842105
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -449.741935483871,
+                  36.38743455497382
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": true
+              },
+              "continuation_prob_far": {
+                "n_far": 1010,
+                "p_discovery_gt_0": 0.49306930693069306,
+                "p_eq_0": 0.0,
+                "p_reversion_gt_0": 0.5069306930693069
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

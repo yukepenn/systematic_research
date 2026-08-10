@@ -178,3 +178,18 @@ mandatory + 2 randomly selected from a 32-family pool) out of the full ~40-famil
 No files belonging to any of the 4 audited runs (`REPORT.md`, `spec.yaml`, `out/`, `src/`) were
 modified. This run's own files are currently untracked in git (not yet committed) since the task
 did not request a commit.
+
+## [ADDENDUM 2026-08-10 — a defect this audit's own scope did not catch]
+
+`runs/AUCTION03_MECHANISM_DECOMPOSITION/REPORT.md` §6 found that `AUCTION01_VALUE_STATE`'s
+`decision_outcomes.parquet` (and the derived `W5_PROTECTED_CONFIRMATION` copy) carries a 4× units
+bug in its raw `markout/mfe/mae/range` columns — the report prose had already corrected this once,
+but the fix was never propagated into the parquet file itself. This is exactly the class of defect
+this run's own STEP 2/3 protocol was designed to catch (§ above: "recompute headline numbers
+directly from source... never trust REPORT.md prose"), but AUCTION01 was not one of the 4 families
+sampled here (2 mandatory + 2 seeded-random of 32), and this audit's recompute step targeted
+*headline aggregate* numbers reported in prose, not a full raw-column unit-consistency check of
+every intermediate parquet — so it would not have caught this specific defect even had AUCTION01
+been selected. Flagged as a scope gap for any future EVIDENCE0x-style pass: recomputation should
+include spot-checking that on-disk intermediate columns match the units the report's prose claims
+for them, not just that final aggregate statistics reproduce.

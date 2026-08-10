@@ -7,7 +7,31 @@ Read this before starting any new research wave. Kept short on purpose — see
 CURRENT MODE: RESEARCH
 ```
 
-> **UPDATE 2026-08-10 (latest) — Master Directive v4 / Wave 5 CLOSED.** U6B's final adjudication
+> **UPDATE 2026-08-10 (latest) — AUCTION03 mechanism decomposition CLOSED, no promotion.** Per
+> the owner's next-phase directive, ran the bounded M1-M5 Auction mechanism slate on
+> already-consumed data only (37 discovery + up to 8 W5-confirmation sessions; no new AMENDMENT_3
+> sessions opened — see `research/system_master/PROTECTED_EVIDENCE_BUDGET.md`, machine-truth-
+> reconstructed and tying out exactly against prior prose). Two real, direction-stable findings
+> (M2/M3: far-from-value predicts price reversion, a tail/magnitude effect not a hit-rate edge;
+> M5: distance-from-value predicts deterioration in the incumbent's own aligned forward return,
+> controlling for momentum/volatility/session — the most credible finding, direction never flips
+> under any stress test) — but an adversarial stress pass found BOTH lose formal dual-clustered
+> significance after removing just 1-3 of ~36 sessions, and are volatility/contract-quarter-
+> concentrated rather than uniform. The directive's own highest-priority question (does a new
+> causal "value-acceptance" feature separate rejected excursions from accepted repricing?) built a
+> lookahead-audited feature successfully but could not be tested — the cell it depends on is
+> nearly empty at the 60s window scale. Two pre-existing data defects were found and disclosed via
+> additive erratum (a 4x units bug in `decision_outcomes.parquet`'s markout columns; a small
+> inherited lookahead bias in `grid1s`'s last-price bucket labeling — neither changes any prior
+> promotion verdict). **No promotion, no Engine C, no further protected-pool spend this pass** —
+> building on this level of fragility would repeat AUCTION02's own already-disclosed mistake.
+> Auction is downgraded (not closed) to "real but fragile, not policy-ready." DOM01's forward
+> collector got a sealed vault and exact owner start-instructions; its single remaining step is a
+> manual NT8 UI/entitlement action. NT8 Auction-prototype feasibility confirmed workable, not yet
+> built (no candidate cleared the bar). Full report: `runs/AUCTION03_MECHANISM_DECOMPOSITION/
+> REPORT.md`.
+>
+> **UPDATE 2026-08-10 — Master Directive v4 / Wave 5 CLOSED.** U6B's final adjudication
 > (genuine-MNQ repricing, capital frontier, intraday DD/ruin, forward-readiness, independent
 > adversarial review) concluded **NOT PROMOTED** — the review found this wave's own earlier O2
 > pass had overstated its case (the "survives both aggregation conventions" claim decomposed to

@@ -219,3 +219,26 @@ evaluated on the data currently available. Overall family disposition: **USEFUL_
 - `runs/AUCTION01_VALUE_STATE/src/02_build_poc_substrate.py` — Step 0 evidence generation + causal running-POC/VWAP construction + grid1s/sechilo/U0 merge + decision-point extraction
 - `runs/AUCTION01_VALUE_STATE/src/03_diagnostics.py` — D4/D6 forward-outcome construction + session-block bootstrap
 - `runs/AUCTION01_VALUE_STATE/out/poc_1s_full.parquet`, `decision_points_30s.parquet`, `decision_outcomes.parquet`, `diagnostics_summary.json`, `build_log.txt`, `diag_log.txt`
+
+## [ADDENDUM 2026-08-10 — two data-integrity defects found by AUCTION03, disclosed here]
+
+`runs/AUCTION03_MECHANISM_DECOMPOSITION/REPORT.md` §6, while decomposing this family's own
+`value_dist_ticks` state into candidate mechanisms, found and fixed-for-its-own-use (without
+modifying this run's frozen files) two pre-existing defects in this run's output:
+
+1. **Units bug**: `decision_outcomes.parquet`'s on-disk `abs/signed_markout_H, mfe_H, mae_H,
+   range_H` columns are exactly 4× too large. This report's own prose numbers were already stated
+   in corrected units, but the parquet file itself was never fixed — any future direct consumer of
+   the file inherits the bug unless they know to divide by 4. Verified bit-exact against 780
+   independently recomputed rows.
+2. **Small inherited lookahead bias** in the `last`-price numerator of `value_dist_ticks`, traced
+   to the upstream `grid1s` 1-second-bucket convention (bucket `T` aggregates `[T,T+1)`, not
+   `(T-1,T]`). `poc_price` itself — the dominant term — is exactly causal (0 bias at every
+   timestamp spot-checked). Measured bias on the `last`-price component: 0–16 ticks across 9 spot
+   checks; judged small relative to the scales this state is used at, not proven negligible in
+   aggregate.
+
+Neither defect changes this report's own D4/D6 qualitative conclusions (the corrected-units prose
+already reflected #1; #2 is small relative to the effect sizes reported above). Not fixed in this
+file's own `out/` (frozen run artifact, per campaign convention) — flagged here as an erratum for
+any future consumer.

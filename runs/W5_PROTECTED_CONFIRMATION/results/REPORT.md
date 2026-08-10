@@ -211,3 +211,14 @@ the 8, and no data ≥2026-08-01, was read at any point.
   `flow01_analysis_summary_CONFIRM.json` (Family 3)
 - New sechilo cache (8 files only):
   `research/scalping_lab/substrate/sechilo/NQ/s{20250819,20250912,20251028,20251125,20260217,20260302,20260422,20260512}.parquet`
+
+## [ADDENDUM 2026-08-10 — data-integrity erratum, disclosed by AUCTION03]
+
+`runs/AUCTION03_MECHANISM_DECOMPOSITION/REPORT.md` §6 found that `decision_outcomes_CONFIRM.parquet`
+(and its sibling `abs/signed_markout_H, mfe_H, mae_H, range_H` columns) inherits the same 4×
+units bug documented in `runs/AUCTION01_VALUE_STATE/REPORT.md`'s own addendum, plus a small
+(0–16 tick, inherited from `grid1s`'s bucket-labeling convention) lookahead bias in the
+`last`-price numerator of `value_dist_ticks` — `poc_price` itself is exactly causal. Neither
+changes this report's own AUCTION01/AUCTION02/FLOW01 verdicts above (magnitudes were already
+qualitatively consistent; no promotion decision rested on the affected precision). Not fixed in
+this file's own `out/` (frozen run artifact) — flagged here as an erratum.
