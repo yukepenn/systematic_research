@@ -1,0 +1,47 @@
+[FLOW01-confirm] 8 protected-pool confirmation sessions (2025-08-19 .. 2026-05-12)
+[FLOW01-confirm] correctness gate PASSED: canonical-window bar_pnl_B_nq_dollars sum = 301915.92 (certified 301915.92)
+[FLOW01-confirm] 3680 U0 bars fall on these 8 confirmation sessions
+[FLOW01-confirm] 1448 total in-position checkpoints on the 8 confirmation sessions ({'HOLD': 1436, 'ENTRY': 10, 'REVERSAL': 2})
+[FLOW01-confirm] HOLD group n=1436, PRE_EXIT group n=12, distinct trades (block_id_B) n=12, distinct sessions n=7
+[FLOW01-confirm] fwd1_pnl usable n=1448, fwd3_pnl usable n=1448
+
+[FLOW01-confirm] SANITY: {
+  "n_sessions_confirmation": 8,
+  "session_date_range": [
+    "2025-08-19",
+    "2026-05-12"
+  ],
+  "correctness_gate_canonical_net": 301915.91999998846,
+  "n_total_checkpoints_position_nonzero": 1448,
+  "n_hold_checkpoints": 1436,
+  "n_pre_exit_checkpoints": 12,
+  "n_distinct_trades_block_id_B": 12,
+  "n_distinct_sessions_with_checkpoints": 7,
+  "n_usable_feature_window_ge30rows": 1448,
+  "action_B_counts": {
+    "HOLD": 1436,
+    "ENTRY": 10,
+    "REVERSAL": 2
+  }
+}
+
+[FLOW01-confirm] checkpoint-feature substrate build complete.
+
+[FLOW01-confirm] usable checkpoints after window filter: n=1448
+[FLOW01-confirm] PRE_EXIT group: n_checkpoints=12, n_trades=12, n_sessions=7
+  fwd1_pnl:signed_flow_aligned_60s: rho=+0.1168  session-CI=[-0.378,+0.844](n_sess=7)  trade-CI=[-0.495,+0.848](n_trades=12)
+  fwd1_pnl:flow_persistence_60s: rho=+0.0742  session-CI=[-0.534,+0.525](n_sess=7)  trade-CI=[-0.507,+0.608](n_trades=12)
+  fwd1_pnl:avg_spread_ticks_60s: rho=+0.7434  session-CI=[+0.499,+0.885](n_sess=7)  trade-CI=[+0.223,+0.927](n_trades=12)  <-- BOTH exclude 0
+  fwd1_pnl:quote_intensity_60s: rho=+0.3061  session-CI=[-0.289,+0.770](n_sess=7)  trade-CI=[-0.397,+0.818](n_trades=12)
+  fwd1_pnl:ret1s_vol_60s: rho=+0.4484  session-CI=[-0.040,+0.827](n_sess=7)  trade-CI=[-0.280,+0.853](n_trades=12)
+  fwd3_pnl:signed_flow_aligned_60s: rho=+0.1168  session-CI=[-0.355,+0.795](n_sess=7)  trade-CI=[-0.497,+0.829](n_trades=12)
+  fwd3_pnl:flow_persistence_60s: rho=+0.0742  session-CI=[-0.515,+0.531](n_sess=7)  trade-CI=[-0.471,+0.661](n_trades=12)
+  fwd3_pnl:avg_spread_ticks_60s: rho=+0.7434  session-CI=[+0.467,+0.890](n_sess=7)  trade-CI=[+0.302,+0.921](n_trades=12)  <-- BOTH exclude 0
+C:\Users\Yuke Zhang\AppData\Local\Programs\Python\Python311\Lib\site-packages\pandas\core\nanops.py:1632: ConstantInputWarning: An input array is constant; the correlation coefficient is not defined.
+  return spearmanr(a, b)[0]
+  fwd3_pnl:quote_intensity_60s: rho=+0.3061  session-CI=[-0.342,+0.791](n_sess=7)  trade-CI=[-0.418,+0.829](n_trades=12)
+  fwd3_pnl:ret1s_vol_60s: rho=+0.4484  session-CI=[-0.097,+0.802](n_sess=7)  trade-CI=[-0.234,+0.861](n_trades=12)
+
+[FLOW01-confirm] 2/10 PRE_EXIT cells have BOTH session-block and trade-block bootstrap CIs excluding zero.
+
+FLOW01_PRE_EXIT_CONFIRM DONE

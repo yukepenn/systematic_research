@@ -63,3 +63,30 @@ The 2026-06-01→2026-07-31 block was read ONCE under the frozen
 research/system_master/FINAL_PACKAGE_SPEC.md protocol (Tier-3-equivalent joint
 finalist read: Solar baseline, HTF-tilt, B-MOM, B1, two portfolios). It is now
 CONSUMED for all campaigns. >= 2026-08-01 remains virgin (LOCKED_FORWARD).
+
+## 2026-08-10 — INTERNAL CONFIRMATION POOL: 8 sessions consumed (Master Directive v4, W5_PROTECTED_CONFIRMATION)
+Owner-authorized ONE controlled use of the ~168-session INTERNAL CONFIRMATION POOL, subject to a
+fully frozen and git-committed pre-registration bundle (`runs/W5_PROTECTED_CONFIRMATION/`,
+commit `2eabcad`, frozen BEFORE any pool session's outcome was read). A metadata-only manifest
+(`ELIGIBLE_SESSION_MANIFEST_METADATA_ONLY.csv`, file-existence checks only, zero outcome values
+read) found only 52/168 pool sessions have both Last and Bid/Ask tick data cached locally. A
+seeded, disclosed, pre-outcome selection (`manifest_work/BATCH1_SELECTION_METHOD.md`) picked 8 of
+those 52, spread chronologically: `20250819, 20250912, 20251028, 20251125, 20260217, 20260302,
+20260422, 20260512`.
+
+These 8 sessions were exported (SWScalpTickExport_v3 → csv_to_parquet → build_grid1s, identical
+pipeline to the original 40 discovery sessions) and the frozen confirmation bundle was run against
+them in full (`runs/W5_PROTECTED_CONFIRMATION/results/REPORT.md`): AUCTION01 D4 diagnostic
+(12/12 sign-replicated, 2/12 CI-excludes-zero — power-limited at n=6 usable session-clusters, 2 of
+the 8 sessions had zero RTH Bid/Ask), AUCTION02 Product-A rate-limiter policy (NOT_PROMOTED per
+its own frozen falsification rule, flagged low-confidence/fragile given only 23 in-domain
+scale-up bars total), FLOW01 PRE_EXIT (PROBABLE_MULTIPLE_TESTING_ARTIFACT, consistent with
+discovery's own null).
+
+**These exact 8 sessions are now CONSUMED for these three specific constructions** (AUCTION01 D4,
+AUCTION02 Product-A rate-limiter policy, FLOW01 PRE_EXIT) — per this ledger's own indiscriminate-
+export discipline, they may not be re-used as a "pristine confirmation" for the same constructions
+again. They remain usable for genuinely different future hypotheses not yet tested. **The
+remaining ~160 sessions of the confirmation pool are untouched and still protected** — this was a
+partial, disclosed opening of the pool (8 of 168), not an exhaustion of it. >= 2026-08-01 remains
+virgin (LOCKED_FORWARD, unaffected by this entry).

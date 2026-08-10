@@ -1,0 +1,45 @@
+[health_substrate] loading bars through 2026-07-31 ...
+[health_substrate] building B-MOM leg ...
+[health_substrate] verified: canonical-window slice reproduces certified net exactly (301915.92); extended net through 2026-07-31 = 360590.96, n_bars=540232, n_sessions=1184
+[step_cd] n=540232 bars, CANONICAL_END=2026-05-31 00:00:00
+[step_cd] bars matched to confirmation-pool tick data (any, incl. non-RTH/illiquid): 3676
+[step_cd] bars in RTH+liquid domain on confirmation-pool dates: 780
+[step_cd] bars with quality_low_auction==TRUE (domain AND |value_dist|>=CUT_FAR_TICKS): 393
+[step_cd] governance check PASSED: matched bars land only on sessions ['20250819', '20250912', '20251028', '20251125', '20260217', '20260302', '20260422', '20260512'] (subset of the 8 authorized confirmation dates)
+[step_cd] running CONTROL (f=None) ...
+[step_cd] CORRECTNESS GATE PASSED: CONTROL canonical net=177924.40 (certified $177,924.40); bar-for-bar position match against u0_state_table CONFIRMED.
+[step_cd] running candidate F0.5 (f=0.5) ...
+[step_cd] F0.5: scale-up bars=12093 in-domain=30 quality-low=19 rate-limited=10 floor-hit=9
+[step_cd] running candidate F0.7 (f=0.7) ...
+[step_cd] F0.7: scale-up bars=12092 in-domain=29 quality-low=18 rate-limited=8 floor-hit=10
+
+[step_cd] tick-covered-date bars (8 confirmation sessions, ALL bars not just RTH/liquid): 3680
+[step_cd] CONTROL: net over 8 tick-covered dates = -6151.10
+[step_cd] F0.5: net over 8 tick-covered dates = -6179.30
+[step_cd] F0.7: net over 8 tick-covered dates = -6234.60
+[step_cd] F0.5 delta vs CONTROL (tick-covered dates only) = -28.20 (1%-of-CONTROL wash threshold = +61.51) -> WASH/NEGATIVE (falsification a TRIGGERED)
+[step_cd] F0.7 delta vs CONTROL (tick-covered dates only) = -83.50 (1%-of-CONTROL wash threshold = +61.51) -> WASH/NEGATIVE (falsification a TRIGGERED)
+
+[step_cd] per-session net (8 confirmation dates):
+candidate   CONTROL    F0.5    F0.7
+sess                               
+2025-08-19   1791.0  1931.0  1861.0
+2025-09-12   -549.9  -549.9  -549.9
+2025-10-28   -248.1  -248.1  -248.1
+2025-11-25  -4982.5 -4982.5 -4982.5
+2026-02-17  -3848.7 -3854.4 -3948.7
+2026-03-02   1896.2  1733.7  1842.7
+2026-04-22    143.0   143.0   143.0
+2026-05-12   -352.1  -352.1  -352.1
+[step_cd] F0.5: contracts delta (8 dates) = -2, commission delta = -1.30
+[step_cd] F0.7: contracts delta (8 dates) = +0, commission delta = +0.00
+
+[step_cd] falsification (e) check: quality_low_auction rate among in-domain scale-up bars = 0.6087 (14/23) vs discovery's 33.3% tercile-construction rate. 2x band = [16.7%, 66.7%].
+
+[step_cd] ==== step_d: right-tail check vs U6's published top20/bottom20 blocks ====
+[step_cd] top20 blocks intersecting the 8 confirmation dates: 0
+[step_cd] bottom20 blocks intersecting the 8 confirmation dates: 2
+[step_cd] bottom20_loser block 7234 (2025-11-25): CONTROL window pnl=-4934.45 F0.5_delta=+0.00 F0.7_delta=+0.00
+[step_cd] bottom20_loser block 7709 (2026-02-17): CONTROL window pnl=-2741.80 F0.5_delta=+93.80 F0.7_delta=-45.50
+
+STEP_C_D_CONFIRM DONE
