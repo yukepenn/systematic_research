@@ -1,10 +1,10 @@
 # CONTINUOUS SYSTEM EVOLUTION — Wave 4 synthesis
 
 **Date:** 2026-08-09. Covers Master Directive v3 (P0-P8 of its priority queue) and its same-day
-multimodal-microstructure addendum. 16 research artifacts this wave (SPEC01, PRICE01, the Wave-4
-truth audit, the Frontier+O2+GAMMA00 audit, GAMMA00 itself, DATA02, DOM01, O2, SOFT01, ADD01,
-WIN01, ICT0102, MOM01, FLOW01, AUCTION01, VAR01, REL01 — 17 counting both audit passes
-separately). **Zero promotions.** Both baselines (`SolarWaveSMMaster_v4`,
+multimodal-microstructure addendum, now complete end to end. 17 research artifacts this wave
+(SPEC01, PRICE01, the Wave-4 truth audit, the Frontier+O2+GAMMA00 audit, GAMMA00 itself, DATA02,
+DOM01, O2, SOFT01, ADD01, WIN01, ICT0102, MOM01, FLOW01, AUCTION01, VAR01, REL01, COMBO01 — 18
+counting both audit passes separately). **Zero promotions.** Both baselines (`SolarWaveSMMaster_v4`,
 `SolarWaveOneContractNQ_v5`/`_MNQ_v5`) unchanged. One candidate — `U6B_PRODUCT_A_SCALE_RATE` —
 strengthened from "closest call in campaign history" to "frozen challenger with new favorable
 evidence under a richer owner-utility measure," still short of promotion pending independent
@@ -66,11 +66,19 @@ adversarial review.
   surviving a time-of-day confound check. Modest effect size, some fading over the sample — not a
   construction yet, flagged as the strongest reusable state to come out of the microstructure
   program.
-- **COMBO01:** one preregistered interaction (AUCTION × FLOW, the addendum's own top-priority
-  pairing) in progress; result to follow in a subsequent update once it lands.
-- **ENGINE-C1/C2:** not reached — gated on COMBO01 showing genuine synergy, which given the
-  individual-modality results (mostly null, one modest real effect) sets a high bar this wave
-  did not clear the preconditions for.
+- **COMBO01:** NO_LARGE_EFFECT_DETECTED. Tested the addendum's own top-priority pairing (AUCTION ×
+  FLOW) exactly as preregistered — does FLOW01's null order-flow signal become conditionally
+  informative once split by AUCTION01's real value-state? Well-powered HOLD-group test (2,757
+  checkpoints/47 trades/31 sessions), 0/8 cells (2 cut variables × 2 horizons, two independent
+  statistical formulations, dual session-/trade-block bootstrap) show any signal; ΔR² ≤0.0016
+  everywhere. Along the way it found a genuine new caveat AUCTION01's own report hadn't surfaced —
+  `poc_share` is heavily entangled with volatility regime (ρ=−0.705 vs sigma460) in this sample,
+  while `value_dist_ticks` is much cleaner — now flagged in `STATE_INFORMATION_LIBRARY.csv` for
+  any future reuse. Does not close AUCTION01's own main-effect finding.
+- **ENGINE-C1/C2:** not reached this wave — gated on COMBO01 showing genuine synergy, and it
+  didn't. Given the individual-modality results (mostly null, one modest real effect that doesn't
+  combine with anything else tested), the precondition for an independent orthogonal engine isn't
+  met on this evidence.
 
 ## Governance corrections applied this wave
 

@@ -1,0 +1,255 @@
+run_id: COMBO01_MULTIMODAL_SYNERGY
+family: "COMBO01 -- AUCTION x FLOW preregistered interaction (addendum G0-G3)"
+directive: >
+  Owner addendum to the active research directive (sections G0-G3): a modality may enter
+  COMBO01 even if its standalone effect is small, AS LONG AS it has a strong economic
+  mechanism and valid causal data (G1). Addendum's own stated top-priority combination:
+  "AUCTION x FLOW -- does aggressive participation have different meaning depending on
+  accepted-value location / POC migration?"
+date_frozen: 2026-08-09
+status: diagnostic-only, no trading policy/candidate this pass (per addendum, per task instruction)
+
+# ---------------------------------------------------------------------------
+# Interaction hypothesis (frozen BEFORE any outcome-touching computation)
+# ---------------------------------------------------------------------------
+hypothesis: >
+  FLOW01_AGGRESSIVE_PARTICIPATION found order-flow (signed_flow_aligned_60s, tick-rule
+  signed flow aligned to the held position's side) to be a CLEAN NULL for the HOLD
+  checkpoint group, unconditionally (all session/trade-block bootstrap CIs tight around
+  zero). AUCTION01_VALUE_STATE separately found a real, modest, confound-checked
+  relationship between value-state (poc_share, |value_dist_ticks|) and subsequent
+  absolute price expansion. Neither family tested whether flow's *conditional* meaning
+  depends on value-state. The interaction hypothesis: aggressive same-direction flow
+  occurring FAR from the session's running point of control (high |value_dist_ticks|,
+  low poc_share) carries different forward-markout information than the same flow
+  occurring AT/NEAR the value area (low |value_dist_ticks|, high poc_share) -- e.g.
+  because flow far from value is more likely to be genuinely information-driven /
+  trend-extending, while flow near value is more likely to be noise trading inside an
+  already-balanced auction. This is directional in mechanism-story only; the statistical
+  test is symmetric (does the flow-outcome SLOPE differ by auction-state bucket), not a
+  one-sided bet on which direction wins.
+  This is ONE preregistered interaction, operationalized as a small grid (predictor x
+  outcome x group), not a search across unrelated hypotheses.
+
+# ---------------------------------------------------------------------------
+# Data sources (both already-causal, already-reported substrates; read-only)
+# ---------------------------------------------------------------------------
+data_reuse:
+  flow_substrate: >
+    runs/FLOW01_AGGRESSIVE_PARTICIPATION/out/checkpoint_features.csv (6,221 raw
+    in-position checkpoints, 37-session BBO-confirmed universe). Reused columns:
+    time, sess_date, block_id_B, position_B, action_B, is_hold_checkpoint,
+    is_pre_exit_checkpoint, signed_flow_aligned_60s (the flow predictor under test,
+    position-side-aligned, tick-rule classified), sigma460_atr_proxy_pts (for the
+    too-good-to-be-true volatility-regime check), fwd1_pnl, fwd3_pnl (the outcome
+    variables -- reused verbatim, NOT re-derived; already side-consistent dollar P&L
+    on the actual Product-B NQ position path).
+  auction_substrate: >
+    runs/AUCTION01_VALUE_STATE/out/poc_1s_full.parquet (3,027,377 rows, full-session
+    1-second-resolution causal running-POC/value-state layer, same 37-session
+    universe), used in preference to decision_points_30s.parquet because FLOW01's
+    checkpoints are 3-minute-bar-aligned (not 30s-aligned) and span the full session
+    (not just RTH) -- poc_1s_full gives an exact-second causal match at each
+    checkpoint's own timestamp rather than a coarser nearest-30s match, and covers
+    sessions decision_points_30s dropped for its own RTH-liquidity filter (e.g.
+    20250902). Reused columns: time, sess_tag, poc_share, value_dist_ticks, bid_upd,
+    ask_upd (for the liquidity-filter reconstruction below).
+  both_substrates_share: >
+    the same 37-session BBO-confirmed universe, the same U0 `time` column / ET
+    session clock (verified identical convention by both parent specs), and the
+    same governance wall. No new data read, no new session touched.
+
+# ---------------------------------------------------------------------------
+# Merge / alignment method (frozen before results)
+# ---------------------------------------------------------------------------
+merge:
+  method: >
+    pandas.merge_asof(FLOW01 checkpoints, AUCTION01 poc_1s_full, on='time',
+    by='sess_tag' [FLOW01's sess_date with dashes stripped], direction='backward',
+    tolerance=2s). Strictly causal: for each FLOW01 checkpoint at time T, the matched
+    poc_share/value_dist_ticks is the AUCTION01 substrate's own state at the latest
+    second <= T within the same session -- never a future value. Both parent
+    constructions (FLOW01's signed_flow_aligned_60s window, AUCTION01's running-POC
+    algorithm) are independently already-verified causal (by inspection, in each
+    family's own REPORT.md); this step only adds a same-or-earlier-second backward
+    join, which cannot introduce lookahead.
+  match_rate: >
+    6,188/6,221 (99.5%) of FLOW01 checkpoints find a match within the 2s tolerance.
+    33 unmatched rows (0.5%) come from small (<1-2s) gaps in poc_1s_full's
+    per-second grid inside two sessions (20251117, 20260519) -- both sessions ARE
+    present in poc_1s_full and match at almost every other checkpoint; this is
+    disclosed as a minor, structurally-expected grid-gap artifact, not fabricated
+    around (unmatched rows are dropped, not imputed).
+  analysis_universe_restriction: >
+    The merged sample is further restricted to RTH [09:30,16:00) ET AND a
+    reconstructed trailing-60s(bid_upd+ask_upd)>0 liquidity gate (computed causally
+    from poc_1s_full's own bid_upd/ask_upd columns, replicating AUCTION01's own
+    decision-point filter exactly). Justification: AUCTION01's D4 finding (the
+    poc_share/value_dist_ticks -> outcome relationship this interaction test
+    depends on) was only established and confound-checked inside that exact RTH+
+    liquid domain -- FLOW01's raw checkpoint universe spans the full session
+    (18:00-17:00 ET, including pre-market/overnight), and extending value-state
+    semantics to that thinner-liquidity domain would be an untested extrapolation.
+    This restriction is mechanical (time-of-day + quote-presence gates, unrelated
+    to either predictor's or the outcome's realized values) and is disclosed as a
+    real, material sample reduction: 6,158 raw HOLD checkpoints -> 2,829 in RTH ->
+    2,757 in RTH+liquid (55% net field-of-view for HOLD; PRE_EXIT: 63 raw -> 35 RTH
+    -> 33 RTH+liquid).
+
+# ---------------------------------------------------------------------------
+# Preregistered cut points (justified from the analysis sample's OWN predictor
+# distribution only -- outcome variables were not inspected before these were set)
+# ---------------------------------------------------------------------------
+cut_points:
+  method: >
+    Tercile split (near/mid/far or low/mid/high), cuts taken at the 33rd/67th
+    percentile of each predictor's marginal distribution WITHIN the final HOLD,
+    RTH+liquid, matched analysis sample (n=2,757) -- not an arbitrary round-number
+    threshold, and not derived from any predictor-outcome relationship.
+  value_dist_ticks_abs_tercile_cuts_ticks: [106.0, 288.0]
+    # near: |value_dist_ticks| < 106 (n=920); mid: [106,288) (n=919); far: >=288 (n=918)
+  poc_share_tercile_cuts: [0.0025264, 0.0036274]
+    # low: poc_share < 0.0025264 (n=919); mid: [.,.){n=919}; high: >= 0.0036274 (n=919)
+  primary_contrast: >
+    near vs far tercile (middle tercile dropped for the PRIMARY contrast, standard
+    tercile-extremes practice -- maximizes contrast, avoids diluting the interaction
+    coefficient with ambiguous mid-bucket rows). Full 3-bucket linear-in-bucket
+    version reported as a robustness/sensitivity check using all rows (mid included).
+  primary_cut_variable: >
+    |value_dist_ticks| (distance from running POC) -- chosen as PRIMARY because the
+    addendum's own example framing is distance-from-value ("far from the session's
+    value area" vs "at/near the value area"), and because AUCTION01's own D4 found
+    |value_dist| to be a non-time-of-day-confounded predictor (raw correlation with
+    minutes-since-open only 0.019), whereas poc_share is confounded with
+    minutes-since-open by construction. poc_share tercile is the SECONDARY /
+    confirmatory cut (correlation between the two predictors in this sample =
+    -0.308 -- related but not redundant, so poc_share serves as an independent
+    check on the same mechanism, not a restatement of the same variable).
+
+# ---------------------------------------------------------------------------
+# Outcome variable (frozen, reused verbatim from FLOW01 -- not re-derived)
+# ---------------------------------------------------------------------------
+outcome:
+  primary: fwd1_pnl   # bar_pnl_B_nq_dollars at checkpoint t_idx+1, side-consistent, dollars
+  secondary: fwd3_pnl # sum of bar_pnl_B_nq_dollars over t_idx+1..t_idx+3
+  note: >
+    Both already require the forward window to stay inside the same session (else
+    NaN); FLOW01's own build established 100% computability for both across its
+    checkpoint universe (Product-B is forced flat well before session close).
+
+# ---------------------------------------------------------------------------
+# Predictor (flow signal under test, reused verbatim from FLOW01)
+# ---------------------------------------------------------------------------
+predictor_flow: signed_flow_aligned_60s
+  # sum(sflow in (T-60s,T]) * sign(position_B); tick-rule classified, lower-confidence
+  # tier per FLOW01/addendum C2 (disclosed inherited caveat, not re-litigated here)
+
+# ---------------------------------------------------------------------------
+# Preregistered test grid (frozen before any cell was computed)
+# ---------------------------------------------------------------------------
+test_grid:
+  primary (HOLD group, n=2,757 checkpoints / 47 trades / 31 sessions):
+    - {cut_variable: value_dist_ticks_abs_tercile, outcome: fwd1_pnl}
+    - {cut_variable: value_dist_ticks_abs_tercile, outcome: fwd3_pnl}
+    - {cut_variable: poc_share_tercile,            outcome: fwd1_pnl}
+    - {cut_variable: poc_share_tercile,            outcome: fwd3_pnl}
+  secondary_exploratory (PRE_EXIT group, n~=33 checkpoints/trades / 22 sessions --
+    expected too small to resolve; reported for completeness only, per this
+    campaign's DATA_LIMITED convention, not treated as a null result if wide):
+    - {cut_variable: value_dist_ticks_abs_tercile, outcome: fwd1_pnl}
+    - {cut_variable: value_dist_ticks_abs_tercile, outcome: fwd3_pnl}
+    - {cut_variable: poc_share_tercile,            outcome: fwd1_pnl}
+    - {cut_variable: poc_share_tercile,            outcome: fwd3_pnl}
+
+# ---------------------------------------------------------------------------
+# Statistical method (frozen)
+# ---------------------------------------------------------------------------
+method:
+  additive_model: "outcome ~ b0 + b1*signed_flow_aligned_60s + b2*bucket_binary(near=0,far=1)"
+  interaction_model: "outcome ~ b0 + b1*signed_flow_aligned_60s + b2*bucket_binary + b3*(signed_flow_aligned_60s*bucket_binary)"
+  key_statistic: >
+    b3 (the interaction coefficient -- difference in the flow-outcome OLS slope
+    between the far/high bucket and the near/low bucket) and Delta-R^2 = R^2(interaction
+    model) - R^2(additive model). Reported together; b3 has an interpretable unit
+    ($ outcome per unit signed_flow_aligned_60s per bucket), Delta-R^2 is the
+    model-comparison confirmation.
+  equivalent_split_check: >
+    Spearman rho(signed_flow_aligned_60s, outcome) computed separately within the
+    near/low bucket and the far/high bucket; report rho_far - rho_near (or
+    rho_high - rho_low). This is the addendum's suggested "equivalent" formulation
+    and must agree in sign/significance with b3 for the result to be treated as
+    robust to functional-form choice (OLS interaction vs rank-based split).
+  robustness_variant: >
+    Full 3-bucket (near/mid/far, coded 0/1/2) linear-interaction OLS using ALL
+    matched rows (mid bucket included, not dropped) -- reported as a sensitivity
+    check on the primary near-vs-far result, not a separate preregistered claim.
+
+# ---------------------------------------------------------------------------
+# Inference (mandatory dual clustering, matching every family this wave)
+# ---------------------------------------------------------------------------
+inference:
+  primary: >
+    Session-block bootstrap, 1000 resamples, resample distinct sessions with
+    replacement (all rows belonging to a resampled session travel together),
+    recompute b3 / Delta-R^2 / rho_far-rho_near each rep, report [2.5,97.5]
+    percentile CI. Matches U9/U9B/AUCTION01/FLOW01's own primary convention.
+  secondary: >
+    Trade-block bootstrap, 1000 resamples, resample distinct block_id_B with
+    replacement, same statistics. Per addendum C7 (FLOW01's own convention): a
+    cell is only treated as a candidate signal if BOTH the session-block AND the
+    trade-block CI exclude zero.
+  effective_n_reporting: >
+    Report raw checkpoint n, distinct-trade n, and distinct-session n for every
+    cell -- never let raw checkpoint n stand in for independent n (this data is
+    heavily within-trade/within-session correlated, as FLOW01's own family
+    explicitly documented: ~98 checkpoints/trade on average in the unrestricted
+    HOLD group).
+
+# ---------------------------------------------------------------------------
+# Too-good-to-be-true gate (mandatory, applied to any cell that looks strong)
+# ---------------------------------------------------------------------------
+too_good_to_be_true_gate:
+  trigger: >
+    Any cell where BOTH the session-block AND trade-block bootstrap CI on b3
+    exclude zero, OR |b3|/Delta-R^2 is large enough to look like a tradeable edge
+    against this campaign's established C1 execution-cost hurdle (2.872 ticks RT
+    -> ~$57.44/RT at $20/pt NQ, contextualized for interpretability only, not as
+    a policy construction).
+  checks_to_run_if_triggered:
+    - "Lookahead re-verification: confirm merge_asof direction='backward' was used
+       (not 'nearest' or 'forward') and that no bucket assignment used any
+       information timestamped after the checkpoint."
+    - "sigma460 volatility-regime confound check: is the auction-state bucket
+       (near/far or low/high) correlated with sigma460_atr_proxy_pts? If yes,
+       repeat the interaction test after residualizing both signed_flow_aligned_60s
+       and the outcome on sigma460_atr_proxy_pts (same residualization pattern
+       AUCTION01 used for its own minutes-since-open confound check) and report
+       whether the interaction survives, weakens, or is fully explained away."
+    - "Session-concentration check: what fraction of the 'far'/'high' bucket's
+       checkpoints (and of any apparent effect) comes from a small number of
+       sessions or trades (matching AUCTION01 D6's and FLOW01's own concentration
+       diagnostics)?"
+    - "Trade-collapsed sanity check: does the effect survive at the checkpoint
+       level, or does it only appear after collapsing to one row per trade
+       (FLOW01's own documented sunk-P&L-adjacent trap)? If a trade-collapsed cut
+       is examined, it is explicitly flagged as exploratory/non-primary, exactly
+       as FLOW01 did, and is not substituted for the checkpoint-level test."
+
+# ---------------------------------------------------------------------------
+# Scope
+# ---------------------------------------------------------------------------
+explicitly_not_in_scope_this_run:
+  - Any candidate/policy/filter/sizing construction -- diagnostic only, matching
+    every other family this wave.
+  - Requesting, exporting, or processing any scalping_lab session outside the 40
+    already on disk -- governance wall respected throughout (only the 37 BBO-
+    confirmed sessions already used by both parent families are read).
+  - Touching any data dated >=2026-08-01 (sealed per research/operational/LOCKED_FORWARD.md)
+    -- not applicable, this substrate's span is 2025-08-14..2026-05-20 entirely.
+  - Re-litigating FLOW01's already-rejected trade-collapsed sunk-P&L confound as
+    if it were new evidence.
+
+promotion_gate: >
+  none (diagnostic-only). Verdict taxonomy per addendum: PROMOTION_CANDIDATE,
+  USEFUL_STATE_ONLY, OPEN_FOR_INTERACTION, DATA_LIMITED, NO_LARGE_EFFECT_DETECTED,
+  CLEAN_NULL.
