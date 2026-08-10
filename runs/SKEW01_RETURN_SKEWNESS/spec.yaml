@@ -1,0 +1,163 @@
+run_id: SKEW01_RETURN_SKEWNESS
+family: "SKEW01 -- causal return-skewness forecasting diagnostic (Track L, DIAGNOSTIC ONLY this
+  run). Sourced from research/system_master/LITERATURE_SCOUT_20260809.md sec2, candidate hypothesis
+  2: external trend/momentum-crash literature (Man Group, Invesco, arXiv 2510.23150) reports that
+  'time series momentum reversals are partly forecasted by the asymmetric structure of the
+  tail-distributed upside and downside risk' -- i.e. by the SKEWNESS of the recent return
+  distribution, not its level or its path-organization."
+depends_on: >
+  U0_UNIFIED_STATE (runs/U0_UNIFIED_STATE/out/u0_state_table.parquet, correctness-gated against
+  all 3 certified canonical nets -- the sole state/P&L source, no other run's ledger re-read).
+  U8_PATH_ORGANIZATION (runs/U8_PATH_ORGANIZATION/src/stats_lib.py reused verbatim -- identical
+  bucket-residualization / OLS-delta-R^2 / year-by-year sign-stability framework; runs/
+  U8_PATH_ORGANIZATION/out/u8_bars_with_features.parquet's already-computed perm_entropy_20/
+  reversal_rate_20/run_persistence_20 columns reused directly (merged on t_idx), not re-derived,
+  for the Step-0 redundancy check -- matching this campaign's established convention). U8's/U6's
+  own outcome-construction scripts (04-07) replicated verbatim in methodology for direct
+  comparability (identical 4-outcome framework, identical bucket/residualization/year-by-year
+  machinery, only the feature column differs). U5_SOFT_WEIGHTING/REPORT.md and
+  LEV01_VOLATILITY_ASYMMETRY/REPORT.md test-2 (the too-good-to-be-true confound pattern: a
+  predictor and its outcome window overlapping in time with a block's own already-realized/sunk
+  P&L, producing a spuriously strong "forward" relationship) -- guarded against explicitly below.
+
+hypothesis: >
+  U8/U8B already tested path ORGANIZATION (reversal_rate/run_persistence/perm_entropy: how
+  "clean" vs "choppy" the recent path has been, independent of direction) and found real-but-tiny,
+  right-tail-unsafe effects; R4 already tested price LEVEL/slope and found zero residual
+  information. This family tests a third, distinct statistical property of the same trailing
+  return window: its SKEWNESS (third standardized moment -- asymmetry between the tail-risk of
+  upside vs downside moves), independent of the window's mean (already tested via M/slope), its
+  dispersion (already tested via sigma460), and its ordinal/sign-sequence organization (already
+  tested via U8/U8B). External literature (arXiv 2510.23150 and related trend-following practice
+  research, cited in LITERATURE_SCOUT_20260809.md sec2) proposes skewness as a forecaster of
+  momentum reversals specifically -- distinct from all three closed/tested families above.
+
+scope: >
+  Diagnostic run only. No candidate construction, no parameter changes to Product A
+  (SolarWaveSMMaster_v4) or Product B (SolarWaveOneContractNQ_v5/MNQ_v5), no NT8/CrossTrade calls.
+  Reads runs/U0_UNIFIED_STATE/out/u0_state_table.parquet as the sole state/P&L source and
+  runs/U8_PATH_ORGANIZATION/out/u8_bars_with_features.parquet ONLY for its 3 already-computed
+  organization columns (Step 0 redundancy check). Writes only under
+  runs/SKEW01_RETURN_SKEWNESS/. Runs no git command.
+
+construction_preregistered: >
+  Exactly 1 feature construction x 2 causal windows (20-bar primary, matching U8's own primary
+  window for direct comparability; 10-bar robustness only, NOT a swept parameter), computed on
+  U0's own `ret_1` (1-bar return) column, plus a direction-aligned transform applied per-outcome
+  (not a separate preregistered feature; see below):
+    skewness_W(t) = mean((r - mean(r))^3) / std(r)^3, over the trailing W bars [t-W+1, t]
+    inclusive (causal, r = ret_1 values in that window), standard Fisher-Pearson / third-
+    standardized-moment (\"moment coefficient of skewness\", g1) skewness -- NOT a reverse-
+    engineering of any vendor indicator, a standard textbook statistical construction. std(r) is
+    the population standard deviation (ddof=0, consistent with the mean() in the numerator and
+    denominator both being uncorrected moments). Guard: if std(r) < epsilon (1e-8, points units,
+    far below NQ's realistic 1-bar tick noise floor) the window is treated as degenerate and
+    skewness_W(t) is set to NaN rather than dividing by ~0.
+  Row-order continuous (not reset per session), causal, matching U0's own M_slope_20/ret_20/
+  trend_efficiency_20 and U8's reversal_rate_20/run_persistence_20/perm_entropy_20 convention.
+  Two columns from this construction: skewness_20 (primary), skewness_10 (robustness).
+  Direction-aligned transform (NOT a separately preregistered feature -- a per-outcome sign
+  transform of skewness_W, applied only where an outcome's population pools long+short
+  observations under one regression, exactly matching R4/R5/U5's own "aligned to trade direction"
+  convention): aligned_skewness_W = skewness_W * side, where side = sign(position_B) at the
+  observation bar for outcomes (a)/(b)/(c) (Product B), and side = sign(target_exposure_A) at the
+  observation bar for outcome (d) (Product A) -- the position/trade's own side at that bar, not a
+  separately-fit direction.
+
+step0_redundancy_check: >
+  MANDATORY FIRST, before any outcome test. Raw Spearman correlation, bar level, canonical window
+  (is_health_only_bar==False), of raw skewness_20 (and skewness_10, robustness) against:
+    (a) U8's own already-computed perm_entropy_20, reversal_rate_20, run_persistence_20 --
+        reused directly from runs/U8_PATH_ORGANIZATION/out/u8_bars_with_features.parquet, merged
+        on t_idx, NOT re-derived.
+    (b) U0's own trend_efficiency_20, range_efficiency_20, M_slope_20, sigma460_atr_proxy_pts.
+  Any |rho| > 0.7 against ANY of these seven columns is flagged REDUNDANT explicitly and treated
+  as a strong reason to discount any subsequent "new information" claim from this family (the
+  outcome tests are still run for completeness and reported, but any positive finding is
+  prominently caveated as potentially restating existing state, per this campaign's standing
+  "if it merely restates an existing feature, CLOSE it" rule).
+
+outcome_tests: >
+  Identical 4-outcome framework U8 used (runs/U8_PATH_ORGANIZATION/src/04-07), replicated
+  verbatim in methodology for direct comparability, evaluated for skewness_20 (primary) with
+  skewness_10 as a robustness cross-check:
+    (a) entry value: net_pnl of ALL Product-B blocks (long+short, canonical+extension reported
+        separately), feature = aligned_skewness_20 measured at the block's own entry bar
+        (age_bars_B==1), aligned to the entry's own side (per construction above) -- the feature
+        strictly precedes all of the block's own P&L (no sunk-P&L confound possible, matching
+        R4's exact block-entry pairing). Raw (unsigned) skewness_20 also computed and reported
+        alongside for completeness (population base-rate context), primary verdict cell uses the
+        aligned version per the orchestrator's explicit construction instruction.
+    (b) hold continuation: forward-5-bar realized P&L (bar_pnl_B_nq_dollars summed over t+1..t+5,
+        U3's/U8's own forward_fixed construction) at every action_B=='HOLD' bar. BOTH raw
+        skewness_20 (not direction-aligned) and aligned_skewness_20 (aligned to the currently-held
+        position's side) are tested and reported, per orchestrator instruction.
+    (c) reversal hazard: binary label = 1 if, within bars t+1..t+10 after a HOLD bar t with
+        position_B[t]=s (nonzero), EITHER action_B=='REVERSAL' occurs OR sign(M)=-s at any bar in
+        that window (M crosses against the held position) -- else 0. Same HOLD-bar population as
+        (b). Feature = aligned_skewness_20 (aligned to the currently-held side), primary; raw also
+        reported.
+    (d) Product-A scale value: forward-20-bar bar_pnl_A_dollars summed and divided by
+        |target_exposure_A delta| (contracts_changed), U6's/U8's own exact
+        fwd20_pnl_per_contract construction, evaluated ONLY at action_A=='SCALE_IN' bars. Feature
+        = aligned_skewness_20 (aligned to the scale-in's own side), primary; raw also reported.
+  Bucket-residualize against (|M| tercile x sigma460 vol tercile) computed at the same bar the
+  feature is measured at (Product-B outcomes a/b/c use |M|; Product-A outcome d uses |M_A_raw|,
+  matching U6/U8's own convention) -- identical R4/R5/U6/U8 framework (bucket_mean subtracted,
+  resid = outcome - bucket_mean; OLS baseline = M_abs + vol_tercile_code, extended = baseline +
+  feature; np.linalg.lstsq only, no black-box model), reusing runs/U8_PATH_ORGANIZATION/src/
+  stats_lib.py verbatim (unmodified, copied into this run's src/ per the "no modification of any
+  file outside this run directory" scope rule).
+  Report raw + residualized Spearman, OLS delta-R^2, and year-by-year (2022/2023/2024/2025,
+  2026-canonical-Jan-May separately) sign-stability for EVERY cell computed (up to 8: raw + aligned
+  skewness_20 x 4 outcomes), no cell skipped/no null skipped. 2026-06/07 health-only extension
+  reported as a separate, observational-only row, never blended into the sign-stability count or
+  any chronology verdict, per U0's own mechanical split.
+
+too_good_to_be_true_gate: >
+  MANDATORY. If any cell shows a surprisingly large ΔR^2 (e.g. > 0.02) or an unusually strong
+  t-stat/correlation: STOP and check specifically whether the outcome window and the skewness-
+  measurement window overlap in time with each other OR with an already-realized/sunk portion of
+  the trade's own P&L -- per U5_SOFT_WEIGHTING/REPORT.md's vwap_aligned confound (residualized rho
+  0.212->0.003 once forward-only P&L was isolated; root cause Spearman(vwap_aligned, already-
+  banked P&L at scale-in)=0.643) and LEV01_VOLATILITY_ASYMMETRY/REPORT.md test 2's confound
+  (100% of the 1,890 canonical Product-B blocks resolved within the SAME session-window used to
+  measure "post-entry" vol change; a strictly forward-only re-test collapsed the effect to exactly
+  0.000). Concretely: (i) confirm outcome (a)'s net_pnl outcome window starts strictly at the
+  entry bar itself (age_bars_B==1, feature measured at that identical bar, before any of the
+  block's own P&L accrues -- same pairing R4/U8 already used and cleared); (ii) confirm outcomes
+  (b)/(c)/(d) are constructed as strictly forward-only (t+1 onward), never including the bar the
+  feature is measured on; (iii) if any single cell's ΔR^2 or |resid rho| is an outlier relative to
+  U8's own already-closed 12-cell table (REPORT.md: max ΔR^2 0.00547, max |resid rho| 0.0698),
+  explicitly re-derive that cell with the feature-measurement bar and outcome-window's start bar
+  printed side-by-side to rule out any accidental look-ahead before reporting it as real.
+
+right_tail_check: >
+  For whichever single (feature x outcome) combination among the computed cells shows the
+  strongest |residualized Spearman|: check that feature's value distribution (at the bar-type the
+  outcome uses) across the top-20 all-time winning canonical-window blocks (Product-B for
+  outcomes a/b/c, Product-A for outcome d) vs bottom-20 vs population base rate -- same discipline
+  as R4/R5/U8/U8B. A feature that would exclude a large fraction of top-20 winners under a naive
+  tercile filter must be flagged as tail-unsafe.
+
+verdict_condition: >
+  If skewness information disappears after Step-0 redundancy conditioning, or after the
+  too-good-to-be-true gate check (confound confirmed), or is right-tail-unsafe: CLOSE AS
+  REDUNDANT/CONFOUNDED/TAIL-UNSAFE as appropriate, exactly as U8/U8B/LEV01 were closed. If the
+  relationship in ANY cell is real (survives residualization), chronologically stable (same sign
+  in a majority of the 5 canonical years), non-redundant (Step 0 |rho|<=0.7 against all 7
+  incumbent columns), non-confounded, AND right-tail-safe: report it explicitly with numbers and
+  describe (prose only, NOT constructed/backtested code) ONE simple policy translation for a
+  FUTURE family, explicitly labeled NOT YET TESTED / NOT AUTHORIZED FOR CONSTRUCTION THIS RUN.
+
+construction_gate: >
+  No candidate is constructed in this run under any circumstance, regardless of finding strength.
+  A positive finding produces a PROSE description only, matching U1/U3/U6/U8's identical
+  discipline.
+
+non_goals:
+  - No modification of Product A or Product B in any way.
+  - No sweep beyond the 2 preregistered windows (10-bar, 20-bar) -- not a parameter search.
+  - No black-box/ML classifier of any kind -- Spearman, OLS via np.linalg.lstsq only.
+  - No modification of U0, U8, or any file outside this run directory.
+  - No git operations.
