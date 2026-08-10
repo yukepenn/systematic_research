@@ -1,0 +1,1499 @@
+{
+  "spec_note": "AUCTION04 clean-substrate re-run of AUCTION03's M2/M3 signed-reversion / signed-discovery test. signed_markout_ticks_H in the clean substrate is STILL position-B-direction-signed (verified three independent ways, see module docstring and [verify-1/2/3] log lines) -- the position_direction_corrected recovery is therefore still applied, WITHOUT any /4 (units are already correct in the clean substrate, unlike the original decision_outcomes.parquet). 'position_direction_corrected' variant is primary/canonical; 'as_specified' (literal stored column) is retained for transparency.",
+  "c1_cost_hurdle_ticks_roundtrip": 2.872,
+  "nboot": 1000,
+  "rng_seed": 20260810,
+  "governance": {
+    "discovery_filter": {
+      "raw_rows": 27299,
+      "raw_sessions": 36,
+      "filtered_rows": 27299,
+      "filtered_sessions": 36,
+      "listed_dates_absent_from_file": [
+        "20250902"
+      ],
+      "sessions_in_file_dropped_as_outside_list": []
+    },
+    "confirmation_filter": {
+      "raw_rows": 4680,
+      "raw_sessions": 6,
+      "filtered_rows": 4680,
+      "filtered_sessions": 6,
+      "listed_dates_absent_from_file": [
+        "20251125",
+        "20260512"
+      ],
+      "sessions_in_file_dropped_as_outside_list": []
+    }
+  },
+  "sign_unit_verification": {
+    "conclusion": "signed_markout_ticks_H is position-B-direction-signed, NOT raw-price-direction-signed; position_direction_corrected recovery (x sign(position_B), no /4) applied.",
+    "cross_check_vs_frozen_original_ratio_old_over_clean": {
+      "discovery": {
+        "H15": {
+          "n_compared": 16450,
+          "median_ratio_old_over_clean": 4.0,
+          "n_ratio_approx_plus4": 16450,
+          "n_ratio_approx_minus4_sign_flip": 0,
+          "n_other": 0
+        },
+        "H60": {
+          "n_compared": 16564,
+          "median_ratio_old_over_clean": 4.0,
+          "n_ratio_approx_plus4": 16564,
+          "n_ratio_approx_minus4_sign_flip": 0,
+          "n_other": 0
+        },
+        "H300": {
+          "n_compared": 16637,
+          "median_ratio_old_over_clean": 4.0,
+          "n_ratio_approx_plus4": 16637,
+          "n_ratio_approx_minus4_sign_flip": 0,
+          "n_other": 0
+        }
+      },
+      "confirmation": {
+        "H15": {
+          "n_compared": 3058,
+          "median_ratio_old_over_clean": 4.0,
+          "n_ratio_approx_plus4": 3058,
+          "n_ratio_approx_minus4_sign_flip": 0,
+          "n_other": 0
+        },
+        "H60": {
+          "n_compared": 3096,
+          "median_ratio_old_over_clean": 4.0,
+          "n_ratio_approx_plus4": 3096,
+          "n_ratio_approx_minus4_sign_flip": 0,
+          "n_other": 0
+        },
+        "H300": {
+          "n_compared": 3123,
+          "median_ratio_old_over_clean": 4.0,
+          "n_ratio_approx_plus4": 3123,
+          "n_ratio_approx_minus4_sign_flip": 0,
+          "n_other": 0
+        }
+      }
+    },
+    "all_matched_rows_ratio_approx_plus4_no_sign_flips": true
+  },
+  "tercile_edges_abs_value_dist_ticks": {
+    "discovery": [
+      1.0,
+      102.0,
+      278.0,
+      1751.0
+    ],
+    "confirmation": [
+      1.0,
+      170.0,
+      558.333333333333,
+      1700.0
+    ]
+  },
+  "rows_dropped_zero_distance": {
+    "discovery": 65,
+    "confirmation": 9
+  },
+  "corr_signD_signPositionB_by_sample": {
+    "discovery": 0.3850080947855177,
+    "confirmation": 0.5638669655966553
+  },
+  "sign_stable_discovery_vs_confirmation": {
+    "reversion": "NOT STABLE (sign flips between discovery and confirmation at >=1 horizon) -- H=15: discovery=+(0.896t) confirmation=-(-0.289t) DIFFERS; H=60: discovery=+(1.911t) confirmation=+(0.680t) SAME; H=300: discovery=+(7.340t) confirmation=-(-1.009t) DIFFERS",
+    "discovery": "NOT STABLE (sign flips between discovery and confirmation at >=1 horizon) -- H=15: discovery=-(-0.896t) confirmation=+(0.289t) DIFFERS; H=60: discovery=-(-1.911t) confirmation=-(-0.680t) SAME; H=300: discovery=-(-7.340t) confirmation=+(1.009t) DIFFERS"
+  },
+  "horizons_where_reversion_sign_agrees_disc_conf": [
+    60
+  ],
+  "results": {
+    "discovery": {
+      "sample": "discovery",
+      "n_sessions": 36,
+      "n_decision_points_nonzero_D": 27234,
+      "by_horizon": [
+        {
+          "horizon": 15,
+          "n_analysis": 16677,
+          "n_dropped_outcome_nan": 10557,
+          "n_dropped_flat_position_B": 10557,
+          "n_dropped_session_boundary": 0,
+          "corr_signD_signPositionB": 0.38508888500775557,
+          "variants": {
+            "as_specified": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  -0.3179607109448082,
+                  -0.38776075318441944,
+                  0.43178360101437024
+                ],
+                "surface_n_near_mid_far": [
+                  5345,
+                  5417,
+                  5915
+                ],
+                "far_mean_ticks": 0.43178360101437024,
+                "far_n": 5915,
+                "far_session_block_ci": [
+                  -0.41787259768997903,
+                  1.2722556197688235
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -0.44854951294192924,
+                  1.2850494590622108
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  0.3179607109448082,
+                  0.38776075318441944,
+                  -0.43178360101437024
+                ],
+                "surface_n_near_mid_far": [
+                  5345,
+                  5417,
+                  5915
+                ],
+                "far_mean_ticks": -0.43178360101437024,
+                "far_n": 5915,
+                "far_session_block_ci": [
+                  -1.2722556197688237,
+                  0.41787259768997903
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -1.285049459062211,
+                  0.4485495129419289
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 5915,
+                "p_discovery_gt_0": 0.4902789518174134,
+                "p_eq_0": 0.011158072696534235,
+                "p_reversion_gt_0": 0.4985629754860524
+              }
+            },
+            "position_direction_corrected": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  0.36304957904583723,
+                  -0.19817242015875947,
+                  0.8963651732882502
+                ],
+                "surface_n_near_mid_far": [
+                  5345,
+                  5417,
+                  5915
+                ],
+                "far_mean_ticks": 0.8963651732882502,
+                "far_n": 5915,
+                "far_session_block_ci": [
+                  0.09744060556038381,
+                  1.9007086180639754
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  0.09776077035755844,
+                  1.8416415746983263
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": true,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -0.36304957904583723,
+                  0.19817242015875947,
+                  -0.8963651732882502
+                ],
+                "surface_n_near_mid_far": [
+                  5345,
+                  5417,
+                  5915
+                ],
+                "far_mean_ticks": -0.8963651732882502,
+                "far_n": 5915,
+                "far_session_block_ci": [
+                  -1.9007086180639758,
+                  -0.09744060556038403
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -1.8416415746983266,
+                  -0.09776077035755847
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": true,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 5915,
+                "p_discovery_gt_0": 0.47590870667793744,
+                "p_eq_0": 0.011158072696534235,
+                "p_reversion_gt_0": 0.5129332206255283
+              }
+            }
+          }
+        },
+        {
+          "horizon": 60,
+          "n_analysis": 16675,
+          "n_dropped_outcome_nan": 10559,
+          "n_dropped_flat_position_B": 10557,
+          "n_dropped_session_boundary": 2,
+          "corr_signD_signPositionB": 0.3850080947855177,
+          "variants": {
+            "as_specified": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  -0.511599625818522,
+                  -0.9799704633561012,
+                  0.63030610519195
+                ],
+                "surface_n_near_mid_far": [
+                  5345,
+                  5417,
+                  5913
+                ],
+                "far_mean_ticks": 0.63030610519195,
+                "far_n": 5913,
+                "far_session_block_ci": [
+                  -1.231370023872036,
+                  2.5300197597937126
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -1.1909579301984967,
+                  2.7234988418224506
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  0.511599625818522,
+                  0.9799704633561012,
+                  -0.63030610519195
+                ],
+                "surface_n_near_mid_far": [
+                  5345,
+                  5417,
+                  5913
+                ],
+                "far_mean_ticks": -0.63030610519195,
+                "far_n": 5913,
+                "far_session_block_ci": [
+                  -2.5300197597937126,
+                  1.2313700238720355
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -2.7234988418224506,
+                  1.1909579301984967
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 5913,
+                "p_discovery_gt_0": 0.49230509047860643,
+                "p_eq_0": 0.006933874513783189,
+                "p_reversion_gt_0": 0.5007610350076104
+              }
+            },
+            "position_direction_corrected": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  0.3245088868101029,
+                  -0.7242938896067934,
+                  1.9113817013360392
+                ],
+                "surface_n_near_mid_far": [
+                  5345,
+                  5417,
+                  5913
+                ],
+                "far_mean_ticks": 1.9113817013360392,
+                "far_n": 5913,
+                "far_session_block_ci": [
+                  0.2716676256710934,
+                  3.9922601812924188
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  0.013765926676589517,
+                  4.085986942159956
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": true,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -0.3245088868101029,
+                  0.7242938896067934,
+                  -1.9113817013360392
+                ],
+                "surface_n_near_mid_far": [
+                  5345,
+                  5417,
+                  5913
+                ],
+                "far_mean_ticks": -1.9113817013360392,
+                "far_n": 5913,
+                "far_session_block_ci": [
+                  -3.992260181292419,
+                  -0.27166762567109354
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -4.085986942159956,
+                  -0.013765926676589737
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": true,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 5913,
+                "p_discovery_gt_0": 0.4840182648401826,
+                "p_eq_0": 0.006933874513783189,
+                "p_reversion_gt_0": 0.5090478606460341
+              }
+            }
+          }
+        },
+        {
+          "horizon": 300,
+          "n_analysis": 16667,
+          "n_dropped_outcome_nan": 10567,
+          "n_dropped_flat_position_B": 10557,
+          "n_dropped_session_boundary": 10,
+          "corr_signD_signPositionB": 0.384684526680814,
+          "variants": {
+            "as_specified": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  0.38101028999064546,
+                  -0.7372161713125346,
+                  -0.4475867908552075
+                ],
+                "surface_n_near_mid_far": [
+                  5345,
+                  5417,
+                  5905
+                ],
+                "far_mean_ticks": -0.4475867908552075,
+                "far_n": 5905,
+                "far_session_block_ci": [
+                  -7.582374380726595,
+                  6.760891469971846
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -7.739601968565204,
+                  7.050728170096946
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -0.38101028999064546,
+                  0.7372161713125346,
+                  0.4475867908552075
+                ],
+                "surface_n_near_mid_far": [
+                  5345,
+                  5417,
+                  5905
+                ],
+                "far_mean_ticks": 0.4475867908552075,
+                "far_n": 5905,
+                "far_session_block_ci": [
+                  -6.760891469971848,
+                  7.582374380726593
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -7.050728170096947,
+                  7.7396019685652035
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 5905,
+                "p_discovery_gt_0": 0.49635901778154107,
+                "p_eq_0": 0.002540220152413209,
+                "p_reversion_gt_0": 0.5011007620660457
+              }
+            },
+            "position_direction_corrected": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  0.3864359214218896,
+                  -0.6977109100978401,
+                  7.339712108382726
+                ],
+                "surface_n_near_mid_far": [
+                  5345,
+                  5417,
+                  5905
+                ],
+                "far_mean_ticks": 7.339712108382726,
+                "far_n": 5905,
+                "far_session_block_ci": [
+                  0.2909474377959993,
+                  15.908506963851721
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -0.2176481021267039,
+                  15.908303020025127
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": true
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -0.3864359214218896,
+                  0.6977109100978401,
+                  -7.339712108382726
+                ],
+                "surface_n_near_mid_far": [
+                  5345,
+                  5417,
+                  5905
+                ],
+                "far_mean_ticks": -7.339712108382726,
+                "far_n": 5905,
+                "far_session_block_ci": [
+                  -15.908506963851721,
+                  -0.29094743779599946
+                ],
+                "far_session_block_n_clusters": 28,
+                "far_trade_block_ci": [
+                  -15.908303020025127,
+                  0.21764810212670097
+                ],
+                "far_trade_block_n_clusters": 41,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": true
+              },
+              "continuation_prob_far": {
+                "n_far": 5905,
+                "p_discovery_gt_0": 0.47468247248094836,
+                "p_eq_0": 0.002540220152413209,
+                "p_reversion_gt_0": 0.5227773073666384
+              }
+            }
+          }
+        }
+      ]
+    },
+    "confirmation": {
+      "sample": "confirmation",
+      "n_sessions": 6,
+      "n_decision_points_nonzero_D": 4671,
+      "by_horizon": [
+        {
+          "horizon": 15,
+          "n_analysis": 3129,
+          "n_dropped_outcome_nan": 1542,
+          "n_dropped_flat_position_B": 1542,
+          "n_dropped_session_boundary": 0,
+          "corr_signD_signPositionB": 0.5638669655966553,
+          "variants": {
+            "as_specified": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  -0.22681359044995408,
+                  -0.19805825242718447,
+                  -1.0846534653465347
+                ],
+                "surface_n_near_mid_far": [
+                  1089,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": -1.0846534653465347,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -6.375,
+                  0.36363636363636365
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -6.375,
+                  2.8680851063829786
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  0.22681359044995408,
+                  0.19805825242718447,
+                  1.0846534653465347
+                ],
+                "surface_n_near_mid_far": [
+                  1089,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": 1.0846534653465347,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -0.36363636363636365,
+                  6.375
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -2.8680851063829786,
+                  6.375
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 1010,
+                "p_discovery_gt_0": 0.501980198019802,
+                "p_eq_0": 0.015841584158415842,
+                "p_reversion_gt_0": 0.48217821782178216
+              }
+            },
+            "position_direction_corrected": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  -0.07254361799816346,
+                  -0.8058252427184466,
+                  -0.2886138613861386
+                ],
+                "surface_n_near_mid_far": [
+                  1089,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": -0.2886138613861386,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -1.2816622691292876,
+                  18.75
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -1.1365276663993584,
+                  18.75
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  0.07254361799816346,
+                  0.8058252427184466,
+                  0.2886138613861386
+                ],
+                "surface_n_near_mid_far": [
+                  1089,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": 0.2886138613861386,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -18.75,
+                  1.2816622691292876
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -18.75,
+                  1.1365276663993584
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 1010,
+                "p_discovery_gt_0": 0.499009900990099,
+                "p_eq_0": 0.015841584158415842,
+                "p_reversion_gt_0": 0.48514851485148514
+              }
+            }
+          }
+        },
+        {
+          "horizon": 60,
+          "n_analysis": 3129,
+          "n_dropped_outcome_nan": 1542,
+          "n_dropped_flat_position_B": 1542,
+          "n_dropped_session_boundary": 0,
+          "corr_signD_signPositionB": 0.5638669655966553,
+          "variants": {
+            "as_specified": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  2.202938475665748,
+                  0.9315533980582524,
+                  -0.9603960396039604
+                ],
+                "surface_n_near_mid_far": [
+                  1089,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": -0.9603960396039604,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -19.46875,
+                  3.727272727272727
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -19.46875,
+                  4.557777777777778
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -2.202938475665748,
+                  -0.9315533980582524,
+                  0.9603960396039604
+                ],
+                "surface_n_near_mid_far": [
+                  1089,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": 0.9603960396039604,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -3.727272727272727,
+                  19.46875
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -4.557777777777778,
+                  19.46875
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 1010,
+                "p_discovery_gt_0": 0.49405940594059405,
+                "p_eq_0": 0.007920792079207921,
+                "p_reversion_gt_0": 0.498019801980198
+              }
+            },
+            "position_direction_corrected": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  -1.6345270890725436,
+                  -2.67621359223301,
+                  0.6801980198019802
+                ],
+                "surface_n_near_mid_far": [
+                  1089,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": 0.6801980198019802,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -1.5395778364116095,
+                  32.3125
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -1.2601572739187419,
+                  32.3125
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  1.6345270890725436,
+                  2.67621359223301,
+                  -0.6801980198019802
+                ],
+                "surface_n_near_mid_far": [
+                  1089,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": -0.6801980198019802,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -32.3125,
+                  1.5395778364116095
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -32.3125,
+                  1.2601572739187419
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 1010,
+                "p_discovery_gt_0": 0.48514851485148514,
+                "p_eq_0": 0.007920792079207921,
+                "p_reversion_gt_0": 0.5069306930693069
+              }
+            }
+          }
+        },
+        {
+          "horizon": 300,
+          "n_analysis": 3129,
+          "n_dropped_outcome_nan": 1542,
+          "n_dropped_flat_position_B": 1542,
+          "n_dropped_session_boundary": 0,
+          "corr_signD_signPositionB": 0.5638669655966553,
+          "variants": {
+            "as_specified": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  1.7713498622589532,
+                  8.298543689320388,
+                  -7.038118811881188
+                ],
+                "surface_n_near_mid_far": [
+                  1089,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": -7.038118811881188,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -69.59375,
+                  9.918181818181818
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -69.59375,
+                  13.331111111111111
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": true
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  -1.7713498622589532,
+                  -8.298543689320388,
+                  7.038118811881188
+                ],
+                "surface_n_near_mid_far": [
+                  1089,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": 7.038118811881188,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -9.918181818181818,
+                  69.59375
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -13.331111111111111,
+                  69.59375
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": true
+              },
+              "continuation_prob_far": {
+                "n_far": 1010,
+                "p_discovery_gt_0": 0.500990099009901,
+                "p_eq_0": 0.0,
+                "p_reversion_gt_0": 0.499009900990099
+              }
+            },
+            "position_direction_corrected": {
+              "Q_reversion": {
+                "monotonic_surface_near_mid_far": [
+                  -3.117539026629936,
+                  -9.72378640776699,
+                  -1.0094059405940594
+                ],
+                "surface_n_near_mid_far": [
+                  1089,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": -1.0094059405940594,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -9.318601583113457,
+                  120.6875
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -8.186107470511141,
+                  120.6875
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "Q_discovery": {
+                "monotonic_surface_near_mid_far": [
+                  3.117539026629936,
+                  9.72378640776699,
+                  1.0094059405940594
+                ],
+                "surface_n_near_mid_far": [
+                  1089,
+                  1030,
+                  1010
+                ],
+                "far_mean_ticks": 1.0094059405940594,
+                "far_n": 1010,
+                "far_session_block_ci": [
+                  -120.6875,
+                  9.318601583113457
+                ],
+                "far_session_block_n_clusters": 3,
+                "far_trade_block_ci": [
+                  -120.6875,
+                  8.186107470511141
+                ],
+                "far_trade_block_n_clusters": 4,
+                "far_dual_clustered_significant": false,
+                "far_economically_relevant_vs_C1": false
+              },
+              "continuation_prob_far": {
+                "n_far": 1010,
+                "p_discovery_gt_0": 0.49207920792079207,
+                "p_eq_0": 0.0,
+                "p_reversion_gt_0": 0.5079207920792079
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "stress_tests_H60_position_direction_corrected_Q_reversion_far_tercile": {
+    "h_target": 60,
+    "rng_seed": 20260810,
+    "nboot": 1000,
+    "c1_cost_hurdle_ticks": 2.872,
+    "baseline": {
+      "discovery": {
+        "mean": 1.9113817013360392,
+        "n": 5913,
+        "session_ci": [
+          0.2716676256710934,
+          3.9922601812924188
+        ],
+        "session_n_clusters": 28,
+        "trade_ci": [
+          0.013765926676589517,
+          4.085986942159956
+        ],
+        "trade_n_clusters": 41,
+        "dual_significant": true,
+        "sign": "+",
+        "econ_relevant_vs_C1": false
+      },
+      "confirmation": {
+        "mean": 0.6801980198019802,
+        "n": 1010,
+        "session_ci": [
+          -1.5395778364116095,
+          32.3125
+        ],
+        "session_n_clusters": 3,
+        "trade_ci": [
+          -1.2601572739187419,
+          32.3125
+        ],
+        "trade_n_clusters": 4,
+        "dual_significant": false,
+        "sign": "+",
+        "econ_relevant_vs_C1": false
+      }
+    },
+    "remove_top3_most_influential_sessions": {
+      "discovery": {
+        "dropped_sessions": [
+          "20260220",
+          "20251029",
+          "20251117"
+        ],
+        "mean": 0.9200808377732868,
+        "n": 5443,
+        "session_ci": [
+          -0.5206241169943425,
+          2.608834829932338
+        ],
+        "session_n_clusters": 25,
+        "trade_ci": [
+          -0.5038300521146286,
+          2.641423874529318
+        ],
+        "trade_n_clusters": 37,
+        "dual_significant": false,
+        "sign": "+",
+        "econ_relevant_vs_C1": false
+      }
+    },
+    "leave_one_session_out": {
+      "discovery": {
+        "n_sessions_iterated": 28,
+        "recomputed_mean_min": 1.3665765765765765,
+        "recomputed_mean_max": 2.283003597122302,
+        "recomputed_mean_median": 1.8816407716261625,
+        "n_sign_flips_to_negative": 0,
+        "n_still_dual_significant": 27,
+        "per_session": [
+          {
+            "held_out_session": "20250814",
+            "n_removed": 8,
+            "mean": 1.8922099915325994,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.12666340868397724,
+              3.929267798701349
+            ],
+            "trade_ci": [
+              0.20166867366643168,
+              4.002240575388522
+            ]
+          },
+          {
+            "held_out_session": "20250820",
+            "n_removed": 363,
+            "mean": 2.0792792792792794,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.22170041954629074,
+              4.163374872213499
+            ],
+            "trade_ci": [
+              0.16175351252470024,
+              4.166880903225284
+            ]
+          },
+          {
+            "held_out_session": "20250905",
+            "n_removed": 241,
+            "mean": 2.040021156558533,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.22227499780078414,
+              4.115650116855016
+            ],
+            "trade_ci": [
+              0.3243567075733931,
+              4.402902031390491
+            ]
+          },
+          {
+            "held_out_session": "20250910",
+            "n_removed": 186,
+            "mean": 1.8425877422734416,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.11067662784111651,
+              3.879091028163735
+            ],
+            "trade_ci": [
+              0.08503137403363986,
+              4.1772843488332265
+            ]
+          },
+          {
+            "held_out_session": "20251002",
+            "n_removed": 5,
+            "mean": 1.8904874746106974,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.19644686213260867,
+              3.8462217416865103
+            ],
+            "trade_ci": [
+              0.21152545099904044,
+              4.144734337336793
+            ]
+          },
+          {
+            "held_out_session": "20251009",
+            "n_removed": 156,
+            "mean": 1.8353309015112038,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.13766898570068514,
+              3.8462217416865103
+            ],
+            "trade_ci": [
+              0.09993390219364973,
+              4.149042662152316
+            ]
+          },
+          {
+            "held_out_session": "20251029",
+            "n_removed": 46,
+            "mean": 1.6982273734446907,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.049737756222785694,
+              3.608457091035771
+            ],
+            "trade_ci": [
+              0.07969302664691587,
+              3.7963539371690795
+            ]
+          },
+          {
+            "held_out_session": "20251117",
+            "n_removed": 61,
+            "mean": 1.719753930280246,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.05502417466993349,
+              3.6864741133867036
+            ],
+            "trade_ci": [
+              0.09200346449853847,
+              3.7782245053964116
+            ]
+          },
+          {
+            "held_out_session": "20251124",
+            "n_removed": 107,
+            "mean": 1.7415604547020325,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.07063228707769317,
+              3.7307319569494934
+            ],
+            "trade_ci": [
+              0.06750544806046328,
+              3.905427775204096
+            ]
+          },
+          {
+            "held_out_session": "20251209",
+            "n_removed": 19,
+            "mean": 1.8809806582965727,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.15029246321252862,
+              3.9373311873243844
+            ],
+            "trade_ci": [
+              0.21202049096255102,
+              4.052101319186855
+            ]
+          },
+          {
+            "held_out_session": "20260123",
+            "n_removed": 309,
+            "mean": 1.984386152748037,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.15067682675405283,
+              4.164254600381474
+            ],
+            "trade_ci": [
+              0.21707465769637013,
+              4.259829157928094
+            ]
+          },
+          {
+            "held_out_session": "20260206",
+            "n_removed": 202,
+            "mean": 2.16634564874803,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.4351256259469681,
+              4.2822324295923435
+            ],
+            "trade_ci": [
+              0.433230033701541,
+              4.356525214741206
+            ]
+          },
+          {
+            "held_out_session": "20260211",
+            "n_removed": 55,
+            "mean": 1.8187948105155343,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.012814706074989444,
+              3.8856974926279135
+            ],
+            "trade_ci": [
+              0.09787338518299435,
+              3.850963930466697
+            ]
+          },
+          {
+            "held_out_session": "20260218",
+            "n_removed": 353,
+            "mean": 2.283003597122302,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.555065667391,
+              4.3564878558101485
+            ],
+            "trade_ci": [
+              0.5809473152941237,
+              4.50415720316355
+            ]
+          },
+          {
+            "held_out_session": "20260220",
+            "n_removed": 363,
+            "mean": 1.3665765765765765,
+            "sign": "+",
+            "dual_significant": false,
+            "session_ci": [
+              0.02246122558305141,
+              3.3665749453989897
+            ],
+            "trade_ci": [
+              -0.11427660659188071,
+              3.322082761921062
+            ]
+          },
+          {
+            "held_out_session": "20260223",
+            "n_removed": 159,
+            "mean": 2.0662148070907196,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.4325202164852848,
+              4.4801800033373
+            ],
+            "trade_ci": [
+              0.2714511014925393,
+              4.179520433291186
+            ]
+          },
+          {
+            "held_out_session": "20260303",
+            "n_removed": 486,
+            "mean": 2.2681960567532706,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.5556771334581934,
+              4.757773952791503
+            ],
+            "trade_ci": [
+              0.5671273687737445,
+              4.4317642308876675
+            ]
+          },
+          {
+            "held_out_session": "20260312",
+            "n_removed": 180,
+            "mean": 1.7516134658991802,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.18991528883343423,
+              4.222409016651255
+            ],
+            "trade_ci": [
+              0.08836013062011454,
+              3.818226709609169
+            ]
+          },
+          {
+            "held_out_session": "20260317",
+            "n_removed": 151,
+            "mean": 1.851266921207914,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.1928694336148027,
+              4.384054344267922
+            ],
+            "trade_ci": [
+              0.10173449962555982,
+              4.056602427854591
+            ]
+          },
+          {
+            "held_out_session": "20260320",
+            "n_removed": 403,
+            "mean": 2.197277676950998,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.43749656660378095,
+              4.773705362110821
+            ],
+            "trade_ci": [
+              0.32440139855084105,
+              4.355179071482149
+            ]
+          },
+          {
+            "held_out_session": "20260406",
+            "n_removed": 35,
+            "mean": 1.8006124532153793,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.18049857166582117,
+              4.096391290270523
+            ],
+            "trade_ci": [
+              0.08200473802581297,
+              3.9982175361239145
+            ]
+          },
+          {
+            "held_out_session": "20260409",
+            "n_removed": 468,
+            "mean": 2.1121212121212123,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.3172418943541001,
+              4.432494597950707
+            ],
+            "trade_ci": [
+              0.2879070249330007,
+              4.41479319889024
+            ]
+          },
+          {
+            "held_out_session": "20260417",
+            "n_removed": 94,
+            "mean": 1.796270836913559,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.16021918982718691,
+              3.9900325463959017
+            ],
+            "trade_ci": [
+              0.09851302379635438,
+              4.003539484864049
+            ]
+          },
+          {
+            "held_out_session": "20260423",
+            "n_removed": 263,
+            "mean": 1.8823008849557523,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.17500270263125678,
+              4.247962738570531
+            ],
+            "trade_ci": [
+              0.12905847201149018,
+              4.263871187294119
+            ]
+          },
+          {
+            "held_out_session": "20260428",
+            "n_removed": 287,
+            "mean": 1.793992179168148,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.1439619694635103,
+              4.138203353349267
+            ],
+            "trade_ci": [
+              0.13744237961743666,
+              4.084235865467648
+            ]
+          },
+          {
+            "held_out_session": "20260506",
+            "n_removed": 185,
+            "mean": 2.0703561452513966,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.34788737545930787,
+              4.24965100282872
+            ],
+            "trade_ci": [
+              0.31583825325794274,
+              4.193391457993103
+            ]
+          },
+          {
+            "held_out_session": "20260519",
+            "n_removed": 496,
+            "mean": 1.9739708325641498,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.15755702935893295,
+              4.3010747223157715
+            ],
+            "trade_ci": [
+              0.18365596665560574,
+              4.252811282428962
+            ]
+          },
+          {
+            "held_out_session": "20260520",
+            "n_removed": 232,
+            "mean": 1.7778560112656223,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              0.11159805573616455,
+              3.9278806451647967
+            ],
+            "trade_ci": [
+              0.07396578853433759,
+              4.1321186591289925
+            ]
+          }
+        ]
+      },
+      "confirmation": {
+        "n_sessions_iterated": 3,
+        "recomputed_mean_min": -0.35480572597137017,
+        "recomputed_mean_max": 7.357142857142857,
+        "recomputed_mean_median": -0.16835443037974684,
+        "n_sign_flips_to_negative": 2,
+        "n_still_dual_significant": 1,
+        "per_session": [
+          {
+            "held_out_session": "20260217",
+            "n_removed": 32,
+            "mean": -0.35480572597137017,
+            "sign": "-",
+            "dual_significant": false,
+            "session_ci": [
+              -1.5395778364116095,
+              3.727272727272727
+            ],
+            "trade_ci": [
+              -1.5395778364116095,
+              3.727272727272727
+            ]
+          },
+          {
+            "held_out_session": "20260302",
+            "n_removed": 758,
+            "mean": 7.357142857142857,
+            "sign": "+",
+            "dual_significant": true,
+            "session_ci": [
+              3.727272727272727,
+              32.3125
+            ],
+            "trade_ci": [
+              3.727272727272727,
+              41.1
+            ]
+          },
+          {
+            "held_out_session": "20260422",
+            "n_removed": 220,
+            "mean": -0.16835443037974684,
+            "sign": "-",
+            "dual_significant": false,
+            "session_ci": [
+              -1.5395778364116095,
+              32.3125
+            ],
+            "trade_ci": [
+              -1.5395778364116095,
+              41.1
+            ]
+          }
+        ]
+      }
+    },
+    "volatility_regime_median_split": {
+      "vol_proxy_definition": "session realized range (max(mid_last_t)-min(mid_last_t)) in ticks, all rows of that session in clean_decision_outcomes.parquet; identical definition to 05_stress_M2M3__far_tercile_reversion_toward_runni.py's A4.",
+      "median_ticks": 4388.0,
+      "n_sessions_hi": 18,
+      "n_sessions_lo": 18,
+      "hi_vol": {
+        "mean": 0.9547325102880658,
+        "n": 4617,
+        "session_ci": [
+          -0.9998741664158506,
+          3.587045094903324
+        ],
+        "session_n_clusters": 17,
+        "trade_ci": [
+          -0.9796713852844455,
+          3.4706681140712217
+        ],
+        "trade_n_clusters": 27,
+        "dual_significant": false,
+        "sign": "+",
+        "econ_relevant_vs_C1": false
+      },
+      "lo_vol": {
+        "mean": 5.319444444444445,
+        "n": 1296,
+        "session_ci": [
+          2.9983974358974357,
+          9.883417706275457
+        ],
+        "session_n_clusters": 11,
+        "trade_ci": [
+          2.763217583413272,
+          10.036224675311912
+        ],
+        "trade_n_clusters": 14,
+        "dual_significant": true,
+        "sign": "+",
+        "econ_relevant_vs_C1": true
+      }
+    }
+  }
+}

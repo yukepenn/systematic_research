@@ -1,0 +1,168 @@
+run_id: AUCTION04_CLEAN_CAUSAL_SUBSTRATE
+family: Auction (strictly event-time-correct causal substrate rebuild)
+information_class: NQ_VOLUME_AT_PRICE
+date_frozen: 2026-08-10
+status: data-integrity replication, no new alpha trial, no trading policy this pass
+
+# ---------------------------------------------------------------------------
+# Why this run exists
+# ---------------------------------------------------------------------------
+motivation: >
+  AUCTION03_MECHANISM_DECOMPOSITION/REPORT.md sec6 disclosed two data-integrity
+  defects in decision_outcomes(_CONFIRM).parquet, both traced to pre-existing
+  infrastructure (build_grid1s.py / build_sechilo.py), not introduced by AUCTION03:
+    (1) units bug: on-disk abs/signed_markout_H, mfe_H, mae_H, range_H are exactly
+        4x too large.
+    (2) small inherited lookahead bias in value_dist_ticks's 'last'-price numerator
+        (0-16 ticks measured across 9 spot checks, not proven negligible in
+        aggregate).
+  This run rebuilds a clean substrate that fixes exactly these two defects, from
+  raw per-trade data, over the IDENTICAL decision-point set AUCTION01/W5 used --
+  same sample, corrected values, nothing else changed.
+
+# ---------------------------------------------------------------------------
+# Root cause (confirmed by direct code inspection, not assumed)
+# ---------------------------------------------------------------------------
+defect_1_units_bug:
+  root_cause: >
+    research/scalping_lab/src/python/build_sechilo.py line 27 stores
+    mid_last/mid_high/mid_low ALREADY in TICK units: `mid = price / 0.25`.
+    AUCTION01's 03_diagnostics.py (and W5's byte-identical
+    02_diagnostics_confirmation.py) then compute
+    `abs(end_mid - mid_last_t) / TICK` -- dividing an already-tick-scaled
+    DIFFERENCE by TICK=0.25 again, i.e. multiplying by 1/0.25 = 4.
+  fix: >
+    Since both operands are already tick counts, their difference IS already in
+    ticks -- this script does not divide the mid difference by TICK a second time.
+  verification: >
+    02_unit_tests.py T3 reproduces the ORIGINAL buggy formula on this run's own
+    mid series and confirms it lands at exactly 4.0x the corrected value, matched
+    against the frozen runs/AUCTION01_VALUE_STATE/out/decision_outcomes.parquet
+    row-for-row (27,299/27,299 rows, atol=1e-6). Independently, T1's 20 markout
+    spot checks compute dollars_1NQ directly from raw price points (bypassing the
+    ticks column entirely) and confirm it equals pipeline_ticks * $5.00/tick
+    (0.25pt/tick * $20/pt, NQ direct point value per BASELINE_MODELS.md line 530).
+defect_2_lookahead:
+  root_cause: >
+    research/scalping_lab/src/python/build_grid1s.py lines 21-25: `last` is built
+    via `df["time"].dt.floor("1s")` then `.last()` within each bucket -- a bucket
+    labeled T aggregates trades in [T,T+1), so a row labeled T can reflect a trade
+    up to ~1s AFTER T. AUCTION01's value_dist_ticks used this `last` column as its
+    numerator.
+  fix: >
+    This script never reads grid1s's `last` column or poc_1s_full.parquet's
+    poc_price at all. causal_last_t and causal_running_POC_t are rebuilt directly
+    from raw bip==0 trade prints (research/scalping_lab/substrate/raw/NQ/*.parquet)
+    with a strict timestamp<=t causal cutoff enforced by searchsorted
+    (causal_lookup()) -- exact, not approximate.
+  verification: >
+    02_unit_tests.py T2 independently re-derives causal_last_t and the running
+    POC for 10 spot checks via a brute-force, dict-based (non-vectorized)
+    re-implementation of the algorithm, strictly filtered to trades with
+    time<=t, and asserts a lookahead violation would raise (last_time_used<=t
+    checked in code). All 10/10 match the pipeline's value_dist_ticks and
+    poc_share exactly.
+  measured_effect: >
+    Comparing this run's value_dist_ticks against the original (defective)
+    decision_outcomes.parquet's value_dist_ticks over the full 27,299-row
+    discovery set: 87.4% of rows differ, median |diff|=3 ticks, mean=4.6 ticks,
+    max=916 ticks (a single outlier, likely a fast-market POC-boundary crossing
+    within the ~1s window). Confirms AUCTION03's disclosed 0-16-tick spot-check
+    range was NOT representative of the tail, though still small relative to the
+    555-1033-tick tercile-defining scale AUCTION03 judged it against.
+
+# ---------------------------------------------------------------------------
+# What was deliberately NOT rebuilt (in-scope decision, not an oversight)
+# ---------------------------------------------------------------------------
+scope_boundary: >
+  mid_last_t and the forward markout/mfe/mae/range outcome series are still
+  sourced from research/scalping_lab/substrate/sechilo/NQ/*.parquet (BBO mid,
+  bip in {1,2}), using the same continuous-1s-grid + ffill-through-gaps
+  aggregation as the original build. That aggregation method itself was never
+  named as either of the two disclosed defects -- only the arithmetic
+  (defect 1) and the trade-price/POC causality (defect 2) were. Per the task's
+  explicit instruction not to change anything else without documenting why:
+  sechilo's own bucket-labeled-by-start convention carries the same kind of
+  ~1s ambiguity as grid1s's `last` column, but rebuilding the entire BBO/mid
+  pipeline from scratch was out of scope for a "fix exactly these two defects"
+  replication and was not requested for the outcome (forward-looking, not
+  decision-time) columns. Flagged here for any future pass that wants a fully
+  causal outcome series too.
+
+# ---------------------------------------------------------------------------
+# Decision-point set (identical to AUCTION01 / W5, not re-derived)
+# ---------------------------------------------------------------------------
+decision_points:
+  source: >
+    runs/AUCTION01_VALUE_STATE/out/decision_points_30s.parquet (discovery, 36
+    contributing sessions of 37 permitted -- 20250902 contributes 0, matching
+    the original's own behaviour) and
+    runs/W5_PROTECTED_CONFIRMATION/results/out/decision_points_30s_CONFIRM.parquet
+    (confirmation, 6 contributing sessions of 8 permitted -- 20251125 and
+    20260512 have zero RTH-liquid decision points, matching AUCTION03's
+    disclosed count). (sess_tag,time) pairs are read directly from these frozen
+    files, not re-derived from the RTH+liquidity filter description in
+    AUCTION01's spec.yaml, to guarantee sample identity. Verified identical
+    (set equality) in 02_unit_tests.py T4 and in the build script's own
+    integrity assertion.
+  filter_reference_only: >
+    RTH [09:30,16:00) ET AND trailing-60s(bid_upd+ask_upd)>0, sampled every 30s
+    (per AUCTION01_VALUE_STATE/spec.yaml's decision_points section) -- this is
+    the filter that PRODUCED the frozen files above; not re-applied here.
+
+# ---------------------------------------------------------------------------
+# Units (explicit, per task instruction)
+# ---------------------------------------------------------------------------
+units:
+  tick_size: 0.25 (NQ)
+  point_value_usd: 20.00 (NQ direct, not MNQ-scaled -- BASELINE_MODELS.md line 530:
+    "Point value $20/pt, tick $5.00 (NQ direct, not MNQ-scaled).")
+  dollar_per_tick: 5.00 (= 0.25 * 20)
+  output_column_units: >
+    All *_ticks_* columns (value_dist_ticks, poc_migration_60s_ticks,
+    abs_markout_ticks_H, range_ticks_H, signed_markout_ticks_H, mfe_ticks_H,
+    mae_ticks_H) are in ticks. mid_last_t is in ticks (sechilo's own convention,
+    preserved unchanged -- a plain reference price, not a markout). points =
+    ticks * 0.25; dollars_1NQ = points * 20 = ticks * 5.00. These conversions
+    are verified (not merely asserted) in 02_unit_tests.py T1, computed directly
+    from raw price points, independent of the pipeline's own ticks column.
+
+# ---------------------------------------------------------------------------
+# Governance
+# ---------------------------------------------------------------------------
+governance:
+  permitted_sessions: >
+    45 = 37 discovery + 8 confirmation-pool (6 with usable RTH BBO). Only
+    research/scalping_lab/substrate/{raw,sechilo}/NQ/s<tag>.parquet for tag in
+    this set are read, plus the two frozen reference files named above
+    (read-only). No file under runs/AUCTION01_VALUE_STATE/,
+    runs/AUCTION02_ACTION_RELEVANCE/, runs/AUCTION03_MECHANISM_DECOMPOSITION/,
+    or runs/W5_PROTECTED_CONFIRMATION/ is modified. Nothing >=2026-08-01. None
+    of the 160 still-protected AMENDMENT_3 confirmation-pool sessions touched.
+    Verified in 02_unit_tests.py T5.
+
+# ---------------------------------------------------------------------------
+# Outputs
+# ---------------------------------------------------------------------------
+outputs:
+  clean_decision_outcomes.parquet: 27,299 rows x 23 cols, 36 sessions (discovery)
+  clean_decision_outcomes_CONFIRM.parquet: 4,680 rows x 23 cols, 6 sessions (confirmation)
+  schema: >
+    sess_tag, time, poc_share, value_dist_ticks, poc_migration_60s_ticks,
+    position_B, M, mid_last_t, and for H in {15,60,300}: abs_markout_ticks_H,
+    range_ticks_H, signed_markout_ticks_H, mfe_ticks_H, mae_ticks_H.
+  NaN_pattern: >
+    Identical to the original decision_outcomes.parquet at every horizon
+    (signed/mfe/mae NaN when position_B==0 [flat]; abs_markout/range NaN only
+    near session end when the forward window cannot be filled) -- confirms no
+    unexpected new gaps were introduced.
+
+# ---------------------------------------------------------------------------
+# Unit tests (02_unit_tests.py) -- all independent of the build script's own functions
+# ---------------------------------------------------------------------------
+unit_tests: >
+  T1 (20 markout/points/dollars spot checks vs raw BBO price differences) +
+  T1b (5 range/mfe/mae full-window reconstructions) + T2 (10 causal_last_t/POC
+  brute-force spot checks) + T3 (defect-1 4x regression check, 27,299/27,299
+  rows) + T4 (decision-point-set identity) + T5 (governance) = 115 checks,
+  115 passed, 0 failed.

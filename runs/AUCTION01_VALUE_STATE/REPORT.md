@@ -242,3 +242,21 @@ Neither defect changes this report's own D4/D6 qualitative conclusions (the corr
 already reflected #1; #2 is small relative to the effect sizes reported above). Not fixed in this
 file's own `out/` (frozen run artifact, per campaign convention) — flagged here as an erratum for
 any future consumer.
+
+## [ADDENDUM 2026-08-10 — AUCTION03's "poc_price is exactly causal" claim was WRONG, falsified by AUCTION04]
+
+The addendum immediately above states "`poc_price` itself — the dominant term — is exactly causal
+(0 bias at every [spot check]...)," a claim AUCTION03 made from 9 manual spot checks.
+`runs/AUCTION04_CLEAN_CAUSAL_SUBSTRATE/`'s automated causality audit — 378 independently
+recomputed timestamps, not 9 manual ones — **falsified this claim**: 1/378 checks found a genuine,
+mechanistically-confirmed lookahead leak in `poc_price` itself (`20260220 15:59:30`: stored
+`poc_price=25060.0` vs. a strict `time<=t` recompute of `25045.0`, a −60 tick / −$300-per-contract
+difference), root-caused to the exact same `grid1s`-style `[t,t+1)` window-labeling defect already
+disclosed for the `last`-price numerator — now shown to also reach the POC component, at low
+(~0.26% in the audited sample) but non-negligible-when-it-occurs frequency. This is a real
+correction to the addendum above, not a restatement of it: "the dominant term is exactly causal"
+should be read as "found causal in a small manual sample, later shown to leak rarely under a much
+larger automated audit." `AUCTION04_CLEAN_CAUSAL_SUBSTRATE`'s own rebuilt `causal_running_POC_t`
+is unaffected (0/378 violations, independently re-verified via strict `searchsorted` cutoffs) and
+should be treated as the trustworthy version going forward. Not fixed in this file's own `out/`
+(frozen run artifact) — flagged here as a second erratum.

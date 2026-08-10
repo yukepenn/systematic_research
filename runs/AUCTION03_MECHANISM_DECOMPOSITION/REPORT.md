@@ -145,6 +145,23 @@ changes as a result — the affected quantities were already qualitatively direc
 with the uncorrected numbers where checked, and no prior promotion decision rested on the specific
 now-corrected magnitudes.
 
+## [ADDENDUM 2026-08-10 — this report's own §6 claim that poc_price is "exactly causal" was WRONG]
+
+§6 above states `poc_price` itself was "independently proven exactly causal" via 9 manual spot
+checks across the stress-test passes. `runs/AUCTION04_CLEAN_CAUSAL_SUBSTRATE/`'s automated
+causality audit (378 independently recomputed timestamps, not 9) **falsified this claim**: found 1
+genuine lookahead leak in `poc_price` (−60 ticks at `20260220 15:59:30`), same root cause as the
+already-disclosed `last`-price defect, occurring at ~0.26% frequency in the audited sample — rare
+enough that 9 manual spot checks plausibly missed it, but real. This is the expected lesson of
+moving from manual spot-checking to a large automated audit (per the structural-invariance
+campaign's own sec9 instruction), not a contradiction of this report's other findings — none of
+§3–5's headline conclusions above changed when re-run on the fully-corrected substrate (see
+`AUCTION04_OLD_VS_CLEAN.md`: M2/M3 lands CASE B — same sign/robustness pattern, magnitude divides
+by the disclosed ~4x units-bug factor, and the corrected H=60 magnitude (1.911 ticks) now falls
+**below** the 2.872-tick C1 cost hurdle, an important correction to §3's economic-relevance framing
+above, which compared the OLD 4x-inflated tick values against that same hurdle; M5 lands CASE A,
+essentially unchanged, confirming it is real signal and not a lookahead artifact).
+
 ## 7. Classification (directive taxonomy)
 
 - **M2/M3 reversion:** `RISK_STATE`-leaning, not `DIRECTIONAL_ALPHA` — near-50% hit rate means

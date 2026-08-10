@@ -1,0 +1,77 @@
+==============================================================================
+STEP A: rebuilding causally-correct value_dist_ticks/abs_value_dist_ticks
+==============================================================================
+[discovery] rows in date range: 13064, analysis_ok: 4375
+[discovery] sessions needing raw-trade causal rebuild: 36: ['20250814', '20250820', '20250901', '20250905', '20250910', '20250911', '20250922', '20251002', '20251009', '20251027', '20251029', '20251110', '20251117', '20251124', '20251128', '20251209', '20251222', '20260123', '20260206', '20260211', '20260218', '20260220', '20260223', '20260303', '20260312', '20260317', '20260320', '20260406', '20260409', '20260417', '20260423', '20260428', '20260506', '20260511', '20260519', '20260520']
+[discovery] clean predictor built: 4375/4375 analysis_ok rows got a non-NaN causal value_dist_ticks (0 NaN -- session missing raw data or decision point before session's first print; these rows drop out of dropna() downstream exactly like any other NaN predictor row would have) | sessions with no raw file: 0
+[confirmation] rows in date range: 2787, analysis_ok: 673
+[confirmation] sessions needing raw-trade causal rebuild: 6: ['20250819', '20250912', '20251028', '20260217', '20260302', '20260422']
+[confirmation] clean predictor built: 673/673 analysis_ok rows got a non-NaN causal value_dist_ticks (0 NaN -- session missing raw data or decision point before session's first print; these rows drop out of dropna() downstream exactly like any other NaN predictor row would have) | sessions with no raw file: 0
+[discovery] analysis_ok rows carried into regression: 4375 (dates=['20250814', '20250820', '20250901', '20250905', '20250910', '20250911', '20250922', '20251002', '20251009', '20251027', '20251029', '20251110', '20251117', '20251124', '20251128', '20251209', '20251222', '20260123', '20260206', '20260211', '20260218', '20260220', '20260223', '20260303', '20260312', '20260317', '20260320', '20260406', '20260409', '20260417', '20260423', '20260428', '20260506', '20260511', '20260519', '20260520'])
+[confirmation] analysis_ok rows carried into regression: 673 (dates=['20250819', '20250912', '20251028', '20260217', '20260302', '20260422'])
+[diagnostic] discovery abs_value_dist_ticks clean-vs-original: n=4375, median|diff|=3.000t, mean|diff|=5.134t, max|diff|=360.000t, pct_rows_changed=89.3%
+
+==============================================================================
+STEP B: M5 OLS-controlled top-vs-bottom-tercile effect (clean predictor)
+==============================================================================
+[discovery] product A: n=4374, trade_blocks=89, sessions=36
+[discovery] A H=1: raw_diff=-3.7319t (sess_CI=[-10.751998064198467, 2.649719939801595], trade_CI=[-10.02994126849484, 2.404692181181611]) | controlled_effect=-6.1662t (sess_CI=[-15.0997, -0.4326], trade_CI=[-14.2538, -0.6708]) | beta=-0.011123t/tick | dual_sig=True dir=deterioration
+[discovery] A H=3: raw_diff=-12.7880t (sess_CI=[-28.490195760940594, 2.4926433947597846], trade_CI=[-28.42310511020781, 0.8317662123603283]) | controlled_effect=-17.7689t (sess_CI=[-35.7208, -3.8013], trade_CI=[-37.915, -4.0678]) | beta=-0.032052t/tick | dual_sig=True dir=deterioration
+[discovery] A H=20: raw_diff=-62.3225t (sess_CI=[-134.91818960163286, 10.292506605161114], trade_CI=[-137.12937284968214, 6.485048690506516]) | controlled_effect=-78.4146t (sess_CI=[-162.1969, -15.0793], trade_CI=[-153.7284, -11.5488]) | beta=-0.141447t/tick | dual_sig=True dir=deterioration
+[discovery] product B: n=2786, trade_blocks=47, sessions=31
+[discovery] B H=1: raw_diff=-5.8108t (sess_CI=[-14.033852449583932, 2.137778053715017], trade_CI=[-14.378326990104158, 1.4069478855395836]) | controlled_effect=-7.4726t (sess_CI=[-17.1368, -1.537], trade_CI=[-18.0045, -0.9442]) | beta=-0.012061t/tick | dual_sig=True dir=deterioration
+[discovery] B H=3: raw_diff=-14.3807t (sess_CI=[-32.251230436680046, 2.947237902856592], trade_CI=[-31.647888872157306, 2.2250068818384503]) | controlled_effect=-21.6529t (sess_CI=[-42.8022, -6.5885], trade_CI=[-45.0349, -5.8165]) | beta=-0.034948t/tick | dual_sig=True dir=deterioration
+[discovery] B H=20: raw_diff=-55.7248t (sess_CI=[-136.1628749604356, 20.54632006427304], trade_CI=[-136.08037627907305, 14.729897170366064]) | controlled_effect=-89.8785t (sess_CI=[-177.8403, -9.0678], trade_CI=[-187.1332, -9.5355]) | beta=-0.145066t/tick | dual_sig=True dir=deterioration
+[confirmation] product A: n=673, trade_blocks=16, sessions=6
+[confirmation] A H=1: raw_diff=-3.6095t (sess_CI=[-18.110500399777692, 5.044898795254513], trade_CI=[-38.14035299124959, 7.1371949766521325]) | controlled_effect=-14.3428t (sess_CI=[-54.7823, -4.1791], trade_CI=[-50.4489, 6.83]) | beta=-0.014470t/tick | dual_sig=False dir=null
+[confirmation] A H=3: raw_diff=-8.4392t (sess_CI=[-43.964652747181724, 16.043903527874562], trade_CI=[-64.65641417406123, 23.180260232607434]) | controlled_effect=-32.3488t (sess_CI=[-155.4734, 6.7721], trade_CI=[-115.9688, 29.9763]) | beta=-0.032636t/tick | dual_sig=False dir=null
+[confirmation] A H=20: raw_diff=-52.9709t (sess_CI=[-242.0885004185178, 71.23913262762618], trade_CI=[-285.78404819315665, 128.2639541057574]) | controlled_effect=-178.7870t (sess_CI=[-537.8399, -3.8416], trade_CI=[-614.1911, 292.1262]) | beta=-0.180372t/tick | dual_sig=False dir=null
+[confirmation] product B: n=522, trade_blocks=7, sessions=5
+[confirmation] B H=1: raw_diff=-3.4598t (sess_CI=[-108.98086124401914, 11.11092530657748], trade_CI=[-109.74968365253078, 10.842580835756563]) | controlled_effect=-11.9156t (sess_CI=[-63.1401, 9.8736], trade_CI=[-65.371, 11.4842]) | beta=-0.011550t/tick | dual_sig=False dir=null
+[confirmation] B H=3: raw_diff=+0.7126t (sess_CI=[-209.57766990291262, 54.469481605351135], trade_CI=[-210.75714916098457, 42.037796610169494]) | controlled_effect=-31.4370t (sess_CI=[-181.7983, 42.9796], trade_CI=[-178.0195, 35.1715]) | beta=-0.030472t/tick | dual_sig=False dir=null
+[confirmation] B H=20: raw_diff=+14.5115t (sess_CI=[-641.3603603603603, 200.94819840287104], trade_CI=[-598.5786616161616, 179.15343281161296]) | controlled_effect=-22.9874t (sess_CI=[-600.5482, 395.5663], trade_CI=[-612.1339, 412.3978]) | beta=-0.022282t/tick | dual_sig=False dir=null
+
+==============================================================================
+STEP C: STRESS CHECKS (LOSO, remove-top-3, vol-regime split; discovery, both products)
+==============================================================================
+
+==============================================================================
+STRESS product A: LEAVE-ONE-SESSION-OUT (discovery, point estimates)
+==============================================================================
+[discovery,A] H=1: LOSO n=36/36 | full-sample=-6.166t | range=[-8.355,-4.468]t mean=-6.181t std=0.548t | sign-stable 36/36 (100.0%)
+[discovery,A] H=3: LOSO n=36/36 | full-sample=-17.769t | range=[-22.722,-14.188]t mean=-17.806t std=1.281t | sign-stable 36/36 (100.0%)
+[discovery,A] H=20: LOSO n=36/36 | full-sample=-78.415t | range=[-102.287,-66.823]t mean=-78.678t std=6.039t | sign-stable 36/36 (100.0%)
+[discovery,A] top-3 most-influential sessions (removing them weakens the finding most): ['20260220', '20251124', '20260423']
+[discovery,A,remove_top3=['20260220', '20251124', '20260423']] H=1: controlled_effect=-2.487t (full-sample -6.166t) | n_sessions=33 | sess_CI=[-7.579, 2.044] trade_CI=[-7.501, 2.526] | dual_sig=False
+[discovery,A,remove_top3=['20260220', '20251124', '20260423']] H=3: controlled_effect=-9.870t (full-sample -17.769t) | n_sessions=33 | sess_CI=[-23.947, 2.582] trade_CI=[-24.637, 4.21] | dual_sig=False
+[discovery,A,remove_top3=['20260220', '20251124', '20260423']] H=20: controlled_effect=-53.046t (full-sample -78.415t) | n_sessions=33 | sess_CI=[-124.686, 22.1] trade_CI=[-125.37, 25.611] | dual_sig=False
+[discovery,A] low-vol sessions (n=18): ['20250814', '20250820', '20250901', '20250905', '20250910', '20250911', '20250922', '20251002', '20251009', '20251027', '20251029', '20251128', '20251209', '20251222', '20260123', '20260409', '20260417', '20260428']
+[discovery,A] high-vol sessions (n=18): ['20251110', '20251117', '20251124', '20260206', '20260211', '20260218', '20260220', '20260223', '20260303', '20260312', '20260317', '20260320', '20260406', '20260423', '20260506', '20260511', '20260519', '20260520']
+[discovery,A,low_vol] H=1: controlled_effect=-3.114t | n=2071, n_sessions=18 | sess_CI=[-8.127, 0.049] trade_CI=[-9.345, 1.103] | dual_sig=False
+[discovery,A,low_vol] H=3: controlled_effect=-9.826t | n=2071, n_sessions=18 | sess_CI=[-29.517, 1.435] trade_CI=[-30.759, 2.939] | dual_sig=False
+[discovery,A,low_vol] H=20: controlled_effect=-13.060t | n=2045, n_sessions=18 | sess_CI=[-70.499, 38.576] trade_CI=[-80.614, 44.135] | dual_sig=False
+[discovery,A,high_vol] H=1: controlled_effect=-7.379t | n=2303, n_sessions=18 | sess_CI=[-21.466, 0.067] trade_CI=[-20.17, 0.243] | dual_sig=False
+[discovery,A,high_vol] H=3: controlled_effect=-20.821t | n=2303, n_sessions=18 | sess_CI=[-49.375, -1.031] trade_CI=[-51.765, -1.606] | dual_sig=True
+[discovery,A,high_vol] H=20: controlled_effect=-100.276t | n=2303, n_sessions=18 | sess_CI=[-236.679, -4.491] trade_CI=[-222.589, -7.951] | dual_sig=True
+
+==============================================================================
+STRESS product B: LEAVE-ONE-SESSION-OUT (discovery, point estimates)
+==============================================================================
+[discovery,B] H=1: LOSO n=31/31 | full-sample=-7.473t | range=[-9.426,-5.758]t mean=-7.484t std=0.602t | sign-stable 31/31 (100.0%)
+[discovery,B] H=3: LOSO n=31/31 | full-sample=-21.653t | range=[-24.991,-17.908]t mean=-21.673t std=1.407t | sign-stable 31/31 (100.0%)
+[discovery,B] H=20: LOSO n=31/31 | full-sample=-89.878t | range=[-115.588,-78.599]t mean=-89.895t std=6.974t | sign-stable 31/31 (100.0%)
+[discovery,B] top-3 most-influential sessions (removing them weakens the finding most): ['20260220', '20260206', '20251124']
+[discovery,B,remove_top3=['20260220', '20260206', '20251124']] H=1: controlled_effect=-3.299t (full-sample -7.473t) | n_sessions=28 | sess_CI=[-11.049, 3.214] trade_CI=[-12.716, 4.32] | dual_sig=False
+[discovery,B,remove_top3=['20260220', '20260206', '20251124']] H=3: controlled_effect=-12.012t (full-sample -21.653t) | n_sessions=28 | sess_CI=[-32.88, 3.488] trade_CI=[-33.05, 4.14] | dual_sig=False
+[discovery,B,remove_top3=['20260220', '20260206', '20251124']] H=20: controlled_effect=-53.009t (full-sample -89.878t) | n_sessions=28 | sess_CI=[-156.977, 45.467] trade_CI=[-158.981, 51.571] | dual_sig=False
+[discovery,B] low-vol sessions (n=16): ['20250814', '20250820', '20250905', '20250910', '20250911', '20250922', '20251002', '20251009', '20251029', '20251209', '20251222', '20260123', '20260211', '20260409', '20260417', '20260428']
+[discovery,B] high-vol sessions (n=15): ['20251117', '20251124', '20260206', '20260218', '20260220', '20260223', '20260303', '20260312', '20260317', '20260320', '20260406', '20260423', '20260506', '20260519', '20260520']
+[discovery,B,low_vol] H=1: controlled_effect=-4.559t | n=1320, n_sessions=16 | sess_CI=[-17.569, 0.602] trade_CI=[-16.919, 1.555] | dual_sig=False
+[discovery,B,low_vol] H=3: controlled_effect=-13.073t | n=1320, n_sessions=16 | sess_CI=[-41.61, -1.827] trade_CI=[-41.314, 1.858] | dual_sig=False
+[discovery,B,low_vol] H=20: controlled_effect=-33.699t | n=1320, n_sessions=16 | sess_CI=[-119.81, 19.352] trade_CI=[-127.797, 33.355] | dual_sig=False
+[discovery,B,high_vol] H=1: controlled_effect=-9.297t | n=1466, n_sessions=15 | sess_CI=[-25.226, -0.389] trade_CI=[-29.295, 0.946] | dual_sig=False
+[discovery,B,high_vol] H=3: controlled_effect=-27.029t | n=1466, n_sessions=15 | sess_CI=[-66.203, -1.445] trade_CI=[-66.604, -3.617] | dual_sig=True
+[discovery,B,high_vol] H=20: controlled_effect=-114.134t | n=1466, n_sessions=15 | sess_CI=[-267.98, 7.659] trade_CI=[-289.563, 1.855] | dual_sig=False
+
+Wrote D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\AUCTION04_CLEAN_CAUSAL_SUBSTRATE\out\m5_clean_action_value.csv
+Wrote D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\AUCTION04_CLEAN_CAUSAL_SUBSTRATE\out\m5_clean_action_value.json

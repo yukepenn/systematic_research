@@ -1,0 +1,69 @@
+[discovery(clean)] raw file: 27299 rows / 36 sessions. After explicit filter to the 37-date list: 27299 rows / 36 sessions. Listed dates absent from file: ['20250902']. Sessions in file but outside the list (dropped): [].
+[confirmation(clean)] raw file: 4680 rows / 6 sessions. After explicit filter to the 8-date list: 4680 rows / 6 sessions. Listed dates absent from file: ['20251125', '20260512']. Sessions in file but outside the list (dropped): [].
+====================================================================================================
+SECTION: sign/unit VERIFICATION of signed_markout_ticks_H (do not assume -- check)
+====================================================================================================
+[verify-1] Source inspection: runs/AUCTION04_CLEAN_CAUSAL_SUBSTRATE/src/01_build_clean_substrate.py line ~233-235 builds sm[i] = side[i] * (end_mid - base), side = sign(position_B) -- structurally IDENTICAL sign convention to AUCTION01's original side*(mid(t+H)-mid_last_t) formula (only the erroneous extra /TICK, defect 1, was removed -- sign was never touched).
+[verify-2] AUCTION04's OWN pre-existing independent unit test (runs/AUCTION04_CLEAN_CAUSAL_SUBSTRATE/src/02_unit_tests.py T1, line ~223-229) computes signed_indep = sign(position_B) * raw_price_diff / TICK directly from raw BBO prices (bypassing the pipeline entirely) and asserts equality with signed_markout_ticks_H -- confirmed PASS for all spot-checked rows in runs/AUCTION04_CLEAN_CAUSAL_SUBSTRATE/out/unit_test_log.txt (115/115 checks passed overall, T1 signed_markout_ticks_H sub-checks included). This is pre-existing, already-run, independent evidence that signed_markout_ticks_H == sign(position_B) * raw_price_diff.
+[verify-3:discovery] matched 27299 / 27299 clean rows to the frozen original file on (sess_tag, time) (position_B_clean vs position_B_ref identical: True).
+[verify-3:discovery] H=15: n_compared=16450, ratio(old/clean) median=4.0, n_ratio~=+4.0: 16450 (100.0%), n_ratio~=-4.0 (would indicate a SIGN FLIP): 0, n_other: 0
+[verify-3:discovery] H=60: n_compared=16564, ratio(old/clean) median=4.0, n_ratio~=+4.0: 16564 (100.0%), n_ratio~=-4.0 (would indicate a SIGN FLIP): 0, n_other: 0
+[verify-3:discovery] H=300: n_compared=16637, ratio(old/clean) median=4.0, n_ratio~=+4.0: 16637 (100.0%), n_ratio~=-4.0 (would indicate a SIGN FLIP): 0, n_other: 0
+[verify-3:confirmation] matched 4680 / 4680 clean rows to the frozen original file on (sess_tag, time) (position_B_clean vs position_B_ref identical: True).
+[verify-3:confirmation] H=15: n_compared=3058, ratio(old/clean) median=4.0, n_ratio~=+4.0: 3058 (100.0%), n_ratio~=-4.0 (would indicate a SIGN FLIP): 0, n_other: 0
+[verify-3:confirmation] H=60: n_compared=3096, ratio(old/clean) median=4.0, n_ratio~=+4.0: 3096 (100.0%), n_ratio~=-4.0 (would indicate a SIGN FLIP): 0, n_other: 0
+[verify-3:confirmation] H=300: n_compared=3123, ratio(old/clean) median=4.0, n_ratio~=+4.0: 3123 (100.0%), n_ratio~=-4.0 (would indicate a SIGN FLIP): 0, n_other: 0
+[verify-3] CONCLUSION: every matched nonzero row has ratio old/clean ~= +4.0 exactly (zero sign-flip or other-ratio rows across both samples, all horizons): True.
+VERIFICATION CONCLUSION (all 3 independent checks agree): signed_markout_ticks_H in the clean substrate is STILL position-B-direction-signed (same convention as the original, only the 4x units bug is fixed). The position_direction_corrected recovery (multiply by sign(position_B) again) is THEREFORE STILL REQUIRED -- the task's 'should already be raw-price-direction-signed' premise does not hold for this column, and no /4 unit correction is applied (units are already correct).
+====================================================================================================
+[check] recovery identity |signed_markout_ticks_H| == abs_markout_ticks_H verified exactly (wherever position_B!=0) for both samples, all horizons -- confirms scaling self-consistency (no residual 4x or other scale mismatch within the clean substrate itself).
+[terciles] discovery: dropped 65 D_t==0 rows, |D_t| tercile edges=[1.0, 102.0, 278.0, 1751.0]
+[terciles] confirmation: dropped 9 D_t==0 rows, |D_t| tercile edges=[1.0, 170.0, 558.333333333333, 1700.0]
+Sign stability discovery vs confirmation (position_direction_corrected):
+  reversion: NOT STABLE (sign flips between discovery and confirmation at >=1 horizon) -- H=15: discovery=+(0.896t) confirmation=-(-0.289t) DIFFERS; H=60: discovery=+(1.911t) confirmation=+(0.680t) SAME; H=300: discovery=+(7.340t) confirmation=-(-1.009t) DIFFERS
+  discovery: NOT STABLE (sign flips between discovery and confirmation at >=1 horizon) -- H=15: discovery=-(-0.896t) confirmation=+(0.289t) DIFFERS; H=60: discovery=-(-1.911t) confirmation=-(-0.680t) SAME; H=300: discovery=-(-7.340t) confirmation=+(1.009t) DIFFERS
+[stress-target-selection] Horizon(s) where discovery/confirmation Q_reversion sign AGREE on the clean substrate: [60]. AUCTION03's original finding on the defective substrate identified H=60 as the ONLY such horizon; stress tests below target H=60 for direct comparability regardless of which horizon(s) agree here (all horizons' raw numbers are still reported above for full transparency).
+====================================================================================================
+[stress baseline] discovery H=60 far (position_direction_corrected Q_reversion): mean=1.9114t session_CI=[0.2716676256710934, 3.9922601812924188] trade_CI=[0.013765926676589517, 4.085986942159956] n=5913 n_sess_clusters=28 dual_sig=True
+[stress baseline] confirmation H=60 far: mean=0.6802t session_CI=[-1.5395778364116095, 32.3125] trade_CI=[-1.2601572739187419, 32.3125] n=1010 n_sess_clusters=3 dual_sig=False
+[check] stress baseline EXACTLY matches the main-decomposition H=60 far cell above.
+[remove-top-3] discovery session influence ranking (most mean-reduction-if-removed first):
+             sum  count       mean  new_mean_if_removed  baseline_mean  drop_in_mean
+sess_tag                                                                            
+20260220  3717.5    363  10.241047             1.366577       1.911382      0.544805
+20251029  1338.5     46  29.097826             1.698227       1.911382      0.213154
+20251117  1238.0     61  20.295082             1.719754       1.911382      0.191628
+20251124  1190.5    107  11.126168             1.741560       1.911382      0.169821
+20260312  1260.0    180   7.000000             1.751613       1.911382      0.159768
+20260520  1202.0    232   5.181034             1.777856       1.911382      0.133526
+20260428  1209.0    287   4.212544             1.793992       1.911382      0.117390
+20260417   849.5     94   9.037234             1.796271       1.911382      0.115111
+20260406   718.0     35  20.514286             1.800612       1.911382      0.110769
+20260211   647.5     55  11.772727             1.818795       1.911382      0.092587
+20251009   736.0    156   4.717949             1.835331       1.911382      0.076051
+20250910   749.5    186   4.029570             1.842588       1.911382      0.068794
+20260317   635.0    151   4.205298             1.851267       1.911382      0.060115
+20251209   215.5     19  11.342105             1.880981       1.911382      0.030401
+20260423   667.0    263   2.536122             1.882301       1.911382      0.029081
+20251002   133.0      5  26.600000             1.890487       1.911382      0.020894
+20250814   128.5      8  16.062500             1.892210       1.911382      0.019172
+20260519   609.0    496   1.227823             1.973971       1.911382     -0.062589
+20260123   181.5    309   0.587379             1.984386       1.911382     -0.073004
+20250905  -269.0    241  -1.116183             2.040021       1.911382     -0.128639
+20260223  -587.0    159  -3.691824             2.066215       1.911382     -0.154833
+20260506  -557.0    185  -3.010811             2.070356       1.911382     -0.158974
+20250820  -238.0    363  -0.655647             2.079279       1.911382     -0.167898
+20260409  -198.5    468  -0.424145             2.112121       1.911382     -0.200740
+20260206 -1070.0    202  -5.297030             2.166346       1.911382     -0.254964
+20260320  -805.0    403  -1.997519             2.197278       1.911382     -0.285896
+20260303 -1007.5    486  -2.073045             2.268196       1.911382     -0.356814
+20260218 -1391.5    353  -3.941926             2.283004       1.911382     -0.371622
+[remove-top-3] discovery, drop ['20260220', '20251029', '20251117']: mean 1.911t -> 0.920t, dual_sig=False, sign=+
+[remove-top-3] confirmation skipped: only 3 far-contributing session(s) < 4 (dropping 3 would leave <1 session; not meaningful) -- matches 05_stress's own confirmation limitation (that script also only ran A1/single-session-drop for confirmation).
+[LOSO] discovery over 28 sessions: recomputed mean range [1.367, 2.283]t, median=1.882t, sign flips to negative in 0/28 removals, still dual-significant in 27/28 removals
+[LOSO] confirmation over 3 sessions: recomputed mean range [-0.355, 7.357]t, sign flips to negative in 2/3 removals, still dual-significant in 1/3 removals
+[vol-split] discovery session-range vol proxy (ticks): median=4388.0, hi-vol sessions=18, lo-vol sessions=18
+[vol-split] hi-vol half: mean=0.955t n=4617 sess_CI=[-0.9998741664158506, 3.587045094903324] trade_CI=[-0.9796713852844455, 3.4706681140712217] dual_sig=False
+[vol-split] lo-vol half: mean=5.319t n=1296 sess_CI=[2.9983974358974357, 9.883417706275457] trade_CI=[2.763217583413272, 10.036224675311912] dual_sig=True
+[write] D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\AUCTION04_CLEAN_CAUSAL_SUBSTRATE\out\m2m3_clean_decomposition.json
+[write] D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\AUCTION04_CLEAN_CAUSAL_SUBSTRATE\out\m2m3_clean_decomposition.csv
