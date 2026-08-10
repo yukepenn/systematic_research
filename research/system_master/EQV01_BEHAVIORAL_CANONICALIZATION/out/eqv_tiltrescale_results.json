@@ -1,0 +1,90 @@
+{
+  "test": "TiltRescale 0.9026 (actual) vs 0.91 (recalled/test) -- rounded+clipped output equivalence",
+  "constants": {
+    "TiltRescale_actual": 0.9026,
+    "TiltRescale_test": 0.91,
+    "TiltMult": 1.25,
+    "ShortHalf": 0.5
+  },
+  "divergence_check_sumNext_vs_T_sign": {
+    "claim": "sign(sumNext) never diverges from sign(T); sumNext==0 iff T==0",
+    "sumNext_domain_tested": [
+      -13,
+      13
+    ],
+    "divergences_found": 0,
+    "divergence_examples": [],
+    "verdict": "CONFIRMED_NO_DIVERGENCE"
+  },
+  "product_A": {
+    "description": "Tpp = clip(-13,13, round_away(T*mm*ss*TiltRescale)), left-to-right double eval",
+    "full_cartesian_grid": {
+      "domain": "T in [-10,10] (21) x mm in {1.0,1.25} (2) x ss in {1.0,0.5} (2) = 84 states",
+      "n_states": 84,
+      "n_matches": 84,
+      "exact_match_rate": 1.0,
+      "mismatches": []
+    },
+    "reachability_aware_enumeration": {
+      "domain": "T in [-10,10] (21) x tiltState in {-1,0,1} (3) = 63 states; mm/ss derived from real gating logic",
+      "n_states": 63,
+      "n_matches": 63,
+      "exact_match_rate": 1.0,
+      "mismatches": [],
+      "reachable_mm_ss_cells": [
+        [
+          1.0,
+          0.5
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.25,
+          1.0
+        ]
+      ],
+      "unreachable_mm_ss_cells_in_full_grid": [
+        [
+          1.25,
+          0.5
+        ]
+      ],
+      "unreachability_reason": "(mm=1.25, ss=0.5) is structurally unreachable: ss=0.5 requires (T<0 AND tiltState>0) i.e. tiltState=1, but mm=1.25 requires sign(T)==tiltState; when T<0, sign(T)=-1 != tiltState=1, so mm collapses to 1.0 whenever ss=0.5. The full cartesian grid tests this unreachable cell anyway (strictly conservative superset)."
+    }
+  },
+  "product_B": {
+    "description": "Tp = clip(-13,13, round_away(T*mm*TiltRescale)), left-to-right double eval, NO ss term (disclosed asymmetry vs A, preserved)",
+    "full_cartesian_grid": {
+      "domain": "T in [-10,10] (21) x mm in {1.0,1.25} (2) = 42 states",
+      "n_states": 42,
+      "n_matches": 42,
+      "exact_match_rate": 1.0,
+      "mismatches": []
+    },
+    "reachability_aware_enumeration": {
+      "domain": "T in [-10,10] (21) x tiltState in {-1,0,1} (3) = 63 states; mm derived from real gating logic (sign(sumNext) proxied by sign(T), justified by divergence_check above)",
+      "n_states": 63,
+      "n_matches": 63,
+      "exact_match_rate": 1.0,
+      "mismatches": [],
+      "unreachable_T_mm_cells_in_full_grid": [
+        {
+          "T": 0,
+          "mm": 1.25
+        }
+      ],
+      "unreachability_reason": "(T=0, mm=1.25) is structurally unreachable: mm=1.25 requires T!=0. The full cartesian grid tests this unreachable cell anyway (strictly conservative superset)."
+    }
+  },
+  "overall_summary": {
+    "total_states_enumerated_full_grids": 126,
+    "total_matches_full_grids": 126,
+    "exact_match_rate_full_grids": 1.0,
+    "total_states_enumerated_all_four_passes": 252,
+    "total_matches_all_four_passes": 252,
+    "all_four_passes_100_percent": true,
+    "classification": "REPRESENTATIONAL_PRECISION"
+  }
+}

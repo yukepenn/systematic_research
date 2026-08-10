@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "task": "EQV01 Product B canonicalization -- Q_B = Tp + 4*bmomPos vs real hysteresis(3,1) on M",
+    "constants": {
+      "TiltMult": 1.25,
+      "TiltRescale": 0.9026,
+      "WSolar": 0.7086,
+      "WBmom": 2.83,
+      "EntryLevel": 3.0,
+      "ExitLevel": 1.0,
+      "WBmom_over_WSolar": 3.993790572960768
+    },
+    "recalled_hypothesis": {
+      "bmom_coef": 4.0,
+      "entry": 5.0,
+      "exit": 1.0,
+      "note": "Owner recollection, tested EXACTLY AS RECALLED -- not silently corrected."
+    },
+    "real_code_thresholds": {
+      "entry": 3.0,
+      "exit": 1.0,
+      "note": "DISCLOSED DISCREPANCY: real EntryLevel/ExitLevel are 3.0/1.0 (re-verified src/ninjascript/SolarWaveOneContractNQ_v5.cs line 145, matches BASELINE_MODELS.md:469 'Discrete hysteresis(3,1)'), NOT the recalled 5/1. This script tests the owner's 5/1 recollection against the real 3.0/1.0-on-M state machine, does not substitute 5/1 into the real code."
+    },
+    "diagnostic_thresholds": {
+      "entry": 4.233700254022015,
+      "exit": 1.4112334180073385,
+      "derivation": "EntryLevel/WSolar , ExitLevel/WSolar (only valid if WBmom/WSolar ~= 4, which it is not exactly)"
+    },
+    "state_space": {
+      "sumNext_domain": [
+        -13,
+        13
+      ],
+      "tiltState_domain": [
+        -1,
+        0,
+        1
+      ],
+      "bmomPos_domain": [
+        -1,
+        0,
+        1
+      ],
+      "prior_position_domain": [
+        -1,
+        0,
+        1
+      ],
+      "total_states": 729,
+      "forceFlat_assumed": false,
+      "entryBlocked_assumed": false,
+      "assumption_note": "Both flags are session-boundary time gates orthogonal to the decoder/hysteresis math under test, per task scope; assumed false for all 729 states, matching the task's own CURRENT_FORM / PROPOSED_CANONICAL_FORM pseudocode (which itself omits both flags)."
+    }
+  },
+  "part_a_as_recalled": {
+    "description": "Q_B = Tp + 4*bmomPos, hysteresis(entry=5.0, exit=1.0) vs TRUE M-based hysteresis(3.0,1.0)",
+    "total_states": 729,
+    "exact_matches": 729,
+    "mismatches": 0,
+    "exact_match_rate": 1.0,
+    "verdict": "EXACT_EQUIVALENCE",
+    "mismatches_near_recalled_boundary_within_1Q": 0,
+    "mismatches_near_true_boundary_within_1Q": 0
+  },
+  "part_b_diagnostic": {
+    "description": "Diagnostic only (NOT a proposed equivalence test): Q_B = Tp + 4*bmomPos, hysteresis(entry=4.233700, exit=1.411233) -- thresholds derived as EntryLevel/WSolar and ExitLevel/WSolar -- vs TRUE M-based hysteresis(3.0,1.0). Shows what threshold WOULD be needed for a simple Tp+4B statistic to best approximate the real state machine, and how close it gets.",
+    "total_states": 729,
+    "exact_matches": 729,
+    "mismatches": 0,
+    "exact_match_rate": 1.0,
+    "verdict": "EXACT_EQUIVALENCE"
+  },
+  "structural_diagnostic": {
+    "description": "Because WBmom/WSolar = 2.83/0.7086 = 3.993791... (NOT exactly 4), Q_B = Tp + 4*bmomPos is not always a lossless sufficient statistic for M = WSolar*Tp + WBmom*bmomPos: distinct (Tp,bmomPos) pairs sharing the same Q_B can map to slightly different M values (max spread ~2*WSolar*|4-ratio| = 0.008800). This checks whether that spread is ever large enough to straddle a real decision boundary {-3,-1,1,3} -- if so, NO threshold on Q_B (any value) can achieve exact equivalence, independent of parts (a)/(b).",
+    "true_bmom_over_solar_ratio": 3.993790572960768,
+    "recalled_coefficient": 4.0,
+    "max_M_spread_per_QB_bucket": 0.008799999999999742,
+    "num_QB_values_with_multiple_source_pairs": 27,
+    "num_boundary_straddling_collisions": 0,
+    "structural_equivalence_possible": true,
+    "collisions": []
+  },
+  "mismatches_part_a_full_list": [],
+  "mismatches_part_b_full_list": []
+}
