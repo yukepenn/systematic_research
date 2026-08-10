@@ -1,0 +1,168 @@
+{
+  "preregistration": {
+    "written_utc_note": "written FIRST, before any data load or placebo randomization",
+    "task": "Product-A sizing causal placebo test (campaign directive sec44-50)",
+    "n_randomizations": 500,
+    "seed_family": "seed_i = 20260810 + i, for i in range(0, 500)",
+    "rng": "numpy.random.default_rng(seed_i), one fresh Generator per replicate, no time-seeded or unseeded randomness anywhere in this script",
+    "stratification_factors": [
+      "direction: sign(target_exposure_A) in {long(+1), short(-1)} -- flat (0) bars are excluded from the permutation universe (no size to permute when flat)",
+      "session_phase: U0's own causal 7-level clock label (RTH_OPEN, RTH_MID, RTH_CLOSE, US_PREMARKET, ETH_EUROPE, ETH_ASIA, POST_RTH), used as-is, not rebinned",
+      "volatility tercile: tercile of sigma460_atr_proxy_pts (the causal 460-bar rolling |dClose| ATR proxy that feeds the incumbent Solar member ensemble), tercile edges computed once from the nonzero-direction canonical population (<= q1 low, (q1,q2] mid, > q2 high)",
+      "Solar-conviction tercile: tercile of |Tp| (the tilt-adjusted Solar-ensemble score stored in the U0 table; identical formula to Product A's own Tpp except it omits Product A's short-halving 'ss' term -- disclosed simplification, stratification-only, does not touch execution), same edge convention as volatility"
+    ],
+    "null_construction": "Within each of the (direction x session_phase x vol_tercile x conviction_tercile) strata, independently apply a uniform random permutation (numpy Generator.permutation) to the REAL |target_exposure_A| values observed at the bars belonging to that stratum, reassigning them across those same bars. Direction and bar timing are untouched -- only the |size| label is reshuffled, and only among bars that already share direction, session-phase, volatility regime, and Solar-conviction regime with each other. This preserves the GLOBAL histogram of |target_exposure_A| exactly (a bijection within each stratum, strata partition the nonzero population), and preserves direction/timing exactly, while breaking the specific pairing of 'this bar's size' to 'this bar's realized market outcome' beyond what the coarse stratum already controls for.",
+    "metrics_per_replicate": [
+      "PnL/contract = net PnL / total contracts traded (sum |delta position| over all bars)",
+      "PnL/exposure-hour = net PnL / total exposure-hours (sum |position| x 3-min bar duration in hours)",
+      "marginal-exposure-value gradient = weighted-least-squares slope, across contract levels k=1..K_max (weight = bar count n_k, minimum n_k >= 30 to enter the fit), of avg_unit_pnl(k) := mean(bar_pnl[t] / |position[t]|) over bars with |position[t]|==k, regressed on k. A positive slope means bars where the REAL/placebo system carried a larger size were, on average, more profitable per contract than bars carrying a smaller size (disclosed as APPROXIMATE: bar_pnl on a bar where the position changed mixes the markout of pre-existing and newly-added contracts; see script docstring)."
+    ],
+    "comparison": "Empirical percentile of the REAL system's value for each metric within its own 500-replicate null distribution: percentile = 100 * mean(null_values <= real_value). Reported for all three metrics; no single yes/no beats-placebo verdict is treated as sufficient on its own.",
+    "correctness_gate": "Reconstruct Product A's realized bar-level P&L from 'target_exposure_A' via loop_exec (built on sm01_solarsim._fill) and require canonical-window net to match the certified 177924.4 to within $1 AND require the reconstructed bar_pnl array to be bit-identical to U0's own certified bar_pnl_A_dollars column, BEFORE any placebo replicate is run.",
+    "decided_before_looking_at_any_placebo_result": true
+  },
+  "correctness_gate": {
+    "reconstructed_net": 177924.3999999992,
+    "certified_net": 177924.4,
+    "net_match_within_1usd": true,
+    "max_abs_bar_pnl_diff_vs_u0_certified": 0.0,
+    "bytewise_match": true,
+    "flat_at_every_session_close": true
+  },
+  "data": {
+    "source": "runs/U0_UNIFIED_STATE/out/u0_state_table.parquet (canonical, is_health_only_bar==False)",
+    "n_bars_canonical": 519714,
+    "n_sessions": 1139,
+    "n_nonzero_direction_bars": 400202,
+    "date_range": [
+      "2022-01-02 18:03:00",
+      "2026-05-29 17:00:00"
+    ]
+  },
+  "stratification": {
+    "n_strata_populated": 126,
+    "stratum_bar_count_min": 345,
+    "stratum_bar_count_median": 1564.0,
+    "stratum_bar_count_max": 17986,
+    "n_strata_with_fewer_than_10_bars": 0,
+    "vol_tercile_edges_atr_pts": {
+      "q1": 4.996739130434783,
+      "q2": 7.1603260869565215
+    },
+    "conviction_tercile_edges_abs_Tp": {
+      "q1": 2.0,
+      "q2": 5.0
+    },
+    "session_phase_levels": [
+      "ETH_ASIA",
+      "ETH_EUROPE",
+      "POST_RTH",
+      "RTH_CLOSE",
+      "RTH_MID",
+      "RTH_OPEN",
+      "US_PREMARKET"
+    ],
+    "real_size_histogram": {
+      "1": 202200,
+      "2": 35963,
+      "3": 27692,
+      "4": 71559,
+      "5": 16302,
+      "6": 9101,
+      "7": 21620,
+      "8": 5461,
+      "9": 7037,
+      "10": 1114,
+      "11": 2153
+    }
+  },
+  "real_system": {
+    "tag": "REAL",
+    "net": 177924.3999999992,
+    "contracts_traded": 36794,
+    "exposure_hours": 53636.9,
+    "pnl_per_contract": 4.835690601728521,
+    "pnl_per_exposure_hour": 3.317201404257129,
+    "marginal_gradient": 0.07394585807613654,
+    "k_max_observed": 11,
+    "n_by_k": {
+      "1": 202200,
+      "2": 35963,
+      "3": 27692,
+      "4": 71559,
+      "5": 16302,
+      "6": 9101,
+      "7": 21620,
+      "8": 5461,
+      "9": 7037,
+      "10": 1114,
+      "11": 2153
+    },
+    "unit_pnl_by_k": {
+      "1": -0.031181008902007753,
+      "2": -0.14019547868638968,
+      "3": 0.01821464682940755,
+      "4": 0.07549766626139393,
+      "5": 0.1128272604587831,
+      "6": -0.28905797897672647,
+      "7": 0.30775736751685046,
+      "8": 0.8133938381247847,
+      "9": 0.5795375238816524,
+      "10": 0.7850538599638034,
+      "11": 2.3926128446564334
+    },
+    "ks_used_in_fit": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "sharpe": 1.1769955515978732,
+    "n_days": 1139
+  },
+  "null_distribution": {
+    "n_randomizations": 500,
+    "pnl_per_contract": {
+      "mean": 0.4867670372652766,
+      "std": 0.06462429315355796,
+      "min": 0.2660757459432195,
+      "max": 0.6793109437227733,
+      "p05": 0.37700918057105615,
+      "p50": 0.488290801895553,
+      "p95": 0.5909634175214393,
+      "n_finite": 500
+    },
+    "pnl_per_exposure_hour": {
+      "mean": 3.8135697700644946,
+      "std": 0.5062891099343764,
+      "min": 2.080521059197644,
+      "max": 5.3232737164133965,
+      "p05": 2.9510872179419776,
+      "p50": 3.825155816237685,
+      "p95": 4.627003052001118,
+      "n_finite": 500
+    },
+    "marginal_gradient": {
+      "mean": 0.33422980139283526,
+      "std": 0.013980409367275595,
+      "min": 0.2869663127263895,
+      "max": 0.3757721657667503,
+      "p05": 0.31050331369786527,
+      "p50": 0.3342754434092481,
+      "p95": 0.3568622963414217,
+      "n_finite": 500
+    }
+  },
+  "real_vs_null_percentiles": {
+    "pnl_per_contract_percentile": 100.0,
+    "pnl_per_exposure_hour_percentile": 15.2,
+    "marginal_gradient_percentile": 0.0
+  }
+}

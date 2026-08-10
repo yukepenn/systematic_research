@@ -1,0 +1,22 @@
+{
+  "written_utc_note": "written FIRST, before any data load or placebo randomization",
+  "task": "Product-A sizing causal placebo test (campaign directive sec44-50)",
+  "n_randomizations": 500,
+  "seed_family": "seed_i = 20260810 + i, for i in range(0, 500)",
+  "rng": "numpy.random.default_rng(seed_i), one fresh Generator per replicate, no time-seeded or unseeded randomness anywhere in this script",
+  "stratification_factors": [
+    "direction: sign(target_exposure_A) in {long(+1), short(-1)} -- flat (0) bars are excluded from the permutation universe (no size to permute when flat)",
+    "session_phase: U0's own causal 7-level clock label (RTH_OPEN, RTH_MID, RTH_CLOSE, US_PREMARKET, ETH_EUROPE, ETH_ASIA, POST_RTH), used as-is, not rebinned",
+    "volatility tercile: tercile of sigma460_atr_proxy_pts (the causal 460-bar rolling |dClose| ATR proxy that feeds the incumbent Solar member ensemble), tercile edges computed once from the nonzero-direction canonical population (<= q1 low, (q1,q2] mid, > q2 high)",
+    "Solar-conviction tercile: tercile of |Tp| (the tilt-adjusted Solar-ensemble score stored in the U0 table; identical formula to Product A's own Tpp except it omits Product A's short-halving 'ss' term -- disclosed simplification, stratification-only, does not touch execution), same edge convention as volatility"
+  ],
+  "null_construction": "Within each of the (direction x session_phase x vol_tercile x conviction_tercile) strata, independently apply a uniform random permutation (numpy Generator.permutation) to the REAL |target_exposure_A| values observed at the bars belonging to that stratum, reassigning them across those same bars. Direction and bar timing are untouched -- only the |size| label is reshuffled, and only among bars that already share direction, session-phase, volatility regime, and Solar-conviction regime with each other. This preserves the GLOBAL histogram of |target_exposure_A| exactly (a bijection within each stratum, strata partition the nonzero population), and preserves direction/timing exactly, while breaking the specific pairing of 'this bar's size' to 'this bar's realized market outcome' beyond what the coarse stratum already controls for.",
+  "metrics_per_replicate": [
+    "PnL/contract = net PnL / total contracts traded (sum |delta position| over all bars)",
+    "PnL/exposure-hour = net PnL / total exposure-hours (sum |position| x 3-min bar duration in hours)",
+    "marginal-exposure-value gradient = weighted-least-squares slope, across contract levels k=1..K_max (weight = bar count n_k, minimum n_k >= 30 to enter the fit), of avg_unit_pnl(k) := mean(bar_pnl[t] / |position[t]|) over bars with |position[t]|==k, regressed on k. A positive slope means bars where the REAL/placebo system carried a larger size were, on average, more profitable per contract than bars carrying a smaller size (disclosed as APPROXIMATE: bar_pnl on a bar where the position changed mixes the markout of pre-existing and newly-added contracts; see script docstring)."
+  ],
+  "comparison": "Empirical percentile of the REAL system's value for each metric within its own 500-replicate null distribution: percentile = 100 * mean(null_values <= real_value). Reported for all three metrics; no single yes/no beats-placebo verdict is treated as sufficient on its own.",
+  "correctness_gate": "Reconstruct Product A's realized bar-level P&L from 'target_exposure_A' via loop_exec (built on sm01_solarsim._fill) and require canonical-window net to match the certified 177924.4 to within $1 AND require the reconstructed bar_pnl array to be bit-identical to U0's own certified bar_pnl_A_dollars column, BEFORE any placebo replicate is run.",
+  "decided_before_looking_at_any_placebo_result": true
+}

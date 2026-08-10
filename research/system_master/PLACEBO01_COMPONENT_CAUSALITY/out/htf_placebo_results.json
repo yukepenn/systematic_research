@@ -1,0 +1,242 @@
+{
+  "task": "PLACEBO01 -- HTF (tiltState) causal placebo test",
+  "generated_utc": "2026-08-10T23:25:43.591938+00:00",
+  "preregistration_file": "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\research\\system_master\\PLACEBO01_COMPONENT_CAUSALITY\\out\\htf_placebo_preregistration.json",
+  "correctness_gates": {
+    "gate_1_grid_core_import_self_check": "PASS (dev-window net Product A=$177,924.40, Product B=$301,915.92, asserted inside grid_core.py import)",
+    "gate_2_restricted_window_vs_full_array_canonical_slice": {
+      "product_A": {
+        "grid_core_full_array_sliced_net": 49703.6,
+        "restricted_window_net": 49703.6,
+        "match": true
+      },
+      "product_B": {
+        "grid_core_full_array_sliced_net": 83363.4,
+        "restricted_window_net": 83363.4,
+        "match": true
+      }
+    }
+  },
+  "n_randomizations": 1000,
+  "seed_family": "20260810+i for i in range(0,1000)",
+  "runtime_seconds_randomization_loop": 387.8,
+  "canonical_window": {
+    "start": "2023-01-01",
+    "end": "2025-02-02",
+    "convention": "CLAUDE.md frozen canonical window (2023-01-01T06:00:00Z..2025-02-02T22:59:59Z UTC)",
+    "n_bars": 245943,
+    "n_sessions": 539
+  },
+  "block_structure_by_year": {
+    "2023": {
+      "n_sessions": 258,
+      "n_blocks": 20,
+      "block_len_min": 1,
+      "block_len_median": 2.5,
+      "block_len_max": 106,
+      "value_counts": {
+        "1.0": 197,
+        "-1.0": 61
+      }
+    },
+    "2024": {
+      "n_sessions": 259,
+      "n_blocks": 15,
+      "block_len_min": 1,
+      "block_len_median": 3.0,
+      "block_len_max": 76,
+      "value_counts": {
+        "1.0": 209,
+        "-1.0": 50
+      }
+    },
+    "2025": {
+      "n_sessions": 22,
+      "n_blocks": 6,
+      "block_len_min": 1,
+      "block_len_median": 2.5,
+      "block_len_max": 8,
+      "value_counts": {
+        "-1.0": 11,
+        "1.0": 11
+      }
+    }
+  },
+  "run_length_disclosure": {
+    "note": "Descriptive only (first replication, seed=SEED_BASE, shown as a representative example) -- quantifies how often adjacent post-shuffle blocks of the same value merge into a longer REALIZED run than any single original block.",
+    "n_original_blocks_total_all_years": 41,
+    "n_realized_runs_in_real_series": 40,
+    "n_realized_runs_in_example_shuffled_series": 23,
+    "real_run_len_mean": 13.475,
+    "real_run_len_max": 106,
+    "shuffled_run_len_mean": 23.434782608695652,
+    "shuffled_run_len_max": 106,
+    "interpretation": "If n_realized_runs_in_example_shuffled_series < n_original_blocks_total, some adjacent blocks merged post-shuffle (expected occasionally, given tiltState's real skew toward +1 in 2023/2024 -- 197/258 and 209/259 up-sessions respectively -- makes same-value adjacency non-trivially likely by chance); this does not violate the preregistered method, it is the disclosed limitation named in the preregistration."
+  },
+  "product_A": {
+    "name": "Product A (SolarWaveSMMaster, MNQ execution)",
+    "real_full_system": {
+      "label": "A_real",
+      "n_days": 539.0,
+      "net": 49703.6000000068,
+      "daily_vol": 1420.615247263204,
+      "ann_vol": 22551.56791778982,
+      "sharpe": 1.030440403876246,
+      "maxDD_eod": 11289.999999999687,
+      "sortino": 2.0175895334968788,
+      "calmar": 2.0582858063109457,
+      "CDaR5": 9679.784615384024,
+      "avgDD": 3596.6753246748203,
+      "ulcer": 4535.078050613147,
+      "longest_TUW_days": 133.0,
+      "median_recovery": 3.0,
+      "p95_recovery": 69.99999999999997,
+      "worst_20D": -10822.199999999704,
+      "worst_40D": -8438.79999999919,
+      "worst_60D": -10708.899999998936,
+      "worst_120D": -4066.9999999975184,
+      "worst_month": -5304.599999999264,
+      "worst_quarter": -3419.1999999987765,
+      "pos_day_pct": 0.4452690166975881,
+      "pos_week_pct": 0.5412844036697247,
+      "pos_month_pct": 0.6,
+      "losing_month_streak": 2.0,
+      "losing_week_streak": 4.0,
+      "rolling60_min": -10708.899999998936
+    },
+    "baseline_solar_bmom_only_tiltState_zero": {
+      "label": "A_baseline",
+      "n_days": 539.0,
+      "net": 43737.10000000548,
+      "daily_vol": 1547.804952190352,
+      "ann_vol": 24570.64188917934,
+      "sharpe": 0.8322336216508112,
+      "maxDD_eod": 16085.89999999991,
+      "sortino": 1.690758383602862,
+      "calmar": 1.2712073484055577,
+      "CDaR5": 13470.83461538449,
+      "avgDD": 4581.911502782369,
+      "ulcer": 5816.5529916513,
+      "longest_TUW_days": 134.0,
+      "median_recovery": 5.0,
+      "p95_recovery": 79.39999999999998,
+      "worst_20D": -12672.500000000036,
+      "worst_40D": -10034.300000000316,
+      "worst_60D": -15171.79999999957,
+      "worst_120D": -8350.79999999658,
+      "worst_month": -7420.899999999438,
+      "worst_quarter": -4923.6999999998425,
+      "pos_day_pct": 0.44341372912801486,
+      "pos_week_pct": 0.5412844036697247,
+      "pos_month_pct": 0.6,
+      "losing_month_streak": 2.0,
+      "losing_week_streak": 4.0,
+      "rolling60_min": -15171.79999999957
+    },
+    "real_marginal_net": 5966.500000001324,
+    "real_marginal_sharpe": 0.19820678222543486,
+    "placebo_marginal_net_distribution": {
+      "mean": 9826.727499998458,
+      "std": 6372.445082716897,
+      "min": -12390.20000000147,
+      "q05": 7.434999997768237,
+      "q50": 9480.299999998835,
+      "q95": 20617.274999996447,
+      "max": 31110.399999996866
+    },
+    "placebo_marginal_sharpe_distribution": {
+      "mean": 0.2596916753306611,
+      "std": 0.11793580164024733,
+      "q05": 0.07299358067996291,
+      "q50": 0.2583362463799951,
+      "q95": 0.46037140927210163
+    },
+    "real_marginal_net_percentile_within_null": 27.800000000000004,
+    "real_marginal_sharpe_percentile_within_null": 32.1,
+    "verdict": "HTF's marginal contribution to Product A performs NO BETTER than the randomized-chronology null -- its economic interpretation weakens substantially, per campaign directive"
+  },
+  "product_B": {
+    "name": "Product B / BEST_ONE_NQ (SolarWaveOneContractNQ, NQ direct execution)",
+    "real_full_system": {
+      "label": "B_real",
+      "n_days": 539.0,
+      "net": 83363.40000000951,
+      "daily_vol": 2792.452033092039,
+      "ann_vol": 44328.80176582946,
+      "sharpe": 0.8792273770400946,
+      "maxDD_eod": 25268.759999999427,
+      "sortino": 1.47521089305313,
+      "calmar": 1.5424221886590965,
+      "CDaR5": 21813.493846153044,
+      "avgDD": 8509.080519479829,
+      "ulcer": 10627.852112756647,
+      "longest_TUW_days": 139.0,
+      "median_recovery": 2.5,
+      "p95_recovery": 70.74999999999999,
+      "worst_20D": -23288.119999999413,
+      "worst_40D": -15238.919999998994,
+      "worst_60D": -22463.43999999977,
+      "worst_120D": -20463.679999997024,
+      "worst_month": -13440.160000000731,
+      "worst_quarter": -14432.679999998429,
+      "pos_day_pct": 0.46382189239332094,
+      "pos_week_pct": 0.5504587155963303,
+      "pos_month_pct": 0.64,
+      "losing_month_streak": 3.0,
+      "losing_week_streak": 3.0,
+      "rolling60_min": -22463.43999999977
+    },
+    "baseline_solar_bmom_only_tiltState_zero": {
+      "label": "B_baseline",
+      "n_days": 539.0,
+      "net": 74215.24000000936,
+      "daily_vol": 2731.8651537720934,
+      "ann_vol": 43367.014873465116,
+      "sharpe": 0.8001019758210122,
+      "maxDD_eod": 29436.11999999878,
+      "sortino": 1.3249292925040583,
+      "calmar": 1.1787570605677684,
+      "CDaR5": 26107.090769229813,
+      "avgDD": 8234.452764377857,
+      "ulcer": 10653.295501516226,
+      "longest_TUW_days": 121.0,
+      "median_recovery": 3.0,
+      "p95_recovery": 76.24999999999996,
+      "worst_20D": -26251.31999999949,
+      "worst_40D": -19151.47999999905,
+      "worst_60D": -28733.559999998724,
+      "worst_120D": -13925.719999997178,
+      "worst_month": -13995.799999999646,
+      "worst_quarter": -10808.240000001155,
+      "pos_day_pct": 0.4582560296846011,
+      "pos_week_pct": 0.5321100917431193,
+      "pos_month_pct": 0.64,
+      "losing_month_streak": 3.0,
+      "losing_week_streak": 3.0,
+      "rolling60_min": -28733.559999998724
+    },
+    "real_marginal_net": 9148.160000000149,
+    "real_marginal_sharpe": 0.0791254012190824,
+    "placebo_marginal_net_distribution": {
+      "mean": 14904.207359999557,
+      "std": 9039.288705191502,
+      "min": -8432.359999998822,
+      "q05": 664.2140000007697,
+      "q50": 14698.539999998757,
+      "q95": 30252.047999997947,
+      "max": 44764.439999994356
+    },
+    "placebo_marginal_sharpe_distribution": {
+      "mean": 0.12115463070795036,
+      "std": 0.08369689917345718,
+      "q05": -0.012412782493487675,
+      "q50": 0.11872228117562666,
+      "q95": 0.26092027634745535
+    },
+    "real_marginal_net_percentile_within_null": 28.799999999999997,
+    "real_marginal_sharpe_percentile_within_null": 31.2,
+    "verdict": "HTF's marginal contribution to Product B performs NO BETTER than the randomized-chronology null -- its economic interpretation weakens substantially, per campaign directive"
+  },
+  "real_beats_placebo_distribution_both_products_net_pct_gt_50": false,
+  "headline": "Product A: real HTF marginal net contribution ($5,967) sits at the 27.8th percentile of 1000 randomized-chronology placebo realizations (Sharpe percentile 32.1th). Product B: real HTF marginal net contribution ($9,148) sits at the 28.8th percentile (1000 reps; Sharpe percentile 31.2th). HTF's marginal contribution to Product A performs NO BETTER than the randomized-chronology null -- its economic interpretation weakens substantially, per campaign directive. HTF's marginal contribution to Product B performs NO BETTER than the randomized-chronology null -- its economic interpretation weakens substantially, per campaign directive."
+}

@@ -1,0 +1,942 @@
+{
+  "task": "PLACEBO01 component 03 -- Product B hysteresis(3.0,1.0) causal placebo, turnover-matched null (generic random suppression/extension)",
+  "generated": "2026-08-10",
+  "preregistration_file": "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\research\\system_master\\PLACEBO01_COMPONENT_CAUSALITY\\out\\PREREGISTRATION.json",
+  "n_randomizations": 300,
+  "scored_seed_family": "20260810 + i, i in range(300)",
+  "calibration_pilot_seed_family": "9_000_000 + i, i in range(15) -- DISJOINT from scored family",
+  "window": {
+    "start": "2023-01-01 01:00:00",
+    "end": "2025-02-02 17:59:59",
+    "n_bars": 245943,
+    "n_sessions": 539
+  },
+  "correctness_gate": {
+    "this_script_real_net_canonical_window": 83363.40000000951,
+    "certified_reference": {
+      "source": "research/system_master/EQV03_PNL_EQUALITY/out/productB_pnl_equality.json pnl_comparisons.operational.primary_claude_canonical.net_total.current",
+      "value": 83363.3999999957
+    },
+    "gap": 1.3809767551720142e-08,
+    "pass": true
+  },
+  "null_construction": {
+    "mechanism": "naive zero-hysteresis (sign(M), no dead zone, same forceFlat/entryBlocked gates as real) with random entry-suppression + holding-extension applied to its own discretionary-transition timeline; two free parameters (p_exit, p_accept) calibrated via a turnover/occupancy-ONLY grid search (never touching PnL/Sharpe/DD), dwell-length draws bootstrap-sampled from the real system's own empirically observed non-forced flat-dwell-run-length distribution.",
+    "calibrated_p_exit": 0.45,
+    "calibrated_p_accept": 0.5,
+    "calibration_grid": {
+      "p_exit_grid": [
+        0.05,
+        0.1,
+        0.15,
+        0.2,
+        0.25,
+        0.3,
+        0.35,
+        0.4,
+        0.45,
+        0.5
+      ],
+      "p_accept_grid": [
+        0.2,
+        0.25,
+        0.3,
+        0.35,
+        0.4,
+        0.45,
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7
+      ],
+      "pilot_seeds": [
+        9000000,
+        9000001,
+        9000002,
+        9000003,
+        9000004,
+        9000005,
+        9000006,
+        9000007,
+        9000008,
+        9000009,
+        9000010,
+        9000011,
+        9000012,
+        9000013,
+        9000014
+      ],
+      "objective": "sum of squared relative error vs (target discretionary event count, target occupancy), both measured on the REAL system within the canonical window"
+    },
+    "calibration_target": {
+      "n_discretionary_events": 1511,
+      "occupancy": 0.3554116197655554
+    },
+    "calibration_achieved_pilot": {
+      "mean_events": 1578.2666666666667,
+      "mean_occupancy": 0.3579113859715462,
+      "sq_rel_err": 0.002031319752074098
+    },
+    "dwell_bootstrap_pool": {
+      "n": 577,
+      "mean": 131.44020797227037,
+      "median": 56.0
+    },
+    "hold_duration_match_diagnostic": {
+      "real_hold_mean": 93.48770053475936,
+      "real_hold_median": 71.0,
+      "real_hold_std": 85.78779694926106,
+      "real_n_holds": 935,
+      "null_diag_hold_mean": 91.42405063291139,
+      "null_diag_hold_median": 51.0,
+      "null_diag_hold_std": 102.53709595087834,
+      "null_diag_n_holds": 948,
+      "ks_statistic": 0.09925314199327602,
+      "ks_pvalue": 0.00016883924563843486,
+      "note": "descriptive diagnostic at ONE pilot seed, not an optimization target; disclosed as-is."
+    },
+    "all_calibration_grid_results": [
+      {
+        "p_exit": 0.05,
+        "p_accept": 0.2,
+        "mean_events": 539.4,
+        "mean_occupancy": 0.26979747339830773,
+        "sq_rel_err": 0.4714986723152742
+      },
+      {
+        "p_exit": 0.05,
+        "p_accept": 0.25,
+        "mean_events": 679.9333333333333,
+        "mean_occupancy": 0.32356819805131,
+        "sq_rel_err": 0.31053955753969376
+      },
+      {
+        "p_exit": 0.05,
+        "p_accept": 0.3,
+        "mean_events": 827.1333333333333,
+        "mean_occupancy": 0.3609643968995526,
+        "sq_rel_err": 0.2050837051959625
+      },
+      {
+        "p_exit": 0.05,
+        "p_accept": 0.35,
+        "mean_events": 965.1333333333333,
+        "mean_occupancy": 0.3950126655363234,
+        "sq_rel_err": 0.14292522517816206
+      },
+      {
+        "p_exit": 0.05,
+        "p_accept": 0.4,
+        "mean_events": 1111.4,
+        "mean_occupancy": 0.4252481265984394,
+        "sq_rel_err": 0.10854959576704876
+      },
+      {
+        "p_exit": 0.05,
+        "p_accept": 0.45,
+        "mean_events": 1273.3333333333333,
+        "mean_occupancy": 0.46401347737754955,
+        "sq_rel_err": 0.11811129085813724
+      },
+      {
+        "p_exit": 0.05,
+        "p_accept": 0.5,
+        "mean_events": 1437.0666666666666,
+        "mean_occupancy": 0.49990770219115804,
+        "sq_rel_err": 0.16768503486787842
+      },
+      {
+        "p_exit": 0.05,
+        "p_accept": 0.55,
+        "mean_events": 1601.0,
+        "mean_occupancy": 0.5294150812722189,
+        "sq_rel_err": 0.24323921871771234
+      },
+      {
+        "p_exit": 0.05,
+        "p_accept": 0.6,
+        "mean_events": 1767.0666666666666,
+        "mean_occupancy": 0.5557200923249153,
+        "sq_rel_err": 0.3463596702603525
+      },
+      {
+        "p_exit": 0.05,
+        "p_accept": 0.65,
+        "mean_events": 1949.0,
+        "mean_occupancy": 0.5830220823524148,
+        "sq_rel_err": 0.4941567628357415
+      },
+      {
+        "p_exit": 0.05,
+        "p_accept": 0.7,
+        "mean_events": 2142.4,
+        "mean_occupancy": 0.61212665807389,
+        "sq_rel_err": 0.6963367390833232
+      },
+      {
+        "p_exit": 0.1,
+        "p_accept": 0.2,
+        "mean_events": 575.5333333333333,
+        "mean_occupancy": 0.2517805616206465,
+        "sq_rel_err": 0.46830931404075765
+      },
+      {
+        "p_exit": 0.1,
+        "p_accept": 0.25,
+        "mean_events": 717.3333333333334,
+        "mean_occupancy": 0.2952253164351089,
+        "sq_rel_err": 0.3045741308314642
+      },
+      {
+        "p_exit": 0.1,
+        "p_accept": 0.3,
+        "mean_events": 856.8,
+        "mean_occupancy": 0.3341899003698689,
+        "sq_rel_err": 0.1910182093958545
+      },
+      {
+        "p_exit": 0.1,
+        "p_accept": 0.35,
+        "mean_events": 999.9333333333333,
+        "mean_occupancy": 0.37239387446142674,
+        "sq_rel_err": 0.11668315502889924
+      },
+      {
+        "p_exit": 0.1,
+        "p_accept": 0.4,
+        "mean_events": 1146.2666666666667,
+        "mean_occupancy": 0.40314490213857135,
+        "sq_rel_err": 0.07630453441728582
+      },
+      {
+        "p_exit": 0.1,
+        "p_accept": 0.45,
+        "mean_events": 1306.3333333333333,
+        "mean_occupancy": 0.4387583030756449,
+        "sq_rel_err": 0.07334076844515976
+      },
+      {
+        "p_exit": 0.1,
+        "p_accept": 0.5,
+        "mean_events": 1465.6,
+        "mean_occupancy": 0.46916697500369325,
+        "sq_rel_err": 0.10334534985963652
+      },
+      {
+        "p_exit": 0.1,
+        "p_accept": 0.55,
+        "mean_events": 1625.2,
+        "mean_occupancy": 0.5009404618143228,
+        "sq_rel_err": 0.17337429877413996
+      },
+      {
+        "p_exit": 0.1,
+        "p_accept": 0.6,
+        "mean_events": 1799.6666666666667,
+        "mean_occupancy": 0.5289916769332731,
+        "sq_rel_err": 0.27502397890683355
+      },
+      {
+        "p_exit": 0.1,
+        "p_accept": 0.65,
+        "mean_events": 1982.4666666666667,
+        "mean_occupancy": 0.5565910258338992,
+        "sq_rel_err": 0.41776664691687604
+      },
+      {
+        "p_exit": 0.1,
+        "p_accept": 0.7,
+        "mean_events": 2156.0,
+        "mean_occupancy": 0.5848214152601755,
+        "sq_rel_err": 0.5988573947783555
+      },
+      {
+        "p_exit": 0.15,
+        "p_accept": 0.2,
+        "mean_events": 596.8,
+        "mean_occupancy": 0.23437408938927584,
+        "sq_rel_err": 0.4820393697930828
+      },
+      {
+        "p_exit": 0.15,
+        "p_accept": 0.25,
+        "mean_events": 744.0,
+        "mean_occupancy": 0.27715852860215584,
+        "sq_rel_err": 0.3061462279663413
+      },
+      {
+        "p_exit": 0.15,
+        "p_accept": 0.3,
+        "mean_events": 886.1333333333333,
+        "mean_occupancy": 0.31086742321052707,
+        "sq_rel_err": 0.18672749308179898
+      },
+      {
+        "p_exit": 0.15,
+        "p_accept": 0.35,
+        "mean_events": 1027.8666666666666,
+        "mean_occupancy": 0.34687278488647094,
+        "sq_rel_err": 0.10281349892239137
+      },
+      {
+        "p_exit": 0.15,
+        "p_accept": 0.4,
+        "mean_events": 1187.8,
+        "mean_occupancy": 0.38277649699320576,
+        "sq_rel_err": 0.05168060144991149
+      },
+      {
+        "p_exit": 0.15,
+        "p_accept": 0.45,
+        "mean_events": 1327.8,
+        "mean_occupancy": 0.4134706009115933,
+        "sq_rel_err": 0.0413856724553544
+      },
+      {
+        "p_exit": 0.15,
+        "p_accept": 0.5,
+        "mean_events": 1492.4666666666667,
+        "mean_occupancy": 0.44732966581687633,
+        "sq_rel_err": 0.06703692227784946
+      },
+      {
+        "p_exit": 0.15,
+        "p_accept": 0.55,
+        "mean_events": 1659.1333333333334,
+        "mean_occupancy": 0.47735613536469834,
+        "sq_rel_err": 0.12733417348978723
+      },
+      {
+        "p_exit": 0.15,
+        "p_accept": 0.6,
+        "mean_events": 1811.1333333333334,
+        "mean_occupancy": 0.5008491127347935,
+        "sq_rel_err": 0.2069064537294199
+      },
+      {
+        "p_exit": 0.15,
+        "p_accept": 0.65,
+        "mean_events": 1978.1333333333334,
+        "mean_occupancy": 0.5344522917911873,
+        "sq_rel_err": 0.34934679293086685
+      },
+      {
+        "p_exit": 0.15,
+        "p_accept": 0.7,
+        "mean_events": 2161.266666666667,
+        "mean_occupancy": 0.556014469477345,
+        "sq_rel_err": 0.5037800320541928
+      },
+      {
+        "p_exit": 0.2,
+        "p_accept": 0.2,
+        "mean_events": 616.4666666666667,
+        "mean_occupancy": 0.21569903053417525,
+        "sq_rel_err": 0.5050089494280084
+      },
+      {
+        "p_exit": 0.2,
+        "p_accept": 0.25,
+        "mean_events": 753.2,
+        "mean_occupancy": 0.25555352256417135,
+        "sq_rel_err": 0.3304656157367048
+      },
+      {
+        "p_exit": 0.2,
+        "p_accept": 0.3,
+        "mean_events": 909.7333333333333,
+        "mean_occupancy": 0.30227789907959696,
+        "sq_rel_err": 0.18069533840824617
+      },
+      {
+        "p_exit": 0.2,
+        "p_accept": 0.35,
+        "mean_events": 1060.1333333333334,
+        "mean_occupancy": 0.3283907246801088,
+        "sq_rel_err": 0.09481645742870298
+      },
+      {
+        "p_exit": 0.2,
+        "p_accept": 0.4,
+        "mean_events": 1196.6,
+        "mean_occupancy": 0.36629544243991496,
+        "sq_rel_err": 0.04423261790326192
+      },
+      {
+        "p_exit": 0.2,
+        "p_accept": 0.45,
+        "mean_events": 1352.1333333333334,
+        "mean_occupancy": 0.40110269452678055,
+        "sq_rel_err": 0.027581645602365385
+      },
+      {
+        "p_exit": 0.2,
+        "p_accept": 0.5,
+        "mean_events": 1511.0666666666666,
+        "mean_occupancy": 0.42609845912806354,
+        "sq_rel_err": 0.03955613981147215
+      },
+      {
+        "p_exit": 0.2,
+        "p_accept": 0.55,
+        "mean_events": 1678.9333333333334,
+        "mean_occupancy": 0.45925221155579415,
+        "sq_rel_err": 0.09771549042172824
+      },
+      {
+        "p_exit": 0.2,
+        "p_accept": 0.6,
+        "mean_events": 1832.4666666666667,
+        "mean_occupancy": 0.48526474291468613,
+        "sq_rel_err": 0.1787507548309335
+      },
+      {
+        "p_exit": 0.2,
+        "p_accept": 0.65,
+        "mean_events": 2013.4,
+        "mean_occupancy": 0.5142237564530535,
+        "sq_rel_err": 0.31021895623246104
+      },
+      {
+        "p_exit": 0.2,
+        "p_accept": 0.7,
+        "mean_events": 2192.866666666667,
+        "mean_occupancy": 0.5364142640096824,
+        "sq_rel_err": 0.4630053849430044
+      },
+      {
+        "p_exit": 0.25,
+        "p_accept": 0.2,
+        "mean_events": 637.1333333333333,
+        "mean_occupancy": 0.20727024825535453,
+        "sq_rel_err": 0.5082091354996164
+      },
+      {
+        "p_exit": 0.25,
+        "p_accept": 0.25,
+        "mean_events": 791.0,
+        "mean_occupancy": 0.25049544000032525,
+        "sq_rel_err": 0.3141984410583287
+      },
+      {
+        "p_exit": 0.25,
+        "p_accept": 0.3,
+        "mean_events": 937.2666666666667,
+        "mean_occupancy": 0.28416177732238773,
+        "sq_rel_err": 0.18436418058899184
+      },
+      {
+        "p_exit": 0.25,
+        "p_accept": 0.35,
+        "mean_events": 1068.8,
+        "mean_occupancy": 0.31925554566166414,
+        "sq_rel_err": 0.0959953101048346
+      },
+      {
+        "p_exit": 0.25,
+        "p_accept": 0.4,
+        "mean_events": 1217.6,
+        "mean_occupancy": 0.34407294915217485,
+        "sq_rel_err": 0.038722132113940974
+      },
+      {
+        "p_exit": 0.25,
+        "p_accept": 0.45,
+        "mean_events": 1369.8,
+        "mean_occupancy": 0.3829041688521323,
+        "sq_rel_err": 0.014716195750303735
+      },
+      {
+        "p_exit": 0.25,
+        "p_accept": 0.5,
+        "mean_events": 1523.6,
+        "mean_occupancy": 0.4105167999631351,
+        "sq_rel_err": 0.02410882485798213
+      },
+      {
+        "p_exit": 0.25,
+        "p_accept": 0.55,
+        "mean_events": 1689.9333333333334,
+        "mean_occupancy": 0.4322345692565621,
+        "sq_rel_err": 0.06074511606020132
+      },
+      {
+        "p_exit": 0.25,
+        "p_accept": 0.6,
+        "mean_events": 1843.6666666666667,
+        "mean_occupancy": 0.45876619108221556,
+        "sq_rel_err": 0.13303792289095936
+      },
+      {
+        "p_exit": 0.25,
+        "p_accept": 0.65,
+        "mean_events": 2006.7333333333333,
+        "mean_occupancy": 0.4901737394436923,
+        "sq_rel_err": 0.25140979384664064
+      },
+      {
+        "p_exit": 0.25,
+        "p_accept": 0.7,
+        "mean_events": 2174.866666666667,
+        "mean_occupancy": 0.5188237382916637,
+        "sq_rel_err": 0.40443369228688575
+      },
+      {
+        "p_exit": 0.3,
+        "p_accept": 0.2,
+        "mean_events": 655.6666666666666,
+        "mean_occupancy": 0.19582830167965748,
+        "sq_rel_err": 0.5220462616665995
+      },
+      {
+        "p_exit": 0.3,
+        "p_accept": 0.25,
+        "mean_events": 802.8,
+        "mean_occupancy": 0.2373758689344008,
+        "sq_rel_err": 0.32997320179758616
+      },
+      {
+        "p_exit": 0.3,
+        "p_accept": 0.3,
+        "mean_events": 951.6666666666666,
+        "mean_occupancy": 0.27474604549292586,
+        "sq_rel_err": 0.18854156542390307
+      },
+      {
+        "p_exit": 0.3,
+        "p_accept": 0.35,
+        "mean_events": 1088.6,
+        "mean_occupancy": 0.3064032451963801,
+        "sq_rel_err": 0.09716235313021009
+      },
+      {
+        "p_exit": 0.3,
+        "p_accept": 0.4,
+        "mean_events": 1232.0666666666666,
+        "mean_occupancy": 0.33265648273515946,
+        "sq_rel_err": 0.038176995375726074
+      },
+      {
+        "p_exit": 0.3,
+        "p_accept": 0.45,
+        "mean_events": 1393.3333333333333,
+        "mean_occupancy": 0.36850842132797706,
+        "sq_rel_err": 0.007422160544906626
+      },
+      {
+        "p_exit": 0.3,
+        "p_accept": 0.5,
+        "mean_events": 1547.7333333333333,
+        "mean_occupancy": 0.39695566316856623,
+        "sq_rel_err": 0.014254264208498676
+      },
+      {
+        "p_exit": 0.3,
+        "p_accept": 0.55,
+        "mean_events": 1707.9333333333334,
+        "mean_occupancy": 0.42324278389708186,
+        "sq_rel_err": 0.05341136263051148
+      },
+      {
+        "p_exit": 0.3,
+        "p_accept": 0.6,
+        "mean_events": 1842.1333333333334,
+        "mean_occupancy": 0.4463744309318284,
+        "sq_rel_err": 0.11352954994134737
+      },
+      {
+        "p_exit": 0.3,
+        "p_accept": 0.65,
+        "mean_events": 2018.6,
+        "mean_occupancy": 0.47257481069461893,
+        "sq_rel_err": 0.2215256788412317
+      },
+      {
+        "p_exit": 0.3,
+        "p_accept": 0.7,
+        "mean_events": 2189.8,
+        "mean_occupancy": 0.5002557503161301,
+        "sq_rel_err": 0.3679037179246327
+      },
+      {
+        "p_exit": 0.35,
+        "p_accept": 0.2,
+        "mean_events": 666.2,
+        "mean_occupancy": 0.1894710020885598,
+        "sq_rel_err": 0.53058554104054
+      },
+      {
+        "p_exit": 0.35,
+        "p_accept": 0.25,
+        "mean_events": 820.6,
+        "mean_occupancy": 0.22895847140733147,
+        "sq_rel_err": 0.33536120818590553
+      },
+      {
+        "p_exit": 0.35,
+        "p_accept": 0.3,
+        "mean_events": 957.0,
+        "mean_occupancy": 0.2626408015949495,
+        "sq_rel_err": 0.20256158364601512
+      },
+      {
+        "p_exit": 0.35,
+        "p_accept": 0.35,
+        "mean_events": 1118.0,
+        "mean_occupancy": 0.2947460725994776,
+        "sq_rel_err": 0.09678358915132218
+      },
+      {
+        "p_exit": 0.35,
+        "p_accept": 0.4,
+        "mean_events": 1247.8,
+        "mean_occupancy": 0.31920323001671125,
+        "sq_rel_err": 0.04072089680415562
+      },
+      {
+        "p_exit": 0.35,
+        "p_accept": 0.45,
+        "mean_events": 1394.8,
+        "mean_occupancy": 0.34891336610515444,
+        "sq_rel_err": 0.006248322483220772
+      },
+      {
+        "p_exit": 0.35,
+        "p_accept": 0.5,
+        "mean_events": 1553.5333333333333,
+        "mean_occupancy": 0.38000593633484187,
+        "sq_rel_err": 0.005580948208879678
+      },
+      {
+        "p_exit": 0.35,
+        "p_accept": 0.55,
+        "mean_events": 1708.6666666666667,
+        "mean_occupancy": 0.4078140056842438,
+        "sq_rel_err": 0.03885243061394289
+      },
+      {
+        "p_exit": 0.35,
+        "p_accept": 0.6,
+        "mean_events": 1859.4,
+        "mean_occupancy": 0.43273685366121417,
+        "sq_rel_err": 0.10049984681224525
+      },
+      {
+        "p_exit": 0.35,
+        "p_accept": 0.65,
+        "mean_events": 2042.7333333333333,
+        "mean_occupancy": 0.46242774409788723,
+        "sq_rel_err": 0.21450346741230997
+      },
+      {
+        "p_exit": 0.35,
+        "p_accept": 0.7,
+        "mean_events": 2125.133333333333,
+        "mean_occupancy": 0.485098579752219,
+        "sq_rel_err": 0.29834119857881597
+      },
+      {
+        "p_exit": 0.4,
+        "p_accept": 0.2,
+        "mean_events": 672.8666666666667,
+        "mean_occupancy": 0.18397758830298075,
+        "sq_rel_err": 0.5403434842753508
+      },
+      {
+        "p_exit": 0.4,
+        "p_accept": 0.25,
+        "mean_events": 833.6666666666666,
+        "mean_occupancy": 0.21829041688521328,
+        "sq_rel_err": 0.3497934499074806
+      },
+      {
+        "p_exit": 0.4,
+        "p_accept": 0.3,
+        "mean_events": 965.5333333333333,
+        "mean_occupancy": 0.24826321546049288,
+        "sq_rel_err": 0.22120726923208706
+      },
+      {
+        "p_exit": 0.4,
+        "p_accept": 0.35,
+        "mean_events": 1120.3333333333333,
+        "mean_occupancy": 0.2799884526089379,
+        "sq_rel_err": 0.11188188437820579
+      },
+      {
+        "p_exit": 0.4,
+        "p_accept": 0.4,
+        "mean_events": 1255.5333333333333,
+        "mean_occupancy": 0.30893635246107165,
+        "sq_rel_err": 0.045684476591729084
+      },
+      {
+        "p_exit": 0.4,
+        "p_accept": 0.45,
+        "mean_events": 1408.2666666666667,
+        "mean_occupancy": 0.33968521161407317,
+        "sq_rel_err": 0.006580604045915225
+      },
+      {
+        "p_exit": 0.4,
+        "p_accept": 0.5,
+        "mean_events": 1569.3333333333333,
+        "mean_occupancy": 0.37530132320632564,
+        "sq_rel_err": 0.004622201555606663
+      },
+      {
+        "p_exit": 0.4,
+        "p_accept": 0.55,
+        "mean_events": 1710.8,
+        "mean_occupancy": 0.39018769931786357,
+        "sq_rel_err": 0.027058955979038492
+      },
+      {
+        "p_exit": 0.4,
+        "p_accept": 0.6,
+        "mean_events": 1871.0,
+        "mean_occupancy": 0.42506380204627364,
+        "sq_rel_err": 0.09517103359033341
+      },
+      {
+        "p_exit": 0.4,
+        "p_accept": 0.65,
+        "mean_events": 1948.3333333333333,
+        "mean_occupancy": 0.4425651472089061,
+        "sq_rel_err": 0.14390363313740406
+      },
+      {
+        "p_exit": 0.4,
+        "p_accept": 0.7,
+        "mean_events": 2052.3333333333335,
+        "mean_occupancy": 0.4743630299161458,
+        "sq_rel_err": 0.24036633899549564
+      },
+      {
+        "p_exit": 0.45,
+        "p_accept": 0.2,
+        "mean_events": 679.6,
+        "mean_occupancy": 0.17216102918155834,
+        "sq_rel_err": 0.5685992546699434
+      },
+      {
+        "p_exit": 0.45,
+        "p_accept": 0.25,
+        "mean_events": 835.4,
+        "mean_occupancy": 0.20644105883612598,
+        "sq_rel_err": 0.37560349344142147
+      },
+      {
+        "p_exit": 0.45,
+        "p_accept": 0.3,
+        "mean_events": 983.6666666666666,
+        "mean_occupancy": 0.2403478312725578,
+        "sq_rel_err": 0.22661112690187976
+      },
+      {
+        "p_exit": 0.45,
+        "p_accept": 0.35,
+        "mean_events": 1130.1333333333334,
+        "mean_occupancy": 0.2676430446621101,
+        "sq_rel_err": 0.1245194320642552
+      },
+      {
+        "p_exit": 0.45,
+        "p_accept": 0.4,
+        "mean_events": 1274.4666666666667,
+        "mean_occupancy": 0.3015189156295023,
+        "sq_rel_err": 0.04749811677189411
+      },
+      {
+        "p_exit": 0.45,
+        "p_accept": 0.45,
+        "mean_events": 1419.0666666666666,
+        "mean_occupancy": 0.32815137382781107,
+        "sq_rel_err": 0.009584800644866049
+      },
+      {
+        "p_exit": 0.45,
+        "p_accept": 0.5,
+        "mean_events": 1578.2666666666667,
+        "mean_occupancy": 0.3579113859715462,
+        "sq_rel_err": 0.002031319752074098
+      },
+      {
+        "p_exit": 0.45,
+        "p_accept": 0.55,
+        "mean_events": 1729.4,
+        "mean_occupancy": 0.3886689192211204,
+        "sq_rel_err": 0.02964792316218643
+      },
+      {
+        "p_exit": 0.45,
+        "p_accept": 0.6,
+        "mean_events": 1800.7333333333333,
+        "mean_occupancy": 0.4108629506294819,
+        "sq_rel_err": 0.06111007897951084
+      },
+      {
+        "p_exit": 0.45,
+        "p_accept": 0.65,
+        "mean_events": 1917.5333333333333,
+        "mean_occupancy": 0.4366504976085245,
+        "sq_rel_err": 0.12463485759337986
+      },
+      {
+        "p_exit": 0.45,
+        "p_accept": 0.7,
+        "mean_events": 2003.4,
+        "mean_occupancy": 0.4635892598420501,
+        "sq_rel_err": 0.19883857459966708
+      },
+      {
+        "p_exit": 0.5,
+        "p_accept": 0.2,
+        "mean_events": 689.8,
+        "mean_occupancy": 0.16732494927686495,
+        "sq_rel_err": 0.5754328490635621
+      },
+      {
+        "p_exit": 0.5,
+        "p_accept": 0.25,
+        "mean_events": 846.2666666666667,
+        "mean_occupancy": 0.20441375982781917,
+        "sq_rel_err": 0.37403835374443195
+      },
+      {
+        "p_exit": 0.5,
+        "p_accept": 0.3,
+        "mean_events": 995.2666666666667,
+        "mean_occupancy": 0.23532715575018057,
+        "sq_rel_err": 0.23065787127688897
+      },
+      {
+        "p_exit": 0.5,
+        "p_accept": 0.35,
+        "mean_events": 1134.1333333333334,
+        "mean_occupancy": 0.26283515557127735,
+        "sq_rel_err": 0.13005617897427033
+      },
+      {
+        "p_exit": 0.5,
+        "p_accept": 0.4,
+        "mean_events": 1281.1333333333334,
+        "mean_occupancy": 0.2968864059287451,
+        "sq_rel_err": 0.0502590037748607
+      },
+      {
+        "p_exit": 0.5,
+        "p_accept": 0.45,
+        "mean_events": 1437.0666666666666,
+        "mean_occupancy": 0.32107954553155266,
+        "sq_rel_err": 0.01172533747480882
+      },
+      {
+        "p_exit": 0.5,
+        "p_accept": 0.5,
+        "mean_events": 1581.4,
+        "mean_occupancy": 0.35253236183451725,
+        "sq_rel_err": 0.0022364122079892956
+      },
+      {
+        "p_exit": 0.5,
+        "p_accept": 0.55,
+        "mean_events": 1675.8,
+        "mean_occupancy": 0.3760556985426163,
+        "sq_rel_err": 0.01526944181413112
+      },
+      {
+        "p_exit": 0.5,
+        "p_accept": 0.6,
+        "mean_events": 1767.0666666666666,
+        "mean_occupancy": 0.4001984199590963,
+        "sq_rel_err": 0.04459901944023599
+      },
+      {
+        "p_exit": 0.5,
+        "p_accept": 0.65,
+        "mean_events": 1861.4666666666667,
+        "mean_occupancy": 0.42482336693190426,
+        "sq_rel_err": 0.09193973265970123
+      },
+      {
+        "p_exit": 0.5,
+        "p_accept": 0.7,
+        "mean_events": 1944.4666666666667,
+        "mean_occupancy": 0.4497155845053529,
+        "sq_rel_err": 0.15270060235395116
+      }
+    ]
+  },
+  "real_system": {
+    "net": 83363.40000000951,
+    "sharpe": 0.8792273770400946,
+    "sortino": 1.47521089305313,
+    "calmar": 1.5424221886590965,
+    "maxDD_eod": 25268.759999999427,
+    "CDaR5": 21813.493846153044,
+    "ulcer": 10627.852112756647,
+    "n_discretionary_events": 1511,
+    "occupancy": 0.3554116197655554,
+    "hold_mean": 93.48770053475936,
+    "hold_median": 71.0,
+    "n_holds": 935,
+    "boot_ci90_daily_mean": [
+      -7.103417439684791,
+      318.5286270872199
+    ],
+    "boot_p_daily_mean_positive": 0.9417
+  },
+  "naive_zero_hysteresis_context_only": {
+    "net": 111374.3600000267,
+    "sharpe": 0.9029729651363022,
+    "sortino": 1.5116610568499833,
+    "calmar": 1.3885886290916307,
+    "maxDD_eod": 37499.31999999529,
+    "n_discretionary_events": 3520,
+    "occupancy": 0.8160264776797876,
+    "note": "NOT the tested null (far more turnover than real, no calibration) -- reported only as descriptive context for how much hysteresis changes turnover in the first place."
+  },
+  "null_distribution_summary": {
+    "sharpe": {
+      "mean": 0.5680969277617566,
+      "std": 0.550081390941316,
+      "p5": -0.27911381707430916,
+      "p50": 0.5639411565649306,
+      "p95": 1.409275719649349
+    },
+    "net": {
+      "mean": 45510.1704000123,
+      "std": 43879.57530819118,
+      "p5": -21183.257999986537,
+      "p50": 43624.180000013344,
+      "p95": 113523.44800000818
+    },
+    "maxDD_eod": {
+      "mean": 39273.12133332998,
+      "std": 14146.827675224326,
+      "p5": 22642.053999999178,
+      "p50": 36057.9399999975,
+      "p95": 65167.90599999396
+    },
+    "n_discretionary_events": {
+      "mean": 1578.12,
+      "std": 35.93452239373096
+    },
+    "occupancy": {
+      "mean": 0.3592021728611914,
+      "std": 0.012014544701299236
+    }
+  },
+  "headline": {
+    "real_sharpe_empirical_percentile_in_null": 69.33333333333333,
+    "real_net_empirical_percentile_in_null": 78.33333333333333,
+    "real_maxDD_empirical_percentile_favorable_direction": 86.66666666666667,
+    "real_beats_median_null": true,
+    "real_significantly_outperforms_null_p_ge_95": false,
+    "real_significantly_underperforms_null_p_le_5": false
+  },
+  "interpretation": "Real hysteresis(3.0,1.0)'s Sharpe over the canonical window sits at the 69.3th percentile of 300 turnover-matched generic-suppression nulls (nulls calibrated to real's own discretionary-trade-count and occupancy, but blind to M's magnitude throughout). This is a REASSURING result for the SPECIFIC 3.0/1.0 entry/exit construction: it beats the median of a generic churn-reducer with matched turnover, suggesting the particular threshold choice (not just 'reduces churn somehow') contributes real value. The result does NOT clear the p>=95 bar for statistically distinguishable outperformance -- report the percentile, not a binary claim.",
+  "runtime_seconds": 205.3
+}

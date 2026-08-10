@@ -1,0 +1,58 @@
+{
+  "task": "PLACEBO01 -- HTF (tiltState) causal placebo test",
+  "written_before_any_placebo_realization_is_generated": true,
+  "n_randomizations": 1000,
+  "n_randomizations_minimum_recommended": 200,
+  "seed_family": "20260810 + i, for i in range(0, 1000)  -- np.random.default_rng(20260810 + i), deterministic, no time/unseeded randomness anywhere in this script",
+  "canonical_window": {
+    "start": "2023-01-01",
+    "end": "2025-02-02",
+    "convention": "CLAUDE.md frozen canonical window (2023-01-01T06:00:00Z..2025-02-02T22:59:59Z UTC)",
+    "n_bars": 245943,
+    "n_sessions": 539
+  },
+  "null_construction_method": {
+    "name": "within-year natural-block permutation of tiltState chronology",
+    "unit_of_randomization": "whole trading SESSION (tiltState is a session-level quantity, constant across all bars of a session by construction -- never shuffled at the bar level)",
+    "steps": [
+      "1. Extract the REAL tiltState value for every session in the canonical window, chronologically ordered (539 sessions: 2023=258, 2024=259, 2025-stub=22).",
+      "2. Within each CALENDAR YEAR separately, partition that year's own chronological tiltState sequence into its NATURAL BLOCKS -- maximal contiguous runs of an identical tiltState value. Block boundaries come from the real data, not from a fixed/arbitrary block length.",
+      "3. Randomly permute the ORDER of that year's own blocks (seeded RNG) and re-lay them, in the new order, onto that SAME year's own session-date slots. Block sizes are never split, merged, or resampled -- only their order changes.",
+      "4. Concatenate the (independently, per-year) shuffled sequences back into chronological session order across the full canonical window.",
+      "5. Broadcast each session's shuffled tiltState value onto every bar of that session to get a bar-level shuffled tiltState array.",
+      "6. Apply the SAME shuffled realization to BOTH Product A's mm/ss gating and Product B's mm gating within one replication (one shared HTF-input shuffle per replication, not two independent draws) -- Solar T and B-MOM stay real/unperturbed throughout."
+    ],
+    "preserves_marginal_distribution": "EXACTLY, per year and therefore overall (same multiset of session tiltState values, only reordered)",
+    "preserves_run_length_distribution": "at the BLOCK level exactly (no block resized); DISCLOSED CAVEAT: two blocks sharing the same value can land adjacent post-shuffle and read as one longer realized run -- quantified empirically in the output, not assumed away",
+    "preserves_year_composition": "EXACTLY (blocks never cross a year boundary)",
+    "breaks_temporal_alignment_with_real_market_state": "yes, by construction -- shuffled sessions' HTF state does not match what genuinely occurred on that date"
+  },
+  "components_perturbed": "tiltState ONLY (Product A: mm AND ss, since ss's own gating condition is itself tiltState>0-dependent; Product B: mm only, no ss term exists there)",
+  "components_held_real_unperturbed": [
+    "Solar T (13-member ensemble consensus)",
+    "B-MOM position (bmomPos)",
+    "EntryBlocked/ForcedFlat C4 day-only overlay clocks",
+    "all decoder constants (KSolar, KBmom, TiltRescale, TiltMult, ShortHalf, WSolar, WBmom, EntryLevel, ExitLevel) -- unperturbed, per task scope (EQV01/PERT01's job, not this workflow's)"
+  ],
+  "baseline_definition": "Solar+BMOM-only control: tiltState held at 0 (neutral) for every bar of the canonical window, mechanically forcing Product A's mm=1.0 AND ss=1.0 (ss's condition requires tiltState>0, never true when tiltState==0) and Product B's mm=1.0. Computed ONCE -- identical subtrahend for the real marginal contribution and every one of the 1000 placebo marginal contributions.",
+  "marginal_contribution_definition": "marginal_X = X(full system, given some tiltState array) - X(Solar+BMOM-only baseline), for X in {net, sharpe}, computed separately for Product A and Product B",
+  "reported_statistic": "empirical percentile of the REAL marginal contribution within the null distribution of PLACEBO marginal contributions: pct = 100 * mean(placebo_marginal <= real_marginal). NOT a bare beats-placebo boolean.",
+  "decision_rule_disclosed_in_advance": "Per campaign directive: if the real HTF-overlay's marginal contribution performs no better than the randomized-chronology null (percentile <= ~50%, i.e. real is unremarkable within the null distribution), HTF's economic interpretation weakens substantially. This will be reported plainly regardless of which way it comes out -- no result is preferred over another.",
+  "seed_note": "Fixed integer seed family per governance instruction (no time-seeded or unseeded randomness). Every np.random usage in this script is via np.random.default_rng(SEED_BASE + i) inside the replication loop; nothing upstream (grid_core, sm01_solarsim, sm_bmom) uses randomness at all -- the entire non-placebo substrate is deterministic.",
+  "correctness_gates_passed_before_this_file_was_written": {
+    "gate_1_grid_core_import_self_check": "PASS (dev-window net Product A=$177,924.40, Product B=$301,915.92, asserted inside grid_core.py import)",
+    "gate_2_restricted_window_vs_full_array_canonical_slice": {
+      "product_A": {
+        "grid_core_full_array_sliced_net": 49703.6,
+        "restricted_window_net": 49703.6,
+        "match": true
+      },
+      "product_B": {
+        "grid_core_full_array_sliced_net": 83363.4,
+        "restricted_window_net": 83363.4,
+        "match": true
+      }
+    }
+  },
+  "generated_utc": "2026-08-10T23:19:14.961791+00:00"
+}

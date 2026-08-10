@@ -1,0 +1,160 @@
+{
+  "task": "PLACEBO01 -- B-MOM causal placebo test (circular per-session block shift)",
+  "generated": "2026-08-10",
+  "preregistration_file": "research/system_master/PLACEBO01_COMPONENT_CAUSALITY/out/bmom_placebo_preregistration.md",
+  "n_randomizations": 500,
+  "seed_family": {
+    "base_seed": 20260810,
+    "rule": "rep i (i=0..N_REPS-1) uses seed = base_seed + i"
+  },
+  "null_construction": "Circular shift of the REAL, complete per-session bmomPos path across the M canonical-window sessions by a single random offset K ~ Uniform{1,...,M-1} per replicate; donor session (r+K) mod M's own intact within-day path is reattached to target session r by matching time-of-day slot (hm), defaulting to flat/0 where the donor session had already ended (early closes). Solar13/HTF/decoder formulas/constants stay real and unperturbed; only bmomPos is shuffled.",
+  "canonical_window": {
+    "start": "2023-01-01",
+    "end": "2025-02-02",
+    "n_bars": 245943,
+    "n_sessions_M": 539,
+    "note": "CLAUDE.md's frozen canonical window (research/system_master/GRID01.../grid_core.py CANON_START/CANON_END). No campaign-certified $ figure exists specifically for this narrower window for either product (only the 2022-01-03..2026-05-31 dev window is certified) -- correctness here rests on gate #1 (grid_core's own dev-window certified-net self-check, run at import) and gate #2 (this script's canonical-window-sliced exec reproduces grid_core's full-history-sliced exec exactly), both PASS, plus the K=0 identity-shift sanity check."
+  },
+  "correctness_gates": {
+    "gate1_grid_core_devwindow_selfcheck": "PASS (raised at import if it failed; see printed log -- Product A $177,924.40, Product B $301,915.92)",
+    "gate2_canonical_slice_vs_full_history_slice": {
+      "product_A_exact_match": false,
+      "product_A_max_abs_diff": 5.820766091346741e-11,
+      "product_B_exact_match": false,
+      "product_B_max_abs_diff": 1.2369127944111824e-10
+    },
+    "sanity_K0_identity_shift_reproduces_real_path": true
+  },
+  "real_full": {
+    "A": {
+      "net": 49703.6000000068,
+      "sharpe": 1.030440403876246,
+      "maxDD_eod": 11289.999999999687,
+      "turnover": 16786.0,
+      "n_days": 539
+    },
+    "B": {
+      "net": 83363.40000000951,
+      "sharpe": 0.8792273770400946,
+      "maxDD_eod": 25268.759999999427,
+      "turnover": 1870.0,
+      "n_days": 539
+    }
+  },
+  "solar_only": {
+    "A": {
+      "net": 27357.00000001208,
+      "sharpe": 0.7546316377382323,
+      "maxDD_eod": 10711.299999996729,
+      "turnover": 12990.0,
+      "n_days": 539
+    },
+    "B": {
+      "net": 1627.4800000116156,
+      "sharpe": 0.017886266427932295,
+      "maxDD_eod": 60100.55999999761,
+      "turnover": 1664.0,
+      "n_days": 539
+    }
+  },
+  "real_marginal_contribution_delta": {
+    "A": {
+      "net": 22346.59999999472,
+      "sharpe": 0.27580876613801375,
+      "maxDD_eod": 578.7000000029584,
+      "turnover": 3796.0
+    },
+    "B": {
+      "net": 81735.91999999789,
+      "sharpe": 0.8613411106121622,
+      "maxDD_eod": -34831.799999998184,
+      "turnover": 206.0
+    }
+  },
+  "null_summary_and_percentile": {
+    "A": {
+      "net": {
+        "real_delta": 22346.59999999472,
+        "placebo_delta_mean": -4912.302200000499,
+        "placebo_delta_std": 17573.18766018327,
+        "placebo_delta_min": -51649.49999999956,
+        "placebo_delta_max": 44635.09999999932,
+        "percentile_of_real_within_null": 94.2
+      },
+      "sharpe": {
+        "real_delta": 0.27580876613801375,
+        "placebo_delta_mean": -0.25362790146831404,
+        "placebo_delta_std": 0.3923790117695593,
+        "placebo_delta_min": -1.2889732818642994,
+        "placebo_delta_max": 0.7747089267935807,
+        "percentile_of_real_within_null": 90.4
+      },
+      "maxDD_eod": {
+        "real_delta": 578.7000000029584,
+        "placebo_delta_mean": 9224.125800000886,
+        "placebo_delta_std": 5040.179482762793,
+        "placebo_delta_min": -303.59999999718275,
+        "placebo_delta_max": 30197.200000000157,
+        "percentile_of_real_within_null": 1.6
+      },
+      "turnover": {
+        "real_delta": 3796.0,
+        "placebo_delta_mean": 3615.508,
+        "placebo_delta_std": 42.03393437781619,
+        "placebo_delta_min": 3454.0,
+        "placebo_delta_max": 3756.0,
+        "percentile_of_real_within_null": 100.0
+      }
+    },
+    "B": {
+      "net": {
+        "real_delta": 81735.91999999789,
+        "placebo_delta_mean": 31237.167520000246,
+        "placebo_delta_std": 38089.267547390446,
+        "placebo_delta_min": -58982.67999999842,
+        "placebo_delta_max": 141351.95999999094,
+        "percentile_of_real_within_null": 88.8
+      },
+      "sharpe": {
+        "real_delta": 0.8613411106121622,
+        "placebo_delta_mean": 0.3308545491940071,
+        "placebo_delta_std": 0.4038312527732165,
+        "placebo_delta_min": -0.6268125181801072,
+        "placebo_delta_max": 1.4195671344513898,
+        "percentile_of_real_within_null": 89.2
+      },
+      "maxDD_eod": {
+        "real_delta": -34831.799999998184,
+        "placebo_delta_mean": -10305.105519999519,
+        "placebo_delta_std": 11978.316495722322,
+        "placebo_delta_min": -33967.599999997765,
+        "placebo_delta_max": 21901.640000000363,
+        "percentile_of_real_within_null": 0.0
+      },
+      "turnover": {
+        "real_delta": 206.0,
+        "placebo_delta_mean": 230.336,
+        "placebo_delta_std": 25.897267054300602,
+        "placebo_delta_min": 140.0,
+        "placebo_delta_max": 292.0,
+        "percentile_of_real_within_null": 15.9
+      }
+    }
+  },
+  "interpretation": {
+    "A": {
+      "net": "COMPARABLE_TO_PLACEBO (not distinguishable from a random same-shaped path)",
+      "sharpe": "COMPARABLE_TO_PLACEBO (not distinguishable from a random same-shaped path)",
+      "maxDD_eod": "TAIL (structural/informative)",
+      "turnover": "TAIL (structural/informative)"
+    },
+    "B": {
+      "net": "COMPARABLE_TO_PLACEBO (not distinguishable from a random same-shaped path)",
+      "sharpe": "COMPARABLE_TO_PLACEBO (not distinguishable from a random same-shaped path)",
+      "maxDD_eod": "TAIL (structural/informative)",
+      "turnover": "COMPARABLE_TO_PLACEBO (not distinguishable from a random same-shaped path)"
+    }
+  },
+  "headline": "Product B (BEST_ONE_NQ) real B-MOM net-PnL marginal contribution over Solar+HTF-only lands at the 88.8th percentile of 500 circular-shift placebo draws (COMPARABLE_TO_PLACEBO (not distinguishable from a random same-shaped path)); Product A (continuous-sizing) lands at the 94.2th percentile (COMPARABLE_TO_PLACEBO (not distinguishable from a random same-shaped path)).",
+  "runtime_seconds": 210.3
+}
