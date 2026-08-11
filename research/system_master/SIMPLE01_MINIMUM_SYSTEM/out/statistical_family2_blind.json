@@ -1,0 +1,485 @@
+{
+  "meta": {
+    "bootstrap": {
+      "method": "circular session-block bootstrap, paired (identical resampled index applied to candidate and full simultaneously)",
+      "block_sessions": 5,
+      "B_replicates": 10000,
+      "seed": 20260808,
+      "window_primary": "dev 2022-01-01..2026-05-31",
+      "n_sessions_dev": 1139
+    },
+    "label_file_mapping_recovered": {
+      "W": "A0",
+      "K": "A1",
+      "R": "A2",
+      "V": "A_FULL"
+    }
+  },
+  "pairs": {
+    "W_vs_V": {
+      "n_sessions": 1139,
+      "block": 5,
+      "B": 10000,
+      "seed": 20260808,
+      "sharpe_margin": {
+        "P_diff_gte_neg0.10": 0.2239,
+        "outcome": "FAIL",
+        "bootstrap_mean_diff": -0.17757541839688742,
+        "bootstrap_median_diff": -0.17530160200928113,
+        "bootstrap_SE_diff": 0.10298246600471148,
+        "CI_90pct_diff": [
+          -0.35125799710940575,
+          -0.010772179194153618
+        ],
+        "CI_95pct_diff": [
+          -0.38608572627088533,
+          0.01938730233636378
+        ],
+        "realized_daily_pnl_correlation_candidate_vs_full": 0.9736588736027106,
+        "bootstrap_sharpe_replicate_correlation": 0.9652758264094037,
+        "bootstrap_mean_sharpe_candidate": 0.9937679842582419,
+        "bootstrap_mean_sharpe_full": 1.1713434026551293
+      },
+      "cdar_margin": {
+        "point_estimate_cdar_candidate": 18227.873214287163,
+        "point_estimate_cdar_full": 14323.078571428612,
+        "point_estimate_ratio": 1.2726225806404328,
+        "bootstrap_mean_cdar_candidate": 31335.14480035761,
+        "bootstrap_mean_cdar_full": 27066.11687428547,
+        "bootstrap_mean_ratio": 1.1577259104400006,
+        "bootstrap_median_ratio": 1.1361328952041951,
+        "CI_90pct_ratio": [
+          0.9296276610838207,
+          1.493355255607613
+        ],
+        "P_ratio_lte_1.10": 0.3992,
+        "outcome_point_estimate": "FAIL",
+        "outcome_bootstrap_mean": "FAIL"
+      },
+      "top10_day_retention_margin": {
+        "recomputed_dev_window": 0.901821623751828,
+        "outcome": "PASS"
+      },
+      "top1pct_trade_retention_margin": {
+        "status": "DATA_UNAVAILABLE",
+        "note": "No trade-level (per-trade) P&L file was provided or found for family-2 labels; only session-level daily PnL CSVs exist. This leg of margin 3.4 cannot be computed from available data and is NOT assumed to pass."
+      },
+      "top_day_and_trade_retention_margin_combined_outcome": "INCOMPLETE (day-leg PASS, trade-leg DATA_UNAVAILABLE) -- cannot certify full PASS on this joint gate",
+      "annual_partition_margin": {
+        "years": [
+          2022,
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "candidate_annual_net": {
+          "2022": 45252.20000000921,
+          "2023": 12429.400000005458,
+          "2024": 28288.19999999828,
+          "2025": 65703.39999998972,
+          "2026": 887.9999999904812
+        },
+        "full_annual_net": {
+          "2022": 47689.00000000608,
+          "2023": 17294.100000005517,
+          "2024": 32135.20000000004,
+          "2025": 70451.89999999272,
+          "2026": 10354.19999999486
+        },
+        "same_sign_by_year": {
+          "2022": true,
+          "2023": true,
+          "2024": true,
+          "2025": true,
+          "2026": true
+        },
+        "n_years_matching": 5,
+        "n_years_total": 5,
+        "outcome": "PASS"
+      },
+      "concentration_gate_incremental_advantage": {
+        "dev_window_incremental_advantage_dollars": -25363.200000006065,
+        "largest_single_day_share_of_advantage": null,
+        "outcome": "PASS (N/A -- candidate does not show a positive incremental net advantage over FULL on dev window; gate is asymmetric and fires only on claimed improvements)"
+      },
+      "after_cost_positive_margin": {
+        "dev_window_net": 152561.19999999314,
+        "outcome": "PASS"
+      },
+      "intraday_dd_margin": {
+        "source": "given point estimates (bar-level intraday data not in provided daily-PnL files)",
+        "maxDD_bar_intraday_candidate": 34430.75,
+        "maxDD_bar_intraday_full": 32921.0,
+        "ratio": 1.0458597855472191,
+        "outcome": "PASS"
+      },
+      "cost_stress_margin": {
+        "source": "given point estimate (stress-cost daily PnL series not in provided files)",
+        "dev_window_net_stress_plus1tick": 132936.2,
+        "outcome": "PASS"
+      },
+      "complexity_reduction_margin": {
+        "source": "02_SPEC_complexity_metric.md sec4 (construction-only, frozen before any performance was computed)",
+        "qualifies_meaningful_simplification": true,
+        "reason": "drops >=1 full signal module (HTF module -- both mm and ss forced neutral, tiltState/TiltSma become dead code)",
+        "outcome": "PASS"
+      },
+      "margin_outcomes_summary": {
+        "sharpe_margin": "FAIL",
+        "cdar_margin_point_estimate": "FAIL",
+        "top10_day_retention_margin": "PASS",
+        "top1pct_trade_retention_margin": "DATA_UNAVAILABLE",
+        "intraday_dd_margin": "PASS",
+        "after_cost_positive_margin": "PASS",
+        "cost_stress_margin": "PASS",
+        "annual_partition_margin": "PASS",
+        "concentration_gate_incremental_advantage": "PASS",
+        "complexity_reduction_margin": "PASS"
+      },
+      "overall_pass": false,
+      "overall_verdict_note": "DOES NOT CLEAR ALL FROZEN MARGINS (see margin_outcomes_summary for which failed / were unresolved) -- not a genuine SIMPLE01 promotion candidate; per governance, ALL margins must clear, not a majority",
+      "secondary_non_gating_disclosure": {
+        "legacy_canonical_2023_01_01_to_2025_02_02": {
+          "gates_nothing": true,
+          "n_sessions": 539,
+          "net_candidate": 43737.10000000333,
+          "net_full": 49703.600000005325,
+          "sharpe_candidate": 0.8322336216507702,
+          "sharpe_full": 1.0304404038762163,
+          "cdar95_candidate": 13470.83461538464,
+          "cdar95_full": 9679.78461538489
+        },
+        "consumed_holdout_2026_06_01_to_2026_07_31": {
+          "status": "CONSUMED per HOLDOUT_DETERMINATION_20260809.md -- characterization ONLY, no tuning, no gate, no selection follows",
+          "gates_nothing": true,
+          "n_sessions": 45,
+          "net_candidate": 39132.999999994296,
+          "net_full": 34970.099999996106
+        }
+      }
+    },
+    "K_vs_V": {
+      "n_sessions": 1139,
+      "block": 5,
+      "B": 10000,
+      "seed": 20260808,
+      "sharpe_margin": {
+        "P_diff_gte_neg0.10": 0.9077,
+        "outcome": "PASS",
+        "bootstrap_mean_diff": -0.047740194681860186,
+        "bootstrap_median_diff": -0.04801575312993109,
+        "bootstrap_SE_diff": 0.03949294099731979,
+        "CI_90pct_diff": [
+          -0.11137344534587355,
+          0.018748978078097518
+        ],
+        "CI_95pct_diff": [
+          -0.12555011595403973,
+          0.032144068454395484
+        ],
+        "realized_daily_pnl_correlation_candidate_vs_full": 0.994952454344381,
+        "bootstrap_sharpe_replicate_correlation": 0.9947584144346989,
+        "bootstrap_mean_sharpe_candidate": 1.1236032079732692,
+        "bootstrap_mean_sharpe_full": 1.1713434026551293
+      },
+      "cdar_margin": {
+        "point_estimate_cdar_candidate": 14006.412499999731,
+        "point_estimate_cdar_full": 14323.078571428612,
+        "point_estimate_ratio": 0.9778912005649009,
+        "bootstrap_mean_cdar_candidate": 26295.032435712892,
+        "bootstrap_mean_cdar_full": 27066.11687428547,
+        "bootstrap_mean_ratio": 0.9715110799914871,
+        "bootstrap_median_ratio": 0.968804170591558,
+        "CI_90pct_ratio": [
+          0.8848797732417923,
+          1.0670725737697628
+        ],
+        "P_ratio_lte_1.10": 0.9771,
+        "outcome_point_estimate": "PASS",
+        "outcome_bootstrap_mean": "PASS"
+      },
+      "top10_day_retention_margin": {
+        "recomputed_dev_window": 0.9018216237518295,
+        "outcome": "PASS"
+      },
+      "top1pct_trade_retention_margin": {
+        "status": "DATA_UNAVAILABLE",
+        "note": "No trade-level (per-trade) P&L file was provided or found for family-2 labels; only session-level daily PnL CSVs exist. This leg of margin 3.4 cannot be computed from available data and is NOT assumed to pass."
+      },
+      "top_day_and_trade_retention_margin_combined_outcome": "INCOMPLETE (day-leg PASS, trade-leg DATA_UNAVAILABLE) -- cannot certify full PASS on this joint gate",
+      "annual_partition_margin": {
+        "years": [
+          2022,
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "candidate_annual_net": {
+          "2022": 43967.30000000825,
+          "2023": 15862.70000000763,
+          "2024": 27220.10000000267,
+          "2025": 64298.99999999607,
+          "2026": 8439.999999994672
+        },
+        "full_annual_net": {
+          "2022": 47689.00000000608,
+          "2023": 17294.100000005517,
+          "2024": 32135.20000000004,
+          "2025": 70451.89999999272,
+          "2026": 10354.19999999486
+        },
+        "same_sign_by_year": {
+          "2022": true,
+          "2023": true,
+          "2024": true,
+          "2025": true,
+          "2026": true
+        },
+        "n_years_matching": 5,
+        "n_years_total": 5,
+        "outcome": "PASS"
+      },
+      "concentration_gate_incremental_advantage": {
+        "dev_window_incremental_advantage_dollars": -18135.29999998992,
+        "largest_single_day_share_of_advantage": null,
+        "outcome": "PASS (N/A -- candidate does not show a positive incremental net advantage over FULL on dev window; gate is asymmetric and fires only on claimed improvements)"
+      },
+      "after_cost_positive_margin": {
+        "dev_window_net": 159789.1000000093,
+        "outcome": "PASS"
+      },
+      "intraday_dd_margin": {
+        "source": "given point estimates (bar-level intraday data not in provided daily-PnL files)",
+        "maxDD_bar_intraday_candidate": 28953.55,
+        "maxDD_bar_intraday_full": 32921.0,
+        "ratio": 0.8794857385863126,
+        "outcome": "PASS"
+      },
+      "cost_stress_margin": {
+        "source": "given point estimate (stress-cost daily PnL series not in provided files)",
+        "dev_window_net_stress_plus1tick": 143189.1,
+        "outcome": "PASS"
+      },
+      "complexity_reduction_margin": {
+        "source": "02_SPEC_complexity_metric.md sec4 (construction-only, frozen before any performance was computed)",
+        "qualifies_meaningful_simplification": false,
+        "reason": "0 modules dropped (HTF module still live via ss/short-halving); only 1 incremental parameter (TiltMult) drops, short of the >=2-without-a-module-drop bar",
+        "outcome": "FAIL"
+      },
+      "margin_outcomes_summary": {
+        "sharpe_margin": "PASS",
+        "cdar_margin_point_estimate": "PASS",
+        "top10_day_retention_margin": "PASS",
+        "top1pct_trade_retention_margin": "DATA_UNAVAILABLE",
+        "intraday_dd_margin": "PASS",
+        "after_cost_positive_margin": "PASS",
+        "cost_stress_margin": "PASS",
+        "annual_partition_margin": "PASS",
+        "concentration_gate_incremental_advantage": "PASS",
+        "complexity_reduction_margin": "FAIL"
+      },
+      "overall_pass": false,
+      "overall_verdict_note": "DOES NOT CLEAR ALL FROZEN MARGINS (see margin_outcomes_summary for which failed / were unresolved) -- not a genuine SIMPLE01 promotion candidate; per governance, ALL margins must clear, not a majority",
+      "secondary_non_gating_disclosure": {
+        "legacy_canonical_2023_01_01_to_2025_02_02": {
+          "gates_nothing": true,
+          "n_sessions": 539,
+          "net_candidate": 43930.600000009836,
+          "net_full": 49703.600000005325,
+          "sharpe_candidate": 0.972821395816475,
+          "sharpe_full": 1.0304404038762163,
+          "cdar95_candidate": 9924.346153845789,
+          "cdar95_full": 9679.78461538489
+        },
+        "consumed_holdout_2026_06_01_to_2026_07_31": {
+          "status": "CONSUMED per HOLDOUT_DETERMINATION_20260809.md -- characterization ONLY, no tuning, no gate, no selection follows",
+          "gates_nothing": true,
+          "n_sessions": 45,
+          "net_candidate": 31108.999999995285,
+          "net_full": 34970.099999996106
+        }
+      }
+    },
+    "R_vs_V": {
+      "n_sessions": 1139,
+      "block": 5,
+      "B": 10000,
+      "seed": 20260808,
+      "sharpe_margin": {
+        "P_diff_gte_neg0.10": 0.4071,
+        "outcome": "FAIL",
+        "bootstrap_mean_diff": -0.12115503016822839,
+        "bootstrap_median_diff": -0.12003357022141109,
+        "bootstrap_SE_diff": 0.08522199958270557,
+        "CI_90pct_diff": [
+          -0.2656283545047145,
+          0.016477183591260103
+        ],
+        "CI_95pct_diff": [
+          -0.29417552959456783,
+          0.041586079908025035
+        ],
+        "realized_daily_pnl_correlation_candidate_vs_full": 0.9834989416335206,
+        "bootstrap_sharpe_replicate_correlation": 0.9760392309259857,
+        "bootstrap_mean_sharpe_candidate": 1.0501883724869008,
+        "bootstrap_mean_sharpe_full": 1.1713434026551293
+      },
+      "cdar_margin": {
+        "point_estimate_cdar_candidate": 18038.79464285916,
+        "point_estimate_cdar_full": 14323.078571428612,
+        "point_estimate_ratio": 1.259421607784976,
+        "bootstrap_mean_cdar_candidate": 31750.565012323434,
+        "bootstrap_mean_cdar_full": 27066.11687428547,
+        "bootstrap_mean_ratio": 1.1730742595916477,
+        "bootstrap_median_ratio": 1.1568405852680756,
+        "CI_90pct_ratio": [
+          0.9786078388640953,
+          1.449798226802383
+        ],
+        "P_ratio_lte_1.10": 0.3126,
+        "outcome_point_estimate": "FAIL",
+        "outcome_bootstrap_mean": "FAIL"
+      },
+      "top10_day_retention_margin": {
+        "recomputed_dev_window": 0.999999999999999,
+        "outcome": "PASS"
+      },
+      "top1pct_trade_retention_margin": {
+        "status": "DATA_UNAVAILABLE",
+        "note": "No trade-level (per-trade) P&L file was provided or found for family-2 labels; only session-level daily PnL CSVs exist. This leg of margin 3.4 cannot be computed from available data and is NOT assumed to pass."
+      },
+      "top_day_and_trade_retention_margin_combined_outcome": "INCOMPLETE (day-leg PASS, trade-leg DATA_UNAVAILABLE) -- cannot certify full PASS on this joint gate",
+      "annual_partition_margin": {
+        "years": [
+          2022,
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "candidate_annual_net": {
+          "2022": 48973.900000006455,
+          "2023": 13860.800000003897,
+          "2024": 33203.29999999603,
+          "2025": 71856.29999998485,
+          "2026": 2802.199999989967
+        },
+        "full_annual_net": {
+          "2022": 47689.00000000608,
+          "2023": 17294.100000005517,
+          "2024": 32135.20000000004,
+          "2025": 70451.89999999272,
+          "2026": 10354.19999999486
+        },
+        "same_sign_by_year": {
+          "2022": true,
+          "2023": true,
+          "2024": true,
+          "2025": true,
+          "2026": true
+        },
+        "n_years_matching": 5,
+        "n_years_total": 5,
+        "outcome": "PASS"
+      },
+      "concentration_gate_incremental_advantage": {
+        "dev_window_incremental_advantage_dollars": -7227.900000018009,
+        "largest_single_day_share_of_advantage": null,
+        "outcome": "PASS (N/A -- candidate does not show a positive incremental net advantage over FULL on dev window; gate is asymmetric and fires only on claimed improvements)"
+      },
+      "after_cost_positive_margin": {
+        "dev_window_net": 170696.4999999812,
+        "outcome": "PASS"
+      },
+      "intraday_dd_margin": {
+        "source": "given point estimates (bar-level intraday data not in provided daily-PnL files)",
+        "maxDD_bar_intraday_candidate": 38398.2,
+        "maxDD_bar_intraday_full": 32921.0,
+        "ratio": 1.1663740469609063,
+        "outcome": "FAIL"
+      },
+      "cost_stress_margin": {
+        "source": "given point estimate (stress-cost daily PnL series not in provided files)",
+        "dev_window_net_stress_plus1tick": 150066.0,
+        "outcome": "PASS"
+      },
+      "complexity_reduction_margin": {
+        "source": "02_SPEC_complexity_metric.md sec4 (construction-only, frozen before any performance was computed)",
+        "qualifies_meaningful_simplification": false,
+        "reason": "0 modules dropped (HTF module still live via mm/up-weight); only 1 incremental parameter (ShortHalf) drops, short of the >=2-without-a-module-drop bar",
+        "outcome": "FAIL"
+      },
+      "margin_outcomes_summary": {
+        "sharpe_margin": "FAIL",
+        "cdar_margin_point_estimate": "FAIL",
+        "top10_day_retention_margin": "PASS",
+        "top1pct_trade_retention_margin": "DATA_UNAVAILABLE",
+        "intraday_dd_margin": "FAIL",
+        "after_cost_positive_margin": "PASS",
+        "cost_stress_margin": "PASS",
+        "annual_partition_margin": "PASS",
+        "concentration_gate_incremental_advantage": "PASS",
+        "complexity_reduction_margin": "FAIL"
+      },
+      "overall_pass": false,
+      "overall_verdict_note": "DOES NOT CLEAR ALL FROZEN MARGINS (see margin_outcomes_summary for which failed / were unresolved) -- not a genuine SIMPLE01 promotion candidate; per governance, ALL margins must clear, not a majority",
+      "secondary_non_gating_disclosure": {
+        "legacy_canonical_2023_01_01_to_2025_02_02": {
+          "gates_nothing": true,
+          "n_sessions": 539,
+          "net_candidate": 49510.09999999975,
+          "net_full": 49703.600000005325,
+          "sharpe_candidate": 0.8965848923504307,
+          "sharpe_full": 1.0304404038762163,
+          "cdar95_candidate": 12513.834615385651,
+          "cdar95_full": 9679.78461538489
+        },
+        "consumed_holdout_2026_06_01_to_2026_07_31": {
+          "status": "CONSUMED per HOLDOUT_DETERMINATION_20260809.md -- characterization ONLY, no tuning, no gate, no selection follows",
+          "gates_nothing": true,
+          "n_sessions": 45,
+          "net_candidate": 42994.09999999465,
+          "net_full": 34970.099999996106
+        }
+      }
+    }
+  },
+  "dsr_lite_context": {
+    "method": "Bailey & Lopez de Prado (2012) PSR/DSR, 'lite' variant: trial universe = the 4 anonymized labels in this task (W,K,R,V), dev window, treated as N=4 independent trials for the expected-max-Sharpe-under-multiple-testing deflator SR0. sigma_SR is the sample std of the 4 realized dev-window Sharpes (a rough proxy for the DSR formula's 'variance of SR estimator across trials', appropriate only for a lite/disclosure-only reading, not a rigorous trials-adjusted p-value).",
+    "n_trials": 4,
+    "sigma_SR_across_trials": 0.07754886652035689,
+    "SR0_expected_max_under_N_trials": 0.08159093245599922,
+    "per_label": {
+      "W": {
+        "sharpe_hat_dev": 1.0010062316248192,
+        "skew_daily_pnl_dev": 1.565849619574808,
+        "kurtosis_pearson_daily_pnl_dev": 9.639335151744914,
+        "PSR_vs_0": 1.0,
+        "DSR_vs_SR0_trials_deflated": 1.0
+      },
+      "K": {
+        "sharpe_hat_dev": 1.12888133926102,
+        "skew_daily_pnl_dev": 1.6285988067124346,
+        "kurtosis_pearson_daily_pnl_dev": 11.161536458001729,
+        "PSR_vs_0": 1.0,
+        "DSR_vs_SR0_trials_deflated": 1.0
+      },
+      "R": {
+        "sharpe_hat_dev": 1.0576467216860055,
+        "skew_daily_pnl_dev": 1.7433761652914632,
+        "kurtosis_pearson_daily_pnl_dev": 10.94370151860702,
+        "PSR_vs_0": 1.0,
+        "DSR_vs_SR0_trials_deflated": 1.0
+      },
+      "V": {
+        "sharpe_hat_dev": 1.1769955515978732,
+        "skew_daily_pnl_dev": 1.8552995587660106,
+        "kurtosis_pearson_daily_pnl_dev": 12.834920226733203,
+        "PSR_vs_0": 1.0,
+        "DSR_vs_SR0_trials_deflated": 1.0
+      }
+    }
+  }
+}

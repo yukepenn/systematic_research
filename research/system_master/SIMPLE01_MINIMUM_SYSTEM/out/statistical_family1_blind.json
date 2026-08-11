@@ -1,0 +1,356 @@
+{
+  "task": "SIMPLE01 blind statistical non-inferiority test, Product family 1 (anonymized labels Q, Z, M only; this agent was not told which label is incumbent/simpler/which rung)",
+  "designated_pairs_frozen_order": [
+    [
+      "Q",
+      "M"
+    ],
+    [
+      "Z",
+      "M"
+    ]
+  ],
+  "method": {
+    "bootstrap": "circular session-block bootstrap (house convention: src/analytics/primary_objective.py::_idx_moving_block / make_indices('moving5')), block=5 trading sessions, B=10000, seed=20260808, applied PAIRED (same resampled index draw used for candidate and full every replicate, not independent marginal bootstraps)",
+    "reporting_window_primary_gating": "dev window 2022-01-01..2026-05-31",
+    "n_dev_sessions": 1139,
+    "sharpe_definition": "mean(daily pnl)/std(daily pnl, ddof=1) * sqrt(252) -- primary_objective.daily_sharpe, house convention",
+    "cdar_definition": "mean of worst 5% of the EOD dollar drawdown series (alpha=0.95) -- primary_objective.cdar_dollar, house convention"
+  },
+  "point_estimates_dev_window_per_label": {
+    "sharpe": {
+      "Q": 0.5433389875587706,
+      "Z": 1.102534968316824,
+      "M": 1.1130645724141028
+    },
+    "net": {
+      "Q": 130412.9999999933,
+      "Z": 293626.91999998776,
+      "M": 301915.91999998846
+    },
+    "cdar_0.95": {
+      "Q": 62185.88857143251,
+      "Z": 42092.245000002105,
+      "M": 44518.38714286004
+    }
+  },
+  "dsr_lite_context_per_label": {
+    "Q": {
+      "n_sessions": 1139,
+      "skew": 0.8033008664057384,
+      "excess_kurtosis": 3.60670522579197,
+      "sharpe_daily": 0.0342271390163363,
+      "sharpe_annualized": 0.5433389875587706,
+      "lo2002_se_daily": 0.029244922106749276,
+      "lo2002_se_annualized_scaled": 0.4642487460354824,
+      "note": "DSR-lite: skew/kurtosis/n/Lo(2002) SE inputs only; NOT a deflated Sharpe ratio (no trial-count assumption applied at this stage, per instructions)."
+    },
+    "Z": {
+      "n_sessions": 1139,
+      "skew": 1.054043304870187,
+      "excess_kurtosis": 7.595302798170753,
+      "sharpe_daily": 0.06945317471235223,
+      "sharpe_annualized": 1.102534968316824,
+      "lo2002_se_daily": 0.028702779919001907,
+      "lo2002_se_annualized_scaled": 0.4556425056113862,
+      "note": "DSR-lite: skew/kurtosis/n/Lo(2002) SE inputs only; NOT a deflated Sharpe ratio (no trial-count assumption applied at this stage, per instructions)."
+    },
+    "M": {
+      "n_sessions": 1139,
+      "skew": 0.9482737978144778,
+      "excess_kurtosis": 7.029315434886376,
+      "sharpe_daily": 0.0701164774229562,
+      "sharpe_annualized": 1.1130645724141028,
+      "lo2002_se_daily": 0.028798109475989046,
+      "lo2002_se_annualized_scaled": 0.4571558154136778,
+      "note": "DSR-lite: skew/kurtosis/n/Lo(2002) SE inputs only; NOT a deflated Sharpe ratio (no trial-count assumption applied at this stage, per instructions)."
+    }
+  },
+  "pair_results": [
+    {
+      "pair": [
+        "Q",
+        "M"
+      ],
+      "reading": "is Q non-inferior to M under the frozen margins?",
+      "margins": {
+        "1_sharpe_margin": {
+          "verdict": "FAIL",
+          "detail": {
+            "definition": "P[Sharpe_cand >= Sharpe_full - 0.10] >= 0.90 (paired circular block bootstrap)",
+            "point_sharpe_candidate_dev": 0.5433389875587706,
+            "point_sharpe_full_dev": 1.1130645724141028,
+            "point_sharpe_diff": -0.5697255848553322,
+            "bootstrap_p_hat": 0.0584,
+            "bootstrap_p_se_binomial_approx": 0.002344982729147488,
+            "bootstrap_diff_mean": -0.5761081718509063,
+            "bootstrap_diff_sd": 0.305007989256433,
+            "bootstrap_diff_95pct_CI": [
+              -1.1697254816730807,
+              0.025778544992539856
+            ],
+            "paired_daily_pnl_correlation_original_data": 0.8143928118873035,
+            "n_boot": 10000,
+            "block": 5,
+            "seed": 20260808,
+            "verdict": "FAIL",
+            "verdict_key": {
+              "PASS": "p_hat>=0.90",
+              "INCONCLUSIVE": "0.80<=p_hat<0.90",
+              "FAIL": "p_hat<0.80"
+            }
+          }
+        },
+        "2_cdar_margin": {
+          "verdict": "FAIL",
+          "detail": {
+            "definition": "CDaR_0.95(candidate) <= 1.10 x CDaR_0.95(full); point estimate on real dev-window data is the primary decision; bootstrap distribution on the SAME resampled paths reported for disclosure/CI (no explicit probability threshold was frozen for this margin, unlike sharpe_margin)",
+            "cdar_candidate_point": 62185.88857143251,
+            "cdar_full_point": 44518.38714286004,
+            "cdar_ratio_point": 1.396858524363815,
+            "cdar_point_pass": false,
+            "bootstrap_cdar_ratio_mean": 1.3382963832652564,
+            "bootstrap_cdar_ratio_95pct_CI": [
+              0.6176641851075031,
+              2.58995100914947
+            ],
+            "bootstrap_P_ratio_leq_1p10": 0.3573,
+            "verdict": "FAIL"
+          }
+        },
+        "3_intraday_dd_margin": {
+          "verdict": "FAIL",
+          "detail": {
+            "definition": "candidate bar-level intraday DD (dev) <= 1.15 x full's",
+            "candidate_intraday_dd_dev": 76518.64,
+            "full_intraday_dd_dev": 59717.44,
+            "ratio": 1.2813449471377205,
+            "source": "SOURCED FROM SUPPLIED ANONYMIZED METRICS BLOB -- not independently recomputable by this agent (only daily-aggregate EOD P&L files were provided, not bar-level intraday marks)"
+          }
+        },
+        "4_top_day_and_trade_retention_margin": {
+          "verdict": "FAIL",
+          "detail": {
+            "day_leg": {
+              "definition": "top-10-day PnL retention >= 90% vs FULL",
+              "recomputed_by_this_agent_from_daily_pnl": 0.81306057460591,
+              "supplied_value_cross_check": 0.813,
+              "pass": false
+            },
+            "trade_leg": {
+              "definition": "top-1% trade P&L retention >= 90% vs FULL (CONVENTIONS.md gate 6)",
+              "status": "NOT_EVALUABLE",
+              "reason": "No trade-level P&L was supplied to this agent -- only daily-aggregate session P&L CSVs (session_date,pnl). This leg cannot be computed or cross-checked from the data made available for this blind test."
+            },
+            "joint_rule": "AND of both legs (CONVENTIONS.md gate 6, frozen verbatim). If the day leg alone already fails, the joint margin is a confirmed FAIL irrespective of the missing trade leg. If the day leg passes, the joint margin cannot be confirmed PASS without the trade leg -- reported INCOMPLETE, not PASS."
+          }
+        },
+        "5_after_cost_positive_margin": {
+          "verdict": "PASS",
+          "detail": {
+            "net_dev": 130412.9999999933,
+            "pass": true
+          }
+        },
+        "6_cost_stress_margin": {
+          "verdict": "PASS",
+          "detail": {
+            "definition": "positive net under +1 tick/side cost stress, dev window",
+            "value": 115608.0,
+            "source": "SOURCED FROM SUPPLIED ANONYMIZED METRICS BLOB -- not independently recomputable (only base-cost, ticks=1, daily P&L files were provided; no per-cost-tick-level daily P&L file was supplied for re-simulation)."
+          }
+        },
+        "7_annual_partition_margin": {
+          "verdict": "PASS",
+          "detail": {
+            "years": [
+              2022,
+              2023,
+              2024,
+              2025,
+              2026
+            ],
+            "n_match": 5,
+            "n_total": 5,
+            "pass": true
+          }
+        },
+        "8_concentration_gate_on_incremental_advantage": {
+          "verdict": "PASS",
+          "detail": {
+            "net_candidate_dev": 130412.9999999933,
+            "net_full_dev": 301915.91999998846,
+            "incremental_advantage_dev": -171502.91999999515,
+            "max_single_day_share_of_incremental_advantage": null,
+            "verdict": "N/A (vacuous pass) -- candidate does not show a net incremental advantage over full",
+            "pass": true
+          }
+        },
+        "9_complexity_reduction_margin": {
+          "verdict": "PASS",
+          "detail": {
+            "qualifies": true,
+            "route": "(a) drops >=1 full signal module",
+            "detail": "drops 2 modules (B-MOM, HTF) per 02_SPEC_complexity_metric.md Sec.4",
+            "source": "02_SPEC_complexity_metric.md Sec.4 (construction-only counts, frozen before any performance was inspected)"
+          }
+        }
+      },
+      "overall_pass": false,
+      "blocking_margins": [
+        "1_sharpe_margin",
+        "2_cdar_margin",
+        "3_intraday_dd_margin",
+        "4_top_day_and_trade_retention_margin"
+      ],
+      "overall_character": "CONFIRMED FAIL -- at least one margin shows a genuine, data-supported violation"
+    },
+    {
+      "pair": [
+        "Z",
+        "M"
+      ],
+      "reading": "is Z non-inferior to M under the frozen margins?",
+      "margins": {
+        "1_sharpe_margin": {
+          "verdict": "INCONCLUSIVE",
+          "detail": {
+            "definition": "P[Sharpe_cand >= Sharpe_full - 0.10] >= 0.90 (paired circular block bootstrap)",
+            "point_sharpe_candidate_dev": 1.102534968316824,
+            "point_sharpe_full_dev": 1.1130645724141028,
+            "point_sharpe_diff": -0.010529604097278877,
+            "bootstrap_p_hat": 0.8473,
+            "bootstrap_p_se_binomial_approx": 0.003596980817296639,
+            "bootstrap_diff_mean": -0.012717172915431292,
+            "bootstrap_diff_sd": 0.08547190598671192,
+            "bootstrap_diff_95pct_CI": [
+              -0.1803824428778748,
+              0.1568322205039097
+            ],
+            "paired_daily_pnl_correlation_original_data": 0.9851559145936526,
+            "n_boot": 10000,
+            "block": 5,
+            "seed": 20260808,
+            "verdict": "INCONCLUSIVE",
+            "verdict_key": {
+              "PASS": "p_hat>=0.90",
+              "INCONCLUSIVE": "0.80<=p_hat<0.90",
+              "FAIL": "p_hat<0.80"
+            }
+          }
+        },
+        "2_cdar_margin": {
+          "verdict": "PASS",
+          "detail": {
+            "definition": "CDaR_0.95(candidate) <= 1.10 x CDaR_0.95(full); point estimate on real dev-window data is the primary decision; bootstrap distribution on the SAME resampled paths reported for disclosure/CI (no explicit probability threshold was frozen for this margin, unlike sharpe_margin)",
+            "cdar_candidate_point": 42092.245000002105,
+            "cdar_full_point": 44518.38714286004,
+            "cdar_ratio_point": 0.9455024699104122,
+            "cdar_point_pass": true,
+            "bootstrap_cdar_ratio_mean": 1.0237671077893742,
+            "bootstrap_cdar_ratio_95pct_CI": [
+              0.8074006575888576,
+              1.278731802993652
+            ],
+            "bootstrap_P_ratio_leq_1p10": 0.7758,
+            "verdict": "PASS"
+          }
+        },
+        "3_intraday_dd_margin": {
+          "verdict": "PASS",
+          "detail": {
+            "definition": "candidate bar-level intraday DD (dev) <= 1.15 x full's",
+            "candidate_intraday_dd_dev": 55338.2,
+            "full_intraday_dd_dev": 59717.44,
+            "ratio": 0.9266673186258486,
+            "source": "SOURCED FROM SUPPLIED ANONYMIZED METRICS BLOB -- not independently recomputable by this agent (only daily-aggregate EOD P&L files were provided, not bar-level intraday marks)"
+          }
+        },
+        "4_top_day_and_trade_retention_margin": {
+          "verdict": "INCOMPLETE_MISSING_TRADE_LEVEL_DATA",
+          "detail": {
+            "day_leg": {
+              "definition": "top-10-day PnL retention >= 90% vs FULL",
+              "recomputed_by_this_agent_from_daily_pnl": 0.9941108795990231,
+              "supplied_value_cross_check": 0.9941,
+              "pass": true
+            },
+            "trade_leg": {
+              "definition": "top-1% trade P&L retention >= 90% vs FULL (CONVENTIONS.md gate 6)",
+              "status": "NOT_EVALUABLE",
+              "reason": "No trade-level P&L was supplied to this agent -- only daily-aggregate session P&L CSVs (session_date,pnl). This leg cannot be computed or cross-checked from the data made available for this blind test."
+            },
+            "joint_rule": "AND of both legs (CONVENTIONS.md gate 6, frozen verbatim). If the day leg alone already fails, the joint margin is a confirmed FAIL irrespective of the missing trade leg. If the day leg passes, the joint margin cannot be confirmed PASS without the trade leg -- reported INCOMPLETE, not PASS."
+          }
+        },
+        "5_after_cost_positive_margin": {
+          "verdict": "PASS",
+          "detail": {
+            "net_dev": 293626.91999998776,
+            "pass": true
+          }
+        },
+        "6_cost_stress_margin": {
+          "verdict": "PASS",
+          "detail": {
+            "definition": "positive net under +1 tick/side cost stress, dev window",
+            "value": 275826.92,
+            "source": "SOURCED FROM SUPPLIED ANONYMIZED METRICS BLOB -- not independently recomputable (only base-cost, ticks=1, daily P&L files were provided; no per-cost-tick-level daily P&L file was supplied for re-simulation)."
+          }
+        },
+        "7_annual_partition_margin": {
+          "verdict": "PASS",
+          "detail": {
+            "years": [
+              2022,
+              2023,
+              2024,
+              2025,
+              2026
+            ],
+            "n_match": 5,
+            "n_total": 5,
+            "pass": true
+          }
+        },
+        "8_concentration_gate_on_incremental_advantage": {
+          "verdict": "PASS",
+          "detail": {
+            "net_candidate_dev": 293626.91999998776,
+            "net_full_dev": 301915.91999998846,
+            "incremental_advantage_dev": -8289.000000000698,
+            "max_single_day_share_of_incremental_advantage": null,
+            "verdict": "N/A (vacuous pass) -- candidate does not show a net incremental advantage over full",
+            "pass": true
+          }
+        },
+        "9_complexity_reduction_margin": {
+          "verdict": "PASS",
+          "detail": {
+            "qualifies": true,
+            "route": "(a) drops >=1 full signal module",
+            "detail": "drops 1 module (HTF) per 02_SPEC_complexity_metric.md Sec.4",
+            "source": "02_SPEC_complexity_metric.md Sec.4 (construction-only counts, frozen before any performance was inspected)"
+          }
+        }
+      },
+      "overall_pass": false,
+      "blocking_margins": [
+        "1_sharpe_margin",
+        "4_top_day_and_trade_retention_margin"
+      ],
+      "overall_character": "NOT CONFIRMED PASS -- no margin shows a confirmed violation, but at least one margin is INCONCLUSIVE (power-limited) or INCOMPLETE (missing trade-level data); promotion rule requires ALL margins to clear, so this is not a pass"
+    }
+  ],
+  "data_availability_caveats": [
+    "This agent was supplied daily-aggregate (session-level) P&L CSVs only for B0/B1/B_FULL (mapped internally to Q/Z/M via construction-description + exact point-metric match to the supplied anonymized blob; the mapping is not reported in the label-facing output beyond what was needed to run the test).",
+    "Bar-level intraday P&L, per-cost-tick-level re-simulated daily P&L, and trade-level P&L were NOT supplied. Margins requiring those (intraday_dd_margin, cost_stress_margin, the trade-leg of top_day_and_trade_retention_margin) are sourced from the supplied anonymized metrics blob and flagged as such rather than independently recomputed by this agent.",
+    "All margins that CAN be computed from daily-aggregate P&L (sharpe_margin, cdar_margin, annual_partition_margin, day-leg of top10 retention, concentration_gate, after_cost_positive_margin) were independently computed by this agent from the raw daily CSVs and cross-checked against the supplied blob figures -- all cross-checks matched exactly."
+  ],
+  "power_caveat_realized": {
+    "note": "Frozen margin spec flagged that paired-bootstrap power depends on candidate/full daily P&L correlation (rho), unmeasured until the bootstrap actually ran. Realized rho:",
+    "Q_vs_M_correlation": 0.8143928118873035,
+    "Z_vs_M_correlation": 0.9851559145936526,
+    "interpretation": "Z_vs_M realized a high correlation (~0.985, in the 'near-neighbor' regime the spec anticipated) yet still landed just under the 90% pass bar (p_hat=0.8473) -> genuinely INCONCLUSIVE, consistent with the disclosed power caveat rather than a clean failure. Q_vs_M realized a much lower correlation (~0.814, the 'far rung' regime) AND a large point-estimate Sharpe gap (-0.57, far outside the +/-0.10 margin) -> the low p_hat (0.058) reflects a real gap, not merely low power."
+  }
+}

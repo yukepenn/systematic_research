@@ -1,0 +1,868 @@
+{
+  "task": "SIMPLE01 execution -- Product A frozen ladder (A0, A1, A2, A_FULL)",
+  "role": "EXECUTION AGENT (campaign directive sec73) -- runs the frozen spec exactly, adjudicates nothing, selects no rung",
+  "generated_utc": "2026-08-11T00:28:59.225821+00:00",
+  "spec_sources": [
+    "research/system_master/SIMPLE01_MINIMUM_SYSTEM/out/00_SPEC_candidate_manifest.md",
+    "research/system_master/SIMPLE01_MINIMUM_SYSTEM/out/01_SPEC_frozen_margins.md",
+    "research/system_master/SIMPLE01_MINIMUM_SYSTEM/out/02_SPEC_complexity_metric.md"
+  ],
+  "rungs": {
+    "A0": "Solar+B-MOM, no HTF, no short-halving: mm forced 1.0, ss forced 1.0",
+    "A1": "+ short-halving only: mm forced 1.0, ss real",
+    "A2": "+ HTF up-weight only: mm real, ss forced 1.0",
+    "A_FULL": "incumbent, unmodified: mm real, ss real"
+  },
+  "cost_levels": {
+    "base_ticks1": {
+      "ticks_adverse_slip_per_fill": 1,
+      "note": "ticks=1 is the already-certified base convention used by every certified $ figure in this repo; ticks=2/3 are +1/+2 tick/side stress via grid_core's own generalization"
+    },
+    "stress_plus1_tick_per_side_ticks2": {
+      "ticks_adverse_slip_per_fill": 2,
+      "note": "ticks=1 is the already-certified base convention used by every certified $ figure in this repo; ticks=2/3 are +1/+2 tick/side stress via grid_core's own generalization"
+    },
+    "stress_plus2_ticks_per_side_ticks3": {
+      "ticks_adverse_slip_per_fill": 3,
+      "note": "ticks=1 is the already-certified base convention used by every certified $ figure in this repo; ticks=2/3 are +1/+2 tick/side stress via grid_core's own generalization"
+    }
+  },
+  "windows": {
+    "canonical_2023_2025": {
+      "start": "2023-01-01",
+      "end": "2025-02-02",
+      "n_sessions_A_FULL_base_cost": 539
+    },
+    "dev_2022_2026_05_31": {
+      "start": "2022-01-03",
+      "end": "2026-05-31",
+      "n_sessions_A_FULL_base_cost": 1139
+    },
+    "full_through_locked_forward_2026_07_31": {
+      "start": "2022-01-03",
+      "end": "2026-07-31",
+      "n_sessions_A_FULL_base_cost": 1184
+    }
+  },
+  "correctness_gates": {
+    "gate_1_grid_core_import_self_check": "PASS (dev-window net Product A=$177,924.40, Product B=$301,915.92, asserted inside grid_core.py import; this script never proceeds past that import if it fails)",
+    "gate_2_A_FULL_wrapper_vs_grid_core_product_a_exec": {
+      "bar_for_bar_exact_match": true,
+      "max_abs_bar_pnl_diff": 0.0,
+      "A_FULL_wrapper_dev_window_net": 177924.4,
+      "certified_dev_window_net": 177924.4,
+      "match": true
+    },
+    "overall_pass": true
+  },
+  "metrics_by_rung_costlevel_window": {
+    "A0": {
+      "base_ticks1": {
+        "canonical_2023_2025": {
+          "n_sessions": 539,
+          "net": 43737.10000000333,
+          "sharpe": 0.8322336216507702,
+          "sortino": 1.6907583836027673,
+          "calmar": 1.2712073484054796,
+          "CDaR5_smv2common": 13470.83461538464,
+          "CDaR_0.95_dollar_primary_objective_house": 13470.83461538464,
+          "maxDD_eod": 16085.90000000011,
+          "maxDD_bar_intraday_MTM_proxy": 16911.80000000006,
+          "ann_vol": 24570.64188917934,
+          "pos_day_pct": 0.44341372912801486,
+          "turnover": {
+            "total_contracts_traded": 19456.0,
+            "n_position_changes_legs": 13616
+          }
+        },
+        "dev_2022_2026_05_31": {
+          "n_sessions": 1139,
+          "net": 152561.19999999314,
+          "sharpe": 1.0010062316248192,
+          "sortino": 2.032697644435525,
+          "calmar": 1.1943168439962242,
+          "CDaR5_smv2common": 18227.873214287163,
+          "CDaR_0.95_dollar_primary_objective_house": 18227.873214287163,
+          "maxDD_eod": 28261.900000005553,
+          "maxDD_bar_intraday_MTM_proxy": 34430.75000000023,
+          "ann_vol": 33719.733351265015,
+          "pos_day_pct": 0.44073748902546095,
+          "turnover": {
+            "total_contracts_traded": 41142.0,
+            "n_position_changes_legs": 28740
+          }
+        },
+        "full_through_locked_forward_2026_07_31": {
+          "n_sessions": 1184,
+          "net": 191694.19999998744,
+          "sharpe": 1.1536053795758296,
+          "sortino": 2.309743419944218,
+          "calmar": 1.3370094428128194,
+          "CDaR5_smv2common": 19043.155932205267,
+          "CDaR_0.95_dollar_primary_objective_house": 19043.155932205267,
+          "maxDD_eod": 30515.700000006153,
+          "maxDD_bar_intraday_MTM_proxy": 34430.75000000023,
+          "ann_vol": 35367.18862134043,
+          "pos_day_pct": 0.44510135135135137,
+          "turnover": {
+            "total_contracts_traded": 42952.0,
+            "n_position_changes_legs": 29872
+          }
+        }
+      },
+      "stress_plus1_tick_per_side_ticks2": {
+        "canonical_2023_2025": {
+          "n_sessions": 539,
+          "net": 34487.60000000607,
+          "sharpe": 0.6556902611658663,
+          "sortino": 1.3285092107686336,
+          "calmar": 0.9452554374967322,
+          "CDaR5_smv2common": 14302.576923076862,
+          "CDaR_0.95_dollar_primary_objective_house": 14302.576923076862,
+          "maxDD_eod": 17057.90000000006,
+          "maxDD_bar_intraday_MTM_proxy": 17892.30000000001,
+          "ann_vol": 24590.990109576676,
+          "pos_day_pct": 0.44341372912801486,
+          "turnover": {
+            "total_contracts_traded": 19456.0,
+            "n_position_changes_legs": 13616
+          }
+        },
+        "dev_2022_2026_05_31": {
+          "n_sessions": 1139,
+          "net": 132936.20000000123,
+          "sharpe": 0.8716903357235124,
+          "sortino": 1.7658459399745048,
+          "calmar": 1.004844450303594,
+          "CDaR5_smv2common": 19109.257142858107,
+          "CDaR_0.95_dollar_primary_objective_house": 19109.257142858107,
+          "maxDD_eod": 29269.900000002905,
+          "maxDD_bar_intraday_MTM_proxy": 35775.750000001164,
+          "ann_vol": 33740.991921783854,
+          "pos_day_pct": 0.43898156277436345,
+          "turnover": {
+            "total_contracts_traded": 41142.0,
+            "n_position_changes_legs": 28740
+          }
+        },
+        "full_through_locked_forward_2026_07_31": {
+          "n_sessions": 1184,
+          "net": 171186.19999999536,
+          "sharpe": 1.0295904329861794,
+          "sortino": 2.0569435583112323,
+          "calmar": 1.1530141322756453,
+          "CDaR5_smv2common": 19948.952542374078,
+          "CDaR_0.95_dollar_primary_objective_house": 19948.952542374078,
+          "maxDD_eod": 31599.700000003446,
+          "maxDD_bar_intraday_MTM_proxy": 35775.750000001164,
+          "ann_vol": 35387.7614907517,
+          "pos_day_pct": 0.44341216216216217,
+          "turnover": {
+            "total_contracts_traded": 42952.0,
+            "n_position_changes_legs": 29872
+          }
+        }
+      },
+      "stress_plus2_ticks_per_side_ticks3": {
+        "canonical_2023_2025": {
+          "n_sessions": 539,
+          "net": 25482.100000005143,
+          "sharpe": 0.4840676694906721,
+          "sortino": 0.9773331981400435,
+          "calmar": 0.6614905327428028,
+          "CDaR5_smv2common": 15200.800000000034,
+          "CDaR_0.95_dollar_primary_objective_house": 15200.800000000034,
+          "maxDD_eod": 18010.400000000787,
+          "maxDD_bar_intraday_MTM_proxy": 18853.300000000716,
+          "ann_vol": 24611.660397495463,
+          "pos_day_pct": 0.44155844155844154,
+          "turnover": {
+            "total_contracts_traded": 19456.0,
+            "n_position_changes_legs": 13616
+          }
+        },
+        "dev_2022_2026_05_31": {
+          "n_sessions": 1139,
+          "net": 113755.20000000071,
+          "sharpe": 0.7454401768388151,
+          "sortino": 1.505843867264184,
+          "calmar": 0.8315754451199174,
+          "CDaR5_smv2common": 19998.003571429414,
+          "CDaR_0.95_dollar_primary_objective_house": 19998.003571429414,
+          "maxDD_eod": 30265.400000002148,
+          "maxDD_bar_intraday_MTM_proxy": 37098.75000000064,
+          "ann_vol": 33762.552997161765,
+          "pos_day_pct": 0.4354697102721686,
+          "turnover": {
+            "total_contracts_traded": 41142.0,
+            "n_position_changes_legs": 28740
+          }
+        },
+        "full_through_locked_forward_2026_07_31": {
+          "n_sessions": 1184,
+          "net": 151130.69999999675,
+          "sharpe": 0.9084275811599837,
+          "sortino": 1.8104330956004977,
+          "calmar": 0.9845469838547654,
+          "CDaR5_smv2common": 20867.57118644162,
+          "CDaR_0.95_dollar_primary_objective_house": 20867.57118644162,
+          "maxDD_eod": 32671.200000002456,
+          "maxDD_bar_intraday_MTM_proxy": 37098.75000000064,
+          "ann_vol": 35408.80097216401,
+          "pos_day_pct": 0.44003378378378377,
+          "turnover": {
+            "total_contracts_traded": 42952.0,
+            "n_position_changes_legs": 29872
+          }
+        }
+      }
+    },
+    "A1": {
+      "base_ticks1": {
+        "canonical_2023_2025": {
+          "n_sessions": 539,
+          "net": 43930.600000009836,
+          "sharpe": 0.9728213958164752,
+          "sortino": 1.8542531756625378,
+          "calmar": 1.7377641310906278,
+          "CDaR5_smv2common": 9924.346153845789,
+          "CDaR_0.95_dollar_primary_objective_house": 9924.346153845789,
+          "maxDD_eod": 11819.20000000004,
+          "maxDD_bar_intraday_MTM_proxy": 12640.599999999977,
+          "ann_vol": 21112.79820377341,
+          "pos_day_pct": 0.4489795918367347,
+          "turnover": {
+            "total_contracts_traded": 15766.0,
+            "n_position_changes_legs": 11248
+          }
+        },
+        "dev_2022_2026_05_31": {
+          "n_sessions": 1139,
+          "net": 159789.1000000093,
+          "sharpe": 1.12888133926102,
+          "sortino": 2.1704571940984017,
+          "calmar": 1.9460227939845458,
+          "CDaR5_smv2common": 14006.412499999731,
+          "CDaR_0.95_dollar_primary_objective_house": 14006.412499999731,
+          "maxDD_eod": 18166.700000003475,
+          "maxDD_bar_intraday_MTM_proxy": 28953.549999997835,
+          "ann_vol": 31316.677016406542,
+          "pos_day_pct": 0.44776119402985076,
+          "turnover": {
+            "total_contracts_traded": 34696.0,
+            "n_position_changes_legs": 24480
+          }
+        },
+        "full_through_locked_forward_2026_07_31": {
+          "n_sessions": 1184,
+          "net": 190898.10000000458,
+          "sharpe": 1.2513718546202617,
+          "sortino": 2.4117581576010596,
+          "calmar": 1.9696884229702043,
+          "CDaR5_smv2common": 14340.196610169483,
+          "CDaR_0.95_dollar_primary_objective_house": 14340.196610169483,
+          "maxDD_eod": 20627.80000000383,
+          "maxDD_bar_intraday_MTM_proxy": 28953.549999997835,
+          "ann_vol": 32468.6372810278,
+          "pos_day_pct": 0.4510135135135135,
+          "turnover": {
+            "total_contracts_traded": 36266.0,
+            "n_position_changes_legs": 25468
+          }
+        }
+      },
+      "stress_plus1_tick_per_side_ticks2": {
+        "canonical_2023_2025": {
+          "n_sessions": 539,
+          "net": 36403.10000001228,
+          "sharpe": 0.8053683958455664,
+          "sortino": 1.528012937636699,
+          "calmar": 1.405512434251381,
+          "CDaR5_smv2common": 10395.949999999491,
+          "CDaR_0.95_dollar_primary_objective_house": 10395.949999999491,
+          "maxDD_eod": 12109.200000000063,
+          "maxDD_bar_intraday_MTM_proxy": 12943.599999999977,
+          "ann_vol": 21132.727900214893,
+          "pos_day_pct": 0.44341372912801486,
+          "turnover": {
+            "total_contracts_traded": 15766.0,
+            "n_position_changes_legs": 11248
+          }
+        },
+        "dev_2022_2026_05_31": {
+          "n_sessions": 1139,
+          "net": 143189.10000001406,
+          "sharpe": 1.0110229426391593,
+          "sortino": 1.9382749236257897,
+          "calmar": 1.640292483816646,
+          "CDaR5_smv2common": 14642.541071428024,
+          "CDaR_0.95_dollar_primary_objective_house": 14642.541071428024,
+          "maxDD_eod": 19313.700000001147,
+          "maxDD_bar_intraday_MTM_proxy": 30026.049999998417,
+          "ann_vol": 31334.716165781694,
+          "pos_day_pct": 0.4433713784021071,
+          "turnover": {
+            "total_contracts_traded": 34696.0,
+            "n_position_changes_legs": 24480
+          }
+        },
+        "full_through_locked_forward_2026_07_31": {
+          "n_sessions": 1184,
+          "net": 173529.60000000993,
+          "sharpe": 1.1369152414635804,
+          "sortino": 2.1852004602836557,
+          "calmar": 1.6913109617427355,
+          "CDaR5_smv2common": 15018.388135592835,
+          "CDaR_0.95_dollar_primary_objective_house": 15018.388135592835,
+          "maxDD_eod": 21837.300000001385,
+          "maxDD_bar_intraday_MTM_proxy": 30026.049999998417,
+          "ann_vol": 32485.856040878927,
+          "pos_day_pct": 0.4467905405405405,
+          "turnover": {
+            "total_contracts_traded": 36266.0,
+            "n_position_changes_legs": 25468
+          }
+        }
+      },
+      "stress_plus2_ticks_per_side_ticks3": {
+        "canonical_2023_2025": {
+          "n_sessions": 539,
+          "net": 29067.100000011465,
+          "sharpe": 0.6424482469932788,
+          "sortino": 1.214837737856979,
+          "calmar": 1.096775241674645,
+          "CDaR5_smv2common": 10898.461538461253,
+          "CDaR_0.95_dollar_primary_objective_house": 10898.461538461253,
+          "maxDD_eod": 12390.700000000295,
+          "maxDD_bar_intraday_MTM_proxy": 13238.10000000021,
+          "ann_vol": 21153.163777191417,
+          "pos_day_pct": 0.44341372912801486,
+          "turnover": {
+            "total_contracts_traded": 15766.0,
+            "n_position_changes_legs": 11248
+          }
+        },
+        "dev_2022_2026_05_31": {
+          "n_sessions": 1139,
+          "net": 126950.10000001511,
+          "sharpe": 0.8958354028045052,
+          "sortino": 1.7125883996038567,
+          "calmar": 1.3736161846737538,
+          "CDaR5_smv2common": 15321.791071427728,
+          "CDaR_0.95_dollar_primary_objective_house": 15321.791071427728,
+          "maxDD_eod": 20447.7000000001,
+          "maxDD_bar_intraday_MTM_proxy": 31084.0499999983,
+          "ann_vol": 31353.18337657061,
+          "pos_day_pct": 0.44073748902546095,
+          "turnover": {
+            "total_contracts_traded": 34696.0,
+            "n_position_changes_legs": 24480
+          }
+        },
+        "full_through_locked_forward_2026_07_31": {
+          "n_sessions": 1184,
+          "net": 156527.10000001133,
+          "sharpe": 1.0249619329931643,
+          "sortino": 1.96466305334998,
+          "calmar": 1.4463479550499208,
+          "CDaR5_smv2common": 15747.157627117864,
+          "CDaR_0.95_dollar_primary_objective_house": 15747.157627117864,
+          "maxDD_eod": 23033.800000000396,
+          "maxDD_bar_intraday_MTM_proxy": 31084.0499999983,
+          "ann_vol": 32503.538379948426,
+          "pos_day_pct": 0.44425675675675674,
+          "turnover": {
+            "total_contracts_traded": 36266.0,
+            "n_position_changes_legs": 25468
+          }
+        }
+      }
+    },
+    "A2": {
+      "base_ticks1": {
+        "canonical_2023_2025": {
+          "n_sessions": 539,
+          "net": 49510.09999999975,
+          "sharpe": 0.8965848923504307,
+          "sortino": 1.867303042647421,
+          "calmar": 1.5629484558464233,
+          "CDaR5_smv2common": 12513.834615385651,
+          "CDaR_0.95_dollar_primary_objective_house": 12513.834615385651,
+          "maxDD_eod": 14810.20000000154,
+          "maxDD_bar_intraday_MTM_proxy": 15636.10000000149,
+          "ann_vol": 25817.498619786984,
+          "pos_day_pct": 0.44155844155844154,
+          "turnover": {
+            "total_contracts_traded": 20476.0,
+            "n_position_changes_legs": 13660
+          }
+        },
+        "dev_2022_2026_05_31": {
+          "n_sessions": 1139,
+          "net": 170696.4999999812,
+          "sharpe": 1.0576467216860055,
+          "sortino": 2.2107286686044487,
+          "calmar": 1.3979758736087768,
+          "CDaR5_smv2common": 18038.79464285916,
+          "CDaR_0.95_dollar_primary_objective_house": 18038.79464285916,
+          "maxDD_eod": 27014.800000004994,
+          "maxDD_bar_intraday_MTM_proxy": 38398.200000002835,
+          "ann_vol": 35707.61186700426,
+          "pos_day_pct": 0.4363476733977173,
+          "turnover": {
+            "total_contracts_traded": 43240.0,
+            "n_position_changes_legs": 28704
+          }
+        },
+        "full_through_locked_forward_2026_07_31": {
+          "n_sessions": 1184,
+          "net": 213690.59999997585,
+          "sharpe": 1.2163800481447367,
+          "sortino": 2.5182800341565312,
+          "calmar": 1.554634196430617,
+          "CDaR5_smv2common": 18743.677966104056,
+          "CDaR_0.95_dollar_primary_objective_house": 18743.677966104056,
+          "maxDD_eod": 29255.4000000057,
+          "maxDD_bar_intraday_MTM_proxy": 38398.200000002835,
+          "ann_vol": 37390.818223001064,
+          "pos_day_pct": 0.4408783783783784,
+          "turnover": {
+            "total_contracts_traded": 45156.0,
+            "n_position_changes_legs": 29845
+          }
+        }
+      },
+      "stress_plus1_tick_per_side_ticks2": {
+        "canonical_2023_2025": {
+          "n_sessions": 539,
+          "net": 39775.60000000208,
+          "sharpe": 0.719776393846737,
+          "sortino": 1.494619873194264,
+          "calmar": 1.1745183800864518,
+          "CDaR5_smv2common": 13399.250000000317,
+          "CDaR_0.95_dollar_primary_objective_house": 13399.250000000317,
+          "maxDD_eod": 15833.200000000492,
+          "maxDD_bar_intraday_MTM_proxy": 16667.600000000457,
+          "ann_vol": 25836.33552664849,
+          "pos_day_pct": 0.44155844155844154,
+          "turnover": {
+            "total_contracts_traded": 20476.0,
+            "n_position_changes_legs": 13660
+          }
+        },
+        "dev_2022_2026_05_31": {
+          "n_sessions": 1139,
+          "net": 150065.99999998888,
+          "sharpe": 0.9293092683321382,
+          "sortino": 1.9378807868184482,
+          "calmar": 1.1876040329521889,
+          "CDaR5_smv2common": 18879.794642858433,
+          "CDaR_0.95_dollar_primary_objective_house": 18879.794642858433,
+          "maxDD_eod": 27956.800000004878,
+          "maxDD_bar_intraday_MTM_proxy": 39844.70000000144,
+          "ann_vol": 35727.18960183358,
+          "pos_day_pct": 0.4354697102721686,
+          "turnover": {
+            "total_contracts_traded": 43240.0,
+            "n_position_changes_legs": 28704
+          }
+        },
+        "full_through_locked_forward_2026_07_31": {
+          "n_sessions": 1184,
+          "net": 192126.09999998356,
+          "sharpe": 1.0930781531393698,
+          "sortino": 2.257929262564438,
+          "calmar": 1.3505016270804162,
+          "CDaR5_smv2common": 19602.0067796627,
+          "CDaR_0.95_dollar_primary_objective_house": 19602.0067796627,
+          "maxDD_eod": 30278.900000005553,
+          "maxDD_bar_intraday_MTM_proxy": 39844.70000000144,
+          "ann_vol": 37409.67980996592,
+          "pos_day_pct": 0.44003378378378377,
+          "turnover": {
+            "total_contracts_traded": 45156.0,
+            "n_position_changes_legs": 29845
+          }
+        }
+      },
+      "stress_plus2_ticks_per_side_ticks3": {
+        "canonical_2023_2025": {
+          "n_sessions": 539,
+          "net": 30300.60000000237,
+          "sharpe": 0.5479076541529923,
+          "sortino": 1.1314762034614096,
+          "calmar": 0.8414568022543881,
+          "CDaR5_smv2common": 14442.02692307688,
+          "CDaR_0.95_dollar_primary_objective_house": 14442.02692307688,
+          "maxDD_eod": 16835.700000001416,
+          "maxDD_bar_intraday_MTM_proxy": 17678.600000001345,
+          "ann_vol": 25855.660490115508,
+          "pos_day_pct": 0.4359925788497217,
+          "turnover": {
+            "total_contracts_traded": 20476.0,
+            "n_position_changes_legs": 13660
+          }
+        },
+        "dev_2022_2026_05_31": {
+          "n_sessions": 1139,
+          "net": 129903.49999999566,
+          "sharpe": 0.80399934027915,
+          "sortino": 1.6715187839259018,
+          "calmar": 0.99104911623971,
+          "CDaR5_smv2common": 19784.932142857993,
+          "CDaR_0.95_dollar_primary_objective_house": 19784.932142857993,
+          "maxDD_eod": 29000.300000001793,
+          "maxDD_bar_intraday_MTM_proxy": 41267.2000000019,
+          "ann_vol": 35747.195608032984,
+          "pos_day_pct": 0.43195785776997364,
+          "turnover": {
+            "total_contracts_traded": 43240.0,
+            "n_position_changes_legs": 28704
+          }
+        },
+        "full_through_locked_forward_2026_07_31": {
+          "n_sessions": 1184,
+          "net": 171039.09999999043,
+          "sharpe": 0.9726013895105599,
+          "sortino": 2.0036167506682956,
+          "calmar": 1.1592245498807432,
+          "CDaR5_smv2common": 20530.43220339082,
+          "CDaR_0.95_dollar_primary_objective_house": 20530.43220339082,
+          "maxDD_eod": 31403.40000000238,
+          "maxDD_bar_intraday_MTM_proxy": 41267.2000000019,
+          "ann_vol": 37429.09749290714,
+          "pos_day_pct": 0.43665540540540543,
+          "turnover": {
+            "total_contracts_traded": 45156.0,
+            "n_position_changes_legs": 29845
+          }
+        }
+      }
+    },
+    "A_FULL": {
+      "base_ticks1": {
+        "canonical_2023_2025": {
+          "n_sessions": 539,
+          "net": 49703.600000005325,
+          "sharpe": 1.0304404038762163,
+          "sortino": 2.0175895334968277,
+          "calmar": 2.05828580631078,
+          "CDaR5_smv2common": 9679.78461538489,
+          "CDaR_0.95_dollar_primary_objective_house": 9679.78461538489,
+          "maxDD_eod": 11290.000000000262,
+          "maxDD_bar_intraday_MTM_proxy": 12246.600000000151,
+          "ann_vol": 22551.567917789806,
+          "pos_day_pct": 0.4452690166975881,
+          "turnover": {
+            "total_contracts_traded": 16786.0,
+            "n_position_changes_legs": 11292
+          }
+        },
+        "dev_2022_2026_05_31": {
+          "n_sessions": 1139,
+          "net": 177924.3999999992,
+          "sharpe": 1.1769955515978732,
+          "sortino": 2.3371254058583872,
+          "calmar": 2.289618837340876,
+          "CDaR5_smv2common": 14323.078571428612,
+          "CDaR_0.95_dollar_primary_objective_house": 14323.078571428612,
+          "maxDD_eod": 17192.89999999918,
+          "maxDD_bar_intraday_MTM_proxy": 32921.0,
+          "ann_vol": 33445.48554586671,
+          "pos_day_pct": 0.44161545215100967,
+          "turnover": {
+            "total_contracts_traded": 36794.0,
+            "n_position_changes_legs": 24444
+          }
+        },
+        "full_through_locked_forward_2026_07_31": {
+          "n_sessions": 1184,
+          "net": 212894.4999999953,
+          "sharpe": 1.3073046883035349,
+          "sortino": 2.6137956493006036,
+          "calmar": 2.3662857103535373,
+          "CDaR5_smv2common": 14533.552542373103,
+          "CDaR_0.95_dollar_primary_objective_house": 14533.552542373103,
+          "maxDD_eod": 19149.000000002823,
+          "maxDD_bar_intraday_MTM_proxy": 32921.0,
+          "ann_vol": 34660.63074122921,
+          "pos_day_pct": 0.44510135135135137,
+          "turnover": {
+            "total_contracts_traded": 38470.0,
+            "n_position_changes_legs": 25441
+          }
+        }
+      },
+      "stress_plus1_tick_per_side_ticks2": {
+        "canonical_2023_2025": {
+          "n_sessions": 539,
+          "net": 41691.10000000742,
+          "sharpe": 0.8636441293412498,
+          "sortino": 1.6828809238685465,
+          "calmar": 1.6402388886489343,
+          "CDaR5_smv2common": 10206.73076923011,
+          "CDaR_0.95_dollar_primary_objective_house": 10206.73076923011,
+          "maxDD_eod": 11883.599999998689,
+          "maxDD_bar_intraday_MTM_proxy": 12709.199999998658,
+          "ann_vol": 22569.41510389694,
+          "pos_day_pct": 0.44155844155844154,
+          "turnover": {
+            "total_contracts_traded": 16786.0,
+            "n_position_changes_legs": 11292
+          }
+        },
+        "dev_2022_2026_05_31": {
+          "n_sessions": 1139,
+          "net": 160318.90000000503,
+          "sharpe": 1.060023558819189,
+          "sortino": 2.0983091124810445,
+          "calmar": 1.9573018721655016,
+          "CDaR5_smv2common": 14984.562499999502,
+          "CDaR_0.95_dollar_primary_objective_house": 14984.562499999502,
+          "maxDD_eod": 18121.899999997768,
+          "maxDD_bar_intraday_MTM_proxy": 34094.99999999881,
+          "ann_vol": 33461.547625133346,
+          "pos_day_pct": 0.437225636523266,
+          "turnover": {
+            "total_contracts_traded": 36794.0,
+            "n_position_changes_legs": 24444
+          }
+        },
+        "full_through_locked_forward_2026_07_31": {
+          "n_sessions": 1184,
+          "net": 194469.5000000007,
+          "sharpe": 1.1936438225130714,
+          "sortino": 2.3792874978867427,
+          "calmar": 2.029063861864422,
+          "CDaR5_smv2common": 15236.91355932173,
+          "CDaR_0.95_dollar_primary_objective_house": 15236.91355932173,
+          "maxDD_eod": 20398.800000002753,
+          "maxDD_bar_intraday_MTM_proxy": 34094.99999999881,
+          "ann_vol": 34675.72748649842,
+          "pos_day_pct": 0.4408783783783784,
+          "turnover": {
+            "total_contracts_traded": 38470.0,
+            "n_position_changes_legs": 25441
+          }
+        }
+      },
+      "stress_plus2_ticks_per_side_ticks3": {
+        "canonical_2023_2025": {
+          "n_sessions": 539,
+          "net": 33885.60000000882,
+          "sharpe": 0.7013722519285949,
+          "sortino": 1.3607418912311398,
+          "calmar": 1.241818067804609,
+          "CDaR5_smv2common": 10777.769230768548,
+          "CDaR_0.95_dollar_primary_objective_house": 10777.769230768548,
+          "maxDD_eod": 12757.599999998572,
+          "maxDD_bar_intraday_MTM_proxy": 13572.199999998542,
+          "ann_vol": 22588.03101813501,
+          "pos_day_pct": 0.4397031539888683,
+          "turnover": {
+            "total_contracts_traded": 16786.0,
+            "n_position_changes_legs": 11292
+          }
+        },
+        "dev_2022_2026_05_31": {
+          "n_sessions": 1139,
+          "net": 143098.40000000817,
+          "sharpe": 0.9456914629952268,
+          "sortino": 1.8662723198353053,
+          "calmar": 1.6593404508569953,
+          "CDaR5_smv2common": 15655.232142856594,
+          "CDaR_0.95_dollar_primary_objective_house": 15655.232142856594,
+          "maxDD_eod": 19079.900000000576,
+          "maxDD_bar_intraday_MTM_proxy": 35252.499999999505,
+          "ann_vol": 33478.202042802135,
+          "pos_day_pct": 0.43459174714661986,
+          "turnover": {
+            "total_contracts_traded": 36794.0,
+            "n_position_changes_legs": 24444
+          }
+        },
+        "full_through_locked_forward_2026_07_31": {
+          "n_sessions": 1184,
+          "net": 176435.50000000407,
+          "sharpe": 1.0824620942627317,
+          "sortino": 2.1511818085486274,
+          "calmar": 1.733445520204076,
+          "CDaR5_smv2common": 15947.305084745309,
+          "CDaR_0.95_dollar_primary_objective_house": 15947.305084745309,
+          "maxDD_eod": 21663.300000001007,
+          "maxDD_bar_intraday_MTM_proxy": 35252.499999999505,
+          "ann_vol": 34691.42294854731,
+          "pos_day_pct": 0.43834459459459457,
+          "turnover": {
+            "total_contracts_traded": 38470.0,
+            "n_position_changes_legs": 25441
+          }
+        }
+      }
+    }
+  },
+  "top10_day_pnl_retention_vs_A_FULL_base_cost": {
+    "canonical_2023_2025": {
+      "A0": 1.0194688041529372,
+      "A1": 0.914743104056169,
+      "A2": 1.1047257000967698,
+      "A_FULL": 1.0
+    },
+    "dev_2022_2026_05_31": {
+      "A0": 0.901821623751828,
+      "A1": 0.9018216237518295,
+      "A2": 0.999999999999999,
+      "A_FULL": 1.0
+    },
+    "full_through_locked_forward_2026_07_31": {
+      "A0": 0.9393194823236374,
+      "A1": 0.8978288113588806,
+      "A2": 1.041490670964757,
+      "A_FULL": 1.0
+    }
+  },
+  "largest_single_day_share_of_incremental_advantage_vs_A_FULL_base_cost": {
+    "canonical_2023_2025": {
+      "A0": {
+        "total_incremental_advantage_over_A_FULL": -5966.500000001994,
+        "applicable_rung_outperforms_A_FULL": false,
+        "largest_single_day_diff": 3159.6999999999534,
+        "largest_single_day_date": "2024-07-24",
+        "largest_single_day_share_of_advantage": null
+      },
+      "A1": {
+        "total_incremental_advantage_over_A_FULL": -5772.999999995489,
+        "applicable_rung_outperforms_A_FULL": false,
+        "largest_single_day_diff": 731.8000000000757,
+        "largest_single_day_date": "2025-01-14",
+        "largest_single_day_share_of_advantage": null
+      },
+      "A2": {
+        "total_incremental_advantage_over_A_FULL": -193.50000000557338,
+        "applicable_rung_outperforms_A_FULL": false,
+        "largest_single_day_diff": 3159.6999999999825,
+        "largest_single_day_date": "2024-07-24",
+        "largest_single_day_share_of_advantage": null
+      }
+    },
+    "dev_2022_2026_05_31": {
+      "A0": {
+        "total_incremental_advantage_over_A_FULL": -25363.200000006065,
+        "applicable_rung_outperforms_A_FULL": false,
+        "largest_single_day_diff": 3159.6999999999534,
+        "largest_single_day_date": "2024-07-24",
+        "largest_single_day_share_of_advantage": null
+      },
+      "A1": {
+        "total_incremental_advantage_over_A_FULL": -18135.29999998992,
+        "applicable_rung_outperforms_A_FULL": false,
+        "largest_single_day_diff": 1197.3000000000611,
+        "largest_single_day_date": "2025-03-13",
+        "largest_single_day_share_of_advantage": null
+      },
+      "A2": {
+        "total_incremental_advantage_over_A_FULL": -7227.900000018009,
+        "applicable_rung_outperforms_A_FULL": false,
+        "largest_single_day_diff": 3159.6999999999825,
+        "largest_single_day_date": "2024-07-24",
+        "largest_single_day_share_of_advantage": null
+      }
+    },
+    "full_through_locked_forward_2026_07_31": {
+      "A0": {
+        "total_incremental_advantage_over_A_FULL": -21200.300000007875,
+        "applicable_rung_outperforms_A_FULL": false,
+        "largest_single_day_diff": 4790.599999999948,
+        "largest_single_day_date": "2026-06-05",
+        "largest_single_day_share_of_advantage": null
+      },
+      "A1": {
+        "total_incremental_advantage_over_A_FULL": -21996.39999999074,
+        "applicable_rung_outperforms_A_FULL": false,
+        "largest_single_day_diff": 1784.8999999997905,
+        "largest_single_day_date": "2026-06-17",
+        "largest_single_day_share_of_advantage": null
+      },
+      "A2": {
+        "total_incremental_advantage_over_A_FULL": 796.0999999805354,
+        "applicable_rung_outperforms_A_FULL": true,
+        "largest_single_day_diff": 4790.599999999831,
+        "largest_single_day_date": "2026-06-05",
+        "largest_single_day_share_of_advantage": 6.017585730582793
+      }
+    }
+  },
+  "annual_net_by_year_base_cost": {
+    "A0": {
+      "by_year_full_history_2026_partial_is_Jan_Jul": {
+        "2022": 45252.20000000921,
+        "2023": 12429.400000005458,
+        "2024": 28288.19999999828,
+        "2025": 65703.39999998972,
+        "2026": 40020.99999998478
+      },
+      "by_year_dev_window_2026_partial_is_Jan_May": {
+        "2022": 45252.20000000921,
+        "2023": 12429.400000005458,
+        "2024": 28288.19999999828,
+        "2025": 65703.39999998972,
+        "2026": 887.999999990483
+      }
+    },
+    "A1": {
+      "by_year_full_history_2026_partial_is_Jan_Jul": {
+        "2022": 43967.30000000825,
+        "2023": 15862.70000000763,
+        "2024": 27220.10000000267,
+        "2025": 64298.99999999607,
+        "2026": 39548.99999998996
+      },
+      "by_year_dev_window_2026_partial_is_Jan_May": {
+        "2022": 43967.30000000825,
+        "2023": 15862.70000000763,
+        "2024": 27220.10000000267,
+        "2025": 64298.99999999607,
+        "2026": 8439.999999994674
+      }
+    },
+    "A2": {
+      "by_year_full_history_2026_partial_is_Jan_Jul": {
+        "2022": 48973.900000006455,
+        "2023": 13860.800000003896,
+        "2024": 33203.29999999603,
+        "2025": 71856.29999998485,
+        "2026": 45796.29999998462
+      },
+      "by_year_dev_window_2026_partial_is_Jan_May": {
+        "2022": 48973.900000006455,
+        "2023": 13860.800000003896,
+        "2024": 33203.29999999603,
+        "2025": 71856.29999998485,
+        "2026": 2802.199999989971
+      }
+    },
+    "A_FULL": {
+      "by_year_full_history_2026_partial_is_Jan_Jul": {
+        "2022": 47689.000000006075,
+        "2023": 17294.100000005514,
+        "2024": 32135.20000000004,
+        "2025": 70451.89999999272,
+        "2026": 45324.299999990966
+      },
+      "by_year_dev_window_2026_partial_is_Jan_May": {
+        "2022": 47689.000000006075,
+        "2023": 17294.100000005514,
+        "2024": 32135.20000000004,
+        "2025": 70451.89999999272,
+        "2026": 10354.19999999486
+      }
+    }
+  },
+  "daily_pnl_files_full_history_base_cost": {
+    "A0": "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\research\\system_master\\SIMPLE01_MINIMUM_SYSTEM\\out\\daily_pnl_A0_base_cost_full_history_through_20260731.csv",
+    "A1": "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\research\\system_master\\SIMPLE01_MINIMUM_SYSTEM\\out\\daily_pnl_A1_base_cost_full_history_through_20260731.csv",
+    "A2": "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\research\\system_master\\SIMPLE01_MINIMUM_SYSTEM\\out\\daily_pnl_A2_base_cost_full_history_through_20260731.csv",
+    "A_FULL": "D:\\OneDrive - Washington University in St. Louis\\TradingResearch\\systematic_research\\research\\system_master\\SIMPLE01_MINIMUM_SYSTEM\\out\\daily_pnl_A_FULL_base_cost_full_history_through_20260731.csv"
+  },
+  "runtime_seconds_total": 20.5
+}
