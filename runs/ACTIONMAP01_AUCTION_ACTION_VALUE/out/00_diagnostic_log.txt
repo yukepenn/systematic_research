@@ -1,0 +1,109 @@
+==============================================================================
+STEP 0: rebuilding clean causal substrate (reusing 05_m5_clean.py verbatim)
+==============================================================================
+[discovery] analysis_ok rows: 4375 | [confirmation] analysis_ok rows: 673
+[product A, discovery] n=4374, sessions=36, trade_blocks=89, tercile_cuts=[105.0, 282.3333333333326]
+[product A, confirmation] n=673, sessions=6, trade_blocks=16, tercile_cuts=[161.99999999999994, 596.9999999999997]
+[product A, discovery] long rows=2812, short rows=1562 | flat (target_exposure_A==0) rows in FULL raw table (pre-filter)=1
+
+==============================================================================
+PART 1: mechanical identity check (Q_add / Q_reduce / Q_reverse vs Q_hold)
+==============================================================================
+Upstream formula (runs/AUCTION02_ACTION_RELEVANCE/src/01_build_action_substrate.py line ~104-106): side = sign(target_exposure_A); signed_markout_H_A = side * (fwd_close - close) / TICK. This is PER-CONTRACT (side is a sign, +-1, never scaled by |target_exposure_A|) -- it does not depend on how many units are held, only on the DIRECTION held. Consequences, exact (not approximate) under this formula:
+  Q_hold(t)  = signed_markout_H_A(t)                                  [already computed]
+  Q_add(t)   = d(P&L)/d(size), same direction  = side*(fwd_close-close)/TICK = signed_markout_H_A(t) IDENTICALLY (the per-unit derivative does not depend on current size, since there is no size term in the formula at all)
+  Q_reduce(t)= value of removing one unit toward flat = -side*(fwd_close-close)/TICK = -signed_markout_H_A(t) IDENTICALLY
+  Q_reverse-per-unit(t) = value of one unit on the OPPOSITE side = -side*(fwd_close-close)/TICK = -signed_markout_H_A(t) IDENTICALLY (same per-unit number as Q_reduce; reversing simply changes 2 units of exposure -- one de-risking unit + one new opposite-side unit -- each worth -Q_hold(t) per unit, not a distinct third quantity)
+This is a mathematical identity following from the formula, not an empirically testable claim -- the data contains no fill-level, partial-size, or market-impact-vs-size records at all (no separate observations exist for 'what if 1 more/fewer contract had been held'), so there is literally nothing in this substrate that COULD contradict the identity even if real-world market impact existed. Per master directive sec34's own instruction not to assume future market impact from tiny research size, this collapses the naive 3-way decomposition exactly as the task anticipated: Q_add(t) == Q_hold(t) and Q_reduce(t) == Q_reverse_per_unit(t) == -Q_hold(t), for every t, by construction.
+[scope note] flat-state (target_exposure_A==0) rows, where a distinct 'initiate new position' Q_add would need a signal-direction convention instead of an incumbent direction, are essentially absent from this decision-point substrate: 1 row(s) in the FULL raw table before any filtering, 0 rows survive analysis_ok. This diagnostic's decision-point grid (inherited unchanged from AUCTION02/M5) is built only where an incumbent A or B exposure already exists, so a flat-state 'Q_add' population is not analyzable here regardless of approach -- Q_add below is properly read as 'value of adding to an existing position', which is exactly what the linear-in-size identity above covers.
+
+==============================================================================
+PART 2: headline Product-A clean M5 result (= Q1 AND Q2 simultaneously, given PART 1)
+==============================================================================
+[discovery,A] H=1: controlled_effect(far-near, abs_value_dist_ticks-controlled)=-6.166t (sess_CI=[-15.1, -0.433], trade_CI=[-14.254, -0.671]) | dual_sig=True | far_mean_Q_hold=-2.412t (sessCI=[-8.484, 3.184]) | near_mean_Q_hold=+1.320t (sessCI=[-2.697, 4.975]) | pct_of_C1=-2.15x
+[discovery,A] H=3: controlled_effect(far-near, abs_value_dist_ticks-controlled)=-17.769t (sess_CI=[-37.398, -4.032], trade_CI=[-36.628, -5.235]) | dual_sig=True | far_mean_Q_hold=-8.617t (sessCI=[-21.676, 4.606]) | near_mean_Q_hold=+4.171t (sessCI=[-5.094, 13.321]) | pct_of_C1=-6.19x
+[discovery,A] H=20: controlled_effect(far-near, abs_value_dist_ticks-controlled)=-78.415t (sess_CI=[-161.164, -7.99], trade_CI=[-156.3, -15.197]) | dual_sig=True | far_mean_Q_hold=-53.878t (sessCI=[-116.539, 11.519]) | near_mean_Q_hold=+8.445t (sessCI=[-26.977, 45.075]) | pct_of_C1=-27.30x
+[confirmation,A] H=1: controlled_effect=-14.343t (sess_CI=[-52.404, -3.387]) | sig(session-only, n_sessions=6 too few for trade-CI to be informative)=True | same_sign_as_discovery=True
+[confirmation,A] H=3: controlled_effect=-32.349t (sess_CI=[-155.054, 7.815]) | sig(session-only, n_sessions=6 too few for trade-CI to be informative)=False | same_sign_as_discovery=True
+[confirmation,A] H=20: controlled_effect=-178.787t (sess_CI=[-535.092, 12.867]) | sig(session-only, n_sessions=6 too few for trade-CI to be informative)=False | same_sign_as_discovery=True
+
+==============================================================================
+PART 3: (a) is the deterioration symmetric in sign(target_exposure_A)?
+==============================================================================
+long-held rows: 2812 (29 sessions) | short-held rows: 1562 (28 sessions)
+[long,A] H=1: n=2812 sessions=29 controlled_effect=-5.506t sess_CI=[-14.97, 1.029] trade_CI=[-16.503, 1.422] dual_sig=False
+[long,A] H=3: n=2812 sessions=29 controlled_effect=-15.298t sess_CI=[-37.254, 3.426] trade_CI=[-39.204, 2.257] dual_sig=False
+[long,A] H=20: n=2786 sessions=29 controlled_effect=-76.205t sess_CI=[-170.21, 7.617] trade_CI=[-170.58, 2.364] dual_sig=False
+[short,A] H=1: n=1562 sessions=28 controlled_effect=-9.052t sess_CI=[-16.394, -2.369] trade_CI=[-18.934, 0.371] dual_sig=False
+[short,A] H=3: n=1562 sessions=28 controlled_effect=-26.795t sess_CI=[-47.202, -9.197] trade_CI=[-52.736, -5.424] dual_sig=True
+[short,A] H=20: n=1562 sessions=28 controlled_effect=-115.402t sess_CI=[-166.848, -25.401] trade_CI=[-168.42, -29.113] dual_sig=True
+[symmetry, split-sample] same-sign(long,short) across all H: True
+[joint model,A] H=1: n=4374 r2=0.0024 | beta_abs=-0.01124 (sessCI=[-0.02584, 0.00813], sig_dual=False) | beta_aligned=+0.00013 (sessCI=[-0.01931, 0.01018], sig_dual=False)
+[joint model,A] H=3: n=4374 r2=0.0093 | beta_abs=-0.03982 (sessCI=[-0.07166, -0.00078], sig_dual=False) | beta_aligned=+0.00879 (sessCI=[-0.03694, 0.03386], sig_dual=False)
+[joint model,A] H=20: n=4348 r2=0.0298 | beta_abs=-0.17262 (sessCI=[-0.28485, -0.00573], sig_dual=True) | beta_aligned=+0.03525 (sessCI=[-0.13727, 0.09965], sig_dual=False)
+
+==============================================================================
+PART 4: (b) is Q_hold's relation to abs_value_dist_ticks linear or threshold/kink-shaped?
+==============================================================================
+quintile edges (abs_value_dist_ticks, ticks): [0.0, 57.0, 135.0, 241.0, 447.8, 1720.0]
+[quintile,A] H=1 Q1: n=883 mean_dist=25.7t mean_Q_hold=+2.088t sessCI=[-1.606, 6.248]
+[quintile,A] H=1 Q2: n=871 mean_dist=93.2t mean_Q_hold=+1.900t sessCI=[-3.943, 8.217]
+[quintile,A] H=1 Q3: n=876 mean_dist=188.1t mean_Q_hold=+0.056t sessCI=[-4.662, 4.483]
+[quintile,A] H=1 Q4: n=869 mean_dist=324.6t mean_Q_hold=+3.022t sessCI=[-1.624, 7.824]
+[quintile,A] H=1 Q5: n=875 mean_dist=765.6t mean_Q_hold=-6.973t sessCI=[-16.056, -0.893]
+[quintile,A] H=3 Q1: n=883 mean_dist=25.7t mean_Q_hold=+5.597t sessCI=[-3.835, 15.752]
+[quintile,A] H=3 Q2: n=871 mean_dist=93.2t mean_Q_hold=+0.222t sessCI=[-12.28, 14.026]
+[quintile,A] H=3 Q3: n=876 mean_dist=188.1t mean_Q_hold=+3.376t sessCI=[-7.247, 12.972]
+[quintile,A] H=3 Q4: n=869 mean_dist=324.6t mean_Q_hold=+3.131t sessCI=[-9.425, 16.988]
+[quintile,A] H=3 Q5: n=875 mean_dist=765.6t mean_Q_hold=-16.193t sessCI=[-34.64, -1.475]
+[quintile,A] H=20 Q1: n=865 mean_dist=25.7t mean_Q_hold=+4.173t sessCI=[-31.461, 41.31]
+[quintile,A] H=20 Q2: n=869 mean_dist=93.2t mean_Q_hold=+6.368t sessCI=[-41.633, 58.503]
+[quintile,A] H=20 Q3: n=870 mean_dist=188.1t mean_Q_hold=+20.908t sessCI=[-19.433, 58.534]
+[quintile,A] H=20 Q4: n=869 mean_dist=324.6t mean_Q_hold=-7.651t sessCI=[-80.641, 65.677]
+[quintile,A] H=20 Q5: n=875 mean_dist=765.6t mean_Q_hold=-79.544t sessCI=[-148.275, -21.599]
+[shape,A] H=1: R2 linear=0.0024 hinge=0.0025 quadratic=0.0024 | hinge_below_slope=-0.00338 (sessCI=[-0.02711, 0.02394], sig=False) | hinge_above_slope=-0.01381 (sessCI=[-0.03491, -0.00466], sig=True) | quad_coef=+0.0000008 (sessCI=[-2.93e-05, 1.68e-05], sig=False)
+[shape,A] H=3: R2 linear=0.0090 hinge=0.0092 quadratic=0.0091 | hinge_below_slope=-0.01625 (sessCI=[-0.07815, 0.05273], sig=False) | hinge_above_slope=-0.03754 (sessCI=[-0.09147, -0.00847], sig=True) | quad_coef=-0.0000051 (sessCI=[-8.65e-05, 2.78e-05], sig=False)
+[shape,A] H=20: R2 linear=0.0289 hinge=0.0299 quadratic=0.0289 | hinge_below_slope=-0.04399 (sessCI=[-0.30486, 0.21889], sig=False) | hinge_above_slope=-0.17519 (sessCI=[-0.42453, -0.01402], sig=True) | quad_coef=+0.0000039 (sessCI=[-0.0003033, 0.0001408], sig=False)
+
+==============================================================================
+PART 5: (c) reversal value, and the block=5 circular-bootstrap robustness cross-check
+==============================================================================
+[reversal,A] H=1: reversal_value(far-tercile, per unit)=+2.412t sessCI=[-3.184, 8.484] tradeCI=[-1.823, 7.959] sig=False | +0.84x C1(=2.872t, one trip) | +0.42x 2*C1 (reversal cost proxy)
+[reversal,A] H=3: reversal_value(far-tercile, per unit)=+8.617t sessCI=[-4.606, 21.676] tradeCI=[-2.275, 23.463] sig=False | +3.00x C1(=2.872t, one trip) | +1.50x 2*C1 (reversal cost proxy)
+[reversal,A] H=20: reversal_value(far-tercile, per unit)=+53.878t sessCI=[-11.519, 116.539] tradeCI=[-1.974, 115.823] sig=False | +18.76x C1(=2.872t, one trip) | +9.38x 2*C1 (reversal cost proxy)
+[robustness cross-check,A] H=1: raw diff=-3.732t | dual-cluster(session+trade, i.i.d.) sess_CI=[-10.898, 2.573] trade_CI=[-10.187, 2.024] | circular block=5 (CONVENTIONS.md sec5, B=10000, seed=20260808) CI=[-8.318, 1.476] sig=False
+[robustness cross-check,A] H=3: raw diff=-12.788t | dual-cluster(session+trade, i.i.d.) sess_CI=[-28.872, 2.832] trade_CI=[-27.491, 2.781] | circular block=5 (CONVENTIONS.md sec5, B=10000, seed=20260808) CI=[-23.208, -0.986] sig=True
+[robustness cross-check,A] H=20: raw diff=-62.323t | dual-cluster(session+trade, i.i.d.) sess_CI=[-135.69, 8.862] trade_CI=[-135.568, 1.123] | circular block=5 (CONVENTIONS.md sec5, B=10000, seed=20260808) CI=[-116.041, -4.441] sig=True
+
+==============================================================================
+PART 6: Q5 robustness -- RTH/ETH feasibility, RTH-subphase cross-check, LOSO/vol-split citation
+==============================================================================
+analysis_ok rows with rth==False (ETH): 0 / 4375 -- a true RTH-vs-ETH split is NOT FEASIBLE on this substrate: the matched&rth&liquid analysis_ok filter (computed upstream, unchanged, not this diagnostic's choice) already restricts every usable decision point to RTH session phases only (ETH liquidity is too thin for a reliable BBO match in this data). session_phase distribution within the product-A incumbent sample: {'RTH_MID': 3740, 'RTH_OPEN': 320, 'RTH_CLOSE': 314}
+RTH_MID-only rows: 3740 (36 sessions) -- closest available substitute robustness check: does the effect survive when RTH_OPEN/RTH_CLOSE edge-of-session rows (where liquidity/spread regimes differ most) are excluded entirely?
+[RTH_MID-only,A] H=1: n=3740 sessions=36 controlled_effect=-5.531t (full-RTH baseline -6.166t) sess_CI=[-13.437, -0.805] trade_CI=[-12.812, -0.911] dual_sig=True same_sign_as_baseline=True
+[RTH_MID-only,A] H=3: n=3740 sessions=36 controlled_effect=-15.602t (full-RTH baseline -17.769t) sess_CI=[-38.543, -1.404] trade_CI=[-35.448, -2.387] dual_sig=True same_sign_as_baseline=True
+[RTH_MID-only,A] H=20: n=3714 sessions=36 controlled_effect=-83.912t (full-RTH baseline -78.415t) sess_CI=[-172.08, -8.578] trade_CI=[-170.21, -13.728] dual_sig=True same_sign_as_baseline=True
+[CITED from runs/AUCTION04_CLEAN_CAUSAL_SUBSTRATE/out/m5_clean_action_value.json, product A, discovery, identical substrate/methodology -- not recomputed here]
+  LOSO H=1: 36/36 sessions same-sign on removal (range=[-8.35,-4.47]t)
+  remove-top3-influential-sessions H=1: controlled_effect=-2.487t dual_sig=False (loses dual significance at every horizon once the 3 most-influential sessions -- 20260220, 20251124, 20260423 -- are dropped)
+  vol-regime split H=1: low_vol controlled_effect=-3.114t dual_sig=False | high_vol controlled_effect=-7.379t dual_sig=False
+  LOSO H=3: 36/36 sessions same-sign on removal (range=[-22.72,-14.19]t)
+  remove-top3-influential-sessions H=3: controlled_effect=-9.870t dual_sig=False (loses dual significance at every horizon once the 3 most-influential sessions -- 20260220, 20251124, 20260423 -- are dropped)
+  vol-regime split H=3: low_vol controlled_effect=-9.826t dual_sig=False | high_vol controlled_effect=-20.821t dual_sig=True
+  LOSO H=20: 36/36 sessions same-sign on removal (range=[-102.29,-66.82]t)
+  remove-top3-influential-sessions H=20: controlled_effect=-53.046t dual_sig=False (loses dual significance at every horizon once the 3 most-influential sessions -- 20260220, 20251124, 20260423 -- are dropped)
+  vol-regime split H=20: low_vol controlled_effect=-13.060t dual_sig=False | high_vol controlled_effect=-100.276t dual_sig=True
+
+==============================================================================
+PART 7: Product B secondary check (structural inspection only, per sec42 scope)
+==============================================================================
+position_B distinct values across the FULL raw table: [-1, 0, 1] -- Product B's held state is a pure directional flag (no size dimension at all: never +-2, +-3, ... unlike target_exposure_A which ranges -9..+9). Consequence: 'add one more unit' is not a representable action for B in this substrate (0 observations of |position_B|>1 exist to even ask the question) -- B's action space collapses to exactly HOLD (stay at +-1) vs. REDUCE-TO-FLAT (go to 0), which by PART 1's identical mechanical identity is simply -Q_hold_B; there is no partial-reduce or partial-add state to decompose further. This is a structurally SIMPLER decomposition than Product A's, not a distinct new one -- no genuine additional Product-B-relevant layer is suggested by inspection, so none is forced here.
+Cross-reference: M5's own confirmation-pool result for product B is dual-significant at 0/3 horizons (n=522, 5 sessions -- underpowered, same as product A's confirmation result), consistent with 'no incremental B-specific claim beyond what M5 already reported'.
+
+==============================================================================
+FINAL VERDICT
+==============================================================================
+gate check: symmetric-and-both-significant(long&short)=False | RTH_MID-only same-sign=True | LOSO fully sign-stable=True | survives remove-top3-influential-sessions at dual-significance=False | circular-block5 significant at every H=False
+Reading: the DIRECTION of the deterioration effect (far-from-POC hurts incumbent-aligned forward markout) is highly stable -- symmetric by long/short, present in RTH_MID alone, 100% LOSO sign-stable, and confirmed by an independent block=5 circular bootstrap design. But its STATISTICAL SIGNIFICANCE is concentrated: it fails the remove-top-3-influential-sessions check at every horizon (drops out of dual-significance once 3 of 36 sessions are excluded), is not significant in the low-vol regime, and does not replicate at dual-significance in the underpowered 6-session confirmation pool (though the point estimate keeps the same sign there too). No add/hold/reduce action separation exists beyond the single univariate abs_value_dist_ticks relationship -- Q_add and Q_hold are mechanically identical, and Q_reduce/Q_reverse-per-unit are mechanically -Q_hold (PART 1) -- so what IS stable is a single continuous 'distance hurts the incumbent-aligned per-unit forward markout, roughly linearly' relationship, directionally robust but not yet strong enough in significance to be called a fully-confirmed, action-differentiated finding.
+
+Wrote D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\ACTIONMAP01_AUCTION_ACTION_VALUE\out\actionmap01_results.json
