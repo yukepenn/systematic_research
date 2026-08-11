@@ -9,9 +9,7 @@ scratch. Queues: `ACTIVE` (currently running), `READY` (next up, nothing blockin
 
 ## ACTIVE
 
-| Item | Lane | Started | Notes |
-|---|---|---|---|
-| ACTIONMAP01 (Auction M5 action-value decomposition) | C | 2026-08-10 | Background workflow: diagnostic → blind SPEC freeze → mechanical EXEC → synthesis. Runs entirely on consumed AUCTION04 data; opens no protected session. |
+*(none right now)*
 
 ## BLOCKED_OWNER
 
@@ -27,7 +25,7 @@ scratch. Queues: `ACTIVE` (currently running), `READY` (next up, nothing blockin
 |---|---|---|---|
 | EQV04 actual parity backtests (RunStrategyBacktest, incumbent vs canonical) | A | Code written, compiled clean; only needs the F5 step | Owner F5 |
 | B1 implementation-parity backtest (NT8 B1 vs Python SIMPLE01 B1) | B | Code written, compiled clean; only needs the F5 step | Owner F5 |
-| ACTIONMAP01 protected-pool power analysis + sequential protocol | C | Only if ACTIONMAP01's EXEC phase passes every consumed-data gate | ACTIONMAP01 completing with a PASS verdict (not assumed) |
+*(nothing else currently ready — see CLOSED below)*
 
 ## DEFERRED (lower EVI this wave, not started)
 
@@ -52,16 +50,28 @@ scratch. Queues: `ACTIVE` (currently running), `READY` (next up, nothing blockin
 | EQV04 canonical object construction | Built, compiled clean, committed (`89840f0`); actual parity test is `BLOCKED_OWNER` above |
 | B1 frozen challenger construction | Built, compiled clean, committed (`12341ab`) |
 | B1 future-confirmation spec | Frozen and committed BEFORE any future outcome read (`57e7078`) |
+| P3 ACTIONMAP01 (Auction M5 action-value decomposition) | `CLOSED_NO_ACTION_MAPPING` (`db1cb92`). Key finding: Q_add(t) is mechanically identical to Q_hold(t), and Q_reduce(t) to −Q_hold(t), by construction — the per-contract markout formula has no size term, so no fill-level/marginal-contract data exists in this dataset to ever separate a 3-way add/hold/reduce decomposition. Only a univariate relationship (M5's own abs_value_dist_ticks → deterioration) can be tested, and it is: direction-robust (symmetric long/short, 100% leave-one-session-out sign-stable) but significance-fragile (fails removing the 3 most-influential of 36 discovery sessions, not significant in low-vol regime or the confirmation pool). Reversal is not economically attractive at H=1 (+0.84× the C1 cost hurdle, not significant) — evidence favors reduce/de-risk over reverse, if any mapping is ever built. **No policy spec was frozen — the SPEC/EXEC phases never ran** because the diagnostic itself found no stable separation to act on (correctly, per sec38/146: do not force a mapping the data can't support). Auction M5 remains a preserved, valid clean information state for future interaction with DOM/execution data (per sec146) — this closure is exactly the kind of information gap DOM collection is positioned to eventually fill (fill-level data would supply the missing size/marginal-contract dimension this task lacked). Protected pool: zero sessions opened. |
+
+**P4 (Auction protected confirmation) does not proceed** — it was explicitly conditional on P3
+passing (`ACTIVE_RESEARCH_QUEUE.md`'s own prior entry), and P3 found no stable mapping to confirm.
 
 ---
 
-## Standing priority order (unchanged unless a result below re-ranks it)
+## Standing priority order (re-ranked after ACTIONMAP01's closure)
 
-P0 governance (done) → P1 EQV04 (built, owner-gated) → P2 B1 (built, owner-gated) → P3 ACTIONMAP01
-(active) → P4 Auction protected confirmation (conditional on P3) → P5 DOM operationalization
-(owner-gated) → P6 options/dealer-state feasibility → P7 cross-market EVI → P8 capital/portfolio
-science → P9 bounded new engine (only if new information supports it).
+P0 governance (done) → P1 EQV04 (built, owner-gated on F5) → P2 B1 (built, owner-gated on F5) →
+~~P3 ACTIONMAP01~~ (closed null) → ~~P4 Auction protected confirmation~~ (does not proceed, no
+mapping to confirm) → P5 DOM operationalization (owner-gated on entitlement) → ~~P6 options/
+dealer-state feasibility~~ (closed prior wave, DATA_LIMITED) → P7 cross-market EVI (no specific
+mechanism identified yet) → P8 capital/portfolio science (nothing new to fold in yet) → P9
+bounded new engine (only if new information supports it).
 
-Two lanes are simultaneously owner-gated on the exact same physical action (one F5 press in NT8),
-so both EQV04 and B1's implementation-parity steps will very likely clear together the next time
-the owner is at the NT8 desktop.
+**Current honest state: every lane with concrete, ready synchronous work is either owner-gated
+(P1/P2 on one F5 press, P5 on entitlement confirmation) or has no specific next action until new
+evidence/a new mechanism appears (P7, P8).** This is not a stall — per master directive sec156-157,
+a wave that closes false leads, ships governance infrastructure, and builds two owner-gated
+executable objects without inventing busywork to fill idle lanes is a legitimate outcome, not a
+gap. Two lanes (P1, P2) share the exact same physical unblock (one F5 press in NT8); a third (P5)
+needs a separate, unrelated confirmation. Next synchronous work resumes once any of those three
+owner actions happens, or once a genuinely new information class or mechanism is identified for
+P7-P9.
