@@ -1,9 +1,10 @@
 # ACTIVE_RESEARCH_QUEUE
 
-**Last updated:** 2026-08-11. Rolling document per master directive sec103/143-144 — re-ranked
-after every major result, not rewritten from scratch. Queues: `ACTIVE` (currently running),
-`READY` (next up, nothing blocking), `BLOCKED` (owner or evidence gated), `DEFERRED` (lower EVI,
-not started), `CLOSED` (done this wave).
+**Last updated:** 2026-08-11 (scientific-preservation/prospective-setup pass, same day as DOM01
+collection start). Rolling document per master directive sec103/143-144 — re-ranked after every
+major result, not rewritten from scratch. Queues: `ACTIVE` (currently running), `READY` (next up,
+nothing blocking), `BLOCKED` (owner or evidence gated), `DEFERRED` (lower EVI, not started),
+`CLOSED` (done this wave).
 
 ---
 
@@ -11,17 +12,19 @@ not started), `CLOSED` (done this wave).
 
 | Item | Lane | Started | Notes |
 |---|---|---|---|
-| DOM01 live collection | E | 2026-08-11 | Owner completed all 5 startup steps. Verified directly (not just owner report): `DataConnectionDisableL2Data=False`, `DataConnectionStatusAtInit=Connected` (via Tradovate, not Simulation), 17,000+ depth rows within the first minute, zero `FATAL_ERROR` events. Genuinely collecting real Level II data now. No completeness/quality checks run yet — per `DOM01_START_INSTRUCTIONS.md`, do not treat this data as research-usable until it passes the checks in `research/data_forward_sealed/DOM01/README.md`. |
+| DOM01 live collection | E | 2026-08-11 | Owner completed all 5 startup steps. Verified directly (not just owner report): `DataConnectionDisableL2Data=False`, `DataConnectionStatusAtInit=Connected` (via Tradovate, not Simulation), depth/topofbook/heartbeat rows flowing continuously, zero `FATAL_ERROR` events (see `runs/DOM01_LIQUIDITY_STATE/collector/qc/dom01_qc_monitor.py` output — 0 FAIL, 1 descriptive WARN). Genuinely collecting real Level II data. Still not research-usable: the one run collected so far is classified `ENGINEERING_BURNIN` per `research/data_forward_sealed/DOM01/DOM01_DATA_GOVERNANCE.md` (structurally inspected while building the QC monitor, before the mechanism was frozen) — every run from here forward is `SEALED_FORWARD` by default and stays sealed even once QC/sample-size readiness is met, pending explicit owner authorization. **Run the QC monitor at least once per collection session** (`runs/DOM01_LIQUIDITY_STATE/collector/qc/README.md`). |
 
 ## BLOCKED_OWNER
 
-*(none right now — both prior F5-gated items closed this wave)*
+*(none right now — both prior F5-gated items closed this wave; DOM01 discovery-authorization is a
+separate, later owner decision, not a blocker on any currently-active item)*
 
 ## READY (next up)
 
-| Item | Lane | Why ready | Depends on |
-|---|---|---|---|
-| DOM data-quality monitor tooling (daily automated checks) | E | Collector is now actually running — building the monitor is no longer speculative | Some accumulated collection history to validate the monitor against (a few days minimum) |
+*(none right now — the DOM QC monitor moved from READY to CLOSED this wave; the next real step is
+accumulating `SEALED_FORWARD` sessions, which is calendar time, not a queued task — see
+`DOM01_DATA_GOVERNANCE.md` sec3 for the mechanical readiness formula that will decide when a
+batch is even proposal-eligible)*
 
 ## DEFERRED (lower EVI this wave, not started)
 
@@ -49,6 +52,15 @@ not started), `CLOSED` (done this wave).
 **P4 (Auction protected confirmation) does not proceed** — conditional on P3 passing; P3 found no
 stable mapping to confirm.
 
+## CLOSED this wave (2026-08-11, scientific-preservation/prospective-setup pass)
+
+| Item | Verdict |
+|---|---|
+| DOM01 collection-integrity QC monitor | Built (`runs/DOM01_LIQUIDITY_STATE/collector/qc/dom01_qc_monitor.py`), run clean against the live collection (0 FAIL, 1 descriptive WARN — heartbeat cadence outlier). Feed/collector integrity only, zero outcome computation. Also surfaced a genuine, appropriately-hedged feed-semantics finding (`EventTime` tracks `RecordedUtc` at a tight, consistent −4:00:00 offset despite `EventTimeKind=Unspecified`). |
+| Canonical timezone-aware session-boundary utility | Built (`research_sdk/session_boundary.py`), 15/15 tests pass (DST spring/fall transitions, ordinary EST/EDT dates, the exact `LOCKED_FORWARD.md` boundary date, early-close session). Fixes the process-error class behind the EQV04 smoke-test near-miss — every future `RunStrategyBacktest`/data-read window can now be computed and mechanically asserted against `LOCKED_FORWARD.md` before any data is read, with no seasonal-offset branch for a caller to get wrong. |
+| DOM01 prospective research protocol + data governance | Frozen and committed (`research/data_forward_sealed/DOM01/DOM01_PROSPECTIVE_PROTOCOL.md`, `DOM01_DATA_GOVERNANCE.md`) before any outcome analysis of DOM data. Exactly one mechanism frozen (DOM-M1: opposite-side depth withdrawal / adverse-selection quote-fade, conditional on the incumbent's own held direction) after reviewing Auction M5's surviving finding and ACTIONMAP01's identifiability failure; two other candidates explicitly reviewed and deferred. The one existing collector run is classified `ENGINEERING_BURNIN` (structurally inspected pre-freeze) and permanently excluded from discovery/confirmation tallies. Data stays `SEALED_FORWARD` even once readiness is met, pending explicit owner authorization. |
+| Orientation-doc lint | `CURRENT_TRUTH.md` / `RESEARCH_HANDOFF.md` top snapshots predated this wave's EQV04/B1/ACTIONMAP01 closures and DOM01 going live — both updated (superseding sections prepended per each file's own convention, nothing rewritten/deleted). `MAP.md` checked, no DOM/EQV04/B1/ACTIONMAP01 references found stale (it doesn't track research status, only file layout) — left unchanged, no repo-wide cleanup campaign run. |
+
 **Process note from this wave, worth remembering:** NT8 requires an explicit F5 *inside the
 NinjaScript Editor* to rebuild the custom assembly after new files are added — a plain application
 restart alone did not pick up 5 newly-written `.cs` files (confirmed directly: a backtest attempt
@@ -68,6 +80,14 @@ P0 governance (done) → ~~P1 EQV04~~ (PASS, closed) → ~~P2 B1~~ (implementati
 capital/portfolio science (nothing new to fold in yet) → P9 bounded new engine (only if new
 information supports it).
 
-**Current honest state: every owner-gated item from the prior wave is now closed.** DOM01 is the
-one active lane, now genuinely collecting rather than blocked. P7/P8/P9 remain correctly idle —
-no invented busywork — until a genuinely new mechanism or a few days of DOM data accumulate.
+**Current honest state (2026-08-11 pass): every owner-gated item from the prior wave is closed,
+and the scientific-preservation lane requested this pass is also closed** — QC monitor built and
+clean, the timezone-boundary error class fixed with tests, exactly one DOM mechanism frozen before
+any outcome analysis, data governance frozen with a non-outcome readiness rule, orientation docs
+delinted. DOM01 is the one active lane, genuinely collecting. Nothing was manufactured to stay
+busy: no DOM alpha/outcome analysis ran, no historical B1/Auction/ACTIONMAP01 work was reopened,
+no baseline changed. P7/P8/P9 remain correctly idle. The correct next state is **core frozen, B1
+frozen, protected evidence untouched, DOM accumulating, prospective hypothesis committed, waiting
+for independent evidence** — that is progress, not a stall, until either a QC-passed `SEALED_FORWARD`
+batch is proposal-eligible per `DOM01_DATA_GOVERNANCE.md` sec3 AND the owner separately authorizes
+opening it, or a genuinely new mechanism is identified elsewhere.
