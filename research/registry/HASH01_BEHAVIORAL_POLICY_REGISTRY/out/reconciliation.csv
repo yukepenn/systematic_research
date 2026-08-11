@@ -1,0 +1,179 @@
+source,experiment,category,category_label,note
+tested_configs.csv,PARITY,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"UI/MCP parity gate, not a trial (gap note's own rule: parity gates are not trials)"
+tested_configs.csv,SW00,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),determinism + baseline + cost-stress + fill-resolution + parallel-submission infra checks on the SAME frozen baseline config
+tested_configs.csv,SW01c,A,parameter_sweep_same_architecture,same frozen baseline params evaluated on an additional data window (2022) + slip stress; no decision-rule change
+tested_configs.csv,SW01b,B,distinct_architecture_mechanism_or_datasource,SW01bRandomEntryV1 -- a genuinely different strategy class (random entry) used as a null-control architecture
+tested_configs.csv,SW01,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"ledger-export instrumentation, no strategy variant"
+tested_configs.csv,SW02a,B,distinct_architecture_mechanism_or_datasource,"introduces a timed forced-flatten exit mechanism (EndTime ladder) not present in the session-close baseline; the ladder of times within it is numeric, but the mechanism itself is new"
+tested_configs.csv,W1_S4,B,distinct_architecture_mechanism_or_datasource,"EntrySignalType {0,1,2,3} -- a categorical/qualitative mode switch in the vendor indicator's own decision rule, not a continuous numeric knob"
+tested_configs.csv,W1_S1,A,parameter_sweep_same_architecture,TM x SM spatial grid -- pure numeric axes of the same Solar Wave member architecture
+tested_configs.csv,W1_S3,A,parameter_sweep_same_architecture,Slowdown x WWS temporal grid -- pure numeric axes
+tested_configs.csv,W1_REF,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"full-history reference rerun of the canonical config, not a swept variant"
+tested_configs.csv,W1_S2,A,parameter_sweep_same_architecture,"same strategy run at different bar timeframes (2m/3m/5m) -- bar-period is a numeric aggregation axis, decision rule unchanged"
+tested_configs.csv,W1b,A,parameter_sweep_same_architecture,dense SM grid (1m and 3m) -- pure numeric plateau-mapping sweep
+tested_configs.csv,B01,B,distinct_architecture_mechanism_or_datasource,"python_vector_orb_fade and python_vector_gapfade -- two genuinely distinct mechanisms (opening-range-breakout fade, gap fade), not parameter variants of Solar Wave or of each other"
+tested_configs.csv,PORT01,B,distinct_architecture_mechanism_or_datasource,"same Solar-Wave-family construction ported to YM/RTY/CL -- a different INSTRUMENT/data-source decision per the task's own category (b), not a numeric sweep"
+tested_configs.csv,DM01,A,parameter_sweep_same_architecture,day-margin time-filter window sweep (1800-1640) on the already-adopted SolarWaveOpenV3 -- numeric operational-window axis
+tested_configs.csv,C01T1_EXPOSURE,B,distinct_architecture_mechanism_or_datasource,"vol-surprise-tercile exposure overlay -- a new regime-conditioning decision layer, not a numeric knob on the existing controller"
+tested_configs.csv,C01T1_ML,B,distinct_architecture_mechanism_or_datasource,logistic-regression meta-label overlay -- a genuinely new ML-based decision mechanism
+tested_configs.csv,SM03_DISASTER_STOP,B,distinct_architecture_mechanism_or_datasource,introduces a close-basis disaster-stop layer not present in the frozen system; the m-multiplier grid within it is incidental numeric variation
+tested_configs.csv,SM03B_DISASTER_STOP_INTRABAR,B,distinct_architecture_mechanism_or_datasource,"same as SM03 but intrabar-extreme trigger -- a different trigger MECHANISM (extreme vs close basis), not a reparameterization of SM03"
+tested_configs.csv,SM04_CONSENSUS_SHAPE,B,distinct_architecture_mechanism_or_datasource,different vote-to-target mapping functions (U1/U2/U3/D1) -- distinct decision-mapping mechanisms
+tested_configs.csv,SM08_HTF_TILT,B,distinct_architecture_mechanism_or_datasource,new HTF-agreement-based exposure tilt mechanism (first adoption of an HTF conditioning layer)
+tested_configs.csv,SM07_TRENDDAY_UPWEIGHT,B,distinct_architecture_mechanism_or_datasource,new frozen-on-history gap/IB trend-day classifier conditioning the existing target -- new conditioning mechanism
+tested_configs.csv,SM10_VOLTRANSITION_ENGINE,B,distinct_architecture_mechanism_or_datasource,"standalone daily engine (compression-state classifier -> directional hold) -- a wholly new, independent architecture, not a variant of Solar/BMOM"
+tested_configs.csv,SM11_HOLDOUT_READ,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"single preregistered holdout-consumption READ of already-frozen candidates, not itself a new architecture or a parameter sweep"
+tested_configs.csv,SM14_ONELOT_DAYMARGIN,B,distinct_architecture_mechanism_or_datasource,"new discretization mechanism collapsing the continuous multi-lot target to sign+hysteresis 1-lot trading; the (a,b) hysteresis-threshold grid within it is incidental numeric variation"
+tested_configs.csv,SMV2B,A,parameter_sweep_same_architecture,"BMOM fill-timing variants (signal-close / next-open / +1t / +2t slip) -- execution/cost-model axis of the same B-MOM decision logic, decision rule itself unchanged"
+tested_configs.csv,SMV2C,A,parameter_sweep_same_architecture,portfolio blend-weight sweep across Solar/BMOM/B1 sleeves (P0-P3) -- numeric allocation axis of the same multi-engine construction
+tested_configs.csv,SMV2E,U,mixed_or_unclassifiable_as_filed (needs sub-splitting before any dedup),s0-s100 is a pure numeric short-scale multiplier (a); c1_htfup_short* vs c2_counterHTF_* are two DIFFERENT conditioning mechanisms (asymmetric-iff-HTF-up vs symmetric counter-HTF) (b) -- needs sub-splitting
+tested_configs.csv,SMV2E-ext,A,parameter_sweep_same_architecture,plateau-neighbor extension of the c1 (HTF-up-conditional) mechanism's own numeric ladder -- same mechanism as SMV2E's c1 arm
+tested_configs.csv,SMV2G,B,distinct_architecture_mechanism_or_datasource,"8 DIFFERENT HTF/trend feature constructions (SMA20/SMA100/EMA50/Donchian50mid/ret50/ret100/SMA50slope5/dualSMA50_200) -- distinct feature-mechanism decisions, not a numeric sweep of one formula"
+tested_configs.csv,SMV2H,U,mixed_or_unclassifiable_as_filed (needs sub-splitting before any dedup),"one-contract construction program: introduces a NEW discretization mechanism (hysteresis one-lot mapping) with several genuinely different variants (A_dominant BMOM-first routing, B_sign, C_hyst thresholds, E_conflictflat, G_router_htf) (b) each a distinct routing/conflict-resolution rule, plus SM14_ref_oldM31 as a reference rerun (N) -- needs sub-splitting by variant letter"
+tested_configs.csv,SMV2H2,A,parameter_sweep_same_architecture,plateau-confirmation reruns of the A_dominant mechanism's own s5/s7/s9 numeric ladder -- same mechanism as SMV2H's A_dominant arm
+tested_configs.csv,SMV2I,U,mixed_or_unclassifiable_as_filed (needs sub-splitting before any dedup),"C-P1 CDaR/EDaR/Ulcer blend-weight sweep (a); C-P3 leverage-multiplier grid (a); C-P4 drought-tilt mechanism + its own placebo battery (b, new conditioning mechanism); C-P7 windfall event-study (N, diagnostic pretest not itself a candidate) -- needs sub-splitting"
+tested_configs.csv,SMV2J,B,distinct_architecture_mechanism_or_datasource,"Variance-Ratio and Efficiency-Ratio state-harness constructions -- new feature/mechanism, not a numeric sweep of an existing one"
+tested_configs.csv,SMV2K,B,distinct_architecture_mechanism_or_datasource,Engine-3 failed-break-fade / small-gap-fade / overnight-drift -- three genuinely distinct trading mechanisms
+tested_configs.csv,SMV2M,B,distinct_architecture_mechanism_or_datasource,"SolarWaveSMMaster_v2 -- the consolidated multi-engine architecture integration point itself, a foundational build milestone, not a sweep"
+tested_configs.csv,SMV2N,B,distinct_architecture_mechanism_or_datasource,"windfall give-back/trim POLICY -- a new decision mechanism (plus its own placebo/chronology validation, N)"
+tested_configs.csv,SMV2O,B,distinct_architecture_mechanism_or_datasource,Kalman innovation-whiteness and BOCPD regime-age -- two distinct new state-estimation mechanisms/data representations
+tested_configs.csv,SMV2P,B,distinct_architecture_mechanism_or_datasource,Engine-3 value-area-rotation / multiday-false-break / month-end-flow -- three distinct trading mechanisms
+tested_configs.csv,SMV2Q,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"diagnostics bundle, not a strategy variant"
+tested_configs.csv,SMV2R,U,mixed_or_unclassifiable_as_filed (needs sub-splitting before any dedup),"bundles a numeric vol-memory-window sweep (a) with T2T3 new signal-LAYER addition and cohort-membership ablation (b, both architecture decisions) and a clamp audit (N, diagnostic) -- needs sub-splitting"
+tested_configs.csv,SMV2S,A,parameter_sweep_same_architecture,HTFgated_dominant threshold sweep (thr3/5/7) -- numeric threshold axis of the already-introduced HTF-gated dominant-routing mechanism
+tested_configs.csv,SMV2T,B,distinct_architecture_mechanism_or_datasource,"NoFAST_R2_confirm -- ablation test removing a component ('FAST') from the architecture, a structural not numeric change"
+tested_configs.csv,SMV2U,B,distinct_architecture_mechanism_or_datasource,"different clock/bar-construction conventions (1m/5m bar-matched vs time-matched) -- a construction-mechanism decision, not a numeric knob"
+tested_configs.csv,SMV2V,B,distinct_architecture_mechanism_or_datasource,"ER150 damper -- new damping POLICY mechanism (plus its own placebo/chronology validation, N)"
+tested_configs.csv,SMV2W,B,distinct_architecture_mechanism_or_datasource,5m clock R2 -- same clock-construction-mechanism family as SMV2U
+tested_configs.csv,SMV2X,B,distinct_architecture_mechanism_or_datasource,Engine-3 shock-continuation / macro-drift (FOMC/CPI) / opex-unclamp-breakout -- three distinct trading mechanisms
+tested_configs.csv,SMV2Y,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"weekly viability diagnostics measuring existing state features (sigma460/ER150/flip-rate/VR) -- measurement, not a new architecture"
+tested_configs.csv,SMV2Z,A,parameter_sweep_same_architecture,viability-gating POLICY threshold sweep (s050/070/085) -- numeric threshold axis of one fixed gating mechanism
+tested_configs.csv,SMV2AA,A,parameter_sweep_same_architecture,portfolio mix-shift -- numeric weight axis
+tested_configs.csv,SMV2AB,B,distinct_architecture_mechanism_or_datasource,Engine-3 slate-4 constructions -- distinct trading mechanisms
+tested_configs.csv,SMV2AC,B,distinct_architecture_mechanism_or_datasource,level-1 joint logistic ML overlay -- new ML-based decision mechanism
+tested_configs.csv,SMV2AD,U,mixed_or_unclassifiable_as_filed (needs sub-splitting before any dedup),"VolMult ceiling numeric sweep (a) bundled with 'extended cohort add/replace' (b, a cohort-membership architecture decision) and an old-regime screen (N, validation) -- needs sub-splitting"
+tested_configs.csv,SMV2AE,A,parameter_sweep_same_architecture,"1-minute rescale of the existing ensemble -- same decision rule at a different bar resolution, a numeric/portability axis"
+tested_configs.csv,SMV2AF,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"gate battery (dev-bootstrap / LOYO-chronology / old-regime / diversification / overall-verdict) -- a promotion-gate validation pass on an already-built candidate, not itself a new architecture or sweep"
+tested_configs.csv,SMV2AG,B,distinct_architecture_mechanism_or_datasource,"adaptive clamp -- a new clamp MECHANISM (adaptive vs the existing fixed clamp), a structural not numeric change"
+tested_configs.csv,SMV2AH,B,distinct_architecture_mechanism_or_datasource,day circuit-breaker -- a new risk-control mechanism (threshold_calibration and circuit_breaker_sweep_16cell are numeric sweeps within it)
+tested_configs.csv,SMV2AI,B,distinct_architecture_mechanism_or_datasource,ATR-blend construction -- a new volatility-scale construction mechanism (replace_blend_sweep_4arm is a numeric blend-weight sweep within it)
+tested_configs.csv,SMV2AJ,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"gate battery (dev-bootstrap / LOYO / old-regime-dual / right-tail / portfolio / weight-robustness / overall-verdict) for the ATR-blend candidate -- validation, not a new architecture"
+tested_configs.csv,SMV2AK,B,distinct_architecture_mechanism_or_datasource,"volume-bar construction -- a new bar-construction/data-representation decision (distinct from time bars), not a numeric knob"
+tested_configs.csv,W16-V1,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"flatten-time audit (NQ/MNQ) -- forensic verification, not a strategy variant"
+tested_configs.csv,W16-V1b,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),origin-of-1639 forensic investigation
+tested_configs.csv,W16-V2,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),overshoot-ratio trailing measurement -- diagnostic
+tested_configs.csv,W16-V3,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),repo exposure status check -- infra
+tested_configs.csv,W16-V4a,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),commission/margin verification -- infra
+tested_configs.csv,W17-V1R1,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),flatten audit -- forensic
+tested_configs.csv,W17-V1R2,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),MNQ flatten root-cause -- forensic
+tested_configs.csv,W17-V1h-V1e,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),margin-window exposure audit -- forensic
+tested_configs.csv,W17-V1R3,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"C4 rebuild v2 -- infra fix, not a strategy variant"
+tested_configs.csv,W17B-C3,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),C4 watchdog v4 -- infra
+tested_configs.csv,W17-V4,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),friction-share ledger -- accounting/diagnostic
+tested_configs.csv,W17-V1d,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),late-entry census -- diagnostic
+tested_configs.csv,W17-V1f,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),event-day margin leverage -- diagnostic
+tested_configs.csv,W17-O1,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),primary-objective build -- infra (utility-function module build)
+tested_configs.csv,W17-DIAG,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),warmup start-state sensitivity -- diagnostic
+tested_configs.csv,W18R1-M1,B,distinct_architecture_mechanism_or_datasource,intraday vol-seasonality D4 construction -- a new conditioning mechanism
+tested_configs.csv,W18R2-M5,B,distinct_architecture_mechanism_or_datasource,ATR-blend cross-instrument replication -- new construction ported cross-instrument
+tested_configs.csv,W18-E1,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"holdout-consumption determination -- protocol/governance decision, not a trial"
+tested_configs.csv,W18-F,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),warmup convergence measurement -- diagnostic
+tested_configs.csv,W18E-C4,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),Product-A C4 propagation check -- forensic
+tested_configs.csv,W18R1-RT,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"M1 red-team review -- adversarial audit, not a new trial"
+tested_configs.csv,W18R2-RT,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),M5 red-team review -- adversarial audit
+tested_configs.csv,W18-STAND,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),stub-concentration caution note -- diagnostic
+tested_configs.csv,W18-O1R,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),O1 blind repair -- infra fix
+tested_configs.csv,W19-R4,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),seal-audit standing check -- governance
+tested_configs.csv,W19-D7,B,distinct_architecture_mechanism_or_datasource,"2026 regime diagnostic construction -- but closed advisory, borderline; classified N since no candidate was constructed (diagnostic-only per its own TESTING_LEDGER row)"
+tested_configs.csv,W19-R3,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),O1 blind-review agreement -- governance/adjudication
+tested_configs.csv,W19-D7RT,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),D7 red-team review -- adversarial audit
+tested_configs.csv,W19R1,B,distinct_architecture_mechanism_or_datasource,w19r1 selectivity run -- a new selectivity-filter construction
+tested_configs.csv,W19R1RT,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),w19r1 red-team review -- adversarial audit
+tested_configs.csv,S0,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),time-of-day autopsy -- diagnostic
+tested_configs.csv,S2-ARMA,B,distinct_architecture_mechanism_or_datasource,ARMA-based selectivity-timing construction -- new mechanism
+tested_configs.csv,S2RT,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),red-team review of S2 -- adversarial audit
+tested_configs.csv,P4-CHURN,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),churn-selectivity autopsy -- diagnostic
+tested_configs.csv,D-WINNER,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),winner autopsy -- diagnostic
+tested_configs.csv,E3-S5,B,distinct_architecture_mechanism_or_datasource,Engine-3 slate-5 cross-market construction -- new mechanism/data-source (cross-market)
+tested_configs.csv,X1X2,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),execution-friction audit -- forensic
+tested_configs.csv,V1R4,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"NT8 parity verification -- infra, not a trial"
+tested_configs.csv,S2-R2,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"S2 adjudication -- governance decision, not a new trial"
+tested_configs.csv,V1R4-P2,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),warmup forensics -- diagnostic
+tested_configs.csv,V1R4-P3,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),defect-3 BMOM-flatten bugfix -- infra fix
+tested_configs.csv,V1R4-P4,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),full-history chunked certification -- infra/verification
+tested_configs.csv,R1-A,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),P0 tradestate-ledger autopsy -- diagnostic
+tested_configs.csv,R1-B,B,distinct_architecture_mechanism_or_datasource,adaptive-exit giveback overlay -- new exit-mechanism construction
+tested_configs.csv,R2,B,distinct_architecture_mechanism_or_datasource,entry-confirmation giveback construction -- new entry mechanism
+tested_configs.csv,R2V1,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),confirm2 formal adjudication -- governance decision on R2's own construction
+tested_configs.csv,SA0,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"system-structure failure-mode science -- diagnostic/taxonomy, not a trial"
+tested_configs.csv,R3,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),seltime state diagnostic -- diagnostic
+tested_configs.csv,R2B,B,distinct_architecture_mechanism_or_datasource,pullback-reclaim adaptive-entry construction -- new entry mechanism
+tested_configs.csv,SA0-ADDENDUM,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),current edge-health monitoring -- diagnostic
+tested_configs.csv,R4,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"slope/impulse residual-information diagnostic -- feature-information test, no candidate constructed"
+tested_configs.csv,R5,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"microstructure OHLCV-proxy diagnostic -- feature-information test, no candidate constructed"
+tested_configs.csv,R6,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"Engine-3 audit, no candidate constructed -- diagnostic"
+tested_configs.csv,PA0-PA1,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"Product-A structural decomposition -- diagnostic/specification, not a trial"
+tested_configs.csv,SYN,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),2026-08-09 final synthesis writeup -- not a trial
+tested_configs_backfill.csv,H011,B,distinct_architecture_mechanism_or_datasource,"backfill: stop-order vs market-order execution mechanics -- a genuinely different fill/execution mechanism, not a numeric parameter"
+tested_configs_backfill.csv,W1C,A,parameter_sweep_same_architecture,"backfill: tf x sm grid, wave1c Tier-2 confirmation -- pure numeric grid, same architecture as W1_S1/W1b"
+tested_configs_backfill.csv,W2,U,mixed_or_unclassifiable_as_filed (needs sub-splitting before any dedup),"backfill: BUNDLES multiple genuinely different hypotheses under one experiment label -- 'fixed-threshold wide sweep' and 'H-012 sigma-estimator robustness' are numeric (a); 'H-006 adaptive threshold', 'H-007 split exit/reversal', 'H-008 anchor definition', 'H-006 x H-008 combo' are each distinct decision-rule mechanisms (b); plus non-trial parity gates. Needs sub-splitting by purpose column before any dedup pass, not a single dedup unit as filed."
+tested_configs_backfill.csv,W3,U,mixed_or_unclassifiable_as_filed (needs sub-splitting before any dedup),"backfill: BUNDLES 'wave-index conditioning', 'H-014 price vs volatility', 'ES portability' (different instrument = data-source decision), 'C2 Type-3 re-entry (adaptive/fixed core)', 'C4 Type-2+Type-3' -- almost entirely (b)-type distinct mechanism/data-source decisions, plus non-trial parity gates. Needs sub-splitting."
+TESTING_LEDGER.csv,ADD01_PARTICIPATION_EXPANSION,B,distinct_architecture_mechanism_or_datasource,reachable-M enumeration + EntryLevel participation-expansion construction -- new mechanism
+TESTING_LEDGER.csv,AUCTION01_VALUE_STATE,B,distinct_architecture_mechanism_or_datasource,NQ_VOLUME_AT_PRICE causal running POC/value-share state -- new data source (first genuinely new information class this campaign)
+TESTING_LEDGER.csv,AUCTION02_ACTION_RELEVANCE,B,distinct_architecture_mechanism_or_datasource,NQ_VOLUME_AT_PRICE-based rate-limiter policy -- new data source + new decision mechanism
+TESTING_LEDGER.csv,AUCTION03_MECHANISM_DECOMPOSITION,B,distinct_architecture_mechanism_or_datasource,"bounded M1-M5 mechanism slate on Auction substrate -- distinct decomposition mechanisms, though not promoted"
+TESTING_LEDGER.csv,AUCTION04_CLEAN_CAUSAL_SUBSTRATE,B,distinct_architecture_mechanism_or_datasource,rebuilt causal Auction substrate + re-run of the M1-M5 mechanism slate -- data-integrity replication of a (b)-type family
+TESTING_LEDGER.csv,COMBO01_MULTIMODAL_SYNERGY,B,distinct_architecture_mechanism_or_datasource,AUCTION x FLOW interaction construction -- new combined-mechanism test
+TESTING_LEDGER.csv,DATA02_MICROSTRUCTURE_INVENTORY,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"read-only data inventory, infra"
+TESTING_LEDGER.csv,DOM01_COLLECTOR,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"forward L2-data collector build, infra, never run"
+TESTING_LEDGER.csv,DOM01_DEPLOY_NT8_FEASIBILITY,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"deployment-feasibility check, infra"
+TESTING_LEDGER.csv,EQV01_BEHAVIORAL_CANONICALIZATION,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"specification/representation-equivalence audit -- explicitly not alpha, per its own status field"
+TESTING_LEDGER.csv,EQV02_FULL_HISTORY_ARRAY_EQUALITY,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),specification/representation-equivalence audit -- explicitly not alpha
+TESTING_LEDGER.csv,EQV03_PNL_EQUALITY,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),specification/representation-equivalence audit -- explicitly not alpha
+TESTING_LEDGER.csv,EVIDENCE01_REPORT_TRACEABILITY,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"audit re-deriving headline numbers from source, infra/verification"
+TESTING_LEDGER.csv,EXEC01_PRODUCT_A_DOLLAR_ATTRIBUTION,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"execution-forensics dollar reconciliation, not a strategy variant"
+TESTING_LEDGER.csv,EXP01_MARGINAL_EXPOSURE_SHAPE,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"diagnostic shape-measurement, reassuring null, no candidate"
+TESTING_LEDGER.csv,FLOW01_AGGRESSIVE_PARTICIPATION,B,distinct_architecture_mechanism_or_datasource,NQ_BIDASK_TICKS order-flow features at in-position checkpoints -- new data source
+TESTING_LEDGER.csv,GRID01_SOLAR_RESOLUTION_CONVERGENCE,A,parameter_sweep_same_architecture,"VolMult grid density/spacing (G7/G13/G25/G49) -- pure numeric axis of the SAME Solar member architecture, explicitly diagnostic zero-alpha-budget per its own status"
+TESTING_LEDGER.csv,GRID02_ENDPOINT_PERTURBATION,A,parameter_sweep_same_architecture,"VolMult grid endpoint sweep [5,29]/[6,30]/[7,31] -- pure numeric axis, same architecture as GRID01"
+TESTING_LEDGER.csv,H0_PRODUCT_A_HEALTH,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),current-health diagnostic panel on the existing incumbent
+TESTING_LEDGER.csv,ICT0102_EVENT_SEQUENCE,B,distinct_architecture_mechanism_or_datasource,PDH/PDL sweep/rejection/MSS structural-event features -- new mechanism/feature class
+TESTING_LEDGER.csv,LEV01_VOLATILITY_ASYMMETRY,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"diagnostic market-structure test, confound caught, no candidate constructed"
+TESTING_LEDGER.csv,LEV02_TRAILING_REGIME,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"diagnostic regime-signal test, clean null, no candidate"
+TESTING_LEDGER.csv,MOM01_INTRADAY_MOMENTUM,B,distinct_architecture_mechanism_or_datasource,literature-based intraday-momentum feature test -- new feature/mechanism (though null result)
+TESTING_LEDGER.csv,O2_NUMERIC_PROVENANCE_AUDIT,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"audit correcting stale numbers in canonical docs, infra"
+TESTING_LEDGER.csv,O2_OWNER_UTILITY_READJUDICATION,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"utility-function readjudication of EXISTING candidates on real P&L -- adjudication, not a new construction"
+TESTING_LEDGER.csv,PERT01_STRUCTURAL_INVARIANCE,A,parameter_sweep_same_architecture,"one-at-a-time numeric perturbation of VolPeriod/BAND_DAYS/TiltSma -- pure numeric axes of the existing architecture, explicitly diagnostic"
+TESTING_LEDGER.csv,PLACEBO01_COMPONENT_CAUSALITY,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"causal placebo/falsification battery on EXISTING components (B-MOM, HTF, hysteresis, sizing) -- diagnostic falsification test, not a new construction"
+TESTING_LEDGER.csv,PORT01_AB_PORTFOLIO_SYNTHESIS,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"portfolio-level quantification of an already-known correlation fact, non-alpha by its own label"
+TESTING_LEDGER.csv,PRICE01_PRODUCT_A_GENUINE_MNQ,B,distinct_architecture_mechanism_or_datasource,genuine-MNQ dual-truth repricing -- a distinct pricing/data-source decision vs the NQ-proxy substrate used throughout the rest of the campaign
+TESTING_LEDGER.csv,REL01_CONDITIONAL_CROSSMARKET,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"scoping-only literature pass, no construction attempted"
+TESTING_LEDGER.csv,SHADOW01_SETUP_COMPATIBILITY,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"diagnostic feature test, no construction attempted"
+TESTING_LEDGER.csv,SKEW01_RETURN_SKEWNESS,B,distinct_architecture_mechanism_or_datasource,new skewness-feature construction (though ultimately closed weak)
+TESTING_LEDGER.csv,SOFT01_CONTINUOUS_WEIGHTING_AUDIT,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"resolved by reference to an existing construction (U6B), no new construction"
+TESTING_LEDGER.csv,SPEC01_SESSION_LEAK_AUDIT,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"specification-defect audit, resolved not-a-defect"
+TESTING_LEDGER.csv,U0_UNIFIED_STATE,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"shared causal state table build, infra"
+TESTING_LEDGER.csv,U1B_SESSION_HOLD_POLICY,B,distinct_architecture_mechanism_or_datasource,session/hold POLICY construction (2 legs) -- new decision mechanism
+TESTING_LEDGER.csv,U1_SESSION_HETEROGENEITY,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"diagnostic on existing incumbent, no candidate constructed"
+TESTING_LEDGER.csv,U2_DATA_AUDIT,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"data-availability audit, not a trial"
+TESTING_LEDGER.csv,U3_HOLD_EXPOSURE_CONTINUATION,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"diagnostic, no candidate constructed"
+TESTING_LEDGER.csv,U4B_SHORT_DECAY_DERISK,B,distinct_architecture_mechanism_or_datasource,signal-gated short early-flatten construction -- new exit-conditioning mechanism
+TESTING_LEDGER.csv,U4_SHORT_MECHANISM,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"diagnostic (giveback_ratio checkpoint measurement), no candidate constructed here (feeds U4B)"
+TESTING_LEDGER.csv,U5_SOFT_WEIGHTING,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"diagnostic, confound found pre-construction, no candidate"
+TESTING_LEDGER.csv,U6B_ADVERSARIAL_REVIEW,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"independent adversarial review verdict on an existing candidate, not a new construction"
+TESTING_LEDGER.csv,U6B_CAPITAL_FRONTIER_INTRADAY_DD,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),diagnostic capital-frontier measurement of an existing candidate
+TESTING_LEDGER.csv,U6B_FORWARD_READINESS,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),diagnostic uncertainty-quantification panel
+TESTING_LEDGER.csv,U6B_PRODUCT_A_SCALE_RATE,B,distinct_architecture_mechanism_or_datasource,bounded continuous scale-rate multiplier -- new sizing mechanism
+TESTING_LEDGER.csv,U6_PRODUCT_A_PATH_DEPENDENCE,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"diagnostic, no candidate constructed"
+TESTING_LEDGER.csv,U7_2026_TIMING_REGIME,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"diagnostic, explains an anomaly, no candidate"
+TESTING_LEDGER.csv,U8B_ORGANIZATION_TRANSITION,B,distinct_architecture_mechanism_or_datasource,organization-transition feature construction -- new mechanism
+TESTING_LEDGER.csv,U8_PATH_ORGANIZATION,B,distinct_architecture_mechanism_or_datasource,new organization-level feature class construction
+TESTING_LEDGER.csv,U9B_MICROSTRUCTURE_ALPHA,B,distinct_architecture_mechanism_or_datasource,"genuine order-flow/BBO-tick data source -- first true microstructure test, new data source"
+TESTING_LEDGER.csv,U9_TRUE_MICROSTRUCTURE,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"infrastructure/design pass (frozen prequential design), no candidate computed"
+TESTING_LEDGER.csv,VAR01_VARIANCE_SIGNATURE,B,distinct_architecture_mechanism_or_datasource,multi-scale realized-variance feature construction -- new feature/mechanism
+TESTING_LEDGER.csv,W5_PROTECTED_CONFIRMATION,U,mixed_or_unclassifiable_as_filed (needs sub-splitting before any dedup),"protected-pool confirmation batch spanning 3 different families (AUCTION01 D4 replication, AUCTION02 rate-limiter policy, FLOW01 PRE_EXIT) -- needs sub-splitting, not one dedup unit"
+TESTING_LEDGER.csv,WAVE1_SYNTHESIS,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"EVI-ranking synthesis note, not a trial"
+TESTING_LEDGER.csv,WAVE2_EVI,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"synthesis note, not a trial"
+TESTING_LEDGER.csv,WAVE4_FRONTIER_O2_GAMMA_AUDIT,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"cross-family audit/synthesis, infra"
+TESTING_LEDGER.csv,WAVE4_TRUTH_AUDIT,N,not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance),"repo-truth verification audit, infra"
+TESTING_LEDGER.csv,WIN01_WINNER_EXIT_RELAXATION,B,distinct_architecture_mechanism_or_datasource,exit-hysteresis relaxation construction (2 products x multiple cells) -- new exit mechanism

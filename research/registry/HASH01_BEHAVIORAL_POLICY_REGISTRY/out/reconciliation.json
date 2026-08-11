@@ -1,0 +1,2784 @@
+{
+  "generated_by": "research/registry/HASH01_BEHAVIORAL_POLICY_REGISTRY/src/01_reconcile.py",
+  "purpose": "bookkeeping/audit reconciliation, not alpha research; does not resolve the governance gap documented in REGISTRY_GAP_NOTE.md (2026-08-07); REGISTRY_GAP_NOTE.md itself is unmodified",
+  "q1_seq_overlap": {
+    "overlap_set_tested_configs_vs_backfill": [],
+    "is_empty": true,
+    "tested_configs_gap_91_229_present_rows": [],
+    "backfill_seq_range": [
+      91,
+      229
+    ],
+    "interpretation": "EMPTY overlap confirmed. tested_configs.csv contains seq {0,1}x infra-placeholders, then 2-90 (Wave1/1b, one seq per trial), then a clean GAP at 91-229 (zero rows), then resumes at 230 through 498 (with skips at 392/407-409 and letter-suffixed sub-ids 392a/392b/423b/437b/437c). tested_configs_backfill.csv fills exactly and only that 91-229 gap (139 distinct seq, all reconstructed=yes). No double-counting risk."
+  },
+  "q1b_third_registry_no_conflation": {
+    "checked": true,
+    "n_ledger_families": 59,
+    "overlap_with_tested_configs_experiment_names": [],
+    "overlap_with_backfill_experiment_names": []
+  },
+  "q2_categorization": {
+    "contemporaneous_wave1_1b": {
+      "seq_range": "0-90 (per tested_configs.csv; 0/1 are shared infra placeholders, 2-90 one seq per trial)",
+      "n_rows_in_file": 112,
+      "governance_status": "genuinely contemporaneous per campaign convention in force through Wave 1b (commit 9a2fff3); reused from gap note, not re-derived"
+    },
+    "reconstructed_backfill": {
+      "seq_range": "91-229",
+      "n_distinct_seq": 139,
+      "n_raw_rows": 296,
+      "governance_status": "reconstructed=yes on ALL rows; preregistration guarantee explicitly NOT restored for this bucket per REGISTRY_GAP_NOTE.md -- reused verbatim, not re-derived"
+    },
+    "post_gap_note": {
+      "seq_range": "230-498 (tested_configs.csv) + TESTING_LEDGER.csv families (no seq numbers)",
+      "n_distinct_seq_or_letter_id_tested_configs": 270,
+      "n_distinct_families_testing_ledger": 59,
+      "governance_status": "MIXED, see preregistration_audit below -- NOT a uniform pass"
+    }
+  },
+  "q3_trial_count_bounds_today": {
+    "methodology": "same as gap note (lower = contemporaneous + reconstructed-distinct-param; upper = every ledger row incl. reruns, excluding non-trial parity gates), extended to include the post-gap-note tested_configs.csv bucket (seq 230-498). TESTING_LEDGER.csv reported SEPARATELY (different unit of account, family-level not row-level; never reconciled to the R1 rule).",
+    "wave1_1b_contemporaneous": 90,
+    "backfill_distinct_param_R1": 139,
+    "backfill_all_rows_minus_parity_gates": 293,
+    "post_gap_note_tested_configs_lower": 270,
+    "post_gap_note_tested_configs_upper": 270,
+    "lower_bound_TODAY": 499,
+    "upper_bound_TODAY": 653,
+    "previously_published_bracket_2026_08_07": [
+      229,
+      383
+    ],
+    "testing_ledger_separate_accounting": {
+      "n_families": 59,
+      "sum_n_parameter_cells": 49,
+      "sum_n_candidate_constructions": 57,
+      "note": "NOT folded into lower/upper bound above -- different unit of account (family-level summary stats self-reported by each family's own agent, not individually-numbered per-config rows); would need its own row-level ledger before it can be combined with the tested_configs.csv R1 rule."
+    }
+  },
+  "preregistration_audit_post_gap_note": {
+    "method": "for every runs/<id>/ directory, compare the git commit that FIRST ADDS spec.yaml against the git commit that FIRST ADDS any other file in that directory. 'genuine preregistration' requires the spec commit to strictly PREDATE the results commit -- the only git-verifiable proxy for 'spec committed before results are read'.",
+    "category_counts": {
+      "SPEC_BEFORE_RESULTS_genuine_prereg": 109,
+      "SAME_COMMIT_spec_and_results": 44,
+      "NO_SPEC_EVER": 30,
+      "SPEC_ONLY_NO_RESULTS_DETECTED": 4
+    },
+    "interpretation": "MIXED, not a clean restoration. Roughly 60% of runs/ dirs with git history (SPEC_BEFORE_RESULTS_genuine_prereg) DO show a verifiably-separate preregistration commit preceding the results commit -- spanning 2026-08-06 (SW00) through 2026-08-09 (WIN01, U9B, etc.), including the immediate post-gap-note recovery (B01C_ORB_FAIL, PORT01_SWEEPS, DM01, SM03-SM14: spec explicitly 'frozen before any result read' in separate earlier commits, confirming the campaign DID follow its own gap-note remediation rule for that stretch). But a material fraction (SAME_COMMIT_spec_and_results, ~24% of dirs, plus NO_SPEC_EVER dirs) shows spec.yaml (where one exists at all) and REPORT.md/src/out all landing in ONE commit -- e.g. AUCTION01_VALUE_STATE, AUCTION02, ADD01, FLOW01, VAR01, REL01, GAMMA00, O2, PRICE01, COMBO01, all dated 2026-08-09/10. The research/system_master/{GRID01,GRID02,PERT01,EQV01,EQV02,EQV03,PLACEBO01}/ directories (outside runs/ entirely) show the SAME same-commit pattern for src+out+REPORT.md, and EXEC01/AUCTION03 have NO spec.yaml at all. So: the LATEST wave of work (2026-08-09/10, essentially all of TESTING_LEDGER.csv plus the tail of runs/) does NOT carry a git-verifiable preregistration guarantee, despite prose language inside several REPORT.md files asserting 'preregistered' or 'frozen before any result read' -- that assertion is not independently checkable against commit history the way the 2026-08-07/08 recovery period's spec.yaml-first commits are.",
+    "conclusion_answers_task_q3": "NO, not uniformly. Post-gap-note work does NOT all inherit a clean pass. The 2026-08-07/08 stretch (roughly seq 230-319, B01 through SM14) genuinely restored spec-before-results discipline and should NOT inherit the Wave1c-3 governance-failure caveat. The 2026-08-09/10 stretch (SMV2* tail, W16-19/R-series audits, and essentially all of TESTING_LEDGER.csv incl. AUCTION0x/EQV0x/GRID0x/PERT01/EXEC01/PLACEBO01) shows same-commit or absent spec artifacts and should carry a caveat of its own -- better documented and contemporaneously logged than Waves 1c-3 (no reconstruction-after-the-fact was needed; REPORT.md/out/ were written the same day as the work), but not git-verifiably preregistered either.",
+    "per_dir_detail_note": "full per-directory categorization retained in reconciliation.json under preregistration_audit_post_gap_note.per_dir",
+    "per_dir": {
+      "A1A2_ATR_AUDIT": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "eba9df8cc442cb0e1b179a84cbb97d45c3f245e6",
+          "2026-08-09T10:32:54-04:00"
+        ],
+        "results_commit": [
+          "25ec9bd0f3bfaaf38e1329d2094f9f3d8059131d",
+          "2026-08-09T10:37:33-04:00"
+        ]
+      },
+      "ADD01_PARTICIPATION_EXPANSION": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "92419b1de641420cce5e6060e05a235ae6d1367c",
+          "2026-08-09T22:02:51-04:00"
+        ]
+      },
+      "AUCTION01_VALUE_STATE": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "871b3639240573563c111e96a4a35fbda9226eb5",
+          "2026-08-09T22:25:09-04:00"
+        ]
+      },
+      "AUCTION02_ACTION_RELEVANCE": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "2714163543b0ba670aae7a41f89ca4162508867b",
+          "2026-08-09T23:29:13-04:00"
+        ]
+      },
+      "AUCTION03_MECHANISM_DECOMPOSITION": {
+        "category": "NO_SPEC_EVER"
+      },
+      "AUCTION04_CLEAN_CAUSAL_SUBSTRATE": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "fcaae6c8cf74e689f22455e27ec0a589ab3306b0",
+          "2026-08-10T19:06:44-04:00"
+        ]
+      },
+      "AUDIT02_V3_SWEEP": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "0bcc6c887a34d07f8e6b4fd3cfdebcd09d54e5ce",
+          "2026-08-07T10:58:26-04:00"
+        ],
+        "results_commit": [
+          "21e78808efd69a53d98b71b44f9aa3c6879d79b5",
+          "2026-08-07T12:02:08-04:00"
+        ]
+      },
+      "AUDIT02_V3_SWEEP_B": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "005fede246dceffbd3fa9131c725d6d6a6f1e2b8",
+          "2026-08-07T11:07:57-04:00"
+        ],
+        "results_commit": [
+          "f1ed2afa2e90af3e1907b827fe6bfee23bd051b1",
+          "2026-08-07T11:19:17-04:00"
+        ]
+      },
+      "AUDIT02_V4_SWEEP": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "0bcc6c887a34d07f8e6b4fd3cfdebcd09d54e5ce",
+          "2026-08-07T10:58:26-04:00"
+        ],
+        "results_commit": [
+          "005fede246dceffbd3fa9131c725d6d6a6f1e2b8",
+          "2026-08-07T11:07:57-04:00"
+        ]
+      },
+      "AUDIT02_V4_SWEEP_B": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "005fede246dceffbd3fa9131c725d6d6a6f1e2b8",
+          "2026-08-07T11:07:57-04:00"
+        ],
+        "results_commit": [
+          "21e78808efd69a53d98b71b44f9aa3c6879d79b5",
+          "2026-08-07T12:02:08-04:00"
+        ]
+      },
+      "AUDIT02_V4_SWEEP_C": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "f1ed2afa2e90af3e1907b827fe6bfee23bd051b1",
+          "2026-08-07T11:19:17-04:00"
+        ],
+        "results_commit": [
+          "21e78808efd69a53d98b71b44f9aa3c6879d79b5",
+          "2026-08-07T12:02:08-04:00"
+        ]
+      },
+      "AUDIT03_BARS": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "7e2eb266a800e14dfc8044e6895210372ed04300",
+          "2026-08-07T11:21:13-04:00"
+        ],
+        "results_commit": [
+          "21e78808efd69a53d98b71b44f9aa3c6879d79b5",
+          "2026-08-07T12:02:08-04:00"
+        ]
+      },
+      "AUDIT04_MNQ_PROBE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "7e2eb266a800e14dfc8044e6895210372ed04300",
+          "2026-08-07T11:21:13-04:00"
+        ],
+        "results_commit": [
+          "ecfbc29bdb15608164a01ba8345b0723819dd7e8",
+          "2026-08-07T11:34:21-04:00"
+        ]
+      },
+      "AUDIT05_V3_HIGHRES": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "7e2eb266a800e14dfc8044e6895210372ed04300",
+          "2026-08-07T11:21:13-04:00"
+        ],
+        "results_commit": [
+          "21e78808efd69a53d98b71b44f9aa3c6879d79b5",
+          "2026-08-07T12:02:08-04:00"
+        ]
+      },
+      "AUDIT05_V3_SLIP2": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "7e2eb266a800e14dfc8044e6895210372ed04300",
+          "2026-08-07T11:21:13-04:00"
+        ],
+        "results_commit": [
+          "9a55d6758419ea735df75b36f79fd11418332659",
+          "2026-08-07T11:42:15-04:00"
+        ]
+      },
+      "AUDIT_GATE_R01": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "0bcc6c887a34d07f8e6b4fd3cfdebcd09d54e5ce",
+          "2026-08-07T10:58:26-04:00"
+        ],
+        "results_commit": [
+          "21e78808efd69a53d98b71b44f9aa3c6879d79b5",
+          "2026-08-07T12:02:08-04:00"
+        ]
+      },
+      "AUDIT_GATE_R02": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "0bcc6c887a34d07f8e6b4fd3cfdebcd09d54e5ce",
+          "2026-08-07T10:58:26-04:00"
+        ],
+        "results_commit": [
+          "21e78808efd69a53d98b71b44f9aa3c6879d79b5",
+          "2026-08-07T12:02:08-04:00"
+        ]
+      },
+      "B01A_BARS_1M": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "dbcc313437964d2a65d80ebd63eb290c5111507e",
+          "2026-08-07T11:49:11-04:00"
+        ],
+        "results_commit": [
+          "21e78808efd69a53d98b71b44f9aa3c6879d79b5",
+          "2026-08-07T12:02:08-04:00"
+        ]
+      },
+      "B01C_ORB_FAIL": {
+        "category": "SPEC_ONLY_NO_RESULTS_DETECTED",
+        "spec_commit": [
+          "bd00fea15166dbd892e6d8aa23046c40131c7e14",
+          "2026-08-07T12:07:51-04:00"
+        ]
+      },
+      "B02_GAP_ESCALATION": {
+        "category": "SPEC_ONLY_NO_RESULTS_DETECTED",
+        "spec_commit": [
+          "abb87da6277bd27fa2dc4afe30ce7aac3e80d1d5",
+          "2026-08-07T12:10:29-04:00"
+        ]
+      },
+      "C01T1_EXPOSURE": {
+        "category": "SPEC_ONLY_NO_RESULTS_DETECTED",
+        "spec_commit": [
+          "a0b8335979fe3dd68cce2069ab0211222decaac8",
+          "2026-08-07T14:52:31-04:00"
+        ]
+      },
+      "C01T1_ML": {
+        "category": "SPEC_ONLY_NO_RESULTS_DETECTED",
+        "spec_commit": [
+          "a0b8335979fe3dd68cce2069ab0211222decaac8",
+          "2026-08-07T14:52:31-04:00"
+        ]
+      },
+      "C01T2_KSCALE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "689da40183cfdf3828c5658540adaa71b474f6fd",
+          "2026-08-07T15:13:58-04:00"
+        ],
+        "results_commit": [
+          "2233b3281daa80e686a4e6ee9a1dd7edac7aaac7",
+          "2026-08-07T15:39:27-04:00"
+        ]
+      },
+      "COMBO01_MULTIMODAL_SYNERGY": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "b1944127d28bbdd4155acdc786b487c09cab2a34",
+          "2026-08-09T22:41:39-04:00"
+        ]
+      },
+      "DM01_DAYMARGIN_SWEEP": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "0503687f1512595e34ca8d8643ef4ff1633d9c80",
+          "2026-08-07T12:23:39-04:00"
+        ],
+        "results_commit": [
+          "b9775ce40a730404056de8a494713188c48b8f91",
+          "2026-08-07T12:32:38-04:00"
+        ]
+      },
+      "DOM01_LIQUIDITY_STATE": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "962a62f3253c4bb091484c1a91acac6e438c3a8c",
+          "2026-08-09T21:33:11-04:00"
+        ]
+      },
+      "D_WINNER_AUTOPSY": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "9220aa10b6b6e8dbd015ce3d5593c3394a5e28de",
+          "2026-08-09T11:05:55-04:00"
+        ]
+      },
+      "E10MASTER_V1": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "689da40183cfdf3828c5658540adaa71b474f6fd",
+          "2026-08-07T15:13:58-04:00"
+        ],
+        "results_commit": [
+          "2233b3281daa80e686a4e6ee9a1dd7edac7aaac7",
+          "2026-08-07T15:39:27-04:00"
+        ]
+      },
+      "E10MASTER_V2": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "02fb163c333be1afeb9c3946f8e69d388ef5a68b",
+          "2026-08-07T17:28:18-04:00"
+        ],
+        "results_commit": [
+          "0bdd9a1ebf48b9c58f18dfbe5adf81f756d78fad",
+          "2026-08-07T18:37:09-04:00"
+        ]
+      },
+      "ENGINE3_SLATE5_CROSSMARKET": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "95a8af291ba8983195240673b82555a0e6e24827",
+          "2026-08-09T11:10:11-04:00"
+        ],
+        "results_commit": [
+          "1016647d9395d70c883a0b954de5ac7e7c9e1d54",
+          "2026-08-09T11:11:58-04:00"
+        ]
+      },
+      "EVIDENCE01_REPORT_TRACEABILITY": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "2714163543b0ba670aae7a41f89ca4162508867b",
+          "2026-08-09T23:29:13-04:00"
+        ]
+      },
+      "EXEC01_PRODUCT_A_DOLLAR_ATTRIBUTION": {
+        "category": "NO_SPEC_EVER"
+      },
+      "EXP01_MARGINAL_EXPOSURE_SHAPE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "80a346e656517c337809f0340769e50b26700ff9",
+          "2026-08-09T20:34:10-04:00"
+        ],
+        "results_commit": [
+          "fab2eec11d3f449399ef4f237fbbc2adcf7369bf",
+          "2026-08-09T20:35:31-04:00"
+        ]
+      },
+      "FH_T1_s0": {
+        "category": "NO_SPEC_EVER"
+      },
+      "FH_T1_s1": {
+        "category": "NO_SPEC_EVER"
+      },
+      "FH_sweep_SM_dense_1m": {
+        "category": "NO_SPEC_EVER"
+      },
+      "FH_sweep_SM_dense_3m": {
+        "category": "NO_SPEC_EVER"
+      },
+      "FH_sweep_spatial": {
+        "category": "NO_SPEC_EVER"
+      },
+      "FH_tf2m_A": {
+        "category": "NO_SPEC_EVER"
+      },
+      "FH_tf2m_B": {
+        "category": "NO_SPEC_EVER"
+      },
+      "FH_tf3m_A": {
+        "category": "NO_SPEC_EVER"
+      },
+      "FH_tf3m_B": {
+        "category": "NO_SPEC_EVER"
+      },
+      "FH_tf5m_A": {
+        "category": "NO_SPEC_EVER"
+      },
+      "FH_tf5m_B": {
+        "category": "NO_SPEC_EVER"
+      },
+      "FLOW01_AGGRESSIVE_PARTICIPATION": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "871b3639240573563c111e96a4a35fbda9226eb5",
+          "2026-08-09T22:25:09-04:00"
+        ]
+      },
+      "GAMMA00_DEALER_GAMMA_FEASIBILITY": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "adc98384da6a991ea1eaa11a8e1264bf439d969e",
+          "2026-08-09T21:28:55-04:00"
+        ]
+      },
+      "H0_PRODUCT_A_HEALTH": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "807ec4c52e7cf2583002f1212d8b0793ed90dfd2",
+          "2026-08-09T18:01:47-04:00"
+        ]
+      },
+      "ICT0102_EVENT_SEQUENCE": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "92419b1de641420cce5e6060e05a235ae6d1367c",
+          "2026-08-09T22:02:51-04:00"
+        ]
+      },
+      "LEV01_VOLATILITY_ASYMMETRY": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "b768f2620803fb6b6eb369f65c19a36c3d39d150",
+          "2026-08-09T20:05:27-04:00"
+        ],
+        "results_commit": [
+          "f0f9991dff94a376f9513e1ea60b54757c9a2431",
+          "2026-08-09T20:11:11-04:00"
+        ]
+      },
+      "LEV02_TRAILING_REGIME": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "dbacf1a1a87c81a3ef83c3a31c2eb1db6bb60d1d",
+          "2026-08-09T20:26:53-04:00"
+        ],
+        "results_commit": [
+          "efa45ad08dfab9de57548cd9ed6fcc8645726b89",
+          "2026-08-09T20:29:22-04:00"
+        ]
+      },
+      "M3_ENTRY_EXIT_S": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "7565d1de867493489fceef57339a4970d74ba6a4",
+          "2026-08-09T10:22:05-04:00"
+        ],
+        "results_commit": [
+          "aafc63d4da7b9e85f7237607636eecf8638b928c",
+          "2026-08-09T10:30:06-04:00"
+        ]
+      },
+      "M4_ANCHOR": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "1b7f510010cb3f5726c4b55db9a01322f29a7807",
+          "2026-08-09T10:31:17-04:00"
+        ]
+      },
+      "MOM01_INTRADAY_MOMENTUM": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "92419b1de641420cce5e6060e05a235ae6d1367c",
+          "2026-08-09T22:02:51-04:00"
+        ]
+      },
+      "O2_NUMERIC_PROVENANCE_AUDIT": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "2714163543b0ba670aae7a41f89ca4162508867b",
+          "2026-08-09T23:29:13-04:00"
+        ]
+      },
+      "O2_OWNER_UTILITY_READJUDICATION": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "1af455a15227a0ebe2c74cb122b16bf366391acc",
+          "2026-08-09T21:37:20-04:00"
+        ]
+      },
+      "P0_TRADESTATE_AUTOPSY": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "845c387be12162c30acfe3aed2a260984456fcb7",
+          "2026-08-09T15:06:58-04:00"
+        ]
+      },
+      "P4_CHURN_SELECTIVITY": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "ae3bcd63d9d81e8118fdf889e3e58104bc863461",
+          "2026-08-09T11:02:05-04:00"
+        ]
+      },
+      "PA0_PRODUCT_A_STRUCTURE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "0eaaca9f0f69a5122079e3a52f6d87e3d6002240",
+          "2026-08-09T17:05:39-04:00"
+        ],
+        "results_commit": [
+          "5b66067c594eaeb02a03dd8201410ef2c665b4f3",
+          "2026-08-09T17:09:49-04:00"
+        ]
+      },
+      "PORT01_AB_PORTFOLIO_SYNTHESIS": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "2662fba1287cf4b14bfd1bfa10376d6d88e02c29",
+          "2026-08-09T20:30:27-04:00"
+        ],
+        "results_commit": [
+          "a7cffa7d94f534fb38012fbf036c8284da6c2896",
+          "2026-08-09T20:32:05-04:00"
+        ]
+      },
+      "PORT01_SWEEPS": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "a3fb06599adc0516da8dc6c4b0cf9ccd4c654cc4",
+          "2026-08-07T12:13:30-04:00"
+        ],
+        "results_commit": [
+          "0503687f1512595e34ca8d8643ef4ff1633d9c80",
+          "2026-08-07T12:23:39-04:00"
+        ]
+      },
+      "PRICE01_PRODUCT_A_GENUINE_MNQ": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "bb470fbe67d699e47904039b1cb26b18e3dd6c2f",
+          "2026-08-09T21:19:11-04:00"
+        ]
+      },
+      "PRODUCTB_ONECONTRACT_FINAL": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "f65141f1394c367826cad940bba434936676243a",
+          "2026-08-08T19:45:03-04:00"
+        ],
+        "results_commit": [
+          "eefdb529a7c2311fceccf7e96d3f0d06d88a62e7",
+          "2026-08-08T20:41:44-04:00"
+        ]
+      },
+      "R1_ADAPTIVE_EXIT": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "8a9641959468d4f363dedf30a32f30e34317bd9d",
+          "2026-08-09T15:19:48-04:00"
+        ]
+      },
+      "R2B_PULLBACK_RECLAIM": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "7f152eb67b47c015bb97658184c90d04619fbd9c",
+          "2026-08-09T16:43:29-04:00"
+        ],
+        "results_commit": [
+          "99c74d889afb7276663e110d033182c809e546b0",
+          "2026-08-09T16:49:47-04:00"
+        ]
+      },
+      "R2_ENTRY_TIMING": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "29e3e6c79afac47ab6c4f93ecdc758b9f29c0a80",
+          "2026-08-09T15:34:11-04:00"
+        ]
+      },
+      "R3_SELTIME_STATE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "e68041c68e8621b856d3b9bf516e071f5ce01eb6",
+          "2026-08-09T16:37:59-04:00"
+        ],
+        "results_commit": [
+          "b2011de64b6b561b9244f95a6ef1396f12504b9e",
+          "2026-08-09T16:42:06-04:00"
+        ]
+      },
+      "R4_SLOPE_IMPULSE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "934876ee5512149d08b23d6bcf7ed5e64ef6bdd6",
+          "2026-08-09T16:58:08-04:00"
+        ],
+        "results_commit": [
+          "3f1687856e34d1bb1855ed9ed90e02b2773f3b54",
+          "2026-08-09T17:00:35-04:00"
+        ]
+      },
+      "R5_MICROSTRUCTURE_PROXY": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "ee41a8d221dc45626934d0894a07805a3bc5db7d",
+          "2026-08-09T17:01:27-04:00"
+        ],
+        "results_commit": [
+          "1213fa8b658ac3f3e402a03aea1cf2ad41b29d58",
+          "2026-08-09T17:03:25-04:00"
+        ]
+      },
+      "R6_ENGINE3_AUDIT": {
+        "category": "NO_SPEC_EVER"
+      },
+      "RE01_open_parity": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "6de79e14d4980f030a4aac82f7bf9b86164c63fd",
+          "2026-08-06T22:18:47-04:00"
+        ]
+      },
+      "REL01_CONDITIONAL_CROSSMARKET": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "871b3639240573563c111e96a4a35fbda9226eb5",
+          "2026-08-09T22:25:09-04:00"
+        ]
+      },
+      "S0_TOD_AUTOPSY": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "3a21a82d20ebcaa05458d64e5dfdc5962047ee6b",
+          "2026-08-09T09:58:04-04:00"
+        ],
+        "results_commit": [
+          "87c31bd271f2701a7806d5254e0eb401aafc02de",
+          "2026-08-09T10:11:21-04:00"
+        ]
+      },
+      "S2_SELTIME": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "3c6f6cde82788690ede93fd1e6d20d97847f86c4",
+          "2026-08-09T10:14:01-04:00"
+        ],
+        "results_commit": [
+          "68c9a5851eb5c95a3a95d631acadebb22aedbc6c",
+          "2026-08-09T10:16:34-04:00"
+        ]
+      },
+      "SA0_SYSTEM_STRUCTURE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "9f5e74ecc9aaf43277d29660a1563ebd2431d445",
+          "2026-08-09T16:21:17-04:00"
+        ],
+        "results_commit": [
+          "f0f273fe56cb0f8eeade3c08e12bb84addb57fa9",
+          "2026-08-09T16:36:41-04:00"
+        ]
+      },
+      "SHADOW01_SETUP_COMPATIBILITY": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "459bdf5a1aa95447f6af34c6a2eb3aebfcd3532c",
+          "2026-08-09T19:21:13-04:00"
+        ],
+        "results_commit": [
+          "382c1c13fc62c0fe994c25a38c407c4d8b2d593f",
+          "2026-08-09T19:25:19-04:00"
+        ]
+      },
+      "SKEW01_RETURN_SKEWNESS": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "3cb78dde5d853148fa214674247ae63f62203d2a",
+          "2026-08-09T20:25:10-04:00"
+        ]
+      },
+      "SM01_SUBSTRATE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "e5fe3bb13b3a2028f48d93b888e5cd598309a8c0",
+          "2026-08-08T00:34:29-04:00"
+        ],
+        "results_commit": [
+          "109e750e1bb9f4ab5871f68edf59d04f908ca498",
+          "2026-08-08T00:44:21-04:00"
+        ]
+      },
+      "SM02B_TRADE_ANATOMY": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "548f9b245374af52e7638be9e1d2072eb37a92b9",
+          "2026-08-08T00:46:33-04:00"
+        ],
+        "results_commit": [
+          "c23f0acead7b47e1b7422be8958effb00f07b4ee",
+          "2026-08-08T01:07:16-04:00"
+        ]
+      },
+      "SM02_DD_ATLAS": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "548f9b245374af52e7638be9e1d2072eb37a92b9",
+          "2026-08-08T00:46:33-04:00"
+        ],
+        "results_commit": [
+          "c23f0acead7b47e1b7422be8958effb00f07b4ee",
+          "2026-08-08T01:07:16-04:00"
+        ]
+      },
+      "SM03B_DISASTER_STOP_INTRABAR": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "dde219fb1728ae824d426adabb916b3a5b9b1658",
+          "2026-08-08T01:15:38-04:00"
+        ],
+        "results_commit": [
+          "97e7957df645002a21f4c6bc0bc23224bc3c6cc1",
+          "2026-08-08T01:21:00-04:00"
+        ]
+      },
+      "SM03_DISASTER_STOP": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "8e3095ccc50e734f64aaf22038f532da0268f76a",
+          "2026-08-08T01:08:23-04:00"
+        ],
+        "results_commit": [
+          "dde219fb1728ae824d426adabb916b3a5b9b1658",
+          "2026-08-08T01:15:38-04:00"
+        ]
+      },
+      "SM04_CONSENSUS_SHAPE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "8e3095ccc50e734f64aaf22038f532da0268f76a",
+          "2026-08-08T01:08:23-04:00"
+        ],
+        "results_commit": [
+          "4940efd629ef7282bb7a990af868c6bd02568fb0",
+          "2026-08-08T01:22:54-04:00"
+        ]
+      },
+      "SM05_BMOM_PORTFOLIO": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "548f9b245374af52e7638be9e1d2072eb37a92b9",
+          "2026-08-08T00:46:33-04:00"
+        ],
+        "results_commit": [
+          "c23f0acead7b47e1b7422be8958effb00f07b4ee",
+          "2026-08-08T01:07:16-04:00"
+        ]
+      },
+      "SM06_SOLAR_HISTORY": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "148c98e25be2fc2078d21cd2eb23f9da4aeb9db9",
+          "2026-08-08T00:49:05-04:00"
+        ],
+        "results_commit": [
+          "82e8d45b5ac81826954c4449c8def9c240e245f4",
+          "2026-08-08T00:51:23-04:00"
+        ]
+      },
+      "SM07_TRENDDAY_UPWEIGHT": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "f0fe82e051bc3dd973a0d91c4a2569285304db3b",
+          "2026-08-08T01:24:19-04:00"
+        ],
+        "results_commit": [
+          "9dac38e2e9e4af5c8d7bb622ed2a79a414c6f6b3",
+          "2026-08-08T03:49:57-04:00"
+        ]
+      },
+      "SM08_HTF_TILT": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "f0fe82e051bc3dd973a0d91c4a2569285304db3b",
+          "2026-08-08T01:24:19-04:00"
+        ],
+        "results_commit": [
+          "898543b962f9e4735d146f0a2c83248d65e6f609",
+          "2026-08-08T03:49:13-04:00"
+        ]
+      },
+      "SM09_LEVERAGE_FRONTIER": {
+        "category": "NO_SPEC_EVER"
+      },
+      "SM10_VOLTRANSITION_ENGINE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "f0fe82e051bc3dd973a0d91c4a2569285304db3b",
+          "2026-08-08T01:24:19-04:00"
+        ],
+        "results_commit": [
+          "2727dc49ba8e27e3907fa99933ee43f9a9f20db3",
+          "2026-08-08T03:52:49-04:00"
+        ]
+      },
+      "SM11_HOLDOUT_READ": {
+        "category": "NO_SPEC_EVER"
+      },
+      "SM14_ONELOT_DAYMARGIN": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "9cb10d977baf3b75a37ee17dcd7c13477c6eff6e",
+          "2026-08-08T07:05:10-04:00"
+        ],
+        "results_commit": [
+          "e54e0e3c94dbd358fa954b80cb22c15ee63c4935",
+          "2026-08-08T07:07:52-04:00"
+        ]
+      },
+      "SM1M_ES_SUBSTRATE": {
+        "category": "NO_SPEC_EVER"
+      },
+      "SM1M_RTY_SUBSTRATE": {
+        "category": "NO_SPEC_EVER"
+      },
+      "SM1M_SUBSTRATE": {
+        "category": "NO_SPEC_EVER"
+      },
+      "SM1M_YM_SUBSTRATE": {
+        "category": "NO_SPEC_EVER"
+      },
+      "SMV2AA_MIX_SHIFT": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "f6fb7d1d7d496437af594dc517b6df37359e3359",
+          "2026-08-08T16:16:17-04:00"
+        ],
+        "results_commit": [
+          "5fd14467beaa442d9f8e43ff739a123547db817a",
+          "2026-08-08T16:30:00-04:00"
+        ]
+      },
+      "SMV2AB_ENGINE3_S4": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "0da78b636539e90861852e7383dd97bfedf3be65",
+          "2026-08-08T16:30:52-04:00"
+        ],
+        "results_commit": [
+          "91d54db2d36985a6bd6a441e6d7d1f5dfcb87826",
+          "2026-08-08T16:56:41-04:00"
+        ]
+      },
+      "SMV2AC_ML_LEVEL1": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "2bf5a4fe936ff29b63377fdd331111c4bcff44ae",
+          "2026-08-08T16:58:07-04:00"
+        ],
+        "results_commit": [
+          "3b15f2850e2d1344542737d62260d2ad51462c3b",
+          "2026-08-08T17:17:01-04:00"
+        ]
+      },
+      "SMV2AD_VOLMULT_CEILING": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "2b2f88a5707c0f5d4f7682f79f9737edd334e4de",
+          "2026-08-08T17:45:03-04:00"
+        ],
+        "results_commit": [
+          "b2bb4d44e32e2d3f05e76e862d9135d9cb8aa8f0",
+          "2026-08-08T18:05:26-04:00"
+        ]
+      },
+      "SMV2AE_1MIN_RESCALE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "2b2f88a5707c0f5d4f7682f79f9737edd334e4de",
+          "2026-08-08T17:45:03-04:00"
+        ],
+        "results_commit": [
+          "b2bb4d44e32e2d3f05e76e862d9135d9cb8aa8f0",
+          "2026-08-08T18:05:26-04:00"
+        ]
+      },
+      "SMV2AF_1MIN_RESCALE_R2": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "db39d56cc2e79acfb58a5b7c0ac7b616bfb15276",
+          "2026-08-08T18:06:07-04:00"
+        ],
+        "results_commit": [
+          "8f0175ef0ecdb6880d5041a208d71991869ce0c6",
+          "2026-08-08T18:37:17-04:00"
+        ]
+      },
+      "SMV2AG_ADAPTIVE_CLAMP": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "db39d56cc2e79acfb58a5b7c0ac7b616bfb15276",
+          "2026-08-08T18:06:07-04:00"
+        ],
+        "results_commit": [
+          "8f0175ef0ecdb6880d5041a208d71991869ce0c6",
+          "2026-08-08T18:37:17-04:00"
+        ]
+      },
+      "SMV2AH_DAY_CIRCUIT_BREAKER": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "d927ec6ed90da6863829b9645c00fe9cf9f25c62",
+          "2026-08-08T18:39:07-04:00"
+        ],
+        "results_commit": [
+          "637478b4045bfbd8117faf4704c5b7975c1f864e",
+          "2026-08-08T19:14:08-04:00"
+        ]
+      },
+      "SMV2AI_ATR_BLEND": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "d927ec6ed90da6863829b9645c00fe9cf9f25c62",
+          "2026-08-08T18:39:07-04:00"
+        ],
+        "results_commit": [
+          "637478b4045bfbd8117faf4704c5b7975c1f864e",
+          "2026-08-08T19:14:08-04:00"
+        ]
+      },
+      "SMV2AJ_ATR_BLEND_R2": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "8c030f8b676fe63f3186ae4289fbacce13e87fa9",
+          "2026-08-08T19:15:25-04:00"
+        ],
+        "results_commit": [
+          "6f3b7cc4a8378e1a2e2cb8a6eb118728448df0c9",
+          "2026-08-08T19:34:51-04:00"
+        ]
+      },
+      "SMV2AK_VOLUME_BARS": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "663311417071fe10778607a43ab4735372a333c9",
+          "2026-08-08T19:37:41-04:00"
+        ],
+        "results_commit": [
+          "1425e29da34bc0e2ce7396c8f9a351e52e3d8d37",
+          "2026-08-08T20:04:25-04:00"
+        ]
+      },
+      "SMV2A_DD_RECONCILE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "4d468ea01e6e0f1beccce62ec4dafe07714f0226",
+          "2026-08-08T10:13:23-04:00"
+        ],
+        "results_commit": [
+          "89b4891a9fd81e14234912bcea56056896291510",
+          "2026-08-08T10:23:07-04:00"
+        ]
+      },
+      "SMV2B_BMOM_EXEC_AUDIT": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "4d468ea01e6e0f1beccce62ec4dafe07714f0226",
+          "2026-08-08T10:13:23-04:00"
+        ],
+        "results_commit": [
+          "fa44763f7dc662f566f2e8860d7e4402011c8524",
+          "2026-08-08T10:27:16-04:00"
+        ]
+      },
+      "SMV2C_B1_ABLATION": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "4d468ea01e6e0f1beccce62ec4dafe07714f0226",
+          "2026-08-08T10:13:23-04:00"
+        ],
+        "results_commit": [
+          "12ece0c8b8493144c8753de27599144c80871b90",
+          "2026-08-08T10:32:03-04:00"
+        ]
+      },
+      "SMV2E_SIDE_ASYM": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "4d468ea01e6e0f1beccce62ec4dafe07714f0226",
+          "2026-08-08T10:13:23-04:00"
+        ],
+        "results_commit": [
+          "12ece0c8b8493144c8753de27599144c80871b90",
+          "2026-08-08T10:32:03-04:00"
+        ]
+      },
+      "SMV2F_LEVERAGE_ROBUST": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "4d468ea01e6e0f1beccce62ec4dafe07714f0226",
+          "2026-08-08T10:13:23-04:00"
+        ],
+        "results_commit": [
+          "b1d5ec5d2023d6168ac67b566fdcb180ba500f00",
+          "2026-08-08T10:35:07-04:00"
+        ]
+      },
+      "SMV2G_HTF_MECHANISM": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "4d468ea01e6e0f1beccce62ec4dafe07714f0226",
+          "2026-08-08T10:13:23-04:00"
+        ],
+        "results_commit": [
+          "b1d5ec5d2023d6168ac67b566fdcb180ba500f00",
+          "2026-08-08T10:35:07-04:00"
+        ]
+      },
+      "SMV2H2_ONELOT_CONFIRM": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "0a9cf3f8924dbaef9924b9d2398328e3252124fc",
+          "2026-08-08T12:09:17-04:00"
+        ],
+        "results_commit": [
+          "f55f0ccc8f4f624b42b41eeb0ee6a7537c45cde9",
+          "2026-08-08T12:41:54-04:00"
+        ]
+      },
+      "SMV2H_ONECONTRACT": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "00df1c7b3b0ce45282505d15a034365acad28d12",
+          "2026-08-08T10:36:20-04:00"
+        ],
+        "results_commit": [
+          "0f16e4827fbe94299f20cb21a64de4939b5d5bfb",
+          "2026-08-08T10:42:59-04:00"
+        ]
+      },
+      "SMV2I_CURVE_READS": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "0a9cf3f8924dbaef9924b9d2398328e3252124fc",
+          "2026-08-08T12:09:17-04:00"
+        ],
+        "results_commit": [
+          "f55f0ccc8f4f624b42b41eeb0ee6a7537c45cde9",
+          "2026-08-08T12:41:54-04:00"
+        ]
+      },
+      "SMV2J_STATE_HARNESS": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "0a9cf3f8924dbaef9924b9d2398328e3252124fc",
+          "2026-08-08T12:09:17-04:00"
+        ],
+        "results_commit": [
+          "f55f0ccc8f4f624b42b41eeb0ee6a7537c45cde9",
+          "2026-08-08T12:41:54-04:00"
+        ]
+      },
+      "SMV2K_ENGINE3_S1": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "0a9cf3f8924dbaef9924b9d2398328e3252124fc",
+          "2026-08-08T12:09:17-04:00"
+        ],
+        "results_commit": [
+          "f55f0ccc8f4f624b42b41eeb0ee6a7537c45cde9",
+          "2026-08-08T12:41:54-04:00"
+        ]
+      },
+      "SMV2M_MASTER_BUILD": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "0789e425b9df2d1f4c31f449efc1e79e993a0cc5",
+          "2026-08-08T12:15:18-04:00"
+        ],
+        "results_commit": [
+          "3bf14cc6c507f58996cd957a83496d8e60f12afe",
+          "2026-08-08T12:24:04-04:00"
+        ]
+      },
+      "SMV2N_WINDFALL_POLICY": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "58dc2d2c23bd564ccb86260d5711d61d9664b839",
+          "2026-08-08T13:14:29-04:00"
+        ],
+        "results_commit": [
+          "140f76cfc15c702d3089ee348099f04161f4b65a",
+          "2026-08-08T13:46:30-04:00"
+        ]
+      },
+      "SMV2O_STATES_2": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "58dc2d2c23bd564ccb86260d5711d61d9664b839",
+          "2026-08-08T13:14:29-04:00"
+        ],
+        "results_commit": [
+          "140f76cfc15c702d3089ee348099f04161f4b65a",
+          "2026-08-08T13:46:30-04:00"
+        ]
+      },
+      "SMV2P_ENGINE3_S2": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "58dc2d2c23bd564ccb86260d5711d61d9664b839",
+          "2026-08-08T13:14:29-04:00"
+        ],
+        "results_commit": [
+          "140f76cfc15c702d3089ee348099f04161f4b65a",
+          "2026-08-08T13:46:30-04:00"
+        ]
+      },
+      "SMV2Q_DIAGNOSTICS": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "58dc2d2c23bd564ccb86260d5711d61d9664b839",
+          "2026-08-08T13:14:29-04:00"
+        ],
+        "results_commit": [
+          "140f76cfc15c702d3089ee348099f04161f4b65a",
+          "2026-08-08T13:46:30-04:00"
+        ]
+      },
+      "SMV2R_SOLAR_CORE_1": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "58dc2d2c23bd564ccb86260d5711d61d9664b839",
+          "2026-08-08T13:14:29-04:00"
+        ],
+        "results_commit": [
+          "140f76cfc15c702d3089ee348099f04161f4b65a",
+          "2026-08-08T13:46:30-04:00"
+        ]
+      },
+      "SMV2S_ONELOT_F2": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "58dc2d2c23bd564ccb86260d5711d61d9664b839",
+          "2026-08-08T13:14:29-04:00"
+        ],
+        "results_commit": [
+          "140f76cfc15c702d3089ee348099f04161f4b65a",
+          "2026-08-08T13:46:30-04:00"
+        ]
+      },
+      "SMV2T_NOFAST_R2": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "547d2d429fd8a73785d7ae33fb5810d12a6e7603",
+          "2026-08-08T13:48:10-04:00"
+        ],
+        "results_commit": [
+          "7abeb79e7106480447639564a7f010c82bacd10e",
+          "2026-08-08T14:57:25-04:00"
+        ]
+      },
+      "SMV2U_CLOCK_CHALLENGE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "547d2d429fd8a73785d7ae33fb5810d12a6e7603",
+          "2026-08-08T13:48:10-04:00"
+        ],
+        "results_commit": [
+          "7abeb79e7106480447639564a7f010c82bacd10e",
+          "2026-08-08T14:57:25-04:00"
+        ]
+      },
+      "SMV2V_ER_DAMPER": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "547d2d429fd8a73785d7ae33fb5810d12a6e7603",
+          "2026-08-08T13:48:10-04:00"
+        ],
+        "results_commit": [
+          "7abeb79e7106480447639564a7f010c82bacd10e",
+          "2026-08-08T14:57:25-04:00"
+        ]
+      },
+      "SMV2W_5MCLOCK_R2": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "7abeb79e7106480447639564a7f010c82bacd10e",
+          "2026-08-08T14:57:25-04:00"
+        ],
+        "results_commit": [
+          "32a156ac8ebc6fb32409b5bc7c64996f3d60be83",
+          "2026-08-08T15:30:04-04:00"
+        ]
+      },
+      "SMV2X_ENGINE3_S3": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "7abeb79e7106480447639564a7f010c82bacd10e",
+          "2026-08-08T14:57:25-04:00"
+        ],
+        "results_commit": [
+          "32a156ac8ebc6fb32409b5bc7c64996f3d60be83",
+          "2026-08-08T15:30:04-04:00"
+        ]
+      },
+      "SMV2Y_JOINTLOSS_VIABILITY": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "51dbc45bb55952b031dec422f543274400bdfb00",
+          "2026-08-08T15:31:20-04:00"
+        ],
+        "results_commit": [
+          "2d5d63e2acc9cc4437d66e6d5bf1e2cf8e6fd4ab",
+          "2026-08-08T15:54:21-04:00"
+        ]
+      },
+      "SMV2Z_VIABILITY_POLICY": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "fdd0e6511d15afb5eaa0c5ffe95c42c132339e88",
+          "2026-08-08T15:55:05-04:00"
+        ],
+        "results_commit": [
+          "4eda9af2103d48792470567e5c7e394d724d8ea0",
+          "2026-08-08T16:14:57-04:00"
+        ]
+      },
+      "SOFT01_CONTINUOUS_WEIGHTING_AUDIT": {
+        "category": "NO_SPEC_EVER"
+      },
+      "SPEC01_SESSION_LEAK_AUDIT": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "bb470fbe67d699e47904039b1cb26b18e3dd6c2f",
+          "2026-08-09T21:19:11-04:00"
+        ]
+      },
+      "SW00_R01": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW00_R02": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW00_R03": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW00_R04": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW00_R05": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW00_R06": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW00_R07": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW00_R08": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW00_R09": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW00_R10": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW00_R11": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW00_R12": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW00_R13": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "73aa5722247cbb7a8131a38d43ea8b22a22f0e21",
+          "2026-08-06T20:32:04-04:00"
+        ],
+        "results_commit": [
+          "5f9cf7e2819f5823b091325a8135a30c45c6ee5a",
+          "2026-08-06T20:48:07-04:00"
+        ]
+      },
+      "SW01_L01": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "25e09231343748a10a1655c4723704a9a190b1da",
+          "2026-08-06T21:13:08-04:00"
+        ]
+      },
+      "SW01_L02": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "25e09231343748a10a1655c4723704a9a190b1da",
+          "2026-08-06T21:13:08-04:00"
+        ]
+      },
+      "SW01b_SWEEP_A": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "25e09231343748a10a1655c4723704a9a190b1da",
+          "2026-08-06T21:13:08-04:00"
+        ]
+      },
+      "SW01b_SWEEP_B": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "25e09231343748a10a1655c4723704a9a190b1da",
+          "2026-08-06T21:13:08-04:00"
+        ]
+      },
+      "SW01c_R01": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "25e09231343748a10a1655c4723704a9a190b1da",
+          "2026-08-06T21:13:08-04:00"
+        ]
+      },
+      "SW01c_R02": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "25e09231343748a10a1655c4723704a9a190b1da",
+          "2026-08-06T21:13:08-04:00"
+        ]
+      },
+      "SW02a_1630_s0": {
+        "category": "NO_SPEC_EVER"
+      },
+      "SW02a_1645_s0": {
+        "category": "NO_SPEC_EVER"
+      },
+      "SW02a_1655_s0": {
+        "category": "NO_SPEC_EVER"
+      },
+      "SW02a_1658_s0": {
+        "category": "NO_SPEC_EVER"
+      },
+      "SW02a_1658_s1": {
+        "category": "NO_SPEC_EVER"
+      },
+      "U0_UNIFIED_STATE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "ed32393b40a67b7670feab3109ba252836df8710",
+          "2026-08-09T17:25:50-04:00"
+        ],
+        "results_commit": [
+          "55afb96080824e1f81431515b45444343a41f050",
+          "2026-08-09T17:32:39-04:00"
+        ]
+      },
+      "U1B_SESSION_HOLD_POLICY": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "69d557e9a8d6e3b84708c4bab389fa2c4bcf7b34",
+          "2026-08-09T19:38:26-04:00"
+        ]
+      },
+      "U1_SESSION_HETEROGENEITY": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "19ec9b1038b0597ccc27be54b34f935a03ad2242",
+          "2026-08-09T18:02:19-04:00"
+        ]
+      },
+      "U2_DATA_AUDIT": {
+        "category": "NO_SPEC_EVER"
+      },
+      "U3_HOLD_EXPOSURE_CONTINUATION": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "d6f2291679003e8752ddf074fa91f38ec50240a5",
+          "2026-08-09T18:02:20-04:00"
+        ]
+      },
+      "U4B_SHORT_DECAY_DERISK": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "d5f58479d8cf1017fae48a59105c6565aa3aca7f",
+          "2026-08-09T18:06:36-04:00"
+        ],
+        "results_commit": [
+          "8c54cfd6d8c1514b5a67414ef66818ba1d0ad19c",
+          "2026-08-09T18:09:17-04:00"
+        ]
+      },
+      "U4_SHORT_MECHANISM": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "7cc33eadf9f75f0fd18b10c7ceab16a31392d076",
+          "2026-08-09T18:02:22-04:00"
+        ]
+      },
+      "U5_SOFT_WEIGHTING": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "9bceb0a2732191cf44ea17fa32639cf6478083a1",
+          "2026-08-09T18:02:23-04:00"
+        ]
+      },
+      "U6B_PRODUCT_A_SCALE_RATE": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "af81889a8195e83bb8a07488fddf31789babb838",
+          "2026-08-09T19:38:27-04:00"
+        ]
+      },
+      "U6_PRODUCT_A_PATH_DEPENDENCE": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "cd5238fba73ac8107ea943e54da6a0ae496d7aba",
+          "2026-08-09T18:02:23-04:00"
+        ]
+      },
+      "U7_2026_TIMING_REGIME": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "47baae7e7f2c52f3f8aec2443ef3e20d64b63674",
+          "2026-08-09T18:02:23-04:00"
+        ]
+      },
+      "U8B_ORGANIZATION_TRANSITION": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "640a6d5017c5c9fef1b7aea088bd88e8bfaeb276",
+          "2026-08-09T19:54:12-04:00"
+        ]
+      },
+      "U8_PATH_ORGANIZATION": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "5a8f07eb359d1d6d81c20d2614797ff46d5916e4",
+          "2026-08-09T19:40:52-04:00"
+        ]
+      },
+      "U9B_MICROSTRUCTURE_ALPHA": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "bea711d129fd7d67a55329318abb39ed8468578a",
+          "2026-08-09T19:57:00-04:00"
+        ],
+        "results_commit": [
+          "54605909e7890a718190e31deb9c99ae2d30d344",
+          "2026-08-09T19:57:43-04:00"
+        ]
+      },
+      "U9_TRUE_MICROSTRUCTURE": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "a01a97c08ef01c028b7ec584f3baf0911ca636e6",
+          "2026-08-09T19:41:02-04:00"
+        ]
+      },
+      "V1R4_NT8_PARITY": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "bcc9387c8fe6075d32f98823152309e48e6797bc",
+          "2026-08-09T11:20:00-04:00"
+        ],
+        "results_commit": [
+          "b5965da9d3aab62577cf27c544404eb85fb12367",
+          "2026-08-09T11:28:52-04:00"
+        ]
+      },
+      "VAR01_VARIANCE_SIGNATURE": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "871b3639240573563c111e96a4a35fbda9226eb5",
+          "2026-08-09T22:25:09-04:00"
+        ]
+      },
+      "W16_V0_HYGIENE": {
+        "category": "SAME_COMMIT_spec_and_results",
+        "commit": [
+          "98d8f733212ca0ec94c0af5c0cadd80db32a1c83",
+          "2026-08-08T22:44:42-04:00"
+        ]
+      },
+      "W17B_C4_WATCHDOG": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "7b35e954b85cc9fe1d02b7c9038b9b08759e8d5a",
+          "2026-08-08T23:30:02-04:00"
+        ],
+        "results_commit": [
+          "8b71aa9fe83c3e752032a0b1eba4bd4faa9a249a",
+          "2026-08-08T23:38:18-04:00"
+        ]
+      },
+      "W17_C4_COMPLIANCE": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "c8330dc84618af76d5b426e4ed662d1f26af641b",
+          "2026-08-08T23:13:10-04:00"
+        ],
+        "results_commit": [
+          "9d84ddfacca2ea65add6d8844e2de333e0a38604",
+          "2026-08-08T23:29:13-04:00"
+        ]
+      },
+      "W18E_PRODUCTA_C4": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "e9486da45bba6d7fb8ec5236fd4c4e18a3eb1c63",
+          "2026-08-09T07:20:55-04:00"
+        ],
+        "results_commit": [
+          "24242705204d06f260900425ebfaeed415404c64",
+          "2026-08-09T07:26:33-04:00"
+        ]
+      },
+      "W18R1_M1_VOLSEASON": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "d0b9f920c1f95842a511f6caf8f1fca475f294de",
+          "2026-08-09T07:01:37-04:00"
+        ],
+        "results_commit": [
+          "ee424da085b8db77f94a43305f17442c8ded2288",
+          "2026-08-09T07:10:26-04:00"
+        ]
+      },
+      "W18R2_M5_XINST": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "d0b9f920c1f95842a511f6caf8f1fca475f294de",
+          "2026-08-09T07:01:37-04:00"
+        ],
+        "results_commit": [
+          "ee424da085b8db77f94a43305f17442c8ded2288",
+          "2026-08-09T07:10:26-04:00"
+        ]
+      },
+      "W18_SEAL_AUDIT": {
+        "category": "NO_SPEC_EVER"
+      },
+      "W18_XINST_BARS": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "668580827197e5ffa0784e81ac5b3e5226aef1d1",
+          "2026-08-09T06:55:44-04:00"
+        ],
+        "results_commit": [
+          "ee424da085b8db77f94a43305f17442c8ded2288",
+          "2026-08-09T07:10:26-04:00"
+        ]
+      },
+      "W19D7_REGIME_2026": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "c345adac0a55024f66d366374339d0142718644b",
+          "2026-08-09T08:35:58-04:00"
+        ],
+        "results_commit": [
+          "cd88199d3bdd6e3b714fffb7adea7a8d8ab91ef8",
+          "2026-08-09T08:46:01-04:00"
+        ]
+      },
+      "W19D7_SEAL_AUDIT": {
+        "category": "NO_SPEC_EVER"
+      },
+      "W19R1_SELECTIVITY": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "d4926a488940b8e3deced5272274806c1cc0d82a",
+          "2026-08-09T07:40:38-04:00"
+        ],
+        "results_commit": [
+          "c345adac0a55024f66d366374339d0142718644b",
+          "2026-08-09T08:35:58-04:00"
+        ]
+      },
+      "W5_PROTECTED_CONFIRMATION": {
+        "category": "NO_SPEC_EVER"
+      },
+      "WIN01_WINNER_EXIT_RELAXATION": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "bd8389ed82b2993c9cf1bdb903bd32fcfd689b51",
+          "2026-08-09T21:40:00-04:00"
+        ],
+        "results_commit": [
+          "da977714510de338ffb242562bf65b79ce1f4185",
+          "2026-08-09T21:54:35-04:00"
+        ]
+      },
+      "X1X2_EXECUTION_FRICTION_AUDIT": {
+        "category": "SPEC_BEFORE_RESULTS_genuine_prereg",
+        "spec_commit": [
+          "1e11445d5ed3986c56a9b9869c32dbd80413e1bc",
+          "2026-08-09T11:13:19-04:00"
+        ],
+        "results_commit": [
+          "9774721e3fea591bdbdd0b995ae860e11742b652",
+          "2026-08-09T11:14:30-04:00"
+        ]
+      }
+    }
+  },
+  "q4_experiment_classification": {
+    "category_definitions": {
+      "A": "parameter_sweep_same_architecture",
+      "B": "distinct_architecture_mechanism_or_datasource",
+      "N": "not_an_architecture_search_trial (infra/diagnostic/audit/validation/governance)",
+      "U": "mixed_or_unclassifiable_as_filed (needs sub-splitting before any dedup)"
+    },
+    "category_counts": {
+      "N": 91,
+      "A": 18,
+      "B": 61,
+      "U": 8
+    },
+    "n_distinct_experiments_classified": 178,
+    "unclassifiable_count": 0,
+    "rows": [
+      {
+        "source": "tested_configs.csv",
+        "experiment": "PARITY",
+        "category": "N",
+        "note": "UI/MCP parity gate, not a trial (gap note's own rule: parity gates are not trials)"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SW00",
+        "category": "N",
+        "note": "determinism + baseline + cost-stress + fill-resolution + parallel-submission infra checks on the SAME frozen baseline config"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SW01c",
+        "category": "A",
+        "note": "same frozen baseline params evaluated on an additional data window (2022) + slip stress; no decision-rule change"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SW01b",
+        "category": "B",
+        "note": "SW01bRandomEntryV1 -- a genuinely different strategy class (random entry) used as a null-control architecture"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SW01",
+        "category": "N",
+        "note": "ledger-export instrumentation, no strategy variant"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SW02a",
+        "category": "B",
+        "note": "introduces a timed forced-flatten exit mechanism (EndTime ladder) not present in the session-close baseline; the ladder of times within it is numeric, but the mechanism itself is new"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W1_S4",
+        "category": "B",
+        "note": "EntrySignalType {0,1,2,3} -- a categorical/qualitative mode switch in the vendor indicator's own decision rule, not a continuous numeric knob"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W1_S1",
+        "category": "A",
+        "note": "TM x SM spatial grid -- pure numeric axes of the same Solar Wave member architecture"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W1_S3",
+        "category": "A",
+        "note": "Slowdown x WWS temporal grid -- pure numeric axes"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W1_REF",
+        "category": "N",
+        "note": "full-history reference rerun of the canonical config, not a swept variant"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W1_S2",
+        "category": "A",
+        "note": "same strategy run at different bar timeframes (2m/3m/5m) -- bar-period is a numeric aggregation axis, decision rule unchanged"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W1b",
+        "category": "A",
+        "note": "dense SM grid (1m and 3m) -- pure numeric plateau-mapping sweep"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "B01",
+        "category": "B",
+        "note": "python_vector_orb_fade and python_vector_gapfade -- two genuinely distinct mechanisms (opening-range-breakout fade, gap fade), not parameter variants of Solar Wave or of each other"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "PORT01",
+        "category": "B",
+        "note": "same Solar-Wave-family construction ported to YM/RTY/CL -- a different INSTRUMENT/data-source decision per the task's own category (b), not a numeric sweep"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "DM01",
+        "category": "A",
+        "note": "day-margin time-filter window sweep (1800-1640) on the already-adopted SolarWaveOpenV3 -- numeric operational-window axis"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "C01T1_EXPOSURE",
+        "category": "B",
+        "note": "vol-surprise-tercile exposure overlay -- a new regime-conditioning decision layer, not a numeric knob on the existing controller"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "C01T1_ML",
+        "category": "B",
+        "note": "logistic-regression meta-label overlay -- a genuinely new ML-based decision mechanism"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SM03_DISASTER_STOP",
+        "category": "B",
+        "note": "introduces a close-basis disaster-stop layer not present in the frozen system; the m-multiplier grid within it is incidental numeric variation"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SM03B_DISASTER_STOP_INTRABAR",
+        "category": "B",
+        "note": "same as SM03 but intrabar-extreme trigger -- a different trigger MECHANISM (extreme vs close basis), not a reparameterization of SM03"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SM04_CONSENSUS_SHAPE",
+        "category": "B",
+        "note": "different vote-to-target mapping functions (U1/U2/U3/D1) -- distinct decision-mapping mechanisms"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SM08_HTF_TILT",
+        "category": "B",
+        "note": "new HTF-agreement-based exposure tilt mechanism (first adoption of an HTF conditioning layer)"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SM07_TRENDDAY_UPWEIGHT",
+        "category": "B",
+        "note": "new frozen-on-history gap/IB trend-day classifier conditioning the existing target -- new conditioning mechanism"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SM10_VOLTRANSITION_ENGINE",
+        "category": "B",
+        "note": "standalone daily engine (compression-state classifier -> directional hold) -- a wholly new, independent architecture, not a variant of Solar/BMOM"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SM11_HOLDOUT_READ",
+        "category": "N",
+        "note": "single preregistered holdout-consumption READ of already-frozen candidates, not itself a new architecture or a parameter sweep"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SM14_ONELOT_DAYMARGIN",
+        "category": "B",
+        "note": "new discretization mechanism collapsing the continuous multi-lot target to sign+hysteresis 1-lot trading; the (a,b) hysteresis-threshold grid within it is incidental numeric variation"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2B",
+        "category": "A",
+        "note": "BMOM fill-timing variants (signal-close / next-open / +1t / +2t slip) -- execution/cost-model axis of the same B-MOM decision logic, decision rule itself unchanged"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2C",
+        "category": "A",
+        "note": "portfolio blend-weight sweep across Solar/BMOM/B1 sleeves (P0-P3) -- numeric allocation axis of the same multi-engine construction"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2E",
+        "category": "U",
+        "note": "s0-s100 is a pure numeric short-scale multiplier (a); c1_htfup_short* vs c2_counterHTF_* are two DIFFERENT conditioning mechanisms (asymmetric-iff-HTF-up vs symmetric counter-HTF) (b) -- needs sub-splitting"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2E-ext",
+        "category": "A",
+        "note": "plateau-neighbor extension of the c1 (HTF-up-conditional) mechanism's own numeric ladder -- same mechanism as SMV2E's c1 arm"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2G",
+        "category": "B",
+        "note": "8 DIFFERENT HTF/trend feature constructions (SMA20/SMA100/EMA50/Donchian50mid/ret50/ret100/SMA50slope5/dualSMA50_200) -- distinct feature-mechanism decisions, not a numeric sweep of one formula"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2H",
+        "category": "U",
+        "note": "one-contract construction program: introduces a NEW discretization mechanism (hysteresis one-lot mapping) with several genuinely different variants (A_dominant BMOM-first routing, B_sign, C_hyst thresholds, E_conflictflat, G_router_htf) (b) each a distinct routing/conflict-resolution rule, plus SM14_ref_oldM31 as a reference rerun (N) -- needs sub-splitting by variant letter"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2H2",
+        "category": "A",
+        "note": "plateau-confirmation reruns of the A_dominant mechanism's own s5/s7/s9 numeric ladder -- same mechanism as SMV2H's A_dominant arm"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2I",
+        "category": "U",
+        "note": "C-P1 CDaR/EDaR/Ulcer blend-weight sweep (a); C-P3 leverage-multiplier grid (a); C-P4 drought-tilt mechanism + its own placebo battery (b, new conditioning mechanism); C-P7 windfall event-study (N, diagnostic pretest not itself a candidate) -- needs sub-splitting"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2J",
+        "category": "B",
+        "note": "Variance-Ratio and Efficiency-Ratio state-harness constructions -- new feature/mechanism, not a numeric sweep of an existing one"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2K",
+        "category": "B",
+        "note": "Engine-3 failed-break-fade / small-gap-fade / overnight-drift -- three genuinely distinct trading mechanisms"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2M",
+        "category": "B",
+        "note": "SolarWaveSMMaster_v2 -- the consolidated multi-engine architecture integration point itself, a foundational build milestone, not a sweep"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2N",
+        "category": "B",
+        "note": "windfall give-back/trim POLICY -- a new decision mechanism (plus its own placebo/chronology validation, N)"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2O",
+        "category": "B",
+        "note": "Kalman innovation-whiteness and BOCPD regime-age -- two distinct new state-estimation mechanisms/data representations"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2P",
+        "category": "B",
+        "note": "Engine-3 value-area-rotation / multiday-false-break / month-end-flow -- three distinct trading mechanisms"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2Q",
+        "category": "N",
+        "note": "diagnostics bundle, not a strategy variant"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2R",
+        "category": "U",
+        "note": "bundles a numeric vol-memory-window sweep (a) with T2T3 new signal-LAYER addition and cohort-membership ablation (b, both architecture decisions) and a clamp audit (N, diagnostic) -- needs sub-splitting"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2S",
+        "category": "A",
+        "note": "HTFgated_dominant threshold sweep (thr3/5/7) -- numeric threshold axis of the already-introduced HTF-gated dominant-routing mechanism"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2T",
+        "category": "B",
+        "note": "NoFAST_R2_confirm -- ablation test removing a component ('FAST') from the architecture, a structural not numeric change"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2U",
+        "category": "B",
+        "note": "different clock/bar-construction conventions (1m/5m bar-matched vs time-matched) -- a construction-mechanism decision, not a numeric knob"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2V",
+        "category": "B",
+        "note": "ER150 damper -- new damping POLICY mechanism (plus its own placebo/chronology validation, N)"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2W",
+        "category": "B",
+        "note": "5m clock R2 -- same clock-construction-mechanism family as SMV2U"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2X",
+        "category": "B",
+        "note": "Engine-3 shock-continuation / macro-drift (FOMC/CPI) / opex-unclamp-breakout -- three distinct trading mechanisms"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2Y",
+        "category": "N",
+        "note": "weekly viability diagnostics measuring existing state features (sigma460/ER150/flip-rate/VR) -- measurement, not a new architecture"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2Z",
+        "category": "A",
+        "note": "viability-gating POLICY threshold sweep (s050/070/085) -- numeric threshold axis of one fixed gating mechanism"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2AA",
+        "category": "A",
+        "note": "portfolio mix-shift -- numeric weight axis"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2AB",
+        "category": "B",
+        "note": "Engine-3 slate-4 constructions -- distinct trading mechanisms"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2AC",
+        "category": "B",
+        "note": "level-1 joint logistic ML overlay -- new ML-based decision mechanism"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2AD",
+        "category": "U",
+        "note": "VolMult ceiling numeric sweep (a) bundled with 'extended cohort add/replace' (b, a cohort-membership architecture decision) and an old-regime screen (N, validation) -- needs sub-splitting"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2AE",
+        "category": "A",
+        "note": "1-minute rescale of the existing ensemble -- same decision rule at a different bar resolution, a numeric/portability axis"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2AF",
+        "category": "N",
+        "note": "gate battery (dev-bootstrap / LOYO-chronology / old-regime / diversification / overall-verdict) -- a promotion-gate validation pass on an already-built candidate, not itself a new architecture or sweep"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2AG",
+        "category": "B",
+        "note": "adaptive clamp -- a new clamp MECHANISM (adaptive vs the existing fixed clamp), a structural not numeric change"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2AH",
+        "category": "B",
+        "note": "day circuit-breaker -- a new risk-control mechanism (threshold_calibration and circuit_breaker_sweep_16cell are numeric sweeps within it)"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2AI",
+        "category": "B",
+        "note": "ATR-blend construction -- a new volatility-scale construction mechanism (replace_blend_sweep_4arm is a numeric blend-weight sweep within it)"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2AJ",
+        "category": "N",
+        "note": "gate battery (dev-bootstrap / LOYO / old-regime-dual / right-tail / portfolio / weight-robustness / overall-verdict) for the ATR-blend candidate -- validation, not a new architecture"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SMV2AK",
+        "category": "B",
+        "note": "volume-bar construction -- a new bar-construction/data-representation decision (distinct from time bars), not a numeric knob"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W16-V1",
+        "category": "N",
+        "note": "flatten-time audit (NQ/MNQ) -- forensic verification, not a strategy variant"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W16-V1b",
+        "category": "N",
+        "note": "origin-of-1639 forensic investigation"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W16-V2",
+        "category": "N",
+        "note": "overshoot-ratio trailing measurement -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W16-V3",
+        "category": "N",
+        "note": "repo exposure status check -- infra"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W16-V4a",
+        "category": "N",
+        "note": "commission/margin verification -- infra"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W17-V1R1",
+        "category": "N",
+        "note": "flatten audit -- forensic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W17-V1R2",
+        "category": "N",
+        "note": "MNQ flatten root-cause -- forensic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W17-V1h-V1e",
+        "category": "N",
+        "note": "margin-window exposure audit -- forensic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W17-V1R3",
+        "category": "N",
+        "note": "C4 rebuild v2 -- infra fix, not a strategy variant"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W17B-C3",
+        "category": "N",
+        "note": "C4 watchdog v4 -- infra"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W17-V4",
+        "category": "N",
+        "note": "friction-share ledger -- accounting/diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W17-V1d",
+        "category": "N",
+        "note": "late-entry census -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W17-V1f",
+        "category": "N",
+        "note": "event-day margin leverage -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W17-O1",
+        "category": "N",
+        "note": "primary-objective build -- infra (utility-function module build)"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W17-DIAG",
+        "category": "N",
+        "note": "warmup start-state sensitivity -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W18R1-M1",
+        "category": "B",
+        "note": "intraday vol-seasonality D4 construction -- a new conditioning mechanism"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W18R2-M5",
+        "category": "B",
+        "note": "ATR-blend cross-instrument replication -- new construction ported cross-instrument"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W18-E1",
+        "category": "N",
+        "note": "holdout-consumption determination -- protocol/governance decision, not a trial"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W18-F",
+        "category": "N",
+        "note": "warmup convergence measurement -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W18E-C4",
+        "category": "N",
+        "note": "Product-A C4 propagation check -- forensic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W18R1-RT",
+        "category": "N",
+        "note": "M1 red-team review -- adversarial audit, not a new trial"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W18R2-RT",
+        "category": "N",
+        "note": "M5 red-team review -- adversarial audit"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W18-STAND",
+        "category": "N",
+        "note": "stub-concentration caution note -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W18-O1R",
+        "category": "N",
+        "note": "O1 blind repair -- infra fix"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W19-R4",
+        "category": "N",
+        "note": "seal-audit standing check -- governance"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W19-D7",
+        "category": "B",
+        "note": "2026 regime diagnostic construction -- but closed advisory, borderline; classified N since no candidate was constructed (diagnostic-only per its own TESTING_LEDGER row)"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W19-R3",
+        "category": "N",
+        "note": "O1 blind-review agreement -- governance/adjudication"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W19-D7RT",
+        "category": "N",
+        "note": "D7 red-team review -- adversarial audit"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W19R1",
+        "category": "B",
+        "note": "w19r1 selectivity run -- a new selectivity-filter construction"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "W19R1RT",
+        "category": "N",
+        "note": "w19r1 red-team review -- adversarial audit"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "S0",
+        "category": "N",
+        "note": "time-of-day autopsy -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "S2-ARMA",
+        "category": "B",
+        "note": "ARMA-based selectivity-timing construction -- new mechanism"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "S2RT",
+        "category": "N",
+        "note": "red-team review of S2 -- adversarial audit"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "P4-CHURN",
+        "category": "N",
+        "note": "churn-selectivity autopsy -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "D-WINNER",
+        "category": "N",
+        "note": "winner autopsy -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "E3-S5",
+        "category": "B",
+        "note": "Engine-3 slate-5 cross-market construction -- new mechanism/data-source (cross-market)"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "X1X2",
+        "category": "N",
+        "note": "execution-friction audit -- forensic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "V1R4",
+        "category": "N",
+        "note": "NT8 parity verification -- infra, not a trial"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "S2-R2",
+        "category": "N",
+        "note": "S2 adjudication -- governance decision, not a new trial"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "V1R4-P2",
+        "category": "N",
+        "note": "warmup forensics -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "V1R4-P3",
+        "category": "N",
+        "note": "defect-3 BMOM-flatten bugfix -- infra fix"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "V1R4-P4",
+        "category": "N",
+        "note": "full-history chunked certification -- infra/verification"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "R1-A",
+        "category": "N",
+        "note": "P0 tradestate-ledger autopsy -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "R1-B",
+        "category": "B",
+        "note": "adaptive-exit giveback overlay -- new exit-mechanism construction"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "R2",
+        "category": "B",
+        "note": "entry-confirmation giveback construction -- new entry mechanism"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "R2V1",
+        "category": "N",
+        "note": "confirm2 formal adjudication -- governance decision on R2's own construction"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SA0",
+        "category": "N",
+        "note": "system-structure failure-mode science -- diagnostic/taxonomy, not a trial"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "R3",
+        "category": "N",
+        "note": "seltime state diagnostic -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "R2B",
+        "category": "B",
+        "note": "pullback-reclaim adaptive-entry construction -- new entry mechanism"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SA0-ADDENDUM",
+        "category": "N",
+        "note": "current edge-health monitoring -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "R4",
+        "category": "N",
+        "note": "slope/impulse residual-information diagnostic -- feature-information test, no candidate constructed"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "R5",
+        "category": "N",
+        "note": "microstructure OHLCV-proxy diagnostic -- feature-information test, no candidate constructed"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "R6",
+        "category": "N",
+        "note": "Engine-3 audit, no candidate constructed -- diagnostic"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "PA0-PA1",
+        "category": "N",
+        "note": "Product-A structural decomposition -- diagnostic/specification, not a trial"
+      },
+      {
+        "source": "tested_configs.csv",
+        "experiment": "SYN",
+        "category": "N",
+        "note": "2026-08-09 final synthesis writeup -- not a trial"
+      },
+      {
+        "source": "tested_configs_backfill.csv",
+        "experiment": "H011",
+        "category": "B",
+        "note": "backfill: stop-order vs market-order execution mechanics -- a genuinely different fill/execution mechanism, not a numeric parameter"
+      },
+      {
+        "source": "tested_configs_backfill.csv",
+        "experiment": "W1C",
+        "category": "A",
+        "note": "backfill: tf x sm grid, wave1c Tier-2 confirmation -- pure numeric grid, same architecture as W1_S1/W1b"
+      },
+      {
+        "source": "tested_configs_backfill.csv",
+        "experiment": "W2",
+        "category": "U",
+        "note": "backfill: BUNDLES multiple genuinely different hypotheses under one experiment label -- 'fixed-threshold wide sweep' and 'H-012 sigma-estimator robustness' are numeric (a); 'H-006 adaptive threshold', 'H-007 split exit/reversal', 'H-008 anchor definition', 'H-006 x H-008 combo' are each distinct decision-rule mechanisms (b); plus non-trial parity gates. Needs sub-splitting by purpose column before any dedup pass, not a single dedup unit as filed."
+      },
+      {
+        "source": "tested_configs_backfill.csv",
+        "experiment": "W3",
+        "category": "U",
+        "note": "backfill: BUNDLES 'wave-index conditioning', 'H-014 price vs volatility', 'ES portability' (different instrument = data-source decision), 'C2 Type-3 re-entry (adaptive/fixed core)', 'C4 Type-2+Type-3' -- almost entirely (b)-type distinct mechanism/data-source decisions, plus non-trial parity gates. Needs sub-splitting."
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "ADD01_PARTICIPATION_EXPANSION",
+        "category": "B",
+        "note": "reachable-M enumeration + EntryLevel participation-expansion construction -- new mechanism"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "AUCTION01_VALUE_STATE",
+        "category": "B",
+        "note": "NQ_VOLUME_AT_PRICE causal running POC/value-share state -- new data source (first genuinely new information class this campaign)"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "AUCTION02_ACTION_RELEVANCE",
+        "category": "B",
+        "note": "NQ_VOLUME_AT_PRICE-based rate-limiter policy -- new data source + new decision mechanism"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "AUCTION03_MECHANISM_DECOMPOSITION",
+        "category": "B",
+        "note": "bounded M1-M5 mechanism slate on Auction substrate -- distinct decomposition mechanisms, though not promoted"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "AUCTION04_CLEAN_CAUSAL_SUBSTRATE",
+        "category": "B",
+        "note": "rebuilt causal Auction substrate + re-run of the M1-M5 mechanism slate -- data-integrity replication of a (b)-type family"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "COMBO01_MULTIMODAL_SYNERGY",
+        "category": "B",
+        "note": "AUCTION x FLOW interaction construction -- new combined-mechanism test"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "DATA02_MICROSTRUCTURE_INVENTORY",
+        "category": "N",
+        "note": "read-only data inventory, infra"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "DOM01_COLLECTOR",
+        "category": "N",
+        "note": "forward L2-data collector build, infra, never run"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "DOM01_DEPLOY_NT8_FEASIBILITY",
+        "category": "N",
+        "note": "deployment-feasibility check, infra"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "EQV01_BEHAVIORAL_CANONICALIZATION",
+        "category": "N",
+        "note": "specification/representation-equivalence audit -- explicitly not alpha, per its own status field"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "EQV02_FULL_HISTORY_ARRAY_EQUALITY",
+        "category": "N",
+        "note": "specification/representation-equivalence audit -- explicitly not alpha"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "EQV03_PNL_EQUALITY",
+        "category": "N",
+        "note": "specification/representation-equivalence audit -- explicitly not alpha"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "EVIDENCE01_REPORT_TRACEABILITY",
+        "category": "N",
+        "note": "audit re-deriving headline numbers from source, infra/verification"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "EXEC01_PRODUCT_A_DOLLAR_ATTRIBUTION",
+        "category": "N",
+        "note": "execution-forensics dollar reconciliation, not a strategy variant"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "EXP01_MARGINAL_EXPOSURE_SHAPE",
+        "category": "N",
+        "note": "diagnostic shape-measurement, reassuring null, no candidate"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "FLOW01_AGGRESSIVE_PARTICIPATION",
+        "category": "B",
+        "note": "NQ_BIDASK_TICKS order-flow features at in-position checkpoints -- new data source"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "GRID01_SOLAR_RESOLUTION_CONVERGENCE",
+        "category": "A",
+        "note": "VolMult grid density/spacing (G7/G13/G25/G49) -- pure numeric axis of the SAME Solar member architecture, explicitly diagnostic zero-alpha-budget per its own status"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "GRID02_ENDPOINT_PERTURBATION",
+        "category": "A",
+        "note": "VolMult grid endpoint sweep [5,29]/[6,30]/[7,31] -- pure numeric axis, same architecture as GRID01"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "H0_PRODUCT_A_HEALTH",
+        "category": "N",
+        "note": "current-health diagnostic panel on the existing incumbent"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "ICT0102_EVENT_SEQUENCE",
+        "category": "B",
+        "note": "PDH/PDL sweep/rejection/MSS structural-event features -- new mechanism/feature class"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "LEV01_VOLATILITY_ASYMMETRY",
+        "category": "N",
+        "note": "diagnostic market-structure test, confound caught, no candidate constructed"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "LEV02_TRAILING_REGIME",
+        "category": "N",
+        "note": "diagnostic regime-signal test, clean null, no candidate"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "MOM01_INTRADAY_MOMENTUM",
+        "category": "B",
+        "note": "literature-based intraday-momentum feature test -- new feature/mechanism (though null result)"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "O2_NUMERIC_PROVENANCE_AUDIT",
+        "category": "N",
+        "note": "audit correcting stale numbers in canonical docs, infra"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "O2_OWNER_UTILITY_READJUDICATION",
+        "category": "N",
+        "note": "utility-function readjudication of EXISTING candidates on real P&L -- adjudication, not a new construction"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "PERT01_STRUCTURAL_INVARIANCE",
+        "category": "A",
+        "note": "one-at-a-time numeric perturbation of VolPeriod/BAND_DAYS/TiltSma -- pure numeric axes of the existing architecture, explicitly diagnostic"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "PLACEBO01_COMPONENT_CAUSALITY",
+        "category": "N",
+        "note": "causal placebo/falsification battery on EXISTING components (B-MOM, HTF, hysteresis, sizing) -- diagnostic falsification test, not a new construction"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "PORT01_AB_PORTFOLIO_SYNTHESIS",
+        "category": "N",
+        "note": "portfolio-level quantification of an already-known correlation fact, non-alpha by its own label"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "PRICE01_PRODUCT_A_GENUINE_MNQ",
+        "category": "B",
+        "note": "genuine-MNQ dual-truth repricing -- a distinct pricing/data-source decision vs the NQ-proxy substrate used throughout the rest of the campaign"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "REL01_CONDITIONAL_CROSSMARKET",
+        "category": "N",
+        "note": "scoping-only literature pass, no construction attempted"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "SHADOW01_SETUP_COMPATIBILITY",
+        "category": "N",
+        "note": "diagnostic feature test, no construction attempted"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "SKEW01_RETURN_SKEWNESS",
+        "category": "B",
+        "note": "new skewness-feature construction (though ultimately closed weak)"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "SOFT01_CONTINUOUS_WEIGHTING_AUDIT",
+        "category": "N",
+        "note": "resolved by reference to an existing construction (U6B), no new construction"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "SPEC01_SESSION_LEAK_AUDIT",
+        "category": "N",
+        "note": "specification-defect audit, resolved not-a-defect"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U0_UNIFIED_STATE",
+        "category": "N",
+        "note": "shared causal state table build, infra"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U1B_SESSION_HOLD_POLICY",
+        "category": "B",
+        "note": "session/hold POLICY construction (2 legs) -- new decision mechanism"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U1_SESSION_HETEROGENEITY",
+        "category": "N",
+        "note": "diagnostic on existing incumbent, no candidate constructed"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U2_DATA_AUDIT",
+        "category": "N",
+        "note": "data-availability audit, not a trial"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U3_HOLD_EXPOSURE_CONTINUATION",
+        "category": "N",
+        "note": "diagnostic, no candidate constructed"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U4B_SHORT_DECAY_DERISK",
+        "category": "B",
+        "note": "signal-gated short early-flatten construction -- new exit-conditioning mechanism"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U4_SHORT_MECHANISM",
+        "category": "N",
+        "note": "diagnostic (giveback_ratio checkpoint measurement), no candidate constructed here (feeds U4B)"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U5_SOFT_WEIGHTING",
+        "category": "N",
+        "note": "diagnostic, confound found pre-construction, no candidate"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U6B_ADVERSARIAL_REVIEW",
+        "category": "N",
+        "note": "independent adversarial review verdict on an existing candidate, not a new construction"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U6B_CAPITAL_FRONTIER_INTRADAY_DD",
+        "category": "N",
+        "note": "diagnostic capital-frontier measurement of an existing candidate"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U6B_FORWARD_READINESS",
+        "category": "N",
+        "note": "diagnostic uncertainty-quantification panel"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U6B_PRODUCT_A_SCALE_RATE",
+        "category": "B",
+        "note": "bounded continuous scale-rate multiplier -- new sizing mechanism"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U6_PRODUCT_A_PATH_DEPENDENCE",
+        "category": "N",
+        "note": "diagnostic, no candidate constructed"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U7_2026_TIMING_REGIME",
+        "category": "N",
+        "note": "diagnostic, explains an anomaly, no candidate"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U8B_ORGANIZATION_TRANSITION",
+        "category": "B",
+        "note": "organization-transition feature construction -- new mechanism"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U8_PATH_ORGANIZATION",
+        "category": "B",
+        "note": "new organization-level feature class construction"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U9B_MICROSTRUCTURE_ALPHA",
+        "category": "B",
+        "note": "genuine order-flow/BBO-tick data source -- first true microstructure test, new data source"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "U9_TRUE_MICROSTRUCTURE",
+        "category": "N",
+        "note": "infrastructure/design pass (frozen prequential design), no candidate computed"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "VAR01_VARIANCE_SIGNATURE",
+        "category": "B",
+        "note": "multi-scale realized-variance feature construction -- new feature/mechanism"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "W5_PROTECTED_CONFIRMATION",
+        "category": "U",
+        "note": "protected-pool confirmation batch spanning 3 different families (AUCTION01 D4 replication, AUCTION02 rate-limiter policy, FLOW01 PRE_EXIT) -- needs sub-splitting, not one dedup unit"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "WAVE1_SYNTHESIS",
+        "category": "N",
+        "note": "EVI-ranking synthesis note, not a trial"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "WAVE2_EVI",
+        "category": "N",
+        "note": "synthesis note, not a trial"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "WAVE4_FRONTIER_O2_GAMMA_AUDIT",
+        "category": "N",
+        "note": "cross-family audit/synthesis, infra"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "WAVE4_TRUTH_AUDIT",
+        "category": "N",
+        "note": "repo-truth verification audit, infra"
+      },
+      {
+        "source": "TESTING_LEDGER.csv",
+        "experiment": "WIN01_WINNER_EXIT_RELAXATION",
+        "category": "B",
+        "note": "exit-hysteresis relaxation construction (2 products x multiple cells) -- new exit mechanism"
+      }
+    ]
+  }
+}

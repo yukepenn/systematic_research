@@ -69,3 +69,38 @@ preregistered rule uses `N_eff` (participation ratio ≈ 7), not the raw count, 
 Do not add a single new configuration until the `runs/<run_id>/spec.yaml` convention is restored
 and demonstrated on one throwaway run. The convention exists because researcher discipline is
 exactly what fails silently under time pressure — as it did here.
+
+## [ADDENDUM 2026-08-10 — the same failure mode recurred, in a milder form, on 2026-08-09/10]
+
+`research/registry/HASH01_BEHAVIORAL_POLICY_REGISTRY/REPORT.md`, auditing the registry as part of
+a structural-invariance campaign, ran a git-history check across all `runs/<id>/` directories
+(comparing the commit that first adds `spec.yaml` against the commit that first adds any other file
+in the same directory) plus every `research/system_master/<id>/` directory created since. Result:
+**109 directories genuinely show `spec.yaml` committed in an earlier, separate commit before
+results** (2026-08-06 through 2026-08-09, including the immediate post-remediation window this
+note's own rule produced — B01C_ORB_FAIL, PORT01_SWEEPS, DM01, SM03 through SM14 all show explicit
+"preregister X" commits strictly preceding "X: result" commits). But **44 directories show
+`spec.yaml` and results landing in the same commit**, and **30 never had a `spec.yaml` at all** —
+concentrated almost entirely in the 2026-08-09/10 wave: `AUCTION01/02/03/04`, `ADD01`, `FLOW01`,
+`VAR01`, `REL01`, `GAMMA00`, `O2`, `PRICE01`, `COMBO01`, and every `research/system_master/
+{GRID01,GRID02,PERT01,EQV01,EQV02,EQV03,PLACEBO01,HASH01,SIMPLE01}/` directory (the last several —
+all of this same day's structural-invariance work, including this HASH01 audit itself — bundle
+`src`+`out`+`REPORT.md` into one atomic commit, same pattern this note originally flagged).
+
+**This is not the same failure as the original one, and should not be read as identical.** The
+2026-08-09/10 wave's specs were genuinely written and, in most cases, methodologically frozen
+*before* their own results were interpreted (e.g. bounded M1–M5 slates declared before running;
+`SIMPLE01`'s SPEC-agent role structurally cannot see performance data before writing its manifest,
+enforced by which information reaches which subagent call, not by commit timing) — this is
+contemporaneous, disclosed, machine-readable work, not after-the-fact reconstruction the way Waves
+1c–3 were. But it shares the original defect's *auditability* gap: a same-commit `spec.yaml` is,
+from git history alone, indistinguishable from a `spec.yaml` written to match an already-known
+result. The convention this note established (spec committed **separately and first**) was not
+followed for this wave, and "the methodology says it was blind" is not independently checkable the
+way a git timestamp is.
+
+**Going forward:** phases still open in the current structural-invariance campaign (EQV04 and
+later) should commit their frozen spec/preregistration artifacts in a separate, first commit before
+the commit containing results — closing this gap prospectively rather than attempting to rewrite
+the history of what has already landed. No history rewrite is being performed for the 2026-08-09/10
+wave's existing commits.
