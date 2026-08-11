@@ -28,7 +28,6 @@ scratch. Queues: `ACTIVE` (currently running), `READY` (next up, nothing blockin
 | EQV04 actual parity backtests (RunStrategyBacktest, incumbent vs canonical) | A | Code written, compiled clean; only needs the F5 step | Owner F5 |
 | B1 implementation-parity backtest (NT8 B1 vs Python SIMPLE01 B1) | B | Code written, compiled clean; only needs the F5 step | Owner F5 |
 | ACTIONMAP01 protected-pool power analysis + sequential protocol | C | Only if ACTIONMAP01's EXEC phase passes every consumed-data gate | ACTIONMAP01 completing with a PASS verdict (not assumed) |
-| Options/dealer-gamma feasibility memo (no purchase) | F | Zero cost, bounded scope, per sec70/155 | None |
 
 ## DEFERRED (lower EVI this wave, not started)
 
@@ -37,6 +36,13 @@ scratch. Queues: `ACTIVE` (currently running), `READY` (next up, nothing blockin
 | DOM data-quality monitor tooling (daily automated checks) | E | Collector isn't running yet (owner-gated) — building the monitor now would be speculative; revisit once DOM01 has ≥1 week of real data |
 | Mechanistic cross-market EVI review | F | No specific mechanism currently identified as high-EVI (per sec71-73, generic "ES predicts NQ" is explicitly not authorized) |
 | Capital/portfolio science refresh | G | `CAPITAL_FRONTIER.md` is current as of Wave 5; no new capital-relevant finding this wave to fold in yet |
+
+## CLOSED prior wave, verified still current (no rework needed)
+
+| Item | Verdict |
+|---|---|
+| GAMMA00 (options/dealer-gamma feasibility) | `DATA_LIMITED` — literature review complete, zero local SPX/NDX options data, purchase not authorized. Spun off MOM01. |
+| MOM01 (Baltussen et al. intraday-momentum diagnostic) | `CLEAN_NULL` — does not replicate on NQ; redundant with existing substrate state. |
 
 ## CLOSED this wave (2026-08-10)
 
