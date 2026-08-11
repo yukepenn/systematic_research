@@ -1,0 +1,132 @@
+{
+  "meta": {
+    "task": "STAT01 -- PBO/CSCV defensibility assessment on the VolMult-grid family (GRID01 G7/G13/G25/G49 + GRID02's 3 endpoints, 7 raw / 6 behaviorally-distinct configs), and a Hansen SPA applicability assessment across GRID01/GRID02/PERT01/SIMPLE01. Per campaign directive sec61-66/sec63-65: no trial-count or assumption is cherry-picked; PBO is not force-computed if the family/partition is inadequate; SPA is not manufactured against an artificial 'superior' candidate.",
+    "reuse_sources": {
+      "hash01_dedup_and_participation_ratio": "research/registry/HASH01_BEHAVIORAL_POLICY_REGISTRY/out/policy_hash_results.json",
+      "grid01_session_counts_for_subperiod_feasibility": "research/system_master/GRID01_SOLAR_RESOLUTION_CONVERGENCE/out/grid01_full_detail.json (performance[].n_days, read only, not recomputed)"
+    },
+    "no_pnl_recomputed": true,
+    "no_dedup_recomputed": true,
+    "no_participation_ratio_recomputed": true,
+    "cscv_run": false,
+    "spa_run": false
+  },
+  "pbo": {
+    "family": "VolMult-grid (GRID01 G7/G13/G25/G49 + GRID02 endpoint_5_29/6_30/7_31)",
+    "family_source_experiments": [
+      "GRID01_SOLAR_RESOLUTION_CONVERGENCE",
+      "GRID02_ENDPOINT_PERTURBATION"
+    ],
+    "unique_behaviorally_distinct_config_names": [
+      "GRID01_G7",
+      "GRID01_G13_incumbent",
+      "GRID01_G25",
+      "GRID01_G49",
+      "GRID02_endpoint_5_29",
+      "GRID02_endpoint_7_31"
+    ],
+    "correlation_summary_excl_trivial_duplicate": {
+      "ProductA": {
+        "n_unique": 6,
+        "n_pairs": 15,
+        "min": 0.985716,
+        "median": 0.990677,
+        "max": 0.995242,
+        "mean": 0.9906426666666668,
+        "n_pairs_r_ge_0.99": 9,
+        "n_pairs_r_ge_0.95": 15
+      },
+      "ProductB": {
+        "n_unique": 6,
+        "n_pairs": 15,
+        "min": 0.929628,
+        "median": 0.953458,
+        "max": 0.977654,
+        "mean": 0.9574694666666669,
+        "n_pairs_r_ge_0.99": 0,
+        "n_pairs_r_ge_0.95": 12
+      }
+    },
+    "subperiod_feasibility_S16": {
+      "CANONICAL_2023_2025": {
+        "n_days": 539,
+        "s_target": 16,
+        "days_per_subperiod_approx": 33.7,
+        "n_combinations_C(S,S/2)": 12870,
+        "length_adequate_for_S=16": true
+      },
+      "FULL_2022_2026": {
+        "n_days": 1184,
+        "s_target": 16,
+        "days_per_subperiod_approx": 74.0,
+        "n_combinations_C(S,S/2)": 12870,
+        "length_adequate_for_S=16": true
+      }
+    },
+    "computed": false,
+    "value": null,
+    "value_note": "No PBO percentage is reported anywhere in this file -- see pbo.assessment.conclusion / pbo.assessment.reasons for why.",
+    "assessment": {
+      "verdict": "NOT_DEFENSIBLE",
+      "n_raw": 7,
+      "n_unique_behaviorally_distinct": 6,
+      "participation_ratio_productA": 1.0151203402654858,
+      "participation_ratio_productB": 1.0699182842766026,
+      "participation_ratio_max_possible": 7,
+      "reasons": [
+        {
+          "criterion": "candidate count / CSCV rank resolution",
+          "finding": "N_raw=7, N_unique_behaviorally_distinct=6 (HASH01 Level 2/3/4 all agree on exactly one exact-duplicate pair: GRID02 endpoint_6_30 == GRID01 G13, same raw vms tuple). CSCV's rank statistic (logit of relative out-of-sample rank of the in-sample-best candidate among N) has at most N possible support values per split. With N=6, the logit distribution used to estimate PBO is quantized into only 6 possible values -- far coarser than the resolution needed to distinguish 'the in-sample winner ranks below median out-of-sample more than half the time' from noise. Published CSCV applications (Bailey/Borwein/Lopez de Prado/Zhu 2014 and common practitioner use, e.g. Lopez de Prado's own worked examples) apply the method to candidate pools ranging from dozens to thousands of configurations; N=6 is well below the range the method was designed and validated for.",
+          "severity": "blocking"
+        },
+        {
+          "criterion": "cross-sectional diversity (participation ratio + pairwise correlation)",
+          "finding": "HASH01's own eigenvalue participation ratio over the full 7x7 daily-P&L correlation matrix: PR_ProductA=1.0151, PR_ProductB=1.0699, out of a maximum possible 7 (all series orthogonal) and a minimum of 1 (all series identical). Restricted to the 6 behaviorally-distinct configs only (dropping the trivial exact duplicate), pairwise full-history P&L correlation is ProductA median=0.9907 (range [0.9857, 0.9952]), ProductB median=0.9535 (range [0.9296, 0.9777]); 9/15 ProductA pairs and 0/15 ProductB pairs already clear HASH01's own pre-disclosed r>=0.99 'near-identity' bar. A family whose 6 members behave as ~1 effective independent dimension was never a search over 6 meaningfully different strategies -- it was a density/robustness probe around one incumbent (GRID01/GRID02's own stated, preregistered purpose; REPORT.md: 'diagnostic-only ... select no winner, promote nothing'). Running CSCV on near-collinear arms does not measure overfitting risk from a real selection process; it measures how a rank statistic behaves on ~1 series against itself under repeated noise draws, which is mechanically pulled toward an uninformative answer regardless of the true (here: essentially absent) selection process.",
+          "severity": "blocking"
+        },
+        {
+          "criterion": "was a real backtest-selection process ever run on this family",
+          "finding": "GRID01_SOLAR_RESOLUTION_CONVERGENCE/REPORT.md and GRID02_ENDPOINT_PERTURBATION/REPORT.md both preregister and both restate at their conclusion: 'No winner is selected. No candidate is promoted or frozen.' GRID02's report explicitly notes two of its three configs numerically 'outperforming' the incumbent on one product each, and explicitly declines to treat that as a selection signal ('without treating either neighbor's outperformance as a signal to re-optimize endpoints, which is out of scope for this diagnostic task'). CSCV/PBO answers 'if the researcher HAD picked the best in-sample performer from this pool, how likely is that pick to disappoint out-of-sample' -- a coherent hypothetical even absent an actual pick. This reason is therefore SUPPORTING context, not independently blocking, but it reinforces that this family's own designers assessed it as too narrow/coarse a comparison to support a selection decision at all (GRID02 REPORT.md: 'a three-point comparison is far too coarse to support such a decision even if it were in scope').",
+          "severity": "supporting"
+        },
+        {
+          "criterion": "sub-period partition length (S=16)",
+          "finding": "NOT a blocking constraint, disclosed for completeness: both available windows comfortably support S=16 sub-periods with a defensible number of observations each -- CANONICAL_2023_2025: n_days=539, ~33.7 obs/sub-period; FULL_2022_2026: n_days=1184, ~74.0 obs/sub-period. C(16,8)=12,870 combinations is computationally trivial either way. The blocking constraints are Reasons 1-2 (candidate count and diversity), not data length -- stated explicitly so this assessment is not read as 'insufficient data' when the real issue is 'insufficient/insufficiently-varied candidates.'",
+          "severity": "not_blocking"
+        }
+      ],
+      "conclusion": "PBO is judged NOT DEFENSIBLE on the VolMult-grid family. Per campaign directive sec64's own explicit instruction ('if the assumptions are poor, report that limitation explicitly rather than outputting a falsely precise PBO number just because code can calculate one'), no CSCV is run and no PBO percentage is reported anywhere in this output. Two independent, individually-sufficient reasons block it: (1) N=6 behaviorally-distinct candidates gives CSCV's rank statistic only 6 possible support values -- too coarse for the method's own designed resolution; (2) those 6 candidates are, by the campaign's own already-computed participation ratio, nearly collinear (PR=1.015-1.070 out of a max of 7) -- the family was a density probe around one incumbent, not a search over meaningfully different strategies, so a CSCV estimate on it would not measure a real selection-induced overfitting risk. Sub-period length (S=16) is explicitly NOT the constraint -- both candidate windows have ample daily observations for S=16. This is a candidate-diversity problem, not a data-length problem, and is reported as such rather than blurred into one generic 'not enough data' excuse."
+    }
+  },
+  "spa": {
+    "has_natural_target": false,
+    "evidence": [
+      {
+        "source": "research/system_master/SIMPLE01_MINIMUM_SYSTEM/REPORT.md",
+        "line_ref": "line 12 (headline) and Sec 8.3 (final, post-completion-pass verdict table)",
+        "quote": "zero rungs pass, for either product.",
+        "reading": "SIMPLE01 tested whether SIMPLER rungs (fewer modules) were NON-INFERIOR to the existing FULL incumbents -- a non-inferiority framing, not a superiority claim. Zero of 5 rungs (A0, A1, A2, B0, B1) passed the full preregistered margin set, even after a completion pass added the previously-missing trade-level retention leg (Sec 8.3: 'Zero rungs pass overall... with every gap closed'). No rung was ever adjudicated as an apparently superior alternative to its incumbent; several rungs cleared INDIVIDUAL margins (e.g. A1's Sharpe non-inferiority, B1's day-leg retention) but the adjudicator explicitly rejects reading any partial-margin PASS as a promotion signal (Sec 8.4: 'passing this (or any) non-inferiority ladder does not auto-promote anything')."
+      },
+      {
+        "source": "research/system_master/GRID01_SOLAR_RESOLUTION_CONVERGENCE/REPORT.md",
+        "line_ref": "lines 3-5, 105-108",
+        "quote": "Diagnostic-only sweep ... No winner is selected. No candidate is promoted or frozen. ... G49's underperformance is reported as a diagnostic observation about value-sensitivity, not as a [selection signal]",
+        "reading": "A resolution-density sweep (G7/G13/G25/G49) around the incumbent, explicitly preregistered and concluded as diagnostic-only. No config is ever framed as an apparently superior alternative to the G13 incumbent."
+      },
+      {
+        "source": "research/system_master/GRID02_ENDPOINT_PERTURBATION/REPORT.md",
+        "line_ref": "lines 75-90",
+        "quote": "Both disclosed neighbors of [6,30] ([5,29] and [7,31]) match or beat the center on both products in both windows ... without treating either neighbor's outperformance as a signal to re-optimize endpoints, which is out of scope for this diagnostic task. ... No winner is selected. No candidate is promoted or frozen.",
+        "reading": "This is the one place in the reviewed set where a numeric 'outperformance' is even written down -- and the report itself explicitly refuses to treat it as a superiority claim, calling a three-point comparison 'far too coarse to support such a decision even if it were in scope.' There is no adjudicated apparently-superior candidate here to feed an SPA test."
+      },
+      {
+        "source": "research/system_master/PERT01_STRUCTURAL_INVARIANCE/REPORT.md",
+        "line_ref": "lines 3-5, 118-119",
+        "quote": "Diagnostic-only one-at-a-time (OAT) perturbation study ... No winner is selected. No candidate is promoted or frozen. No parameter value in this study -- incumbent or perturbed -- is being recommended for adoption.",
+        "reading": "Same pattern: three structural axes perturbed one-at-a-time, explicitly diagnostic, explicitly no candidate ever adjudicated superior."
+      }
+    ],
+    "conclusion": "SPA has NO natural application in this pass of the campaign. Hansen's SPA test (and White's Reality Check before it) answers a specific question: 'this ONE alternative appears to beat this ONE benchmark -- does that survive once I account for having searched over many alternatives to find it?' That question presupposes an adjudicated apparently-superior alternative. Reviewing the four candidate-generating exercises in this wave (GRID01, GRID02, PERT01, SIMPLE01) against their own final adjudications: SIMPLE01's own headline is 'zero rungs pass, for either product' (a non-inferiority test, and even on that weaker bar nothing cleared it); GRID01/GRID02/PERT01 are each self-adjudicated as diagnostic-only with an explicit, restated 'no winner is selected, no candidate is promoted' conclusion, including the one case (GRID02) where a raw number nominally 'outperforms' the incumbent -- a case the report's own authors declined to read as a superiority claim. Per campaign directive sec65's own explicit instruction, this task does not manufacture an artificial 'apparently superior candidate' in order to have something to run SPA against and get a p-value. No SPA is computed. If a future task DOES produce a genuinely adjudicated apparently-superior candidate against a stated benchmark, SPA would be the right tool to reach for then, not retrofitted onto this wave's diagnostic-only results."
+  },
+  "governance_restatement_sec66": "This task does not claim to restore lost preregistration, and does not claim that withholding a PBO number 'solves' the campaign's selection-bias exposure. It reports one honest methodological finding (this family is unsuitable for CSCV) and one honest scoping finding (SPA has no candidate to test against in this pass) -- nothing more."
+}

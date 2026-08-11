@@ -1,0 +1,21 @@
+section,item,value,note
+pbo,family,VolMult-grid (GRID01 G7/G13/G25/G49 + GRID02 endpoint_5_29/6_30/7_31),
+pbo,n_raw,7,
+pbo,n_unique_behaviorally_distinct,6,"HASH01 Level 2/3/4 dedup, reused verbatim"
+pbo,participation_ratio_productA,1.0151,"out of max 7, HASH01 reused verbatim"
+pbo,participation_ratio_productB,1.0699,"out of max 7, HASH01 reused verbatim"
+pbo,pairwise_corr_median_ProductA_excl_duplicate,0.9907,"n_pairs=15, range=[0.9857,0.9952]"
+pbo,pairwise_corr_median_ProductB_excl_duplicate,0.9535,"n_pairs=15, range=[0.9296,0.9777]"
+pbo,subperiod_feasibility_CANONICAL_2023_2025,33.7,"n_days=539, S=16, adequate_length=True"
+pbo,subperiod_feasibility_FULL_2022_2026,74.0,"n_days=1184, S=16, adequate_length=True"
+pbo_reason,candidate count / CSCV rank resolution,blocking,"N_raw=7, N_unique_behaviorally_distinct=6 (HASH01 Level 2/3/4 all agree on exactly one exact-duplicate pair: GRID02 endpoint_6_30 == GRID01 G13, same raw vms tuple). CSCV's rank statistic (logit of relative out-of-sample rank of the in-sample-best candidate among N) has at most N possible support va"
+pbo_reason,cross-sectional diversity (participation ratio + pairwise correlation),blocking,"HASH01's own eigenvalue participation ratio over the full 7x7 daily-P&L correlation matrix: PR_ProductA=1.0151, PR_ProductB=1.0699, out of a maximum possible 7 (all series orthogonal) and a minimum of 1 (all series identical). Restricted to the 6 behaviorally-distinct configs only (dropping the triv"
+pbo_reason,was a real backtest-selection process ever run on this family,supporting,GRID01_SOLAR_RESOLUTION_CONVERGENCE/REPORT.md and GRID02_ENDPOINT_PERTURBATION/REPORT.md both preregister and both restate at their conclusion: 'No winner is selected. No candidate is promoted or frozen.' GRID02's report explicitly notes two of its three configs numerically 'outperforming' the incum
+pbo_reason,sub-period partition length (S=16),not_blocking,"NOT a blocking constraint, disclosed for completeness: both available windows comfortably support S=16 sub-periods with a defensible number of observations each -- CANONICAL_2023_2025: n_days=539, ~33.7 obs/sub-period; FULL_2022_2026: n_days=1184, ~74.0 obs/sub-period. C(16,8)=12,870 combinations is"
+pbo,VERDICT,NOT_DEFENSIBLE,"pbo.computed=False, pbo.value=None -- no CSCV run, see JSON for full reasoning"
+spa,has_natural_target,False,
+spa_evidence,research/system_master/SIMPLE01_MINIMUM_SYSTEM/REPORT.md,"line 12 (headline) and Sec 8.3 (final, post-completion-pass verdict table)","zero rungs pass, for either product."
+spa_evidence,research/system_master/GRID01_SOLAR_RESOLUTION_CONVERGENCE/REPORT.md,"lines 3-5, 105-108","Diagnostic-only sweep ... No winner is selected. No candidate is promoted or frozen. ... G49's underperformance is reported as a diagnostic observation about value-sensitivity, not as a [selection signal]"
+spa_evidence,research/system_master/GRID02_ENDPOINT_PERTURBATION/REPORT.md,lines 75-90,"Both disclosed neighbors of [6,30] ([5,29] and [7,31]) match or beat the center on both products in both windows ... without treating either neighbor's outperformance as a signal to re-optimize endpoints, which is out of scope for this diagnostic task. ... No winner is selected. No candidate is prom"
+spa_evidence,research/system_master/PERT01_STRUCTURAL_INVARIANCE/REPORT.md,"lines 3-5, 118-119",Diagnostic-only one-at-a-time (OAT) perturbation study ... No winner is selected. No candidate is promoted or frozen. No parameter value in this study -- incumbent or perturbed -- is being recommended for adoption.
+spa,VERDICT,NO_NATURAL_TARGET,"spa_run=False -- no SPA computed, see JSON for full reasoning"
