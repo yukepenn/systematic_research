@@ -7,9 +7,34 @@ Read this before starting any new research wave. Kept short on purpose — see
 CURRENT MODE: RESEARCH
 ```
 
-> **UPDATE 2026-08-10 (latest) — Post-structural-invariance master directive, wave 1: governance
-> infra shipped, EQV04 + B1 built and compiled (both owner-gated on one F5 press), ACTIONMAP01
-> running.** Full queue: `research/system_master/ACTIVE_RESEARCH_QUEUE.md`. **P0 governance:**
+> **UPDATE 2026-08-11 (latest) — Post-structural-invariance master directive, wave 1 CLOSED; DOM01
+> collecting; QC/governance/timezone infra shipped.** Full queue:
+> `research/system_master/ACTIVE_RESEARCH_QUEUE.md`. **P0 governance** unchanged (below).
+> **P1 EQV04: PASS, bit-identical** — the owner's F5 unblocked the actual NT8 backtest; all three
+> canonical/incumbent object pairs match trades and net P&L to the cent on two windows, Product A
+> additionally bit-identical bar-by-bar across 165,861 bars
+> (`runs/EQV04_NT8_CANONICAL_PARITY/REPORT.md`). **P2 B1: implementation-certified** — the NT8 B1
+> objects diverge from the incumbent only and exactly where the one-line `mm`-forced-to-1.0 change
+> predicts; does not re-adjudicate B1's frozen historical verdict, still INCONCLUSIVE on Sharpe
+> (`runs/B1_NT8_IMPLEMENTATION_PARITY/REPORT.md`). **P3 ACTIONMAP01: CLOSED,
+> CLEAN_INFORMATION_STATE / NO_CURRENT_ACTION_MAPPING** — no add/hold/reduce action space exists
+> to decompose in the substrate (no size term, a definitional identity, not an empirical failure);
+> Auction M5's own univariate finding is preserved unchanged for future DOM interaction, Auction is
+> not retuned (`runs/ACTIONMAP01_AUCTION_ACTION_VALUE/REPORT.md`). **DOM01: collecting real Level-II
+> data** since 2026-08-11 (owner completed all 5 start steps; verified via
+> `DataConnectionDisableL2Data=False`, live Tradovate connection, real depth rows flowing). This
+> same wave also shipped `runs/DOM01_LIQUIDITY_STATE/collector/qc/dom01_qc_monitor.py` (integrity/
+> feed QC only, zero outcome computation), `research_sdk/session_boundary.py` (canonical
+> timezone-aware NT8 window boundaries, fixing the DST-offset error class that nearly touched
+> `LOCKED_FORWARD.md` during EQV04's smoke test), and `research/data_forward_sealed/DOM01/
+> DOM01_PROSPECTIVE_PROTOCOL.md` + `DOM01_DATA_GOVERNANCE.md` (one frozen DOM mechanism spec, no
+> outcome analysis run yet; data stays `SEALED_FORWARD` until explicit owner authorization even
+> once QC/sample-size readiness is met). **Zero incumbent code changed. Zero alpha promotions
+> this wave.** Core frozen, B1 frozen, protected evidence untouched, DOM accumulating.
+>
+> **UPDATE 2026-08-10 (superseded above) — Post-structural-invariance master directive, wave 1:
+> governance infra shipped, EQV04 + B1 built and compiled (both owner-gated on one F5 press),
+> ACTIONMAP01 running.** **P0 governance:**
 > `research_sdk/prereg_guard.py` now mechanically enforces "spec commit precedes result commit"
 > (prospective gate + retrospective git-forensic audit mode), self-tested against real campaign
 > history, closing the gap HASH01 found in the previous wave. **P1 EQV04:** the three research-only

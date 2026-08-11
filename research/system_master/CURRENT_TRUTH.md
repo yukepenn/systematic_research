@@ -1,5 +1,45 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+## SNAPSHOT UPDATE (2026-08-11, post-structural-invariance wave 1 CLOSED; DOM01 collecting)
+
+**Supersedes every section below for anything it touches.** Full detail:
+`research/system_master/ACTIVE_RESEARCH_QUEUE.md`, `RESEARCH_HANDOFF.md` (repo root).
+
+- **EQV04 (NT8 canonical-object executable parity): PASS, bit-identical.** All three
+  canonical/incumbent object pairs match trades and net P&L to the cent, two windows; Product A
+  additionally bit-identical bar-by-bar across 165,861 bars. Specification finding only — incumbent
+  files unchanged. `runs/EQV04_NT8_CANONICAL_PARITY/REPORT.md`.
+- **B1 (frozen SIMPLE01 challenger, NT8 implementation): implementation-certified**, still frozen
+  pending genuinely new confirmation. Diverges from the incumbent only and exactly where the
+  one-line `mm`-forced-to-1.0 change predicts. Does **not** change B1's historical verdict (still
+  INCONCLUSIVE on Sharpe) or open protected/locked-forward data.
+  `runs/B1_NT8_IMPLEMENTATION_PARITY/REPORT.md`.
+- **ACTIONMAP01 (Auction M5 action-value decomposition): CLOSED, CLEAN_INFORMATION_STATE /
+  NO_CURRENT_ACTION_MAPPING.** No add/hold/reduce action space exists to decompose in this
+  substrate — a definitional identity (no size term anywhere in the substrate), not an empirical
+  failure. Auction is not retuned; M5's own univariate finding is preserved, unchanged, for future
+  DOM interaction (sec146). `runs/ACTIONMAP01_AUCTION_ACTION_VALUE/REPORT.md`.
+- **DOM01: genuinely collecting real Level-II depth** since 2026-08-11 (owner completed all 5
+  start steps; `DataConnectionDisableL2Data=False`, live Tradovate connection verified, not
+  Simulation). Not yet cleared for research use — see governance below.
+- **New engineering infrastructure this wave**: `runs/DOM01_LIQUIDITY_STATE/collector/qc/
+  dom01_qc_monitor.py` (feed/collection integrity QC only — file presence, timestamp
+  monotonicity, malformed rows, crossed/locked-book incidence, heartbeat cadence, checksums; zero
+  outcome/predictive computation); `research_sdk/session_boundary.py` (canonical
+  `zoneinfo`-based timezone-aware NT8 window-boundary utility, replacing hand-picked seasonal UTC
+  offsets — fixes the process-error class behind a near-miss during EQV04's smoke test where the
+  wrong DST-season offset was used and only the CME weekend gap prevented an actual
+  `LOCKED_FORWARD.md` boundary read); `research/data_forward_sealed/DOM01/
+  DOM01_PROSPECTIVE_PROTOCOL.md` + `DOM01_DATA_GOVERNANCE.md` (exactly one DOM mechanism frozen —
+  opposite-side depth withdrawal / adverse-selection quote-fade — with the full required
+  preregistration template; zero DOM sessions read for any outcome purpose; data stays
+  `SEALED_FORWARD` even once QC/sample-size readiness is met, pending explicit owner
+  authorization, since `LOCKED_FORWARD.md` predates DOM01 and is read conservatively rather than
+  as silent permission).
+- **Zero incumbent code changed. Zero alpha promotions this wave.** Current honest state: core
+  frozen, B1 frozen, protected evidence untouched, DOM accumulating, waiting for independent
+  evidence — not a stall, the correct state per this wave's own owner directive.
+
 ## SNAPSHOT UPDATE (2026-08-09, SYSTEM ARCHITECTURE SCIENCE + ALPHA OPTIMIZATION campaign CLOSED)
 
 **Supersedes the snapshot below for anything it touches.** The post-parity research campaign
