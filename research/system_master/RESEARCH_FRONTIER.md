@@ -87,6 +87,30 @@ promotions or not. Wave 1 (U0/U2/H0/U1/U3/U4/U5/U6/U7) is CLOSED with zero promo
 Product A and Product B baselines remain UNCHANGED. See `research/system_master/
 CONTINUOUS_EVOLUTION_WAVE1_SYNTHESIS.md` for the EVI ranking of what's next.
 
+## [ADDENDUM 2026-08-10] Structural-invariance / minimum-system campaign CLOSED
+
+A separate, later campaign (canonicalization + minimum-system + causal falsification + selection-
+robustness) ran and closed same-day. Full synthesis: `research/system_master/
+STRUCTURAL_INVARIANCE_MINIMUM_SYSTEM_SYNTHESIS.md`. Splitting incumbent structural science from the
+new-information frontier per this file's own convention:
+
+**Incumbent structural science (this addendum's scope) — CLOSED:** Product A/B canonicalization
+proven exactly equivalent (thin margin for A, robust for B); Solar-resolution/endpoint robustness
+confirmed (no cliffs) but VolPeriod/BAND_DAYS show real window-dependence; causal placebo tests
+found HTF underperforms its own randomized-chronology null for both products (the weakest-evidenced
+component this campaign); a blind-adjudicated minimum-system ladder certified zero simplifications,
+with HTF-removal (Product B) isolated to one statistically inconclusive Sharpe margin; trial-count
+bracket updated to 499-653; selection-adjusted Sharpe (Bonferroni haircut) stays at 0.000 at the
+wider bracket. Zero incumbent code changed. HTF is flagged as the clearest lead for a future,
+better-powered re-test — not actioned in this campaign per its own no-optimize-in-the-same-campaign
+rule.
+
+**New-information frontier (unchanged by this addendum, see the AUCTION/DOM sections elsewhere in
+this repo's Wave 5 and later synthesis docs):** Auction mechanism research (weak-but-real, not
+policy-ready), DOM01 forward Level-II collection (built, owner action pending), options/dealer-gamma
+(deferred), genuinely mechanistic cross-market states (not authorized without a specific
+motivating mechanism). This structural campaign did not touch or resolve any of these.
+
 ## Standing constraints (do not re-litigate)
 
 - Incumbents (`SolarWaveSMMaster_v4`, `SolarWaveOneContractNQ_v5`, `SolarWaveOneContractMNQ_v5`)

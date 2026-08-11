@@ -7,7 +7,39 @@ Read this before starting any new research wave. Kept short on purpose — see
 CURRENT MODE: RESEARCH
 ```
 
-> **UPDATE 2026-08-10 (latest) — AUCTION03 mechanism decomposition CLOSED, no promotion.** Per
+> **UPDATE 2026-08-10 (latest) — Structural-invariance / minimum-system campaign CLOSED, zero
+> promotions.** Full synthesis: `research/system_master/
+> STRUCTURAL_INVARIANCE_MINIMUM_SYSTEM_SYNTHESIS.md`. Per the owner's directive, this campaign
+> actively tried to break the incumbent rather than search for a better one. Headline results:
+> **canonicalization (EQV01-03)** — the owner's proposed simplified equations are exactly
+> equivalent to the incumbent decoders over the complete reachable state space and the full
+> historical record, for both products (Product A's margin is real but thin; Product B's is
+> robust) — a specification finding, not an alpha change, incumbent files unchanged.
+> **Structural robustness (GRID01/GRID02/PERT01)** — no cliffs, broad scale band monetized, but
+> `VolPeriod` sits on a monotonic slope (not a peak) and `BAND_DAYS` flips between local peak and
+> valley depending on the reporting window. **Causal falsification (PLACEBO01)** — the most
+> consequential finding: HTF's real marginal contribution sits *below* its own randomized-
+> chronology null's median for **both** products, while B-MOM (real tail/drawdown value,
+> unconfirmed net value) and hysteresis (directionally favorable) fare better. **Minimum-system
+> ladder (SIMPLE01, blind-adjudicated)** — zero simplifications certified for either product, but
+> Product B's HTF-removal candidate clears every frozen margin except one statistically
+> underpowered (not economically failing) Sharpe read — the cleanest "near miss" this campaign's
+> methodology can produce, directly coherent with the placebo finding above. **Trial-count/
+> selection robustness (HASH01/STAT01)** — honest trial bracket updated to 499-653 sessions;
+> selection-adjusted Sharpe (Bonferroni haircut) stays at 0.000 at the wider bracket, unchanged
+> from before. HASH01's own audit also found this session's *own* work lacks git-verifiable
+> preregistration (spec+results same-commit) — documented additively in `REGISTRY_GAP_NOTE.md`,
+> practice changed prospectively. **Execution proof (EXEC01)** — Product A's execution parity is
+> now leg-verified to zero unexplained dollars (97.8% of the +10.91% residual explained),
+> closing a standing open item. **Auction (AUCTION04)** — a clean, causality-re-audited substrate
+> confirms the incumbent-action-value finding (real signal) but downgrades the reversion finding
+> below the cost hurdle once correctly unit-scaled; also found and corrected a prior claim that
+> `poc_price` was "exactly causal" (it wasn't, rarely). **Zero incumbent code changed anywhere.**
+> HTF is flagged as the clearest lead for a future, better-powered re-test — not acted on in this
+> campaign, per its own no-optimize-in-the-same-wave rule. EQV04 (NT8 canonical parity) is cleared
+> but not attempted; DOM01 is unchanged, one owner action pending.
+>
+> **UPDATE 2026-08-10 — AUCTION03 mechanism decomposition CLOSED, no promotion.** Per
 > the owner's next-phase directive, ran the bounded M1-M5 Auction mechanism slate on
 > already-consumed data only (37 discovery + up to 8 W5-confirmation sessions; no new AMENDMENT_3
 > sessions opened — see `research/system_master/PROTECTED_EVIDENCE_BUDGET.md`, machine-truth-
