@@ -47,6 +47,28 @@ against two real commits from this campaign's own history: a clean pass
 (SIMPLE01 completion pass, `6ffe82d` → `e5e03bf`) and a known same-commit violation
 (AUCTION04, `fcaae6c`).
 
+## session_boundary.py
+
+Canonical timezone-aware boundary utility for CME index-future data windows, replacing
+hand-picked seasonal UTC offsets (`CLAUDE.md`'s "22:59:59Z EST / 21:59:59Z EDT" convention)
+with `zoneinfo`-based `America/New_York` localization. Built after a real near-miss on
+2026-08-11 (`runs/EQV04_NT8_CANONICAL_PARITY/REPORT.md`): a smoke-test window used the
+EST-season offset on an EDT-season date, and only the CME Friday-to-Sunday weekly gap
+prevented an actual `LOCKED_FORWARD.md` boundary read. There is no seasonal branch in this
+module for a caller to get wrong.
+
+```python
+from research_sdk.session_boundary import authorized_backtest_window, BoundaryError
+
+# Raises BoundaryError BEFORE any data is read if the window would cross
+# LOCKED_FORWARD.md's boundary (default) or a narrower explicit one.
+window = authorized_backtest_window(first_session_date, last_session_date)
+# window.from_utc_iso / window.to_utc_iso are ready for RunStrategyBacktest's from/to.
+```
+
+Run `python research_sdk/test_session_boundary.py` for the DST spring/fall transition,
+ordinary-season, locked-forward-boundary, and early-close-session tests.
+
 ## Run classes
 
 `ENGINEERING_ONLY`, `AUDIT`, `DIAGNOSTIC`, `EXPLORATORY_DISCOVERY`,
