@@ -1,7 +1,9 @@
 > **⚠️ This is the ORIGINAL campaign's audit handoff (2026-08-07), not a live resume point.**
-> For the current campaign's exact resume state see
-> **`research/system_master/NEXT_HANDOFF.md`** (same filename, different campaign — easy to
-> open the wrong one). Repo orientation: **[`MAP.md`](MAP.md)**.
+> Renamed 2026-08-11 from `NEXT_HANDOFF.md` to remove a filename collision with campaign #3's own
+> (former) `research/system_master/NEXT_HANDOFF.md` — that file has since been archived too (see
+> `research/system_master/_archive/README.md`). For current state, see
+> **`research/system_master/CURRENT_TRUTH.md`** and **`research/system_master/
+> ACTIVE_RESEARCH_QUEUE.md`**. Repo orientation: **[`MAP.md`](MAP.md)**.
 
 # NEXT_HANDOFF — POST_CAMPAIGN_AUDIT_01 + post-audit waves complete; CONVERGENCE
 

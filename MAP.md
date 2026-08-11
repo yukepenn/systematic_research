@@ -29,12 +29,16 @@ before starting). The rest of this file is deeper structural orientation, not a 
 the repo guaranteed not to lag behind the actual state of the research. Everything else —
 including this file — can go stale; that one is append-only and current by construction.
 
-Two filename collisions to know about, both intentional (different campaigns, not a mistake):
-`NEXT_HANDOFF.md` exists at repo root (campaign #1/#2, closed) **and** inside
-`research/system_master/` (campaign #3, live) — open the one under `system_master/` for a
-resume point. `frontier.yaml`/`FRONTIER.yaml`/`SYSTEM_FRONTIER.yaml` exist under `research/`,
+One filename collision to know about (fixed 2026-08-11 — was previously two files both named
+`NEXT_HANDOFF.md`, root and `research/system_master/`, "easy to open the wrong one"): the
+root-level one is now named `NEXT_HANDOFF_CAMPAIGN1_CLOSED.md` to make the distinction
+unambiguous. For a live resume point, use `research/system_master/NEXT_HANDOFF.md` — that one is
+also now archived (superseded by `FINAL_OWNER_DECISION_20260809.md`/`CURRENT_TRUTH.md`, see
+`research/system_master/_archive/README.md`), so in practice neither `NEXT_HANDOFF*` file is the
+current resume point anymore; use `CURRENT_TRUTH.md` and `ACTIVE_RESEARCH_QUEUE.md` instead.
+`frontier.yaml`/`FRONTIER.yaml`/`SYSTEM_FRONTIER.yaml` exist under `research/`,
 `research/scalping_lab/`, and `research/system_master/` respectively — one machine-readable
-frontier per campaign, not three copies of the same thing.
+frontier per campaign, not three copies of the same thing (this one remains intentional).
 
 ## Top-level layout
 
@@ -44,7 +48,7 @@ README.md          Whole-repo landing page (rewritten 2026-08-09 — current sys
 BASELINE_MODELS.md  THE canonical record of the 3 current objects (moved to root 2026-08-09)
 RESEARCH_HANDOFF.md What a new research wave should read before starting (added 2026-08-09)
 MAP.md             This file.
-NEXT_HANDOFF.md     Campaign #1/#2's resume state (closed; banner added)
+NEXT_HANDOFF_CAMPAIGN1_CLOSED.md  Campaign #1/#2's resume state (closed; renamed 2026-08-11, was NEXT_HANDOFF.md)
 research/           All research content — see below (includes SOLAR_WAVE_CAMPAIGN_README.md,
                      campaign #1's own entry point, moved from root 2026-08-09)
 runs/                Immutable experiment directories: spec.yaml (frozen before results) + out/
@@ -122,7 +126,26 @@ Removed (zero content, zero evidence lost): 7 empty placeholder directories
 (`research/03_timeframes_parameters/`, `05_portfolio/`, `06_locked_forward/`, `src/ninja/`,
 `src/research/`, and two empty run-output subfolders) and all stray `__pycache__`/`.pyc` build
 artifacts (already gitignored, regenerable, never tracked). Added orientation banners (additive
-only, zero content removed) to `README.md`, `NEXT_HANDOFF.md` (root), `RESEARCH_INDEX.md`, and
-`scalping_lab/reports/LATEST.md` where they were silently stale. Did **not** move, rename, or
-delete any run directory, spec, report, registry row, or raw data file — the "never delete raw
-research evidence" rule in `CLAUDE.md` is absolute and was treated as such throughout.
+only, zero content removed) to `README.md`, `NEXT_HANDOFF.md` (root, since renamed — see below),
+`RESEARCH_INDEX.md`, and `scalping_lab/reports/LATEST.md` where they were silently stale. Did
+**not** move, rename, or delete any run directory, spec, report, registry row, or raw data file —
+the "never delete raw research evidence" rule in `CLAUDE.md` is absolute and was treated as such
+throughout.
+
+## Housekeeping done 2026-08-11 (this pass)
+
+A 6-zone read-only audit Workflow (system_master top-level docs, system_master run
+subdirectories, `runs/`, `scalping_lab/`, other closed-campaign `research/` trees, `src/`+
+`reports/`+root docs — ~2,800+ files reviewed) found **zero delete-worthy junk** anywhere — the
+evidence layer (`runs/`, every campaign's experiment subdirectories) was already clean and stayed
+untouched. All findings were top-level meta-documentation sprawl: 23 superseded docs moved from
+`research/system_master/` into `research/system_master/_archive/` (index + reasoning per file in
+that folder's own `README.md`), plus `reports/OWNER_STATUS.html` (a stale campaign-#3 dashboard
+that had ended up inside campaign-#1's otherwise internally consistent closed package) moved to
+`reports/_archive/`. Every move is a plain `git mv` — zero content edits, full git history
+preserved. Also fixed the filename collision flagged above: root `NEXT_HANDOFF.md` renamed to
+`NEXT_HANDOFF_CAMPAIGN1_CLOSED.md` (its own research/system_master sibling was itself one of the
+23 archived — neither `NEXT_HANDOFF*` file is a live resume point anymore; use `CURRENT_TRUTH.md`
+and `ACTIVE_RESEARCH_QUEUE.md`). Purged 27 gitignored, untracked `__pycache__` directories from
+disk (948K, zero git footprint). No run directory, spec, report, registry row, or raw data file
+was moved, renamed, or deleted.
