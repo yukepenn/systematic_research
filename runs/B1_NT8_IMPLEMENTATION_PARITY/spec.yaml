@@ -1,0 +1,42 @@
+run_id: B1_NT8_IMPLEMENTATION_PARITY
+run_class: ENGINEERING_ONLY   # zero alpha budget, per master directive sec8/20 -- implementation
+                              # certification only, explicitly NOT a re-adjudication of B1's
+                              # historical verdict (still INCONCLUSIVE on the Sharpe margin per
+                              # SIMPLE01's completion pass, commit e5e03bf -- unchanged by this run)
+date: 2026-08-11
+hypothesis: >
+  SolarWaveOneContractNQ_B1_v1.cs / SolarWaveOneContractMNQ_B1_v1.cs (committed 2026-08-10,
+  commit 12341ab) correctly implement the frozen SIMPLE01 B1 rung (mm forced to 1.0, bmomPos
+  real, one-line diff from each incumbent v5 file) inside the real NT8 engine.
+
+primary_comparison: >
+  NT8 B1 vs NT8 incumbent v5, SAME instrument/window/engine, real Strategy Analyzer both sides
+  -- unambiguous, no cross-engine convention differences. Expect: on bars where the incumbent's
+  real mm was already 1.0 (i.e. tiltState==0, or sumNext==0, or sign(sumNext)!=tiltState), B1's
+  and the incumbent's Tp/M/target/fills should match exactly. Divergence should occur ONLY on
+  bars where the incumbent's real mm was 1.25 (tiltState agreed with sumNext's sign) -- this is
+  the one-line change's entire footprint, and is directly checkable via each object's execution
+  fills ledger (ExportDir/Tag params, already built into both objects).
+
+secondary_comparison: >
+  Rough magnitude/direction sanity check only (NOT a strict pass/fail) against SIMPLE01's own
+  Python-computed B1 daily P&L (research/system_master/SIMPLE01_MINIMUM_SYSTEM/out/
+  daily_pnl_B1_base_cost_full_history_through_20260731.csv). Two disclosed sources of expected
+  non-exact-match: (a) that file does not specify whether it represents the NQ or MNQ contract
+  size, or points/no-instrument-scaling -- ambiguous, not reconciled here; (b) Python
+  (src/analytics simulator conventions) and NT8's Strategy Analyzer use different fill-timing/
+  slippage models even at matched cost settings. Any large directional or sign disagreement
+  would be investigated; a magnitude difference consistent with (a)/(b) would not be.
+
+window: >
+  Smoke test first (short window, both objects resolve/run cleanly), matching
+  EQV04_NT8_CANONICAL_PARITY's window choice for consistency; expand only if useful. Does not
+  touch research/operational/LOCKED_FORWARD.md's >=2026-08-01 boundary.
+
+verdict_rule: >
+  PASS (implementation-certified) only if the primary NT8-vs-NT8 comparison shows exact
+  agreement on every bar where mm's real value was already 1.0, with all divergence explained
+  by bars where mm was 1.25. Does NOT change B1's frozen historical verdict (still blocked on
+  one INCONCLUSIVE Sharpe read) and does NOT authorize opening any protected/locked-forward
+  data -- per B1_FUTURE_CONFIRMATION_SPEC.md, that remains a separate, later, explicitly-gated
+  step.

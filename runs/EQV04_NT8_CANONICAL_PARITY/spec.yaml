@@ -1,0 +1,53 @@
+run_id: EQV04_NT8_CANONICAL_PARITY
+run_class: ENGINEERING_ONLY   # zero alpha budget, per master directive sec8/12 -- executable
+                              # canonicalization proof, not a new signal or parameter search
+date: 2026-08-11
+hypothesis: >
+  The three canonical NinjaScript objects built and committed 2026-08-10 (commit 89840f0)
+  are EXECUTABLE-behaviorally identical to their incumbent counterparts, closing the one
+  remaining gap after EQV01 (finite-state), EQV02 (full-history array equality, Python),
+  EQV03 (PnL equality, Python) -- all three already certified EXACT_EQUIVALENCE. This is the
+  first test of the ACTUAL compiled .cs objects (not their Python re-implementations) inside
+  the real NT8 Strategy Analyzer engine.
+
+candidates:
+  - incumbent: SolarWaveSMMaster_v4
+    canonical: SolarWaveSMMaster_Canonical_v1
+    instrument: "NQ 09-26"
+  - incumbent: SolarWaveOneContractNQ_v5
+    canonical: SolarWaveOneContractNQ_Canonical_v1
+    instrument: "NQ 09-26"
+  - incumbent: SolarWaveOneContractMNQ_v5
+    canonical: SolarWaveOneContractMNQ_Canonical_v1
+    instrument: "NQ 09-26"   # signal primary; ExecInstrument=MNQ 09-26 set internally by each object's own default
+
+method: >
+  RunStrategyBacktest (NT8 Strategy Analyzer engine, via mcp__crosstrade__RunStrategyBacktest --
+  backtests run on NT8's isolated Backtest scratch account only, Sim101/live never touched).
+  Each incumbent/canonical pair run with identical instrument, bars_period (Minute, 3), from/to
+  window, fill/commission settings, and each object's OWN default parameters (the canonical
+  form uses different literal constants by design -- 0.73/4 vs KSolar=0.728654/KBmom=2.934159
+  for Product A; integer Q-space 5/1 thresholds vs EntryLevel=3.0/ExitLevel=1.0 for Product B --
+  EQV01 already proved these substitutions are behaviorally exact, so using each object's own
+  defaults IS the correct test, not a confound).
+
+  Comparison basis:
+    1. Net profit, trade count, win rate -- must match to the cent / exactly.
+    2. Bar-level internal-state export (ExportDir/Tag params, both objects' built-in diagnostic
+       CSV logger, already present in the incumbent and carried over unmodified in the
+       canonical twin): T, Tpp/Tp, bmomPos, target-raw, target-ops, physical-position,
+       tilt-state per bar -- compared row-by-row for exact equality, matching EQV02's own
+       full-history array-equality methodology but on the REAL compiled objects instead of a
+       Python re-implementation.
+
+window: >
+  Smoke test first (short window, confirm both objects resolve and run cleanly end-to-end)
+  then a longer representative window if the smoke test passes. Neither touches
+  research/operational/LOCKED_FORWARD.md's >=2026-08-01 boundary.
+
+verdict_rule: >
+  PASS only if net profit/trade count match exactly AND the bar-level CSV export is row-for-row
+  identical on every logged column. Any mismatch is investigated as a real discrepancy (not
+  waved through), consistent with EQV02/EQV03's own zero-tolerance standard. This is NOT an
+  alpha promotion regardless of outcome -- both incumbent files remain the sole source of truth
+  per CANONICAL_MATHEMATICAL_SPEC.md's own explicit statement.
