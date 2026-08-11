@@ -1,8 +1,26 @@
-# DOM01 forward-data vault — SEALED, not yet receiving data
+# DOM01 forward-data vault — SEALED, receiving data as of 2026-08-11
 
-**Status as of 2026-08-10: this directory is empty and no collector has ever run.** It is created
-now, ahead of collection start, purely to fix the destination path, schema contract, and
-governance rule before any bytes land here. See
+**UPDATE 2026-08-11: collection is live** (`runs/DOM01_LIQUIDITY_STATE/collector/out/`, one run
+in progress). Before any of it is read for research, see the two governance documents this update
+adds:
+
+- `DOM01_PROSPECTIVE_PROTOCOL.md` — the one frozen DOM mechanism (DOM-M1, opposite-side depth
+  withdrawal), full preregistration template, feed-semantics verification. No outcome analysis has
+  happened under it yet.
+- `DOM01_DATA_GOVERNANCE.md` — chronological data states (`ENGINEERING_BURNIN` ->
+  `SEALED_FORWARD` -> `PROSPECTIVE_DISCOVERY`/`PROTECTED_CONFIRMATION`), the readiness rule (QC
+  completion + structural incidence only, never observed effect size), and why reaching readiness
+  does not itself authorize a read.
+- QC monitor: `runs/DOM01_LIQUIDITY_STATE/collector/qc/dom01_qc_monitor.py` — run this against any
+  batch before it can even be proposed for promotion.
+
+Everything below this line predates live collection and is retained for history.
+
+---
+
+**Status as of 2026-08-10 (superseded above): this directory is empty and no collector has ever
+run.** It is created now, ahead of collection start, purely to fix the destination path, schema
+contract, and governance rule before any bytes land here. See
 `runs/DOM01_LIQUIDITY_STATE/collector/REPORT.md` and
 `runs/DOM01_LIQUIDITY_STATE/collector/DOM01_START_INSTRUCTIONS.md` for the collector build state
 and the exact remaining owner steps to start it.
