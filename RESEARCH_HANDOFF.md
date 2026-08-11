@@ -7,7 +7,27 @@ Read this before starting any new research wave. Kept short on purpose — see
 CURRENT MODE: RESEARCH
 ```
 
-> **UPDATE 2026-08-10 (latest) — Structural-invariance / minimum-system campaign CLOSED, zero
+> **UPDATE 2026-08-10 (latest) — Post-structural-invariance master directive, wave 1: governance
+> infra shipped, EQV04 + B1 built and compiled (both owner-gated on one F5 press), ACTIONMAP01
+> running.** Full queue: `research/system_master/ACTIVE_RESEARCH_QUEUE.md`. **P0 governance:**
+> `research_sdk/prereg_guard.py` now mechanically enforces "spec commit precedes result commit"
+> (prospective gate + retrospective git-forensic audit mode), self-tested against real campaign
+> history, closing the gap HASH01 found in the previous wave. **P1 EQV04:** the three research-only
+> canonical NinjaScript objects (`SolarWaveSMMaster_Canonical_v1`, `SolarWaveOneContractNQ/MNQ_
+> Canonical_v1`) are built as minimal, line-verified diffs from the incumbent files, compile clean
+> (0 errors), and are written into NT8's NinjaScript folder — but NT8 has not rebuilt
+> `NinjaTrader.Custom.dll` (`compile_engine=file_only`), so the actual parity backtest needs one
+> owner action: press F5 in the NinjaScript Editor (or restart NT8). **P2 B1:** the frozen SIMPLE01
+> B1 rung (Solar+B-MOM, HTF removed — a literal one-line diff from each incumbent Product B file)
+> is built the same way, same F5-pending state, plus `B1_FUTURE_CONFIRMATION_SPEC.md` is frozen and
+> committed *before* any future or protected-pool outcome for B1 was read — endpoints, cost model,
+> tail/concentration gates all reused verbatim from SIMPLE01's own margins, no data source opened.
+> **P3 ACTIONMAP01** (Auction M5 → add/hold/reduce action-value decomposition for Product A) is
+> running as a background multi-agent pipeline (diagnostic → blind SPEC freeze → mechanical
+> execution → synthesis) on consumed data only; no protected session opened. **Zero incumbent code
+> changed.** DOM01 unchanged, one owner action still pending (separate from the F5 step above).
+>
+> **UPDATE 2026-08-10 (prior) — Structural-invariance / minimum-system campaign CLOSED, zero
 > promotions.** Full synthesis: `research/system_master/
 > STRUCTURAL_INVARIANCE_MINIMUM_SYSTEM_SYNTHESIS.md`. Per the owner's directive, this campaign
 > actively tried to break the incumbent rather than search for a better one. Headline results:
