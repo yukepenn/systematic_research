@@ -1,0 +1,978 @@
+{
+  "task": "SIMPLE01 completion pass -- closes the trade-level retention gap and the Product-B DD-blob defect, per 03_SPEC_completion_pass_preregistration.md",
+  "role": "Mechanical completion of the already-frozen SIMPLE01 evaluation -- no new margin, window, threshold, or bootstrap; only fills a previously-missing leg and corrects a transcription defect, then re-applies the exact frozen promotion rule.",
+  "generated_utc": "2026-08-11T01:15:58.296637+00:00",
+  "spec_sources": [
+    "research/system_master/SIMPLE01_MINIMUM_SYSTEM/out/00_SPEC_candidate_manifest.md",
+    "research/system_master/SIMPLE01_MINIMUM_SYSTEM/out/01_SPEC_frozen_margins.md",
+    "research/system_master/SIMPLE01_MINIMUM_SYSTEM/out/02_SPEC_complexity_metric.md",
+    "research/system_master/SIMPLE01_MINIMUM_SYSTEM/out/03_SPEC_completion_pass_preregistration.md",
+    "research/system_master/CONVENTIONS.md",
+    "research/system_master/SIMPLE01_MINIMUM_SYSTEM/REPORT.md"
+  ],
+  "conventions_gate_6_verbatim": "6. HARD RIGHT-TAIL GATE for anything that modifies Solar exposure or exits: top-1% trade P&L retention >= 90% AND top-10 day retention >= 90% vs baseline; any state down-weighted below baseline must hold top-1% P&L share <= its session share.",
+  "preregistration_trade_definition_verbatim": "a trade = a maximal contiguous run of nonzero, same-signed position; its P&L = sum of bar_pnl over that run",
+  "preregistration_retention_formula_verbatim": "top-1% trade retention = (sum of P&L of the FULL reference's own top 1% of trades by P&L, restricted to trades that occur on the SAME dates in the candidate rung) / (sum of P&L of the FULL reference's top 1% of trades)",
+  "notes_on_gate_6_third_clause": "CONVENTIONS.md gate 6 has a third clause beyond the two retention legs: 'any state down-weighted below baseline must hold top-1% P&L share <= its session share.' Neither 01_SPEC_frozen_margins.md sec3.4 nor 03_SPEC_completion_pass_preregistration.md's Method section gives this clause a computable formula for SIMPLE01's ladder specifically -- and it does not have a natural, unambiguous referent here: gate 6's 'state' concept (per CONVENTIONS.md sec4's metric suite, 'for any Solar modification: top-1% trade retention, top-10 day retention, largest-winner table vs baseline') targets continuous down-weighting of individual Solar member states, whereas every SIMPLE01 rung either forces a whole component to a constant (mm=1.0, ss=1.0, bmomPos=0 -- i.e. a full module set to its neutral/ off value) or leaves it fully real -- there is no intermediate 'down-weighted' state on this ladder for the clause to apply to. This script therefore implements ONLY the two ratio-based legs (day retention, already computed by execution_productA.py/execution_productB.py; trade retention, computed here) as the operative margin 3.4, and discloses this reasoning rather than inventing an unspecified third computation.",
+  "top1pct_k_rule": "k = max(1, floor(0.01 * n_trades_FULL)) -- truncation, not rounding, matching the house CDaR convention's own truncation style (primary_objective.cdar_dollar: k = max(1, int((1-alpha)*len(dd)))). Neither CONVENTIONS.md gate 6 nor the preregistration specifies round-vs-floor-vs-ceil for the '1%' cutoff; this is the one implementation-level choice this script makes beyond what was frozen, and it is disclosed here rather than silently picked.",
+  "trade_definition_disclosure": "The literal frozen definition ('maximal contiguous run of nonzero, same-signed bar_pos') is used for the PRIMARY/decision-driving 'trade_level_retention' below. A material, disclosed property was found while implementing it: this substrate's execution loop books a closed position's exit fill (commission + adverse-tick realization) on the bar immediately AFTER bar_pos returns to 0 (signal evaluated on bar t, executed at bar t+1's open) -- so, taken literally, every trade's reconstructed P&L excludes its own exit cost (4-9% of each rung's dev-window net across the 7 rungs; see trade_pnl_sums_to_daily_total). This is a genuine property of the frozen rule applied to this substrate's actual bar-level fill timing, not a reconstruction bug (verified: sum of trade P&L plus the exit-inclusive robustness variant's absorbed leak == daily total exactly, all 7 rungs). A disclosed ROBUSTNESS variant ('trade_level_retention_robustness_exit_inclusive') additionally absorbs each trade's own deferred exit-fill bar (same session only, same trade boundaries/count/dates) and is reported alongside; see readjudication_5_non_reference_rungs[*].robustness_exit_inclusive_trade_definition for whether this changes any PASS/FAIL.",
+  "window_and_cost_level_used": "dev window (2022-01-01..2026-05-31, CONVENTIONS.md CURRENT / 01_SPEC_frozen_margins.md sec1.1 primary gating window), base cost (ticks=1) -- identical to the already-published day-leg retention convention (see integrity checks).",
+  "integrity_checks": {
+    "gate_A_FULL_bar_for_bar_vs_grid_core": true,
+    "gate_B_FULL_bar_for_bar_vs_grid_core": true,
+    "dev_net_A_FULL": 177924.3999999992,
+    "dev_net_A_FULL_matches_certified_177924_40": true,
+    "dev_net_B_FULL": 301915.91999998846,
+    "dev_net_B_FULL_matches_certified_301915_92": true,
+    "day_leg_cross_check_vs_raw_json": {
+      "A0": {
+        "recomputed_here": 0.901821623751828,
+        "published_in_raw_json": 0.901821623751828,
+        "match": true
+      },
+      "A1": {
+        "recomputed_here": 0.9018216237518295,
+        "published_in_raw_json": 0.9018216237518295,
+        "match": true
+      },
+      "A2": {
+        "recomputed_here": 0.999999999999999,
+        "published_in_raw_json": 0.999999999999999,
+        "match": true
+      },
+      "A_FULL": {
+        "recomputed_here": 1.0,
+        "published_in_raw_json": 1.0,
+        "match": true
+      },
+      "B0": {
+        "recomputed_here": 0.81306057460591,
+        "published_in_raw_json": 0.81306057460591,
+        "match": true
+      },
+      "B1": {
+        "recomputed_here": 0.9941108795990231,
+        "published_in_raw_json": 0.9941108795990231,
+        "match": true
+      },
+      "B_FULL": {
+        "recomputed_here": 1.0,
+        "published_in_raw_json": 1.0,
+        "match": true
+      }
+    },
+    "every_trade_single_session_date": {
+      "A0": true,
+      "A1": true,
+      "A2": true,
+      "A_FULL": true,
+      "B0": true,
+      "B1": true,
+      "B_FULL": true
+    },
+    "trade_pnl_sums_to_daily_total_literal_definition": {
+      "A0": {
+        "sum_of_trade_pnl_literal_definition": 159919.14999998742,
+        "sum_of_daily_pnl": 152561.19999999314,
+        "diff_daily_minus_trades": -7357.949999994278,
+        "match": false,
+        "note": "diff != 0 is EXPECTED under the literal frozen definition -- see comment above extract_trades(); the exit-inclusive robustness variant below recovers exact equality and is used to check the retention ratios are not sensitive to this."
+      },
+      "A1": {
+        "sum_of_trade_pnl_literal_definition": 166389.30000000302,
+        "sum_of_daily_pnl": 159789.1000000093,
+        "diff_daily_minus_trades": -6600.199999993725,
+        "match": false,
+        "note": "diff != 0 is EXPECTED under the literal frozen definition -- see comment above extract_trades(); the exit-inclusive robustness variant below recovers exact equality and is used to check the retention ratios are not sensitive to this."
+      },
+      "A2": {
+        "sum_of_trade_pnl_literal_definition": 177897.14999997517,
+        "sum_of_daily_pnl": 170696.4999999812,
+        "diff_daily_minus_trades": -7200.64999999397,
+        "match": false,
+        "note": "diff != 0 is EXPECTED under the literal frozen definition -- see comment above extract_trades(); the exit-inclusive robustness variant below recovers exact equality and is used to check the retention ratios are not sensitive to this."
+      },
+      "A_FULL": {
+        "sum_of_trade_pnl_literal_definition": 184372.24999999302,
+        "sum_of_daily_pnl": 177924.3999999992,
+        "diff_daily_minus_trades": -6447.849999993807,
+        "match": false,
+        "note": "diff != 0 is EXPECTED under the literal frozen definition -- see comment above extract_trades(); the exit-inclusive robustness variant below recovers exact equality and is used to check the retention ratios are not sensitive to this."
+      },
+      "B0": {
+        "sum_of_trade_pnl_literal_definition": 141995.59999998743,
+        "sum_of_daily_pnl": 130412.9999999933,
+        "diff_daily_minus_trades": -11582.599999994127,
+        "match": false,
+        "note": "diff != 0 is EXPECTED under the literal frozen definition -- see comment above extract_trades(); the exit-inclusive robustness variant below recovers exact equality and is used to check the retention ratios are not sensitive to this."
+      },
+      "B1": {
+        "sum_of_trade_pnl_literal_definition": 306932.199999976,
+        "sum_of_daily_pnl": 293626.91999998776,
+        "diff_daily_minus_trades": -13305.279999988212,
+        "match": false,
+        "note": "diff != 0 is EXPECTED under the literal frozen definition -- see comment above extract_trades(); the exit-inclusive robustness variant below recovers exact equality and is used to check the retention ratios are not sensitive to this."
+      },
+      "B_FULL": {
+        "sum_of_trade_pnl_literal_definition": 316071.119999976,
+        "sum_of_daily_pnl": 301915.91999998846,
+        "diff_daily_minus_trades": -14155.199999987555,
+        "match": false,
+        "note": "diff != 0 is EXPECTED under the literal frozen definition -- see comment above extract_trades(); the exit-inclusive robustness variant below recovers exact equality and is used to check the retention ratios are not sensitive to this."
+      }
+    },
+    "trade_pnl_sums_to_daily_total_exit_inclusive_variant": {
+      "A0": {
+        "sum_of_trade_pnl_exit_inclusive": 152561.19999999314,
+        "sum_of_daily_pnl": 152561.19999999314,
+        "match": true
+      },
+      "A1": {
+        "sum_of_trade_pnl_exit_inclusive": 159789.1000000093,
+        "sum_of_daily_pnl": 159789.1000000093,
+        "match": true
+      },
+      "A2": {
+        "sum_of_trade_pnl_exit_inclusive": 170696.4999999812,
+        "sum_of_daily_pnl": 170696.4999999812,
+        "match": true
+      },
+      "A_FULL": {
+        "sum_of_trade_pnl_exit_inclusive": 177924.3999999992,
+        "sum_of_daily_pnl": 177924.3999999992,
+        "match": true
+      },
+      "B0": {
+        "sum_of_trade_pnl_exit_inclusive": 130412.9999999933,
+        "sum_of_daily_pnl": 130412.9999999933,
+        "match": true
+      },
+      "B1": {
+        "sum_of_trade_pnl_exit_inclusive": 293626.91999998776,
+        "sum_of_daily_pnl": 293626.91999998776,
+        "match": true
+      },
+      "B_FULL": {
+        "sum_of_trade_pnl_exit_inclusive": 301915.91999998846,
+        "sum_of_daily_pnl": 301915.91999998846,
+        "match": true
+      }
+    },
+    "trade_retention_numerator_cross_check_literal_definition": {
+      "note": "EXPECTED to be inexact (small, ~0.1-0.2% of the numerator) under the literal trade definition, for the same disclosed exit-fill-bar-excluded-from-every-run reason documented in trade_definition_disclosure -- confirms the mismatch is fully attributable to that reason (same order of magnitude, same sign direction) rather than a reconstruction error; the exit-inclusive robustness variant (top1pct_trade_retention applied to TRADES_EXIT_INCL) has no such gap by construction.",
+      "match_exact": {
+        "A0_vs_A_FULL": false,
+        "A1_vs_A_FULL": false,
+        "A2_vs_A_FULL": false,
+        "B0_vs_B_FULL": false,
+        "B1_vs_B_FULL": false
+      },
+      "diff": {
+        "A0_vs_A_FULL": -467.5499999996973,
+        "A1_vs_A_FULL": -440.0999999997439,
+        "A2_vs_A_FULL": -506.44999999942956,
+        "B0_vs_B_FULL": -261.29999999981374,
+        "B1_vs_B_FULL": -278.21999999979744
+      }
+    }
+  },
+  "trade_counts_by_rung_dev_window": {
+    "A0": 5173,
+    "A1": 4791,
+    "A2": 5191,
+    "A_FULL": 4809,
+    "B0": 1575,
+    "B1": 1878,
+    "B_FULL": 1978
+  },
+  "trade_level_retention": {
+    "A0_vs_A_FULL": {
+      "n_trades_full": 4809,
+      "k_top1pct": 48,
+      "top1pct_full_trade_dates": [
+        "2022-02-23",
+        "2022-02-24",
+        "2022-03-11",
+        "2022-04-14",
+        "2022-04-26",
+        "2022-05-05",
+        "2022-05-18",
+        "2022-08-03",
+        "2022-08-26",
+        "2022-09-13",
+        "2022-10-14",
+        "2022-10-28",
+        "2022-11-10",
+        "2022-11-30",
+        "2022-12-22",
+        "2023-08-24",
+        "2023-11-10",
+        "2024-01-08",
+        "2024-04-25",
+        "2024-08-01",
+        "2024-08-08",
+        "2024-09-03",
+        "2024-12-18",
+        "2024-12-20",
+        "2025-02-21",
+        "2025-02-27",
+        "2025-03-03",
+        "2025-03-10",
+        "2025-03-26",
+        "2025-04-02",
+        "2025-04-07",
+        "2025-04-08",
+        "2025-04-09",
+        "2025-04-10",
+        "2025-04-24",
+        "2025-10-10",
+        "2025-11-05",
+        "2025-11-14",
+        "2025-11-20",
+        "2025-12-17",
+        "2026-02-02",
+        "2026-02-04",
+        "2026-02-06",
+        "2026-02-12",
+        "2026-03-09",
+        "2026-03-20",
+        "2026-03-31",
+        "2026-05-08"
+      ],
+      "denom_full_top1pct_trade_pnl_sum": 340972.59999999596,
+      "n_candidate_trades_matched_on_same_dates": 153,
+      "numer_candidate_pnl_on_same_dates": 304747.7499999964,
+      "retention_ratio": 0.8937602317605579,
+      "pass_ge_0_90": false,
+      "numer_cross_check_via_daily_series": 304280.1999999967,
+      "numer_cross_check_diff": -467.5499999996973,
+      "numer_cross_check_match_exact": false
+    },
+    "A1_vs_A_FULL": {
+      "n_trades_full": 4809,
+      "k_top1pct": 48,
+      "top1pct_full_trade_dates": [
+        "2022-02-23",
+        "2022-02-24",
+        "2022-03-11",
+        "2022-04-14",
+        "2022-04-26",
+        "2022-05-05",
+        "2022-05-18",
+        "2022-08-03",
+        "2022-08-26",
+        "2022-09-13",
+        "2022-10-14",
+        "2022-10-28",
+        "2022-11-10",
+        "2022-11-30",
+        "2022-12-22",
+        "2023-08-24",
+        "2023-11-10",
+        "2024-01-08",
+        "2024-04-25",
+        "2024-08-01",
+        "2024-08-08",
+        "2024-09-03",
+        "2024-12-18",
+        "2024-12-20",
+        "2025-02-21",
+        "2025-02-27",
+        "2025-03-03",
+        "2025-03-10",
+        "2025-03-26",
+        "2025-04-02",
+        "2025-04-07",
+        "2025-04-08",
+        "2025-04-09",
+        "2025-04-10",
+        "2025-04-24",
+        "2025-10-10",
+        "2025-11-05",
+        "2025-11-14",
+        "2025-11-20",
+        "2025-12-17",
+        "2026-02-02",
+        "2026-02-04",
+        "2026-02-06",
+        "2026-02-12",
+        "2026-03-09",
+        "2026-03-20",
+        "2026-03-31",
+        "2026-05-08"
+      ],
+      "denom_full_top1pct_trade_pnl_sum": 340972.59999999596,
+      "n_candidate_trades_matched_on_same_dates": 145,
+      "numer_candidate_pnl_on_same_dates": 290065.29999999714,
+      "retention_ratio": 0.8506997336442886,
+      "pass_ge_0_90": false,
+      "numer_cross_check_via_daily_series": 289625.1999999974,
+      "numer_cross_check_diff": -440.0999999997439,
+      "numer_cross_check_match_exact": false
+    },
+    "A2_vs_A_FULL": {
+      "n_trades_full": 4809,
+      "k_top1pct": 48,
+      "top1pct_full_trade_dates": [
+        "2022-02-23",
+        "2022-02-24",
+        "2022-03-11",
+        "2022-04-14",
+        "2022-04-26",
+        "2022-05-05",
+        "2022-05-18",
+        "2022-08-03",
+        "2022-08-26",
+        "2022-09-13",
+        "2022-10-14",
+        "2022-10-28",
+        "2022-11-10",
+        "2022-11-30",
+        "2022-12-22",
+        "2023-08-24",
+        "2023-11-10",
+        "2024-01-08",
+        "2024-04-25",
+        "2024-08-01",
+        "2024-08-08",
+        "2024-09-03",
+        "2024-12-18",
+        "2024-12-20",
+        "2025-02-21",
+        "2025-02-27",
+        "2025-03-03",
+        "2025-03-10",
+        "2025-03-26",
+        "2025-04-02",
+        "2025-04-07",
+        "2025-04-08",
+        "2025-04-09",
+        "2025-04-10",
+        "2025-04-24",
+        "2025-10-10",
+        "2025-11-05",
+        "2025-11-14",
+        "2025-11-20",
+        "2025-12-17",
+        "2026-02-02",
+        "2026-02-04",
+        "2026-02-06",
+        "2026-02-12",
+        "2026-03-09",
+        "2026-03-20",
+        "2026-03-31",
+        "2026-05-08"
+      ],
+      "denom_full_top1pct_trade_pnl_sum": 340972.59999999596,
+      "n_candidate_trades_matched_on_same_dates": 153,
+      "numer_candidate_pnl_on_same_dates": 329877.9499999954,
+      "retention_ratio": 0.9674617549914548,
+      "pass_ge_0_90": true,
+      "numer_cross_check_via_daily_series": 329371.499999996,
+      "numer_cross_check_diff": -506.44999999942956,
+      "numer_cross_check_match_exact": false
+    },
+    "B0_vs_B_FULL": {
+      "n_trades_full": 1978,
+      "k_top1pct": 19,
+      "top1pct_full_trade_dates": [
+        "2022-02-24",
+        "2022-04-26",
+        "2022-05-18",
+        "2022-08-26",
+        "2024-07-24",
+        "2024-08-08",
+        "2024-09-03",
+        "2024-12-18",
+        "2025-02-27",
+        "2025-03-10",
+        "2025-04-02",
+        "2025-04-08",
+        "2025-04-09",
+        "2025-04-10",
+        "2025-10-10",
+        "2025-11-20",
+        "2026-02-06",
+        "2026-03-31",
+        "2026-05-08"
+      ],
+      "denom_full_top1pct_trade_pnl_sum": 269356.39999999956,
+      "n_candidate_trades_matched_on_same_dates": 35,
+      "numer_candidate_pnl_on_same_dates": 198963.69999999972,
+      "retention_ratio": 0.738663347148982,
+      "pass_ge_0_90": false,
+      "numer_cross_check_via_daily_series": 198702.3999999999,
+      "numer_cross_check_diff": -261.29999999981374,
+      "numer_cross_check_match_exact": false
+    },
+    "B1_vs_B_FULL": {
+      "n_trades_full": 1978,
+      "k_top1pct": 19,
+      "top1pct_full_trade_dates": [
+        "2022-02-24",
+        "2022-04-26",
+        "2022-05-18",
+        "2022-08-26",
+        "2024-07-24",
+        "2024-08-08",
+        "2024-09-03",
+        "2024-12-18",
+        "2025-02-27",
+        "2025-03-10",
+        "2025-04-02",
+        "2025-04-08",
+        "2025-04-09",
+        "2025-04-10",
+        "2025-10-10",
+        "2025-11-20",
+        "2026-02-06",
+        "2026-03-31",
+        "2026-05-08"
+      ],
+      "denom_full_top1pct_trade_pnl_sum": 269356.39999999956,
+      "n_candidate_trades_matched_on_same_dates": 31,
+      "numer_candidate_pnl_on_same_dates": 245973.05999999953,
+      "retention_ratio": 0.9131881031971022,
+      "pass_ge_0_90": true,
+      "numer_cross_check_via_daily_series": 245694.83999999973,
+      "numer_cross_check_diff": -278.21999999979744,
+      "numer_cross_check_match_exact": false
+    }
+  },
+  "trade_level_retention_robustness_exit_inclusive": {
+    "A0_vs_A_FULL": {
+      "n_trades_full": 4809,
+      "k_top1pct": 48,
+      "top1pct_full_trade_dates": [
+        "2022-02-23",
+        "2022-02-24",
+        "2022-03-11",
+        "2022-04-14",
+        "2022-04-26",
+        "2022-05-05",
+        "2022-05-18",
+        "2022-08-03",
+        "2022-08-26",
+        "2022-09-13",
+        "2022-10-14",
+        "2022-10-28",
+        "2022-11-10",
+        "2022-11-30",
+        "2022-12-22",
+        "2023-08-24",
+        "2023-11-10",
+        "2024-01-08",
+        "2024-04-25",
+        "2024-08-01",
+        "2024-08-08",
+        "2024-09-03",
+        "2024-12-18",
+        "2024-12-20",
+        "2025-02-21",
+        "2025-02-27",
+        "2025-03-03",
+        "2025-03-10",
+        "2025-03-26",
+        "2025-04-02",
+        "2025-04-07",
+        "2025-04-08",
+        "2025-04-09",
+        "2025-04-10",
+        "2025-04-24",
+        "2025-10-10",
+        "2025-11-05",
+        "2025-11-14",
+        "2025-11-20",
+        "2025-12-17",
+        "2026-02-02",
+        "2026-02-04",
+        "2026-02-06",
+        "2026-02-12",
+        "2026-03-09",
+        "2026-03-20",
+        "2026-03-31",
+        "2026-05-08"
+      ],
+      "denom_full_top1pct_trade_pnl_sum": 340610.29999999586,
+      "n_candidate_trades_matched_on_same_dates": 153,
+      "numer_candidate_pnl_on_same_dates": 304280.19999999664,
+      "retention_ratio": 0.8933382225963229,
+      "pass_ge_0_90": false
+    },
+    "A1_vs_A_FULL": {
+      "n_trades_full": 4809,
+      "k_top1pct": 48,
+      "top1pct_full_trade_dates": [
+        "2022-02-23",
+        "2022-02-24",
+        "2022-03-11",
+        "2022-04-14",
+        "2022-04-26",
+        "2022-05-05",
+        "2022-05-18",
+        "2022-08-03",
+        "2022-08-26",
+        "2022-09-13",
+        "2022-10-14",
+        "2022-10-28",
+        "2022-11-10",
+        "2022-11-30",
+        "2022-12-22",
+        "2023-08-24",
+        "2023-11-10",
+        "2024-01-08",
+        "2024-04-25",
+        "2024-08-01",
+        "2024-08-08",
+        "2024-09-03",
+        "2024-12-18",
+        "2024-12-20",
+        "2025-02-21",
+        "2025-02-27",
+        "2025-03-03",
+        "2025-03-10",
+        "2025-03-26",
+        "2025-04-02",
+        "2025-04-07",
+        "2025-04-08",
+        "2025-04-09",
+        "2025-04-10",
+        "2025-04-24",
+        "2025-10-10",
+        "2025-11-05",
+        "2025-11-14",
+        "2025-11-20",
+        "2025-12-17",
+        "2026-02-02",
+        "2026-02-04",
+        "2026-02-06",
+        "2026-02-12",
+        "2026-03-09",
+        "2026-03-20",
+        "2026-03-31",
+        "2026-05-08"
+      ],
+      "denom_full_top1pct_trade_pnl_sum": 340610.29999999586,
+      "n_candidate_trades_matched_on_same_dates": 145,
+      "numer_candidate_pnl_on_same_dates": 289625.1999999973,
+      "retention_ratio": 0.8503125125693521,
+      "pass_ge_0_90": false
+    },
+    "A2_vs_A_FULL": {
+      "n_trades_full": 4809,
+      "k_top1pct": 48,
+      "top1pct_full_trade_dates": [
+        "2022-02-23",
+        "2022-02-24",
+        "2022-03-11",
+        "2022-04-14",
+        "2022-04-26",
+        "2022-05-05",
+        "2022-05-18",
+        "2022-08-03",
+        "2022-08-26",
+        "2022-09-13",
+        "2022-10-14",
+        "2022-10-28",
+        "2022-11-10",
+        "2022-11-30",
+        "2022-12-22",
+        "2023-08-24",
+        "2023-11-10",
+        "2024-01-08",
+        "2024-04-25",
+        "2024-08-01",
+        "2024-08-08",
+        "2024-09-03",
+        "2024-12-18",
+        "2024-12-20",
+        "2025-02-21",
+        "2025-02-27",
+        "2025-03-03",
+        "2025-03-10",
+        "2025-03-26",
+        "2025-04-02",
+        "2025-04-07",
+        "2025-04-08",
+        "2025-04-09",
+        "2025-04-10",
+        "2025-04-24",
+        "2025-10-10",
+        "2025-11-05",
+        "2025-11-14",
+        "2025-11-20",
+        "2025-12-17",
+        "2026-02-02",
+        "2026-02-04",
+        "2026-02-06",
+        "2026-02-12",
+        "2026-03-09",
+        "2026-03-20",
+        "2026-03-31",
+        "2026-05-08"
+      ],
+      "denom_full_top1pct_trade_pnl_sum": 340610.29999999586,
+      "n_candidate_trades_matched_on_same_dates": 153,
+      "numer_candidate_pnl_on_same_dates": 329371.4999999959,
+      "retention_ratio": 0.9670039338211438,
+      "pass_ge_0_90": true
+    },
+    "B0_vs_B_FULL": {
+      "n_trades_full": 1978,
+      "k_top1pct": 19,
+      "top1pct_full_trade_dates": [
+        "2022-02-24",
+        "2022-05-05",
+        "2022-05-18",
+        "2022-08-26",
+        "2024-07-24",
+        "2024-08-08",
+        "2024-09-03",
+        "2024-12-18",
+        "2025-02-27",
+        "2025-03-10",
+        "2025-04-02",
+        "2025-04-08",
+        "2025-04-09",
+        "2025-04-10",
+        "2025-10-10",
+        "2025-11-20",
+        "2026-02-06",
+        "2026-03-31",
+        "2026-05-08"
+      ],
+      "denom_full_top1pct_trade_pnl_sum": 269154.9799999997,
+      "n_candidate_trades_matched_on_same_dates": 35,
+      "numer_candidate_pnl_on_same_dates": 198527.3999999999,
+      "retention_ratio": 0.7375951208482197,
+      "pass_ge_0_90": false
+    },
+    "B1_vs_B_FULL": {
+      "n_trades_full": 1978,
+      "k_top1pct": 19,
+      "top1pct_full_trade_dates": [
+        "2022-02-24",
+        "2022-05-05",
+        "2022-05-18",
+        "2022-08-26",
+        "2024-07-24",
+        "2024-08-08",
+        "2024-09-03",
+        "2024-12-18",
+        "2025-02-27",
+        "2025-03-10",
+        "2025-04-02",
+        "2025-04-08",
+        "2025-04-09",
+        "2025-04-10",
+        "2025-10-10",
+        "2025-11-20",
+        "2026-02-06",
+        "2026-03-31",
+        "2026-05-08"
+      ],
+      "denom_full_top1pct_trade_pnl_sum": 269154.9799999997,
+      "n_candidate_trades_matched_on_same_dates": 31,
+      "numer_candidate_pnl_on_same_dates": 245519.83999999973,
+      "retention_ratio": 0.912187617706349,
+      "pass_ge_0_90": true
+    }
+  },
+  "dd_blob_fix": {
+    "regenerated_cells_from_execution_productB_raw_json": {
+      "B0_canonical": {
+        "rung": "B0",
+        "window": "canonical_2023_2025",
+        "maxDD_eod": 66261.68000000354,
+        "maxDD_bar_intraday_MTM_proxy": 68926.04000000353
+      },
+      "B0_dev": {
+        "rung": "B0",
+        "window": "dev_2022_2026_05_31",
+        "maxDD_eod": 74324.28000000329,
+        "maxDD_bar_intraday_MTM_proxy": 76518.64000000327
+      },
+      "B1_canonical": {
+        "rung": "B1",
+        "window": "canonical_2023_2025",
+        "maxDD_eod": 29436.120000003604,
+        "maxDD_bar_intraday_MTM_proxy": 30614.200000003795
+      },
+      "B1_dev": {
+        "rung": "B1",
+        "window": "dev_2022_2026_05_31",
+        "maxDD_eod": 55338.2000000031,
+        "maxDD_bar_intraday_MTM_proxy": 59866.660000003
+      },
+      "B_FULL_canonical": {
+        "rung": "B_FULL",
+        "window": "canonical_2023_2025",
+        "maxDD_eod": 25268.76000000164,
+        "maxDD_bar_intraday_MTM_proxy": 27183.76000000164
+      },
+      "B_FULL_dev": {
+        "rung": "B_FULL",
+        "window": "dev_2022_2026_05_31",
+        "maxDD_eod": 59717.44000000332,
+        "maxDD_bar_intraday_MTM_proxy": 63967.70000000327
+      }
+    },
+    "recomputed_ratios": {
+      "B0_vs_B_FULL_dev": {
+        "window": "dev_2022_2026_05_31",
+        "candidate_maxDD_bar_intraday": 76518.64000000327,
+        "full_maxDD_bar_intraday": 63967.70000000327,
+        "ratio": 1.1962074609529396,
+        "gates_at_this_window": true,
+        "pass_le_1_15": false
+      },
+      "B1_vs_B_FULL_dev": {
+        "window": "dev_2022_2026_05_31",
+        "candidate_maxDD_bar_intraday": 59866.660000003,
+        "full_maxDD_bar_intraday": 63967.70000000327,
+        "ratio": 0.9358888939261524,
+        "gates_at_this_window": true,
+        "pass_le_1_15": true
+      },
+      "B0_vs_B_FULL_canonical": {
+        "window": "canonical_2023_2025",
+        "candidate_maxDD_bar_intraday": 68926.04000000353,
+        "full_maxDD_bar_intraday": 27183.76000000164,
+        "ratio": 2.535559466387261,
+        "gates_at_this_window": false,
+        "pass_le_1_15": null
+      },
+      "B1_vs_B_FULL_canonical": {
+        "window": "canonical_2023_2025",
+        "candidate_maxDD_bar_intraday": 30614.200000003795,
+        "full_maxDD_bar_intraday": 27183.76000000164,
+        "ratio": 1.1261944631648435,
+        "gates_at_this_window": false,
+        "pass_le_1_15": null
+      }
+    },
+    "red_team_claim_independent_verification": {
+      "B0_vs_FULL_dev": {
+        "red_team_claimed": "1.281 -> 1.196",
+        "independently_recomputed_here": 1.1962074609529396,
+        "matches_claim": true
+      },
+      "B1_vs_FULL_dev": {
+        "red_team_claimed": "0.927 -> 0.936",
+        "independently_recomputed_here": 0.9358888939261524,
+        "matches_claim": true
+      },
+      "flips_any_pass_fail": "No. B0/FULL corrected ratio 1.1962 still exceeds the 1.15 cap (still FAIL, as with the original uncorrected 1.281). B1/FULL corrected ratio 0.9359 still clears the 1.15 cap (still PASS, as with the original uncorrected 0.927). Independently confirmed here, not assumed from REPORT.md's restatement."
+    },
+    "product_A_cross_check_no_defect_found": {
+      "A0": {
+        "ratio_from_raw_json": 1.0458597855472263,
+        "REPORT_md_reported_ratio": 1.0459,
+        "match": true
+      },
+      "A1": {
+        "ratio_from_raw_json": 0.8794857385862469,
+        "REPORT_md_reported_ratio": 0.8795,
+        "match": true
+      },
+      "A2": {
+        "ratio_from_raw_json": 1.1663740469609924,
+        "REPORT_md_reported_ratio": 1.1664,
+        "match": true
+      }
+    }
+  },
+  "readjudication_5_non_reference_rungs": {
+    "A0_vs_A_FULL": {
+      "margins": {
+        "3.1_sharpe": "FAIL",
+        "3.2_cdar": "FAIL",
+        "3.5_after_cost_positive": "PASS",
+        "3.6_cost_stress_positive": "PASS",
+        "3.7_annual_sign_match": "PASS",
+        "3.8_concentration_gate": "PASS (vacuous)",
+        "3.9_complexity_reduction": "PASS",
+        "3.3_intraday_dd": "PASS",
+        "3.4_retention_day_AND_trade": "FAIL"
+      },
+      "margin_3_3_detail": {
+        "dev_window_ratio": 1.0458597855472263,
+        "cap": 1.15,
+        "pass": true
+      },
+      "margin_3_4_detail": {
+        "day_leg_dev_window": 0.901821623751828,
+        "day_leg_pass": true,
+        "trade_leg_retention_ratio": 0.8937602317605579,
+        "trade_leg_pass": false,
+        "joint_pass": false
+      },
+      "overall_pass": false,
+      "failing_margins": [
+        "3.1_sharpe",
+        "3.2_cdar",
+        "3.4_retention_day_AND_trade"
+      ],
+      "robustness_exit_inclusive_trade_definition": {
+        "trade_leg_retention_ratio": 0.8933382225963229,
+        "trade_leg_pass": false,
+        "margin_3_4_pass": false,
+        "overall_pass": false,
+        "changes_overall_verdict_vs_primary": false
+      }
+    },
+    "A1_vs_A_FULL": {
+      "margins": {
+        "3.1_sharpe": "PASS",
+        "3.2_cdar": "PASS",
+        "3.5_after_cost_positive": "PASS",
+        "3.6_cost_stress_positive": "PASS",
+        "3.7_annual_sign_match": "PASS",
+        "3.8_concentration_gate": "PASS (vacuous)",
+        "3.9_complexity_reduction": "FAIL",
+        "3.3_intraday_dd": "PASS",
+        "3.4_retention_day_AND_trade": "FAIL"
+      },
+      "margin_3_3_detail": {
+        "dev_window_ratio": 0.8794857385862469,
+        "cap": 1.15,
+        "pass": true
+      },
+      "margin_3_4_detail": {
+        "day_leg_dev_window": 0.9018216237518295,
+        "day_leg_pass": true,
+        "trade_leg_retention_ratio": 0.8506997336442886,
+        "trade_leg_pass": false,
+        "joint_pass": false
+      },
+      "overall_pass": false,
+      "failing_margins": [
+        "3.9_complexity_reduction",
+        "3.4_retention_day_AND_trade"
+      ],
+      "robustness_exit_inclusive_trade_definition": {
+        "trade_leg_retention_ratio": 0.8503125125693521,
+        "trade_leg_pass": false,
+        "margin_3_4_pass": false,
+        "overall_pass": false,
+        "changes_overall_verdict_vs_primary": false
+      }
+    },
+    "A2_vs_A_FULL": {
+      "margins": {
+        "3.1_sharpe": "FAIL",
+        "3.2_cdar": "FAIL",
+        "3.5_after_cost_positive": "PASS",
+        "3.6_cost_stress_positive": "PASS",
+        "3.7_annual_sign_match": "PASS",
+        "3.8_concentration_gate": "PASS (vacuous)",
+        "3.9_complexity_reduction": "FAIL",
+        "3.3_intraday_dd": "FAIL",
+        "3.4_retention_day_AND_trade": "PASS"
+      },
+      "margin_3_3_detail": {
+        "dev_window_ratio": 1.1663740469609924,
+        "cap": 1.15,
+        "pass": false
+      },
+      "margin_3_4_detail": {
+        "day_leg_dev_window": 0.999999999999999,
+        "day_leg_pass": true,
+        "trade_leg_retention_ratio": 0.9674617549914548,
+        "trade_leg_pass": true,
+        "joint_pass": true
+      },
+      "overall_pass": false,
+      "failing_margins": [
+        "3.1_sharpe",
+        "3.2_cdar",
+        "3.9_complexity_reduction",
+        "3.3_intraday_dd"
+      ],
+      "robustness_exit_inclusive_trade_definition": {
+        "trade_leg_retention_ratio": 0.9670039338211438,
+        "trade_leg_pass": true,
+        "margin_3_4_pass": true,
+        "overall_pass": false,
+        "changes_overall_verdict_vs_primary": false
+      }
+    },
+    "B0_vs_B_FULL": {
+      "margins": {
+        "3.1_sharpe": "FAIL",
+        "3.2_cdar": "FAIL",
+        "3.5_after_cost_positive": "PASS",
+        "3.6_cost_stress_positive": "PASS",
+        "3.7_annual_sign_match": "PASS",
+        "3.8_concentration_gate": "PASS (vacuous)",
+        "3.9_complexity_reduction": "PASS",
+        "3.3_intraday_dd": "FAIL",
+        "3.4_retention_day_AND_trade": "FAIL"
+      },
+      "margin_3_3_detail": {
+        "dev_window_ratio": 1.1962074609529396,
+        "cap": 1.15,
+        "pass": false
+      },
+      "margin_3_4_detail": {
+        "day_leg_dev_window": 0.81306057460591,
+        "day_leg_pass": false,
+        "trade_leg_retention_ratio": 0.738663347148982,
+        "trade_leg_pass": false,
+        "joint_pass": false
+      },
+      "overall_pass": false,
+      "failing_margins": [
+        "3.1_sharpe",
+        "3.2_cdar",
+        "3.3_intraday_dd",
+        "3.4_retention_day_AND_trade"
+      ],
+      "robustness_exit_inclusive_trade_definition": {
+        "trade_leg_retention_ratio": 0.7375951208482197,
+        "trade_leg_pass": false,
+        "margin_3_4_pass": false,
+        "overall_pass": false,
+        "changes_overall_verdict_vs_primary": false
+      }
+    },
+    "B1_vs_B_FULL": {
+      "margins": {
+        "3.1_sharpe": "INCONCLUSIVE",
+        "3.2_cdar": "PASS",
+        "3.5_after_cost_positive": "PASS",
+        "3.6_cost_stress_positive": "PASS",
+        "3.7_annual_sign_match": "PASS",
+        "3.8_concentration_gate": "PASS (vacuous)",
+        "3.9_complexity_reduction": "PASS",
+        "3.3_intraday_dd": "PASS",
+        "3.4_retention_day_AND_trade": "PASS"
+      },
+      "margin_3_3_detail": {
+        "dev_window_ratio": 0.9358888939261524,
+        "cap": 1.15,
+        "pass": true
+      },
+      "margin_3_4_detail": {
+        "day_leg_dev_window": 0.9941108795990231,
+        "day_leg_pass": true,
+        "trade_leg_retention_ratio": 0.9131881031971022,
+        "trade_leg_pass": true,
+        "joint_pass": true
+      },
+      "overall_pass": false,
+      "failing_margins": [
+        "3.1_sharpe"
+      ],
+      "robustness_exit_inclusive_trade_definition": {
+        "trade_leg_retention_ratio": 0.912187617706349,
+        "trade_leg_pass": true,
+        "margin_3_4_pass": true,
+        "overall_pass": false,
+        "changes_overall_verdict_vs_primary": false
+      }
+    }
+  },
+  "headline": "Trade-level retention leg computed for all 7 rungs (5 non-reference vs their product's FULL). DD-blob defect confirmed and corrected for the 5 affected Product-B cells (B0-canonical, B1-canonical, B1-dev, B_FULL-canonical, B_FULL-dev); B0-dev was already correct. Neither correction flips any margin 3.3 PASS/FAIL. Re-adjudicated overall verdicts: A0_vs_A_FULL=FAIL; A1_vs_A_FULL=FAIL; A2_vs_A_FULL=FAIL; B0_vs_B_FULL=FAIL; B1_vs_B_FULL=FAIL. Zero rungs pass overall -- unchanged from REPORT.md's headline null result. B1's margin 3.4 (retention) is now a genuine, fully-evidenced PASS (previously 'FAIL to certify' for lack of the trade leg); B1's remaining blocker is margin 3.1 (Sharpe), still INCONCLUSIVE, unchanged by this pass.",
+  "runtime_seconds_total": 19.8
+}

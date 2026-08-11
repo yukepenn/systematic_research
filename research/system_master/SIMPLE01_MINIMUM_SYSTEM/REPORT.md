@@ -346,3 +346,149 @@ suggests without overclaiming beyond what a single non-inferiority ladder can sh
 label-mapping key supplied at un-blinding. No new computation was run in this task; all figures above
 are read from the sealed inputs (red-team-corrected where the red team found and confirmed a specific
 transcription defect, per §3.1).*
+
+---
+
+## 8. ADDENDUM — Completion pass (closes §3.1 and §3.2's two open gaps; §7 item 1-2 executed)
+
+**Status: additive only.** Nothing above this line is edited, retracted, or reinterpreted. This
+addendum executes the two follow-ups §3's red-team review left open — the missing trade-level leg of
+margin 3.4 (§3.2 above, HIGH severity) and the Product-B intraday-DD blob defect (§3.1 above, MEDIUM
+severity) — against a preregistration frozen and committed *before* either gap was computed
+(`out/03_SPEC_completion_pass_preregistration.md`, commit `6ffe82d`), per the practice this program
+adopted 2026-08-10. No margin, window, threshold, bootstrap, or complexity rule from
+`01_SPEC_frozen_margins.md` / `02_SPEC_complexity_metric.md` is touched, loosened, or re-derived here.
+Method, code, and full numeric output: `src/04_completion_pass.py`, `out/completion_pass_results.json`.
+
+### 8.1 Headline answer, stated plainly first
+
+**Nothing flips to an overall PASS.** All 5 rungs (A0, A1, A2, B0, B1) still FAIL the complete frozen
+non-inferiority ladder, exactly as this report's original headline said. This is not a foregone
+conclusion — it was checked, not assumed — and it is exactly what the data show.
+
+The one place the newly-completed evidence *does* change something: **margin 3.4 (retention) is now
+fully certified, in both directions, for every rung** — where §1-2 above could previously only say
+"FAIL to certify" (day-leg passed, trade-leg never measured) for A0, A1, and B1:
+
+| Rung | Day-leg (already known) | Trade-leg (NEW) | Margin 3.4 now | Previously reported as |
+|---|---:|---:|---|---|
+| A0 vs A_FULL | 0.9018 (pass) | 0.8938 (**fail**, <0.90) | **FAIL** | "FAIL to certify" |
+| A1 vs A_FULL | 0.9018 (pass) | 0.8507 (**fail**, <0.90) | **FAIL** | "FAIL to certify" |
+| A2 vs A_FULL | 1.0000 (pass) | 0.9675 (pass) | **PASS** | "FAIL to certify (moot)" |
+| B0 vs B_FULL | 0.8131 (already fail) | 0.7387 (fail) | **FAIL** | FAIL (day-leg alone already failed it) |
+| B1 vs B_FULL | 0.9941 (pass) | 0.9132 (pass) | **PASS** | "FAIL to certify" |
+
+For A0, A2, and B0 this is moot — all three were already blocked on other, independent grounds
+(Sharpe/CDaR for A0/B0, Sharpe/CDaR/intraday-DD for A2), so completing margin 3.4 changes their
+evidence record but not their verdict. **A1 was already blocked by the construction-level complexity
+gate (3.9)** regardless of statistics, so its new trade-leg FAIL is likewise moot to its outcome. **B1
+is the one rung where this newly-computed leg is not moot**: its day-leg already passed (0.9941) and
+its trade-leg now also passes (0.9132) — margin 3.4 moves from "FAIL to certify" to a genuine,
+fully-evidenced **PASS** for B1. That narrows B1's sole remaining blocker to margin 3.1 (Sharpe), which
+stays **INCONCLUSIVE**, unchanged (no new bootstrap was run in this pass — that number is not
+recomputed here). **B1 therefore still does not pass the full margin set: INCONCLUSIVE is a
+preregistered non-pass, so B1's overall verdict remains FAIL, exactly as originally reported.**
+
+**Direct answer to "does this change B1's or A1's status": no.** B1's overall verdict is unchanged
+(FAIL, both before and after) — what changed is *why*: it now fails on exactly one clean, well-evidenced
+margin (Sharpe, INCONCLUSIVE) instead of two margins including one that could not previously be fully
+evidenced. A1's overall verdict is unchanged (FAIL, both before and after) for an unrelated, independent
+reason that this pass does not touch: construction-level complexity (margin 3.9), which the trade-level
+result does not affect either way.
+
+### 8.2 What was computed, and how (method summary; full detail in `completion_pass_results.json`)
+
+- **Gap 1 (trade-level retention leg of margin 3.4).** Per-trade P&L was reconstructed for all 7 rungs
+  directly from the `bar_pos`/`bar_pnl` arrays already computed by the byte-for-byte-reused rung
+  construction functions in `src/execution_productA.py` / `execution_productB.py` (verified bar-for-bar
+  identical to `grid_core`'s own reference execution, and dev-window net reproduces the certified
+  $177,924.40 / $301,915.92 figures exactly — both integrity gates pass). A trade = a maximal contiguous
+  run of nonzero, same-signed `bar_pos`; trade P&L = `sum(bar_pnl)` over that run — the definition frozen
+  in the preregistration, itself a mechanical instantiation of `CONVENTIONS.md` gate 6 ("top-1% trade
+  P&L retention ≥ 90% ... vs baseline"), quoted verbatim in the code and reproduced here:
+
+  > 6. HARD RIGHT-TAIL GATE for anything that modifies Solar exposure or exits: top-1% trade P&L
+  > retention ≥ 90% AND top-10 day retention ≥ 90% vs baseline; any state down-weighted below baseline
+  > must hold top-1% P&L share ≤ its session share.
+
+  Retention ratio = (candidate's own trade P&L, summed over trades occurring on the same dates as
+  FULL's own top-1%-by-P&L trades) ÷ (FULL's own top-1% trades' P&L sum) — the day-level
+  `top10_day_retention()` pattern generalized from day-index to trade-date, per the preregistration.
+  `k = max(1, floor(0.01 × n_trades_FULL))`, matching the house CDaR truncation convention; this is the
+  one implementation-level choice not otherwise specified by the frozen spec, and it is disclosed as
+  such (`TOP1PCT_K_RULE` in the output) rather than silently picked. Gate 6's third clause ("any state
+  down-weighted below baseline must hold top-1% P&L share ≤ its session share") is quoted but **not**
+  separately operationalized: it targets continuous down-weighting of individual Solar member states,
+  and SIMPLE01's ladder is an all-or-nothing whole-module ablation (`mm`/`ss`/`bmomPos` forced to a
+  constant or left fully real) with no intermediate "down-weighted" state for the clause to attach to —
+  this is disclosed in the output (`notes_on_gate_6_third_clause`) rather than fabricating a formula for
+  a case the clause does not describe.
+- **Gap 2 (Product-B intraday-DD blob defect).** Every `maxDD_bar_intraday_MTM_proxy` cell was
+  regenerated by direct programmatic read of `execution_productB_raw.json` (the authoritative source),
+  never hand-transcribed. Corrected dev-window ratios: **B0/B_FULL 1.281 → 1.196207** (still exceeds the
+  1.15 cap — still FAIL) and **B1/B_FULL 0.927 → 0.935889** (still clears the 1.15 cap — still PASS).
+  The red team's restated corrected figures were independently reproduced from source, not merely
+  trusted. Product A's raw-JSON intraday-DD ratios were cross-checked against this report's §2 figures
+  and found to already match exactly — no defect found on the Product A side. **Neither correction flips
+  any margin 3.3 PASS/FAIL, for either product.**
+- **A material implementation finding, disclosed rather than silently absorbed.** This substrate's
+  execution loop books a closed position's exit fill (commission + adverse-tick realization) on the bar
+  *immediately after* `bar_pos` returns to 0 (a "signal evaluated on bar t, executed at bar t+1's open"
+  convention). Taken literally, the frozen trade definition ("maximal contiguous run of *nonzero*
+  `bar_pos`") therefore excludes each trade's own exit cost from its own reconstructed P&L — a real
+  property of this substrate's bar-level fill timing, not a reconstruction bug, and worth ≈4-9% of each
+  rung's dev-window net summed across trades. The literal definition is used as PRIMARY (it is what the
+  preregistration froze), alongside a disclosed exit-inclusive robustness variant (identical trade
+  boundaries, count, and dates; absorbs the deferred exit-fill bar into its own trade). **Both variants
+  agree on every single PASS/FAIL, for all 5 rungs** (e.g. B1's trade-leg retention: 0.9132 literal vs.
+  0.9122 exit-inclusive — both ≥0.90) — the conclusion is not an artifact of this bookkeeping nuance.
+
+### 8.3 Full updated verdict table, all 5 rungs (supersedes nothing in §1-2 above — this is the
+completed version of the same table)
+
+| Rung | 3.1 Sharpe | 3.2 CDaR | 3.3 Intraday DD (corrected) | 3.4 Retention (day AND trade, now complete) | 3.5-3.8 | 3.9 Complexity | **Overall** |
+|---|---|---|---|---|---|---|---|
+| A0 vs A_FULL | FAIL | FAIL | PASS (1.046) | **FAIL** (trade 0.894<0.90) | PASS | PASS | **FAIL** (unchanged) |
+| A1 vs A_FULL | PASS | PASS | PASS (0.879) | **FAIL** (trade 0.851<0.90) | PASS | FAIL | **FAIL** (unchanged) |
+| A2 vs A_FULL | FAIL | FAIL | FAIL (1.166) | **PASS** (trade 0.967) | PASS | FAIL | **FAIL** (unchanged) |
+| B0 vs B_FULL | FAIL | FAIL | FAIL (1.196, corrected) | **FAIL** (day 0.813 already <0.90) | PASS | PASS | **FAIL** (unchanged) |
+| B1 vs B_FULL | **INCONCLUSIVE** | PASS | PASS (0.936, corrected) | **PASS** (trade 0.913, newly certified) | PASS | PASS | **FAIL** (unchanged — INCONCLUSIVE is a non-pass) |
+
+**Zero rungs pass overall.** This is the same null result §0/§1-2 already reported, now with every
+margin's evidence complete for every rung rather than one leg of one margin outstanding.
+
+### 8.4 Standing caveat restated (campaign directive sec108-109) — even where 8.3 shows a clean PASS row
+
+**No rung here passes every margin, so this caveat does not have anything to apply to today** — restated
+in full regardless, because it is the standing rule for this whole program and because a reader
+skimming the 8.1 table alone could otherwise mistake B1's or A2's new margin-3.4 PASS for a promotion
+signal: **passing this (or any) non-inferiority ladder does not auto-promote anything.** Per this
+report's own §6 ("Does not establish," restated, not superseded, by this addendum): even in a
+hypothetical world where a rung cleared every single frozen margin, that would not itself be a
+promotion. A passing simplification would still require the full battery — tail-risk stress,
+capital-frontier interaction, and NT8-executable proof (a compiled strategy, live-parity backtest, not
+just this Python analytics twin), plus, for Product B, NQ/MNQ shared-core parity — before promotion
+could even be considered. **None of that battery is run in this addendum, for any rung, and would not
+have been run even had a rung's overall verdict flipped to PASS.** This task, both originally and in
+this completion pass, answers only "can this simplification be shown non-worse on the frozen dev-window
+screen" — nothing more.
+
+### 8.5 What changed in this document as a direct result of this pass
+
+- §1.2 (B1) and §2.1-2.2 (A0, A1)'s "FAIL to certify" / "DATA_UNAVAILABLE" retention rows are now fully
+  evidenced (see 8.3); their *overall* verdicts (FAIL, FAIL, FAIL) are unchanged.
+- §3.1's red-team-corrected DD ratios (1.281→1.196, 0.927→0.936) are independently reproduced by direct
+  computation from source, not merely carried forward on trust.
+- §3.2's HIGH-severity completeness gap is closed: the trade-level leg is now computed and reported for
+  all 7 rungs.
+- §7 items 1 and 2 (recommended follow-ups) are executed by this addendum.
+- No figure in §1, §2, §3, §4, §5, §6, or §7 above is edited or retracted — this addendum only adds the
+  previously-missing evidence and restates the resulting (unchanged) verdicts.
+
+*Inputs to this addendum: `out/03_SPEC_completion_pass_preregistration.md` (frozen and committed before
+either gap was computed), `src/execution_productA.py` / `execution_productB.py` (rung construction
+reused verbatim), `out/execution_productA_raw.json` / `out/execution_productB_raw.json` (authoritative
+source for the DD-blob fix and cross-checks), `research/system_master/CONVENTIONS.md` (gate 6, quoted
+verbatim), and this report's own §1-§2 (unchanged margins quoted, not recomputed). Full numeric output,
+including every integrity cross-check referenced above: `out/completion_pass_results.json`. Generated by
+`src/04_completion_pass.py`.*
