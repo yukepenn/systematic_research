@@ -37,6 +37,27 @@ in the manifest and `SCHEMA.md` already discloses this as unverified — see
 `depth:eventtime_semantics` in any report. This is a feed-semantics integrity check, not
 an interpretation of what the data means.
 
+`events:cap_reached_rows` checks for `CAP_REACHED` rows in `_events.csv` specifically
+because the manifest's own `CapReached` field is written once at `State.DataLoaded` and
+not rewritten until `State.Terminated` (confirmed by reading
+`ninjascript/Dom01DepthRecorder_v1.cs`) — for an in-progress run, `events.csv` is the
+*only* live signal that a stream has silently started dropping rows.
+
+## `dom01_storage_monitor.py` — disk capacity, separate concern from data QC
+
+```
+python runs/DOM01_LIQUIDITY_STATE/collector/qc/dom01_storage_monitor.py
+```
+
+Per-run file sizes, realized bytes/hour since `StartUtc`, a coarse projected GB for one
+full 23h session at that rate, row counts vs. `MaxRowsPerStreamFile` (read from
+`_heartbeat.csv`'s own last row, not by scanning `_depth.csv`), free disk space on the
+drive hosting `out/`, and a WARN/FAIL alert on projected days-until-full (defaults: WARN
+<30 days or <50 GiB free, FAIL <7 days or <15 GiB free — override with `--warn-days`
+etc.). Also lists `Terminated` runs as compression candidates with the verified-safe
+procedure (see below). Same non-outcome scope discipline as the QC monitor — bytes and
+row counts only, never anything about what the data says about the market.
+
 It computes zero of: future returns, markouts, PnL, predictive correlations, alpha by
 DOM state, conditional price response, or candidate performance. If a future
 predictive/outcome analysis is wanted, that is a separate, separately-preregistered
@@ -50,6 +71,43 @@ deliberately untracked while collection is in progress — see
 would go stale within minutes of a still-running collector, so `qc/reports/` is treated
 the same way as `collector/out/`: reproducible from the script, not committed as
 evidence. Re-run the script to get a current read.
+
+## File rotation — verified, not assumed
+
+**The collector does NOT rotate files per CME trading session.** One file set (5 files,
+one `RunId`) is opened per `State.DataLoaded` event and stays open until
+`State.Terminated` — i.e. one chart-attach lifecycle, which can span many trading
+sessions if the indicator/chart is never detached and NT8 never restarts. Confirmed by
+reading `ninjascript/Dom01DepthRecorder_v1.cs`: `InitializeRun()` (creates the 5
+`StreamWriter`s) fires only at `State.DataLoaded`; there is no session-boundary check
+anywhere in the file. The only two things that end a run are (a) `State.Terminated`
+(chart/indicator removed, NT8 shutdown, or a connection-loss termination), or (b) each
+stream independently hitting `MaxRowsPerStreamFile` (default 20,000,000 rows) — which
+does **not** open a new file, it drops further rows for that stream for the rest of the
+run (logged as a `CAP_REACHED` event, not silent, but still real loss if unnoticed).
+Practical consequence: `_depth.csv` grows without bound across sessions unless someone
+periodically restarts the collector — `dom01_storage_monitor.py` is how you'd notice
+before that becomes a disk or row-cap problem.
+
+## Compression — verified safe, with one hard rule
+
+Gzip round-trip was tested this session against a real `_topofbook.csv` sample:
+sha256-identical before compression and after a full compress/decompress cycle (11.76x
+smaller, 91.5% size reduction — CSV of repetitive numeric/text fields compresses very
+well). Lossless and reversible, confirmed empirically, not just assumed from gzip's
+general reputation.
+
+**Hard rule: only compress a run after its manifest shows `EndUtc` is set
+(`State.Terminated`).** An in-progress run's `StreamWriter` still owns an open file
+handle on that exact path — compressing (or otherwise touching) a file NT8 is actively
+appending to risks reading a torn/incomplete state or interfering with the writer.
+Verified-safe procedure for a `Terminated` run (see `dom01_storage_monitor.py`'s own
+printed instructions): recompute each CSV's sha256 and confirm it matches the manifest's
+`FileChecksumsSha256` *before* compressing; `gzip -k` (keep original) each CSV;
+decompress to a temp path and recompute sha256 again to confirm the round-trip is still
+identical; only then delete the uncompressed original. This changes storage bytes, never
+the logical content — the manifest's existing checksums remain the provenance record and
+verify against the decompressed output at every step.
 
 ## Suggested cadence
 

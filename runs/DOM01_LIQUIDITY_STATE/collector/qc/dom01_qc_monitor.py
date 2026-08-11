@@ -257,6 +257,16 @@ def check_events_stream(path: Path, report: RunReport):
     else:
         report.add("events:warn_rows", "PASS", "0 WARN rows")
 
+    cap_count = categories.count("CAP_REACHED")
+    if cap_count:
+        report.add("events:cap_reached_rows", "FAIL",
+                    f"{cap_count} CAP_REACHED row(s) -- this run is silently dropping rows for at "
+                    f"least one stream RIGHT NOW (manifest.CapReached is NOT updated until "
+                    f"Terminated, so this events.csv row is the only live signal). Restart the "
+                    f"collector to open a new run.")
+    else:
+        report.add("events:cap_reached_rows", "PASS", "0 CAP_REACHED rows")
+
     with open(path, "r", encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
         details = [row["Detail"] for row in reader if row["Category"] == "STATE_TRANSITION"]
