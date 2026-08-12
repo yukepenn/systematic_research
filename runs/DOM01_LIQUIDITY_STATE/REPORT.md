@@ -61,6 +61,37 @@ filename timestamp only — filesystem metadata, never opened/parsed, per `LOCKE
 unchanged from DATA02.** `DATA03_HISTORICAL_MARKET_REPLAY_INVENTORY` is not created — its own
 trigger condition (genuine L2 replay files existing for any ≤2026-07-31 date) is not met.
 
+## MARKET REPLAY CONFIRMED AVAILABLE 2026-08-11 (dated correction, appended not rewritten)
+
+**Correction to the "no historical Level-II route" conclusion above: it was correct at the time
+strictly as a LOCAL-INVENTORY statement (`db/replay` was empty), not as a statement about NT8
+server-side availability.** The owner subsequently used the previously-unexplored
+`Historical Data -> Get Market Replay data` section and downloaded NQU6 2026-07-15, producing
+`db\replay\NQ 09-26\20260715.nrd` (160,994,081 bytes). `db/replay` is no longer empty.
+
+**Classification: `GENUINE_NT8_MARKET_REPLAY_L1_PLUS_L2`, acquisition proof = PASS.** Per the
+owner, NinjaTrader's own documentation states Market Replay files store the synchronized Level I
++ Level II event sequence together, by design, to keep them in sync — this session's own local
+structural inspection (byte-stride record counting only, no field-content decoding, per explicit
+instruction not to reverse-engineer the proprietary `.nrd` format further) is consistent with,
+but does not independently prove, that classification on its own; the classification rests on the
+documented acquisition mechanism plus NT8's own stated file design, disclosed as such rather than
+overclaimed as independently re-derived.
+
+**DATA02's own conclusion — "no historical Level-II data exists or can be recovered
+retroactively"** — is therefore superseded for the ≤2026-07-31 window specifically:
+NinjaTrader's servers do retain and serve genuine Market Replay history via the documented UI
+workflow, at least for 2026-07-15. `db/snapshot` remains empty (unrelated feature). Full
+acquisition planning, batch-download mechanism research, and the live storage/retention findings:
+`runs/DATA03_HISTORICAL_MARKET_REPLAY_INVENTORY/REPORT.md`.
+
+**Unchanged**: entitlement/route for a *live* Level-II feed via the regular license was never in
+question here — this correction is about historical Market Replay specifically, a separate NT8
+feature from live Order Flow+/Market Depth Map entitlement. DOM01's own live forward collection is
+untouched and continues to be the separate, `SEALED_FORWARD`-governed prospective evidence stream
+— historical Replay and live DOM01 are not being mixed (see `DOM01_PROSPECTIVE_PROTOCOL.md`,
+reconciliation with this new source explicitly deferred to a later step).
+
 NT8's actual Market Replay connection type (`GetConnections`: `Playback`, provider id 13) is
 currently `Disconnected` and distinct from both the regular Historical Data downloader and the
 live/sim `Simulation` (Tradovate-backed) connection this campaign already uses — confirms the

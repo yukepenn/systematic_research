@@ -1,0 +1,45 @@
+# DATA03 acquisition plan -- living document, update `status` as probe/acquisition results land.
+# Re-run src/data03_inventory.py after each update to regenerate out/manifest.{csv,json} from the
+# actual filesystem state (the manifest is always derived from db/replay/, never hand-edited).
+
+hard_boundary_max_date: "2026-07-31"   # research/operational/LOCKED_FORWARD.md -- never move this
+
+server_retention_note: >
+  NinjaTrader's own support-forum threads (not the official help-guide page, which doesn't state
+  a number) report Market Replay is available for "up to 90 days" back from the present. ~90
+  days back from 2026-08-11 is approximately 2026-05-13. Treat this as a planning PRIOR only --
+  the sparse backward probe below is what actually establishes the true boundary, per the owner's
+  own instruction not to assume an exact figure.
+
+# Step 3: sparse backward availability probe. Owner performs the UI click for each date (checking
+# `python research_sdk/session_boundary.py check-date <date>` first, though all of these are well
+# inside the authorized window); Claude verifies db/replay/ immediately after each and updates
+# `status` here.
+probe_dates:
+  - date: "2026-07-31"
+    instrument: "NQ 09-26"
+    status: "not yet probed"
+  - date: "2026-07-15"
+    instrument: "NQ 09-26"
+    status: "ACQUIRED -- proof day, verified PASS (see runs/DATA03_HISTORICAL_MARKET_REPLAY_INVENTORY/REPORT.md)"
+  - date: "2026-07-01"
+    instrument: "NQ 09-26"
+    status: "not yet probed"
+  - date: "2026-06-15"
+    instrument: "NQ 09-26"
+    status: "not yet probed"
+  - date: "2026-06-01"
+    instrument: "NQ 06-26"
+    status: "not yet probed"
+  - date: "2026-05-15"
+    instrument: "NQ 06-26"
+    status: "not yet probed"
+
+contract_overlap_window_draft:
+  note: >
+    RAW-acquisition draft only, not a scientific roll-date decision (explicitly deferred per
+    owner instruction). Existing local L1 tick data already shows NQU6 (NQ 09-26) beginning
+    2026-06-08 while NQM6 (NQ 06-26) continues through 2026-06-12 -- a real, already-downloaded
+    4-day overlap. For raw Market Replay acquisition, plan to acquire BOTH contracts across a
+    wider bracket once the probe above establishes the true earliest-available date -- exact
+    bracket intentionally left open here pending those results.
