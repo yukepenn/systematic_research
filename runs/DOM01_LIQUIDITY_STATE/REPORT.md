@@ -45,3 +45,37 @@ liquidity dynamics informing adverse-selection risk, continuation quality, entry
 timing per addendum E4) remains a live, legitimate hypothesis — it simply has no historical
 evidence to test against, and forward collection requires an entitlement check and a dedicated
 build pass, both flagged here for the owner rather than assumed or silently skipped.
+
+## RE-VERIFIED 2026-08-11 (direct filesystem forensics, after an owner Historical Data download)
+
+Owner downloaded historical NQ data via NT8's Historical Data window (NQU6 tree showed Last/Ask/
+Bid loaded; NQM6 was mid-download; the "Get Market Replay data" section was never expanded).
+Direct recursive listing of `C:\Users\Yuke Zhang\Documents\NinjaTrader 8\db\replay\` and
+`...\db\snapshot\` (the only two paths NT8 uses for Market Replay/depth-snapshot storage) both
+returned **0 items** — unchanged from DATA02's 2026-08-09 finding. **CASE A confirmed: this
+download only added/extended L1 `.ncd` Bid/Ask/Last tick files under `db\tick\`** (per-contract
+folders, e.g. `NQ 09-26` now spans first=2026-06-08 01:00 through last=2026-08-11 20:00 by
+filename timestamp only — filesystem metadata, never opened/parsed, per `LOCKED_FORWARD.md`;
+`NQ 06-26` spans 2026-03-16 through 2026-06-12, fully inside the authorized ≤2026-07-31 window).
+**No genuine historical Level-II/Market Replay data exists locally. This conclusion is
+unchanged from DATA02.** `DATA03_HISTORICAL_MARKET_REPLAY_INVENTORY` is not created — its own
+trigger condition (genuine L2 replay files existing for any ≤2026-07-31 date) is not met.
+
+NT8's actual Market Replay connection type (`GetConnections`: `Playback`, provider id 13) is
+currently `Disconnected` and distinct from both the regular Historical Data downloader and the
+live/sim `Simulation` (Tradovate-backed) connection this campaign already uses — confirms the
+UI path for genuine replay is a separate workflow the owner has not yet used, consistent with
+"Get Market Replay data" being observed collapsed/unused in the screenshot.
+
+Incidentally found while checking DOM01 was undisturbed (read-only, no action taken): the prior
+collector run (`RunId 5c8ca242...`) cleanly `Terminated` at `23:57:02Z` and a fresh run
+(`8c57389f...`) started half a second later — consistent with NT8 reloading NinjaScripts/charts
+during the historical-data session, not anything this verification pass did. The terminated
+run's manifest has one real, disclosed collector defect: `FileChecksumsSha256.events.csv` holds
+a raw, JSON-unescaped `.NET` exception string ("process cannot access the file... used by
+another process") instead of a checksum — a file-lock race between closing the `events.csv`
+writer and hashing it at shutdown, which also makes that one manifest technically invalid JSON.
+`dom01_qc_monitor.py` already catches this correctly (`FAIL`, gracefully skips the rest of that
+run's manifest-dependent checks rather than crashing) — not fixed in the collector source this
+pass, flagged here for a future dedicated engineering pass. `depth.csv`/`topofbook.csv`/
+`heartbeat.csv` checksums for that run all wrote correctly; only `events.csv`'s was affected.
