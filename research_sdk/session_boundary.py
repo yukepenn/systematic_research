@@ -156,3 +156,32 @@ def assert_not_locked_forward(
             f"{max_authorized_session_date_et.isoformat()} (research/operational/"
             f"LOCKED_FORWARD.md). Refusing before any data was read."
         )
+
+
+def _cli() -> int:
+    """Manual pre-flight guard for workflows this module can't gate programmatically
+    (e.g. a human clicking through NT8's "Get Market Replay data" dialog one day at a
+    time -- there is no API to intercept, so the check has to run BEFORE the human
+    clicks Download, not around the click).
+
+    Usage: python research_sdk/session_boundary.py check-date YYYY-MM-DD [YYYY-MM-DD max]
+    Prints AUTHORIZED or BLOCKED and exits 0/1 accordingly -- safe to call from a
+    shell loop or before each manual click."""
+    import sys as _sys
+    if len(_sys.argv) < 3 or _sys.argv[1] != "check-date":
+        print(__doc__ if False else "usage: python session_boundary.py check-date YYYY-MM-DD [max YYYY-MM-DD]")
+        return 2
+    d = date.fromisoformat(_sys.argv[2])
+    max_d = date.fromisoformat(_sys.argv[3]) if len(_sys.argv) > 3 else LOCKED_FORWARD_LAST_CONSUMED_SESSION
+    try:
+        assert_not_locked_forward(d, max_d)
+        print(f"AUTHORIZED  {d.isoformat()} <= {max_d.isoformat()} -- OK to proceed with this date")
+        return 0
+    except BoundaryError as e:
+        print(f"BLOCKED  {e}")
+        return 1
+
+
+if __name__ == "__main__":
+    import sys as _sys
+    _sys.exit(_cli())
