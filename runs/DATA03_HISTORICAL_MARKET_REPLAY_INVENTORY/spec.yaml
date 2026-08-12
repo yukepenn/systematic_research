@@ -1,0 +1,59 @@
+run_id: DATA03_HISTORICAL_MARKET_REPLAY_INVENTORY
+run_class: ENGINEERING_ONLY   # zero alpha budget -- data ACQUISITION and INFRASTRUCTURE inventory
+                              # only. No markout, return, price-response, or strategy analysis is
+                              # in scope anywhere in this run. Bypasses research_sdk/prereg_guard.py
+                              # per its own BYPASS_CLASSES; spec still committed first as house
+                              # style.
+date: 2026-08-11
+supersedes_local_inventory_statement_in: runs/DOM01_LIQUIDITY_STATE/REPORT.md (append-only
+  correction, not a rewrite -- see that file's own "RE-VERIFIED 2026-08-11" and
+  "MARKET REPLAY CONFIRMED AVAILABLE" sections)
+
+purpose: >
+  Acquire and inventory the maximum available, authorized (<=2026-07-31) genuine NT8 Market
+  Replay history for NQ before NinjaTrader's server-side retention window rolls it out of reach.
+  This run tracks WHAT WAS ACQUIRED (files, dates, contracts, sizes, checksums) and WHETHER THE
+  FEED IS STRUCTURALLY USABLE for a future DOM discovery substrate (schema/timestamp/depth-level
+  comparability to DOM01's live schema) -- it does not read, summarize, or condition on any
+  price/depth CONTENT from the acquired files. That is explicitly out of scope for this run and
+  for every script committed under it.
+
+classification: >
+  NQU6 2026-07-15 = GENUINE_NT8_MARKET_REPLAY_L1_PLUS_L2, acquisition proof = PASS. Basis: (1)
+  acquired via NT8's official, documented "Historical Data -> Get Market Replay data" workflow,
+  the only download path server-side; (2) NinjaTrader's own product documentation states Market
+  Replay files store the synchronized Level I + Level II event sequence together in one file
+  (owner-cited, not independently re-derived by decoding the proprietary .nrd format -- that
+  decoding was attempted once for structural bounds only, found inconclusive on its own, and is
+  correctly NOT being pursued further per owner instruction). Local structural inspection
+  (~2,012,426 fixed 80-byte records for the one day, exact file existence/location/format) is
+  consistent with, but does not independently prove, this classification -- the classification
+  rests on (1)+(2) above, disclosed as such.
+
+hard_boundary: >
+  Maximum acquisition date = 2026-07-31 (research/operational/LOCKED_FORWARD.md). No date
+  >=2026-08-01 may be requested, downloaded, or inspected under this run, ever. Every acquisition
+  script under src/ must call research_sdk/session_boundary.py's assert_not_locked_forward (or
+  the check-date CLI, for the manual-click steps a human must still perform) before recording a
+  date as attempted.
+
+acquisition_mechanism: >
+  NT8's Historical Data -> Get Market Replay data UI supports exactly one instrument/date per
+  download (confirmed both by direct owner experience and NinjaTrader's own support forum). No
+  MCP/API endpoint exists for this (confirmed against the full crosstrade tool surface this
+  session). No general Windows desktop-automation tool is available in this environment (checked:
+  no pywinauto/uiautomation/AutoHotkey installed; browser automation tools are Chrome-tab-only and
+  cannot reach a native NT8 window). Batch acquisition therefore proceeds via one of, in order of
+  preference: (A) an inspectable, owner-approved AddOn that itself only automates the official UI
+  workflow (candidates researched, see REPORT.md -- none installed without explicit owner
+  approval); (B) an owner-reviewed-and-executed UI-automation script (not run by the assistant);
+  (C) manual per-date clicking by the owner. In all cases, this run's own scripts only ever
+  READ the filesystem after the fact (db/replay/) to verify, inventory, and checksum what actually
+  landed -- they never attempt to trigger a download themselves.
+
+out_of_scope_this_run: >
+  DOM-M1 or any other DOM mechanism test. Any read of a .nrd file's price/size/depth CONTENT
+  (only structural/metadata inspection -- existence, size, checksum, record-count-as-a-structural-
+  fact -- is in scope). Reconciling this substrate against DOM01_PROSPECTIVE_PROTOCOL.md's
+  governance (deferred explicitly to a later, separate step per the owner's own sec9-10).
+  Deleting or recompressing any acquired .nrd file (no preservation-plan review has happened yet).
