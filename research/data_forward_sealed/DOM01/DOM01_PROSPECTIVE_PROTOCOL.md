@@ -1,5 +1,11 @@
 # DOM01 Prospective Research Protocol — SPEC ONLY, NO ALPHA RUN
 
+**UPDATE 2026-08-12: DOM01 collection PAUSED** (owner risk-control decision, workstation
+resource-instability incident — see `research/system_master/DOM_PAUSE_CLEANUP_20260812.md`). This
+frozen protocol remains valid and unchanged; it simply has no active data source feeding it until
+collection is explicitly re-authorized. No session ever reached this protocol's readiness
+threshold before the pause.
+
 **Status: frozen before any outcome/predictive analysis of DOM01 data. Zero DOM sessions have
 been read for any price-response, markout, or predictive purpose as of this commit.** This
 document exists to freeze the hypothesis and the exact evaluation procedure *before* that

@@ -7,8 +7,19 @@ Read this before starting any new research wave. Kept short on purpose — see
 CURRENT MODE: RESEARCH
 ```
 
-> **UPDATE 2026-08-11 (latest) — Post-structural-invariance master directive, wave 1 CLOSED; DOM01
-> collecting; QC/governance/timezone infra shipped.** Full queue:
+> **UPDATE 2026-08-12 (latest) — DOM / Level-II / Market Replay work PAUSED (owner risk-control
+> decision) after a workstation resource-instability incident.** Full record:
+> `research/system_master/DOM_PAUSE_CLEANUP_20260812.md`. No continuous DOM capture, no automated
+> full-depth collection, no bulk Market Replay downloading, no background Level-II collector,
+> until explicitly re-authorized. **This does not affect the core project**: the baseline
+> strategies work without DOM by design (DOM/order-flow is downstream research, never a
+> prerequisite), and ordinary bars / required historical tick data remain fully allowed. DOM01's
+> collector now fail-closed by default. 1.4 GB of raw, never-promoted DOM01 capture data was
+> deleted; the one deliberately-acquired Market Replay proof file (NQU6 2026-07-15, 153.5 MB) and
+> all canonical research/governance documentation were preserved.
+>
+> **UPDATE 2026-08-11 (superseded above) — Post-structural-invariance master directive, wave 1
+> CLOSED; DOM01 collecting; QC/governance/timezone infra shipped.** Full queue:
 > `research/system_master/ACTIVE_RESEARCH_QUEUE.md`. **P0 governance** unchanged (below).
 > **P1 EQV04: PASS, bit-identical** — the owner's F5 unblocked the actual NT8 backtest; all three
 > canonical/incumbent object pairs match trades and net P&L to the cent on two windows, Product A

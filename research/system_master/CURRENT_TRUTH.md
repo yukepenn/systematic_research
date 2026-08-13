@@ -1,5 +1,23 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+## DOM RESOURCE POLICY — effective 2026-08-12 (supersedes DOM01/DATA03 status below)
+
+**Full-depth DOM / Level-II continuous collection is PAUSED**, following a workstation
+resource-instability incident on 2026-08-12 during heavy DOM/Level-II/Market Replay work (the
+machine became unstable and crashed; recovered). This is a risk-control decision — the
+resource-heavy workflow coincided with instability, that is the extent of the claim; DOM work is
+not shown to have caused a hardware failure. Until explicitly re-authorized: no continuous DOM
+capture, no automated full-depth collection, no bulk Market Replay downloading, no background
+Level-II collector. DOM-dependent research is not, and must not become, a prerequisite for
+current baselines — **the baseline strategies work without DOM by design**; DOM/order-flow work
+is downstream research only. Ordinary bars and required historical tick data remain allowed and
+unaffected. Full record, cleanup manifest, and what was preserved vs. removed:
+`research/system_master/DOM_PAUSE_CLEANUP_20260812.md`. The DOM01 collector
+(`Dom01DepthRecorder_v1.cs`) now fail-closed defaults (`DomCollectionEnabled=false`) and will not
+record anything until explicitly re-enabled with recorded owner authorization. Future
+reconsideration should follow an improved resource architecture (more dedicated memory/storage or
+an isolated compute environment), not simply "try again."
+
 ## SNAPSHOT UPDATE (2026-08-11, post-structural-invariance wave 1 CLOSED; DOM01 collecting)
 
 **Supersedes every section below for anything it touches.** Full detail:

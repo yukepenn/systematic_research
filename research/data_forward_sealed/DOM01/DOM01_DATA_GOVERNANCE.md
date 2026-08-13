@@ -145,6 +145,7 @@ resolved (understood and either fixed or explained) before that window's session
 | Date | Event | Sessions affected | Owner decision reference |
 |---|---|---|---|
 | 2026-08-11 | `DOM01_PROSPECTIVE_PROTOCOL.md` + this document frozen and committed. Zero sessions promoted. | n/a | This commit |
+| 2026-08-12 | **COLLECTION PAUSED** (owner risk-control decision after a workstation resource-instability incident). Both collected `ENGINEERING_BURNIN` runs deleted (raw, never-promoted, per this document's own design). Collector fail-closed by default. Zero sessions promoted; this state machine and readiness rule remain valid, unused, for whenever collection resumes. | 2 runs deleted (0 ever reached `SEALED_FORWARD`-and-promoted) | `research/system_master/DOM_PAUSE_CLEANUP_20260812.md` |
 
 No further rows exist yet. The next row this document expects is either (a) a QC-failure
 resolution note, or (b) an explicit owner authorization moving a named batch from

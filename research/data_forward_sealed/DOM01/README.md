@@ -1,8 +1,18 @@
-# DOM01 forward-data vault — SEALED, receiving data as of 2026-08-11
+# DOM01 forward-data vault — SEALED, collection PAUSED as of 2026-08-12
 
-**UPDATE 2026-08-11: collection is live** (`runs/DOM01_LIQUIDITY_STATE/collector/out/`, one run
-in progress). Before any of it is read for research, see the two governance documents this update
-adds:
+**UPDATE 2026-08-12: collection PAUSED** (owner risk-control decision after a workstation
+resource-instability incident during heavy DOM/Replay work). No continuous DOM capture until
+explicitly re-authorized — full record: `research/system_master/DOM_PAUSE_CLEANUP_20260812.md`.
+The collector (`Dom01DepthRecorder_v1.cs`) now fail-closed defaults
+(`DomCollectionEnabled=false`). This vault remains empty (nothing was ever promoted into it); the
+raw, never-promoted capture CSVs from the two 2026-08-11/12 collection runs were deleted per that
+cleanup record (both cleanly `Terminated`, `ENGINEERING_BURNIN`/`SEALED_FORWARD` by design, not
+canonical evidence). The governance framework below remains valid and unchanged for whenever
+collection resumes.
+
+**UPDATE 2026-08-11 (historical, superseded above): collection is live**
+(`runs/DOM01_LIQUIDITY_STATE/collector/out/`, one run in progress). Before any of it is read for
+research, see the two governance documents this update adds:
 
 - `DOM01_PROSPECTIVE_PROTOCOL.md` — the one frozen DOM mechanism (DOM-M1, opposite-side depth
   withdrawal), full preregistration template, feed-semantics verification. No outcome analysis has

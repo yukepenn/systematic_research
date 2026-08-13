@@ -1,30 +1,28 @@
 # ACTIVE_RESEARCH_QUEUE
 
-**Last updated:** 2026-08-11 (scientific-preservation/prospective-setup pass, same day as DOM01
-collection start). Rolling document per master directive sec103/143-144 — re-ranked after every
-major result, not rewritten from scratch. Queues: `ACTIVE` (currently running), `READY` (next up,
+**Last updated:** 2026-08-12 (DOM pause/cleanup pass, following a workstation resource-instability
+incident). Rolling document per master directive sec103/143-144 — re-ranked after every major
+result, not rewritten from scratch. Queues: `ACTIVE` (currently running), `READY` (next up,
 nothing blocking), `BLOCKED` (owner or evidence gated), `DEFERRED` (lower EVI, not started),
-`CLOSED` (done this wave).
+`PAUSED` (owner risk-control decision), `CLOSED` (done this wave).
 
 ---
 
-## ACTIVE
+## PAUSED (owner risk-control decision, 2026-08-12 — see `DOM_PAUSE_CLEANUP_20260812.md`)
 
-| Item | Lane | Started | Notes |
+| Item | Lane | Paused | Notes |
 |---|---|---|---|
-| DOM01 live collection | E | 2026-08-11 | Owner completed all 5 startup steps. Verified directly (not just owner report): `DataConnectionDisableL2Data=False`, `DataConnectionStatusAtInit=Connected` (via Tradovate, not Simulation), depth/topofbook/heartbeat rows flowing continuously, zero `FATAL_ERROR` events (see `runs/DOM01_LIQUIDITY_STATE/collector/qc/dom01_qc_monitor.py` output — 0 FAIL, 1 descriptive WARN). Genuinely collecting real Level II data. Still not research-usable: the one run collected so far is classified `ENGINEERING_BURNIN` per `research/data_forward_sealed/DOM01/DOM01_DATA_GOVERNANCE.md` (structurally inspected while building the QC monitor, before the mechanism was frozen) — every run from here forward is `SEALED_FORWARD` by default and stays sealed even once QC/sample-size readiness is met, pending explicit owner authorization. **Run the QC monitor at least once per collection session** (`runs/DOM01_LIQUIDITY_STATE/collector/qc/README.md`). |
+| DOM01 live collection | E | 2026-08-12 | Was `ACTIVE`; paused after a workstation resource-instability incident during heavy DOM/Replay work. Collector source now fail-closed (`DomCollectionEnabled=false` default) — will not record anything until explicitly re-enabled with recorded owner authorization. Raw captured CSVs (1.4 GB, never promoted past `ENGINEERING_BURNIN`) deleted; QC/storage-monitor tooling preserved for whenever this resumes. |
+| DATA03 historical Market Replay acquisition (probe/batch plan) | E | 2026-08-12 | Was mid-planning (1 of 6 probe dates acquired: NQU6 2026-07-15, classified `GENUINE_NT8_MARKET_REPLAY_L1_PLUS_L2`, preserved). No further probing or batch acquisition until explicitly re-authorized — see `runs/DATA03_HISTORICAL_MARKET_REPLAY_INVENTORY/acquisition_plan.yaml`. |
 
 ## BLOCKED_OWNER
 
-*(none right now — both prior F5-gated items closed this wave; DOM01 discovery-authorization is a
-separate, later owner decision, not a blocker on any currently-active item)*
+*(none right now)*
 
 ## READY (next up)
 
-*(none right now — the DOM QC monitor moved from READY to CLOSED this wave; the next real step is
-accumulating `SEALED_FORWARD` sessions, which is calendar time, not a queued task — see
-`DOM01_DATA_GOVERNANCE.md` sec3 for the mechanical readiness formula that will decide when a
-batch is even proposal-eligible)*
+*(none right now — DOM/Replay work is paused, not queued; see PAUSED above. Non-DOM baseline
+research is unaffected and remains the primary project.)*
 
 ## DEFERRED (lower EVI this wave, not started)
 

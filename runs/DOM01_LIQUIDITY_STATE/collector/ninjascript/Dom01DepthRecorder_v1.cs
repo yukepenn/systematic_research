@@ -103,12 +103,22 @@ namespace NinjaTrader.NinjaScript.Indicators
         [NinjaScriptProperty]
         public int HeartbeatEveryNBars { get; set; }
 
+        // DOM_PAUSE_CLEANUP_20260812: project-policy fail-closed guard, effective 2026-08-12
+        // after a resource-instability incident during heavy DOM/Replay work. Defaults to
+        // false (paused) on every fresh add/reload -- NinjaScript re-applies [SetDefaults] on
+        // each new instance, so this cannot be silently left "on" from a prior session. Do NOT
+        // flip this default to true without explicit, dated owner re-authorization recorded in
+        // research/system_master/DOM_PAUSE_CLEANUP_20260812.md and
+        // research/data_forward_sealed/DOM01/DOM01_DATA_GOVERNANCE.md.
+        [NinjaScriptProperty]
+        public bool DomCollectionEnabled { get; set; }
+
         protected override void OnStateChange()
         {
             if (State == State.SetDefaults)
             {
                 Name = "Dom01DepthRecorder_v1";
-                Description = "Research-only DOM01 forward-collection logger: MBP depth + top-of-book + connection events. No order methods. See runs/DOM01_LIQUIDITY_STATE/collector/REPORT.md.";
+                Description = "Research-only DOM01 forward-collection logger: MBP depth + top-of-book + connection events. No order methods. See runs/DOM01_LIQUIDITY_STATE/collector/REPORT.md. PAUSED by project policy as of 2026-08-12 -- set DomCollectionEnabled=true to override only after explicit owner re-authorization.";
                 IsOverlay = false;
                 Calculate = Calculate.OnEachTick;
                 ExportDir = @"D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\DOM01_LIQUIDITY_STATE\collector\out";
@@ -117,6 +127,7 @@ namespace NinjaTrader.NinjaScript.Indicators
                 FlushEveryNEvents = 500;
                 RecordTopOfBook = true;
                 HeartbeatEveryNBars = 1;
+                DomCollectionEnabled = false;
             }
             else if (State == State.DataLoaded)
             {
@@ -134,6 +145,14 @@ namespace NinjaTrader.NinjaScript.Indicators
 
         private void InitializeRun()
         {
+            if (!DomCollectionEnabled)
+            {
+                Print("DOM / Level-II collection is paused by project policy. Explicit authorization is required to enable it. " +
+                      "See research/system_master/DOM_PAUSE_CLEANUP_20260812.md. This indicator will not open any output files, " +
+                      "capture any connection identity, or record any depth/top-of-book/event data while paused.");
+                return;
+            }
+
             lock (sync)
             {
                 try

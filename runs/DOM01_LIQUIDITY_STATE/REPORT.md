@@ -1,6 +1,15 @@
-# DOM01 — Level-II liquidity state: DATA_LIMITED, no historical route, forward-collection scoped not built
+# DOM01 — Level-II liquidity state: DATA_LIMITED historically, forward collection PAUSED 2026-08-12
 
-**Disposition: DATA_LIMITED.** Per addendum E1: only genuine Market Replay/MBO/MBP evidence
+**UPDATE 2026-08-12: forward collection PAUSED** (owner risk-control decision after a workstation
+resource-instability incident during heavy DOM/Level-II/Market Replay work). No continuous DOM
+capture until explicitly re-authorized. Collector now fail-closed by default
+(`DomCollectionEnabled=false`). Raw capture data from the two collection runs (1.4 GB, never
+promoted past `ENGINEERING_BURNIN`) deleted; the Market Replay proof file and all governance
+documentation preserved. Full record: `research/system_master/DOM_PAUSE_CLEANUP_20260812.md`.
+Everything below predates the pause and is retained for history — the disposition/classification
+narrative is unaffected by it.
+
+**Disposition (as of 2026-08-10, historical): DATA_LIMITED.** Per addendum E1: only genuine Market Replay/MBO/MBP evidence
 qualifies for DOM01 — OHLCV or BBO-only proxies are explicitly invalid. DATA02's inventory
 (`runs/DATA02_MICROSTRUCTURE_INVENTORY/`) confirms, independently and twice, that no such data
 exists anywhere on this machine: `db/replay/` and `db/snapshot/` under the local NinjaTrader 8

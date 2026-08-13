@@ -1,4 +1,11 @@
-# DATA03 — Historical Market Replay Inventory: OPEN, acquisition planning stage
+# DATA03 — Historical Market Replay Inventory: PAUSED 2026-08-12, acquisition planning stage
+
+**UPDATE 2026-08-12: acquisition PAUSED** (owner risk-control decision after a workstation
+resource-instability incident during heavy DOM/Replay work — see
+`research/system_master/DOM_PAUSE_CLEANUP_20260812.md`). The probe/batch plan in
+`acquisition_plan.yaml` (1 of 6 dates acquired) does not proceed until explicitly re-authorized.
+The one acquired proof file (NQU6 2026-07-15, `GENUINE_NT8_MARKET_REPLAY_L1_PLUS_L2`) was
+preserved, not deleted — see the cleanup record for the reasoning.
 
 **Classification: INFRASTRUCTURE / DATA ACQUISITION. Zero alpha budget.** No price, markout,
 return, or price-response content has been read from any `.nrd` file. This report documents what
