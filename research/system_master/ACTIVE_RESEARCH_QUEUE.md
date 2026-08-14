@@ -1,10 +1,27 @@
 # ACTIVE_RESEARCH_QUEUE
 
-**Last updated:** 2026-08-12 (DOM pause/cleanup pass, following a workstation resource-instability
-incident). Rolling document per master directive sec103/143-144 — re-ranked after every major
-result, not rewritten from scratch. Queues: `ACTIVE` (currently running), `READY` (next up,
-nothing blocking), `BLOCKED` (owner or evidence gated), `DEFERRED` (lower EVI, not started),
-`PAUSED` (owner risk-control decision), `CLOSED` (done this wave).
+**Last updated:** 2026-08-14 (return to primary non-DOM research program; EVI re-rank + HTFMECH01).
+Rolling document per master directive sec103/143-144 — re-ranked after every major result, not
+rewritten from scratch. Queues: `ACTIVE` (currently running), `READY` (next up, nothing blocking),
+`BLOCKED` (owner or evidence gated), `DEFERRED` (lower EVI, not started), `PAUSED` (owner
+risk-control decision), `CLOSED` (done this wave).
+
+## EVI-ranked non-DOM frontier (2026-08-14) — see `RESEARCH_FRONTIER.md` for full evidence per row
+
+Explicitly excluded from ranking per owner instruction (not re-litigated): DOM/Market Replay
+(`PAUSED`, see below), B1 historical tuning (frozen, calendar/protected-pool-gated only),
+ACTIONMAP01 (`CLOSED_NO_ACTION_MAPPING`), U6B (`NOT_PROMOTED`), generic OHLCV feature mining
+(8 independently-constructed feature families already show a consistent right-tail-unsafe-or-
+too-small failure signature — diminishing EVI for more of the same kind of single-feature test).
+
+| Rank | Item | EVI reasoning |
+|---|---|---|
+| 1 | HTF mechanism decomposition | Two independent methods (PLACEBO01 causal placebo, SIMPLE01 non-inferiority ladder) already flag HTF as the weakest-evidenced live component; `STRUCTURAL_INVARIANCE_MINIMUM_SYSTEM_SYNTHESIS.md` names it the explicit target for future work. Pure diagnostic, no new data, directly actionable. **DONE THIS WAVE — see `HTFMECH01_TILT_MECHANISM/`.** |
+| 2 | Direction-conditioned HTF construction (future, separately preregistered) | HTFMECH01 sharpened the target further: HTF's cost concentrates on the short side (−$22,020 A / −$2,822 B), corroborated by SA0/PA0/PA1's independent long/short asymmetry findings. Real candidate for a future construction task — full gate battery required, not started here. |
+| 3 | U9/U9B microstructure re-test at larger sample | Legitimate genuine order-flow (not OHLCV, not DOM/Replay) — closed null only for lack of statistical power (37+8 sessions). Gated on scalping_lab's tick/BBO history accumulating materially more sessions; ~6 calendar days have passed since closure, nowhere near enough. Not ready. |
+| 4 | Second literature-scout pass (auction spillovers, intraday liquidity cycles) | Cheap, principled, hypothesis-first (not data-mining) — could surface a genuinely new, well-motivated mechanism. Untried topics per `FRONTIER_AUDIT_20260809.md`. Not started — lower urgency than 1-2, no specific candidate mechanism in hand yet. |
+| 5 | Cross-market EVI review | Still no specific motivating mechanism (generic "ES predicts NQ" explicitly not authorized). Deferred until literature scout (rank 4) or another lead produces one. |
+| 6 | Capital/portfolio science refresh | `CAPITAL_FRONTIER.md` current as of Wave 5; nothing new to fold in. |
 
 ---
 
@@ -21,8 +38,10 @@ nothing blocking), `BLOCKED` (owner or evidence gated), `DEFERRED` (lower EVI, n
 
 ## READY (next up)
 
-*(none right now — DOM/Replay work is paused, not queued; see PAUSED above. Non-DOM baseline
-research is unaffected and remains the primary project.)*
+| Item | Lane | Why ready | Depends on |
+|---|---|---|---|
+| Direction-conditioned HTF construction (rank 2, see EVI table above) | A | HTFMECH01 sharpened the target with a real, corroborated mechanism (short-side concentration); diagnostic complete | Its own separate preregistration + full gate battery (chronology, tail-risk, right-tail-safety, NT8-executable proof) before any promotion — not started |
+| Second literature-scout pass (rank 4) | F | Cheap, principled, could surface a genuinely new mechanism | Nothing — could start any time; lower urgency than rank 1-2 |
 
 ## DEFERRED (lower EVI this wave, not started)
 
@@ -30,6 +49,12 @@ research is unaffected and remains the primary project.)*
 |---|---|---|
 | Mechanistic cross-market EVI review | F | No specific mechanism currently identified as high-EVI (per sec71-73, generic "ES predicts NQ" is explicitly not authorized) |
 | Capital/portfolio science refresh | G | `CAPITAL_FRONTIER.md` is current as of Wave 5; no new capital-relevant finding this wave to fold in yet |
+
+## CLOSED this wave (2026-08-14, return to primary research program)
+
+| Item | Verdict |
+|---|---|
+| HTFMECH01 (HTF marginal-contribution mechanism decomposition) | **Diagnostic complete, real finding, no promotion.** Whole-window totals reproduce PLACEBO01's certified figures exactly. Year decomposition: not uniform (2024 strongly positive for B). Side decomposition: strongly concentrated — HTF's up-weight mechanism is value-additive long, value-destructive short (Product A short-side cost −$22,020, 3.5× the whole-window net positive), corroborated by SA0/PA0/PA1's independent long/short asymmetry findings. Sharpens (does not resolve) the synthesis's own flagged HTF lead. See `HTFMECH01_TILT_MECHANISM/REPORT.md`. |
 
 ## CLOSED prior wave, verified still current (no rework needed)
 

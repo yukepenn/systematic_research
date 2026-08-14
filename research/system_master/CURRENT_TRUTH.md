@@ -1,5 +1,26 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+## RETURN TO PRIMARY RESEARCH PROGRAM — 2026-08-14 (non-DOM frontier re-ranked, HTFMECH01 closed)
+
+DOM branch stays `PAUSED` (see policy note directly below, unchanged). Re-read `BASELINE_MODELS.md`,
+`ACTIVE_RESEARCH_QUEUE.md`, `RESEARCH_FRONTIER.md`, and
+`STRUCTURAL_INVARIANCE_MINIMUM_SYSTEM_SYNTHESIS.md`; re-ranked the remaining non-DOM frontier by
+EVI (full table: `ACTIVE_RESEARCH_QUEUE.md`). Excluded from consideration per standing instruction:
+DOM/Replay, B1 historical tuning, ACTIONMAP01, U6B, generic OHLCV feature mining (8 independently-
+built feature families already show a consistent right-tail-unsafe-or-too-small failure pattern).
+
+**Top-ranked item actioned this wave: HTFMECH01**, a pure diagnostic decomposing PLACEBO01's
+already-established finding (HTF's marginal contribution sits below its own randomized-chronology
+null, the weakest-evidenced live component per two independent methods —
+`STRUCTURAL_INVARIANCE_MINIMUM_SYSTEM_SYNTHESIS.md`'s own named future-work target). **Real,
+corroborated result, no promotion**: HTF's underperformance is not uniform across years, but is
+sharply concentrated by direction — value-additive on longs, value-destructive on shorts (Product A
+short-side cost −$22,020, over 3.5× the whole-window net positive), independently corroborated by
+SA0/PA0/PA1's own long/short asymmetry findings. Sharpens, does not resolve, the open HTF question.
+No incumbent file touched, no `B1` file touched, no construction attempted. Full report:
+`research/system_master/HTFMECH01_TILT_MECHANISM/REPORT.md`. Next-ranked item (a
+separately-preregistered direction-conditioned HTF construction test) queued `READY`, not started.
+
 ## DOM RESOURCE POLICY — effective 2026-08-12 (supersedes DOM01/DATA03 status below)
 
 **Full-depth DOM / Level-II continuous collection is PAUSED**, following a workstation
