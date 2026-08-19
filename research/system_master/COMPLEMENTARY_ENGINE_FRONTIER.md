@@ -1,3 +1,9 @@
+> _Supersede note (2026-08-18): the candidate queue below cites `NEXT_RESEARCH_QUEUE.md` (since
+> archived). The queued slate (VALUE-1/VOL-1/REL-1/MOM-6 and the VR/ER/fade variants) was
+> subsequently tested and **killed** in the continuous-evolution waves; no engine-#3 candidate is
+> currently queued. The frozen requirement block below still binds any future candidate. Live
+> frontier: `ACTIVE_RESEARCH_QUEUE.md`._
+
 # COMPLEMENTARY_ENGINE_FRONTIER — the hunt for engine #3
 
 _2026-08-08. Holder: B-MOM (E2 basis) — losing-day corr to Solar ≈0.04, standalone

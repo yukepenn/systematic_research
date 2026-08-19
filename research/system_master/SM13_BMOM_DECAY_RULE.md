@@ -3,6 +3,12 @@
 Frozen BEFORE any monitoring reading. Applies to every deployed variant carrying the
 B-MOM leg (PORT_TILT_532 master; SolarWaveSMOneLot_v1).
 
+> _Object-name mapping (appended 2026-08-18; the frozen rule is unchanged): the deployed
+> B-MOM-carrying objects are now `SolarWaveSMMaster_v4` (Product A, successor of the
+> PORT_TILT_532 master line) and `SolarWaveOneContractNQ_v5` / `SolarWaveOneContractMNQ_v5`
+> (Product B). This monitor applies to them identically; readings occur at each MONITOR-01
+> cadence date (`research/operational/MONITORING_CALENDAR.md`)._
+
 **Statistic:** rolling 504-session (2-year) mean of the B-MOM leg's daily net C1 $
 (1-NQ basis), computed quarterly at each MONITOR-01 reading from the frozen rule's
 own ledger extension (sm_bmom.py on fresh bars; the extension read is an evaluation,

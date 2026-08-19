@@ -1,3 +1,7 @@
+> _Era banner (2026-08-18): campaign #1 final package, frozen 2026-08-07. Current-object
+> robustness/health lives in `research/system_master/CURRENT_EDGE_HEALTH.md` (+ `_PRODUCT_A`)
+> and `/BASELINE_MODELS.md`. Current repo state: `/STATE_OF_RESEARCH_20260818.md`._
+
 # Robustness — final, 2026-08-07
 
 _Two layers: the frozen baseline (Phase 0, unchanged and still valid) and the finalist ensembles

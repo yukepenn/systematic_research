@@ -1,3 +1,8 @@
+> _Supersede note (2026-08-18): the gating described below has since completed — EQV02/EQV03
+> passed 2026-08-10 and **EQV04 passed bit-identical on NT8** 2026-08-11
+> (`runs/EQV04_NT8_CANONICAL_PARITY/REPORT.md`). The incumbent `.cs` files remain the sole
+> source of truth for behavior; this document remains the exact minimal representation._
+
 # CANONICAL_MATHEMATICAL_SPEC
 
 **Status:** derived 2026-08-10 from `EQV01_BEHAVIORAL_CANONICALIZATION/REPORT.md`, whose three

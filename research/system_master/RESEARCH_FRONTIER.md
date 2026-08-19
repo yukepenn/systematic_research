@@ -1,3 +1,9 @@
+> _Supersede note (2026-08-18): live frontier navigation moved to **`ACTIVE_RESEARCH_QUEUE.md`**
+> (EVI-re-ranked 2026-08-14). Not reflected in the rows below: **HTFMECH01** closed 2026-08-14
+> (HTF cost is direction-concentrated — short side; see `HTFMECH01_TILT_MECHANISM/REPORT.md`),
+> and DOM01 went live 2026-08-11 then was **PAUSED** 2026-08-12 (`DOM_PAUSE_CLEANUP_20260812.md`).
+> This table remains the authoritative per-family closure record for the families it lists._
+
 # RESEARCH_FRONTIER — navigation table for the post-parity RESEARCH campaign
 
 Started 2026-08-09 (MEGA RESEARCH DIRECTIVE, same day the parity/repo-consolidation campaign

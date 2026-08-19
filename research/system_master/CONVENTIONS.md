@@ -5,6 +5,20 @@ Everything below is binding for the whole program. Changes require a new dated s
 appended here with justification; nothing may be edited after a result that depends on it
 has been read.
 
+> **DATED CORRECTION 2026-08-18 (append-only; the frozen text below is unchanged).**
+> 1. **§1's "Honesty note on the holdout" is factually superseded**: `runs/SM11_HOLDOUT_READ`
+>    consumed 2026-06-01→2026-07-31 on 2026-08-08 **for everything — including B-MOM, B-FADE, B1,
+>    and any new engine**. The note was correct when frozen (2026-08-08, before SM11 ran later
+>    that day); it is no longer true. Authority: `HOLDOUT_DETERMINATION_20260809.md` (VERDICT:
+>    CONSUMED) and Wave-18 E-1 in `CURRENT_TRUTH.md`. No pristine OOS exists through 2026-07-31;
+>    the only virgin data is ≥2026-08-01 (LOCKED_FORWARD).
+> 2. **Dev-window boundary label vs constant**: §1's "2026-05-31" is the window *label*; the last
+>    session actually in the dev data — and the constant every analysis codes — is
+>    **2026-05-29** (`src/analytics/seal_audit.py` DEV_END, `primary_objective.py`). No session
+>    exists on 05-30/31 (weekend), so the two are the same data; cite **2026-05-29** as the
+>    canonical boundary. Canonical boundary math: `research_sdk/session_boundary.py`
+>    (LOCKED_FORWARD_LAST_CONSUMED_SESSION = 2026-07-31).
+
 ## 1. Data windows (frozen)
 
 | window | range | role |

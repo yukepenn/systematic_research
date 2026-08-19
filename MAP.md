@@ -120,6 +120,20 @@ delete outputs** — this is raw evidence, not scratch, even for killed/rejected
 - `research/operational/LOCKED_FORWARD.md` — the virgin-data seal (data ≥2026-08-01 is
   off-limits for tuning).
 
+## Addendum 2026-08-18 (consolidation pass — three corrections to this file's own claims)
+
+- The "one machine-readable frontier per campaign" note above is wrong about campaign #3:
+  **`SYSTEM_FRONTIER.yaml` and `SYSTEM_SCORECARD.md` do not exist anywhere in the repo** (verified
+  by full-tree search; the reading order quoting them is from an archived layer). Campaign #3's
+  machine-ish state lives in `CURRENT_TRUTH.md` + `ACTIVE_RESEARCH_QUEUE.md` +
+  `TESTING_LEDGER.csv`. The `research/frontier.yaml` (campaign #1) and
+  `research/scalping_lab/FRONTIER.yaml` (campaign #4) files do exist.
+- `runs/` is now **191 directories** (the "112+" above is a 2026-08-09 count). A machine-readable
+  classification now exists: `research/registry/RUNS_INDEX.csv`.
+- A repo-wide consolidated state map now exists and is the recommended first read after
+  `README.md`: **`/STATE_OF_RESEARCH_20260818.md`** (all campaigns, merged open frontier, unified
+  data boundaries, monitoring calendar).
+
 ## Housekeeping done 2026-08-09 (this pass)
 
 Removed (zero content, zero evidence lost): 7 empty placeholder directories

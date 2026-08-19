@@ -1,5 +1,12 @@
 # Campaign State
 
+> _Pointer banner (2026-08-18): this file is **campaign #1's** closed state (2026-08-07) and is
+> final. Note its `../README.md` link now points at the whole-repo landing page (rewritten
+> 2026-08-09), not the campaign-#1 README — that moved to `SOLAR_WAVE_CAMPAIGN_README.md` (this
+> directory). Current repo truth: `/STATE_OF_RESEARCH_20260818.md`, `/BASELINE_MODELS.md`,
+> `system_master/CURRENT_TRUTH.md`. Campaign #1's only live obligations are the scheduled
+> MONITOR-01 readings (`operational/MONITORING_CALENDAR.md`)._
+
 _Last updated: 2026-08-07, after the reports integrity audit (section 13). **Campaign CLOSED** at
 the formal stop condition — see section 9b. Entry point for everything: [`../README.md`](../README.md);
 decision package: [`../reports/final_system_design.md`](../reports/final_system_design.md)._

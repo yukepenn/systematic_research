@@ -1,3 +1,8 @@
+> _Era banner (2026-08-18): campaign #1 statement, frozen 2026-08-07, and true within that
+> campaign's scope. Campaign #3 (SYSTEM_MASTER) subsequently built multi-engine portfolio
+> objects — Product A (Solar13 + B-MOM, continuous sizing) and the Product B one-contract
+> pair. See `/BASELINE_MODELS.md`; this file is historical._
+
 # Portfolio — NOT BUILT
 
 _2026-08-07 · This is a statement of absence, not a placeholder for work in progress._

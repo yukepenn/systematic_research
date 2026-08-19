@@ -46,3 +46,13 @@ The right tail requires long holding duration (blocks >7.5h net +$1,922 mean vs 
 mean) and high initial consensus. Time-of-day contributes only mildly and non-monotonically
 conditional on other state (see `runs/SA0_SYSTEM_STRUCTURE/out/sec16_*.csv`) — this motivates R3
 rather than answering it.
+
+---
+
+_Appended 2026-08-18 (consolidation pass): the HTF-tilt row above ("small, real, not free";
+"closed axis") predates two later results that sharpen it — PLACEBO01 (2026-08-10): HTF's marginal
+contribution sits BELOW its own randomized-chronology null for both products (the weakest-evidenced
+live component); HTFMECH01 (2026-08-14): that underperformance is direction-concentrated —
+value-additive on longs, value-destructive on shorts (Product A short side −$22,020). See
+`HTFMECH01_TILT_MECHANISM/REPORT.md`. A direction-conditioned HTF construction is queued READY in
+`ACTIVE_RESEARCH_QUEUE.md`; the axis is a live lead again, not closed._

@@ -67,6 +67,34 @@ ranking or verdict in the program depends on it — the band brackets it.
 
 ---
 
+## OQ-1a — pointer correction (appended 2026-08-18)
+OQ-1's citation "`README.md` §6b" refers to the pre-2026-08-09 README; that section now lives at
+`research/SOLAR_WAVE_CAMPAIGN_README.md` §6b (root README was rewritten as the whole-repo landing
+page on 2026-08-09). OQ-1 itself remains OPEN and remains the highest-consequence item here.
+
+---
+
+## OQ-4 — DOM/Replay pause follow-ups: two rolling-retention clocks + one unresolved disk finding
+**Opened** 2026-08-18 (consolidation pass). **Status** OPEN. **Severity** medium; all three are
+owner decisions, none blocks current research (DOM work is downstream-only by design).
+
+1. **DATA03 Market Replay probe dates are aging out.** The acquisition plan
+   (`runs/DATA03_HISTORICAL_MARKET_REPLAY_INVENTORY/acquisition_plan.yaml`) is PAUSED with 5 of 6
+   probe dates unacquired; the server retention prior is ~90 days rolling, so the oldest planned
+   dates (2026-05/06) are at or past the edge. Doing nothing forfeits those dates permanently —
+   that may be an acceptable cost of the pause; it just should be a decision, not a side effect.
+2. **Confirmation-pool BBO archival window.** 116 of 160 untouched protected scalp-pool sessions
+   have no local Bid/Ask cache and the server tick window rolls at ~1 year. ARCHIVE_ONLY exports
+   (no analysis) are already permitted under CONTAMINATION_LEDGER Amendment 3 and are NOT
+   suspended by the DOM pause (ordinary bars + required historical tick data remain allowed per
+   `DOM_PAUSE_CLEANUP_20260812.md`) — but resuming opportunistic archival still deserves an
+   explicit owner OK given the resource-instability incident happened during heavy data work.
+3. **C:-drive space drain (2026-08-12) never resolved.** DATA03 REPORT §5 recorded free space
+   falling ~34.4→22.2 GiB in ~30-40 min, cause unconfirmed. No resolution is recorded anywhere in
+   the repo. Quick owner check (Task Manager / Resource Monitor) recommended.
+
+---
+
 ## OQ-3 — NinjaScript recompile (F5) after a strategy edit
 **Opened** 2026-08-09. **Status** RESOLVED-IN-PRACTICE, kept for the record.
 

@@ -1,3 +1,15 @@
+> **UPDATE 2026-08-18 (consolidation pass — two later parity results recorded, all 3 objects still
+> byte-identical/UNCHANGED).** (1) **EXEC01** (2026-08-10, `runs/EXEC01_PRODUCT_A_DOLLAR_ATTRIBUTION/
+> REPORT.md`): Product A's +10.91% NT8 residual leg-audited across 9 representative periods —
+> **1,371/1,371 order-level legs matched 1:1, zero unexplained dollars**; ~97.8% of the full-history
+> residual attributed to the two disclosed non-defect conventions. This materially closes the "not
+> leg-proven" caveat below (9 periods + extrapolation, not every session) and sets the forward bar:
+> no Product-A challenger with Python improvement < ~$430/0.24% may be promoted on Python evidence
+> alone. (2) **EQV04** (2026-08-11, `runs/EQV04_NT8_CANONICAL_PARITY/REPORT.md`): all three
+> canonical/incumbent object pairs match NT8 trades and net P&L **to the cent** on two windows;
+> Product A additionally bit-identical bar-by-bar across 165,861 bars. Zero promotions since this
+> file was written; per-wave detail lives in `research/system_master/CURRENT_TRUTH.md`.
+>
 > **UPDATE 2026-08-09 (SYSTEM ARCHITECTURE SCIENCE + ALPHA OPTIMIZATION campaign, same day, after
 > the text below).** A full structural/failure-mode decomposition (SA0) plus 6 further research
 > families (R3/R2B/R4/R5/R6/PA0-PA1) ran to completion — **zero promotions, all 3 objects below

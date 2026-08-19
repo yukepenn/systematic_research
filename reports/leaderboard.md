@@ -1,3 +1,8 @@
+> _Era banner (2026-08-18): campaign #1 final package, frozen 2026-08-07. The "RECOMMENDED"
+> champion here (theoretical R5) was re-tiered by the post-audit `FINAL_PARETO_FRONTIER.md`
+> (CHAMPION = Executable R5-E10, $179,361.36 / 0.9671 / −$41,252.20) — that file governs.
+> Current repo state: `/STATE_OF_RESEARCH_20260818.md`._
+
 # Leaderboard — final, 2026-08-07
 
 _Ranked by **daily Sharpe**, never by net profit. 3-minute NQ, real slip-1, Lifetime commission,

@@ -4,6 +4,13 @@
 > `research/system_master/_archive/README.md`). For current state, see
 > **`research/system_master/CURRENT_TRUTH.md`** and **`research/system_master/
 > ACTIVE_RESEARCH_QUEUE.md`**. Repo orientation: **[`MAP.md`](MAP.md)**.
+>
+> _Banner extension (2026-08-18): §H step 1 (owner force-push of the rewritten branches) was
+> completed — the vendor-blob track's live status is now `OWNER_QUEUE.md` §OQ-1 (repo PUBLIC,
+> remote retention UNVERIFIED, owner decision pending). Do not execute §H's commands from this
+> file. Also superseded by later evidence: the "portability (RTY/YM/CL)" item in the resume list
+> below was run and failed 0/3 (PORTABILITY-01) — see `research/frontier.yaml`'s 2026-08-18
+> reconciliation block for final dispositions of every then-open item._
 
 # NEXT_HANDOFF — POST_CAMPAIGN_AUDIT_01 + post-audit waves complete; CONVERGENCE
 

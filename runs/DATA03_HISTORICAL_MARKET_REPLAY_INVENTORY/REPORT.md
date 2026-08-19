@@ -126,3 +126,13 @@ read beyond structural byte-stride counting. No Playback connection touched — 
 collector remains untouched (re-verified via `dom01_qc_monitor.py`, unchanged state). No mixing
 of this substrate with `DOM01_PROSPECTIVE_PROTOCOL.md`'s governance — that reconciliation is
 explicitly deferred to a later step per the owner's own instruction.
+
+---
+
+## §5 STATUS NOTE (appended 2026-08-18 — additive; the report above is unchanged)
+
+The §5 C:-drive space-drain finding (free space ~34.4→22.2 GiB in ~30-40 min on 2026-08-12,
+cause unconfirmed) has **no recorded resolution**. Status: UNRESOLVED — surfaced to the owner as
+`OWNER_QUEUE.md` §OQ-4 item 3 (quick Task Manager / Resource Monitor check recommended). The
+acquisition plan itself remains PAUSED per the same-day owner risk-control decision; the ~90-day
+server-retention clock on the unacquired probe dates is likewise surfaced in §OQ-4 item 1.

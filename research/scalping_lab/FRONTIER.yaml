@@ -1,6 +1,6 @@
 # Scalping Lab frontier — machine-readable state
-updated: 2026-08-08
-phase: W2_FAST_STRUCTURAL   # Amendment 4: Zone F primary
+updated: 2026-08-18   # consolidation pass; state file kept current per campaign convention
+phase: PHASE_COMPLETE_2026-08-08   # was W2_FAST_STRUCTURAL; Zone F closed per par.34, Program B = 3 parked / 0 frozen; forward schedule in ../operational/MONITORING_CALENDAR.md
 champions:  # per-zone per Amendments 1+4; adjacent may never claim the scalp title
   MICRO:            {signal_reference: null, final: null}   # roles B/C only
   FAST_STRUCTURAL:  {signal_reference: null, final: null, zone_status: CLOSED_2026-08-08_par34}  # reports/ZONE_F_FINAL_VERDICT.md; reopen rule inside
@@ -13,7 +13,7 @@ champions:  # per-zone per Amendments 1+4; adjacent may never claim the scalp ti
   SCALP_FINAL_CHAMPION: null   # must come from MICRO or STRUCTURAL_SCALP
 splits:
   development_tick: [2025-08-10, 2026-05-31]
-  holdout_scalp: [2026-06-01, 2026-07-31]   # sealed; single-read at Tier-3
+  holdout_scalp: [2026-06-01, 2026-07-31]   # was sealed; CONSUMED 2026-08-08 by system_master SM11 (owner-authorized) — see CONTAMINATION_LEDGER; only >=2026-08-01 remains virgin
   development_minute: [2005-01-01, 2026-05-31]
   locked_forward: 2026-08-01
 data_levels:
@@ -25,8 +25,8 @@ data_levels:
   level4_depth: blocked_by_data
 seals:
   locked_forward_start: 2026-08-01
-  scalp_holdout: pending_data_audit
-waves_without_pareto_improvement: 3   # W3, W4, W5 — par.35.9 met for Zone F; closure still gated on FSS-10 + red team (Amendment 6 par.9)
+  scalp_holdout: frozen_2026-08-07_consumed_2026-08-08_by_SM11   # was pending_data_audit
+waves_without_pareto_improvement: 3   # W3, W4, W5 — par.35.9 met; closure COMPLETED 2026-08-08 (FSS-10 + red team + par.9 checklist all discharged; reports/ZONE_F_FINAL_VERDICT.md)
 open_questions:
   - id: Q1
     q: What data levels does our NT8 historical cache actually support, over what coverage?
@@ -54,9 +54,12 @@ open_questions:
   - id: Q7
     q: Does a wait-deeper entry (retracement >= X from clean-move distribution, eff60/flow-aligned) close the viability gap where shallow triggers failed? (W5-1)
     priority: 1
+    status: answered_2026-08-08  # no — W5-C1 killed; intended recovery gate was inert (binding-recovery variant = untested space, carried in ZONE_F UNRESOLVED)
   - id: Q8
     q: Does ES state (confirmation / non-confirmation / relative strength at seconds-minutes horizon) supply the missing conditional lift on NQ structural states? (FSS-10)
     priority: 1
+    status: answered_2026-08-08  # no — FSS-10 negative on all 3 readings (W6); ES substrate archived for reuse
   - id: Q9
     q: Is the adverse selection of passive fills state-dependent (fill-rate/selection by spread, flow, location), i.e. is there any location class where limit entry beats market? (role-C)
     priority: 2
+    status: open_needs_new_spec_2026-08-18  # never statused during the phase; adjacent evidence negative (A-EXIT passive closed, W4-A adverse selection FACT); requires new spec + larger tick library

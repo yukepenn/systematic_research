@@ -1,5 +1,11 @@
 # DRAWDOWN_FRONTIER — current state of DD engineering
 
+> _Supersede note (2026-08-18): frozen at 2026-08-08. Two later closures not reflected below:
+> **C-P7 windfall give-back was KILLED at confirmation** (risk reduction indistinguishable from
+> random same-duration de-risking; see wave-2 synthesis) — its "only survivor / frozen spec next
+> wave" line is dead. Champion/object references are superseded by `/BASELINE_MODELS.md`
+> (Product A `SolarWaveSMMaster_v4`). The lever taxonomy itself remains valid reference._
+
 _2026-08-08. Reference: every number at DUAL-Solar dev vol ($37.1k ann) unless noted._
 
 | lever | status | effect on maxDD |

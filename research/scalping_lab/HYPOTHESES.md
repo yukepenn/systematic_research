@@ -1,5 +1,10 @@
 # Hypothesis Frontier — living document
 
+> _Pointer (2026-08-18): statuses in this file are frozen at 2026-08-07 vintage; most families
+> listed as open were killed/closed in W1-W10. Authoritative live status:
+> `registry/hypothesis_ledger.csv` + `registry/tested_configs.csv` + `REJECTED_IDEAS.md`;
+> final phase state: `CAMPAIGN_STATE.md` (PHASE COMPLETE entry) + `ALPHA_SCOREBOARD.md`._
+
 Status key: SEED (from mandate) | HOUSE (our own, from first principles / Solar findings) |
 DR (from deep research) | T0/T1/T2/T3 (tier reached) | BLOCKED_BY_DATA | REJECTED (→ REJECTED_IDEAS.md)
 

@@ -60,6 +60,12 @@ trial; parity gates are not trials at all.
 The asserted ≈316 sits inside the honest bracket, so no published figure was inflated by an
 undercount. It was, however, an assertion rather than a count, and it is now checkable.
 
+> _Supersede pointer (appended 2026-08-18): the 229–383 bracket above was correct for its date
+> and is **superseded** — 270 further trial-slots were logged (seq 230–498) after it was written.
+> The on-record bracket is now **499–653** (`HASH01_BEHAVIORAL_POLICY_REGISTRY/REPORT.md` §1.3,
+> 2026-08-10), exclusive of `TESTING_LEDGER.csv`'s family-level rows. Haircut conclusions
+> unchanged (Harvey–Liu Sharpe 0.000 at every bracket end)._
+
 **This changes nothing downstream.** The R6 Harvey–Liu haircut used N_raw = 316; at either end of
 the 229–383 bracket the haircut Sharpe remains **0.000**, and the deflated Sharpe under the
 preregistered rule uses `N_eff` (participation ratio ≈ 7), not the raw count, so it is unaffected.
@@ -104,3 +110,11 @@ later) should commit their frozen spec/preregistration artifacts in a separate, 
 the commit containing results — closing this gap prospectively rather than attempting to rewrite
 the history of what has already landed. No history rewrite is being performed for the 2026-08-09/10
 wave's existing commits.
+
+> _Clarification (appended 2026-08-18): the "30 never had a `spec.yaml` at all" census above is a
+> statement about git history **at audit time** — at current HEAD, most of those dirs (AUCTION01/
+> 02/04, ADD01, FLOW01, VAR01, REL01, GAMMA00, O2, PRICE01, COMBO01) DO contain spec files added
+> after the audit; the after-the-fact-ness is what the census records, not a still-missing file.
+> The prospective rule above has been honored since (EQV04/B1: spec commit `0f2e09e` strictly
+> precedes results `046961d`; DATA03 and HTFMECH01 likewise; `research_sdk/prereg_guard.py` now
+> enforces it mechanically). Registry navigation for newcomers: see `research/registry/README.md`._

@@ -96,6 +96,10 @@ restart alone.
 
 ## Standing priority order (re-ranked after EQV04/B1 closure)
 
+> _Marker (2026-08-18): the "P5 DOM operationalization (ACTIVE — collecting)" line below and the
+> 2026-08-11 "Current honest state" paragraph predate the 2026-08-12 DOM pause — the PAUSED table
+> at the top of this file governs._
+
 P0 governance (done) → ~~P1 EQV04~~ (PASS, closed) → ~~P2 B1~~ (implementation-certified, closed)
 → ~~P3 ACTIONMAP01~~ (closed null) → ~~P4 Auction protected confirmation~~ (does not proceed) →
 **P5 DOM operationalization (ACTIVE — collecting)** → ~~P6 options/dealer-state feasibility~~

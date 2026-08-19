@@ -1,3 +1,8 @@
+> _Supersede note (2026-08-18): the three open-lead lines in this file are all terminally
+> resolved by later waves — (1) the 1-minute VolMult-rescale R2 candidate: **1-minute Solar is
+> CLOSED FOR GOOD** (SMV2AF, third independent failure); (2) SMV2Y sigma460+ER150 "policy design
+> licensed": the sigma460/ER150→exposure **escalation path is EXHAUSTED**; (3) the ER150-damper
+> spec was never warranted. Do not requeue any of the three from this file._
 
 ## SMV2AD + SMV2AE (2026-08-08, seq 415-419) — VolMult ceiling/cohort CLOSED, 1m rescale PASS-SCREEN
 - **Fixed clamp ceiling / fixed slow-cohort extension: CLOSED.** Raising the 1200t ceiling

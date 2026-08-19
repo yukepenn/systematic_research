@@ -1,3 +1,9 @@
+> _Entry-point banner (2026-08-18): several files this README's body references are archived or
+> superseded (`CURRENT_STATE.md`, `SYSTEM_FRONTIER.yaml`, `NEXT_RESEARCH_QUEUE.md`,
+> `NINJATRADER_MASTER_SPEC.md`, `FINAL_NQ_SYSTEM*.md` — see `_archive/README.md`). Current entry
+> points: **`CURRENT_TRUTH.md`** (state), **`ACTIVE_RESEARCH_QUEUE.md`** (frontier),
+> **`/BASELINE_MODELS.md`** (repo root — the 3 objects), `CONVENTIONS.md` (binding protocol)._
+
 # SYSTEM_MASTER — NQ Systematic Master Program
 
 Opened 2026-08-08 by owner master directive (verbatim: `OWNER_DIRECTIVE_20260808.txt` in this

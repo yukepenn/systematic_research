@@ -2,6 +2,11 @@
 
 Historical systematic NQ/MNQ research repository.
 
+> **Consolidated current-state map (2026-08-18): [`STATE_OF_RESEARCH_20260818.md`](STATE_OF_RESEARCH_20260818.md)** —
+> all four campaigns on one page: objects, merged open frontier, kill-ledger index, unified data
+> boundaries, monitoring calendar. This README's narrative sections below run through 2026-08-09;
+> per-wave truth stays in `research/system_master/CURRENT_TRUTH.md`.
+
 ## Current canonical systems
 
 **Product A** — combined NQ system, ensembles/leverage authorized.

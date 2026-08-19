@@ -62,3 +62,20 @@ once any base exists.
 Forward re-reads: Solar MONITOR-01 #2 >= 2026-11-01; Program-B combined re-read
 (B1/B-FADE/B-MOM on accumulated forward data) >= 2027-08-01. Blocked-on-restart:
 SWScalpTickExport_v3 compile (s20251117 completeness re-export only).
+
+## DATED CORRECTIONS (appended 2026-08-18, consolidation pass — the text above is unchanged)
+1. **Holdout/pool status**: line 9's "Holdout + confirmation pool NEVER read" was true for THIS
+   campaign's own reads and remains true of them — but the sealed scalp holdout (2026-06-01→
+   2026-07-31) was **CONSUMED on 2026-08-08 by system_master SM11** (owner-authorized joint read),
+   and **8 of 168** confirmation-pool sessions were opened 2026-08-10 for three specific
+   AMENDMENT_3 constructions. Authority: CONTAMINATION_LEDGER.md entries of those dates. Any
+   future Tier-3 plan must treat the holdout as research-consumed; only ≥2026-08-01 is virgin.
+2. **v3 exporter**: the "blocked-on-restart" line above is stale in one half — SWScalpTickExport_v3
+   was compiled clean and deployed 2026-08-10 and produced the 8-session batch-1 exports. The ONLY
+   remaining item is the s20251117 completeness re-export at the 20M cap (both files currently
+   truncated at 12M rows), deferred to the next natural NT8 restart.
+3. **Cross-asset lines**: every "GC/CL r-screen" open-program mention above is superseded by the
+   owner's NQ-only scope ruling (2026-08-08, recorded in specs/W9): DEPRIORITIZED, reopen only on
+   new owner direction.
+4. **Program-B re-read protocol**: now written and frozen at
+   `../../operational/MONITOR02_PROTOCOL.md` (committed 2026-08-18, before any forward read).

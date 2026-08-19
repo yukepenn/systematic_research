@@ -454,3 +454,70 @@
     Naive NQ-block scaling falsified: K=2 Sharpe -0.19 vs K=1; boundary churn
     (+$29,657/NQ-eq) exceeds max commission saving (~$22,454); slippage not
     recoverable by blocks. All-MNQ linear scaling is correct at K>1.
+
+# =============================================================================
+# FRONTIER CLOSURE RECONCILIATION — appended 2026-08-18 (consolidation pass).
+# The campaign closed 2026-08-07 at the formal stop condition (CAMPAIGN_STATE §9b);
+# entries above were never individually closed out. Final dispositions (authority:
+# CAMPAIGN_STATE.md / registry / reports/FINAL_*.md — cited per line). Statuses
+# above are historical; nothing here reopens any axis.
+# -----------------------------------------------------------------------------
+# SW02_CATASTROPHE_AND_SESSION_EXIT: RESOLVED_ELSEWHERE — session-exit half settled by SW02a (no fill
+#   artifact) + DM01 seq 272-284 (95.2% net, 96.2% top-10 retention; CAMPAIGN_STATE §15) + 16:44-flatten
+#   CONFIRMED_ADOPT (runs/E10MASTER_V2/results.md, Owner Amendment 1 §11); catastrophe-stop half never
+#   run in campaign 1 — SUPERSEDED_BY_CAMPAIGN3 (SM02/SM03 stop frontier,
+#   research/system_master/_archive/HYPOTHESIS_LEDGER.md: "SW02 catastrophe spec existed, never run").
+# SW03_SINGLE_TYPE3_REENTRY: CLOSED_FALSIFIED — premise dead: the 46% untaken signals cost
+#   -$9.04/marginal trade over 54,151 trades (Wave 1c; CAMPAIGN_STATE §6); rebuilt as C2 and rejected on
+#   the adaptive core (dSharpe -0.402, P=0.879; C2_SLEEVE_INTERACTION_TEST; hypotheses.md Wave 3).
+# SW04_SELECTIVE_TYPE2: CLOSED_FALSIFIED — C4 (Type-2 added to core) -0.33 Sharpe (CAMPAIGN_STATE §9),
+#   confirming Wave-1 cost-fragility; wave-index selectivity FAILED (non-monotone 0.54-0.93); remaining
+#   architectures C3/C5/C6 recorded NOT BUILT (registry/hypotheses.md Wave 3).
+# SW05_CHOP_VETO: CLOSED_FALSIFIED — original flip-count veto INVERTED, would delete 74% of profit
+#   (CAMPAIGN_STATE §6); redesigned eff_120 veto never run — the veto/suppression class is foreclosed by
+#   the right-tail rule (top 1% of trades = 160-248% of net, §8) and C01T1_ML (every cut tail-adverse).
+# SW06_TIMEFRAME_PORTABILITY: RESOLVED_ELSEWHERE — absorbed by the Wave 1/1b timeframe scan: plateaus
+#   1m [170,280] / 3m [180,260], 3-minute the stronger timeframe and adopted as the campaign basis
+#   (CAMPAIGN_STATE §5); never run as a standalone SW06.
+# SW07_MAJOR_MINOR_CONTEXT: CLOSED_BY_STOP_CONDITION — no individual adjudication on record anywhere in
+#   the repo; conditioning axes closed as a class by Wave 3 + Wave C01 (CAMPAIGN_STATE §9, §16).
+# SW08_FIXED_SIGNAL_VOLATILITY_SIZING: CLOSED_NO_IMPROVEMENT — refined into C01-T0-4 (vol-surprise PASS)
+#   then C01T1_EXPOSURE REJECT: RW p=0.0556, H1 sign negative, effect post-2024-only
+#   (registry/hypotheses.md C01 Tier-1); champion unchanged.
+# FB01_FAILED_OPENING_BREAKOUT: CLOSED_FALSIFIED — B01c ORB-failure fade net -$22,534 slip-1 / -$19,124
+#   slip-0, fails first gate (seq 230); Family B falsified at B01c/B01e/B02, seq 230-232
+#   (registry/rejected_ideas.md 2026-08-07; CAMPAIGN_STATE §15).
+# PORTFOLIO_LAYER: CLOSED_BY_STOP_CONDITION — vacuously closed: no second family ever qualified (B01 all
+#   arms negative; PORTABILITY-01 0/3); convergence criteria (5)/(6) N/A by vacuity (CAMPAIGN_STATE §15).
+# LOCKED_FORWARD (first entry, phase-9 pending): RESOLVED_ELSEWHERE — superseded by the later ACTIVE
+#   entry of the same id: freeze declared 2026-08-07 (research/operational/LOCKED_FORWARD.md).
+# H012_SIGMA_ESTIMATOR_ROBUSTNESS: RESOLVED_ELSEWHERE — closed by H012_SIGMA_ESTIMATOR_ROBUSTNESS_RESULT
+#   above: PASS, estimator lag 0.13-7.96 sessions gives Sharpe 0.769-1.494 (hypotheses.md Wave 3).
+# H013_ENSEMBLE_WEIGHTING: RESOLVED_ELSEWHERE — recorded NOT RUN in registry/hypotheses.md (Wave 3): 1/N
+#   stands on complexity grounds as preregistered; strict 1/N pinned by CONVENTIONS_FIXED_20260807.
+# H014_PRICE_PROPORTIONAL_THRESHOLD: RESOLVED_ELSEWHERE — closed by H014_PRICE_PROPORTIONAL_RESULT
+#   above: PASS, volatility beats price by +0.728 Sharpe, p=0.009 (CAMPAIGN_STATE §9).
+# RESEARCH_WAVE_B01: CLOSED_FALSIFIED — closed by RESEARCH_WAVE_B01_RESULT above: all arms negative
+#   under preregistered gates, seq 230-232 (rejected_ideas.md WAVE B01 CONCLUSION; CAMPAIGN_STATE §15).
+# PORTABILITY_01_THIRD_INSTRUMENT: CLOSED_FALSIFIED — closed by PORTABILITY_01_RESULT above: 0/3
+#   (YM -$21,947 / RTY -$17,006 / CL -$12,218, seq 233-271); with ES 0-for-4 external markets,
+#   NQ-specific alpha confirmed (CAMPAIGN_STATE §15).
+# OWNER_REOPEN_2026_08_07: CLOSED_BY_STOP_CONDITION — reopen mandate discharged: DC02b, Wave C01
+#   (closed, no Pareto improvement, seq 285-290), E10 master v1, MONITOR-01 reading #1, C01T2_KSCALE;
+#   sixth consecutive wave without improvement reinforced convergence (CAMPAIGN_STATE §16).
+# WAVE_C01_PREREGISTERED: RESOLVED_ELSEWHERE — executed and closed same day by WAVE_C01_RESULT above
+#   (closed_no_pareto_improvement; 12 items, 6 R1 trials, seq 285-290).
+# LOCKED_FORWARD (second entry, active): RESOLVED_ELSEWHERE — deliberately NOT closed: its governance
+#   lives on as the standing protocol (research/operational/LOCKED_FORWARD.md + MONITOR01_PROTOCOL.md),
+#   the campaign's only live obligation; MONITOR-01 reading #2 due >= 2026-11-01, annual frozen-champion
+#   evaluation due >= 2027-08-01.
+# Corrected figures embedded above (do not re-quote from this file):
+# - RE02_TYPE2_FULL_RECOVERY: "1,436,860 bars" is WRONG (it understated the evidence) — true count is
+#   2,035,869 bars, the row total of the committed ledgers (CAMPAIGN_STATE §1 correction note + §13).
+# - R4_REDEFINED_FULL_RANGE: Sharpe 0.910 / 1,370-session calendar / P(Sharpe<=0)=0.0066 superseded —
+#   pinned basis is the 1,424-session campaign calendar: Sharpe 0.892, P=0.0051 (CAMPAIGN_STATE §3, §8;
+#   net, drawdown and worst year are calendar-invariant; no ranking changed).
+# - WAVE1C_TIER2_AND_VALIDATION "DSR 0.83" and H006 "DSR 0.832": ALL Wave-1c/Wave-2 DSR figures are
+#   WITHDRAWN (survivor-only variance pool; CAMPAIGN_STATE §8; under the preregistered rule every
+#   candidate scores 0.45-0.55 against a 0.90 bar — DSR_UNDER_PREREGISTERED_RULE above).
+# =============================================================================

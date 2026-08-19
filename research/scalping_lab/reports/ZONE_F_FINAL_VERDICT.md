@@ -89,3 +89,22 @@ Signed: autonomous researcher, per Amendments 1–6, all specs frozen before rea
 all artifacts committed. Verdict inputs: specs/W6_fss10_redteam.md §9 logic +
 specs/W7_rt2_discharge.md closure rule; evidence chain in ALPHA_SCOREBOARD.md,
 REJECTED_IDEAS.md, registry/, artifacts/.
+
+---
+
+## POST-VERDICT STATUS (appended 2026-08-18 — the verdict text above is frozen and unchanged)
+
+Resolutions of this verdict's own UNRESOLVED list, from work completed after signing:
+- **B1 overnight premium** — resolved by W9-1 on 20yr minute data (decay-aware rule):
+  PARKED-MARGINAL (letter-pass but bootstrap under-converged at 10k reps; top-10 nights 53%).
+  Forward re-read ≥2027-08-01 per `../../operational/MONITOR02_PROTOCOL.md`. No longer open here.
+- **H-D3@1min** — resolved by W9-2 (the one reserved reconstruction): **CLOSED FINAL**
+  (slope t=1.33 vs frozen t≥2; mechanism real at 20yr scale, economics unresolvable).
+- **S2a short side** — unchanged: Tier-1 read remains BARRED (did not survive Tier-0).
+- **Binding-recovery variant, ES spread/size, L3/L4** — unchanged (untested space / data-blocked).
+- **Holdout/pool intactness** (final paragraph of the scope section): superseded — the sealed
+  holdout was consumed 2026-08-08 by system_master SM11 (owner-authorized), and 8/168 pool
+  sessions were opened 2026-08-10 (CONTAMINATION_LEDGER). **The reopen rule stands, but its
+  holdout leg must now use ≥2026-08-01 forward data** (the only remaining virgin window).
+- The verdict itself (NO QUALIFIED FAST NQ SCALPING EDGE FOUND IN THE TESTED RESEARCH UNIVERSE,
+  with RT-1's four scope conditions) is unaffected by any of the above.

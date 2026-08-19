@@ -28,3 +28,13 @@ Constitution and phase gates: thesis §17 + `research/CAMPAIGN_STATE.md`.
 - Registry: `research/registry/` (experiments.yaml, tested_configs.csv, hypotheses.md, rejected_ideas.md). Every tested config gets a sequence number.
 - State: `research/CAMPAIGN_STATE.md` + `research/frontier.yaml` after every experiment.
 - Reports: `reports/latest.md`, `leaderboard.md` (never ranked by net profit alone), `robustness.md`, `portfolio.md`.
+
+## ADDENDUM 2026-08-18 — current campaigns (the sections above describe campaign #1, CLOSED 2026-08-07)
+- The hard safety boundary, frozen truth, and NT8 conventions above remain binding verbatim for ALL campaigns.
+- The Workflow section's State/Registry/Reports pointers are campaign-#1 locations (closed). Current locations:
+  - Whole-repo state map: `STATE_OF_RESEARCH_20260818.md` (root) → `README.md` → `MAP.md`.
+  - Current baselines (3 shipped objects): `BASELINE_MODELS.md` (root) — authoritative; Product A `SolarWaveSMMaster_v4.cs`, Product B `SolarWaveOneContractNQ_v5.cs` / `SolarWaveOneContractMNQ_v5.cs`.
+  - Active program (campaign #3 SYSTEM_MASTER): `research/system_master/CURRENT_TRUTH.md` + `ACTIVE_RESEARCH_QUEUE.md`; binding stats protocol `research/system_master/CONVENTIONS.md`; spec-first commits enforced via `research_sdk/prereg_guard.py`; experiment registration since 2026-08-09 in `research/system_master/TESTING_LEDGER.csv` (see `research/registry/README` note).
+  - Scalping Lab (campaign #4, phase-complete/dormant): `research/scalping_lab/CAMPAIGN_STATE.md`.
+  - Scheduled forward reads: `research/operational/MONITORING_CALENDAR.md`. Data seals: `research/operational/LOCKED_FORWARD.md` (≥2026-08-01 virgin) + `research_sdk/session_boundary.py` for boundary math.
+- DOM / Level-II / Market Replay collection is PAUSED (owner risk-control, 2026-08-12) — do not resume without explicit recorded owner re-authorization (`research/system_master/DOM_PAUSE_CLEANUP_20260812.md`).

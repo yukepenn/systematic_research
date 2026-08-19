@@ -7,7 +7,18 @@ Read this before starting any new research wave. Kept short on purpose — see
 CURRENT MODE: RESEARCH
 ```
 
-> **UPDATE 2026-08-12 (latest) — DOM / Level-II / Market Replay work PAUSED (owner risk-control
+> **UPDATE 2026-08-18 (latest) — consolidation pass; 2026-08-14 wave recorded.** HTFMECH01
+> (HTF marginal-contribution mechanism decomposition) CLOSED 2026-08-14 — diagnostic, real
+> corroborated finding, no promotion: HTF's cost is direction-concentrated (value-additive long,
+> value-destructive short; Product A short-side −$22,020). Non-DOM frontier re-ranked by EVI;
+> next-ranked item (direction-conditioned HTF construction, separately preregistered) queued
+> READY, not started. See `research/system_master/CURRENT_TRUTH.md` (top) and
+> `ACTIVE_RESEARCH_QUEUE.md`. A repo-wide consolidation map now exists:
+> **`STATE_OF_RESEARCH_20260818.md`** (root) — one-page current truth across all campaigns,
+> merged open frontier, unified data-boundary table, monitoring calendar
+> (`research/operational/MONITORING_CALENDAR.md`).
+>
+> **UPDATE 2026-08-12 (superseded above) — DOM / Level-II / Market Replay work PAUSED (owner risk-control
 > decision) after a workstation resource-instability incident.** Full record:
 > `research/system_master/DOM_PAUSE_CLEANUP_20260812.md`. No continuous DOM capture, no automated
 > full-depth collection, no bulk Market Replay downloading, no background Level-II collector,

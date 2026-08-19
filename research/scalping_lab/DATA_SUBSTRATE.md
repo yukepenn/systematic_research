@@ -32,3 +32,13 @@ returns under BBO_EXEC + C1). Finalists ONLY may drop to Layer 0 for exact seque
 - Every layer records producer code version + row counts in a manifest
   (`substrate/MANIFEST.csv`).
 - Engine session-keying: `from` ET calendar date == session END date (see pilot report).
+
+## Appended notes (2026-08-18)
+- The holdout window above was **consumed 2026-08-08 by system_master SM11** (owner-authorized
+  joint read; CONTAMINATION_LEDGER entry). The no-export enforcement stays in force for this
+  campaign's substrate — the window is research-consumed either way; only ≥2026-08-01 is virgin.
+- Exporter lineage: `SWScalpTickExport_v1` (original substrate) → v2 (BUGGED, single-arg
+  AddDataSeries, never produced data) → **v3** (fixed; compiled+deployed 2026-08-10; produced the
+  8 batch-1 pool exports). `substrate/MANIFEST.csv`'s `src` column is hardcoded to v1 by
+  `csv_to_parquet.py` and its `capped` flag uses the v1-era 12M rule — see
+  `substrate/MANIFEST_NOTES.md` for the correct per-row reading.

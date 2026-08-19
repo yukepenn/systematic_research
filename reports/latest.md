@@ -1,3 +1,8 @@
+> _Era banner (2026-08-18): this is **campaign #1's** final report package, frozen at its
+> 2026-08-07 close. "Latest" is relative to that campaign only — repo truth has since advanced
+> (campaigns #3/#4). Current state: `/STATE_OF_RESEARCH_20260818.md` and `/BASELINE_MODELS.md`.
+> Within this package, `FINAL_PARETO_FRONTIER.md` supersedes this file's champion framing._
+
 # Latest — 2026-08-07 · campaign CLOSED
 
 **Status: closed at the formal stop condition** (constitution §23(B)). Three consecutive waves

@@ -1,5 +1,18 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+> **READER'S CORRECTIONS INDEX (2026-08-18 consolidation pass — 5 traps in the layers below):**
+> (1) Two different things are named **"B1"**: the *SYSTEM_MASTER frozen challenger* (drop-HTF
+> Product-B variant, implementation-certified, INCONCLUSIVE on Sharpe, revival per
+> `B1_FUTURE_CONFIRMATION_SPEC.md`) vs the *scalping-lab/portfolio "B1 overnight" sleeve*
+> (parked-marginal, demoted from an ablation gate). Context decides; they share nothing but the name.
+> (2) Any "holdout clean/untouched" line below the top layers is superseded — SM11 consumed
+> 2026-06/07 on 2026-08-08 for **everything** (`HOLDOUT_DETERMINATION_20260809.md`).
+> (3) Per-object nets $303,239.64 / $177,315 / $28,705.20 / $28,900.70 in lower layers are
+> superseded by `/BASELINE_MODELS.md` ($301,915.92 / $177,924.40 / $28,587.10).
+> (4) The $75,449.60 figure and the "$2,575 gap" are **UNVERIFIED — DO NOT CITE** (Wave-18 §6).
+> (5) `SYSTEM_FRONTIER.yaml` / `SYSTEM_SCORECARD.md` named in old layers no longer exist
+> (archived). Repo-wide current map: **`/STATE_OF_RESEARCH_20260818.md`**.
+
 ## RETURN TO PRIMARY RESEARCH PROGRAM — 2026-08-14 (non-DOM frontier re-ranked, HTFMECH01 closed)
 
 DOM branch stays `PAUSED` (see policy note directly below, unchanged). Re-read `BASELINE_MODELS.md`,

@@ -1,5 +1,10 @@
 # ALPHA_THROUGHPUT — SYSTEM_MASTER Wave Scoreboard
 
+> _Supersede note (2026-08-18): this scoreboard's closing line "Sealed holdout: untouched as of
+> this document" was true at writing and superseded the same day — SM11 consumed the 2026-06/07
+> holdout on 2026-08-08 (`HOLDOUT_DETERMINATION_20260809.md`, VERDICT: CONSUMED). Wave records
+> after this file live in `CURRENT_TRUTH.md`._
+
 _2026-08-08. Directive §30: every wave delivers results, kills, promotions, DD
 improvement, portfolio improvement, or Analyzer implementations — never reports alone._
 

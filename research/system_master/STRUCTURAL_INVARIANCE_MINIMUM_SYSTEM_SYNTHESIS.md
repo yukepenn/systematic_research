@@ -1,3 +1,11 @@
+> _Supersede note (2026-08-18) on three forward-looking statements below: (1) **EQV04 was
+> subsequently attempted and PASSED bit-identical** (2026-08-11, `runs/EQV04_NT8_CANONICAL_PARITY/
+> REPORT.md`); (2) **DOM01** went live 2026-08-11 and was **PAUSED** 2026-08-12
+> (`DOM_PAUSE_CLEANUP_20260812.md`); (3) the named HTF future-work target was actioned as
+> **HTFMECH01** (closed 2026-08-14, diagnostic: HTF cost is short-side-concentrated —
+> `HTFMECH01_TILT_MECHANISM/REPORT.md`), with a direction-conditioned construction queued READY.
+> Everything else stands as written._
+
 # STRUCTURAL_INVARIANCE_MINIMUM_SYSTEM_SYNTHESIS
 
 **Date:** 2026-08-10. **Repo SHA at synthesis time:** `121e3f65a3794b00d3272bf008c05f4af7ade85b`

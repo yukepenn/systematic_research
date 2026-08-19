@@ -48,3 +48,14 @@ Cache: `C:\Users\Yuke Zhang\Documents\NinjaTrader 8\db\` (hourly `.ncd` files pe
 - [ ] ES minute coverage check; trigger ES tick download for the dev window if free
 - [ ] Rollover/back-adjust policy for tick-level work (probe uses single contracts — level
   signals must use unadjusted single-contract prices; document merge policy explicitly)
+
+## Closing note (appended 2026-08-18 — census above is the 2026-08-07 snapshot, kept as history)
+All three open items were resolved during the campaign: DATAPROBE01 ran 2026-08-07
+(`runs/DATAPROBE01/results.md` — L1/L2 CONFIRMED); ES was exported and archived (39 sessions,
+`substrate/raw/ES/` + converter `src/python/es_csv_to_parquet.py`); rollover policy = unadjusted
+single contract per session, session-keyed (implemented throughout `src/python/`, documented in
+DATA_SUBSTRATE.md). Census rows now superseded: NQ Bid/Ask tick IS cached for the exported
+sessions (40 NQ substrate sessions + 8 batch-1 pool sessions; 52/168 pool sessions have BBO
+per PROTECTED_EVIDENCE_BUDGET.md), and `db\replay\` now contains one Market Replay proof file
+(NQU6 2026-07-15, preserved under the 2026-08-12 DOM pause). Minute history: the deep-history
+export actually begins 2006-01-05 (NT8 cache start), not 2005 — see substrate/minute/NQ/MANIFEST.

@@ -1,6 +1,9 @@
 # Scalping Lab — Campaign State
 
 **Phase: P0 BOOTSTRAP → P1 DATA REALITY** (2026-08-07)
+**→ PHASE COMPLETE 2026-08-08** (header updated 2026-08-18; the operative entry is the
+**PHASE COMPLETE** checkbox below — 3 parked Program-B candidates, 0 frozen, Zone F closed,
+everything runnable run. Forward schedule: `../operational/MONITORING_CALENDAR.md`.)
 
 ## Now
 - [x] Skeleton + constitution + mandate archived
@@ -171,7 +174,7 @@
       forward-monitored.** Remaining work requires: forward data (Program-B re-read
       >= 2027-08; Solar MONITOR-01 #2 >= 2026-11-01), an NT8 F5 (v3 exporter,
       completeness only), or new owner direction.
-- [ ] **W9 QUEUED (spec frozen; NT8 restarted, exporters live)**: NQ 1-min 2005→2026-05
+- [x] (superseded record — W9/W10 completed, see PHASE COMPLETE above) **W9 QUEUED (spec frozen; NT8 restarted, exporters live)**: NQ 1-min 2005→2026-05
       export running (nq1m_2005_202605) → W9-1 B1 overnight 2005+ resolution (RT-1
       prescription, power-adequate verdict), W9-2 H-D3@1min (the ONE reserved
       reconstruction), W9-3 B-FADE pre-2022 confirmation (needs historical BLS/Fed
@@ -224,3 +227,14 @@
 
 ## Log
 - 2026-08-07: Campaign opened per owner MANDATE_V2. Bootstrap committed.
+- 2026-08-18 (consolidation pass, appended): PHASE COMPLETE state confirmed final. Clarifications
+  of record: (a) the sealed scalp holdout was consumed 2026-08-08 by system_master SM11
+  (owner-authorized) and 8/168 pool sessions opened 2026-08-10 — see CONTAMINATION_LEDGER and the
+  dated corrections in ALPHA_SCOREBOARD.md; (b) the repo-wide DOM/L2/Replay PAUSE (2026-08-12)
+  does NOT suspend this campaign's oldest-first ARCHIVE_ONLY tick/BBO exports (ordinary bars +
+  required historical tick data remain allowed per DOM_PAUSE_CLEANUP_20260812.md) — but archival
+  has been de facto idle since phase completion and resuming it is put to the owner as
+  OWNER_QUEUE §OQ-4 (rolling ~1yr server window; 116/160 untouched pool sessions lack local BBO);
+  (c) Program-B forward re-read protocol frozen at ../operational/MONITOR02_PROTOCOL.md;
+  (d) unchecked pre-W1 checkbox items above are historical artifacts of the living checklist,
+  not open work.
