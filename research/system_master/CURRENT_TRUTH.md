@@ -1,5 +1,31 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+## WAVE 2026-08-19c — CLOSEREV01 + TOMFLOW01: both FAIL-closed cleanly (alpha 2/2 of this wave)
+
+**Supersedes the section below for anything it touches.** The owner's "全面科学最合理全部无敌地继续"
+opened the next wave; both remaining top scout candidates were preregistered, read once, and
+closed:
+
+- **CLOSEREV01** (post-close 16:00-16:14 pressure reversion; spec be9b993 with PRE-outcome
+  feasibility audits — 20yr window census PASS; local-BBO execution audit forced the cost model
+  to 1.5t/side BEFORE any P&L): **FAIL** — N=325, net −$2,117, every economics gate fails, the
+  placebo itself significantly negative. The genuinely virgin window holds nothing tradable at
+  audited costs. Family CLOSED (one shot). First live application of the **G3-SPLIT pre/post-2020
+  primary gate** — worked as designed.
+- **TOMFLOW01** (classic McConnell-Xu turn-of-month long; spec 1d5ee2d with an honest power prior
+  that predicted this outcome): **FAIL** — +$293/event but every CI spans zero (t≈0.96), G3-SPLIT
+  fails both eras, single events are 28-33% of |net|, losing-day ρ 0.314 > 0.25. **The NQ
+  calendar axis is now fully adjudicated dead** (day-of-week, month-end fade seq-379,
+  turn-of-month, pre-holiday-by-literature).
+- Standing count: engine-#3 constructed candidates now **0-for-17** (+2 parked regime-locals:
+  LIQREV01, B-MOM-class). Remaining funded scout candidate: TERMFLOW (weakest prior). The
+  program's own EVI now points at the FORWARD calendar (MONITOR-01 #2 ≥2026-11-01 with two
+  shadow constructions) and new-data classes (GAMMA00 / DOM re-auth / U9B accrual) over further
+  OHLCV-substrate engine hunting.
+- Both closures are the deliverable: cheap, preregistered, decisive nulls that no future session
+  needs to re-spend. Total wave cost ~2 hours; zero seals touched; no red team needed (nothing
+  adopted).
+
 ## WAVE 2026-08-19 — full-speed authorization: shadow protocol frozen, engine-3 scout, LIQREV01 (alpha 2/2)
 
 **Supersedes the 2026-08-18 section below for anything it touches.** Owner authorized full

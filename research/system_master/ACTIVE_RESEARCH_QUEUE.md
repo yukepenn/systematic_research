@@ -1,13 +1,22 @@
 # ACTIVE_RESEARCH_QUEUE
 
-**Last updated:** 2026-08-19 (engine-3 scout + LIQREV01 parked; wave alpha budget 2/2 exhausted).
-Current READY queue for the NEXT wave, in order:
-1. **CLOSEREV** (post-cash-close 16:00-16:14 pressure reversion — virgin window, scout rank 2;
-   needs its own spec + the preregistered BBO slippage audit on the tick year). NOTE the
-   2026-08-19 standing lesson: preregister a pre/post-2020 split CI as a PRIMARY gate.
-2. **TOM-FLOW** (turn-of-month flow window — registry-distinct from killed seq 379; knife-edge
-   power; same split-CI requirement).
-3. **TERMFLOW** (repo's own DR_V4 designated next-step; weakest prior of the three).
+**Last updated:** 2026-08-19c (second wave of the day complete: CLOSEREV01 FAIL-closed,
+TOMFLOW01 FAIL-closed — both preregistered one-shots, both predicted-fragile priors confirmed;
+alpha budget 2/2 spent again). Scout-candidate pool now: **TERMFLOW only** (weakest prior of the
+original four). READY queue for the NEXT wave:
+1. **TERMFLOW** (calendar-flagged terminal-flow continuation; repo's own DR_V4 designated
+   next-step; split-CI primary gate mandatory; direction-proxy weakness known).
+2. NDX-reconstitution waiver decision (owner) — the one waiver-eligible reopening.
+3. A third literature-scout pass only if TERMFLOW closes — at 0-for-17 constructed engine-3
+   candidates (+2 parked regime-locals), the honest EVI of further OHLCV-substrate engine
+   hunting is falling fast; the higher-EVI paths are the FORWARD calendar (MONITOR-01 #2,
+   two shadow candidates) and new-data classes (GAMMA00 purchase / DOM re-auth / U9B accrual).
+
+*(2026-08-19a queue below retained for history.)*
+Historical queue of 2026-08-19a:
+1. CLOSEREV — **DONE, FAIL-CLOSED** (`CLOSEREV01_POSTCLOSE_REVERSION/REPORT.md`).
+2. TOM-FLOW — **DONE, FAIL-CLOSED** (`TOMFLOW01_TURN_OF_MONTH/REPORT.md`; calendar axis closed).
+3. TERMFLOW — carried, see above.
 4. Second literature-scout pass topics not yet mined; NDX-reconstitution waiver decision (owner).
 Standing forward reads: MONITOR-01 #2 ≥2026-11-01 now carries TWO shadow constructions
 (HTFDIR01 ARM_LONGONLY + LIQREV01) per `research/operational/MONITOR01_SHADOW_HTFDIR01.md`.
