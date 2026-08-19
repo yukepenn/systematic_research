@@ -35,6 +35,20 @@ appended to `monitor01_shadow_htfdir01_ledger.csv` (this directory).
   regime-dependent (sign flipped in 2024 and Jun–Jul 2026); each reading reports the forward
   regime split (up-tilt vs down-tilt session Δ) so a KILL/ADVANCE can be read mechanistically.
 
+## AMENDMENT 2026-08-19 (same day, BEFORE any reading exists): second shadow construction
+
+**LIQREV01 ARM (frozen)** — the stress-gated daily reversal per
+`research/system_master/LIQREV01_STRESS_REVERSAL/SPEC.md` (byte-frozen constants: stress =
+rv5 ≥ 90th trailing-252 pct; prior-63 q20/q80 trigger; 1-day hold; C1). Parked REGIME-LOCAL(2020+)
+with its engine-#3 role refuted on dev data (see its REPORT §2.3); forward data decides.
+At each MONITOR-01 reading, extend its trade ledger over the new forward window (evaluation only):
+- **ADVANCE** (to a new, separately-preregistered portfolio-role spec): accumulated forward net
+  > 0 AND forward P&L on the Solar-incumbent's forward LOSING days ≥ 0 (the exact functional the
+  dev window failed) once ≥ 20 forward trades exist.
+- **KILL** (CLOSED permanently): accumulated forward net ≤ −$10,000 at any reading, OR forward
+  P&L on Solar losing days ≤ −$10,000, OR still < 20 trades by the 2028-08 reading.
+- Otherwise CONTINUE. Recorded in the same shadow ledger CSV, separate columns.
+
 ## Bookkeeping
 
 Readings recorded in `monitor01_log.csv` alongside the champion reading; registry row per

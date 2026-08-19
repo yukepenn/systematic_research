@@ -1,7 +1,20 @@
 # ACTIVE_RESEARCH_QUEUE
 
-**Last updated:** 2026-08-18 (HTFDIR01 executed + red-teamed; OUTSIDE_VIEW review; see the wave
-entry at the top of `CURRENT_TRUTH.md`). Changes vs the 2026-08-14 table below:
+**Last updated:** 2026-08-19 (engine-3 scout + LIQREV01 parked; wave alpha budget 2/2 exhausted).
+Current READY queue for the NEXT wave, in order:
+1. **CLOSEREV** (post-cash-close 16:00-16:14 pressure reversion — virgin window, scout rank 2;
+   needs its own spec + the preregistered BBO slippage audit on the tick year). NOTE the
+   2026-08-19 standing lesson: preregister a pre/post-2020 split CI as a PRIMARY gate.
+2. **TOM-FLOW** (turn-of-month flow window — registry-distinct from killed seq 379; knife-edge
+   power; same split-CI requirement).
+3. **TERMFLOW** (repo's own DR_V4 designated next-step; weakest prior of the three).
+4. Second literature-scout pass topics not yet mined; NDX-reconstitution waiver decision (owner).
+Standing forward reads: MONITOR-01 #2 ≥2026-11-01 now carries TWO shadow constructions
+(HTFDIR01 ARM_LONGONLY + LIQREV01) per `research/operational/MONITOR01_SHADOW_HTFDIR01.md`.
+Blocked-on-one-owner-click: CrossTrade OAuth → confirmation-pool BBO archival resumes.
+
+**2026-08-18 changes below retained:**
+Changes vs the 2026-08-14 table below:
 - Rank 2 (direction-conditioned HTF construction) — **DONE**: HTFDIR01 PASS-SCREEN on Product B
   with binding recency cautions / FAIL on Product A (`HTFDIR01_DIRECTIONAL_TILT/REPORT.md`).
   New READY item it spawns: **HTFDIR01 promotion step** (NT8 build + parity + full battery) —

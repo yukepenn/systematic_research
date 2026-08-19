@@ -20,3 +20,11 @@ later rows; this note is the correction of record.
 
 If `csv_to_parquet.py` is ever used again, fix the `src` hardcode and the cap rule first;
 until then, this note governs interpretation.
+
+## Addendum 2026-08-19 (LIQREV01 red team) — minute-substrate defects of record
+- `minute/NQ/nq1m_2005_202605.parquet` has genuine holes: the entire week 2014-01-27..31 is
+  missing, plus scattered non-holiday weekdays (2009-03-27, 2009-06-19, 2013-07-12); 46 valid
+  days carry only 261-379 RTH bars. Post-2014 CME 13:00-halt holiday Globex sessions (July 4,
+  Juneteenth, Thanksgiving Day, Christmas Eve) pass a 200-bar RTH filter and look like thin
+  trading days. Any daily-scale study on this file should disclose these; none changed the
+  LIQREV01 verdict (quantified in its REPORT §2).

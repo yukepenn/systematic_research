@@ -1,5 +1,35 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+## WAVE 2026-08-19 — full-speed authorization: shadow protocol frozen, engine-3 scout, LIQREV01 (alpha 2/2)
+
+**Supersedes the 2026-08-18 section below for anything it touches.** Owner authorized full
+discretion 2026-08-19 ("授权并且给你随意权限。全速马力出动").
+
+- **HTFDIR01 shadow ledger protocol FROZEN** before any forward reading
+  (`research/operational/MONITOR01_SHADOW_HTFDIR01.md`); OQ-4 dispositions recorded (BBO archival
+  authorized — blocked only on one CrossTrade OAuth click; DATA03 single-date-conservative;
+  C-drive drain resolved-by-observation at 34.5 GB free).
+- **ENGINE3_SCOUT_20260819**: 5 lanes + adversarial gatekeeper (all web-sourced, cite-checked).
+  4 candidates (LIQREV-1 #1, CLOSEREV, TOM-FLOW, TERMFLOW), 2 killed by arithmetic/decayed
+  literature (QREBAL, PREHOL), volatility lane argued-ZERO. NDX-reconstitution flagged
+  waiver-eligible. `ENGINE3_SCOUT_20260819/REPORT.md`.
+- **LIQREV01** (spec 9775c0a pre-committed; scout rank-1; Nagel/CGW stress-gated daily reversal,
+  20yr minute substrate): **ALL 8 frozen gates PASS on the letter** (N=455, $579/trade, episode
+  CI [+155,+1061], both cells positive, matched placebo NULL — the stress conditioning genuinely
+  carries ~$740/t). **FREEZE WITHHELD after a 4-attacker red team** (B1-precedent adjudication):
+  evidence is REGIME-LOCAL(2020+) — pre-2020 +$12/t CI spans zero, 98.6% of net post-2020,
+  effective N≈5 macro episodes, state variable is vol-acceleration not intermediary stress
+  (2009 = zero stress sessions) — and the **engine-#3 role is REFUTED**: profits land on Solar's
+  TOP-decile days, −$46.5k on Solar's bottom-decile days, zero trades in Solar's maxDD window,
+  combo ΔSharpe CI [−0.32,+0.70]. PARKED; forward resolution via the shadow protocol (2nd
+  construction, frozen ADVANCE/KILL incl. the Solar-losing-day functional the dev window failed).
+  Full report: `LIQREV01_STRESS_REVERSAL/REPORT.md`. **Alpha budget 2/2 exhausted this wave** —
+  CLOSEREV/TOM-FLOW/TERMFLOW queue for a future wave.
+- Standing lesson reinforced (now 3-for-3 across HTFDIR01, LIQREV01, and B-MOM/W10): on this
+  substrate, letter-passing constructions keep resolving to post-2020-regime bets. The frozen
+  gates' era tripwires (LOYO, cluster signs) structurally under-detect a hot 2020+ window;
+  future specs should preregister a pre/post-2020 split CI as a primary gate, not a read.
+
 ## WAVE 2026-08-18 — OUTSIDE_VIEW review + HTFDIR01 construction (1 alpha hypothesis consumed)
 
 **Supersedes the 2026-08-14 section below for anything it touches.**
