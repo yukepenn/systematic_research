@@ -95,6 +95,24 @@ owner decisions, none blocks current research (DOM work is downstream-only by de
 
 ---
 
+## OQ-4a — AUTHORIZATION RECORDED (2026-08-19) + dispositions
+Owner authorized 2026-08-19 (verbatim: "授权并且给你随意权限。全速马力出动"), covering the
+HTFDIR01 shadow ledger and the OQ-4 items. Dispositions:
+1. **HTFDIR01 shadow ledger**: protocol frozen at
+   `research/operational/MONITOR01_SHADOW_HTFDIR01.md` (before any forward reading exists).
+2. **Confirmation-pool BBO archival (OQ-4 item 2)**: AUTHORIZED — resumes oldest-first,
+   ARCHIVE_ONLY, as soon as the CrossTrade MCP session is re-authenticated (currently blocked on
+   one owner browser click; NT8 itself is running). No analysis of archived data without a spec.
+3. **DATA03 probe dates (OQ-4 item 1)**: AUTHORIZED in principle; execution deliberately
+   conservative given the resource-incident history — single probe date at a time, only after
+   the BBO archival lane proves stable, C-drive free space re-checked before each download
+   (2026-08-19 reading: **34.5 GB free — recovered from the 22.2 GB incident low; the drain has
+   stopped**), and never concurrently with other heavy NT8 work.
+4. **C-drive drain (OQ-4 item 3)**: RESOLVED-BY-OBSERVATION (recovered to 34.5 GB; cause never
+   identified; standing rule: check free space before any bulk download).
+
+---
+
 ## OQ-3 — NinjaScript recompile (F5) after a strategy edit
 **Opened** 2026-08-09. **Status** RESOLVED-IN-PRACTICE, kept for the record.
 
