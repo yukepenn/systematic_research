@@ -1,5 +1,36 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+## WAVE 2026-08-18 — OUTSIDE_VIEW review + HTFDIR01 construction (1 alpha hypothesis consumed)
+
+**Supersedes the 2026-08-14 section below for anything it touches.**
+
+- **OUTSIDE_VIEW_20260818.md** (new): four independent third-party perspectives (allocator /
+  risk committee / alpha anatomy / research-director lever ranking), every number checked by a
+  second agent. Headlines: raw Sharpe real but selection-adjusted evidence ≈ 0 (Harvey-Liu 0.000,
+  DSR ~0.003 at the honest N=499-653 bracket) → the fundable evidence is the FORWARD calendar;
+  concentration on every axis (one instrument, one family, 2022 = ~39% of B-NQ net, top-10 days
+  52-62% of net, long Sharpe 1.540 vs short 0.179); the owner's daily-consistency wish is
+  structurally incompatible with this edge (44-47% positive days; every smoothing construction
+  killed) — consistency lives at week/month horizon and the only honest daily-consistency lever
+  is another near-zero-ρ engine. **Correction of record surfaced by the check pass: the
+  S-resampling "untouched surface" (Wave-18 §7) was in fact tested and CLOSED UNCONDITIONALLY by
+  the Wave-18 red team's de-confounded constructions (ΔSharpe −0.303, P=0.116; seq 464-465) —
+  do not re-queue it.**
+- **HTFDIR01** (spec fb44d67 frozen pre-readout): direction-conditioned HTF tilt (LONGONLY
+  up-weight, zero new constants) + SHORTONLY falsification control. **Product B: PASS-SCREEN on
+  every frozen gate** (net $301,916→$323,979, Sharpe 1.113→1.198, P=0.9556, LOYO min +0.051,
+  retention 99.4%, CDaR improves; control failed as predicted). **Product A: FAIL** (honest,
+  and mechanistically coherent — see report). **Four-attacker red team: no kill, but BINDING
+  corrections**: 86.4% of the B delta is 2025-26 (pre-2025-04 P=0.585; −$55.76 inside
+  HTFMECH01's own window; post-dev Jun-Jul extension ADVERSE both products); the effect =
+  conditional trim of marginal hysteresis-threshold shorts + real long-side tilt value
+  (beats NOTILT placebo P≈0.94), NOT "new HTF information"; HTFMECH01's A-side −$22,020
+  conflated two channels (correction appended there). **Disposition: NT8-parity promotion step
+  queued READY but NOT started — recommended instead: owner-authorized candidate shadow ledger
+  at MONITOR-01 readings, letting forward data separate "regime bet that peaked" from
+  "structural trim" before any build spend.** A-side direction-conditioning CLOSED (one shot).
+  Full report: `HTFDIR01_DIRECTIONAL_TILT/REPORT.md`. Registry: TESTING_LEDGER row 2026-08-18.
+
 > **READER'S CORRECTIONS INDEX (2026-08-18 consolidation pass — 5 traps in the layers below):**
 > (1) Two different things are named **"B1"**: the *SYSTEM_MASTER frozen challenger* (drop-HTF
 > Product-B variant, implementation-certified, INCONCLUSIVE on Sharpe, revival per

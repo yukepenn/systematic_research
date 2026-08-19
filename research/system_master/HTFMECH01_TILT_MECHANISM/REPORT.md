@@ -73,3 +73,16 @@ task, not acted on.
 `research/system_master/PLACEBO01_COMPONENT_CAUSALITY/src/02_htf_placebo.py`'s `solve_A`/`solve_B`
 verbatim (copied, not modified) and `GRID01_SOLAR_RESOLUTION_CONVERGENCE/src/grid_core.py`'s
 certified substrate unmodified.
+
+---
+
+## CORRECTION POINTER (appended 2026-08-18, after HTFDIR01)
+
+HTFDIR01's red team established that this report's side decomposition CONFLATES two channels:
+the tilt_state=0 counterfactual removes BOTH the agreement up-weight (m_arr) AND the SHORTHALF
+disagreement overlay (s_arr), so the Product-A short-side marginal (−$22,019.55) cannot be
+attributed to the agreement up-weight alone. HTFDIR01's direct single-channel test showed the
+A-side short-AGREEMENT boost is value-ADDITIVE (removing it costs −$8,932 on those bars); most
+of the −$22,020 presumably lives in the SHORTHALF channel or the interaction. The year/side
+tables above remain correct as measurements of the COMBINED tilt mechanism; only the
+single-channel attribution reading is corrected. See HTFDIR01_DIRECTIONAL_TILT/REPORT.md §2.3.

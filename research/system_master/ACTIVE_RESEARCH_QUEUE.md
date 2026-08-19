@@ -1,6 +1,19 @@
 # ACTIVE_RESEARCH_QUEUE
 
-**Last updated:** 2026-08-14 (return to primary non-DOM research program; EVI re-rank + HTFMECH01).
+**Last updated:** 2026-08-18 (HTFDIR01 executed + red-teamed; OUTSIDE_VIEW review; see the wave
+entry at the top of `CURRENT_TRUTH.md`). Changes vs the 2026-08-14 table below:
+- Rank 2 (direction-conditioned HTF construction) — **DONE**: HTFDIR01 PASS-SCREEN on Product B
+  with binding recency cautions / FAIL on Product A (`HTFDIR01_DIRECTIONAL_TILT/REPORT.md`).
+  New READY item it spawns: **HTFDIR01 promotion step** (NT8 build + parity + full battery) —
+  gated on its own preregistration AND owner go-ahead; recommended predecessor: owner-authorized
+  candidate **shadow ledger at MONITOR-01 readings** (cheap forward evidence first).
+- Rank 4 (second literature-scout pass) — now the top un-started READY item.
+- Confirmed dead, do not re-queue: S-resampling (tested + CLOSED UNCONDITIONALLY by the Wave-18
+  red team, seq 464-465 — the Wave-18 §7 "untouched surface" line was withdrawn there).
+- OUTSIDE_VIEW's lever ranking (its §4) is the current cross-checked menu; its top actionable
+  non-research item is OQ-4 (data-retention clocks) + running Product A at the $150k J-peak.
+
+*(2026-08-14 queue below, retained; still accurate except as amended above.)*
 Rolling document per master directive sec103/143-144 — re-ranked after every major result, not
 rewritten from scratch. Queues: `ACTIVE` (currently running), `READY` (next up, nothing blocking),
 `BLOCKED` (owner or evidence gated), `DEFERRED` (lower EVI, not started), `PAUSED` (owner
