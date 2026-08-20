@@ -4,6 +4,16 @@
 > licensed": the sigma460/ER150→exposure **escalation path is EXHAUSTED**; (3) the ER150-damper
 > spec was never warranted. Do not requeue any of the three from this file._
 
+> _Supersede note (2026-08-19, ATRPOOL01): the **sigma-ESTIMATOR axis is now PERMANENTLY
+> CLOSED** (ATR/range/semivariance/vol-of-vol blends — DR_V4 candidates 3/6/8). SMV2AJ's
+> near-miss was re-adjudicated ONCE on the pooled 2006-2026 sample (5,269 sessions) at an
+> elevated 0.90 bar per frozen spec 5db5318: P(dCDaR>0)=0.8910 < 0.90 → FAIL. Additionally,
+> **instrument-level re-adjudication of ANY closed lead is exhausted program-wide** (that spec's
+> §2.5, priced in advance) — this kills CLOCKHIST01-style reopenings too (SMV2W's dev
+> confidence failed on its own terms). Standing prospective amendment: future R2 confidence
+> gates run on the pooled dev+hist instrument from the start (dev-only CDaR power measured at
+> 0.207 — see `ATRPOOL01_POOLED_READJUDICATION/out/power_audit.json`)._
+
 ## SMV2AD + SMV2AE (2026-08-08, seq 415-419) — VolMult ceiling/cohort CLOSED, 1m rescale PASS-SCREEN
 - **Fixed clamp ceiling / fixed slow-cohort extension: CLOSED.** Raising the 1200t ceiling
   (tested to 2400t) and/or adding VolMult 34-50 members mechanically relieves the clamp bind

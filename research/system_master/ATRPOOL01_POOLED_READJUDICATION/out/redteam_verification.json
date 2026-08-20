@@ -1,0 +1,49 @@
+{
+ "verifier": "adversarial red-team, independent reimplementation (fresh code; full-sort CDaR instead of np.partition; no import of 01_atrpool01.py)",
+ "date": "2026-08-19",
+ "spec_commit": "5db5318",
+ "independent_G1": {
+  "P_dSharpe": 0.9963,
+  "P_dCDaR": 0.8910,
+  "matches_bitexact": true,
+  "n_pooled": 5269,
+  "k_worst": 263,
+  "pipeline_validation": "same independent code reproduces SMV2AJ gate_A published dev-only numbers bit-exactly (seed 20260808 -> P_dSharpe 0.9316, P_dCDaR 0.7529), proving battery-verbatim equivalence with the house convention"
+ },
+ "code_vs_spec_findings": [
+  "G1: code matches SPEC exactly (pooled hist-then-dev n=5269, block=5, B=10000, seed=20260820, gate_A.py index convention starts=rng.integers(0,n,(B,ceil(n/5))), circular, truncate to n; Sharpe=mean/std(ddof=1)*sqrt(252); CDaR5 k=int(0.05*n)=263). Independent reimplementation reproduces P(dSharpe>0)=0.9963 and P(dCDaR>0)=0.8910 bit-exactly.",
+  "G2 (seed interpretation): SPEC says 'the same paired MBB run within each era' and asserts the published dev P(dCDaR>0)=0.7529 'will reproduce'. The executed code used derived seeds SEED+1/SEED+2 (20260821/20260822), yielding 0.7584 (dev) and 0.8902 (hist) - the 0.7529 reproduction claim did NOT hold verbatim because that number requires the original gate_A seed 20260808 (verified: 20260808 -> 0.7529 exactly; 20260821 -> 0.7584 exactly). Pure seed-choice effect; no verdict impact - every interpretation clears the 0.55 floor by >0.20 and both eras' point dSharpe > 0, so G2 passes under all readings.",
+  "G3 (seed deviation): SPEC text specifies 'iid bootstrap (B=10,000, seed=20260820)'; code used SEED+3=20260823 (pre) and SEED+4=20260824 (post). Under the literal seed 20260820 for both sub-eras: pre-2020 CI=[0.683, 26.40], post-2020 CI=[-3.356, 56.99] -> G3 still PASS (identical pass logic outcome). Fragility note: the pre-2020 CI_lo is thin (range 0.479..0.897 across 8 seeds tested) but positive at every seed; and a hypothetical G3 flip could only reinforce FAIL, never produce PASS.",
+  "G5 (seed deviation): SPEC says 'same B/seed/battery' (literally 20260820); code used SEED+5=20260825 and drew hist-block and dev-block indices from one shared rng stream (SPEC silent on stream sharing). No verdict risk: G5 margins vs the 0.85 bar are ~13 and ~48 MC standard errors (P_dCDaR 0.8903, P_dSharpe 0.9967); no seed/stream interpretation can flip G5.",
+  "G0: code tolerance rule (0.1 if |published|>10 else 1e-4) is operationally identical to SPEC's +/-$0.1 / +/-0.0001 for all 10 endpoints; k=max(1,int(0.05n)) equals SPEC's int(0.05n) at every n used (263/206/56). All 10 endpoints independently verified within tolerance.",
+  "G3 era split independently verified: n_pre=3612, n_post=1657 (sums to 5269), split at 2020-01-01 on pooled dates. G4 independently recomputed: ctrl_top10=499618.12, blend_on_top=502873.76, retention=1.0065162569, matching the executed output; top-10 selection (argsort of control, descending, first 10) matches SPEC.",
+  "Decision aggregation: gates collected are exactly G0..G5 *_pass; ALL_GATES_PASS = all(gates) AND G1_G5_convention_agree. G1 failure alone forces overall FAIL per SPEC section 6; additionally G1_pass != G5_pass triggers the INCONCLUSIVE=FAIL clause. Design quirk (spec-level, correctly implemented): the asymmetric bars (G1 0.90 vs G5 0.85) make 'disagreement' automatic whenever a prong lands in [0.85, 0.90) - here the two conventions' estimates actually agree to 0.0007 (0.8910 vs 0.8903). Overall FAIL is overdetermined via two independent routes.",
+  "Governance: 01_atrpool01.py was itself committed frozen in the prereg commit 5db5318 alongside SPEC.md and is byte-identical at readout time, so the derived-seed choices (SEED+1..+5), though deviating from a literal reading of the SPEC text, were fixed before any pooled statistic existed - zero post-hoc researcher degrees of freedom. Housekeeping: out/atrpool01_results.json and REPORT.md are currently untracked and should be committed to complete the evidence trail."
+ ],
+ "seed_sensitivity": {
+  "seeds": [1, 2, 3, 20260808, 777],
+  "P_dCDaR_values": [0.8915, 0.8878, 0.8884, 0.8921, 0.8890],
+  "P_dSharpe_values": [0.9968, 0.9968, 0.9961, 0.9956, 0.9960],
+  "spread_P_dCDaR": 0.0043,
+  "any_seed_ge_090": false,
+  "mc_se": 0.0031,
+  "verdict_robust_to_mc_noise": true,
+  "detail": "Frozen-seed 0.8910 sits 0.0090 = 2.9 MC standard errors below the 0.90 bar (one-sided crossing probability ~0.2% per seed). Empirically 0 of 6 seeds (frozen + 5 alternates) reach 0.90; max observed 0.8921. Pooling all 6 draws: mean P(dCDaR>0)=0.8900, combined SE ~0.0013, i.e. ~7.9 SE below the bar. The CDaR-prong FAIL is not a Monte-Carlo artifact."
+ },
+ "endpoint_recon_pass": true,
+ "endpoint_recon_detail": {
+  "dev_net_ctrl": [138280.0, 138280.0],
+  "dev_net_blend": [144815.2, 144815.2],
+  "hist_net_ctrl": [447134.72, 447134.7],
+  "hist_net_blend": [533138.88, 533138.9],
+  "dev_sharpe_ctrl": [0.899201, 0.8992],
+  "dev_sharpe_blend": [0.943147, 0.9431],
+  "hist_sharpe_ctrl": [0.294467, 0.2945],
+  "hist_sharpe_blend": [0.350436, 0.3504],
+  "hist_maxdd_ctrl": [246834.0, 246834.0],
+  "hist_maxdd_blend": [213326.8, 213326.8],
+  "format": "[independently recomputed from raw CSVs, published]; all within SPEC tolerance +/-$0.1 / +/-0.0001"
+ },
+ "overall_verdict": "CONFIRMED",
+ "notes": "Headline confirmed: pooled paired MBB (n=5269, block=5, B=10000, seed=20260820) gives P(dSharpe>0)=0.9963 PASS and P(dCDaR>0)=0.8910 FAIL vs the preregistered 0.90 bar, reproduced bit-exactly by a fresh independent implementation whose equivalence to the house battery was separately validated against SMV2AJ gate_A's published numbers. The FAIL is robust to Monte-Carlo noise (2.9 SE below the bar at the frozen seed; 0/6 seeds reach 0.90; 6-seed pooled estimate 0.8900 +/- 0.0013). All 10 G0 endpoints reconcile from the raw committed curves. The only code-vs-spec deviations are derived-seed choices (G2/G3/G5 used 20260820+1..+5 where the SPEC text literally says 20260820, and the SPEC's claim that dev P(dCDaR>0)=0.7529 'will reproduce' in G2 did not hold verbatim - the executed seed gives 0.7584); none of these can flip any gate under any interpretation, and the executed script was itself frozen in the prereg commit, eliminating post-hoc freedom. Overall FAIL and permanent closure of the sigma-estimator axis per SPEC section 6 stands. Two ledger notes: (1) the G1-vs-G5 'INCONCLUSIVE' flag fired only because of the asymmetric bars (estimates 0.8910 vs 0.8903 nearly identical) - overall FAIL is overdetermined regardless; (2) out/atrpool01_results.json and REPORT.md remain uncommitted and should be committed to close the evidence trail."
+}

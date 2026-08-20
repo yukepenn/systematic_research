@@ -1,5 +1,40 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+## WAVE 2026-08-19d — ATRPOOL01 + TERMFLOW01: both FAIL-closed; scout pool EXHAUSTED; OHLCV engine hunting PAUSED (alpha 2/2)
+
+**Supersedes the sections below for anything it touches.** Owner asked (i) whether stops/exit
+overlays could raise Sharpe — answered NO from the closed record (`STOP_OVERLAY_FRONTIER.md`,
+8 families, all DEAD with evidence; the strategy's exit IS a trailing stop; 34% false-start
+rate is a structural constant, not a filterable state) — and (ii) for unconventional/micro/
+simple-indicator Sharpe levers, which surfaced the one genuine near-miss in the record:
+
+- **ATRPOOL01** (one-time pooled 2006-2026 re-adjudication of SMV2AJ's ATR-blend near-miss;
+  spec 5db5318 frozen with an elevated 0.90 bar, shadow-only ceiling, permanent-closure
+  pricing): **FAIL by 0.009** — P(dSharpe)=0.9963 / P(dCDaR)=**0.8910** < 0.90. Every
+  consistency gate passed (hist-era CDaR confidence 0.8902, point CDaR −13.2%, pre-2020 diff
+  CI_lo>0, retention 1.0065); red-team CONFIRMED bit-exact; 5-seed sensitivity max 0.8921 —
+  not an MC artifact. **The sigma-ESTIMATOR axis is PERMANENTLY CLOSED, and instrument-level
+  re-adjudication of closed leads is exhausted program-wide** (kills CLOCKHIST01-style
+  reopenings; SMV2W's dev gate failed on its own terms). Two lasting wins regardless of
+  verdict: (a) measured instrument pathology — SMV2AJ's dev-only CDaR prong had **power
+  0.207**, median simulated P 0.7533 vs 0.7529 observed; (b) **standing prospective
+  amendment: future R2 confidence gates run on the pooled dev+hist instrument from the
+  start**. Solar core has now survived SIX challenge families.
+- **TERMFLOW01** (calendar-flagged terminal-flow continuation into the cash close; spec
+  8cc0fcf): **FAIL** — N=470, net −$1,769, flagged-minus-matched-unflagged
+  **t=−0.06** (the mechanism's own gate: flagged days are indistinguishable from any other
+  day). G3-SPLIT fails (pre-2020 −$10.2/event). Disclosed defect: 3 of 9 plateau cells
+  (e1545) were lookahead-contaminated as coded — invalid, anti-conservative direction,
+  verdict unaffected (valid cells mixed-sign anyway). Family CLOSED one-shot.
+- Standing count: engine-#3 constructed candidates **0-for-18** (+2 parked regime-locals).
+  **ENGINE3_SCOUT_20260819 pool EXHAUSTED; per the frozen TERMFLOW01 decision rule,
+  OHLCV-substrate engine hunting is PAUSED** — next information events are the FORWARD
+  calendar (MONITOR-01 #2 ≥2026-11-01: champion health + SM13 B-MOM decay + HTFDIR01 +
+  LIQREV01 shadows) and new-data classes (GAMMA00 purchase / DOM re-auth / U9B accrual).
+- Wave artifacts: `ATRPOOL01_POOLED_READJUDICATION/` (incl. power_audit.json,
+  redteam_verification.json), `TERMFLOW01_TERMINAL_FLOW/`, TESTING_LEDGER rows 75-76,
+  INDICATOR_FRONTIER supersede note 2026-08-19.
+
 ## WAVE 2026-08-19c — CLOSEREV01 + TOMFLOW01: both FAIL-closed cleanly (alpha 2/2 of this wave)
 
 **Supersedes the section below for anything it touches.** The owner's "全面科学最合理全部无敌地继续"

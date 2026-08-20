@@ -1,16 +1,27 @@
 # ACTIVE_RESEARCH_QUEUE
 
-**Last updated:** 2026-08-19c (second wave of the day complete: CLOSEREV01 FAIL-closed,
-TOMFLOW01 FAIL-closed — both preregistered one-shots, both predicted-fragile priors confirmed;
-alpha budget 2/2 spent again). Scout-candidate pool now: **TERMFLOW only** (weakest prior of the
-original four). READY queue for the NEXT wave:
-1. **TERMFLOW** (calendar-flagged terminal-flow continuation; repo's own DR_V4 designated
-   next-step; split-CI primary gate mandatory; direction-proxy weakness known).
-2. NDX-reconstitution waiver decision (owner) — the one waiver-eligible reopening.
-3. A third literature-scout pass only if TERMFLOW closes — at 0-for-17 constructed engine-3
-   candidates (+2 parked regime-locals), the honest EVI of further OHLCV-substrate engine
-   hunting is falling fast; the higher-EVI paths are the FORWARD calendar (MONITOR-01 #2,
-   two shadow candidates) and new-data classes (GAMMA00 purchase / DOM re-auth / U9B accrual).
+**Last updated:** 2026-08-19d (third wave of the two-day sequence complete: **ATRPOOL01
+FAIL-closed** — sigma-estimator axis permanently closed at an elevated 0.90 bar, 0.8910
+observed, red-team confirmed; instrument-level re-adjudication of closed leads exhausted
+program-wide — and **TERMFLOW01 FAIL-closed** — flagged-vs-unflagged t=−0.06, mechanism null).
+**The ENGINE3_SCOUT_20260819 funded pool is EXHAUSTED (constructed candidates 0-for-18) and
+OHLCV-substrate engine hunting is PAUSED per TERMFLOW01's frozen decision rule.**
+
+Standing gains from 2026-08-19d (not candidates — protocol): (a) future R2 confidence gates
+run on the pooled dev+hist instrument from the start (dev-only CDaR power measured 0.207);
+(b) CLOCKHIST01-style reopenings are dead — do not queue; (c) stop/exit overlays re-confirmed
+closed by record review (`STOP_OVERLAY_FRONTIER.md`) — do not re-litigate.
+
+READY queue now (in EVI order):
+1. **Calendar-blocked**: MONITOR-01 #2 ≥2026-11-01 (champion health + SM13 B-MOM decay +
+   HTFDIR01 ARM_LONGONLY + LIQREV01 shadow adjudications — the next genuine information event).
+2. **Owner-blocked**: GAMMA00 options-data purchase decision; DOM re-authorization;
+   CrossTrade renewal (BBO archival, DATA03, MONITOR-01 #2's fresh export path);
+   NDX-reconstitution waiver; OQ-1/OQ-2.
+3. U9B microstructure re-test — gated on tick/BBO sample accrual (needs CrossTrade renewal).
+4. A fourth literature-scout pass is NOT queued: with 0-for-18 and four decisive nulls from
+   the last pool, funding more OHLCV-substrate scouting requires new information, not a new
+   list.
 
 *(2026-08-19a queue below retained for history.)*
 Historical queue of 2026-08-19a:
