@@ -19,10 +19,17 @@ construction — 12-1 monthly sign TSMOM on the 15-ETF universe, both preregiste
 | G6 (50/50 risk blend) | Sharpe 0.280→**0.544**; CDaR5 (vol-units) 48.1→**15.8** (−67%); maxDD 50.3→19.2 | PASS* |
 | G7 (3× cost stress) | Sharpe 0.408, G2 holds; G3 fails as above | FAIL |
 
-\* G5/G6 are **not red-team-verified** (FAIL verdicts don't trigger the confirm step);
-treat as strong-but-unaudited. Known audit point: the Solar comparator concatenates
-`e10_daily_hist.csv` (2006-2021) with `e10_daily_py.csv` (2022-2026) — scale consistency
-between the two files must be verified before these numbers are used for any decision.
+\* G5/G6 audit completed same day (`out/redteam_g5g6_audit.json`):
+**CONFIRMED_WITH_CORRECTIONS.** All ten reported numbers reproduce exactly from fresh code;
+no scale bug (both ledger files verified on the E10-executable dollar convention against
+Atlas §0 and SM06's own report); the complementarity conclusion survives era-wise Solar
+normalization (ρ_full −0.043, ρ_losing +0.057, blend Sharpe 0.118→0.429). **Corrections
+that bind any future use**: (a) the 48→16 CDaR improvement is manufactured by the dead
+2006-2021 simulated era — **dev-era-only, the blend CDaR5 WORSENS by 32%** (11.3→14.9
+vol-units) even though dev-era blend Sharpe improves 0.73→1.02; (b) Solar-alone Sharpe 0.28
+is a concat artifact (hist −0.04 / dev +0.73). **Robust core**: ρ≈0 in every treatment, and
+the book earned +3.1%/yr (hist era) and +4.1%/yr (dev era) on Solar losing days —
+regime-robust complementarity in returns, NOT in modern-era tail risk.
 
 Replication fidelity: 13 of 15 stream Sharpes positive (median ≈0.28 vs the literature's
 0.34); per-year book returns positive in **2008 (+5.1%), 2020 (+5.4%), 2022 (+6.9%)** — the

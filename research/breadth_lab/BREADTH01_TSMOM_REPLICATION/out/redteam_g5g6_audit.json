@@ -1,0 +1,87 @@
+{
+  "audit": "BREADTH01 G5/G6 adversarial red-team recomputation",
+  "date": "2026-08-19",
+  "auditor": "red-team agent (fresh code, independent of src/01_breadth01.py)",
+  "scope_note": "Construction is CLOSED-FAIL (G3/G7); this audit verifies only the G5/G6 complementarity numbers feeding the pending owner decision. Nothing here reopens the gate outcome.",
+  "scale_finding": "NO UNITS BUG, BUT A MATERIAL VOL-REGIME MIX. Both CSVs are on the same E10-executable dollar convention: dev file (runs/SM01_SUBSTRATE/out/e10_daily_py.csv) masked to <=2026-05-31 reproduces the published atlas baselines exactly (n=1139, net +$119,008.9, mean +$104.49/day, sd $2,338.7); hist file (runs/SM06_SOLAR_HISTORY/out/e10_daily_hist.csv) reproduces the SM06 report (file n=4130 incl. 20 warmup sessions, net -$10,017 vs report -$8,970 on 4,110 ex-warmup sessions; file maxDD $63,490 vs report $62,588 - same object, 'research-basis MNQ x10 scale, same as dev champion'). The SMV2AJ gate-C $447k/16y figure was confirmed to be the DUAL-transformed object and is NOT this ledger. However, under fixed-contract sizing the dollar-vol regimes differ hugely: full-era daily sd $676.5 (hist 2006-2021) vs $2,338.7 (dev 2022-2026/05) = 3.46x; in the closest comparable vol regime (hist 2020-2021 sd $1,575 vs dev 2022-2023 sd $2,069) the ratio is 1.31x, UNDER the 1.5x materiality bar - so the gap is genuine NQ point-vol growth, not a scale error. EFFECT ON REPORTED NUMBERS: raw-dollar concatenation gives the dev era 76.7% of pooled Solar variance on only 21.6% of the days, so the correlations are effectively dev-weighted (barely changed: rho_full -0.0368 raw vs -0.0429 era-wise; rho_losing +0.0396 vs +0.0566) while the Sharpe and vol-unit drawdown stats are hybrid artifacts: Solar-alone Sharpe 0.280 equals neither era (hist -0.041, dev +0.732), and the headline CDaR5 48.1->15.8 / maxDD 50.3->19.2 'improvement' is the dead hist era's $63.5k dollar grind divided by the pooled sd (~$1,262) - it is NOT a property of the current regime (see dev_era_only).",
+  "matches_reported": true,
+  "match_detail": "All ten reported ARM_FULL_G5G6 values reproduced bit-comparable with independent code: overlap 5123; rho_full -0.036780; rho_losing +0.039592; tsmom on Solar losing days +3.3359%/yr; Solar-alone Sharpe 0.279855; blend Sharpe 0.544182; CDaR5 vol-units 48.1304->15.7915; maxDD vol-units 50.3199->19.1566.",
+  "independent_recompute": {
+    "method": "raw-dollar concat (replicates reported construction), 50/50 blend with each leg scaled to its full-overlap sd",
+    "overlap_days": 5123,
+    "n_solar_losing_days": 3073,
+    "rho_full": -0.03678,
+    "rho_losing": 0.039592,
+    "tsmom_on_losing_ann": 0.033359,
+    "blend_sharpe": 0.544182,
+    "solar_alone_sharpe": 0.279855,
+    "cdar5_ratio": 0.3281,
+    "cdar5_solar_volunits": 48.1304,
+    "cdar5_blend_volunits": 15.7915,
+    "maxdd_solar_volunits": 50.3199,
+    "maxdd_blend_volunits": 19.1566
+  },
+  "erawise_recompute": {
+    "method": "each Solar era divided by its OWN daily sd before concatenation (hist $676.5, dev $2,338.7), then identical pipeline",
+    "overlap_days": 5123,
+    "n_solar_losing_days": 3073,
+    "rho_full": -0.042932,
+    "rho_losing": 0.056632,
+    "tsmom_on_losing_ann": 0.033359,
+    "blend_sharpe": 0.428735,
+    "solar_alone_sharpe": 0.117716,
+    "cdar5_ratio": 0.2347,
+    "cdar5_solar_volunits": 89.4436,
+    "cdar5_blend_volunits": 20.9913,
+    "maxdd_solar_volunits": 93.5126,
+    "maxdd_blend_volunits": 23.9062,
+    "conclusion": "G5 and G6 as specified still PASS under era-wise normalization (rho's remain ~0, TSMOM positive on Solar losing days, blend Sharpe 0.118->0.429, CDaR5 ratio 0.235). The complementarity direction survives; only the LEVELS of the Sharpe/drawdown numbers move."
+  },
+  "dev_era_only": {
+    "method": "same pipeline restricted to 2022-01-03..2026-05-29 (the live-regime champion window) - the decision-relevant slice",
+    "overlap_days": 1105,
+    "n_solar_losing_days": 648,
+    "rho_full": -0.050493,
+    "rho_losing": 0.061571,
+    "tsmom_on_losing_ann": 0.040841,
+    "blend_sharpe": 1.017618,
+    "solar_alone_sharpe": 0.731526,
+    "cdar5_ratio": 1.3181,
+    "cdar5_solar_volunits": 11.3131,
+    "cdar5_blend_volunits": 14.912,
+    "conclusion": "Correlation complementarity is CONFIRMED in the current regime (rho ~ -0.05, TSMOM +4.08%/yr on Solar losing days, blend Sharpe 0.73->1.02). But the G6 CDaR prong FAILS dev-era-only: blending WORSENS CDaR5 in vol units by 32% (11.3->14.9, tolerance was 1.02x). The reported tail-risk improvement (48->16) is manufactured entirely by the dead 2006-2021 simulated era."
+  },
+  "hist_era_only": {
+    "rho_full": -0.0413,
+    "rho_losing": 0.0565,
+    "tsmom_on_losing_ann": 0.0314,
+    "solar_alone_sharpe": -0.041,
+    "note": "TSMOM was positive on Solar losing days in BOTH eras independently - the G5 claim is robust across regimes."
+  },
+  "complementarity_verdict": "CONFIRMED_WITH_CORRECTIONS",
+  "verdict_rationale": "Every reported number reproduces exactly (no computation error), and the core G5 claim - near-zero full and losing-day correlation with positive TSMOM return on Solar losing days - holds raw, era-wise normalized, and in each era separately. The corrections: (1) the Solar-alone Sharpe 0.28 and the CDaR5/maxDD vol-unit levels are artifacts of concatenating two dollar-vol regimes (3.46x sd gap) and describe no portfolio anyone would hold; (2) the G6 tail-risk-improvement claim does NOT survive restriction to the current regime - dev-era-only CDaR5 worsens 32% under the 50/50 blend even as Sharpe improves 0.73->1.02; (3) the blend-Sharpe prong of G6 is near-mechanical given G2+G5 (two positive-Sharpe legs at rho ~ -0.04 must blend higher), so G6 added little independent evidence. Owner decision should rest on: rho ~ 0 confirmed everywhere, TSMOM earns +3-4%/yr on Solar losing days in both regimes, blend Sharpe improvement real in all treatments, tail-risk benefit NOT established for the current regime.",
+  "caveats": [
+    "The Solar hist leg (2006-2021) is a SIMULATION of the current frozen champion on historical data - SM06's own verdict is REGIME_LOCAL (pooled net -$9k, Sharpe -0.051, edge economically 2020+). It is not live returns and represents a regime in which the program would likely not have been running this engine; concatenating it with dev-era results builds a comparator no capital ever experienced.",
+    "Raw-dollar concatenation weights the analysis inconsistently: correlations are effectively dev-era-weighted (76.7% of pooled Solar variance from 21.6% of days) while the vol-unit drawdown statistics are hist-era-dominated (the 48-50 vol-unit Solar drawdown is the dead era's $63.5k grind over a pooled sd of ~$1,262). The same headline mixes two different effective samples.",
+    "Dev-era-only G6 CDaR prong fails (11.3->14.9 vol units, ratio 1.32 vs 1.02 tolerance): in the current regime the 50/50 blend improves Sharpe but worsens 5% tail drawdown in vol units. The reported 48->16 CDaR improvement should not be quoted as a current-regime risk benefit.",
+    "3,073 'Solar losing days' are dominated by the dead hist era (2,425 of 3,073); however TSMOM's positive return on losing days holds in both eras separately (+3.1%/yr hist, +4.1%/yr dev), so this particular claim is regime-robust.",
+    "Blend Sharpe > Solar-alone Sharpe is close to mechanical once G2 (TSMOM Sharpe>0) and G5 (rho ~ 0) hold: equal-vol 50/50 of Sharpes 0.28 and 0.46 at rho -0.037 must land near 0.53. G6's Sharpe prong is confirmatory, not independent evidence.",
+    "The TSMOM book uses Yahoo auto-adjusted closes = a total-return proxy with dividends implicitly reinvested at the close, 5bps/side costs, no borrow/financing on shorts, and no futures-implementation slippage; its 0.46 Sharpe is a research object, not an implementable track record.",
+    "The TSMOM construction itself is CLOSED-FAIL one-shot (G3-SPLIT and G7 3x-cost stress failed); per the frozen decision rule these G5/G6 numbers cannot promote it - they only inform whether breadth/complementarity is a direction worth a new preregistered spec.",
+    "No locked-forward contamination: the dev Solar file extends to 2026-07-31 but the join is truncated by the book's <=2026-05-31 mask (last joined day 2026-05-29); data >=2026-08-01 untouched.",
+    "Minor: e10_daily_hist.csv includes the 20 warmup sessions SM06's verdict excluded (file net -$10,017 vs report -$8,970) and file maxDD $63,490 vs report $62,588 - immaterial to all conclusions.",
+    "rho_losing is a correlation conditioned on truncating one variable (Solar<0), which mechanically attenuates it; the more informative preregistered quantity - TSMOM mean return on those days - is positive and regime-robust."
+  ],
+  "reproduction": {
+    "inputs": [
+      "research/breadth_lab/BREADTH01_TSMOM_REPLICATION/out/book_daily_full.csv",
+      "runs/SM06_SOLAR_HISTORY/out/e10_daily_hist.csv",
+      "runs/SM01_SUBSTRATE/out/e10_daily_py.csv"
+    ],
+    "validation_anchors": {
+      "dev_vs_atlas_section0": "n=1139, net +119008.9, mean +104.49, sd 2338.7 - exact match",
+      "hist_vs_sm06_report": "net -10017 (file, incl. warmup) vs -8970 (report, ex-warmup); maxDD 63490 vs 62588 - same object",
+      "smv2aj_gateC_447k": "confirmed DUAL-transformed object, correctly NOT this ledger"
+    }
+  }
+}
