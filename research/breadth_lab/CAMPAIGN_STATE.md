@@ -7,18 +7,23 @@ supersedes the 2026-08-08 NQ-only ruling for RESEARCH only). Motivation: OUTSIDE
 professional parity. This campaign tests whether a complementary multi-asset book can be
 built honestly on free public data. Conventions: `CONVENTIONS.md` (binding).
 
-## Ledger
+## Ledger — the style trilogy, complete (all 2026-08-19, three preregistered one-shots)
 
 | spec | construction | verdict |
 |---|---|---|
-| BREADTH01 (f0bd917) | 12-1 monthly sign TSMOM, 15 ETFs, 2003-2026 | **CLOSED_FAIL_ONE_SHOT** — G3-SPLIT era-significance prong (a gate-misfit now fixed in CONVENTIONS §2); disclosed: G2 full-period CI_lo +0.84%/yr PASS, Sharpe 0.46 net, halves 0.42/0.52, ρ_losing vs Solar +0.04, blend CDaR −67% (G5/G6 unaudited), crisis years 2008/2020/2022 all positive |
+| BREADTH01 (f0bd917) | 12-1 monthly sign TSMOM, 15 ETFs, 2003-2026 | **CLOSED_FAIL_ONE_SHOT** — era-significance gate-misfit (fixed in CONVENTIONS §2); disclosed: G2 CI_lo +0.84%/yr PASS, Sharpe 0.46 net, ρ_losing +0.04, +3-4%/yr on Solar losing days BOTH eras (audit CONFIRMED_WITH_CORRECTIONS: dev-era blend CDaR worsens 32% — hist-era had manufactured the tail improvement) |
+| BREADTH02 (dd8f08e) | bond slope + equity div-yield carry, 2003-2026 | **CLOSED_FAIL_ONE_SHOT** — genuine modern-regime death: post-2020 −4.1%/yr, halves 0.36/−0.09 opposite signs, loses on Solar losing days |
+| BREADTH03 (c5266a8) | Simon-Campasano contango-conditional short-VIXY, 2011-2026 | **CLOSED_FAIL_ONE_SHOT** — Sharpe 0.506 but year-block CI_lo −0.51% (2018 left-tail year); G3/G5/G6 all passed incl. audit-hardened dev-era CDaR (−26%) and +13.1%/yr on Solar losing days; Mar-2020 sidestepped FLAT by the basis condition. Power section priced this coin-flip; it landed tails |
 
-## Open items
+## State after the trilogy
 
-- Red-team audit of BREADTH01's G5/G6 complementarity numbers (Solar hist/dev ledger scale
-  consistency) — informs the owner mandate decision; does NOT reopen the closed construction.
-- Next construction candidates (each needs its own powered spec per CONVENTIONS):
-  cross-asset CARRY (bond curve + equity div-yield sleeves, official free data);
-  defensive/quality-style books. NOT eligible: any TSMOM re-skin (closed).
-- Owner decisions pending: fund breadth properly (real futures data ~$30-60/mo, wider
-  universe) vs keep to free-data prototypes; GAMMA00 remains the top NQ-side data unlock.
+Free-data tier fully adjudicated: trend and VRP show real, ρ≈0, Solar-losing-day-positive
+economics that do NOT clear preregistered significance at free-data sample/universe sizes;
+carry is dead post-2020 in free-data form. This is OUTSIDE_VIEW2's verified thesis in
+miniature: breadth needs breadth (50+ markets). **No further free-data style shots are
+queued** — XSMOM/value on the same 15 ETFs would be near-re-skins (CONVENTIONS §5) and every
+remaining lever is an owner decision:
+1. Fund a real breadth program (futures data ~$30-60/mo, 40-60 markets, proper universe) —
+   the only path that turns 0.4-0.5-class books into confirmable 1.0-class portfolios;
+2. GAMMA00 options data ($80-199/mo) — the NQ-side top unlock;
+3. Hold — the forward calendar (MONITOR-01 #2 ≥2026-11-01) is free.
