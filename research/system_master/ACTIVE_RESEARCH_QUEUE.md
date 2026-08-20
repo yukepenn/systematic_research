@@ -23,6 +23,16 @@ READY queue now (in EVI order):
    the last pool, funding more OHLCV-substrate scouting requires new information, not a new
    list.
 
+**2026-08-19e addendum (OUTSIDE_VIEW2, zero budget)**: the owner's "others persist" challenge
+was investigated deeply (`OUTSIDE_VIEW2_20260819/REPORT.md`, verified citations). 24
+documented single-market edges censused → 7 KILL / 2 OWNER_DECISION / **0 FUND_ELIGIBLE** —
+the queue above is CONFIRMED, not extended. New standing framing for owner decisions:
+per-market extraction is at/above professional per-stream quality; the industry's Sharpe
+factory is BREADTH (√N over low-ρ streams). Owner decision menu, priced: (a) GAMMA00
+$80-199/mo (top data unlock; modal outcome = decisive null, that is what priced bets look
+like); (b) deliberate multi-market breadth program (standard trend/carry engines, 0.3-0.4 per
+stream, NEW product line — Solar does not port, 0-for-4); (c) hold (free forward reads).
+
 *(2026-08-19a queue below retained for history.)*
 Historical queue of 2026-08-19a:
 1. CLOSEREV — **DONE, FAIL-CLOSED** (`CLOSEREV01_POSTCLOSE_REVERSION/REPORT.md`).

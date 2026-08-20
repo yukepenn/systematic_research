@@ -1,5 +1,22 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+## 2026-08-19e — OUTSIDE_VIEW2 (zero-budget): the "others persist, we're stuck" challenge, answered with verified evidence
+
+Owner challenged that many systematic non-HFT players and day traders persist, so we must be
+missing something. Deep 6-agent investigation (web-verified citations + registry dedup +
+adversarial gatekeeper): `OUTSIDE_VIEW2_20260819/REPORT.md`. Verified verdicts: professional
+per-stream Sharpe is ~0.34 gross (Trends Everywhere, verified from PDF); headline 1.5-2 Sharpe
+is a **breadth product** (50-500 streams at ρ≈0.05-0.2, √N arithmetic reproduces observed
+numbers); persistent day traders are a <1% tail (Taiwan/Brazil, verified). **We are at or
+above professional per-market extraction (dev 1.05-1.18/object vs 0.3-0.5 band)** — the gap is
+breadth we structurally lack (portability 0-for-4, engine-3 0-for-18, A/B ρ 0.88). 24
+documented single-market edges censused and adjudicated: 7 KILL, 2 OWNER_DECISION,
+**0 FUND_ELIGIBLE** — nothing justifies the next preregistered shot. The two live owner
+decisions: (1) GAMMA00 options-data purchase ($80-199/mo, top unlock, modal outcome still a
+decisive null); (2) deliberate multi-market breadth expansion (standard trend/carry engines at
+0.3-0.4/stream × √N — the industry's actual factory; a NEW product line, since Solar doesn't
+port). Holding pattern confirmed correct: forward reads ≥2026-11-01 + owner-gated data.
+
 ## WAVE 2026-08-19d — ATRPOOL01 + TERMFLOW01: both FAIL-closed; scout pool EXHAUSTED; OHLCV engine hunting PAUSED (alpha 2/2)
 
 **Supersedes the sections below for anything it touches.** Owner asked (i) whether stops/exit
