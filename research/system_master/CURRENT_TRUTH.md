@@ -1,5 +1,26 @@
 # CURRENT_TRUTH — single page, updated after every wave
 
+## 2026-08-19f — CAMPAIGN #5 (breadth_lab) opened AND its style trilogy fully adjudicated in one day
+
+Owner blanket authorization ("我给你所有权限,不要停不要问我") recorded as superseding NQ-only
+for RESEARCH. New campaign `research/breadth_lab/` (CONVENTIONS.md binding; free public data,
+sha256 manifests, mask ≤2026-05-31). Three preregistered one-shots, all CLOSED_FAIL:
+- **BREADTH01 TSMOM** (f0bd917): Sharpe 0.46 net over 23.3y, full-period CI_lo +0.84%/yr,
+  ρ_losing vs Solar +0.04, +3-4%/yr on Solar losing days BOTH eras (audit-confirmed) — closed
+  on an era-significance **gate-misfit** (mine; fixed prospectively in CONVENTIONS §2; the
+  audit also killed the hist-era-manufactured tail-improvement claim: dev-era blend CDaR
+  +32% WORSE).
+- **BREADTH02 carry** (dd8f08e): genuinely dead post-2020 (−4.1%/yr, halves opposite signs).
+- **BREADTH03 VRP** (c5266a8): Sharpe 0.51, G3/G5/G6 all passed (best complementarity ever:
+  +13.1%/yr on Solar losing days, dev-era blend CDaR −26%, Mar-2020 sidestepped FLAT by the
+  basis condition) — closed by year-block CI_lo −0.51% (the 2018 tail year), a power-priced
+  coin flip that landed tails. Void first run (VIX3M data failure) disclosed.
+Net truth: on free data, two of three canonical styles show real ρ≈0 economics that cannot
+clear preregistered significance at free sample/universe sizes — OUTSIDE_VIEW2's thesis in
+miniature. **All remaining levers are owner decisions**: fund real breadth (futures data
+~$30-60/mo, 40-60 markets), GAMMA00 ($80-199/mo), CrossTrade renewal, or hold for
+MONITOR-01 #2 (≥2026-11-01). No further free-data style shots queued (re-skin bar).
+
 ## 2026-08-19e — OUTSIDE_VIEW2 (zero-budget): the "others persist, we're stuck" challenge, answered with verified evidence
 
 Owner challenged that many systematic non-HFT players and day traders persist, so we must be

@@ -162,3 +162,12 @@ ALPHA_THROUGHPUT, STRUCTURE_MAP, SM13_BMOM_DECAY_RULE, README, COMPLEMENTARY_ENG
 ACTIVE_RESEARCH_QUEUE, TESTING_LEDGER.csv (HTFMECH01 catch-up row)}, scalping_lab/{CAMPAIGN_STATE,
 ALPHA_SCOREBOARD, FRONTIER.yaml, HYPOTHESES, DATA_INVENTORY, DATA_SUBSTRATE,
 reports/ZONE_F_FINAL_VERDICT, registry/experiments.yaml}, runs/DATA03…/REPORT.md (§5 status).
+
+---
+**ADDENDUM 2026-08-19 (evening):** Campaign #5 opened and its free-data style trilogy fully
+adjudicated same day: `research/breadth_lab/` (CAMPAIGN_STATE.md + CONVENTIONS.md). BREADTH01
+TSMOM / BREADTH02 carry / BREADTH03 VRP all CLOSED_FAIL one-shot (details in CURRENT_TRUTH
+2026-08-19f). Also same day: ATRPOOL01 (sigma-estimator axis permanently closed, 0.8910 vs
+0.90), TERMFLOW01 (scout pool exhausted, 0-for-18, OHLCV engine hunting PAUSED), OUTSIDE_VIEW2
+(verified breadth thesis; owner decision menu). System_master TESTING_LEDGER now carries the
+cross-campaign rows.
