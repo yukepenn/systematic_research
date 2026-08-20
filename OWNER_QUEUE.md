@@ -125,3 +125,15 @@ therefore not by itself proof that a compile is blocked** — verify by resolvin
 not by trusting the flag. Recorded because it changes how future waves should read that
 response, and because the reverse (a stale type served after an edit) remains possible: the
 self-check used here is that a freshly-added property/output must actually appear.
+
+## OQ-5 (2026-08-19, from campaign #5 trilogy + OUTSIDE_VIEW2) — the breadth-funding decision
+The free-data tier is fully adjudicated (trend/carry/VRP all closed one-shot; 2 of 3 showed
+real ρ≈0, Solar-losing-day-positive economics that free sample/universe sizes cannot confirm).
+Options, priced:
+1. **Fund a real breadth program**: futures daily data (Norgate/CSI class, ~$30-60/mo),
+   40-60 markets, preregistered TSMOM+carry multi-style book — the industry's verified Sharpe
+   factory (per-stream 0.34 × √N); the only path to a confirmable ~1.0-class complementary book.
+2. **GAMMA00** options data ($80-199/mo) — NQ-side top unlock (unchanged).
+3. **CrossTrade renewal** — BBO accrual → U9B; also MONITOR-01 #2's fresh-export path (Nov).
+4. **Hold** — free; MONITOR-01 #2 (≥2026-11-01) adjudicates two NQ shadow candidates.
+These are additive, not exclusive. No research action is possible on any of them without you.
