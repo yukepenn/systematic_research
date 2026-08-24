@@ -27,7 +27,7 @@ BARS_REQUIRED = 20
 
 def load_ledger(path: str) -> dict:
     """Load t2_canonical_1m.csv (skips '# params' comment line)."""
-    times, o, h, l, c, vol, fbos, st, wave = [], [], [], [], [], [], [], [], []
+    times, o, h, l, c, vol, fbos, st, wave, ts, tv = [], [], [], [], [], [], [], [], [], [], []
     with open(path, newline="") as f:
         rdr = csv.reader(f)
         header = None
@@ -47,6 +47,8 @@ def load_ledger(path: str) -> dict:
             fbos.append(int(row[idx["first_bar_of_session"]]))
             st.append(int(float(row[idx["signal_trade"]])))
             wave.append(int(float(row[idx["signal_wave"]])))
+            ts.append(float(row[idx["trailing_stop"]]) if row[idx["trailing_stop"]] else np.nan)
+            tv.append(float(row[idx["trend_vector"]]) if row[idx["trend_vector"]] else np.nan)
     n = len(times)
     time_arr = np.array(times, dtype="datetime64[s]")
     fbos_arr = np.array(fbos, dtype=bool)
@@ -62,6 +64,8 @@ def load_ledger(path: str) -> dict:
         "first_bar": fbos_arr, "last_bar": last_bar, "session_id": session_id,
         "signal_trade": np.array(st, dtype=np.int64),
         "signal_wave": np.array(wave, dtype=np.int64),
+        "trailing_stop": np.array(ts),
+        "trend_vector": np.array(tv),
         "n": n,
     }
 
@@ -81,6 +85,8 @@ class WrapperPolicy:
     first_pullback_only: bool = False
     # reverse directly on opposite flip (stop-and-reverse) instead of exit-then-wait
     reverse_on_flip: bool = False
+    # exit line: "TS" = TrailingStop (V0 certified), "TV" = TrendVector (S4 hypothesis)
+    exit_line: str = "TS"
     # time selection: callable minutes_of_day(int array) -> bool array of allowed ENTRY times
     # (bar stamp = bar END time, ET). None = no time filter.
     entry_time_mask: Optional[Callable[[np.ndarray], np.ndarray]] = None
@@ -103,6 +109,7 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
     close, opn = bars["close"], bars["open"]
     last_bar, first_bar = bars["last_bar"], bars["first_bar"]
     time_arr = bars["time"]
+    ts_arr, tv_arr = bars["trailing_stop"], bars["trend_vector"]
     mod = _minutes_of_day(time_arr)
     entry_ok_t = pol.entry_time_mask(mod) if pol.entry_time_mask is not None else np.ones(n, bool)
     flat_t = pol.flat_time_mask(mod) if pol.flat_time_mask is not None else np.zeros(n, bool)
@@ -165,14 +172,20 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
             pend_exit = True
             continue
 
-        # 2) exit first, early return (no entry on same bar)
-        if pos != 0 and sig == -pos and abs(sig) == 1:
-            if pol.reverse_on_flip and (pol.long_enabled if sig > 0 else pol.short_enabled) \
-               and entry_ok_t[i] and i >= BARS_REQUIRED:
-                pend_reverse = sig
-            else:
-                pend_exit = True
-            continue
+        # 2) exit first, early return (V0 certified: Close vs END-of-bar exit line,
+        #    INCLUSIVE comparison — a touch exits without a flip; on flip bars the line
+        #    already belongs to the new trend, so opposite flips always exit too)
+        if pos != 0:
+            line = ts_arr[i] if pol.exit_line == "TS" else tv_arr[i]
+            if not np.isnan(line) and ((pos > 0 and close[i] <= line) or
+                                       (pos < 0 and close[i] >= line)):
+                if pol.reverse_on_flip and sig == -pos and abs(sig) == 1 \
+                   and (pol.long_enabled if sig > 0 else pol.short_enabled) \
+                   and entry_ok_t[i] and i >= BARS_REQUIRED:
+                    pend_reverse = sig
+                else:
+                    pend_exit = True
+                continue
 
         # 3) entry when flat
         if pos == 0 and sig != 0 and i >= BARS_REQUIRED and entry_ok_t[i]:
