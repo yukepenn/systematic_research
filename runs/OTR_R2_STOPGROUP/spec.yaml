@@ -1,0 +1,34 @@
+run_id: OTR_R2_STOPGROUP
+class: RECONSTRUCTION_PASS
+campaign: OTR
+date: 2026-08-24
+plan_ref: POST_SCREENSHOT_RECONSTRUCTION_PLAN.md (Track R2)
+prereg: |
+  Committed BEFORE readout. The 2025 accretion-era panel (Class A, OTRIMG-0079) shows
+  St... group [In 65 / Tr 30 / I 65 / M 20] on top of the A-param core. Base wrapper =
+  OTR-S-CAND1 (T1+T3, reverse-on-flip, 04:00-16:00 entries, force-flat outside,
+  touch exit, comm 0 to match $0-commission weekly reports).
+  PREREGISTERED STOP-SEMANTICS GRID (points; the -1300 caps prove point units):
+    G0: no stops (frozen CAND1 control)
+    G1: initial stop 65 both sides, intrabar fill at stop px (gap-through -> open)
+    G2: G1 + trailing stop 30 pts from best extreme, intrabar, replaces TS exit only
+        when tighter (engine exit line retained)
+    G3: G1 + trail 30 activated only after +20 pts profit (M=20 = activation)
+    G4: initial 65 long / 65 short separately toggled (I=65 short-side initial),
+        trail 30, M unused
+    G5: G2 with trail measured from entry (not extreme)
+  A-params per era: 90/179/5/10/10 for windows ending <= 2025-10-24;
+  90/180/3/6/9 for windows ending >= 2025-11-07 (retune bounds from panel timeline);
+  the 10/31 window runs BOTH (transition ambiguous).
+  Targets: weekly table screenshot_forensics/derived/targets_weekly_2025S.csv
+  (Jul-Dec 2025, ~24 windows, $0-commission SA basis).
+  Scoring: per-window trades/net/WR/hold/largest-loss; DECISIVE metric = does the
+  model reproduce the exact -1300.00 largest-loss caps in the windows where the
+  target shows them, WITHOUT capping windows where the target shows smaller losses.
+  Selection: lowest mean normalized error (trades, WR, hold primary; net secondary);
+  no other knobs may be touched.
+data: nq1m_2005_202605.parquet; fresh signal state at 2025-06-15 (well before first
+  target window; single continuous run, windows sliced from it - matches how weekly
+  SA reports of a LIVE strategy relate to its running state only approximately, but
+  the trader's weekly SA backtests were themselves fresh-state windows; we therefore
+  ALSO run per-window fresh-state for the decisive weeks if the sliced run misses).

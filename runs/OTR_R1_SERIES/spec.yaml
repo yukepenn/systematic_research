@@ -1,0 +1,40 @@
+run_id: OTR_R1_SERIES
+class: RECONSTRUCTION_PASS
+campaign: OTR (original trader reconstruction)
+date: 2026-08-24
+plan_ref: research/original_trader_reconstruction/screenshot_forensics/POST_SCREENSHOT_RECONSTRUCTION_PLAN.md (Track R1)
+prereg: |
+  Committed BEFORE readout. Targets come from ORIGINAL PIXELS (image audit, Class A):
+  R1.1 MASTER RESCORE: frozen OTR-S-CAND1 (entry_types (1,3), reverse_on_flip, SelTime
+    entries 04:00-16:00 ET force-flat outside, inclusive TS-touch exit) on the canonical
+    ledger t2_canonical_1m.csv with comm_side=2.09 ($4.18/RT, the trader's own template
+    rate visible in OTRIMG-0002), scored against the exact master row-set:
+    net 292172.82 gross 310360.00, 4351 tr (2166L/2185S), WR 40.29 (L 41.97 / S 38.63),
+    PF 1.18 (L 1.27 / S 1.09), DD -32677.42, avg 67.15, avgW 1111.73, avgL -637.68,
+    W/L 1.74, consec 8/15, LW 7705.82, LL -4449.18, hold 94.15 (L 105.85 / S 82.56),
+    8.26 tr/day. Also score V0-baseline (no wrapper) for reference.
+  R1.2 FEB-2025 DAILY WINDOWS: per-window FRESH-STATE runs (each SA backtest re-inits
+    the indicator state at window start; window = [start_date-1 18:00 ET, end_date
+    17:00 ET] per the frozen To/From convention) on the scalping substrate parquet,
+    signals from solar_wave_full(90/179/5/10/10). Windows & targets (from OTRIMG
+    settings panes; commission per window as observed):
+      2/4-2/5   30 tr net -3805.40 comm 4.18/tr | 2/6-2/8 4 tr +6864.84 (HIS data
+      missing 2/6 - internet outage; run full-data AND 2/6-dropped variants)
+      2/9-2/11  10 tr -891.80 | 2/12-2/13 20 tr +5956.40 (LossLimit 4000 present)
+      2/15-2/18 4 tr -2555.00 comm OFF (LL 2500) | 2/19-2/20 10 tr +1848.20
+      2/21      3 tr +3517.46 | 2/23-2/24 8 tr +8229.56 comm 5.68/tr
+      2/25-2/26 18 tr +4582.76 | 2/28 21 tr -9455.00 comm OFF
+    Primary readout: per-window trade-count vector under frozen CAND1. If counts
+    mismatch, bounded refits ONLY over: entry window grid (starts 00:00-09:00, ends
+    12:00-17:00, 30-min steps), entry_types {(1,),(1,3)}, reverse_on_flip {T,F}.
+    Selection metric: L1 trade-count error across windows (NOT net).
+  R1.3 LOSSLIMIT SEMANTICS: on windows 2/12-13 (LL 4000) and 2/15-18 (LL 2500), run
+    loss_limit_mode in {None, per_trade, session_realized, session_mtm} and check which
+    reproduces the observed counts/nets.
+tolerances: trades ±5%, WR ±2pp, PF ±0.05, hold ±10%, DD ±25% (bands preregistered in
+  IDENTIFICATION_OBJECTIVE.md); Feb windows judged primarily on exact trade counts.
+data: t2_canonical_1m.csv (frozen); nq1m_2005_202605.parquet (ET end-stamped, first
+  bar 18:01, last 16:59 - same NT8 export quirk as canonical). No data >= 2026-08-01.
+known_data_caveats: substrate is a continuous back-adjusted series, trader ran single
+  front contracts (MAR25); constant per-segment offset does not affect tick-offset
+  flips within a window; Feb windows all inside the MAR25 segment.
