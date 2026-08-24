@@ -56,3 +56,20 @@ outputs: out/r7_grid.csv (member x window distances), out/r7_best_report.md,
   VF_WEEKLY_FINGERPRINT_MATRIX.csv for the surviving member(s),
   SIGNAL_TREND_IDENTIFICATION.md + SIGNAL_TRADE_HYPOTHESES.md updates.
 code: research/original_trader_reconstruction/vwap_flux_family/src/run_r7_signal_id.py
+
+amendment_1:
+  date: 2026-08-24
+  registered_before_readout: true
+  motivation: pub-recon findings (official changelog + manual-verbatim CLV orientation)
+  added_members:
+    close_threshold: H1c manual-verbatim (long valid iff (High-Close)/Range >= 0.10,
+      i.e. exclude only closes in the top decile AGAINST the pullback reading;
+      at T=10 nearly-open filter)
+    strength_gate (version-aware, active only >= 2026-02-24): trend strength
+      from bar-level cum-delta proxy (sign(close-open)*volume, session-cum);
+      members {none, strong_only: enter only when CVD slope sign agrees with
+      trend direction over the last TrendPeriod=20 bars}
+  base_structures: top surviving pass-1 structures only
+    (T_C|P_MED, T_C|P_Q75, T_A|P_IN, T_D|P_IN, T_B|P_IN, T_D|P_Q75) x {C_DIR,C_REC}
+    x {X_OPP, X_FLIP}
+  scoring: unchanged (§40 + failure-week DQ + LOWO rank stability)
