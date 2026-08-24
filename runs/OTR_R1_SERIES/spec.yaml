@@ -55,3 +55,25 @@ amendment_1:
     matches (22 possible) DESC; (2) per-day count L1 ASC; (3) master aggregate within
     tolerances as final gate. Fitting data: Jan-2023 slice (fresh state = master's own
     state, since master starts 1/1/2023); validation: full master + Feb-2025 windows.
+amendment_2:
+  date: 2026-08-24
+  committed_before: r1g integration readout
+  reason: |
+    Gate hunt returned two interlocking identified layers: FAMILY D session-equity
+    wrapper (42/42 HARD labels; hunt_D_result.md) and FAMILY B1 first-bar-of-session
+    signal drop (matches the trader's visible code line). D attributes ~half of the
+    remaining master gap to the signal stream being EARLY-pullback while the trader
+    hard-codes late mode (PullbackEarly=FALSE; the -274.18 trade decodes to a late-T2
+    fill to the cent).
+  registered_integration_model: |
+    Signals: solar_wave_full(90/179/5/10/10, pullback_early=FALSE) on canonical data.
+    Entries: T1 flips (stop-and-reverse) + T2 late pullbacks when flat; NO T3.
+    B1: no entry decision on a session's first bar.
+    D-gate (self-consistent realized-equity state, reset each 18:00 session):
+      evening: prior session net <= -C -> no entries first 360 min;
+      armed (session high >= X and time >= noon ET): cum < 0 -> block all;
+      consec same-side losses >= K -> block that side.
+    Constants center: X=1600, K=3, C=1000 (label-feasible intervals in hunt_D_result).
+    Exits: inclusive TS-touch, session-close, comm 2.09/side. Readout: master
+    aggregate vs pixel targets + Jan per-day subset-diff residuals. Tolerance bands
+    unchanged. Sensitivity: X in {1550,1600,1750,1900}, C in {500,1000,1300}, K=3.
