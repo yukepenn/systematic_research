@@ -1,4 +1,18 @@
-# TRACK VF — VWAP Flux report (passes 1-3, 2026-08-24)
+# TRACK VF — VWAP Flux report (passes 1-4, 2026-08-24)
+
+> **2026-08-24b addendum (VF4 + owner build-first directive):** VWAP Flux upgraded to
+> HIGH-CONFIDENCE COMPONENT IDENTIFICATION (owner ruling). Architecture re-selected on
+> **vendor chart-image fidelity** (manual NQ MAR26 1-min + 100-tick charts): the cloud
+> edges drift smoothly with periodic jumps → layers are **ANCHORED-CUMULATIVE** (each of
+> 5 layers = VWAP from its anchor, one of the 5 most recent 60-min starts, to the current
+> bar; hourly rotation) — VF1's frozen-segment staircase reading is REJECTED ON IMAGE
+> EVIDENCE. VF4 (spec-frozen, 7 cells): best `ANC|SIG2|X_MED|stop130|QLEV` D=3.398 —
+> net −3,745 vs −4,055 ✓, hold 36.6 vs 39.8 ✓, avg win 1,268 vs 1,236 ✓; residuals WR
+> 22.1 vs 37.7 and count 258 vs 183. Quantile-of-layers level math beats range
+> interpolation. Remaining unknown has NARROWED to: exact Signal_Trade trigger + the
+> trader's exit rule. OF2: ninZa-verbatim delta (inside-spread EXCLUDED) certified on
+> both clean tick sessions (corr 0.55/0.67). No-buy program status + pre-purchase parity
+> kit: `../vendor_forensics/PURCHASE_GATE.md` (recommendation state: NOT YET).
 
 ## What is now IDENTIFIED (Class A)
 
