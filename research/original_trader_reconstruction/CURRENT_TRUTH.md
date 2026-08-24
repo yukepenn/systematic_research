@@ -1,5 +1,46 @@
 # OTR CURRENT TRUTH (prepend-newest)
 
+## 2026-08-24i — CONVERGENCE PASS (directive v3.0 C3/C4/V1-V5 + recon): NT8 port, VF clean-room, OTR-VF-CAND1, purchase-EVI downgrade
+
+- **C3**: OriginalTraderSolarCAND2_v1.cs written (research-only, fail-closed);
+  parity protocol staged (CAND2_NT8_PARITY_PROTOCOL.md; analyzer execution
+  owner/UI-gated). Gate-semantics member test R1.j: fill-bar vs decision-close
+  IDENTICAL on the whole master (0 stream diff) — NT8-native semantics adopted
+  free. Directional-stop test: long Initial=65 CONFIRMED; short stop
+  TIME-VARYING 65↔75 in era B (exact −1385/−1500 hits vs exact −1300 caps in
+  different weeks; both members kept).
+- **C4**: RISK_STATE_MACHINE_2025.md (layered stack; D/M literal REJECTED for
+  dev build) + FEB2025_FAST_BUILD.md (DSTMa fast layer: freq 4-10× with A-panel
+  UNCHANGED → additional tight-risk entry layer; slowed to 8.4 t/day by May;
+  the SAME layer family whose knobs (A3-A5) the Nov retune touched).
+- **V1/V2**: vf_core clean-room (ANCHOR vs BLOCK quantified: width 47 vs 106
+  pts, movers 5.0 vs 1.3/bar; percentile-vs-minmax discriminator = FVP-midspan
+  offset 8.9 pts vs ≡0). PUBLIC_ANALOGUE_MAP: VF-ANCHOR+percentile is the only
+  publicly-precedented construction (LuxAlgo full source, license recorded).
+- **V3-V5 (R7/R7b, 208 members, no free constants): OTR-VF-CAND1** = trend
+  close-vs-FairValue+EMA20-agreement → pullback to Median/rail → close-quality
+  confirm (H1a extreme-toward reading dominates; manual-verbatim H1c mid-pack;
+  H1b rejected) → SAR/flip exit; QtyPerTrend 3, Split 5, 130-pt stop. Leader
+  mean §40 distance 0.476 (LOWO 13/17); failure week 3/22-27 right SIGN in all
+  survivors, 23-63% magnitude; one member DQ'd for failure-week profit (§32).
+  4-member cluster INSEPARABLE (§6) — separation needs Signal_Trade timestamps
+  or per-day 2026 labels.
+- **Vendor-model finding (EV-038/039 + img/pub recon)**: manual pins Split/
+  QtyPerTrend/CLV-family semantics; official changelog verbatim (2/9
+  Signal_Cum_Delta added; 2/24 Signal_Trend 2→4-state). **EV-039: in the
+  trader's displayed mode (BidAskPrice_RealVolume, Tick Replay OFF) the
+  licensed indicator computes NOTHING historically → his SA backtests cannot
+  be the embedded licensed indicator in that mode.** With the frozen VF-13
+  block amid mutating neighbor head fields, no Zone Period in ANY frame, and
+  zero local artifacts: **own-implementation (H3/H4) now leads**; prior
+  "custom wrapper on licensed VWAP Flux" wording downgraded. PURCHASE GATE
+  stays CLOSED with EVI downgraded (oracle would answer vendor semantics, not
+  his build's).
+- **Recon extras**: −$2,600 cap PRE-DATES the first VF frame (2/1-6 week, old
+  S-family tail — wrapper/account-level stop, not VF-module); THIRD machine
+  "mimi" identified; 2026_VARIANT_LEDGER.csv (6 variants); variant-2 week LL
+  −1,890 (cap absent), one −2,820 pierce in a live-slippage window.
+
 ## 2026-08-24h — R5 WEEKLY VALIDATION: CAND2 passes dev-machine OOS; residual is MACHINE-correlated (directive v3.0 PHASE C1)
 
 Full-fingerprint, version-aware run of frozen CAND2 against all 28 late-2025
