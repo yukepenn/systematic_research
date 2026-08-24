@@ -1,0 +1,35 @@
+run_id: OTR_V2_PROXY_PREVHOUR
+campaign: original_trader_reconstruction
+phase: "Phase 7 (sec 48 recursive) — Track V proxy pass 2: static prior-hour ladder + trend exits"
+date: 2026-08-23
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+
+diagnostics_driving_this_pass: >
+  V1 pass 1 (running intra-hour ladder, ladder exits): every cell fails hard (best
+  D=5.2): holds 2-15m vs 39.8m, M_BRK counts 593-754 vs 183, avg winners $234-740 vs
+  $1,236. The observed 61.8-pt average winner on 40m holds requires riding moves across
+  anchor hours. Bounded reinterpretation: (a) ladder = PREVIOUS completed hour's
+  volume-percentile levels held STATIC through the current hour (classic value-area
+  trading); (b) exit = trend violation (close crossing EMA20 against the position), not
+  ladder reversion.
+
+grid_frozen:
+  cells:
+    - PREV|T_LVL|X_EMA
+    - PREV|T_SLP|X_EMA
+    - PREV|T_LVL|X_MED   # control
+    - PREV|T_SLP|X_MED   # control
+    - RUN|T_LVL|X_EMA
+    - RUN|T_SLP|X_EMA
+  entry: M_BRK only (M_REV falsified in pass 1: counts/holds/winners all wrong direction)
+  all other constants frozen as V1 (3 signals/trend, 5-bar split, P75/P25 trigger lines)
+scoring: V1 objective unchanged (window A primary; W20260308/22/0419 report-only)
+prior_prediction: >
+  PREV|*|X_EMA: count 120-300, hold 20-60m, avg win up toward $1k. If no cell reaches
+  D<2.5-class fit, that is proxy-pass 2 of 3 under sec 49; pass 3 (close-threshold
+  semantics) would be final before Track V closes as BLOCKED/UNMATCHED at proxy level.
+outputs:
+  - runs/OTR_V2_PROXY_PREVHOUR/out/{sweep_results.json, scorecard.csv}
+  - HYPOTHESIS_LEDGER rows OTR-V2-*
+seed: deterministic

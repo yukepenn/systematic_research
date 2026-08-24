@@ -22,30 +22,44 @@ def ema(x: np.ndarray, period: int) -> np.ndarray:
     return out
 
 
-def ladder_series(time_arr, close, volume):
-    """Per-bar percentile ladder of the running anchored volume-at-price histogram."""
+def ladder_series(time_arr, close, volume, basis="RUN"):
+    """Per-bar percentile ladder. basis=RUN: running intra-hour histogram (causal).
+    basis=PREV: previous completed hour's histogram, static through the current hour."""
     n = len(close)
     hours = time_arr.astype("datetime64[h]")
     lad = np.full((n, len(PCTS)), np.nan)
+
+    def pcts_of(hist):
+        prices = sorted(hist)
+        vols = np.array([hist[q] for q in prices])
+        cum = np.cumsum(vols) / vols.sum()
+        out = []
+        for pc in PCTS:
+            j = int(np.searchsorted(cum, pc / 100.0))
+            out.append(prices[min(j, len(prices) - 1)])
+        return out
+
     hist = {}
+    prev_levels = None
     bars_in_anchor = 0
     cur_hour = None
     for i in range(n):
         h = hours[i]
         if h != cur_hour:
+            if basis == "PREV" and bars_in_anchor >= 5:
+                prev_levels = pcts_of(hist)
             cur_hour = h
             hist = {}
             bars_in_anchor = 0
         p = round(close[i] / TICK) * TICK
         hist[p] = hist.get(p, 0.0) + volume[i]
         bars_in_anchor += 1
-        if bars_in_anchor >= 5:
-            prices = sorted(hist)
-            vols = np.array([hist[q] for q in prices])
-            cum = np.cumsum(vols) / vols.sum()
-            for k, pc in enumerate(PCTS):
-                j = int(np.searchsorted(cum, pc / 100.0))
-                lad[i, k] = prices[min(j, len(prices) - 1)]
+        if basis == "RUN":
+            if bars_in_anchor >= 5:
+                lad[i] = pcts_of(hist)
+        else:
+            if prev_levels is not None:
+                lad[i] = prev_levels
     return lad
 
 
@@ -110,7 +124,9 @@ def run_v_proxy(bars, entry_family="M_BRK", trend_def="T_LVL", exit_rule="X_MED"
 
         # exits first (early return)
         if pos != 0:
-            if exit_rule == "X_MED":
+            if exit_rule == "X_EMA":
+                hit = (pos > 0 and close[i] < e20[i]) or (pos < 0 and close[i] > e20[i])
+            elif exit_rule == "X_MED":
                 hit = (pos > 0 and close[i] < P50[i]) or (pos < 0 and close[i] > P50[i])
             else:  # X_OPP: profit-take at the extreme band in trade direction, stop at opposite extreme
                 hit = ((pos > 0 and (close[i] >= P95[i] or close[i] <= P5[i])) or
