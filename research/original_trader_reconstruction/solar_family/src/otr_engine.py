@@ -94,6 +94,10 @@ class WrapperPolicy:
     # T3 re-entry quality gates (S5): strong-trend-only / must be on trend side of TV
     t3_strong_only: bool = False
     t3_reclaim_tv: bool = False
+    # S5B churn-merge: min bars between an exit and the next flat-entry (reversals exempt);
+    # reversal counts toward max_entries_per_trend when reverse_counts_entry is True
+    reentry_cooldown_bars: int = 0
+    reverse_counts_entry: bool = False
     # time selection: callable minutes_of_day(int array) -> bool array of allowed ENTRY times
     # (bar stamp = bar END time, ET). None = no time filter.
     entry_time_mask: Optional[Callable[[np.ndarray], np.ndarray]] = None
@@ -130,9 +134,11 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
     pend_entry = 0     # direction of market entry order to fill at next bar open
     pend_exit = False
     pend_reverse = 0   # direction to reverse into at next bar open
+    last_exit_i = -10**9
 
     def close_trade(i_exit: int, px_exit: float, kind: str):
-        nonlocal pos, entry_px, entry_i
+        nonlocal pos, entry_px, entry_i, last_exit_i
+        last_exit_i = i_exit
         pnl = pos * (px_exit - entry_px) * POINT_VALUE - 2 * pol.comm_side
         trades.append({
             "dir": pos, "entry_i": entry_i, "exit_i": i_exit,
@@ -153,6 +159,8 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
             pos = pend_reverse
             entry_px, entry_i = opn[i], i
             pend_reverse = 0
+            if pol.reverse_counts_entry:
+                entries_this_trend += 1
         if pend_entry != 0 and pos == 0:
             pos = pend_entry
             entry_px, entry_i = opn[i], i
@@ -198,7 +206,7 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
                 continue
 
         # 3) entry when flat
-        if pos == 0 and sig != 0 and i >= BARS_REQUIRED and entry_ok_t[i]:
+        if pos == 0 and sig != 0 and i >= BARS_REQUIRED and entry_ok_t[i] \n           and (i - last_exit_i) >= pol.reentry_cooldown_bars:
             mag = abs(sig)
             if mag not in pol.entry_types:
                 continue

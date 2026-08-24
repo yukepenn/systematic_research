@@ -1,0 +1,38 @@
+run_id: OTR_S5B_CHURN_MERGE
+campaign: original_trader_reconstruction
+phase: "Phase 3 (directive S5) — churn-merge family (re-entry cooldown / one-entry-per-leg)"
+date: 2026-08-23
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+
+accounting_note: >
+  S5 (T3 quality gates) was VACUOUS by my own spec-design error: a T3 bar is by
+  construction a new trend extreme with weak cleared, so both gates (strong-only,
+  reclaim-TV) are tautologies — 0 entries filtered, results bit-identical to baselines.
+  Logged as VACUOUS; does not count as a mechanism pass under sec 49.
+
+diagnostics_driving_this_pass: >
+  In-market arithmetic: target = 4,351 x 94m / 539 sessions = 759 min/day.
+  E13_R1|W_0200_1600|FF measures 760 min/day — EXACT — but splits it into 4,988 trades
+  (+14.6%) of 82.1m. The residual is purely churn-splitting: touch-exit -> immediate T3
+  re-entry cycles. The vendor's own design language contains minimum-separation constants
+  (Track-V SignalSplit=5 bars; Solar A5 PullbackSplit=10). Bounded merge family:
+  M1 one-entry-per-trend-leg (parameter-free; reversal counts as the leg's entry),
+  M2 re-entry cooldown 10 bars after an exit, M3 cooldown 5 bars.
+
+grid_frozen:
+  shapes: [E13_R1]
+  windows: [W_0200_1600_FF, W_0300_1600_FF]
+  mechanisms: [M1_one_per_leg, M2_cooldown10, M3_cooldown5]
+  new_cells: 6
+scoring: frozen S1 objective unchanged
+layer1_cost_convention: commission $0, slippage 0
+prior_prediction: >
+  M2/M3 on W_0200_1600: count -> 4,300-4,600, hold -> 88-96, WR/PF/net up. If no cell
+  improves D=1.153, that is non-improving mechanism pass #2; per the sec 49 rule ONE more
+  distinct failed pass closes the Track-S wrapper search with the frontier candidate
+  classified at band-edge fit.
+outputs:
+  - runs/OTR_S5B_CHURN_MERGE/out/{sweep_results.json, scorecard.csv}
+  - HYPOTHESIS_LEDGER rows OTR-S5B-*
+seed: deterministic
