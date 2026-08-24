@@ -15,7 +15,11 @@ ecosystem consistency. Verbal grades only (no fake precision).
 | **ApexFlow Zignal** | LOW-MEDIUM (secondary hypothesis for June TP short-hold sleeve) | 2026 marketing pairs it with TZ; order-flow sleeve could explain TP profile | no parameter-pane match; nothing observed |
 | **Infinity Algo Engine$** | SPECULATIVE-MEDIUM (meta-layer) | released 2026-01-01; multi-condition/multi-strategy + daily P/L controls fit AS-1 + TP evidence; timeline fits | no direct property evidence yet; capabilities reproducible by custom code |
 | **Captain Optimus Strong** | SPECULATIVE (meta-layer) | multi-system overlap features fit AS-1 | same as Infinity; released 2024-12 |
-| **Unknown B (multi-block)** | CERTAIN that something unidentified exists | EV-007 blocks match NO documented product so far | mechanism/bar type unknown; layout matching pending full vendor DB |
+| **Unknown B (multi-block)** | RE-CHARACTERIZED: a King-Kong-style STACK | [90,180?,3,6,9]=Solar RK panel EXACT; osc battery semantic-strong; SJB [30,70,2,20] EXACT | packaging (Cosmik vs Multi-Osc) undecided; [14,6] location unproven — see TRACK_B_ROWMAP.md |
+| **Multi-Osc OB/OS Overlap** | MEDIUM-HIGH (as the osc battery's packaging, tied w/ Cosmik) | 16-row panel = Cosmik's osc section; King Kong package co-member with Solar | non-contiguous threshold transcription required (same as Cosmik) |
+| **Cosmik Z-TP** | MEDIUM-HIGH (tied) | [10,26,14,19?,18?,14?] contiguous fit w/ default-14 anchors | [90,180?...] impossible in it; offset-unit caveat |
+| **King Kong Trading RK (architecture)** | HIGH as the DESIGN of the 2025 multi-block sleeve | vendor-official Solar×Multi-Osc pullback stack (2023-10-19); matches owner's decision-stack reading | which packaging he ran remains open |
+| **Personal $2,600 (520t) hard stop** | HIGH — personal, cross-strategy | reproduced exactly in sims; ABSENT from all vendor material (high-coverage search) | week attribution pending owner |
 
 ## Minimum consistent account model (unchanged from CHANGEPOINT_MAP)
 

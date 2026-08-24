@@ -1,5 +1,32 @@
 # OTR CURRENT TRUTH (prepend-newest)
 
+## 2026-08-24d — H-B1/H-B2/H-B3 adjudication + stop-search verdict (owner correction executed)
+
+- **Row-map adjudication (vendor_forensics/TRACK_B_ROWMAP.md, panels verified by direct
+  image reading):** Multi-Osc's 16-row panel is IDENTICAL to Cosmik's oscillator section
+  (Cosmik embeds Multi-Osc) → threshold-triple [65/30, 75/20, 46/36] is semantically
+  STRONG (MFI/RSI/Stoch H/L) but contiguous in NEITHER product — packaging (Cosmik vs
+  Multi-Osc) UNDECIDED, needs screenshot images. Decisive splits: **[90,180?,3,6,9] =
+  EXACT Solar RK panel skeleton (bool position included) — a faster Solar retune is
+  PRESENT in the stack**; [10,26,14,19?,18?,14?] = Cosmik-contiguous fit (both 14s on
+  default-14 rows; offset-unit caveat). SJB [30,70,2,20] EXACT unchanged.
+- **King Kong Trading RK confirmed as the vendor-official architecture** (rel. 2023-10-19:
+  Solar Wave RK trend filter × Multi-Osc reversals → pullback signals + KingRenko$ +
+  one-click execution); staff Solar-RK Renko templates 30/70→70/150 all /5/10/checked/10.
+  The owner's hypothesized decision stack (trend → reversal quality → location → risk) is
+  vendor-canonical, not our invention.
+- **Stop search CLOSED (high-coverage negative):** no 130-pt/520-tick/$2,600 stop exists
+  in any public vendor material (full forum API sweep + 399 sitemap pages + every
+  published NQ dialog read). All vendor stops 10-150 ticks. **−$2,600 = the trader's
+  PERSONAL hard risk cap — a cross-strategy personal fingerprint.**
+- **VF language corrected per owner:** quantile implementation = HIGH-QUALITY BEHAVIORAL
+  CLONE, not source-exact (official docs say "linear-based methodology").
+- **ARCHITECTURE_CANDIDATES.md v1:** E (independent simultaneous sleeves) CONFIRMED at
+  account level; C (Solar+osc battery+SJB King-Kong stack) LEADING for the multi-block
+  sleeve; D (1-min VF + secondary Renko) attractive-unproven pending [14,6] location.
+- Multi-Osc manual archived (17 products now in DB). Free unlocks unchanged: screenshot
+  IMAGES > −2,600 week attribution > Renko recollection.
+
 ## 2026-08-24c — BUILD-FIRST pass: Track-B candidate-CRACKED; VF architecture advanced; no purchases
 
 - **Track B breakthrough (EV-023/024/025, PROPERTY_MATCH_MATRIX.md):** the multi-block
