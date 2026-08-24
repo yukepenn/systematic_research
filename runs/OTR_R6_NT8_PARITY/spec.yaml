@@ -1,0 +1,47 @@
+run_id: OTR_R6_NT8_PARITY
+date: 2026-08-24
+campaign: OTR (campaign 6)
+directive: v3.0 PHASE C3/§8 (NinjaTrader parity gate)
+authorization: >
+  Owner message 2026-08-24: NinjaTrader restarted, NinjaScript Editor opened,
+  CrossTrade subscribed and explicitly authorized for this campaign
+  ("我也subscribe了CrossTrader,如果需要的话你可以使用CrossTrade").
+  Supersedes the earlier campaign-level CrossTrade prohibition. Standing hard
+  safety boundary unchanged: Strategy Analyzer BACKTESTS ONLY — no order
+  placement, no strategy enablement, no Sim101/live accounts, no
+  connection/credential/licensing changes, no vendor-assembly modification.
+purpose: >
+  Execute CAND2_NT8_PARITY_PROTOCOL.md: OriginalTraderSolarCAND2_v1 (installed
+  to bin/Custom/Strategies 2026-08-24, compiled via owner F5/editor) vs the
+  Python reference engine vs original labels, three layers.
+layers:
+  A_cent_labels:
+    window: 2023-01-01 -> 2023-01-17 (to = 2023-01-17T22:59:59Z per boundary rule)
+    instrument: NQ 09-26 canonical back-adjusted merge (frozen-truth series)
+    commission: $0 template-equivalent (parity of fills/timing; Python reference
+      rerun at comm_side=0; commission is fill-invariant)
+    pass: per-day W/L structure matches Python stream trade-for-trade;
+      cent-level where Python matched targets
+  B_master:
+    window: 2023-01-01T06:00:00Z -> 2025-02-02T22:59:59Z
+    reference (comm 0): from run_r1j engine rerun at comm_side=0 BEFORE readout
+    tolerance: trades ±1%, net ±2%; excess localized by date if breached
+  C_weekly:
+    windows: 10/26-10/31, 11/23-11/28, 1/4-1/9(2026), 10/12-10/17 (era configs
+      per R5: params old/new180, UseInitialStop=65, comm 0)
+    reference: runs/OTR_R5_CAND2_WEEKLY_VALIDATION out matrices (noDM variants)
+    note: NT8 data availability for Jul-2025..Jan-2026 on the canonical merge
+      series to be verified first; per-contract fallback documented if absent
+mcp_conventions: memory crosstrade-nt8-parity-conventions.md (to = one second
+  before next 18:00 ET open; strategy defaults carry analyzer settings; only
+  NinjaScriptProperty inputs as parameters; ET-stamped outputs).
+prereg_note: >
+  Python comm-0 reference numbers are computed and recorded in this run dir
+  BEFORE the first CrossTrade backtest readout. Known port-vs-reference
+  differences under test: none expected (R1.j proved gate-timing equivalence);
+  any divergence is localized, not tuned away.
+secondary_unlock (same NT8 session, separate readout class): export NQ 1-min
+  2026-06-01..07-31 (JUN26 + SEP26 per-contract) via existing export
+  strategy/indicator for the June TP overlay — pre-seal data (< 2026-08-01),
+  read-only market-data operation. Registered here as R6-DATA; overlay itself
+  will be a separate preregistered run.
