@@ -1,0 +1,42 @@
+run_id: OTR_S6_T2_CONDITIONED
+campaign: original_trader_reconstruction
+phase: "Phase 3 — FINAL Track-S wrapper pass under the sec 49 stop rule"
+date: 2026-08-23
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+
+stop_rule_status: >
+  Non-improving mechanism passes so far: S4 exit-semantics (#1), S5B churn-merge (#2);
+  S5 T3-quality was VACUOUS (tautological gates, logged, does not count). Per the frozen
+  sec 49 rule, if THIS pass does not improve the frontier (D=1.153,
+  E13_R1|W_0400_1600|FF), Track-S wrapper search CLOSES and the frontier candidate is
+  classified at its band-edge fit.
+
+diagnostics_driving_this_pass: >
+  The hold-correct shape family is E13_P0 (no reversal): hold 100.1 at EXCL_0200_0800 but
+  count -12.5% (3,809 vs 4,351). The missing ~540 trades must come from an entry type that
+  does not shorten holds much. Unrestricted T2 adds ~1,350 (overshoot, WR crash to 37).
+  RECOVERED FACT (Class B): 68% of T2 pullback events fire while the trend is WEAK, 32%
+  while STRONG — so a strong-only T2 gate is BINDING (unlike S5) and adds ~430 entries.
+  Vendor-manual provenance (thesis v1): pullback reliability was a marketed feature;
+  PullbackEarly=true is the vendor default (observed in our replica config).
+
+grid_frozen:
+  cells:
+    - E1_2strong_3|EXCL_0200_0800|FF   # T1 + T2(strong-only) + T3, no reversal
+    - E1_2strong_3|W_0200_1600|FF
+    - E1_2strong_3|W_0400_1600|FF
+    - E1_2strong_3|none
+    - E1_2strong|EXCL_0200_0800|FF     # without T3
+    - E13_R1_2strong|W_0400_1600|FF    # frontier shape + strong-T2
+    - E13_R1_2strong|EXCL_0200_0800|FF
+scoring: frozen S1 objective unchanged
+layer1_cost_convention: commission $0, slippage 0
+prior_prediction: >
+  E1_2strong_3|EXCL_0200_0800 predicted: count 4,150-4,350, hold 92-100, WR 39.5-41,
+  net 210-250k, DD -28..-33k. If D < 1.153 the candidate advances to Phase 8
+  cross-window validation; else Track-S closes at the current frontier.
+outputs:
+  - runs/OTR_S6_T2_CONDITIONED/out/{sweep_results.json, scorecard.csv}
+  - HYPOTHESIS_LEDGER rows OTR-S6-*
+seed: deterministic

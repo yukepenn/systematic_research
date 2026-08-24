@@ -94,6 +94,8 @@ class WrapperPolicy:
     # T3 re-entry quality gates (S5): strong-trend-only / must be on trend side of TV
     t3_strong_only: bool = False
     t3_reclaim_tv: bool = False
+    # S6: T2 entries only when the trend is STRONG (|Signal_Trend| == 2) at the signal bar
+    t2_strong_only: bool = False
     # S5B churn-merge: min bars between an exit and the next flat-entry (reversals exempt);
     # reversal counts toward max_entries_per_trend when reverse_counts_entry is True
     reentry_cooldown_bars: int = 0
@@ -206,7 +208,8 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
                 continue
 
         # 3) entry when flat
-        if pos == 0 and sig != 0 and i >= BARS_REQUIRED and entry_ok_t[i] \n           and (i - last_exit_i) >= pol.reentry_cooldown_bars:
+        if (pos == 0 and sig != 0 and i >= BARS_REQUIRED and entry_ok_t[i]
+                and (i - last_exit_i) >= pol.reentry_cooldown_bars):
             mag = abs(sig)
             if mag not in pol.entry_types:
                 continue
@@ -222,6 +225,8 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
                 tvv = tv_arr[i]
                 if np.isnan(tvv) or (sig > 0 and close[i] <= tvv) or (sig < 0 and close[i] >= tvv):
                     continue
+            if mag == 2 and pol.t2_strong_only and abs(bars["signal_trend"][i]) != 2:
+                continue
             if mag == 2:
                 if pol.first_pullback_only and t2_seen_this_trend:
                     t2_seen_this_trend = True
