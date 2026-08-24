@@ -1,0 +1,37 @@
+run_id: OTR_S3B_SELTIME_CROSS
+campaign: original_trader_reconstruction
+phase: "Phase 3 (directive S3 x S1/S5 interaction, sec 48 recursive pass)"
+date: 2026-08-23
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+
+diagnostics_driving_this_pass: >
+  S3: E1_R1|W_0300_1600 D=1.343 nails count (4,527/+4%), tpd (8.40 vs 8.26), WR (39.74)
+  but hold -26% (69.4 vs 94) and net -17%. E13_P0|EXCL_0200_0800 nails hold (100.1) and WR
+  (41.03) but count -12.5%. Per sec 48: (a) short-hold + right-count wants positions to
+  RIDE past the window (entry-gate-only semantics) instead of force-flat; (b) E13's
+  low-count/long-hold wants flip-reversal added. Neither is a new free-form axis — both
+  are bounded semantic alternatives of components already in evidence (V0 TimeFilter shape
+  vs entry-gating; reverse-on-flip already in the S1 grid).
+
+grid_frozen:
+  shapes: [E1_R1, E13_R1, E13_P0]
+  windows: [W_0200_1600, W_0300_1600, W_0400_1600, W_0300_1700, EXCL_0200_0800]
+  window_modes: [FF (force-flat outside, V0 TimeExit), EO (entry-gate only; positions ride
+    to normal Solar/session exits)]
+  extra_cells: [E12_R1 and E123_P4 at W_0300_1600 + EXCL_0200_0800, FF only]
+  total_cells: 34
+
+scoring: frozen S1/S3 objective unchanged (EARLY_LONG fingerprint)
+layer1_cost_convention: commission $0, slippage 0 (unchanged)
+prior_prediction: >
+  E1_R1|W_0300_1600|EO predicted to raise hold toward 94 and net upward while count rises
+  slightly (reversals outside window become plain exits -> some count loss offsets rides).
+  If EO overshoots hold, the truth likely sits at a boundary variant (W_0200/0400) or the
+  FF/EO distinction is wrong and S4 (exit family) is next.
+stop_rule_reminder: this is bounded pass 3 of Track S; per directive sec 49, three
+  meaningfully different mechanism passes without frontier improvement end the family search.
+outputs:
+  - runs/OTR_S3B_SELTIME_CROSS/out/{sweep_results.json, scorecard.csv}
+  - HYPOTHESIS_LEDGER rows OTR-S3B-*
+seed: deterministic
