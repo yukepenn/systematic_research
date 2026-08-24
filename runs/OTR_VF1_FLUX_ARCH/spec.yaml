@@ -1,0 +1,43 @@
+run_id: OTR_VF1_FLUX_ARCH
+campaign: original_trader_reconstruction
+phase: "TRACK_VF pass 1 — documented VWAP Flux architecture (owner directive 2026-08-24 sec 1)"
+date: 2026-08-24
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+
+identification_basis: >
+  EV-019: VWAP Flux parameter layout matches EV-006 13/13 in UI order; release 2026-01-09.
+  Trader's values: Anchor 60 / Amount 5 / Trend EMA(20) / Levels 95-75-50-25-5 /
+  Qty 3 / CloseThr 10 / Split 5. This pass implements the DOCUMENTED architecture with
+  bounded interpretations for the undocumented pieces (all labeled Class C):
+
+frozen_construction:
+  layers: segmented anchored VWAPs, one per 60-min clock period (sum p*v / sum v);
+    arms L_C = 5 most recent COMPLETED layers; L_E = current evolving + 4 completed
+  levels (V-L1, consistent with manual defaults 100/70/50/30/0 mapping to extremes):
+    level_pct = Lmin + pct/100 * (Lmax - Lmin) over the layer-VWAP set ->
+    Highest(95)/Upper(75)/Median(50)/Lower(25)/Lowest(5)
+  trend:
+    T_A: up iff EMA20(close) > Median AND close > Median (mirror down)
+    T_B (cloud break + hysteresis): close > Highest -> up; close < Lowest -> down;
+      else unchanged
+  entry (documented "pullback into cloud with trend intact"): trend up AND close crosses
+    from above Highest INTO the band -> BUY next open; mirror for down. Close-threshold
+    filter per vendor screenshot semantics (Sell valid iff (close-low)/range >= thr;
+    Buy iff (high-close)/range >= thr; thr=10 -> nearly permissive; ambiguity disclosed).
+    Max 3 signals per trend episode; >=5 bars between same-direction signals.
+  exits (trader's wrapper unknown; bounded):
+    XA: trend flip (opposite extreme cross) + session close
+    XB: profit at re-break beyond entry-side extreme OR trend-flip stop + session close
+    XC: XA + per-trade LossLimit 2500 (bar-close MTM, next-open fill)  # EV-017 probe
+  execution: 1m bars, qty 1, next-bar-open fills, slippage 0, commission $0 (Layer-1)
+  volume: minute total volume for VWAP layers (bid/ask split feeds only trend-STRENGTH in
+    the real product; our trend arms do not use delta — disclosed limitation)
+cells: (L_C, L_E) x (T_A, T_B) x (XA, XB, XC) = 12
+targets: window A (W20260510) primary, frozen S1-style D-score; W20260308/W20260322/
+  W20260419 secondary report-only; PLUS largest-loss distribution per cell (EV-017:
+  repeated ~-$2,600 caps)
+success_rule: D < 2.431 (the standing V-proxy frontier) would make the Flux-architecture
+  reading the new primary; regardless, all fingerprints + loss-tail stats are reported.
+outputs: runs/OTR_VF1_FLUX_ARCH/out/{sweep_results.json, scorecard.csv}
+seed: deterministic
