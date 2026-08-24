@@ -38,3 +38,20 @@ data: t2_canonical_1m.csv (frozen); nq1m_2005_202605.parquet (ET end-stamped, fi
 known_data_caveats: substrate is a continuous back-adjusted series, trader ran single
   front contracts (MAR25); constant per-segment offset does not affect tick-offset
   flips within a window; Feb windows all inside the MAR25 segment.
+amendment_1:
+  date: 2026-08-24
+  committed_before: r12c grid readout
+  reason: |
+    Per-day diagnostic (r12b, OTRIMG-0003 targets) FALSIFIES the 04:00-16:00 entry
+    window: the no-window variant P6 matches day-level largest-win/largest-loss to
+    the cent on most days (incl. an overnight -854.18 trade the window excludes),
+    while every windowed variant destroys those matches. Residual vs P6: +1,395
+    trades (+32%), net -54k, hold +21min, excess concentrated on chop days.
+  amended_refit_space: |
+    entry window grid RETAINED (incl. none / flat-only variants) PLUS churn-suppression
+    axes already implemented in the certified engine: max_entries_per_trend {None,2,3,4},
+    reentry_cooldown_bars {0,5,10,15,30,60}, t3_requires_t2 {F,T}, reverse_counts_entry
+    {F,T}. Selection metric (preregistered here): (1) count of cent-exact day-extreme
+    matches (22 possible) DESC; (2) per-day count L1 ASC; (3) master aggregate within
+    tolerances as final gate. Fitting data: Jan-2023 slice (fresh state = master's own
+    state, since master starts 1/1/2023); validation: full master + Feb-2025 windows.
