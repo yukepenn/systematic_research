@@ -1,5 +1,29 @@
 # OTR CURRENT TRUTH (prepend-newest)
 
+## 2026-08-24j — NT8/CrossTrade UNLOCKED: R6 parity BIT-EXACT; June-July data ingested; VF-CAND1 survives TRUE OOS
+
+Owner re-authorized CrossTrade (recorded in runs/OTR_R6_NT8_PARITY/spec.yaml);
+full self-serve loop now: sandbox compile -> Strategy Analyzer backtest via MCP.
+- **R6 PARITY (PHASE C3 §8): PASS.** Layer A Jan-2023 cent-exact 91/91,
+  $6,815.00 == $6,815.00, trade-for-trade. Layer B two-year master BIT-EXACT:
+  4,592/4,592 trades, $279,655.00 net, DD −30,305.00, consec 7/15, ZERO trade
+  differences across 735k bars (the 1 unserialized = known boundary quirk).
+  Layer C: one window EXACT, others ≤1-trade data-source deltas. §51-E CLOSED:
+  Python ↔ NinjaScript ↔ NT8 Analyzer end-to-end. (v1 port had an int-overflow
+  cooldown bug caught by zero-trade smoke; fixed in v2, class renamed.)
+- **R6-DATA**: June-July 2026 per-contract 1-min exported via SA runs
+  (JUN26 + SEP26, pre-seal, hashed into research/original_trader_reconstruction/data/).
+- **R8-A TRUE OOS: OTR-VF-CAND1 cluster survives** (preregistered prediction
+  held; all distances 0.327-0.668). Leader T_C|P_MED|C_DIR|H1a|X_OPP stable
+  (6/28 window d=0.338, net 7,985 vs 8,630); T_D|H1c member DEMOTED (−32.5k
+  swing on a +8.6k week). −2,600 stop reproduces OOS. Residual unchanged in
+  kind: WR gap + missing extra edge in his biggest weeks.
+- **R8-B**: 6/14-18 TP week is flagship-sized by count (VF 72 vs TP 78) but
+  carries a REAL-EXECUTION 65-pt-class stop (LL −1,426.18) → some 65-pt-stop
+  sleeve still live in June. 6/7-12 (n136, WR50, hold 20.5) stays
+  UNDER-EXPLAINED — the fast/tight layer (variant-2 era) is the missing
+  carrier. No weights fitted.
+
 ## 2026-08-24i — CONVERGENCE PASS (directive v3.0 C3/C4/V1-V5 + recon): NT8 port, VF clean-room, OTR-VF-CAND1, purchase-EVI downgrade
 
 - **C3**: OriginalTraderSolarCAND2_v1.cs written (research-only, fail-closed);

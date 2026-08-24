@@ -1,25 +1,24 @@
-# RESUME_HERE (2026-08-24, end of convergence pass — directive v3.0)
+# RESUME_HERE (2026-08-24 late — post NT8/CrossTrade unlock)
 
-State: all v3.0 phases executed except those blocked on external access.
-Authoritative narrative: CURRENT_TRUTH.md entries 2026-08-24h/i +
-CONVERGENCE_PASS_ANSWERS_20260824.md (§51 A-V). Everything committed+pushed.
+R6 parity DONE (bit-exact); June-July data ingested; R8 OOS done. CrossTrade
+MCP authorized + self-serve compile loop working (CompileNinjaScript sandbox →
+RunStrategyBacktest; WriteNinjaScriptFile reflection-compile unavailable →
+file_only, sandbox path is the workhorse). Conventions: NQ 09-26 = canonical
+merge; to = one second before next 18:00 ET; comm template omitted = $0.
 
-## Blocked (needs owner/environment, in EVI order)
-1. NT8 Strategy Analyzer session → execute CAND2_NT8_PARITY_PROTOCOL.md
-   (OriginalTraderSolarCAND2_v1.cs is written; spec-first R6 dir on first run).
-2. NQ 1-min 2026-06→07 data (pre-seal, not locked) → June TP overlay
-   (JUNE_TP_RECONSTRUCTION.md) + 2026 flagship windows 6/21+.
-3. New labels that separate frozen ambiguities: any per-day Analyzer table
-   (any era); hp-machine settings frame; St-row frame between 12/14-1/18;
-   any 2026 chart frame with signal arrows + readable times.
+## Highest-EVI open work (all free, all runnable now)
+1. 6/7-12 June TP decomposition: the fast/tight sleeve (variant-2-shaped,
+   n~40-60, hold ~15-25min, WR high) — bounded member test on JUN26 data.
+2. R7 trigger residual: leader's WR gap (26-35 vs 39-45) — one bounded pass on
+   exit composition (winner-riding: trail/target family from St-group values)
+   under §6 discipline.
+3. hp-build weekly identification (OTR_R9): CAND2 + winner-extension members
+   vs the 19 hp weeks.
+4. Feb-2025 fast-layer shape test on 2/26-27 per-day rows.
+5. NT8-side: Layer C on canonical substrate gaps is closable by exporting
+   NT8's own late-2025 bars (SWMinuteExport_v1) and re-slicing R5 if wanted.
 
-## Open free work (if continuing without new data)
-- FVP-midspan measurement on existing chart frames (percentile-vs-minmax, J/K).
-- hp-build hypothesis: fit CAND2+winner-extension members against the 19
-  hp weeks (preregister as OTR_R8; §6 discipline — this is a SIBLING build).
-- Feb-2025 fast-layer shape test on the 2/26-27 per-day rows (bounded members
-  from FEB2025_FAST_BUILD.md §Open question).
-
-## Do-not-do (standing)
-No purchases (gate CLOSED, EVI downgraded — PURCHASE_GATE.md). No CrossTrade.
-No DOM/L2 resumption. LOCKED_FORWARD ≥2026-08-01 virgin. Originals read-only.
+## Standing
+Purchase gate CLOSED (EVI downgraded; owner said: only as last resort).
+Never: orders/Sim101/live, connections, licensing, vendor DLLs. Originals
+read-only. LOCKED_FORWARD ≥2026-08-01 virgin.
