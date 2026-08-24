@@ -82,3 +82,14 @@ an hp week that fits CAND2 almost exactly (dist 0.153), and 12/21 is a holiday
 anomaly — so "hp = sibling build" is the leading hypothesis, not a proven
 partition. Within-ERA_B contrast (hp |Δn| ~31% vs dev ~11%) is the cleanest
 supporting evidence.
+
+## Amendment-1 readout — directional stop (era B, 11 weeks, LL columns ±$50)
+hits (long,short): L65S65 (8,5) | L65S75 (8,6) | L75S65 control (2,2→collapses).
+- **Long initial stop = 65 pts CONFIRMED** (control ruins the long column).
+- Short side is a MIXTURE: L65S75 scores exact-value hits on 11/23 (−1500 vs
+  −1490), 12/7 (−1385.00 EXACT) and 1/4 (−1500.00 EXACT), but 12/14 and 1/18
+  targets cap shorts at exactly −1300.00 (demands 65). → the short-side stop is
+  TIME-VARYING 65↔75 within era B (consistent with the author's near-weekly
+  panel tinkering: 65→75 on 11/14, 46/36→46/30 on 1/17). Per §6 BOTH members
+  kept; no unique rule forced. Discriminator that would close it: any panel
+  frame between 12/14 and 1/18 showing the St row values.
