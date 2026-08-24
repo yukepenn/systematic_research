@@ -1,0 +1,33 @@
+run_id: OTR_VF2_STOP130
+campaign: original_trader_reconstruction
+phase: "TRACK_VF pass 2 — Flux pullback entries + intrabar 130-pt protective stop (EV-017)"
+date: 2026-08-24
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+
+diagnostics_driving_this_pass: >
+  VF1: all 12 bounded readings fail (best D 5.81). Flip-exits too wide (WR 17-23), re-break
+  exits are scalp mirrors (WR 76-80, W/L 0.27). Target geometry (aw 62 pts / al 39 pts /
+  hold 40m / WR 38) requires a mid-size protective stop with a run-letting exit.
+  EV-017 (repeated largest losses ~= -$2,600 across 2026 screenshots): 130 NQ pts x $20 =
+  $2,600 EXACTLY -> signature of an INTRABAR working stop order 130 pts (or $2,600) from
+  entry, filling AT the level (gap-through worse). VF1's XC (LossLimit-2500 bar-close)
+  produced worst losses -2,785/-3,190 — overshoot pattern INCONSISTENT with the evidence;
+  the intrabar fixed-stop reading is now primary for the 2026 family.
+
+grid_frozen:
+  entries: Flux pullback-into-cloud (VF1 semantics), L_C levels, trend in {T_B, T_A},
+    qty 3/trend, split 5, close-thr 10
+  stop: intrabar 130 pts from entry fill; fill = stop level, or worse open on gap-through
+    (ONRANGE fill lesson); checked before close-based exits each bar
+  exit arms:
+    Y1: stop + opposite Flux pullback signal exits position + session close
+    Y2: stop + trend-flip exit (close crosses opposite extreme) + session close
+    Y3: stop + re-break profit exit (close beyond entry-side extreme) + session close
+  cells: 2 trend x 3 exits = 6
+targets: window A primary (frozen D-score), W20260308/22/0419 secondary; loss-tail stats
+  mandatory (EV-017 check: worst clustered at exactly -2600 minus/plus slip?)
+success_rule: D < 2.431 makes VF-arch primary; loss-tail match to EV-017 is scored
+  qualitatively regardless.
+outputs: runs/OTR_VF2_STOP130/out/{sweep_results.json, scorecard.csv}
+seed: deterministic
