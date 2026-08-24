@@ -1,4 +1,13 @@
-# OTR FINAL PACKAGE v1 (2026-08-23) — answers to directive §52
+# OTR **INTERIM** PACKAGE v1 (2026-08-23; re-designated INTERIM by owner directive 2026-08-24)
+
+> **2026-08-24 OWNER CORRECTION applies.** This is NOT the final reconstruction. Known
+> over-strong statements below are retracted in CURRENT_TRUTH.md (2026-08-24 entry):
+> Q5's "Type-2 FALSIFIED" reads as "simple/unconditional T2 strongly disfavored";
+> Q9/Q22's migration narrative is retracted (no clean Solar→Volume switch established;
+> ACCOUNT(t) = time-varying combination of families); "2026 weeks are NOT Family S"
+> reads as "the frozen OTR-S-CAND1 does not explain the 2026 fingerprints".
+> New external evidence (VWAP Flux, ThunderZilla, ninZa Volume Base, ~−$2,600 loss caps)
+> reopened Tracks VF/TZ — see CURRENT_TRUTH.md. Kept verbatim below as the 08-23 state.
 
 Status: Phases 0–9, 12–13 complete; Phase 10 ports written; Phase 11 parity OWNER-GATED
 (ninjatrader_parity/PARITY_PLAN.md). This package updates if parity or new evidence lands.

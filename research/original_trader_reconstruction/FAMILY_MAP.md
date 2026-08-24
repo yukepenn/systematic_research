@@ -86,6 +86,31 @@ inference (labeled); D = unknown. Never silently promote C/D → A.
   Kaufman book = lineage clue only.
 - If unidentified after bounded search: retain FAMILY_B = UNKNOWN MULTI-BLOCK.
 
+## TRACK VF — VWAP Flux hypothesis (opened 2026-08-24, PRIMARY Track-V interpretation)
+
+- External evidence [A, EV-014]: ninZa VWAP Flux docs — AnchorPeriodMinutes = per-layer
+  duration; Amount = number of recent VWAP layers retained; 5-level value map
+  Highest/Upper/Median/Lower/Lowest; Signal_Trend; Signal_Cum_Delta added 2026-02-09.
+  Structure matches EV-006 (Anchor 60 / VWAP Amount 5 / 95-75-50-25-5) closely.
+- Working reading [C]: the trader's 2026 "Volume" strategy is built on VWAP Flux (or a
+  close relative) — NOT an invented volume-percentile ladder. The 08-23 V-proxy
+  (prev-hour percentile ladder, runs OTR_V1..V3) is preserved as a behavioral-mimic
+  artifact but demoted.
+- To resolve [D]: exact layer mechanics (rolling vs segmented; live vs frozen layers);
+  what the Percent parameters position; Signal Close Threshold/Split semantics in Flux.
+
+## TRACK TZ — ThunderZilla hypothesis (opened 2026-08-24, high-EVI, unconfirmed)
+
+- External evidence [A, EV-015]: RenkoKings ThunderZilla changelog 2025-08-11 adds
+  "Signal: Quantity Per Trend" — near-verbatim match to the EV-006 label; TZ =
+  trend/pullback/momentum/trailing-stop system exposing Signal_Trend/Signal_Trade; same
+  vendor ecosystem as Solar; forum NQ settings exist (VWMA or EMA trend).
+- Hypothesis [C]: some late-2025/2026 multi-block screenshots (Track B's raw token
+  groups) may be ThunderZilla or a strategy wrapping it. NOT concluded as used.
+- Adjudication path: match public property list/ordering + defaults against the raw
+  visible blocks (EV-007); search local NT8 templates/configs/logs for artifacts;
+  behavioral test only if the mechanism is publicly documented well enough.
+
 ## ACCOUNT / COMBINATION P
 
 - Trade Performance reports 2026-06-07→12 (136 trades, 32.83/day, 20.49m hold, WR 50%)

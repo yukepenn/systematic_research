@@ -1,5 +1,16 @@
 # TRACK S — SolarWindRKSelTime reconstruction report (closed 2026-08-23)
 
+> **CORRECTION 2026-08-24 (owner directive; append-only):** (1) "NOT T2-pullback-driven"
+> reads as **"simple/unconditional T2 entry is strongly disfavored"** — conditional
+> (wave/time/state-gated) T2 is untested; absence from source cannot be claimed.
+> (2) "2026 headline weeks are NOT Family S" reads as **"the frozen OTR-S-CAND1 does not
+> explain the 2026 fingerprints"** — parameter/wrapper-evolved Solar or combinations are
+> not excluded. (3) Track S is re-designated a **moderate-confidence wrapper CANDIDATE**,
+> incumbent but not final; the 08-23 §49 closure is superseded by the amended stop rule
+> (closure only when all direct external evidence is consumed). Residual program (exact
+> date alignment, net/hold residuals, SelTime plateau characterization, per-week error
+> distribution) continues.
+
 **Classification (directive §40): PARTIALLY RECONSTRUCTED, leaning RECONSTRUCTED —
 MODERATE CONFIDENCE on wrapper structure.** Search closed at the frozen §49 stop rule:
 three meaningfully different mechanism passes (S4 exit-semantics, S5B churn-merge,

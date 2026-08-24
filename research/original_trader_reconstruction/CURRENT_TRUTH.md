@@ -1,5 +1,42 @@
 # OTR CURRENT TRUTH (prepend-newest)
 
+## 2026-08-24 — OWNER CORRECTION DIRECTIVE: package → INTERIM; retractions; TZ/VF opened
+
+**RETRACTIONS (over-strong claims corrected; append-only, originals preserved below):**
+1. ~~"2026 headline weeks are NOT Family S"~~ → **"The frozen OTR-S-CAND1 does not
+   explain the 2026 screenshot fingerprints."** The trader ran several strategies
+   simultaneously and modified them; Solar may have persisted with changed
+   parameters/wrapper or in combination. ACCOUNT(t) = time-varying combination of
+   families; no clean regime switch is established.
+2. ~~"the trader migrated from Solar to Volume in 2026"~~ → retracted as a narrative;
+   S13's fact stands only as: the FROZEN candidate loses −$78k in 2026.
+3. ~~"T2 is NOT part of the system"~~ → **"simple/unconditional T2 entry is strongly
+   disfavored"** — conditional T2 (wave/time/state-gated) is untested and cannot be
+   excluded without source.
+
+**STOP-RULE AMENDMENT (supersedes the §49 reading used on 08-23):** this is system
+identification of a known external target. The three-failed-pass closure applies ONLY
+when all available DIRECT screenshot/vendor/property evidence is consumed, no
+identifiable parameter/property clue remains, and remaining alternatives are
+observationally equivalent. New external evidence AUTOMATICALLY reopens a family.
+
+**NEW EXTERNAL EVIDENCE (EV-014..EV-017):** VWAP Flux (ninZa) public docs match the
+2026 Track-V parameter block closely (AnchorPeriodMinutes, Amount=N recent VWAP layers,
+5-level Highest/Upper/Median/Lower/Lowest map; Feb-2026 changelog adds Signal_Cum_Delta,
+upgrades Signal_Trend). ThunderZilla (RenkoKings) changelog 2025-08-11 adds "Signal:
+Quantity Per Trend" — near-verbatim match to the screenshot label; same vendor ecosystem
+as Solar. ninZa delta indicators expose Volume Base = BidAskPrice_RealVolume verbatim →
+the 2026 systems likely REMAIN in the ninZa/RenkoKings ecosystem. Repeated ~−$2,600
+largest losses across 2026 screenshots = new identification fingerprint.
+
+**FRONTIER RESHAPED:** Track V reopened as **TRACK_VF (VWAP Flux architecture)** — the
+08-23 V-proxy (prev-hour percentile ladder) is DEMOTED to a preserved
+behavioral-mimic artifact, no longer the primary interpretation. **TRACK_TZ
+(ThunderZilla)** opened as high-EVI identification hypothesis for the late-2025/2026
+multi-block screenshots (not concluded as used). Order-flow classification from the 2
+stored full BBO sessions authorized NOW (no CrossTrade). Track S: CAND1 remains
+incumbent (moderate-confidence wrapper candidate); residual program per directive §6.
+
 ## 2026-08-23c — Tracks SD / B / V / P adjudicated; Phase-13 old-history stress done
 
 - **Track SD (LossLimit)**: PARTIALLY IDENTIFIED. Per-trade semantics INERT at 2500/4000
