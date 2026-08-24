@@ -1,5 +1,27 @@
 # PURCHASE GATE (owner directive 2026-08-24 §17-19) — status + pre-purchase parity kit
 
+## UPDATE 2026-08-24 (directive v3.0 §44-§45) — GATE STAYS CLOSED, EVI DOWNGRADED
+
+Quantitative status per §45:
+- CLOUD GEOMETRY: solved-to-class (VF-ANCHOR + percentile rails; VF_CORE_PARITY_REPORT;
+  sole public precedent per PUBLIC_ANALOGUE_MAP; FVP-midspan discriminator defined).
+- TREND STATE: solved-to-cluster (T_C leader 13/17 LOWO; input bound 1.7%).
+- STOP/RISK: solved (130-pt fixed; pre-dates VF per 2026_VARIANT_LEDGER — wrapper-level).
+- SIGNAL COUNT: right scale (~1.2-1.8k vs 1.2k); SIGNAL TIMING: not matched
+  (plateau §40 distance 0.476; failure week right sign, 23-63% magnitude).
+- Signal_Trade timestamps ARE the dominant residual (§45 condition met in form) — BUT:
+- **EV-039 changes the calculus**: in the trader's displayed configuration
+  (BidAskPrice_RealVolume + Tick Replay OFF) the LICENSED indicator computes NOTHING
+  historically. His backtests therefore cannot be the licensed indicator in that mode,
+  and the leading reading (VF_PANEL_COMPLETENESS_NOTE: frozen VF-13 block amid mutating
+  neighbors; no Zone Period anywhere) is his OWN implementation. A $300 oracle would
+  answer VENDOR semantics, not his build's. Purchase would only bound "how far his
+  reimplementation sits from the vendor original" — useful, not identifying.
+- **Verdict: still CLOSED — now on grounds of reduced EVI, not just prematurity.**
+  Reopen triggers: (a) evidence the trader used Tick Replay or UpDownTick mode,
+  (b) any Signal_Trade-timestamp-bearing screenshot, (c) owner explicitly wants the
+  vendor-distance bound.
+
 ## Gate conditions (§18) — VWAP Flux status after the no-buy program
 
 | Condition | Status |

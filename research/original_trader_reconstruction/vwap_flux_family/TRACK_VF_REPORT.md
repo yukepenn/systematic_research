@@ -62,3 +62,18 @@ Alternative free path: none identified — the "No Tick Replay" historical appro
 
 Artifacts: runs/OTR_VF1_FLUX_ARCH, OTR_VF2_STOP130, OTR_VF3_MEDEXIT. The 08-23 V-proxy
 (runs/OTR_V1..V3) stays preserved as a demoted behavioral-mimic artifact.
+
+## 2026-08-24c — CONVERGENCE pass (directive v3.0 V1-V5): OTR-VF-CAND1 defined
+vf_core dual-lifecycle clean-room built (unit tests PASS); VF-ANCHOR quantified
+vs VF-BLOCK (width 47 vs 106 pts; movers 5.0 vs 1.34/bar) — ANCHOR incumbent,
+sole public precedent (PUBLIC_ANALOGUE_MAP). Percentile-vs-minmax discriminator:
+FVP-midspan offset (8.9 pts mean under percentile, ≡0 under minmax). R7/R7b
+(208 members, no free constants): OTR-VF-CAND1 cluster = trend close-vs-FV
+(+EMA20 agreement) → pullback to Median/rail → close-quality confirm → SAR/flip
+exit, QtyPerTrend 3 / Split 5 / 130-pt stop; leader mean §40 dist 0.476, LOWO
+13/17; failure week right-sign in all survivors (23-63% magnitude); 4 members
+inseparable (§6). Version timeline verbatim-sourced (2/9 Signal_Cum_Delta,
+2/24 Signal_Trend 2→4-state). EV-039: displayed mode computes nothing
+historically → own-implementation reading leads; purchase gate CLOSED with
+downgraded EVI. Correction: manual presets use CloseThreshold 70 everywhere
+(the earlier "4/80/30" reading was a §2.11 example sentence, not defaults).

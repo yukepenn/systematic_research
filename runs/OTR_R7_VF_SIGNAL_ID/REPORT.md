@@ -26,3 +26,15 @@ Public recon (same-day) changed the hypothesis space:
   on 2026-02-24 — mid-sample; Signal_Cum_Delta added 2026-02-09; staff forum
   teaches VF-direction + delta-confirmation composition. → version-aware
   strength/delta gating members are motivated by evidence, not tuning.
+
+## Pass-2 readout (amendment 1)
+64 members. NO separation gained: best remains T_C|P_MED|C_DIR|H1a|X_OPP
+(0.476; LOWO top-3 in 13/17 rotations). H1c manual-verbatim members mid-pack
+(0.512+); strength gate (post-2/24 4-state via CVD proxy) mildly degrades the
+leader (0.492) — strength dimension unidentifiable from weekly aggregates.
+T_D|P_IN|C_REC|H1c|X_FLIP delivers the best catastrophe geometry (failure week
+−26,535 = 63% of −42,235, worst-window 0.755). Surviving cluster (4 members)
+declared INSEPARABLE per §6 — full metrics in
+vwap_flux_family/VF_WEEKLY_FINGERPRINT_MATRIX.csv; separation requires
+Signal_Trade timestamps or per-day 2026 labels (SIGNAL_TRADE_HYPOTHESES.md).
+Model class named OTR-VF-CAND1.
