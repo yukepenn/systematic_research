@@ -1,0 +1,27 @@
+run_id: OTR_R10_FEB2025_FAST
+date: 2026-08-24
+campaign: OTR (campaign 6)
+directive: v3.0 §11 (Feb-2025 transition build) — mechanism from observed behavior
+hypothesis: >
+  The RKSelTimeDSTMa fast layer is a TrendVector-cycle machine built entirely
+  from recovered components: T1 flip opens the trend position; CLOSE crossing
+  the TrendVector (A1=90 ticks) against the position exits; the recovered
+  Type-2 pullback signal (close back inside TV) re-enters in trend direction;
+  opposite T1 reverses. Predicted consequences (vs FEB2025_FAST_BUILD
+  constraints): frequency multiplies with A-panel UNCHANGED; per-trade losses
+  shrink to TV-cycle scale (target avg loss −$331 ≈ 16.5 pts on 2/27);
+  holds compress to ~20-40 min.
+members:
+  F_T1 (control) | F_TV2E | F_TV2L (early/late T2 re-entry) x LL {none, 2500
+  literal session-loss halt (panel: LossLimit 2500 in this branch)}.
+  Params 90/179/5/10/10 (panel-confirmed 2/28), NO St stop (not yet existing),
+  D-gate inherited frozen, comm 0.
+targets (fast-evidence subset; 2/15-2/24 windows EXCLUDED for documented
+  version churn, W0206 excluded qty-3): 2/26 n15 | 2/27 n90 avgloss −331 |
+  2/28 n21 avgloss −945 hold 19.6 | 3/2-3 n26 | 3/4-5 n70 hold 31.8 |
+  3/6-7 n47 hold 31.1 | 3/9-10 n33 hold 24.4 | 3/12-14 n60 hold 41.2
+scoring: per-window count / avg-loss / hold / WR / net errors; verdict on
+  whether ONE member reproduces the count EXPLOSION (90-day) AND the tight
+  avg loss AND the neighboring days' 15-26 range without per-window changes.
+code: research/original_trader_reconstruction/solar_family/src/run_r10_fast.py
+data: nq1m parquet 2025-01-20..2025-03-15 (warmup from 1/20).
