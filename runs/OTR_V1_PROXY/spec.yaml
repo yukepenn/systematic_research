@@ -1,0 +1,53 @@
+run_id: OTR_V1_PROXY
+campaign: original_trader_reconstruction
+phase: "Phase 7 (directive sec 18) — Track V PROXY mechanism identification, pass 1"
+date: 2026-08-23
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+
+caveat: >
+  V-PROXY ONLY (see volume_vwap_family/DATA_FEASIBILITY.md): minute close-price volume
+  proxies the unavailable bid/ask real volume. Best achievable classification is
+  BEHAVIORALLY MATCHED - MECHANISM UNIDENTIFIED. Never conflate with exact parity.
+
+frozen_constants_from_evidence (Class A):
+  anchor: 60-minute clock-hour anchored volume-at-price distribution (0.25 bins, causal
+    running histogram, reset at each hour boundary; percentiles defined once >=5 bars)
+  ladder: [5, 25, 50, 75, 95] volume percentiles
+  trend_ma: EMA(20) of 1m closes
+  max_signals_per_trend: 3
+  signal_split_bars: 5
+  close_threshold_10pct: NOT interpreted in pass 1 (ambiguous; disclosed; a pass-2 axis)
+
+mechanism_grid_frozen:
+  entry_families:
+    M_REV: uptrend -> BUY close crossing DOWN through P25; downtrend -> SELL close
+      crossing UP through P75 (pullback-into-value)
+    M_BRK: uptrend -> BUY close crossing UP through P75; downtrend -> SELL close
+      crossing DOWN through P25 (value-breakout continuation)
+  trend_defs:
+    T_LVL: close > EMA20 (up) / < (down)
+    T_SLP: EMA20 > EMA20 5 bars ago (up) / < (down)
+  exits:
+    X_MED: close crosses P50 against the position -> exit next open; + session close
+    X_OPP: close reaches opposite extreme band (P95 up-exit for shorts entered at P75;
+      P5 for longs...) -> exit; + session close   # mirror-consistent definitions in code
+  cells: 2x2x2 = 8, plus W_0400_1600 entry-window variant on the 2 best (10 total)
+  execution: flat-only entries, qty 1, next-bar-open fills, slippage 0, commission $0
+
+targets:
+  primary: W20260510 (window A, confirmed params): 183 trades (18.3/day), WR 37.70,
+    PF 0.95, hold 39.84m, avg win +1236.16, avg loss -783.77, net -4055, DD -12700
+  secondary_report_only: W20260308, W20260322 (failure week), W20260419
+scoring: D-score, same scale conventions as Track S (trades 7.5%, WR 2pp, PF 0.075,
+  hold 15%, avg win/loss 15%, DD 20%, net 15% - net weight 0.5)
+substrate: nq1m parquet, 2026-02-20..2026-05-29 segment (consumed history)
+prior_prediction: >
+  In-market arithmetic (18.3/day x 39.8m = 728 min/day) says Track V also trades
+  overnight. The 61.8-pt avg winner with 40m holds favors M_BRK (breakout) over M_REV
+  scalps. If no cell approaches the count/hold/WR triple, pass 2 varies the ladder
+  interaction (close-threshold semantics) before the sec 49 counter starts.
+outputs:
+  - runs/OTR_V1_PROXY/out/{sweep_results.json, scorecard.csv}
+  - HYPOTHESIS_LEDGER rows OTR-V1-*
+seed: deterministic
