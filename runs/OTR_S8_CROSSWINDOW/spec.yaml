@@ -1,0 +1,35 @@
+run_id: OTR_S8_CROSSWINDOW
+campaign: original_trader_reconstruction
+phase: "Phase 8 (directive sec 33) — cross-window validation of the frozen Track-S candidate"
+date: 2026-08-23
+run_class: DIAGNOSTIC
+spec_frozen_before_results: true
+
+candidate_frozen: >
+  OTR-S-CAND1 = E13_R1|W_0400_1600|FF, touch-exit, commission $0 (Layer-1):
+  entries T1+T3 when flat, stop-and-reverse on opposite flips, entries allowed only
+  04:00-16:00 ET bar-stamps with force-flat outside, exit on Close touching end-of-bar
+  TrailingStop, session-close flat, next-bar-open fills. Solar params frozen
+  90/179/5/10/true/10. NO per-window retuning of any kind (sec 33).
+
+purpose: >
+  (a) Family-membership evidence: which later target windows are CONSISTENT with the
+  early-Solar candidate vs clearly a different strategy (final-package Q13).
+  (b) Honest out-of-fit-window behavior of the candidate (the EARLY_LONG window was the
+  identification window; late-2025/2026 windows were untouched by Track-S fitting).
+
+substrate: research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet
+  (signals recomputed via solar_wave_full — proven bit-equal to vendor; different
+  back-adjust offsets are immaterial: Solar math is difference-based)
+segment: 2025-08-15 .. 2026-05-29 continuous run; trades sliced into the 14 target
+  windows (W20250921 .. W20260524) by entry time; sessions = 18:00 ET boundary
+comparison_metrics: per-window net sign, trade count, WR, PF, avg hold vs TARGET_WINDOWS.csv
+prediction_frozen: >
+  If the trader still ran Family S in late 2025 (90/179/5/10/10 seen in a 2025-09 era
+  screenshot), W20250921/W20251221/W20251228-class windows should show count/hold in the
+  candidate's range (roughly 30-45 trades/week, hold 60-90m). 2026 windows hypothesized
+  Family V/B (hold 33-66m typical, count up to 92-183/wk) should NOT match. The candidate
+  weekly count at ~8.6/day is ~43/week — windows with 60-183 trades are un-matchable by
+  Family S at qty 1: that is itself family-classification evidence.
+outputs: runs/OTR_S8_CROSSWINDOW/out/{crosswindow.json, crosswindow.csv}
+seed: deterministic
