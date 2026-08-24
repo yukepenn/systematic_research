@@ -43,3 +43,12 @@ Subset-diff of our trade multisets against the trader's own per-day W/L structur
 ## Status: MAJOR PROGRESS, gate identification pending. Class-B+ base model:
 entry_types=(1,) [+ late-T2 layer TBD], reverse_on_flip, inclusive touch exit,
 session-close flat, no time window, comm $4.18/RT, plus unidentified sparse gate.
+
+## Out-of-sample note (0026 per-day rows, 2/26-27/2025)
+Integrated model: 2/26 n=23 (tgt 15), 2/27 n=22 (tgt 90!!). The late-Feb DSTMa build
+EXPLODES to 90 trades on the NVDA-aftermath volatile day with avg loss only -$331
+(far tighter than the 179-tick flip distance) while neighboring days run 15-21.
+A fast additional layer (plausibly the pullback layer activated in the 2/18+
+iteration) exists in that build and is ABSENT from the master/Jan build we identify.
+Transitional-era divergence documented; not chased (master + Jul+ weekly eras are
+the identification targets).
