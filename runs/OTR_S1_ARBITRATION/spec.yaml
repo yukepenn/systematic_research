@@ -1,0 +1,57 @@
+run_id: OTR_S1_ARBITRATION
+campaign: original_trader_reconstruction
+phase: "Phase 3 (directive S1+S5) — Track S wrapper: signal arbitration + re-entry, bounded"
+date: 2026-08-23
+run_class: RECONSTRUCTION_PASS   # identification, not alpha; every cell -> HYPOTHESIS_LEDGER row
+spec_frozen_before_results: true
+
+objective: >
+  Identify which Signal_Trade types and event policies the original SolarWindRKSelTime
+  wrapper traded, by fingerprint distance to EARLY_LONG (2023-01..2025-02: ~4,351 trades,
+  8.26/day, 40.29% WR, PF 1.18, ~94m hold, ~$67/trade, DD ~-$32.7k, net ~$292k).
+  NOT return maximization. Score = multi-fingerprint distance (IDENTIFICATION_OBJECTIVE.md).
+
+substrate: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv (exact canonical series)
+engine: research/original_trader_reconstruction/solar_family/src/otr_engine.py (S0-certified:
+  touch-exit vs end-of-bar TrailingStop, next-bar-open fills, exit-before-entry,
+  session-close conventions)
+
+layer1_cost_convention: >
+  Screenshot parity: slippage 0, commission $0 (several author reports display
+  Commission = 0; his ~$2/RT is a real-world estimate, not the Analyzer display).
+  Finalists get a $1.00/side disclosure arm. Identification verdicts on the $0 arm.
+
+hypothesis_grid_frozen:
+  entry_type_subsets: [[1],[2],[3],[1,2],[1,3],[2,3],[1,2,3]]
+  event_policies:
+    - P0_unlimited
+    - P1_first_event_per_trend      # max_entries_per_trend=1
+    - P2_first_two_per_trend        # max_entries_per_trend=2
+    - P3_t3_requires_t2             # only for subsets containing both 2 and 3
+    - P4_first_pullback_only        # only for subsets containing 2
+    - R1_reverse_on_flip            # only for subsets containing 1; P0 policy otherwise
+  exit: TS touch-exit (V0 certified) — exits are S4's axis, held fixed here
+  time_filter: none — SelTime is S3's axis, held fixed here
+  long_short: both enabled (asymmetry is S6, requires evidence first)
+  total_cells: 31
+
+scoring_frozen:
+  primary: [trades, trades_per_day, win_rate_pct, pf, avg_hold_min, avg_trade, max_dd]
+  secondary: [net]
+  scales: {trades: 0.075T, trades_per_day: 0.075T, win_rate_pct: 2.0pp abs, pf: 0.075 abs,
+           avg_hold_min: 0.15T, avg_trade: 0.15T, max_dd: 0.20T, net: 0.15T}
+  D: mean(primary_e) + 0.5*mean(secondary_e); full error vector always reported;
+  complexity (n of active wrapper choices) reported alongside.
+
+prior_prediction: >
+  T1-only = 2,915 trades (measured S0). Adding T2 entries should raise count toward the
+  4,351 target and SHORTEN avg hold toward 94m (T2 entries occur mid-trend). {1,2} or
+  {1,2,3} with no/loose caps expected closest. Residual trades/day + hold mismatch may
+  remain for S3 (SelTime). If ALL cells overshoot on hold or undershoot on count,
+  that diagnostic drives the next mechanism (per directive sec 48).
+
+outputs:
+  - runs/OTR_S1_ARBITRATION/out/sweep_results.json  (all 31 cells, full fingerprints)
+  - runs/OTR_S1_ARBITRATION/out/scorecard.csv
+  - HYPOTHESIS_LEDGER.csv rows OTR-S1-001..031
+seed: deterministic (no randomness)
