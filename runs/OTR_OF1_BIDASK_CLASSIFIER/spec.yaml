@@ -1,0 +1,31 @@
+run_id: OTR_OF1_BIDASK_CLASSIFIER
+campaign: original_trader_reconstruction
+phase: "Owner directive 2026-08-24 sec 5 — causal trade-at-bid/ask classification from stored BBO"
+date: 2026-08-24
+run_class: ENGINEERING_ONLY
+spec_frozen_before_results: true
+
+purpose: >
+  Build the causal quote-rule classifier over the two complete stored tick sessions
+  (s20260511, s20260512: bip 0=Last trades, 1=Bid updates, 2=Ask updates, ms stamps,
+  stream order preserved) to reconstruct BidAskPrice_RealVolume-class series WITHOUT
+  CrossTrade. Outputs feed mechanism discrimination for TRACK_VF/OF: (a) how different
+  are real-volume-classified distributions vs the minute close-binned PROXY used on
+  08-23; (b) 1-min buy/sell/delta series for signal experiments.
+
+method:
+  classifier: maintain best bid/ask from streams 1/2 in event order; for each trade:
+    price >= ask -> BUY volume; price <= bid -> SELL volume; strictly inside spread ->
+    tick-rule fallback (vs previous trade price; unchanged -> carry last side); spread
+    invalid/missing -> tick-rule. All causal (no lookahead).
+  outputs_per_session:
+    - classification stats (at-ask %, at-bid %, inside %, fallback %)
+    - 1-min aggregates: buy_vol, sell_vol, delta, total, vwap_real (price*totvol), n_trades
+    - proxy-vs-real diagnostics: (i) 60-min anchored VWAP from tick trades vs from minute
+      close*volume proxy (displacement stats in ticks); (ii) hourly volume-at-price
+      distributions real vs minute-close-binned (percentile-line displacement at
+      5/25/50/75/95 in ticks)
+outputs:
+  - runs/OTR_OF1_BIDASK_CLASSIFIER/out/{s20260511_1m.parquet, s20260512_1m.parquet,
+    results.json}
+seed: deterministic
