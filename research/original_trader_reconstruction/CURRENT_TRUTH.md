@@ -1,5 +1,33 @@
 # OTR CURRENT TRUTH (prepend-newest)
 
+## 2026-08-23c — Tracks SD / B / V / P adjudicated; Phase-13 old-history stress done
+
+- **Track SD (LossLimit)**: PARTIALLY IDENTIFIED. Per-trade semantics INERT at 2500/4000
+  (binds 1-3 trades in 25 months → a trader doesn't tune an inert knob); session-level
+  (B stop-new-entries / C flatten+disable) both consistent with late-2025 weeklies;
+  C@2500 mildly disfavored (damages W20251228). `solar_dstm_family/LOSSLIMIT_SEMANTICS.md`.
+- **Track B**: UNKNOWN MULTI-BLOCK confirmed — zero repo/source hits for any raw token
+  group; no mechanism guess admitted (§22). `multiblock_family/TRACK_B_STATUS.md`.
+- **Track V**: V-EXACT BLOCKED BY MISSING DATA (bid/ask real volume: only 2 full tick
+  sessions inside window A; re-export = CrossTrade, excluded). V-PROXY: 3 bounded passes;
+  pass 3 met the frozen success rule (D 2.431 < 5.203) with `PREV|T_LVL|X_MED|C2`:
+  **breakout of the PREVIOUS hour's static volume-percentile ladder in EMA20 trend
+  direction, not-extended-10% entry gate, median-line exit** → count 189/183, net −5,445
+  vs −4,055, hold 36/40m all ✓; WR −8pp and avg-loss −37% out of band; March/April
+  cross-window signs unresolved (family membership unknown). Classification:
+  BEHAVIORALLY MATCHED — PARTIAL. Running-intra-hour ladder and hourly-EMA20 trend
+  FALSIFIED. `volume_vwap_family/TRACK_V_REPORT.md`.
+- **Track P**: UNDERDETERMINED. June TP aggregates (32.8 trades/day @ 20.5m, WR 50%)
+  need a short-hold high-WR component beyond V+S → corroborates multiple strategies incl.
+  unidentified Family B; H1 vs H2 not discriminable; TP commission $1.04/RT is a new
+  unresolved evidence item. `account_combination/TRACK_P_NOTES.md`.
+- **Phase 13 (S13)**: OTR-S-CAND1 over 2006-2026 = REGIME-LOCAL(recent): sweet spot
+  2023-2025 (+$93.5k/+$143.2k/+$26.3k), 2026 Jan-May **−$78.1k** — the reconstructed
+  Solar family dies exactly when the trader migrated to the Volume family. Fixed-tick
+  params are price-level-dependent; pre-2018 counts are structurally tiny.
+- Remaining phases: 10-11 (NinjaScript ports + parity for S-CAND1/V-proxy), final
+  package (Phase 14). Window B (2026-08) stays governance-blocked.
+
 ## 2026-08-23b — Track S CLOSED: PARTIALLY RECONSTRUCTED (moderate-confidence wrapper)
 
 - **S0 PASS**: pure-Python loop reproduces the canonical Type-1 NT8 run trade-for-trade

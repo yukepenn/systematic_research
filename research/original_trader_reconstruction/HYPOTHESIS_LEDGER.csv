@@ -110,3 +110,11 @@ OTR-S6-005,S,otr_engine.py@S6,E1_2s|EXCL_0200_0800|FF,T2 strong-only no T3,EARLY
 OTR-S6-006,S,otr_engine.py@S6,E13R1_2s|W_0400_1600|FF,frontier+strong-T2,EARLY_LONG,1.1855,,no improvement over 1.1534,NO_IMPROVEMENT
 OTR-S6-007,S,otr_engine.py@S6,E13R1_2s|EXCL_0200_0800|FF,frontier+strong-T2,EARLY_LONG,1.818,,,NO_IMPROVEMENT
 OTR-S8-001,S,otr_engine.py@S6,OTR-S-CAND1 frozen cross-window,sec33 validation,W20250921..W20260524,n/a,,"late-2025 consistent (3/4 sign, counts in range); 2026 windows STRONGLY inconsistent (counts 1.5-2x, holds 24-27m vs 33-50m)",FAMILY_CLASSIFICATION_EVIDENCE
+OTR-SD1-001,SD,otr_engine.py@SD1,A_per_trade x 2500/4000,LossLimit semantics,canonical+late2025,n/a,,binds 1-3 trades/25mo — INERT,INDISTINGUISHABLE
+OTR-SD1-002,SD,otr_engine.py@SD1,B_session_realized x 2500/4000,LossLimit semantics,canonical+late2025,n/a,,-78..-184 trades; late-2025 windows within noise,CONSISTENT
+OTR-SD1-003,SD,otr_engine.py@SD1,C_session_mtm x 2500/4000,LossLimit semantics,canonical+late2025,n/a,,-552..-1142 trades; C_2500 damages W20251228 (20 vs 31),CONSISTENT_EXCEPT_C2500
+OTR-V1-001,V,v_proxy_engine@V1,"RUN ladder, 8 cells",proxy pass 1,W20260510+3,best 5.203,,"all cells fail: holds 2-15m, M_BRK counts 593-754; M_REV falsified",FALSIFIED_RUNNING_LADDER
+OTR-V2-001,V,v_proxy_engine@V2,"PREV static ladder + X_EMA/X_MED, 6 cells",proxy pass 2,W20260510+3,best 6.339,,"PREV|T_LVL|X_MED nails geometry (hold 39.2, aw 1083) but count +39% WR -6.6pp; no D improvement",GEOMETRY_MATCH_NO_FRONTIER
+OTR-V3-001,V,inline@V3,PREV|T_LVL|X_MED|C2 (not-extended 10%),proxy pass 3 FINAL,W20260510+3,2.431,,"SUCCESS per frozen rule (<5.203): n 189/183, net -5445/-4055, hold 36/40; WR -8pp, avg loss -37% residual; W0322/W0419 signs unresolved",BEHAVIORALLY_MATCHED_PARTIAL
+OTR-V3-002,V,inline@V3,PREV|T_H1|... (hourly EMA20 trend),proxy pass 3,W20260510,10.3-20.1,,turns window A strongly positive — wrong sign,FALSIFIED
+OTR-S13-001,S,otr_engine.py@S13,"OTR-S-CAND1 frozen, 2006-2026",sec 35 old-history stress,full history,n/a,,"REGIME-LOCAL: 2023-25 sweet spot (+93.5k/+143.2k/+26.3k), 2026 Jan-May -78.1k, pre-2018 inert (fixed-tick params price-level-dependent); trader's 2026 migration to V corroborates",REGIME_LOCAL_RECENT
