@@ -1,0 +1,35 @@
+run_id: OTR_R8_JUNE2026
+date: 2026-08-24
+campaign: OTR (campaign 6)
+directive: v3.0 §31 (full 2026 validation) + §38 (June TP) — unlocked by R6-DATA
+data: research/original_trader_reconstruction/data/nq0626_jun2026_1m.csv
+  (sha256:4659b40b6f6969cd, JUN26 raw, 2026-05-24..06-18) +
+  nq0926_junjul2026_1m.csv (sha256:f8048926c24d41f9, SEP26 raw,
+  2026-06-14..07-31). Exported via SWMinuteExport_v1 SA runs, NT8 HDS.
+  All < 2026-08-01 (pre-seal). RAW per-contract (no back-adjust) = the price
+  series the trader's charts actually showed.
+part_A_r7_extension (TRUE OOS for OTR-VF-CAND1):
+  windows (image targets, targets_weekly_2026V):
+    6/21-6/26 (n71, net 42765, LL -2200), 6/28-7/10 (n162, net 8630, LL -2600),
+    7/12-7/31 (n223, net 49940, LL -2820/-2600)
+  members: the frozen 4-member cluster EXACTLY as defined in
+    SIGNAL_TRADE_HYPOTHESES.md (no reconfiguration, no new members):
+    T_C|P_MED|C_DIR|H1a|X_OPP, +strong_only variant,
+    T_C|P_Q75|C_REC|H1a|X_OPP, T_D|P_IN|C_REC|H1c|X_FLIP
+  cloud/params: VF-ANCHOR percentile, 60/5/(5,25,50,75,95), close*vol,
+    QtyPerTrend 3, Split 5, CloseThr 0.10, 130-pt stop; substrate = SEP26 csv
+    (warmup from 6/14).
+  scoring: §40 distance per window; prediction registered BEFORE readout:
+    if the cluster is right-class, distances should sit in the in-sample band
+    (~0.35-0.65) and the strongly-positive 6/21 week (his best: +42,765,
+    PF 2.39) must NOT come out deeply negative.
+part_B_june_tp_overlay (§38):
+  anchors: TP 6/7-6/12 (n136, WR50, hold 20.5, net +11,860.30, LL -3046.18),
+    TP 6/14-6/18 (n78, WR 42.3, hold 34.1, net +8,503.24, LL -1426.18)
+  candidates (H1 gross-sum semantics first): VF flagship member(s) (part A) +
+    CAND2-S (new180, stop 65) on the same days; compare summed n/hold/WR
+    class vs TP. Layer-2 costs per COST_MODEL (comm $1.04/RT-side-basis
+    anomaly noted). Expect UNDER-explanation (>=2 unknown sleeves finding
+    stands unless overlay closes the gap) — this is a bound, not a fit.
+prereg_note: no parameter may be adjusted in this run; readouts are
+  classifications of the FROZEN cluster/members only.
