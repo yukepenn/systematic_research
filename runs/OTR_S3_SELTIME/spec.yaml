@@ -1,0 +1,43 @@
+run_id: OTR_S3_SELTIME
+campaign: original_trader_reconstruction
+phase: "Phase 3 (directive S3) — SelTime identification on the two surviving wrapper shapes"
+date: 2026-08-23
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+
+motivation_from_s1_diagnostics: >
+  E13_P0 (T1+T3 entries): count/WR/PF/DD in-band, hold +42% too long. E1_R1 (pure
+  stop-and-reverse on flips): hold/WR near-exact, count +24% too high. In-market minutes
+  per day: E1_R1 964, E13_P0 1028, target ~776 (8.26 trades x 94m). Both diagnostics point
+  at time selection — the strategy is NAMED SelTime. Directive S3 mandates interpretable
+  contiguous windows; semantics = V0's own TimeFilter shape (Class B): entries allowed
+  only inside window; force-flat (TimeExit) when outside; window may wrap midnight.
+
+wrapper_shapes: [E13_P0, E1_R1]
+
+time_windows_frozen:   # bar-stamp ET, allowed interval [start, end); wrap allowed
+  - none               # baseline (S1 measured)
+  - RTH_0930_1600
+  - RTH_0930_1700
+  - W_0830_1600
+  - W_0700_1600
+  - W_0600_1600
+  - W_0300_1600
+  - EXCL_0200_0800     # allow 08:00 -> 02:00 (wraps); blocks 02:00-08:00
+  - EXCL_0000_0800     # allow 08:00 -> 00:00; blocks 00:00-08:00
+  - SKIP30_1000_1600
+  - LUNCH_SKIP         # 09:30-12:00 + 13:30-16:00
+total_cells: 22
+
+scoring: same frozen S1 objective (EARLY_LONG fingerprint, D-score, full error vectors)
+layer1_cost_convention: commission $0, slippage 0 (unchanged)
+prior_prediction: >
+  RTH-only should FAIL for both shapes (caps in-market at 390 min/day < 776 target).
+  EXCL_0200_0800-class windows predicted best for E1_R1 (cuts ~19% of flips and ~190
+  in-market min/day). If no window closes both count and hold simultaneously for either
+  shape, the residual drives S4 (exit family) next.
+outputs:
+  - runs/OTR_S3_SELTIME/out/sweep_results.json
+  - runs/OTR_S3_SELTIME/out/scorecard.csv
+  - HYPOTHESIS_LEDGER rows OTR-S3-001..022
+seed: deterministic
