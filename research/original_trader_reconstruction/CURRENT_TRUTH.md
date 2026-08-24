@@ -1,5 +1,64 @@
 # OTR CURRENT TRUTH (prepend-newest)
 
+## 2026-08-24e — ORIGINAL-SCREENSHOT CORPUS AUDIT COMPLETE (164/164; owner directive v2.0, phases IMG-0..15)
+
+Formal truth update after 100% first-pass transcription + >11% pixel-level QC.
+Authoritative artifacts: `screenshot_forensics/` (IMAGE_MASTER, per_image/×164,
+PARAMETER_VERSION_TIMELINE, CHANGEPOINT_MAP_v2, STRATEGY_EVOLUTION_TREE,
+SCREENSHOT_AUDIT_REPORT [45 Q], BACKTEST_VS_LIVE_AUDIT, CONTRADICTION_LEDGER,
+AUTHOR_RESEARCH_PROCESS, POST_SCREENSHOT_RECONSTRUCTION_PLAN + 7 CSV ledgers).
+
+**Class-A identity (pixels):** Strategy `SolarWindRKSelTime`, params obfuscated
+**A1=90 A2=179 A3=5 A4=10 A5=10, Quantity=1**, NQ front 1-Minute Last, TickReplay
+off, Break-at-EOD ✔, lookback 256, BarsRequired 20, Standard(Fastest), trading hours
+= instrument default → **SelTime window is HARD-CODED (no time params exist)**.
+Master 2023-01→2025-02-02 = +$292,172.82 / 4,351 tr / comm $4.18/RT INCLUDED,
+captured 2/2/2025 23:57, live next morning. Renamed `RKSelTimeDSTMa` + LossLimit
+4000→2500 by 2/18; commission $0 from 2/28 (author-admitted laziness, 0098).
+
+**Track-B REFRAMED (falsifications):** the multi-block panels are the SAME A-param
+strategy accreting THE AUTHOR'S OWN groups: M…(E✔,D 4500,M 2000 daily money pair),
+**St…= STOP group (In 65/Tr 30/I 65/M 20 — label initials read; −$1,300=65-pt caps
+in 2025 reports)**, U…(E✔,80), later [☑10/26/14/**198?/180?/140?** (3-digit!)];
+A3-A5 retuned 5/10/10→**3/6/9** between 10/24 and 11/7/2025. → **Cosmik, Multi-Osc,
+SJB-as-product, King-Kong-as-package: FALSIFIED as sources** (osc-threshold reading
+impossible: values >100 + stop-group labels). [30,70,2,20] and [14,6] live inside a
+2026-06-05 custom variant panel; **[14,6] is NOT a Data Series setting**.
+
+**2026 flagship (Class A):** author's custom strategy embedding licensed **ninZa
+VWAP Flux** — full labeled stack read (Volume Base=BidAskPrice_RealVolume, 60/5/20
+EMA, 95/75/50/25/5, Signal Qty/Trend 3, Close Threshold 10%, Split 5 Bars; colon-less
+near-ninZa names + vendor enum string) — first visible 2/13/2026 (≤5 wks after
+release), FROZEN 5/23→8/14/2026. Variants tested ~1 week each (4/29: +[16/6/9]+
+windows 13:00-13:30 & 15:00-15:30; 6/5: 30/70/2/20+[14,6]+[3,0,12,0]).
+
+**−$2,600 (T5 RESOLVED):** exactly −2,600 in 18 reports, first = week 2026-02-01..06,
+across BOTH 2026 panel families, NEVER in 2025 → 2026 wrapper/account fixed stop
+(130 pt, or 2×65 pt w/ Entries-per-direction=2 from mid-Jan); −$1,300 precursor caps
+(65-pt St Initial) already in 2025-10 reports. LossLimit 2500/4000 = Feb-2025 DSTM
+only; D/M 4500/2000 = separate daily money pair. Three risk mechanisms, three eras.
+
+**Live-vs-backtest (T8):** 58/70 capture-lag=0 (dual OS clocks) → contemporaneous
+weekly Friday ritual; but weekly SA numbers are **single-strategy $0-commission
+slices** (author verbatim 0098: several strategies run concurrently, SA per-sleeve;
+real ≈ posted ×0.9 wins /×1.1 losses; real comm ≈$1.04/side = "$2一个来回" ✓ TP
+mystery solved). June 2026 gap weeks were posted from real TRADE PERFORMANCE
+(+11,860.30 / +8,503.24). Non-overlapping posted totals: 2025 ≈ +$232.1k, 2026→8/14
+≈ +$227.8k; author's stated 2025 "~$150k+" ≠ posted slices (C-3 open).
+
+**Author (identity/process):** rednote "mac studio" ID 1384856832; bilingual US IT
+contractor, amateur ("业余的"), ex-$200k stock/options loser, $60k→$100k own capital,
+day-margin ~3k, flatten 16:59:30 ET daily, never over 17-18 break/weekends; codes
+own NinjaScript (VS Code, class-per-iteration renames, A-label obfuscation for
+public posting), recommends Kaufman TSM to learners; machines creator/hp/dev/mimi.
+
+**Corrections to prior passes:** rn-agent year fits 2020-21 → 2025-26 (PnL
+cross-match); 2026-08-24d's "packaging undecided (Cosmik vs Multi-Osc)" → both
+falsified; "[90,180?,3,6,9] = second Solar panel" → same strategy's A-params
+retuned; SpaceGPS/MaxDailyPL readings of [450?,200?] → D/M 4500/2000 money pair.
+Purchase gate: still CLOSED; only VWAP Flux ($300) remains justified, and only if
+R3 residuals persist (POST_SCREENSHOT_RECONSTRUCTION_PLAN).
+
 ## 2026-08-24d — H-B1/H-B2/H-B3 adjudication + stop-search verdict (owner correction executed)
 
 - **Row-map adjudication (vendor_forensics/TRACK_B_ROWMAP.md, panels verified by direct

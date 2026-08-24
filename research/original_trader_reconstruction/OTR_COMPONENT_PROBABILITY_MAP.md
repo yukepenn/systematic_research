@@ -1,29 +1,33 @@
-# OTR COMPONENT PROBABILITY MAP (qualitative EVI, v1 2026-08-24 — directive §16)
+# OTR COMPONENT PROBABILITY MAP (v2 2026-08-24 — post image-corpus audit)
 
-Axes per component: label match / order match / value match / release timing / bar-type
-compatibility / behavioral fingerprint / multi-strategy workflow fit / local files /
-ecosystem consistency. Verbal grades only (no fake precision).
+v1 (pre-corpus) preserved in git history. Grades are verbal; Class A = pixels.
 
-| Component | Trader used it? | Key FOR | Key AGAINST / unknown |
-|---|---|---|---|
-| **Solar Wave RK** (2023-2025 core) | **NEAR-CERTAIN** | strategy name SolarWindRKSelTime; params 90/179/5/10/10 repeatedly visible incl. late-2025; licensed DLL + templates on OUR machine came as the same package; behavioral wrapper reconstructed to band-edge | exact wrapper residuals (hold −20%); SolarWind-vs-SolarWave engine identity unverifiable |
-| **Solar DSTM variant** (LossLimit 2500/4000) | HIGH (name+param observed) | truncated name RKSelTimeDSTM…; LossLimit values visible | DSTM meaning unknown; session-level semantics only weakly favored |
-| **VWAP Flux** (2026 1-min system) | **HIGH-CONFIDENCE COMPONENT IDENTIFICATION** (owner ruling + EV-019) | 13/13 ordered param labels; release 2026-01-09 = his system change; NQ 1-min demos; BidAskPrice_RealVolume default | internal formula/signal timing proprietary; our clone: architecture+risk recovered, trigger unresolved |
-| **130-pt ($2,600) intrabar stop** (2026 wrapper) | HIGH | EV-017 repeated −$2,600 reproduced exactly; LossLimit-2500-bar-close rejected | which weeks carry it unattributed (owner input pending) |
-| **ThunderZilla** | **MEDIUM / CONDITIONAL** (downgraded per owner §1) | same ecosystem; Signal-DNA similar; "Signal: Quantity Per Trend" changelog | phrase also in VWAP Flux (not unique); Renko-only vs NQ 1-min primary; documented params ≠ EV-007 blocks; not installed locally |
-| **Cumulative/Volume Delta** | MEDIUM-LOW as separate purchase; MEDIUM as embedded concept | Volume Base fingerprint; Flux embeds cum-delta internally | no separate parameter pane observed |
-| **ApexFlow Zignal** | LOW-MEDIUM (secondary hypothesis for June TP short-hold sleeve) | 2026 marketing pairs it with TZ; order-flow sleeve could explain TP profile | no parameter-pane match; nothing observed |
-| **Infinity Algo Engine$** | SPECULATIVE-MEDIUM (meta-layer) | released 2026-01-01; multi-condition/multi-strategy + daily P/L controls fit AS-1 + TP evidence; timeline fits | no direct property evidence yet; capabilities reproducible by custom code |
-| **Captain Optimus Strong** | SPECULATIVE (meta-layer) | multi-system overlap features fit AS-1 | same as Infinity; released 2024-12 |
-| **Unknown B (multi-block)** | RE-CHARACTERIZED: a King-Kong-style STACK | [90,180?,3,6,9]=Solar RK panel EXACT; osc battery semantic-strong; SJB [30,70,2,20] EXACT | packaging (Cosmik vs Multi-Osc) undecided; [14,6] location unproven — see TRACK_B_ROWMAP.md |
-| **Multi-Osc OB/OS Overlap** | MEDIUM-HIGH (as the osc battery's packaging, tied w/ Cosmik) | 16-row panel = Cosmik's osc section; King Kong package co-member with Solar | non-contiguous threshold transcription required (same as Cosmik) |
-| **Cosmik Z-TP** | MEDIUM-HIGH (tied) | [10,26,14,19?,18?,14?] contiguous fit w/ default-14 anchors | [90,180?...] impossible in it; offset-unit caveat |
-| **King Kong Trading RK (architecture)** | HIGH as the DESIGN of the 2025 multi-block sleeve | vendor-official Solar×Multi-Osc pullback stack (2023-10-19); matches owner's decision-stack reading | which packaging he ran remains open |
-| **Personal $2,600 (520t) hard stop** | HIGH — personal, cross-strategy | reproduced exactly in sims; ABSENT from all vendor material (high-coverage search) | week attribution pending owner |
+| Component | Verdict | Basis |
+|---|---|---|
+| **SolarWindRKSelTime (author's own NinjaScript, A1-A5 = 90/179/5/10/10)** | **CONFIRMED (Class A)** | full settings panels OTRIMG-0007/0012/0016; obfuscated labels; no time params (SelTime hard-coded); NQ 1-min Last, qty 1 |
+| Solar Wave RK math as the A-param engine | HIGH (Class B unchanged) | A-quintuple = vendor panel semantics; licensed package on his machine; our recovered math reproduces canonical behavior; engine internals never on screen |
+| RKSelTimeDSTMa + LossLimit 4000→2500 | CONFIRMED (Class A), Feb-2025 era only | OTRIMG-0014/0016 |
+| M… daily money pair (E✔, D 4500, M 2000) | CONFIRMED values (A), semantics C ("Daily…/Max…") | OTRIMG-0077/0079/0062/0093 |
+| St… stop group In 65 / Tr 30 / I 65 / M 20 (→ 65/30/75/20/46/36) | CONFIRMED (A labels via initials) | OTRIMG-0079; −$1,300 = 65-pt caps in 2025-10 reports |
+| **ninZa VWAP Flux inside 2026 flagship (custom wrapper)** | **CONFIRMED (Class A)** | OTRIMG-0146 labeled stack + BidAskPrice_RealVolume enum; frozen 5/23→8/14/2026; first visible 2/13/2026 |
+| −$2,600 fixed stop (2026 wrapper/account) | CONFIRMED-ATTRIBUTED (A) | 18 reports, both 2026 panel families, onset wk 2/1-6/2026; 130-pt vs 2×65-pt microstructure OPEN |
+| [☑10/26/14/198?/180?/140?] group | values A, semantics UNKNOWN (D) | 3-digit tails pixel-verified (0093/0138); MACD-like head is hypothesis only |
+| U… group (E✔, 80) | values A, semantics UNKNOWN | |
+| 2026 variant windows (13:00-13:30 & 15:00-15:30; [3,0,12,0]; [16,0,10,15]) | values A, time-reading C | 0138/0150/0132 |
+| [14, 6] | A location: INSIDE a variant strategy's param group (not Data Series) | 0150; internal-Renko use unevidenced |
+| Cosmik Z-TP | **FALSIFIED as block source** | thresholds >100 impossible; St-group labels; no product names anywhere |
+| Multi-Osc OB/OS Overlap | **FALSIFIED as block source** | same |
+| Super JumpBoo$t | **FALSIFIED as product** (value coincidence only) | [30,70,2,20] sits in author's own variant panel |
+| King Kong Trading RK (package) | FALSIFIED as packaging; design-analogy only | author built the equivalent stack himself by accretion |
+| ThunderZilla / ApexFlow / Infinity / Captain / SpaceGPS / NVI / PVI / OFP | NO IMAGE SUPPORT — dropped | zero appearances in 164 images |
+| Multi-sleeve account (several strategies × qty 1) | CONFIRMED (A statements + infra) | 0098/0102 verbatim; machines creator/hp/dev/mimi; Strategy B annotation |
+| Real commission ≈$1.04/side ($2.08/RT) | CONFIRMED (A) | TP frames + author "$2一个来回" |
 
-## Minimum consistent account model (unchanged from CHANGEPOINT_MAP)
-
-2023-2025: Solar(SelTime wrapper) → +LossLimit(SD). From 2026-01: VWAP-Flux-based 1-min
-system (custom-tuned) + ≥1 concurrent family (B / order-flow sleeve) + possibly a
-meta/execution layer, all qty-1 intraday-flat, with a 130-pt stop wrapper on the 2026
-system(s).
+## Minimum consistent account model (v2)
+2023-01→2026-01: ONE evolving author-written flagship (SolarWind A-params; SelTime
+hard-coded; accretes LossLimit → M/St/U groups; retuned faster in Nov-2025) +
+unknown concurrent sleeves. From 2026-02: author-written VF-wrapper flagship
+(licensed VWAP Flux inputs, frozen params from late-May) + ~weekly variant tests +
+the personal 2026 hard stop (exact −$2,600) + standing conventions everywhere:
+qty 1/sleeve, 1-min NQ front, flatten 16:59:30 ET, flat over 17-18 break, $0-comm
+posting with ×0.9/×1.1 self-correction.
