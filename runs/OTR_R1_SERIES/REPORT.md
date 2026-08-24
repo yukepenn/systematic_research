@@ -52,3 +52,10 @@ A fast additional layer (plausibly the pullback layer activated in the 2/18+
 iteration) exists in that build and is ABSENT from the master/Jan build we identify.
 Transitional-era divergence documented; not chased (master + Jul+ weekly eras are
 the identification targets).
+
+## R1.j (amendment 4, 2026-08-24): gate semantics — fill-bar vs decision-close
+IDENTICAL trade streams on the master window (4,577 common, 0 either-only).
+The D-gate never binds on a threshold-boundary bar where the 1-bar timing or
+the Close-vs-next-open exit proxy changes a decision. Member ambiguity is
+IRRELEVANT on all available data; decision-close (NT8-native, what the trader's
+own OnBarClose code can express) is adopted for the port at zero parity cost.
