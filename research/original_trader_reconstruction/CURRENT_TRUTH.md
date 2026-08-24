@@ -1,5 +1,33 @@
 # OTR CURRENT TRUTH (prepend-newest)
 
+## 2026-08-24c — BUILD-FIRST pass: Track-B candidate-CRACKED; VF architecture advanced; no purchases
+
+- **Track B breakthrough (EV-023/024/025, PROPERTY_MATCH_MATRIX.md):** the multi-block
+  screenshot stack is most consistent with **Super JumpBoo$t + Cosmik Z-TP ×2 on a
+  ninZaRenko/KingRenko$ 14/6 chart**: [30,70,2,20] = EXACT consecutive-row + published-
+  value match to SJB (also the vendor's own recommended NQ values); [65,30,75,20,46,36]
+  and [10,26,14,19?,18?,14?] land structurally on Cosmik's oscillator battery and
+  offset/period rows (both 14s on factory-default-14 rows); [14,6] = Renko bar pair;
+  [450?,200?] = SpaceGPS volume minimums OR a Max-Daily-P/L pair. Dates the stack
+  ≥2025-04-10. **Cosmik's head params are literally "Offset: Multiplier Trend/Stop" —
+  Solar naming — the trader's ecosystem evolution path is now visible end-to-end.**
+  Excluded as sources: TZ, ApexFlow, Noble Cloud, NVI/PVI, OFP v2, Infinity/Captain
+  grids, KingDOM$. 17-product fingerprint DB built; 12 more manuals archived.
+- **VF4 (image-fidelity architecture):** vendor chart images select ANCHORED-CUMULATIVE
+  layers (smooth drift + hourly rotation jumps); staircase reading rejected. Best cell
+  D=3.398 with net/hold/avg-win ✓; residual isolated to Signal_Trade trigger + exit.
+  QLEV (quantile-of-layers) level math favored. OF2: ninZa-verbatim delta (inside
+  EXCLUDED) certified on both clean sessions.
+- **Purchase gate (§17-18): NOT YET for anything.** VWAP Flux pre-purchase parity kit is
+  ready (`vendor_forensics/PURCHASE_GATE.md`); Cosmik Z-TP + Super JumpBoo$t now rank
+  ABOVE ThunderZilla in the eventual-purchase hierarchy for Track B. TZ formally
+  MEDIUM/CONDITIONAL (`thunderzilla_family/TRACK_TZ_STATUS.md`); Infinity/Captain
+  property grids positively absent from the screenshots
+  (`vendor_forensics/INFINITY_COMPATIBILITY_HYPOTHESIS.md`).
+- Highest-value free owner inputs unchanged + one new: the original screenshot IMAGE
+  files themselves (control-type/layout verification would convert the Track-B
+  STRONG-STRUCTURAL match into an identification).
+
 ## 2026-08-24b — Forensics + VF passes 1-3 + OF1 + changepoint map v1
 
 - **VWAP Flux = the 2026 Track-V vendor product, IDENTIFIED at parameter-layout level**
