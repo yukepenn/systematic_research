@@ -1,0 +1,19 @@
+run_id: OTR_VF3_MEDEXIT
+campaign: original_trader_reconstruction
+phase: "TRACK_VF pass 3 (final bounded exit family) - median/fair-value exits on the count-matching entry stream"
+date: 2026-08-24
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+motivation: >
+  VF1 L_C|T_B entry stream yields n=178 vs target 183 (count ~exact); VF2 fixed the loss
+  tail (intrabar 130-pt stop = exactly -2,600 repeated, matching EV-017). Remaining axis:
+  the run-letting exit. The documented Fair Value (median) line is the natural candidate.
+cells:
+  - MED: entries VF1 L_C|T_B + stop130 + exit close crosses MEDIAN against position + session close
+  - MEDSOFT: same but exit only if close crosses LOWER band (P25) against position (deeper give-back)
+  - STOPONLY: entries + stop130 + session close only (no close-based exit)
+success_rule: D < 2.431 promotes; regardless, geometry vector reported. This closes the
+  bounded exit family for the current evidence set (further internals need the actual
+  indicator = owner purchase decision).
+outputs: runs/OTR_VF3_MEDEXIT/out/results.json
+seed: deterministic
