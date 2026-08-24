@@ -87,6 +87,8 @@ class WrapperPolicy:
     reverse_on_flip: bool = False
     # exit line: "TS" = TrailingStop (V0 certified), "TV" = TrendVector (S4 hypothesis)
     exit_line: str = "TS"
+    # exit comparison: True = inclusive touch (V0 certified), False = strict cross only
+    exit_touch: bool = True
     # time selection: callable minutes_of_day(int array) -> bool array of allowed ENTRY times
     # (bar stamp = bar END time, ET). None = no time filter.
     entry_time_mask: Optional[Callable[[np.ndarray], np.ndarray]] = None
@@ -177,8 +179,11 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
         #    already belongs to the new trend, so opposite flips always exit too)
         if pos != 0:
             line = ts_arr[i] if pol.exit_line == "TS" else tv_arr[i]
-            if not np.isnan(line) and ((pos > 0 and close[i] <= line) or
-                                       (pos < 0 and close[i] >= line)):
+            if pol.exit_touch:
+                hit = (pos > 0 and close[i] <= line) or (pos < 0 and close[i] >= line)
+            else:
+                hit = (pos > 0 and close[i] < line) or (pos < 0 and close[i] > line)
+            if not np.isnan(line) and hit:
                 if pol.reverse_on_flip and sig == -pos and abs(sig) == 1 \
                    and (pol.long_enabled if sig > 0 else pol.short_enabled) \
                    and entry_ok_t[i] and i >= BARS_REQUIRED:

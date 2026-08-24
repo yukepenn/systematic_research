@@ -1,0 +1,33 @@
+run_id: OTR_S4_EXITS
+campaign: original_trader_reconstruction
+phase: "Phase 3 (directive S4) — exit-semantics identification"
+date: 2026-08-23
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+
+diagnostics_driving_this_pass: >
+  S3B frontier (E13_R1|W_0400_1600|FF D=1.153; E1_R1|W_0400_1600|FF D=1.295) matches
+  count/tpd/WR/DD but holds are 20-30% short and net -13/-20%. The V0-certified TOUCH exit
+  (inclusive close-vs-TS) truncates trends early: trades exit on a touch, then re-enter,
+  producing shorter holds and giving back spread inside trends. A wrapper that exits only
+  on a STRICT cross (= true flip) lengthens holds, raises net capture, and drops count via
+  merged round-trips — all three residuals move toward target. Directive S4's bounded exit
+  family: trailing stop / direction flip / opposite signal / session close. Opposite-signal
+  and weak-transition exits shorten holds (wrong direction) — excluded with reason.
+
+grid_frozen:
+  exits: [X0_touch (V0, baseline cells already measured), X1_strict_flip_only]
+  shapes: [E1_R1, E13_R1, E13_P0]
+  windows: [W_0200_1600, W_0300_1600, W_0400_1600]  # FF mode
+  new_cells: 9 (X1 arm)
+scoring: frozen S1 objective unchanged
+layer1_cost_convention: commission $0, slippage 0
+prior_prediction: >
+  E13_R1|X1 at W_0300/0400 predicted new frontier best: hold 85-95, count 4,200-4,500,
+  net up toward 260-290k. If X1 overshoots holds beyond 100 with count collapse, the
+  touch-exit was right and the hold deficit needs a different mechanism (pass 4 would then
+  be the last per sec 49 stop rule).
+outputs:
+  - runs/OTR_S4_EXITS/out/{sweep_results.json, scorecard.csv}
+  - HYPOTHESIS_LEDGER rows OTR-S4-*
+seed: deterministic
