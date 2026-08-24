@@ -27,7 +27,7 @@ BARS_REQUIRED = 20
 
 def load_ledger(path: str) -> dict:
     """Load t2_canonical_1m.csv (skips '# params' comment line)."""
-    times, o, h, l, c, vol, fbos, st, wave, ts, tv = [], [], [], [], [], [], [], [], [], [], []
+    times, o, h, l, c, vol, fbos, st, wave, ts, tv, strend = [], [], [], [], [], [], [], [], [], [], [], []
     with open(path, newline="") as f:
         rdr = csv.reader(f)
         header = None
@@ -48,6 +48,7 @@ def load_ledger(path: str) -> dict:
             st.append(int(float(row[idx["signal_trade"]])))
             wave.append(int(float(row[idx["signal_wave"]])))
             ts.append(float(row[idx["trailing_stop"]]) if row[idx["trailing_stop"]] else np.nan)
+            strend.append(int(float(row[idx["signal_trend"]])))
             tv.append(float(row[idx["trend_vector"]]) if row[idx["trend_vector"]] else np.nan)
     n = len(times)
     time_arr = np.array(times, dtype="datetime64[s]")
@@ -65,6 +66,7 @@ def load_ledger(path: str) -> dict:
         "signal_trade": np.array(st, dtype=np.int64),
         "signal_wave": np.array(wave, dtype=np.int64),
         "trailing_stop": np.array(ts),
+        "signal_trend": np.array(strend, dtype=np.int64),
         "trend_vector": np.array(tv),
         "n": n,
     }
@@ -89,6 +91,9 @@ class WrapperPolicy:
     exit_line: str = "TS"
     # exit comparison: True = inclusive touch (V0 certified), False = strict cross only
     exit_touch: bool = True
+    # T3 re-entry quality gates (S5): strong-trend-only / must be on trend side of TV
+    t3_strong_only: bool = False
+    t3_reclaim_tv: bool = False
     # time selection: callable minutes_of_day(int array) -> bool array of allowed ENTRY times
     # (bar stamp = bar END time, ET). None = no time filter.
     entry_time_mask: Optional[Callable[[np.ndarray], np.ndarray]] = None
@@ -203,6 +208,12 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
                 continue
             if mag == 3 and pol.t3_requires_t2 and not t2_seen_this_trend:
                 continue
+            if mag == 3 and pol.t3_strong_only and abs(bars["signal_trend"][i]) != 2:
+                continue
+            if mag == 3 and pol.t3_reclaim_tv:
+                tvv = tv_arr[i]
+                if np.isnan(tvv) or (sig > 0 and close[i] <= tvv) or (sig < 0 and close[i] >= tvv):
+                    continue
             if mag == 2:
                 if pol.first_pullback_only and t2_seen_this_trend:
                     t2_seen_this_trend = True

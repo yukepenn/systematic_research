@@ -1,0 +1,34 @@
+run_id: OTR_S5_REENTRY_QUALITY
+campaign: original_trader_reconstruction
+phase: "Phase 3 (directive S5) — re-entry quality family"
+date: 2026-08-23
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+
+diagnostics_driving_this_pass: >
+  S4 falsified the exit-semantics hypothesis (strict vs touch: hold 75.4 vs 74.9, no
+  frontier move; 1 consecutive non-improving mechanism pass under the sec 49 stop rule).
+  Remaining residual pattern at the frontier (E13_R1|W_0400_1600|FF, D=1.153): count +7%,
+  WR -0.5pp, PF -0.039, net -13%, hold -20% — every arrow says the replica takes MORE,
+  SMALLER, WORSE trades than the original. The bounded mechanism family that prunes
+  low-quality re-entries using already-recovered states (Class B): condition T3 re-entries.
+
+grid_frozen:
+  reentry_conditions:
+    - Q0_any            # measured baseline
+    - Q1_strong_only    # T3 entry only when |Signal_Trend| == 2 at the signal bar
+    - Q2_reclaim_tv     # T3 entry only when close is on the trend side of TrendVector
+  shapes: [E13_R1, E13_P0]
+  windows: [W_0400_1600_FF, EXCL_0200_0800_FF]
+  new_cells: 8 (Q1/Q2 arms)
+scoring: frozen S1 objective unchanged
+layer1_cost_convention: commission $0, slippage 0
+prior_prediction: >
+  Q1/Q2 on E13_R1|W_0400_1600 should cut 200-400 churn trades, raising WR/PF/hold/net
+  jointly. If neither improves D, that is the SECOND consecutive non-improving mechanism
+  pass; one more failed pass closes Track-S wrapper search at the sec 49 stop rule with
+  the frontier candidate classified RECONSTRUCTED - MODERATE CONFIDENCE (band-edge fit).
+outputs:
+  - runs/OTR_S5_REENTRY_QUALITY/out/{sweep_results.json, scorecard.csv}
+  - HYPOTHESIS_LEDGER rows OTR-S5-*
+seed: deterministic
