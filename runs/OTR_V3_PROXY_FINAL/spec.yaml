@@ -1,0 +1,32 @@
+run_id: OTR_V3_PROXY_FINAL
+campaign: original_trader_reconstruction
+phase: "Phase 7 — Track V proxy pass 3 (FINAL under sec 49)"
+date: 2026-08-23
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+
+diagnostics_driving_this_pass: >
+  V2's PREV|T_LVL|X_MED nails the trade GEOMETRY (hold 39.2 vs 39.8; avg win 1083 vs
+  1236; avg loss -540 vs -784) but count +39% and WR -6.6pp; V2 did not beat the V1
+  D-frontier (5.203, a degenerate scalper cell). Two bounded refinements remain inside
+  the evidence: (a) "Signal Close Threshold (%) = 10" as an entry-confirmation depth;
+  (b) "Trend Period 20 / EMA" read as EMA20 of ANCHOR-period (hourly) closes — a slow
+  trend that prunes counter-trend churn.
+
+grid_frozen:
+  base: M_BRK entries off PREVIOUS-hour static ladder, X_MED exit (V2 geometry winner)
+  trend_defs: [T_LVL (EMA20 of 1m closes, V2), T_H1 (EMA20 of hourly closes, static intra-hour)]
+  close_threshold_semantics:
+    - C0_none
+    - C1_confirm: entry only if close beyond line by >= 10% of (P95-P5) depth
+    - C2_not_extended: entry only if close beyond line by <= 10% of (P95-P5)
+  cells: 2 x 3 = 6
+success_rule_frozen: >
+  Improvement = D < 5.203 (the standing Track-V proxy frontier). If achieved ->
+  classification BEHAVIORALLY MATCHED (PARTIAL) at proxy level. If not -> Track V closes:
+  V-PROXY UNMATCHED after 3 bounded passes; V-EXACT remains BLOCKED PENDING DATA.
+  Either way this is the LAST proxy pass (sec 49).
+outputs:
+  - runs/OTR_V3_PROXY_FINAL/out/{sweep_results.json, scorecard.csv}
+  - HYPOTHESIS_LEDGER rows OTR-V3-*
+seed: deterministic
