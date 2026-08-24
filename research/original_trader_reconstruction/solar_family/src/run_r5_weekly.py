@@ -239,7 +239,7 @@ def main():
                 print(f"[r5] run {key}", flush=True)
                 runsv[key] = run_m(bb[pk], stop_pts=stop, dm_profit=dm[0], dm_loss=dm[1])
                 with open(os.path.join(OUT, f"trades_{key}.json"), "w") as f:
-                    json.dump(runsv[key], f)
+                    json.dump(runsv[key], f, default=lambda x: int(x) if np.isscalar(x) else str(x))
 
     def era_primary(d0, d1):
         s, e = pd.Timestamp(d0), pd.Timestamp(d1)
