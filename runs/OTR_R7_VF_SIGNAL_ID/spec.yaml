@@ -1,0 +1,58 @@
+run_id: OTR_R7_VF_SIGNAL_ID
+date: 2026-08-24
+campaign: OTR (campaign 6)
+directive: v3.0 PHASES V3-V5 (§19-§26, §31-§33, §40-§41)
+purpose: >
+  Bounded structural identification of the trader's 2026 Signal_Trend +
+  Signal_Trade composition over the clean-room VF-ANCHOR cloud, validated on
+  ALL image-confirmed 2026 weekly windows reachable in the local substrate
+  (17 windows 2026-01-25..05-29), with the failure week 2026-03-22..27
+  (−42,235) as a mandatory geometry discriminator (§32). NO free numeric
+  constants: every parameter is the trader's panel value (60/5/95-75-50-25-5/
+  QtyPerTrend 3/CloseThreshold 10/Split 5, 130-pt stop fixed per §33).
+  Structural members only; PnL never used as a selection objective — §40
+  reconstruction distance + failure-geometry reproduction are the criteria.
+
+cloud: vf_core.vf_levels VF-ANCHOR, P=60, A=5, pcts (5,25,50,75,95),
+  formula percentile_linear (minmax kept as control), price close×volume
+  (hlc3 control), no session reset (rolling), substrate nq1m parquet.
+
+trend_members (state in {+1,-1}, hold-last):
+  T_A: close > Max rail -> +1; close < Min rail -> -1            # R3 incumbent
+  T_B: whole candle outside cloud (Low>Max / High<Min)
+  T_C: close vs FairValue AND EMA20(close) slope agreement; state only when both agree, else hold
+  T_D: EMA20(close) crosses FairValue
+
+signal_members (two-stage per vendor usage pattern, §22-§23):
+  stage1: trend episode = maximal run of constant trend state
+  pullback_depth P in:
+    P_IN:  price re-enters cloud (long: Low <= Max rail)
+    P_Q75: touch of Upper/Lower rail (long: Low <= Q75)
+    P_MED: touch of Median (long: Low <= Q50)
+  confirmation C in:
+    C_DIR: signal-bar candle closes in trend direction (close>open for long)
+    C_REC: close back above the touched rail (long: close >= touched rail)
+  close_threshold readings (manual EV-038 ambiguity, T=10):
+    H1a momentum-close: long requires (High-Close)/Range <= 0.10
+    H1b pullback-close: long requires (Close-Low)/Range <= 0.10
+  constraints (pinned semantics): QtyPerTrend=3 SAME-DIRECTION per episode;
+    Split=5 min bars between consecutive same-direction signals.
+
+exit_members:
+  X_OPP: opposite Signal_Trade
+  X_FLIP: trend-state flip
+  X_MED: close crosses Median against position
+  all with fixed 130-pt intrabar stop (fill at level / open if gapped),
+  session-close flat, fills next open, $0 commission (screenshot layer).
+
+scoring: §40 weighted distance per window (very-high: trades all/L/S, largest
+  loss, hold, WR; high: PF, avg win/loss, side nets/WRs; medium: net, DD,
+  trades/day); report mean/worst/failure-week; §32 check: any member
+  PROFITABLE in the 3/22-27 week while target loses 42k is disqualified
+  regardless of other fits. §41: structure selected on 12 windows must hold on
+  the held-out 5 (rotate); no per-week members.
+
+outputs: out/r7_grid.csv (member x window distances), out/r7_best_report.md,
+  VF_WEEKLY_FINGERPRINT_MATRIX.csv for the surviving member(s),
+  SIGNAL_TREND_IDENTIFICATION.md + SIGNAL_TRADE_HYPOTHESES.md updates.
+code: research/original_trader_reconstruction/vwap_flux_family/src/run_r7_signal_id.py
