@@ -1,5 +1,36 @@
 # OTR CURRENT TRUTH (prepend-newest)
 
+## 2026-08-24g — R1-R4 RECONSTRUCTION EXECUTED; OTR-S-CAND1 RETIRED → OTR-S-CAND2 (verified model class)
+
+Cent-level identification against the trader's own per-day table (OTRIMG-0003).
+- **Engine/data/conventions validated TO THE CENT** (whole days trade-for-trade;
+  master largest-loss −4,449.18 and largest wins reproduce exactly).
+- **FALSIFIED: 04:00-16:00 SelTime window; T3-entry participation; vendor-mode T2
+  at the decoded resume bar (armed-latch arithmetic); first-bar-breakout as a
+  global gate; always-on 30-pt trail; 65×2 microstructure for the 2026 −2600.**
+- **OTR-S-CAND2** (solar_family/TRACK_S_REPORT.md): T1-flip stop-and-reverse chains
+  + B1 first-bar drop + session equity wrapper (evening-after-red ≤−C; armed at
+  high≥X≈1600 past noon: cum<0 stops all, K=3 same-side consec losses stops side;
+  X2≈2500 pre-noon; ~20/session cap; 3-bar cooldown) + early-close-evening resume
+  via SECOND-BREAKDOWN LATCH (fill decoded to the cent; reference level ambiguous
+  among 4 candidates). Adversarially re-implemented: 42/42 cent-certain labels;
+  structure confirmed, constants interval-identified; one equally-consistent rival
+  member (4 TOTAL same-side losses) not separable on available data.
+- **Master fit (best config): n +5.7%, net −9.3%, WR −0.2pp, PF −0.03, DD −2.3%,
+  holds L/S 109.6/81.9 vs 105.9/82.6, consec 7/15 vs 8/15** — band-edge across the
+  board (CAND1 was net −13% / hold −20%). Residual (+247 tr, −27.2k, short-side,
+  chop-months) = his hard-coded pullback/resume signal layer, not more gating.
+- **R2**: St-group In=65 = 65-pt intrabar initial stop CONFIRMED (−1300.00-cap
+  signature; gap-through overshoots); always-on trail falsified; +20pt-activation
+  trail viable. **R3**: 2026 −2600 = 130-pt × qty-1 CONFIRMED (row discriminator);
+  onset week 2/1-6 incl. per-side columns; variant-B week uncapped; LIVE TP shows
+  −3,046.18 = ~22-pt stop slippage; tick-true input fidelity bound: trend-state
+  disagreement only 1.7% → VF residual is the proprietary trigger, not inputs.
+- **R4**: real ≈ posted ×0.79 (2025) / ×0.89 (2026) at $2.08/RT + 1-tick slippage.
+- Late-Feb-2025 DSTMa transitional build diverges (90-trade day, avg loss −$331)
+  — documented, out of CAND2 scope. Runs: OTR_R1_SERIES (3 amendments), R2, R3;
+  hunts/verifications in runs/OTR_R1_SERIES/out/ (hunt_*, v_*).
+
 ## 2026-08-24e — ORIGINAL-SCREENSHOT CORPUS AUDIT COMPLETE (164/164; owner directive v2.0, phases IMG-0..15)
 
 Formal truth update after 100% first-pass transcription + >11% pixel-level QC.
