@@ -1,0 +1,61 @@
+run_id: OTR_S0_TYPE1_REPRO
+campaign: original_trader_reconstruction
+phase: "Phase 2 (directive S0) — reproduce existing Type-1 baseline in pure Python"
+date: 2026-08-23
+run_class: ENGINEERING_ONLY   # infrastructure certification, no alpha claim, no target-window readout
+spec_frozen_before_results: true
+
+purpose: >
+  Certify a pure-Python trading loop that reproduces the frozen canonical Type-1 result
+  (SolarWaveRKReplicaV0, NT8) on the exact canonical NQU6 bar series, so that all Track-S
+  wrapper hypotheses (S1..S7) can be evaluated in Python with known-good conventions.
+  If this fails, diagnose data/session/fill/code before ANY reconstruction pass (directive S0).
+
+substrate:
+  file: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv
+  bars: 737707
+  series: NQU6 back-adjusted merge (exact canonical series; vendor signals embedded)
+  window: 2023-01-02T18:01 .. 2025-01-31T17:00 ET (canonical To=2025-02-02 boundary rule)
+
+arms:
+  ARM_LEDGER:
+    description: trading loop driven by the ledger's vendor-truth signal_trade column
+    entry: EntrySignalType=1 — enter when FLAT on signal_trade==+1 (long) / -1 (short),
+      fill at next-bar open, slippage 0; no entry before bar index 20 (BarsRequiredToTrade);
+      NT8 drops entries signaled on a session's last bar; exit checked before entry with
+      early return (exit and entry never share a bar)
+    exit: opposite flip (signal_trade == -dir) -> fill next-bar open; if position open at
+      session's last bar -> session-close exit at that bar's CLOSE
+    commission: 2.18 per side (NinjaTrader Brokerage Lifetime, 4.36/RT)
+  ARM_PYTHON:
+    description: same loop but signals recomputed by src/analytics/solarwave.py
+      solar_wave_full(open,high,low,close, canonical params, start_up False); assert
+      series equality vs ledger columns first (signal_trade/trailing_stop)
+
+targets_frozen_truth:
+  net: 146440.60
+  trades: 2915
+  max_dd: -22066.60
+  pf: 1.132213
+  commission_total: 12709.40
+  winners_pct: 39.3139
+  long_trades: 1386
+  long_net: 103162.04
+  short_trades: 1529
+  short_net: 43278.56
+  first_trade: "Long 2023-01-02 21:39 @14147.75 -> 2023-01-03 06:44 @14261.50 (+$2,270.64)"
+
+gates:
+  G_S0_net: abs(net - 146440.60) <= 500      # expected exact; tolerance for boundary quirks
+  G_S0_trades: abs(trades - 2915) <= 5
+  G_S0_pf: abs(pf - 1.132213) <= 0.005
+  note: >
+    the serialized-list quirk (trade #2914 at data boundary) affects lists not totals;
+    Python counts it. Any gate failure -> diagnose (data revision / session / fill / code)
+    before proceeding, per directive S0.
+
+outputs:
+  - runs/OTR_S0_TYPE1_REPRO/out/results.json
+  - runs/OTR_S0_TYPE1_REPRO/out/trades_arm_ledger.csv
+engine: research/original_trader_reconstruction/solar_family/src/otr_engine.py (committed with this spec)
+seed: deterministic (no randomness)
