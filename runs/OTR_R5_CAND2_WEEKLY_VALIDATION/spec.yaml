@@ -1,0 +1,65 @@
+run_id: OTR_R5_CAND2_WEEKLY_VALIDATION
+date: 2026-08-24
+campaign: OTR (original trader reconstruction, campaign 6)
+directive: OWNER MASTER CONTINUATION DIRECTIVE v3.0 §2-§4 (PHASE C1/C2)
+purpose: >
+  Full-fingerprint, VERSION-AWARE validation of OTR-S-CAND2 against the 28
+  late-2025/early-2026 weekly Strategy Analyzer targets
+  (targets_weekly_2025S.csv). Not net-only: all available metrics. The weekly
+  error matrix is then used as a mechanism discriminator (error-shape
+  diagnostics per §4), NOT as a tuning objective.
+
+model_under_test:
+  class: OTR-S-CAND2 (frozen wrapper constants X=1600 K=3 C=700 X2=2500 cap=20 cd=3)
+  engine: solar_wave_full T1-flip SAR + B1 first-bar drop + inclusive TS-touch exit
+    + session-close flat + fills next open + BarsRequired 20
+  stop: intrabar initial protective stop (era-dependent distance), fill at level
+    (or open if gapped through)
+  commission: $0/side (screenshot parity; $0 era from 2025-02-28, EV-035)
+  resume_latch: NOT simulated (armed set = early-close evenings; none material in
+    these windows — noted as a limitation)
+
+era_assignment_preregistered:
+  ERA_A: weeks ending <= 2025-10-24 -> params 90/179/5/10/10, stop 65
+  TRANSITION: weeks 10/26-10/31 and 11/2-11/7 -> BOTH param sets run, stop 65;
+    primary hypothesis 10/26=OLD, 11/2=NEW (retune bracketed 10/24..11/7 by 0079/0083)
+  ERA_B: weeks starting >= 2025-11-09 -> params 90/180/3/6/9 (A2=180 primary,
+    179 noted ambiguous), stop 75 (11/9 week also run at 65 as secondary; 65->75
+    change bracketed by 0087)
+  known_unmodeled: 46/36 St-group rows (11/7+), 46/30 + [0/2] group +
+    entries-per-direction=2 (1/18 week) -> expect undercount there; documented,
+    not fitted.
+
+variant_members (per era, all preregistered; no post-hoc knobs):
+  M1_noDM: gate as frozen (D/M money group NOT simulated)
+  M2_DM: + literal daily-money halts dm_profit=2000 (M), dm_loss=4500 (D) on
+    session cum realized PnL (panel shows E-checkbox ENABLED with D4500/M2000
+    from Jul-2025 era onward -> literal semantics is a live hypothesis)
+  controls: params-OLD-everywhere and params-NEW-everywhere at stop 65 and 75
+    (to verify the era assignment carries signal and isn't imposed)
+
+metrics_per_window: trades all/L/S; net all/L/S; gross profit/loss; WR all/L/S;
+  PF all/L/S; max DD (realized-equity, window-local); avg trade/win/loss; W/L
+  ratio; largest win; largest loss all/L/S; max consec win/loss; avg hold all/L/S
+  (wall-clock minutes); trades per day (n / sessions traded; NT8 convention
+  uncertain -> low weight).
+
+error_matrix_weights (directive §40):
+  very_high(3.0): trades_all, trades_long, trades_short, largest_loss_all, hold_all, wr_all
+  high(2.0): pf_all, avg_win, avg_loss, net_long, net_short, wr_long, wr_short
+  medium(1.0): net_all, max_dd, trades_per_day
+  normalization: counts |d|/max(tgt,1); per-trade dollars |d|/max(|tgt|,100);
+    aggregates |d|/max(|tgt|,1000); WR |d_pp|/15; PF |d|/max(tgt,0.5);
+    hold |d|/max(tgt,1); each component capped at 2.0; distance = weighted mean.
+
+success_criteria: >
+  NOT a pass/fail tune. Outputs: (1) WEEKLY_FINGERPRINT_MATRIX.csv,
+  (2) WEEKLY_ERROR_MATRIX.csv, (3) WEEKLY_VALIDATION_REPORT.md with per-era
+  verdicts and §4 error-shape diagnostics (dTrades/dL/dS/dNet/dHold/dLL/dConsec
+  residual classification). Mechanism inference from error shape only;
+  parameter optimization prohibited in this run.
+
+data: research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet
+  (sim from 2025-06-15 warmup; windows 2025-07-06 .. 2026-01-23). No locked
+  forward data touched (all windows < 2026-08-01).
+code: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py
