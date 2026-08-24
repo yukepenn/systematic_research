@@ -35,3 +35,15 @@ $141.20 / 136 trades = $1.038/trade RT. Inconsistent with the author's ~$2/RT es
 (AS-4) and with NQ Lifetime $4.36/RT; close to MNQ-class or a discounted/exchange-only
 template. Possibilities (all Class C): some sleeves trade MNQ; a partial commission
 template; TP commission column semantics differ. Recorded, unresolved.
+
+## R4 addendum (2026-08-24, post image-audit; bounded — June-2026 data unavailable locally)
+- Layer-2 economics on the POSTED weekly series (single-strategy, $0-comm basis):
+  2025 Jul->Jan slice: 1,306 trades, posted +$75,055 -> real ≈ +$59.3k (79%) at
+  $2.08/RT + 1 tick/side slippage. 2026 Jan->Aug SA slice: 1,854 trades, posted
+  +$204,395 -> real ≈ +$182.0k (89%). The author's own "×0.9 wins / ×1.1 losses"
+  rule (OTRIMG-0098) is consistent with these haircuts. High-frequency weeks are
+  slippage-dominated (commission is minor at his $1.04/side rate).
+- Account composition: June-2026 TP profiles (23-33 tr/day, 20-34 min holds, WR
+  higher than any single SA sleeve) still require >=2 concurrent sleeves alongside
+  the VF flagship; sleeve count/netting unresolved (H2 gross-overlap still favored).
+- R4.1 overlay vs June TP is blocked locally (minute substrate ends 2026-05-29).
