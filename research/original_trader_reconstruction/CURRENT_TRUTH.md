@@ -1,5 +1,36 @@
 # OTR CURRENT TRUTH (prepend-newest)
 
+## 2026-08-24b — Forensics + VF passes 1-3 + OF1 + changepoint map v1
+
+- **VWAP Flux = the 2026 Track-V vendor product, IDENTIFIED at parameter-layout level**
+  (EV-019: 13/13 labels in exact UI order from the official manual; release 2026-01-09
+  aligns with his 2026 system change; trader tuned every parameter group vs manual
+  values). Manuals archived in `vendor_docs/`.
+- **The 2026 risk wrapper IDENTIFIED: intrabar ~130-pt ($2,600) protective stop** —
+  VF2/VF3 reproduce EV-017's "repeatedly ≈ −$2,600 largest losses" as EXACT −2600 tails;
+  the LossLimit-2500-at-bar-close alternative produces −2,785/−3,190 overshoots and is
+  REJECTED for the 2026 family.
+- **VF signal internals: BLOCKED BY MISSING MECHANISM INFO** after 21 bounded cells
+  (VF1-3): entry-stream count matches window A (178/183) but no bounded exit reaches the
+  WR-38/W-L-1.58/hold-40m geometry; the manual documents architecture, not math.
+  **Unblock = owner purchase of VWAP Flux ($300)** → read its public Signal_* series on
+  our data → identification becomes direct observation. Escalated per §50.
+- **ThunderZilla weakened for Track B** (EV-020): documented parameter structure does
+  NOT match the EV-007 multi-block groups; TZ is Renko-exclusive; hypothesis retained
+  only for the unseen below-crop parameters. Not installed locally (EV-021).
+- **OF1**: causal quote-rule classifier certified on both full window-A tick sessions
+  (delta-return corr 0.66/0.67). DATA DEFECT: v3 exporter recorded quotes from a
+  different contract (median 892-tick offset, all 8 batch-1 sessions suspect) — salvaged
+  by rolling-median offset correction; flagged to scalping_lab.
+- Vendor Major/Minor templates (EV-022) = Class-A confirmation of signal-type-selection
+  design + PullbackEarly=true vendor default (Track-S relevance).
+- **CHANGEPOINT_MAP.md v1**: frequency+hold clusters separate S-like (5-9 tpd, 70-115m) /
+  V-like (15-19 tpd, 33-50m) / TP-aggregates (20-33 tpd); minimum consistent model by
+  mid-2026 = V (confirmed) + ≥1 concurrent family; 2025-12-28 high-WR week = UNKNOWN,
+  immediately pre-dates the Flux release.
+- Owner asks that would sharpen identification: (1) which weeks showed the −$2,600
+  largest losses; (2) the $300 VWAP Flux decision; (3) any fuller Track-B screenshots.
+
 ## 2026-08-24 — OWNER CORRECTION DIRECTIVE: package → INTERIM; retractions; TZ/VF opened
 
 **RETRACTIONS (over-strong claims corrected; append-only, originals preserved below):**
