@@ -1,0 +1,35 @@
+run_id: OTR_R9_HP_BUILD
+date: 2026-08-24
+campaign: OTR (campaign 6)
+directive: v3.0 §4-§5 (residual mechanism from error shape) — the hp-machine sibling build
+hypothesis: >
+  The hp-machine weekly reports come from a PULLBACK-QUALIFIED entry build:
+  entries on recovered Type-2 signals (pullback to the TrendVector) instead of
+  immediate T1 flips; flips act only through the trailing-stop exit. Predicted
+  error-shape fixes vs the R5 hp diagnosis: fewer trades (pullback must
+  qualify), better entry prices -> larger average winners and higher WR,
+  including the two +18.5k trend weeks (11/2, 11/16). Motivations: A3-A5
+  retune invisibility to T1 (R5), the 1/17 20:48 cent-exact late-T2 trade
+  (R1.2), the trader's own PullbackEarly-style hard-coded layer, and the
+  T3-rearm coupling that makes the Nov retune (5/10/10 -> 3/6/9) CHANGE the
+  T2 stream (testable era-awareness).
+members (all from existing recovered machinery, no new constants):
+  entry_mode: M_T1 control (CAND2 incumbent) | M_T2L (late/close-basis
+    pullback, pullback_early=False) | M_T2E (early/high-low basis)
+  era params: old 90/179/5/10/10 (weeks <= 10/24) | new180 90/180/3/6/9
+    (>= 11/9); transition weeks both
+  wrapper: FROZEN D-gate {X1600,K3,C700,X2 2500,cap20,cd3}, 65-pt stop,
+    comm 0, cooldown 3; T2-only modes have NO reversal path (flip bars carry
+    T1 signals which do not qualify) -> exit then wait for next T2.
+preregistered_discriminators:
+  D1: Jul-Oct hp counts (targets 21-48/wk; M_T1 overtrades +40-70%)
+  D2: 11/2 and 11/16 nets (+18,545/+18,605; M_T1 gets -1,385/-4,775) and
+      avg_win (1,691/1,683; M_T1 far too small)
+  D3: era tracking across the retune under era-aware params
+  D4: CONTROL - dev-machine weeks must fit M_T2 modes WORSE than M_T1
+      (if T2 fits both, the machine-split hypothesis weakens; report honestly)
+scoring: full §40 fingerprint distance on all 28 windows split hp/dev;
+  judged on D1-D4, not on any single number. No tuning; entry_mode and era
+  are the only dimensions.
+code: research/original_trader_reconstruction/solar_family/src/run_r9_hp.py
+data: nq1m parquet substrate (as R5).
