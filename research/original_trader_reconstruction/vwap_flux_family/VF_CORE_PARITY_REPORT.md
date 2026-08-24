@@ -49,3 +49,14 @@ bar-data implementation with vendor-style parameter names (H4/H3 > H1). Our
 bar-level clone is therefore the SAME input class as his build, not an
 approximation of it. Purchase-gate oracle protocol must use Tick Replay or
 UpDownTick modes for the licensed product to compute historically at all.
+
+## ADDENDUM (same day): rail-formula discriminator EXECUTED on vendor charts
+Manual pp.3/8 chart PNGs (extracted): the FairValue plot hugs the price-side
+cloud edge through sustained trends (median of a trend-skewed 5-layer
+population = 3rd-youngest layer, clustered near price) and never sits at the
+stretched-range midpoint → **percentile-family CONFIRMED, min-max REJECTED at
+the vendor level (EV-040)**. Hour-boundary rail steps with smooth drift
+between confirm VF-ANCHOR visually. Signal arrows on both charts fire on
+pullbacks toward FVP/cloud in trend direction — qualitative vendor-chart
+validation of the OTR-VF-CAND1 two-stage structure. §51 J/K upgraded from
+OPEN to RESOLVED(vendor)/LEADING(trader build).

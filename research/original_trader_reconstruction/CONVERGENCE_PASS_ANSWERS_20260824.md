@@ -53,13 +53,14 @@ selected; quantified vs BLOCK (width 47 vs 106 pts).
 BLOCK kept as falsifier; a frozen-rail staircase in any chart frame would
 flip it — none observed.
 
-**J. Percentile-linear or something else?** OPEN with a defined discriminator:
-percentile FVP sits off-midspan (mean 8.9 pts); min-max FVP ≡ midspan. Manual
-wording mildly favors min-max; geometry test on chart frames outranks it.
-With A=5 the median rail is formula-independent — only outer rails separate.
+**J. Percentile-linear or something else?** PERCENTILE family — RESOLVED at
+the vendor level same-day (EV-040): manual chart frames show the FVP hugging
+the price-side cloud edge in trends (skewed-population median geometry);
+min-max midspan placement contradicted. Linear-vs-nearest-rank interpolation
+remains open (separable only on outer rails).
 
-**K. Is FVP effectively Median/Q50?** Leading YES (manual + public precedent);
-under min-max it would be midspan instead — same discriminator as J.
+**K. Is FVP effectively Median/Q50?** YES (vendor level, EV-040): edge-hugging
+FVP = median of the trend-skewed layer population; midspan alternative rejected.
 
 **L. How close can Signal_Trend be reconstructed?** To a 3-member cluster
 (close-vs-FV+EMA20-agreement leads, LOWO 13/17; rail-break and EMA-cross
