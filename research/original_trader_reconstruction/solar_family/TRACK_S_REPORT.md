@@ -143,3 +143,13 @@ short-side/chop-month concentrated and points at the signal-stream family
 (his hard-coded pullback variant + resume triggers), not more equity gating.
 The late-Feb-2025 DSTMa build diverges (90-trade volatile-day explosion) and is
 NOT covered by CAND2.
+
+## R5 (2026-08-24, directive v3.0 PHASE C1) — 28-week full-fingerprint validation
+CAND2 frozen, version-aware (era params/stops preregistered in
+runs/OTR_R5_CAND2_WEEKLY_VALIDATION/spec.yaml). Verdict: **dev-machine weeks =
+OOS PASS (±7% counts, holds ~7min, LL structure right, several near-exact
+weeks); hp-machine weeks = sibling build (suppression + winner extension), not a
+CAND2 failure.** Literal D/M halts rejected for this build. A3-A5 retune proven
+invisible to T1-only stream → active pullback layer in his build (residual's
+home). St-row3 65→75 ≠ Initial stop (exact −1300s persist; short-side −1500).
+Full analysis: runs/OTR_R5_CAND2_WEEKLY_VALIDATION/WEEKLY_VALIDATION_REPORT.md.

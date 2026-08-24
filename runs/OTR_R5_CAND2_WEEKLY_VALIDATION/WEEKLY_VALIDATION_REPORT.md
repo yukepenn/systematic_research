@@ -76,4 +76,9 @@ unexplained by a 65-pt stop.
 ## Limitations
 Resume latch not simulated (no early-close-evening arms material here); NT8
 trades_per_day convention unverified; hp/dev classification rests on audited
-`machine` annotations in per-image records.
+`machine` annotations in per-image records. The machine split is partly
+CONFOUNDED with era (ERA_A is 14 hp / 1 dev) and with week character: 10/26 is
+an hp week that fits CAND2 almost exactly (dist 0.153), and 12/21 is a holiday
+anomaly — so "hp = sibling build" is the leading hypothesis, not a proven
+partition. Within-ERA_B contrast (hp |Δn| ~31% vs dev ~11%) is the cleanest
+supporting evidence.

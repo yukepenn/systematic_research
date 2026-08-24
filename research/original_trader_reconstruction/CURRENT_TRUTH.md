@@ -1,5 +1,26 @@
 # OTR CURRENT TRUTH (prepend-newest)
 
+## 2026-08-24h — R5 WEEKLY VALIDATION: CAND2 passes dev-machine OOS; residual is MACHINE-correlated (directive v3.0 PHASE C1)
+
+Full-fingerprint, version-aware run of frozen CAND2 against all 28 late-2025
+weekly targets (runs/OTR_R5_CAND2_WEEKLY_VALIDATION/). Prestate frozen in
+OTR_CONVERGENCE_PRESTATE.md. Key results:
+- **CAND2 (noDM) matches every dev-machine week at ±7% mean count error, holds
+  within ~7 min, LL structure correct — 9 windows, fully OOS.** Near-exact weeks:
+  10/26 (50/50 trades, net −3,310 vs −3,330), 11/23 (−15,405 vs −15,365), 1/4/26.
+- **hp-machine weeks are a sibling build**: +39.5% overtrade vs targets, longer
+  holds, much larger winners (both +18.5k trend weeks are hp; missed by −20/−25k).
+  Leading hypothesis (partly era-confounded; 10/26 hp fits CAND2): EV-035
+  multi-strategy per-machine split. 12/21 Christmas stand-down (tgt 9 vs sim 17).
+- **Literal D/M halts (M2000/D4500) REJECTED for the dev/CAND2 build**
+  (over-suppresses −27.6%); partially explanatory but erratic for hp.
+- **A3-A5 retune (→3/6/9, 11/7) is INVISIBLE to a T1-only model (old≡new179
+  streams bit-identical) → the trader's build contains an ACTIVE pullback layer**
+  whose frequency those params control. Confirms the master-residual reading.
+- **St-row3 65→75 (11/14) is NOT the Initial stop**: exact −1,300 rows persist
+  through Jan; −1,500.00 exact appears 1/4 week short side; era-B LL>1300 rows
+  are mostly SHORT-side → directional/second stop tier OPEN.
+
 ## 2026-08-24g — R1-R4 RECONSTRUCTION EXECUTED; OTR-S-CAND1 RETIRED → OTR-S-CAND2 (verified model class)
 
 Cent-level identification against the trader's own per-day table (OTRIMG-0003).
