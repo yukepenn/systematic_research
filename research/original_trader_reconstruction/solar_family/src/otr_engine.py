@@ -100,6 +100,9 @@ class WrapperPolicy:
     # reversal counts toward max_entries_per_trend when reverse_counts_entry is True
     reentry_cooldown_bars: int = 0
     reverse_counts_entry: bool = False
+    # SD LossLimit family: mode in {None, 'per_trade', 'session_realized', 'session_mtm'}
+    loss_limit: Optional[float] = None
+    loss_limit_mode: Optional[str] = None
     # time selection: callable minutes_of_day(int array) -> bool array of allowed ENTRY times
     # (bar stamp = bar END time, ET). None = no time filter.
     entry_time_mask: Optional[Callable[[np.ndarray], np.ndarray]] = None
@@ -137,11 +140,14 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
     pend_exit = False
     pend_reverse = 0   # direction to reverse into at next bar open
     last_exit_i = -10**9
+    sess_realized = 0.0
+    sess_disabled = False
 
     def close_trade(i_exit: int, px_exit: float, kind: str):
-        nonlocal pos, entry_px, entry_i, last_exit_i
+        nonlocal pos, entry_px, entry_i, last_exit_i, sess_realized
         last_exit_i = i_exit
         pnl = pos * (px_exit - entry_px) * POINT_VALUE - 2 * pol.comm_side
+        sess_realized += pnl
         trades.append({
             "dir": pos, "entry_i": entry_i, "exit_i": i_exit,
             "entry_time": str(time_arr[entry_i]), "exit_time": str(time_arr[i_exit]),
@@ -169,6 +175,10 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
             pend_entry = 0
         pend_entry = 0  # unfilled entry orders do not persist
 
+        if first_bar[i]:
+            sess_realized = 0.0
+            sess_disabled = False
+
         sig = st[i]
         if sig == 1 or sig == -1:  # flip bar: new trend leg
             entries_this_trend = 0
@@ -188,6 +198,21 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
         if pos != 0 and flat_t[i]:
             pend_exit = True
             continue
+
+        # 1c) LossLimit family (SD)
+        if pol.loss_limit is not None:
+            ll = pol.loss_limit
+            open_mtm = pos * (close[i] - entry_px) * POINT_VALUE if pos != 0 else 0.0
+            if pol.loss_limit_mode == "per_trade" and pos != 0 and open_mtm <= -ll:
+                pend_exit = True
+                continue
+            if pol.loss_limit_mode == "session_realized" and sess_realized <= -ll:
+                sess_disabled = True
+            if pol.loss_limit_mode == "session_mtm" and (sess_realized + open_mtm) <= -ll:
+                sess_disabled = True
+                if pos != 0:
+                    pend_exit = True
+                    continue
 
         # 2) exit first, early return (V0 certified: Close vs END-of-bar exit line,
         #    INCLUSIVE comparison — a touch exits without a flip; on flip bars the line
@@ -209,6 +234,7 @@ def run_wrapper(bars: dict, pol: WrapperPolicy) -> dict:
 
         # 3) entry when flat
         if (pos == 0 and sig != 0 and i >= BARS_REQUIRED and entry_ok_t[i]
+                and not sess_disabled
                 and (i - last_exit_i) >= pol.reentry_cooldown_bars):
             mag = abs(sig)
             if mag not in pol.entry_types:
