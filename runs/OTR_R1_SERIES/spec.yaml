@@ -77,3 +77,22 @@ amendment_2:
     Exits: inclusive TS-touch, session-close, comm 2.09/side. Readout: master
     aggregate vs pixel targets + Jan per-day subset-diff residuals. Tolerance bands
     unchanged. Sensitivity: X in {1550,1600,1750,1900}, C in {500,1000,1300}, K=3.
+amendment_3:
+  date: 2026-08-24
+  committed_after_r1h_r1i_diagnostics: |
+    r1g integration: D-gate+B1 on T1-only = n 5011 / net 244.6k / hold split
+    105.6/80.7 (target 105.9/82.6) / DD -29.1k; Jan rm=6. Adding our late-T2 stream
+    HURTS (wrong-timed extra trades) - vendor late-mode T2 CANNOT fire at the decoded
+    20:47 bar under any PullbackSplit (armed-latch arithmetic) -> the -274.18 trade is
+    NOT a vendor-style T2. r1i: first-bar-breakout as a GLOBAL gate FALSIFIED (kills
+    the cent-exact alternating reversal chains); as a RESUME-only mechanism it fires
+    2 pts early (20:37 vs 20:48; level ~14713.25 vs firstbar low 14715) - resume
+    mechanism right-shaped, exact reference level OPEN.
+  registered_next: |
+    Verification fleet: (V1) adversarial re-verification of D-gate on all labels +
+    W0204/09 out-of-sample; (V2) resume-level decoder (candidate references: prior
+    settlement, prior-day close +/- offsets, TS/TV-derived, alternative session
+    stamps); (V3) master-gap hunter for the remaining ~660 excess trades within
+    D-family constants + one additional simple rule, validated on Jan labels.
+    Owner free unlock identified: MORE ROWS of the OTRIMG-0003 Daily table (the
+    screenshot shows 11 of ~527 rows; each additional row is a labeled day).
