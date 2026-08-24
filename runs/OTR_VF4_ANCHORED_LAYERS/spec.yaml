@@ -1,0 +1,43 @@
+run_id: OTR_VF4_ANCHORED_LAYERS
+campaign: original_trader_reconstruction
+phase: "TRACK_VF — literal architecture rebuilt from vendor CHART GEOMETRY (owner directive secs 4-10)"
+date: 2026-08-24
+run_class: RECONSTRUCTION_PASS
+spec_frozen_before_results: true
+
+architecture_selection_by_plot_fidelity: >
+  Vendor manual chart images (NQ MAR26 1-Minute and 100-Tick, archived) show the cloud
+  edges DRIFTING SMOOTHLY with periodic jumps — inconsistent with frozen per-segment
+  VWAPs (VF1's staircase reading, now REJECTED ON IMAGE EVIDENCE), consistent with
+  ANCHORED-CUMULATIVE layers: layer_j = VWAP accumulated from anchor_j (one of the 5 most
+  recent 60-min period starts) to the CURRENT bar; at each period boundary the oldest
+  anchor is dropped and a new one starts (jump), between boundaries all 5 evolve smoothly
+  and the newest layer hugs price (visible in both images). Selected per directive sec 5:
+  by plot resemblance, not PnL.
+
+frozen_construction:
+  layers: 5 anchored-cumulative VWAPs, anchors at the 5 most recent clock-hour starts;
+    price basis = minute close x volume (primary); HLC3 disclosure arm if promoted
+  levels: PRIMARY interpretation D/E (percent interpolation across the layer range:
+    level = Lmin + pct/100*(Lmax-Lmin), consistent with default Max=100 -> max,
+    Min=0 -> min); disclosure arm A (linear-interpolated quantiles of the 5 values)
+    for the best cell
+  trend: cloud-break hysteresis (close > Highest -> up; close < Lowest -> down; hold
+    otherwise) — matches image trend flips at full-cloud crossings
+  signals (directive sec 9 bounded family):
+    SIG1: trend up AND close enters the band from above (prev close > prev Highest,
+      close within [Lowest, Highest]); mirror short
+    SIG2: trend up AND low touches band (low <= Highest) while close >= Median; mirror
+  gating: qty 3 per trend episode, split 5 bars between same-direction signals,
+    close-threshold 10 as bar-range position filter (screenshot semantics; ~permissive)
+  wrapper: entries next-bar open; INTRABAR 130-pt protective stop (identified, EV-017);
+    exit arms X_FLIP (trend change), X_MED (median cross), X_OPP (opposite signal);
+    session-close flat; commission $0 (Layer 1)
+cells: 2 signals x 3 exits = 6 (+1 quantile-levels disclosure on the best)
+side_output_OF2: ninZa-documented delta on s20260511 (inside-spread ticks EXCLUDED from
+  both buckets per the verbatim >=ask / <=bid definitions) vs OF1's tick-rule-fallback
+  version — corr(delta, ret) both ways, preregistered rule recorded.
+targets: window A primary (frozen D-score), W20260308/22/0419 secondary, loss tails
+success_rule: D < 2.431 promotes the anchored-layer reading to primary Track-V interpretation.
+outputs: runs/OTR_VF4_ANCHORED_LAYERS/out/{sweep_results.json, scorecard.csv, of2.json}
+seed: deterministic
