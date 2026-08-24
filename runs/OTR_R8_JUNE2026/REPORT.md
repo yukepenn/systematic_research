@@ -31,3 +31,14 @@ plausibly NOT running in June-2026 (last S-panel evidence Jan-2026), or
 account semantics ≠ H1 full-size. The n136/hold-20.5 TP week (6/7-12) sits on
 the JUN26 contract (data available, not yet overlaid) and remains the
 multi-sleeve evidence carrier. Bound recorded; no weights fitted.
+
+## Part B addendum — the 6/7-6/12 TP week (JUN26 data)
+VF-leader: n93 WR25.8 net −19,035 LL −2600 | CAND2-S(new180,s65): n88 WR42.0
+hold 30.9 net +9,745 LL −1300 | H1 sum n181 vs TP n136 WR50 hold 20.5 +11,860.
+Verdicts: (1) the week stays UNDER-EXPLAINED as predicted — his real account
+made +11.9k at WR 50 while the pure VF clone loses; the fast/tight layer
+(variant-2 era: +14,540 posted for 5/31-6/5) is the missing carrier; (2) NEW
+EVIDENCE from TP largest losses: 6/14-18 LL −1,426.18 ≈ a 65-pt-class stop
+(+~6 pts slippage) in REAL June execution — some 65-pt-stop sleeve was still
+live in June (tension with "S retired by June" from the count bound; MNQ
+sizing does not resolve it). Recorded as open decomposition, no weights fit.
