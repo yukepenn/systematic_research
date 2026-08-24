@@ -182,44 +182,152 @@ def base_trades(bars_sl):
 
 
 def features_for_trades(trades, bars, S, legs):
-    """For each base trade, features of the flip signal bar j = entry_i - 1."""
+    """For each base trade, wide feature set at the flip signal bar j = entry_i - 1."""
     rows = []
     time_arr = bars["time"]
-    c = bars["close"]; o = bars["open"]; h = bars["high"]; l = bars["low"]
+    c = bars["close"]; o = bars["open"]; h = bars["high"],
+    h = bars["high"]; l = bars["low"]
     st = bars["signal_trade"]
+    sess = bars["session_id"]
+    first_bar = bars["first_bar"]
+    n = bars["n"]
+    # session start index per bar
+    sess_start = np.zeros(n, np.int64)
+    cur = 0
+    for i in range(n):
+        if first_bar[i]:
+            cur = i
+        sess_start[i] = cur
+    fl_idx = np.flatnonzero(S["flip"])
+    t2l_idx = np.flatnonzero(S["fire_late"])
+    t2e_idx = np.flatnonzero(S["fire_early"])
+    t3_idx = np.flatnonzero(S["t3"])
+    mod = ((time_arr - time_arr.astype("datetime64[D]")).astype("timedelta64[s]").astype(np.int64) // 60)
+
+    leg_start_close = c[legs["start"]]     # anchor at leg birth = flip close
+    # per-leg overshoot at its birth
+    leg_overshoot = np.full(len(legs["start"]), np.nan)
+    for i in range(1, len(legs["start"])):
+        jj = legs["start"][i]
+        leg_overshoot[i] = abs(c[jj] - S["anchor"][jj-1]) - S_PTS
+
     for t in trades:
         j = t["entry_i"] - 1
-        sig = st[j]
         d = 1 if t["dir"] > 0 else -1
-        k = S["leg"][j]           # new leg id (flip bar starts leg k)
-        row = dict(entry_time=t["entry_time"], dir=("L" if d > 0 else "S"),
-                   pnl=t["pnl"], sig_at_j=int(sig), leg_id=int(k))
-        # old leg = k-1 (dir -d); same-dir legs: k-2; prev opposite: k-3
-        def A(i):
-            return legs["fa"][i] if i >= 0 else np.nan
+        k = S["leg"][j]
+        def A(i): return legs["fa"][i] if i >= 0 else np.nan
+        def SC(i): return leg_start_close[i] if i >= 0 else np.nan
+        def LEN(i): return int(legs["length"][i]) if i >= 0 else -1
         a1, a2, a3, a4 = A(k-1), A(k-2), A(k-3), A(k-4)
+        s1, s2 = SC(k-1), SC(k-2)
         cj = c[j]
-        row.update(
-            close_j=cj, a1=a1, a2=a2, a3=a3, a4=a4,
-            g1_hl=d*(a1-a3),          # higher-low (L) / lower-high (S), in pts
-            g2_peak=d*(cj-a2),        # flip close vs last same-dir extreme
-            g3_hh=d*(a2-a4),          # last same-dir extreme vs one before
-            g5_range=d*(cj-a3),
-            old_len=int(legs["length"][k-1]) if k >= 1 else -1,
+        amp1 = abs(a1 - s1) if k >= 1 else np.nan
+        amp2 = abs(a2 - s2) if k >= 2 else np.nan
+        width = d * (a2 - a1) if k >= 2 else np.nan   # last same-dir extreme minus last opp extreme
+        old_len = LEN(k-1)
+        bse_prev = int(S["bse"][j-1])
+        ext_bar_old = int(legs["ext_bar"][k-1]) if k >= 1 else -1
+        # events since old leg extreme
+        t2l_since_ext = int(((t2l_idx > ext_bar_old) & (t2l_idx < j)).sum()) if k >= 1 else 0
+        t2e_since_ext = int(((t2e_idx > ext_bar_old) & (t2e_idx < j)).sum()) if k >= 1 else 0
+        last_t2l = t2l_idx[t2l_idx < j]
+        last_t2e = t2e_idx[t2e_idx < j]
+        last_t3 = t3_idx[t3_idx < j]
+        row = dict(
+            entry_time=t["entry_time"], dir=("L" if d > 0 else "S"), d=d,
+            pnl=t["pnl"], leg_id=int(k),
+            mod=int(mod[j]), bars_in_sess=int(j - sess_start[j]),
+            close_j=cj,
+            g1_hl=d*(a1-a3), g2_peak=d*(cj-a2), g3_hh=d*(a2-a4), g5_range=d*(cj-a3),
+            prog1=d*(cj-s1), prog2=d*(cj-s2),
+            amp1=amp1, amp2=amp2, width=width,
+            retr=(amp1/amp2 if (k >= 2 and amp2 > 0) else np.nan),
+            old_len=old_len, len2=LEN(k-2), len3=LEN(k-3),
             old_max_wave=int(legs["max_wave"][k-1]) if k >= 1 else 0,
+            wave2=int(legs["max_wave"][k-2]) if k >= 2 else 0,
             old_n_t3=int(legs["n_t3"][k-1]) if k >= 1 else 0,
             old_n_t2e=int(legs["n_t2e"][k-1]) if k >= 1 else 0,
             old_n_t2l=int(legs["n_t2l"][k-1]) if k >= 1 else 0,
             weak_prev=bool(S["weak"][j-1]),
-            bse_prev=int(S["bse"][j-1]),
+            weak_prev2=bool(S["weak"][j-2]),
+            bse_prev=bse_prev,
+            ext_frac=(bse_prev/old_len if old_len > 0 else np.nan),
             armed_e_prev=bool(S["armed_early"][j-1]),
             armed_l_prev=bool(S["armed_late"][j-1]),
             overshoot=abs(cj - S["anchor"][j-1]) - S_PTS,
+            overshoot_prev=leg_overshoot[k-1] if k >= 1 else np.nan,
             bar_range=h[j]-l[j], bar_body=abs(c[j]-o[j]),
-            bars_since_old_ext=int(j - legs["ext_bar"][k-1]) if k >= 1 else -1,
+            gap_j=abs(o[j]-c[j-1]),
+            t2l_since_ext=t2l_since_ext, t2e_since_ext=t2e_since_ext,
+            bars_since_t2l=int(j - last_t2l[-1]) if len(last_t2l) else 10**6,
+            bars_since_t2e=int(j - last_t2e[-1]) if len(last_t2e) else 10**6,
+            bars_since_t3=int(j - last_t3[-1]) if len(last_t3) else 10**6,
+            flips_60=int(((fl_idx >= j-60) & (fl_idx < j)).sum()),
+            flips_120=int(((fl_idx >= j-120) & (fl_idx < j)).sum()),
+            flips_240=int(((fl_idx >= j-240) & (fl_idx < j)).sum()),
+            old_cross_sess=bool(sess[legs["start"][k-1]] != sess[j]) if k >= 1 else False,
         )
         rows.append(row)
     return pd.DataFrame(rows)
+
+
+def search_rules(m):
+    """Exhaustive scan: find skip-predicates (1 or 2 conjuncts) that capture all
+    HARD SKIPs and zero HARD TAKEs. Predicates may be dir-conditioned."""
+    hard = m[m.certainty == "HARD"].copy()
+    y = (hard.label == "SKIP").to_numpy()
+    feat_cols = [c for c in m.columns if c not in
+                 ("entry_time", "dir", "label", "certainty", "dir_lab", "pnl",
+                  "close_j", "leg_id")]
+    X = {}
+    for cname in feat_cols:
+        v = hard[cname]
+        if v.dtype == bool:
+            X[cname + "==T"] = v.to_numpy()
+            X[cname + "==F"] = (~v).to_numpy()
+        else:
+            vals = np.unique(v[np.isfinite(v.astype(float))])
+            if len(vals) < 2:
+                continue
+            # candidate thresholds = midpoints
+            mids = (vals[:-1] + vals[1:]) / 2
+            if len(mids) > 60:
+                mids = np.quantile(mids, np.linspace(0, 1, 60))
+            arr = v.astype(float).to_numpy()
+            for thr in mids:
+                X[f"{cname}<={thr:.3f}"] = arr <= thr
+                X[f"{cname}>={thr:.3f}"] = arr >= thr
+    # also dir-conditioned atoms
+    dl = (hard["d"] == 1).to_numpy()
+    keys = list(X.keys())
+    for kk in keys:
+        X["[L]&" + kk] = dl & X[kk]
+        X["[S]&" + kk] = (~dl) & X[kk]
+
+    names = list(X.keys())
+    mat = np.array([X[nm] for nm in names])
+    nskip = int(y.sum())
+    # singles
+    hits = []
+    for i1, nm in enumerate(names):
+        p = mat[i1]
+        if (p & y).sum() == nskip and (p & ~y).sum() == 0:
+            hits.append(("SINGLE", nm))
+    # pairs (OR of two atoms): each atom must not hit any TAKE
+    clean = [i for i in range(len(names)) if (mat[i] & ~y).sum() == 0 and (mat[i] & y).sum() > 0]
+    for ii, i1 in enumerate(clean):
+        for i2 in clean[ii+1:]:
+            p = mat[i1] | mat[i2]
+            if (p & y).sum() == nskip:
+                hits.append(("OR", names[i1], names[i2]))
+    # pairs (AND): conjunction covers all skips, no takes
+    covers = [i for i in range(len(names)) if (mat[i] & y).sum() == nskip]
+    for ii, i1 in enumerate(covers):
+        for i2 in covers[ii+1:]:
+            p = mat[i1] & mat[i2]
+            if (p & y).sum() == nskip and (p & ~y).sum() == 0:
+                hits.append(("AND", names[i1], names[i2]))
+    return hits
 
 
 def main():
@@ -235,32 +343,12 @@ def main():
     print(f"label join: {len(m)} trades, {unmatched} unmatched")
     m.to_csv(os.path.join(OUT, "hunt_C_flip_features.csv"), index=False)
 
-    # quick separation scan on HARD labels
-    hard = m[m.certainty == "HARD"]
-    skips = hard[hard.label == "SKIP"]
-    takes = hard[hard.label == "TAKE"]
-    print(f"\nHARD: {len(takes)} TAKE, {len(skips)} SKIP")
-    num_cols = ["g1_hl", "g2_peak", "g3_hh", "g5_range", "old_len", "old_max_wave",
-                "old_n_t3", "old_n_t2e", "old_n_t2l", "bse_prev", "overshoot",
-                "bar_range", "bar_body", "bars_since_old_ext"]
-    for cname in num_cols:
-        s, t = skips[cname], takes[cname]
-        print(f"{cname:>18}: SKIP [{s.min():9.2f},{s.max():9.2f}] med {s.median():8.2f} | "
-              f"TAKE [{t.min():9.2f},{t.max():9.2f}] med {t.median():8.2f}", end="")
-        # perfect threshold separation?
-        if s.max() < t.min() or t.max() < s.min():
-            print("  <-- PERFECT SEPARATION", end="")
-        print()
-    for cname in ["weak_prev", "armed_e_prev", "armed_l_prev"]:
-        print(f"{cname:>18}: SKIP {skips[cname].mean():.2f} true-frac | TAKE {takes[cname].mean():.2f}")
-
-    print("\nSKIP rows (HARD):")
-    cols = ["entry_time", "dir", "g1_hl", "g2_peak", "g3_hh", "weak_prev", "bse_prev",
-            "armed_l_prev", "old_len", "old_n_t2l", "overshoot", "bars_since_old_ext"]
-    print(hard[hard.label == "SKIP"][cols].to_string(index=False))
-    print("\nSOFT SKIP rows:")
-    soft = m[(m.certainty == "SOFT") & (m.label == "SKIP")]
-    print(soft[cols].to_string(index=False))
+    hits = search_rules(m)
+    print(f"\nperfect-HARD rules found: {len(hits)}")
+    for hh in hits[:200]:
+        print("   ", hh)
+    with open(os.path.join(OUT, "hunt_C_rulehits.json"), "w") as f:
+        json.dump(hits, f, indent=1)
 
 
 if __name__ == "__main__":
