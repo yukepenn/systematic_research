@@ -63,3 +63,15 @@ data: research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet
   (sim from 2025-06-15 warmup; windows 2025-07-06 .. 2026-01-23). No locked
   forward data touched (all windows < 2026-08-01).
 code: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py
+
+amendment_1:
+  date: 2026-08-24
+  registered_before_readout: true
+  purpose: >
+    Directional-stop discriminator from the R5 LL anatomy: era-B target LL>1300
+    rows are mostly SHORT-side (−1410/−1490/−1500/−1385; −1500.00 exact on the
+    1/4 week short column) while longs cap at −1300 → test St-row3 (65→75 on
+    11/14) as a SHORT-side initial stop. Members: (long65,short65) incumbent,
+    (long65,short75), (long75,short65) control, from the 11/9 week onward.
+  readout: per-week LL_long/LL_short column match (±$50) + count/hold drift;
+    judged on the LL columns primarily, counts secondarily. No other knobs.
