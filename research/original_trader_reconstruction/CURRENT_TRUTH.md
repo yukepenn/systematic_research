@@ -1,5 +1,23 @@
 # OTR CURRENT TRUTH (prepend-newest)
 
+## 2026-08-24k — R9/R10: hp-build narrowed (pullback qualification partial), fast-layer TV-cycle rejected; free-EVI frontier reached
+
+- **R9 (hp build)**: pure T2-entry REJECTED as complete model; control holds
+  (dev=T1, 0.284 vs 0.41). But pullback qualification moves the right numbers:
+  T2E swings the two +18.5k trend weeks by +8.5k/+17.9k toward target; T2L
+  cuts hp overtrade to +23.8%. hp = suppression-in-chop + pullback-priced
+  entries in trend; the hybrid family stays UNREGISTERED pending new labels.
+- **R10 (Feb-2025 fast build)**: TV-cycle machine REJECTED (2/27 explosion not
+  reproduced; wrong-day explosions). NEW: the T1 control's avg-loss profile
+  tracks the whole Feb-Mar daily series (−588/−596, −682/−704, −717/−742...)
+  → the series is mostly T1-scale; the 2/27 n90 row is likely a ONE-OFF
+  experiment build (era of daily experiments), not a persistent fast layer.
+- **Frontier statement**: with NT8 parity closed, June-July data ingested, and
+  R7-R10 batteries run, the remaining residuals (VF trigger composition; hp
+  hybrid; June 6/7-12 fast sleeve; frozen §6 ambiguities) are LABEL-BOUND or
+  ORACLE-BOUND. Free compute cannot separate them further without inventing
+  members (§5 prohibition). See RESUME_HERE for the §45 purchase framing.
+
 ## 2026-08-24j — NT8/CrossTrade UNLOCKED: R6 parity BIT-EXACT; June-July data ingested; VF-CAND1 survives TRUE OOS
 
 Owner re-authorized CrossTrade (recorded in runs/OTR_R6_NT8_PARITY/spec.yaml);
