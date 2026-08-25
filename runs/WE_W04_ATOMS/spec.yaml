@@ -1,0 +1,29 @@
+run_id: WE_W04_ATOMS
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner 2026-08-25 — "你甚至都可以拆开我们product从最简单一个个来"
+
+question: >
+  Atomic ablation of the product stack on 1-min NQ: which atoms carry per-trade expectancy
+  and which are dead weight? Every atom runs through the product's own pipeline (sm14) with
+  parameter overrides whose defaults leave existing behavior unchanged.
+
+grid (preregistered):
+  single members (7): volmults=[k] for k in {6,10,14,18,22,26,30} — one state machine at a
+    time through the full pipeline (tilt+hysteresis+filters active, bmom off)
+  mechanism ablations on all13 (bmom off, to isolate the Solar path):
+    BASE          : hysteresis(3,1), tilt on, session blocks on   (= W01 S4_SOLAR13_only)
+    NOHYST        : hysteresis(3,3) — exit level raised to entry level
+    NOTILT        : tilt multiplier disabled (mm = 1 always)
+    NOBLOCK       : entry-block/forced-flat windows disabled (engine session-close flat only)
+    NOHYST+NOTILT : both
+  combiner ablations (from prior runs, cited not rerun): +bmom (W01 S4), bmom alone (W01 S5),
+    member subsets (W03 wide7/narrow6)
+  S1 atoms (cited from archived r13, not rerun): T1 SAR without gate = 5,223 tr / $217,738;
+    with D-gate = 4,577 / $260,003 -> the gate's marginal value is +$42k and -646 trades.
+metrics: as prior waves; PRIMARY readout = per-trade expectancy and dev weekly Sharpe of each
+  atom, and the marginal delta of each mechanism vs BASE.
+rules: no promotion from this run (it is a measurement map); dev/holdout both reported;
+  holdout = fourth read, confirm-only.
+forbidden: [data >= 2026-08-01, changing signal math, adding members post-readout]
+outputs: [out/summary.csv, REPORT.md]

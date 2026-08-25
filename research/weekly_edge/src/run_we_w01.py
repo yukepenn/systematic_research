@@ -81,7 +81,7 @@ def round_away(x):
 
 
 def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False,
-            volmults=None):
+            volmults=None, entry_level=3.0, exit_level=1.0, tilt_on=True, blocks_on=True):
     """Faithful port of SolarWaveOneContractNQ_v5 decision stack to 1-min bars.
 
     Declared port choices (spec): B-MOM reset at bar-end 09:31, signal cutoff 15:54, flatten
@@ -203,14 +203,15 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
         # combiner
         sum_next = sum(m_pend) if with_solar else 0
         T = max(-10, min(10, round_away(sum_next / float(NMEM) * 10.0)))
-        mm = 1.25 if (sum_next != 0 and tilt != 0 and np.sign(sum_next) == tilt) else 1.0
+        mm = 1.25 if (tilt_on and sum_next != 0 and tilt != 0
+                      and np.sign(sum_next) == tilt) else 1.0
         Tp = max(-13, min(13, round_away(T * mm * 0.9026)))
         M = (0.7086 * Tp if with_solar else 0.0) + (2.83 * bmom if with_bmom else 0.0)
         # hysteresis on current physical target (fills applied next bar; decision uses tgt path)
         p = tgt_arr[i - 1] if i > 0 and not fb[i] else 0
         tgt = p
-        blocked = t[i] >= sess_end[sid[i]] - np.timedelta64(30 * 60, "s")
-        flat = t[i] >= sess_end[sid[i]] - np.timedelta64(21 * 60, "s")
+        blocked = blocks_on and t[i] >= sess_end[sid[i]] - np.timedelta64(30 * 60, "s")
+        flat = blocks_on and t[i] >= sess_end[sid[i]] - np.timedelta64(21 * 60, "s")
         if not with_solar and with_bmom:
             # amendment_2: S5 per spec is the B-MOM leg as a DIRECT +-1 position (2.83*bmom
             # can never cross the 3.0 hysteresis entry level, so routing it through the
@@ -221,19 +222,19 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
             tgt = 0
         elif p == 0:
             if not blocked:
-                if M >= 3.0:
+                if M >= entry_level:
                     tgt = 1
-                elif M <= -3.0:
+                elif M <= -entry_level:
                     tgt = -1
         elif p > 0:
-            if M <= -3.0 and not blocked:
+            if M <= -entry_level and not blocked:
                 tgt = -1
-            elif M <= 1.0:
+            elif M <= exit_level:
                 tgt = 0
         else:
-            if M >= 3.0 and not blocked:
+            if M >= entry_level and not blocked:
                 tgt = 1
-            elif M >= -1.0:
+            elif M >= -exit_level:
                 tgt = 0
         tgt_arr[i] = tgt
 
