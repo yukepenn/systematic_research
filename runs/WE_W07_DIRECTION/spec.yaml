@@ -1,0 +1,49 @@
+run_id: WE_W07_DIRECTION
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner 2026-08-25 — "我在意的是constantly每周甚至每天都赚钱。抓住大趋势，也能在其他形势里面赚钱或者少亏。"
+  W06 phase 1 identified the binding problem: wrong-side 23-33% + chop-loss 24-35% of sessions.
+
+question: >
+  Can DIRECTION QUALITY and CHOP AVOIDANCE be improved with causally-available information we
+  have never used — cross-asset agreement (ES/RTY/YM), overnight structure, opening range —
+  measured on W06's session-level metrics rather than on P&L alone?
+
+primary_metrics (the owner's objective, session-level, NOT net P&L):
+  RIGHT  = % of sessions where the sleeve is on the available direction AND profitable
+  WRONG  = % wrong-side sessions
+  CHOP   = % right-side-but-losing sessions
+  CAPTURE= captured pts / available pts (W06 definition, unchanged)
+  guards = weekly Sharpe, worst week, stress-net (a filter that raises RIGHT while destroying
+           the weekly guards is rejected)
+
+signals (ALL strictly causal; each stated with the exact bar at which it becomes known):
+  X1 CROSS  : at bar i, sign(close - EMA20) computed on ES, RTY, YM at bar i-1 each, mapped
+              onto the NQ clock by timestamp merge (no forward fill beyond the same minute).
+              agreement score = sum of the three signs, in {-3..+3}.
+  X2 ON     : overnight structure. From the session's 18:00 open to 09:29, take ON high/low/
+              mid. Known at 09:30; applies to RTH bars only; +1 if the 09:30 open is above
+              ON mid, -1 below.
+  X3 OR15   : opening range 09:31-09:45 high/low. Known at 09:46; +1 after a close above the
+              OR high, -1 below, 0 inside. Applies from 09:46.
+  X4 EFF    : PRIOR session efficiency ratio |c_last-c_first| / sum|dc|, known at session
+              start. High = trending regime, low = chop regime. Threshold: the trailing
+              60-session 33rd percentile (causal, excludes the current session).
+tests (each on the S4.narrow6.gdl base and, separately, on S1; frozen bases, no re-tuning):
+  T1 CROSS gate    : block entries whose direction disagrees with sign(agreement) when
+                     |agreement| >= 2; K in {2, 3}
+  T2 ON gate       : block RTH entries against X2
+  T3 OR gate       : block RTH entries against X3
+  T4 EFF stand-aside: block ALL entries in sessions classified chop by X4
+  T5 STACK         : the subset of T1-T4 that individually improve RIGHT without breaking a
+                     guard, applied together (declared now: the stack is formed by the rule,
+                     not by picking the best combination afterwards)
+rules:
+  - session-level metrics are the primary readout; weekly guards are veto-only
+  - causality audit of every new mask before its number is quoted (W03 am.1 standing rule)
+  - no promotion; holdout reported but this is its 6th read - confirm-only, never selection
+  - NT8/CrossTrade Strategy Analyzer parity is a VALIDATION step for a frozen candidate
+    later, never a research loop (owner noted its availability)
+forbidden: [data >= 2026-08-01, masks using fill-bar information, post-hoc hypothesis
+  addition, selecting the stack by trying combinations]
+outputs: [out/direction.txt, out/summary.csv, REPORT.md]
