@@ -22,8 +22,8 @@ Sources: `vwap_flux_family/2026_PANEL_TOPOLOGY.md` (committed FACT tables),
 | coverage of those ~497 custom rows | count | share |
 |---|---|---|
 | **label photographed** (§43 LEVEL-A eligible) | **13** | **2.6 %** |
-| photographed as a value, label never photographed | 66 | 13.3 % |
-| **never photographed in any form** | **~418** | **84.1 %** |
+| photographed as a value, label never photographed | 63 | 12.7 % |
+| **never photographed in any form** | **~421** | **84.7 %** |
 
 **All 13 labelled rows are the VWAP Flux block**, and nothing else. Every other custom parameter
 the trader has is either a bare number on screen with no label, or was never on screen at all.
@@ -35,7 +35,7 @@ the trader has is either a bare number on screen with no label, or was never on 
 §5 is binding: a component may not be identified from numeric coincidence. §43 LEVEL A requires
 a direct class/product name or a near-exact property-label/order/UI match.
 
-For the 66 value-only slots the labels **do not exist anywhere in the corpus**, and the owner has
+For the 63 value-only slots the labels **do not exist anywhere in the corpus**, and the owner has
 confirmed the 164 images are complete. So no amount of vendor research, and no purchase, can
 produce a label match for them. The only §5-admissible route left is a match on **control-type
 sequence + group-separator position + values**, which is why those sequences are recorded as the
@@ -43,7 +43,7 @@ primary fingerprint in the matrix:
 
 | block | n | control-type sequence (the matchable fingerprint) |
 |---|---|---|
-| HEAD-A | 15 | `GRP·enum·enum·GRP·chk·num·num·num·num·num·num·chk·num·num·num` |
+| HEAD-A | 12 | `GRP·chk·num·num·num·num·num·num·chk·num·num·num` (the leading `GRP·enum·enum` is NT8's General group, not his) |
 | BANK-1 | 2 | `GRP·chk×8` mask `U,C,C,U,U,C,C,C` |
 | BANK-2 | 2 | `GRP·chk×7` mask `U,C,C,U,U,C,C` — **identical first seven to BANK-1** |
 | MIDDLE | 21 | `num×4·GRP·chk×4·num·num·chk·num·num·num·GRP·num×4·GRP·chk×5·num·chk` |
@@ -125,13 +125,13 @@ buying. §54's answer is given in the campaign report.
 
 ## 6. Every still-unexplained row
 
-All 66 are enumerated in `UNEXPLAINED_PARAMETER_LEDGER.csv` with block, slot index, control type,
+All 63 are enumerated in `UNEXPLAINED_PARAMETER_LEDGER.csv` with block, slot index, control type,
 visible value, capture date and the reason the label is unavailable. Nothing is hidden and nothing
 is filled in from imagination. Summary by block:
 
 | block | unexplained slots | dates | status |
 |---|---|---|---|
-| HEAD-A | 15 | 2026-02-20, 2026-04-29 | UNEXPLAINED — top of list, only two frames ever at scroll 0 |
+| HEAD-A | 12 | 2026-02-20, 2026-04-29 | UNEXPLAINED — his FIRST custom group. Slots 1-3 reclassified 2026-08-25 as NT8's own General group (Backtest type / Strategy) per VENDOR_FORENSICS_v2 §10 |
 | BANK-1 / BANK-2 | 4 | 2026-02-20 | UNEXPLAINED — repeated-block evidence |
 | MIDDLE | 21 | 2026-06-05 | UNEXPLAINED — the only middle-scrolled frame in the corpus |
 | VF-HEAD | 11 | 2026-02-13 … 2026-08-14 | UNEXPLAINED — mutable rows above VF13 |

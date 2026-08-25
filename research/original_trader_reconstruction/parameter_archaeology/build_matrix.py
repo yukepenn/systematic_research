@@ -23,14 +23,20 @@ L = "LABEL_PHOTOGRAPHED"
 
 SLOTS = [
     # ---- HEAD-A : top of the list, the only two frames ever scrolled to position 0 -----------
-    ("HEAD-A", 1, "OTRIMG-0119,0138", "2026-02-20/04-29", "TOP", G, "UNREADABLE", "", V,
-     "group header, label truncated to ellipsis in the narrowed pane"),
-    ("HEAD-A", 2, "OTRIMG-0119,0138", "2026-02-20/04-29", "TOP", E, "UNREADABLE", "", V,
-     "dropdown; selected text not legible at this pane width"),
-    ("HEAD-A", 3, "OTRIMG-0119,0138", "2026-02-20/04-29", "TOP", E, "UNREADABLE", "", V,
-     "dropdown; selected text not legible"),
+    # CORRECTED 2026-08-25: these four are NinjaTrader's OWN "General" group, not custom rows.
+    # NT8 Help Guide backtest_a_strategy.htm documents the pair Backtest type / Strategy, and
+    # PARAMETER_PANEL_LEDGER.csv shows the identical opening on OTRIMG-0002 (Feb-2025).
+    ("NT8-GENERAL", 1, "OTRIMG-0119,0138", "2026-02-20/04-29", "TOP", G, "General", "General", L,
+     "NT8 Strategy Analyzer's own first group"),
+    ("NT8-GENERAL", 2, "OTRIMG-0119,0138", "2026-02-20/04-29", "TOP", E, "UNREADABLE",
+     "Backtest type", L,
+     "renders as a BARE CHEVRON - pane narrower than the value text, so no string was drawn"),
+    ("NT8-GENERAL", 3, "OTRIMG-0119,0138", "2026-02-20/04-29", "TOP", E, "UNREADABLE",
+     "Strategy", L,
+     "THE STRATEGY NAME. Re-read at x7 in both top-scrolled frames: a bare chevron, no glyphs. "
+     "Not a resolution limit - the characters were never rendered. PROVEN UNRECOVERABLE."),
     ("HEAD-A", 4, "OTRIMG-0119,0138", "2026-02-20/04-29", "TOP", G, "UNREADABLE", "", V,
-     "group header"),
+     "group header - the FIRST custom group; his own parameters begin below this"),
     ("HEAD-A", 5, "OTRIMG-0119,0138", "2026-02-20/04-29", "TOP", K, "checked", "", V, ""),
     ("HEAD-A", 6, "OTRIMG-0119,0138", "2026-02-20/04-29", "TOP", N, "10", "", V, ""),
     ("HEAD-A", 7, "OTRIMG-0119,0138", "2026-02-20/04-29", "TOP", N, "26 -> 20", "", V,
@@ -162,10 +168,15 @@ FIELDS = ["block", "slot_index", "image_evidence", "capture_dates", "scroll_posi
 def main():
     rows = []
     for blk, idx, img, dts, scr, ctrl, val, lab, ev, note in SLOTS:
-        if ev == L:
-            cand = "ninZa VWAP Flux (13/13 published labels, exact order)"
-            st = "HIGH_CONFIDENCE_FAMILY_MATCH"
+        if blk == "NT8-GENERAL":
+            cand = "NinjaTrader 8 platform (Strategy Analyzer General group)"
+            st = "IDENTIFIED_PLATFORM_SETTING"
             elm, lom, ctm = "YES", "YES", "YES"
+        elif ev == L:
+            cand = ("ninZa VWAP Flux CONCEPTS (13/13); labels are the trader's own - "
+                    "his rows 6-10 end in 'Percent' where the vendor's end in '(%)'")
+            st = "HIGH_CONFIDENCE_FAMILY_MATCH"
+            elm, lom, ctm = "CONTRADICTED (see VENDOR_FORENSICS_v2)", "CONTRADICTED (Volume Base first vs last)", "YES"
         else:
             cand, st, elm, lom, ctm = "", "UNEXPLAINED", "NO (label never photographed)", \
                 "sequence recorded", "YES (recorded)"
@@ -197,8 +208,9 @@ def main():
         w = csv.DictWriter(f, fieldnames=FIELDS); w.writeheader(); w.writerows(rows)
 
     # ---------------- coverage arithmetic ----------------
-    custom = [r for r in rows if r["block"] != "NT8-TAIL"]
-    nt8 = [r for r in rows if r["block"] == "NT8-TAIL"]
+    PLATFORM = ("NT8-TAIL", "NT8-GENERAL")   # NT8's own rows, not the trader's parameters
+    custom = [r for r in rows if r["block"] not in PLATFORM]
+    nt8 = [r for r in rows if r["block"] in PLATFORM]
     lab_ok = [r for r in custom if r["label_evidence"] == L]
     unexp = [r for r in custom if r["status"] == "UNEXPLAINED"]
     AUG_EXTENT, FEB_EXTENT, NT8_ROWS = 523, 218, 26
