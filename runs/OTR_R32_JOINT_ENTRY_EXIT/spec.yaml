@@ -1,0 +1,106 @@
+run_id: OTR_R32_JOINT_ENTRY_EXIT
+campaign: 6-OTR
+directive: OWNER CONTINUATION DIRECTIVE OTR R31 sections 7, 13, 14 (2026-08-25)
+date_preregistered: 2026-08-25
+status: PREREGISTERED_BEFORE_READOUT
+
+lesson_applied: >
+  R31 killed three of my own claims because each rested on a single 17-window correlation.  This
+  run is designed so that cannot happen again:
+    - ALL 23 non-sealed windows are used, never 17.
+    - A HOLDOUT is fixed in advance: fit/rank on the 17 windows to 2026-05-29, then report the
+      five June/July windows SEPARATELY as out-of-sample.  A model is only reported as leading if
+      it survives both.
+    - No mechanism is selected on any single correlation, and none on net P&L.
+  August (2026-08-01 onward) stays SEALED by LOCKED_FORWARD and is not touched.
+
+# =====================================================================================
+# PART A - the loss-mechanism diagnostic (targets the ONE robust regularity)
+# =====================================================================================
+part_a:
+  why: >
+    The only relationship that survived R31's out-of-sample extension is
+    corr(ATR, HIS avg_loss) = -0.509 (17w) -> -0.515 (23w).  His average LOSS shrinks as
+    volatility rises.  Our incumbent does the opposite: +0.775.
+    A FIXED hard stop predicts the OPPOSITE of his sign: in higher volatility the stop is reached
+    more often, losses pile up at the cap, and avg_loss is dragged UP toward it.  That is exactly
+    what our +0.775 is.  So his negative sign implies the hard stop is NOT his dominant loss
+    mechanism - his losses must be dominated by an earlier discretionary exit that fires sooner
+    when volatility is higher.
+  method: >
+    Measure, per window, the fraction of LOSING trades that terminate at the hard stop versus a
+    discretionary exit, for our incumbent and for each exit family.  Compare avg_loss as a
+    fraction of the stop.  For him this fraction is not directly observable, but avg_loss/2600 is,
+    and so is the fact that largest_loss sits exactly at the cap in 18 of 24 weeks.
+  preregistered:
+    A1: >
+      PREDICTION: our incumbent's losses are stop-dominated (a high stop-out share), and its
+      avg_loss/stop ratio is materially higher than his.  His avg_loss/2600 ranges 0.27-0.52
+      across 2026.  If ours is in the same range, this diagnostic has no resolving power and A2
+      is not run.
+    A2: >
+      THE DISCRIMINATOR: an exit family whose stop-out share FALLS as ATR rises will reproduce a
+      negative corr(ATR, avg_loss).  Report corr(ATR, stop_out_share) per family.
+      PREDICTION: state-based exits fire sooner at high volatility and so should show a falling
+      stop-out share; fixed-distance exits should not.  If NO family produces a negative
+      corr(ATR, avg_loss) over 23 windows, then no exit mechanism explains the one robust
+      regularity, and an exposure/sizing law becomes the only remaining candidate for it.
+
+# =====================================================================================
+# PART B - the entry axis that has NEVER been tested
+# =====================================================================================
+part_b:
+  why: >
+    Every one of the 144 members in the R7/R8 grid is TREND-CONDITIONAL: in layer_a the candidate
+    direction is set by the trend sign (cand = +1 iff trend > 0, cand = -1 iff trend < 0), and the
+    rail is approached from the trend's side.  A COUNTER-TREND / FADE architecture - short the
+    upper rail, long the lower rail, against the move - is not representable in that grid and has
+    therefore never been tested in this campaign.
+    VWAP Flux is a VALUE-AREA indicator, and fading the outer rails back toward Fair Value is its
+    most natural use.  This is a structural gap, not a tuning gap.
+  axes:
+    direction:
+      D_MOM:  direction = trend sign (the incumbent convention)
+      D_FADE: touch the UPPER rail -> SHORT; touch the LOWER rail -> LONG (against the move)
+    trend_gate:
+      G_NONE:    no trend filter
+      G_WITH:    only when the trend agrees with the entry direction
+      G_AGAINST: only when the trend opposes it
+    rail: [P_IN (outer MAX/MIN), P_Q75 (Q75/Q25), P_MED (fair value)]
+    confirmation: [C_DIR, C_REC]
+    exit: reuse the R30 families - X_OPP, X_TREND, X_FV, X_BAND, X_TRAIL_PTS {25,50,80}, X_TARGET {60}
+  note: >
+    D_MOM + G_WITH reproduces the incumbent exactly and serves as the control.  If it does not
+    reproduce the incumbent's numbers the harness is wrong and the run is void.
+  preregistered:
+    B1: >
+      HARNESS CHECK: D_MOM|G_WITH|P_MED|C_DIR|X_OPP must reproduce the incumbent's 1,512 in-window
+      trades and section-40 distance 0.4768 to within rounding.  If not, void the run.
+    B2: >
+      PREDICTION about FADE, registered before readout: a fade architecture will produce a
+      MATERIALLY DIFFERENT hold and payoff profile from momentum, and specifically a HIGHER win
+      rate with a LOWER payoff ratio (fading value extremes wins often and small).  His profile is
+      wr ~38-45 % with payoff ~1.8 - between the two.  I do NOT predict fade wins; I predict it is
+      distinguishable, which is the point of testing it at all.
+    B3: >
+      THE DECISION RULE, fixed in advance.  A configuration is reported as LEADING only if it
+      (a) ranks top-5 on the 17 fit windows AND (b) ranks top-10 on the 5 holdout windows.
+      Anything that wins the fit and fails the holdout is reported as an OVERFIT, by name.
+      No configuration is promoted into any model on the strength of this run.
+    B4: >
+      NULL registered: if no configuration beats the incumbent's 0.4768 on BOTH samples, the entry
+      axis as parameterised here does not contain his architecture either, and the surviving
+      explanation moves to exposure/sizing plus something not in this parameterisation.
+
+deliverables:
+  - runs/OTR_R32_JOINT_ENTRY_EXIT/out/loss_mechanism.csv
+  - runs/OTR_R32_JOINT_ENTRY_EXIT/out/joint_entry_exit.csv
+  - runs/OTR_R32_JOINT_ENTRY_EXIT/REPORT.md
+
+binding_rules:
+  - Spec committed BEFORE readout; amendments appended, never rewritten.
+  - Net P&L may never select a mechanism.
+  - No mechanism selected on a single correlation (the R31 lesson).
+  - Fit/holdout split fixed in advance and reported separately.
+  - LOCKED_FORWARD: 2026-08-01 onward untouched.
+  - Failed predictions recorded, not rewritten.
