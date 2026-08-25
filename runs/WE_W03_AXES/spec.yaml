@@ -1,0 +1,47 @@
+run_id: WE_W03_AXES
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner 2026-08-25 — "继续全面的尝试各种来进步。你甚至都有vwap flux以及各种manual你可以聪明的尝试重新加的。
+  那就搞各种轴…… 不管是大趋势像他抓住的各种还是什么。"
+
+question: >
+  W02 proved our tail is intra-week accumulation and per-trade caps are inert. Do (a)
+  SESSION-level dollar halts, (b) S4 member-subset/context-gate variants (VF rails re-added
+  as CONTEXT, not engine), and (c) two manual-derived NEW information bases (CumDelta
+  transition, Multi-Osc overlap-reversal) reach the dev tail bar — and lift per-trade
+  expectancy toward his $103?
+
+grid (exhaustive, preregistered):
+  S4 variants (27): volmults {all13, wide7=VolMult 18-30, narrow6=VolMult 6-16}
+    x session_halt {none, 1300, 2600} USD (sleeve session realized P&L; entries blocked for
+      the rest of the session once breached; exits always allowed)
+    x context_gate {none, FV (long only when close>=FV of the W01-cached VF rails — VWAP Flux
+      re-added as CONTEXT), DELTA (long only when session up/down-tick cum delta >= 0;
+      declared 1-min proxy of the manual's UpDownTick_RealVolume)}
+  S1 variants (3): {none, h1300, h2600} — halt as POST-HOC trade-drop overlay (drop trades
+    entered after the session breach); APPROXIMATION declared: internal D-gate state assumed
+    unchanged; exact re-implementation required before any promotion.
+  CD sleeve (2): manual-documented entry = transition into the strong state. 1-min declared
+    construction: signed volume by close direction, session-anchored cumsum; diff = cd -
+    rolling_median(cd,240 bars, min 30); state = sign(diff) where |diff| > rolling_std(diff,
+    240); entry pulse on transition into +-1; exits via layer_b_exit X_OPP, stop 130.
+    Variants {ns, h2600 post-hoc}.
+  MO sleeve (2): overlap = MFI14>80 & RSI14>70 & StochK(14,3)>80 (OB; mirror 20/30/20 OS) —
+    "all three simultaneously" is DECLARED (manual leaves it undefined); reversal bar =
+    close direction against the overlap side vs prior close, within Safe Reversal Period 5
+    of the area's end; short after OB, long after OS; exits via layer_b_exit X_TIMEOUT:240,
+    stop 130. Variants {ns, h2600}.
+  S5 (1): ns.vf carried from W02.
+  portfolios (56): S1.none + each S4 variant; S1.h2600 + each S4 variant;
+    PC = S1.none + S4.all13.h2600.none + CD.h2600 + MO.h2600; PD = PC + S5.
+  SJB: DEFERRED to W04 — its only mechanical rule is a vendor series we cannot compute;
+    zone construction would be pure invention.
+metrics: as W01/W02 (dev/holdout, base + C1 stress)
+promotion_rule: unchanged from W02 (dev worst>-15000, pos>=55, stress>0; champion by dev
+  Sharpe; holdout confirm sharpe>=0.30 & worst>-15000)
+holdout_reuse_disclosure: THIRD read of the same 9 weeks; confirm-only, arbiter stays the
+  virgin >=2026-11-01 read.
+forbidden: [data >= 2026-08-01, adding grid members after readout, promoting the S1 overlay
+  approximation without exact re-implementation, quoting dev-sorted holdout rows as
+  expectations]
+outputs: [out/summary.csv, REPORT.md]

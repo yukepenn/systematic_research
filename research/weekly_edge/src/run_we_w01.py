@@ -80,7 +80,8 @@ def round_away(x):
     return int(np.floor(x + 0.5)) if x >= 0 else int(np.ceil(x - 0.5))
 
 
-def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False):
+def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False,
+            volmults=None):
     """Faithful port of SolarWaveOneContractNQ_v5 decision stack to 1-min bars.
 
     Declared port choices (spec): B-MOM reset at bar-end 09:31, signal cutoff 15:54, flatten
@@ -90,8 +91,9 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
     fb, lb, sid, n = D["fb"], D["lb"], D["sid"], D["n"]
     sess_end = D["sess_end"]
     TICK = 0.25
-    VOLM = [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
-    NMEM = 13
+    VOLM = list(volmults) if volmults is not None else \
+        [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
+    NMEM = len(VOLM)
     SMIN, SMAX, STOPM = 40 * TICK, 1200 * TICK, 179 * TICK
     hm = ((t - t.astype("datetime64[D]")).astype("timedelta64[s]").astype(np.int64))
     hhmmss = (hm // 3600) * 10000 + ((hm // 60) % 60) * 100          # bar-END hhmmss*? end-stamped
@@ -200,7 +202,7 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
                 sess_closes.pop(0)
         # combiner
         sum_next = sum(m_pend) if with_solar else 0
-        T = max(-10, min(10, round_away(sum_next / 13.0 * 10.0)))
+        T = max(-10, min(10, round_away(sum_next / float(NMEM) * 10.0)))
         mm = 1.25 if (sum_next != 0 and tilt != 0 and np.sign(sum_next) == tilt) else 1.0
         Tp = max(-13, min(13, round_away(T * mm * 0.9026)))
         M = (0.7086 * Tp if with_solar else 0.0) + (2.83 * bmom if with_bmom else 0.0)
