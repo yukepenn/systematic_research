@@ -54,3 +54,17 @@ Direct facts:
 - Post dated 7/11, location United States, 2 images in carousel; second image unrecoverable (black) in this capture.
 Open questions:
 - Content of the post's two images (likely performance screenshots; not visible here).
+
+## IMG-16 ADDENDUM (2026-08-24): black frame RECOVERED by pixel stretch
+Method: linear stretch ×6.4 (image mean 30, p99 216 — dark but not empty);
+derived copy: derived/OTRIMG-0160_stretched_x6.4.png. Original untouched.
+- The 2-image CAROUSEL AREA is genuinely unloaded (uniform background + the
+  two-dot indicator) — post image content unrecoverable from this frame; the
+  7/11 date matches OTRIMG-0159 (SA 6/28-7/10) which likely carries the same
+  content as a proper capture.
+- COMMENT THREAD fully readable (verbatim):
+  Momo: 全自动化吗 不需要盯盘 (7/11, First comment)
+  mac studio [Author]: 全自动
+  Momo: Reply mac studio: 你也是这方面的工作吗 风格有从业者的味道
+  mac studio [Author]: Reply Momo: 业余的
+  4 comments, 3 likes, 1 star. "7/11 United States".
