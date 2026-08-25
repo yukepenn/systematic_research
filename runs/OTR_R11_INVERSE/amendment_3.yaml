@@ -1,0 +1,51 @@
+run_id: OTR_R11_INVERSE
+amendment: 3
+date: 2026-08-24
+status: COMMITTED BEFORE THE READOUT IT AUTHORISES
+
+reason: >
+  The crossed sweep (6 event universes x 2 exit rules x 11 days) returned two results that
+  redirect the search:
+    (1) EVERY feasible day solves with min_extra = 0. Adding T2 (either PullbackEarly
+        setting) or T3 to the entry universe never produces a new explanation for a
+        solvable day and never rescues an unsolvable one. Within these universes the early
+        flagship enters on T1 ONLY.
+    (2) 2023-01-04, 2023-01-12 and 2023-01-17 are IMPOSSIBLE in every universe whose search
+        ran to EXHAUSTION (not merely to the node budget). 2023-01-17 needs 6 trades but the
+        session contains only 5 T1 candidate signals, so it demands either extra entries or
+        extra exits.
+  Therefore the missing ingredient is NOT a different entry signal class. The next
+  evidence-attested candidate is an EXIT mechanism that splits trades: a fixed intrabar
+  initial stop, which is documented for the trader's later eras (the "St" group / 65-point
+  stop, research/.../solar_family/RISK_STATE_MACHINE_2025.md).
+
+prior_reasoning_being_revisited: >
+  We previously argued NO fixed stop existed in the 2023 era because the largest single loss
+  across the 11 days is -1384.18 = 69.00 points gross, which exceeds the later 65-point
+  stop. That argument bounds the stop from BELOW; it does not exclude a LOOSER early stop.
+  The per-day largest-loser column bounds any early stop at >= 69.25 points.
+
+hypotheses:
+  H-STOP-EARLY: >
+    The 2023 build carries a fixed intrabar initial stop of S_e points, S_e >= 69.25.
+    A stop creates additional exits, and therefore additional entries, which is exactly the
+    deficit on 2023-01-17.
+    TEST: re-run the inverse solver on the three impossible days over
+    S_e in {70, 75, 80, 85, 90, 100, 110, 125, 150, 175, 200} x {STRICT, INCLUSIVE}
+    x {U1, U5}.
+    FALSIFIER: no stop value makes any of the three days feasible.
+  H-NOT-STOP: >
+    If H-STOP-EARLY fails, the deficit lies outside the {entry signal class, exit line,
+    fixed stop} space entirely, and the three days must be recorded as
+    UNEXPLAINED_BY_ANY_TESTED_MECHANISM rather than patched.
+
+guardrails:
+  - "A stop value may be adopted ONLY if it makes previously-impossible days FEASIBLE while
+     leaving the 8 already-unique days unchanged (still feasible, still unique, same path).
+     A stop that 'improves net' but breaks a unique path is REJECTED."
+  - "If several stop values work identically, the result is an INTERVAL, not a point value
+     (directive v4.0 section 6)."
+  - "No P&L objective. Feasibility and path-preservation only."
+
+outputs:
+  - runs/OTR_R11_INVERSE/out/r15_stop_sweep.csv
