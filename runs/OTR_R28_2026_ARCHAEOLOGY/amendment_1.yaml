@@ -1,0 +1,62 @@
+amendment: 1
+run_id: OTR_R28_2026_ARCHAEOLOGY
+date: 2026-08-25
+status: PREREGISTERED_BEFORE_READOUT
+supersedes: nothing.  The original c3.P3_2 result stands as recorded (0 solutions) and is NOT
+            rewritten.  This amendment adds a STRICTLY MORE GENERAL model that the original
+            search could not express.
+
+why: >
+  P3_2 searched for a single (instrument, quantity, commission) triple holding for ALL trades in
+  a record - i.e. a UNIFORM position size.  It returned 0 solutions.  Inspecting the residues
+  printed by that same run shows they are not random:
+
+      OTRIMG-0152  largest_win  mod 500 = 382     largest_loss mod 500 = 382
+      OTRIMG-0154  largest_win  mod 500 = 264     largest_loss mod 500 = 382
+
+  A single NQ round turn at commission c makes a net cell congruent to -c (mod 500).  Residue 382
+  implies c = 118 (mod 500); residue 264 implies 2c = 236 (mod 500), the same c but TWO
+  contract-round-turns.  The uniform-quantity model is therefore refuted by its own residues,
+  and the correct model has a per-trade quantity that VARIES inside one record.
+
+model: >
+  Let L = instrument tick value in cents and c = commission in cents per CONTRACT per ROUND TURN.
+  For any reported cell V (cents) aggregating trades whose total contract-round-turns is the
+  unknown integer m:                V + c*m  ==  0   (mod L)
+  Accounting identities verified exactly in both records and therefore imposed as constraints:
+      gross_profit + gross_loss == net_all         (holds to the cent in 0152 and 0154)
+      net_long     + net_short  == net_all         (holds to the cent in 0152 and 0154)
+  hence          m_win + m_loss == m_all           and     m_long + m_short == m_all
+  Feasibility bounds: m >= n (every trade is at least one contract) and m <= 4n.
+
+preregistered:
+  P5_1: >
+    PREDICTION: a single commission c, together with per-cell contract-round-turn counts m that
+    satisfy both additive identities and the bound m >= n, explains EVERY cent-level cell of BOTH
+    Trade Performance records.  If it does, the cent lattice has read out his live position sizing
+    without a single backtest.
+  P5_2: >
+    THE DISCRIMINATOR, fixed in advance.
+      If m == n for every cell        -> every live trade was ONE contract.  The Trade Performance
+                                         records are then consistent with the single qty-1 strategy
+                                         the Strategy Analyzer backtests describe, and directive
+                                         section 30's account-level model gains NO support here.
+      If m  > n for some cell         -> live position size EXCEEDS one contract and VARIES.  The
+                                         live account is then doing something the qty-1 backtests
+                                         do not describe.  This is registered in advance as
+                                         positive evidence for section 30 / section 2I.
+    I do not know which holds.
+  P5_3: >
+    Residues fix c only MODULO the tick value, so c is recoverable only as a congruence class
+    (section 6: report the interval, not a point value).  PREDICTION: the search returns a
+    congruence class {c0, c0+L, c0+2L, ...} and NOT a unique commission.  Any claim of a unique
+    2026 commission rate would be over-reading the evidence and is forbidden.
+
+search_space:
+  instruments: [NQ (L=500), MNQ (L=50), ES (L=1250), MES (L=125)]
+  commission_c: 1..1500 cents per contract per round turn
+  m: all integers in [n, 4n] satisfying the congruences and the two additive identities
+
+decision_rule: >
+  Report the FULL feasible set.  If several instruments survive, all are kept as rivals.
+  A negative result (no feasible set) is reported as such and NOT rescued by widening bounds.
