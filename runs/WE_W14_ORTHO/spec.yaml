@@ -1,0 +1,44 @@
+run_id: WE_W14_ORTHO
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "继续从第一性原理出发看我们各种research，各种gate，各种strategies，各种维度"
+
+premise (the one lever that keeps working): >
+  Across 13 waves the only consistently productive lever is ADDING AN UNCORRELATED SLEEVE.
+  S1 and S4n.evidence-only correlate 0.19; combined they take capture from 4.70/4.87% to
+  9.57% and Sharpe from 0.176/0.210 to 0.248. Every other lever (exits, sizing, timing,
+  direction prediction, entry geometry, multi-instrument, per-member split) has been tested
+  and closed. So this wave hunts ORTHOGONALITY systematically, and validates the one gate
+  that is only weak evidence (delta, p=0.10) against true tick data.
+
+axis_A ORTHOGONAL SLEEVE HUNT:
+  candidates (each stress-tested standalone; 1-min bars remain the substrate and the decision
+  cadence — coarser SIGNAL aggregation is multi-timeframe, not a different bar clock):
+    C1 SOLAR5   : the same Solar13-narrow engine with signals computed on 5-min aggregates
+    C2 SOLAR15  : same, 15-min aggregates
+    C3 ORB      : opening-range breakout, RTH only: break of the 09:31-09:45 range, one
+                  position per side per session, exit on opposite break or session close
+    C4 VWAPTREND: long while close > session VWAP and VWAP slope > 0 (both at i-1), mirror
+                  short; flat otherwise; session-flat
+    C5 ASIA     : the existing S4n engine restricted to 18:00-02:59 entries (W11 measured
+                  $176.6/trade there — this tests it as a STANDALONE sleeve)
+  admission rule (declared, applied in this order, no scanning):
+    (i) standalone stress-net > 0 on dev, (ii) |weekly correlation| with the current
+    portfolio < 0.30, (iii) adding it raises portfolio dev Sharpe AND does not worsen the
+    portfolio worst week by more than 15%.
+  Candidates failing (i) or (ii) are not tested in (iii).
+
+axis_B TRUE-DELTA VALIDATION (48 tick sessions, 2025-08 .. 2026-05):
+  B1 fidelity: per 1-min bar compute TRUE delta two ways from ticks — BidAsk mode (trade
+     price >= ask -> buy volume; <= bid -> sell volume; bip 0/1/2 in the substrate) and
+     UpDownTick mode — and measure agreement with the campaign's close-direction proxy
+     (sign-agreement rate and correlation of the session cumulative series).
+  B2 gate quality: rebuild the delta gate on those sessions with each version and compare
+     per-trade P&L of the gated sleeve. Sample is ~48 sessions, so this is a FIDELITY and
+     DIRECTION check, never a Sharpe claim.
+  decision value: if TRUE delta materially outperforms the proxy, the VWAP Flux purchase
+  gains a second, independent justification (its documented volume modes are exactly these).
+promotion: none. Any admitted sleeve joins the challenger set for the virgin forward read.
+forbidden: [data >= 2026-08-01, fill-bar information, admitting a sleeve that fails any
+  admission clause, quoting axis-B Sharpe]
+outputs: [out/ortho.txt, out/summary.csv, REPORT.md]
