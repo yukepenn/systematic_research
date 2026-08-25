@@ -293,7 +293,9 @@ def main():
     bb23 = IC.prepare(sub.reset_index(drop=True), SolarWaveParams())
     tr23 = run_master(bb23, exit_strict=False, gate=True, comm=4.18)
     net23 = sum(x["pnl"] for x in tr23)
-    okh = abs(len(tr23) - 4598) <= 5 and abs(net23 - 264955) < 2500
+    # amendment_1: parquet-based frozen artifact is 4577 / $260,003.14 (r13 CSV), reproduced
+    # to the cent; the 4598/$264,955 figure is the r1j LEDGER-based variant.
+    okh = abs(len(tr23) - 4577) <= 2 and abs(net23 - 260003.14) < 500
     print(f"HARNESS S1 2023-window: n={len(tr23)} net=${net23:,.0f} -> "
           f"{'PASS' if okh else 'FAIL - VOID'}", flush=True)
     if not okh:
@@ -345,9 +347,34 @@ def main():
         members[nm] = week_table(trl, D, lambda x: x["xt"])
         print(f"{nm}: {len(trl)} trades [{_time.time()-t0:.0f}s]", flush=True)
 
+    # ---- S6: VF manual 1-minute suggested preset (amendment_1) -------------------------
+    lv6_path = os.path.join(OUT, "vf_levels_preset1m_cache.npy")
+    if os.path.exists(lv6_path):
+        lv6 = np.load(lv6_path)
+    else:
+        lv6 = vf_levels(D["t"], D["c"], D["v"], 20, 7,
+                        pcts=(10, 40, 50, 60, 80),
+                        lifecycle="anchor", formula="percentile_linear")
+        np.save(lv6_path, lv6)
+    print(f"vf_levels preset ready [{_time.time()-t0:.0f}s]", flush=True)
+    bars6 = dict(n=D["n"], t=D["t"], o=D["o"], h=D["h"], l=D["l"], c=D["c"],
+                 lb=D["lb"], lv=lv6)
+    trend6 = trend_states("T_C", D["c"], D["l"], D["h"], lv6, ema(D["c"], 20))
+    for cthr in (0.10, 0.30):
+        s6 = layer_a_v2(bars6, trend6, "D_MOM", "G_WITH", "P_IN", "C_REC", "H1a",
+                        qty=5, split=15, close_thr=cthr)
+        for X, xp in (("X_OPP", None), ("X_TRAIL_PTS", 80)):
+            trl = layer_b_exit(bars6, trend6, s6, atr, X, xp)
+            for x in trl:
+                x["pnl"] -= COMM_RT
+            nm = f"S6_VF1M_c{int(cthr*100)}_{X}{'' if xp is None else xp}"
+            members[nm] = week_table(trl, D, lambda x: x["xt"])
+            print(f"{nm}: {len(trl)} trades [{_time.time()-t0:.0f}s]", flush=True)
+
     # ---- S4 / S5 -----------------------------------------------------------------------
     for nm, vp, ws, wb in (("S4_SM14_vp460", 460, True, True),
                            ("S4_SM14_vp1380", 1380, True, True),
+                           ("S4_SOLAR13_only", 460, True, False),
                            ("S5_BMOM", 460, False, True)):
         trl = sm14_1m(D, vp, with_solar=ws, with_bmom=wb)
         members[nm] = week_table(trl, D, lambda x: x["xt"])
@@ -364,7 +391,10 @@ def main():
 
     ports = {"P1": combine(["S1_CAND2", "S4_SM14_vp460", "S5_BMOM"]),
              "P2": combine(["S1_CAND2", "S4_SM14_vp460"]),
-             "P3": combine(["S1_CAND2", "S2_X_TRAIL_PTS80_s130", "S4_SM14_vp460"])}
+             "P3": combine(["S1_CAND2", "S2_X_TRAIL_PTS80_s130", "S4_SM14_vp460"]),
+             "P4": combine(["S2_X_OPP_s130", "S2_X_TRAIL_PTS25_s130",
+                            "S2_X_TRAIL_PTS50_s130", "S2_X_TRAIL_PTS80_s130",
+                            "S2_X_TARGET60_s130"])}
 
     def overlay(per_s, limit):
         if limit is None:
@@ -387,7 +417,7 @@ def main():
 
     all_rows = []
     for nm, per_s in list(members.items()) + list(ports.items()):
-        for lim in ((None, 3000, 5000) if nm in ("P1", "P2", "P3") else (None,)):
+        for lim in ((None, 3000, 5000) if nm in ("P1", "P2", "P3", "P4") else (None,)):
             ps = overlay(per_s, lim)
             tag = nm if lim is None else f"{nm}_wl{lim}"
             for which in ("dev", "hold"):
@@ -410,7 +440,7 @@ def main():
     sm.to_csv(os.path.join(OUT, "summary.csv"), index=False)
     # weekly detail for portfolios + S1 (for the report)
     det = []
-    for nm in ("S1_CAND2", "P1", "P2", "P3"):
+    for nm in ("S1_CAND2", "P1", "P2", "P3", "P4"):
         per_s = members.get(nm) or ports[nm]
         for which in ("dev", "hold"):
             r = summarize(per_s, D, which)

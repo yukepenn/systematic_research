@@ -1,0 +1,31 @@
+amendment: 1
+date: 2026-08-25
+status: PRE-READOUT (the first run aborted at its harness check; no results were read)
+
+1_harness_correction:
+  finding: >
+    The runner's harness expected n=4598 / $264,955 for S1 on the 2023 master window. That
+    figure is the r1j LEDGER-based variant (signals from t2_canonical_1m.csv). The
+    parquet-based frozen artifact (runs/OTR_R11_INVERSE/out/r13_master_exitrule.csv,
+    INCLUSIVE_gate) is n=4577 / $260,003.14 — and the W01 pipeline reproduced it TO THE CENT
+    on both substrates. The two parquets are bar-identical over the window (737,708 bars,
+    0 differing closes).
+  action: harness target corrected to n=4577 ± 2 / net $260,003.14 ± $500.
+
+2_owner_authorization (mid-run, 2026-08-25): >
+  "当然你可以改各种参数。加策略。用idea各种。我想我们已经有很多学习到了的。folders里面都有。"
+  Parameter variation and additional sleeves authorized. Added BEFORE any holdout read:
+
+3_added_members:
+  S6_VF1M_preset: the ninZa VWAP Flux manual's OFFICIAL 1-minute suggested preset
+    (SIGNAL_SEMANTICS_DIGEST_20260825.md): Anchor 20 min, Amount 7, levels 80/60/40/10,
+    Signal Split 15, Quantity Per Trend 5 — geometry via vf_levels(20, 7, pcts=(10,40,50,60,80)).
+    Trigger uses the R32-leading clean-room reading (D_MOM|G_WITH|P_IN|C_REC|H1a).
+    close_thr in {0.10 incumbent, 0.30 = manual "70%" reading} x exits {X_OPP, X_TRAIL_PTS:80},
+    stop 130 -> 4 members. Trend stays the incumbent T_C/EMA20 convention (manual's Trend
+    Period 14 noted, not adopted — one change axis at a time).
+  S4_SOLAR13_only: the Solar13 ensemble leg alone (with_bmom=False) -> 1 member.
+  P4_S2_ENSEMBLE: sum of the five stop-130 S2 members (campaign-1 lesson: ensembles beat
+    selection). Max gross exposure 5 contracts — reported as-is with the exposure note;
+    weekly loss-limit overlay applies as for P1-P3.
+4_unchanged: dev/holdout split, one-shot holdout rule R4, frictions, R1-R5, F1-F2.
