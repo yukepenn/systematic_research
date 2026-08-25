@@ -1,0 +1,33 @@
+run_id: WE_W12_ARCH
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "从我们nq系统反思，从各种维度反思"; two things the campaign owns but has
+  never used: (a) the recovered Solar vendor math's OTHER signal types, (b) a per-member
+  multi-sleeve architecture (positions summed) instead of an averaged ensemble.
+
+questions:
+  Q1 ARCH  : the product averages 13 member votes BEFORE one position decision. Does running
+             members as INDEPENDENT sleeves (each +-1, own throttle, positions summed) beat
+             the averaged ensemble at equal max exposure? (AS-1 architecture: several
+             strategies simultaneously.)
+  Q2 SIGNAL: solarwave.py exposes signal_trend (+-2 strong / +-1 weak), signal_trade
+             (+-1 flip / +-3 strengthen) and signal_wave. The campaign has only ever used
+             T1 flips. Do the UNUSED types carry independent information?
+grid:
+  A1 per-member sleeves: k members from {6,10,14,18,22,26,30} each as its own +-1 sleeve with
+     the A_range0.8 throttle and the delta gate; summed. k in {3 (6/14/22), 5 (6/10/14/22/30),
+     7 (all)}; max exposure = k contracts, disclosed. Compared against the averaged ensemble
+     at the SAME max exposure by dividing weekly nets by k (exposure-normalised).
+  A2 strong-only: entries only when |signal_trend| == 2 (strong) at i-1, on the S4n base.
+  A3 strengthen: add T3 (signal_trade == +-3, "strengthen") as an additional entry trigger.
+  A4 wave: use signal_wave sign as an additional agreement gate.
+promotion_rule: exposure-normalised weekly Sharpe must beat the S4n.A0.8+noCLOSE base (0.214)
+  AND stress > 0 AND big-day capture >= 90% of base.
+falsifiers:
+  FA: if per-member sleeves do not beat the ensemble exposure-normalised -> averaging before
+      the decision is the right architecture and the AS-1 analogy is closed for us.
+  FB: if none of the unused Solar signal types improves anything -> T1-only is confirmed
+      optimal for our engines too, and the vendor-math axis is exhausted.
+forbidden: [data >= 2026-08-01, fill-bar info, post-hoc additions, comparing different
+  exposures without normalising]
+outputs: [out/arch.txt, out/summary.csv, REPORT.md]
