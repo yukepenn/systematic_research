@@ -1,0 +1,33 @@
+run_id: WE_W10_EXPOSURE
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "不断持续的research，找出结果，否认自己，再次优化"; W09 established that the
+  intraday range ratio is a causal regime variable that throttles losses without costing
+  big-day capture. This wave tests its MIRROR and its GENERALITY.
+
+questions:
+  Q1 mirror : if a LOW range ratio should reduce exposure, should a HIGH ratio increase it?
+  Q2 general: does the same throttle help the other sleeves (S1, S4.all13, S5) — i.e. is it a
+              property of the market regime or of this one sleeve?
+  Q3 portfolio: what do throttled sleeves do in combination, on the W08 regime split?
+
+grid:
+  P1 SIZE : exposure = 1 when ratio in [0.8, hi), 2 when ratio >= hi; 0 below 0.8.
+            hi in {1.2, 1.5, 2.0}. Applied to S4.narrow6.gdl.
+            Reported WITH the exposure disclosure: max 2 contracts.
+  P2 SPREAD: throttle q in {0.7, 0.8, 0.9} applied to S1, S4.all13.gdl, S5.vf separately
+            (S4.narrow6 already measured in W09 -> cited, not re-run).
+  P3 PORT : {S1, S1+q}, x {S4n.gdl+A0.8}, and the three-sleeve add of S5+q if P2 qualifies it.
+readouts: W08 regime split (capture / big-day / small-day) + weekly guards + trades/week.
+promotion_rule (unchanged from W09): qualifies iff small-day points > that sleeve's own base
+  AND big-day capture >= 90% of its own base AND weekly Sharpe >= its own base AND stress > 0.
+  For P1 (sizing) the Sharpe test is the binding one: a pure-leverage result (dollars and tail
+  scaling together, Sharpe flat) is REJECTED, per the W06 H2 precedent.
+falsifiers:
+  F1: if P1 raises dollars without raising Sharpe -> "range-proportional sizing is leverage,
+      not edge" (same verdict as W06 H2 pyramiding), recorded and closed.
+  F2: if the throttle fails on S1/S5 -> it is a property of the S4 engine, not of the regime,
+      and its generality claim is withdrawn.
+forbidden: [data >= 2026-08-01, fill-bar information, post-hoc grid additions, promoting on
+  dollars alone]
+outputs: [out/exposure.txt, out/summary.csv, REPORT.md]
