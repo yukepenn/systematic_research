@@ -1,0 +1,32 @@
+run_id: WE_W20_ENSEMBLE
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "不断迭代我们赚钱的模型" ; W19 measured that quarterly config selection is
+  noise (88% churn, +0.021 Sharpe over naive), so the correct move is aggregation.
+
+question: >
+  If we STOP selecting a configuration and instead AGGREGATE across the whole family, does
+  out-of-sample performance beat both the walk-forward selector (0.171) and the naive single
+  config (0.150) — and does it approach or beat the hindsight-best single config (0.279)?
+
+aggregations (all on the same 64-config family as W19, same period 2022-07..2026-07):
+  E1 PNL_AVG_ALL   : equal-weight average of all 64 configs' weekly P&L, exposure-normalised
+                     by dividing by 64 (theoretical benchmark; not directly tradeable)
+  E2 PNL_AVG_LONG  : same over the 32 long-only configs
+  E3 PNL_AVG_DELTA : same over the 32 delta-gate-on configs
+  E4 VOTE_1CONTRACT: the tradeable version — at each bar take the MAJORITY signed position
+                     across the 64 configs' target paths, capped at +-1 contract, fills at
+                     next open. This is one contract, not 64.
+  E5 VOTE_LONG     : E4 restricted to the long-only subfamily (positions in {0,+1})
+  E6 VOTE_SUPERMAJ : E4 but requiring >= 75% agreement to hold a position, else flat
+comparisons: WF (0.171), FIXED (0.249), NAIVE (0.150), BESTFIXED (0.279), all from W19.
+verdicts:
+  WIN     : a tradeable aggregate (E4/E5/E6) beats WF and NAIVE on Sharpe AND has a better
+            worst week than NAIVE -> aggregation is the answer to selection noise
+  NEUTRAL : beats NAIVE but not WF
+  LOSE    : does not beat NAIVE -> aggregation adds nothing and the family is simply weak
+also_required: report the aggregate's per-year Sharpe, and its correlation with WF, so that
+  "it works because it is different" can be distinguished from "it works because it is bigger".
+forbidden: [data >= 2026-08-01, fill-bar information, quoting E1-E3 as tradeable results,
+  post-hoc addition of aggregation schemes]
+outputs: [out/ens.txt, out/summary.csv, REPORT.md]
