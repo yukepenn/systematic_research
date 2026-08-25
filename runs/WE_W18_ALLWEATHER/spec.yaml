@@ -1,0 +1,45 @@
+run_id: WE_W18_ALLWEATHER
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "不同策略可能自己有edge，但是要正确combine起来。而且我们也要尽量不管什么天，
+  市场情况，以及各种都赚钱。" W17 established what we actually own: a long-volatility trend
+  harvester that is ~zero across sixteen years because it bleeds in quiet regimes.
+
+design principle (from W17, not from taste): >
+  Stop tuning the trend family. Build the COMPLEMENT and combine on a causal regime variable.
+  A trend harvester + a quiet-regime engine, each trading only where it earns, is the only
+  architecture consistent with everything measured: W08 (all P&L comes from 16.8% big-range
+  sessions), W09 (throttling the quiet regime helps), W11 (fading the quiet regime failed —
+  but ONLY on the volatile 2022-2026 sample), W17 (quiet YEARS are the losing years).
+
+sample discipline (this is what makes it a real test):
+  BUILD  window = 2006-01-05 .. 2017-12-31  (12 years, never used for anything)
+  TEST   window = 2018-01-01 .. 2021-12-31  (4 years, never used, modern price levels)
+  CONFIRM window = 2022-01-01 .. 2026-07-31 (the old dev sample, now a THIRD sample)
+  Anything selected on BUILD must hold on TEST before it is even looked at on CONFIRM.
+
+regime variable (causal, already validated as a throttle in W09):
+  R = session realized-range ratio vs the trailing-60-session time-of-day median, read at i-1.
+  QUIET = R < 0.8 (the regime the trend family is throttled out of), ACTIVE = R >= 0.8.
+
+engines:
+  T  TREND    : the existing S4n family, ACTIVE regime only, LONG-ONLY and both-sides variants
+                (long-only is the one W17-replicated finding)
+  Q1 FADE_VWAP: fade k*ATR from session VWAP, target VWAP, stop 130 pts — QUIET regime only,
+                k in {1.0, 1.5, 2.0}   (the W11 test, moved to where the quiet regime is)
+  Q2 FADE_RAIL: fade a touch of the session's prior-day-range extreme back toward the session
+                open, QUIET only, exit at open or session close
+  Q3 MR_BAND  : Bollinger-style mean reversion on 1-min closes (20, 2 sigma), QUIET only,
+                exit at the mean; this is the free %B proxy the R33 directive specified
+combination rule (declared before results): the portfolio is T(ACTIVE) + the single best-on-
+  BUILD quiet engine (QUIET), each at 1 contract, never overlapping by construction.
+verdicts:
+  PASS      : the combined portfolio has pooled Sharpe > 0 on BUILD *and* > 0 on TEST, with
+              >= 60% positive years on the two windows pooled
+  PARTIAL   : positive on BUILD, not on TEST -> the quiet engine is also regime-fitted
+  FAIL      : no quiet engine is positive on BUILD -> the quiet regime is untradeable by
+              mean reversion, and the campaign's honest answer is that we own a
+              regime-dependent instrument, not an all-weather one
+forbidden: [looking at CONFIRM before BUILD and TEST are both decided, changing any trend-side
+  parameter, fill-bar information, post-hoc engine additions]
+outputs: [out/allweather.txt, out/summary.csv, REPORT.md]
