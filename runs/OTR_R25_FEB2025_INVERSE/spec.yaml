@@ -1,0 +1,66 @@
+run_id: OTR_R25_FEB2025_INVERSE
+title: "Global inverse reconstruction of the Feb-2025 daily table (incl. the 90-trade day)"
+directive: "OWNER MASTER DIRECTIVE v4.0, section 19 + the named next experiment in section 45 Q28"
+date_opened: 2026-08-24
+status: OPEN
+campaign: OTR (#6)
+
+purpose: >
+  OTR_R11_INVERSE recovered the trader's 2023-01-03..17 trade list exactly (unique 89-trade
+  continuous path, every visible cell) and in doing so pinned three model choices:
+  T1-only entries, STRICT exit comparison, CALENDAR-date report rows.
+  OTRIMG-0026 is the ONLY other cent-level daily surface in the 164-image corpus: two
+  consecutive days, 2025-02-26 and 2025-02-27, with full Analysis($) cells including
+  avg_MAE / avg_MFE. Applying the identical machinery to it tests whether the 2023
+  mechanism survives into the era where the risk stack and the DSTM build appear -- and
+  2025-02-27 is the 90-trade anomaly that OTR_R10 failed to explain.
+
+targets:
+  source: "OTRIMG-0026, Analysis($) Period=Daily, Time base=Exit Time"
+  commission: "$5.68 per round turn (85.20/15 and 511.20/90 both give 5.68 exactly)"
+  2025-02-26: {n: 15, nW: 8, nL: 7, gross_profit: 4889.56, gross_loss: -1564.76,
+               largest_win: 2089.32, largest_loss: -405.68, sum_MAE: 2855, sum_MFE: 10435,
+               net: 3324.80}
+  2025-02-27: {n: 90, nW: 35, nL: 55, gross_profit: 29306.20, gross_loss: -18222.40,
+               largest_win: 5029.32, largest_loss: -865.68, sum_MAE: 30770, sum_MFE: 64480,
+               net: 11083.80}
+  cropped_cell_resolution: >
+    gross_loss on both days was cropped. Both resolve on the $5-tick lattice and are then
+    CONFIRMED independently by the reported net: 4889.56 - 1564.76 = 3324.80 and
+    29306.20 - 18222.40 = 11083.80. Neither value is fabricated; each is cross-checked.
+  lattice_check: "2855, 10435, 30770, 64480 are all exact multiples of $5 -- the same
+    invariant that made the 2023 reconstruction possible."
+
+prereg_predictions:
+  P1: >
+    2025-02-26 (n=15) is reproducible by the SAME mechanism as 2023 (T1-only, STRICT,
+    calendar rows), with or without the documented 65-point initial stop.
+  P2: >
+    2025-02-27 (n=90 in a single day) is NOT reproducible by that mechanism. The 2023 build
+    averages ~8 trades/day; 90 is an order of magnitude out. If P2 is wrong and the plain
+    mechanism does reach 90, the "anomalous build" story collapses and 2/27 becomes ordinary.
+  P3: >
+    If 2/27 needs extra machinery, the fixed 65-point stop is the cheapest candidate that
+    could supply it, because a stop splits trades and manufactures re-entries. R11 falsified
+    an early-era stop for 2023; 2025 is a different era with independent evidence for one.
+
+method:
+  - "Identical machinery: inverse_core + inverse_multiday, calendar-date attribution,
+     day-sealing, empty-date constraint on any calendar date in span without a report row."
+  - "Grid: exit rule {STRICT, INCLUSIVE} x entry universe {T1, T1+T2E, T1+T3, T1+T2E+T3}
+     x stop {none, 65} -- all crossed, none selected by P&L."
+  - "Per-day feasibility first, then the joint two-day global path."
+  - "A day that is infeasible under every cell is reported as
+     UNEXPLAINED_BY_ANY_TESTED_MECHANISM. No new mechanism is invented to force a fit."
+
+falsifiers:
+  - "P1 fails if 2025-02-26 is infeasible in every cell -> the 2023 mechanism does not
+     survive into 2025 and the two eras must be modelled separately."
+  - "P2 fails if the plain 2023 mechanism reproduces n=90 -> 2/27 is not anomalous."
+
+outputs:
+  - runs/OTR_R25_FEB2025_INVERSE/out/r25_log.txt
+  - runs/OTR_R25_FEB2025_INVERSE/out/r25_grid.csv
+  - runs/OTR_R25_FEB2025_INVERSE/REPORT.md
+
+safety: "Historical bars only. No orders, no deploy, no live data. LOCKED_FORWARD untouched."
