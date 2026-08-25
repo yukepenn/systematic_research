@@ -1,0 +1,21 @@
+amendment: 1
+date: 2026-08-25
+status: METHOD CORRECTION before any readout (run 1 crashed in N1, no results were read)
+findings:
+  bug: >
+    block-rate was computed as 1 - mean(mask_long & mask_short). For a DIRECTIONAL gate
+    (delta: long allowed when cd>=0, short when cd<=0) the intersection is almost empty, so
+    the rate evaluated to ~1.0, every null blocked every session, all 200 nulls produced
+    0 trades, and np.percentile crashed on an empty array.
+  method: >
+    session-level random blocking is also a weak null: it has a different autocorrelation
+    structure from the real masks, so a difference could come from structure rather than from
+    market alignment.
+fixes:
+  rate: computed per direction, rate = 1 - (mean(mask_long) + mean(mask_short)) / 2.
+  null: CIRCULAR SHIFT of the real mask by a uniformly random offset. This preserves the
+    mask's block rate AND its autocorrelation exactly, and destroys only its alignment with
+    the market — the strictest available null for "is this gate about the market or about
+    trading less?".
+  n_nulls: 100 per gate (p-resolution 0.01), for runtime.
+unchanged: N2/N3/N4, all verdict rules, the forbidden list.
