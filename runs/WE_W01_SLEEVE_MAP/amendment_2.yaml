@@ -1,0 +1,12 @@
+amendment: 2
+date: 2026-08-25
+status: IMPLEMENTATION CORRECTION, rerun of the full script (run 1 log preserved as run1.log)
+finding: >
+  S5_BMOM produced 0 trades in run 1. Cause: the implementation routed the B-MOM leg through
+  the SM14 hysteresis (entry level 3.0), but the leg's maximum |M| contribution is 2.83, so it
+  can never enter. The spec defines S5 as "the B-MOM leg standalone as +-1 position". This was
+  an implementation error, not a market result. Consequence in run 1: P1 was identical to P2.
+fix: with_solar=False & with_bmom=True now maps the bmom state directly to the target
+  (flattened in the forced-flat window), bypassing the hysteresis.
+unchanged: everything else. Run-1 outputs preserved; run 2 is the run of record.
+note: run-1 readouts of members other than S5/P1 are identical in run 2 (same code path).

@@ -209,6 +209,12 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True):
         tgt = p
         blocked = t[i] >= sess_end[sid[i]] - np.timedelta64(30 * 60, "s")
         flat = t[i] >= sess_end[sid[i]] - np.timedelta64(21 * 60, "s")
+        if not with_solar and with_bmom:
+            # amendment_2: S5 per spec is the B-MOM leg as a DIRECT +-1 position (2.83*bmom
+            # can never cross the 3.0 hysteresis entry level, so routing it through the
+            # hysteresis was an implementation error that produced zero trades).
+            tgt_arr[i] = 0 if flat else bmom
+            continue
         if flat:
             tgt = 0
         elif p == 0:
