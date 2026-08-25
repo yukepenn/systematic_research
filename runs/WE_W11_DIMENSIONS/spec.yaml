@@ -1,0 +1,44 @@
+run_id: WE_W11_DIMENSIONS
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner 2026-08-25 — "甚至也不是一定只有抓住趋势才能赚钱。那还有很多赚钱的思路。
+  你要不断地去根据我们以前很多的research反思，从日内反思，从我们nq系统反思，从各种维度反思。"
+
+premise: >
+  Ten waves have optimised ONE dimension (trend capture on NQ, 23h/day, one instrument).
+  Three dimensions this campaign has never touched are tested here, each preregistered.
+
+axis_1 TIME-OF-DAY (diagnostic + throttle):
+  D1 attribution: split every sleeve's P&L by session segment — ASIA 18:00-02:59,
+     EUROPE 03:00-08:29, PREOPEN 08:30-09:29, RTH_AM 09:30-12:29, RTH_PM 12:30-15:59,
+     CLOSE 16:00-17:00 (ET, session clock). Report net, trades, $/trade, capture per segment.
+  D2 test: restrict entries to the segments that are positive for that sleeve on DEV
+     (rule-formed, not scanned) and re-measure. Explicit multiplicity note: 6 segments,
+     so a positive result needs the holdout and forward read to mean anything.
+
+axis_2 MULTI-INSTRUMENT (real diversification, data already in repo):
+  M1: run the S4.narrow6 engine unchanged on ES, RTY, YM 1-min (2022-2026/07) with each
+      instrument's own point value and commission (ES $50/pt $4.36/RT; RTY $50/pt $4.36/RT;
+      YM $5/pt $4.36/RT), delta gate computed per instrument.
+  M2: weekly-net correlation across instruments; equal-weight portfolio; compare with the
+      NQ-only object on every guard.
+  Declared: this is DIFFERENT-INSTRUMENT diversification, not a new signal. Point values from
+  CME contract specs; if a value is wrong the P&L scales but the correlations do not.
+
+axis_3 LOW-RANGE FADE (make money where we currently only defend):
+  F1: in sessions whose intraday range ratio is BELOW the W09 threshold (the regime we now
+      stand aside in), run a mean-reversion sleeve: fade a move of k x ATR14 from the session
+      VWAP, take profit back at VWAP, stop 130 pts, max 3/session, flat at session close.
+      k in {1.0, 1.5, 2.0}. Fully causal (VWAP and ATR read at i-1).
+  Rationale from evidence: W08 showed small days carry 66% of sessions and we are negative on
+  them; W09 showed standing aside only stops the bleed. This tests whether they can PAY.
+promotion_rule: unchanged (own-base comparison on capture/big-day/Sharpe/stress).
+falsifiers:
+  FA: if no segment restriction beats its own base on dev Sharpe -> time-of-day is not an
+      exploitable axis for these engines.
+  FB: if cross-instrument weekly correlation > 0.7 -> multi-instrument is not diversification,
+      only leverage, and is closed.
+  FC: if no fade variant is stress-positive on low-range sessions -> the small-day regime is
+      defensively-only, and that is the final word on it.
+forbidden: [data >= 2026-08-01, fill-bar information, post-hoc additions, promoting on dollars]
+outputs: [out/dimensions.txt, out/summary.csv, REPORT.md]
