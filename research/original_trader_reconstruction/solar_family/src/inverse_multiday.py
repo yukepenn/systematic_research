@@ -85,6 +85,17 @@ def enumerate_multiday(bb, span_start, span_end, targets_by_day, universe,
     sealed = []
     cur = [dict(day=None, n=0, nW=0, nL=0, gw=0.0, gl=0.0, mae=0.0, mfe=0.0,
                 lw=-1e18, ll=1e18)]
+    # Report days must be filled in order and none may be skipped: every visible row has
+    # n >= 1, so a path that jumps from one report day to a LATER one has left an
+    # unfillable gap behind it. Without this the search wastes most of its time on
+    # subtrees that can never terminate.
+    ordered = sorted(targets_by_day)
+    day_pos = {d: k for k, d in enumerate(ordered)}
+
+    def day_follows(old, new):
+        if new not in day_pos:
+            return False
+        return day_pos[new] == (0 if old is None else day_pos[old] + 1)
 
     def seal_ok(a):
         T = targets_by_day.get(a["day"])
@@ -112,6 +123,8 @@ def enumerate_multiday(bb, span_start, span_end, targets_by_day, universe,
         snap = dict(cur[0])
         opened = False
         if cur[0]["day"] != dy:
+            if not day_follows(cur[0]["day"], dy):
+                return None
             if cur[0]["day"] is not None:
                 if not seal_ok(cur[0]):
                     return None
