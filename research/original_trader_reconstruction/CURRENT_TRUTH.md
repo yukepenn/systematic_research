@@ -1,5 +1,30 @@
 # OTR CURRENT TRUTH (prepend-newest)
 
+## 2026-08-24l — IMG-16 chart-content pass: corpus label-surface EXHAUSTION now PROVEN; EV-041 recovered from the black frame
+
+- **IMG-16 (all 90 social frames swept + cross-check of all 164 audit records):
+  the corpus contains ZERO author platform-chart imagery.** The only price
+  chart anywhere is a commenter's TradingView MNQ shot (OTRIMG-0130, no time
+  axis); every "TradingView" mention in SA frames is a dock icon. F1-F5 (arrow
+  timestamps, HIS-build FVP geometry, cloud width, session-open behavior,
+  S-era wave-plot check) are all NOT TESTABLE from the corpus — vendor-level
+  EV-040 remains the only chart-geometry evidence. CHART_CONTENT_LEDGER.csv +
+  CHART_CONTENT_FINDINGS.md.
+- **OTRIMG-0160 (black carousel) RECOVERED by ×6.4 pixel stretch → EV-041**:
+  author verbatim 7/11: "全自动" (fully automated, no watching) and "业余的"
+  (amateur). Carousel images genuinely unloaded (content matches 0159's window
+  by date). Runtime discretion layer: excluded by author's own statement.
+- **Terminal frontier statement (proven, not assumed)**: corpus, local
+  artifacts, public web, and bounded-member compute are ALL exhausted. The
+  remaining separations (OTR-VF-CAND1 members / H1a-vs-H1c / QtyPerTrend
+  reset / hp hybrid) have exactly one remaining evidence source: the licensed
+  VWAP Flux oracle (vendor-semantics layer). Post-purchase oracle is fully
+  automatable EXCEPT install/licensing (owner): exporter strategy referencing
+  the licensed indicator in UpDownTick_RealVolume mode (computes historically
+  without Tick Replay), SA run via MCP, bar-by-bar series alignment. Caveat
+  stays: vendor oracle ≠ his private build (EV-039); it bounds and constrains,
+  transfer likelihood high IF he mirrored what he saw (frozen VF-13 panel).
+
 ## 2026-08-24k — R9/R10: hp-build narrowed (pullback qualification partial), fast-layer TV-cycle rejected; free-EVI frontier reached
 
 - **R9 (hp build)**: pure T2-entry REJECTED as complete model; control holds
