@@ -1,0 +1,48 @@
+run_id: WE_W08_PULLBACK
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner 2026-08-25 — "不断持续的research，找出结果，否认自己，再次优化，直到真的达到目标…
+  一旦觉得有幻觉了，就从high level看了再回来。"
+
+high_level_reframe (the reason this wave exists): >
+  Seven waves in, two architectures with OPPOSITE failure modes converge to the same 4.68-4.70 %
+  capture (S1: right 40.9/wrong 23.5/chop 34.9; S4: 39.8/33.0/24.1). A shared ceiling across
+  opposite failure modes indicates the limit is the ENGINE CLASS, not parameters, gates or
+  exits — all of which have now been attacked and failed (W02 caps, W06 timing x5, W07
+  direction x4). Every engine we own is CONFIRM-THEN-CHASE: Solar trend-flip, B-MOM breakout,
+  osc reversal, delta turn. Each enters AFTER the move is established, paying the confirmation
+  in basis. That is consistent with the measured points-per-trade gap: his 5.15 pts/trade vs
+  our 1.45. The untested family is PULLBACK-INTO-TREND: define the trend, then enter on a
+  RETRACEMENT against it, which buys a better basis and leaves more of the move ahead.
+
+question: >
+  Does a pullback-entry geometry, built from components we already own, raise points-per-trade
+  and capture relative to our confirm-then-chase engines at equal or better weekly guards?
+
+engine (new, PB): fully causal, decision at bar close, fill at next bar open
+  trend state TR[i] (choose ONE per variant, both already in the repo):
+    TR_SOLAR : sign of the Solar13 ensemble target (sm14 targets, narrow6) at bar i-1
+    TR_EMA   : sign(EMA(c,P1) - EMA(c,P2)) at i-1, (P1,P2) = (20,100)
+  swing anchor: running extreme of the current trend leg (reset on trend flip)
+  pullback trigger: price retraces R fraction of the leg from the extreme, then makes ONE
+    bar closing back in the trend direction (the "resumption bar"); enter at next open
+    R in {0.236, 0.382, 0.5}
+  risk: initial stop 130 pts (campaign convention) AND a leg-invalidation stop at the leg
+    origin; exits: {X_TREND (flip), X_TRAIL_PTS:80, X_TARGET:120}
+  throttles: max 3 entries per trend leg, min 15 bars between entries (VF-manual-documented
+    throttle semantics, applied to our own engine)
+  gates: {none, delta-flow gate (lagged, as W03)} — 2 levels
+  grid: 2 trends x 3 R x 3 exits x 2 gates = 36 variants
+diagnostics (primary, alongside the usual):
+  - points per trade vs S1 (1.45) and S4n.gdl (3.3 pts = $66.4)
+  - session RIGHT/WRONG/CHOP/CAPTURE (W06/W07 definitions)
+  - BIG-DAY analysis: capture ratio restricted to sessions with available >= 500 pts, to test
+    whether the pullback family captures big trends better (the owner's "抓住大趋势")
+promotion: none from this run. Shortlist rule: dev capture > 5.5 % AND dev weekly Sharpe >=
+  S4n.gdl's 0.193 AND stress-positive.
+falsifier F1: if NO pullback variant exceeds 5.5 % capture, the confirm-then-chase ceiling is
+  NOT an entry-geometry artifact and W09 must look at the bar clock itself (sub-minute /
+  event bars) or accept the ceiling and optimise the portfolio instead.
+forbidden: [data >= 2026-08-01, fill-bar information in any mask, post-hoc grid additions,
+  reporting big-day results without the small-day counterpart]
+outputs: [out/pullback.txt, out/summary.csv, REPORT.md]
