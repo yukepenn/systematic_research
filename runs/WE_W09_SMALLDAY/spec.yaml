@@ -1,0 +1,36 @@
+run_id: WE_W09_SMALLDAY
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "抓住大趋势，也能在其他形势里面赚钱或者少亏"; W08 measured that we already
+  capture 17.55% of big-day movement but bleed -1.87% on the 83.2% of sessions that are small.
+
+question: >
+  Can the small-day bleed be stopped by INTRADAY-OBSERVED throttles (never ex-ante prediction,
+  which W07 falsified), lifting overall capture toward the 5.92% arithmetic ceiling of a
+  flat-small-day version, without damaging big-day capture (17.55%) or the weekly guards?
+
+base (frozen): S4.narrow6 + lagged delta gate ("S4n.gdl"), the W08 measured object.
+  dev capture 4.68% | big 17.55% | small -1.87% | wk mean $1,373 | pos 59.1% | Sharpe 0.193
+
+throttles (all causal; each states when its state is known):
+  A RANGE   : at bar i, session realized range so far (high-low since session open, through
+              bar i-1) divided by the trailing-60-session median of the SAME time-of-day
+              range. Block new entries while ratio < q. q in {0.6, 0.8, 1.0}
+  B PNL     : session realized P&L halt, the S1 D-gate mechanism ported to S4 (already probed
+              in W03 as h1300/h2600; re-run here on the narrow6 base for the small-day split).
+              limits {1300, 2600}
+  C MOVE    : block new entries while |close(i-1) - session open| < m x ATR14(i-1),
+              m in {0.5, 1.0} — "the day has not committed yet"
+  D COMBO   : A(best q by small-day capture) AND B(best limit) — the combination is formed by
+              the preregistered rule, not by scanning combinations.
+readouts (primary = the W08 split, not P&L):
+  capture overall / big-day / small-day, small-day points, RIGHT/WRONG/CHOP,
+  guards: weekly mean, %pos, worst, Sharpe, stress-net; trades/week
+promotion_rule: a throttle QUALIFIES iff small-day points > base AND big-day capture >= 16.0%
+  (i.e. gives up < 10% of big-day capture) AND weekly Sharpe >= 0.193 AND stress > 0.
+falsifier F1: if no throttle qualifies, the small-day bleed is not separable from the big-day
+  edge with intraday-observable state, and W10 must either accept it as the cost of the edge
+  or attack big-day capture instead.
+forbidden: [data >= 2026-08-01, fill-bar information, post-hoc throttle additions,
+  choosing the combo by scanning]
+outputs: [out/smallday.txt, out/summary.csv, REPORT.md]
