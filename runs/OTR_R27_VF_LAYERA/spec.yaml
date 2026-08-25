@@ -1,0 +1,56 @@
+run_id: OTR_R27_VF_LAYERA
+title: "Corrected two-layer VF: QtyPerTrend / Split moved to signal generation, then re-test the purchase gate"
+directive: "OWNER MASTER DIRECTIVE v4.0 sections 22/23; PURCHASE_GATE_v2 flip-condition 2"
+date_opened: 2026-08-25
+status: OPEN
+campaign: OTR (#6)
+
+defect_being_fixed: >
+  Vendor manual semantics: "Signal Quantity Per Trend" caps the number of SIGNALS emitted
+  per trend, and "Signal Split (Bars)" is the minimum bar distance between consecutive
+  SAME-DIRECTION SIGNALS. Both belong to the indicator's signal-generation layer.
+  In run_r7_signal_id.run_member the counters `cnt[sig]` and `last_sig[sig]` are advanced
+  ONLY where a trade is actually entered (the flat-entry branch and the X_OPP stop-and-
+  reverse branch). A signal that the indicator would emit while the strategy is already in
+  a position therefore consumes no quota and does not start the split clock.
+  Consequence: emitted-signal density is wrong in a way no parameter tuning can repair,
+  and every R7/R8 conclusion inherits it.
+
+fix: >
+  A raw candidate that survives the quota and split tests IS an emitted signal. Increment
+  the counters at that moment, in Layer A, independently of whether Layer B trades it.
+  Layer B (enter / ignore / exit / reverse / stop / session-flat) never writes back into
+  Layer A state.
+
+prereg_predictions:
+  P1_direction: >
+    Emitted-signal quota is now consumed by signals the wrapper ignores, so FEWER signals
+    survive the filter and the executed trade count should FALL.
+    Recorded before the run: the incumbent leader trades 1722 times across the 17 windows;
+    the trader's observed scale is ~1200. A fall is predicted; landing near 1200 is a
+    HYPOTHESIS, not an expectation, and a fall past 1200 would be an over-correction that
+    counts against the reading.
+  P2_gate: >
+    Re-run the six-geometry floor sweep (OTR_R26) under the corrected Layer A.
+    PURCHASE_GATE_v2 states the verdict flips to BUY if any geometry floor drops below 0.35.
+    This run is the honest test of that flip condition.
+  P3_null: >
+    It is fully possible the correction changes the floors negligibly. That outcome is
+    reportable and would strengthen, not weaken, the DO-NOT-BUY verdict.
+
+method:
+  - "New module vf_layer_ab.py implementing Layer A and Layer B separately; the original
+     run_r7_signal_id.py is left untouched as history."
+  - "Regression: report old vs new emitted-signal and trade counts for the incumbent leader."
+  - "Sweep: 2 lifecycles x 3 rail formulas x 144 structural members x 17 weekly windows,
+     minimum mean section-40 distance per geometry, exactly as in OTR_R26."
+  - "All numeric constants stay at the trader's panel values (QtyPerTrend 3, Split 5,
+     CloseThreshold 0.10, stop 130 pts, period 60, amount 5, 95/75/50/25/5, EMA 20)."
+  - "No P&L objective anywhere."
+
+outputs:
+  - runs/OTR_R27_VF_LAYERA/out/r27_log.txt
+  - runs/OTR_R27_VF_LAYERA/out/geometry_floor_corrected.csv
+  - runs/OTR_R27_VF_LAYERA/REPORT.md
+
+safety: "Historical bars only. No purchase is made by this run."
