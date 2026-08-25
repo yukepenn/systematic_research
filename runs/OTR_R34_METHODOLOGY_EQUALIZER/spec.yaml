@@ -1,0 +1,60 @@
+run_id: OTR_R34_METHODOLOGY_EQUALIZER
+date: 2026-08-25
+campaign: OTR (#6)
+directive: owner request 2026-08-25 ("做一下这个") following the R33 exchange — quantify how much
+  of the visual gap between HIS weekly sheets and OUR frozen results is DISPLAY METHODOLOGY
+  (weekly re-tuned, gross-of-commission, in-sample backtest sheets) rather than edge.
+
+question: >
+  If we display OUR OWN clean-room VF family the way HE displays his system — each week allowed
+  to pick the best configuration for that week, gross of commission, Strategy Analyzer style —
+  how good-looking is the resulting weekly sheet, compared to (a) his actual sheet and (b) our
+  honestly-frozen configurations on identical weeks?
+
+design:
+  windows: the 21 comparable SA weeks of targets_weekly_2026V.csv — the 17 fit windows
+    (to 2026-05-29, continuous parquet) plus the 4 June/July holdout windows (contract CSVs),
+    exactly as constructed in run_r32_joint.py. EXCLUDED: OTRIMG-0152/0154 (Trade Performance,
+    different basis) and anything ≥ 2026-08-01 (LOCKED_FORWARD).
+  family: the identical 288-config grid of R32 (D × G × P × C × X). No new configs. qty 1,
+    $20/point, 130-pt stop — machinery imported unchanged from run_r32_joint / run_r30c.
+  weekly attribution: trade belongs to the week containing its ENTRY time ("et"), the same
+    convention score() uses in R32.
+  sheets:
+    HIS: net_all per week from the corpus (gross — commission_total = 0.00 on his sheets).
+    FROZEN_INCUMBENT: D_MOM|G_WITH|P_MED|C_DIR|X_OPP, fixed across all 21 weeks;
+      gross AND net of $4.36/RT commission.
+    FROZEN_LEADING: D_MOM|G_WITH|P_IN|C_REC|X_TRAIL_PTS:80 (frozen by R32 BEFORE this run);
+      gross AND net.
+    SHOWCASE_V1 (hindsight): per week, argmax over the 288 configs of THAT week's gross net.
+      Chosen config recorded per week. This mimics "tune during the week, then backtest the week".
+    SHOWCASE_V2 (walk-forward retune): for week k, use the config that maximised gross net on
+      week k-1; week 1 uses the incumbent. Separates transferable adaptivity from pure hindsight.
+  metrics_per_sheet: [weeks_positive_of_21, total, mean_week, best_week, worst_week]
+
+preregistered_interpretation:
+  A1: if SHOWCASE_V1 has >= 80% positive weeks AND total >= HIS total on the same 21 weeks,
+    then hindsight weekly selection + gross display ALONE suffices to produce a sheet at least
+    as good-looking as his, and "he basically wins every week" carries, by itself, no evidence
+    of a persistent edge.
+  A2: if SHOWCASE_V1 total < 50% of HIS total, selection over our family CANNOT fake his sheet;
+    the gap is structural and the "genuine capture we have not reconstructed" reading strengthens.
+  A3: between A1 and A2, report the methodology share
+    (V1 - FROZEN_INCUMBENT) / (HIS - FROZEN_INCUMBENT), on totals and on positive-week counts.
+  A4: V2 ~ FROZEN implies weekly retuning does NOT transfer (pure hindsight);
+    V2 ~ V1 implies genuine adaptivity. Report where V2 lands on that line.
+  note_lower_bound: V1 over 288 discrete configs is a LOWER bound on the hindsight power
+    available to a person tuning continuous parameters during the week.
+
+forbidden:
+  - promoting ANY configuration from this run (this run measures a selection artifact;
+    net P&L here is the OBJECT OF STUDY, not a mechanism selector — §40 intent preserved)
+  - interpreting SHOWCASE performance as attainable forward performance
+  - touching data >= 2026-08-01 (LOCKED_FORWARD)
+  - concluding anything about HIS mechanism from which config wins which week
+harness_check:
+  B1: the incumbent must reproduce 1512 fit-window trades (±2) as in R32, else the run is VOID.
+outputs:
+  - out/weekly_net_matrix.csv   (288 configs × 21 weeks, gross net)
+  - out/sheets.csv              (the five sheets, week by week)
+  - REPORT.md
