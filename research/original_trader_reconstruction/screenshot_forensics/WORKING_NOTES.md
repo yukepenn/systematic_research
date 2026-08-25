@@ -65,3 +65,16 @@ pair present). Largest loss −$1,130 (NOT −2600) in this week.
 164 files; 0 exact dups; NEAR-004 = 63 same-layout JD/SA screenshots (weekly series
 backbone); 74 JD-class, 75 RN-class, 15 IP-class. Filename timestamps = owner's
 2026-08-24 phone export time, NOT capture dates. EXIF only on the 15 iPhone PNGs.
+
+## IMG-16 (2026-08-24, registered before readout): CHART-CONTENT exploitation pass
+Owner correction: the 164 images ARE the complete corpus — all remaining labels
+must come from inside them. The audit exhausted panels/tables; the EMBEDDED
+CHART IMAGERY in the 90 social frames (75 NOTE + 15 THREAD) was only partially
+exploited. This pass sweeps every social frame for: price-chart presence; era
+(S-wave line vs VF cloud); visible plots (TrailingStop/TrendVector vs 5-rail
+cloud+FVP); signal arrows / trade markers WITH readable times; FVP position
+within the cloud (edge vs center — percentile-vs-minmax discriminator ON HIS
+BUILD); cloud width vs our ANCHOR(≈47pt)/BLOCK(≈106pt) stats; session-open
+cloud behavior (pool reset observable); time-axis ranges. Rules: pixel-certain
+only, trailing "?" for cropped, no guessing, originals read-only. Output:
+staging/chart_content_*.jsonl -> CHART_CONTENT_LEDGER.csv + findings doc.
