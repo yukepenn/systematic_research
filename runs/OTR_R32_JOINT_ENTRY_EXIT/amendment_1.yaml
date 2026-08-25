@@ -1,0 +1,46 @@
+amendment: 1
+run_id: OTR_R32_JOINT_ENTRY_EXIT
+date: 2026-08-25
+status: PREREGISTERED_BEFORE_READOUT
+supersedes: nothing.  Parts A and B stand as recorded.
+
+why: >
+  Part A established that NO exit mechanism reproduces corr(ATR, his avg_loss) = -0.51, leaving an
+  exposure/sizing law as the only remaining candidate.  That law is now DERIVABLE rather than
+  merely searchable, because quantity enters MULTIPLICATIVELY: it rescales every dollar figure and
+  leaves hold, win rate, payoff ratio and trade count untouched.
+
+  So if our points-behaviour is right and only the dollar-behaviour is wrong, there is a UNIQUE
+  power law that reconciles them, and it can be SOLVED FOR instead of fitted.
+
+derivation: >
+  Fit log(avg_loss) = a + b*log(ATR) for us and for him.
+  Under a quantity law q proportional to ATR^(-k), our dollar exponent becomes (b_ours - k).
+  Setting that equal to his gives      k = b_ours - b_his.
+  Do the same for avg_win.  A single exposure law must give the SAME k on both, because quantity
+  multiplies winners and losers identically.
+
+preregistered:
+  K1: >
+    PREDICTION: the k solved from avg_loss and the k solved from avg_win agree to within 0.4.
+    If they do NOT agree, a pure quantity law cannot reconcile both, and the exposure hypothesis is
+    insufficient on its own - a genuine negative result, since exposure is the last remaining
+    candidate for the ATR-avg_loss sign.
+  K2: >
+    THE SHARP TEST.  A fixed DOLLAR RISK per trade of R with a volatility-scaled stop
+    (stop_points = c*ATR) implies q = R / (20*c*ATR), i.e. EXACTLY k = 1.
+    PREDICTION: if the solved k is near 1, fixed-dollar-risk sizing is strongly indicated - and it
+    would simultaneously explain why his largest loss sits at EXACTLY -$2,600 in 18 of 24 weeks,
+    because under fixed dollar risk the worst case is R by construction, independent of volatility.
+    One hypothesis would then account for three separate observations at once.
+    If k is far from 1, report the solved value as an interval and do NOT name a mechanism.
+  K3: >
+    CONSISTENCY CHECK registered in advance: under a fixed-POINT stop with varying quantity the
+    largest loss would VARY week to week.  It does not - it is exactly -$2,600 in 18 of 24 weeks.
+    So any exposure law that keeps a fixed point stop is in tension with that observation, and only
+    a fixed-DOLLAR-risk formulation is consistent with it.  State this tension explicitly whichever
+    way k comes out.
+
+forbidden:
+  - Do not fit k to minimise a distance.  Solve it from the measured exponents and report it.
+  - Do not name fixed-dollar-risk as identified on the strength of one solved exponent.
