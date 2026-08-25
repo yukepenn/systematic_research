@@ -1,0 +1,19 @@
+PORTFOLIO (S1 + S4n.evidence): dev Sharpe 0.248  mean $2,830  pos 61.3%  worst $-27,182
+
+=== AXIS A: ORTHOGONAL SLEEVE HUNT ===
+candidate           n         net  wkMean  wkShrp    strs   corr  admission
+C1_SOLAR5        1203     114,175      97   0.015      47   0.28  PASS(i,ii) corr 0.28
+C2_SOLAR15        715     181,593     462   0.066     432   0.29  PASS(i,ii) corr 0.29
+C3_ORB           1727     162,545     957   0.126     885   0.35  FAIL(ii) corr 0.35
+C4_VWAPTREND    18828     109,370     203   0.024    -582   0.50  FAIL(i) stress<=0
+C5_ASIA           911     160,913     603   0.193     564   0.11  PASS(i,ii) corr 0.11
+
+candidates passing (i)+(ii): ['C1_SOLAR5', 'C2_SOLAR15', 'C5_ASIA']
+  + C1_SOLAR5    -> portfolio Sharpe 0.201 (was 0.248)  mean $2,927  worst $-42,094  strs $2,154  hold 0.994  REJECTED at (iii)
+  + C2_SOLAR15   -> portfolio Sharpe 0.218 (was 0.248)  mean $3,276  worst $-42,795  strs $2,524  hold 1.084  REJECTED at (iii)
+  + C5_ASIA      -> portfolio Sharpe 0.282 (was 0.248)  mean $3,407  worst $-28,222  strs $2,647  hold 0.772  ADMITTED
+
+=== AXIS B: TRUE-DELTA VALIDATION (tick substrate) ===
+sessions used: 40
+BidAsk-mode  vs proxy: bar sign-agreement 63.5%  cumulative-series corr 0.284
+UpDownTick   vs proxy: bar sign-agreement 74.7%  cumulative-series corr 0.519
