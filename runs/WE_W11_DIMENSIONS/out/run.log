@@ -1,0 +1,55 @@
+bases ready [53s]
+=== AXIS 1: TIME-OF-DAY ATTRIBUTION (entry segment) ===
+
+S1
+segment         n         net   $/trade   share%
+ASIA         2189     106,681      48.7     27.6
+EUROPE       2783      35,066      12.6      9.1
+PREOPEN       835      54,999      65.9     14.2
+RTH_AM       4940     101,567      20.6     26.3
+RTH_PM       2278      97,703      42.9     25.3
+CLOSE         276      -9,718     -35.2     -2.5
+  positive segments (rule-formed): ['ASIA', 'EUROPE', 'PREOPEN', 'RTH_AM', 'RTH_PM']
+
+S4n.A0.8
+segment         n         net   $/trade   share%
+ASIA          911     160,913     176.6     40.2
+EUROPE       1112      44,657      40.2     11.2
+PREOPEN       331       9,507      28.7      2.4
+RTH_AM       1492     146,010      97.9     36.5
+RTH_PM        483      51,044     105.7     12.8
+CLOSE          54     -11,930    -220.9     -3.0
+  positive segments (rule-formed): ['ASIA', 'EUROPE', 'PREOPEN', 'RTH_AM', 'RTH_PM']
+
+--- D2: restrict entries to those segments ---
+variant                       n   wkMean  wkPos   wkWorst  wkShrp    strs   hShrp
+S1.base                   13301    1,399   54.8   -20,957   0.176     857   0.393
+S1.posseg                 13025    1,438   54.8   -20,273   0.179     908   0.398
+S4n.A0.8.base              4383    1,431   59.1   -24,417   0.210   1,250   0.665
+S4n.A0.8.posseg            4329    1,484   59.6   -25,032   0.214   1,305   0.666
+
+=== AXIS 2: MULTI-INSTRUMENT (same engine, other index futures) ===
+instrument        n          net   wkMean  wkPos   wkWorst  wkShrp
+ES             3685      -30,529     -145   49.3   -17,922  -0.037
+   ES done [104s]
+RTY            2285      -16,358      -26   45.9    -6,338  -0.013
+   RTY done [153s]
+YM             4504      -28,292     -127   44.1    -7,837  -0.057
+   YM done [203s]
+
+weekly-net correlations:
+               NQ       ES      RTY       YM
+NQ           1.00     0.55     0.27     0.35
+ES           0.55     1.00     0.33     0.45
+RTY          0.27     0.33     1.00     0.24
+YM           0.35     0.45     0.24     1.00
+max off-diagonal correlation 0.55 -> genuine diversification
+equal-weight 4-instrument portfolio: weeks 239  mean 1,360  pos 57.3%  worst -52,655  sharpe 0.115
+
+=== AXIS 3: LOW-RANGE FADE (trade the regime we stand aside in) ===
+low-range bars: 29.9%
+variant             n         net     $/tr   wkMean  wkPos   wkWorst  wkShrp    strs
+FADE k=1.0        2511     -76,471    -30.5     -328   54.5    -6,937  -0.208    -439
+FADE k=1.5        2447     -90,099    -36.8     -359   55.7    -6,034  -0.204    -468
+FADE k=2.0        2401    -112,016    -46.7     -412   52.5    -5,981  -0.216    -519
+done [204s]
