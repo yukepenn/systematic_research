@@ -1,0 +1,146 @@
+run_id: OTR_R28_2026_ARCHAEOLOGY
+campaign: 6-OTR
+directive: OWNER MASTER DIRECTIVE v5.0 (2026-08-25)
+sections: ["P1", "21", "22", "24", "26", "30", "31", "41", "53"]
+date_preregistered: 2026-08-25
+status: PREREGISTERED_BEFORE_READOUT
+
+purpose: >
+  Directive v5.0 P1 asks for a stitched June-August 2026 parameter panel and a parameter-origin
+  matrix.  A measurement already committed (vwap_flux_family/2026_PANEL_TOPOLOGY.md, 612 rows)
+  establishes that ~94% of the August panel and ~80% of the February panel were NEVER PHOTOGRAPHED.
+  Stitching cannot recover rows that do not exist in any frame.  This run therefore attacks the
+  2026 evidence along the two axes that ARE measurable and have not been exploited:
+
+    (C1/C2) the panel EXTENT SERIES as a build-event signal covering the unphotographed 94%;
+    (C3/C4) the CENT LATTICE of the 2026 report cells, the same technique that cracked Jan-2023.
+
+  Neither requires new data, a purchase, or the locked-forward window.
+
+inputs:
+  - vwap_flux_family/2026_PANEL_TOPOLOGY.md      # scrollbar geometry, 22 frames (FACT rows)
+  - vwap_flux_family/2026_panel_rows.csv         # 612 measured panel rows
+  - screenshot_forensics/derived/targets_weekly_2026V.csv   # 24 weekly 2026 records
+  - screenshot_forensics/PARAMETER_PANEL_LEDGER.csv
+  - screenshot_forensics/derived/CHANGEPOINT_MAP_v2.md
+
+# ----------------------------------------------------------------------------------
+# C1 - panel extent series with honest error propagation
+# ----------------------------------------------------------------------------------
+c1:
+  method: >
+    Recompute E = (T/21.7) * (T/h) for all 22 frames from the committed pixel bands, and
+    propagate a +/-1 px per-thumb-edge uncertainty (i.e. +/-2 px on h) into sigma_E analytically.
+    The topology note's own validation gives a further systematic overestimate of ~4 rows which is
+    COMMON to all frames and therefore cancels in differences; only differences are interpreted.
+  preregistered:
+    P1_1: >
+      sigma_E grows as h shrinks (dE/dh = -E/h), so late-2026 extents are far less certain than
+      early ones.  PREDICTION: sigma_E at 2026-07-31 (h=35) exceeds sigma_E at 2026-02-13 (h=90)
+      by more than a factor of 5.  If false, the error model is wrong and C2 is not run.
+    P1_2: >
+      The series contains NEGATIVE week-over-week deltas.  A property list cannot shrink unless
+      rows were removed.  PREDICTION: every negative delta is within 2 sigma of zero, i.e. is
+      consistent with pure measurement noise.  A negative delta beyond 2 sigma would be direct
+      evidence of REMOVED parameters and must be reported as such, not smoothed away.
+    P1_3: >
+      PREDICTION: at least one week-over-week delta exceeds 4 sigma.  That would establish a
+      discrete BUILD EVENT inside the unphotographed region.  If no delta exceeds 4 sigma the
+      growth is indistinguishable from smooth and C2 must report "no build events resolvable".
+  decision_rule: >
+    A "build event" is declared ONLY for deltas exceeding 4 sigma.  Deltas between 2 and 4 sigma
+    are reported as MARGINAL and are never used to support a conclusion.
+
+# ----------------------------------------------------------------------------------
+# C2 - do build events align with behaviour changes?
+# ----------------------------------------------------------------------------------
+c2:
+  method: >
+    Align every C1 build event against the 24-row 2026 weekly performance record, on the
+    section-40 fingerprint fields (trades, wr, pf, hold, largest_loss, net_long, net_short) -
+    never on net alone (section 40).
+  preregistered:
+    P2_1: >
+      TWO RIVAL MODELS, stated before readout.
+        R-COUPLED   : panel growth changes what the strategy trades, so build events coincide
+                      with (or immediately precede) shifts in the trade fingerprint.
+        R-DECOUPLED : the added rows are inert w.r.t. the traded behaviour - options, plots,
+                      alerts, disabled blocks, or sleeves that produce no fills in that window.
+      PREDICTION registered in advance: I do not know which holds.  The discriminator is whether
+      the fingerprint shift at a build-event week exceeds the ordinary week-to-week fingerprint
+      variation of the 2026 series (measured as the median absolute week-over-week section-40
+      distance across all 23 adjacent pairs).
+    P2_2: >
+      If R-DECOUPLED holds, then the ~470 unphotographed August rows CANNOT be assumed to be
+      trading logic, and directive section 19's premise (that a visible-but-unrecognised filter
+      explains 2730 -> 1214) weakens correspondingly.  This consequence is registered in advance
+      so it cannot be reinterpreted after the fact.
+  forbidden: >
+    No conclusion may be drawn from net P&L alone (section 40).  Panel growth must not be fitted
+    to P&L.
+
+# ----------------------------------------------------------------------------------
+# C3 - cent-lattice forensics on the 2026 report cells
+# ----------------------------------------------------------------------------------
+c3:
+  method: >
+    Every NQ qty-1 gross P&L is an integer number of $5 ticks.  For each 2026 record test whether
+    all cent-level cells are simultaneously reducible to (5 * integer ticks) minus (n * commission)
+    for a single per-round-turn commission c and a single instrument/quantity.  Solve for c over
+    the cent lattice by exhaustive search rather than assuming a template rate.
+  preregistered:
+    P3_1: >
+      22 of the 24 records report values that are exact multiples of $5 with commission_total 0.
+      The NT8 tail is a committed FACT: "Include commission" is UNCHECKED.  PREDICTION: those 22
+      are GROSS backtests and their true net is lower by n * c.  Confirmation = every cell in
+      those 22 records lies on the $5 lattice.  A single off-lattice cell falsifies it.
+    P3_2: >
+      OTRIMG-0152 and OTRIMG-0154 report cent-level values (11860.30 / 8503.24 nets, largest
+      losses -3046.18 / -1426.18).  Both largest losses are congruent to 1.18 (mod 5), which
+      pins c to {1.18, 6.18, 11.18, ...} IF those trades are NQ qty 1.
+      PREDICTION (the sharp one): a SINGLE (instrument, quantity, commission) triple explains the
+      largest-loss cells AND the net/gross cells of both records simultaneously.
+      If NO such triple exists, the two Trade Performance records are NOT reducible to one
+      NQ-qty-1 strategy, which is positive evidence for directive section 30's account-level
+      multi-strategy model - and would be the first such evidence that is not merely the author's
+      own statement.
+  decision_rule: >
+    Search c over 0.01..15.00 in $0.01 steps, quantity 1..10, and both NQ ($5/tick) and
+    MNQ ($0.50/tick).  Report the FULL solution set, not one point value (section 6).
+
+# ----------------------------------------------------------------------------------
+# C4 - the -$2,600 cap and its overshoots
+# ----------------------------------------------------------------------------------
+c4:
+  method: >
+    Tabulate largest_loss across all 24 records against the 130-point / -$2,600 hypothesis.
+  preregistered:
+    P4_1: >
+      The cap is exceeded in at least two records (-2820.00 in a backtest, -3046.18 in a Trade
+      Performance record).  Naively this CONTRADICTS a 130-point stop.
+      RIVAL A (stop is not 130): the cap is some other value, or drifts.
+      RIVAL B (gap overshoot): NT8 Standard fill executes a stop at the BAR OPEN when the open
+      gaps past the stop level, so a 130-point stop CAN realise more than 130 points.
+      DISCRIMINATOR registered in advance: under RIVAL B the overshoot must be one-sided
+      (losses may exceed 130 points, never fall systematically short of it as a cap), and the
+      LIVE overshoot must be >= the BACKTEST overshoot because real slippage adds to the gap.
+      Under RIVAL A there is no reason for that ordering.
+    P4_2: >
+      PREDICTION: no record shows a largest loss in the open interval (2600, 2820) other than the
+      observed ones - i.e. the distribution of losses is capped with a thin overshoot tail, not
+      spread smoothly above 2600.  A smooth spread would favour RIVAL A.
+
+deliverables:
+  - runs/OTR_R28_2026_ARCHAEOLOGY/out/panel_extent_series.csv
+  - runs/OTR_R28_2026_ARCHAEOLOGY/out/build_events.csv
+  - runs/OTR_R28_2026_ARCHAEOLOGY/out/cent_lattice_solutions.csv
+  - runs/OTR_R28_2026_ARCHAEOLOGY/REPORT.md
+  - research/original_trader_reconstruction/parameter_archaeology/PARAMETER_COVERAGE_REPORT.md
+
+binding_rules:
+  - Spec committed BEFORE any readout.  Amendments appended, never rewritten.
+  - Section 6: keep rivals, report intervals not point values.
+  - Section 40: net P&L must never rescue wrong trade geometry.
+  - Section 43: LEVEL A (label/order/class evidence) required for component identity.
+  - Numeric coincidence may only produce OPEN_VENDOR_CANDIDATE (section 5).
+  - Negative results preserved (section 44).
