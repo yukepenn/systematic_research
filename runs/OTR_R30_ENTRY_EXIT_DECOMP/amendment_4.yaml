@@ -1,0 +1,60 @@
+amendment: 4
+run_id: OTR_R30_ENTRY_EXIT_DECOMP
+date: 2026-08-25
+status: PREREGISTERED_BEFORE_READOUT
+supersedes: nothing.  Parts A/B/C stand as recorded, including F4 firing.
+
+why - A SELF-CORRECTION, and it vindicates the owner's correction to keep cause E isolated: >
+  R30 Part C concluded "the sign of corr(opportunity, avg_win) is an entry signature, not an exit
+  signature".  A diagnostic on HIS reported numbers alone shows that was stated too broadly,
+  because avg_win is denominated in DOLLARS and dollars are exactly what position sizing rescales:
+
+      corr(atr14, HIS avg_win)  = -0.469        corr(max_run, HIS avg_win)  = -0.595
+      corr(atr14, HIS avg_loss) = -0.509        corr(max_run, HIS avg_loss) = -0.186
+      corr(atr14, HIS payoff)   = -0.062        corr(max_run, HIS payoff)   = -0.452
+      corr(atr14, HIS hold)     = -0.883   <-- the strongest relationship in his whole 2026 record
+      corr(atr14, HIS trades)   = +0.689        corr(atr14, HIS win rate)   = -0.483
+
+  Against ATR his winners and losers shrink TOGETHER at nearly the same rate, leaving the payoff
+  RATIO essentially untouched (-0.062).  That is the signature of volatility-scaled position
+  sizing (or an equivalent dollar-risk-normalised stop) - i.e. the owner's cause E - and it is
+  NOT excluded.
+
+  Against max_run the winners shrink about three times as much as the losers, and the payoff ratio
+  DOES respond (-0.452).  Sizing scales winners and losers identically and therefore cannot
+  produce that asymmetry.
+
+  So the observed pattern decomposes cleanly:
+      ATR-symmetric part      -> consistent with SIZING (cause E).  Payoff-neutral.
+      max_run-asymmetric part -> a genuine STRUCTURAL effect.  Payoff-bearing.
+
+new_target_metric: >
+  The PAYOFF RATIO is invariant to any position-sizing scheme, because sizing multiplies wins and
+  losses identically.  It is therefore the sizing-immune version of the signal, and the correct
+  quantity for Part C to reproduce:
+
+      TARGET:  corr(max_run, payoff) = -0.452        (his, 17 windows)
+      and NOT: corr(max_run, avg_win) = -0.595       (contaminated by sizing)
+
+preregistered:
+  G1: >
+    Re-score all 26 Part-C exit families on corr(max_run, per-window payoff) instead of avg_win.
+    PREDICTION: the re-scoring does NOT rescue exit geometry - no family reaches -0.452 - because
+    the C1 asymmetry failure (March and late-May cannot be moved in opposite directions) is
+    unaffected by which denominator is used.  If a family DOES reach it, F4 is withdrawn and exit
+    geometry returns as a live sole explanation.
+  G2: >
+    PREDICTION: our incumbent's corr(max_run, payoff) is POSITIVE or near zero, mirroring its
+    positive avg_win correlation.  If it is already strongly negative, then the avg_win framing
+    was the artefact and Part B's structural claim weakens.
+  G3: >
+    Registered so it is not claimed later without test: the ATR-symmetric component being
+    consistent with sizing does NOT establish that he used volatility-scaled sizing.  A
+    dollar-risk-normalised stop, an ATR-scaled stop with fixed contracts, or a market-microstructure
+    effect on fill quality would all produce a similar signature.  Cause E is UPGRADED to live and
+    material, not established.
+
+consequence_for_the_write_up: >
+  R30's sentence "the sign of corr(opportunity, avg_win) is an entry signature, not an exit
+  signature" is CORRECTED to apply only to the payoff-bearing, max_run-asymmetric component.  The
+  correction is recorded in the report rather than the original being deleted.
