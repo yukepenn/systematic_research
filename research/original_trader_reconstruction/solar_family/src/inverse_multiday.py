@@ -19,7 +19,7 @@ from inverse_core import (POINT_VALUE, BARS_REQUIRED, eligible, mae_mfe, session
 def enumerate_multiday(bb, span_start, span_end, targets_by_day, universe,
                        allow_reverse=True, allow_exit_only=True, stop_pts=None,
                        comm_rt=4.18, max_solutions=200, node_budget=40_000_000,
-                       exit_strict=True, empty_days=()):
+                       exit_strict=True, empty_days=(), count_end=None):
     """`empty_days` = calendar dates inside the span that have NO row in the report; zero
     trades may exit on those dates. For Jan-2023 that is the pre-first-row evening (Jan 2)
     and the weekends."""
@@ -170,14 +170,25 @@ def enumerate_multiday(bb, span_start, span_end, targets_by_day, universe,
         if len(sols) >= max_solutions:
             overflow[0] = True
 
+    # `count_end` = last bar that can appear in the report. Trades exiting after it are
+    # real but INVISIBLE to the report (they belong to a row we cannot see), so they must
+    # neither be counted nor rejected -- otherwise the last visible day is silently
+    # truncated at the data boundary. Without this the Jan-17 calendar row loses its
+    # evening block, which is exactly where its missing trade lives.
+    c_end = span_end if count_end is None else count_end
+
     def flat(i):
         nodes[0] += 1
         if nodes[0] > node_budget:
             overflow[0] = True
             return
         terminal()
+        if i > c_end:
+            return
         for kk in range(nxt_cand.get(min(i, span_end + 1), len(cand)), len(cand)):
             j = cand[kk]
+            if j > c_end:
+                break
             sg = st[j]
             take(seg(j, 1 if sg > 0 else -1))
             if overflow[0]:
@@ -187,6 +198,9 @@ def enumerate_multiday(bb, span_start, span_end, targets_by_day, universe,
         if r is None:
             return
         d, ei, epx, xi, xpx, atc, kind, can_rev, rdir = r
+        if xi > c_end:
+            terminal()          # this trade is invisible to the report; nothing more counts
+            return
         if day_of[xi] in empty:
             return
         state = push(d, ei, epx, xi, xpx, atc, kind)
