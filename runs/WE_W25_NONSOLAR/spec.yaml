@@ -1,0 +1,38 @@
+run_id: WE_W25_NONSOLAR
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "说不定你哪个阶段又全部打散然后从第一性原理重来"
+
+the unexamined assumption (named after 24 waves): >
+  EVERY engine in this campaign is Solar. S1 is Solar T1 flips. S4 is the Solar13 ensemble.
+  ASIA is S4 restricted by clock. The E5 vote aggregates 32 configurations of the SAME state
+  machine. The short vote mirrors it. What the campaign calls "diversification" is one
+  information source dressed 32 ways plus one older wrapper around the same source. The
+  measured correlations (S1 vs S4 = 0.19) understate the shared model risk, because a common
+  failure of the Solar ratchet would take everything at once.
+  This wave builds trend engines with NO Solar content, wraps them in the AUDITED risk
+  architecture, and asks whether they are genuinely orthogonal.
+
+engines (each long-only, 1 contract, next-open fills, session-flat, range throttle q=0.8,
+  session halt $1,300 — i.e. the audited wrapper, only the SIGNAL changes):
+  N1 DONCHIAN  : long while close > highest close of the last P bars (P in {60, 240}),
+                 flat otherwise. The oldest trend rule there is; zero Solar content.
+  N2 EMA_CROSS : long while EMA(f) > EMA(s), (f,s) in {(20,100), (60,480)}.
+  N3 ACCEL     : long while the 60-bar return is positive AND rising vs the prior 60 bars
+                 (momentum of momentum) — a different functional form entirely.
+  N4 RANGE_POS : long while close sits in the top 25% of the trailing 240-bar range.
+  N5 VOTE_NS   : the majority vote across all N1-N4 variants (selection-free, same form as E5).
+tests:
+  T1 standalone: Sharpe / worst / stress / positive weeks vs E5halt1300 (0.273, −$8,769).
+  T2 orthogonality: weekly-net correlation of each engine, and of N5, with E5halt1300.
+  T3 combination: E5halt + N5, and E5halt + S1 + N5, on the adoption rule of W23
+     (Sharpe up, positive-week rate up, tail degrading less than production gains).
+  T4 null: circular-shift null on N5 if it is adopted (100 shifts), same protocol as W21.
+verdicts:
+  a non-Solar engine that is stress-positive AND correlates < 0.30 with E5 is the campaign's
+  first genuine model-risk diversification, and is worth more than its Sharpe suggests.
+  If all fail, the honest statement is that the campaign owns ONE model, and that model risk
+  must be stated in every future summary.
+forbidden: [data >= 2026-08-01, fill-bar information, tuning the new engines beyond the two
+  declared parameter values each, adopting on standalone Sharpe alone]
+outputs: [out/nonsolar.txt, out/summary.csv, REPORT.md]
