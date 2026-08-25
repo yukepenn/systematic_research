@@ -1,0 +1,15 @@
+base ready [50s]
+tick sessions mapped: 48, bars covered 63,327 [109s]
+sample: 48 tick sessions, 63,327 covered 1-min bars, available 19,036 pts
+NOTE (spec): no Sharpe is quoted from this sample - it is ~8 weeks.
+
+gate              n         net   $/trade  capture%      long$     short$
+G0_nogate       263      27,588     104.9      7.25     41,543    -13,955
+G1_proxy        214      24,992     116.8      6.56     41,699    -16,707
+G2_true_UD      198      30,577     154.4      8.03     41,460    -10,883
+G3_true_BA      163      22,024     135.1      5.78     42,519    -20,495
+
+--- preregistered decision rule ---
+G2_true_UD vs proxy: $/trade +32.2%   total +22.3%   -> does not clear the 25% bar
+G3_true_BA vs proxy: $/trade +15.7%   total -11.9%   -> does not clear the 25% bar
+done [110s]
