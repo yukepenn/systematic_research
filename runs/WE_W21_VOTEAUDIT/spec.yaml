@@ -1,0 +1,34 @@
+run_id: WE_W21_VOTEAUDIT
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "最对地不断前进"; W20 produced the campaign's first selection-free tradeable
+  object (E5). Before it is trusted it must survive the same three attacks that killed earlier
+  headlines.
+
+object under test: E5 = one-contract majority vote (>=50%) across the 32 LONG-ONLY configs
+  (4 member sets x 4 range-throttle settings x delta-gate on/off), fills next-open,
+  session-flat. No parameter is selected at runtime.
+
+attacks:
+  A1 DEEP HISTORY : run E5 unchanged on 2006-2021 (the sample that failed the fixed stack).
+    Because E5 selects nothing, this is a fair structural test rather than a scale test.
+    Report per-year Sharpe and the pooled figure. Declared: a positive pooled Sharpe here is
+    the single strongest evidence the campaign could produce; a negative one confines E5 to
+    the modern regime, which the owner has explicitly accepted as sufficient.
+  A2 NULL CALIBRATION : 100 circular-shift nulls of the VOTE ITSELF — shift each config's
+    position path by a common random offset, recompute the vote, rebuild. This tests whether
+    the vote's edge is about the market or about the shape of the aggregate exposure.
+  A3 ORTHOGONAL COMBINATION : E5 + S1 (weekly correlation of S1 with the S4 family measured at
+    0.19 in W05A). Report the combined Sharpe, worst week and per-year figures at 2 contracts
+    max exposure, disclosed.
+  A4 SUBFAMILY SENSITIVITY : drop each of the four member sets in turn from the vote (24-config
+    votes) and each of the four throttle settings in turn, and report the Sharpe spread. A
+    vote whose result depends on one subfamily is a disguised selection.
+verdicts:
+  A2 is binding: if E5 does not clear the 95th percentile of its own shifted null, it is
+    demoted to "not evidence" exactly as the wave gate and CLOSE-hour drop were in W13.
+  A4 is binding: if the Sharpe spread across leave-one-subfamily-out exceeds 0.05, the vote is
+    labelled subfamily-dependent.
+forbidden: [data >= 2026-08-01, fill-bar information, changing E5's definition, reporting A1
+  or A3 before A2 has been decided]
+outputs: [out/audit.txt, out/summary.csv, REPORT.md]
