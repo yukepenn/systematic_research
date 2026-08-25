@@ -1,0 +1,50 @@
+run_id: OTR_R11_INVERSE
+amendment: 1
+date: 2026-08-24
+status: COMMITTED BEFORE THE READOUT IT AUTHORISES
+
+reason: >
+  The inverse solver localised the two Jan-2023 days whose only defect was a single trade's
+  EXIT PRICE (2023-01-06 by $70, 2023-01-16 by $10, with sum-MAE and sum-MFE already exact,
+  which proves the ENTRIES were already right). In both cases the trader's exit price is
+  exactly the price at which OUR run re-enters in the opposite direction a few bars later:
+    2023-01-06  ours L exit 15:52 @ 14264.25   his 14260.75 = our 15:56 short entry
+    2023-01-16  ours S exit 06:16 @ 14704.50   his 14704.00 = our 06:21 long entry
+  i.e. he REVERSED where we EXITED EARLY. That is the signature of a different comparison
+  on the trailing-stop exit test.
+
+new_dimension:
+  name: exit_comparison_rule
+  values:
+    INCLUSIVE: "close <= TrailingStop (campaign-1 V0 certified convention)"
+    STRICT:    "close <  TrailingStop"
+  structural_note: >
+    Given the Solar ladder recurrence, for a long in an uptrend `close <= TS` can occur ONLY
+    on a flip bar or on a bar where close == anchor - S EXACTLY. So STRICT is equivalent to
+    "exit only when the trend actually flips" (pure stop-and-reverse), and the two rules
+    differ ONLY on exact-touch bars. This is why the rules were never separable by aggregate
+    statistics and needed cent-level daily labels to distinguish.
+
+hypothesis:
+  H-EXIT-STRICT: >
+    The original trader's exit test is STRICT: he holds through an exact touch of the
+    trailing stop and exits/reverses only on a genuine trend flip.
+  FALSIFIER: >
+    A day that is FEASIBLE under INCLUSIVE and IMPOSSIBLE under STRICT, in every event
+    universe. (The converse has already been observed three times.)
+
+authorised_new_readouts:
+  - "Re-run the 11-day inverse sweep with exit_comparison_rule as a crossed factor
+     (6 universes x 2 rules x 11 days)."
+  - "MASTER-WINDOW readout: run the incumbent CAND2 automaton over 2023-01-03..2025-02-02
+     under both exit rules, with the D-gate ON and OFF, and compare the full fingerprint to
+     the EARLY_LONG master target (TARGET_WINDOWS.csv: n~4351, net ~$292,172, WR 40.29,
+     PF 1.18, DD -32,700, avg hold ~94 min, trades/day 8.26).
+     PREREGISTERED PREDICTION: if H-EXIT-STRICT is right, STRICT moves the master trade
+     count and average hold TOWARD the target relative to INCLUSIVE. Recorded before the
+     run: the incumbent INCLUSIVE fit is n=4598 (+5.7% vs target) and hold 95.56 min."
+  - "NT8 confirmation of the master-window readout through the Strategy Analyzer engine."
+
+selection_rule_unchanged: >
+  Rules are adjudicated by DAY-FEASIBILITY and by fingerprint geometry, never by net profit.
+  If both rules remain feasible everywhere, BOTH are kept (directive v4.0 section 6).
