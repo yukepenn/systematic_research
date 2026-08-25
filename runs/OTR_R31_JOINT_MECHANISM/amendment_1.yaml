@@ -1,0 +1,61 @@
+amendment: 1
+run_id: OTR_R31_JOINT_MECHANISM
+date: 2026-08-25
+status: PREREGISTERED_BEFORE_READOUT
+supersedes: nothing.  Part A results stand as recorded, including the FAILED ordering prediction.
+
+part_a_result_that_motivates_this: >
+  A1 SUBSTANTIVE PASS, ORDERING FAIL.  The ATR-hold law separates exit CLASSES sharply:
+      DISTANCE   n=12  exponent -1.871..-0.700  mean -1.205  mean R^2 0.759
+      TIME       n=5   exponent -0.182..-0.063  mean -0.125  mean R^2 0.110
+      STATE      n=4   exponent -0.338..+0.312  mean +0.084  mean R^2 0.107
+      VOL-SCALED n=5   exponent -0.062..+0.162  mean +0.068  mean R^2 0.056
+  My exact predicted ordering (DISTANCE < STATE < VOL-SCALED) FAILED, because STATE (+0.084) and
+  VOL-SCALED (+0.068) are both ~0 and came out swapped.  Recorded, not rewritten.  The SUBSTANTIVE
+  prediction - distance-based exits are steep and tight, everything else is flat and loose -
+  passed emphatically.
+
+  Against his (b = -1.636, R^2 = 0.923) the nearest families are
+      X_TRAIL_PTS 20 : b = -1.740, R^2 = 0.912   (|db| = 0.104)
+      X_TRAIL_PTS 25 : b = -1.546, R^2 = 0.881   (|db| = 0.090)
+      X_TRAIL_PTS 30 : b = -1.500, R^2 = 0.864   (|db| = 0.137)
+  This is the first POSITIVE identification of an exit CLASS in the 2026 era: a fixed-point
+  trailing stop of roughly 20-30 NQ points.
+
+  A2 TENSION, reported as preregistered: those same families FAILED R30's C1 asymmetry test
+  (X_TRAIL_PTS 25 gives March $700 / late-May $603 against targets $909 / $2,061) and carry poor
+  section-40 distances (0.73-0.79).  Right class, wrong magnitudes - with OUR entry path.
+
+new_preregistered_tests:
+  H1: >
+    THE CAUSE-E ELIMINATION TEST.  If a fixed-point trailing stop at constant quantity reproduces
+    BOTH his hold law AND his dollar co-scaling
+        corr(ATR, avg_win)  = -0.469
+        corr(ATR, avg_loss) = -0.509
+        corr(ATR, payoff)   = -0.062   (i.e. the ratio is nearly untouched)
+    then dynamic quantity is not required for ANY of the observed regularities and cause E can be
+    demoted from "materially supported" to "not required by the evidence".
+    PREDICTION: it does reproduce them, because a fixed trail truncates a move earlier in higher
+    volatility for BOTH winners and losers, which co-scales them and leaves the ratio alone.
+    If it does NOT, cause E survives as an independent requirement.
+  H2: >
+    THE ENTRY CONSTRAINT this implies, registered so it is testable rather than rhetorical.
+    A ~25-point trail applied to OUR entries yields avg_win ~$517 and ~2,126 trades; his avg_win
+    median is ~$1,780 at 1,214 trades.  So IF his exit is a ~20-30 pt trail, his ENTRIES must be
+    positioned so that a tight trail is not hit before a large move develops - i.e. he enters much
+    closer to the start of moves than we do.
+    MEASURABLE PREDICTION: his implied per-trade MAE must be SMALL relative to ours.  A trade that
+    goes 25 points against you dies immediately under a 25-pt trail, so under this hypothesis his
+    adverse excursion distribution is tightly bounded.  We cannot observe his MAE in 2026, but we
+    CAN observe it in Feb-2025 (OTRIMG-0026) and Jan-2023 (OTRIMG-0003).  Test there.
+  H3: >
+    Registered as the falsifier for the whole exit-class identification: if the ATR-hold exponent
+    is ALSO produced by entry-side mechanisms with a state-based exit, the law is not specific to
+    exits and the identification collapses.  Test by re-running the incumbent state-based exit
+    while varying only the ENTRY rail (P_IN / P_Q75 / P_MED) and trend model, and checking whether
+    any entry variant alone reaches b < -1.0 with R^2 > 0.5.
+
+binding_rules:
+  - A family matching the volatility law while failing C1 is reported as BOTH, never as a winner.
+  - Net P&L may not select anything.
+  - Failed predictions recorded, not rewritten.
