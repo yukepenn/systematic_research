@@ -1,0 +1,53 @@
+amendment: 2
+run_id: OTR_R30_ENTRY_EXIT_DECOMP
+date: 2026-08-25
+status: PREREGISTERED_BEFORE_READOUT
+supersedes: nothing.  Amendment 1's result (session bound is too loose; q in {1,5,13} survives
+            parity + legal-tick + session bound) stands as recorded.
+
+why: >
+  Amendment 1 landed in its registered WEAK direction: max session ranges are 461-1058 index
+  points, so even q=1's implied largest-win moves (145-584 points) fit comfortably.  Nothing was
+  excluded.  Parity plus the legal-tick constraint leaves q in {1, 5, 13}, i.e. a stop of
+  130.00 / 26.00 / 10.00 index points.
+
+  Arithmetic cannot go further.  But BEHAVIOUR can, and by a route that needs no knowledge of q
+  at all: the section-40 metrics trades_all, wr_all, avg_time_min_all and the payoff ratio
+  avg_win/avg_loss are ALL INVARIANT under a uniform quantity scaling, because q multiplies every
+  P&L identically.  Only the currency-denominated metrics scale.
+
+  Therefore the STOP IN INDEX POINTS is identifiable from scale-invariant fingerprint metrics
+  alone, and identifying it collapses q immediately via  stop_points = 2600 / (20 q).
+
+method: >
+  Re-simulate the frozen incumbent (Layer A + X_OPP wrapper, entry path untouched) with the stop
+  set to each candidate value 130.00 / 65.00 / 32.50 / 26.00 / 13.00 / 10.00 index points, over
+  the 16 locally-testable 2026 windows.  Compare ONLY scale-invariant metrics against his
+  reported values: trades_all, wr_all, avg_time_min_all, payoff = avg_win/|avg_loss|.
+  Currency metrics are reported for completeness but MUST NOT enter the comparison, since they
+  are exactly the quantities q rescales.
+
+preregistered:
+  E1: >
+    PREDICTION: a much tighter stop produces materially MORE trades (more stop-outs re-arm the
+    entry logic), a LOWER win rate, and SHORTER holds.  If the scale-invariant metrics do NOT
+    move monotonically with the stop, the test has no resolving power and E2 is not interpretable.
+  E2: >
+    THE DISCRIMINATOR.  His scale-invariant fingerprint across the 16 windows is
+    trades 1214, wr ~38%, hold 33.7-123.1 min, payoff 0.91-2.37 (median 1.83).
+    Whichever candidate stop reproduces that fingerprint best identifies the stop in POINTS, and
+    hence q.  Report the full ranking; keep every candidate within noise as a live rival
+    (section 6).
+  E3: >
+    Registered in advance: I expect 130 points to win, because the incumbent already reproduces
+    his counts and holds at that value.  That expectation is exactly why the test must be run
+    against tighter stops rather than assumed - if 26 or 10 points fits comparably well, the
+    130-point claim was never identified by the evidence at all.
+  E4: >
+    NOTE the confound, stated in advance: our entry path is NOT verified (owner correction 1), so
+    this test identifies the stop only CONDITIONAL on the incumbent entry path.  A different entry
+    path could prefer a different stop.  The result must be written as conditional.
+
+forbidden:
+  - Currency-denominated metrics (net, avg_win, avg_loss, largest_loss in dollars) may not select
+    the winner - they are precisely what quantity rescales.
