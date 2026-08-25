@@ -1,0 +1,39 @@
+run_id: WE_W24_SHORT
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "最终系统以后有不同的策略肯定是有可以做空的"
+
+premise (a design error, named): >
+  Every short we have tested was the MIRROR of a long engine: same state machine, same
+  throttle, sign flipped. That is wrong on first principles, because NQ is structurally
+  asymmetric:
+    - persistent upward drift, so a symmetric engine bets against the drift half the time;
+    - up moves are slow grinds, down moves are fast and volatility-expanding;
+    - the volatility regime that KILLS a long engine (expansion) is exactly what a short
+      engine needs.
+  So the short sleeve should not share the long sleeve's trigger, its throttle direction, or
+  its holding horizon. This wave builds shorts from the short side's own opportunity.
+
+short engines (all causal, session-flat, 1 contract, own session halt at $1,300):
+  X1 VOL_EXPANSION : short only when the session's realized range ratio (W09's variable) is
+     ABOVE a high threshold - the INVERSE of the long throttle. r in {1.2, 1.5}. Entry on the
+     Solar-vote short signal within that regime.
+  X2 BREAKDOWN     : short on a close below the PRIOR session's low (known at session start),
+     no trend requirement; exit on close back above it, or session close.
+  X3 FAST_EXIT     : the vote-short signal but with a hard time exit at {30, 60} bars, on the
+     premise that down moves are fast and holding a short past its impulse gives it back.
+  X4 GAP_FADE      : short a session that OPENS above the prior session's high by >= k*ATR14
+     (opening gap up into resistance), exit at the prior high or session close, k in {0.5, 1.0}
+  X5 DRIFT_AWARE   : the mirror short vote, but only while the 50-session HTF tilt is negative
+     (do not fight the drift). This is the control - it is the closest to what we already
+     rejected, included so the wave can distinguish "shorts are hard" from "our shorts were
+     built wrong".
+evaluation: standalone Sharpe / worst / stress, then added to the reference pair
+  (E5halt1300 + S1). Adoption requires: combined Sharpe >= reference AND combined positive-week
+  rate > reference AND combined worst week degrading by less than the production gain (%).
+falsifier: if no short engine clears the bar, the honest statement is that on NQ in this regime
+  the short side is a diversifier of hit-rate rather than a source of edge, and it should be
+  sized as insurance, not as production.
+forbidden: [data >= 2026-08-01, fill-bar information, mirroring a long parameter without
+  stating it, adopting on positive-week rate alone]
+outputs: [out/short.txt, out/summary.csv, REPORT.md]
