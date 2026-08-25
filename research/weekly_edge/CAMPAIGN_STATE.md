@@ -107,6 +107,14 @@ frozen. Beating his numbers under our measurement standard is therefore a STRICT
   x flow gate x session halt). W05 = freeze challengers C1/C2/C3 + preregister the virgin
   champion-vs-challenger forward read (>=2026-11-01). Holdout now read 4x - exhausted.
 
+- 2026-08-25 (correction): **W03 amendment 1 — look-ahead in context gates** (entry-bar close
+  admitted fills at entry-bar open), caught in self-review before any freeze. Lag-corrected
+  rerun: the 0.355 headline was substantially artifact; delta gate's REAL marginal is
+  +0.02-0.03 Sharpe; `S4.all13.h1300.gdl` still clears the dev tail bar ($110.5/trade, worst
+  -$12,915) but fails holdout confirm -> still no champion. Session halts unaffected.
+  New standing rule: gates must carry decision-bar info only; explainability review before
+  any freeze.
+
 ## Relationship to campaign #6 (OTR)
 OTR stays open (purchase gate awaiting owner action; free follow-ups queued). #7 consumes #6's
 conclusions but never its sealed evidence. Nothing in #7 feeds back into #6's identification
