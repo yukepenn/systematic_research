@@ -1,0 +1,35 @@
+run_id: WE_W17_DEEPHISTORY
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "我们就是很科学很聪明地在过去就知道我们可以赚钱…因为我们可以了解和知道
+  为什么我们赚钱和亏钱的。而不是单纯的p-hacking"
+
+premise: >
+  Sixteen waves have been calibrated on 2022-01 .. 2026-07 only. The scalping-lab substrate
+  holds NQ 1-min back to 2006-01-05 - SIXTEEN YEARS never touched by this campaign, including
+  the 2008 crash, the 2010-2015 low-volatility bull, 2018's two corrections and 2020's COVID
+  crash. This is not future data; it is past data we never spent. Running the FROZEN stack
+  there is the strongest out-of-sample test available to us before 2026-11-01.
+
+frozen objects (NO parameter may change; anything that changes voids the run):
+  S1      = CAND2 + D-gate, defaults, comm 4.36
+  S4n     = Solar13 volmults [6,8,10,12,14,16] + range throttle q=0.8 + lagged delta gate
+  ASIA    = S4n restricted to 18:00-02:59 entries
+  PORT    = S1(q=0.7 throttle) + S4n + ASIA
+  plus S4n LONG-ONLY, to test whether its 2022-2026 advantage is drift or structure
+window: 2006-01-05 .. 2021-12-31 (strictly before the calibration sample)
+readouts: per-year net / weekly mean / %positive / worst week / Sharpe / trades per week;
+  pooled Sharpe; the 2008 and 2020 crash years called out individually.
+frictions: same $4.36/RT and the C1 stress line. DISCLOSED: historical commissions were
+  higher and NQ traded at 1/10th today's price level, so per-trade DOLLAR figures are not
+  comparable across eras - the campaign therefore judges this wave on SHARPE, %POSITIVE and
+  SIGN, never on dollars.
+declared interpretation:
+  PASS      : pooled Sharpe > 0 AND >= 11 of 16 years positive AND no year worse than -0.35
+  PARTIAL   : pooled Sharpe > 0 but the year distribution fails
+  FAIL      : pooled Sharpe <= 0 -> the stack is a 2022-2026 artifact and must be labelled so
+  LONG-ONLY : if long-only beats both-sides in the deep sample too, the advantage is
+              structural; if it reverses, it was drift and long-only is closed.
+forbidden: [changing any parameter, re-fitting anything on this window, using it to select,
+  quoting dollar figures as comparable to the modern era]
+outputs: [out/deep.txt, out/summary.csv, REPORT.md]
