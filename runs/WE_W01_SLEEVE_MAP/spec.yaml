@@ -1,0 +1,71 @@
+run_id: WE_W01_SLEEVE_MAP
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+question: >
+  Ported to NQ 1-minute bars and evaluated as WEEKLY P&L profiles net of frictions, what do our
+  existing sleeves and their OTR-lesson variants actually deliver — and do any fixed portfolio
+  combinations approach the weekly-profitability target (positive-rate > 76%, mean > $8,583/wk,
+  worst week materially better than -$42,235)?
+
+data:
+  source: runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet   # 2022-01-02 18:01 -> 2026-07-31 16:59
+  dev: 2022-01-02 18:00 -> 2026-05-29 17:00
+  holdout: 2026-05-31 18:00 -> 2026-07-31 16:59   # ~9 weeks, never used for any choice
+  sealed: nothing >= 2026-08-01 exists in repo; not touched.
+  week: ISO week of session date (session = 18:00->17:00 ET; session date = date of last bar).
+        All sleeves are session-flat, so trade-level weekly attribution is exact.
+
+frictions:
+  base: $4.36/RT NQ (Lifetime), fills as each engine implements (next-bar-open convention)
+  stress: C1 line, $14.36/RT all-in (2.872 ticks) applied per round turn — reported for every
+    member; a member positive only below stress "does not exist" per CONVENTIONS §3.
+
+sleeves:
+  S1_CAND2_DGATE: run_master(bb, exit_strict=False, gate=True, defaults, comm=4.36) — the
+    runnable 2023-style Solar wrapper, unchanged. 1 member.
+  S2_SOLAR_SKEW: Solar T1 flip signals (solar_wave_full, canonical 90/179 params, T1-only)
+    fed to layer_b_exit with exit family x stop grid:
+    families {X_OPP, X_TRAIL_PTS:25, X_TRAIL_PTS:50, X_TRAIL_PTS:80, X_TARGET:60}
+    stops {65, 130} pts  -> 10 members. lv rails set NaN (families using them excluded).
+    EXPLORATORY: 10-member multiplicity acknowledged; no member may be promoted from this run.
+  S3_VF: clean-room VF configs frozen by campaign #6 BEFORE this run:
+    incumbent D_MOM|G_WITH|P_MED|C_DIR|X_OPP and leading D_MOM|G_WITH|P_IN|C_REC|X_TRAIL_PTS:80.
+    Out-of-era test: these were built on 2026 windows; running 2022-2026 is honest exposure.
+    2 members.
+  S4_SM14_1M: faithful 1-min port of Product B decision stack (Solar13 sigma/ratchet members,
+    HTF tilt >50-session gate, B-MOM band+VWAP, M = 0.7086*Tp + 2.83*bmom, hysteresis 3.0/1.0,
+    entry block 30 min / forced flat 21 min before close). Declared port choices, not tuning:
+    VolPeriod in {460, 1380} 1-min bars (same count vs same wall-clock as the 3-min original);
+    B-MOM slots per 1-min bar-end 09:31-16:00, signal cutoff 15:54, flatten 15:57. 2 members.
+  S5_BMOM_1M: the B-MOM leg standalone as +-1 position (same port choices). 1 member.
+
+portfolios_fixed:  # declared here, before any results are seen
+  P1: S1 + S4(VolPeriod460) + S5
+  P2: S1 + S4(VolPeriod460)
+  P3: S1 + S2(X_TRAIL_PTS:80, stop 130) + S4(VolPeriod460)
+  overlay: weekly loss-limit on each portfolio in {none, -3000, -5000} USD — halt all sleeves
+    for the remainder of the ISO week once breached (evaluated on portfolio weekly running net
+    at session close; positions closed at next session start if halted mid-week... all sleeves
+    are session-flat so halt simply blocks the following sessions of that week).
+
+metrics: per member and portfolio, on dev and holdout separately, base and stress:
+  [weekly mean, weekly median, %positive weeks, worst week, best week, weekly Sharpe
+   (mean/std of weekly net), max drawdown on weekly equity, trades/week, $/trade]
+
+benchmark: HIS 21-week displayed record (gross): 76% positive, mean $8,583, worst -$42,235.
+  Asymmetry (his gross+display vs our net+frozen) stated in every readout.
+
+preregistered_rules:
+  R1: no member or portfolio is PROMOTED from this run; W01 produces a map and a shortlist.
+  R2: shortlist rule (for W03 consideration only): on dev AND holdout, weekly Sharpe >= S1's
+      and %positive >= S1's, and dev worst week > -$15,000 at base frictions.
+  R3: any config positive at base but negative at stress is marked DOES_NOT_EXIST.
+  R4: holdout is read ONCE, after all members/portfolios are computed; no iteration against it.
+  R5: no data >= 2026-08-01; no weekly retuning; no per-week parameter selection anywhere.
+falsifiers_declared:
+  F1: if NO sleeve/portfolio reaches 60% positive weeks on dev at base frictions, the honest
+      conclusion is "the current library cannot approach the target" and W02/W03 must add
+      information (manual-derived sleeves, VF oracle), not parameters.
+  F2: if S2 skew exits do not improve $/trade over S1 on dev, the "positive-skew exits" lesson
+      FAILED its first transfer test and must be reported as such.
+outputs: [out/members_weekly.csv, out/portfolio_weekly.csv, out/summary.csv, REPORT.md]
