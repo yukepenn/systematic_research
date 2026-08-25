@@ -1,0 +1,34 @@
+run_id: WE_W13_NULL
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+type: DISCIPLINE WAVE — designed to attack our own stack, not to improve it.
+directive: owner — "不要有幻觉，一旦觉得有幻觉了，就从high level看了再回来"
+
+premise: >
+  Twelve waves, 250+ variants, one dev sample. The accumulated stack (delta gate + range
+  throttle + drop-CLOSE + wave gate) lifted single-sleeve dev Sharpe 0.160 -> 0.225. Each step
+  had a mechanism and passed a preregistered rule, but the CUMULATIVE selection has never been
+  calibrated against chance. This wave measures how much of it could be luck.
+
+tests:
+  N1 NULL GATES: for each real gate, build 200 RANDOM gates with the SAME block rate (blocking
+     a random contiguous-in-time set of bars matched on rate, session-aligned), rebuild the
+     sleeve, and record dev Sharpe. Report where the real gate sits in the null distribution
+     (percentile and empirical p). A gate that is not beyond the 95th percentile of its own
+     rate-matched null is NOT evidence.
+  N2 PER-YEAR: dev Sharpe / weekly mean / %positive of the full stack for 2022, 2023, 2024,
+     2025, 2026(to 07-31) separately. An improvement that lives in one year is not a mechanism.
+  N3 SENSITIVITY: perturb every stack parameter one at a time (range q 0.7/0.8/0.9; member set
+     narrow6 / narrow5 / narrow7; delta-gate on/off; wave-gate on/off; CLOSE drop on/off) and
+     report the Sharpe surface. A stack that only works at its exact parameters is fitted.
+  N4 DEGRADATION ORDER: remove each stack component from the FULL stack one at a time (leave-
+     one-out) and report the loss. Components whose removal costs nothing are dead weight and
+     must be dropped for parsimony.
+verdicts (declared now):
+  - any gate failing N1 is DEMOTED to "not evidence" regardless of its dev improvement
+  - any component failing N4 (removal costs < 0.005 Sharpe) is DROPPED from the stack
+  - if the stack's per-year Sharpe is negative in any year, the stack is NOT a champion
+    candidate regardless of pooled numbers
+forbidden: [data >= 2026-08-01, using this wave to search for improvements, quoting the stack
+  without the results of this wave]
+outputs: [out/null.txt, out/summary.csv, REPORT.md]
