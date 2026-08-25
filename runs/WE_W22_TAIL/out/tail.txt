@@ -1,0 +1,35 @@
+variant                             weeks         net   wkMean    pos%     worst  sharpe
+E5 base (vote>=0.5, 1 contract)       203     227,009    1,118    59.6   -17,440   0.214  
+S1 alone                              205     284,548    1,388    54.1   -20,957   0.172  
+E5+S1 (reference, <=2)                205     511,557    2,495    58.0   -26,850   0.241  
+
+--- V1 THRESHOLD CURVE (reported whole; no selection) ---
+V1 vote>=0.30                         203     225,793    1,112    58.6   -22,721   0.202  
+V1 vote>=0.40                         203     227,009    1,118    59.6   -17,440   0.214  
+V1 vote>=0.50                         203     227,009    1,118    59.6   -17,440   0.214  
+V1 vote>=0.60                         202     190,098      941    56.4   -26,333   0.200  
+V1 vote>=0.70                         202     190,098      941    56.4   -26,333   0.200  
+V1 vote>=0.80                         188     174,297      927    56.9   -17,164   0.222  
+
+--- V2 CONVICTION SIZE (1 in [0.5,0.75), 2 at >=0.75; max 2) ---
+V2 conviction 1/2                     203     405,854    1,999    57.6   -42,632   0.207  
+
+--- V3 THREE SLEEVES (E5+S1+ASIA, max 3) ---
+V3 E5+S1+ASIA                         205     545,642    2,662    60.0   -27,375   0.251  
+
+--- V4 SESSION HALT ON THE VOTE ---
+V4 E5 halt 1300                       203     229,514    1,131    57.6    -8,769   0.273  
+V4 E5halt1300+S1                      205     514,062    2,508    59.5   -21,514   0.259  
+V4 E5 halt 2600                       203     208,702    1,028    57.1   -11,952   0.220  
+V4 E5halt2600+S1                      205     493,250    2,406    58.0   -24,447   0.241  
+
+--- V5 CONCENTRATION CAP (E5+S1 same-direction, cap 2) ---
+   (E5 is long-only 1 contract and S1 is +-1, so the pair already caps at 2 long;
+    the cap therefore binds only when both are long, which is the reference case.)
+   -> V5 is a no-op on this pair and is reported as such rather than fabricated.
+
+=== ADOPTION RULE: worst week better by >=15% WITHOUT reducing Sharpe ===
+  ADOPT   V4 E5 halt 1300  (worst -8,769 vs ref -17,440; sharpe 0.273 vs 0.214)
+  ADOPT   V4 E5halt1300+S1  (worst -21,514 vs ref -26,850; sharpe 0.259 vs 0.241)
+  ADOPT   V4 E5 halt 2600  (worst -11,952 vs ref -17,440; sharpe 0.22 vs 0.214)
+  (nothing printed above = falsifier fired: the tail is the price of the edge)
