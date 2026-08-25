@@ -1,0 +1,32 @@
+run_id: WE_W16_SEGSLEEVES
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — keep optimising from first principles across gates/strategies/dimensions.
+
+premise: >
+  W14 admitted the ASIA sleeve because its weekly correlation with the portfolio is 0.11 —
+  time-of-day segmentation is itself a source of orthogonality, independent of signal design.
+  W11 measured that every segment except CLOSE is profitable for both engines. W15 exposed a
+  new problem: the SHORT book loses on the tick-session sample while longs are stable.
+
+questions:
+  Q1 SEGMENT SLEEVES: run the S4n engine as SEPARATE per-segment sleeves (ASIA, EUROPE,
+     PREOPEN, RTH_AM, RTH_PM) and measure the full correlation matrix between them. Does a
+     portfolio of segment sleeves beat the single all-hours sleeve at equal max exposure?
+     Exposure disclosure: k concurrent segments can never overlap in time, so max exposure
+     stays 1 contract for the segment family — this is free diversification if it works.
+  Q2 SHORT BOOK: split every current sleeve into its long and short halves and measure each
+     separately over the FULL 4.6 years (the W15 short-side loss was a 48-session sample).
+     If the short book is structurally weaker, test: (a) long-only variants, (b) a short-only
+     gate requiring the HTF tilt to agree.
+  Q3 S1 THROTTLE: W10 found S1+q0.7 qualifies (small-day points +153 -> +1,106). Add it to
+     the portfolio and re-measure with ASIA included.
+promotion: none; admitted sleeves join the challenger set.
+admission rule (same as W14): standalone stress > 0, |corr| < 0.30 with the current
+  portfolio, and adding it raises portfolio dev Sharpe without worsening the worst week
+  by more than 15%.
+falsifier: if the segment portfolio does not beat the all-hours sleeve, segmentation is a
+  property of ASIA specifically (its own regime), not a general orthogonality source.
+forbidden: [data >= 2026-08-01, fill-bar info, post-hoc additions, quoting long-only results
+  without stating that they halve the strategy's opportunity set]
+outputs: [out/seg.txt, out/summary.csv, REPORT.md]
