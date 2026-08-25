@@ -66,15 +66,6 @@ frozen. Beating his numbers under our measurement standard is therefore a STRICT
   semantics extraction in progress; documented-concept sleeves (S/R zones, OB/OS overlap,
   delta) are W02 material. ninZa free helpers (ATR/MFI/RSI/SMMA/Stoch) installed locally.
 
-- 2026-08-25 (later still): **W02 COMPLETE** (`runs/WE_W02_COMPOSER/REPORT.md`). ZERO of
-  101 configs clear the preregistered dev tail bar -> no champion, reported honestly. Key
-  measurement: per-trade dollar caps are nearly inert on our sleeves (S1 loses 142/13,301
-  trades to a 65-pt cap) because **our tail is intra-week accumulation, not single-trade
-  catastrophe** -> tail control must be session-level (generalize the D-gate), not
-  trade-level. Composition lifts dev Sharpe to 0.267 but 3-sleeve overlap worsens the tail.
-  W03 = session-level halts + regime weights (tail axis) and new information bases
-  (trend-capture / reversal-zone / delta / overlap - owner freed the base from Solar).
-
 ## Roadmap
 - **W01 SLEEVE_MAP** (now): port the product sleeves to 1-min NQ + Solar×skew-exit grid + VF
   configs; weekly-P&L map on dev (2022-01→2026-05-29) + holdout (2026-06-01→07-31); fixed
@@ -96,6 +87,15 @@ frozen. Beating his numbers under our measurement standard is therefore a STRICT
   DOES_NOT_EXIST at stress. B-MOM negative on holdout (decay watch confirmed). W02 = add
   information (tick features, SJB-zone/Multi-Osc sleeves, VF oracle post-purchase); W03 =
   tail control that preserves hit rate.
+
+- 2026-08-25 (later still): **W02 COMPLETE** (`runs/WE_W02_COMPOSER/REPORT.md`). ZERO of
+  101 configs clear the preregistered dev tail bar -> no champion, reported honestly. Key
+  measurement: per-trade dollar caps are nearly inert on our sleeves (S1 loses 142/13,301
+  trades to a 65-pt cap) because **our tail is intra-week accumulation, not single-trade
+  catastrophe** -> tail control must be session-level (generalize the D-gate), not
+  trade-level. Composition lifts dev Sharpe to 0.267 but 3-sleeve overlap worsens the tail.
+  W03 = session-level halts + regime weights (tail axis) and new information bases
+  (trend-capture / reversal-zone / delta / overlap - owner freed the base from Solar).
 
 ## Relationship to campaign #6 (OTR)
 OTR stays open (purchase gate awaiting owner action; free follow-ups queued). #7 consumes #6's
