@@ -1,0 +1,54 @@
+amendment: 3
+run_id: OTR_R30_ENTRY_EXIT_DECOMP
+date: 2026-08-25
+status: PREREGISTERED_BEFORE_PART_C_READOUT
+supersedes: nothing.  Part B's result stands as recorded, including its FAILED prediction B3.
+
+part_b_result_that_motivates_this: >
+  H-MARKET is REFUTED, and in the opposite direction to the working assumption.  March
+  2026-03-22..03-27 was not a low-opportunity week - it ranked 17/17 on max_run (the LARGEST mean
+  directional runs of the whole sample), 16/17 on mfe60_short, 15/17 on session_range and atr14.
+  Our realised per-trade MFE there was ABOVE median (rank 11/17), which FAILED preregistered B3.
+  Our avg_win ranked 14/17 (one of our better weeks); HIS ranked 1/17 (his worst).
+
+  The market offered the most and he captured the least.
+
+  Across the 17 windows this is systematic, not a one-week accident:
+      corr(max_run,       HIS avg_win) = -0.595      corr(max_run,       OURS) = +0.295
+      corr(mfe60_short,   HIS avg_win) = -0.652      corr(session_range, OURS) = +0.633
+      corr(atr14,         HIS avg_win) = -0.469      corr(atr14,         OURS) = +0.498
+  His average winner SHRINKS as opportunity rises.  Ours grows.  His hold shows the same sign:
+  longest hold 123.1 min in the LOWEST-atr week (7.47), shortest holds in the highest-atr weeks.
+
+new_preregistered_predictions:
+  F1: >
+    THE MECHANISM PREDICTION.  A trailing stop denominated in FIXED POINTS reproduces this sign
+    automatically: in a high-ATR week ordinary noise reaches a fixed trail almost immediately, so
+    winners are truncated; in a low-ATR week the same trail survives and winners run.  An
+    ATR-SCALED trail does NOT, because scaling by volatility is precisely what removes the
+    dependence.
+    PREDICTION: X_TRAIL_PTS outperforms X_TRAIL_ATR on the section-40 fingerprint, and only
+    X_TRAIL_PTS reproduces a NEGATIVE corr(opportunity, avg_win).
+    This is registered BEFORE Part C is run.  If X_TRAIL_ATR wins, F1 is refuted and recorded.
+  F2: >
+    CORRECTION TO MY OWN C3 RATIONALE, recorded rather than rewritten.  C3 predicted the X_TRAIL
+    family would win "because a trailing stop lets winners run in trends and truncates them in
+    chop".  Part B shows March was the MOST trending week of the sample, so the trend/chop framing
+    was wrong even though the family prediction may be right.  The operative variable is
+    VOLATILITY, not trendiness.  C3's family call stands; C3's stated reason is corrected.
+  F3: >
+    THE PRIMARY EVALUATION METRIC IS NOW THE CORRELATION, not the two endpoint weeks.  A credible
+    exit family must reproduce corr(max_run, avg_win) in the region of -0.6 across the 17 windows,
+    with ONE frozen parameter set.  Matching March and late-May alone is a two-point fit and can
+    be achieved by accident; reproducing the sign and rough magnitude of the correlation across
+    all 17 cannot.
+  F4: >
+    Registered as the failure mode: if NO exit family produces a negative correlation, then exit
+    geometry cannot be the explanation, because the sign itself is the thing to be explained.  In
+    that case the surviving causes are entry timing and entry selection (owner correction 1), and
+    that outcome feeds the purchase gate directly (owner correction 7).
+
+binding_rules:
+  - Net P&L may not select the winner (section 40).
+  - Report the full ranking and keep rivals (section 6).
+  - Failed predictions recorded, not rewritten (section 44).  B3 is already so recorded.
