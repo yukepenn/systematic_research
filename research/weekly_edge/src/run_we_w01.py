@@ -80,7 +80,7 @@ def round_away(x):
     return int(np.floor(x + 0.5)) if x >= 0 else int(np.ceil(x - 0.5))
 
 
-def sm14_1m(D, vol_period, with_solar=True, with_bmom=True):
+def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False):
     """Faithful port of SolarWaveOneContractNQ_v5 decision stack to 1-min bars.
 
     Declared port choices (spec): B-MOM reset at bar-end 09:31, signal cutoff 15:54, flatten
@@ -235,6 +235,8 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True):
                 tgt = 0
         tgt_arr[i] = tgt
 
+    if return_targets:        # W02 hook (no behavior change for existing callers)
+        return tgt_arr
     # fills: decision at bar i -> position over bar i+1..; entry/exit at next bar open
     trades = []
     pos = 0; epx = 0.0; eti = -1

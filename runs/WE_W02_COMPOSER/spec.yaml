@@ -1,0 +1,50 @@
+run_id: WE_W02_COMPOSER
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner, 2026-08-25 — "从最初第一性原理出发，可以自由地组合他们，调整参数，甚至仓位止损各种以及新的东西。
+  怎么造出这个最厉害的每周赚钱的nq策略。" And, mid-run: "甚至都base不一定是solar…… 甚至什么都可以。
+  我们这么多思考。" — the base is NOT restricted to Solar. W02's machinery (dollar caps,
+  vol filter, composition) is base-agnostic by construction; NEW bases (Multi-Osc overlap,
+  SJB zones, delta features from the tick substrate) enter in W03 with their own
+  preregistration, not smuggled into this grid mid-flight.
+
+question: >
+  W01 found the binding constraint is the worst-week tail and that information diversification
+  (S1+S4) works while exit dressing does not. Can per-trade hard dollar caps (the trader's own
+  risk unit — a mechanism our sleeves entirely lack), a causal volatility-regime filter, and
+  integer-weight composition produce a config that PASSES the tail bar without giving up the
+  hit rate?
+
+design_principles (from W01 evidence):
+  - attack the tail at the TRADE level (his -$2,600 unit), not the week level (wl overlay
+    failed: locks losses, kills hit rate)
+  - diversify across INFORMATION (S1 x S4), never across exits of the same entries (P4)
+  - signal-engine parameters stay FROZEN this wave; only risk/exposure/composition vary
+
+grid (exhaustive, preregistered, no additions after first readout):
+  S1 variants (3): stop_pts in {none, 65, 130} via run_master's existing stop_pts param
+  S4 variants (6): vp460, stop_pts in {none, 65, 130} x volfilter in {off, on}
+    - stop implementation (new code, declared): intrabar cap at entry±stop; after a stop-out
+      re-entry is blocked until the decision target returns to 0 (prevents instant re-fill)
+    - volfilter (new code, declared): entries blocked (exits still allowed) in sessions whose
+      PRIOR-session mean true range ranks above the 90th percentile of the trailing 60
+      sessions (fully causal)
+  S5 variants (2): {as-is, volfilter on} — B-MOM held for composition only, W01 showed decay
+  portfolios: every S1v x S4v pair x weights {(1,1),(1,2),(2,1)} = 54,
+    plus S1v x S4v x S5v at weights (1,1,1) = 36 -> 90 portfolios, all from weekly tables
+metrics: identical to W01 (dev/holdout, base + C1 stress)
+
+promotion_rule (preregistered):
+  champion = argmax dev Sharpe among configs with dev worst > -15000 AND dev pos_pct >= 55
+    AND dev stress_mean > 0
+  confirmed iff holdout Sharpe >= 0.30 AND holdout worst > -15000
+  if no config clears the dev bar -> report "tail bar unreachable with this library", no
+    champion, W03 must add new mechanisms
+holdout_reuse_disclosure: >
+  The June-July holdout was already read once in W01 for overlapping members. Its evidential
+  value for W02 is therefore reduced (cross-wave multiplicity). The true arbiter is the
+  preregistered VIRGIN forward read (>= 2026-11-01, champion-vs-challenger protocol per
+  LOCKED_FORWARD.md). W02's holdout read is a sanity confirm, not proof.
+forbidden: [data >= 2026-08-01, weekly retuning, adding grid members after readout,
+  promoting anything that fails stress, touching signal-engine parameters]
+outputs: [out/summary.csv, out/champion.md, REPORT.md]

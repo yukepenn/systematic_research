@@ -78,6 +78,15 @@ frozen. Beating his numbers under our measurement standard is therefore a STRICT
 
 ## Status
 - 2026-08-25: campaign opened. W01 spec committed; run in progress.
+- 2026-08-25 (later): **W01 COMPLETE** (`runs/WE_W01_SLEEVE_MAP/REPORT.md`). Harness PASS to
+  the cent. Shortlist EMPTY under R2 — the binding constraint is the worst-week tail. F2
+  FIRED: bolt-on skew exits destroy expectancy on our entries. Best objects: **P2 = S1+S4**
+  (dev 60.9 % pos / $2,553/wk / Sharpe 0.226) and **S4 = SM14 ported to 1-min** (holdout
+  $8,836/wk · 77.8 % · worst −$9,195 · $447/trade — the only object meeting all three
+  benchmark numbers, on 9 weeks only). VF clean-room configs and the VF manual preset are
+  DOES_NOT_EXIST at stress. B-MOM negative on holdout (decay watch confirmed). W02 = add
+  information (tick features, SJB-zone/Multi-Osc sleeves, VF oracle post-purchase); W03 =
+  tail control that preserves hit rate.
 
 ## Relationship to campaign #6 (OTR)
 OTR stays open (purchase gate awaiting owner action; free follow-ups queued). #7 consumes #6's
