@@ -1,0 +1,57 @@
+run_id: OTR_R11_INVERSE
+amendment: 4
+date: 2026-08-24
+status: COMMITTED BEFORE THE READOUT IT AUTHORISES
+
+reason: >
+  Section 5 of the directive asked what NT8's Daily Analysis actually means by
+  "Time base = Exit Time". The MAE/MFE certification run recorded the question as
+  NOT SEPARABLE, because zero trades in the certification window exit in the 18:00-23:59
+  block where the SESSION-date and CALENDAR-date readings differ.
+  That answer was premature. The three days the session reading cannot explain
+  (2023-01-04, 2023-01-12, 2023-01-17) turn out to separate the two readings decisively,
+  because the calendar window admits a DIFFERENT set of candidate signals -- 2023-01-17 has
+  5 T1 candidates in its session window but 8 in its calendar window.
+
+readout_already_taken:
+  test: "R17 - re-solve all 11 days with trades attributed by CALENDAR exit date."
+  result: "SESSION rule 8/11 feasible (8 unique). CALENDAR rule 11/11 feasible (5 unique)."
+  status: >
+    This readout was taken under the original spec's stated method (feasibility
+    adjudication of the day-assignment rule was listed as hypothesis H-R11-2), so it is not
+    a new readout class. This amendment records it and preregisters the GLOBAL test below,
+    which IS new.
+
+why_a_global_test_is_needed: >
+  11 days solved INDEPENDENTLY is 11 separate 9-constraint problems, and the calendar
+  formulation leaves trades outside each day's window unconstrained -- which is exactly why
+  its solution counts (1 to 4 per day) are looser than the session formulation's. That
+  looseness is an artefact of solving days in isolation. The trader ran ONE continuous
+  backtest. The correct object is a SINGLE path over the whole window that reproduces every
+  row at once, and in which the free trades of one day are the constrained trades of its
+  neighbour.
+
+hypotheses:
+  H-CALENDAR: >
+    NT8 Daily Analysis with Time base = Exit Time attributes a trade to the CALENDAR date of
+    its exit timestamp. A single continuous T1-only STRICT path exists that reproduces all
+    11 visible rows simultaneously AND leaves zero trades exiting on 2023-01-02 and on the
+    weekends (dates with no row in the report).
+    FALSIFIER: no such global path exists, while one exists under the SESSION reading.
+  H-SESSION: >
+    The rival. Already known to fail on 3 of 11 days in every tested universe and under both
+    exit rules, so the global test is expected to fail for it; run it anyway as the control.
+
+guardrails:
+  - "The empty-date constraint is part of the evidence, not a convenience: the report has no
+     row for 2023-01-02, so a path that exits a trade on 2023-01-02 is REJECTED."
+  - "No P&L objective. Feasibility only. If BOTH readings admit a global path, the question
+     stays UNKNOWN and both are kept."
+  - "If the global path is unique it is the strongest reconstruction artefact the campaign
+     has produced, but it remains conditional on (universe = T1-only, exit rule = STRICT)
+     and must be labelled as such -- it is still not an observed trade list."
+
+outputs:
+  - runs/OTR_R11_INVERSE/out/r18_global_log.txt
+  - runs/OTR_R11_INVERSE/out/r18_global_paths.json
+  - research/original_trader_reconstruction/solar_family/inverse/GLOBAL_PATH_JAN2023.md

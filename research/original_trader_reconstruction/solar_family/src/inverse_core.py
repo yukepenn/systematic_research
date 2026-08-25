@@ -120,7 +120,11 @@ def eligible(bb, i, universe):
 def enumerate_paths(bb, s_start, s_end, tgt: DayTarget, universe,
                     allow_reverse=True, allow_exit_only=True, stop_pts=None,
                     comm_rt=4.18, max_solutions=50000, node_budget=8_000_000,
-                    exit_strict=False, max_extra=None):
+                    exit_strict=False, max_extra=None, drop=()):
+    """`drop` = names of constraints to RELAX, for diagnosing an infeasible day:
+    'gp' gross profit, 'gl' gross loss, 'lw' largest winner, 'll' largest loser,
+    'mae' sum MAE, 'mfe' sum MFE, 'wl' the winner/loser split. `n` is never relaxed.
+    Relaxing a constraint also disables its monotone prune, so runs get slower."""
     """exit_strict=False -> Close vs end-of-bar TrailingStop, INCLUSIVE (campaign-1 V0
     convention). exit_strict=True -> STRICT, which (given the ladder recurrence) is
     equivalent to "exit only when the trend actually FLIPS": for a long in an uptrend
@@ -209,14 +213,16 @@ def enumerate_paths(bb, s_start, s_end, tgt: DayTarget, universe,
     def push(dirn, ei, epx, xi, xpx, atc, kind):
         """Add a trade; return False (and add nothing) if it violates a monotone bound."""
         pnl = round(dirn * (xpx - epx) * POINT_VALUE - comm_rt, 2)
+        if A.nW + A.nL + 1 > tgt.n:
+            return False
         if pnl > 0:
-            if A.nW + 1 > tgt.nW or pnl > tgt.lw + 0.006 or A.gw + pnl > tgt.gp + EPS:
+            if ("wl" not in drop and A.nW + 1 > tgt.nW)                or ("lw" not in drop and pnl > tgt.lw + 0.006)                or ("gp" not in drop and A.gw + pnl > tgt.gp + EPS):
                 return False
         else:
-            if A.nL + 1 > tgt.nL or pnl < tgt.ll - 0.006 or A.gl + pnl < tgt.gl - EPS:
+            if ("wl" not in drop and A.nL + 1 > tgt.nL)                or ("ll" not in drop and pnl < tgt.ll - 0.006)                or ("gl" not in drop and A.gl + pnl < tgt.gl - EPS):
                 return False
         mae, mfe = mae_mfe(bb, dirn, ei, epx, xi, xpx, atc)
-        if A.mae + mae > tgt.mae + 0.6 or A.mfe + mfe > tgt.mfe + 0.6:
+        if ("mae" not in drop and A.mae + mae > tgt.mae + 0.6)            or ("mfe" not in drop and A.mfe + mfe > tgt.mfe + 0.6):
             return False
         A.tr.append(dict(d=dirn, ei=ei, xi=xi, epx=epx, xpx=xpx, pnl=pnl,
                          mae=mae, mfe=mfe, kind=kind))
@@ -259,6 +265,13 @@ def enumerate_paths(bb, s_start, s_end, tgt: DayTarget, universe,
 
     def feasible_suffix():
         """False => no continuation can reach the exact targets; safe to prune."""
+        if drop:
+            left = tgt.n - A.nW - A.nL
+            if "mae" not in drop and A.mae + left * _maxmae[0] < tgt.mae - 0.6:
+                return False
+            if "mfe" not in drop and A.mfe + left * _maxmfe[0] < tgt.mfe - 0.6:
+                return False
+            return True
         wl = tgt.nW - A.nW
         ll_ = tgt.nL - A.nL
         if A.gw + wl * tgt.lw < tgt.gp - EPS:
@@ -273,16 +286,23 @@ def enumerate_paths(bb, s_start, s_end, tgt: DayTarget, universe,
         return True
 
     def terminal():
-        if (A.nW == tgt.nW and A.nL == tgt.nL
-                and abs(A.gw - tgt.gp) < EPS and abs(A.gl - tgt.gl) < EPS
-                and abs(A.mae - tgt.mae) < 0.6 and abs(A.mfe - tgt.mfe) < 0.6):
-            if tgt.nW and abs(max(x["pnl"] for x in A.tr) - tgt.lw) > 0.006:
-                return
-            if tgt.nL and abs(min(x["pnl"] for x in A.tr) - tgt.ll) > 0.006:
-                return
-            sols.append([dict(x) for x in A.tr])
-            if len(sols) >= max_solutions:
-                overflow[0] = True
+        if "wl" not in drop and (A.nW != tgt.nW or A.nL != tgt.nL):
+            return
+        if "gp" not in drop and abs(A.gw - tgt.gp) >= EPS:
+            return
+        if "gl" not in drop and abs(A.gl - tgt.gl) >= EPS:
+            return
+        if "mae" not in drop and abs(A.mae - tgt.mae) >= 0.6:
+            return
+        if "mfe" not in drop and abs(A.mfe - tgt.mfe) >= 0.6:
+            return
+        if "lw" not in drop and A.nW and abs(max(x["pnl"] for x in A.tr) - tgt.lw) > 0.006:
+            return
+        if "ll" not in drop and A.nL and abs(min(x["pnl"] for x in A.tr) - tgt.ll) > 0.006:
+            return
+        sols.append([dict(x) for x in A.tr])
+        if len(sols) >= max_solutions:
+            overflow[0] = True
 
     def flat(i):
         """Flat and free to decide from bar i onward."""
@@ -355,3 +375,186 @@ def solve_min_extra(bb, s_start, s_end, tgt, universe, extras_ladder=(0, 1, 2, 3
         if stats["overflow"]:
             return [], stats, None
     return [], last, None
+
+
+# ---------------------------------------------------------------------------
+# CALENDAR-day enumeration (directive v4.0 section 5: the day-assignment rule)
+# ---------------------------------------------------------------------------
+def enumerate_calendar_day(bb, span_start, cut_bar, count_lo, count_hi, tgt, universe,
+                           allow_reverse=True, allow_exit_only=True, stop_pts=None,
+                           comm_rt=4.18, max_solutions=20000, node_budget=8_000_000,
+                           exit_strict=False, drop=()):
+    """Enumerate paths where a trade belongs to the report row iff its EXIT bar lies in
+    [count_lo, count_hi] -- i.e. NT8 'Time base = Exit Time' read as a CALENDAR date rather
+    than a trading-session date.
+
+    Simulation runs from `span_start` (a session's first bar) to `cut_bar` (the last bar of
+    the calendar day, 23:59). A position still open at `cut_bar` necessarily exits after the
+    calendar day ends, so it is simply NOT COUNTED -- which is why the span can be truncated
+    there instead of simulating the whole following session.
+
+    Trades outside the counted window are FREE (unconstrained). That weakens pruning, so
+    this is deliberately used only on the days the session-based reading cannot explain.
+    """
+    o, h, l, c, ts, st, lb, fb = (bb[k] for k in ("o", "h", "l", "c", "ts", "st", "lb", "fb"))
+    sess_end = {}
+    for s0, s1 in sessions(bb):
+        if s0 <= cut_bar and s1 >= span_start:
+            for i in range(max(s0, span_start), min(s1, cut_bar) + 1):
+                sess_end[i] = s1
+    cand = [i for i in range(span_start, cut_bar + 1) if eligible(bb, i, universe)]
+    nxt_cand = {}
+    ptr = 0
+    for i in range(span_start, cut_bar + 2):
+        while ptr < len(cand) and cand[ptr] < i:
+            ptr += 1
+        nxt_cand[i] = ptr
+    sols, nodes, overflow = [], [0], [False]
+    EPS = 0.011
+    _seg = {}
+
+    def seg(i, d):
+        key = (i, d)
+        if key in _seg:
+            return _seg[key]
+        ei = i + 1
+        s_end = sess_end.get(i, cut_bar)
+        if ei > s_end or ei > cut_bar:
+            _seg[key] = None
+            return None
+        epx = float(o[ei])
+        k = ei
+        while True:
+            if k >= s_end or lb[k]:
+                r = (d, ei, epx, s_end, float(c[s_end]), True, "sc")
+                break
+            if stop_pts is not None:
+                lvl = epx - d * stop_pts
+                if (l[k] <= lvl) if d > 0 else (h[k] >= lvl):
+                    gap = (o[k] <= lvl) if d > 0 else (o[k] >= lvl)
+                    r = (d, ei, epx, k, float(o[k]) if gap else lvl, True, "stop")
+                    break
+            line = ts[k]
+            hit = (((d > 0 and c[k] < line) or (d < 0 and c[k] > line)) if exit_strict
+                   else ((d > 0 and c[k] <= line) or (d < 0 and c[k] >= line)))
+            if not np.isnan(line) and hit:
+                if k + 1 > s_end:
+                    xi, xpx, atc = s_end, float(c[s_end]), True
+                else:
+                    xi, xpx, atc = k + 1, float(o[k + 1]), False
+                sg = st[k]
+                cr = (abs(sg) == 1 and np.sign(sg) == -d and k >= BARS_REQUIRED
+                      and not lb[k] and not atc)
+                r = (d, ei, epx, xi, xpx, atc, "rev" if cr else "ts")
+                _seg[key] = r + (bool(cr), int(np.sign(sg)) if cr else 0)
+                return _seg[key]
+            k += 1
+        _seg[key] = r + (False, 0)
+        return _seg[key]
+
+    class Acc:
+        __slots__ = ("tr", "nW", "nL", "gw", "gl", "mae", "mfe")
+
+        def __init__(self):
+            self.tr = []; self.nW = self.nL = 0
+            self.gw = self.gl = self.mae = self.mfe = 0.0
+
+    A = Acc()
+
+    def counted(xi):
+        return count_lo <= xi <= count_hi
+
+    def push(d, ei, epx, xi, xpx, atc, kind):
+        cnt = counted(xi)
+        pnl = round(d * (xpx - epx) * POINT_VALUE - comm_rt, 2)
+        mae = mfe = 0.0
+        if cnt:
+            if A.nW + A.nL + 1 > tgt.n:
+                return False
+            if pnl > 0:
+                if ("wl" not in drop and A.nW + 1 > tgt.nW) \
+                   or ("lw" not in drop and pnl > tgt.lw + 0.006) \
+                   or ("gp" not in drop and A.gw + pnl > tgt.gp + EPS):
+                    return False
+            else:
+                if ("wl" not in drop and A.nL + 1 > tgt.nL) \
+                   or ("ll" not in drop and pnl < tgt.ll - 0.006) \
+                   or ("gl" not in drop and A.gl + pnl < tgt.gl - EPS):
+                    return False
+            mae, mfe = mae_mfe(bb, d, ei, epx, xi, xpx, atc)
+            if ("mae" not in drop and A.mae + mae > tgt.mae + 0.6) \
+               or ("mfe" not in drop and A.mfe + mfe > tgt.mfe + 0.6):
+                return False
+            if pnl > 0:
+                A.nW += 1; A.gw += pnl
+            else:
+                A.nL += 1; A.gl += pnl
+            A.mae += mae; A.mfe += mfe
+        A.tr.append(dict(d=d, ei=ei, xi=xi, epx=epx, xpx=xpx, pnl=pnl,
+                         mae=mae, mfe=mfe, kind=kind, counted=cnt))
+        return True
+
+    def pop():
+        tr = A.tr.pop()
+        if tr["counted"]:
+            if tr["pnl"] > 0:
+                A.nW -= 1; A.gw -= tr["pnl"]
+            else:
+                A.nL -= 1; A.gl -= tr["pnl"]
+            A.mae -= tr["mae"]; A.mfe -= tr["mfe"]
+
+    def terminal():
+        if A.nW + A.nL != tgt.n:
+            return
+        if "wl" not in drop and (A.nW != tgt.nW or A.nL != tgt.nL):
+            return
+        if "gp" not in drop and abs(A.gw - tgt.gp) >= EPS:
+            return
+        if "gl" not in drop and abs(A.gl - tgt.gl) >= EPS:
+            return
+        if "mae" not in drop and abs(A.mae - tgt.mae) >= 0.6:
+            return
+        if "mfe" not in drop and abs(A.mfe - tgt.mfe) >= 0.6:
+            return
+        cw = [x for x in A.tr if x["counted"]]
+        if "lw" not in drop and A.nW and abs(max(x["pnl"] for x in cw) - tgt.lw) > 0.006:
+            return
+        if "ll" not in drop and A.nL and abs(min(x["pnl"] for x in cw) - tgt.ll) > 0.006:
+            return
+        sols.append([dict(x) for x in A.tr])
+        if len(sols) >= max_solutions:
+            overflow[0] = True
+
+    def flat(i):
+        nodes[0] += 1
+        if nodes[0] > node_budget:
+            overflow[0] = True
+            return
+        terminal()
+        for kk in range(nxt_cand.get(min(i, cut_bar + 1), len(cand)), len(cand)):
+            j = cand[kk]
+            sg = st[j]
+            take(seg(j, 1 if sg > 0 else -1))
+            if overflow[0]:
+                return
+
+    def take(r):
+        if r is None:
+            return
+        d, ei, epx, xi, xpx, atc, kind, can_rev, rdir = r
+        if not push(d, ei, epx, xi, xpx, atc, kind):
+            return
+        if kind == "sc" and sess_end.get(xi, -1) == xi and xi >= cut_bar:
+            terminal()
+        elif kind == "sc":
+            flat(xi + 1)
+        else:
+            if can_rev and allow_reverse:
+                take(seg(xi - 1, rdir))
+            if (not can_rev) or allow_exit_only:
+                flat(xi)
+        pop()
+
+    flat(span_start)
+    return sols, dict(n_candidates=len(cand), nodes=nodes[0],
+                      overflow=overflow[0], n_solutions=len(sols))
