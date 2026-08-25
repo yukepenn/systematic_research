@@ -1,0 +1,108 @@
+run_id: OTR_R11_INVERSE
+title: "Set-valued inverse trade-path reconstruction from NT8 Daily Analysis metrics"
+directive: "OWNER MASTER DIRECTIVE v4.0 (2026-08-24), phases P1/P2/P3 (sections 5,6,7,8,9,10)"
+date_opened: 2026-08-24
+status: OPEN
+campaign: OTR (#6)
+
+purpose: >
+  Replace the R1e subset-diff (which assumed the original trades are a SUBSET of one
+  candidate stream) with a set-valued inverse reconstruction over explicitly enumerated
+  Solar event universes, constrained by ALL metrics visible in the trader's NT8
+  Daily Analysis table (OTRIMG-0003, OTRIMG-0026) -- including the previously unused
+  path statistics avg_MAE / avg_MFE / avg_ETD.
+
+motivating_observation:
+  note: >
+    PRE-SPEC DIAGNOSTIC on already-committed run OTR_R6_NT8_PARITY (layerA_nt8_raw.json,
+    committed 2026-08-24). No new model was fit; this is a re-read of a frozen artifact,
+    recorded here for provenance because it motivated this run.
+  finding_1: >
+    NT8 serializes MaeCurrency / MfeCurrency / EtdCurrency per trade. The trader's
+    daily avg_MAE * n and avg_MFE * n resolve to EXACT integer dollar sums that are
+    multiples of $5 (= 1 NQ tick * $20/pt * 0.25) on all 11 visible Jan-2023 days.
+    => 22 new exact integer constraints, orthogonal to PnL.
+  finding_2: >
+    Current CAND2 (via NT8) already matches trade-count AND sum-MAE AND sum-MFE exactly
+    on 7 of 11 days (1/3,1/5,1/6,1/9,1/10,1/11,1/16); 6 of those also match net to the cent.
+  finding_3: >
+    On 2023-01-13 and 2023-01-17 CAND2 produces FEWER trades than the target (4 vs 6 both
+    days). A removal-only ("subset-diff") solver is structurally incapable of explaining
+    these days. This falsifies the premise of R1e as a global explanation and is the
+    formal reason to widen the event universe.
+
+epistemic_status_corrections_adopted:
+  - "R1e/R1f TAKE/SKIP outputs are CONDITIONAL_LATENT_LABELS under a candidate-event-universe
+     assumption, NOT observed original trade labels. The phrase 'ground-truth trade labels'
+     is retired (directive v4.0 section 1D)."
+  - "R6 established IMPLEMENTATION_PARITY (Python CAND2 <-> NinjaScript CAND2 <-> NT8 SA),
+     NOT ORIGINAL_PARITY (directive v4.0 section 1A)."
+
+hypotheses:
+  H-R11-1: >
+    NT8 MAE/MFE (currency) for a trade = max adverse / favorable excursion measured from
+    the entry FILL price over bar HIGH/LOW across bars [entry_bar .. exit_bar] inclusive,
+    times point value times quantity, floored at 0.
+    FALSIFIER: any mismatch vs the 90 NT8-serialized trades in layerA_nt8_raw.json.
+  H-R11-2: >
+    NT8 Daily Analysis with Time base = Exit Time assigns a trade to the CALENDAR date of
+    its exit timestamp (exchange/session-display time), not the trading-session date.
+    NOTE: for a strategy flat at every session close these two rules coincide unless a
+    trade exits in the 18:00-23:59 ET evening block; test measures whether the corpus can
+    separate them at all.
+  H-R11-3: >
+    There exists a Solar event universe U and a wrapper W with NO day-specific constants
+    such that every visible daily aggregate (n, nW, nL, gross profit, gross loss, largest
+    winner, largest loser, sum MAE, sum MFE) is simultaneously satisfiable.
+    FALSIFIER: a day for which NO feasible path exists under ANY tested universe.
+
+event_universes:
+  U1: "T1 only"
+  U2: "T1 + T2 (PullbackEarly=True)"
+  U3: "T1 + T2 (PullbackEarly=False)"
+  U4: "T1 + T3"
+  U5: "T1 + T2E + T3"
+  U6: "T1 + T2L + T3"
+  note: >
+    PullbackEarly is treated as a HIDDEN FIXED implementation choice (the trader's panel
+    exposes only 5 NUMERIC parameters A1-A5), not an optimization knob (directive v4.0 section 6).
+  A_params: "A1=90 A2=179 A3=5 A4=10 A5=10 (offset_trend / offset_stop / slowdown_scan /
+    weak_weak_split / pullback_split), frozen from OTRIMG evidence"
+
+constraints_used:
+  exact: [trade_count, winner_count, loser_count, sum_MAE_usd, sum_MFE_usd, commission]
+  exact_when_uncropped: [gross_profit, gross_loss, largest_winner, largest_loser, net]
+  interval_when_cropped: "cropped cell tails are handled as INTERVALS, never fabricated"
+  derived_identity: "avg_ETD = avg_MFE - avg_net_profit (verified on all 11 days; ETD carries no independent information)"
+  cost_basis: "$4.18 per round turn (= commission column / n on every 2023 day); 2025 rows use $5.68/RT"
+
+method:
+  P1: "Calibrate a Python MAE/MFE oracle against the 90 NT8-serialized trades; accept only 90/90 exact."
+  P2: "Generate exact per-bar event ledgers from solar_wave_full() for each universe."
+  P3: >
+    Depth-first path enumeration over the decision DAG (flat -> take/skip each signal;
+    in-position exits are deterministic under the wrapper), with monotone pruning on
+    n, nW, nL, cumulative MAE, cumulative MFE, gross profit and gross loss.
+    Emit ALL feasible paths, then classify each event MUST_TAKE / MUST_SKIP / AMBIGUOUS,
+    and each (day, universe) FEASIBLE / IMPOSSIBLE_UNDER_UNIVERSE.
+
+outputs:
+  - runs/OTR_R11_INVERSE/out/mae_mfe_calibration.json
+  - runs/OTR_R11_INVERSE/out/daily_targets_parsed.csv
+  - research/original_trader_reconstruction/platform_semantics/NT8_DAILY_ANALYSIS_SEMANTICS.md
+  - research/original_trader_reconstruction/solar_family/inverse/EVENT_UNIVERSES.md
+  - research/original_trader_reconstruction/solar_family/inverse/FEASIBLE_PATH_SUMMARY.csv
+  - research/original_trader_reconstruction/solar_family/inverse/EVENT_INVARIANTS.csv
+  - research/original_trader_reconstruction/solar_family/inverse/UNIVERSE_ADJUDICATION.md
+
+selection_rule: >
+  NO selection by PnL or by net profit. A universe is adjudicated ONLY by feasibility
+  (can it reproduce every visible daily aggregate at all) and by the size of the
+  ambiguous set. Rival universes that are observationally equivalent are BOTH kept
+  (directive v4.0 sections 6/46).
+
+safety:
+  - "Research/backtest only. CrossTrade used for historical Strategy Analyzer runs and
+     historical bar reads ONLY; never orders, never deploy, never Sim101/live."
+  - "LOCKED_FORWARD >= 2026-08-01 untouched by this run."
+  - "Original screenshots read-only."
