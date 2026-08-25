@@ -1,0 +1,1395 @@
+# MODEL REGISTRY - OTR campaign #6 (Original Trader Reconstruction)
+# Built 2026-08-24 per OWNER MASTER DIRECTIVE v4.0 section 42.
+# Companion file: RUN_PROVENANCE.csv (directive section 44).
+#
+# WHY THIS FILE EXISTS
+#   The campaign reused a small number of names ("OTR-S-CAND1", "OTR-S-CAND2",
+#   "OTR-VF-CAND1", "the T1 control", "the VF4 clone") across materially different
+#   configurations - different cost models, different A-parameter eras, different stop
+#   distances, different gate constants, different data. This registry mints an
+#   IMMUTABLE id per distinct configuration so a claim can never again point at an
+#   ambiguous name. Where a fact is not recoverable from the repo the field says
+#   UNKNOWN; nothing here is guessed.
+#
+# LOAD-BEARING FINDING THAT FORCES COST-MODEL SEPARATION
+#   In the CAND2 engine family the D-gate reads SESSION REALIZED EQUITY, and realized
+#   PnL is computed net of commission (`pnl = pos*(p-epx)*PV - 2*comm_side` feeds cum /
+#   hi / consec, which the gate `ok()` then reads - solar_family/src/run_r1j_gatesemantics.py
+#   lines 46-62). Therefore commission is INSIDE the model, not a post-hoc accounting
+#   layer: the same wrapper at $4.18/RT and at $0 produces DIFFERENT trade streams
+#   (master n = 4,598 vs 4,592). Status of this statement: REPRODUCED (endpoints:
+#   runs/OTR_R1_SERIES/out/v_mg_result.md at comm_side 2.09 vs
+#   runs/OTR_R6_NT8_PARITY/out/python_reference_comm0.json at comm_side 0).
+#
+# SCOPE RULE (stated so the omissions are not silent)
+#   Registered here: every candidate that received a campaign-level NAME, every member
+#   of a named cluster, every control/base model that was CARRIED ACROSS runs, and every
+#   variant block that a run enumerated and reported per-variant. NOT registered as
+#   separate ids: individual cells of a within-run sweep that were never named or carried
+#   (S1 31 cells, S3 22, S3B 34, V1 10, VF1 12, R7 208, ...). Those are fully enumerated
+#   in each run's own out/sweep_results.json + scorecard.csv, which RUN_PROVENANCE.csv
+#   names per run.
+#
+# STATUS VOCABULARY (lifecycle of the model object, distinct from the directive's five
+# EVIDENCE statuses which apply to claims)
+#   FROZEN_REFERENCE  - fixed benchmark, not a hypothesis about the trader
+#   INCUMBENT         - current best member of its family
+#   CLUSTER_MEMBER    - kept under section 6 (observationally equivalent rival)
+#   DEMOTED           - kept as a member, no longer co-leader
+#   CONTROL           - run to test whether a discriminator carries signal
+#   SUPERSEDED        - replaced by a later id, artifacts preserved
+#   RETIRED           - withdrawn by us (implementation defect or falsified premise)
+#   FALSIFIED         - tested and rejected against evidence; kept with the falsifier
+#   DISQUALIFIED      - excluded by a preregistered DQ rule
+#   VACUOUS           - the configuration provably could not differ from its baseline
+#   OPEN              - defined and specced, adjudication incomplete
+#
+# NAMING GRAMMAR
+#   <FAMILY>_<SHAPE>_<ERA/PARAMS>_<STOP>_<COMM>   e.g. CAND2_ERA_B180_STOP75_COMM0
+#   COMM0 = $0/side, COMM418 = $4.18/RT ($2.09/side), COMM436 = $4.36/RT ($2.18/side).
+#   Solar A-params written as A1/A2/A3/A4/A5 = offset_trend / offset_stop / slowdown_scan
+#   / weak_weak_split / pullback_split.
+
+models:
+
+# ============================================================================
+# FAMILY: TYPE1_BASELINE - the frozen vendor-replica benchmark (not a hypothesis
+# about the original trader; it is the substrate certification object)
+# ============================================================================
+
+  - model_id: T1_V0_BASELINE_COMM436
+    family: TYPE1_BASELINE
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine.py (ARM_LEDGER + ARM_PYTHON in run_s0.py)
+    config_summary: >
+      Pure-Python reimplementation of SolarWaveRKReplicaV0 Type-1. Enter when FLAT on
+      signal_trade == +-1, fill next-bar open, slippage 0, BarsRequiredToTrade 20,
+      entries signalled on a session's last bar dropped, exit on opposite flip or on
+      INCLUSIVE close-vs-end-of-bar-TrailingStop touch, session-close exit at the last
+      bar's close. Solar params 90/179/5/10/true/10.
+    event_universe: "T1 only (Signal_Trade == +-1 trend starts)"
+    wrapper: "none (bare V0 semantics; no time filter, no gate, no protective stop)"
+    cost_model: "$4.36/RT ($2.18/side, NinjaTrader Brokerage Lifetime)"
+    data_source: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv (737,707 bars)
+    date_window: "2023-01-02T18:01 .. 2025-01-31T17:00 ET"
+    purpose: "Certify the Python trading loop against the frozen canonical NT8 result before any wrapper hypothesis is scored"
+    defining_run: OTR_S0_TYPE1_REPRO
+    status: FROZEN_REFERENCE
+    notes: >
+      2,914 of 2,915 trades exact in entry time, entry price, exit price and PnL vs the
+      NT8 serialized list; the single difference is the documented data-boundary trade
+      (delta = 15.25 pts = $305.00). This is IMPLEMENTATION_PARITY (our Python <-> the
+      frozen NT8 canonical run), never ORIGINAL_PARITY.
+
+  - model_id: T1_V0_BASELINE_COMM418
+    family: TYPE1_BASELINE
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r1.py
+    config_summary: "Same V0 Type-1 semantics as T1_V0_BASELINE_COMM436, rescored at the trader's own commission rate as a reference row in the R1.1 master rescore table"
+    event_universe: "T1 only"
+    wrapper: "none"
+    cost_model: "$4.18/RT ($2.09/side) - the rate visible in OTRIMG-0002"
+    data_source: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv
+    date_window: "2023-01-01T06:00:00Z .. 2025-02-02T22:59:59Z (master window)"
+    purpose: "Reference row: how far the bare vendor mechanism sits from the trader's pixel-read master row-set"
+    defining_run: OTR_R1_SERIES
+    status: FROZEN_REFERENCE
+    notes: >
+      Separated from COMM436 because the cost basis differs, not because the mechanism
+      does. For a gate-free model commission is a pure accounting layer; this id exists
+      so the two rows are never conflated in a table.
+
+# ============================================================================
+# FAMILY: TRACK_S_SHAPE - the named wrapper shapes swept in S1..S6 (comm $0)
+# Each shape is quoted in later runs as "E13_R1", "E1_R1", "E13_P0"; the window and
+# mode suffix is always required to make a shape a runnable model.
+# ============================================================================
+
+  - model_id: S_SHAPE_E1_R1_COMM0
+    family: TRACK_S_SHAPE
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine.py (WrapperPolicy entry_types=(1,), reverse_on_flip=True)
+    config_summary: "Pure stop-and-reverse on T1 flips; touch exit; session-close flat; next-bar-open fills; slippage 0"
+    event_universe: "T1 only"
+    wrapper: "reverse_on_flip=True; no time filter in the base cell (S3/S3B attach windows)"
+    cost_model: "$0/side (Layer-1 screenshot parity)"
+    data_source: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv
+    date_window: "2023-01 .. 2025-02 (EARLY_LONG)"
+    purpose: "Wrapper-shape hypothesis: the original reverses at flips"
+    defining_run: OTR_S1_ARBITRATION
+    status: SUPERSEDED
+    notes: >
+      S1 diagnostic: hold and WR near target, count +24% too high. Carried into S3/S3B/S4.
+      Became the R2 amended base (see R2_BASE_T1REV_COMM0) after R1 falsified CAND1.
+
+  - model_id: S_SHAPE_E13_P0_COMM0
+    family: TRACK_S_SHAPE
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine.py (entry_types=(1,3), P0_unlimited)
+    config_summary: "T1 + T3 entries when flat, unlimited events per trend, NO reversal on flip; touch exit; session-close flat"
+    event_universe: "T1 + T3 (trend starts + strengthening/resumption)"
+    wrapper: "P0_unlimited; no time filter in the base cell"
+    cost_model: "$0/side"
+    data_source: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv
+    date_window: "2023-01 .. 2025-02 (EARLY_LONG)"
+    purpose: "Wrapper-shape hypothesis: entries accumulate within a trend without reversal"
+    defining_run: OTR_S1_ARBITRATION
+    status: SUPERSEDED
+    notes: "S1 diagnostic: count/WR/PF/DD in band, hold +42% too long. Best hold match of the family at EXCL_0200_0800 (100.1 min) but count -12.5%."
+
+  - model_id: S_SHAPE_E13_R1_COMM0
+    family: TRACK_S_SHAPE
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine.py (entry_types=(1,3), reverse_on_flip=True)
+    config_summary: "T1 + T3 entries when flat AND stop-and-reverse on opposite flips; touch exit; session-close flat"
+    event_universe: "T1 + T3"
+    wrapper: "reverse_on_flip=True; window attached per cell"
+    cost_model: "$0/side"
+    data_source: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv
+    date_window: "2023-01 .. 2025-02 (EARLY_LONG)"
+    purpose: "The shape that carried the Track-S frontier"
+    defining_run: OTR_S3B_SELTIME_CROSS
+    status: SUPERSEDED
+    notes: "At W_0400_1600 force-flat this shape IS OTR-S-CAND1 (D=1.153). Falsified as an identification by R1.2 per-day forensics (T3 entries absent from every cent-exact target day)."
+
+  - model_id: S_SHAPE_E1_2STRONG_3_COMM0
+    family: TRACK_S_SHAPE
+    source_file: research/original_trader_reconstruction/solar_family/src/run_s5.py (S6 cell definitions)
+    config_summary: "T1 + strong-only T2 (pullback fires only while |Signal_Trend| == 2) + T3, no reversal; touch exit"
+    event_universe: "T1 + T2(strong-only) + T3"
+    wrapper: "P0-style, windows EXCL_0200_0800 / W_0200_1600 / W_0400_1600 / none"
+    cost_model: "$0/side"
+    data_source: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv
+    date_window: "2023-01 .. 2025-02 (EARLY_LONG)"
+    purpose: "Final Track-S mechanism pass: a BINDING T2 gate (68% of T2 events fire while trend is weak) to add ~430 entries without shortening holds"
+    defining_run: OTR_S6_T2_CONDITIONED
+    status: FALSIFIED
+    notes: "Did not beat D=1.153; third consecutive non-improving mechanism pass -> Track-S wrapper search closed at the frozen sec 49 stop rule."
+
+# ============================================================================
+# FAMILY: OTR_S_CAND1 - the first named campaign candidate (RETIRED 2026-08-24)
+# NAME-REUSE HAZARD: this one name was scored at two different commission bases and
+# used as the base of two different downstream grids, one of which silently changed it.
+# ============================================================================
+
+  - model_id: S_CAND1_COMM0
+    family: OTR_S_CAND1
+    source_file: research/original_trader_reconstruction/solar_family/src/run_s8.py (WrapperPolicy name="OTR-S-CAND1", comm_side=0.0)
+    config_summary: >
+      E13_R1 | W_0400_1600 | FF. T1+T3 entries when flat, stop-and-reverse on opposite
+      flips, entries allowed only 04:00-16:00 ET bar-stamps with FORCE-FLAT outside,
+      exit on Close touching the end-of-bar TrailingStop (inclusive), session-close flat,
+      next-bar-open fills, Solar params 90/179/5/10/true/10, qty 1.
+    event_universe: "T1 + T3"
+    wrapper: "reverse_on_flip + 04:00-16:00 ET entry window with TimeExit force-flat; no protective stop; no equity gate"
+    cost_model: "$0/side (Layer-1)"
+    data_source: t2_canonical_1m.csv (identification) and nq1m_2005_202605.parquet (S8/S13 cross-window)
+    date_window: "identification 2023-01..2025-02; carried to 2025-08-15..2026-05-29 (S8) and 2006..2026-05 (S13)"
+    purpose: "First campaign-level reconstruction candidate for the early Solar family"
+    defining_run: OTR_S3B_SELTIME_CROSS (frontier) / OTR_S8_CROSSWINDOW (frozen definition)
+    status: RETIRED
+    notes: >
+      RETIRED 2026-08-24 by R1.2 per-day pixel forensics on OTRIMG-0003. Two independent
+      falsifiers: (a) the target contains overnight trades the 04:00-16:00 window forbids
+      (e.g. a long 21:39 -> 06:44 +$2,270.82 that our no-window variant matches to the
+      cent), and (b) every T3 entry in our runs is absent from the cent-exact target days.
+      Artifacts preserved; never delete.
+
+  - model_id: S_CAND1_COMM418
+    family: OTR_S_CAND1
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r1.py
+    config_summary: "Identical wrapper to S_CAND1_COMM0, rescored at the trader's own commission rate for the R1.1 master comparison"
+    event_universe: "T1 + T3"
+    wrapper: "as S_CAND1_COMM0"
+    cost_model: "$4.18/RT ($2.09/side)"
+    data_source: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv
+    date_window: "2023-01-01T06:00:00Z .. 2025-02-02T22:59:59Z (master)"
+    purpose: "Score the frozen candidate against the exact pixel-read master row-set at the commission basis the screenshot itself used"
+    defining_run: OTR_R1_SERIES
+    status: RETIRED
+    notes: >
+      Measured: 4,665 trades (2,379L/2,286S), net $234,235.30, WR 39.79, PF 1.129,
+      DD -$33,530.90, hold 74.92, largest loss -$4,449.18 (cent-exact vs target).
+      Target: 4,351 trades, net $292,172.82, WR 40.29, PF 1.18, DD -$32,677.42, hold 94.15.
+      NAME-REUSE: prior text says "OTR-S-CAND1" for both this and S_CAND1_COMM0.
+
+  - model_id: S_CAND1_LL_A_PERTRADE_2500
+    family: OTR_S_CAND1_LOSSLIMIT
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine.py (loss_limit_mode per SD1 spec)
+    config_summary: "S_CAND1 base + semantic A: exit when the OPEN trade's bar-close MTM <= -$2,500 (fill next open)"
+    event_universe: "T1 + T3"
+    wrapper: "as S_CAND1 plus per-trade MTM cap 2500"
+    cost_model: "UNSTATED in spec; verified $0/side (base net $253,735 on 4,665 trades)"
+    data_source: t2_canonical_1m.csv + nq1m_2005_202605.parquet
+    date_window: "canonical 2023-01..2025-01 (539 sessions) + late-2025 2025-08-15..2026-01-03"
+    purpose: "Adjudicate the LossLimit=2500 field seen on an RKSelTimeDSTM panel"
+    defining_run: OTR_SD1_LOSSLIMIT
+    status: FALSIFIED
+    notes: "Behaviorally INERT: -3 trades / -$1.8k over 25 months. A trader does not display and then change a knob that never fires (weak Class-C inference that LossLimit is session-level)."
+
+  - model_id: S_CAND1_LL_A_PERTRADE_4000
+    family: OTR_S_CAND1_LOSSLIMIT
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine.py
+    config_summary: "S_CAND1 base + semantic A at $4,000"
+    event_universe: "T1 + T3"
+    wrapper: "as S_CAND1 plus per-trade MTM cap 4000"
+    cost_model: "UNSTATED in spec; verified $0/side"
+    data_source: t2_canonical_1m.csv + nq1m_2005_202605.parquet
+    date_window: "canonical 2023-01..2025-01 + late-2025 2025-08-15..2026-01-03"
+    purpose: "Adjudicate the LossLimit=4000 value seen on a second panel"
+    defining_run: OTR_SD1_LOSSLIMIT
+    status: FALSIFIED
+    notes: "Inert: -1 trade / -$0.9k."
+
+  - model_id: S_CAND1_LL_B_SESSREALIZED_2500
+    family: OTR_S_CAND1_LOSSLIMIT
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine.py
+    config_summary: "S_CAND1 base + semantic B: when realized session PnL <= -$2,500, no NEW entries (reversals degrade to plain exits) until next session; an open position exits normally"
+    event_universe: "T1 + T3"
+    wrapper: "as S_CAND1 plus realized-session entry block at 2500, reset at 18:00 ET"
+    cost_model: "UNSTATED in spec; verified $0/side"
+    data_source: t2_canonical_1m.csv + nq1m_2005_202605.parquet
+    date_window: "canonical 2023-01..2025-01 + late-2025 2025-08-15..2026-01-03"
+    purpose: "Session-level LossLimit reading"
+    defining_run: OTR_SD1_LOSSLIMIT
+    status: OPEN
+    notes: "-184 trades / -$17.6k vs base. Weakly favored with B_4000 and C_4000; weekly aggregates cannot separate B from C - needs a session-level PnL trace or an intraday screenshot of a stop-out day."
+
+  - model_id: S_CAND1_LL_B_SESSREALIZED_4000
+    family: OTR_S_CAND1_LOSSLIMIT
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine.py
+    config_summary: "S_CAND1 base + semantic B at $4,000"
+    event_universe: "T1 + T3"
+    wrapper: "as S_CAND1 plus realized-session entry block at 4000"
+    cost_model: "UNSTATED in spec; verified $0/side"
+    data_source: t2_canonical_1m.csv + nq1m_2005_202605.parquet
+    date_window: "canonical 2023-01..2025-01 + late-2025 2025-08-15..2026-01-03"
+    purpose: "Session-level LossLimit reading at the second observed value"
+    defining_run: OTR_SD1_LOSSLIMIT
+    status: OPEN
+    notes: "-78 trades / -$1.5k vs base; B_2500 gives n=59 vs target 60 in W20251130."
+
+  - model_id: S_CAND1_LL_C_SESSMTM_2500
+    family: OTR_S_CAND1_LOSSLIMIT
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine.py
+    config_summary: "S_CAND1 base + semantic C: when realized + open MTM <= -$2,500 at bar close, flatten (next open) and disable until next session"
+    event_universe: "T1 + T3"
+    wrapper: "as S_CAND1 plus session-MTM flatten-and-disable at 2500"
+    cost_model: "UNSTATED in spec; verified $0/side"
+    data_source: t2_canonical_1m.csv + nq1m_2005_202605.parquet
+    date_window: "canonical 2023-01..2025-01 + late-2025 2025-08-15..2026-01-03"
+    purpose: "Most aggressive session-level LossLimit reading; also stands in for directive semantics D and F (behaviorally identical)"
+    defining_run: OTR_SD1_LOSSLIMIT
+    status: OPEN
+    notes: "-1,142 trades / -$66.9k vs base; mildly disfavored - visibly damages W20251228 (20 trades vs 31 observed)."
+
+  - model_id: S_CAND1_LL_C_SESSMTM_4000
+    family: OTR_S_CAND1_LOSSLIMIT
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine.py
+    config_summary: "S_CAND1 base + semantic C at $4,000"
+    event_universe: "T1 + T3"
+    wrapper: "as S_CAND1 plus session-MTM flatten-and-disable at 4000"
+    cost_model: "UNSTATED in spec; verified $0/side"
+    data_source: t2_canonical_1m.csv + nq1m_2005_202605.parquet
+    date_window: "canonical 2023-01..2025-01 + late-2025 2025-08-15..2026-01-03"
+    purpose: "Session-MTM reading at the second observed value"
+    defining_run: OTR_SD1_LOSSLIMIT
+    status: OPEN
+    notes: "-552 trades / -$48.0k vs base; within noise of the four late-2025 weekly fingerprints."
+
+# ============================================================================
+# FAMILY: R2_STOP_GRID - 2025 St-group stop semantics on the amended T1+reverse base
+# ============================================================================
+
+  - model_id: R2_BASE_T1REV_COMM0
+    family: R2_STOP_GRID
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r2.py (WrapperPolicy comm_side=0.0, entry_types=(1,), reverse_on_flip=True)
+    config_summary: "T1-only stop-and-reverse, no time mask, no equity gate, no stop; era A-params 90/179/5/10/10 (windows to 2025-10-24) and 90/180/3/6/9 (from 2025-11-07); the 10/31 window run under BOTH"
+    event_universe: "T1 only"
+    wrapper: "reverse_on_flip only"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet; targets screenshot_forensics/derived/targets_weekly_2025S.csv
+    date_window: "fresh signal state 2025-06-15; 28 weekly windows Jul-2025 .. Jan-2026"
+    purpose: "Control (G0) for the stop grid, after R1 falsified the CAND1 base mid-run"
+    defining_run: OTR_R2_STOPGROUP
+    status: CONTROL
+    notes: >
+      NAME-REUSE: the R2 spec's original text calls the base "OTR-S-CAND1 (T1+T3,
+      reverse-on-flip, 04:00-16:00 entries, force-flat outside, touch exit, comm 0)";
+      amendment_1 (committed before readout) REPLACED it with this materially different
+      base while the run id and prose kept saying "the R2 base". Counts under this base
+      run 1.5-2.4x target - it carries no entry gate.
+
+  - model_id: R2_G1_INIT65_COMM0
+    family: R2_STOP_GRID
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine_stops.py
+    config_summary: "R2_BASE_T1REV + initial protective stop 65 points both sides, INTRABAR, fill at the stop level or at the open when gapped through"
+    event_universe: "T1 only"
+    wrapper: "reverse_on_flip + 65-pt intrabar initial stop"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet; targets targets_weekly_2025S.csv
+    date_window: "28 weekly windows Jul-2025 .. Jan-2026"
+    purpose: "Test whether the St-group field 'In 65' is a 65-point initial protective stop"
+    defining_run: OTR_R2_STOPGROUP
+    status: INCUMBENT
+    notes: >
+      SUPPORTED at the signature level: reproduces the exact -$1,300.00 largest-loss caps
+      in 6 of the 8 weeks whose targets show them, while firing rarely (0-7 stops/week) -
+      a backstop, not the exit engine. Overshoots of 3-12 points beyond 65 are consistent
+      with 1-min intrabar gap-through fills.
+
+  - model_id: R2_G2_INIT65_TRAIL30_COMM0
+    family: R2_STOP_GRID
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine_stops.py
+    config_summary: "G1 + always-on trailing stop 30 points from the best extreme, intrabar, replacing the engine TS exit only when tighter"
+    event_universe: "T1 only"
+    wrapper: "reverse_on_flip + 65-pt initial + always-on 30-pt trail"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "28 weekly windows Jul-2025 .. Jan-2026"
+    purpose: "Test the St-group field 'Tr 30' as an always-on trailing stop"
+    defining_run: OTR_R2_STOPGROUP
+    status: FALSIFIED
+    notes: "Caps every week's worst loss at approximately -$600, contradicting the -$1,300 targets."
+
+  - model_id: R2_G3_INIT65_TRAIL30_ACT20_COMM0
+    family: R2_STOP_GRID
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine_stops.py
+    config_summary: "G1 + 30-point trail ARMED ONLY after +20 points favorable excursion (reading the St-group 'M 20' field as an activation threshold)"
+    event_universe: "T1 only"
+    wrapper: "reverse_on_flip + 65-pt initial + activation-gated 30-pt trail"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "28 weekly windows Jul-2025 .. Jan-2026"
+    purpose: "Alternative reading of the trail field that preserves the -1,300 caps"
+    defining_run: OTR_R2_STOPGROUP
+    status: OPEN
+    notes: "Keeps the -$1,300 caps and stays viable; final adjudication blocked on the entry gate (counts are 1.5-2.4x target under the gate-free base)."
+
+  - model_id: R2_G4_INIT65_DIRECTIONAL_COMM0
+    family: R2_STOP_GRID
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine_stops.py
+    config_summary: "Initial 65 long / 65 short toggled separately (reading the 'I 65' row as a short-side initial stop) + 30-pt trail, M unused"
+    event_universe: "T1 only"
+    wrapper: "reverse_on_flip + per-side initial stops + trail"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "28 weekly windows Jul-2025 .. Jan-2026"
+    purpose: "Test whether the St-group exposes per-direction stops"
+    defining_run: OTR_R2_STOPGROUP
+    status: OPEN
+    notes: "No separate verdict issued in R2; the directional-stop question was reopened and partially answered by R5 amendment_1 (see CAND2_ERA_B180_L65_S75_COMM0)."
+
+  - model_id: R2_G5_TRAIL30_FROMENTRY_COMM0
+    family: R2_STOP_GRID
+    source_file: research/original_trader_reconstruction/solar_family/src/otr_engine_stops.py
+    config_summary: "G2 with the trail measured from the ENTRY price rather than from the best extreme"
+    event_universe: "T1 only"
+    wrapper: "reverse_on_flip + 65-pt initial + entry-anchored 30-pt trail"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "28 weekly windows Jul-2025 .. Jan-2026"
+    purpose: "Trail-anchor semantics alternative"
+    defining_run: OTR_R2_STOPGROUP
+    status: OPEN
+    notes: "No separate verdict issued in R2."
+
+# ============================================================================
+# FAMILY: OTR_S_CAND2 - the current early-Solar candidate class
+# THE PRINCIPAL NAME-REUSE SITE OF THE CAMPAIGN. "CAND2" has been used for at least
+# five materially different configurations: two gate-constant sets, two commission
+# bases, with and without a protective stop, and three A-parameter eras.
+# ============================================================================
+
+  - model_id: CAND2_GATE_C1000_COMM418
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r1g.py (cell INTEGRATED_X1600_K3_C1000 / INT_T1only_X1600)
+    config_summary: >
+      R1 amendment_2 registered integration model. Signals solar_wave_full
+      90/179/5/10/10 with pullback_early=FALSE. Entries: T1 flips (stop-and-reverse).
+      B1: no entry decision on a session's first bar. D-gate on self-consistent realized
+      session equity, reset each 18:00 ET: evening block (prior session net <= -C -> no
+      entries for the first 360 min); armed when session high >= X and time >= noon ET
+      (cum < 0 blocks all; K consecutive same-side losses blocks that side).
+      Constants X=1600, K=3, C=1000. NO X2, NO session cap, NO cooldown, NO stop.
+    event_universe: "T1 only (the registered variant also had a T1+late-T2 arm, dropped after readout)"
+    wrapper: "B1 first-bar drop + D-gate {X=1600, K=3, C=1000} + inclusive TS-touch exit + session-close flat"
+    cost_model: "$4.18/RT ($2.09/side)"
+    data_source: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv
+    date_window: "2023-01-01T06:00:00Z .. 2025-02-02T22:59:59Z (master); Jan-2023 11-day label slice"
+    purpose: "First integration of the two identified layers (FAMILY D session-equity wrapper + FAMILY B1 first-bar signal drop)"
+    defining_run: OTR_R1_SERIES (amendment_2, out/r1g_integration.json)
+    status: SUPERSEDED
+    notes: >
+      Measured n=5,011, net $244,589.02, DD -$29.1k, holds L/S 105.6/80.7 (target
+      105.9/82.6); Jan removals 6. Registered sensitivity set was X in {1550,1600,1750,1900}
+      and C in {500,1000,1300} - C=700 was NOT in it and arrived later from the v_mg
+      master-gap hunter. Adding our late-T2 stream HURTS.
+
+  - model_id: CAND2_GATE_C700_X2_CAP20_CD3_COMM418
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r1j_gatesemantics.py (and runs/OTR_R1_SERIES/out/v_mg_final.py)
+    config_summary: >
+      The frozen CAND2. CAND2_GATE_C1000_COMM418 with C changed to 700 and three
+      throttles added: X2=2500 (a second armed threshold that arms the cum<0 / K-consec
+      blocks BEFORE noon), cap=20 max entries per session, cd=3 bar re-entry cooldown
+      after touch-exits. Params 90/179/5/10/10, pullback_early=FALSE, NO protective stop.
+    event_universe: "T1 only"
+    wrapper: "B1 first-bar drop + D-gate {X=1600, K=3, C=700, X2=2500, cap=20, cd=3} + inclusive TS-touch exit + session-close flat"
+    cost_model: "$4.18/RT ($2.09/side) - AND the commission is INSIDE the gate state (see header)"
+    data_source: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv
+    date_window: "2023-01-01T06:00:00Z .. 2025-02-02T22:59:59Z (master)"
+    purpose: "Closest available fit to the pixel-read master row-set under a wrapper with no day-specific constants"
+    defining_run: OTR_R1_SERIES (out/v_mg_result.md, out/v_mg_final.json)
+    status: INCUMBENT
+    notes: >
+      Measured n=4,598 (2,265L/2,333S), net $264,955, WR 40.08, PF 1.152, DD -$31,934,
+      holds L/S 109.62/81.91, consec 7/15, largest win $7,705.82 and largest loss
+      -$4,449.18 both cent-exact vs target. Weighted master distance 1.0909 -> 0.5441.
+      SELF-DECLARED CAVEAT (kept verbatim from v_mg_result.md): "X2/capM/cd were selected
+      on master aggregates; Jan only interval-bounds them... this is a closeness fit,
+      not an identification." Residual +247 trades / -$27.2k, of which -$20.7k is
+      short-side net.
+
+  - model_id: CAND2_GATE_C700_X2_CAP20_CD3_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r1j_gatesemantics.py (rerun at comm_side=0)
+    config_summary: "Identical wrapper and constants to CAND2_GATE_C700_X2_CAP20_CD3_COMM418, run at zero commission"
+    event_universe: "T1 only"
+    wrapper: "B1 + D-gate {X=1600, K=3, C=700, X2=2500, cap=20, cd=3} + touch exit + session-close flat; no stop"
+    cost_model: "$0/side"
+    data_source: NT8 canonical NQ 09-26 back-adjusted merge (NT8 side) and t2_canonical_1m.csv (Python side)
+    date_window: "Layer A 2023-01-01..2023-01-17T22:59:59Z; Layer B 2023-01-01T06:00:00Z..2025-02-02T22:59:59Z"
+    purpose: "The frozen pre-readout Python reference for the NT8 parity gate"
+    defining_run: OTR_R6_NT8_PARITY (out/python_reference_comm0.json)
+    status: FROZEN_REFERENCE
+    notes: >
+      Measured Layer B n=4,592 (2,263L/2,329S), net $279,655.00, DD -$30,305.00,
+      consec 7/15. THIS IS A DIFFERENT TRADE STREAM from the COMM418 id (4,592 vs 4,598)
+      because commission feeds the D-gate's realized-equity state. Layer A n=91,
+      net $6,815.00, cent-exact vs the NT8 port.
+
+  - model_id: CAND2_GATE_SEM_FILLBAR
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r1j_gatesemantics.py (mode='fill')
+    config_summary: "CAND2 with the D-gate evaluated at the FILL bar with same-bar exit already realized (the Python incumbent semantics)"
+    event_universe: "T1 only"
+    wrapper: "as CAND2 frozen constants; gate-evaluation timing = fill bar"
+    cost_model: "$4.18/RT ($2.09/side)"
+    data_source: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv
+    date_window: "master 2023-01..2025-02"
+    purpose: "Member-ambiguity test registered as R1 amendment_4 before readout"
+    defining_run: OTR_R1_SERIES (amendment_4)
+    status: CLUSTER_MEMBER
+    notes: "IDENTICAL trade streams to CAND2_GATE_SEM_DECISIONCLOSE on the master window (4,577 common, 0 either-only). Member ambiguity is IRRELEVANT on all available data - kept per section 6, not resolved."
+
+  - model_id: CAND2_GATE_SEM_DECISIONCLOSE
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r1j_gatesemantics.py (mode='decision')
+    config_summary: "CAND2 with the D-gate evaluated at the DECISION close with projected exit PnL - the only semantics NT8 OnBarClose code can natively express"
+    event_universe: "T1 only"
+    wrapper: "as CAND2 frozen constants; gate-evaluation timing = decision close"
+    cost_model: "$4.18/RT ($2.09/side); rerun at $0 for R6"
+    data_source: research/03_reverse_engineering/ledgers/t2_canonical_1m.csv
+    date_window: "master 2023-01..2025-02"
+    purpose: "The semantics adopted for the NinjaScript port at zero parity cost"
+    defining_run: OTR_R1_SERIES (amendment_4); confirmed harmless in the real engine by OTR_R6_NT8_PARITY
+    status: INCUMBENT
+    notes: "Adopted for the port because it is what the trader's own OnBarClose code could plausibly have done; R6 showed it produces no trade differences in the NT8 engine."
+
+  - model_id: CAND2_NT8_PORT_V1
+    family: CAND2_NT8_PORT
+    source_file: src/ninjascript/OriginalTraderSolarCAND2_v1.cs
+    config_summary: "First NinjaScript port of CAND2 (decision-close gate semantics, GateX 1600 / GateK 3 / GateC 700 / X2 2500 / cap 20 / cooldown 3)"
+    event_universe: "T1 only"
+    wrapper: "as CAND2 frozen"
+    cost_model: "$0 template-equivalent"
+    data_source: NT8 Historical Data Server, NQ 09-26 canonical back-adjusted merge
+    date_window: "smoke test only"
+    purpose: "Port CAND2 into the NT8 engine for the parity gate"
+    defining_run: OTR_R6_NT8_PARITY
+    status: RETIRED
+    notes: "int.MinValue cooldown-overflow bug produced ZERO entries; caught by the zero-trade smoke result. Fixed in v2 and the class renamed per the repo HOT-RELOAD rule. First live catch of a Python-vs-C# semantics hazard in this campaign."
+
+  - model_id: CAND2_NT8_PORT_V2
+    family: CAND2_NT8_PORT
+    source_file: src/ninjascript/OriginalTraderSolarCAND2_v2.cs
+    config_summary: "Corrected NinjaScript port; GateX=1600, GateC=700, decision-bar clocks for the noon/evening gates, next-open fills; resume latch OFF by default"
+    event_universe: "T1 only"
+    wrapper: "as CAND2 frozen"
+    cost_model: "$0 template-equivalent (Layer A/B); UseInitialStop=65 for Layer C weekly windows"
+    data_source: NT8 Historical Data Server, NQ 09-26 canonical back-adjusted merge
+    date_window: "Layer A 2023-01-01..01-17; Layer B 2023-01..2025-02; Layer C four era-configured weekly windows"
+    purpose: "Establish IMPLEMENTATION_PARITY across Python <-> NinjaScript <-> NT8 Strategy Analyzer"
+    defining_run: OTR_R6_NT8_PARITY
+    status: INCUMBENT
+    notes: >
+      PASS: Layer A cent-exact 91/91 ($6,815.00 both sides); Layer B bit-exact
+      (4,592 trades, $279,655.00, DD -$30,305.00, 0 real trade differences over 735k bars);
+      Layer C deltas <= 1 trade/window attributable to parquet-vs-NT8-feed data
+      differences. This is IMPLEMENTATION_PARITY only - it says nothing about
+      ORIGINAL_PARITY (us vs the original trader).
+
+  # --- R5 weekly variant block: 3 param sets x 2 stop distances x 2 money-halt settings
+  - model_id: CAND2_ERA_A179_STOP65_NODM_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (variant key old_s65_noDM)
+    config_summary: "CAND2 frozen gate + params 90/179/5/10/10 + 65-pt intrabar initial protective stop; no daily money halts"
+    event_universe: "T1 only"
+    wrapper: "B1 + D-gate {1600,3,700,2500,20,3} + 65-pt intrabar stop + touch exit + session-close flat"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet (warmup 2025-06-15); targets targets_weekly_2025S.csv
+    date_window: "primary for weeks ending <= 2025-10-24 and the 10/26 transition week"
+    purpose: "ERA_A member of the version-aware weekly validation"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: INCUMBENT
+    notes: "ERA_A is 14 hp weeks / 1 dev week - the machine split is partly confounded with era here, stated in the R5 limitations section."
+
+  - model_id: CAND2_ERA_A179_STOP65_DM_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (old_s65_DM)
+    config_summary: "As CAND2_ERA_A179_STOP65_NODM_COMM0 plus LITERAL daily money halts on session cumulative realized PnL: profit halt +$2,000 (M), loss halt -$4,500 (D)"
+    event_universe: "T1 only"
+    wrapper: "as above + literal D/M halts"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet; targets targets_weekly_2025S.csv
+    date_window: "weeks ending <= 2025-10-24 + 10/26 transition"
+    purpose: "Test the literal reading of the panel's D 4500 / M 2000 money pair"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: FALSIFIED
+    notes: "REJECTED for the dev/CAND2 build (over-suppresses, mean dn -27.6%); partially explanatory but erratic for hp (+39.5% -> +13.5%, but 72.7% one week and -29.7% another)."
+
+  - model_id: CAND2_ERA_A179_STOP75_NODM_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (old_s75_noDM)
+    config_summary: "CAND2 frozen gate + params 90/179/5/10/10 + 75-pt intrabar initial stop; no money halts"
+    event_universe: "T1 only"
+    wrapper: "as ERA_A but stop 75"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet; targets targets_weekly_2025S.csv
+    date_window: "all 28 weekly windows (run as a control that the era assignment carries signal)"
+    purpose: "Control against imposing the era assignment"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: CONTROL
+    notes: "Preregistered control arm."
+
+  - model_id: CAND2_ERA_A179_STOP75_DM_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (old_s75_DM)
+    config_summary: "params 90/179/5/10/10 + 75-pt stop + literal D/M halts"
+    event_universe: "T1 only"
+    wrapper: "as above + literal D/M halts"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "all 28 weekly windows"
+    purpose: "Control cell of the R5 12-variant block"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: CONTROL
+    notes: "Reported in out/WEEKLY_FINGERPRINT_MATRIX.csv; no separate verdict."
+
+  - model_id: CAND2_ERA_B179_STOP65_NODM_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (new179_s65_noDM)
+    config_summary: "CAND2 frozen gate + A2=179 with the retuned A3-A5 = 3/6/9 + 65-pt stop; no money halts"
+    event_universe: "T1 only"
+    wrapper: "as ERA_A but A3/A4/A5 = 3/6/9"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "weeks from 2025-11-09"
+    purpose: "Disambiguate the A2 179-vs-180 reading in the era-B panel"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: CONTROL
+    notes: >
+      KEY NEGATIVE RESULT: the old and new179 trade streams are BIT-IDENTICAL, because
+      A3/A4/A5 only drive T2/T3/weak states and this model enters on T1 only. Since the
+      trader demonstrably retuned those parameters on 2025-11-07, his build must contain
+      an ACTIVE pullback (T2-class) layer that ours does not.
+
+  - model_id: CAND2_ERA_B179_STOP65_DM_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (new179_s65_DM)
+    config_summary: "A2=179 / A3-A5 3-6-9 + 65-pt stop + literal D/M halts"
+    event_universe: "T1 only"
+    wrapper: "as above + literal D/M halts"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "weeks from 2025-11-09"
+    purpose: "Cell of the R5 12-variant block"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: CONTROL
+    notes: "Reported in the R5 matrices; no separate verdict."
+
+  - model_id: CAND2_ERA_B179_STOP75_NODM_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (new179_s75_noDM)
+    config_summary: "A2=179 / A3-A5 3-6-9 + 75-pt stop; no money halts"
+    event_universe: "T1 only"
+    wrapper: "as above, stop 75"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "weeks from 2025-11-09"
+    purpose: "Cell of the R5 12-variant block"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: CONTROL
+    notes: "Reported in the R5 matrices; no separate verdict."
+
+  - model_id: CAND2_ERA_B179_STOP75_DM_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (new179_s75_DM)
+    config_summary: "A2=179 / A3-A5 3-6-9 + 75-pt stop + literal D/M halts"
+    event_universe: "T1 only"
+    wrapper: "as above + literal D/M halts"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "weeks from 2025-11-09"
+    purpose: "Cell of the R5 12-variant block"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: CONTROL
+    notes: "Reported in the R5 matrices; no separate verdict."
+
+  - model_id: CAND2_ERA_B180_STOP65_NODM_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (new180_s65_noDM)
+    config_summary: "CAND2 frozen gate + params 90/180/3/6/9 + 65-pt intrabar initial stop; no money halts"
+    event_universe: "T1 only"
+    wrapper: "B1 + D-gate {1600,3,700,2500,20,3} + 65-pt intrabar stop + touch exit + session-close flat"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "weeks from 2025-11-02 / 2025-11-09"
+    purpose: "ERA_B member; also the configuration used by R6 Layer C and by the R8 June overlay"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: INCUMBENT
+    notes: >
+      NAME-REUSE HAZARD: R5's era_primary() marks stop 75 as the PRIMARY era-B variant
+      from 2025-11-09 onward (run_r5_weekly.py lines 245-252), while R6 Layer C ran era-B
+      windows at UseInitialStop=65 and R8 called its overlay member "CAND2-S (new180,
+      stop 65)". "CAND2 era B" therefore means stop 75 in R5 and stop 65 in R6/R8.
+
+  - model_id: CAND2_ERA_B180_STOP65_DM_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (new180_s65_DM)
+    config_summary: "params 90/180/3/6/9 + 65-pt stop + literal D/M halts (+2000 / -4500)"
+    event_universe: "T1 only"
+    wrapper: "as above + literal D/M halts"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "weeks from 2025-11-02"
+    purpose: "Literal money-halt test in era B"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: FALSIFIED
+    notes: "Same verdict as the ERA_A DM arm: rejected for the dev build. One near-hit recorded: 1/4/2026 week n=51 with DM vs target 52 (distance 0.121)."
+
+  - model_id: CAND2_ERA_B180_STOP75_NODM_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (new180_s75_noDM)
+    config_summary: "params 90/180/3/6/9 + 75-pt intrabar initial stop; no money halts"
+    event_universe: "T1 only"
+    wrapper: "as ERA_B but stop 75 both sides"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "weeks from 2025-11-09 (R5 PRIMARY era-B variant)"
+    purpose: "Test the reading that the St-group row changing 65->75 on 2025-11-14 is the Initial stop"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: FALSIFIED
+    notes: >
+      Reading CORRECTED by R5: exact -$1,300.00 largest-loss rows persist in targets
+      through Dec/Jan (11/9, 12/14, 1/18 weeks) while -$1,500.00 exact appears in the 1/4
+      week short column, so the row that changed 65->75 is NOT the same field as row 1
+      (Initial 65). Symmetric 75 is rejected; the 75 belongs to a second stop tier whose
+      semantics are UNKNOWN.
+
+  - model_id: CAND2_ERA_B180_STOP75_DM_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (new180_s75_DM)
+    config_summary: "params 90/180/3/6/9 + 75-pt stop + literal D/M halts"
+    event_universe: "T1 only"
+    wrapper: "as above + literal D/M halts"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "weeks from 2025-11-09"
+    purpose: "Cell of the R5 12-variant block"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: CONTROL
+    notes: "Reported in the R5 matrices; no separate verdict."
+
+  - model_id: CAND2_ERA_B180_L65_S75_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (amendment_1 directional-stop arm)
+    config_summary: "params 90/180/3/6/9 + DIRECTIONAL initial stop: 65 points on longs, 75 points on shorts"
+    event_universe: "T1 only"
+    wrapper: "as ERA_B with per-side initial stop distances"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "11 era-B weeks from the 2025-11-09 week"
+    purpose: "R5 amendment_1: era-B targets show largest losses > 1300 mostly on the SHORT side (-1410/-1490/-1500/-1385) while longs cap at -1300"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: CLUSTER_MEMBER
+    notes: >
+      Hits (long, short) at +-$50 on the LL columns: L65S65 (8,5), L65S75 (8,6),
+      L75S65 control (2,2 - collapses). Exact-value hits on 11/23 (-1500 vs -1490),
+      12/7 (-1385.00 EXACT) and 1/4 (-1500.00 EXACT), BUT 12/14 and 1/18 cap shorts at
+      exactly -1300 (demanding 65). Reading: the short-side stop is TIME-VARYING 65<->75
+      within era B. Both members kept per section 6; no unique rule forced. Discriminator
+      that would close it: any panel frame between 2025-12-14 and 2026-01-18.
+
+  - model_id: CAND2_ERA_B180_L75_S65_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r5_weekly.py (amendment_1 control arm)
+    config_summary: "params 90/180/3/6/9 + directional initial stop: 75 points on longs, 65 on shorts"
+    event_universe: "T1 only"
+    wrapper: "as ERA_B with the reversed per-side assignment"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "11 era-B weeks from the 2025-11-09 week"
+    purpose: "Preregistered control: does the directional assignment carry signal or is it an artifact?"
+    defining_run: OTR_R5_CAND2_WEEKLY_VALIDATION
+    status: FALSIFIED
+    notes: "Collapses to (2,2) LL-column hits - the control ruins the long column, which is what CONFIRMS long initial stop = 65 points."
+
+  - model_id: CAND2_S_ERA_B180_STOP65_JUN2026RAW_COMM0
+    family: OTR_S_CAND2
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_r8_june.py (Part B, "CAND2-S (new180, stop 65)")
+    config_summary: "CAND2_ERA_B180_STOP65_NODM run on RAW per-contract June-2026 data instead of the back-adjusted parquet substrate"
+    event_universe: "T1 only"
+    wrapper: "as CAND2_ERA_B180_STOP65_NODM_COMM0"
+    cost_model: "$0/side (Layer-1); the Trade Performance anchor itself carries a real commission ~$1.04/side"
+    data_source: research/original_trader_reconstruction/data/nq0626_jun2026_1m.csv (sha256:4659b40b6f6969cd) and nq0926_junjul2026_1m.csv (sha256:f8048926c24d41f9), NT8 HDS exports
+    date_window: "2026-06-07..06-12 (JUN26) and 2026-06-14..06-18 (SEP26)"
+    purpose: "Bound how much of the June Trade Performance weeks the known S sleeve can explain"
+    defining_run: OTR_R8_JUNE2026
+    status: OPEN
+    notes: >
+      Separate id because the data source is materially different (RAW per-contract vs
+      continuous back-adjusted). Measured on 6/7-6/12: n=88, WR 42.0, hold 30.9,
+      net +$9,745, largest loss -$1,300. Evidence pulls both ways: an H1 gross-sum with
+      the VF leader gives n=181 vs TP n=136 (suggesting CAND2-S was NOT running), while
+      the 6/14-18 TP largest loss of -$1,426.18 implies a 65-point-class stop WAS live in
+      real June execution. Recorded as an open decomposition; no weights fitted.
+
+# ============================================================================
+# FAMILY: R9_HP - hp-machine sibling-build hypothesis (era-aware, 65-pt stop)
+# ============================================================================
+
+  - model_id: HP_M_T1_ERAAWARE_STOP65_COMM0
+    family: R9_HP
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r9_hp.py (run_hp with entry_abs=1)
+    config_summary: "CAND2 frozen D-gate {1600,3,700,2500,20,3} + 65-pt stop + era-aware params (old 90/179/5/10/10 to 10/24, new180 90/180/3/6/9 from 11/9, transition weeks both); entries on T1 flips"
+    event_universe: "T1 only"
+    wrapper: "B1 + frozen D-gate + 65-pt intrabar stop + touch exit + session-close flat, cooldown 3"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "28 weekly windows 2025-07-06 .. 2026-01-23, split hp / dev"
+    purpose: "Preregistered CONTROL for the hp pullback hypothesis (discriminator D4)"
+    defining_run: OTR_R9_HP_BUILD
+    status: CONTROL
+    notes: >
+      D4 PASS: dev weeks fit this control far better (0.284) than either T2 mode
+      (0.409 / 0.413), so the machine split survives and dev = a T1 build.
+      NAME-REUSE: this "T1 control" is NOT the same object as R10's "F_T1 control"
+      (which has no stop and cap=1000) nor as R2_BASE_T1REV_COMM0 (no gate, no stop).
+
+  - model_id: HP_M_T2L_ERAAWARE_STOP65_COMM0
+    family: R9_HP
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r9_hp.py (mode M_T2L, pullback_early=False)
+    config_summary: "As HP_M_T1 but entries ONLY on recovered Type-2 LATE (close-basis) pullback signals; flips act only through the trailing-stop exit; no reversal path"
+    event_universe: "T2 late-mode only (pullback_early=False)"
+    wrapper: "as HP_M_T1 but exit then wait for the next qualifying T2"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "28 weekly windows 2025-07-06 .. 2026-01-23"
+    purpose: "Test whether the hp weekly reports come from a pullback-qualified entry build"
+    defining_run: OTR_R9_HP_BUILD
+    status: FALSIFIED
+    notes: "REJECTED as a complete model. Right direction, insufficient magnitude: cuts hp overtrade from +39.5% to +23.8%; overall hp distance 0.435 vs the T1 control's 0.421."
+
+  - model_id: HP_M_T2E_ERAAWARE_STOP65_COMM0
+    family: R9_HP
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r9_hp.py (mode M_T2E, pullback_early=True)
+    config_summary: "As HP_M_T1 but entries ONLY on recovered Type-2 EARLY (high-low basis) pullback signals"
+    event_universe: "T2 early-mode only (pullback_early=True)"
+    wrapper: "as HP_M_T2L"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "28 weekly windows 2025-07-06 .. 2026-01-23"
+    purpose: "Second pullback-mode member"
+    defining_run: OTR_R9_HP_BUILD
+    status: FALSIFIED
+    notes: >
+      REJECTED as a complete model (worsens counts to +49.3%; hp distance 0.495) BUT it
+      moves the trend-week ECONOMICS the right way: in the two +$18.5k hp weeks it swings
+      net by +8.5k/+17.9k toward target (+7,095 / +11,275 vs the T1 control's -1,385 /
+      -6,665) with larger average wins. The hp build plausibly MIXES T1 chains with
+      pullback-priced entries; that hybrid family is deliberately left UNREGISTERED
+      (creating it would violate the section 5 no-invented-members rule).
+
+# ============================================================================
+# FAMILY: R10_FEB2025_FAST - the Feb-2025 RKSelTimeDSTMa transitional build
+# ============================================================================
+
+  - model_id: FEB25_F_T1_CAPFREE_LLNONE_COMM0
+    family: R10_FEB2025_FAST
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r10_fast.py (run_fast with tv_cycle=False)
+    config_summary: "T1-flip chains with D-gate constants {X=1600, K=3, C=700, X2=2500, cd=3} but cap=1000 (effectively no session cap) and NO protective stop; params 90/179/5/10/10"
+    event_universe: "T1 only"
+    wrapper: "B1 + D-gate with the session cap disabled; touch exit; session-close flat"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "2025-01-20 .. 2025-03-15 (warmup from 1/20); 8 scored Feb-Mar windows"
+    purpose: "Preregistered control for the TrendVector-cycle fast-layer hypothesis"
+    defining_run: OTR_R10_FEB2025_FAST
+    status: CONTROL
+    notes: >
+      NAME-REUSE / SPEC-vs-CODE DIVERGENCE: the R10 spec says "D-gate inherited frozen",
+      but run_r10_fast.py line 40 sets cap=1000 whereas the frozen CAND2 gate uses cap=20.
+      This control is therefore NOT the frozen CAND2 gate. Its unexpected positive
+      finding stands regardless: the control's average-loss profile tracks the whole
+      Feb-Mar daily series (sim/target -840/-945, -808/-869, -717/-742, -588/-596,
+      -682/-704, -658/-619) at the same hold scale.
+
+  - model_id: FEB25_F_T1_CAPFREE_LL2500_COMM0
+    family: R10_FEB2025_FAST
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r10_fast.py
+    config_summary: "As FEB25_F_T1_CAPFREE_LLNONE plus a literal session-loss halt at $2,500 (the LossLimit value visible on the 2/18+ panel)"
+    event_universe: "T1 only"
+    wrapper: "as above + LossLimit 2500 session halt"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "2025-01-20 .. 2025-03-15"
+    purpose: "LossLimit arm of the R10 grid"
+    defining_run: OTR_R10_FEB2025_FAST
+    status: CONTROL
+    notes: "Reduces counts but does not change the pattern verdict."
+
+  - model_id: FEB25_F_TV2E_LLNONE_COMM0
+    family: R10_FEB2025_FAST
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r10_fast.py (tv_cycle=True, pullback_early=True)
+    config_summary: >
+      TrendVector-cycle machine, EARLY re-entry: T1 flip opens the trend position; CLOSE
+      crossing the TrendVector (A1=90 ticks) against the position exits; a recovered
+      Type-2 early-mode pullback signal re-enters in the trend direction; an opposite T1
+      reverses. Params 90/179/5/10/10, no protective stop, cap=1000.
+    event_universe: "T1 + T2 early (as a TrendVector re-entry trigger)"
+    wrapper: "D-gate constants as F_T1 control + TrendVector-cross exit"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "2025-01-20 .. 2025-03-15; 8 scored windows 2/26 .. 3/12-14"
+    purpose: "Explain the 2/27 count explosion (n=90, avg loss -$331) with frequency multiplied while the A-panel stayed UNCHANGED"
+    defining_run: OTR_R10_FEB2025_FAST
+    status: FALSIFIED
+    notes: "Decisive discriminator FAILED: produces 26-31 trades on the 90-trade day while exploding on the WRONG days (3/12-14: 145 vs target 60; 3/4-5: 130 vs 70); holds 8-18 min vs 20-45."
+
+  - model_id: FEB25_F_TV2E_LL2500_COMM0
+    family: R10_FEB2025_FAST
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r10_fast.py
+    config_summary: "FEB25_F_TV2E plus a literal $2,500 session-loss halt"
+    event_universe: "T1 + T2 early"
+    wrapper: "as above + LossLimit 2500"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "2025-01-20 .. 2025-03-15"
+    purpose: "LossLimit arm of the TV-cycle early member"
+    defining_run: OTR_R10_FEB2025_FAST
+    status: FALSIFIED
+    notes: "Same verdict; the halt reduces counts without fixing the day-attribution pattern."
+
+  - model_id: FEB25_F_TV2L_LLNONE_COMM0
+    family: R10_FEB2025_FAST
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r10_fast.py (tv_cycle=True, pullback_early=False)
+    config_summary: "TrendVector-cycle machine with LATE (close-basis) Type-2 re-entry"
+    event_universe: "T1 + T2 late"
+    wrapper: "as FEB25_F_TV2E"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "2025-01-20 .. 2025-03-15"
+    purpose: "Late-mode member of the TV-cycle hypothesis"
+    defining_run: OTR_R10_FEB2025_FAST
+    status: FALSIFIED
+    notes: "Same verdict as the early member; |n error| 50-112% vs the control's 43%."
+
+  - model_id: FEB25_F_TV2L_LL2500_COMM0
+    family: R10_FEB2025_FAST
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r10_fast.py
+    config_summary: "FEB25_F_TV2L plus a literal $2,500 session-loss halt"
+    event_universe: "T1 + T2 late"
+    wrapper: "as above + LossLimit 2500"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "2025-01-20 .. 2025-03-15"
+    purpose: "LossLimit arm of the TV-cycle late member"
+    defining_run: OTR_R10_FEB2025_FAST
+    status: FALSIFIED
+    notes: "Same verdict."
+
+# ============================================================================
+# FAMILY: R11_INVERSE_UNIVERSE - set-valued inverse reconstruction (directive v4.0)
+# These are EVENT UNIVERSES paired with a fixed wrapper, not fitted models. Their
+# outputs are CONDITIONAL_LATENT_LABELS under a candidate-universe assumption, never
+# observed trade labels.
+# ============================================================================
+
+  - model_id: INV_U1_T1_COMM418
+    family: R11_INVERSE_UNIVERSE
+    source_file: research/original_trader_reconstruction/solar_family/src/inverse_core.py + run_r11b_inverse.py
+    config_summary: "Event universe U1 = T1 only; A-params A1=90 A2=179 A3=5 A4=10 A5=10 frozen from OTRIMG evidence; depth-first path enumeration over the decision DAG with monotone pruning on n, nW, nL, cumulative MAE, cumulative MFE, gross profit and gross loss"
+    event_universe: "T1 only"
+    wrapper: "in-position exits deterministic under the wrapper; NO day-specific constants permitted"
+    cost_model: "$4.18/RT (= commission column / n on every visible 2023 day)"
+    data_source: t2_canonical_1m.csv + pixel-read daily targets OTRIMG-0003 / OTRIMG-0026 + the 90 NT8-serialized trades in runs/OTR_R6_NT8_PARITY/out/layerA_nt8_raw.json
+    date_window: "Jan-2023, 11 visible daily rows (2023-01-03 .. 2023-01-17)"
+    purpose: "Test hypothesis H-R11-3: does ANY event universe make every visible daily aggregate simultaneously satisfiable?"
+    defining_run: OTR_R11_INVERSE
+    status: OPEN
+    notes: "FEASIBLE on 3 of 11 days (01-09, 01-10, 01-11), 1 solution each; IMPOSSIBLE_UNDER_UNIVERSE on the other 8 (solar_family/inverse/FEASIBLE_PATH_SUMMARY.csv)."
+
+  - model_id: INV_U2_T1_T2E_COMM418
+    family: R11_INVERSE_UNIVERSE
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r11b_inverse.py
+    config_summary: "Event universe U2 = T1 + T2 with PullbackEarly=True (treated as a HIDDEN FIXED implementation choice, not an optimization knob - the trader's panel exposes only 5 numeric parameters)"
+    event_universe: "T1 + T2 early"
+    wrapper: "as U1"
+    cost_model: "$4.18/RT"
+    data_source: as U1
+    date_window: "Jan-2023, 11 visible daily rows"
+    purpose: "Widen the candidate universe past the removal-only solver"
+    defining_run: OTR_R11_INVERSE
+    status: OPEN
+    notes: "Same feasibility pattern as U1 in the current partial output (3 of 11 days feasible)."
+
+  - model_id: INV_U3_T1_T2L_COMM418
+    family: R11_INVERSE_UNIVERSE
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r11b_inverse.py
+    config_summary: "Event universe U3 = T1 + T2 with PullbackEarly=False (late/close-basis)"
+    event_universe: "T1 + T2 late"
+    wrapper: "as U1"
+    cost_model: "$4.18/RT"
+    data_source: as U1
+    date_window: "Jan-2023, 11 visible daily rows"
+    purpose: "The late-mode reading motivated by the cent-exact -$274.18 trade decoded at 2023-01-17 20:48"
+    defining_run: OTR_R11_INVERSE
+    status: OPEN
+    notes: "Same feasibility pattern as U1 in the current partial output."
+
+  - model_id: INV_U4_T1_T3_COMM418
+    family: R11_INVERSE_UNIVERSE
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r11b_inverse.py
+    config_summary: "Event universe U4 = T1 + T3"
+    event_universe: "T1 + T3"
+    wrapper: "as U1"
+    cost_model: "$4.18/RT"
+    data_source: as U1
+    date_window: "Jan-2023, 11 visible daily rows"
+    purpose: "Re-test T3 participation inside a set-valued framework rather than a removal-only one"
+    defining_run: OTR_R11_INVERSE
+    status: OPEN
+    notes: "Same feasibility pattern as U1 in the current partial output."
+
+  - model_id: INV_U5_T1_T2E_T3_COMM418
+    family: R11_INVERSE_UNIVERSE
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r11b_inverse.py
+    config_summary: "Event universe U5 = T1 + T2 early + T3"
+    event_universe: "T1 + T2 early + T3"
+    wrapper: "as U1"
+    cost_model: "$4.18/RT"
+    data_source: as U1
+    date_window: "Jan-2023, 11 visible daily rows"
+    purpose: "Widest early-mode universe"
+    defining_run: OTR_R11_INVERSE
+    status: OPEN
+    notes: "Same feasibility pattern as U1 in the current partial output."
+
+  - model_id: INV_U6_T1_T2L_T3_COMM418
+    family: R11_INVERSE_UNIVERSE
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r11b_inverse.py
+    config_summary: "Event universe U6 = T1 + T2 late + T3"
+    event_universe: "T1 + T2 late + T3"
+    wrapper: "as U1"
+    cost_model: "$4.18/RT"
+    data_source: as U1
+    date_window: "Jan-2023, 11 visible daily rows"
+    purpose: "Widest late-mode universe"
+    defining_run: OTR_R11_INVERSE
+    status: OPEN
+    notes: "Same feasibility pattern as U1 in the current partial output."
+
+  - model_id: NT8_MAEMFE_ORACLE_INCLENTRY_EXCLEXIT_HILO
+    family: R11_INVERSE_UNIVERSE
+    source_file: research/original_trader_reconstruction/solar_family/src/run_r11a_maemfe_calib.py
+    config_summary: "Python oracle for NT8 MaeCurrency / MfeCurrency: excursion measured from the entry FILL price over bar HIGH/LOW across bars [entry_bar .. exit_bar), i.e. entry bar INCLUDED and exit bar EXCLUDED, times point value times quantity, floored at 0"
+    event_universe: "N/A - measurement oracle, not a trading model"
+    wrapper: "N/A"
+    cost_model: "N/A (path statistics carry no commission)"
+    data_source: the 90 NT8-serialized trades in runs/OTR_R6_NT8_PARITY/out/layerA_nt8_raw.json
+    date_window: "2023-01-01 .. 2023-01-17"
+    purpose: "Calibrate a measurement oracle so avg_MAE and avg_MFE from the trader's Daily Analysis table become usable exact integer constraints"
+    defining_run: OTR_R11_INVERSE
+    status: OPEN
+    notes: >
+      Best variant of the 6 tested: 88/90 MAE exact and 89/90 MFE exact. The spec's
+      acceptance gate is "accept only 90/90 exact" and it is NOT yet met, so hypothesis
+      H-R11-1 as written is not yet confirmed. Runner-up incl_entry_incl_exit|hilo gives
+      60/90 MAE and 90/90 MFE; all close-basis variants are near-zero (0-1/90).
+
+# ============================================================================
+# FAMILY: V_PROXY - the 2026 volume family reconstructed with minute close-price
+# volume standing in for unavailable bid/ask real volume. DEMOTED 2026-08-24 to a
+# preserved behavioral-mimic artifact when TRACK_VF opened.
+# ============================================================================
+
+  - model_id: VPROXY_MREV_RUNNING_LADDER_COMM0
+    family: V_PROXY
+    source_file: research/original_trader_reconstruction/volume_vwap_family/src/v_proxy_engine.py + run_v1.py
+    config_summary: "Pullback-into-value entries (uptrend -> BUY on close crossing DOWN through P25; downtrend mirror) off a RUNNING intra-hour volume-at-price ladder (0.25 bins, causal running histogram, reset at each clock hour, percentiles defined once >= 5 bars); ladder [5,25,50,75,95]; EMA20 trend; <=3 signals per trend; >=5-bar split"
+    event_universe: "ladder-crossing signals (P25 / P75 lines)"
+    wrapper: "flat-only entries, qty 1, next-bar-open fills, slippage 0, ladder or median exits + session close"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "2026-02-20 .. 2026-05-29; primary target window A 2026-05-10..05-22"
+    purpose: "Pass-1 entry-family hypothesis"
+    defining_run: OTR_V1_PROXY
+    status: FALSIFIED
+    notes: "Counts, holds and average winners all wrong direction; excluded from pass 2 with reason recorded."
+
+  - model_id: VPROXY_MBRK_RUNNING_LADDER_COMM0
+    family: V_PROXY
+    source_file: research/original_trader_reconstruction/volume_vwap_family/src/run_v1.py
+    config_summary: "Value-breakout continuation entries (uptrend -> BUY on close crossing UP through P75) off the RUNNING intra-hour ladder"
+    event_universe: "ladder-crossing signals"
+    wrapper: "as above"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "2026-02-20 .. 2026-05-29; window A primary"
+    purpose: "Pass-1 entry-family hypothesis (favored by the prior prediction)"
+    defining_run: OTR_V1_PROXY
+    status: FALSIFIED
+    notes: "Counts 593-754 vs target 183; holds 2-15 min vs 39.8; average winners $234-740 vs $1,236. The running ladder is falsified; the ladder must be effectively STATIC per anchor period."
+
+  - model_id: VPROXY_PREV_TLVL_XEMA_COMM0
+    family: V_PROXY
+    source_file: research/original_trader_reconstruction/volume_vwap_family/src/run_v1.py (V2 grid)
+    config_summary: "M_BRK entries off the PREVIOUS completed hour's ladder held static through the current hour; trend = close vs EMA20 of 1-min closes; exit on close crossing EMA20 against the position"
+    event_universe: "static prior-hour ladder crossings"
+    wrapper: "flat-only, qty 1, next-open fills, session-close flat"
+    cost_model: "UNSTATED in spec ($0/side - v_proxy_engine.py comm_side=0.0)"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "2026-02-20 .. 2026-05-29; window A primary"
+    purpose: "Pass-2 primary hypothesis: classic value-area trading with a trend-violation exit"
+    defining_run: OTR_V2_PROXY_PREVHOUR
+    status: FALSIFIED
+    notes: "Did not beat the standing D-frontier; the trend-violation exit is not the exit."
+
+  - model_id: VPROXY_PREV_TLVL_XMED_C0_COMM0
+    family: V_PROXY
+    source_file: research/original_trader_reconstruction/volume_vwap_family/src/run_v1.py (V2 control cell)
+    config_summary: "M_BRK entries off the static prior-hour ladder, EMA20-of-1-min trend, exit on close crossing the ladder median P50, NO close-threshold gate"
+    event_universe: "static prior-hour ladder crossings"
+    wrapper: "as above"
+    cost_model: "UNSTATED in spec ($0/side)"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "2026-02-20 .. 2026-05-29; window A primary"
+    purpose: "Registered as a CONTROL in the V2 grid; became the geometry winner"
+    defining_run: OTR_V2_PROXY_PREVHOUR
+    status: SUPERSEDED
+    notes: "Nails the trade GEOMETRY (hold 39.2 vs 39.8; avg win 1,083 vs 1,236; avg loss -540 vs -784) but count +39% and WR -6.6pp. Became the base of the V3 grid."
+
+  - model_id: VPROXY_PREV_TLVL_XMED_C2_COMM0
+    family: V_PROXY
+    source_file: research/original_trader_reconstruction/volume_vwap_family/src/run_v1.py (V3 grid, C2_not_extended)
+    config_summary: >
+      The named Track-V proxy candidate. Breakout of the PREVIOUS completed hour's static
+      volume-percentile ladder (P75 up / P25 down) in the EMA20 (1-min closes) trend
+      direction, entry only if the close is NOT extended more than 10% of ladder depth
+      (P95-P5) beyond the line, exit on close crossing the ladder median P50, <=3 signals
+      per trend, >=5 bars apart, session-close flat.
+    event_universe: "static prior-hour ladder crossings with a close-extension gate"
+    wrapper: "flat-only entries, qty 1, next-open fills, slippage 0"
+    cost_model: "UNSTATED in spec ($0/side)"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "2026-02-20 .. 2026-05-29; identification window A 2026-05-10..05-22"
+    purpose: "Final bounded proxy pass under the section 49 stop rule"
+    defining_run: OTR_V3_PROXY_FINAL
+    status: DEMOTED
+    notes: >
+      MET the frozen success rule (D=2.431 < 5.203) -> classified BEHAVIORALLY MATCHED
+      (PARTIAL) / MECHANISM UNIDENTIFIED. Window A: 189 vs 183 trades, net -$5,445 vs
+      -$4,055, PF 0.918 vs 0.95, hold 36.1 vs 39.8 - but WR -8.1pp and avg loss -37% out
+      of band, and cross-window signs fail on W20260322 (+4,655 vs -42,235) and
+      W20260419. DEMOTED (not deleted) on 2026-08-24 when external evidence identified
+      the vendor product as ninZa VWAP Flux and TRACK_VF became the primary
+      interpretation. NEVER conflate this proxy match with exact parity.
+
+  - model_id: VPROXY_PREV_TH1_XMED_COMM0
+    family: V_PROXY
+    source_file: research/original_trader_reconstruction/volume_vwap_family/src/run_v1.py (V3 grid, T_H1)
+    config_summary: "As VPROXY_PREV_TLVL_XMED but with 'Trend Period 20 / EMA' read as EMA20 of ANCHOR-period (hourly) closes, static intra-hour"
+    event_universe: "static prior-hour ladder crossings"
+    wrapper: "as above"
+    cost_model: "UNSTATED in spec ($0/side)"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "2026-02-20 .. 2026-05-29; window A primary"
+    purpose: "Alternative reading of the Trend Period parameter"
+    defining_run: OTR_V3_PROXY_FINAL
+    status: FALSIFIED
+    notes: "Falsified for window A - turns the week strongly profitable, the wrong sign."
+
+# ============================================================================
+# FAMILY: TRACK_VF_ARCH - competing readings of the ninZa VWAP Flux cloud
+# NAME-REUSE HAZARD: "the VF4 clone" is quoted downstream (R3, R7, R8) but VF4's own
+# spec named PERCENT-INTERPOLATION as primary and quantile levels as a disclosure arm;
+# the object actually carried forward is the QUANTILE (QLEV) build.
+# ============================================================================
+
+  - model_id: VF_SEGMENTED_LC_COMM0
+    family: TRACK_VF_ARCH
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_vf1.py
+    config_summary: "Segmented anchored VWAPs, one FROZEN per 60-min clock period (sum p*v / sum v); arm L_C = the 5 most recent COMPLETED layers; levels by percent interpolation across the layer set (Highest 95 / Upper 75 / Median 50 / Lower 25 / Lowest 5); EMA20 trend; pullback-into-cloud entries; max 3 signals per trend episode; >=5 bars between same-direction signals; close-threshold 10"
+    event_universe: "pullback-into-cloud signals (close crossing from beyond the Highest/Lowest rail INTO the band)"
+    wrapper: "qty 1, next-bar-open fills, slippage 0; exit arms XA trend flip / XB re-break / XC LossLimit-2500 at bar close; session-close flat"
+    cost_model: "$0/side (Layer-1)"
+    data_source: nq1m_2005_202605.parquet (minute total volume standing in for bid/ask split)
+    date_window: "window A 2026-05-10..05-22 primary; W20260308 / W20260322 / W20260419 secondary"
+    purpose: "Implement the DOCUMENTED VWAP Flux architecture with bounded readings of the undocumented pieces"
+    defining_run: OTR_VF1_FLUX_ARCH
+    status: FALSIFIED
+    notes: >
+      Two independent falsifiers: (a) all 12 bounded readings fail on geometry (best
+      D=5.81); (b) VF4 REJECTED the frozen-segment staircase reading ON IMAGE EVIDENCE -
+      the vendor manual's own NQ MAR26 1-min and 100-tick chart images show cloud edges
+      DRIFTING SMOOTHLY with periodic jumps, which a staircase cannot produce. The
+      entry-stream count (178 vs 183 in window A) was and remains the closest count match
+      in the family.
+
+  - model_id: VF_SEGMENTED_LE_COMM0
+    family: TRACK_VF_ARCH
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_vf1.py
+    config_summary: "As VF_SEGMENTED_LC but arm L_E = the current EVOLVING layer plus the 4 most recent completed layers"
+    event_universe: "pullback-into-cloud signals"
+    wrapper: "as VF_SEGMENTED_LC"
+    cost_model: "$0/side (Layer-1)"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "window A 2026-05-10..05-22 primary"
+    purpose: "Layer-lifecycle alternative"
+    defining_run: OTR_VF1_FLUX_ARCH
+    status: FALSIFIED
+    notes: "Same two falsifiers as VF_SEGMENTED_LC."
+
+  - model_id: VF_LOSSLIMIT2500_BARCLOSE_COMM0
+    family: TRACK_VF_ARCH
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_vf1.py (exit arm XC)
+    config_summary: "VF1 entries + per-trade LossLimit $2,500 evaluated at BAR CLOSE with a next-open fill (EV-017 probe)"
+    event_universe: "pullback-into-cloud signals"
+    wrapper: "trend-flip exit + bar-close LossLimit 2500 + session-close flat"
+    cost_model: "$0/side (Layer-1)"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "window A 2026-05-10..05-22"
+    purpose: "Rival reading of the repeated ~-$2,600 largest losses in the 2026 screenshots"
+    defining_run: OTR_VF1_FLUX_ARCH
+    status: FALSIFIED
+    notes: >
+      REJECTED for the 2026 family: produces worst losses of -$2,785 and -$3,190, an
+      OVERSHOOT pattern inconsistent with the evidence, which shows exactly -$2,600 in 18
+      reports. Track SD's session-level LossLimit conclusion for the 2025 DSTM era is a
+      separate question and is unaffected.
+
+  - model_id: VF_STOP130_INTRABAR
+    family: TRACK_VF_ARCH
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_vf2.py
+    config_summary: "INTRABAR working protective stop 130 NQ points from the entry fill (130 x $20 = $2,600 exactly), filling AT the level or worse at the open on gap-through, checked BEFORE close-based exits each bar"
+    event_universe: "N/A - a risk-wrapper component attached to VF entry streams"
+    wrapper: "attached to VF pullback entries with exit arms Y1 opposite-signal / Y2 trend-flip / Y3 re-break"
+    cost_model: "UNSTATED in spec (no commission term in the vf run code = $0/side)"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "window A 2026-05-10..05-22 primary; W20260308 / W20260322 / W20260419 secondary"
+    purpose: "Identify the 2026 risk wrapper from the repeated largest-loss signature"
+    defining_run: OTR_VF2_STOP130
+    status: INCUMBENT
+    notes: >
+      IDENTIFIED at the signature level and independently CONFIRMED by R3's row-value
+      discriminator: only a single-lot 130-point stop can make a -$2,600 trade ROW, so the
+      rival 65-pt x 2-entries microstructure is rejected. Cap onset week = 2026-02-01..06.
+      Independent corroboration from real execution: the June Trade Performance report
+      shows -$3,046.18, a 130-pt stop slipping about 22 points in live tape. Reproduced
+      out-of-identification-window in R8.
+
+  - model_id: VF_ANCHORED_QLEV_STOP130_COMM0
+    family: TRACK_VF_ARCH
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_vf4.py + vf_core.py
+    config_summary: >
+      5 ANCHORED-CUMULATIVE VWAP layers, anchors at the 5 most recent clock-hour starts,
+      each accumulating from its anchor to the CURRENT bar; at each period boundary the
+      oldest anchor is dropped and a new one starts. Price basis = minute close x volume.
+      Levels = QLEV, linear-interpolated QUANTILES of the 5 layer values. Trend =
+      cloud-break hysteresis. Signals SIG1 (band re-entry) / SIG2 (rail touch with close
+      beyond median), qty 3 per trend episode, split 5 bars, close-threshold 10.
+      Intrabar 130-pt stop; exit arms X_FLIP / X_MED / X_OPP; session-close flat.
+    event_universe: "SIG1 / SIG2 pullback signals on the anchored cloud"
+    wrapper: "qty 1 execution, next-bar-open fills, slippage 0, intrabar 130-pt stop, session-close flat"
+    cost_model: "$0/side (Layer 1)"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "window A 2026-05-10..05-22 primary; W20260308 / W20260322 / W20260419 secondary"
+    purpose: "Architecture RE-SELECTED BY PLOT FIDELITY against the vendor manual's own chart images, explicitly not by PnL"
+    defining_run: OTR_VF4_ANCHORED_LAYERS
+    status: INCUMBENT
+    notes: >
+      Best cell ANC|SIG2|X_MED|stop130|QLEV, D=3.398: net -$3,745 vs -$4,055, hold 36.6 vs
+      39.8, avg win $1,268 vs $1,236 all match; residuals WR 22.1 vs 37.7 and count 258 vs
+      183. Quantile-of-layers level math beats range interpolation. NAME-REUSE: the VF4
+      spec registered PERCENT INTERPOLATION (interpretation D/E) as PRIMARY with quantiles
+      as a disclosure arm, but the object carried into R3, R7 and R8 as "the VF4 clone" is
+      this QLEV build. This is a behavioral clone, not source-exact.
+
+  - model_id: VF_ANCHORED_PCTINTERP_STOP130_COMM0
+    family: TRACK_VF_ARCH
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_vf4.py
+    config_summary: "As VF_ANCHORED_QLEV but levels computed by PERCENT INTERPOLATION across the layer range (level = Lmin + pct/100 * (Lmax - Lmin)), consistent with the vendor default Max=100 -> max and Min=0 -> min"
+    event_universe: "SIG1 / SIG2 pullback signals on the anchored cloud"
+    wrapper: "as VF_ANCHORED_QLEV"
+    cost_model: "$0/side (Layer 1)"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "window A 2026-05-10..05-22"
+    purpose: "The level-math reading registered as PRIMARY in the VF4 spec"
+    defining_run: OTR_VF4_ANCHORED_LAYERS
+    status: SUPERSEDED
+    notes: "Beaten by QLEV on the window-A fingerprint. The vf_core clean-room separately quantified a percentile-vs-minmax discriminator (fair-value-percentile midspan offset 8.9 points mean under percentile, identically 0 under minmax)."
+
+# ============================================================================
+# FAMILY: OTR_VF_CAND1 - the surviving 2026 signal-composition cluster
+# NAME-REUSE HAZARD: "OTR-VF-CAND1" denotes a CLUSTER of four inseparable members,
+# not one model. Any claim about "VF-CAND1" must name the member.
+# ============================================================================
+
+  - model_id: VF_CAND1_TC_PMED_CDIR_H1A_XOPP
+    family: OTR_VF_CAND1
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_r7_signal_id.py + run_r7b_signal_id.py
+    config_summary: >
+      Cluster LEADER. Trend T_C: close vs FairValue AND EMA20(close) slope must AGREE;
+      state set only when both agree, else hold last. Pullback depth P_MED: price touches
+      the Median. Confirmation C_DIR: the signal bar closes in the trend direction.
+      Close-threshold reading H1a: the signal candle closes in the extreme 10% TOWARD the
+      signal. Exit X_OPP: stop-and-reverse on the opposite Signal_Trade.
+      No free numeric constants - every parameter is a panel value: VF-ANCHOR cloud
+      P=60 A=5 pcts (5,25,50,75,95) percentile_linear, close x volume, QtyPerTrend 3
+      (same-direction per trend episode), Split 5 bars, CloseThreshold 10, 130-pt stop.
+    event_universe: "VF Signal_Trade pullback events on the VF-ANCHOR clean-room cloud"
+    wrapper: "qty 1, next-bar-open fills, slippage 0, fixed 130-pt intrabar stop, session-close flat"
+    cost_model: "$0/side (screenshot layer)"
+    data_source: nq1m_2005_202605.parquet (identification); nq0926_junjul2026_1m.csv sha256:f8048926c24d41f9 (held-out window)
+    date_window: "identification 17 weekly windows 2026-01-25..05-29; held-out 6/21-6/26, 6/28-7/10, 7/12-7/31"
+    purpose: "Bounded structural identification of the trader's 2026 Signal_Trend + Signal_Trade composition"
+    defining_run: OTR_R7_VF_SIGNAL_ID (held out and re-scored in OTR_R8_JUNE2026)
+    status: INCUMBENT
+    notes: >
+      Mean section-40 distance 0.476, worst 0.905, LOWO top-3 in 13 of 17 rotations.
+      Failure week 2026-03-22..27 net -$9,730 against a -$42,235 target: RIGHT SIGN, 23%
+      of magnitude. Held-out window result: distances 0.338-0.592, counts within +8% to
+      +20%, no blowups - the stable member. Persistent residual: WR gap (26-35 vs 39-45)
+      and missing extra edge in his two biggest weeks. Held-out scoring here is a
+      HELD_OUT_RECONSTRUCTION_WINDOW, NOT true OOS - the historical outcomes were already
+      visible to us.
+
+  - model_id: VF_CAND1_TC_PMED_CDIR_H1A_XOPP_STRONGONLY
+    family: OTR_VF_CAND1
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_r7b_signal_id.py
+    config_summary: "The leader plus a VERSION-AWARE strength gate active only from 2026-02-24 (the date the official changelog upgraded Signal_Trend from 2-state to 4-state): enter only when the bar-level cumulative-delta-proxy slope sign agrees with the trend direction over the last TrendPeriod=20 bars"
+    event_universe: "as the leader, additionally gated by trend strength"
+    wrapper: "as the leader"
+    cost_model: "$0/side"
+    data_source: as the leader
+    date_window: "as the leader"
+    purpose: "Test whether the mid-sample 4-state Signal_Trend upgrade is visible in the weekly fingerprints"
+    defining_run: OTR_R7_VF_SIGNAL_ID (amendment_1)
+    status: CLUSTER_MEMBER
+    notes: "Mean distance 0.492 - mildly DEGRADES the leader; the strength dimension is unidentifiable from weekly aggregates. Failure week -$5,135. Held-out counts run low (58/118/146 vs 71/162/223)."
+
+  - model_id: VF_CAND1_TC_PQ75_CREC_H1A_XOPP
+    family: OTR_VF_CAND1
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_r7_signal_id.py
+    config_summary: "Trend T_C (FairValue + EMA20 slope agreement); pullback depth P_Q75 (touch of the Upper/Lower rail rather than the Median); confirmation C_REC (close recovers back beyond the touched rail); close-threshold H1a; exit X_OPP"
+    event_universe: "VF pullback events at the Q75/Q25 rails"
+    wrapper: "as the leader"
+    cost_model: "$0/side"
+    data_source: as the leader
+    date_window: "as the leader"
+    purpose: "Shallower-pullback rival member"
+    defining_run: OTR_R7_VF_SIGNAL_ID
+    status: CLUSTER_MEMBER
+    notes: "Mean distance 0.501, worst 0.827, failure week -$17,870. Held-out distances 0.404-0.536 with counts 72/150/213."
+
+  - model_id: VF_CAND1_TD_PIN_CREC_H1C_XFLIP
+    family: OTR_VF_CAND1
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_r7b_signal_id.py
+    config_summary: "Trend T_D (EMA20(close) crosses FairValue); pullback depth P_IN (price re-enters the cloud); confirmation C_REC; close-threshold H1c, the MANUAL-VERBATIM orientation (a long is valid iff (High-Close)/Range >= 0.10, i.e. exclude only closes in the top decile against the pullback reading); exit X_FLIP on trend-state flip"
+    event_universe: "VF cloud re-entry events"
+    wrapper: "as the leader"
+    cost_model: "$0/side"
+    data_source: as the leader
+    date_window: "as the leader"
+    purpose: "Manual-verbatim close-threshold reading; best catastrophe geometry in the cluster"
+    defining_run: OTR_R7_VF_SIGNAL_ID (amendment_1)
+    status: DEMOTED
+    notes: >
+      Mean distance 0.514 with the BEST worst-window (0.755) and by far the best failure
+      week: -$26,535 = 63% of the -$42,235 target. DEMOTED after the held-out window: it
+      swings -$32,500 on a +$8,630 target week while scoring the cluster's best distance
+      (0.327) on another. Kept as a member, no longer co-leader.
+
+  - model_id: VF_DQ_TC_PMED_CREC_H1A_XOPP
+    family: OTR_VF_CAND1
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_r7_signal_id.py
+    config_summary: "As the leader but with confirmation C_REC (close recovers back beyond the touched rail) instead of C_DIR"
+    event_universe: "VF pullback events at the Median"
+    wrapper: "as the leader"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "17 weekly windows 2026-01-25..05-29"
+    purpose: "Rank-2 member by mean distance"
+    defining_run: OTR_R7_VF_SIGNAL_ID
+    status: DISQUALIFIED
+    notes: "Mean distance 0.479 (rank 2) but PROFITABLE at +$2,970 in the week the trader lost $42,235 -> disqualified by the preregistered section 32 rule regardless of rank. Kept with its falsifier."
+
+  - model_id: VF_H1B_EXTREME_AGAINST
+    family: OTR_VF_CAND1
+    source_file: research/original_trader_reconstruction/vwap_flux_family/src/run_r7_signal_id.py
+    config_summary: "Close-threshold orientation H1b: a long requires (Close-Low)/Range <= 0.10, i.e. the signal candle closes in the extreme 10% AGAINST the signal"
+    event_universe: "applies across all trend/pullback/exit combinations in the R7 grid"
+    wrapper: "as the leader"
+    cost_model: "$0/side"
+    data_source: nq1m_2005_202605.parquet
+    date_window: "17 weekly windows 2026-01-25..05-29"
+    purpose: "One of three rival readings of the panel's Signal Close Threshold (%) = 10"
+    defining_run: OTR_R7_VF_SIGNAL_ID
+    status: FALSIFIED
+    notes: "Degenerate - near-zero trades, bottom of the 144-member table. The entire top-15 is H1a. H1c (manual-verbatim) sits mid-pack at 0.512+ and survives inside the cluster."
+
+# ============================================================================
+# DELIBERATELY NOT REGISTERED (recorded so the absence is not silent)
+# ============================================================================
+
+not_registered:
+  - name: "hp hybrid build (T1 chains mixed with pullback-priced entries, or a state switch between them)"
+    reason: >
+      R9 narrowed the hp shape to "suppression in chop + pullback-priced entries in
+      trend", but no member of that family exists in code and minting one would require
+      inventing constants with no evidence. Blocked by directive section 5 until new
+      labels arrive (an hp-machine settings frame, or any per-day Analyzer table).
+    status: UNKNOWN
+  - name: "the Feb-2025 2/27 n=90 build"
+    reason: >
+      R10 rejected the only bounded candidate (the TrendVector-cycle machine). Leading
+      reading is that the 2/27 row belongs to a one-off experiment build, not to a
+      persistent fast layer of the flagship lineage - but that is an INFERENCE and no
+      model object is registered for it.
+    status: UNKNOWN
+  - name: "the June 2026-06-07..12 fast/tight sleeve"
+    reason: >
+      The Trade Performance week (n=136, WR 50, hold 20.5, +$11,860.30) stays
+      UNDER-EXPLAINED by VF-CAND1 + CAND2-S. The missing carrier is hypothesised to be
+      the variant-2-era fast layer; no member exists.
+    status: UNKNOWN
+  - name: "MULTI-BLOCK FAMILY B"
+    reason: >
+      Raw visible parameter token groups are transcribed in FAMILY_MAP.md, but zero
+      repo/source hits exist for any token group and no mechanism guess is admitted.
+      Cosmik, Multi-Osc, SJB-as-product and King-Kong-as-package were all FALSIFIED as
+      sources; ThunderZilla is weakened (EV-020). No model object.
+    status: UNKNOWN
+  - name: "V-EXACT (the 2026 volume family on true bid/ask-classified volume)"
+    reason: >
+      Only 2 complete tick sessions exist inside window A (OTR_OF1 classified both).
+      Weekly simulation needs far more. Classified BLOCKED PENDING DATA; the V_PROXY
+      family above is the substitute and must never be described as exact parity.
+    status: UNKNOWN
