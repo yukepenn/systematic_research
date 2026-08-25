@@ -1,0 +1,22 @@
+=== REGRESSION on the incumbent leader T_C|P_MED|C_DIR|H1a|X_OPP ===
+  emitted signals (Layer A, corrected) : 2730
+  trades OLD (counters on execution)   : 1722
+  trades NEW (counters on emission)    : 1705
+  trader's observed scale across these windows: 1214
+  section-40 distance  OLD 0.4761   NEW 0.4768
+  PREREGISTERED P1: trade count should FALL -> PASS
+
+=== six-geometry floor sweep, corrected Layer A ===
+  anchor  percentile_linear  floor=0.4768  median=0.8325  best=T_C|P_MED|C_DIR|H1a|X_OPP
+  anchor  nearest_rank       floor=0.4768  median=0.7858  best=T_C|P_MED|C_DIR|H1a|X_OPP
+  anchor  minmax             floor=0.4894  median=0.8307  best=T_D|P_IN|C_DIR|H1a|X_FLIP
+D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\research\original_trader_reconstruction\solar_family\src\run_r5_weekly.py:160: RuntimeWarning: divide by zero encountered in scalar divide
+  ratio_wl_all=(p[win].mean() / -p[~win].mean()) if (win.any() and (~win).any()) else np.nan,
+  block   percentile_linear  floor=0.4534  median=0.8038  best=T_C|P_MED|C_DIR|H1a|X_OPP
+  block   nearest_rank       floor=0.4534  median=0.8276  best=T_C|P_MED|C_DIR|H1a|X_OPP
+  block   minmax             floor=0.5378  median=0.8604  best=T_C|P_IN|C_REC|H1a|X_MED
+
+=== PURCHASE_GATE_v2 flip-condition 2 ===
+  corrected floors: [0.4534, 0.4534, 0.4768, 0.4768, 0.4894, 0.5378]
+  best 0.4534  (R26 uncorrected best was 0.4624)
+  -> no geometry reaches <0.35: DO-NOT-BUY verdict STANDS

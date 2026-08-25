@@ -101,13 +101,29 @@ Stated in advance so the verdict is falsifiable:
    era, and vendor-level signal timing would become checkable. The owner has confirmed the
    164 images are the complete corpus, so this is not obtainable — which is precisely why
    the purchase cannot be rescued by spending.
-2. **Some geometry reaching a floor below 0.35** in a future re-run (e.g. after the Layer-A
-   rebuild corrects the QtyPerTrend/Split semantics). That would show geometry does carry
-   the residual after all. The corrected two-layer architecture is specified in
-   `VF_SIGNAL_GENERATOR_v2.md` and has not yet been built — **this is the one genuinely
-   open free item, and it should be done before the question is revisited.**
+2. ~~**Some geometry reaching a floor below 0.35** after the Layer-A rebuild.~~
+   **CLOSED 2026-08-25 — the rebuild was done and the verdict stands.**
+   `runs/OTR_R27_VF_LAYERA` implemented the corrected two-layer architecture (quota and
+   split moved to signal generation) and re-ran the full six-geometry sweep. The defect was
+   real but its effect is negligible: trades 1,722 → 1,705 (−1.0 %), §40 distance
+   0.4761 → 0.4768. Corrected floors are 0.4534 / 0.4534 / 0.4768 / 0.4768 / 0.4894 /
+   0.5378 — **best 0.4534, still far above 0.35.** `percentile_linear` and `nearest_rank`
+   again produce byte-identical floors, confirming behavioural inertness a second time.
+   The R7/R8 conclusions that were marked PROVISIONAL pending this rebuild are no longer
+   provisional; the corrected architecture reproduces them and the incumbent leader is
+   unchanged.
+   The rebuild also localised the 2026 residual: Layer A emits **2,730** signals, our
+   wrapper trades **1,705**, the trader trades **1,214**. The gap is in how many emitted
+   signals his wrapper DECLINES — the same unidentified suppression behaviour R23 could not
+   pin down for 2023 even with exact labels. That is a wrapper question, not a vendor
+   question, and no purchase touches it.
 3. Direct evidence that his build tracks vendor semantics (e.g. a frame showing a vendor
    version string alongside his panel).
+
+## Status: the free surface IS now exhausted
+
+Every item that was outstanding when the gate was first written has been executed. There is
+no remaining free experiment whose outcome could reverse the verdict.
 
 ## Free work that was completed this pass, so "not exhausted" is no longer an excuse
 
@@ -116,8 +132,8 @@ Stated in advance so the verdict is falsifiable:
   than quietly dropped.
 - All six geometries swept behaviourally (R26).
 - EV-039 re-audited against the actual frames.
-- Signal-vs-execution defect confirmed by code reading and the corrected architecture
-  specified.
+- Signal-vs-execution defect confirmed by code reading, corrected architecture specified
+  AND BUILT (`vf_layer_ab.py`), re-swept, verdict unchanged (R27).
 
 ## Bottom line for the owner
 
@@ -126,4 +142,8 @@ distance, about an indicator we cannot show he used unmodified, in an era where 
 evidence fine-grained enough to check the answer. The binding constraint is **evidence, not
 vendor knowledge** — and no amount of money fixes that.
 
-The one thing that could still move 2026 is free: build Layer A correctly and re-measure.
+That was also true of the last free item on the list. Layer A has now been rebuilt
+correctly (R27) and it moved the reconstruction distance by 0.0007. There is nothing left to
+spend $300 on that we have not already obtained for nothing.
+
+**The 2026 residual is a wrapper/suppression problem, not a vendor-semantics problem.**
