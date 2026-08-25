@@ -1,0 +1,55 @@
+run_id: OTR_R12_PARAM_INTERVENTION
+title: "A3/A4/A5 retune as a natural experiment: which Solar event families actually move"
+directive: "OWNER MASTER DIRECTIVE v4.0 (2026-08-24), phase P4 (section 11)"
+date_opened: 2026-08-24
+status: OPEN
+campaign: OTR (#6)
+
+purpose: >
+  The trader changed A3/A4/A5 from 5/10/10 to 3/6/9 (with A2 179 -> 180) around late 2025.
+  That is a controlled intervention on a system whose indicator mathematics we have
+  recovered exactly. Measure WHICH EVENT FAMILIES CHANGE, in event space, BEFORE looking at
+  any P&L. The event families that move are the causal candidates for the layer his build
+  has and our T1 skeleton does not.
+
+  This replaces the loose argument "A3-A5 sound like pullback parameters, therefore his
+  build has a pullback layer" (directive v4.0 section 1H: the missing layer must NOT be
+  named until discriminated).
+
+prereg_predictions:
+  P1: >
+    T1 (trend-start / flip) events are near-invariant under the retune. Only A2 (179 -> 180)
+    touches the flip threshold, and by 1 tick, so |Jaccard(T1_old, T1_new)| should be > 0.97.
+    If T1 moves materially, the whole "A3-A5 is invisible to T1" premise is wrong.
+  P2: >
+    T3 (strengthening) counts RISE under 5/10/10 -> 3/6/9, because slowdown_scan 5 -> 3
+    declares "weak" sooner and weak_weak_split 10 -> 6 re-arms sooner, so more
+    weak->new-extreme transitions fire.
+  P3: >
+    T2 (pullback) counts RISE modestly: pullback_split 10 -> 9 shortens the minimum gap
+    between consecutive pullback fires by one bar (~10%). PullbackEarly is a HIDDEN FIXED
+    implementation choice, measured for BOTH values, never optimised.
+  P4: >
+    Signal_Trend spends MORE time in the weak state (|1|) under the new parameters.
+
+method:
+  - "Compute solar_wave_full() on the identical bar series under both parameter sets,
+     for pullback_early in {True, False}."
+  - "Emit per-family event counts, per-family timing shifts, Jaccard overlap on exact bar
+     indices, weak-state duty cycle, wave-leg counts, and TrendVector-cross counts."
+  - "Report side asymmetry (long vs short) of every family delta."
+  - "NO P&L is computed in this run. Selection by P&L is forbidden here by construction."
+  window: "2025-06-15 .. 2026-01-24 (spans the observed retune); NQ 1-minute."
+
+falsifiers:
+  - "If every family moves by a similar relative amount, the intervention has no
+     discriminating power and must be recorded as UNINFORMATIVE."
+  - "If T1 moves as much as T2/T3, prediction P1 fails and the intervention cannot be used
+     to argue for a non-T1 layer at all."
+
+outputs:
+  - runs/OTR_R12_PARAM_INTERVENTION/out/event_family_deltas.csv
+  - runs/OTR_R12_PARAM_INTERVENTION/out/family_timing.csv
+  - research/original_trader_reconstruction/solar_family/PARAMETER_INTERVENTION_2025.md
+
+safety: "Pure indicator computation on historical bars. No orders, no deploy, no live data."
