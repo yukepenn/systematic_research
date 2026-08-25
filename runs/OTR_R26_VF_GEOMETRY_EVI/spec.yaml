@@ -1,0 +1,68 @@
+run_id: OTR_R26_VF_GEOMETRY_EVI
+title: "Is VWAP Flux GEOMETRY the binding constraint on the 2026 reconstruction? (purchase-gate decider)"
+directive: "OWNER MASTER DIRECTIVE v4.0 sections 34/35 (purchase gate), 21 (lifecycle reopen)"
+date_opened: 2026-08-25
+status: OPEN
+campaign: OTR (#6)
+
+question: >
+  The owner's standing instruction is to buy VWAP Flux only as a last resort, and only as an
+  INFORMATION PURCHASE. A licensed copy would tell us the vendor's exact cloud geometry
+  (lifecycle + rail formula) and exact Signal_Trade timing. This run asks the only question
+  that makes that purchase worth anything:
+    IS GEOMETRY WHAT IS LIMITING US?
+
+  R7/R8 identified the 2026 signal family under ONE fixed geometry (ACTIVE anchors,
+  percentile-linear rails). The best member achieves mean section-40 distance 0.476 against
+  the trader's 17 weekly windows. If that 0.476 floor is roughly the SAME under every rival
+  geometry, then knowing the vendor's true geometry cannot improve the reconstruction, and
+  the purchase buys information we cannot use.
+
+method:
+  - "Sweep geometry: lifecycle in {anchor, block} x rail formula in
+     {percentile_linear, nearest_rank, minmax} = 6 geometries. All are already implemented
+     in vf_core.py and all are live rivals per VF_ARCHITECTURE_REOPEN.md."
+  - "For EACH geometry, re-run the FULL R7 144-member structural grid (trend rule x pullback
+     depth x confirmation x close-threshold reading x exit family) over the 17 weekly
+     windows, with every numeric constant frozen at the trader's own panel values."
+  - "Report per geometry the MINIMUM mean section-40 distance over all 144 members."
+
+why_the_minimum_is_the_right_statistic: >
+  A vendor oracle would SELECT the correct geometry and the correct semantic reading. The
+  minimum over members is therefore an OPTIMISTIC bound on what an oracle could deliver --
+  optimistic because it is chosen with hindsight using the trader's own data, which a real
+  oracle cannot do. If even this hindsight-optimal bound is poor, a real oracle is
+  strictly worse.
+
+prereg_decision_rule:
+  BUY_IS_JUSTIFIED: >
+    if the best geometry beats the incumbent geometry's floor by a MATERIAL margin --
+    concretely, if min-mean-distance drops below 0.35 for some geometry (which would put VF
+    in the same band as the Solar family's ordinary weekly fit of 0.28-0.42), because then
+    geometry demonstrably carries the residual and an oracle that fixes geometry pays off.
+  BUY_IS_NOT_JUSTIFIED: >
+    if all six geometries floor out within ~0.05 of each other and all remain well above
+    0.35. Then geometry is not where the residual lives, an oracle cannot close it, and the
+    money buys an answer to a question that is not the binding one.
+  RECORDED IN ADVANCE so the result cannot be reinterpreted after the fact.
+
+second_decisive_fact_already_established: >
+  Independently of this run, an evidence-surface audit found that the ENTIRE 164-image
+  corpus contains per-day Analysis tables (with avg_MAE / avg_MFE) for exactly three
+  records: OTRIMG-0003 (11 days, Jan-2023), OTRIMG-0026 (2 days, Feb-2025) and OTRIMG-0032
+  (a summary strip with no per-day rows). There is NO 2026 per-day table, and the 2026
+  weekly rows carry no MAE/MFE columns at all.
+  The Jan-2023 reconstruction succeeded precisely because per-day rows + MAE/MFE + the
+  $5 lattice + joint solving made the trade path nearly determined. None of that machinery
+  can be pointed at 2026. This bounds what ANY 2026 improvement can be verified against.
+
+falsifier_of_this_run: >
+  If some geometry drops the floor below 0.35, the conclusion flips and the purchase becomes
+  HIGH-EVI. The run is designed to be able to produce that outcome.
+
+outputs:
+  - runs/OTR_R26_VF_GEOMETRY_EVI/out/geometry_floor.csv
+  - runs/OTR_R26_VF_GEOMETRY_EVI/REPORT.md
+  - research/original_trader_reconstruction/vendor_forensics/PURCHASE_GATE_v2.md
+
+safety: "Historical bars only. No purchase is made by this run; it only informs the owner's decision."
