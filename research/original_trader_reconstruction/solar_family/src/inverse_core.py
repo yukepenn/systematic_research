@@ -98,70 +98,6 @@ def mae_mfe(bb, dirn, entry_i, entry_px, exit_i, exit_px, at_close):
 
 
 # ---------------------------------------------------------------------------
-# deterministic forward simulation of one entry (may become a reversal CHAIN)
-# ---------------------------------------------------------------------------
-def simulate_chain(bb, s_end, decide_i, dirn, universe, reverse_on_flip,
-                   stop_pts=None):
-    """Enter on the decision at bar `decide_i` (fill at open of decide_i+1) and run
-    forward deterministically until FLAT. Returns (trades, flat_at_bar) or None.
-
-    `flat_at_bar` = the bar index at whose CLOSE we are flat again and may decide anew.
-    """
-    o, h, l, c, ts, st, lb = (bb[k] for k in ("o", "h", "l", "c", "ts", "st", "lb"))
-    out = []
-    i = decide_i + 1
-    if i > s_end:
-        return None
-    pos, epx, ei = dirn, float(o[i]), i
-    while True:
-        # -- session close: realize at THIS bar's close, flat afterwards
-        if lb[i] or i >= s_end:
-            xpx = float(c[s_end])
-            xi = s_end
-            mae, mfe = mae_mfe(bb, pos, ei, epx, xi, xpx, at_close=True)
-            out.append(dict(d=pos, ei=ei, xi=xi, epx=epx, xpx=xpx,
-                            g=pos * (xpx - epx) * POINT_VALUE, mae=mae, mfe=mfe,
-                            kind="sc"))
-            return out, s_end + 1
-        # -- optional fixed intrabar stop (era-dependent; 2023 evidence says OFF)
-        if stop_pts is not None:
-            lvl = epx - pos * stop_pts
-            hit = (l[i] <= lvl) if pos > 0 else (h[i] >= lvl)
-            if hit:
-                gap = (o[i] <= lvl) if pos > 0 else (o[i] >= lvl)
-                xpx = float(o[i]) if gap else lvl
-                mae, mfe = mae_mfe(bb, pos, ei, epx, i, xpx, at_close=True)
-                out.append(dict(d=pos, ei=ei, xi=i, epx=epx, xpx=xpx,
-                                g=pos * (xpx - epx) * POINT_VALUE, mae=mae, mfe=mfe,
-                                kind="stop"))
-                return out, i
-        # -- trailing-stop touch (inclusive, close vs END-of-bar line)
-        line = ts[i]
-        if not np.isnan(line):
-            hit = (pos > 0 and c[i] <= line) or (pos < 0 and c[i] >= line)
-            if hit:
-                sig = st[i]
-                rev = (reverse_on_flip and abs(sig) == 1 and np.sign(sig) == -pos
-                       and i >= BARS_REQUIRED and not lb[i])
-                if i + 1 > s_end:
-                    xpx, xi, atc = float(c[s_end]), s_end, True
-                else:
-                    xpx, xi, atc = float(o[i + 1]), i + 1, False
-                mae, mfe = mae_mfe(bb, pos, ei, epx, xi, xpx, at_close=atc)
-                out.append(dict(d=pos, ei=ei, xi=xi, epx=epx, xpx=xpx,
-                                g=pos * (xpx - epx) * POINT_VALUE, mae=mae, mfe=mfe,
-                                kind="rev" if rev else "ts"))
-                if rev and xi <= s_end:
-                    pos, epx, ei = int(np.sign(sig)), xpx, xi
-                    i = xi
-                    continue
-                return out, xi
-        i += 1
-        if i > s_end:
-            i = s_end
-
-
-# ---------------------------------------------------------------------------
 # the day target
 # ---------------------------------------------------------------------------
 class DayTarget:
@@ -184,7 +120,7 @@ def eligible(bb, i, universe):
 def enumerate_paths(bb, s_start, s_end, tgt: DayTarget, universe,
                     allow_reverse=True, allow_exit_only=True, stop_pts=None,
                     comm_rt=4.18, max_solutions=50000, node_budget=8_000_000,
-                    exit_strict=False):
+                    exit_strict=False, max_extra=None):
     """exit_strict=False -> Close vs end-of-bar TrailingStop, INCLUSIVE (campaign-1 V0
     convention). exit_strict=True -> STRICT, which (given the ladder recurrence) is
     equivalent to "exit only when the trend actually FLIPS": for a long in an uptrend
@@ -211,6 +147,7 @@ def enumerate_paths(bb, s_start, s_end, tgt: DayTarget, universe,
             ptr += 1
         nxt_cand[i] = ptr
     sols, nodes, overflow = [], [0], [False]
+    _extras = [0]
     EPS = 0.011
 
     # ---- memoised segment graph -------------------------------------------
@@ -298,6 +235,43 @@ def enumerate_paths(bb, s_start, s_end, tgt: DayTarget, universe,
             A.nL -= 1; A.gl -= tr["pnl"]
         A.mae -= tr["mae"]; A.mfe -= tr["mfe"]
 
+    # ---- admissible (never-prunes-a-solution) suffix bounds ----------------
+    # Every winner is <= tgt.lw and every loser is >= tgt.ll EXACTLY, because those two
+    # cells are read directly off the report. So the best any continuation can still add is
+    # (winners_left * lw) and (losers_left * ll). Likewise no single trade's MAE/MFE can
+    # exceed the largest MAE/MFE of ANY segment available in this session.
+    _maxmae = [0.0]
+    _maxmfe = [0.0]
+
+    def _bound_scan():
+        mm = mf = 0.0
+        for i in range(s_start, s_end):
+            for d in (1, -1):
+                r = seg(i, d)
+                if r is None:
+                    continue
+                a, b = mae_mfe(bb, r[0], r[1], r[2], r[3], r[4], r[5])
+                if a > mm:
+                    mm = a
+                if b > mf:
+                    mf = b
+        _maxmae[0], _maxmfe[0] = mm, mf
+
+    def feasible_suffix():
+        """False => no continuation can reach the exact targets; safe to prune."""
+        wl = tgt.nW - A.nW
+        ll_ = tgt.nL - A.nL
+        if A.gw + wl * tgt.lw < tgt.gp - EPS:
+            return False
+        if A.gl + ll_ * tgt.ll > tgt.gl + EPS:
+            return False
+        left = wl + ll_
+        if A.mae + left * _maxmae[0] < tgt.mae - 0.6:
+            return False
+        if A.mfe + left * _maxmfe[0] < tgt.mfe - 0.6:
+            return False
+        return True
+
     def terminal():
         if (A.nW == tgt.nW and A.nL == tgt.nL
                 and abs(A.gw - tgt.gp) < EPS and abs(A.gl - tgt.gl) < EPS
@@ -318,10 +292,22 @@ def enumerate_paths(bb, s_start, s_end, tgt: DayTarget, universe,
             return
         if A.nW + A.nL == tgt.n:
             terminal(); return
+        if not feasible_suffix():
+            return
         for kk in range(nxt_cand.get(min(i, s_end + 1), len(cand)), len(cand)):
             j = cand[kk]
             sg = st[j]
+            extra = abs(sg) != 1
+            if extra:
+                # iterative deepening: cap how many entries may come from a NON-T1
+                # signal class. max_extra=0 reduces exactly to the T1-only universe,
+                # so the search reports the MINIMUM number of non-T1 entries a day needs.
+                if max_extra is not None and _extras[0] >= max_extra:
+                    continue
+                _extras[0] += 1
             take(seg(j, 1 if sg > 0 else -1))
+            if extra:
+                _extras[0] -= 1
             if overflow[0]:
                 return
 
@@ -344,6 +330,28 @@ def enumerate_paths(bb, s_start, s_end, tgt: DayTarget, universe,
                 flat(xi)
         pop()
 
+    _bound_scan()
     flat(s_start)
     return sols, dict(n_candidates=len(cand), nodes=nodes[0],
-                      overflow=overflow[0], n_solutions=len(sols))
+                      overflow=overflow[0], n_solutions=len(sols),
+                      max_extra=max_extra)
+
+
+def solve_min_extra(bb, s_start, s_end, tgt, universe, extras_ladder=(0, 1, 2, 3),
+                    **kw):
+    """Iterative deepening on the number of NON-T1 entries.
+
+    Returns (solutions, stats, min_extra). min_extra is the SMALLEST number of non-T1
+    entries any feasible path needs -- a directly interpretable measure of how much extra
+    machinery the day demands beyond the T1 skeleton. None if no ladder rung solved it.
+    """
+    last = None
+    for k in extras_ladder:
+        sols, stats = enumerate_paths(bb, s_start, s_end, tgt, universe,
+                                      max_extra=k, **kw)
+        last = stats
+        if sols:
+            return sols, stats, k
+        if stats["overflow"]:
+            return [], stats, None
+    return [], last, None

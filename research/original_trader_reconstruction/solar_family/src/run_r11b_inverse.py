@@ -102,19 +102,20 @@ def main():
                 print(f"  {day}: SESSION NOT FOUND"); continue
             s0, s1 = sd[day]
             T = tgts[day]
-            sols, stats = IC.enumerate_paths(bb, s0, s1, T, mags,
-                                             allow_reverse=True, allow_exit_only=True, stop_pts=None,
-                                             comm_rt=COMM, node_budget=8_000_000,
-                                             max_solutions=20000, exit_strict=strict)
+            sols, stats, mx = IC.solve_min_extra(
+                bb, s0, s1, T, mags, extras_ladder=(0, 1, 2, 3),
+                allow_reverse=True, allow_exit_only=True, stop_pts=None,
+                comm_rt=COMM, node_budget=6_000_000, max_solutions=20000,
+                exit_strict=strict)
             verdict = ("FEASIBLE" if sols else
                        ("BUDGET_EXCEEDED" if stats["overflow"] else
                         "IMPOSSIBLE_UNDER_UNIVERSE"))
             print(f"  {day}  cand={stats['n_candidates']:>3} nodes={stats['nodes']:>9,} "
-                  f"sols={len(sols):>5}  {verdict}", flush=True)
+                  f"sols={len(sols):>5} min_extra={mx}  {verdict}", flush=True)
             rows.append(dict(universe=uname, exit_rule=xr, day=day, n_target=T.n,
                              n_candidate_signals=stats["n_candidates"],
                              nodes=stats["nodes"], n_solutions=len(sols),
-                             verdict=verdict))
+                             min_non_T1_entries=mx, verdict=verdict))
             if sols:
                 detail.setdefault(f"{uname}|{xr}", {})[day] = sols
                 # event invariants over the feasible set.
