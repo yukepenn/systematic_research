@@ -1,5 +1,27 @@
 # THE EXPOSURE LAW — and how it resolves the 130 vs 65 ambiguity
 
+> ## ⚠ INTERPRETATION CORRECTED 2026-08-25 — see `runs/OTR_R32_JOINT_ENTRY_EXIT/amendment_2.yaml`
+>
+> The **arithmetic below stands** (k = [0.61, 1.53], median 1.151, K1 4/5). The **interpretation
+> does not**, because `AUTHOR_STATEMENTS.md` — CLASS A direct evidence — was not consulted first.
+>
+> **AS-9: "Generally traded one contract." AS-2: Strategy Analyzer records are PER-STRATEGY.**
+> Together with R30's parity test, which independently FORCED q = 1 for four SA records, three
+> lines agree the 22 backtests are **quantity 1**.
+>
+> Therefore:
+> - **The stop is 130 index points.** "65 × qty 2" is RETIRED for the SA records — so §4 below
+>   reaches the right answer for the wrong reason. It is settled by testimony plus architecture,
+>   not by the elegant `stop = 2600/(20q)` reading, which is **withdrawn**.
+> - The **qty-2 June trade is account-level overlap of two sleeves (AS-1)**, not one strategy
+>   sizing up — exactly the reading the owner insisted on.
+> - **Most important:** at fixed q = 1, `corr(ATR, avg_loss) = −0.51` cannot be a sizing effect at
+>   all. It is a POINTS-level phenomenon, and it returns to **UNEXPLAINED**. Exposure is no longer
+>   "the only remaining candidate"; it is largely excluded for the backtested records, and nothing
+>   has replaced it.
+>
+> Retained verbatim below as the record of what was measured and claimed.
+
 Run `OTR_R32_JOINT_ENTRY_EXIT` amendment 1, preregistered before readout.
 Code: `run_r32b_exposure.py`. No purchase, no new data, nothing from the sealed window.
 

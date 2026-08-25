@@ -1,0 +1,59 @@
+amendment: 2
+run_id: OTR_R32_JOINT_ENTRY_EXIT
+date: 2026-08-25
+status: CORRECTION_TO_AMENDMENT_1, recorded before the final synthesis
+supersedes: amendment 1's INTERPRETATION only.  Its arithmetic (k = [0.61, 1.53], median 1.151,
+            K1 4/5) stands exactly as measured.
+
+why: >
+  Amendment 1 concluded that fixed-dollar-risk position sizing was INDICATED, on the strength of a
+  solved exponent k near 1.  Before writing that into a final synthesis I checked
+  AUTHOR_STATEMENTS.md, which is CLASS A direct evidence relayed from the trader himself, and it
+  materially undercuts the interpretation.  Recording the correction rather than carrying the
+  claim forward.
+
+class_A_statements_that_bear_on_it:
+  AS-1: "Runs several strategies simultaneously."
+  AS-2: "Uses Strategy Analyzer to examine INDIVIDUAL strategy performance; Trade Performance may
+         be account-level."
+  AS-9: "Generally traded one contract."
+
+consequences:
+  1: >
+    The 22 Strategy Analyzer records are PER-STRATEGY backtests (AS-2) of a trader who generally
+    trades one contract (AS-9).  Independently, R30's parity test already FORCED q = 1 for four of
+    them from the $5 lattice alone.  Three lines therefore agree that the SA records are qty 1.
+    CONSEQUENCE: the stop is 130 index points, and the "65 points x qty 2" alternative is RETIRED
+    for the Strategy Analyzer records.  R30 left these separated by 0.023 and unresolved; this
+    resolves it - but by author testimony plus architecture, not by the fit score.
+  2: >
+    Amendment 1's proposal that stop_points = 2600/(20q) varies with a dynamic q is therefore
+    WRONG for the SA records.  At a fixed q = 1 a $2,600 risk IS 130 points, always.  The neat
+    "both 130 and 65 are true at different times" resolution is WITHDRAWN.
+  3: >
+    The confirmed qty-2 trade in the June Trade Performance record is better explained by AS-1 +
+    AS-2 - two strategies overlapping at the ACCOUNT level - than by one strategy sizing up.  That
+    is also exactly the reading the owner insisted on when correcting me earlier: qty 2 proves
+    account exposure was not globally 1, NOT that a single strategy varied its size.
+  4: >
+    MOST IMPORTANT.  If quantity is fixed at 1 inside each SA backtest, then
+    corr(ATR, his avg_loss) = -0.51 cannot be a sizing effect at all: it must be a POINTS-level
+    phenomenon.  His average loss in POINTS falls as volatility rises, while every one of our nine
+    exit families has it RISING (+0.66 to +0.87).
+    CONSEQUENCE: the one regularity that survived R31 out of sample returns to UNEXPLAINED.
+    Exposure/sizing is no longer the "only remaining candidate" - it is largely excluded for the
+    backtested records, and nothing has replaced it.
+
+what_survives_from_amendment_1:
+  - The arithmetic: k solved to [0.61, 1.53], K1 agreement 4/5.  Unchanged as a measurement.
+  - The observation that a multiplicative law CAN reconcile his winners and losers.  That remains
+    true; it simply cannot be quantity inside a single qty-1 backtest.
+  - It may still describe the ACCOUNT level, where overlapping sleeves genuinely vary exposure.
+    Untested, and not claimed.
+
+standing_lesson: >
+  This is the fourth interpretation this session to fail on contact with a check I could have run
+  first.  The specific failure mode here was NOT a statistical one - the arithmetic was right -
+  it was failing to consult CLASS A author testimony already committed in the repo before
+  interpreting a derived quantity.  AUTHOR_STATEMENTS.md must be read before any mechanism claim
+  about quantity, risk or account structure.
