@@ -1,0 +1,125 @@
+run_id: OTR_R31_JOINT_MECHANISM
+campaign: 6-OTR
+directive: OWNER CONTINUATION DIRECTIVE OTR R31 (2026-08-25)
+sections: ["1", "2", "4", "5", "7", "8", "9", "10", "13", "14", "15", "16"]
+date_preregistered: 2026-08-25
+status: PREREGISTERED_BEFORE_READOUT
+
+# ---------------------------------------------------------------------------------
+# 0. STATUS OF THE PLATFORM-BOUNDARY CORRECTION (directive section 1)
+# ---------------------------------------------------------------------------------
+platform_boundary: >
+  The correction is CORRECT, and it is ALREADY IN FORCE in the current artifacts, so no committed
+  result changes.  Recorded plainly so the record is unambiguous:
+    - 2026_PANEL_TOPOLOGY.md (committed 2026-08-24) already identifies the six trailing groups as
+      the NinjaTrader standard tail and counts them as 26 PLATFORM rows.
+    - ALL_VISIBLE_PARAMETER_ORIGIN_MATRIX.csv marks 29 slots IDENTIFIED_PLATFORM_SETTING
+      (26 tail + 3 General) and ZERO of them as custom or as an author module.
+    - PARAMETER_COVERAGE_REPORT.md computes his custom rows as extent MINUS those 26 rows
+      (523 - 26 = ~497), which is exactly the boundary rule the directive states.
+    - This session additionally reclassified the head "[SEP] enum enum" as NinjaTrader's OWN
+      General group (Backtest type / Strategy), per VENDOR_FORENSICS_v2 section 10.
+  WHAT IS GENUINELY OUTSTANDING: older repo artifacts predating this correction may still encode
+  the wrong reading.  Part D sweeps and corrects them.
+
+# ---------------------------------------------------------------------------------
+# PART A - the VOLATILITY / EXPOSURE LAW  (directive section 8) - HIGHEST EVI
+# ---------------------------------------------------------------------------------
+part_a:
+  motivating_measurement: >
+    corr(ATR, HIS hold) = -0.883; a log-log fit gives hold ~ ATR^-1.636 with R^2 = 0.923.
+    CONTROL ALREADY RUN: our incumbent, which HAS fixed distances (130-pt stop, fixed rails) and
+    NO explicit ATR logic, produces exponent -0.338 with R^2 = 0.169, and -0.405 / -0.439 at
+    65 / 32.5 pt stops.  So "fixed distance" alone does not reproduce his law in our engine.
+  correction_to_my_own_benchmark: >
+    My H-V1 benchmark of "exponent = -1" was WRONG and is recorded rather than quietly replaced.
+    Under diffusive price motion a FIXED distance D is traversed in time ~ (D/sigma)^2, giving
+    exponent -2; under purely ballistic motion it gives -1.  Real price sits between, so a
+    fixed-distance exit predicts an exponent in [-2, -1].
+    HIS -1.636 lies INSIDE that band.  OURS (-0.34) does not.
+  hypotheses:
+    H-V1: fixed distance, no explicit ATR logic -> exponent in [-2,-1] with HIGH R^2
+    H-V2: explicit volatility-normalised exit   -> exponent near 0, since scaling removes it
+    H-V3: dynamic quantity only                 -> exponent near 0 for HOLD (quantity cannot
+                                                   change holding time), but dollar win/loss
+                                                   co-scaling with ATR
+    H-V4: hybrid                                -> dollar co-scaling AND a steep hold exponent
+  preregistered:
+    A1: >
+      THE KEY TEST.  Re-score all 26 R30 Part-C exit families on the ATR-hold law: fit
+      log(hold) ~ b*log(ATR) per family, record b and R^2.
+      PREDICTION: distance-based families (X_TRAIL_PTS, X_TARGET) land in [-2,-1] with high R^2;
+      state-based families (X_OPP, X_TREND, X_FV, X_BAND) stay near -0.3 with low R^2; and the
+      volatility-scaled family (X_TRAIL_ATR) sits nearest 0.
+      If that ordering holds, the ATR-hold law IDENTIFIES THE EXIT CLASS even though R30 Part C's
+      fingerprint distance could not - the first positive identification of his exit class.
+      If the ordering does NOT hold, the law is not diagnostic of exit class and A2 is not run.
+    A2: >
+      Given A1, report which family best matches his (b = -1.636, R^2 = 0.923) JOINTLY, and state
+      explicitly whether that family ALSO failed R30's C1 asymmetry test.  A family matching the
+      volatility law while failing C1 is reported as BOTH, never as a winner.
+    A3: >
+      H-V3 SEPARATION, registered because the owner corrected me on exactly this point:
+      quantity scaling CANNOT change holding time.  Therefore if any CONSTANT-QUANTITY family
+      reproduces his steep hold exponent, dynamic quantity is NOT REQUIRED to explain hold, and
+      cause E is then supported by the dollar co-scaling ALONE.  I previously implied sizing was
+      supported by both the co-scaling and the hold law; that was wrong and is corrected here.
+
+# ---------------------------------------------------------------------------------
+# PART B - platform-boundary map (directive section 2)
+# ---------------------------------------------------------------------------------
+part_b:
+  method: >
+    For every 2026 Strategy Analyzer frame record: the last visible custom row, the first visible
+    platform category, the count of custom rows above the boundary, VF-tail alignment, and scroll
+    position.  The first Data Series group is a HARD positional anchor - everything above it is
+    strategy-exposed, everything from it down is platform.
+  deliverable: parameter_archaeology/2026_PLATFORM_BOUNDARY_MAP.csv
+  preregistered:
+    B1: >
+      PREDICTION: the VF13 block sits IMMEDIATELY above the boundary in every frame showing both.
+      This is already recorded as a FACT in 2026_PANEL_TOPOLOGY.md section 2 ("the next row below
+      is the group header Data Series; nothing sits between them"), so this is a CONFIRMATION
+      pass, not a discovery, and must be written as such.
+    B2: >
+      The boundary yields an absolute row index for the VF tail in every frame that shows it.
+      PREDICTION: using it as an anchor REDUCES uncertainty on relative scroll offsets versus the
+      thumb-geometry estimate alone.  Report the improvement, or report that there is none.
+
+# ---------------------------------------------------------------------------------
+# PART C - strategy-class adjudication (directive sections 4, 5)
+# ---------------------------------------------------------------------------------
+part_c:
+  hypotheses:
+    H-COMP: most Feb-Aug 2026 frames are ONE strategy class at different scroll positions
+    H-MULTI: two or more distinct Strategy Analyzer strategy classes are represented
+    H-HYBRID: one dominant composite strategy PLUS separate sleeves at the account level
+  method: >
+    Decide on panel geometry, group ordering, platform-boundary alignment, VF-tail anchors,
+    parameter-sequence continuity and version chronology.  NEVER on P&L.
+  preregistered:
+    C1: >
+      PREDICTION: H-COMP or H-HYBRID.  The falsifier for H-COMP is a frame whose custom rows
+      cannot be reconciled with any scroll slice of a single list - for example one where the
+      VF13 block is NOT immediately followed by the Data Series separator.
+    C2: >
+      BINDING RULE going forward: a new "family" may NOT be created from a numeric block alone.
+      Unidentified blocks are called CUSTOM BLOCKS.  The label "Family B" is RETIRED unless class
+      identity is established.
+
+# ---------------------------------------------------------------------------------
+# PART D - stale-artifact sweep (directive section 1)
+# ---------------------------------------------------------------------------------
+part_d:
+  method: >
+    Sweep repo artifacts predating the platform-boundary correction and the family-proliferation
+    ban.  Correct them or mark them superseded.  Never delete evidence or falsified records.
+  deliverable: PLATFORM_BOUNDARY_SWEEP.md
+
+binding_rules:
+  - Spec committed BEFORE readout; amendments appended, never rewritten.
+  - Directive section 14 / campaign section 40: net P&L may never select a mechanism.
+  - Section 6: keep rivals, report intervals not point values.
+  - LOCKED_FORWARD: nothing from 2026-08-01 onward is used for selection.
+  - No new family may be created from a numeric block alone.
+  - Failed predictions recorded, not rewritten.
