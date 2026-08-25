@@ -1,0 +1,39 @@
+run_id: WE_W19_WALKFORWARD
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "我只在乎这个regime…只要未来赚钱就行" + "继续aggressive打造每天每周都赚钱的系统"
+
+question (the decisive one for a regime-conditional system): >
+  Every number this campaign has produced used parameters chosen by looking at the whole
+  2022-2026 sample. If instead the choices are refit on a TRAILING window and applied only to
+  the NEXT block — never looking forward — does the system still make money? That is the only
+  honest proxy for "will it make money next quarter".
+
+protocol:
+  warm-up: 2022-01-01 .. 2022-06-30 (no trading, feature warm-up only)
+  cadence: quarterly. At each boundary date t: fit on the trailing 12 months ending at t,
+    pick ONE configuration by trailing-window weekly Sharpe, then trade ONLY (t, t+1 quarter]
+    with it. Roll. The stitched out-of-sample blocks are the walk-forward equity curve.
+  choice set at each refit (4 x 4 x 2 x 2 = 64):
+    q          in {none, 0.7, 0.8, 0.9}              (range throttle)
+    members    in {narrow5, narrow6, narrow7, all13}
+    delta gate in {on, off}
+    side       in {both, long-only}
+  All features (range norm, delta, targets) are computed ONCE on the full history and sliced —
+  they are causal by construction, so this removes warm-up artifacts without leaking.
+comparisons (reported together, no cherry-picking):
+  WF        : the walk-forward stitched result
+  FIXED     : the campaign's fixed stack over the same stitched period (in-sample reference)
+  NAIVE     : narrow6, no gates, both sides (the do-nothing baseline)
+  BESTFIXED : the single best config over the whole period (pure hindsight upper bound)
+verdicts (declared):
+  STRONG : WF Sharpe >= 0.8 x FIXED and WF > NAIVE -> the parameters are stable and the edge
+           is real within the regime; the system is a legitimate forward candidate.
+  WEAK   : WF > NAIVE but < 0.8 x FIXED -> some edge, materially overstated by fixed fitting.
+  FAIL   : WF <= NAIVE -> the fixed numbers were self-deception; parameter selection adds
+           nothing and must be abandoned in favour of a single frozen naive configuration.
+also_reported: per-quarter WF Sharpe and net, which configuration was chosen each quarter, and
+  how often the choice changed (choice instability is itself the diagnostic).
+forbidden: [data >= 2026-08-01, fill-bar information, changing the choice set after seeing
+  results, reporting WF without NAIVE and FIXED alongside]
+outputs: [out/wf.txt, out/summary.csv, REPORT.md]
