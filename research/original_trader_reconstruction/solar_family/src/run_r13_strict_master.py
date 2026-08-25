@@ -33,7 +33,7 @@ TGT = dict(n=4351, net=292000.0, wr=40.29, pf=1.18, dd=-32700.0, hold=94.0, tpd=
 
 
 def run_master(bb, exit_strict, gate=True, X=1600.0, K=3, C=700.0, X2=2500.0,
-               cap=20, cd=3, comm=COMM):
+               cap=20, cd=3, comm=COMM, stop_pts=None):
     """Incumbent CAND2 automaton with the exit comparison as a switch."""
     t, o, h, l, c = (bb[k] for k in ("t", "o", "h", "l", "c"))
     fb, lb, st, ts, n = (bb[k] for k in ("fb", "lb", "st", "ts", "n"))
@@ -97,6 +97,13 @@ def run_master(bb, exit_strict, gate=True, X=1600.0, K=3, C=700.0, X2=2500.0,
             px = False; pe = 0; pr = 0
             continue
         dec = not fb[i]
+        if pos != 0 and stop_pts is not None:
+            lvl = epx - pos * stop_pts
+            if (l[i] <= lvl) if pos > 0 else (h[i] >= lvl):
+                gapped = (o[i] <= lvl) if pos > 0 else (o[i] >= lvl)
+                realize(i, o[i] if gapped else lvl)
+                px = False; pe = 0; pr = 0
+                continue
         if pos != 0 and not np.isnan(ts[i]):
             hit = (((pos > 0 and c[i] < ts[i]) or (pos < 0 and c[i] > ts[i]))
                    if exit_strict else
