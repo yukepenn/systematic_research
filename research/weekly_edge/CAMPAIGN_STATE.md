@@ -115,6 +115,24 @@ frozen. Beating his numbers under our measurement standard is therefore a STRICT
   New standing rule: gates must carry decision-bar info only; explainability review before
   any freeze.
 
+- 2026-08-25 (waves W05A-W13): sustained research push. **W06** trend-capture accounting:
+  available 346 pts/session, we capture 4.7%, HE ~24.8%; leakage = wrong-side 23-33% +
+  chop 24-35%; all 5 timing hypotheses failed. **W07** direction signals (cross-asset ES/RTY/YM,
+  overnight, opening range, efficiency) ALL failed - session direction not predictable ex ante.
+  **W08** pullback family REJECTED (F1) but its diagnostic reframed everything: big days
+  (>=500 pts) are 16.8% of sessions carrying 33.7% of points; S4n.gdl captures 17.55% there and
+  bleeds -1.87% on small days; S1 is the flat-small-day existence proof. **W09** intraday RANGE
+  THROTTLE qualifies on every dimension (Sharpe 0.193->0.210, capture 4.68->4.87%, worst week
+  -29.0k->-24.4k, 25% fewer trades, big-day capture intact) - throttle the REGIME VARIABLE,
+  not the P&L symptom. **W10** sizing = leverage (F1); throttle is engine-dependent (F2);
+  PORTFOLIO S1+S4n.A0.8 -> capture 9.57%, big-day 31.39% (> his 24.8% overall), Sharpe 0.248,
+  holdout 9/9 weeks positive. **W11** CLOSE hour negative on BOTH engines (drop it); edge is
+  NQ-SPECIFIC (same engine loses on ES/RTY/YM); low-range fade FAILS (FC) - small days are
+  defensive-only, final. **W12** per-member sleeves lose to the averaged ensemble (FA); two
+  never-used Solar signal types qualify (wave gate -> Sharpe 0.225). **W13** = discipline wave
+  (null-calibrated gates via circular-shift, per-year stability, sensitivity, leave-one-out).
+  Cumulative single-sleeve dev Sharpe: 0.160 -> 0.193 -> 0.210 -> 0.214 -> 0.225.
+
 ## Relationship to campaign #6 (OTR)
 OTR stays open (purchase gate awaiting owner action; free follow-ups queued). #7 consumes #6's
 conclusions but never its sealed evidence. Nothing in #7 feeds back into #6's identification
