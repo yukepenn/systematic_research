@@ -26,9 +26,9 @@ made conditional on it.
 
 | | |
 |---|---|
-| **Jan-2023** | a **unique continuous 89-trade path** reproduces all eleven daily rows of OTRIMG-0003 to the cent and tick. T1-only entries, STRICT flip exit, calendar-exit-date grouping — all pinned by elimination |
+| **Jan-2023** | **TWO** global 11-day paths exist (`r22_log.txt`: "global 11-day paths = 2"); the one serialized reproduces all eleven daily rows of OTRIMG-0003 to the cent and tick. **"Unique" was wrong and I propagated it — corrected 2026-08-25.** T1-only entries, STRICT flip exit, calendar-exit-date grouping — all pinned by elimination |
 | **2025** | the 2023 mechanism is **falsified at cent level** for 2025-02-26. Different build |
-| **VF13 block** | **LEVEL A**: his panel rows are his OWN re-declarations, not ninZa's grid — four label/order differences, and NT8 architecture requires it anyway |
+| **VF13 block** | **LEVEL B** (downgraded from A by audit): his panel rows are his OWN re-declarations. Only 1 of 4 cited label differences holds — the `Volume Base` order claim is a **FALSE VENDOR FACT**, the vendor also has it first. The conclusion rests on the `Percent` vs `(%)` difference plus the NT8 architectural argument |
 | **stop** | **130 index points at quantity 1** (parity forces q=1 on four records; AS-9 + AS-2 agree). 18 of 24 weeks sit at exactly −$2,600; the two overshoots are gap fills, live > backtest |
 | **platform** | the six trailing panel groups are NT8 boilerplate; the head `SEP·enum·enum` is NT8's own General group. The **strategy name is PROVEN unrecoverable** — the combo renders as a bare chevron |
 | **2026 reports** | all Strategy Analyzer figures are **GROSS of commission**; true net is 1.1–5.6 % lower |
@@ -37,24 +37,28 @@ made conditional on it.
 
 - **Entry filtering by a simple one-dimensional threshold** — failed three independent attacks
   (R23 exact labels, R29 null-calibrated, R32 joint).
-- **Counter-trend / value-fading entries** — tested in R32 across 288 configs, worse on both
-  samples. The last untested entry axis, now closed.
+- **Counter-trend / value-fading entries** — verdict **WITHDRAWN by audit**. The fade arm was given
+  exits written for momentum: no take-profit at Fair Value, and 3 of 8 families fire on the entry
+  bar for a fade. **Fade is UNTESTED, not disfavoured.**
 - **Exit geometry as a sole explanation** — F4, and no family reproduces the March/late-May
   asymmetry.
-- **All five panel motifs vs every published ninZa layout** — contradicted or unmatched.
+- **Three of five panel motifs** contradicted against published ninZa Parameters lists. One is the
+  leading vendor candidate (Super JumpBoo$t), one is NT8 platform boilerplate.
 - **Multi-Osc / King Kong / ApexFlow / Infinity / Captain** — excluded or downgraded on
   label/order/count evidence.
 
 ## The one thing that survives everything and is still UNEXPLAINED
 
-> **`corr(ATR, his avg_loss) = −0.509` (17 windows) → `−0.515` (23 windows).**
-> His average loss **in points** shrinks as volatility rises. All nine of our exit families have
-> it *rising* (+0.66 to +0.87). Sizing is largely excluded for the backtested records by AS-9.
-> Nothing explains it.
+> **`corr(ATR, his avg_loss) = −0.51` pooled — but the 17- and 23-window samples are NESTED.**
+> On the **6 genuinely new** windows it is **−0.114, p = 0.83**. The withdrawn
+> `corr(max_run, payoff)` is **+0.109** on those same six. **They are indistinguishable out of
+> sample**, and I applied the standard asymmetrically. This is a pooled feature with **no
+> out-of-sample support**, not a robust regularity.
 
-Companion constraint, scale-invariant so it survives any quantity question:
-**his avg_loss is 36.5 % of his stop; every configuration we have sits at 7–21 %.** His losers run
-about twice as far relative to his own risk limit as any exit rule built so far.
+Companion constraint **REFUTED by audit**: "scale-invariant" is false as used — under a 65-pt stop
+our families reach 0.137–0.369 and the incumbent lands at **0.369, above his 0.365**; and the
+run's own leading entry `P_IN|C_REC` reaches **0.339**. The gap was largely an artifact of
+comparing against one entry configuration.
 
 ---
 
