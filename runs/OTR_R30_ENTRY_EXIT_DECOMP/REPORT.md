@@ -5,7 +5,11 @@ real-time epistemic correction, both 2026-08-25 (corrections 3, 5, 8).
 Code: `run_r30a_quantity.py`, `run_r30a2_sessionbound.py`, `run_r30a3_stoppoints.py`,
 `run_r30b_opportunity.py`, `run_r30c_exitfamilies.py`.
 
-**Data boundary honoured.** Substrate ends 2026-05-29; June/July bars are not local.
+**Data boundary — CORRECTED 2026-08-25.** This section originally said June/July bars were not
+local and needed a fresh export. **Wrong**: `data/nq0626_jun2026_1m.csv` and
+`data/nq0926_junjul2026_1m.csv` were already in the repo, giving continuous coverage to
+2026-07-31. The error cost this run its out-of-sample check; OTR_R31 supplies it.
+Original text follows. Substrate ends 2026-05-29; June/July bars are not local.
 `LOCKED_FORWARD` seals 2026-08-01 onward — August was **not** touched. The right-tail
 discriminator is therefore late-May (OTRIMG-0148), not July/August.
 
@@ -139,6 +143,16 @@ correlation primary, so X_TARGET is **rejected despite winning the aggregate**. 
 it is a live example of why §40 forbids letting one summary number pick a mechanism.
 
 ## AMENDMENT 4 READOUT — a self-correction that changes Part B's headline
+
+> **⚠ SUPERSEDED 2026-08-25 by OTR_R31 I3.** The key quantity below,
+> `corr(max_run, payoff) = −0.452`, was identified here as *"the genuine structural effect that
+> sizing cannot produce"* and made Part C's primary target. Recomputed over **23** windows
+> (adding the five June/July windows, whose bars were in the repo and which R30 wrongly reported
+> as unavailable) it is **−0.050 — nothing.** It was a 17-window artifact, and the structural
+> claim built on it is **WITHDRAWN**.
+>
+> Robust on both samples: `corr(ATR, avg_loss)` = −0.509 → −0.515. Weakened:
+> `corr(ATR, avg_win)` = −0.469 → −0.289. Retained below as the record of what was measured.
 
 The claim above is denominated in **dollars**, and dollars are exactly what position sizing
 rescales. Re-scoring everything on the **payoff ratio**, which is invariant to any sizing scheme:

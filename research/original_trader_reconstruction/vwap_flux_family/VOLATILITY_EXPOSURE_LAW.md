@@ -1,5 +1,26 @@
 # VOLATILITY / EXPOSURE LAW — 2026
 
+> ## ⚠ IDENTIFICATION WITHDRAWN 2026-08-25 (OTR_R31 amendment 2, Part E)
+>
+> The exit-class identification below — *"his discretionary exit is a fixed-point trailing stop of
+> 20–30 NQ points"* — is **WITHDRAWN**, by the falsifier registered in advance.
+>
+> **Why.** The Jan-2023 era's exit is *known* to be a stop-and-reverse on Solar flips with **no
+> trailing stop** (established by the unique 89-trade inverse). Measured on that already-recovered
+> path, 2023 gives `hold ~ ATR^−0.844`, R² = 0.606. A demonstrably **state-based** exit produces a
+> steep law too, so **the ATR-hold law is not diagnostic of exit class.**
+>
+> Also failed: **I2** — the two right-tail weeks (6/21–6/26, 7/12–7/31) are high-ATR with holds
+> *above* the curve (+13.2, +5.1 residual), which I registered as directly contrary to a fixed
+> trail.
+>
+> **What survives:** the law itself is real and robust (23 windows: b = −1.369, R² = 0.868), but is
+> most economically read as a generic property of intraday systems — moves complete faster at
+> higher volatility — rather than a fingerprint of any mechanism.
+>
+> The text below is retained verbatim as the record of what was measured and claimed.
+> See `runs/OTR_R31_JOINT_MECHANISM/REPORT.md`.
+
 Directive R31 §8, §17. Run `OTR_R31_JOINT_MECHANISM` Part A + amendment 1, preregistered before
 each readout. Code: `run_r31a_volatility_law.py`.
 
