@@ -138,14 +138,57 @@ metric prefers a family that gets the structure inverted. F3 anticipated this by
 correlation primary, so X_TARGET is **rejected despite winning the aggregate**. Recorded because
 it is a live example of why §40 forbids letting one summary number pick a mechanism.
 
-### Why exits cannot do it — the argument, not just the result
+## AMENDMENT 4 READOUT — a self-correction that changes Part B's headline
+
+The claim above is denominated in **dollars**, and dollars are exactly what position sizing
+rescales. Re-scoring everything on the **payoff ratio**, which is invariant to any sizing scheme:
+
+| | HIS | incumbent | best family | gap closed |
+|---|---|---|---|---|
+| corr(max_run, **avg_win**) — sizing-contaminated | −0.595 | **+0.295** | −0.067 | 41 % |
+| corr(max_run, **payoff**) — sizing-immune | −0.452 | **−0.240** | −0.305 | 31 % |
+| families with a NEGATIVE correlation | — | — | **1 of 26** vs **22 of 26** | — |
+
+**G2 FAILED, and its failure is the finding.** The incumbent's payoff-correlation is already
+**−0.240** — the *same sign* as his −0.452. My Part B framing ("his capture is inversely related
+to opportunity, ours is positively related") was **substantially an artefact of dollar
+denomination**. On the sizing-immune metric we do not have the wrong architecture; we have the
+right sign at about half the magnitude.
+
+**G1 FAILED by 0.003** (best −0.305 against a −0.302 threshold). That margin is not a
+discriminator and is reported as a straddle, not a result.
+
+**What this promotes.** From his numbers alone:
+
+| | corr with ATR | corr with max_run |
+|---|---|---|
+| his avg_win | −0.469 | −0.595 |
+| his avg_loss | −0.509 | −0.186 |
+| **his payoff ratio** | **−0.062** | **−0.452** |
+| **his hold** | **−0.883** | −0.656 |
+
+Against ATR his winners and losers shrink **together**, leaving the payoff ratio untouched — the
+signature of **volatility-scaled position sizing (cause E)**, which the owner insisted be kept
+isolated and which is now materially supported. Against max_run the winners shrink three times as
+much as the losers and the payoff *does* move — that part sizing cannot produce.
+
+And `corr(ATR, his hold) = −0.883` is the strongest single relationship in his entire 2026 record.
+
+**Corrected statement of what R30 shows:** exit geometry cannot reproduce the March/late-May
+asymmetry (F4, denominator-independent), and the residual on the sizing-immune metric is a
+**magnitude** gap of about 0.21 in correlation — not the opposite-architecture gap of 0.89 that
+the dollar-denominated framing suggested.
+
+### Why exits cannot close the C1 asymmetry — the argument, not just the result
 
 If you are *in* a position while a large run happens, **any** exit rule captures some of it. An
 exit rule can scale winners down uniformly, but it cannot invert their relationship with the
 excursion that was available. To make winners *shrink* as runs get *bigger*, you must not be in
 the position during the big runs — **and that is an entry property.**
 
-**The sign of corr(opportunity, avg_win) is an entry signature, not an exit signature.**
+**CORRECTED per amendment 4:** this argument applies to the **payoff-bearing, max_run-asymmetric**
+component only. The ATR-symmetric component is consistent with sizing and is not an entry
+signature at all. The C1 asymmetry failure stands regardless of denominator.
 
 ---
 
@@ -177,14 +220,16 @@ the position during the big runs — **and that is an entry property.**
 | D | interaction A+B+C | live |
 | E | direction-specific sizing | untested |
 
-## The hypothesis this points to, registered here and tested in R31
+## What to do next — and what amendment 4 took off the table
 
-Every one of the 144 members in the R7/R8 grid is **trend-conditional**: a long requires
-`trend > 0`. The entire member space is trend-following. A **mean-reverting / fading**
-architecture — sell the upper rail, buy the lower rail, *against* the move — has **never been
-tested**, and it produces the observed sign by construction: in a quiet week price oscillates
-around fair value and fades pay well; in a high-run week price trends and fades get run over.
+**Downgraded by amendment 4.** The fade/mean-reversion hypothesis was going to be R31, on the
+reasoning that only a counter-trend architecture could produce a negative correlation. That
+reasoning is now weakened: the incumbent **already produces one** (−0.240) on the sizing-immune
+metric. We do not have the wrong sign. Fade remains untested and worth testing — every one of the
+144 R7/R8 members is trend-conditional (`cand = +1` iff `trend > 0`), so a counter-trend
+architecture has genuinely never been in the search space — but it is no longer the obvious
+answer, and it must not be promoted on the strength of a claim that has since been corrected.
 
-VWAP Flux is a **value-area** indicator, and fading the outer rails toward Fair Value is its most
-natural use. If he is fading, we have not merely mis-tuned his model — **we have never tested his
-architecture.** Preregistered as OTR_R31.
+**Upgraded by amendment 4.** Cause E, position sizing. `corr(ATR, his hold) = −0.883` and the
+ATR-symmetric shrinkage of both winners and losers are the two largest unexplained regularities in
+his 2026 record, and neither is addressed by any entry or exit hypothesis currently on the table.

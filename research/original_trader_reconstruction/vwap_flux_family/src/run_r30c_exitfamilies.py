@@ -142,7 +142,12 @@ def main():
     metrics = W3 + W2 + W1
     runs = np.array([opp[r["image_id"]] for r, _, _ in wins])
     his_aw = np.array([num(r.get("avg_win_all")) for r, _, _ in wins])
-    print(f"TARGET  corr(max_run, HIS avg_win) = {np.corrcoef(runs, his_aw)[0,1]:+.3f}")
+    his_pay = np.array([abs(num(r.get("avg_win_all")) / num(r.get("avg_loss_all")))
+                        for r, _, _ in wins])
+    print(f"TARGET  corr(max_run, HIS avg_win) = {np.corrcoef(runs, his_aw)[0,1]:+.3f}"
+          f"   (sizing-contaminated)")
+    print(f"TARGET  corr(max_run, HIS payoff)  = {np.corrcoef(runs, his_pay)[0,1]:+.3f}"
+          f"   <-- AMENDMENT 4 PRIMARY, sizing-immune")
     march = [k for k, (r, _, _) in enumerate(wins) if r["image_id"] == "OTRIMG-0129"][0]
     maylate = [k for k, (r, _, _) in enumerate(wins) if r["image_id"] == "OTRIMG-0148"][0]
     print(f"TARGET  March avg_win ${his_aw[march]:.0f}   late-May avg_win ${his_aw[maylate]:.0f}\n")
@@ -158,20 +163,22 @@ def main():
     print("C - exit families.  PRIMARY = corr(max_run, avg_win); target -0.595")
     print("=" * 112)
     print(f"{'family':<16}{'param':>7}{'trades':>8}{'wr%':>7}{'hold':>7}{'avgWin':>9}"
-          f"{'payoff':>8}{'CORR':>9}{'March':>8}{'lateMay':>9}{'s40dist':>9}")
+          f"{'payoff':>8}{'CORRw':>9}{'CORRpay':>10}{'March':>8}{'lateMay':>9}{'s40dist':>9}")
     rows = []
     for fam, prm in FAMILIES:
         trl = layer_b_exit(bars, trend, sig, atr, fam, prm)
-        aw, ds, agg = [], [], dict(n=0, wr=[], hold=[], pay=[])
+        aw, ds, pay_w, agg = [], [], [], dict(n=0, wr=[], hold=[], pay=[])
         for k, (r, a, b) in enumerate(wins):
             w = [x for x in trl if a <= np.datetime64(x["et"]) <= b]
             fp = fingerprint(w)
             if fp is None:
-                aw.append(np.nan); ds.append(2.0); continue
+                aw.append(np.nan); pay_w.append(np.nan); ds.append(2.0); continue
             tg = {m: num(r.get(m)) for m in metrics}
             ds.append(distance({m: norm_err(m, fp.get(m), tg.get(m)) for m in metrics}))
             p = np.array([x["pnl"] for x in w])
             aw.append(float(p[p > 0].mean()) if (p > 0).any() else np.nan)
+            pay_w.append(abs(p[p > 0].mean() / p[p <= 0].mean())
+                         if (p > 0).any() and (p <= 0).any() else np.nan)
             agg["n"] += len(w); agg["wr"].append(100.0 * (p > 0).mean())
             agg["hold"].append(float(np.mean([x["hold"] for x in w])))
             agg["pay"].append(abs(p[p > 0].mean() / p[p <= 0].mean())
@@ -179,17 +186,20 @@ def main():
         aw = np.array(aw, float)
         ok = np.isfinite(aw)
         corr = float(np.corrcoef(runs[ok], aw[ok])[0, 1]) if ok.sum() > 3 else np.nan
+        pw = np.array(pay_w, float); okp = np.isfinite(pw)
+        corr_pay = float(np.corrcoef(runs[okp], pw[okp])[0, 1]) if okp.sum() > 3 else np.nan
         d = dict(family=fam, param=prm if prm is not None else "", trades=agg["n"],
                  wr=round(float(np.mean(agg["wr"])), 1),
                  hold=round(float(np.mean(agg["hold"])), 1),
                  avg_win=round(float(np.nanmean(aw)), 0),
                  payoff=round(float(np.nanmean(agg["pay"])), 2), corr=round(corr, 3),
+                 corr_payoff=round(corr_pay, 3),
                  march_avg_win=round(float(aw[march]), 0),
                  latemay_avg_win=round(float(aw[maylate]), 0),
                  s40_distance=round(float(np.mean(ds)), 4))
         rows.append(d)
         print(f"{fam:<16}{str(d['param']):>7}{d['trades']:>8}{d['wr']:>7.1f}{d['hold']:>7.1f}"
-              f"{d['avg_win']:>9.0f}{d['payoff']:>8.2f}{corr:>9.3f}"
+              f"{d['avg_win']:>9.0f}{d['payoff']:>8.2f}{corr:>9.3f}{corr_pay:>10.3f}"
               f"{d['march_avg_win']:>8.0f}{d['latemay_avg_win']:>9.0f}{d['s40_distance']:>9.4f}",
               flush=True)
 
