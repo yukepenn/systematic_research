@@ -1,0 +1,35 @@
+run_id: WE_W26_DAILY
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner, repeatedly — "每天每周都赚钱" / "constantly每周甚至每天都赚钱"
+
+gap this wave closes: >
+  Twenty-five waves have optimised and reported WEEKLY statistics. The owner's objective has
+  always included DAILY consistency, and the campaign has never measured it. A weekly-positive
+  system can be daily-terrible (few big days carrying many small losses) - and W08 measured
+  exactly that shape (16.8% of sessions carry ~all P&L). This wave measures the daily truth
+  and tests whether it can be improved.
+
+measurements (audited objects only: E5halt1300, E5halt+S1, E5halt+S1+mirror-short):
+  M1 daily distribution: % of TRADING days positive, % of ALL sessions positive (a day with
+     no trade is not a losing day but it is not a winning one either), mean/median/worst day,
+     the fraction of total P&L delivered by the best 5% of days.
+  M2 streaks: longest losing-day streak, distribution of consecutive losing days, and the
+     same for weeks.
+  M3 daily hit-rate levers (each causal, each tested for its Sharpe cost):
+     L1 PARTIAL PROFIT : exit half the position at +X points, run the rest (X in {30, 60}).
+        Halves are simulated as two independent 1-lot sleeves so exposure is explicit.
+     L2 DAILY TARGET   : stop trading for the session once realised session P&L >= +T
+        (T in {1000, 2000}) - the mirror of the session halt that already works.
+     L3 EARLY FLAT     : close all positions at 15:00 ET rather than session close, on the
+        premise that late-session giveback is a hit-rate cost.
+  Each lever is judged on: daily positive rate (primary, this wave), weekly Sharpe (guard,
+  must not fall), worst week (guard).
+adoption: a lever is ADOPTED only if the daily positive rate rises AND weekly Sharpe does not
+  fall AND the worst week does not degrade.
+falsifier: if no lever raises the daily positive rate without cost, the honest statement is
+  that daily consistency is not achievable in this architecture, and the objective must be
+  restated as weekly.
+forbidden: [data >= 2026-08-01, fill-bar information, reporting a daily rate without stating
+  the no-trade-day convention, adopting on daily rate alone]
+outputs: [out/daily.txt, out/summary.csv, REPORT.md]
