@@ -1,0 +1,40 @@
+run_id: WE_W23_PRODUCTION
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "为什么别人一周1万多甚至4万多，你才2000？"
+
+diagnosis this wave acts on (measured, not assumed): >
+  The weekly-dollar gap is NOT primarily edge. Decomposed:
+  (a) EXPOSURE: our numbers are 1-2 contracts; matched to his tail tolerance (-$42k worst
+      week) the SAME object would run ~4.8 contracts, i.e. ~$5,400/wk net.
+  (b) MEASUREMENT: his figures are gross, in-sample (each sheet is the then-current version
+      backtested over the week just passed), version-churned 4x, and display-selected (R34).
+      Ours are net, frozen, and include all 205 weeks.
+  (c) SAME-WEEK: on his own 21 displayed weeks we netted $137,189 against his $180,250 gross
+      (76%), not 25% (W05A R4).
+  (d) REAL STRUCTURAL GAP: he captures ~24.8% of the daily available move, we capture
+      4.7-9.6% (W06). Per-trade expectancy is already comparable ($103 gross vs our $110
+      net). The gap is PRODUCTION - we trade one side and throttle hard.
+
+questions:
+  Q1 SHORT SIDE PRODUCTION: E5 is long-only because longs earn ~3x shorts per trade. But
+     "worse" is not "unprofitable" - shorts made money on every sleeve (W16). Does a SEPARATE
+     short-side vote (its own 32 configs, its own session halt) add net production without
+     wrecking the tail, when run as an independent sleeve rather than inside one strategy?
+  Q2 THROTTLE COST: the range throttle blocks ~30% of bars. Measure exactly what the blocked
+     bars would have produced for the VOTE object (not for a single config). If the blocked
+     production is positive-but-volatile, a partial throttle (half size instead of flat) is
+     the honest middle - test sizes {0, 0.5, 1} in the throttled regime.
+  Q3 EXPOSURE LADDER: report the audited object at 1, 2, 3, 4, 5 contracts with worst week and
+     Sharpe, so the owner can pick the exposure rather than being handed one. Sharpe is
+     exposure-invariant by construction; this table exists to make the tail explicit.
+  Q4 HIS-BENCHMARK AT MATCHED TAIL: the contract count at which our worst week equals his
+     -$42,235, and the weekly mean there. Reported with the gross/net and
+     selected/full-sample asymmetries restated.
+rules: every variant must keep the W21 audit properties (no runtime selection); anything that
+  introduces a chosen parameter is reported but flagged as unaudited.
+promotion: a short-side sleeve is ADOPTED only if the combined object's Sharpe rises AND the
+  combined worst week degrades by less than the production gain in percent.
+forbidden: [data >= 2026-08-01, fill-bar information, quoting a matched-tail figure without
+  the asymmetry note, adopting on dollars alone]
+outputs: [out/prod.txt, out/summary.csv, REPORT.md]
