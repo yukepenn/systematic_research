@@ -1,0 +1,44 @@
+run_id: WE_W06_TRENDCAP
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner 2026-08-25 — "我们为什么抓不到市场的趋势以及各种那种" / "他每天至少10笔左右都可以赚这么多"
+
+question: >
+  Decompose the trend-capture gap. Per session: how much directional move is AVAILABLE, how
+  much do our sleeves capture, and where exactly does the leakage happen — not entering at
+  all, entering late, exiting early, or being on the wrong side?
+
+phase_1_measurement (no new strategy, pure accounting):
+  available: per session, the perfect-foresight single-trade move
+    MFE_session = max over (i<j) of |c[j]-c[i]| within the session, signed by direction
+    (computed with the standard running-min/max scan, O(n))
+  captured: per session, each sleeve's realized points (pnl / 20)
+  capture_ratio = captured / available, per session and pooled
+  leakage attribution, mutually exclusive and exhaustive per session:
+    L1 NO_TRADE      : sleeve took no position that session
+    L2 WRONG_SIDE    : net position direction opposed the session's available direction
+    L3 LATE_ENTRY    : first entry bar later than the available move's start bar
+    L4 EARLY_EXIT    : last exit bar earlier than the available move's end bar
+    L5 CHOP_LOSS     : traded, right side, but realized < 0
+  reported for: S1, S4.narrow6.gdl, S4.all13.h1300.gdl, PORT, and (reference) the trader's
+    own 2026 weeks via his reported avg trade count vs our trades/session.
+phase_2_hypotheses (each tested ONLY if phase 1 says its leakage class is material; each
+  implemented causally with decision-bar information only — W03 amendment 1 rule):
+  H1 RE_ENTRY      : after a stop/exit, allow re-entry in the SAME direction while the
+                     session's flow gate still agrees (attacks L4)
+  H2 PYRAMID       : add a second unit when the position is up >= X points and flow agrees,
+                     exit both together (attacks L4 / raises $/trade)
+  H3 EARLY_SESSION : allow entries in the first 30 min of RTH only when flow agrees
+                     (attacks L1/L3)
+  H4 WIDER_HOLD    : raise the hysteresis exit level asymmetrically (hold longer in the
+                     direction of the HTF tilt) (attacks L4)
+  H5 TWO_SPEED     : run fast (narrow6) and slow (wide7) sleeves simultaneously with the
+                     flow gate, so the fast sleeve trades chop and the slow one holds trends
+                     (attacks L3/L4 jointly)
+rules:
+  - phase 2 hypotheses are declared HERE, before phase 1 is read; no post-hoc additions
+  - every phase-2 variant must be verified against look-ahead before its number is quoted
+  - no promotion from this run; dev + holdout reported, holdout is confirm-only (5th read)
+forbidden: [data >= 2026-08-01, gates using fill-bar information, quoting any phase-2 result
+  that has not passed the causality audit]
+outputs: [out/capture.txt, out/summary.csv, REPORT.md]
