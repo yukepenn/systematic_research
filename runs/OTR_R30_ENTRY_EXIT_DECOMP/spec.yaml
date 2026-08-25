@@ -1,0 +1,158 @@
+run_id: OTR_R30_ENTRY_EXIT_DECOMP
+campaign: 6-OTR
+directive: OWNER MASTER DIRECTIVE v5.0 + OWNER REAL-TIME EPISTEMIC CORRECTION (both 2026-08-25)
+sections: ["correction-3", "correction-5", "correction-8", "24", "26", "39", "40", "41"]
+date_preregistered: 2026-08-25
+status: PREREGISTERED_BEFORE_READOUT
+
+purpose: >
+  Three parts, in dependency order.  Part A re-audits the -$2,600 fingerprint conditional on
+  QUANTITY, because the confirmed qty-2 trade reopens 65 pts x 2 as a rival to 130 pts x 1 - and
+  65 points is exactly the established 2025-era stop, so "the stop never changed" is the more
+  parsimonious rival.  Part B separates MARKET OPPORTUNITY from STRATEGY CAPTURE, which is a
+  better experiment than continuing to stare at net P&L.  Part C competes exit families.
+
+  Nothing in Part C may be promoted on net P&L (section 40).
+
+# =====================================================================================
+# DATA BOUNDARY - binding, checked before anything else
+# =====================================================================================
+data_boundary: >
+  Local substrate ends 2026-05-29 16:59.  June/July 2026 bars are NOT in the repo.
+  research/operational/LOCKED_FORWARD.md: data from 2026-08-01 is VIRGIN and may not be used for
+  selection or challenger fitting.
+  CONSEQUENCE: the owner's stated bar ("explain March winner collapse AND July/August right-tail")
+  cannot be run on July or August.  August is SEALED for selection.  The right-tail discriminator
+  is therefore taken INSIDE available, research-consumed data:
+      LOW-payoff window  : OTRIMG-0129, 2026-03-22..03-27, avg_win $909,   payoff 0.91 (worst of 24)
+      HIGH-payoff window : OTRIMG-0148, 2026-05-24..05-29, avg_win $2,061, payoff 2.37 (2nd best of 24)
+  Extending to June/July requires a fresh bar export and is NOT done in this run.
+
+# =====================================================================================
+# PART A - quantity audit of the -$2,600 fingerprint  (owner correction 5)
+# =====================================================================================
+part_a:
+  method: >
+    Every NQ gross P&L at quantity q is an integer multiple of $5q.  Therefore:
+      (i) for any SINGLE-TRADE cell (largest win, largest loss) that is an ODD multiple of $5,
+          the quantity on that trade must be ODD;
+      (ii) 2600 / (20 q) must itself be a multiple of 0.25 (a legal NQ increment), which admits
+          q in {1, 2, 4, 5, 8, ...} and EXCLUDES q = 3, 6, 7, 9;
+      (iii) the gcd of all cells in a record bounds q from above.
+    Classify every -$2,600 occurrence into the owner's three buckets:
+      A. Strategy Analyzer, quantity forced to 1 by the lattice
+      B. Strategy Analyzer, quantity not determinable
+      C. Trade Performance, quantity recoverable per trade
+  preregistered:
+    A1: >
+      PREDICTION: at least one 2026 SA record contains a single-trade cell that is an ODD multiple
+      of $5.  Combined with (ii) that forces q in {1, 5, ...} for that trade, and q=5 implies a
+      26-point stop.  If NO record has an odd single-trade cell, quantity is unconstrained by the
+      lattice and the 130-point claim must be downgraded to an interval.
+    A2: >
+      THE DECISION, fixed in advance.  The claim "130 NQ points = $2,600" may be reported as
+      confirmed ONLY for bucket-A occurrences.  For bucket B it is reported as
+      "130 x 1 OR 65 x 2, both live".  The count in each bucket is the deliverable.
+    A3: >
+      Registered so it cannot be reinterpreted later: if bucket A is empty or small, then
+      "the stop never changed from the 2025 era (65 pts), the position simply doubled" becomes a
+      LIVE and more parsimonious rival to "the stop changed 65 -> 130", and must be recorded as
+      such in CURRENT_HYPOTHESES.
+  forbidden:
+    - Do not assume uniform quantity across trades within a record; aggregate cells only bound
+      the SUM, not each trade.  Only single-trade cells constrain a single trade's quantity.
+
+# =====================================================================================
+# PART B - MARKET OPPORTUNITY vs STRATEGY CAPTURE  (owner correction 3)
+# =====================================================================================
+part_b:
+  method: >
+    Measure, per window, quantities that are STRATEGY-INDEPENDENT (they use only bars, never any
+    model's entries), so they cannot be contaminated by our wrapper being wrong:
+        mfe60_long / mfe60_short : mean over bars of max favourable excursion over the next 60 bars
+        mae60                    : the adverse counterpart
+        session_range            : mean session High-Low
+        atr14                    : mean
+        efficiency               : per session |close_end - close_start| / sum|delta close|
+        max_run                  : longest monotone directional run
+    Then, per window, the STRATEGY-DEPENDENT quantities: our realised per-trade MFE and MAE (using
+    the certified 90/90 NT8 MAE/MFE rule), our avg_win, and his reported avg_win.
+  preregistered:
+    B1: >
+      H-MARKET  : March 2026-03-22..03-27 sits at or near the BOTTOM of the 17 windows on the
+                  strategy-independent opportunity measures.  Then his $909 avg win is what the
+                  week offered, and the winner collapse needs no mechanism.
+      H-EXIT    : March's opportunity measures are ORDINARY and our realised per-trade MFE is
+                  ORDINARY, yet his avg win collapsed.  Then opportunity existed and HIS EXITS
+                  truncated it.
+      H-ENTRY   : opportunity existed and we captured it, but his entries were worse.  NOTE this
+                  is only inferable RESIDUALLY - his entries are unobservable - so it may be
+                  reached only by elimination, never claimed directly.
+      I do not know which holds.
+    B2: >
+      DECISION RULE fixed in advance: "bottom of the 17 windows" means rank 1 or 2 of 17 on at
+      least three of the six strategy-independent measures.  Anything less is ORDINARY.
+    B3: >
+      PREDICTION registered so the harness is falsifiable: our realised per-trade MFE in the March
+      window will be LOWER than our 17-window median.  If it is not, either the MFE computation or
+      the window mapping is wrong and B1 is not interpretable.
+
+# =====================================================================================
+# PART C - exit-family competition  (owner correction 8)
+# =====================================================================================
+part_c:
+  model_frozen_except_exit: >
+    Layer A and the entry path are held EXACTLY at the incumbent (T_C | P_MED | C_DIR | H1a,
+    lifecycle=anchor, formula=percentile_linear, stop 130 pts).  ONLY the exit rule varies.
+    This isolates exit geometry; it does NOT assume the entry path is correct (owner correction 1).
+  families:
+    X_OPP:        reverse on opposite Signal_Trade (the incumbent)
+    X_TREND:      exit on Signal_Trend flip
+    X_FV:         exit on Fair Value cross
+    X_BAND:       exit on re-entry into the inner rails (Q75 / Q25)
+    X_TRAIL_ATR:  trailing stop at k x ATR14, k in {1.5, 2, 3, 4}
+    X_TRAIL_PTS:  trailing stop at fixed points, in {20, 30, 40, 60, 80}
+    X_TIMEOUT:    exit after N bars, N in {20, 40, 60, 90, 120}
+    X_TARGET:     fixed profit target, in {40, 60, 80, 120} points
+    X_TGT_TRAIL:  target + trailing hybrid
+  evaluation: >
+    Section-40 fingerprint ONLY - trades, wr, pf, avg_win, avg_loss, largest_loss, hold, L/S split.
+    Net P&L may NOT select a winner (section 40).  Report the full ranking, keep rivals (section 6).
+  preregistered:
+    C1: >
+      THE DISCRIMINATOR, fixed in advance and deliberately hard.  A credible exit mechanism must
+      reproduce BOTH ends of the payoff range with ONE frozen parameter set:
+          March  (OTRIMG-0129): his avg_win $909,   payoff 0.91   - ours currently $1,425 / 2.34
+          late-May (OTRIMG-0148): his avg_win $2,061, payoff 2.37 - ours currently to be measured
+      A family that fixes March by capping winners everywhere FAILS, because it destroys late-May.
+      That asymmetry is the whole test.  Report each family's (March avg_win, late-May avg_win)
+      pair explicitly alongside its aggregate distance.
+    C2: >
+      PREDICTION: a fixed profit TARGET (X_TARGET) will improve March and damage late-May, because
+      his avg_win varies 909..2389 across 2026 and no fixed cap spans that.  If X_TARGET wins
+      overall on the aggregate distance, the aggregate distance is not measuring what C1 measures
+      and C1 governs.
+    C3: >
+      PREDICTION: X_TRAIL (either variant) is the a-priori favourite, because a trailing stop lets
+      winners run in trends and truncates them in chop - the only listed mechanism that can move
+      March and late-May in OPPOSITE directions from one parameter set.  Registered in advance so
+      that if it wins, it is a passed prediction rather than a post-hoc story.
+    C4: >
+      NULL / FAILURE MODE registered: if NO family reproduces both ends, then exit geometry alone
+      does not explain the residual, and by the owner's correction-1 logic the surviving causes are
+      entry timing, entry selection, or their interaction with exits.  That outcome is reported as
+      such and directly feeds the purchase gate (owner correction 7).
+
+deliverables:
+  - runs/OTR_R30_ENTRY_EXIT_DECOMP/out/quantity_audit.csv
+  - runs/OTR_R30_ENTRY_EXIT_DECOMP/out/opportunity_by_window.csv
+  - runs/OTR_R30_ENTRY_EXIT_DECOMP/out/exit_family_fingerprints.csv
+  - runs/OTR_R30_ENTRY_EXIT_DECOMP/REPORT.md
+
+binding_rules:
+  - Spec committed BEFORE readout; amendments appended, never rewritten.
+  - Section 6 keep rivals and report intervals, not point values.
+  - Section 40 net P&L may never select a mechanism.
+  - Section 13 no ad-hoc term added to force a fit.
+  - LOCKED_FORWARD: nothing from 2026-08-01 onward is touched.
+  - Failed predictions recorded, not rewritten (section 44).
