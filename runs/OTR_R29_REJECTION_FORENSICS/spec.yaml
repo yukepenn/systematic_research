@@ -1,0 +1,87 @@
+run_id: OTR_R29_REJECTION_FORENSICS
+campaign: 6-OTR
+directive: OWNER MASTER DIRECTIVE v5.0 (2026-08-25)
+sections: ["19", "20", "25", "39", "40", "P5"]
+date_preregistered: 2026-08-25
+status: PREREGISTERED_BEFORE_READOUT
+
+purpose: >
+  Directive v5.0 section 19/20 asks where the 2,730 -> 1,705 -> 1,214 acceptance gap lives, and
+  section 40 asks that residual concentration - not P&L search - drive filter identification.
+  OTR_R28 has just shown the gap is unlikely to be readable off the panel (only 13 of ~497 custom
+  August rows carry a photographed label, and panel growth is DECOUPLED from behaviour).  So this
+  run asks the question that does not depend on the panel at all:
+
+      Is our 491-trade excess CONCENTRATED in any observable entry-state feature,
+      or is it spread like a random thinning of our trade list?
+
+  This is a DIAGNOSTIC, not a model search.  Nothing here is promoted.  Section 13 forbids
+  bolting an ad-hoc gate term onto a model to force a fit, and no term will be added to any model
+  as a result of this run regardless of outcome.
+
+inputs:
+  - vwap_flux_family/src/vf_layer_ab.py     # corrected two-layer VF (R27)
+  - vwap_flux_family/src/vf_core.py         # vf_levels
+  - solar_family/src/run_r5_weekly.py       # fingerprint / norm_err / distance / W3,W2,W1
+  - screenshot_forensics/derived/targets_weekly_2026V.csv
+  - research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet
+model_frozen: >
+  Incumbent leader ONLY: T_C | P_MED | C_DIR | H1a | X_OPP, lifecycle=anchor,
+  formula=percentile_linear, stop 130 pts.  17 windows, 2026-01-11 .. 2026-05-29.
+  Baseline section-40 mean distance 0.4768, 1,705 trades against the trader's 1,214.
+  No parameter of the model is varied in this run.
+
+features_recorded_at_ENTRY:
+  - tod_min_since_session_open, clock_hour_et, day_of_week
+  - direction
+  - signal_index_within_trend, bars_since_prev_emitted_signal
+  - bars_since_prev_exit, prev_trade_pnl, prev_trade_was_loss, consec_losses
+  - trades_so_far_today, cum_pnl_today, cum_pnl_week
+  - trend_age_bars
+  - atr14, bar_range, dist_from_fair_value_in_rail_widths
+
+method: >
+  For each feature and each decile threshold, in both directions (keep-below / keep-above),
+  apply the filter GLOBALLY (one threshold everywhere - not a per-window quota), recompute the
+  section-40 mean distance over the 17 windows, and record the surviving per-window trade counts.
+
+  THE NULL (this is the whole point).  For each candidate filter, draw 200 random trade subsets
+  that remove EXACTLY the same number of trades IN EACH WINDOW as that filter did, and score them
+  identically.  The null therefore receives full credit for count-matching, so any excess
+  improvement is attributable ONLY to WHICH trades were removed, never to HOW MANY.
+
+preregistered:
+  P1: >
+    RIVAL A - CONCENTRATED.  Some observable entry-state feature localises the excess: at least
+    one filter beats its own matched null at the 1st percentile or better, i.e. fewer than 2 of
+    200 null draws reach its distance.  That would name the axis the trader's suppression acts on
+    without needing to read his panel.
+    RIVAL B - DIFFUSE.  No filter beats its matched null at the 5th percentile.  Then the excess
+    is a random-looking thinning of our trade list with respect to all 17 observable features, and
+    the suppression is either unobservable from bar state, or lives in signal GENERATION rather
+    than acceptance, or the model's trade set is wrong in a way count-matching cannot fix.
+    I do not know which holds.
+  P2: >
+    PREDICTION about the null itself, stated so the machinery is falsifiable: random removal of
+    ~29% of our trades will IMPROVE the mean section-40 distance relative to the 0.4768 baseline,
+    because trades_all is a weight-3 term and our count is 40% too high.  If the null does NOT
+    improve on baseline, the scoring harness is wrong and P1 is not interpretable.
+  P3: >
+    PREDICTION: the improvement available from count-matching alone is LARGE relative to the
+    improvement available from choosing well.  Registered because if true it means every past
+    comparison of members with different trade counts was partly measuring count, not geometry.
+
+decision_rule: >
+  Report every feature's null percentile.  Declare CONCENTRATED only at percentile <= 1.
+  Report the full ranking either way.  A DIFFUSE result is a publishable negative result under
+  section 44 and will be recorded as such, not buried.
+forbidden:
+  - No filter found here may be added to any model (section 13).
+  - No conclusion from net P&L (section 40).
+  - No claim that a winning feature identifies a vendor component (sections 5, 43).
+
+deliverables:
+  - runs/OTR_R29_REJECTION_FORENSICS/out/trade_features.csv
+  - runs/OTR_R29_REJECTION_FORENSICS/out/filter_vs_null.csv
+  - runs/OTR_R29_REJECTION_FORENSICS/REPORT.md
+  - research/original_trader_reconstruction/vwap_flux_family/VF_REJECTION_CLUSTER_REPORT.md
