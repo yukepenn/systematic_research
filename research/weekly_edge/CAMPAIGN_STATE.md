@@ -97,6 +97,16 @@ frozen. Beating his numbers under our measurement standard is therefore a STRICT
   W03 = session-level halts + regime weights (tail axis) and new information bases
   (trend-capture / reversal-zone / delta / overlap - owner freed the base from Solar).
 
+- 2026-08-25 (night): **W03 + W04 COMPLETE.** W03: FIRST 4 configs clear the dev tail bar;
+  the **delta-proxy gate** (VF manual's up/down-tick mode as 1-min context) is the best
+  mechanism found so far (S4.narrow6.gdl dev Sharpe 0.355, $104.6/trade ~ his $103; champion
+  candidate $143.9/trade) but the candidate FAILED holdout confirm (0.180<0.30) -> no
+  champion, per prereg. Session halts do what per-trade caps could not. MO base dead; CD
+  marginal (better as gate). W04 atoms: single members weak (best 0.106); hysteresis and
+  tilt both carry positive marginal value; expectancy lives in the INTERACTION (fast members
+  x flow gate x session halt). W05 = freeze challengers C1/C2/C3 + preregister the virgin
+  champion-vs-challenger forward read (>=2026-11-01). Holdout now read 4x - exhausted.
+
 ## Relationship to campaign #6 (OTR)
 OTR stays open (purchase gate awaiting owner action; free follow-ups queued). #7 consumes #6's
 conclusions but never its sealed evidence. Nothing in #7 feeds back into #6's identification
