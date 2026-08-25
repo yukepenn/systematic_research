@@ -1,0 +1,35 @@
+walk-forward: 17 quarterly refits, trailing 12-month fit, 64 configs per refit
+quarter     chosen config                       fitShrp    oosNet  oosShrp  oosPos%
+2022-07-01  ('narrow5', 0.7, True, 'both')        0.167    12,039    0.155     64.3
+2022-10-01  ('all13', None, True, 'both')         0.213    21,526    0.381     61.5
+2023-01-01  ('narrow5', None, True, 'both')       0.286   -12,069   -0.238     38.5
+2023-04-01  ('narrow7', 0.7, False, 'both')       0.293      -521   -0.011     46.2
+2023-07-01  ('narrow7', None, True, 'long')       0.306     5,078    0.141     53.8
+2023-10-01  ('narrow6', 0.7, True, 'both')        0.313    21,803    0.408     61.5
+2024-01-01  ('all13', 0.7, True, 'long')          0.364     3,155    0.069     28.6
+2024-04-01  ('narrow7', 0.8, True, 'long')        0.442    14,825    0.371     69.2
+2024-07-01  ('narrow7', 0.8, True, 'both')        0.407    32,880    0.471     64.3
+2024-10-01  ('narrow7', 0.8, True, 'both')        0.473     4,556    0.070     42.9
+2025-01-01  ('narrow7', 0.7, True, 'both')        0.407     6,026    0.060     64.3
+2025-04-01  ('narrow6', 0.7, True, 'both')        0.428     2,688    0.025     53.8
+2025-07-01  ('narrow5', 0.9, True, 'long')        0.264    22,889    0.501     72.7
+2025-10-01  ('narrow5', 0.9, True, 'long')        0.350    14,927    0.198     71.4
+2026-01-01  ('narrow6', 0.9, True, 'both')        0.380    33,503    0.177     78.6
+2026-04-01  ('narrow6', 0.9, True, 'long')        0.371    24,365    0.386     55.6
+2026-07-01  ('all13', 0.8, True, 'long')          0.398         0      nan      0.0
+
+=== COMPARISONS (all on the stitched walk-forward period) ===
+object                        weeks         net   wkMean    pos%     worst  sharpe  trades
+WF walk-forward                 203     207,669    1,023    58.1   -23,537   0.171    3373
+FIXED (narrow6,0.8,dg,both)     205     341,300    1,665    61.0   -24,417   0.249    3641
+NAIVE (narrow6,none,off,both)    205     251,821    1,228    59.0   -37,318   0.150    6595
+BESTFIXED ('narrow5', 0.8, True, 'long')    204     278,916    1,367    60.3   -14,543   0.279    1954
+
+=== PREREGISTERED VERDICT ===
+WF 0.171 | FIXED 0.249 (0.8x = 0.200) | NAIVE 0.150 | BESTFIXED 0.279  ->  WEAK
+choice instability: 14 distinct configs over 17 refits, 14 changes (88% of boundaries)
+   chosen  2x: ('narrow6', 0.7, True, 'both')
+   chosen  2x: ('narrow7', 0.8, True, 'both')
+   chosen  2x: ('narrow5', 0.9, True, 'long')
+   chosen  1x: ('narrow5', 0.7, True, 'both')
+   chosen  1x: ('all13', None, True, 'both')
