@@ -1,0 +1,23 @@
+REFERENCE E5halt1300      Sharpe 0.273  wk $1,131  pos 57.6%  worst $-8,769
+REFERENCE E5halt+S1       Sharpe 0.259  wk $2,508  pos 59.5%  worst $-21,514
+
+non-Solar engine            n        net   wkMean   pos%     worst   shrp  stress  corrE5
+N1_donchian60           38176   -157,557     -769   36.6    -6,983 -0.341  -2,631    0.11
+N1_donchian240          20084    -86,258     -421   39.5    -7,486 -0.221  -1,400    0.11
+N2_ema20x100             7272    138,643      676   50.2   -12,573  0.113     322    0.55
+N2_ema60x480             3226    176,579      861   55.1   -15,417  0.134     704    0.47
+N3_accel                28038     18,814       92   44.4   -11,490  0.020  -1,276    0.46
+N4_rangepos             15550     48,795      238   46.3   -11,248  0.056    -521    0.34
+N5_vote_nonsolar        20554     10,043       49   45.4   -11,855  0.011    -954    0.37
+
+--- T3 COMBINATION ---
+portfolio                      wkMean   pos%     worst   shrp  verdict
+E5halt + N5                     1,169   52.7   -14,681  0.164  reject  (prod +3.4% vs tail +67.4%)
+E5halt + S1 + N5                2,557   55.6   -29,108  0.216  reject  (prod +2.0% vs tail +35.3%)
+
+--- T4 NULL on the non-Solar vote (100 circular shifts) ---
+real 0.011 | null mean -0.023 | p95 0.079 | percentile 71.0 | p 0.290 -> NOT EVIDENCE
+
+=== MODEL-RISK STATEMENT ===
+No non-Solar engine is both stress-positive and <0.30 correlated (min corr 0.11). The campaign owns ONE model (the Solar ratchet), and that
+model risk must be stated in every future summary.
