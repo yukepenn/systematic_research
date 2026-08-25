@@ -1,0 +1,32 @@
+variant                           weeks         net   wkMean    pos%     worst  sharpe
+E5halt1300 (1 contract, long)       203     229,514    1,131    57.6    -8,769   0.273  
+E5halt1300 + S1 (<=2)               205     514,062    2,508    59.5   -21,514   0.259  
+
+--- Q1 SHORT-SIDE VOTE as an independent sleeve ---
+SHORT vote halt none                202      37,102      184    47.0   -15,843   0.038  
+  E5halt + SHORT vote halt none     205     266,616    1,301    57.1   -21,743   0.207  
+     production +15.0% vs tail degradation +148.0% -> reject
+  E5halt + S1 + SHORT vote halt none    205     551,164    2,689    61.5   -29,803   0.233  
+SHORT vote halt 1300                202      53,551      265    45.5    -8,269   0.067  
+  E5halt + SHORT vote halt 1300     205     283,065    1,381    61.0   -14,171   0.240  
+     production +22.1% vs tail degradation +61.6% -> reject
+  E5halt + S1 + SHORT vote halt 1300    205     567,613    2,769    63.4   -24,667   0.248  
+
+--- Q2 THROTTLE COST: what the blocked bars would have produced ---
+throttled-away production only      152      -9,540      -63    50.7    -3,841  -0.039  
+  throttled regime at size 0 (current)    203     229,514    1,131    57.6    -8,769   0.273  
+  throttled regime at size 1 (no throttle)    203     211,800    1,043    56.7    -9,196   0.247  
+
+--- Q3 EXPOSURE LADDER (Sharpe is exposure-invariant; the tail is not) ---
+contracts       wkMean       worst     annual~
+1                2,508     -21,514     130,396
+2                5,015     -43,027     260,792
+3                7,523     -64,541     391,189
+4               10,030     -86,054     521,585
+5               12,538    -107,568     651,981
+
+--- Q4 MATCHED-TAIL BENCHMARK vs his displayed record ---
+his displayed: $8,583/wk with worst week $-42,235 (GROSS, in-sample sheets, version-churned, display-selected - R34)
+ours at matched tail: 2.0 contracts -> $4,923/wk NET, full 205-week sample, frozen, no runtime selection
+efficiency per unit of tail: his 0.203 vs ours 0.117 (1.74x)
+ASYMMETRY RESTATED: his numerator is gross and curated; ours is net and complete.
