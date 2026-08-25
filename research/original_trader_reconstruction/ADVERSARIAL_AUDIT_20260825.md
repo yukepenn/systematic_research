@@ -4,9 +4,9 @@ Eight independent skeptics were run against the eight load-bearing claims surviv
 the v5.0 / R31 / R32 work, each instructed to **try to refute**, with access to the repo and to the
 vendor documents. Seven have reported.
 
-**Result: 0 CONFIRMED. 1 REFUTED. 6 WEAKER_THAN_STATED.** Every claim audited was overstated in at
-least one respect, and several errors were mine from *this session*. Recorded here in full;
-nothing below is softened.
+**Result: 0 CONFIRMED. 2 REFUTED. 6 WEAKER_THAN_STATED.** Every one of the eight claims audited was
+overstated in at least one respect, and several errors were mine from *this session*. Recorded here
+in full; nothing below is softened.
 
 ---
 
@@ -28,6 +28,37 @@ What still holds: the `Percent` vs `(%)` label difference, and — decisively an
 any label — the **architectural** argument that NinjaTrader never surfaces an internally
 instantiated indicator's properties in a strategy's grid. The conclusion is right. The evidence is
 LEVEL B, not LEVEL A.
+
+## C2 — "q=1 forced on four records, so 130 points" · **REFUTED**
+
+**A non sequitur, and it violates my own preregistered constraint.**
+
+In all three bucket-A records (0121, 0129, 0146) the odd-$5 cell is **`largest_win_all` — never the
+−$2,600 cell.** In **all 18** −$2,600 occurrences the loss cell is 520 units of $5, i.e. **EVEN**,
+and therefore parity-unconstrained. Getting from *"the largest WINNER had odd quantity"* to
+*"the −$2,600 LOSER had quantity 1"* requires assuming **uniform quantity within a record** — which
+`spec.yaml part_a.forbidden` bans in as many words:
+
+> *"Do not assume uniform quantity across trades within a record... Only single-trade cells
+> constrain a single trade's quantity."*
+
+I wrote that constraint and then broke it two sections later.
+
+**The count is also wrong.** Bucket A = **3**, not 4. OTRIMG-0113 is the fourth odd-cell record and
+its largest loss is −$1,365 — it is the *only* record where parity constrains a **losing** trade,
+and it is the only one of the four with no −$2,600 at all. My "4 forced + 15 other" gives 19
+against the artifact's 18.
+
+**So no −$2,600 trade is constrained by parity anywhere in the corpus.**
+
+What survives: *conditional on the incumbent entry path* (which the same run calls suspect, and
+which R32 shows is beaten), stops of 32.5 / 26 / 13 / 10 points fit materially worse than 130 or
+65 — and **130 vs 65 differ by 0.0234, with 65 fitting hold better.**
+
+**Consequence for the stop.** "130 points, settled" loses its arithmetic leg entirely. What remains
+is **AS-9** ("generally traded one contract") + **AS-2** (Strategy Analyzer = per-strategy) — real
+Class A testimony, but testimony, and "generally" is not "always". Correct status:
+**130 points is supported by author testimony, not by arithmetic; 65 × 2 is not excluded.**
 
 ## C3 — "a UNIQUE 89-trade path" · **WEAKER_THAN_STATED**
 

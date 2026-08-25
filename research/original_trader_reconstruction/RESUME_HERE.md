@@ -33,7 +33,7 @@ should be made conditional on it.
 | **Jan-2023** | **TWO** global 11-day paths exist (`r22_log.txt`: "global 11-day paths = 2"); the one serialized reproduces all eleven daily rows of OTRIMG-0003 to the cent and tick. **"Unique" was wrong and I propagated it — corrected 2026-08-25.** T1-only entries, STRICT flip exit, calendar-exit-date grouping — all pinned by elimination |
 | **2025** | the 2023 mechanism is **falsified at cent level** for 2025-02-26. Different build |
 | **VF13 block** | **LEVEL B** (downgraded from A by audit): his panel rows are his OWN re-declarations. Only 1 of 4 cited label differences holds — the `Volume Base` order claim is a **FALSE VENDOR FACT**, the vendor also has it first. The conclusion rests on the `Percent` vs `(%)` difference plus the NT8 architectural argument |
-| **stop** | **130 index points at quantity 1** (parity forces q=1 on four records; AS-9 + AS-2 agree). 18 of 24 weeks sit at exactly −$2,600; the two overshoots are gap fills, live > backtest |
+| **stop** | **130 points — on AUTHOR TESTIMONY only (AS-9 + AS-2). 65 × 2 is NOT excluded.** The parity argument is **REFUTED**: in all 18 −$2,600 occurrences the loss cell is EVEN and parity-unconstrained; the odd cells are `largest_win`, a different trade. Behaviour excludes 32.5/26/13/10; 130 vs 65 differ by 0.0234 and 65 fits hold better. 18 of 24 weeks sit at exactly −$2,600; the two overshoots are gap fills, live > backtest |
 | **platform** | the six trailing panel groups are NT8 boilerplate; the head `SEP·enum·enum` is NT8's own General group. The **strategy name is PROVEN unrecoverable** — the combo renders as a bare chevron |
 | **2026 reports** | all Strategy Analyzer figures are **GROSS of commission**; true net is 1.1–5.6 % lower |
 
