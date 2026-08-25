@@ -95,5 +95,22 @@ first. Preregister the falsifier and honour it when it fires.
 - Corpus ends **2026-08-14**. There is *no evidence of any kind* about what he ran after that.
 
 ## Next
-`PURCHASE_GATE_v3.md` — and the open question is entry identification, since exits, sizing and the
-panel have all been worked to their evidence limits.
+
+**Binding frame: `OWNER_DIRECTIVE_R33_PURCHASE_FRAME_20260825.md`** (ratifies the BUY-VF verdict,
+corrects its justification, installs the post-purchase protocol). In brief:
+
+- **Purchase**: VWAP Flux only (~$300), understood as an experimental instrument / signal oracle —
+  NOT as proof that the late build is "Solar + VF". Buy nothing else; second purchases are
+  **residual-driven** after official-VF parity (SJB is the leading second candidate at ~30–45 %).
+- **Post-purchase**: Phase 1 vendor parity (author's exact 13 parameters, export per-bar
+  FV/rails/Signal_Trend/Signal_Trade/Signal_Cum_Delta) → Phase 2 retire the clean-room layer_a
+  (official output = oracle) → Phase 3 wrapper-only inverse problem from official `Signal_Trade`.
+- **Model ranking** for mature 2026 (keep all three live): M1 VF core + author wrapper (most
+  likely); M2 VF + auxiliary signal(s) + wrapper; M3 VF strategy + separate Solar sleeve at
+  account level (AS-1). Never promote "Solar existed 2023–25" into "Solar is inside the August
+  SA strategy".
+- **Eventual decisive test**: freeze any recovered MATURE_AUGUST_2026 build and run 2022–2026
+  uniformly (real commission/slippage/rollover/NT8 fills). If it isn't strong, accept that we
+  reconstructed the author's evolving process, not a fixed persistent edge.
+- **Free work still open**: fade retest with fade-appropriate exits (FV take-profit); the
+  "Solar Wind" product lead; the second 2023 global path serialization.

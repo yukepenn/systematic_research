@@ -161,3 +161,25 @@ exported 2026-08-24. `LOCKED_FORWARD` seals 2026-08-01 onward for selection in a
 
 **There is zero evidence of any kind about what he ran after 2026-08-14** — not weak evidence, none.
 Any claim about his post-corpus system would be invention.
+
+---
+
+## ADDENDUM — 2026-08-25, OWNER DIRECTIVE R33 (justification corrected; verdict unchanged)
+
+The owner ratified the action verdict (**BUY VWAP Flux, nothing else**) but corrected its
+justification, and the corrected version is now the binding one:
+
+> The purchase is justified **not** because the late-2026 system is proven to be "Solar + VWAP
+> Flux" — it is not, and may never be — but because **VWAP Flux is the only product where $300
+> materially collapses the core hypothesis space, with very strong direct linkage to the 2026
+> screenshots.** The $300 buys an experimental instrument (a signal oracle), not an indicator.
+
+Whether Solar sits inside the mature VF strategy is OPEN (owner prior ~25–45 %; ~50–70 % that
+Solar persists somewhere at account level). Whether a second ninZa signal participates is OPEN
+(~25–45 %). "The other ninZa are all excluded" is **not** a licensed conclusion.
+
+Full corrected frame — model ranking M1/M2/M3, owner priors, purchase table (SJB second at
+~30–45 %, BB%B Pro down to ~15–30 %, Multi-Osc ~10–20 %), the three-phase post-purchase protocol,
+the residual-driven second-purchase rule, and the frozen-build 2022–2026 decisive test — lives in
+**`OWNER_DIRECTIVE_R33_PURCHASE_FRAME_20260825.md`**, which supersedes this file's reasoning
+wherever they conflict.
