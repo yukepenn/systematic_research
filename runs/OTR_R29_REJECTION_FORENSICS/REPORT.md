@@ -128,10 +128,15 @@ Arithmetic closes exactly: 26 × $909 − 66 × $998 = −$42,234.
 Combined with R28's finding that the panel changed by **−4.0 rows (−0.58σ)** that week — no build
 change at all — this settles §24A:
 
-> **The March catastrophe is a regime event, not a build regression.** A trend system with a
-> 130-point stop, ordinary ~50-point average losses and a 2:1 payoff produces exactly this when
-> sustained runs disappear for a week (his holds collapsed to 33.7 min, second-shortest of 24).
-> There is no bug in his March build to find.
+> **CORRECTED 2026-08-25 (owner epistemic correction).** This originally read "a regime event, not
+> a build regression". That does not follow, and it contradicted this campaign's own finding: the
+> extent series measures only the TOTAL ROW COUNT, so a build change that rewrites logic at
+> constant property count is **invisible** to it — and ~85 % of the pane is unobserved anyway.
+>
+> The defensible statement: **risk-control failure is strongly disfavoured** (stop still exactly
+> −$2,600; avg loss −$998 is mid-range for the year) and **winner collapse is the dominant observed
+> fingerprint** (payoff 0.91, the only sub-1.0 week of 2026). **No large VISIBLE panel change is
+> observed. A hidden version change remains UNEXCLUDED.**
 
 Our model does **not** reproduce the hold collapse (60.1 min vs his 33.7) and therefore does not
 reproduce the winner collapse. That is the specific, localised mismatch.
@@ -140,23 +145,47 @@ reproduce the winner collapse. That is the specific, localised mismatch.
 
 ## 5. Where this leaves the program
 
-Two independent lines this run point the same way, and away from where §19 pointed:
+> **OWNER EPISTEMIC CORRECTION, 2026-08-25 — applied.** This section originally read that the run
+> had *localised* the residual to exit geometry. That overstated it, and is corrected here rather
+> than deleted. **Matching the trade count does not entail matching the entry path**: the same 92
+> trades can be a completely different 92 trades.
 
-1. Count-matching buys +0.0072; no entry-state feature beats its null → **the residual is not in
-   which signals are accepted.**
-2. In his worst week we match count, win rate and stop exactly, and miss avg-win by 57 % →
-   **the residual is in exit geometry and hold duration.**
+**What R29 established:** *simple one-dimensional threshold suppression is not the main residual.*
+Count-matching buys +0.0072, and no single observable entry-state feature beats its matched null.
+
+**What R29 did NOT establish:** that entry selection is correct. It falsifies **one-dimensional
+threshold filtering**, not **entry arbitration as a whole** — a conjunctive rule over trend state
+AND value location AND signal ordinal AND prior state AND direction passes straight through this
+test undetected.
+
+**Surviving competing causes, all live:**
+
+| | cause |
+|---|---|
+| A | entry **timing** wrong |
+| B | entry **selection** wrong |
+| C | **exit** timing / mechanism wrong |
+| D | interaction of A+B+C |
+| E | direction-specific **sizing / quantity** (non-trivial now: a qty-2 trade is confirmed) |
+
+Two observations make **C a high-EVI competing explanation** — not a located residual:
+
+1. Count-matching buys +0.0072; no one-dimensional entry-state feature beats its null.
+2. In his worst week we match count, win rate and stop exactly, and miss avg-win by 57 %.
 
 Combined with R23 (2023, exact labels, no entry rule found) and R28 (panel decoupled from
 behaviour, 84 % of the mature panel never photographed), the entry-filter hypothesis has now
 failed on three independent attacks.
 
-**Recommended next axis: exit geometry.** Our X_OPP "reverse on opposite signal" holds ~60–88 min
+**EXIT GEOMETRY IS NOW A HIGH-EVI COMPETING EXPLANATION** — not a localised residual. Our X_OPP "reverse on opposite signal" holds ~60–88 min
 against his 20–123 min, and systematically longer in 12 of 17 windows. That is a testable,
 free, preregisterable rival set. It is *not* run here and nothing from this run is promoted.
 
 ## 6. What this run did NOT establish
-- It did not identify any suppression rule, and now argues one is unlikely to be a simple filter.
+- It did not identify any suppression rule, and now argues one is unlikely to be a simple
+  **one-dimensional threshold** filter. Conjunctive / multi-condition entry arbitration is
+  untouched by this test and remains fully live.
+- It did not show entry selection is correct — only that the *count* is not the binding error.
 - `dist_fv_rails` and `atr14` are **not** endorsed; their apparent significance is threshold-shopped.
 - It did not test exit rules at all.
 - It says nothing about any vendor component (§5, §43).

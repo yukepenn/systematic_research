@@ -83,9 +83,13 @@ The **largest single behavioural break in all of 2026 — the −$42,235 catastr
 at all.** And the +75-row build event two weeks earlier produced a fingerprint
 (n=76, wr 38.2, pf 1.21) indistinguishable from its neighbours.
 
-**Verdict: R-DECOUPLED.** Panel growth and behavioural change are not aligned in this corpus. The
-catastrophe happened on an unchanged panel — it was a market event meeting a fixed rule set, not a
-build regression.
+**Verdict: R-DECOUPLED** *as measured*. Panel growth and behavioural change are not aligned.
+
+**CORRECTED 2026-08-25 (owner epistemic correction).** The original text continued "…a market event
+meeting a fixed rule set, not a build regression". That over-reads the measurement. The extent
+series measures the **total number of declared properties** and nothing else; a build change that
+rewrites logic while leaving the property count unchanged is invisible to it, and ~85 % of the pane
+is unobserved regardless. **"No visible panel change" is not "no change."**
 
 **P2_2 consequence, registered in advance and now triggered:** the ~470 unphotographed August rows
 **cannot be assumed to be trading logic**. §19's premise — that a visible-but-unrecognised filter
@@ -154,10 +158,17 @@ m_win+m_loss = m_all, both identities verified to the cent), NQ at c=$1.18 requi
 **m_all ≥ 415 for OTRIMG-0152 (n=136) — at least 3.05 contract-round-turns per trade** — while the
 same record's largest win and largest loss are single-contract trades.
 
+**CORRECTED 2026-08-25 (owner epistemic correction).** What the 2× commission proves is that
+**at least one executed trade/position carried a total quantity of 2** — i.e. account exposure was
+not globally constrained to exactly one NQ at all times. That is new and important.
+
+It does **not** prove multiple strategies caused it. All remain live: a single strategy trading
+2 lots · scale-in · two overlapping sleeves · NT8 execution grouping merging fills into one
+reported trade. The author's own statement that he ran several strategies is already independent
+direct evidence and does not need this result to carry it.
+
 No single (instrument, commission, position-size) story explains both records' aggregates *and*
-their extremes comfortably. Combined with the confirmed 2× trade, this is the preregistered
-signature of **an account aggregating more than the one qty-1 strategy the backtests describe**
-(§30, §2I) — and it is the first such evidence that is not merely the author's own statement.
+their extremes comfortably — consistent with aggregation, but not establishing it.
 
 **Named caveat / falsifier.** The aggregate leg assumes NT8 reports gross profit, gross loss and
 the long/short split on the same net-of-commission basis as net profit. The exact accounting

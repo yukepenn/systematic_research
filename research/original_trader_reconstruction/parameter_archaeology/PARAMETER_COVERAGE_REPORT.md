@@ -25,8 +25,18 @@ Sources: `vwap_flux_family/2026_PANEL_TOPOLOGY.md` (committed FACT tables),
 | photographed as a value, label never photographed | 63 | 12.7 % |
 | **never photographed in any form** | **~421** | **84.7 %** |
 
-**All 13 labelled rows are the VWAP Flux block**, and nothing else. Every other custom parameter
-the trader has is either a bare number on screen with no label, or was never on screen at all.
+**All 13 labelled rows are the VWAP Flux block**, and nothing else.
+
+**CAVEAT ON THE DENOMINATOR (owner correction, 2026-08-25) — read before quoting these numbers.**
+The ~497 figure is *inferred from scrollbar geometry*, not observed row by row. The unobserved
+region must NOT be described as "~421 unknown alpha parameters". A NinjaTrader settings pane of
+that length plausibly contains repeated condition blocks, generic NT properties, risk and execution
+fields, plot and appearance settings, disabled sections, and builder-generated controls — in
+unknown proportion. The defensible statement is:
+
+> **the mature settings pane has a very large unobserved region.**
+
+Everything downstream of this table is conditioned on that caveat.
 
 ---
 
@@ -73,9 +83,16 @@ architecture, and it is the one shape a vendor meta-engine would also produce.
 2026 build is the *earliest* one — 2026-01-30, at ~51 custom parameters, an ordinary hand-written
 NinjaScript strategy size, of which we have nearly a third.
 
-This does not mean abandon August. It means August conclusions will carry ~3 % parameter support
-and must be labelled accordingly, while the Jan-2026 build — the direct ancestor of the mature
-one, and the last build before VWAP Flux — is where parameter archaeology has actual leverage.
+This does not mean abandon August. It means August conclusions carry thin parameter support and
+must be labelled accordingly, while the Jan-2026 build — the direct ancestor of the mature one and
+the last build before VWAP Flux — is where per-row archaeology has the most leverage.
+
+**And the right unit of analysis changes.** Because most of the pane is unobserved, "identify the
+product behind each row" is the wrong target. The tractable target is **PANEL GRAMMAR** — repeated
+block sizes, section recurrence, scroll overlap, builder-like patterns. A pane hundreds of rows
+long is *itself* an architecture fingerprint, and grammar can be inferred from scroll geometry plus
+sparse visible slices even where individual values were never captured. BANK-1 and BANK-2 sharing
+an identical seven-state mask is the first datum of that grammar.
 
 ---
 

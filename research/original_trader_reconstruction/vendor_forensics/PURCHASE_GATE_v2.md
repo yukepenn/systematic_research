@@ -4,7 +4,27 @@ Directive v4.0 §34/§35. Supersedes `PURCHASE_GATE.md`. Written 2026-08-25 afte
 directive-v4.0 pass. The owner's standing framing: buy only as a last resort, only as an
 **information purchase**, never as "buy the profitable indicator".
 
-# Recommendation: **DO NOT BUY.** Verdict: UNNECESSARY, not merely premature.
+# STATUS 2026-08-25: **DEFERRED PENDING ENTRY/EXIT DECOMPOSITION (OTR_R30).**
+
+**The earlier verdict on this page — "DO NOT BUY / UNNECESSARY" — is SUPERSEDED by owner decision
+of 2026-08-25.** The reasoning below is retained verbatim as the record of what was measured. Its
+four findings stand as measurements; what is withdrawn is the *conclusion drawn from them*.
+
+Why: the page argued that a purchase cannot deliver the whole reconstruction, then treated that as
+"no information value". Those are different claims. Exact vendor `Signal_Trend` / `Signal_Trade` /
+`Signal_Cum_Delta` would convert the whole signal-source module from hypothesis space into **known
+vendor output**, and would measure *how far his build sits from vendor behaviour* — a falsification
+oracle even if he modified it. Separately, the research effort already spent avoiding the purchase
+exceeds its cost by a large multiple, so "save $300 by reverse-engineering further" is no longer
+economically sound.
+
+**Decision rule now in force.** After OTR_R30 answers the entry/exit decomposition:
+*would exact vendor signal series materially collapse the surviving entry/exit hypotheses?*
+If VF remains central and the surviving hypothesis set is still wide — **BUY**.
+
+---
+
+## Superseded verdict (retained as record): DO NOT BUY, UNNECESSARY
 
 Not because the money is large, and not on caution — on four measured findings, three of
 which are new this pass and any one of which would be enough on its own.
