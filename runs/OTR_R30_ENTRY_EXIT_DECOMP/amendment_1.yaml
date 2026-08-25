@@ -1,0 +1,54 @@
+amendment: 1
+run_id: OTR_R30_ENTRY_EXIT_DECOMP
+date: 2026-08-25
+status: PREREGISTERED_BEFORE_READOUT
+supersedes: nothing.  Part A's bucket counts (3 / 15 / 0) stand as recorded.
+
+why: >
+  Part A's parity test bounds quantity only weakly (bucket A = 3 of 18).  But two facts already
+  committed elsewhere combine into a much sharper test that the spec did not anticipate:
+
+    FACT 1 (NT8 tail, committed in 2026_PANEL_TOPOLOGY.md, identical in every 2026 frame):
+           "Exit on session close" is CHECKED.  Therefore NO trade spans a session boundary.
+    FACT 2 (arithmetic): a single trade of quantity q has gross P&L = 20 * q * (index points),
+           and its points cannot exceed the High-Low range of the ONE session it lived in.
+
+  Together:      largest_win / (20 * q)  <=  max session range in that window.
+  Any q whose implied point move exceeds the largest single-session range available in the window
+  is IMPOSSIBLE.  Since implied points fall as q rises, this places a LOWER bound on q - the exact
+  complement of the parity test, which constrains parity only.
+
+  This is the "quantity-normalized proof" the owner's correction 5 demanded, and it uses no new
+  data: session ranges come from the existing local substrate.
+
+method: >
+  For every 2026 window whose bars exist locally (through 2026-05-29), compute the maximum
+  session High-Low range.  For each candidate quantity q in {1,2,4,5,8,10,13,20} (the set that can
+  produce a -$2,600 stop at a legal NQ increment, from Part A), compute
+  largest_win/(20q) and largest_loss/(20q) and mark q IMPOSSIBLE if either exceeds the window's
+  max session range.  Report the surviving q set per window and its intersection.
+
+preregistered:
+  D1: >
+    PREDICTION: the intersection over all locally-computable windows is NON-EMPTY.  An empty
+    intersection would mean the uniform-quantity assumption itself is wrong for SA records - i.e.
+    the strategy varies size internally - which would be a finding in its own right and must be
+    reported as such rather than resolved by widening the candidate set.
+  D2: >
+    THE DISCRIMINATOR.  q = 1 survives only if every window's largest win fits inside that
+    window's biggest session.  If q = 1 is EXCLUDED anywhere, the 130-point stop is dead and
+    "65 points x 2" (or smaller/larger multiples) takes over.  If q = 1 survives everywhere AND
+    q = 2 is excluded somewhere, the 130-point stop is confirmed by a route independent of parity.
+  D3: >
+    Registered so it cannot be reinterpreted: this test can only ever EXCLUDE SMALL q (by making
+    the implied move too large).  It cannot exclude large q.  So a "q = 1 survives" outcome is
+    weak confirmation, whereas a "q = 1 excluded" outcome is strong refutation.  The asymmetry is
+    stated in advance and must be honoured in the write-up.
+  D4: >
+    Windows after 2026-05-29 (OTRIMG-0150 onward) CANNOT be tested - the substrate ends there and
+    2026-08-01 onward is sealed by LOCKED_FORWARD.  Their largest wins are reported as
+    UNTESTABLE, not silently dropped.
+
+binding_rules:
+  - Section 6: report the surviving q SET, never a point value.
+  - Failed predictions recorded, not rewritten.
