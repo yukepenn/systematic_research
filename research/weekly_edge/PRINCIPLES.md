@@ -67,3 +67,42 @@ the 9-week holdout is exhausted (4 reads) and June–July 2026 was a favourable 
   If yes, the proxy is validated backward; if no, the gate's real value may be higher.
 - Would the official VF `Signal_Trend/Signal_Cum_Delta` (if purchased) beat the proxy gate?
 - Portfolio-level tail: same-direction concentration cap (never yet implemented cleanly).
+
+---
+
+## 6. MAJOR REVISION 2026-08-25 (waves W17-W20) — what we actually own
+
+Three results forced a rewrite of everything above:
+
+**W17 deep history.** The frozen stack run on 2006-2021 (sixteen untouched years) is
+**pooled Sharpe -0.001, 9/16 positive years**. The 2022-2026 numbers do not replicate. The
+price-scale alibi fails: 2021, at modern levels and adjacent to the calibration sample, is the
+worst year. Owner accepted a regime-conditional stance (only the current regime matters), which
+is legitimate for a non-stationary market -- but it moves the burden: the supporting regime is
+~4.5 years old and our calibration consumed all of it.
+
+**W19 walk-forward.** Refitting quarterly on a trailing year and trading only the next quarter
+gives **Sharpe 0.171 vs the fixed-calibration 0.249 and naive 0.150**. Verdict WEAK: the fixed
+numbers overstate by ~30 %, and quarterly selection buys +0.021 over doing nothing.
+**14 distinct configs across 17 refits (88 % churn) -- selection is noise.**
+
+**W20 ensemble.** The correct response to selection noise is aggregation.
+**E5 = a one-contract majority vote across the 32 LONG-ONLY configurations** gives Sharpe
+**0.214**, beats walk-forward (0.171) and naive (0.150), worst week **-$17,440** against
+naive's -$37,318 on less than half the trades, and is **positive in every year**
+(0.260/0.271/0.307/0.113/0.315). It performs **no runtime parameter selection**, so it is
+structurally immune to the W19 failure.
+
+### The single most replicated finding: LONG-ONLY
+Favoured independently by W16 (side split: 0.229 vs 0.210, worst -$15.1k vs -$24.4k),
+W17 (the ONLY finding to replicate on 2006-2021: +0.072 vs -0.008), W19 (BESTFIXED is
+long-only, worst week -$14,543) and W20 (E5 0.214 > E4 0.200). Shorts earn ~1/3 the per-trade
+rate of longs on every sleeve measured.
+
+### Corrected honest description
+A **selection-free, long-only, volatility-regime-throttled trend harvester on NQ**. It earns
+in active-range sessions (16.8 % of sessions carry ~all P&L), stands aside in quiet ones
+(three independent attempts to trade the quiet regime failed: W11, W18 build, W18 modern),
+and is NQ-specific (the same engine loses on ES/RTY/YM). Out-of-sample within the regime it
+is worth roughly **Sharpe 0.21, ~$1,100/week per contract, 59-60 % positive weeks, worst week
+about -$17k** -- not the 0.28/$3,400 that fixed calibration advertised.

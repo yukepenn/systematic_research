@@ -133,6 +133,21 @@ frozen. Beating his numbers under our measurement standard is therefore a STRICT
   (null-calibrated gates via circular-shift, per-year stability, sensitivity, leave-one-out).
   Cumulative single-sleeve dev Sharpe: 0.160 -> 0.193 -> 0.210 -> 0.214 -> 0.225.
 
+- 2026-08-25 (W14-W20, the decisive block): **W14** ASIA sleeve admitted (corr 0.11) but the
+  delta proxy correlates only 0.284 with true BidAsk delta. **W15** true tick delta beats the
+  proxy +32%/trade but misses the 25%-on-both bar -> tick data NOT worth acquiring, and HIS
+  BidAsk mode is the WORST for our engine (weakens the VF purchase's delta argument).
+  **W16** segmentation does not generalise (ASIA is the only anti-correlated segment,
+  -0.12/-0.14 vs the US session); shorts earn ~1/3 of longs on every sleeve.
+  **W17 DEEP HISTORY = FAIL**: the frozen stack is pooled Sharpe -0.001 over 2006-2021; owner
+  redirected to a regime-conditional stance, W17 relabelled a mechanism measurement.
+  **W18** quiet regime is defence-only (third confirmation). **W19 WALK-FORWARD = WEAK**:
+  0.171 vs fixed 0.249 vs naive 0.150, with 88% config churn -> selection is noise.
+  **W20 ENSEMBLE = WIN**: E5, a selection-free one-contract majority vote over the 32
+  long-only configs, gives 0.214, beats walk-forward and naive, worst week -$17,440, positive
+  every year. LONG-ONLY is now the campaign's most replicated finding (W16/W17/W19/W20).
+  W21 audits E5 (circular-shift null, subfamily sensitivity, S1 combination, deep history).
+
 ## Relationship to campaign #6 (OTR)
 OTR stays open (purchase gate awaiting owner action; free follow-ups queued). #7 consumes #6's
 conclusions but never its sealed evidence. Nothing in #7 feeds back into #6's identification
