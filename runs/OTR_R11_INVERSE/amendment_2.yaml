@@ -1,0 +1,61 @@
+run_id: OTR_R11_INVERSE
+amendment: 2
+date: 2026-08-24
+status: COMMITTED BEFORE THE READOUT IT AUTHORISES
+
+reason: >
+  The inverse sweep produced, for 8 of the 11 visible Jan-2023 days, a UNIQUE feasible
+  trade path under the T1-only universe with the STRICT exit comparison. A unique path
+  fixes, for every T1 signal in those sessions, whether the original strategy TOOK it or
+  SKIPPED it. Those are the first non-circular take/skip labels in the campaign: they come
+  from cent-level daily aggregates plus path statistics (MAE/MFE), not from fitting a
+  wrapper to P&L.
+  Directive v4.0 section 13 requires the incumbent D-gate to be re-adjudicated against
+  exactly these invariants rather than kept because it improves master net.
+
+label_provenance:
+  source: "unique feasible paths, runs/OTR_R11_INVERSE/out/feasible_paths.json"
+  universe: "U1 (T1 only)"
+  exit_rule: "STRICT"
+  status_of_labels: >
+    INVARIANT_LABELS. Stronger than the retired R1e CONDITIONAL_LATENT_LABELS because the
+    solution is UNIQUE within the universe -- but still conditional ON the universe and on
+    the exit rule. If a wider universe later admits a second path for one of these days,
+    that day's labels revert to AMBIGUOUS and must be dropped from gate fitting.
+    They are NOT "observed original trade labels".
+
+hypotheses:
+  H-GATE-NECESSARY: >
+    Each incumbent D-gate component {X=1600 PM armed threshold, X2=2500 AM armed threshold,
+    K=3 consecutive same-side losses, C=700 prior-session-red evening block, cap=20 trades
+    per session, cd=3 bar cooldown} is NECESSARY: removing it changes at least one
+    invariant label.
+    Method: leave-one-component-out over the invariant labels only.
+    Classification per component: NECESSARY / SUPPORTED / REDUNDANT / UNIDENTIFIED.
+  H-GATE-MISFIT: >
+    Under STRICT the incumbent gate OVER-suppresses on 2023-01-13 (produces 5 trades where
+    the unique path needs 6) and is REQUIRED on 2023-01-03 (gate-off produces 14 where the
+    unique path needs 12). Therefore at least one incumbent constant is wrong under STRICT,
+    because the constants were fitted under the INCLUSIVE exit rule.
+    FALSIFIER: a single constant set that reproduces every invariant label.
+
+selection_rule: >
+  A gate component may be retained ONLY if it is required by the invariant labels. It may
+  NOT be retained, tuned, or introduced because master net profit improves
+  (directive v4.0 sections 13 and 40). Any component that the labels cannot separate is
+  recorded UNIDENTIFIED and BOTH settings are kept alive.
+  If no constant set explains all labels, that is the reported result -- do NOT add a new
+  ad-hoc gate term to force a fit.
+
+authorised_new_readouts:
+  - "Extract per-signal TAKE/SKIP invariant labels from the unique feasible paths."
+  - "Replay session state (session cum P&L, session high-water, consecutive losses per
+     direction, completed trades, minute-of-day, minutes-from-open, prior session net,
+     bars since last exit) at every T1 decision bar in those sessions."
+  - "Leave-one-component-out and constant-sweep scoring of the D-gate against the labels
+     ONLY (no P&L objective anywhere in the fit)."
+
+outputs:
+  - runs/OTR_R11_INVERSE/out/gate_labels.csv
+  - runs/OTR_R11_INVERSE/out/gate_component_scores.csv
+  - research/original_trader_reconstruction/solar_family/CAND2_REAUDIT.md
