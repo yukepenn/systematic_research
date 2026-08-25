@@ -1,0 +1,73 @@
+fit windows 17   holdout windows 4 (OTRIMG-0150, OTRIMG-0156, OTRIMG-0159, OTRIMG-0162)
+EXCLUDED from scoring: ['OTRIMG-0152', 'OTRIMG-0154'] - Trade Performance, different basis
+
+configurations: 288
+
+  ... 24/288
+  ... 48/288
+  ... 72/288
+  ... 96/288
+  ... 120/288
+  ... 144/288
+  ... 168/288
+  ... 192/288
+  ... 216/288
+  ... 240/288
+  ... 264/288
+  ... 288/288
+
+====================================================================================================
+B1 HARNESS CHECK - the incumbent must reproduce 1512 trades / 0.4768
+====================================================================================================
+   D_MOM|G_WITH|P_MED|C_DIR|X_OPP -> trades 1512  dist 0.4768
+   B1 -> PASS
+
+====================================================================================================
+TOP 15 BY FIT (17 windows) - with their HOLDOUT rank
+====================================================================================================
+configuration                                 fitDist   fitN  holdDist  holdN  holdRank
+D_MOM|G_NONE|P_IN|C_REC|X_TRAIL_PTS:80         0.4368   1339    0.3503    613         1
+D_MOM|G_WITH|P_IN|C_REC|X_TRAIL_PTS:80         0.4368   1339    0.3503    613         2
+D_MOM|G_NONE|P_IN|C_REC|X_TARGET:60            0.4506   1498    0.4622    659        23
+D_MOM|G_WITH|P_IN|C_REC|X_TARGET:60            0.4506   1498    0.4622    659        24
+D_MOM|G_NONE|P_MED|C_DIR|X_TARGET:60           0.4693   1643    0.3817    668         5
+D_MOM|G_WITH|P_MED|C_DIR|X_TARGET:60           0.4693   1643    0.3817    668         6
+D_MOM|G_NONE|P_Q75|C_REC|X_TARGET:60           0.4721   1606    0.4112    704         9
+D_MOM|G_WITH|P_Q75|C_REC|X_TARGET:60           0.4721   1606    0.4112    704        10
+D_MOM|G_NONE|P_MED|C_REC|X_TARGET:60           0.4738   1638    0.3871    672         7
+D_MOM|G_WITH|P_MED|C_REC|X_TARGET:60           0.4738   1638    0.3871    672         8
+D_MOM|G_NONE|P_MED|C_DIR|X_OPP                 0.4768   1512    0.4546    594        21
+D_MOM|G_WITH|P_MED|C_DIR|X_OPP                 0.4768   1512    0.4546    594        22
+D_MOM|G_NONE|P_MED|C_REC|X_OPP                 0.4789   1502    0.4713    596        25
+D_MOM|G_WITH|P_MED|C_REC|X_OPP                 0.4789   1502    0.4713    596        26
+D_MOM|G_NONE|P_Q75|C_REC|X_TRAIL_PTS:80        0.4983   1522    0.3765    680         3
+
+====================================================================================================
+B3 DECISION RULE - LEADING requires top-5 on FIT and top-10 on HOLDOUT
+====================================================================================================
+   LEADING : 3
+      D_MOM|G_NONE|P_IN|C_REC|X_TRAIL_PTS:80       fit#1 (0.4368)  hold#1 (0.3503)
+      D_MOM|G_NONE|P_MED|C_DIR|X_TARGET:60         fit#5 (0.4693)  hold#5 (0.3817)
+      D_MOM|G_WITH|P_IN|C_REC|X_TRAIL_PTS:80       fit#2 (0.4368)  hold#2 (0.3503)
+   OVERFIT (won the fit, failed the holdout): 2
+      D_MOM|G_NONE|P_IN|C_REC|X_TARGET:60          fit#3 (0.4506)  hold#23 (0.4622)
+      D_MOM|G_WITH|P_IN|C_REC|X_TARGET:60          fit#4 (0.4506)  hold#24 (0.4622)
+
+   incumbent: fit#12 (0.4768)  hold#22 (0.4546)
+   B4: configurations beating the incumbent on BOTH samples: 8
+      D_MOM|G_NONE|P_IN|C_REC|X_TRAIL_PTS:80       fit 0.4368  hold 0.3503
+      D_MOM|G_WITH|P_IN|C_REC|X_TRAIL_PTS:80       fit 0.4368  hold 0.3503
+      D_MOM|G_NONE|P_MED|C_DIR|X_TARGET:60         fit 0.4693  hold 0.3817
+      D_MOM|G_WITH|P_MED|C_DIR|X_TARGET:60         fit 0.4693  hold 0.3817
+      D_MOM|G_NONE|P_MED|C_REC|X_TARGET:60         fit 0.4738  hold 0.3871
+      D_MOM|G_WITH|P_MED|C_REC|X_TARGET:60         fit 0.4738  hold 0.3871
+      D_MOM|G_NONE|P_Q75|C_REC|X_TARGET:60         fit 0.4721  hold 0.4112
+      D_MOM|G_WITH|P_Q75|C_REC|X_TARGET:60         fit 0.4721  hold 0.4112
+
+====================================================================================================
+B2 - is FADE distinguishable from MOMENTUM?
+====================================================================================================
+   D_MOM    n=144  fit  min 0.4368 median 0.8415   hold min 0.3503 median 0.7015   trades median 1691
+   D_FADE   n=144  fit  min 0.5268 median 0.8468   hold min 0.4790 median 0.8194   trades median 1194
+
+written: D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\OTR_R32_JOINT_ENTRY_EXIT\out\joint_entry_exit.csv
