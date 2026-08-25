@@ -15,10 +15,14 @@
 
 ## The single most important structural fact
 
-**~85 % of his mature August-2026 parameter panel was never photographed, and only 13 of ~497
-custom rows (2.6 %) have a photographed LABEL — all 13 being the VWAP-Flux block.** The corpus is
-fixed at 164 images. Parameter-origin closure is therefore **unreachable**, and no gate should be
-made conditional on it.
+**For the AUGUST panel specifically, ~15 of ~497 custom rows are observed at all (~3 %).** The
+corpus is fixed at 164 images, so per-row LABEL closure is genuinely **unreachable** and no gate
+should be made conditional on it.
+
+> **CORRECTED 2026-08-25 by adversarial audit.** The widely-quoted "13 of ~497 have labels (2.6 %)"
+> **pools Jan-2026 through Aug-2026 observations** and is *not* the August figure — 61 of the 63
+> value-only slots are Feb/Apr/Jun-only. `PARAMETER_COVERAGE_REPORT.md` §3 already gave the
+> August-specific number; I quoted the pooled one as if it were August. Base-mixing, again.
 
 ---
 
