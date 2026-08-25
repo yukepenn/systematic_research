@@ -181,10 +181,13 @@ def main():
     atr = pd.Series(trr).rolling(14, min_periods=1).mean().values
 
     cds, cd_arr = cd_signals(D)
-    allow_L_fv = np.isnan(FV) | (D["c"] >= FV)
-    allow_S_fv = np.isnan(FV) | (D["c"] <= FV)
-    allow_L_dl = cd_arr >= 0
-    allow_S_dl = cd_arr <= 0
+    # amendment_1: gates must carry DECISION-BAR information only -> lag one bar.
+    def lag(a):
+        return np.concatenate([[True], a[:-1]])
+    allow_L_fv = lag(np.isnan(FV) | (D["c"] >= FV))
+    allow_S_fv = lag(np.isnan(FV) | (D["c"] <= FV))
+    allow_L_dl = lag(cd_arr >= 0)
+    allow_S_dl = lag(cd_arr <= 0)
 
     members = {}
 

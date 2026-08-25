@@ -1,0 +1,16 @@
+amendment: 1
+date: 2026-08-25
+status: LOOK-AHEAD CORRECTION — discovered in self-review BEFORE any freeze/promotion;
+  full rerun replaces run 1 as the run of record (run-1 log kept as run1.log)
+finding: >
+  In fills(), context gates were evaluated at the ENTRY bar's index i while the entry executes
+  at o[i]: the delta gate's cd_arr[i] includes bar i's signed volume (a function of c[i]) and
+  the FV gate compares c[i] >= FV[i] — both use the entry bar's CLOSE to admit a fill at its
+  OPEN. One-bar look-ahead. All W03 gated rows (g fv / gdl), including the headline
+  S4.narrow6.hnone.gdl dev Sharpe 0.355 and the champion candidate, are SUSPECT until rerun.
+unaffected: session halts (computed from realized P&L in-loop, causal), all ungated W03 rows,
+  W01/W02 entirely (no gates), W04 entirely (no gates), the W02 volfilter (prior-session TR,
+  causal).
+fix: gate masks are now lagged one bar at construction (decision-bar information only):
+  allow[i] := allow_raw[i-1], allow[0] := True.
+honesty_note: whatever survives the lag is the finding; whatever evaporates was never real.
