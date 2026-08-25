@@ -1,0 +1,43 @@
+bases ready [53s]
+object                          wkMean  wkPos   wkWorst  wkShrp    strs    tpw   hShrp   hPos
+PORTFOLIO S1+S4n+ASIA (base)     3,407   60.4   -28,222   0.282   2,647   76.0   0.772   77.8
+
+=== Q1: per-segment sleeves ===
+  SEG_ASIA (n=911)                 603   45.9   -15,610   0.193     564    3.8   0.584   77.8
+  SEG_EUROPE (n=1441)              443   49.8   -11,596   0.132     381    6.2   0.193   55.6
+  SEG_PREOPEN (n=667)              316   47.1    -7,402   0.106     285    3.1  -0.061   33.3
+  SEG_RTH_AM (n=1838)              721   56.3   -19,892   0.122     646    7.6   0.010   55.6
+  SEG_RTH_PM (n=967)               381   48.0    -8,765   0.099     339    4.1   0.668   77.8
+
+segment weekly-net correlations:
+                 ASIA    EUROPE   PREOPEN    RTH_AM    RTH_PM
+ASIA             1.00      0.41      0.09     -0.12     -0.14
+EUROPE           0.41      1.00      0.54      0.28      0.20
+PREOPEN          0.09      0.54      1.00      0.33      0.08
+RTH_AM          -0.12      0.28      0.33      1.00      0.41
+RTH_PM          -0.14      0.20      0.08      0.41      1.00
+max off-diagonal 0.54
+
+SEGMENT PORTFOLIO (all 5)        2,372   56.1   -29,563   0.205   2,133   24.0   0.400   77.8
+single all-hours S4n (ref)       1,431   59.1   -24,417   0.210   1,250   18.1   0.665   77.8
+  falsifier: segment portfolio does NOT beat the all-hours sleeve (0.205 vs 0.210)
+
+=== Q2: long vs short book, full 4.6 years ===
+sleeve/side                         n         net   $/trade
+S1.long                          6597     275,522      41.8
+S1.short                         6704     110,776      16.5
+S4n.long                         1930     276,555     143.3
+S4n.short                        2453     123,645      50.4
+ASIA.long                         422     103,445     245.1
+ASIA.short                        489      57,468     117.5
+
+variant                         wkMean  wkPos   wkWorst  wkShrp    strs    tpw   hShrp   hPos
+S4n LONG-ONLY (halves opportunity)   1,101   57.1   -15,089   0.229   1,020    8.1   0.480   77.8
+S4n SHORT-gated-by-tilt            997   58.0   -24,417   0.173     873   12.4   0.616   88.9
+
+=== Q3: S1 with its own q=0.7 throttle, in the full portfolio ===
+S1+q0.7 standalone               1,297   56.3   -20,853   0.176     831   46.7   0.518   66.7
+S1+S4n+ASIA (base)               3,407   60.4   -28,222   0.282   2,647   76.0   0.772   77.8
+S1q07+S4n+ASIA                   3,300   61.3   -25,405   0.280   2,617   68.2   0.867  100.0
+S1q07+S4n+ASIA+shortTilt         2,848   61.3   -24,991   0.275   2,225   62.3   0.835  100.0
+done [56s]
