@@ -1,0 +1,33 @@
+run_id: WE_W15_TRUEDELTA
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner 2026-08-25 — "你有ninjatrader，crosstrader，如果真的需要各种tick数据的话你也可以下载…
+  不要考虑未来数据是什么。我们就是很科学很聪明地在过去就知道我们可以赚钱…因为我们是可以了解和知道
+  为什么我们赚钱和亏钱的。而不是单纯的p-hacking"
+
+question: >
+  W14 measured that our 1-min close-direction delta proxy correlates only 0.284 with TRUE
+  BidAsk delta (63.5% bar sign agreement). On the 40 sessions where true ticks exist, does a
+  TRUE-delta gate outperform the proxy gate — and by how much? The answer decides whether
+  acquiring tick history (NT8/CrossTrade export, owner-assisted) is worth doing.
+
+design (sample = the 40 non-RTH-suffixed NQ tick sessions, 2025-08-11 .. 2026-05-20):
+  gates compared on the identical S4.narrow6 + range-throttle base, same sessions:
+    G0 NO GATE
+    G1 PROXY      : close-direction cumulative delta (the campaign's current gate)
+    G2 TRUE_UD    : UpDownTick real-volume cumulative delta from ticks
+    G3 TRUE_BA    : BidAskPrice real-volume cumulative delta from ticks (the mode the
+                    trader's own VF panel was set to)
+  metrics: per-trade P&L, total, trade count, session RIGHT/WRONG/CHOP, capture.
+  NOT reported: weekly Sharpe (40 sessions is ~8 weeks; the spec forbids a Sharpe claim here).
+decision rule (declared):
+  - if G3 or G2 beats G1 by >= 25% on per-trade P&L AND on total, then TICK DATA IS WORTH
+    ACQUIRING and a data-acquisition plan is written into the campaign state.
+  - if the true-delta gates do NOT beat the proxy, the delta axis is closed and the gate is
+    demoted to what its null calibration says (weak, p=0.10).
+epistemic note (owner's framing, adopted): the purpose is to KNOW WHY we win and lose. A gate
+  that works only through a noisy proxy is not understood; measuring the same gate with the
+  exact quantity the vendor defines is how the mechanism gets pinned down.
+forbidden: [quoting a Sharpe from this 40-session sample, using RTH-suffixed duplicate files,
+  data >= 2026-08-01 (none exists in the tick set), fill-bar information]
+outputs: [out/truedelta.txt, REPORT.md]
