@@ -1,0 +1,100 @@
+run_id: WE_W79_CLIQUE
+title: "The three-stream portfolio, tested properly on the extended window: {AXISB, BMOM,
+        X9a} — the best object this campaign has measured, and the one that has never faced
+        a null."
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+a_premise_of_mine_that_was_wrong_and_is_recorded_before_this_wave: >
+  I stated at the end of W78 that the next move was an OVERNIGHT-ONLY engine, on the argument
+  that P1 barely trades 18:00-09:29 so temporal disjointness would GUARANTEE rho ~ 0. I measured
+  it before writing the code. P1 spends **59.0 % of its in-market bars overnight**, enters 1,465
+  of its 2,272 trades there, and earns **59.7 % of its net** there. The overnight tape is P1's
+  PRIMARY venue, not empty space. **The structural argument is dead and the wave is withdrawn
+  unrun.** (Method rule 26: search/measure before writing code. Second time this session it has
+  saved a wasted wave.)
+
+why_this_wave_instead: >
+  W75's census found the largest admissible clique in the repo — pairwise |daily rho| < 0.20 AND
+  positive in the full window AND 2025 AND 2026 — is **{AXISB, BMOM, w72:X9a}**, mean pairwise
+  |rho| 0.069, max 0.167. Equal-weighted at constant exposure it measured:
+      max drawdown $7,810 against P1's $20,245 (2.6x smaller)
+      $2,346/week at a matched $20,245 drawdown against P1's $1,475 (+59 %)
+      median week $820 vs $455, weekly losing streak 6 vs 8, worst week -$5,976 vs -$7,418
+      inverse-vol weighting: 61.8 % positive weeks with a streak of 4
+  It is the best risk-adjusted object this campaign has produced and it came out of a census, not
+  a search. **It has never faced a null, a rolling-window test, a walk-forward, or the extended
+  window that contains the regime turn.** W78 is the cautionary example: a seven-of-seven
+  full-sample table that failed both gates.
+
+  It is also the direct instance of W74's finding — three streams at rho ~ 0.07 is exactly the
+  configuration the bootstrap says should deliver ~69 % positive weeks. The measured 58.8 %
+  equal-weight / 61.8 % inverse-vol falls short of that, and the SIZE of the shortfall is
+  itself a preregistered output: it prices how much the streams being unequal in quality costs.
+
+members_and_their_known_defects_stated_up_front:
+  AXISB: >
+    W40's volatility-expansion event engine, axis_volexp(up=1.6, down=1.0, look=15). W40's own
+    amendment 2 WITHDREW its adoption: B alone is negative in 2023 and 2024 and the pair beat
+    exposure-matched long-alone only in the years B itself worked. Its parameter walk-forward
+    failed (64 % churn, 46 % retention). Deep history: 8/16 positive years on net but 2/16 on
+    stress-net.
+  BMOM: >
+    the component W67-W69 disclosed as regime-local: flat pre-2022 (t = 0.93, PF 1.042 over
+    5,643 trades), latest 24-month window at the 98th percentile of its own history, and it lost
+    $17,952 in W76's forward window.
+  X9a: >
+    a full P1-shaped object with the OR slot occupied by the SESSION-anchored displacement rule.
+    W72 found it is the only durable channel of eleven (pre-2022 t = 1.83) and that it costs 28 %
+    of modern production. It is rho = 0.71 with P1, so it is NOT an independent stream from P1 —
+    it is an ALTERNATIVE to P1. That is why the clique excludes P1 and it must be said plainly.
+  the_honest_reading: >
+    this is not three good engines. It is three flawed ones whose flaws are uncorrelated. That
+    is a legitimate thing for a portfolio to be, and it is also exactly the configuration that
+    can look excellent on a full sample and fall apart across sub-periods.
+
+method:
+  1_rebuild_on_the_extended_window: >
+    All three members re-derived at FROZEN parameters on 2022-07-04 -> 2026-07-31 (1,058
+    sessions), including W76's 46 never-previously-read sessions. AXISB must be rebuilt from
+    run_we_w40.axis_volexp since W56's persisted series stops at 2026-05.
+  2_the_panel: full Amendment-2 consistency panel, equal-weight and inverse-vol, vs P1.
+  3_rolling: >
+    rolling 24-month windows vs P1 on weekly $ at a fixed $20,245 drawdown, positive-week % and
+    mean top-5 drawdown, and ALL THREE. Bar: all three in a MAJORITY. This is the gate that
+    killed W78 and four candidates before it.
+  4_null: >
+    N1, 200 draws: circularly shift EACH member's daily series independently against the others,
+    preserving every marginal and destroying only alignment. Reports whether the portfolio's
+    advantage is timing or merely three-streams-ness. W74 predicts GENERIC; if so that is the
+    recorded finding, not a failure.
+  5_walk_forward: >
+    quarterly re-selection of the weight vector on a trailing year from a fixed small set
+    (equal, inverse-vol, and the three single-member portfolios), trading the next quarter.
+    W29 bar: >= 80 % retention. Choice churn reported.
+  6_per_year_and_2026: every year including the extended 2026, plus W76's held-out 46 sessions
+    reported separately as an observation.
+  7_friction: both lines - net $4.36/RT and the C1 stress line at $14.36/RT, with trade counts.
+
+preregistered_decision_rule:
+  promote_only_if: >
+    (1) all three rolling metrics beat P1 in a MAJORITY of windows, AND (2) walk-forward
+    retention >= 80 %, AND (3) it is positive in 2026 on the extended window, AND (4) it is not
+    carried by a single member — removing any one member must not destroy the result.
+  if_it_fails: >
+    recorded as: the best full-sample object in the repo does not survive sub-period testing
+    either, which would make it the sixth such case and would say something structural about
+    this whole search — that full-sample dominance is nearly uninformative here and only the
+    rolling and walk-forward tests carry information.
+  adoption: NOTHING is adopted in this wave.
+
+traps_named_before_running:
+  - "The clique was SELECTED by a rule (rho threshold + recency gate) that was preregistered in
+     W75, so it is not a free scan - but the rule was applied to 20 candidates and the winner is
+     still the argmax of a 20-object search. The rolling and walk-forward tests are the controls."
+  - "Two of the three members are era-bound by this repo's own measurements. A portfolio of
+     era-bound components is era-bound, and the per-year table is where that shows."
+  - "Equal-weight and inverse-vol are the ONLY weightings permitted. Any optimised weight vector
+     would be fitted on the same sample the result is quoted from."
+  - "The extended window is in-sample. Nothing here is out-of-sample and it will not be called so."
