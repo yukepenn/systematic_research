@@ -183,7 +183,7 @@ def main():
         c1 = c2 = c3 = c4 = tot = 0
         for eend in ends:
             b0 = eend - pd.DateOffset(months=24)
-            mk = ((sdate > b0) & (sdate <= eend)).values
+            mk = (sdate > b0) & (sdate <= eend)
             a_, b_ = met(comb, "", mk), met(p1, "", mk)
             if a_ is None or b_ is None:
                 continue
@@ -202,7 +202,7 @@ def main():
     rr = []
     for eend in ends:
         b0 = eend - pd.DateOffset(months=24)
-        mk = ((sdate > b0) & (sdate <= eend)).values
+        mk = (sdate > b0) & (sdate <= eend)
         s_ = sh[mk]
         if len(s_) < 200:
             continue
@@ -216,8 +216,8 @@ def main():
            f"median t {RR['t'].median():+.2f} | latest t {last['t']:+.2f} at the "
            f"{100*float((RR['t'].values < last['t']).mean()):.0f}th percentile of its own history")
     P_(f"\n   per year (short sleeve standalone, pts/session):")
-    yrs = sorted(set(sdate.dt.year))
-    P_("      " + "  ".join(f"{y}: {sh[(sdate.dt.year == y).values].sum()/PV/max((sdate.dt.year==y).sum(),1):+.2f}"
+    yrs = sorted(set(sdate.year))
+    P_("      " + "  ".join(f"{y}: {sh[sdate.year == y].sum()/PV/max((sdate.year==y).sum(),1):+.2f}"
                             for y in yrs))
 
     # =====================================================================================

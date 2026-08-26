@@ -1,0 +1,63 @@
+=== B1 GATE: 14.86 pts/session over 1012 sessions (expect 14.72) -> PASS [24s]
+   short sleeve: 2225 trades, net $121,454, 6.00 pts/session [24s]
+
+================================================================================================================================
+=== PHASE 1: the short sleeve's own consistency ledger (never measured)
+================================================================================================================================
+arm                               day+%  trdD+%  flat%   wk+%  dStrk  wStrk   medWk$   weekly$   top5DD   ulcer   worst$
+P1 LONG (incumbent)                27.6    46.0   40.0   58.3      6      8      455     1,475   14,266   6,183   -7,418
+SHORT sleeve standalone            28.1    42.2   33.5   49.5      7      9        0       371   12,703   6,333   -5,148
+
+   On the 405 sessions P1 is FLAT (40.0 %):
+      the short sleeve trades 330 of them (81.5 %) and wins 44.2 % of those
+      W58's comparison numbers on the same question: axis B 49.4 %, B-MOM 56.9 %, BREADTH01 52.3 %
+   On the 343 sessions BOTH trade, their daily correlation is +0.012
+   Full-sample daily correlation: -0.003 | weekly: +0.158
+
+================================================================================================================================
+=== PHASE 2: the combination, constant total risk, fixed $20,245 drawdown
+================================================================================================================================
+arm                               day+%  trdD+%  flat%   wk+%  dStrk  wStrk   medWk$   weekly$   top5DD   ulcer   worst$
+P1 LONG (incumbent)                27.6    46.0   40.0   58.3      6      8      455     1,475   14,266   6,183   -7,418
+P1 + SHORT w=0.05                  42.3    45.7    7.4   57.8     10      8      583     1,643   15,126   6,348   -8,204
+P1 + SHORT w=0.10                  42.1    45.5    7.4   60.3     10      4      802     1,867   16,462   6,650   -9,249
+P1 + SHORT w=0.15                  42.0    45.4    7.4   60.8     10      4      980     1,936   16,320   6,385   -9,513
+P1 + SHORT w=0.20                  42.6    46.0    7.4   61.8     10      4    1,028     1,814   14,766   5,613   -9,086
+P1 + SHORT w=0.25                  43.1    46.5    7.4   61.8      9      4    1,025     1,701   13,446   5,040   -8,861
+P1 + SHORT w=0.30                  43.6    47.1    7.4   63.7      9      4      959     1,582   12,159   4,619   -8,579
+P1 + SHORT w=0.35                  44.2    47.7    7.4   62.3      9      4      780     1,457   11,249   4,352   -8,227
+P1 + SHORT w=0.40                  44.0    47.5    7.4   63.2      9      4      822     1,344   11,090   4,260   -7,910
+P1 + SHORT w=0.45                  43.7    47.2    7.4   63.7      8      3      740     1,242   11,082   4,284   -7,623
+P1 + SHORT w=0.50                  44.0    47.5    7.4   65.2     10      3      731     1,149   11,112   4,361   -7,362
+P1 + SHORT w=0.55                  43.9    47.4    7.4   63.2     10      5      724     1,059   11,119   4,481   -7,088
+P1 + SHORT w=0.60                  44.0    47.5    7.4   61.8     10      5      760       956   11,135   4,609   -6,689
+
+================================================================================================================================
+=== PHASE 3: sub-period stability. Every W60 arm scored 0 % on 'all three'.
+================================================================================================================================
+arm                       windows   trdD+% wins   weekly$ wins   top5DD wins   ALL THREE
+P1 + SHORT w=0.10              22           36%           100%           23%          0%
+P1 + SHORT w=0.20              22           64%            95%           18%         14%
+P1 + SHORT w=0.30              22          100%            95%            9%          5%
+P1 + SHORT w=0.40              22          100%            95%            9%          5%
+P1 + SHORT w=0.50              22           95%            95%            5%          0%
+
+   the SHORT SLEEVE'S OWN rolling record - the test that caught axis B at the 97th
+   percentile of its own history and B-MOM at the 98th:
+      22 windows | 100.0 % positive | median t +2.13 | latest t +1.44 at the 0th percentile of its own history
+
+   per year (short sleeve standalone, pts/session):
+      2022: +10.11  2023: +2.76  2024: +13.92  2025: +6.05  2026: -10.62
+
+================================================================================================================================
+=== PHASE 4: nulls (scan-matched; every draw takes its own best weight)
+================================================================================================================================
+metric                  real     N1 mean      N1 p95  percentile   verdict
+weekly $            1,936.24    1,767.40    2,319.12       75.3%      fail
+traded-day %           45.36       45.80       47.41       32.3%      fail
+week + %               60.78       59.79       62.25       71.7%      fail
+
+   N1 keeps the short sleeve's mean and vol and destroys only its ALIGNMENT with P1.
+   A pass says it earns WHEN P1 DOES NOT; a fail says it just earns.
+
+=== STATUS: nothing adopted. ===
