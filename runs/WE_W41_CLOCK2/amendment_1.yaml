@@ -1,0 +1,50 @@
+amendment: 1
+run_id: WE_W41_CLOCK2
+date: 2026-08-25
+status: appended AFTER read 1; read 1 stands unchanged in out/clock2.txt
+
+what read 1 established - W32 IS OVERTURNED ON THE TRUE ENGINE:
+  B1c PASSED: the clock harness at k = 1 reproduces the incumbent vote BAR FOR BAR. That is
+    precisely the check W32 lacked, and its absence is why W32's verdict was provisional.
+  Coarser clocks are NOT catastrophic on the real object. W32's simplified engine scored
+    3.84 (3-min) against its own 4.85 (1-min); the TRUE engine scores 9.40 against 10.62, and
+    the per-trade economics move the other way entirely: $170.8/trade on the 3-min clock and
+    $236.5 on the range clock against $103.9 on 1-min. W32's "coarser clocks are worse"
+    survives only as "coarser clocks produce slightly less per session", not as a rejection.
+  AND THE MEASUREMENT W32 NEVER MADE: the clock sleeves are genuinely decorrelated from the
+    long quality object - weekly P&L correlation 0.32 (range), 0.44 (volume), 0.47-0.48
+    (3-min), against 0.89 for the 1-min base object; and INSIDE the long object's worst-decile
+    weeks 0.02 (3-min sigma=460), 0.12 (3-min), 0.16 (range), 0.22 (volume).
+  All four clear BOTH nulls at the 100th percentile (one at the 99th).
+  At w = 0.05 several clocks give a FOUR-WAY improvement at constant total exposure - e.g.
+    range: eff 0.198 -> 0.207, CVaR-eff 0.272 -> 0.283, Sharpe 0.311 -> 0.318 and the worst
+    week -$7,418 -> -$7,080, for 0.4 % less money.
+
+mechanism (INFERENCE, and it follows from an established prior rather than being invented):
+  W31 established that the edge lives in the FLIP EVENT, not the trend state. A different bar
+  clock is therefore not a smoothed version of the same signal - it is a DIFFERENT EVENT
+  GENERATOR, because the anchor updates at different times and the threshold is crossed at
+  different places. That is why the same rule on a different sampling produces weekly P&L
+  correlated only 0.32-0.48 with the 1-min version. This is SAMPLING diversification, not
+  model diversification: every clock is still the same Solar ratchet, and a decay in the
+  ratchet would still take all of them.
+
+what this amendment adds, before anything is adopted:
+  Y  PER-YEAR re-measurement of every clock sleeve. This is standing policy since W40
+     amendment 2, where an arm that cleared five preregistered conditions was withdrawn on
+     exactly this test. Read 1's numbers are full-window only.
+  C  the full weekly-P&L CORRELATION MATRIX among the clocks themselves - read 1 measured each
+     clock against the long object but never against each other, so it cannot yet say whether
+     a BASKET of clocks beats any single one.
+  K  BASKETS: long + {3-min}, {range}, {volume}, {3-min+range}, {3-min+volume+range},
+     {all four}, at w = 0.03 / 0.05 / 0.08 each, always at constant total exposure.
+  N  a binding count-matched null on the best basket, in which every clock sleeve is replaced
+     by a random sleeve with the same trade count and the same median holding time.
+
+adoption: a basket is adopted only if it improves BOTH eff and CVaR-efficiency on the FULL
+  window, is not negative in more than one year, and clears the count-matched null at >= 95th.
+falsifier: if the per-year read shows the clock advantage confined to one or two years, the
+  clocks join axis B as parked candidates and the honest statement becomes that no
+  diversification of any kind has survived a per-year test in this campaign.
+forbidden: [adopting on the full-window read alone, matching exposure in anything but
+  time-weighted contract-minutes, describing sampling diversification as model diversification]

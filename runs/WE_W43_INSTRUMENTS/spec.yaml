@@ -1,0 +1,73 @@
+run_id: WE_W43_INSTRUMENTS
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner charter of 2026-08-25, wave W43 (portfolio / sleeve interaction) - "do not
+  confuse multiple variants of one ratchet with true diversification"; and the owner's
+  standing rule that a defended prior may be reopened when the earlier harness was defective.
+
+the prior being reopened, and why this is not a rerun: >
+  W11 ran the NQ engine on ES, RTY and YM and it lost on all three (-$30k / -$16k / -$28k),
+  and the campaign has since quoted "our edge is NQ-specific". That test TRANSPLANTED NQ's
+  parameters, and two of them are not dimensionless:
+    * the reversal threshold is clamped to [40, 1200] TICKS. In relative terms that is
+      [0.05 %, 1.5 %] of price on NQ, [0.18 %, 5.5 %] on ES and RTY, [0.09 %, 2.7 %] on YM -
+      up to 3.6x different. The clamp was doing a completely different job on each instrument.
+    * the session box is -$1,300 / +$1,000 in DOLLARS, against point values of $20 (NQ),
+      $50 (ES), $50 (RTY) and $5 (YM) - so the same box is a wildly different fraction of each
+      instrument's own session dispersion.
+  W11 therefore does not establish "the edge is NQ-specific". It establishes "NQ's
+  tick-denominated and dollar-denominated constants do not transplant", which is a much weaker
+  and rather unsurprising claim. This wave re-derives both quantities in the instrument's OWN
+  units and re-asks the question properly.
+
+why it matters more than another NQ rule: >
+  After W38-W42 every lever inside NQ 1-minute bars is at its frontier (short side closed,
+  feature mining closed, four non-ratchet mechanisms closed, exit engineering closed). The
+  owner's target needs profit per unit of tail to roughly triple, and only diversification can
+  deliver that. Four index futures running the SAME rule fire their flip EVENTS at different
+  times even though their prices are ~0.9 correlated - the correlation that matters is between
+  P&L streams, not between price series, and it has never been measured for this object.
+
+construction (declared):
+  dimensionless and unchanged: VolMult set, sigma window (460 bars), vote threshold 0.5,
+    range throttle q = 0.8, delta gate, the causal quality score and its majority-of-five rule.
+  re-derived per instrument, from that instrument's own data only:
+    S clamp - NQ's [40, 1200] ticks is converted to a multiple of NQ's own median sigma, and
+      the SAME multiple is applied to each instrument's median sigma.
+    session box - NQ's -$1,300 / +$1,000 is converted to a fraction of NQ's median session
+      dollar range for one contract, and the SAME fraction is applied to each instrument.
+    Both are derived transforms of the incumbent constants, not new free parameters, and both
+    use only the instrument's own history.
+  frictions: $4.36/RT base and $14.36/RT stress on every instrument.
+  window 2022-07-01 -> 2026-08-01. No data >= 2026-08-01.
+
+arms:
+  I0 NQ incumbent (B1: must reproduce 14.72 pts/session)
+  I1 ES, I2 RTY, I3 YM - the same object with the two re-derived quantities
+  I4 the W11 TRANSPLANT repeated on each, as the explicit control, so the size of the
+     re-derivation effect is visible rather than asserted
+  P1 EQUAL-RISK BASKET - each sleeve scaled to the same weekly P&L standard deviation, versus
+     NQ alone scaled to the SAME TOTAL weekly standard deviation. Cross-instrument exposure
+     cannot be matched in contracts (different notionals), so risk parity by weekly sigma is
+     the exposure-neutral unit here, and it is stated before any result.
+  P2 the same basket restricted to whichever instruments are stress-net positive standalone.
+
+measurements (every instrument, profitable or not):
+  standalone pts/session, $/trade, weekly, worst week, CVaR5, Sharpe, stress-net, per year;
+  the full weekly-P&L CORRELATION MATRIX; and each instrument's correlation with NQ INSIDE
+  NQ's worst-decile weeks - the number that decides whether a sleeve is diversification or
+  decoration (W40's lesson).
+
+adoption: an instrument joins the basket only if stress-net > 0 standalone AND its correlation
+  with NQ inside NQ's worst-decile weeks is < 0.7 AND the equal-risk basket beats NQ-alone at
+  the same total weekly sigma on eff AND CVaR-efficiency AND the improvement is not confined to
+  one year. A binding count-matched null on the basket.
+falsifier: if the re-derived engine still loses on all three, then W11's conclusion holds FOR
+  THE RIGHT REASON and "the edge is NQ-specific" becomes a supported claim rather than an
+  artifact of a bad transplant - which is itself worth having, because it closes the last
+  cheap route to diversification and leaves only paid information (VWAP Flux) and an
+  independent-implementation check.
+forbidden: [data >= 2026-08-01, transplanting NQ constants into an adopted arm, matching
+  exposure in contracts across instruments, adopting without the drawdown-conditional
+  correlation, describing a negative as permanent]
+outputs: [out/instruments.txt, out/corr.csv, out/summary.csv, REPORT.md]
