@@ -1,0 +1,90 @@
+run_id: WE_W38_SHORTQ
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: improvement-queue item 1 (THE_STRATEGY.md §7.1), self-directed.
+
+question: >
+  The short sleeve is insurance, not production (Sharpe 0.162 with the box vs 0.305 long).
+  W35's only attempt at short quality sizing MIRRORED the long score (every directional
+  feature sign-flipped) and produced +15 % production with a WORSE tail. Mirroring assumes the
+  short side is the long side reflected, which is exactly what NQ's upward drift makes false.
+  This wave asks two questions that mirroring conflates:
+    Q1 (SCORE)  - does a SHORT-SPECIFIC score, whose features and feature SIGNS are chosen by
+                  the data on the short entries themselves, grade short flips the way the long
+                  score grades long flips?
+    Q2 (REGIME) - or is the short side's problem not gradeable flip quality at all, but a
+                  drift tax concentrated in particular hours/regimes, in which case the fix is
+                  a restriction, not a score?
+  Q2 is preregistered here precisely so that a Q1 failure is not silently reinterpreted.
+
+data: NQ 1-min, 2022-01-01 load / 2022-07-01 -> 2026-08-01 measurement window. No data
+  >= 2026-08-01 (LOCKED_FORWARD seal).
+
+sample split (binding, declared before any result is read):
+  SEL  = 2022-07-01 -> 2024-07-01   (feature screen, sign choice, hour restriction derived here)
+  EVAL = 2024-07-01 -> 2026-08-01   (the ONLY numbers that may be quoted as honest)
+  Full-window numbers are printed but are labelled selection-contaminated and may not be
+  quoted as evidence.
+
+base object (unchanged): short vote >= 0.5 over the same 32 members (short_vote), session box
+  halt -$1,300 / target +$1,000, 1 contract. Fills at the next bar's open; every feature is
+  lagged to decision-bar information only.
+
+candidate feature pool (16, all causal; each screened at BOTH signs so the data picks the
+  direction rather than a mirror assumption):
+  dist_open, dist_vwap, prev_ret, runlen, delta_mag, delta_signed, ratio, atr_rel,
+  gap_prev_close, mom60, sess_extension, bars_since_open, hour_sin, hour_cos, prev_range_rel,
+  upvol_share
+  EXCLUDED BY PRINCIPLE: the vote fraction and anything else the object already trades on
+  (W06/W10/W22 leverage law).
+
+screen protocol (SEL window only):
+  for each candidate x sign: split the SEL short entries at the 2/3 quantile of the signed
+  feature; effect = mean per-trade P&L(favourable) - mean(rest); Welch t.
+  ADMIT iff |t| >= 2.0 on SEL AND the effect keeps its sign in BOTH halves of SEL.
+  The admitted set defines the score; k = majority of the admitted count (derived, not chosen),
+  exactly as W37 derived k = 3 from five features.
+
+arms (short sleeve, EVAL window unless stated):
+  S0 BASE            : short vote + box, size 1                       (reference)
+  S1 MIRROR          : W35's mirrored long score, causal quantiles     (reference - the thing
+                       being replaced; if S1 >= S2 the mirror was fine and Q1 is answered NO)
+  S2 SHORT-SPECIFIC  : screened score, trailing-250-entry causal quantiles, size 2 when
+                       score >= majority
+  S3 REGIME          : Q2. Hour buckets whose SEL mean per-trade P&L is negative are blocked;
+                       the blocked set is derived on SEL and applied unchanged on EVAL
+  S4 S2+S3           : both, if either passes on its own
+  C1 COMBINED        : long P2 (causal quality + causal cut) + the best passing short arm,
+                       reported as one portfolio (weekly mean, worst week, Sharpe, exposure)
+
+adoption (all conditions, on EVAL):
+  pts/session > S0 AND weekly-mean / |worst week| >= S0 AND worst week >= S0 x 1.02
+  AND stress-net (at $14.36/RT) > 0 AND circular-shift null percentile >= 95.
+  Sharpe reported alongside; per W36 it is not the sole gate.
+
+priors under challenge (owner standing instruction 2026-08-25: the mechanism laws are CURRENT
+  DEFENDED PRIORS, not truth; reopening is allowed when a new mechanism, a new data
+  representation, a new combination form or a stronger preregistered falsifier can genuinely
+  challenge them - but not by rerunning an old experiment unchanged):
+  - "long-only" (4 replications, W16/W17/W19/W20) is challenged here by a NEW mechanism, not a
+    rerun: every previous short test used the LONG side's feature signs. If S2 passes its null
+    on EVAL, "shorts earn a third of the long rate" is demoted to "shorts were being graded
+    with the wrong instrument".
+  - "the quiet regime is defence-only" is NOT re-tested here; nothing in this wave adds
+    entries in the quiet regime.
+  - "sizing on new information is edge" is being tested for the SECOND direction; a failure on
+    the short side narrows the law from "the score grades flips" to "the score grades LONG
+    flips", which is a real and reportable weakening.
+
+falsifier: if no short arm passes on EVAL, the recorded conclusion is that the short sleeve is
+  NOT improvable by grading flip quality, the mirror score is withdrawn rather than replaced,
+  and the short sleeve stays insurance-only at size 1. That result is written to
+  PARKED_NOT_DEAD.md with its revival condition.
+
+harness check (B1, mandatory since W32): the long P2 path must reproduce W37's causal numbers
+  (13.50 pts/session, Sharpe 0.291) before any short number is read. FAIL -> whole run VOID.
+
+forbidden: [data >= 2026-08-01, fill-bar information, full-sample quantiles in any adopted arm,
+  quoting SEL or full-window numbers as out-of-sample, adopting without the null,
+  re-screening features after seeing EVAL]
+outputs: [out/shortq.txt, out/screen.csv, out/summary.csv, REPORT.md]
