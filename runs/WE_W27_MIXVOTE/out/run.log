@@ -1,0 +1,28 @@
+voters ready: 32 solar + 6 non-solar [148s]
+=== A MIXED-MODEL VOTE (same 1 contract, session box -1300/+1000) ===
+vote                          vtrs      n   wkMean  wkPos%   dPos%     worst    shrp   solar%
+PURE SOLAR (32)                 32   2334    1,060    59.1    46.1    -7,487   0.305    100.0
+V_ALL (32 + 6)                  38   3134      738    55.9    44.3    -6,333   0.240     90.0
+V_PROFITABLE (32 + 4)           36   2562      760    54.2    44.0    -7,160   0.231     90.6
+V_HALF (16 + 6, balanced)       22   2937      732    57.4    43.0    -6,383   0.244     82.1
+
+=== B SESSION-TARGET NULL (binding, 100 circular shifts of the mechanism) ===
+   target nulls 25/100 [164s]
+   target nulls 50/100 [177s]
+   target nulls 75/100 [190s]
+   target nulls 100/100 [203s]
+target gain on the real path +0.032 (0.273 -> 0.305); null gains: mean -0.005, p95 +0.041
+percentile 88.0, p 0.120 -> weak
+
+=== C SESSION BOX ON S1 ===
+variant                          wkMean  wkPos%     worst    shrp
+S1 raw                            1,388    54.1   -20,957   0.172
+S1 box -1300/+1000                  279    47.5   -10,789   0.068
+S1 halt -1300                       433    46.6   -10,789   0.072
+S1 target +1000                     852    56.1   -20,957   0.141
+
+=== D BEST OBJECT ===
+portfolio                                wkMean  wkPos%   dPos%     worst    shrp
+E5box + S1raw + shortbox                  3,030    64.9    52.7   -23,374   0.285
+E5box + S1box + shortbox                  1,920    56.1    48.6   -16,682   0.275
+done [346s]
