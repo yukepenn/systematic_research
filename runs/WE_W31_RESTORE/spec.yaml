@@ -1,0 +1,43 @@
+run_id: WE_W31_RESTORE
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "我们repo里面还有那么多research以及strategy不能借鉴学习的吗" (mined by the
+  we-mine-repo workflow, 2026-08-25) + W30's closing question.
+
+the defect (found by mining our own repo, confirmed by measurement): >
+  research/weekly_edge/src/run_we_w01.py:194-198 - at every session end sm14_1m zeroes
+  m_pos/m_pend for all members but does NOT reset m_up/m_anchor. The from-flat entry rule
+  (lines 152-161) only takes a position when m_sig != 0, i.e. on a FRESH Type-1 flip. A member
+  that is mid-up-leg at 17:00 ET is therefore flat for the remainder of that leg - possibly
+  days. Measured on our own substrate: members are in an UP leg on 56.0-59.5 % of bars but
+  LONG on only 17.7-26.1 %; at the ensemble level >=50 % of members are UP on 64.31 % of bars
+  while >=50 % are LONG on only 21.93 %.
+  This is the mechanical cause of W30 Q2's "95.5 % of absent bars = vote below 0.5", and those
+  are HIGH-agreement bars, not the unprofitable 0.3-0.5 band W22 already rejected.
+prior evidence (campaign #1, runs/OTR_S1_ARBITRATION/out/scorecard.csv): admitting Type-3
+  ("strengthen") entries alongside Type-1 gave 4,143 vs 2,915 trades (+42 %) at UNCHANGED
+  per-trade expectancy ($55.88 vs $54.49) and unchanged PF (1.1502 vs 1.1444); net $231,530
+  vs $158,845. Campaign #1's DM01 records that immediate-restore arms were deliberately never run.
+
+arms (all long-only, 1 contract, the audited wrapper: range throttle q=0.8, delta gate,
+  session box halt -$1,300 / target +$1,000; fills next-open, session-flat):
+  R0 BASELINE   : current behaviour (flat at session end, wait for a fresh flip)
+  R1 RESTORE    : at the first decision bar of each session, a member whose ratchet is in an
+                  UP leg re-arms LONG immediately
+  R2 RESTORE_CONF: as R1 but the member must ALSO be above its own trailing anchor-minus-S
+                  exit line at that bar (i.e. the leg is still valid, not merely un-flipped)
+  R3 TYPE3      : keep R0 session behaviour but admit intra-session Type-3 STRENGTHEN pulses
+                  (solarwave.py TRADE_STRENGTHEN) as additional entries
+  R4 R1+R3      : both
+readouts (primary = production): pts/session, % bars in position, pts per bar-in-position,
+  trades/week, $/trade; guards: weekly Sharpe, % positive weeks, worst week, stress net.
+adoption: an arm is ADOPTED if pts/session rises AND pts-per-bar-in-position does not fall by
+  more than 15 % AND weekly Sharpe does not fall AND stress stays positive.
+null: the adopted arm gets 100 circular shifts of its position path before it is believed,
+  same protocol as W21/W28. Binding.
+falsifier: if restoring exposure raises time-in-market but per-bar density collapses, then the
+  absent bars are absent for a reason and W30's "absence is protective" reading extends to the
+  high-agreement bars too.
+forbidden: [data >= 2026-08-01, fill-bar information, adopting without the null, changing any
+  other parameter in the same wave]
+outputs: [out/restore.txt, out/summary.csv, REPORT.md]
