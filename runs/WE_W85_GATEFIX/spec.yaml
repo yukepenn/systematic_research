@@ -1,0 +1,84 @@
+run_id: WE_W85_GATEFIX
+title: "The rolling gate I used in W78-W84 has no power. Fix it, prove the fix with an oracle
+        battery, and re-adjudicate every verdict that depended on it."
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+the_defect_found_by_an_independent_11_agent_adversarial_audit_and_re_derived_by_me: >
+  Every rolling verdict in W78, W79, W80, W83 and W84 used three legs:
+      x1: weekly_dd = mean(weekly) * DD_TARGET / maxdd     (higher better)
+      x2: positive-week %                                   (higher better)
+      x3: dd5      = mean_top5_drawdown * DD_TARGET / maxdd (lower better)
+  Both x1 and x3 divide by the SAME window-realised maximum drawdown. So x3 is not a drawdown
+  LEVEL at all - it is the SHAPE RATIO top5/maxdd. An object whose drawdowns are uniformly
+  smaller has the same ratio and earns no credit; an object handed free money that REDUCES its
+  maximum drawdown scores WORSE on x3, because maxdd falls faster than top5.
+
+  I ran the oracle battery myself before writing this spec:
+    * "P1 + $200 free money EVERY session" (strictly more money, strictly smaller drawdowns):
+          money-leg 100 %, positive-week leg 100 %, **dd5 leg 0 %, ALL THREE 0 %**
+          - while its RAW maximum drawdown is genuinely better in **100 % of the 25 windows**.
+    * "P1 with every losing session halved" (strictly dominant): **ALL THREE 20 %**.
+  A gate that scores a strictly dominant object at 0-20 % cannot be used to reject anything.
+
+what_this_invalidates: >
+  The rolling ALL-THREE verdicts in W78 (pair, 12 %), W79 (clique, 0 %), W80 (X9a, 0 %),
+  W83 (six sizing arms, 0-24 %) and W84 (Q3, 0 %) - and the meta-finding built on them, that
+  "seven consecutive objects failed sub-period testing, always on the drawdown sub-metric".
+  That meta-finding then reordered W80's phases and was written into STATE_OF_THE_SYSTEM.md and
+  into the campaign memory as a standing prior. It has to be retracted and re-measured.
+  It does NOT invalidate: the nulls (W78's 98th-percentile drawdown specificity, W79's generic
+  result, W84's generic result), the walk-forwards, the per-year tables, or any full-sample panel.
+
+the_corrected_gate:
+  x1: "weekly $ at a fixed $20,245 drawdown - UNCHANGED. This is a legitimate risk-adjusted money
+       metric and it is not the defective leg."
+  x2: "positive-week % - UNCHANGED."
+  x3: "RAW mean top-5 drawdown at matched NOMINAL exposure, lower better. All objects compared
+       here are built at ~1 unit of nominal exposure by construction, so a raw comparison is
+       meaningful; where it is not, exposure in contract-minutes is reported alongside."
+  power_check_is_mandatory_and_runs_FIRST: >
+    the same oracle battery is run against the CORRECTED gate before any object is scored with
+    it. If the corrected gate does not pass all three oracles at a high rate, it is also broken
+    and no verdict is issued. This check should have existed before the gate was ever used and is
+    now a standing requirement for any preregistered gate in this campaign.
+
+objects_re_adjudicated:
+  - "W78: P1 + SHORT at w = 0.30 (and the tradeable 2:1)"
+  - "W79: the clique {AXISB, BMOM, X9a}, equal and inverse-vol"
+  - "W80: X9a as an alternative to P1"
+  - "W83/W84: the sizing arms Q1 (layer off), Q3 (score>=4), Q4 (size 3)"
+  all at the measured $14.65/RT friction from W82 and at commission-only, both reported.
+
+preregistered_decision_rule:
+  this_wave_issues_no_promotion: >
+    it re-issues VERDICTS on the corrected gate. Any object that now passes goes to a fresh
+    champion-vs-challenger with its own null and walk-forward - it is NOT promoted on a
+    re-scored gate, because the gate is the thing that was wrong and a reversal produced by
+    fixing my own error deserves more scrutiny, not less.
+  the_meta_finding: >
+    is retracted unconditionally. Whatever the corrected numbers say replaces it, including if
+    they say the same thing.
+  what_would_be_worst: >
+    if objects I reported as failures now pass, the campaign spent this session rejecting
+    candidates with a broken instrument. That would be the single largest error of the campaign
+    and it will be stated in those words.
+
+two_further_confirmed_defects_recorded_here_and_corrected_separately:
+  W76_window_was_not_virgin: >
+    CONFIRMED BY ME. `run_we_w01.py`'s own docstring reads "Dev 2022-01-02 18:00 -> 2026-05-29
+    17:00; holdout 2026-05-31 -> 07-31, read once at the end", and `runs/WE_W01_SLEEVE_MAP/
+    REPORT.md:38-39` declares S4/SM14 "the best object in the library" explicitly on holdout
+    grounds. `out/summary.csv` shows the vol_period choice separating ONLY there: vp460 and
+    vp1380 TIE on dev Sharpe (0.160/0.160) with vp1380 AHEAD on dev total ($303,386 vs $265,401),
+    while on the 9 holdout weeks vp460 wins ($79,524 / 77.8 % vs $64,746 / 66.7 %). The campaign
+    uses vp460 everywhere. **W76's claim that the window was never "fitted, selected, tuned,
+    screened or even LOOKED AT" is FALSE, and "P1's first genuine forward test" is FALSE.** The
+    measurement stands; the label does not. My failure was checking that the DATA was unsealed
+    without checking whether the WINDOW had been read - method rule 26 exactly.
+  W74_K_ceiling_overstated: >
+    CONFIRMED BY ME. `run_we_w74b.py` ran K only to 24 and printed "> 24 (or never)". Extending
+    it: at rho = 0.2, K = 60 reaches 76.2 % and the ceiling is ~77.2 %. The published claim
+    "unreachable at rho >= 0.2 at ANY K" is wrong. Correct statement: ~6 at rho = 0, ~9-10 at
+    rho = 0.1, **~60 at rho = 0.2**, and genuinely unreachable at rho >= 0.3 (ceiling ~71.3 %).
