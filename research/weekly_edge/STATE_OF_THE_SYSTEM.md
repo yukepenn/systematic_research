@@ -49,6 +49,22 @@
 > forward test" are **FALSE**. The −22.49 pts/session measurement stands; the label does not.
 > 2026-05-31 → 07-31 is **BURNED**.
 >
+> ### 4. W77's "THE VIOLENT 20 % CARRY 72 % OF THE NET" IS WITHDRAWN (5th outcome-conditioning casualty)
+> `run_we_w77.py:85` sorted the decile table by `X["ratio"][en[s]]` — the session's **own complete
+> realised range**. Same P&L, three sort keys:
+>
+> | sort key | top-2 deciles | bottom-2 deciles |
+> |---|---|---|
+> | **TERMINAL (as run)** | **72.0 %** | −18.5 % |
+> | **PREVIOUS session (causal)** | **15.8 %** | 17.8 % |
+> | TRAILING-5 (causal) | 28.4 % | 28.6 % |
+>
+> With a key knowable before the session opens there is **no volatility concentration at all**.
+> **The wave's VERDICT stands** — all ten arms used causal keys and failed independently.
+> Corrected statement: *sessions that turn out large carry the P&L (near-tautological for a trend
+> harvester) and cannot be identified in advance*. **A SORT KEY IS A GATE**: any bucketed table
+> must use a variable available at the decision point.
+>
 > ### 3. W74's "UNREACHABLE AT ρ ≥ 0.2 AT ANY K" IS FALSE.
 > `run_we_w74b.py` ran K only to 24. Extended: ρ = 0.2 reaches **76.2 % at K = 60**, ceiling
 > ~77.2 %. Correct: **≈6 at ρ = 0, ~9–10 at ρ = 0.1, ~60 at ρ = 0.2, unreachable at ρ ≥ 0.3**.
