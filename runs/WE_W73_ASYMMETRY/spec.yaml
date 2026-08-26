@@ -1,0 +1,108 @@
+run_id: WE_W73_ASYMMETRY
+title: "Why the short side loses: is it the DRIFT, or is the ratchet's single sigma the wrong
+        scale for down-legs?"
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+owner_question: >
+  "很明显nq有很多东西，为什么我们不能从short收益" and "我们好多好多市场movement都没抓住，为什么".
+
+what_the_record_already_says: >
+  W38: the mirrored short score FAILS out of sample (efficiency 0.079 -> 0.066) and adding the
+  short sleeve at matched exposure is worse than running the long object larger.
+  W39: dropped the short sleeve on an efficiency criterion the owner has since demoted.
+  W61: reopened it. Standalone 6.00 pts/session, 2,225 trades, daily rho with P1 = -0.003 (the
+  best decoupling in the repo), trades 81.5 % of the sessions P1 sits out, and at w = 0.30 buys
+  +5.4 pp positive weeks, halves the longest weekly losing streak 8 -> 4 and doubles the median
+  week for +7 % money. NOT adopted because its trailing-24-month t sits at the 0th percentile of
+  its own history and 2026 is -10.62 pts/session, its worst year ever.
+  W50: TREND-DOWN sessions are 13.9 % of the sample and cost us -21.89 pts/session; RANGE is
+  27.1 % and costs -4.86; REVERSAL is 26.0 % and we capture 0.17 %.
+
+  So the short side is not untested. What has NEVER been asked is WHY it underperforms.
+  Three explanations are in play and they have completely different consequences:
+    H1 DRIFT      - NQ rose ~45 % across the window. A mirrored trend-follower's short legs are
+                    fighting a positive drift and lose the drift's worth of money regardless of
+                    whether their timing is any good.
+    H2 MIS-SCALED - the Solar ratchet derives ONE sigma from |dClose| over 460 bars and uses it
+                    as the retracement distance S for the up-leg AND the down-leg. If down moves
+                    have a different scale, S is systematically wrong for one direction, and the
+                    ratchet gives back a different fraction of every down move than of every up
+                    move. This is a property of the INHERITED parameterisation, not of the market
+                    view, and nothing in 72 waves has questioned it.
+    H3 NO EDGE    - there is genuinely nothing to trade short on this instrument at this cadence.
+  H1 and H2 are repairable; H3 is not. They have never been separated.
+
+phase_0_measurement_first:
+  0a_drift_decomposition: >
+    For the long object and for the short sleeve, decompose realised net into
+        net  =  DRIFT COMPONENT  +  TIMING COMPONENT
+    where the drift component is (signed contract-minutes held) x (mean per-minute price change
+    over the same window) x PV, and the timing component is the residual. This says, for the
+    first time, how much of the long object's money is the market rising under it and how much
+    the ratchet actually knows - and whether the short sleeve's timing is good or bad ONCE the
+    drift it is fighting is removed. Reported per year and pooled.
+  0b_ratchet_leg_geometry: >
+    Using the cached per-member state: for UP legs and DOWN legs separately, the distribution of
+    leg duration, maximum favourable excursion, maximum adverse excursion, and THE TERMINAL
+    RETRACEMENT THAT ENDS THE LEG - each in points and as a fraction of the S actually in force.
+    If the single sigma were the right scale for both directions these distributions would
+    coincide.
+  0c_signed_volatility: >
+    sigma_up and sigma_dn (mean |dClose| conditional on sign) over the same 460-bar window, and
+    the same statistic at k = 5, 15, 60 and 460 bar horizons, pooled and per year.
+
+  FALSIFIER, named before running: >
+    if the terminal-retracement/S distributions for up-legs and down-legs agree within 5 % on
+    the median AND the signed-volatility ratio is inside [0.95, 1.05] at every horizon, H2 is
+    FALSIFIED. Phases 1-4 are then reported as a falsification of the mechanism and the arms are
+    NOT tuned around it.
+
+arms:
+  - "S_sym  : the mirrored short sleeve, exactly as W61 built it (the reference)."
+  - "S_sig  : the same, with the engine's new sigma_mode=signed. The 460-bar window is
+              UNCHANGED and the same observations are used; they are only split by sign, so the
+              timescale is held fixed and DIRECTION is the only thing that varies. A new UP leg
+              is stopped by a DOWN move and vice versa, so a leg's retracement scale is taken
+              from the OPPOSITE sign's volatility."
+  - "L_sym  : the long object P1, unchanged (the B1 gate)."
+  - "L_sig  : the long object with signed sigma - the control that says whether the change is a
+              short-side repair or a global re-tuning."
+  - "PAIR   : P1 + the better short arm at w = 0.30, W61's weight, NOT re-tuned."
+
+nulls:
+  - "N_signshuffle: the exact null for H2. Recompute sigma_up/sigma_dn from the SAME |dClose|
+     magnitudes with the signs randomly permuted within the window. Any gain that survives this
+     comes from splitting the sample in two, not from the sign carrying information."
+  - "N1 circular shift of the short sleeve's daily series against P1, as W61 ran it, so the
+     pairing result is comparable to W61's."
+
+preregistered_decision_rule:
+  b1: "L_sym must reproduce 14.72 +- 0.6 pts/session or the wave is VOID."
+  h2_supported: >
+    S_sig beats S_sym on per-trade expectancy AND on pts/session AND exceeds the 95th percentile
+    of N_signshuffle. Then the single sigma is measurably the wrong scale for down-legs and the
+    repair is a parameterisation fix, not a new model.
+  h1_dominant: >
+    if phase 0a shows the short sleeve's TIMING component is positive and of the same order as
+    the long object's, while its total is negative by roughly the drift, then the short side has
+    real timing skill and the deficit is directional. That is recorded as the answer to the
+    owner's question and the follow-up wave is drift-neutralisation, not signal work.
+  recency_gate: >
+    binding regardless of the above: any arm proposed for promotion must be positive over the
+    trailing 24 months and must not be at the bottom of its own rolling history, which is
+    exactly what disqualified the short sleeve in W61.
+  adoption: "NOTHING is adopted in this wave. Phase 0 is the deliverable; the arms are evidence."
+
+traps_named_before_running:
+  - "The drift decomposition is an accounting identity, not a model: the timing component is a
+     RESIDUAL and inherits every error in the drift estimate. It is reported with the drift
+     estimate's own standard error and is never quoted as if it were a fitted alpha."
+  - "sigma_mode=signed changes the engine. The default path has been verified bit-identical
+     against the committed version (0 of 175,403 bars differ) before this wave was written."
+  - "Five arms x several metrics is a scan. The sign-shuffle null is the multiplicity control and
+     no arm is quoted on a single metric."
+  - "W61's revival condition for the short sleeve is a trailing-24-month t back at ~+2.1. If
+     S_sig looks better only because the sigma split happens to suppress 2026's -10.62, that is
+     a per-year artifact and the per-year table will show it."
