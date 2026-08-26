@@ -1,0 +1,65 @@
+run_id: WE_W64_BADYEAR
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: the owner asked whether the system can make $3,000/week STABLY. The arithmetic says
+  the average can, at ~2.6 contracts and a ~$41,000 drawdown, and that ONE YEAR breaks the word
+  "stably". This wave attacks that year. It has never been asked why it was bad.
+
+the number that motivates the wave:
+  P1 per year at ~1.27 time-weighted contracts:
+      2022 $1,024/wk | 2023 $308/wk | 2024 $1,951 | 2025 $2,265 | 2026 $1,521
+  Scaled to the ~2.6 contracts that average $3,000/week, 2023 becomes $626/WEEK FOR A WHOLE
+  YEAR. Everything else about the object is strong - annualised MAR 3.79, positive in 100 % of
+  its 22 rolling 24-month windows - and 2023 is the single fact that makes "stably" false.
+
+what is already known and must not be re-derived:
+  W50 classified sessions into TREND-UP / TREND-DOWN / REVERSAL / RANGE / MIXED and showed the
+  object earns +88.68 pts/session on TREND-UP days (20.9 % of sessions) and gives back on the
+  rest. W58 showed P1 is flat on 40 % of sessions by design. Neither asked what 2023 looked like
+  in those terms. That is a decomposition, not a new hypothesis, and it costs one script.
+
+phase 1 - WHAT 2023 WAS, in the object's own vocabulary (exact accounting, no backtest):
+  a) the session-class mix per year: was 2023 short of TREND-UP days, or were its TREND-UP days
+     smaller, or did the object simply capture less of them?
+  b) the object's capture rate per class per year - so "fewer opportunities" and "worse
+     execution of the same opportunities" are separated rather than conflated.
+  c) exposure per year in contract-minutes, trade count, and flat-session share: did the object
+     stand aside more in 2023, and if so which gate did it (the range throttle, the session box,
+     or simply fewer votes)?
+  d) the per-trade distribution per year: hit rate, mean winner, mean loser, and the share of
+     the year's P&L in its best 5 % of sessions.
+  This produces one sentence: 2023 was bad BECAUSE <x>, where x is one of "fewer trend days",
+  "smaller trend days", "worse capture", or "the object sat out".
+
+phase 2 - WAS IT FORESEEABLE, CAUSALLY?
+  Whatever phase 1 identifies, test whether a CAUSAL trailing measure of it would have been
+  visible during 2023 rather than only afterwards. The honest form is the rolling one: compute
+  the identified variable on a trailing window, and ask how much of 2023 a rule reading it would
+  have seen coming. This campaign has failed at regime identification four times, so the bar
+  is: the variable must be visible in the trailing data DURING the bad stretch, not merely
+  correlated with it after the fact.
+
+phase 3 - DOES IT MATTER, i.e. would knowing have helped?
+  If 2023 was foreseeable, price what standing aside would have been worth ACROSS ALL YEARS -
+  not just in 2023. A rule that avoids the bad year and also avoids two good ones is worse than
+  no rule. Report the all-years effect, the per-year effect, and the leave-one-year-out folds
+  with W63's corrected scoring: a fold in which the rule declines to act is ABSTAINED, not a
+  success.
+
+phase 4 - IF IT WAS NOT FORESEEABLE, price the expectation instead:
+  Then the deliverable is not a rule, it is an honest distribution. Report, from the 204 weeks:
+  the probability of a year at or below 2023's level, the longest losing streak, the
+  distribution of 52-week windows, and what a $3,000/week target implies in worst-case terms.
+  An owner who knows he must survive a $626/week year at 2.6 contracts is better served by that
+  number than by a rule fitted to one observation.
+
+adoption bar: nothing is adopted. A rule from phase 3 is RECOMMENDED only if it improves the
+  all-years result, is positive in a majority of leave-one-year-out folds WHERE IT ACTED, and
+  clears a scan-matched null.
+falsifier: if 2023's weakness is not identifiable in the object's own vocabulary, or is
+  identifiable but not causally visible during the year, the wave delivers phase 4 and records
+  that the bad year is the price of the edge rather than a fixable defect.
+forbidden: [data >= 2026-08-01, fitting a stand-aside threshold on the year it is meant to
+  detect, counting an abstained leave-one-out fold as a success, presenting a rule that works
+  only because 2023 is in the training data, quoting a full-sample average as if it were stable]
+outputs: [out/badyear.txt, out/peryear.csv, out/classmix.csv, out/distribution.csv, REPORT.md]
