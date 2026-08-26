@@ -1,0 +1,19 @@
+arm                   pts/sess   inPos%   pts/bar   tr/wk  $/trade   wkMean  wkPos%     worst   shrp  stress
+R0 baseline              10.62    12.90    0.0603    10.2    103.9    1,060    59.1    -7,487  0.305     958
+   R0 baseline done [149s]
+R1 restore                0.70    20.68    0.0025    17.1      4.0       69    51.2   -12,534  0.018    -102
+   R1 restore done [278s]
+R2 restore+conf           0.70    20.68    0.0025    17.1      4.0       69    51.2   -12,534  0.018    -102
+   R2 restore+conf done [409s]
+R3 type3                  3.93    23.90    0.0120    21.2     18.4      388    50.2   -10,251  0.095     177
+   R3 type3 done [540s]
+R4 restore+type3          3.66    23.95    0.0112    23.2     15.6      361    50.7    -9,504  0.089     130
+   R4 restore+type3 done [671s]
+
+=== ADOPTION (pts/session up, density loss <15%, Sharpe not down, stress>0) ===
+  R1 restore           pts 0.70 vs 10.62 | density 0.0025 vs 0.0603 (4%) | shrp 0.018 vs 0.305 | reject
+  R2 restore+conf      pts 0.70 vs 10.62 | density 0.0025 vs 0.0603 (4%) | shrp 0.018 vs 0.305 | reject
+  R3 type3             pts 3.93 vs 10.62 | density 0.0120 vs 0.0603 (20%) | shrp 0.095 vs 0.305 | reject
+  R4 restore+type3     pts 3.66 vs 10.62 | density 0.0112 vs 0.0603 (19%) | shrp 0.089 vs 0.305 | reject
+  NONE -> falsifier: the absent bars are absent for a reason.
+done [671s]
