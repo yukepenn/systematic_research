@@ -97,6 +97,40 @@ NinjaTrader would fill at the next session's open. The forced-flat window (−21
 position is normally already closed, so this path should be near-dead — but it is a known,
 disclosed difference rather than an assumed equivalence.
 
+## 5b. FULL-WINDOW END-TO-END CONFIRMATION (2022-01-03 -> 2026-05-29)
+
+NinjaTrader loaded **1,558,498** bars against the Python substrate's 1,558,497 - the same
+continuous series - so the quality layer's trailing-250-entry window is fully warm and the
+sizing layer IS validated here.
+
+| campaign window 2022-07 -> 2026-05 | Python (baseline) | NT8 Strategy Analyzer | delta |
+|---|---|---|---|
+| trades | 1,950 | 1,948 | -2 (-0.1 %) |
+| net | $298,327 | $296,423 | **-0.64 %** |
+| pts/session | 14.72 | 14.63 | -0.6 % |
+| size-2 share | 18.4 % | **20.6 %** | +2.2 pp |
+| weeks | 203 | 203 | - |
+| weekly mean | $1,470 | $1,460 | -0.7 % |
+| weekly std | $4,720 | $4,705 | -0.3 % |
+| **annualised Sharpe** | **2.25** | **2.24** | -0.4 % |
+| positive weeks | 58.6 % | 58.1 % | -0.5 pp |
+| max drawdown | -$22,360 | -$23,649 | +5.8 % |
+| **worst week** | **-$7,418** | **-$8,557** | **+15.4 %** |
+| eff | 0.198 | 0.171 | -13.6 % |
+| **weekly series correlation** | | **0.9752** | |
+
+The only material difference is ONE WEEK. Because eff = weekly mean / |worst week| is a
+SINGLE-OBSERVATION statistic, it inherits that entire difference: eff moves 13.6 % while the
+annualised Sharpe moves 0.4 %. **Method note recorded: eff must always be reported beside
+Sharpe and CVaR-efficiency, because one week can move it by an order of magnitude more than it
+moves any distributional metric.**
+
+The 2 missing trades are the slow-member warm-up: NT8 starts cold on 2022-01-03 and a large
+VolMult member that had not flipped before then carries a sigma-stale threshold for a while.
+
+**The 5-month run's $8,567 gap is now explained and closed** - it was entirely the cold
+quality-sizing window, exactly as disclosed before that run.
+
 ## 6. Status
 The campaign's baseline now exists as a NinjaScript strategy whose **decision series is
 confirmed against the Python object through NinjaTrader's own engine at 99.985 %**. W44's
