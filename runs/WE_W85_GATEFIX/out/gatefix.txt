@@ -1,0 +1,59 @@
+=== 1058 sessions, 213 weeks; 9 objects re-adjudicated [0s]
+
+========================================================================================================================
+=== PHASE 0 (MANDATORY, RUNS FIRST): ORACLE BATTERY. A gate that cannot pass a strictly
+===          dominant object cannot reject anything.
+========================================================================================================================
+oracle                           OLD gate ALL3   CORRECTED ALL3   raw maxDD better
+P1 + $200 every session                     0%             100%               100%
+P1 with every loss halved                  20%             100%               100%
+P1 + $500 every session                     0%             100%               100%
+P1 with losses x0.75                        0%             100%               100%
+
+   OLD gate on strictly-dominant objects: 0-20 %   -> BROKEN
+   CORRECTED gate:                        100-100 %   -> USABLE
+
+========================================================================================================================
+=== PHASE 1: RE-ADJUDICATION at the measured $14.65/RT. OLD vs CORRECTED, side by side.
+========================================================================================================================
+object                       money    wk+%|   OLD dd-leg  OLD ALL3 |   NEW dd-leg  NEW ALL3    verdict change
+W78 pair w=0.30                84%    100%|          12%        0% |         100%       84%  PASS <- was FAIL
+W78 pair 2:1 (w=1/3)           84%    100%|          12%        0% |         100%       84%  PASS <- was FAIL
+W79 clique equal               92%     72%|           4%        0% |         100%       68%  PASS <- was FAIL
+W79 clique inverse-vol         84%     72%|           4%        0% |         100%       68%  PASS <- was FAIL
+W80 X9a                        16%     52%|          64%        0% |          28%        8%        still FAIL
+W83 Q1 layer OFF                4%     64%|          64%        0% |          60%        4%        still FAIL
+W84 Q3 score>=4                 4%     88%|          84%        0% |           8%        0%        still FAIL
+W83 Q4 size 3                 100%     64%|          36%       24% |           0%        0%        still FAIL
+
+========================================================================================================================
+=== PHASE 2: the RAW drawdown numbers the old leg was hiding (full window, $14.65/RT)
+========================================================================================================================
+object                       wk+%  wStrk   weekly$    wk$@DD   RAW top5DD   RAW maxDD   worst wk
+P1 (champion)               52.6%      8     1,152       853       18,458      27,328     -7,581
+W78 pair w=0.30             58.7%      4       946       852       12,188      22,494     -6,476
+W78 pair 2:1 (w=1/3)        59.6%      4       924       818       11,837      22,865     -6,472
+W79 clique equal            56.8%      6       697       824        9,778      17,130     -6,108
+W79 clique inverse-vol      57.7%      5       650       832        9,489      15,815     -5,103
+W80 X9a                     52.1%      8       936       710       17,796      26,717     -8,819
+W83 Q1 layer OFF            54.9%      7       800       716       16,587      22,635     -7,633
+W84 Q3 score>=4             54.0%      9       968       755       18,900      25,950     -8,612
+W83 Q4 size 3               54.0%      8     1,555     1,280       19,487      24,596     -9,353
+
+========================================================================================================================
+=== VERDICT
+========================================================================================================================
+   objects whose verdict CHANGES when the gate is fixed: 4 of 8
+      W78 pair w=0.30            all-three 0 % -> 84 %
+      W78 pair 2:1 (w=1/3)       all-three 0 % -> 84 %
+      W79 clique equal           all-three 0 % -> 68 %
+      W79 clique inverse-vol     all-three 0 % -> 68 %
+
+   -> THIS IS THE LARGEST ERROR OF THE CAMPAIGN: candidates were rejected with a
+      broken instrument. Each flipped object goes to a fresh champion-vs-challenger
+      with its own null and walk-forward. NONE is promoted on this re-score.
+
+   RETRACTED UNCONDITIONALLY: 'seven consecutive objects failed sub-period testing,
+   always on the drawdown sub-metric'. That was the instrument, not the data.
+
+=== STATUS: NOTHING ADOPTED. [0s] ===

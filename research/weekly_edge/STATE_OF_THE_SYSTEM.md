@@ -3,6 +3,63 @@
 
 # STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7)
 
+> ## 🚨 CURRENT TRUTH after W85 (2026-08-26) — CORRECTS THE BLOCK BELOW
+>
+> An independent 11-agent adversarial audit found, and I re-derived, three defects of mine.
+> **Read these before ANY number further down.**
+>
+> ### 1. THE ROLLING GATE USED IN W78–W84 HAS NO POWER. FOUR VERDICTS REVERSE.
+> Its drawdown leg was `top5 × DD_TARGET / maxdd` — a SHAPE RATIO sharing its denominator with
+> the money leg. Oracle battery: **"P1 + $200 free money every session" scores ALL-THREE 0 %**
+> while its raw max drawdown is better in 100 % of windows. Corrected leg (raw top-5 drawdown at
+> matched nominal exposure) scores all four oracles at 100 %.
+>
+> | object | OLD ALL3 | **NEW ALL3** | |
+> |---|---|---|---|
+> | **W78 pair w=0.30** | 0 % | **84 %** | **PASS ← was FAIL** |
+> | **W78 pair 2:1** | 0 % | **84 %** | **PASS ← was FAIL** |
+> | **W79 clique equal** | 0 % | **68 %** | **PASS ← was FAIL** |
+> | **W79 clique inverse-vol** | 0 % | **68 %** | **PASS ← was FAIL** |
+> | X9a · Q1 · Q3 · Q4 | 0–24 % | 0–8 % | still FAIL |
+>
+> What the broken leg hid, at W82's measured $14.65/RT:
+>
+> | | wk+% | streak | wk$@fixed DD | RAW top-5 DD | RAW max DD | worst week |
+> |---|---|---|---|---|---|---|
+> | **P1 (champion)** | 52.6 % | 8 | **$853** | $18,458 | $27,328 | −$7,581 |
+> | **pair w=0.30** | **58.7 %** | **4** | **$852** | **$12,188** | **$22,494** | **−$6,476** |
+> | **clique inverse-vol** | **57.7 %** | **5** | $832 | **$9,489** | **$15,815** | **−$5,103** |
+>
+> **NOTHING IS PROMOTED ON THIS RE-SCORE** — a reversal caused by fixing my own error needs more
+> scrutiny, not less. Both go to fresh champion-vs-challenger waves. W78's walk-forward failure
+> (58 %, w=0.30 chosen 0/12) is independent of the gate but selected `w` on money alone, which is
+> the wrong objective for the owner's stated ordering, and must be re-run.
+>
+> **RETRACTED UNCONDITIONALLY**: *"seven consecutive objects failed sub-period testing, always on
+> the drawdown sub-metric"*. That was the instrument. (The enumeration was also wrong: W40, W41,
+> W74 and W77 have no 24-month test at all.)
+>
+> ### 2. W76'S "NEVER-SEEN" WINDOW WAS NOT VIRGIN.
+> `run_we_w01.py` docstring: *"holdout 2026-05-31 → 07-31, read once at the end"*, and
+> `runs/WE_W01_SLEEVE_MAP/REPORT.md:38` names S4/SM14 *"the best object in the library"* **on
+> holdout grounds**. `summary.csv`: vp460 and vp1380 **tie on dev Sharpe (0.160/0.160)** with
+> vp1380 **ahead** on dev total ($303,386 vs $265,401), and separate **only** on the holdout
+> (vp460 $79,524 / 77.8 % vs $64,746 / 66.7 %). **The campaign uses vp460 everywhere.**
+> W76's "nothing was ever fitted, selected, screened or even LOOKED AT" and "P1's first genuine
+> forward test" are **FALSE**. The −22.49 pts/session measurement stands; the label does not.
+> 2026-05-31 → 07-31 is **BURNED**.
+>
+> ### 3. W74's "UNREACHABLE AT ρ ≥ 0.2 AT ANY K" IS FALSE.
+> `run_we_w74b.py` ran K only to 24. Extended: ρ = 0.2 reaches **76.2 % at K = 60**, ceiling
+> ~77.2 %. Correct: **≈6 at ρ = 0, ~9–10 at ρ = 0.1, ~60 at ρ = 0.2, unreachable at ρ ≥ 0.3**.
+> Also: the census counted DAILY ρ while the K table is built on WEEKLY ρ — the short sleeve is
+> weekly ρ **+0.158**, not −0.003. Every independence census must be recomputed on weekly ρ.
+>
+> ### Still standing after the audit
+> every null (incl. W78's 98th-percentile drawdown specificity), every walk-forward, every
+> per-year table, W82's fill cost, W80's deep-history run, W73's drift decomposition, W77's arms.
+
+
 > ## ⚠️ CURRENT TRUTH after W72–W76 (2026-08-26) — supersedes everything below
 >
 > ### The campaign's problem is now a single number, and it is not a signal problem.
@@ -18,7 +75,7 @@
 > **W74** (`FACT`, bootstrap from P1's own 204 empirical weeks, Gaussian copula, no
 > distributional assumption): **76 % needs SIX genuinely independent streams at our quality; TEN
 > at ρ = 0.1; and at ρ ≥ 0.2 it is unreachable at any K.**
-> **W75** (`FACT`, census of 20 streams on one grid): **K_admissible = 2 — {P1, AXISB}** — stable
+> **W75** (census of 20 streams): ~~K_admissible = 2~~ **CORRECTED TO 1 by W79** (AXISB is 2025-only on the extended window), and the census used DAILY ρ where the K table uses WEEKLY ρ — see the W85 block at the top — stable
 > at ρ < 0.15, 0.20 and 0.25. Only three streams in the whole repo are ρ<0.2 with P1, and two of
 > them (SHORT, S_sig) fail the owner's 2025+2026 recency gate.
 >
