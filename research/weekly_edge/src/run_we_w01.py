@@ -82,7 +82,7 @@ def round_away(x):
 
 def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False,
             volmults=None, entry_level=3.0, exit_level=1.0, tilt_on=True, blocks_on=True,
-            restore=None, type3=False):
+            restore=None, type3=False, smin_pts=None, smax_pts=None, stopm_pts=None):
     """Faithful port of SolarWaveOneContractNQ_v5 decision stack to 1-min bars.
 
     Declared port choices (spec): B-MOM reset at bar-end 09:31, signal cutoff 15:54, flatten
@@ -95,7 +95,12 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
     VOLM = list(volmults) if volmults is not None else \
         [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
     NMEM = len(VOLM)
-    SMIN, SMAX, STOPM = 40 * TICK, 1200 * TICK, 179 * TICK
+    # W43: the clamp is expressed in POINTS so a non-NQ instrument can pass its own
+    # volatility-derived values. Defaults are the incumbent NQ constants, so every existing
+    # caller is bit-identical.
+    SMIN = 40 * TICK if smin_pts is None else float(smin_pts)
+    SMAX = 1200 * TICK if smax_pts is None else float(smax_pts)
+    STOPM = 179 * TICK if stopm_pts is None else float(stopm_pts)
     hm = ((t - t.astype("datetime64[D]")).astype("timedelta64[s]").astype(np.int64))
     hhmmss = (hm // 3600) * 10000 + ((hm // 60) % 60) * 100          # bar-END hhmmss*? end-stamped
 
