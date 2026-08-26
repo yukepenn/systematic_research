@@ -1,0 +1,29 @@
+=== PRE-TEST: mutual correlation at the entry bars (|r|>0.7 would collapse to one) ===
+          F5 dist-open  F11 prior-se  F14 run leng  F4 dist-VWAP  F2 |delta|/v
+F5 dist           1.00          0.05          0.09          0.68          0.29
+F11 pri           0.05          1.00          0.00          0.08          0.04
+F14 run           0.09          0.00          1.00          0.07          0.22
+F4 dist           0.68          0.08          0.07          1.00          0.24
+F2 |del           0.29          0.04          0.22          0.24          1.00
+pairs above |0.7|: none -> all five count separately
+features entering the score: ['F5 dist-open/ATR', 'F11 prior-sess ret', 'F14 run length', 'F4 dist-VWAP/ATR', 'F2 |delta|/vol']
+
+score distribution at entries: 0:470, 1:760, 2:411, 3:308, 4:106, 5:17
+
+arm                             n  avgSz   pts/sess  $/trade   wkMean  wkPos%     worst  sharpe
+S0 base (1 contract)         2072   1.00      10.62    103.9    1,060    59.1    -7,487   0.305
+S1 filter score>=2           3331   1.00       5.32     32.4      534    52.0    -6,141   0.200
+S1 filter score>=3           3359   1.00       2.86     17.2      290    44.5    -5,665   0.123
+S2 size2 @score>=2           1768   1.39      15.08    172.8    1,505    56.7    -8,403   0.306
+S2 size2 @score>=3           1946   1.19      15.86    165.2    1,583    59.6    -7,418   0.331
+S3 size 1/2/3 @3,4           1925   1.24      16.06    169.1    1,603    59.6    -7,596   0.316
+
+=== ADOPTION (filters: pts up & Sharpe not down | sizing: SHARPE MUST RISE) ===
+  S1 filter score>=2         pts 5.32 vs 10.62 | Sharpe 0.200 | reject
+  S1 filter score>=3         pts 2.86 vs 10.62 | Sharpe 0.123 | reject
+  S2 size2 @score>=2         Sharpe 0.306 vs 0.305 | pts 15.08 | worst -8,403 | ADOPT
+  S2 size2 @score>=3         Sharpe 0.331 vs 0.305 | pts 15.86 | worst -7,418 | ADOPT
+  S3 size 1/2/3 @3,4         Sharpe 0.316 vs 0.305 | pts 16.06 | worst -7,596 | ADOPT
+
+=== NULL (binding) on S2 size2 @score>=3: 100 circular shifts of the score ===
+real 0.331 | null mean 0.282 | p95 0.318 | percentile 98.0 | p 0.020 -> EVIDENCE

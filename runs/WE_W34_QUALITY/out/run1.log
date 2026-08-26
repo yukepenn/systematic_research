@@ -1,0 +1,33 @@
+HARNESS: Sharpe 0.305, pts/session 10.62 -> PASS
+=== PRE-TEST: mutual correlation at the entry bars (|r|>0.7 would collapse to one) ===
+          F5 dist-open  F11 prior-se  F14 run leng  F4 dist-VWAP  F2 |delta|/v
+F5 dist           1.00          0.05          0.09          0.68          0.29
+F11 pri           0.05          1.00          0.00          0.08          0.05
+F14 run           0.09          0.00          1.00          0.07          0.21
+F4 dist           0.68          0.08          0.07          1.00          0.24
+F2 |del           0.29          0.05          0.21          0.24          1.00
+pairs above |0.7|: none -> all five count separately
+features entering the score: ['F5 dist-open/ATR', 'F11 prior-sess ret', 'F14 run length', 'F4 dist-VWAP/ATR', 'F2 |delta|/vol']
+
+score distribution at entries: 0:469, 1:757, 2:421, 3:301, 4:107, 5:17
+
+arm                             n  avgSz   pts/sess  $/trade   wkMean  wkPos%     worst  sharpe
+S0 base (1 contract)         2072   1.00      10.62    103.9    1,060    59.1    -7,487   0.305
+S1 filter score>=2           3288   1.00       5.60     34.5      562    54.5    -6,141   0.205
+S1 filter score>=3           3313   1.00       3.13     19.2      317    44.5    -5,509   0.133
+S2 size2 @score>=2           1776   1.40      14.70    167.7    1,467    56.2    -8,403   0.298
+S2 size2 @score>=3           1951   1.19      16.19    168.1    1,616    60.1    -7,418   0.338
+S3 size 1/2/3 @3,4           1927   1.24      16.13    169.6    1,610    59.6    -7,418   0.319
+
+=== ADOPTION (filters: pts up & Sharpe not down | sizing: SHARPE MUST RISE) ===
+  S1 filter score>=2         pts 5.60 vs 10.62 | Sharpe 0.205 | reject
+  S1 filter score>=3         pts 3.13 vs 10.62 | Sharpe 0.133 | reject
+  S2 size2 @score>=2         Sharpe 0.298 vs 0.305 | pts 14.70 | worst -8,403 | reject (leverage)
+  S2 size2 @score>=3         Sharpe 0.338 vs 0.305 | pts 16.19 | worst -7,418 | ADOPT
+  S3 size 1/2/3 @3,4         Sharpe 0.319 vs 0.305 | pts 16.13 | worst -7,418 | ADOPT
+
+=== NULL (binding) on S2 size2 @score>=3: 100 circular shifts of the score ===
+   nulls 50/100 [167s]
+   nulls 100/100 [180s]
+real 0.338 | null mean 0.282 | p95 0.317 | percentile 100.0 | p 0.000 -> EVIDENCE
+done [180s]

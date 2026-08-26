@@ -1,0 +1,15 @@
+amendment: 1
+date: 2026-08-25
+status: LOOK-AHEAD CORRECTION found in mandatory causality review BEFORE the result was
+  written up or promoted. Run 1 preserved as out/run1.log and out/quality_run1.txt.
+finding: >
+  Feature F2 was computed as |cd[i]| / volnorm[i], where cd is the session-anchored cumulative
+  signed volume THROUGH bar i and volnorm is a rolling mean of volume THROUGH bar i. Both
+  therefore contain bar i's own close and volume, while the position they size is filled at
+  bar i's OPEN. One-bar look-ahead, the same defect corrected in W03 amendment 1.
+  F5, F11, F14 and F4 are clean: they use c[i-1], the prior session's return, runlen[i-1] and
+  vwap[i-1] respectively, all with atr[i-1].
+fix: F2 is lagged one bar (both numerator and denominator) and the entire wave re-run. Whatever
+  survives the lag is the finding; whatever evaporates was never real.
+note: run 1 reported S2 size2@score>=3 at Sharpe 0.338 / 16.19 pts-session / null 100th
+  percentile. That number is SUSPENDED until the corrected re-run reproduces it.
