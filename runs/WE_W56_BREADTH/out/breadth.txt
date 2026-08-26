@@ -1,0 +1,110 @@
+=== B1 GATE: 14.86 pts/session over 1012 sessions (expect 14.72) -> PASS [23s]
+   persisted p1_daily.csv (607 sessions, sha 9bc2d7f7000653b4) and axisb_daily.csv (1010 sessions, 4236 trades)
+   B-MOM 5,199 sessions 2006-01-25 -> 2026-05-29 (US$ at 1 NQ, C1 friction) | BREADTH01 5,867 days 2003-02-04 -> 2026-05-29 (daily fractional return)
+
+   INTERSECTION WINDOW 2022-07-05 -> 2026-05-29; P1 loses 0 sessions at the right edge to the sleeves' coverage.
+   204 common weeks
+
+================================================================================================================
+=== PHASE 1: correlation against P1 ITSELF (every published rho was vs E10)
+================================================================================================================
+sleeve        wk mean $   wk sd $  annShrp  rho vs P1  rho in P1 worst decile  rho underwater
+AXISB           324.668 4,208.992     0.56      0.060          -0.205 +- 0.24          -0.006
+BMOM          1,291.374 7,757.720     1.20      0.371          -0.051 +- 0.24          -0.171
+BREADTH           0.000     0.006     0.36      0.129          +0.141 +- 0.24           0.217
+P1                1,475     4,703     2.26      1.000
+
+   The worst-decile column conditions on P1 ALONE being extreme, not on the SUM, so
+   it does not carry the selection artifact I created and caught in W53. But it is
+   20 weeks: SE(rho) ~ 0.24, so none of these is distinguishable from 0.
+
+================================================================================================================
+=== PHASE 2: every portfolio rescaled to P1's own max drawdown ($20,245)
+================================================================================================================
+weekly$ is THE column: how many dollars a week you get for the SAME worst drawdown.
+
+portfolio                        weekly$   wk+%    worst$    top5DD    ulcer  annShrp   cvEff  P1 contracts  sleeve units
+P1 INCUMBENT                       1,475   58.3    -7,418    14,266    6,183     2.26   0.273          1.27             -
+P1 + AXISB w=0.05                  1,506   58.3    -7,130    13,987    6,079     2.28   0.283          1.28          0.06
+P1 + AXISB w=0.10                  1,542   59.3    -7,564    13,689    5,996     2.29   0.293          1.29          0.13
+P1 + AXISB w=0.15                  1,582   57.4    -8,059    13,350    5,941     2.30   0.299          1.31          0.20
+P1 + AXISB w=0.20                  1,629   56.9    -8,628    12,961    5,933     2.30   0.296          1.32          0.29
+P1 + AXISB w=0.25                  1,677   57.8    -9,252    13,435    6,016     2.28   0.282          1.33          0.39
+P1 + AXISB w=0.30                  1,713   59.3    -9,869    14,751    6,274     2.25   0.259          1.33          0.50
+P1 + AXISB w=0.35                  1,705   58.3   -10,552    15,942    6,650     2.20   0.238          1.30          0.61
+P1 + AXISB w=0.40                  1,613   57.8   -10,849    16,643    7,013     2.13   0.217          1.19          0.70
+P1 + AXISB w=0.45                  1,502   59.8   -10,998    17,113    7,359     2.04   0.195          1.08          0.78
+P1 + AXISB w=0.50                  1,394   59.8   -11,143    17,569    7,804     1.93   0.174          0.96          0.85
+P1 + AXISB w=0.55                  1,290   57.8   -11,283    18,254    8,329     1.81   0.155          0.85          0.92
+P1 + AXISB w=0.60                  1,051   56.4   -10,094    17,207    7,951     1.67   0.137          0.66          0.87
+
+P1 + BMOM w=0.05                   1,543   59.8    -7,421    14,087    6,094     2.28   0.285          1.29          0.03
+P1 + BMOM w=0.10                   1,623   60.3    -7,426    13,930    6,017     2.29   0.294          1.32          0.07
+P1 + BMOM w=0.15                   1,716   60.8    -7,646    13,746    5,954     2.29   0.298          1.35          0.11
+P1 + BMOM w=0.20                   1,826   59.8    -8,056    13,528    5,917     2.29   0.299          1.39          0.17
+P1 + BMOM w=0.25                   1,958   59.8    -8,549    13,690    5,946     2.28   0.295          1.43          0.23
+P1 + BMOM w=0.30                   2,114   59.3   -10,084    14,178    6,071     2.26   0.290          1.48          0.30
+P1 + BMOM w=0.35                   2,218   59.8   -11,867    15,000    6,086     2.24   0.279          1.49          0.38
+P1 + BMOM w=0.40                   2,310   59.8   -13,780    16,182    6,163     2.20   0.266          1.47          0.47
+P1 + BMOM w=0.45                   2,289   58.8   -15,142    16,810    6,043     2.15   0.249          1.37          0.54
+P1 + BMOM w=0.50                   2,183   59.3   -15,948    16,968    5,818     2.09   0.232          1.23          0.59
+P1 + BMOM w=0.55                   2,080   58.8   -16,727    17,146    5,762     2.02   0.214          1.09          0.63
+P1 + BMOM w=0.60                   1,981   57.8   -17,480    17,623    5,932     1.94   0.197          0.95          0.68
+
+P1 + BREADTH w=0.05                1,404   59.8    -7,012    14,037    6,245     2.26   0.269          1.20      42029.17
+P1 + BREADTH w=0.10                1,333   60.8    -7,274    13,836    6,360     2.26   0.262          1.13      83528.31
+P1 + BREADTH w=0.15                1,264   61.3    -7,533    11,634    6,595     2.24   0.254          1.06     124507.38
+P1 + BREADTH w=0.20                1,153   60.3    -7,513    11,494    6,870     2.21   0.245          0.96     159146.23
+P1 + BREADTH w=0.25                1,037   61.3    -7,389    11,481    7,103     2.18   0.232          0.85     188334.96
+P1 + BREADTH w=0.30                  932   61.3    -7,277    11,469    7,370     2.12   0.216          0.75     214571.02
+P1 + BREADTH w=0.35                  837   61.8    -7,176    11,493    7,657     2.05   0.196          0.66     238267.02
+P1 + BREADTH w=0.40                  723   60.3    -6,822    11,266    7,676     1.97   0.177          0.56     250159.52
+P1 + BREADTH w=0.45                  592   58.8    -6,163    10,692    7,871     1.86   0.158          0.45     245994.42
+P1 + BREADTH w=0.50                  490   58.3    -5,652    10,254    8,063     1.74   0.140          0.36     242760.90
+P1 + BREADTH w=0.55                  409   58.3    -5,244     9,944    8,246     1.61   0.122          0.30     240177.84
+P1 + BREADTH w=0.60                  342   58.3    -5,137     9,683    8,422     1.47   0.106          0.24     237775.03
+
+P1 + BMOM 0.40 + BREADTH 0.05      2,082   58.8   -13,499    15,543    6,061     2.18   0.254          1.28             -
+
+================================================================================================================
+=== PHASE 3: the nulls (scan-matched - every draw takes its own best of 12)
+================================================================================================================
+N1 circular shift  : same mean, same vol, alignment with P1 destroyed
+N3 synthetic sleeve: same mean, vol and lag-1 autocorrelation, drawn independently
+A zero-mean uncorrelated sleeve STRICTLY HURTS at constant risk, so any gain requires
+the sleeve's own expectancy. These nulls ask whether the ALIGNMENT adds anything.
+
+sleeve        real best $   N1 mean   N1 pct   N3 mean   N3 pct   verdict
+AXISB               1,713     1,626    72.5%     1,645    66.5%      fail
+BMOM                2,310     2,071    77.0%     1,919    86.5%      fail
+BREADTH             1,404     1,631     4.0%     1,597     4.5%      fail
+
+================================================================================================================
+=== PHASE 4: the weaknesses, measured rather than caveated
+================================================================================================================
+   BMOM: 204 weeks in-window, weekly mean 1,291.3741 +- 543.1491 (SE), t = 2.38
+   BREADTH: 204 weeks in-window, weekly mean 0.0003 +- 0.0004 (SE), t = 0.71
+
+   B-MOM era split on its OWN full history (the Amendment-1 2(a) question):
+      2006-2021: 4,077 sessions, net $18,156, daily mean $4.5 +- 16.8 (SE), t = 0.27
+      2022-2026: 1,122 sessions, net $319,123, daily mean $284.4 +- 106.8 (SE), t = 2.66
+      -> the modern era is a 1,122-session sample. Amendment 1 2(b) requires a
+         CAUSAL REGIME VARIABLE separating the eras; none is named in the record, so
+         the honest description is 'a 4-year sample', not 'a regime'.
+
+   BREADTH01 notional disclosure: the book is a fractional-return series at 4.25 % annualised vol in-window.
+      at the scanned weight w=0.05 the implied notional is reported in wscan.csv column sleeve_units (units of ONE book).
+
+=== FRONTIER (the owner's column, sorted) ===
+portfolio                        weekly$   wk+%    worst$    top5DD    ulcer  annShrp   cvEff  P1 contracts  sleeve units
+P1 + BMOM w=0.40                   2,310   59.8   -13,780    16,182    6,163     2.20   0.266          1.47          0.47
+P1 + BMOM w=0.45                   2,289   58.8   -15,142    16,810    6,043     2.15   0.249          1.37          0.54
+P1 + BMOM w=0.35                   2,218   59.8   -11,867    15,000    6,086     2.24   0.279          1.49          0.38
+P1 + BMOM w=0.50                   2,183   59.3   -15,948    16,968    5,818     2.09   0.232          1.23          0.59
+P1 + BMOM w=0.30                   2,114   59.3   -10,084    14,178    6,071     2.26   0.290          1.48          0.30
+P1 + BMOM 0.40 + BREADTH 0.05      2,082   58.8   -13,499    15,543    6,061     2.18   0.254          1.28           nan
+P1 + BMOM w=0.55                   2,080   58.8   -16,727    17,146    5,762     2.02   0.214          1.09          0.63
+P1 + BMOM w=0.60                   1,981   57.8   -17,480    17,623    5,932     1.94   0.197          0.95          0.68
+
+   incumbent weekly at its own drawdown: $1,475
+   best portfolio: P1 + BMOM w=0.40 at $2,310/week (+56.7 %)
