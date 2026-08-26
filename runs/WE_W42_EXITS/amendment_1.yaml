@@ -1,0 +1,51 @@
+amendment: 1
+run_id: WE_W42_EXITS
+date: 2026-08-25
+status: LOOK-AHEAD CORRECTION found in self-review of read 1. Read 1's PHASE 1 diagnostic is
+  unaffected and stands; read 1's E2/E3/E4 arms are VOID and preserved in out/exits.txt.
+
+the defect: >
+  fills_x updated the running MAE/MFE with bar i's OWN high and low, then exited at bar i's
+  OPEN. The trigger therefore used a price the decision could not have seen. This is the same
+  error as W03's gate and W37's thresholds, and it had already produced the highest Sharpe in
+  campaign history (E2 at 0.465, +23 % production). Those numbers are withdrawn.
+  A second defect in the same arms: after an exit the object re-entered on the very next bar,
+  because `want` still came from the unchanged vote array. The trade count nearly doubled
+  (1,950 -> 3,204) and the "stop" was economically a one-bar skip, not a stop.
+  A third defect: E1 could only exit EARLIER, never later, since the position array was already
+  zeroed at vote < 0.5 - so all three E1 rows were identical to the reference and nothing was
+  tested.
+
+the corrected construction (also the one that would actually be traded):
+  RESTING ORDERS at levels known before the bar trades.
+    E2  stop at epx - (trailing-250-winner median MAE) x ATR_at_entry, level FIXED at entry
+    E3  trailing stop at epx + MFE(through bar i-1) x (1 - trailing-250-winner median
+        give-back), level known at the start of bar i
+    E5  limit at epx + trailing-250-winner median MFE (already legitimate in read 1)
+  Fills are at the level, or at the open when the bar gaps through it. Signal-driven exits
+  happen at the open FIRST, then resting orders inside the bar - the correct sequencing.
+  RE-ENTRY IS BLOCKED after a stop-out until the vote target returns to zero; the unblocked
+  version is kept as an explicit control arm (E2b, E3b) so the size of that effect is visible.
+  E1 is rebuilt as a genuine hysteresis: enter at vote >= 0.50, HOLD while vote >= x.
+
+what read 1's PHASE 1 established (stands, and it is the wave's real content):
+  1,950 trades, 37.8 % winners, median hold 22 bars.
+  MFE median 1.87 ATR (winners 6.62, losers 1.01); MAE median -1.94 ATR (winners -0.86,
+  losers -2.70). CAPTURE (realised / MFE) median -0.384; winners keep only 0.414 of their MFE.
+  GIVE-BACK of MFE: median 1.384 - the median trade gives back MORE than its entire favourable
+  excursion. This is a low-hit-rate, high-payoff object that pays for its winners with many
+  small round-trips.
+  EARLY ADVERSITY PREDICTS FAILURE, and it is decided by bar 5:
+    P(win | MAE <= -0.25 ATR by bar 5) 32.4 % ... <= -1.00 ATR 24.0 %, against an
+    unconditional 37.8 %, monotone in the threshold and FLAT in the horizon (m = 5, 10, 20, 40
+    give the same numbers). The information is in the first five bars.
+  QUALITY SCORE AND PATH: score >= 3 trades have roughly double the MFE (3.10-5.45 ATR vs
+    1.30-1.51) at similar MAE, which is WHY sizing them up works - the score forecasts
+    excursion size, not hit rate (win % is 35-40 % at every score except 4).
+  SURVIVAL CURVE: E[remaining]/ATR rises monotonically with bars-in-trade (0.689 at t=0 to
+    2.454 at t=90). INTERPRETIVE CAUTION recorded with it: this is survivorship, not a
+    hold-longer argument - trades still alive at t=90 are precisely the ones the ratchet has
+    not flipped. It says the structural exit is already selecting well, not that time helps.
+adoption and falsifier: unchanged from the spec.
+forbidden: [quoting read 1's E2/E3/E4 numbers, using bar i's high/low to trigger a fill at
+  bar i's open, reporting a stop arm without its re-entry-blocked/allowed control]
