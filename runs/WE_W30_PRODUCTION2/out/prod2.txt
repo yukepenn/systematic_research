@@ -1,0 +1,25 @@
+window 2022-07-01 .. 2026-08-01: 1013 sessions, 1,382,735 bars, available 325,296 pts (321.1/session)
+
+=== Q1 TIME IN MARKET ===
+object                       inPos%  sessTraded%  pts/session  pts/barInPos  ptsPerTradedSess
+E5 box (1 contract)           12.90         60.0        10.62        0.0603             17.70
+S1                            60.73         99.1        14.04        0.0169             14.17
+E5box + S1 (either)           64.24
+
+=== Q2 WHERE THE ABSENCE COMES FROM (share of NON-position bars) ===
+   vote below 0.5                     95.5%  (1,150,420 bars)
+   range throttle                      0.2%  (2,777 bars)
+   session box already fired           4.1%  (49,351 bars)
+   wanted in, between fills            0.1%  (1,752 bars)
+   TOTAL absent                       87.1% of all bars
+
+=== Q3 CONCURRENCY: 4 member-sets as independent sleeves, each with its own box ===
+object                         contracts  pts/session   wkMean$  wkPos%    worst$   shrp
+E5 box (reference)                     1        10.62     1,060    59.1    -7,487  0.305
+4 member sleeves, own boxes            4        37.97     3,771    60.3   -32,358  0.268
+4 member sleeves + S1                  5        52.01     5,140    57.6   -29,767  0.298
+
+=== Q4 CEILING: perfect knowledge of the SESSION's direction only ===
+   with our entries but the session's true direction: 31.6 pts/session  (vs our 10.6)
+   perfect-foresight single trade: 321.1 pts/session
+   NOT ACHIEVABLE - this is a decomposition bound, not a target (spec).
