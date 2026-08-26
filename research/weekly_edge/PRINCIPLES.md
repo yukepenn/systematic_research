@@ -355,3 +355,44 @@ count-matched random-sizing control and a random-five-feature control (W39 am.2)
 
 Also confirmed independently of W44: sigma counted in BARS (460) beats the wall-clock
 equivalent (153) - C2 loses to C1 on every metric.
+
+
+## W46-W48 - three closures and one unifying law (2026-08-26)
+
+**1. RESTORE fails on BOTH clocks (W46).** The 1-minute control reproduced W31 exactly (0.70
+pts/session against the base's 10.62). On the product's own 3-minute clock: exposure 15.5 % ->
+28.5 % of bars while edge density collapses 0.0378 -> 0.0118 points per bar-in-position, eff
+0.067 -> 0.034. The re-entry question is closed on both clocks the campaign has tested.
+Incidental code finding: restore="conf" is DEGENERATE - at the session's first decision bar a
+leg that has not flipped necessarily satisfies px > anchor - S, so conf == plain, and W31's
+conf arm never tested anything different either.
+
+**2. CROSS-CLOCK DECISION RULES all fail (W47)** - confirmation at 0.50 and 0.25, the pooled
+64-config vote, and the 3-min-direction/1-min-timing split. But they fail INFORMATIVELY: they
+raise edge density (0.0648 -> 0.0784 with confirmation+quality, and 0.0835 for the timing split
+- the highest ever measured here) and every one of them worsens the worst week.
+
+**3. THE UNIFYING LAW, now three-times measured:**
+> On this object, ANY change that REDUCES THE NUMBER OF EVENTS worsens the tail faster than it
+> improves per-event quality. Its tail protection comes from having many roughly independent
+> events per week; fewer events concentrate the week's P&L into fewer bets.
+
+W42 (stops), W45 (the quality layer on the 3-minute clock) and W47 (cross-clock confirmation)
+are three independent instances. It is also why SIZING works and FILTERING fails (W34): sizing
+keeps every event.
+
+**4. THE TAIL CANNOT BE ATTACKED AT THE TRADE LEVEL (W48, exact accounting).** A stop cuts
+losers 1.8x to 4.8x more often than winners - the separation is real - and net P&L is NEGATIVE
+at every level, because the count asymmetry is overwhelmed by the VALUE asymmetry: at the most
+aggressive level $347,125 saved against $579,873 lost. The trade-off has no middle: halve the
+worst week (-$7,418 -> -$3,732) and give up 78 % of all the money, or keep the money and the
+worst week does not move. Session-level truncation (the box) works precisely because it acts on
+the ACCUMULATION rather than on individual trades.
+Correction recorded: W42 chose the WORST possible level (the median of winners' own MAE, which
+cuts half the winners by construction) and its general conclusion was not licensed by its test.
+The conclusion is now licensed by the whole surface.
+
+**5. Method: exact accounting before a parameter sweep.** W48 phase 1 cost no backtest and
+answered the question more completely than the backtests did, including levels a sweep would
+never have tried. Where the mechanism can be written down, compute it on the measured paths
+first.
