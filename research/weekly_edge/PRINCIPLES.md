@@ -126,3 +126,47 @@ priced there, instead of being described as risk reduction.
 The short side's negative hours (06/10/15/18/20/21 ET) looked like a clean, mechanistic
 restriction and produced +1.76 pts/session; arbitrary shifted schedules did the same
 (65th percentile, p = 0.350). Exposure reduction masquerades as selection.
+
+## W39 — what the quality layer actually is, and why more features do not help (2026-08-25)
+
+**1. The layer is NOT leverage, and it is not just the rule's shape.** It had only ever faced
+circular-shift nulls. Two count-matched controls, 100 draws each, full window:
+
+| | pts/session | eff | Sharpe |
+|---|---|---|---|
+| base, all size 1 | 10.62 | 0.142 | 0.305 |
+| C1 null - a RANDOM 20 % sized up | 12.03 | 0.141 | 0.279 |
+| C2 null - five RANDOM features, identical rule | 12.62 | 0.152 | 0.284 |
+| the real layer | **14.72** | **0.198** | 0.311 |
+| percentile vs C1 / C2 | 97.0 / 95.0 | **100.0 / 97.0** | 94 / 90 (weak) |
+
+Reading: pure exposure explains 12.03; the rule's SHAPE with arbitrary features adds only
+0.6 more; the SPECIFIC five add the remaining 2.1. **The features carry most of the gain.**
+Residual caveat (`WEAK`): those five were selected on the full window in W33, so part of the
+97th-percentile margin is that selection. What is independent of it: W36's walk-forward kept
+the same five and refit only thresholds, reaching 14.41.
+
+**2. Feature information is unstable, so feature CHOICE must be fixed, not re-chosen.**
+Quarterly re-selection churns 62 % (top-5) and 80 % (t >= 2 admission, which admits ZERO
+features in 2 of 12 quarters), and every re-selection scheme loses to the fixed five
+(eff 0.163 and 0.138 vs 0.229). My own hypothesis - that the churn was an artifact of forcing
+a rank-5 pick among near-ties - was refuted by the threshold arm churning worse.
+
+**3. Aggregation is scoped, not universal.** W20 aggregated 32 configs and won; W39 aggregated
+42 features and lost (eff 0.180 vs 0.229). The distinction:
+> aggregation helps when the members are noisy estimates of the SAME quantity, and hurts when
+> they are candidates for DIFFERENT quantities, because the informative few get diluted.
+
+**4. A fourth confirmation of the leverage law in a new form**: continuous size (cap 3) is the
+highest-production arm ever measured here (21.44 pts/session) at avg 2.00 contracts, with
+eff 0.201 against the incumbent's 0.229 at 1.19. Size RESOLUTION buys exposure, not edge.
+
+**5. N1 and N2 are not interchangeable.** The short continuous arm passed the circular-shift
+null at the 100th percentile and FAILED count-matched random sizing at the 69th. For any
+SIZING rule the count-matched control is the binding one; alignment nulls cannot separate
+"sized the right trades" from "sized some trades". Every sizing claim from now on reports both.
+
+**6. Two method corrections.** A worst-week gate expressed in absolute dollars is
+exposure-naive and will reject arms that beat their reference at matched exposure; eff and
+CVaR efficiency are the criteria and the absolute worst week is reported, not gated. Exposure
+matching is time-weighted (contract-minutes), not trade-count-weighted.

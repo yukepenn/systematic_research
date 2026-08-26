@@ -1,7 +1,43 @@
 > Full component-by-component explanation with every parameter and its evidence:
 > **`THE_STRATEGY.md`**
 
-# STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7), as of 2026-08-25 after 26 waves
+# STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7)
+
+> ## CURRENT TRUTH after W39 (2026-08-25) — supersedes anything below it that conflicts
+>
+> **The recommended object is LONG-ONLY, scaled by contracts.** The short sleeve is no longer
+> part of the production or risk-efficient object; it survives only as the CONSISTENCY object.
+>
+> | object | avg contracts | pts/session | weekly | wk + % | worst week | CVaR5 | Sharpe | **wk ÷ \|worst\|** |
+> |---|---|---|---|---|---|---|---|---|
+> | base vote + box | 1.00 | 10.62 | $1,060 | 59.1 % | −$7,487 | — | 0.305 | 0.142 |
+> | **P1 causal quality sizing** | 1.18 | **14.72** | $1,470 | 58.6 % | −$7,418 | −$5,398 | 0.311 | 0.198 |
+> | **P2 = P1 + causal 23-bar cut** | 1.11 | 13.50 | $1,347 | 56.7 % | **−$5,818** | — | 0.291 | **0.232** |
+> | P1 scaled ×1.91 (same eff) | 2.26 | 28.13 | $2,807 | 58.6 % | −$14,170 | −$10,311 | 0.311 | 0.198 |
+> | P1 + short sleeve (consistency object) | ~2.2 | 25.87 | $2,557 | **64.4 %** | −$14,606 | −$10,097 | **0.337** | 0.175 |
+>
+> **The quality layer is not leverage** (W39 amendment 2, the controls it had never faced):
+> against 100 count-matched random-sizing draws it sits at the **97th percentile on
+> pts/session (p = 0.030) and the 100th on profit-per-unit-of-tail (p = 0.000)**; against 100
+> random five-feature scores of identical shape, the 95th and 97th. Decomposition:
+> `base 10.62 → random sizing 12.03 (pure exposure) → random five features 12.62 →
+> the incumbent five 14.72`; on eff `0.142 → 0.141 → 0.152 → 0.198`. **The specific features
+> carry most of the genuine gain.** Sharpe is only *weak* against both controls (94th / 90th) —
+> as W36 predicted, it penalises the upside variance the layer deliberately adds.
+>
+> **Feature mining is closed as a lever** (W39): 42 causal candidates, 8 classes; quarterly
+> re-selection churns 62 % (top-5) or 80 % (t ≥ 2 admission) and every re-selection scheme
+> loses to the fixed five; aggregating over all features loses too.
+>
+> **Distance to the owner's $10k/week**: at eff 0.198–0.232 that is ≈ 9 contracts and a worst
+> week near −$43k. Reaching $10k/week at a −$15k worst week needs eff ≈ 0.67, i.e. **2.9× the
+> current profit-per-unit-of-tail**. Contracts cannot deliver it; only diversification that
+> lowers the tail can. That is why W40 (an independent second model) is the live wave.
+>
+> Stale below: the "sleeves + short vote = insurance" line in §1 (withdrawn, W38) and the
+> "A3 17.78/0.338" and "A3 + S1 + short box" rows in §2 (A3 retired for threshold look-ahead).
+
+## Original header — as of 2026-08-25 after 26 waves
 
 Single reference. Everything here is measured, net of $4.36/RT, on NQ 1-minute bars,
 out-of-sample within the modern regime (2022-07 → 2026-07, 205 weeks) unless stated.
