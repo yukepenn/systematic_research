@@ -2,3 +2,36 @@
    E4: pts 15.38  MAR 18.75  maxDD 16,604  trades 1779  expo 100.3 % [26s]
    N1 within-session shift: 25/150 draws [76s]
    N1 within-session shift: 50/150 draws [126s]
+   N1 within-session shift: 75/150 draws [177s]
+   N1 within-session shift: 100/150 draws [227s]
+   N1 within-session shift: 125/150 draws [278s]
+   N1 within-session shift: 150/150 draws [328s]
+   N2 wrong-day mask: 25/150 draws [378s]
+   N2 wrong-day mask: 50/150 draws [428s]
+   N2 wrong-day mask: 75/150 draws [478s]
+   N2 wrong-day mask: 100/150 draws [528s]
+   N2 wrong-day mask: 125/150 draws [578s]
+   N2 wrong-day mask: 150/150 draws [627s]
+
+========================================================================================================
+=== PHASE G VERDICT: E4 against 150 draws of each null
+========================================================================================================
+   exposure match: incumbent 212,087 contract-minutes | E4 212,760 (100.3 %) | N1 mean 195,415 (92.1 %) | N2 mean 184,186 (86.8 %)
+   trade-count match: incumbent 1950 | E4 1779 | N1 mean 1514 | N2 mean 1453
+
+metric         incumbent          E4      N1 mean      N1 pct      N2 mean      N2 pct   verdict
+pts               14.862      15.384       15.590       38.0%       12.118       96.7%      PASS
+wk             1,474.593   1,526.379    1,546.777       38.0%    1,202.293       96.7%      PASS
+maxdd         20,245.200  16,604.280   18,761.537       65.3%   23,244.150       91.3%      fail
+dd_top5       14,266.080  10,713.392   12,702.299       82.7%   14,972.269       98.0%      PASS
+ulcer          6,182.844   4,552.820    4,714.277       51.3%    6,474.121       89.3%      fail
+mar               14.859      18.753       17.802       59.3%       11.419       96.7%      PASS
+annshrp            2.261       2.376        2.537       26.7%        1.994       94.0%      fail
+cveff              0.273       0.286        0.292       44.0%        0.212       96.0%      PASS
+eff                0.199       0.200        0.186       62.0%        0.138       92.0%      fail
+worst         -7,417.840  -7,623.360   -8,822.860       68.7%   -9,226.444       75.3%      fail
+
+   The BINDING null is N2 (wrong-day mask). The preregistered bar is N2 >= 95th
+   percentile on pts AND on MAR.
+   pts 96.7%  MAR 96.7%  -> BOTH CLEAR
+done [627s]

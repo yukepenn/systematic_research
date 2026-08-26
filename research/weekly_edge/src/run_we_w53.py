@@ -64,6 +64,16 @@ def main():
     mod = ((tarr - tarr.astype("datetime64[D]")).astype("timedelta64[s]")
            .astype(np.int64) // 60)
 
+    # a trade belongs to the window iff its ENTRY SESSION does. Filtering on the raw entry
+    # timestamp instead admits the session that straddles A (2022-06-30 18:00 -> 07-01 17:00),
+    # whose week label is not in keys_w. Earlier waves dropped those trades silently inside
+    # ledger(); doing it explicitly here keeps B1 identical and removes the ambiguity.
+    in_win = np.zeros(D["n_sess"], bool)
+    in_win[sess_in] = True
+
+    def keep(x):
+        return bool(in_win[int(sid[i_of(x["et"])])])
+
     def build(pos, halt=1300.0, target=1000.0):
         base = fills_daily(D, pos, halt=halt, target=target)
         ent = np.array([i_of(x["et"]) for x in base if A <= np.datetime64(x["et"]) < B])
@@ -71,8 +81,7 @@ def main():
             return []
         sc, _ = causal_score(X, ent, window=WIN)
         sz = np.where(sc >= 3, 2, 1).astype(np.int8)
-        return [x for x in fills_qexit(D, pos, sz, sc, halt=halt, target=target)
-                if A <= np.datetime64(x["et"]) < B]
+        return [x for x in fills_qexit(D, pos, sz, sc, halt=halt, target=target) if keep(x)]
 
     def vec_cm(trl):
         """weekly P&L vector and total contract-minutes"""
