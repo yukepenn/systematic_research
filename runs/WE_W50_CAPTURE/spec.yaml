@@ -1,0 +1,65 @@
+run_id: WE_W50_CAPTURE
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: owner, 2026-08-26 - "我们目前原理是抓住什么？抓住全了吗？risk mitigate完了吗？
+  抓不住的又用什么其他策略来抓住？" and "每天都有市场movement".
+
+the question, stated so it can be answered rather than argued: >
+  The object is a volatility-scaled trend-reversal ratchet. It therefore captures ONE KIND of
+  session structure and is blind to the others by construction. The campaign has never
+  produced a complete, current decomposition of WHERE the money in a session goes and which
+  part of it we take. W06 did a version of this 44 waves ago, on a different object, before
+  the vote, the box and the quality layer existed. Every "what else should we trade" decision
+  since has been made without it.
+  This wave produces that decomposition on the CURRENT object, so that the next engine is
+  chosen by measurement rather than by my intuition about what sounds complementary.
+
+phase 1 - SESSION TAXONOMY (descriptive, no strategy, no selection):
+  classify every session in 2022-07 -> 2026-08 by its own realised shape, using only
+  end-of-session facts (this is a DIAGNOSTIC, not a trading rule, and is labelled as such):
+    TREND-UP / TREND-DOWN : |close - open| >= 0.6 x (high - low), signed
+    REVERSAL              : the session's extreme in one direction precedes a close beyond
+                            60 % of the range in the other
+    RANGE                 : |close - open| <= 0.25 x (high - low)
+    MIXED                 : everything else
+  For each class report: share of sessions, share of TOTAL available movement (sum of
+  |close-open| and of the full range), our P&L, our capture ratio, our trade count, and our
+  in-market fraction.
+
+phase 2 - THE LEAKAGE LEDGER, per session, mutually exclusive and exhaustive:
+  available (perfect-foresight single trade)  =  captured
+                                              +  never entered (we were flat all session)
+                                              +  entered late (movement before our entry)
+                                              +  exited early (movement after our exit)
+                                              +  wrong side (we held against the move)
+                                              +  chopped (in the market, right side, but the
+                                                 path took it back)
+  Reported in points per session and as a share, overall and BY SESSION CLASS. This is the
+  table that says which missing engine is worth building: a class where we are FLAT and the
+  available movement is large is an opportunity; a class where we are WRONG SIDE is a filter
+  problem; a class where we are CHOPPED is an exit or throttle problem.
+
+phase 3 - RISK LEDGER, the mirror question ("risk mitigate 完了吗"):
+  decompose the worst 10 % of weeks into: which sessions caused them, which class those
+  sessions were, whether the session box engaged, and what the loss would have been with the
+  box removed. Also: how much of the total drawdown is intra-session accumulation versus
+  overnight gap versus a single trade. This says whether any risk mechanism remains untried
+  at the level where the damage actually happens.
+
+phase 4 - THE COMPLEMENT TEST, preregistered so the answer cannot be rationalised:
+  for each session class where we capture less than 25 % of what is available, measure the
+  PERFECT-FORESIGHT single trade in that class and the SIMPLEST rule that would take it
+  (open-to-close hold in the realised direction). If even perfect foresight in that class is
+  worth less than 1 point/session after the stress line, the class is NOT an opportunity and
+  no engine should be built for it. This kills "we should also trade X" arguments with a
+  number instead of an opinion.
+
+adoption: this wave adopts NOTHING. It is a measurement wave. Its output is a RANKED LIST of
+  session classes by (available movement we do not capture) x (whether a simple rule could
+  have taken it), which becomes the preregistered agenda for W51+.
+falsifier: not applicable - but the wave FAILS if the leakage ledger does not sum to the
+  available movement within 1 %, which is asserted in code and aborts the run.
+forbidden: [data >= 2026-08-01, using the session classification as a trading signal anywhere
+  (it uses end-of-session information and is a diagnostic only), quoting any phase-4 number as
+  an achievable result rather than as a ceiling]
+outputs: [out/capture.txt, out/sessions.csv, out/leakage.csv, REPORT.md]

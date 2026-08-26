@@ -1,0 +1,51 @@
+amendment: 2
+run_id: WE_W41_CLOCK2
+date: 2026-08-26
+status: THE W41 ADOPTION IS WITHDRAWN. Read 1 and amendment 1 stand as records; their adoption
+  verdict does not. Found by an independent adversarial meta-audit, not by me.
+
+the defect (categorical, independent of magnitude): >
+  `research/weekly_edge/src/we_clocks.py` `size_for_rate()` sets the RANGE clock's bar size as
+      R = np.quantile(rolling3(TrueRange), 1 - target/n)
+  over the ENTIRE 2022-01 -> 2026-05 array, and `run_we_w41b.py` consumes it to build the
+  `range` sleeve - one of the two sleeves in the adopted basket. That is a full-sample quantile
+  cut on the measurement sample, inside an ADOPTED arm.
+  The campaign's own standing rule, added in W40 after the third such casualty, is categorical:
+  "ANY threshold or quantile cut on the measurement sample must be re-derived causally before
+  it can support a conclusion - including one that appears only in a DIAGNOSTIC."
+  So the adoption falls on the rule alone. This is the FOURTH full-sample-quantile casualty
+  (W03's gate, W37's score thresholds, W40's regime band, now W41's bar size) and the second
+  that had already produced a promotion.
+
+the magnitude, as measured by the auditor and re-measured in W49:
+  full-sample R = 22.75; causal expanding R = 30.25 at 2022-07, then 25.25 / 20.50 / 20.25 / 21.50
+  range sleeve standalone   $890/wk  ->  $591/wk       (eff 0.0768 -> 0.0451)
+  basket w=0.03 eff         0.2094   ->  0.2028
+  the basket's own binding null printed p95 = 0.209; 0.2028 does not clear it.
+  So roughly 40 % of the headline eff gain was the look-ahead, and what remains fails the very
+  test that licensed the adoption.
+
+three further defects in the same wave, all confirmed by the audit:
+  N1 THE BINDING NULL WAS NOT EXPOSURE-MATCHED. `run_we_w41b.py:214` applies the scale derived
+     from the REAL sleeve's contract-minutes to the RANDOM sleeve without renormalising;
+     measured, the range null carries 0.80 of the real sleeve's contract-minutes, so it was
+     compared at an effective w of about 0.024 rather than 0.03.
+  N2 THE NULL'S HOLDING TIME WAS THE WRONG STATISTIC. `run_we_w41b.py:209` takes the median
+     INTER-ENTRY GAP (191 and 255 bars) as the holding time; the true medians are 41 and 63
+     minutes. Only the np.clip(..., 5, 120) prevented a 3-6x error.
+  N3 MULTIPLICITY AND ROUNDING. 18 basket cells were scanned, the argmax was taken, and the
+     null was run on the winner only, with an unrounded null distribution compared against a
+     real value already rounded to three decimals. The same-combo neighbours fail
+     (eff 0.197 at w=0.05, 0.180 at w=0.08), which is what an argmax artifact looks like.
+  V4 AND THE GAIN WAS ALWAYS A DENOMINATOR EFFECT. The basket earns LESS money than long alone
+     ($1,459 vs $1,470/wk). Holding the tail fixed at the incumbent's, 1459/7418 = 0.1967 and
+     1459/5398 = 0.2703 - both BELOW long alone. Per year, on the joint eff-AND-cvEff standard
+     it is 3 of 5, not the 4 of 5 the report claimed.
+
+what survives and is now the live candidate:
+  the 3-MINUTE sleeve carries NO full-sample parameter (its bar size is a fixed 3 minutes), it
+  is positive and stress-positive in every year, and at w = 0.03 it gives eff 0.204 on its own.
+  It needs its own preregistered, exposure-matched, multiplicity-aware null before any
+  adoption. W49 does exactly that.
+forbidden: [quoting the 0.209 eff or the "adopted" status, using size_for_rate() in any arm
+  that is not explicitly labelled look-ahead-contaminated]
