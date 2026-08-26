@@ -497,3 +497,58 @@ small drawdown**: positive-day rate, positive-traded-day rate, positive-week rat
 losing streak, median day and week, weekly dollars at a fixed max drawdown, and the drawdown
 distribution. P1 is **27.6 % positive days / 46.0 % positive traded days / 58.3 % positive
 weeks**, and the positive-day rate has never been attacked by any wave.
+
+## W59-W63 (2026-08-26) — consistency has a price, and it is the same price everywhere
+
+**14. THE OLD OBJECTIVE OPTIMISED EXACTLY ONE THING (W59, `FACT`).** Among 216 cells of the
+object's own outer parameters, the incumbent ranks **4th on money-per-drawdown** and **178th and
+185th on the drawdown DISTRIBUTION**, with every consistency metric mid-pack (traded-day rate
+96th of 216). It did not fail — it maximised one quantity extremely well and left the rest on
+the table.
+
+**15. CONSISTENCY AND PRODUCTION ARE CONJUGATE ON ONE ENGINE (W59+W60, four instances).**
+The traded-day positive rate is **monotone** in the profit target (49.3 → 47.3 → 46.0 → 44.0 →
+42.2 → 41.7 as the target rises) and monotone in the halt, and pts/session moves the opposite
+way each time. Exact accounting prices it: the target buys **34 net green days for $29,387 over
+four years ≈ $860 per green day**. The halt aggregate loses **$4,792** on exactly the 254
+sessions where it acts while raising their positive-day rate from 23.2 % to 28.7 %.
+**No route tested produces consistency for free, and the curve KINKS**: green days cost $207
+each up to one step in the monotone direction and **$2,029–$2,580 beyond it**.
+
+**16. Counter-intuitive and measured: REMOVING the halt IMPROVES the drawdown distribution**
+($14,266 → $10,830, −24 %). Halting at −$1,300 realised locks the day red; without it some of
+those days recover. The halt earns its keep on money-per-drawdown ($1,475 vs $759) and pays for
+it in every consistency metric.
+
+**17. LAW 2 ACQUIRES A BOUNDARY (W59).** Aggregating all 216 outer cells LOSES to the incumbent
+($909 vs $1,475) because it is pulled toward the average cell. **Aggregation helps when members
+are near-exchangeable and dilutes when there is a real quality gradient.** The 32 inner configs
+are the same rule at different VolMults; the 216 outer cells are not. Aggregating over the HALT
+alone — where they are near-exchangeable — clears its null at the 95.3rd/98.0th percentile.
+
+**18. SELECTION HAS NOW LOST AT EVERY SCALE (W59, W60).** Free quarterly selection over 216
+cells: **2.0th percentile** of random choice. Constrained selection over 24 cells with a
+one-step-per-quarter limit: **18.7th percentile** on money. W19's PBO result was not a property
+of the inner configs; it is a property of selecting anything here.
+
+**19. THE SHORT SLEEVE IS THE BEST DECOUPLED CANDIDATE IN THE REPO AND IT IS UNUSABLE NOW
+(W61-W63).** Daily rho with P1 = **−0.003**, and it trades **81.5 %** of the sessions P1 sits
+out. At w = 0.30 it gives +7 % money, +5.4 pp positive weeks, the longest weekly losing streak
+halved 8 → 4, and the money gain is stable in **95–100 %** of rolling 24-month windows — the
+most stable improvement measured here. And in **2026 the combination earns 65 % less than P1
+alone with a 28 % larger drawdown**, because ~91 % of the benefit is the sleeve's own expectancy
+(its nulls fail) and that expectancy is currently −10.62 pts/session. **No unconditional weight
+survives:** the worst-year delta is ≥ 0 only at w = 0.00, and leave-one-year-out produced a
+usable weight in **0 of 5 acted folds**. The insurance reading — hold it through the premium —
+was tested and refuted: you cannot carry a hedge costing 65 % of weekly income in the regime you
+are in.
+
+**20. Method rules bought here.**
+- **A leave-one-out fold in which the procedure selects the NULL ACTION is scored ABSTAINED,
+  never as a success.** My code printed "4 of 5 folds hold" when four folds were the procedure
+  declining to act. A procedure's out-of-sample record is its record on the folds where it ACTED.
+- **Report a scan as a SURFACE, and prefer a monotone response to an argmax.** A monotone
+  response over 4–6 levels is far stronger evidence than the best cell of 216, and it is what
+  separates a direction from a fit.
+- **An aggregate performing no selection must not be dressed in a scan-matched null.** Its test
+  is whether it beats the incumbent and the average member; a null it cannot fail is theatre.
