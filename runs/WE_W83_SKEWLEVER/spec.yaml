@@ -1,0 +1,90 @@
+run_id: WE_W83_SKEWLEVER
+title: "Does the quality SIZING layer — the campaign's main adopted innovation — hurt the owner's
+        actual objective?"
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+the_argument_from_first_principles: >
+  W42 measured what the quality score actually forecasts: **EXCURSION SIZE, NOT HIT RATE.** Win
+  rate is flat at 35-40 % across every score bucket while median MFE runs 1.3 -> 5.5 ATR. So
+  sizing up on score >= 3 concentrates contracts on the fattest-right-tail trades by design.
+  That ADDS positive skew to the weekly distribution.
+
+  W74 then measured the exchange rate between skew and the metric the owner ranks first, fitted on
+  216 cells and validated on 19 held-out objects (R2 +0.277):
+        wk+%  =  48.07  +  45.41 x weeklySharpe  -  2.99 x weeklySkew
+  One unit of weekly skew costs **2.99 pp of positive weeks**. P1's weekly skew is **+2.11**, so
+  the shape of its payoff is costing roughly **6.3 pp** of the owner's primary metric right now.
+
+  W39 validated the quality layer hard - against count-matched random sizing (97th percentile on
+  pts/session, 100th on profit-per-unit-of-tail) and against random five-feature scores (95th /
+  97th). But it was validated on PRODUCTION and TAIL. **It has never been evaluated against the
+  positive-week rate**, and the skew-to-hit-rate exchange rate did not exist until today.
+
+  So the question has never been asked: the layer buys Sharpe and pays in skew. Under the owner's
+  stated ordering - consistency first, then drawdown, then money - is that trade a good one?
+
+arms:  # every arm changes ONLY the map from causal score to contracts. Nothing else moves.
+  Q0_incumbent : "size 2 when score >= 3, else 1. The adopted object."
+  Q1_flat      : "size 1 always - the layer OFF. The base W39 measured 10.62 pts/session on."
+  Q2_inverted  : "size 2 when score <= 1, else 1. The skew-REDUCING direction: put the contracts
+                  on the trades the score says have the SMALLEST expected excursion."
+  Q3_selective : "size 2 when score >= 4. More selective - should add MORE skew."
+  Q4_levered   : "size 3 when score >= 3. More weight on the tail - should add MORE skew.
+                  Tests monotonicity: if skew rises Q1 < Q0 < Q4, the mechanism is confirmed."
+  Q5_graded    : "size = clip(round(1 + score/2.5), 1, 3) - continuous rather than a step."
+
+phase_0_falsifier_before_any_verdict: >
+  The premise is that the sizing scheme materially changes the WEEKLY SKEW. Measure the weekly
+  skew of all six arms first. IF THE SKEW SPREAD ACROSS ARMS IS LESS THAN 0.5 UNITS, the premise
+  is FALSIFIED - the layer is not a meaningful skew lever - and the wave reports that rather than
+  proceeding to interpret hit-rate differences as skew effects.
+  A second check in the same phase: skew should be ordered Q2 < Q1 < Q0 < Q4 if the mechanism is
+  what W42 says it is. If the ordering is scrambled, the mechanism is wrong and that is the
+  finding.
+
+method_ordered_by_the_W79_meta_finding: >
+  Seven consecutive objects have shown full-sample dominance and failed sub-period testing, so
+  THE ROLLING TEST RUNS BEFORE ANY FULL-SAMPLE TABLE IS INTERPRETED. Rolling 24-month windows on
+  the extended window (2022-07-04 -> 2026-07-31, 1,058 sessions): fraction in which each arm beats
+  Q0 on positive-week %, on weekly $ at a fixed $20,245 drawdown, and on mean top-5 drawdown.
+
+  All figures are quoted at BOTH friction lines: net $4.36/RT, and the MEASURED all-in cost of
+  $14.65/RT from W82. The arms differ in contract count, so friction is not neutral between them
+  and quoting only the commission line would flatter the higher-size arms.
+
+secondary_and_genuinely_out_of_sample: >
+  W74's exchange rate was fitted on 216 halt/target cells and held out on 19 objects. These six
+  SIZING arms are a different family entirely and were not in either set. Predict each arm's
+  positive-week rate from its (Sharpe, skew) using the frozen coefficients and compare to the
+  measured value. This is a real out-of-sample test of the exchange rate, and it is reported
+  whether or not it flatters the regression.
+
+preregistered_decision_rule:
+  an_arm_is_a_candidate_only_if: >
+    it beats Q0 on positive-week % in a MAJORITY of rolling windows AND gives up no more than
+    10 % of weekly $ at a fixed drawdown, measured at the $14.65/RT line.
+  the_most_likely_outcome_and_it_is_still_worth_having: >
+    that no arm passes, in which case the wave produces (a) the measured price of the layer in
+    positive-week points, which the campaign has never known, and (b) an out-of-sample test of
+    W74's exchange rate. Both are worth the compute even with no promotion.
+  if_Q1_flat_wins_on_the_owners_metric: >
+    that would mean the campaign's single adopted innovation since W37 is net-negative against the
+    owner's stated primary objective. It would NOT be quietly promoted - it would go to a full
+    champion-vs-challenger with a walk-forward, because W39's nulls are real evidence on the other
+    side and two measurements pointing opposite ways is a reason to test harder, not to switch.
+  adoption: NOTHING is adopted in this wave.
+
+traps_named_before_running:
+  - "Six arms x several metrics is a scan. The rolling test and the per-year table are the
+     controls; no arm is quoted on a full-sample number alone."
+  - "Arms differ in EXPOSURE (contract-minutes), and every drawdown statistic scales with
+     exposure. Report time-weighted contracts for every arm and use money-at-fixed-drawdown as
+     the money metric, never raw net."
+  - "The five features, their signs and runlen's 0.9 quantile were chosen by a full-sample scan in
+     W33. That look-ahead is inside the SCORE and therefore inside EVERY arm here including the
+     inverted one, so it cannot bias the COMPARISON between arms - but it does mean none of these
+     numbers is clean in absolute terms, and that caveat travels."
+  - "Q2 (inverted) will look bad on production by construction. It is included because it is the
+     only arm that isolates the skew direction, not because it is expected to win."
