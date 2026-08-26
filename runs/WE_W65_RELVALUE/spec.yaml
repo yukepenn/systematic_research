@@ -1,0 +1,100 @@
+run_id: WE_W65_RELVALUE
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: the first genuinely new MECHANISM CLASS this campaign has had available. Four
+  independent routes now say the object needs a second engine whose errors are not its own, and
+  a repo-wide search found that RELATIVE VALUE has never been tested here even once.
+
+the finding that opens it:
+  A repo-wide search for pairs trading / statistical arbitrage / spread mean-reversion /
+  cointegration / hedge ratio / market-neutral / dollar-neutral returned ZERO instances across
+  every campaign. Everything ever done with two instruments traded NQ OUTRIGHT while another
+  instrument fed a signal - stated verbatim in runs/SMV2AB_ENGINE3_S4/REPORT.md:6-8:
+    "Traded instrument is ALWAYS NQ; ES/RTY/YM feed only z-scores/consensus-sign/spread-
+     direction, NEVER a fill or a P&L of their own."
+  NO TWO-LEGGED POSITION HAS EVER BEEN OPENED IN THIS REPO.
+  There is also a written-but-never-executed hypothesis for exactly this - H-DR-D2, NQ/ES
+  beta-adjusted divergence, research/scalping_lab/deep_research/DR_D_crossmarket_sessions.md:
+  130-141 - with a falsification design already specified (OU half-life / variance-ratio on the
+  divergence series). It appears in no ledger, no tested_configs, no rejected_ideas.
+
+why it is the right thing to test and not just a new thing:
+  W56 wrote the specification for what is needed: an engine with a real edge whose UNDERWATER
+  CURVE is not P1's. Every candidate since has had the decoupling and not the edge, or the edge
+  and not the durability. A dollar-neutral spread is decorrelated with a directional trend
+  follower BY CONSTRUCTION rather than by luck - it has no market beta to be correlated through.
+  That does not make it profitable. It makes its decoupling non-accidental, which is the half
+  this campaign has never been able to secure.
+
+the priors that argue against it, recorded so the wave is not sold to itself:
+  * the repo's own deep research says the NQ/ES divergence is "at best weakly mean-reverting
+    standalone" (DR_D_crossmarket_sessions.md).
+  * seconds-scale ES lead-lag is PERMANENTLY CLOSED (scalping_lab/CAMPAIGN_STATE.md:209) and
+    DR_D argues price-level arb between ES and NQ is same-engine, co-located, inside the race.
+    Neither statement bounds a position HELD FOR MINUTES OR LONGER, which is what this tests.
+  * cross-market signal conditioning is 15/15 killed across 5 engine-3 slates.
+  * TWO LEGS MEANS TWO FRICTIONS. A spread must clear roughly double the round-turn cost of an
+    outright, and the wave must price that from the start rather than discover it at the end.
+  * ES minute data on disk starts 2022-01-02. There is NO pre-2022 ES anywhere, so this is a
+    4.6-year sample and cannot be given a 20-year out-of-sample check the way B-MOM was.
+
+data, verified on disk before writing this:
+  runs/SM1M_ES_SUBSTRATE/out/es_1m_2022_2026.parquet   1,620,385 bars, 2022-01-02 18:01 ->
+    2026-07-31 16:59
+  research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet  overlaps it on
+    1,557,681 exactly-matching minute timestamps through 2026-05-29
+  NQ $20/point, ES $50/point. At current levels one NQ is ~$400k notional and one ES ~$325k, so
+  dollar-neutrality is near 1:1.23 - the integer feasibility is reported, never assumed.
+
+phase 1 - IS THE DIVERGENCE MEAN-REVERTING AT ALL? (exact measurement, no rule, no backtest)
+  This is the preregistered STOPPING RULE and it is the whole point of doing it first.
+  Build the divergence causally: beta from a TRAILING regression of NQ returns on ES returns
+  (never full-sample - four casualties), the divergence being the cumulative residual within a
+  session, reset at each session open so no overnight/roll contamination enters.
+  Measure, at horizons of 1, 5, 15, 30, 60 and 120 minutes:
+   a) VARIANCE RATIO of the divergence. VR < 1 is mean reversion, VR = 1 is a random walk,
+      VR > 1 is trending. Report with its own sampling distribution from a circular-block
+      bootstrap, because a variance ratio on 1.5 M overlapping observations will look precise
+      and is not.
+   b) OU HALF-LIFE of the divergence, per session and pooled.
+   c) autocorrelation of divergence CHANGES at each horizon.
+   d) the ECONOMIC version, which is the one that decides: conditional on |divergence| exceeding
+      a trailing quantile, what is the MEAN SUBSEQUENT REVERSION IN DOLLARS for a dollar-neutral
+      two-leg position, and how does it compare with TWO round turns of friction?
+  STOPPING RULE: if (d) shows the mean reversion after the threshold is smaller than two round
+  turns of friction at every horizon and every threshold, the wave STOPS HERE and records that
+  the divergence is not tradeable at this frequency. That costs one script and no backtest.
+
+phase 2 - only if phase 1 clears: THE SIMPLEST POSSIBLE RULE
+  Enter when the causal divergence z-score exceeds a threshold, exit when it decays past a lower
+  one, flat at session close (the architecture's own rule). NO threshold is selected: per this
+  campaign's law 2 and W59's boundary on it, the arm AGGREGATES over a ladder of thresholds
+  whose members are near-exchangeable, exactly as the 32-config vote does.
+  Both legs filled at the next bar's open, both legs charged full friction, and the ES leg's own
+  commission and tick value used rather than NQ's.
+
+phase 3 - THE DECOUPLING, verified rather than assumed:
+  Daily and weekly correlation with P1, correlation of the UNDERWATER CURVES (the number W56
+  established actually matters for a drawdown claim), overlap of best and worst days, and the
+  share of P1's flat sessions on which the spread trades. Then the combination at constant total
+  risk rescaled to P1's own $20,245 max drawdown, reported consistency-first per Amendment 2.
+
+phase 4 - THE NULLS:
+  N1 circular shift of the spread's daily series against P1 - separates "it earns" from "it
+     earns when P1 does not", which this campaign has now conflated three times.
+  N2 a WRONG-DAY divergence: compute the signal from a randomly chosen other session's ES series.
+     A real feature with real structure applied to the wrong day.
+  N3 scan-matched over the threshold ladder if any selection survives phase 2.
+  300 draws each.
+
+adoption bar: nothing is adopted in this wave. An arm is RECOMMENDED only if it is profitable
+  net of TWO round turns at stress friction, decoupled from P1 on the underwater curve, improves
+  the combination's positive-week rate and drawdown distribution at a fixed drawdown, passes the
+  trailing-24-month chronology gate of Amendment 2, and clears N1 and N2 at >= 95th percentile.
+falsifier: phase 1(d) empty at every horizon and threshold.
+forbidden: [data >= 2026-08-01, a full-sample beta or a full-sample quantile anywhere, charging
+  one leg's friction to a two-leg position, holding a spread through a session close, claiming
+  decoupling without the underwater-curve correlation, selecting a threshold without a
+  scan-matched null, quoting a variance ratio without its bootstrap distribution]
+outputs: [out/relvalue.txt, out/varratio.csv, out/reversion.csv, out/arm.csv, out/nulls.csv,
+  REPORT.md]
