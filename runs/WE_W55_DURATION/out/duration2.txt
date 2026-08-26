@@ -62,16 +62,15 @@ or_pos                   2    348        84     65.8%          17      16,139   
 
    baseline: P(short) = 59.7 %, mean per-unit P&L = $98 over 1942 trades
 
-=== THE PREREGISTERED STOPPING RULE ===
-   2 causal buckets (n >= 100) have NEGATIVE per-unit P&L. The five that
-   cost the most, i.e. the best refusal candidates:
-feature             bucket      n  P(short)  per-unit $  pts/sess refused
-dist_vwap                2    332     61.7%         -63             -1.03
-prev_ret                 4    367     59.7%         -18             -0.78
+=== MULTIPLICITY CHECK on phase 1's own 77-bucket scan (amendment_1) ===
+   observed: 2 negative buckets (n>=100), most negative $-63/unit
+   permuted: 3.0 negative buckets on average (5th-95th pct 0-6), most negative $-34 on average (5th pct $-82)
+   p(as many negative buckets by chance) = 0.776   p(one as negative by chance) = 0.128
+   -> DOES NOT SURVIVE - chance produces this or more
 
-   -> phase 2 is AUTHORISED. Naive upper bound if all five were refused with no
-      side effects: +1.80 pts/session. That is NOT an achievable result -
-      the buckets overlap, refusing an entry changes the session box and the
-      trailing quantile pool, and the nulls have not been run.
+=== THE PREREGISTERED STOPPING RULE ===
+   NO causal bucket of >= 100 entries has negative per-unit P&L.
+   -> X3 RECORDED: the -15.02 is not reachable through these features. The wave
+      STOPS at phase 1. Duration is forecastable; profitability is not.
 
 === STATUS: diagnostic, nothing adopted, no arm built. ===
