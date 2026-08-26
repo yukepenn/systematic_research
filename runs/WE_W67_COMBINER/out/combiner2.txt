@@ -1,0 +1,49 @@
+=== B1 GATE: 14.86 pts/session (expect 14.72) -> PASS [32s]
+
+======================================================================================================================
+=== PHASE 2: whose money is it? Every trade tagged by its ENTRY STATE
+======================================================================================================================
+A trade is B-MOM-ENABLED if, at its entry bar, the member consensus alone would NOT have
+cleared the entry level - i.e. it fired only because B-MOM was pushing the same way.
+
+entry state                          trades   share         net $  share of net    $/trade   win %
+B-MOM ENABLED (consensus short)         401   20.6%        83,083         27.6%        207   41.9%
+member consensus sufficed              1541   79.4%       217,734         72.4%        141   36.8%
+   of which tilt agreed                 990   51.0%       170,548         56.7%        172   36.2%
+   of which no tilt help                551   28.4%        47,187         15.7%         86   37.9%
+
+   by year, the B-MOM-enabled share of NET:
+year       trades  enabled  enabled share of net   enabled $/trade
+2022          207       56                  9.9%                53
+2023          550      141                 82.4%                92
+2024          595       98                 17.3%               180
+2025          427       71                 45.9%               776
+2026          163       35                -16.6%              -159
+
+   member consensus at entry: median 4 of 13, 10th pct 0, 25th 2, 90th 8
+
+======================================================================================================================
+=== PHASE 3: the B-MOM weight, 0 (Solar only) -> 4.2 (B-MOM alone enters)
+======================================================================================================================
+At 4.2 the B-MOM term alone exceeds the 3.0 entry level, so the members stop mattering.
+This is NOT a search for a better weight - it measures how much of the object is B-MOM.
+
+w_bmom       trds    pts  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   ulcer   worst$
+0.00         1841   7.26   20.5    43.7   53.9      8      153       891   15,020   6,709  -10,746
+1.00         1961  10.58   23.7    44.2   55.4      8      373     1,119   12,546   5,236   -8,008
+2.00         1986  13.41   26.0    44.9   58.8      8      311     1,117   10,720   6,350   -5,786
+2.83         1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   6,183   -7,418   <- INCUMBENT
+4.20         2140  14.62   32.3    44.0   58.3      8      880     1,429   15,689   6,071  -12,435
+
+   per year (pts/session):
+w_bmom          2022      2023      2024      2025      2026
+0.00            5.31      3.27      5.66     10.95     14.32
+1.00            6.92      6.45     11.05     13.29     17.32
+2.00            6.83      1.75     18.52     22.30     15.70
+2.83           11.59      3.04     19.59     23.17     15.79
+4.20           11.33      9.77     19.66     18.62      8.34
+
+   SOLAR-ONLY vs the incumbent: 7.26 vs 14.86 pts/session, i.e. B-MOM contributes 51 % of the object's net.
+   correlation of the two daily series: 0.648
+
+=== STATUS: attribution only. Nothing adopted. ===

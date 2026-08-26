@@ -3,7 +3,49 @@
 
 # STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7)
 
-> ## CURRENT TRUTH after W57 + CHARTER AMENDMENT 2 (2026-08-26) — supersedes everything below
+> ## ⚠️ CURRENT TRUTH after W67 (2026-08-26) — supersedes everything below
+>
+> ### THE OBJECT IS NOT WHAT THIS CAMPAIGN HAS BEEN CALLING IT.
+>
+> Every prior wave describes P1 as *"a selection-free majority vote over 32 long-only
+> Solar-ratchet configurations"*. **W67 enumerated the combiner exactly and that description is
+> wrong.** The six inherited constants collapse to one table — the members that must be net-long
+> to enter:
+>
+> | tilt agrees | B-MOM | members needed | fraction |
+> |---|---|---|---|
+> | no | 0 | 6 of 13 | 46.2 % |
+> | no | **+1** | **1 of 13** | **7.7 %** |
+> | yes | 0 | 5 of 13 | 38.5 % |
+> | yes | **+1** | **1 of 13** | **7.7 %** |
+>
+> **The object is a Solar ensemble OR-GATED WITH B-MOM.** B-MOM was long at 37.3 % of all
+> entries; the median entry has only 5 of 13 members agreeing. The ±13 clamp is dead code, and
+> four of the six constants cancel out of the decision entirely.
+>
+> ### `FACT`: B-MOM SUPPLIES 51 % OF THE OBJECT'S NET.
+> Solar alone: **7.26 pts/session**. The object: **14.86**. Per year, B-MOM's contribution is
+> +6.28 / −0.23 / **+13.93** / +12.22 / **+1.47** (2022→2026) — **collapsing**. The
+> B-MOM-enabled share of net by year: 9.9 % / **82.4 %** / 17.3 % / 45.9 % / **−16.6 %**.
+>
+> ### And this repo has independently judged B-MOM regime-local, twice, without connecting it:
+> the scalping lab parked it (PF **1.013** over the 16 unseen years 2006–2021); **W57** measured
+> t = 0.27 pre-2022 against t = 2.66 after with no regime variable separating them; **W58** put
+> its latest 24-month window at the **98th percentile of its own 234-window history**.
+>
+> **W57's conclusion therefore reads far more seriously than it did when written.** It said
+> *"this repo holds no engine that diversifies P1"* — about a candidate. It is really about a
+> component **we already depend on for half the net**, which is in-sample, at the top of its own
+> historical range, and already negative in 2026.
+>
+> **This is a risk concentration to disclose, not a parameter to tune.** Measured alternatives:
+> `w_bmom = 2.00` costs 10 % of production for a **25 % smaller mean top-5 drawdown, a 22 %
+> smaller worst week** and a higher positive-week rate; `w_bmom = 0` is 7.26 pts/session, the
+> honest floor if B-MOM's edge is a 4-year artifact. Neither is adopted.
+>
+> ### Everything else from W51–W66 stands as recorded below. Nothing has been adopted since W37.
+>
+> ## CURRENT TRUTH after W57 + CHARTER AMENDMENT 2 — superseded above, kept for the detail
 >
 > **THE OBJECT IS STILL P1 / P2, LONG-ONLY. W51–W57 adopted nothing.** Against the owner's
 > ACTUAL objective (consistency, then drawdown — Sharpe is demoted to a diagnostic):
