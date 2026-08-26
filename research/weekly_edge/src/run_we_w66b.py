@@ -48,7 +48,7 @@ def main():
     D, X, TG, st, en = setup()
     n, tarr, sid = D["n"], D["t"], D["sid"]
     wkmap = {s: D["wk"][s] for s in range(D["n_sess"])}
-    out = open(os.path.join(OUT, "clampfix.txt"), "w", encoding="utf-8")
+    out = open(os.path.join(OUT, "clampfix_c2rnull.txt"), "w", encoding="utf-8")
 
     def P_(*a):
         print(*a, flush=True); print(*a, file=out)
@@ -206,18 +206,18 @@ def main():
     P_("These arms perform no selection, so the right null is a random-member aggregate of equal")
     P_("size drawn from the same 4-40 pool (W59 amendment_1: an aggregate must not be dressed in")
     P_("a scan-matched null it cannot fail).\n")
-    tgt_arm = "C2 ladder 6-40, clamp OFF"
+    tgt_arm = "C2r ladder 6-40, clamp ON"
     if tgt_arm in ledger:
         real = met(ledger[tgt_arm], 0, "")
         nulls = []
         for _ in range(60):
             pick = sorted(RNG.choice(WIDE, len(L2), replace=False).tolist())
-            r = build(mem_n, bm_n, tl_n, pick)
+            r = build(mem_c, bm_c, tl_c, pick)
             if r is None:
                 continue
             nulls.append(met(r[0], r[1], ""))
         Nd = pd.DataFrame(nulls)
-        Nd.to_csv(os.path.join(OUT, "clamp_nulls.csv"), index=False)
+        Nd.to_csv(os.path.join(OUT, "c2r_nulls.csv"), index=False)
         P_(f"{'metric':<16}{'real':>12}{'null mean':>12}{'null p95':>12}{'percentile':>12}"
            f"{'verdict':>10}")
         for key, hi in (("pts", True), ("weekly", True), ("trdpos", True), ("wkpos", True),
