@@ -1,0 +1,63 @@
+amendment: 1
+run_id: WE_W39_FEATURES
+date: 2026-08-25
+status: appended AFTER read 1; read 1 stands unchanged in out/features.txt
+
+what read 1 established:
+  B1 PASS - W37's P1 reproduced at exactly 14.72 pts/session, Sharpe 0.311.
+  SCREEN: 7 of 42 long-side features reach |t| >= 2 against a chance expectation of 1.9, so
+    the universe does carry more than noise. Three of the incumbent five are in the top seven
+    (dist_open, prev_ret, dist_vwap); the strongest NEW ones are body_share (-1, t 2.58) and
+    rv_expansion (-1, t 2.22).
+  Q1 FEATURE SELECTION IS NOISE, like config selection was: 62 % quarterly churn (W19's
+    config churn was 88 %), and the walk-forward pick LOSES to the fixed five on every axis
+    (16.03 vs 16.91 pts/session, worst -$9,888 vs -$7,418, eff 0.163 vs 0.229).
+  Q2 AGGREGATION OVER FEATURES DOES NOT WORK, unlike aggregation over configs. 16.22 pts,
+    eff 0.180, Sharpe 0.282 - all below Q0. This is a genuine refinement of the W19/W20 prior:
+    aggregation helps when the members are noisy estimates of the SAME quantity (32 configs of
+    one rule) and hurts when they are candidates for DIFFERENT quantities (42 heterogeneous
+    features, most of which carry nothing). The prior "selection is noise, aggregate instead"
+    is hereby scoped to the former case.
+  Q3 CONTINUOUS SIZE IS LEVERAGE (4th confirmation, new form): highest production of any arm
+    (21.44 pts/session) at avg 2.00 contracts, but eff 0.201 < Q0's 0.229 at avg 1.19. More
+    size resolution bought exposure, not edge.
+  Q4 the FLOW class is actively harmful inside the continuous form: dropping its 6 features
+    lifts Q2 from 13.69 to 15.93 pts and eff 0.151 to 0.172. No class is load-bearing.
+
+two defects in read 1's own adoption rule, corrected here before anything is adopted:
+  D1 THE WORST-WEEK GATE IS EXPOSURE-NAIVE. "worst >= reference x 1.02" penalises any arm that
+     uses more contracts, which is precisely what the owner charter forbids ("exposure-neutral
+     units first; contract count is a deployment choice, not evidence"). The short arm
+     S-cont was rejected by this gate while BEATING the base at matched exposure:
+       short base at 1.00 contracts : $601/wk, worst -$8,269, eff 0.073
+       short base scaled to 1.46    : $877/wk, worst -$12,073, eff 0.073 (invariant)
+       S-cont at avg 1.46 contracts : $1,118/wk, worst -$11,862, eff 0.094, Sharpe 0.197
+     Same tail, 27 % more money. The corrected primary criterion is EFF (weekly mean per unit
+     of worst week) plus CVaR efficiency, with the absolute worst week reported, not gated.
+  D2 Q1 FORCED A TOP-5 PICK. Rank-5 selection flips whenever two features are near-tied, which
+     manufactures churn independently of whether the information is stable. An ADMISSION
+     THRESHOLD (t >= 2 on the trailing window) admits a variable number and is the natural
+     stable form. Read 1 cannot distinguish "feature information is unstable" from "top-k
+     ranking is unstable"; this amendment separates them.
+
+added arms:
+  Q5 WF-THRESHOLD  : quarterly, admit every feature whose trailing-12m |t| >= 2 at its
+                     trailing-chosen sign; binary count; size 2 at a majority of the admitted
+                     count. Churn measured the same way, so Q5 vs Q1 answers D2 directly.
+  Q6 CORE+ADMITTED : the incumbent five ALWAYS kept, plus anything Q5 admits (declared
+                     engineering choice: the core has passed two independent nulls, so it is
+                     not put at risk by a quarterly screen).
+  S1n SHORT NULLS  : the binding N1 (circular shift) and N2 (count-matched random sizing) on
+                     S-cont, which read 1 rejected on the defective gate and therefore never
+                     null-tested.
+  S2p SHORT PORTFOLIO: P2 + S-cont vs P2 alone at matched total exposure - the only fair
+                     question, and the one W38 answered for the unsized short sleeve.
+
+adoption (corrected): eff > reference AND CVaR5 efficiency > reference AND stress-net > 0
+  AND N1 >= 95th AND N2 >= 95th. Absolute worst week is REPORTED alongside, never gated.
+falsifier: if Q5 churns as badly as Q1, then feature information itself is unstable and the
+  incumbent five stay by default; if Q5 is stable but still loses to Q0, the scoring-form
+  conclusion of read 1 stands unchanged. If S-cont fails either null, W38's short conclusion
+  stands unchanged and the short side is closed for this campaign's feature universe.
+forbidden: [using the full-window screen to build any adopted arm, gating on absolute worst
+  week, adopting on one null]
