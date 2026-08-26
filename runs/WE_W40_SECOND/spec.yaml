@@ -1,0 +1,73 @@
+run_id: WE_W40_SECOND
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner charter of 2026-08-25, wave W40 - "a genuinely independent second model.
+  This is strategically more important than another 5 % improvement to Solar. Do NOT require
+  it to resemble Solar."
+
+why this wave is not a rerun of W25/W27: >
+  W25 tested Donchian, EMA cross, momentum acceleration and range position as SLEEVES; W27
+  tested the same library as VOTERS. Both are textbook TREND STATE rules, and W31 later
+  measured why state rules lose here (0.0025 vs 0.0603 pts/bar). Nothing in that library was
+  an EVENT rule, and no non-trend market mechanism was ever tested at all. What W25/W27
+  support is "the non-Solar signal library we tested did not diversify" - NOT "no independent
+  second model exists" (the charter names that upgrade as the quantifier hallucination to
+  avoid). This wave tests four mechanisms that are structurally different from a trend
+  ratchet, three of them EVENT rules by construction, one of them trading a disjoint set of
+  bars by construction.
+
+axes (each is a market mechanism, stated before any result):
+  A FADE EVENT - value reversion as an EVENT, not a state.
+    Mechanism: price extends >= k x ATR from session VWAP and then CLOSES BACK inside by a
+    fraction of that extension. The reopening is legitimate: W11 and W18 falsified LOW-RANGE
+    FADE, which is a STATE rule ("it is quiet, so fade"), and did so before W31 established
+    that this instrument pays events and not states. A fade EVENT has never been run.
+  B VOLATILITY-EXPANSION EVENT - the onset of realised-vol expansion.
+    Mechanism: short-horizon realised vol crosses above a multiple of its own long-horizon
+    level; enter in the direction of the initiating displacement. Different from the ratchet,
+    which flips on RETRACEMENT, not on expansion.
+  C SWEEP-AND-RECLAIM EVENT - a liquidity mechanism, not a trend mechanism.
+    Mechanism: price takes out the session (or prior-session) extreme and closes back inside
+    within m bars; enter against the sweep. This is the only tested axis whose economic story
+    is stop-running rather than trend participation.
+  D COMPLEMENT-SET MODEL - a supervised model that trades ONLY the bars where the Solar
+    object holds nothing (87.1 % of bars, W30). Orthogonality is structural here rather than
+    hoped for: the two sleeves cannot be in the market at the same time except by accident.
+    Fit: ridge regression of the forward 30-bar return on standardised causal features,
+    refit quarterly on the trailing 12 months of FLAT bars only, traded the next quarter,
+    entering when |prediction| is in the top decile of the trailing prediction distribution.
+    W30 Q2 showed those bars are unprofitable FOR THE SOLAR RULE; whether they are
+    unprofitable for any rule has never been asked.
+
+shared harness: all four use the campaign's own fill layer (next-bar-open fills, decision-bar
+  information only), the same session box (-$1,300 / +$1,000), the same frictions
+  ($4.36/RT base, $14.36/RT stress). B1 CHECK: the long Solar object must reproduce
+  14.72 pts/session before any axis is interpreted.
+
+measurements (reported for EVERY axis, profitable or not - W32's omission was that it
+  measured production and never measured a single correlation):
+  standalone: pts/session, $/trade, weekly mean, worst week, CVaR5, Sharpe, stress-net
+  independence: weekly-P&L correlation with the long object; bar-overlap of in-position time;
+    and the one that actually matters for the tail - CONDITIONAL correlation inside the long
+    object's WORST DECILE of weeks (a sleeve that decouples in calm weeks and re-couples in
+    bad ones is worthless).
+  portfolio: TIME-WEIGHTED exposure-matched comparison (contract-minutes), long alone scaled
+    to the pair's exposure versus the pair, on eff (weekly / |worst week|) and CVaR
+    efficiency. Per the W39 amendment, absolute worst week is reported, never gated.
+
+adoption (a second model is adopted only if ALL hold):
+  stress-net > 0 standalone
+  AND weekly correlation with the long object < 0.5
+  AND conditional correlation in the long object's worst-decile weeks < 0.5
+  AND the exposure-matched pair beats long-alone-scaled on eff OR on CVaR efficiency
+  AND a binding null appropriate to the axis (circular shift of the entry mask, plus for
+      axis D a count-matched random-entry control).
+falsifier: if no axis clears, the recorded statement is "no second model has been found in
+  four structurally different mechanism families, in addition to the five signal families of
+  W25/W27" - which is a stronger, honestly-bounded version of the model-concentration risk,
+  and NOT a claim that none exists. The next escalation would then be a different instrument
+  or a different data representation (W41), not more rules on NQ 1-min bars.
+forbidden: [data >= 2026-08-01, fill-bar information, unmatched-exposure portfolio claims,
+  adopting on production alone without the conditional-correlation measurement, describing
+  any negative result as permanent]
+outputs: [out/second.txt, out/summary.csv, REPORT.md]

@@ -1,0 +1,54 @@
+amendment: 2
+run_id: WE_W39_FEATURES
+date: 2026-08-25
+status: appended AFTER amendment 1's readout; both prior readouts stand unchanged
+
+what amendment 1 established:
+  D2 ANSWERED, AND AGAINST MY OWN HYPOTHESIS. Threshold admission (t >= 2) churns WORSE than
+    top-5 selection (80 % vs 62 % Jaccard) and admits ZERO features in 2 of 12 quarters.
+    So the churn is not an artifact of rank-k ties: FEATURE INFORMATION ITSELF IS UNSTABLE
+    quarter to quarter. Q5 eff 0.138 and Q6 (core five + admitted) eff 0.162, both below the
+    incumbent five's 0.229. Read 1's scoring-form conclusion stands and is now robust across
+    two independent selection forms.
+  D1 CORRECTED AND CONSEQUENTIAL. With the exposure-naive gate removed, the short continuous
+    arm passed the corrected criteria - and then FAILED the binding count-matched null:
+      N1 circular shift        100th percentile, p = 0.000  EVIDENCE
+      N2 count-matched random   69th percentile, p = 0.310  NOT EVIDENCE
+    Randomly sizing up the same number of short entries does as well. S-cont is REJECTED and
+    W38's short conclusion stands unchanged.
+  PORTFOLIO, at time-weighted matched exposure (contract-minutes, not trade-count):
+    long alone x1.91 -> $2,807/wk, worst -$14,170, eff 0.198
+    long + S-cont    -> $2,557/wk, worst -$14,606, eff 0.175
+    long + S0 short  -> $2,048/wk, worst -$12,588, eff 0.163
+    Long-only scaled wins on money AND on tail; only Sharpe (0.337 vs 0.311) and weekly
+    positive rate (64.4 % vs 58.6 %) favour the pair. Third independent confirmation.
+
+why this amendment exists: >
+  N2 did something N1 could not: it separated "sized the RIGHT trades" from "sized SOME
+  trades". The LONG quality layer - the campaign's largest adopted improvement, worth
+  10.62 -> 14.72 pts/session - has only ever been tested against N1 (W34 98th percentile,
+  W37 100th percentile). It has never faced a count-matched control. If it fails one, the
+  layer is leverage and the headline must be withdrawn, exactly as the short arm's was.
+  Running this test is not optional once the tool exists and the short side has shown it can
+  overturn an N1 pass.
+
+controls (both on the FULL window, versus the adopted long object):
+  C1 COUNT-MATCHED RANDOM SIZING - size up the same NUMBER of entries, chosen at random,
+     100 draws, reported on pts/session, eff AND Sharpe.
+  C2 RANDOM FIVE FEATURES - the identical causal binary rule built from five features drawn at
+     random from the 42-feature universe with random signs, 100 draws. This controls the one
+     contamination the campaign has never controlled: the incumbent five were selected on the
+     full sample in W33. W36/W37 showed the SHAPE survives honest refitting; C2 asks whether
+     the specific FEATURES do any work at all.
+
+interpretation declared in advance:
+  C1 fail                -> the quality layer is leverage; withdraw the 14.72 headline and
+                            revert to the 10.62 base object, exactly as W38's S5 was withdrawn.
+  C1 pass, C2 fail       -> the RULE SHAPE pays and the specific five do not. Keep the layer,
+                            stop defending the feature list, and describe it honestly as
+                            "a five-way causal quantile vote on flip context" rather than as
+                            five identified mechanisms.
+  C1 pass, C2 pass       -> both the shape and the feature choice carry information; the
+                            layer stands as described.
+forbidden: [reporting only the favourable control, changing the metric after seeing a result,
+  describing a C2 failure as a C1 failure or vice versa]

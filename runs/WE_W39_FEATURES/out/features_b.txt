@@ -1,0 +1,42 @@
+=== B1: 14.72 pts/session (expect 14.72) -> PASS [25s]
+
+=== Q5 threshold admission (t >= 2, trailing 12m) [48s] ===
+   quarters 12 | admitted per quarter [1, 3, 1, 0, 0, 2, 3, 5, 1, 2, 2, 2] | Jaccard overlap 20% -> CHURN 80%  (Q1 top-5 churn was 62 %)
+     2023Q3: mom60
+     2023Q4: dist_lo60, mom15, mom60
+     2024Q1: trend_accel
+     2024Q2: (none admitted)
+     2024Q3: (none admitted)
+     2024Q4: body_share, prev_ret
+     2025Q1: body_share, delta_mag, delta_signed
+     2025Q2: delta_mag, delta_signed, dist_open, dist_prevclose, trend_accel
+     2025Q3: dist_lo60
+     2025Q4: dist_open, trend_accel
+     2026Q1: dist_open, trend_accel
+     2026Q2: path_eff, trend_accel
+
+=== LONG ARMS on the adoption window 2023-07 -> 2026-08 (eff/cvEff are the criteria; worst week reported not gated) ===
+arm                                    n   sz    pts    $/tr     wk$  wk+%    worst    CVaR5   shrp    eff  cvEff  stress
+Q0 incumbent five (reference)       1455 1.19  16.91   175.1   1,698  60.0   -7,418   -5,868  0.331  0.229  0.289   1,601
+Q5 WF threshold-admitted            1455 1.18  13.33   138.0   1,338  58.7   -9,700   -5,843  0.309  0.138  0.229   1,241  reject
+Q6 core five + admitted             1467 1.16  15.69   161.1   1,575  58.7   -9,700   -5,784  0.326  0.162  0.272   1,477  reject
+BASE no quality layer               1544 1.00  11.94   116.5   1,199  60.7   -7,487   -5,172  0.321  0.160  0.232   1,096
+
+=== SHORT SIDE, EXPOSURE-MATCHED (D1 correction) [49s] ===
+arm                                    n   sz    pts    $/tr     wk$  wk+%    worst    CVaR5   shrp    eff  cvEff  stress
+S0 short base x1                    2225 1.00   5.99    54.6     601  50.0   -8,269   -5,744  0.162  0.073  0.105     491
+S0 short base x1.46 (matched)       2225 1.46   8.73    79.4     875  50.0  -12,035   -8,361  0.162  0.073  0.105     715
+S-cont continuous score             1864 1.46  11.15   121.1   1,118  53.5  -11,862   -8,014  0.197  0.094  0.139   1,026  PASS
+
+=== BINDING NULLS on S-cont [50s] ===
+   N1 circular shift          real 0.094 | null mean 0.073 | p95 0.074 | pctile 100.0 | p 0.000 -> EVIDENCE
+   N2 count-matched random    real 0.094 | null mean 0.084 | p95 0.118 | pctile 69.0 | p 0.310 -> NOT EVIDENCE
+   BOTH nulls >= 95th: False
+
+=== PORTFOLIO at matched exposure, full window [98s] ===
+arm                                    n   sz    pts    $/tr     wk$  wk+%    worst    CVaR5   shrp    eff  cvEff  stress
+long Q0 x1                          1950 1.18  14.72   153.0   1,470  58.6   -7,418   -5,398  0.311  0.198  0.272   1,374
+   time-weighted exposure: long 212,193 contract-min, long+short 405,350 -> long must be scaled x1.91 to match
+long Q0 x1.91 (matched)             1950 2.26  28.13   292.3   2,807  58.6  -14,170  -10,311  0.311  0.198  0.272   2,624
+long Q0 + S-cont                    3814 1.32  25.87   137.4   2,557  64.4  -14,606  -10,097  0.337  0.175  0.253   2,371
+long Q0 + S0 short                  4175 1.09  20.72   100.5   2,048  63.4  -12,588   -8,636  0.320  0.163  0.237   1,844
