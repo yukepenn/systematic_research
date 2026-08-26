@@ -1,0 +1,91 @@
+run_id: WE_W66_INNER
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: the owner is right and this is the most glaring omission in 65 waves.
+
+THE OMISSION:
+  The object's CORE SIGNAL PARAMETERS have never been examined by this campaign. Not once.
+      VolMult ladder  [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]  - 13 members, step 2
+      sigma window    460 bars
+      hysteresis      entry_level 3.0 / exit_level 1.0 on the ensemble mean
+      S clamp         SMIN 40 ticks, SMAX 1200 ticks, initial STOPM 179 ticks
+  Every one of them was inherited from the vendor's Solar Wave and frozen as "frozen truth" in
+  campaign #1. W59 scanned 216 cells of the OUTER parameters and its spec explicitly excluded
+  these, saying "that is a different object and needs its own wave". That wave was never written.
+  Sixty-five waves have optimised everything around a signal core nobody has ever questioned.
+
+  The owner's words, and they are the standing instruction: 目前这个东西不一定是最优的...
+  永远要尝试否认自己，继续提升.
+
+what W59 and W19 jointly license, and what they forbid:
+  FORBIDDEN: selecting a better parameter. W59 measured a quarterly selector over 216 outer
+    cells at the 2.0th percentile of random choice, and a CONSTRAINED selector at the 18.7th.
+    Selection has lost at every scale this campaign has tested. No cell will be selected here.
+  LICENSED: AGGREGATION over members that are NEAR-EXCHANGEABLE. W19 measured that aggregating
+    the 32 inner configs beats selecting among them (PBO 0.48-0.90 for selection), and W59 found
+    the boundary: aggregation helps when members are near-exchangeable and DILUTES when there is
+    a real quality gradient. Different VolMults of the SAME ratchet, and the same ratchet at
+    different sigma timescales, are the most near-exchangeable members this object has - far
+    more so than the 216 outer cells, which is why W59's global aggregate diluted.
+  So the wave's whole shape is: MAKE THE ENSEMBLE MORE DIVERSE ALONG AXES THAT ARE
+  EXCHANGEABLE, and never choose.
+
+phase 0 - DOES THE CLAMP EVEN BIND? (exact accounting, no backtest, costs nothing)
+  S = clamp(VolMult x sigma, 40, 1200 ticks). NQ has gone from ~11,000 to ~20,000 over the
+  window while sigma scales with price. Measure, per member and per year, the fraction of bars
+  on which the floor binds and the fraction on which the cap binds. If the floor binds on the
+  low VolMults in the early sample and not later, the ladder's effective width has been CHANGING
+  over time without anyone noticing, and that is a finding regardless of what phase 1 shows.
+
+phase 1 - THE LADDER'S ENDS AND DENSITY (aggregate, never select):
+  The ladder stops at 6 and 30 with step 2, and nothing justifies either endpoint.
+  L1  extend DOWN:  [4, 6, ... 30]      L2  extend UP:  [6, 8, ... 40]
+  L3  extend BOTH:  [4, 6, ... 40]      L4  denser:     [6, 7, 8, ... 30] step 1
+  L5  wider+denser: [4, 5, 6, ... 40] step 1
+  Each is a strictly larger near-exchangeable member set aggregated the same way the incumbent
+  aggregates its 13. The incumbent is a NESTED SUBSET of L1-L5, which is what makes this a
+  diversity question rather than a parameter search.
+
+phase 2 - THE SIGMA TIMESCALE, which is the genuinely new axis:
+  sigma is a trailing mean of |dClose| over 460 bars - one number, one timescale, never varied.
+  A ratchet at a 230-bar sigma and one at a 920-bar sigma estimate the SAME quantity at
+  different speeds; they are exchangeable in exactly the sense law 2 requires, and this axis has
+  never been diversified at all.
+  S1 aggregate over sigma in {230, 460, 920} at the incumbent ladder
+  S2 the full cross product of S1 with the best-supported ladder from phase 1
+  Report the ensemble's effective diversity: pairwise correlation of member target series, and
+  how much the vote's own distribution changes.
+
+phase 3 - THE HYSTERESIS, aggregated:
+  entry 3.0 / exit 1.0 on the ensemble mean M. H1 aggregates over {(2.5,1.0), (3.0,1.0),
+  (3.5,1.5)}. This is the one axis where members may NOT be exchangeable - a lower entry level
+  trades much more - so phase 3 reports the exchangeability check explicitly and defers to it.
+
+phase 4 - EVALUATION, consistency-first per Charter Amendment 2, and the bar is W60's:
+  Every arm at a fixed $20,245 max drawdown: positive days, positive TRADED days, positive
+  weeks, longest losing streaks, median week, weekly dollars, drawdown distribution.
+  SUB-PERIOD STABILITY IS THE GATE, not the full-sample number: the fraction of rolling
+  24-month windows in which the arm beats the incumbent on the traded-day rate AND weekly
+  dollars AND the drawdown distribution. Every W60 arm scored 0 % on that and it is the bar.
+
+phase 5 - NULLS, chosen per arm as W59's amendment_1 requires:
+  These arms perform NO selection, so a scan-matched null is meaningless for them. Their null is
+  a RANDOM-MEMBER aggregate of the same size drawn from a wide VolMult x sigma pool: does the
+  SPECIFIC extension beat an arbitrary ensemble of equal size? 300 draws.
+  Plus the B1 identity gate: the incumbent ladder at sigma 460 must reproduce 14.72 +- 0.6
+  pts/session or the wave is VOID.
+
+adoption bar: beats the incumbent on the traded-day rate and weekly dollars at a fixed drawdown
+  in a MAJORITY of rolling 24-month windows, does not worsen the drawdown distribution, performs
+  no parameter selection at any point, clears its random-member null at >= 95th percentile, and
+  passes the trailing-24-month chronology gate.
+falsifier: if a strictly larger, strictly more diverse near-exchangeable ensemble does not beat
+  the incumbent, then the vendor's ladder is not merely acceptable but at a genuine optimum for
+  a reason nobody has articulated - and finding that reason becomes the next question rather
+  than a closed door.
+forbidden: [data >= 2026-08-01, SELECTING any ladder or sigma window, judging on Sharpe or eff,
+  presenting a full-sample winner without its sub-period table, comparing a no-selection
+  aggregate to a scan-matched null, changing the fill layer or the session box (those are W59's
+  axes and mixing them would confound both)]
+outputs: [out/inner.txt, out/clamp.csv, out/arms.csv, out/subperiod.csv, out/nulls.csv,
+  REPORT.md]
