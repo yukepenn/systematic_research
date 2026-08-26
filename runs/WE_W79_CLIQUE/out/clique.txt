@@ -1,0 +1,94 @@
+=== 1058 sessions, 213 weeks, 2022-07-04 -> 2026-07-31 (EXTENDED; the last 46 were W76's held-out window)
+    AXISB rebuilt on the extended window at FROZEN (1.6, 1.0, 15): 4,346 trades, net $43,766 [24s]
+
+=== pairwise daily rho on the EXTENDED window (W75 measured these on the truncated one) ===
+            AXISB     BMOM      X9a       P1
+AXISB       1.000    0.156    0.018    0.031
+BMOM        0.156    1.000    0.032    0.314
+X9a         0.018    0.032    1.000    0.673
+P1          0.031    0.314    0.673    1.000
+
+   max pairwise |rho| among the three members: 0.156 -> still a clique at 0.20
+
+   inverse-vol weights: AXISB 0.378, BMOM 0.246, X9a 0.376
+
+================================================================================================================================
+=== PHASE 1: THE PANEL, extended window
+================================================================================================================================
+object                        net $   wk+%  wStrk   medWk$  weekly$   wk$@DD   top5DD    maxDD    worst
+AXISB                        43,766  52.6%      6      170      205       75    9,562   55,739  -14,329
+BMOM                        252,258  57.7%      4    1,153    1,184      549   12,673   43,712  -16,907
+X9a                         233,781  53.5%      7      280    1,098      923   13,873   24,075   -8,658
+
+clique equal-weight         176,602  57.3%      6      786      829    1,080   11,668   15,548   -5,976
+clique inverse-vol          166,552  59.6%      5      715      782    1,112   12,372   14,233   -4,971
+P1 (reference)              280,131  56.3%      8      279    1,315    1,099   13,864   24,225   -7,418
+
+================================================================================================================================
+=== PHASE 2: ROLLING 24-MONTH WINDOWS vs P1. The gate that killed W78.
+================================================================================================================================
+portfolio                   n   weekly$@DD     wk+%    top5DD   ALL THREE
+clique equal-weight        25          96%      60%        4%          0%
+clique inverse-vol         25          88%      68%        4%          0%
+drop AXISB                 25          80%      88%        4%          0%
+drop BMOM                  25          20%      52%        4%          0%
+drop X9a                   25           0%      32%       36%          0%
+
+   BAR: all three in a MAJORITY. equal-weight scores 0 % -> FAIL
+
+================================================================================================================================
+=== PHASE 3: PER YEAR (weekly $ | positive-week %)
+================================================================================================================================
+object                                2022              2023              2024              2025              2026
+AXISB                           -436 | 42%         -48 | 54%         -41 | 53%       1,201 | 57%        -126 | 48%
+BMOM                           1,647 | 54%         886 | 58%       1,163 | 58%       1,877 | 68%          71 | 45%
+X9a                              796 | 46%         157 | 50%       2,150 | 62%         784 | 49%       1,595 | 55%
+clique equal-weight              669 | 50%         332 | 50%       1,091 | 60%       1,287 | 72%         513 | 48%
+clique inverse-vol               540 | 50%         259 | 54%       1,080 | 62%       1,210 | 74%         570 | 52%
+P1 (reference)                 1,159 | 46%         302 | 60%       1,915 | 60%       2,265 | 58%         412 | 52%
+
+   W76's held-out 46 sessions (OBSERVATION - 9 weeks ranks nothing):
+      AXISB                    net $  -23,250   positive weeks  22.2 %   worst $ -14,329
+      BMOM                     net $  -17,952   positive weeks  33.3 %   worst $ -16,907
+      X9a                      net $   16,702   positive weeks  33.3 %   worst $  -3,127
+      clique equal-weight      net $   -8,167   positive weeks  22.2 %   worst $  -4,953
+      clique inverse-vol       net $   -6,907   positive weeks  22.2 %   worst $  -4,514
+      P1 (reference)           net $  -20,686   positive weeks  11.1 %   worst $  -5,015
+
+================================================================================================================================
+=== PHASE 4: N1 NULL - shift each member independently; keep every marginal exactly.
+================================================================================================================================
+
+metric                      real   null mean    null p95   pctile          
+weekly $ @ DD            1,079.6     1,026.6     1,396.7      60%   generic
+positive-week %             57.3        59.1        62.9      15%   generic
+mean top-5 DD           11,667.6    13,632.0     9,879.9      83%   generic
+weekly streak                6.0         4.8         4.0       9%   generic
+
+================================================================================================================================
+=== PHASE 5: WALK-FORWARD over the weight vector
+================================================================================================================================
+   12 refits: ['BMOM', 'equal', 'X9a', 'X9a', 'X9a', 'X9a', 'X9a', 'invvol', 'invvol', 'invvol', 'invvol', 'invvol']
+   choice churn 27 %
+
+                            wk+%   weekly$    wk$@DD    top5DD     worst
+walk-forward               62.1%     1,257     1,149    10,385    -7,017
+fixed equal-weight         60.7%     1,031     1,343    10,056    -5,976
+P1 alone                   58.6%     1,737     1,452     9,002    -6,344
+
+   retention 86 % (W29 bar 80 %) -> PASS
+
+================================================================================================================================
+=== PREREGISTERED VERDICT
+================================================================================================================================
+   (1) all three in a majority of rolling windows :     0 %   -> FAIL
+   (2) walk-forward retention >= 80 %             :    86 %   -> PASS
+   (3) positive in 2026 (extended)                : $  15,914 -> PASS
+   (4) not carried by one member (no 2-member subset beats the 3) -> PASS
+
+   -> DOES NOT CLEAR THE BAR. The best full-sample object in the repo does not
+      survive sub-period testing either. That is now the SIXTH such case, and it
+      says something structural: full-sample dominance is nearly uninformative
+      here, and only the rolling and walk-forward tests carry information.
+
+=== STATUS: NOTHING ADOPTED. [24s] ===
