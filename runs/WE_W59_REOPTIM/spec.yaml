@@ -1,0 +1,85 @@
+run_id: WE_W59_REOPTIM
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: a first-principles re-examination the owner's correction makes mandatory, and which
+  no wave has done because until today nobody noticed it was necessary.
+
+the observation:
+  EVERY PARAMETER OF THE CURRENT OBJECT WAS SELECTED UNDER AN OBJECTIVE THE OWNER HAS NOW
+  CORRECTED. The session box (-$1,300 halt / +$1,000 target) came from W22 and W26, chosen
+  because both halves improved Sharpe AND the tail. The vote threshold, the quality-size cut and
+  the throttle were all chosen on production, eff, or Sharpe. Charter Amendment 2 demotes Sharpe
+  to a diagnostic and makes the objective CONSISTENCY plus small drawdown - positive days,
+  positive traded days, positive weeks, longest losing streak, medians, dollars at a fixed
+  drawdown. Under that objective the same parameters are not obviously the same optima, and one
+  of them has an obvious mechanical reason to be badly wrong.
+
+  THE SESSION PROFIT TARGET. Under a production objective, stopping the sleeve at +$1,000
+  realised is a CAP on the upside and was justified only because it also cut the tail. Under a
+  consistency objective it does something completely different: IT LOCKS A DAY GREEN. A day that
+  reaches +$1,000 and is then allowed to keep trading can end red; a day that stops there cannot.
+  The profit target is therefore a direct, mechanical lever on the exact number the owner cares
+  about, and its level has never been chosen with that in mind.
+
+  W58 measured the ceiling this runs into: P1 is FLAT on 40 % of sessions by design, so no
+  entry-side change lifts the all-session positive rate above 60 %. But the TRADED-day rate is
+  46.0 % and that is entirely inside this wave's reach.
+
+the danger, named first: 216 cells is a large scan and I already know which direction I want.
+  W53's rule and W55/W57's multiplicity lesson both apply, and phase 2 exists because a grid
+  winner is not a result.
+
+phase 0 - PERSIST THE SURFACE (infrastructure, reusable):
+  Compute the FULL DAILY P&L SERIES of every cell once and write it to disk, so this and every
+  future wave does arithmetic on stored series instead of re-simulating. The incumbent cell
+  (halt 1300, target 1000, vote >= 0.5, size cut >= 3) must reproduce 14.72 +- 0.6 pts/session
+  or the wave is VOID.
+  Grid, all OUTSIDE the 32-config vote so the object's identity is unchanged:
+    session halt   : 800, 1300, 2000, none
+    session target : 500, 750, 1000, 1500, 2500, none
+    vote threshold : 0.375, 0.500, 0.625  (closed form: nMem x nThr x (1+dL) >= 32 x threshold)
+    quality cut    : size 2 at score >= 2, >= 3, >= 4
+  216 cells.
+
+phase 1 - THE SURFACE, read as a surface and not for a winner:
+  For each of the owner's metrics report the whole grid, and specifically:
+   a) is the response to the PROFIT TARGET monotone, and where does the positive-traded-day rate
+      peak against where the money peaks - that trade-off is the wave's actual subject;
+   b) is any good cell a PLATEAU or a SPIKE (neighbours within one grid step must agree);
+   c) the incumbent's own rank on each metric, which says how badly the old objective misled.
+
+phase 2 - WALK-FORWARD PARAMETER SELECTION (the only defensible claim):
+  A grid winner is not a result. At each quarter, choose the cell that was best on the TRAILING
+  data by the consistency objective, trade it for the next quarter, and report what that
+  actually earned - including the parameter turnover and how often the choice changed. Compare
+  against (i) the incumbent held fixed forever and (ii) the best fixed cell chosen with hindsight,
+  which bounds it from above and is not achievable.
+
+phase 3 - NULLS:
+  N1 SCAN-MATCHED: the arm's cell is the best of 216, so every null draw takes its own best of
+     216. W53 measured a 21-point scan inflating MAR ~20 % on structureless data; 216 cells will
+     be far worse and that inflation must be subtracted before anything is believed.
+  N2 the walk-forward selector run on PERMUTED trailing performance - does choosing by real
+     trailing consistency beat choosing at random from the same grid?
+  Both required. N2 is the binding one because it tests the SELECTOR, which is the thing that
+  would actually be deployed.
+
+phase 4 - THE MECHANISM, written down before the numbers are believed:
+  For the best target level, count directly: how many sessions reach the target and would have
+  ended RED without it, how many end lower because of it, and the net in dollars and in
+  positive-day count. This is exact accounting on the measured paths, the rule bought in W48,
+  and it must agree with the backtest or the backtest is not understood.
+
+adoption bar: positive-traded-day rate AND positive-week rate rise, weekly dollars at a fixed
+  $20,245 drawdown do not fall, the drawdown distribution does not worsen, the winning region is
+  a plateau and not a spike, the WALK-FORWARD version (not the grid winner) clears both nulls at
+  >= 95th percentile, and phase 4's accounting reconciles with the backtest.
+falsifier: if the walk-forward selector does not beat the incumbent held fixed, the recorded
+  conclusion is that the object's parameters are already at a consistency optimum too, and that
+  the owner's objective cannot be served from inside the current object at all - which would
+  make breadth the only remaining axis and would be worth knowing for certain.
+forbidden: [data >= 2026-08-01, adopting a grid winner, judging on Sharpe or eff, comparing a
+  216-cell scan to an unscanned null, changing anything INSIDE the 32-config vote (that is a
+  different object and needs its own wave), quoting the hindsight-best cell as achievable]
+outputs: [out/reoptim.txt, out/grid.csv, out/cells_daily.parquet, out/walkforward.csv,
+  out/nulls.csv, out/mechanism.csv, REPORT.md]
