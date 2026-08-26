@@ -61,7 +61,7 @@ def axis_fade(D, X, k=2.0, giveback=0.30, cut=None):
             peak = 0.0; side = 0; held = 0
         e = ext[i]
         if held != 0:
-            done = (e * held >= 0) if False else ((e >= 0) if held > 0 else (e <= 0))
+            done = (e >= 0) if held > 0 else (e <= 0)      # exit on the VWAP touch
             if done or (cut is not None and i - hold_from >= cut):
                 held = 0
             pos[i] = held
@@ -148,7 +148,8 @@ def axis_complement(D, F, names, flat, horizon=30, lam=10.0, q=0.90):
         240, min_periods=30).mean().values, 1e-9)
     fwd = (np.concatenate([c[horizon:], [c[-1]] * horizon]) - c) / atr
     # bar-i information at index i (we_features lags by one; un-lag for the decision bar)
-    M = np.vstack([np.concatenate([F[k][1:], F[k][-1:]]) for k in names]).T
+    M = np.vstack([np.concatenate([F[k][1:], F[k][-1:]])
+                   for k in names]).T.astype(np.float32)
     t = D["t"]
     qtr = pd.PeriodIndex(pd.to_datetime(t), freq="Q")
     pred = np.zeros(n); thr = np.full(n, np.inf)
@@ -160,7 +161,7 @@ def axis_complement(D, F, names, flat, horizon=30, lam=10.0, q=0.90):
         tstm = (qtr == qp).values
         if fitm.sum() < 5000 or tstm.sum() == 0:
             continue
-        Xf = M[fitm]; yf = fwd[fitm]
+        Xf = M[fitm].astype(np.float64); yf = fwd[fitm]
         mu, sd = Xf.mean(0), np.maximum(Xf.std(0), 1e-9)
         Z = (Xf - mu) / sd
         beta = np.linalg.solve(Z.T @ Z + lam * np.eye(Z.shape[1]), Z.T @ yf)

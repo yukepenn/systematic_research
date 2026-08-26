@@ -1,0 +1,32 @@
+=== B1: 14.72 pts/session (expect 14.72) -> PASS
+   real quality layer : pts 14.72 | eff 0.198 | Sharpe 0.311 | worst -7,418
+   base (all size 1)  : pts 10.62 | eff 0.142 | Sharpe 0.305
+   entries 2072 | sized up 415 (20.0 %)
+
+=== C1 COUNT-MATCHED RANDOM SIZING [23s] ===
+   C1 25/100 [30s]
+   C1 50/100 [36s]
+   C1 75/100 [43s]
+   C1 100/100 [50s]
+
+--- C1 random subset of the same size (100 draws) ---
+   pts     real  14.725 | null mean  12.031 | p95  14.267 | pctile  97.0 | p 0.030 -> EVIDENCE
+   eff     real   0.198 | null mean   0.141 | p95   0.177 | pctile 100.0 | p 0.000 -> EVIDENCE
+   sharpe  real   0.311 | null mean   0.279 | p95   0.317 | pctile  94.0 | p 0.060 -> weak
+
+=== C2 RANDOM FIVE FEATURES, identical rule shape [50s] ===
+   C2 25/100 [83s]
+   C2 50/100 [98s]
+   C2 75/100 [113s]
+   C2 100/100 [128s]
+
+--- C2 five random features, same rule (100 draws) ---
+   pts     real  14.725 | null mean  12.620 | p95  14.718 | pctile  95.0 | p 0.050 -> EVIDENCE
+   eff     real   0.198 | null mean   0.152 | p95   0.186 | pctile  97.0 | p 0.030 -> EVIDENCE
+   sharpe  real   0.311 | null mean   0.284 | p95   0.321 | pctile  90.0 | p 0.100 -> weak
+
+   reading rule (declared): C1 answers whether the gain comes from sizing up the
+   RIGHT flips; C2 answers whether it comes from THESE features or from the rule's
+   SHAPE. A C2 failure with a C1 pass would mean the shape pays and the specific
+   five do not - which changes what we defend, not whether the layer is kept.
+done [128s]
