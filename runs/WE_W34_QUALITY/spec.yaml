@@ -1,0 +1,42 @@
+run_id: WE_W34_QUALITY
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: self-directed continuation (owner: "你该自己知道怎么从第一性原理…持续前进")
+
+what W33 established and what follows from it: >
+  Flip quality IS predictable: 7 of 59 null-calibrated filters cleared the 95th percentile
+  against 3.0 expected by chance. But filtering to the best decile destroys production
+  (10.62 -> 3.61 pts/session at Sharpe 0.275 < 0.305): quality rises, quantity collapses.
+  The correct use of a quality signal that does NOT reduce trade count is SIZING.
+  This campaign has rejected exposure sizing three times (W06 pyramid on unrealised profit,
+  W10 range-proportional, W22 vote-conviction) and recorded it as a law. The law needs its
+  precise statement: all three scaled with information the object ALREADY trades on - the
+  same trade's profit, the volatility regime that is already the throttle, the vote fraction
+  that is already the entry rule. Scaling on those is doubling the same bet, hence leverage.
+  F5 (distance from session open / ATR), F11 (prior-session return, CONTRARIAN), F14 (run
+  length) and F4 (distance from VWAP / ATR) are NOT used anywhere in the object. Sizing on
+  genuinely new information is a different proposition and has never been tested.
+
+features admitted (EVIDENCE in W33 and not already used by the object):
+  F5 dist-from-open/ATR (top tercile favourable), F11 prior-session return (BOTTOM tercile),
+  F14 run length (top decile), F4 dist-from-VWAP/ATR (top tercile), F2 |delta|/volume (top
+  decile). EXCLUDED: F1 range ratio - it IS the throttle, so sizing on it would be the W10
+  rule again.
+pre-test: mutual correlation matrix of the five features at the entry bars. If any pair
+  exceeds |0.7| they are counted once, so the composite score cannot double-count one signal.
+arms (all on the audited object: vote >= 0.5, throttle 0.8, session box -1300/+1000):
+  S0 base                : 1 contract always (reference)
+  S1 filter score>=k     : trade only when the composite score >= k, 1 contract, k in {2,3}
+  S2 size-up score>=k    : 1 contract always, 2 contracts when score >= k, k in {2,3}
+  S3 size-up strict      : 1 contract always, 2 when score >= 3, 3 when score >= 4
+adoption:
+  for FILTER arms: pts/session must rise AND Sharpe not fall.
+  for SIZING arms: **Sharpe must RISE** - this is the leverage test, and it is the same bar
+  the three rejected rules failed. Dollars rising with a proportional tail is REJECTED.
+  Whatever is adopted then faces a binding circular-shift null.
+falsifier: if sizing on new information also fails the Sharpe test, then the leverage law is
+  general rather than conditional on information novelty, and exposure is closed permanently
+  as a research axis (leaving only contract count, which is the owner's risk choice).
+forbidden: [data >= 2026-08-01, fill-bar information, sizing on F1, adopting a sizing arm on
+  dollars, skipping the correlation pre-test]
+outputs: [out/quality.txt, out/summary.csv, REPORT.md]
