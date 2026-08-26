@@ -1,0 +1,65 @@
+=== DEFECT 18: FROZEN-FEED FILTER (a forward-filled dead quote passes `bid>0`) ===
+session                    seconds  % frozen >60s   longest run (s)
+s20250902.parquet           82,800          73.9%            61,204
+s20251125.parquet           82,800          73.9%            61,201
+s20260512.parquet           82,798          73.9%            61,199
+s20251128.parquet           69,300          54.9%            18,925
+s20250814.parquet           82,800           0.0%                35
+s20260320.parquet           82,800           0.0%                14
+
+   overall: 6.0 % of 3,689,792 second-quotes sit in runs longer than 60s
+   after filtering: 3,468,138 clean second-quotes (2025-08-13 18:00:00 -> 2026-05-20 16:59:59)
+
+   UNFILTERED (as published): ALL median 3.00 tk, mean 3.442, p90 5.00  |  RTH median 2.00, p90 4.00
+
+   FILTERED (clean): ALL median 3.00 tk, mean 3.221, p90 5.00  |  RTH median 2.00, p90 3.00
+
+   P1: 462 trades in the quote era [19s]
+
+================================================================================================================
+=== DEFECT 15: the DIRECT estimate, with code and output committed this time
+================================================================================================================
+   The 1-minute substrate is BACK-ADJUSTED; the 1-second grid is RAW FRONT MONTH. The
+   per-session offset is removed before any level is compared. Both grids are bar-END
+   stamped, so a bar ending T has its open in the second at T-59s.
+   118 overlapping fills; open INSIDE the quote on 29.7 %
+   on those 35: median spread 4.00 tk;
+      omitted cost per SIDE  median 2.00 tk ($10.00), mean 2.40 tk ($12.00)
+      -> $24.00 per ROUND TURN
+   THIS IS A SELECTED SUBSAMPLE (35 of 118) and is the pessimistic bound,
+   not the headline.
+
+================================================================================================================
+=== DEFECT 19b: does 'one full spread per round turn' over-charge THIS object?
+================================================================================================================
+   If the minute's OPEN sits closer to the ask after an up-minute, and the object buys
+   after up-minutes, then the simulated fill already carries part of the spread and
+   charging a full spread double-counts.
+
+   P1 enters after an UP minute on 45.8 % of entries
+   open's location in the quote (0 = bid, 1 = ask):
+      after an UP minute   0.489   (n = 13)
+      after a DOWN minute  0.352   (n = 22)
+
+   direction-weighted spreads charged per round turn: 1.085
+   -> 4.341 ticks = $21.70/RT at the measured median spread
+
+================================================================================================================
+=== DEFECT 19a: SCOPE. What the $14.65 does and does not cover.
+================================================================================================================
+   quote sample: 2025-08-13 -> 2026-05-20, NQ 23,036 - 29,479
+   it covers 118 of P1's ~4,752 fills = 2.5 % of its contract round turns, ALL of them at 2025-26 price levels.
+   The repository holds NO NQ quote sample below 23,036. Applying a
+   POINT-denominated spread to 2006-2021 (NQ 1,600-16,000) is unsupported and every
+   deep-history re-quote made with it is WITHDRAWN pending an era-appropriate estimate.
+
+================================================================================================================
+=== DEFECT 16: stress must be charged PER CONTRACT, not per trade
+================================================================================================================
+   W80 deep: net $79,076, stress-net $-36,494 at $10/RT
+   -> implied 11,557 CONTRACT round turns (W80 reported 9,557 TRADES)
+   my W82 report's '-$81,000' used 4.65 x 9,557 TRADES = $-1,857 - WRONG BASIS
+   correct at $14.65/RT per contract: $-90,234
+   (and this figure is itself WITHDRAWN under defect 19a - wrong era for the estimate)
+
+=== STATUS: corrections. [22s] ===

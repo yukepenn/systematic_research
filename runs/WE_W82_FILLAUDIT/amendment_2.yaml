@@ -1,0 +1,60 @@
+run_id: WE_W82_FILLAUDIT
+amendment: 2
+date: 2026-08-26
+status: FOUR AUDIT DEFECTS CONFIRMED AND FIXED; ONE NOT CONFIRMED. Code committed this time.
+
+defect_15_CONFIRMED_and_fixed: >
+  `out/direct_cost.csv` was 10 BYTES - a header and no rows. The corrected direct estimate
+  ($24.00/RT, "29.2 %", "35 of 120") was produced in an UNCOMMITTED shell heredoc and existed
+  only in prose in the REPORT. That is a reproducibility failure and the audit was right to call
+  it. `run_we_w82b.py` is now committed and writes the artifact.
+  Re-run result, essentially unchanged: 118 overlapping fills, open inside the quote on 29.7 %,
+  median spread on those 4.00 ticks, omitted cost per side mean 2.40 tk -> **$24.00 per round
+  turn**, on a SELECTED subsample of 35. Unchanged status: pessimistic bound, not the headline.
+
+defect_18_CONFIRMED_and_fixed: >
+  The `(bid>0).mean() >= 0.5` filter cannot see a frozen feed, because `build_grid1s.py` forward-
+  fills and a dead quote scores 1.00. Added a filter on quote runs longer than 60 consecutive
+  seconds. Effect on the published table:
+      ALL   median 3.00 -> 3.00   mean 3.442 -> 3.221   p90 5.00 -> 5.00
+      RTH   median 2.00 -> 2.00   mean         -        p90 4.00 -> **3.00**
+  THE HEADLINE SURVIVES because it is built from per-minute MEDIANS, which frozen runs barely
+  move. **The MEAN and the RTH p90 in `REPORT.md` §2 are corrected as above.**
+
+defect_16_CONFIRMED_and_corrected: >
+  W80 charges the stress line PER CONTRACT: (79,076.48 + 36,493.52)/10 = **11,557 contract round
+  turns**, against the 9,557 TRADES W80 reports. My REPORT.md §3 statement "at $14.65 it is
+  roughly -$81,000" used 4.65 x 9,557 TRADES - the wrong basis. Correct arithmetic:
+  79,076 - 14.65 x 11,557 = **-$90,234**. (That figure is itself withdrawn under 19a below.)
+  The same per-trade slip appears in W72's "9.5 RT/week ~ $95/week" and W78's "-$94/wk"; the
+  correct rate is 2,376/213 = **11.15 contract RT/week**, which W82 §3 already used.
+
+defect_19a_CONFIRMED_and_WORSE_than_stated: >
+  The $14.65 is measured on 45 sessions, 2025-08-13 -> 2026-05-20, at NQ **23,036 - 29,479**.
+  Measured here: it overlaps **118 of P1's ~4,752 fills = 2.5 %** of its contract round turns
+  (the audit said 16.1 %; the direct-overlap figure is 2.5 %), every one at 2025-26 price levels.
+  The repository holds NO NQ quote sample below 23,036.
+  >> WITHDRAWN: every application of this spread to 2006-2021 (NQ 1,600-16,000), including
+  >> W82 REPORT.md §3's deep-history re-quote and §6.1's "every stress-net figure in the
+  >> repository is overstated". A point-denominated spread is not transportable across a 10x
+  >> price level. The 2022-2026 re-quotes STAND - that window sits at NQ 11,000-30,000 and the
+  >> sample sits inside its upper half, which is a stretch but not a different market.
+
+defect_19b_NOT_CONFIRMED: >
+  The audit claimed "one spread per round turn" over-charges this object, citing P1 buying after
+  an up-bar 74.3 % of the time and the open sitting at 0.597 of the quote after an up-minute vs
+  0.446 after a down-minute, giving 0.925 spreads/RT = $13.55.
+  RE-DERIVED HERE AND IT DOES NOT REPRODUCE. I measure P1 entering after an up minute on
+  **45.8 %** of entries (not 74.3 %), and the open's location at **0.489** after up vs **0.352**
+  after down - which weights to **1.085 spreads/RT = $21.70**, i.e. the OPPOSITE sign: the object
+  would be UNDER-charged at one spread, not over-charged.
+  BUT the classified sample is **13 and 22 fills**. Neither the audit's number nor mine can be
+  supported on that. RECORDED AS: the direction-adjustment is UNRESOLVED and $14.65 (one spread
+  per round turn) remains the working estimate with $24 as the pessimistic bound. Settling it
+  needs a quote sample an order of magnitude larger.
+
+what_stands: >
+  **$14.65/RT for the 2022-2026 window.** It is built from per-minute median spreads weighted by
+  P1's own fill time-of-day distribution, it is robust to the frozen-feed cleaning (the audit
+  measured $14.49-$14.78 across four cleanings), and it remains far above the campaign's assumed
+  $0 headline and $10 stress line. Every 2022-2026 re-quote in REPORT.md §3 stands.
