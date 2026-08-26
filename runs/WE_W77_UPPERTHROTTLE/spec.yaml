@@ -1,0 +1,88 @@
+run_id: WE_W77_UPPERTHROTTLE
+title: "The object has a brake for QUIET sessions and none for VIOLENT ones. Should it?"
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+the_observation_that_motivates_it_and_the_contamination_that_creates: >
+  W76 read 46 previously-unreadable sessions and found P1 losing -22.49 pts/session, broadly
+  (median TRADED day -$1,447, 19.6 % positive days), in a window where the TREND-DOWN share went
+  13.7 % -> 26.1 % and the MEDIAN SESSION RANGE went 288 -> 664 points, a 2.3x expansion, while
+  NQ fell 8.1 %. The data was validated in W76 amendment 1 and the failure is real.
+
+  DISCLOSED IN ADVANCE: this wave is motivated by having SEEN that window. That is a genuine
+  contamination risk and it is handled by construction, not by assertion —
+    * every threshold is derived and every arm is chosen on 2022-07-01 -> 2026-05-29 ONLY, the
+      window all 75 prior waves used;
+    * the held-out window 2026-06-01 -> 2026-07-31 is reported for EVERY grid point, never for a
+      selected one, so no choice can be made on it;
+    * if the arm that looks best on the derivation window is not the one that helps on the
+      held-out window, that is reported as the headline rather than buried.
+
+the_gap_this_wave_exists_to_test: >
+  The range throttle is ONE-SIDED. `we_quality.build_context` computes
+      ratio = session realised range through bar i-1  /  trailing-60-session time-of-day median
+  and the vote's throttle blocks a new entry when `ratio < q` for q in {0.7, 0.8, 0.9}. There is
+  no upper bound of any kind. In 77 waves nobody has asked whether an object that stands aside in
+  QUIET sessions should also stand aside in VIOLENT ones. The held-out window is the first time
+  the question has had a live cost attached to it.
+
+the_skeptical_framing_that_must_survive: >
+  The session box already halts the sleeve at -$1,300 realised. In a violent session that halt
+  fires early, so the box is ALREADY an implicit volatility brake, applied ex post. The honest
+  question is therefore NOT "does volatility hurt us" but "does an EX ANTE brake add anything
+  over the ex-post halt we already have?" P1's held-out median traded day was -$1,447, i.e. AT
+  the halt on a typical day - the object was being stopped out almost daily and still lost
+  $20,686. The prize is the difference between "halt at -$1,300" and "do not trade at all", and
+  this wave measures it rather than assuming it.
+
+phase_0_falsifier_before_any_arm_is_built: >
+  On the DERIVATION window only: P1's net, pts/session and positive-day rate by DECILE of the
+  session's terminal range ratio, plus the share of sessions in each decile that hit the halt.
+  IF THE HIGHEST-RANGE DECILES ARE PROFITABLE, the upper throttle is FALSIFIED before it is
+  built and phases 1-3 are reported as a falsification. A trend harvester plausibly NEEDS large
+  sessions - W50 measured that 16.8 % of sessions carry essentially all P&L - so this falsifier
+  is a real possibility and not a formality.
+
+arms:
+  U0: "the incumbent."
+  U1: "within-session upper bound: block NEW entries once `ratio` exceeds Q. Same variable and
+       same causal construction as the existing lower throttle, upper side.
+       Q in {1.5, 2.0, 2.5, 3.0} - all four reported."
+  U2: "ex-ante bound: block ALL new entries for a session whose PRIOR session's terminal range
+       ratio exceeded Q. Known before the session opens, so it is a regime brake rather than an
+       intra-session one. Q in {1.5, 2.0, 2.5}."
+  U3: "ex-ante smoothed: the same with the trailing FIVE-session mean range ratio.
+       Q in {1.25, 1.5, 2.0}."
+  note: "an entry BLOCK, never an exit rule - W51 recorded that `pos = posL & allow` silently
+         turns a gate into an exit and changed the trade count; the block here applies to new
+         entries only and the trade count is reported so the error cannot recur unseen."
+
+nulls:
+  - "N1 circular shift of the BLOCK SCHEDULE against the P&L series, 200 draws per surviving arm.
+     A brake that reduces exposure will look good on any drawdown metric; the null asks whether
+     blocking THESE sessions beats blocking an arbitrary equal number."
+  - "exposure control: every arm reports blocked-session count, trade count and in-market %, and
+     any arm whose improvement tracks its exposure cut is called leverage-in-reverse, not edge."
+
+preregistered_decision_rule:
+  derivation_bar: >
+    an arm is a CANDIDATE only if, on the derivation window, it improves the mean top-5 drawdown
+    AND the longest weekly losing streak AND does not reduce weekly $ at a fixed $20,245 drawdown
+    by more than 10 % — and then clears the 95th percentile of its own N1 null.
+  held_out_is_an_observation: >
+    the held-out figures are reported for all arms and used to select NOTHING. If a candidate
+    also helps there, that is corroboration; if it does not, the candidate is still reported with
+    its derivation-window result and the disagreement is stated plainly.
+  adoption: >
+    NOTHING is adopted in this wave. An arm that passes everything becomes a preregistered
+    champion-vs-challenger for a later wave, with a walk-forward it has not yet had.
+
+traps_named_before_running:
+  - "Four-plus-three-plus-three thresholds is a scan of ten cells. The N1 null and the reporting
+     of every cell on both windows are the multiplicity controls."
+  - "Blocking high-range sessions cuts exposure, and cutting exposure improves every drawdown
+     statistic. The exposure-matched reading is the only one that counts."
+  - "The derivation window contains 2022, itself a bear year, so the arm is NOT being fitted on a
+     purely up-trending sample. That is stated because it is the strongest thing in the design and
+     it should be checked rather than claimed: 2022's per-year figure is reported for every arm."

@@ -1,0 +1,51 @@
+run_id: WE_W76_FORWARD2026
+amendment: 1
+date: 2026-08-26
+status: DATA VALIDATION — run because the wave's conclusion ("the champion failed") was being
+        drawn from 46 sessions of a substrate region that had never been checked.
+
+why: >
+  W76 asserts that P1 lost -$20,686/contract over 46 never-seen sessions and that NQ fell 8.1 %
+  with double the TREND-DOWN share and 2.3x the median session range. That conclusion rests
+  entirely on data the campaign had never validated. An 8.1 % decline concentrated in a window
+  containing the June quarterly roll is EXACTLY what an unhandled or differently-adjusted
+  contract roll would look like, and the extension file is a different file from the base
+  substrate. Publishing "the object failed" without checking that would be indefensible.
+
+checks_run:
+  session_shape:
+    result: >
+      HELD-OUT median 1,380 bars/session — IDENTICAL to the prior twelve months' 1,380.
+      Median session volume 538,095 against the prior year's 515,503 (+4 %), consistent with a
+      more volatile period. Sessions are well-formed; no truncation, no duplication.
+  overnight_gaps:
+    result: >
+      HELD-OUT median |gap| 16.75 pts, max 223.75 pts, with exactly ONE gap above 200 pts.
+      The prior twelve months: median 7.00, max 354.00, NINE gaps above 200 pts.
+      The held-out window therefore has FEWER large overnight gaps than normal, not more.
+      The five largest are 2026-06-15 (+223.75, a Monday open), 07-27 (+193.50), 07-17 (+143.00),
+      07-13 (-116.50), 06-22 (-70.00). None sits on the June quarterly roll date and none has
+      the one-sided signature of a roll adjustment error.
+      The median |gap| rising 7.00 -> 16.75 (2.4x) matches the measured 2.3x rise in session
+      range independently — the two are coherent, which is what real volatility looks like.
+  decline_shape:
+    result: >
+      Weekly closes: 30,805 / 29,718 / 30,832 / 30,663 / 29,995 / 29,948 / 29,429 / 28,768 /
+      28,307 / 28,306. A grinding decline with a full recovery in mid-June and a second leg down
+      through July. NOT a single discontinuity, which is what a bad roll or a re-adjustment would
+      produce.
+  overlap:
+    result: >
+      Already asserted at load time and re-confirmed: bit-exact on all 1,558,497 overlapping rows
+      across time, open, high, low, close and volume.
+
+verdict: >
+  THE DATA IS SOUND AND W76's CONCLUSION STANDS. P1's -22.49 pts/session over the held-out window
+  is a real market outcome, not a substrate artifact. The 8.1 % decline, the doubling of the
+  TREND-DOWN share and the 2.3x rise in session range are genuine.
+
+what_this_does_NOT_license: >
+  The window is still 46 sessions of ONE regime. It establishes that the object loses money in a
+  fast down-trending high-volatility market — which W50 had already measured from the other
+  direction — and it establishes nothing about any object's general quality. No ranking over
+  nine weeks is stable and none is used.
