@@ -1,0 +1,33 @@
+HARNESS: Sharpe 0.331 (expect 0.331), pts/session 15.86 (expect 15.86) -> PASS
+=== REFERENCE (W34 quality-sized) ===
+arm                                   n  avgSz   pts/ses     $/tr   wkMean  wkPos%     worst  sharpe  stress
+REF quality-sized                  1946   1.19     15.86    165.2    1,583    59.6    -7,418   0.331   1,487
+
+=== A QUALITY-CONDITIONED EXIT ===
+A1 big target on quality           2012   1.20     16.04    161.5    1,600    60.1    -7,418   0.328   1,501  reject
+A2 cut low-quality @60b            2212   1.19     16.42    150.4    1,639    58.6    -7,442   0.325   1,530  reject
+A2 cut low-quality @120b           2035   1.20     17.10    170.3    1,707    60.1    -7,418   0.338   1,606  ADOPT
+A3 both (big tgt + cut 120)        2113   1.21     17.78    170.5    1,774    59.1    -7,418   0.338   1,670  ADOPT
+
+=== B RESTORE, RE-OPENED WITH THE QUALITY GATE ===
+B restore, quality>=3              3703   1.51      2.61     14.3      259    45.1    -9,127   0.068      78  reject
+B restore, quality>=4              2525   1.64      4.79     38.5      476    48.0    -8,800   0.123     352  reject
+
+=== C QUALITY ON THE SHORT SIDE ===
+arm                                   n  avgSz   pts/ses     $/tr   wkMean  wkPos%     worst  sharpe  stress
+C short base                       2225   1.00      5.99     54.6      601    50.0    -8,269   0.162     491
+C short quality-sized              2012   1.23      6.91     69.5      693    52.5   -11,263   0.161     593
+   (mirror construction disclosed: the long-only sizer is run on the inverted path and
+    the P&L negated, with commission re-added as a cost.)
+
+=== E FRAME CHALLENGE: does the score grade FLIPS or the MARKET STATE? ===
+arm                                   n  avgSz   pts/ses     $/tr   wkMean  wkPos%     worst  sharpe  stress
+E random entries, size 1         134611   1.00    -27.52     -4.1   -2,720    16.6    -8,574  -1.064  -9,286
+E random entries, quality-sized  124495   1.15    -27.15     -4.4   -2,684    15.6    -8,567  -1.003  -8,756  reject
+E EMA-cross, size 1                6897   1.00      4.93     14.5      487    48.3   -11,417   0.107     150
+E EMA-cross, quality-sized         6713   1.08      5.06     15.3      500    48.8   -11,636   0.097     173  reject
+
+interpretation rule (declared in the spec): if the score lifts the random and
+EMA arms as much as it lifts the Solar vote, it is a MARKET-STATE edge, not a flip
+grader, and the frame must change.
+done [422s]
