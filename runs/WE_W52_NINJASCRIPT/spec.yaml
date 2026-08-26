@@ -1,0 +1,66 @@
+run_id: WE_W52_NINJASCRIPT
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: owner, 2026-08-26 - "把我们目前 baseline 写出 ninjascript 给到 nt 上面，并且用
+  cross trade 跑 strategy analyzer 确认".
+
+what the baseline IS, stated exactly before any code is written: >
+  P1, long-only, the object W48/W50 measure at 14.72 pts/session:
+    1. a majority vote (>= 0.5) over 32 long-only configurations = 4 member sets
+       x 4 range-throttle settings x delta-gate on/off
+       member sets  narrow5 [6,8,10,12,14] | narrow6 [6,8,10,12,14,16]
+                    narrow7 [6,8,10,12,14,16,18] | all13 [6,8,...,30]
+    2. each configuration is the SolarWave decision stack (ratchet members with
+       S = clamp(VolMult x sigma, 40, 1200 ticks), sigma = trailing mean |dClose| over 460
+       bars, HTF tilt over 50 session closes, the combiner, hysteresis 3.0 / 1.0, B-MOM, and
+       the session entry-block / forced-flat windows) run on ONE-MINUTE bars
+    3. range throttle: no new entry while the session's realised range through bar i-1 is
+       below q x its trailing-60-session same-minute median, for q in {none, 0.7, 0.8, 0.9}
+    4. delta gate: the session's 1-minute up/down-tick cumulative delta, LAGGED ONE BAR,
+       must be >= 0
+    5. session box: halt for the session at -$1,300 realised, stop at +$1,000 realised
+    6. causal quality sizing: five features scored against the quantiles of the trailing 250
+       PRIOR entries, size 2 when >= 3 of 5 are favourable, else 1
+  NOT part of the baseline: the W41 clock basket (adoption WITHDRAWN 2026-08-26, amendment 2),
+  the short sleeve, and anything on the 3-minute clock.
+
+known before we start, and binding on the design: >
+  W44 established that the SHIPPED SolarWaveOneContractNQ_v5.cs is NOT this object - it runs
+  its decision stack on a 3-MINUTE secondary series and is 2.1x less active (137 flips against
+  our 285 over the same window, 73.19 % decision agreement). So the existing C# cannot be
+  reused or adapted by changing an input. A new strategy must be written to implement the
+  PYTHON object, and validated against the PYTHON object - that was W44's explicit
+  deployment consequence.
+
+phase 0 - CLOSED FORM (do this first because it decides the implementation's size):
+  The 32 voters apply the throttle and delta masks to the TARGET, after the decision stack, so
+      vote = (1/32) x nMemLong x nThrottlePass x (1 + dL)
+  where nMemLong in 0..4 is how many member sets are long, nThrottlePass in 1..4 is how many
+  throttle settings pass, and dL in {0,1} is the lagged delta gate. Hence
+      vote >= 0.5   <=>   nMemLong x nThrottlePass x (1 + dL) >= 16
+  ASSERTED IN CODE against the actual vote() output over all 1.5M bars. If it does not hold
+  bar-for-bar the closed form is wrong and the strategy must implement all 32 voters
+  explicitly. This check runs before a line of C# is written.
+
+phase 1 - the NinjaScript. Class name carries a version suffix per the repo's hot-reload rule.
+phase 2 - compile through CrossTrade (compile only; no deployment, no enabling, no account).
+phase 3 - Strategy Analyzer backtest on a window INSIDE ONE CONTRACT where our parquet has
+  data, so the two engines see the same bars: NQ 06-26, 2026-01-02 -> 2026-05-29, 1-minute
+  Last, Standard fill, NinjaTrader Brokerage Lifetime commission, warm-up discarded and the
+  comparison restricted to 2026-04-01 onward, exactly as W44 did.
+phase 4 - PARITY, judged on the same preregistered thresholds W44 used:
+  >= 99 % decision agreement and trade counts within 2 %  -> IMPLEMENTATION VALIDATED
+  90-99 %                                                  -> localised disagreement, reported
+                                                              bar by bar before anything else
+  < 90 %                                                   -> NOT VALIDATED; the C# is not the
+                                                              object and must not be used
+  Primary comparison is the DECISION SERIES, not P&L, because P&L can agree by luck.
+
+safety, restated: Strategy Analyzer BACKTEST ONLY, on NinjaTrader's isolated Backtest account.
+  No order is placed. No strategy is enabled, deployed or started. No account, connection,
+  credential or licence is touched. No vendor assembly is modified. This is the same operation
+  campaign #1 used for its UI/MCP parity and W44 used for the port check.
+forbidden: [enabling/deploying/starting any strategy, touching Sim101 or any live account,
+  tuning the C# to improve agreement, quoting agreement on a window that spans a roll,
+  claiming validation on P&L agreement alone]
+outputs: [out/parity.txt, out/nt8_trades.csv, out/py_trades.csv, the .cs file, REPORT.md]

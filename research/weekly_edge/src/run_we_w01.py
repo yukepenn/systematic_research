@@ -82,7 +82,8 @@ def round_away(x):
 
 def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False,
             volmults=None, entry_level=3.0, exit_level=1.0, tilt_on=True, blocks_on=True,
-            restore=None, type3=False, smin_pts=None, smax_pts=None, stopm_pts=None):
+            restore=None, type3=False, smin_pts=None, smax_pts=None, stopm_pts=None,
+            return_debug=False):
     """Faithful port of SolarWaveOneContractNQ_v5 decision stack to 1-min bars.
 
     Declared port choices (spec): B-MOM reset at bar-end 09:31, signal cutoff 15:54, flatten
@@ -124,6 +125,10 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
         return min(max(mult * sg, SMIN), SMAX)
 
     tgt_arr = np.zeros(n, np.int8)                                    # decision at bar close
+    # W52: optional per-bar trace of the SHARED state (bmom, tilt). Off by default, so
+    # every existing caller is bit-identical.
+    dbg_bmom = np.zeros(n, np.int8) if return_debug else None
+    dbg_tilt = np.zeros(n, np.int8) if return_debug else None
     for i in range(n):
         px = c[i]
         # apply pending
@@ -259,7 +264,11 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
             elif M >= -exit_level:
                 tgt = 0
         tgt_arr[i] = tgt
+        if return_debug:
+            dbg_bmom[i] = bmom; dbg_tilt[i] = tilt
 
+    if return_debug:
+        return tgt_arr, dbg_bmom, dbg_tilt
     if return_targets:        # W02 hook (no behavior change for existing callers)
         return tgt_arr
     # fills: decision at bar i -> position over bar i+1..; entry/exit at next bar open
