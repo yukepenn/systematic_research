@@ -1,0 +1,74 @@
+=== modern extended window: 1058 sessions, 213 weeks, rho(P1, X9a) = +0.673
+
+======================================================================================================================
+=== PHASE 1 (RUN FIRST, per W79's meta-finding): ROLLING 24-MONTH WINDOWS
+======================================================================================================================
+   25 windows.  X9a beats P1 on:
+      weekly $ at a fixed $20,245 drawdown :    16 %
+      positive-week %                      :     8 %
+      mean top-5 drawdown                  :    64 %
+      ALL THREE                            :     0 %   (bar: > 50 %) -> FAIL
+
+======================================================================================================================
+=== PHASE 2: the modern panel
+======================================================================================================================
+object                      net $   wk+%  wStrk   medWk$  weekly$   wk$@DD   top5DD    maxDD    worst
+P1 (champion)             280,131  56.3%      8      279    1,315    1,099   13,864   24,225   -7,418
+X9a (challenger)          233,781  53.5%      7      280    1,098      923   13,873   24,075   -8,658
+
+=== PER YEAR (weekly $ | positive-week %) ===
+object                              2022              2023              2024              2025              2026
+P1                           1,159 | 46%         302 | 60%       1,915 | 60%       2,265 | 58%         412 | 52%
+X9a                            796 | 46%         157 | 50%       2,150 | 62%         784 | 49%       1,595 | 55%
+
+=== W76's 46 held-out sessions, WITH the concentration check (method rule 29) ===
+object                        net   minus top-3  median traded  pos day %
+P1                        -20,686       -21,237         -1,447      19.6%
+X9a                        16,702       -15,658         -1,359      21.7%
+
+======================================================================================================================
+=== PHASE 3: does the CHOICE between them churn?
+======================================================================================================================
+   12 refits: ['P1', 'P1', 'X9a', 'X9a', 'X9a', 'P1', 'X9a', 'P1', 'P1', 'P1', 'P1', 'P1']
+   churn 36 %   |   X9a chosen 4 of 12
+
+                          wk+%   weekly$    wk$@DD    top5DD     worst
+quarterly choice         56.2%     1,295       959    10,701    -7,418
+P1 fixed                 58.2%     1,689     1,411     9,726    -7,418
+X9a fixed                58.9%     1,563     1,428    11,484    -8,658
+
+======================================================================================================================
+=== PHASE 4: THE SIXTEEN UNSEEN YEARS. The FULL OBJECT - not just the channel - has
+===          NEVER been run on 2006-2021 for either arm. This is the campaign's
+===          largest untouched sample.
+======================================================================================================================
+   CAVEAT that travels with every number below: the quality score's five features were
+   chosen by a full-sample scan on 2022-2026 (W33), so this measures the object AS
+   SPECIFIED, including that specification-level look-ahead. That is the right test.
+
+   deep substrate 4,908,286 bars, 4,279 sessions, 2006-01-05T08:59:00 -> 2021-12-31T17:00:00 [4s]
+   fast-context harness check on a 2010 slice (299,316 bars): ALL ARRAYS BIT-EXACT [11s]
+   deep context built [17s]
+   member matrix built on 16 years [129s]
+   P1 (09:31 anchor): 9,557 trades [164s]
+   X9a (18:00 anchor): 9,504 trades [194s]
+
+object                   trades        net $     stress $  pts/sess   $/trade      t     PF   wk+%   yrs>0
+P1 (09:31 anchor)         9,557       79,076      -36,494      0.92       8.3   1.62  1.086  44.5%    7/16 
+X9a (18:00 anchor)        9,504      120,461        4,901      1.41      12.7   2.33  1.136  45.1%    7/16 
+
+   per year, net $ at 1 contract (deep-era dollars are NOT comparable to modern ones - NQ traded 2,000-16,000):
+                           2006     2007     2008     2009     2010     2011     2012     2013     2014     2015     2016     2017     2018     2019     2020     2021
+P1 (09:31 anchor)        -7,507   -4,962  -10,386   -9,834     -963   -1,318   -2,760    6,553   -2,032   12,554    7,037   -1,770   19,064   24,487   28,996   21,917
+X9a (18:00 anchor)       -7,321   -5,596   -8,874   -8,470   -2,516   -1,804   -4,555   10,473   -4,128   12,937    6,067   -2,100   11,912   24,049   55,572   44,816
+
+======================================================================================================================
+=== VERDICT
+======================================================================================================================
+   (1) rolling all-three in a majority :     0 %  -> FAIL
+   (2) materially better over 2006-2021: X9a 1.41 vs P1 0.92 pts/session  -> PASS
+   (3) the quarterly choice does not churn: 36 %  -> FAIL
+
+   -> P1 REMAINS THE BASELINE. X9a is not promoted.
+
+=== STATUS: NOTHING ADOPTED. [194s] ===

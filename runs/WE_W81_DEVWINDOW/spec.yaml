@@ -1,0 +1,75 @@
+run_id: WE_W81_DEVWINDOW
+title: "Is P1's advantage over X9a confined to P1's own development window?"
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+the_observation_from_w80: >
+  X9a is P1 with ONE inherited constant changed - the OR-slot channel measures displacement from
+  the 18:00 session open instead of the 09:31 RTH open. W80 measured both objects everywhere they
+  can be measured and the pattern is:
+      2006-2021 (4,279 sessions, never used for anything) : X9a +53 % (1.41 vs 0.92 pts/session,
+                                                            t 2.33 vs 1.62, and X9a is the only
+                                                            one of the two that is positive after
+                                                            the C1 stress line)
+      2023                                                : X9a worse ($157 vs $302/wk)
+      2024                                                : X9a better ($2,150 vs $1,915)
+      2025                                                : X9a much worse ($784 vs $2,265)
+      2026 YTD                                            : X9a much better ($1,595 vs $412)
+      W76's 46 never-read sessions                        : X9a +$16,702 vs P1 -$20,686
+  P1's development window is 2022-2026. **X9a wins on both sides of it and loses in the middle.**
+
+the_hypothesis_and_why_it_is_testable: >
+  H: the 09:31 anchor is FITTED to the middle of the development sample, and P1's apparent
+  superiority is an artifact of measuring it there. If so, P1's advantage should be a function of
+  DISTANCE FROM THE DEVELOPMENT WINDOW'S CENTRE and should not survive outside it.
+  The rolling-window test in W80 CANNOT see this, because it is computed entirely inside the
+  modern window - the very region the hypothesis says is contaminated. That is not a criticism of
+  the test; it is a statement of what it can and cannot resolve.
+
+design:
+  1_the_advantage_curve: >
+    Compute (P1 - X9a) pts/session in non-overlapping 6-month blocks across the ENTIRE 2006-2026
+    record, ~40 blocks. Plot/report it against block midpoint. Under H the difference is near
+    zero or negative outside 2022-2026 and positive inside it, with no other structure.
+  2_the_falsifier_named_first: >
+    H is FALSIFIED if P1's advantage is ALSO positive in a majority of the 2006-2021 blocks, or
+    if the difference correlates with something obvious that is not development-window distance -
+    specifically realised volatility, trend strength, or the TREND-UP session share, each of
+    which is computed per block and regressed against the difference. If a regime variable
+    explains the difference better than development-window distance does, H is rejected and the
+    difference is REGIME-CONDITIONAL, not overfitting - a completely different and more useful
+    conclusion.
+  3_the_placebo_that_makes_it_honest: >
+    Repeat the whole comparison for a THIRD anchor with no claim attached - X2 (displacement from
+    the 09:31 open with the VWAP condition removed, W72's arm that reached 88 % of production).
+    If the 'development-window advantage' pattern appears for X2 as well, the pattern is a
+    property of the measurement, not of the anchor, and nothing may be concluded from it.
+  4_sample_adequacy: >
+    Each 6-month block holds ~125 sessions. Report the standard error of every block difference
+    and count how many are individually distinguishable from zero. If almost none are, say so -
+    the curve is then a shape, not a set of measurements, and it can only motivate further work,
+    never settle anything.
+
+preregistered_decision_rule:
+  H_supported: >
+    P1's advantage is positive in a majority of 2022-2026 blocks AND negative-or-zero in a
+    majority of 2006-2021 blocks AND no regime variable explains it better AND the X2 placebo
+    does NOT show the same pattern. Then the campaign has evidence that its headline object is
+    partly a fit to its own development window, which would be the most consequential finding of
+    the campaign and would force a re-quote of every number P1 has ever produced.
+  H_falsified: >
+    any of the four conditions fails. Then the P1/X9a difference is regime-conditional or noise,
+    W80's verdict stands unchanged, and the anchor question is closed for good.
+  adoption: >
+    NOTHING. Neither outcome promotes X9a - W80's gates already decided that. This wave decides
+    what P1's OWN numbers mean, which is a separate and more important question.
+
+traps_named_before_running:
+  - "Blocks are a scan. Report every block, never a selected subset, and use the placebo arm as
+     the multiplicity control rather than a permutation of the same series."
+  - "Deep-era and modern-era pts/session are on different price levels. The difference between
+     two objects measured on the SAME bars in the SAME block is scale-free enough to compare
+     across blocks, but the LEVEL is not - only differences are quoted."
+  - "This wave is motivated by a pattern I noticed after the fact. That is disclosed here, in
+     advance, and it is exactly why the placebo arm and the regime-variable check exist."
