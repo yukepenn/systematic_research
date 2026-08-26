@@ -170,3 +170,37 @@ SIZING rule the count-matched control is the binding one; alignment nulls cannot
 exposure-naive and will reject arms that beat their reference at matched exposure; eff and
 CVaR efficiency are the criteria and the absolute worst week is reported, not gated. Exposure
 matching is time-weighted (contract-minutes), not trade-count-weighted.
+
+## W40 — the second-model search, and a third full-sample-quantile casualty (2026-08-25)
+
+**1. Four non-ratchet mechanisms, no adoption.** Fade-as-an-EVENT (-11.4 pts/session),
+sweep-and-reclaim (-3.08), a complement-set ridge over the 83 % of bars where Solar is flat
+(stress-net -$55/wk despite 2.7 % overlap), and a volatility-expansion event sleeve. The
+complement-set result is the substantive one: those bars are POOR, not merely unexploited.
+
+**2. What axis B does establish (`SUPPORTED`)**: a non-Solar engine that is positive after
+frictions AND decoupled inside our drawdowns EXISTS - corr +0.01 overall, **-0.25 inside the
+long object's worst-decile weeks**, 5.7 % bar overlap. W25/W27's orthogonal engines all lost
+money; this one does not. It is parked for failing the binding count-matched null (92nd, needs
+95th) and for a per-year record of 2 poor years in 4, not for being fake.
+
+**3. THIRD full-sample-quantile casualty, and this one had already produced a promotion.**
+B's regime dependence looked decisive: the high-volatility band was stress-net positive in BOTH
+modern halves (+$12,015 and +$75,665) while the low band was negative in both - the
+preregistered promotion condition, met. The band was cut at the FULL-SAMPLE median. Re-cut at
+the TRAILING-250-session median, B-gated gets WORSE than B-ungated ($200/wk vs $323/wk, weekly
+positive rate 32 % vs 53.7 %). After W03's gate and W37's score thresholds this is now a
+standing rule:
+> ANY threshold or quantile cut on the measurement sample must be re-derived causally before
+> it can support a conclusion - including thresholds that only appear in a DIAGNOSTIC.
+
+**4. An arbitrary allocation is not a diversification verdict.** W40's first read paired each
+axis with the long object at ONE CONTRACT EACH, silently handing a sleeve of efficiency 0.065
+a 34 % share of a book whose main sleeve runs at 0.229, and read that as a failure to
+diversify. Diversification questions must scan WEIGHT at CONSTANT TOTAL EXPOSURE, measured in
+time-weighted contract-minutes.
+
+**5. Full-window and per-year re-measurement is now a precondition for any adoption.** B
+cleared all five preregistered conditions on 2023-07 -> 2026-08 - a window chosen in W39 for a
+different comparison - and the adoption was withdrawn on the full-window read. A window chosen
+for one purpose will flatter something else.
