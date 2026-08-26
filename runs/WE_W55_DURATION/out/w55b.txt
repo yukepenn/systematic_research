@@ -1,0 +1,60 @@
+=== B1 GATE: 14.86 pts/session over 1012 sessions (expect 14.72) -> PASS [23s]
+   1942 entries x 16 features | trailing train 750, refit every 50, ridge lambda 10.0, no prediction before entry 500
+
+========================================================================================================================
+=== PHASE 2: three causal walk-forward models [43s]
+========================================================================================================================
+All at a FIXED $20,245 max drawdown, so weekly$ is comparable across rows.
+Consistency first (Charter Amendment 2): Sharpe is a diagnostic and decides nothing.
+
+arm                                 day+%  trdD+%   wk+%  dStrk  wStrk   medWk$   weekly$   top5DD   ulcer   worst$   shrp
+P1 INCUMBENT                         27.6    46.0   58.3      6      8      455     1,475   14,266   6,183   -7,418   2.26
+M1 ridge on per-unit P&L @5%         27.2    46.4   58.8      6      8      585     1,458   13,325   6,023   -6,344   2.30
+M1 ridge on per-unit P&L @10%        26.1    45.3   56.4      6      8      306     1,367   13,573   6,953   -6,344   2.19
+M1 ridge on per-unit P&L @15%        25.5    44.7   56.4      6      8      271     1,374   13,369   6,862   -6,344   2.20
+M1 ridge on per-unit P&L @20%        25.1    44.4   55.9      6      8      246     1,355   13,533   6,805   -6,344   2.20
+M1 ridge on per-unit P&L @25%        24.5    43.9   55.4      7      8      246     1,330   13,476   6,606   -6,344   2.17
+M1 ridge on per-unit P&L @30%        24.0    43.9   55.4      7      8      240     1,316   13,463   6,549   -6,344   2.20
+
+M2 logistic-ish on win/loss @5%      27.1    45.7   56.9      6      8      391     1,353   14,811   6,554   -6,848   2.15
+M2 logistic-ish on win/loss @10%     26.0    44.5   55.9      6      8      202     1,174   14,744   6,730   -6,319   2.03
+M2 logistic-ish on win/loss @15%     25.5    44.0   55.9      6      8      202       994   13,160   6,277   -5,381   2.01
+M2 logistic-ish on win/loss @20%     24.9    43.4   55.9      5      8      213       983   13,705   6,389   -5,323   1.95
+M2 logistic-ish on win/loss @25%     24.8    43.8   55.4      5      8      203       973   12,765   6,398   -4,813   2.02
+M2 logistic-ish on win/loss @30%     24.2    43.4   55.4      6      8      220     1,018   13,895   6,606   -5,361   1.95
+
+M3 on SHORT-trade label @5%          27.2    45.5   57.4      6      8      622     1,453   14,562   6,295   -6,769   2.24
+M3 on SHORT-trade label @10%         26.9    45.4   57.4      6      8      588     1,448   14,961   6,431   -6,747   2.23
+M3 on SHORT-trade label @15%         26.6    45.6   56.4      6      8      479     1,382   14,110   6,269   -6,747   2.17
+M3 on SHORT-trade label @20%         26.3    45.3   57.8      6      8      575     1,406   13,938   6,184   -6,747   2.23
+M3 on SHORT-trade label @25%         26.2    45.8   58.3      6      8      494     1,411   12,939   6,020   -6,687   2.28
+M3 on SHORT-trade label @30%         26.1    46.2   57.8      6      8      417     1,393   12,702   5,951   -4,902   2.29
+
+=== out-of-sample rank quality of each model (Spearman on the predicted entries) ===
+   M1 ridge on per-unit P&L           rho vs per-unit P&L -0.034 | vs duration +0.175 | n = 1442
+   M2 logistic-ish on win/loss        rho vs per-unit P&L +0.002 | vs duration +0.019 | n = 1442
+   M3 on SHORT-trade label            rho vs per-unit P&L -0.041 | vs duration +0.476 | n = 1442
+
+=== analytic vs full pipeline on the best arm ===
+arm                                 day+%  trdD+%   wk+%  dStrk  wStrk   medWk$   weekly$   top5DD   ulcer   worst$   shrp
+M1 ridge on per-unit P&L @5%         27.2    46.4   58.8      6      8      585     1,458   13,325   6,023   -6,344   2.30
+M1 ridge on per-unit P&L @5% FULL PIPELINE   27.9    46.5   60.3      6      8      600     1,521   13,243   5,966   -7,102   2.33
+   weekly$ error 4.3 % -> analytic nulls ACCEPTED
+
+========================================================================================================================
+=== PHASE 3: NULLS. N1 label permutation is the binding one [44s]
+========================================================================================================================
+N1 refits the ENTIRE pipeline on shuffled labels. If the real model does not beat its
+own procedure applied to noise, it is a description of the sample and the branch dies.
+
+model                               real best $   N1 mean   N1 pct   N2 mean   N2 pct   N3 mean   N3 pct   verdict
+M1 ridge on per-unit P&L                  1,458     1,384    78.0%     1,443    58.5%     2,983     0.0%      fail
+M2 logistic-ish on win/loss               1,353     1,400    22.5%     1,439     4.5%     2,992     0.0%      fail
+M3 on SHORT-trade label                   1,453     1,400    71.0%     1,446    51.0%     2,976     0.0%      fail
+
+   incumbent weekly at its own drawdown: $1,475
+   preregistered bar: N1 label permutation AND N3 both >= 95th percentile.
+   -> NO MODEL CLEARS. Recorded per the falsifier: the same fitting procedure on
+      SHUFFLED labels does as well, so the multivariate branch is closed for this
+      feature set and this target. It does NOT close nonlinear learners, other
+      feature sets, session-level targets, or other objects.

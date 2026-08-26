@@ -1,0 +1,40 @@
+amendment: 3
+run_id: WE_W55_DURATION
+date: 2026-08-26
+status: APPEND-ONLY, recording a DEFECT in amendment_2's own null design, found by reading the
+  output. Phase 2 is run; its N1 and N2 columns stand, its N3 column does not mean what the
+  amendment said it meant.
+
+the result that stands (FACT, out/nulls2.csv):
+  Three causal walk-forward models, all 16 features, trailing-750 training window, refit every
+  50 entries, ridge, no in-sample feature selection, minimum 500 entries of history:
+    M1 ridge on per-unit P&L    best $1,458/wk at fixed drawdown   N1 label-permutation 78.0 %
+    M2 on the win/loss label    best $1,353/wk                     N1 22.5 %
+    M3 on the SHORT-trade label best $1,453/wk                     N1 71.0 %
+  The incumbent is $1,475/wk at the same drawdown, so NOT ONE MODEL EVEN BEATS DOING NOTHING,
+  and none clears the binding label-permutation null at the preregistered 95th percentile.
+  M2 sits BELOW the median of models fitted on shuffled labels.
+  RECORDED per the falsifier: the multivariate branch is closed FOR THIS FEATURE SET AND THIS
+  TARGET. It does not close nonlinear learners, other feature sets, session-level or
+  portfolio-level targets, or other objects - and saying otherwise would repeat the quantifier
+  error Charter Amendment 2 section 4 just corrected.
+
+the defect:
+  amendment_2 described N3 as "W54's duration-biased rolled masks, evaluated WITHOUT their delay
+  cost - the structural bias that needs no forecast at all". The implementation instead drew the
+  deletion probability as 1/realised-duration, i.e. it SELECTS ON THE OUTCOME. That is not a
+  forecast-free structural bias; it is a PERFECT ORACLE. Requiring a causal model to beat an
+  oracle is an impossible bar and the N3 column must not be read as a verdict.
+  The N1 column is unaffected and it is the binding one, so the wave's conclusion does not
+  change.
+
+what the mis-specified null accidentally measured, and it is worth more than the arm was:
+  As an oracle, N3 prices the CEILING of the entire duration axis: deleting short trades with
+  perfect foresight, at the best rate out of the grid, is worth $2,983/week at the incumbent's
+  own $20,245 max drawdown against the incumbent's $1,475 - i.e. +102 %.
+  So the duration axis is worth roughly DOUBLE the current object to a perfect classifier, and
+  the campaign's best causal attempt at that classifier does not beat doing nothing. That is a
+  sharper statement of the same fact and it is now the recorded ceiling for the axis.
+  It is a CEILING and not an achievable result. Nothing may quote it as one.
+correction to the record: any future N3 on this axis must use the forecast-free construction
+  (W54's rolled masks with the delay removed), and the oracle version must be labelled a ceiling.
