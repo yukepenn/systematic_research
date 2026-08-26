@@ -1,0 +1,36 @@
+=== B1: long P2 full-window 13.5 pts/session, Sharpe 0.291, cut 23b -> PASS
+
+=== S5 FEATURES (top 5 by SEL t, SEL-chosen signs, NO significance gate) ===
+   prev_range_rel   sign -1  t  1.48  eff $  79.79/trade  halves $97.86/$61.22
+   dist_open        sign +1  t  1.34  eff $  77.05/trade  halves $47.69/$104.37
+   mom60            sign -1  t  1.13  eff $  66.38/trade  halves $110.87/$22.55
+   delta_mag        sign +1  t  1.10  eff $  60.38/trade  halves $48.12/$71.83
+   upvol_share      sign -1  t  1.10  eff $  54.95/trade  halves $176.09/$-65.23
+   majority rule: size 2 when >= 3 of 5 favourable (derived)
+   scoring 2225 short entries causally (trailing 250) [25s]
+
+=== SHORT ARMS on SEL (in-sample by construction) ===
+arm                                n   sz    pts    $/tr     wk$  wk+%    worst    CVaR5   shrp    eff  day+%  lose  conc%  stress
+S0 base short [SEL]             1298 1.00   5.51    44.0     549  50.0   -6,766   -5,093  0.179  0.081   45.1     9  155.8     424
+S5 combined short score [SEL]   1204 1.23   7.84    67.4     781  49.0   -7,483   -5,431  0.190  0.104   44.2     8  146.0     665
+S6 S5 + hour block [SEL]        1117 1.20   8.26    76.7     823  54.8   -6,435   -4,953  0.212  0.128   45.5     9  135.8     716
+
+=== SHORT ARMS on EVAL (honest - screen never saw it) ===
+arm                                n   sz    pts    $/tr     wk$  wk+%    worst    CVaR5   shrp    eff  day+%  lose  conc%  stress
+S0 base short [EVAL]             927 1.00   6.49    69.5     657  50.0   -8,269   -6,410  0.153  0.079   39.0     8  226.6     563
+S5 combined short score [EVAL]   851 1.24   8.22    95.8     832  53.1  -12,520   -8,199  0.151  0.066   39.0     4  213.6     745
+S6 S5 + hour block [EVAL]        855 1.18  10.09   117.1   1,021  51.0  -12,232   -8,303  0.189  0.083   39.5     9  170.0     934
+
+   arms passing the preregistered EVAL gate: NONE -> S5 falsifier fires
+
+=== EXPOSURE-MATCHED PORTFOLIO, EVAL (the only fair comparison) ===
+arm                                n   sz    pts    $/tr     wk$  wk+%    worst    CVaR5   shrp    eff  day+%  lose  conc%  stress
+long P2 x1 [EVAL]               1426 1.11  20.22   140.6   2,026  61.6   -5,818   -5,025  0.350  0.348   52.9     4   77.5   1,882
+long P2 x2 [EVAL]               1426 2.22  40.44   281.3   4,052  61.6  -11,636  -10,049  0.350  0.348   52.9     4   77.5   3,908
+P2 x1 + S0 short x1             2353 1.07  26.71   112.6   2,650  66.0  -12,062   -9,850  0.320  0.220   49.4     4   97.9   2,414
+P2 x1 + S5 short x1             2277 1.16  28.44   123.9   2,821  66.0  -13,483  -11,030  0.298  0.209   49.7     3  101.8   2,593
+
+   reading rule: eff and Sharpe are exposure-invariant, so 'P2 x2' and 'P2 x1'
+   share them by construction; the pairwise question is whether adding a short
+   sleeve beats simply running the long object larger at the SAME total exposure.
+done [27s]

@@ -106,3 +106,23 @@ in active-range sessions (16.8 % of sessions carry ~all P&L), stands aside in qu
 and is NQ-specific (the same engine loses on ES/RTY/YM). Out-of-sample within the regime it
 is worth roughly **Sharpe 0.21, ~$1,100/week per contract, 59-60 % positive weeks, worst week
 about -$17k** -- not the 0.28/$3,400 that fixed calibration advertised.
+
+## W38 — two narrowings of existing claims (both bought with measurement, 2026-08-25)
+
+**1. "Sizing on new information is edge" is narrowed to "the score grades LONG flips."**
+The identical construction on short entries behaves like leverage: +27 % production for +51 %
+worst week, efficiency 0.079 -> 0.066 on EVAL after rising in-sample. The law is not repealed
+on the long side (W34/W37 nulls stand); its DOMAIN is now measured rather than assumed.
+
+**2. "Shorts are insurance" is WITHDRAWN as a description.** At matched exposure the short
+sleeve widens the tail (efficiency 0.348 -> 0.220) and lowers the daily positive rate; what it
+actually buys is +4.4 pp of weekly positive rate. Long and short drawdowns CO-OCCUR. Running
+the long object at 2 contracts dominates long+short at 1+1 on production, tail, CVaR, Sharpe
+and daily hit rate simultaneously; only the weekly positive rate favours the pair.
+Consequence: the short sleeve moves to the CONSISTENCY corner of the Pareto frontier and is
+priced there, instead of being described as risk reduction.
+
+**3. An hour-of-day P&L pattern is not an hour effect until it survives a shift null.**
+The short side's negative hours (06/10/15/18/20/21 ET) looked like a clean, mechanistic
+restriction and produced +1.76 pts/session; arbitrary shifted schedules did the same
+(65th percentile, p = 0.350). Exposure reduction masquerades as selection.

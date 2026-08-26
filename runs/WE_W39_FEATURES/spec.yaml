@@ -1,0 +1,74 @@
+run_id: WE_W39_FEATURES
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner charter of 2026-08-25, wave W39 - "expand the flip-event feature universe
+  substantially; do NOT restrict yourself to indicators already in the system; the goal is to
+  find NEW information that can rank event quality and then allocate risk efficiently without
+  destroying production."
+
+central question (this is NOT 'add more features and see'): >
+  Is the quality layer limited by its FEATURES (only five, chosen in one pass over 16
+  candidates) or by its SCORING FORM (a binary count of five, each cut at a fixed quantile)?
+  The two have different fixes and the campaign has never separated them.
+  Attribution says the mechanism that pays is RESOLUTION: 21 % of trades (score >= 3) carry
+  79 % of profit while score-0 trades lose money. Anything that separates better should pay;
+  anything that merely adds correlated features should not.
+
+what is genuinely new here:
+  1. The feature universe is expanded from 16 to ~40 causal candidates across the information
+     classes the charter names (trend acceleration, realised-vol expansion, range
+     compression/release, VWAP displacement, opening-range geometry, prior-session path,
+     overnight return/range, trend age, pre-flip excursion, flip magnitude vs ATR, directional
+     volume, signed-volume acceleration, volume surprise, path efficiency, wick/body
+     asymmetry, local skew, prior false-flip history, distance from recent extrema,
+     multi-horizon return alignment, intraday seasonality, session regime, HTF state).
+  2. FEATURE SELECTION IS ITSELF WALK-FORWARDED. The current five were picked by looking at
+     the whole sample. W19 showed CONFIG selection was noise (88 % quarterly churn); whether
+     FEATURE selection is noise has never been asked. Quarterly re-selection with measured
+     churn is the diagnostic, exactly as in W19 - a new application of that finding, not a
+     rerun of it.
+  3. CONTINUOUS SCORING replaces the binary count, removing every per-feature quantile
+     (2/3, 1/3, 0.9 were fitted choices that W37 could only make causal, not remove).
+  4. BOTH DIRECTIONS are screened separately with the same protocol, which also gives the
+     short side a second, better-powered answer than W38's (long entries ~4.5k vs W38's
+     1,298 SEL short entries).
+
+data / windows: NQ 1-min, load 2022-01, measure 2022-07-01 -> 2026-08-01. Nothing >= 2026-08-01.
+  Where a fixed split is needed: SEL 2022-07 -> 2024-07, EVAL 2024-07 -> 2026-08. The
+  walk-forward arms use quarterly refits on trailing 12 months and are the headline.
+
+arms (long side; the short side runs Q0/Q2 only, as its production is an order smaller):
+  Q0 REFERENCE   : the W37 causal five-feature binary score, size 2 when >= 3 of 5
+                   (B1: must reproduce 14.72 pts/session, Sharpe 0.311 within tolerance)
+  Q1 SELECT-5-WF : expanded universe, binary count, the five features RE-SELECTED each quarter
+                   on the trailing 12 months, scored causally, traded the next quarter.
+                   Reported with CHOICE CHURN - the diagnostic, not a footnote.
+  Q2 ALL-CONT    : every admitted feature, no selection at all. Each feature converted to its
+                   causal trailing-250-entry percentile rank; score = mean rank across
+                   features; size 2 above the trailing median score. Zero free thresholds.
+  Q3 CONT-SIZE   : Q2 with size = 1 + round(2 x (score - 0.5)) clipped to [1, 3], testing
+                   whether finer SIZE resolution pays or is just leverage. Cap 2 vs 3 reported.
+  Q4 CLASS-DROP  : leave-one-CLASS-out on the best arm, to attribute which information class
+                   carries the separation rather than which individual feature.
+
+nulls (mechanism-appropriate, both required on whatever is adopted):
+  N1 circular shift of the score array (100 draws) - controls alignment.
+  N2 R29 count-matched random sizing (100 draws): the same NUMBER of entries sized up, chosen
+     at random - controls the credit for "doubling k trades" independent of which ones.
+  N2 is the binding one for a sizing rule; N1 alone cannot separate a real ranking from a
+  lucky alignment of an arbitrary subset.
+
+adoption (all, on the walk-forward result, versus Q0):
+  pts/session > Q0 AND weekly-mean/|worst week| >= Q0 AND worst week >= Q0 x 1.02
+  AND stress-net (at $14.36/RT) > 0 AND N1 >= 95th AND N2 >= 95th.
+falsifier: if no expanded arm beats Q0 on the walk-forward, the recorded conclusion is that
+  the quality layer is limited by the SCORING FORM's information content, not by feature
+  count, and that further feature mining is not the lever - which redirects effort to W40
+  (an independent second model). If Q1 churns heavily while Q2 does not, the recorded
+  conclusion is that FEATURE selection is noise the same way CONFIG selection was, and
+  aggregation over features becomes the standing form.
+forbidden: [data >= 2026-08-01, fill-bar information, any full-sample quantile or full-sample
+  feature ranking in an adopted arm, quoting a fixed-fit number when the walk-forward exists,
+  adopting on N1 alone, re-screening after seeing the walk-forward result]
+outputs: [out/features.txt, out/screen_long.csv, out/screen_short.csv, out/summary.csv,
+  REPORT.md]
