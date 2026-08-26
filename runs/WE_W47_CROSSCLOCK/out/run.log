@@ -1,0 +1,29 @@
+=== B1 GATE: 1-min full object 14.72 pts/session (expect 14.72) -> PASS [24s]
+   3-min vote fraction ready [24s]
+
+=== CROSS-CLOCK DECISION RULES, all at ONE contract [25s] ===
+arm                                n    pts    $/tr  inMkt%  pts/bar  expo(k)     wk$  wk+%    worst    CVaR5   shrp    eff  cvEff  stress   corr
+X0  1-min base vote             2072  10.62   103.9    16.7   0.0467    178.5   1,060  59.1   -7,487   -4,860  0.305  0.142  0.218     958   0.89
+X0q 1-min full (incumbent)      1950  14.72   153.0    16.7   0.0648    212.2   1,470  58.6   -7,418   -5,398  0.311  0.198  0.272   1,374   1.00
+X1  confirm f3 >= 0.50          1436   8.55   120.6    12.3   0.0510    140.6     853  54.7   -8,522   -5,596  0.243  0.100  0.152     783   0.76  reject
+X2  confirm f3 >= 0.25          1607   9.51   119.9    14.2   0.0491    157.4     949  60.1   -8,562   -5,840  0.267  0.111  0.163     870   0.82  reject
+X3  pooled 64-config vote       1756  10.68   123.2    15.3   0.0510    175.1   1,065  59.6   -8,318   -6,044  0.249  0.128  0.176     979   0.74  reject
+X4  3-min dir + 1-min timing     731   6.25   173.3     7.7   0.0592    101.1     624  47.8   -8,478   -5,991  0.169  0.074  0.104     588   0.61  reject
+
+=== SAME ARMS + THE CAUSAL QUALITY LAYER (X5) [27s] ===
+arm                                n    pts    $/tr  inMkt%  pts/bar  expo(k)     wk$  wk+%    worst    CVaR5   shrp    eff  cvEff  stress   corr
+X5a confirm f3 >= 0.50 +Q       1381  13.14   192.8    12.3   0.0784    174.7   1,312  51.2   -8,912   -6,324  0.266  0.147  0.207   1,243   0.81  reject
+X5b confirm f3 >= 0.25 +Q       1524  15.14   201.2    14.2   0.0782    191.3   1,511  57.6  -11,221   -6,349  0.304  0.135  0.238   1,436   0.87  reject
+X5c pooled 64-config vote +Q    1665  15.16   184.4    15.3   0.0725    217.2   1,513  56.2   -9,767   -6,703  0.290  0.155  0.226   1,431   0.75  reject
+X5d 3-min dir + 1-min timing +Q   719   8.81   248.2     7.7   0.0835    126.2     879  46.8   -9,447   -6,793  0.203  0.093  0.129     844   0.63  reject
+
+=== PER YEAR for anything that passed [29s] ===
+arm                                n    pts    $/tr  inMkt%  pts/bar  expo(k)     wk$  wk+%    worst    CVaR5   shrp    eff  cvEff  stress   corr
+X0q 1-min full (incumb 2022      215  10.55   128.6    10.6   0.0735     17.1   1,024  44.4   -3,879   -3,261  0.269  0.264  0.314     944   0.00
+X0q 1-min full (incumb 2023      550   3.04    28.5    15.0   0.0148     52.8     308  60.8   -5,784   -4,797  0.117  0.053  0.064     200   0.00
+X0q 1-min full (incumb 2024      595  19.59   170.5    18.2   0.0787     63.9   1,951  61.5   -6,747   -5,692  0.410  0.289  0.343   1,837   0.00
+X0q 1-min full (incumb 2025      427  23.17   281.1    17.8   0.0958     55.8   2,265  58.5   -7,418   -5,066  0.355  0.305  0.447   2,184   0.00
+X0q 1-min full (incumb 2026      163  15.79   205.3    21.5   0.0536     22.6   1,521  68.2   -6,344   -6,120  0.346  0.240  0.249   1,447   0.00
+
+=== NO CROSS-CLOCK RULE BEATS THE INCUMBENT AT EQUAL EXPOSURE -> falsifier fires ===
+done [29s]

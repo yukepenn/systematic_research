@@ -1,0 +1,57 @@
+run_id: WE_W48_STOPLEVEL
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: self-directed. This wave exists because I found a specific DESIGN ERROR in my own
+  W42, not because the W42 conclusion is being doubted on the level it tested.
+
+the error in W42: >
+  W42 derived its structural stop as the TRAILING MEDIAN OF WINNERS' MAE (0.81-0.86 ATR) and
+  reported that it cut production from 14.72 to 6.03 pts/session, concluding that "stops are
+  structurally incompatible with this payoff". But a stop placed at the MEDIAN of the winners'
+  own adverse excursion cuts, BY CONSTRUCTION, about half of all winners. The result was
+  guaranteed by the choice of derived quantity, and it does not test whether A stop can work -
+  only whether THAT stop can.
+  The correct derived quantity for a structural invalidation is a HIGH quantile of the winners'
+  MAE distribution: the level beyond which winners essentially never go. That is equally
+  "derived, not fitted", and it is the standard logic for a protective stop.
+  W42's mechanism sentence ("winners' median MAE is 0.86 ATR, so any stop at the level winners
+  endure cuts the winners") is TRUE and remains true - it just does not license the general
+  claim that exit engineering is closed.
+
+why this matters for the owner's objective: >
+  The binding constraint on $10,000/week at a -$15,000 worst week is profit-per-unit-of-tail
+  (eff), which is 0.198 and needs to be about 0.67. Contracts cannot move eff. Nine signal
+  families and seven structural axes have been falsified. A working protective stop is the one
+  classical mechanism that attacks the TAIL directly, and W42 may have dismissed it on a bad
+  parameterisation.
+
+phase 1 - EXACT ACCOUNTING, no backtest, from the path data:
+  For every candidate stop distance s (in ATR at entry), computed on the frozen entry set's
+  measured MFE/MAE paths:
+    winner_cut(s)  = fraction of WINNING trades whose MAE reaches -s
+    loser_cut(s)   = fraction of LOSING trades whose MAE reaches -s
+    the CUT RATIO   loser_cut / winner_cut - a stop can only help if this is well above 1
+    dollars_saved(s) = sum over stopped LOSERS of (their realised loss) - (-s x ATR)
+    dollars_lost(s)  = sum over stopped WINNERS of (their realised gain) + (s x ATR)
+    net(s) and, crucially, the effect on the WORST WEEK, since that is what a stop is for.
+  This is exact bookkeeping on paths already measured, it costs no backtest, and it says in
+  advance which levels could possibly work. Levels are the trailing-250-WINNER MAE distribution
+  at quantiles 0.50 (W42's choice, the control), 0.75, 0.90, 0.95, 0.99, and the same quantiles
+  of the ALL-TRADE MAE distribution.
+
+phase 2 - BACKTEST only the levels phase 1 says could work, with the corrected resting-order
+  machinery from W42 amendment 1 (a stop at a level FIXED AT ENTRY, filled at the level or at
+  the open on a gap-through, with re-entry blocked until the vote returns to flat, and the
+  re-entry-allowed control reported beside it).
+
+adoption: eff AND CVaR-efficiency above the incumbent's 0.198 / 0.272, stress-net > 0, not
+  negative in more than one year, and BOTH nulls at >= 95th percentile with the count-matched
+  one binding. A stop that improves the worst week while REDUCING eff is reported as a
+  DEFENSIVE Pareto point, not adopted.
+falsifier: if no stop level improves eff, W42's conclusion is promoted from "the tested stop
+  fails" to "no derived stop level on this MAE distribution helps", which is a materially
+  stronger and honestly-bounded statement, and closes exits for good.
+forbidden: [data >= 2026-08-01, using bar i's high/low to trigger a bar-i-open fill, tuning
+  the stop quantile after seeing phase 2, reporting a stop arm without its re-entry control,
+  claiming W42 was wrong about the mechanism it actually measured]
+outputs: [out/stoplevel.txt, out/accounting.csv, out/summary.csv, REPORT.md]

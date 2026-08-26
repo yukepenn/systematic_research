@@ -185,7 +185,7 @@ def main():
     P_(f"\n=== SAME ARMS + THE CAUSAL QUALITY LAYER (X5) [{_time.time()-t0:.0f}s] ===")
     P_(hdr)
     best = None
-    for nm, (pos, trl) in built.items():
+    for nm, (pos, trl) in list(built.items()):
         blx = [x for x in trl if A <= np.datetime64(x["et"]) < B]
         if len(blx) < 200:
             continue
