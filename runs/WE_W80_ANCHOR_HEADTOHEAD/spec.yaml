@@ -1,0 +1,85 @@
+run_id: WE_W80_ANCHOR_HEADTOHEAD
+title: "P1 vs X9a — the only two-sided out-of-sample evidence in the campaign, and the first time
+        the FULL OBJECT is run on the sixteen unseen years."
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+the_two_independent_signals_that_motivate_this: >
+  X9a is P1 with ONE inherited choice changed: the OR-slot channel measures displacement from the
+  18:00 SESSION open instead of the 09:31 RTH open. Nothing else differs - same members, same
+  throttle, same delta gate, same 32-config vote, same quality score, same session box.
+  Two completely independent out-of-sample tests point at it:
+    * W72: of eleven candidate channels it is the ONLY one durable across 2006-2021
+      (standalone pre-2022 t = 1.83, PF 1.105, +$28.6/trade, against the incumbent's t = 0.93,
+      PF 1.042, +$10.3/trade).
+    * W76: in the 46 sessions no code had ever read, X9a made +$16,702 while P1 lost -$20,686.
+  These two tests are separated by sixteen years of data and share no sample. That is a different
+  class of evidence from a single window - but it is NOT yet a result, and this wave decides.
+
+what_is_already_known_AGAINST_it_and_is_stated_first:
+  - "X9a costs 28 % of modern production (10.73 vs 14.86 pts/session in W72's original read)."
+  - "Its W76 held-out advantage is 194 % concentrated in THREE of forty-six sessions; without its
+     best three days it is -$15,658. Its median traded day there was -$1,359, essentially the
+     same as P1's -$1,447. On the concentration evidence alone the forward signal is weak."
+  - "It is rho = 0.673 with P1, so it is NOT a new stream. It is an ALTERNATIVE to P1, and it
+     cannot help the stream-count problem W74/W75/W79 identified."
+
+method_ordered_by_the_meta_finding_of_W79: >
+  Six consecutive objects have shown full-sample dominance and failed sub-period testing, and the
+  sub-metric that fails every time is the DRAWDOWN DISTRIBUTION (4-24 % of windows, six for six).
+  Therefore the rolling-window test runs FIRST in this wave, before any full-sample table is
+  computed or written up. If it fails, the report says so in its first line.
+
+phases:
+  1_rolling_FIRST: >
+    Rolling 24-month windows on the extended modern window: fraction in which X9a beats P1 on
+    weekly $ at a fixed $20,245 drawdown, on positive-week %, on mean top-5 drawdown, and on ALL
+    THREE. Bar: all three in a MAJORITY.
+  2_stability_of_the_choice: >
+    Quarterly, pick whichever object did better on a trailing year and trade only the next
+    quarter. Report churn and the stitched result against both fixed objects. A choice that
+    churns is a choice that is noise (W29's 88 %-churn finding).
+  3_per_year_held_out_and_concentration: >
+    Per-year on the extended window; W76's 46 held-out sessions as an OBSERVATION with the
+    top-3-day concentration check attached to every number, per method rule 29.
+  4_THE_DEEP_RUN - the point of the wave: >
+    Run BOTH FULL OBJECTS - not just the channel - on 2006-01-05 -> 2021-12-31. Sixteen years,
+    4,279 sessions. **This has never been done for either object.** W17/W21 ran the bare vote on
+    the deep sample (+0.056 pooled, 8/16 positive years) but that was BEFORE the quality layer,
+    the session box and the throttle existed. This is the campaign's largest untouched sample and
+    it directly tests the era-bound disclosure of W72.
+    NOTE THE HONEST CAVEAT: the quality score's five features were selected by a full-sample scan
+    on 2022-2026 (W33), so the deep run tests the object INCLUDING that specification-level
+    look-ahead. That is the right test - it measures what the object as specified would have done
+    - and the caveat travels with every number.
+  5_nulls: "circular-shift null on the deep run for whichever object is better there."
+
+  build_context_speed: >
+    `we_quality.build_context` contains two per-session loops that are O(n) each, i.e. O(n x
+    n_sess) overall - about 2.8e10 operations on the deep substrate, which is not runnable. A
+    vectorised equivalent is written here and must reproduce `build_context` EXACTLY on the
+    modern window (every array, bit-for-bit) before it is used on the deep one. If it does not
+    match, the deep phase is abandoned rather than run on an unverified harness.
+
+preregistered_decision_rule:
+  replace_P1_only_if: >
+    (1) X9a beats P1 on all three rolling metrics in a MAJORITY of windows, AND (2) it is
+    materially better than P1 over 2006-2021, AND (3) the quarterly choice does not churn.
+  the_likely_and_still_useful_outcome: >
+    if (1) fails - which the six-for-six prior says is likely - the wave still produces the
+    campaign's largest new measurement: what the full object does over sixteen unseen years.
+    That number is worth having regardless of which object wins, because the entire
+    "everything is era-bound" disclosure currently rests on CHANNEL-level evidence only.
+  adoption: NOTHING is adopted in this wave.
+
+traps_named_before_running:
+  - "X9a was chosen out of eleven channels in W72 and then again out of thirteen objects in W76.
+     It is a double argmax. The rolling and deep tests are the controls; the two-sided evidence
+     is a reason to TEST, never a reason to believe."
+  - "2006-2021 is a different market: NQ traded 2,000-16,000, tick value and volatility are
+     different in absolute terms. Report pts/session and PF (scale-free) alongside dollars, and
+     never compare deep-era dollars to modern-era dollars directly."
+  - "A good deep-era result for BOTH objects would mean the era-bound disclosure is too strong; a
+     bad one for both would mean the whole object family is modern-only. Both outcomes are
+     informative and both will be reported without softening."
