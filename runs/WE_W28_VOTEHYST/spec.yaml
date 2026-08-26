@@ -1,0 +1,31 @@
+run_id: WE_W28_VOTEHYST
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "继续全面进步"
+
+the untested idea: >
+  W04 measured that the PRODUCT's hysteresis(3.0, 1.0) - a higher bar to enter than to exit -
+  carries positive marginal value (+0.03-0.04 Sharpe, +$12.8/trade) at the MEMBER level.
+  The vote has never been given the same treatment: it enters and exits at the same 50 %
+  threshold. Vote-level hysteresis is the direct analogue and has never been tested.
+  W22's threshold curve was symmetric-only, so it cannot answer this.
+
+axes:
+  H VOTE HYSTERESIS: enter when the voting fraction >= H_in, hold until it falls below H_out,
+    with H_in > H_out. Grid: H_in in {0.50, 0.60, 0.70}, H_out in {0.30, 0.40, 0.50},
+    only pairs with H_in > H_out plus the symmetric baseline (0.5, 0.5) = 7 configurations.
+    All at 1 contract with halt -$1,300 and the (weak) target +$1,000, so the comparison is
+    against the current best object.
+  N NULL: the winning hysteresis pair, if any, gets 100 circular shifts before it is believed
+    (and the SESSION HALT's owed null is run in the same pass, since it is the same machinery).
+  Y 2025 DIAGNOSTIC: 2025 is the weak year (vote Sharpe 0.113 vs 0.26-0.32 elsewhere). Decompose
+    it: trades, win rate, per-trade, big-day share, and how much of the year's weakness is the
+    halt/target firing versus the signal itself. A weak year that is EXPLAINED is a different
+    object from one that is not.
+adoption: a hysteresis pair is adopted only if Sharpe rises AND the worst week does not worsen
+  AND it clears its own circular-shift null at the 95th percentile.
+falsifier: if no pair beats the symmetric baseline, vote-level hysteresis is closed and the
+  member-level result does not generalise upward - itself worth knowing.
+forbidden: [data >= 2026-08-01, fill-bar information, adopting without the null, reporting the
+  2025 diagnostic as a fix rather than an explanation]
+outputs: [out/hyst.txt, out/summary.csv, REPORT.md]
