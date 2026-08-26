@@ -1,0 +1,61 @@
+run_id: WE_W42_EXITS
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner charter of 2026-08-25, wave W42 - "entry event quality matters; now ask
+  whether the EXIT should depend on the same quality. But do not repeat simplistic 'hold
+  winners longer'. Every exit experiment must freeze entries."
+
+what the object currently does on the exit side (so nothing is re-tested unchanged):
+  1. opposite flip of the 32-config vote (the structural exit)
+  2. session close (always flat)
+  3. session box: halt at -$1,300 realised, stop at +$1,000 realised
+  4. a causal time cut at the base object's own trailing median hold (data set it to 23 bars)
+     for low-score entries only (adopted in W37 as P2)
+  W35 already falsified "give good trades a bigger session target" TWICE (A1, and again as a
+  marginal in W36 at -0.000 Sharpe). It is not retested.
+
+phase 1 - DIAGNOSTIC ONLY, no selection, no promotion: >
+  The campaign has never measured the PATH of its own trades. For every trade of the FROZEN
+  entry set, in ATR units and in points:
+    MFE and MAE, by quality score, by regime band, by hold duration and by year
+    capture ratio = realised P&L / MFE, and the give-back distribution
+    P(final win | MAE >= x ATR within the first m bars) for a grid of (x, m) - does early
+      adversity predict failure, or is it noise?
+    the expected-remaining-P&L curve by bar-in-trade (a survival curve), which is the object
+      that decides whether ANY time-based exit can help and where
+  This phase answers "what is the shape of our own payoff" - a question the owner charter
+  lists under attribution and which no wave has answered.
+
+phase 2 - hypotheses, DECLARED HERE BEFORE PHASE 1 IS READ (entries frozen in all arms):
+  E1 EXIT-ONLY VOTE HYSTERESIS - hold until the vote falls below a LOWER threshold than the
+     0.5 used to enter. W28 tested SYMMETRIC vote hysteresis (0.6 in / 0.4 out) and it failed
+     its null at the 63rd percentile; entry-side and exit-side hysteresis have never been
+     separated, and W31's flip-event law argues they are different objects: the entry
+     threshold decides WHICH events are taken, the exit threshold decides how much of an
+     already-validated event is kept.
+  E2 MAE STRUCTURAL INVALIDATION - exit when adverse excursion exceeds the trailing 250-trade
+     quantile of the MAE distribution OF EVENTUAL LOSERS (causal, derived, no fitted constant).
+     This is not a dollar stop (W02 proved those are inert here); it is "the flip has been
+     structurally invalidated", measured in the object's own units.
+  E3 MFE GIVE-BACK CAP - exit when a trade gives back the trailing median give-back fraction
+     of its own MFE. Again derived from trailing trades, not chosen.
+  E4 THREE-TIER QUALITY HOLD - the causal score already picks size; give it the hold too:
+     low score -> the derived cut (current P2 behaviour), mid -> the structural exit,
+     high -> the structural exit plus a trailing invalidation. No new thresholds: the tiers
+     are the score's own terciles over trailing entries.
+  E5 PARTIAL EXIT - half off at the trailing median MFE, remainder on the structural exit.
+     W26's L1 partial-profit test was run on the PRE-quality object and at a fixed point
+     target; this version is quality-conditioned and derived.
+
+adoption (all, versus P1 = the current causal quality object, 14.72 pts/session, eff 0.198):
+  eff > P1 AND CVaR-efficiency > P1 AND stress-net > 0
+  AND BOTH nulls at >= 95th percentile (circular shift AND count-matched, the latter binding)
+  AND the improvement holds on the FULL window and is not negative in more than one year.
+falsifier: if no exit mechanism clears, the recorded conclusion is that the structural exit
+  (opposite flip) plus the session box is already the efficient frontier of this object's exit
+  side, and exit engineering is closed - which would leave entry information and
+  diversification as the only open levers, and both are currently exhausted on NQ 1-min.
+forbidden: [changing entries in any arm, any threshold cut on the full measurement sample,
+  retesting the big-target idea, adopting on the alignment null alone, quoting a
+  walk-forward-window number as the headline]
+outputs: [out/exits.txt, out/paths.csv, out/summary.csv, REPORT.md]

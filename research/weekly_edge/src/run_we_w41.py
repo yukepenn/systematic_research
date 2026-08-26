@@ -205,9 +205,9 @@ def main():
                 best = (w, e, c) if best is None or e > best[1] else best
         if best:
             winners.append((nm, best))
-    P_(f"\n   clocks improving eff or CVaR-eff at some weight: "
-       f"{[(w[0], w[1][0]) for w in winners] if winners else 'NONE -> W32 verdict CONFIRMED '
-          'on the true engine'}")
+    msg = (str([(w[0], w[1][0]) for w in winners]) if winners
+           else "NONE -> W32 verdict CONFIRMED on the true engine")
+    P_(f"\n   clocks improving eff or CVaR-eff at some weight: {msg}")
 
     # ---- nulls on any winner ----------------------------------------------------------
     for nm, (w, _, _) in winners:
