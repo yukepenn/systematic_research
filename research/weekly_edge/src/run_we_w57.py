@@ -65,7 +65,7 @@ def main():
     g = rth.groupby("d")
     day = pd.DataFrame({
         "o": g["open"].first(), "h": g["high"].max(), "l": g["low"].min(),
-        "c": g["close"].last(), "v": g["volume"].sum(), "nbar": g["close"].size,
+        "c": g["close"].last(), "v": g["volume"].sum(), "nbar": g["close"].count(),
     })
     day = day[day["nbar"] >= 200]                        # full RTH sessions only
 
@@ -173,7 +173,11 @@ def main():
         on_ = r.get("n_2022-2026", 0)
         om = r.get("mean_2022-2026", np.nan)
         ot = r.get("t_2022-2026", np.nan)
-        good = bool(np.isfinite(pt) and pt >= 1.65 and np.isfinite(pm) and pm > 0)
+        # amendment_1: the spec's MECHANICAL COHERENCE requirement, which the first version of
+        # this code did not implement. (a) the edge must be there pre-2022 AND (b) it must be
+        # in the SAME regime state post-2022, or the variable does not locate the modern edge.
+        good = bool(np.isfinite(pt) and pt >= 1.65 and np.isfinite(pm) and pm > 0
+                    and np.isfinite(ot) and ot >= 1.65 and np.isfinite(om) and om > 0)
         if good:
             qualifies.append(r["var"])
         P_(f"{r['var']:<18}{int(pn) if pn == pn else 0:>12}"
@@ -194,6 +198,46 @@ def main():
         P_(f"      present evidence, model concentration is the binding constraint on the")
         P_(f"      owner's objective, and the next move is to BUILD or BUY genuinely different")
         P_(f"      information rather than to recombine what already exists.")
+
+    # ---------------- multiplicity, per amendment_1 --------------------------------------
+    P_(f"\n=== MULTIPLICITY on this wave's own 60-cell scan (amendment_1) ===")
+    cells = []
+    for var in REG.columns:
+        rk = crank(M[var].values)
+        for b in range(NQ):
+            hi = ((b + 1) / NQ) if b < NQ - 1 else 1.0001
+            m = np.isfinite(rk) & (rk >= b / NQ) & (rk < hi)
+            for e in ("2006-2021", "2022-2026"):
+                mm = m & (M["era"].values == e)
+                if mm.sum() >= 20:
+                    cells.append((mm, e))
+
+    def count_hits(p):
+        c = 0
+        for mm, _ in cells:
+            v = p[mm]
+            se = v.std(ddof=1) / np.sqrt(len(v))
+            if se > 0 and v.mean() / se >= 1.65:
+                c += 1
+        return c
+    obs = count_hits(pnl)
+    rng_ = np.random.default_rng(20260857)
+    era_arr = M["era"].values
+    perm_counts = []
+    for _ in range(500):
+        p = pnl.copy()
+        for e in ("2006-2021", "2022-2026"):          # permute WITHIN era
+            idx = np.flatnonzero(era_arr == e)
+            p[idx] = rng_.permutation(p[idx])
+        perm_counts.append(count_hits(p))
+    perm_counts = np.array(perm_counts)
+    P_(f"   {len(cells)} cells with n >= 20. Observed cells at t >= 1.65: {obs}")
+    P_(f"   permuted within era: {perm_counts.mean():.1f} on average "
+       f"(5th-95th pct {np.percentile(perm_counts,5):.0f}-{np.percentile(perm_counts,95):.0f}), "
+       f"p(as many by chance) = {float((perm_counts >= obs).mean()):.3f}")
+    P_(f"   -> the quintile structure is "
+       + ("MORE than chance produces" if float((perm_counts >= obs).mean()) < 0.05
+          else "NOT distinguishable from chance"))
 
     # ---------------- context: what actually changed between the eras -------------------
     P_(f"\n=== CONTEXT: did these variables actually move between the eras? ===")
