@@ -59,6 +59,22 @@ At **matched tail** (his displayed worst week −$42,235): ours ≈ **$4,923/wee
 sheets. Efficiency per unit of tail: his 0.203 vs ours 0.117 — **1.74×**, not the 5–20× the
 raw weekly figures suggest (W23).
 
+## 4b. OUT-OF-SAMPLE VALIDATION (W29) — the quote is honest
+
+Refitting **every free parameter** (halt, target, vote threshold, throttle q) quarterly on a
+trailing year and trading only the next quarter:
+
+| | walk-forward | fixed quote | naive | hindsight best |
+|---|---|---|---|---|
+| Sharpe | **0.290** | 0.300 | 0.214 | 0.304 |
+| weekly | $1,034 | $1,042 | $1,114 | $1,045 |
+| % weeks + | 60.3 % | 59.6 % | 60.1 % | 63.5 % |
+| worst week | −$8,189 | −$7,797 | −$17,365 | −$7,257 |
+
+**97 % of the fixed Sharpe survives an honest refit** (bar was 80 %), choice churn is 38 %
+(against 88 % for the old select-one-config family), and `(1300, 1000, ·, ·)` is chosen in 15
+of 17 refits. Walk-forward per-year: 0.353 / 0.062 / 0.410 / 0.248 / 0.490 — all positive.
+
 ## 5. Confidence, by evidence class
 
 | claim | evidence |
