@@ -1,0 +1,37 @@
+run_id: WE_W29_FINALWF
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "继续全面进步"; the final honest validation of the object as it now stands.
+
+why this wave: >
+  W19's walk-forward tested the OLD family (single configs, quarterly selection) and returned
+  WEAK. The object has since changed completely: a selection-free vote plus a session box.
+  It has never been walk-forwarded. Its remaining free choices are the BOX LEVELS
+  (halt, target), the VOTE THRESHOLD and the RANGE-THROTTLE q - all four chosen on this data.
+  This wave refits those four quarterly on a trailing year and trades only the next quarter.
+  If the walk-forward result approximates the fixed result, the object's parameters are stable
+  and the number we quote is honest. If it collapses, the quoted number is fitted.
+
+protocol (identical discipline to W19):
+  warm-up 2022-01..2022-06; quarterly refits from 2022-07 to 2026-07; fit on the trailing
+  12 months; trade only the next quarter; stitch.
+  choice set per refit (3 x 3 x 3 x 3 = 81):
+    halt   in {none, 1300, 2600}
+    target in {none, 1000, 2000}
+    thresh in {0.40, 0.50, 0.60}
+    q      in {0.7, 0.8, 0.9}
+  selection criterion inside each fit window: weekly Sharpe (same as W19).
+comparisons reported together:
+  WF_FINAL   : the stitched walk-forward
+  FIXED_FINAL: halt 1300 / target 1000 / thresh 0.50 / q 0.80 (the quoted object)
+  NAIVE      : no halt, no target, thresh 0.50, q 0.80 (the vote alone)
+  BESTFIXED  : the best of the 81 over the whole span (hindsight upper bound)
+verdicts:
+  STRONG : WF >= 0.8 x FIXED and WF > NAIVE -> the quoted object is honest
+  WEAK   : WF > NAIVE but < 0.8 x FIXED -> the quote overstates; restate it at the WF level
+  FAIL   : WF <= NAIVE -> the box adds nothing out of sample and must be dropped
+also required: choice churn (how often the quarterly pick changes), and the WF result's own
+  per-year figures.
+forbidden: [data >= 2026-08-01, fill-bar information, quoting WF without NAIVE and FIXED,
+  changing the choice set after seeing results]
+outputs: [out/wf2.txt, out/summary.csv, REPORT.md]
