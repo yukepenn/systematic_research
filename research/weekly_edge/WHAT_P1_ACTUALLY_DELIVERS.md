@@ -22,31 +22,51 @@ stopped two months early.
 The trend across the first three rows is the thing to look at: **$68k → $46k → $21k annualised as
 the window moves toward the present, against a maximum drawdown that does not fall at all.**
 
-## 2. What $150,000 a year would cost
+## 2. What $150,000 a year would cost — **at the MEASURED friction of $14.65/RT**
 
-| at this period's realised rate | units needed | **NQ contracts** | **implied max drawdown** | implied worst week |
+| at this period's realised rate | weekly $ net | annualised | **NQ contracts** | **implied max drawdown** |
 |---|---|---|---|---|
-| full-window rate | 2.19 | **2.8** | **$53,133** | −$16,270 |
-| trailing-12-month rate | 3.28 | **4.2** | **$79,496** | −$20,819 |
-| **2026 YTD rate** | 7.00 | **8.9** | **$169,492** | **−$44,389** |
+| full-window rate | $1,152 | $59,895 | **3.2** | **$60,668** |
+| **trailing-12-month rate** | **$716** | **$37,215** | **5.1** | **$97,640** |
+| **2026 YTD rate** | **$249** | **$12,945** | **14.7** | **$280,711** |
 
-Read the last row plainly: **at the rate the object has actually produced in 2026, earning
-$150,000 a year requires accepting a $169,492 drawdown — a drawdown larger than the annual
-profit.** That is not an investable configuration.
+At the pessimistic $24/RT bound the same rates are **$54,473 / $31,794 / $7,523** per unit per
+year.
+
+Read the last row plainly: **at the rate the object has actually produced in 2026, and at the
+spread we have now measured, earning $150,000 a year would require ~15 NQ contracts and a
+$280,711 drawdown.** That is not a configuration anyone should trade.
 
 The middle row is the honest one to plan against, because a trailing year is the shortest window
-that contains more than one regime: **$150k/year at ≈4.2 NQ contracts with a ~$79,500 drawdown,
-i.e. MAR ≈ 1.9.**
+containing more than one regime: **$150k/year at ≈5.1 NQ contracts with a ~$97,600 drawdown,
+i.e. MAR ≈ 1.5.**
 
-## 3. The friction line that must travel with all of it
+(The earlier version of this table — 2.8 / 4.2 / 8.9 contracts — assumed zero spread cost and is
+superseded.)
 
-The C1 stress line ($10/RT of slippage on top of commission) costs **≈ $94/week per unit**:
+## 3. ⚠️ THE FRICTION LINE — MEASURED IN W82, AND IT WAS OPTIMISTIC
 
-- **6–7 %** of the full-window rate
-- **11 %** of the trailing-12-month rate
-- **23 %** of the 2026 rate
+**Superseded.** W82 audited 3.7 million two-sided second-quotes against P1's own fill
+time-of-day distribution. The campaign's assumed 2-tick stress line is wrong:
 
-At 2026's rate, slippage alone consumes almost a quarter of the gross.
+> **Measured spread at P1's actual trading times: 2.93 ticks = $14.65 per round turn.**
+> Overnight 3.19 ticks / $15.97 — and **61.6 % of P1's fills are overnight.**
+
+At P1's 11.15 contract round turns per week that is **$163/week**, not $94:
+
+| cost line | $/week | full window | trailing 12m | **2026** |
+|---|---|---|---|---|
+| headline (commission only) | $0 | $1,315 | $879 | $412 |
+| old C1 stress line (assumed) | $112 | $1,204 | $767 | $301 |
+| **MEASURED $14.65/RT** | **$163** | **$1,152** | **$716** | **$249** |
+
+**Annualised per unit at the measured cost: full $59,888 · trailing 12m $37,209 · 2026 $12,938.**
+
+A pessimistic bound of **$24/RT** comes from a direct per-fill measurement on a selected 35-fill
+subsample; it agrees on direction and cannot establish magnitude. Carry $14.65 as the working
+number and $24 as the bound.
+
+**Every table below §3 that quotes the old $94/week line is superseded by this one.**
 
 ## 4. What has to be true for the top row to be the right one
 
