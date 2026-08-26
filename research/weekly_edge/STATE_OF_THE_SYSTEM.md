@@ -3,7 +3,30 @@
 
 # STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7)
 
-> ## CURRENT TRUTH after W39 (2026-08-25) — supersedes anything below it that conflicts
+> ## CURRENT TRUTH after W42 (2026-08-26) — supersedes everything below
+>
+> **Adopted since W39**: the **clock basket** (W41) — `long quality + 3-min clock + range clock`
+> at w = 0.03 each, constant total exposure. eff 0.198 → **0.209**, CVaR-eff 0.272 → **0.282**,
+> Sharpe 0.311 → **0.318**, worst week −$7,418 → **−$6,968**, for 0.7 % less money; better on
+> eff in 4 of 5 years; every clock sleeve positive and stress-positive in **every** year.
+> Binding count-matched null **95.0th percentile, p = 0.050 — it clears by nothing**.
+> ⚠️ **Scale qualification**: w = 0.03 is 0.04 contracts. In tradeable integer form the basket
+> improves both metrics only at **≥ 16 long : 1 : 1 (≈ $25,000/week)**; at 4 : 1 : 1 to
+> 12 : 1 : 1 it improves Sharpe and CVaR-efficiency but worsens eff and the single worst week;
+> below 4 : 1 : 1 there is no benefit. ⚠️ It is **sampling** diversification, not model
+> diversification — every clock is the same Solar ratchet.
+>
+> **Closed since W38**: short-side quality (W38) · the short sleeve as tail insurance (W38) ·
+> feature mining (W39) · four non-ratchet mechanisms (W40) · **exit engineering (W42)**.
+> **Reopened and resolved**: W32's clock axis (W41 — its verdict was a harness artifact).
+>
+> **W42's payoff diagnostic, the campaign's first**: 37.8 % of trades win; the median trade
+> gives back **more than its entire MFE**; winners keep only 41 % of theirs; winners' median
+> MAE is **0.86 ATR**, which is *why* every stop fails here. The quality score forecasts
+> **excursion size, not hit rate** (win % flat at 35–40 %, MFE 1.3 → 5.5 ATR across scores) —
+> the mechanism behind sizing working and filtering failing.
+>
+> ## CURRENT TRUTH after W39 (2026-08-25) — superseded above, kept for the numbers
 >
 > **The recommended object is LONG-ONLY, scaled by contracts.** The short sleeve is no longer
 > part of the production or risk-efficient object; it survives only as the CONSISTENCY object.
