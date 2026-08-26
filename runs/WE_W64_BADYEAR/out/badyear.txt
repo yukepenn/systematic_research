@@ -1,0 +1,75 @@
+=== B1 GATE: 14.86 pts/session over 1012 sessions (expect 14.72) -> PASS [23s]
+
+======================================================================================================================
+=== PHASE 1a: the session-class MIX per year (was 2023 short of trend days?)
+======================================================================================================================
+year      sessions     TREND-UP   TREND-DOWN     REVERSAL        RANGE        MIXED
+2022           130        18.5%        15.4%        30.0%        26.2%        10.0%
+2023           258        22.9%        13.6%        25.2%        25.6%        12.8%
+2024           259        21.6%        15.4%        23.2%        29.0%        10.8%
+2025           259        20.1%        12.4%        27.0%        27.4%        13.1%
+2026           106        19.8%        13.2%        27.4%        26.4%        13.2%
+ALL           1012        20.9%        13.9%        26.0%        27.1%        12.1%
+
+=== PHASE 1b: were the trend days SMALLER, and did we capture less of them? ===
+year      avail/ses  TREND-UP avail  our pts/ses  TREND-UP pts  capture on TU  $/wk @1.27
+2022          319.4           369.9        11.59         45.74         12.37%       1,159
+2023          235.2           272.2         3.04         50.55         18.57%         302
+2024          306.0           336.9        19.59        103.79         30.80%       1,915
+2025          405.9           417.9        23.17        134.33         32.14%       2,265
+2026          478.5           519.2        15.79         91.59         17.64%       1,521
+
+=== PHASE 1c: did the object SIT OUT more in 2023? ===
+year       trades  flat sess %  contract-min  per session   hit %  mean win $  mean loss $  top-5% share
+2022          207        45.4%        17,021        130.9   36.2%       1,172         -437          164%
+2023          550        38.8%        52,826        204.8   36.7%         808         -424          374%
+2024          595        36.7%        63,871        246.6   36.5%       1,122         -376           97%
+2025          427        44.8%        55,750        215.3   41.2%       1,400         -503           98%
+2026          163        33.0%        22,619        213.4   39.9%       1,630         -740          126%
+
+======================================================================================================================
+=== PHASE 2: was 2023 visible in TRAILING data while it was happening?
+======================================================================================================================
+Trailing 60-session measures, lagged, so each value is knowable before the session it
+describes. The bar this campaign's four regime-identification failures set: the variable
+must be low DURING the bad stretch in the trailing data, not merely correlated after.
+
+year       trailing TREND-UP share   trailing avail/ses   trailing range  realised $/wk
+2022                         18.8%                326.2            326.2          1,159
+2023                         21.5%                246.3            246.3            302
+2024                         22.6%                289.9            289.9          1,915
+2025                         20.7%                401.2            401.2          2,265
+2026                         16.3%                451.7            451.7          1,521
+
+   correlation of the TRAILING measure with the SAME session's P&L:
+      tr_tu          Spearman +0.044
+      tr_avail       Spearman -0.001
+      tr_rng         Spearman -0.001
+      tr_absbody     Spearman -0.002
+
+   and at the WEEKLY level, trailing measure vs that week's P&L:
+      tr_tu          Spearman +0.027
+      tr_avail       Spearman +0.034
+      tr_rng         Spearman +0.034
+
+======================================================================================================================
+=== PHASE 4: the distribution the owner actually needs
+======================================================================================================================
+   at 2.6 contracts (the size at which the full-window average is ~$3,000/week):
+      mean $3,019/wk | median $933 | positive weeks 58.3 %
+      worst week $-15,186 | best week $65,612 | max drawdown $41,447
+
+   rolling 52-week windows at that size (153 of them):
+        0th percentile of the 52-week average: $-80/wk
+        5th percentile of the 52-week average: $367/wk
+       10th percentile of the 52-week average: $1,007/wk
+       25th percentile of the 52-week average: $1,752/wk
+       50th percentile of the 52-week average: $3,564/wk
+       75th percentile of the 52-week average: $4,863/wk
+      100th percentile of the 52-week average: $5,881/wk
+      fraction of 52-week windows below $2,000/wk: 38 %   below $1,000/wk: 10 %
+
+   longest run of losing weeks: 8
+   weeks spent under water: 62 % | longest under-water stretch 29 weeks
+
+=== STATUS: diagnostic. Nothing adopted. ===
