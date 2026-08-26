@@ -1,0 +1,84 @@
+=== 1058 sessions, 213 weeks, 2022-07-04 -> 2026-07-31 [6s]
+    object + causal score built; 2,139 scored entries [16s]
+    Q0_incumbent   2,002 trades,  2,368 contract RTs, 11.12 RT/week [16s]
+    Q1_flat        2,131 trades,  2,131 contract RTs, 10.00 RT/week [17s]
+    Q2_inverted    1,798 trades,  2,840 contract RTs, 13.33 RT/week [17s]
+    Q3_selective   2,094 trades,  2,198 contract RTs, 10.32 RT/week [17s]
+    Q4_levered     1,913 trades,  2,583 contract RTs, 12.13 RT/week [18s]
+    Q5_graded      1,804 trades,  2,553 contract RTs, 11.99 RT/week [18s]
+
+==================================================================================================================================
+=== PHASE 0: THE FALSIFIER. Does the sizing scheme actually move the weekly SKEW?
+==================================================================================================================================
+arm               avg size   RT/week   weekly skew   kurtosis
+Q0_incumbent          1.18     11.12          2.10       8.91
+Q1_flat               1.00     10.00          0.98       1.74
+Q2_inverted           1.58     13.33          1.05       2.48
+Q3_selective          1.05     10.32          1.23       2.73
+Q4_levered            1.35     12.13          3.06      18.20
+Q5_graded             1.42     11.99          1.52       4.35
+
+   skew spread across arms: 2.08 units -> PREMISE HOLDS
+   predicted ordering Q2 < Q1 < Q0 < Q4 (1.05 < 0.98 < 2.10 < 3.06) -> SCRAMBLED - the W42 mechanism is not what drives skew here
+
+==================================================================================================================================
+=== PHASE 1 (BEFORE any full-sample table is interpreted): ROLLING 24-MONTH WINDOWS vs Q0, at the MEASURED $14.65/RT
+==================================================================================================================================
+arm                 n   wk+% win   money win   top5DD win   ALL THREE
+Q1_flat            25        64%          4%          64%          0%
+Q2_inverted        25        40%          0%          64%          0%
+Q3_selective       25        88%          4%          84%          0%
+Q4_levered         25        64%        100%          36%         24%
+Q5_graded          25        80%         16%          80%          0%
+
+==================================================================================================================================
+=== PHASE 2: the panel, net $4.36/RT commission only
+==================================================================================================================================
+arm                wk+%  wStrk   skew  Sharpe   medWk$  weekly$   wk$@DD   top5DD    maxDD    worst  W74 pred wk+%
+Q0_incumbent      56.3%      8   2.10   0.280      279    1,315    1,099   13,864   24,225   -7,418          54.5%
+Q1_flat           57.3%      7   0.98   0.270      443      947      966   15,183   19,851   -7,487          57.4%
+Q2_inverted       53.5%      9   1.05   0.188      313      973      314    8,528   62,778  -12,259          53.5%
+Q3_selective      55.9%      9   1.23   0.283      443    1,119      963   14,778   23,531   -8,461          57.2%
+Q4_levered        55.4%      8   3.06   0.282      551    1,732    1,595   15,922   21,991   -9,175          51.7%
+Q5_graded         55.9%      9   1.52   0.277      440    1,445      940   13,034   31,131   -9,327          56.1%
+
+==================================================================================================================================
+=== PHASE 2: the panel, at W82's MEASURED $14.65/RT all-in
+==================================================================================================================================
+arm                wk+%  wStrk   skew  Sharpe   medWk$  weekly$   wk$@DD   top5DD    maxDD    worst  W74 pred wk+%
+Q0_incumbent      52.6%      8   2.10   0.246      116    1,152      854   13,674   27,319   -7,581          53.0%
+Q1_flat           54.9%      7   0.98   0.228      296      800      716   14,836   22,636   -7,633          55.5%
+Q2_inverted       51.6%      9   1.05   0.150      118      777      234    8,715   67,271  -12,454          51.7%
+Q3_selective      54.0%      9   1.23   0.244      292      968      755   14,745   25,950   -8,612          55.5%
+Q4_levered        54.0%      8   3.06   0.253      373    1,555    1,280   16,040   24,595   -9,353          50.4%
+Q5_graded         54.0%      9   1.52   0.243      264    1,269      757   13,139   33,941   -9,502          54.6%
+
+   W74's exchange rate on this NEW family (not in its fit or its hold-out):
+      MAE 1.11 pp, bias -0.07 pp, R2 -1.222
+
+=== PER YEAR (positive-week %, at $14.65/RT) ===
+arm                   2022      2023      2024      2025      2026
+Q0_incumbent           42%       54%       55%       57%       52%
+Q1_flat                38%       62%       58%       53%       58%
+Q2_inverted            42%       58%       53%       51%       48%
+Q3_selective           38%       56%       60%       55%       55%
+Q4_levered             50%       54%       57%       55%       55%
+Q5_graded              46%       54%       64%       49%       52%
+
+==================================================================================================================================
+=== PREREGISTERED VERDICT
+==================================================================================================================================
+   Q1_flat          wk+% wins  64 % of windows | money at fixed DD  83.8 % of Q0 -> no
+   Q2_inverted      wk+% wins  40 % of windows | money at fixed DD  27.4 % of Q0 -> no
+   Q3_selective     wk+% wins  88 % of windows | money at fixed DD  88.4 % of Q0 -> no
+   Q4_levered       wk+% wins  64 % of windows | money at fixed DD 149.9 % of Q0 -> CANDIDATE
+   Q5_graded        wk+% wins  80 % of windows | money at fixed DD  88.7 % of Q0 -> no
+
+   the layer's measured price, Q0 vs Q1 (layer OFF), at $14.65/RT:
+      positive weeks  52.6 % vs 54.9 %  (-2.3 pp)
+      weekly skew     +2.10 vs +0.98  (+1.12)
+      money @ fixed DD $854 vs $716  (+19.3 %)
+
+   -> CANDIDATES: Q4_levered
+
+=== STATUS: NOTHING ADOPTED. [18s] ===
