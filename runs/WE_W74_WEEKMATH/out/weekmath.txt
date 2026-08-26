@@ -1,0 +1,88 @@
+=== 235 objects on disk: 216 W59 cells, P1, the short sleeve, 5 blends, 12 W72 channel arms
+
+================================================================================================================
+=== PHASE 1: does the positive-week rate FOLLOW from the weekly moments?
+================================================================================================================
+   194 of 235 objects have |skew| < 2 and enter the fit (spec: Cornish-Fisher is unreliable outside that).
+   M0  Phi(weekly Sharpe)           MAE  3.84 pp   bias  +3.40 pp   R2 -1.087
+   M1  Cornish-Fisher with skew     MAE  3.31 pp   bias  -2.65 pp   R2 -0.531
+
+   -> the wave uses M1 (skew-corrected); MAE 3.31 pp
+
+   where things sit:
+object                      weeks   weekly $        sd  Sharpe   skew   kurt  wk+% real     M0     M1    ac1
+P1                            204      1,475     4,703   0.314   2.11   8.97      58.3%   62.3   48.5  -0.09
+SHORT                         204        595     3,683   0.162   0.81   1.23      49.5%   56.4   51.0   0.07
+P1+SHORT w=0.30               204      1,211     3,634   0.333   2.21  10.50      61.8%   63.0   48.6  -0.09
+P1+SHORT w=0.50               204      1,035     3,208   0.323   1.89   8.68      63.7%   62.7   50.3  -0.06
+216 cells: best wk+%                                     0.272   0.05             63.2%
+216 cells: median                                        0.253   1.17             56.4%
+
+================================================================================================================
+=== PHASE 2: THE REQUIREMENT. What buys 76 % positive weeks?
+================================================================================================================
+   P1 today: weekly Sharpe 0.314, weekly skew +2.11, positive weeks 58.3 %
+
+   (a) AT OUR CURRENT SKEW (+2.11), 76 % needs weekly Sharpe 0.882 - that is 2.81x what we have.
+   (b) AT OUR CURRENT SHARPE (0.314), 76 % needs weekly skew -3.00 - we are at +2.11.
+       (a skew that negative is not reachable by any truncation of this object; the skew lever ALONE cannot get there.)
+
+   iso-76 % curve - the weekly Sharpe required at each level of weekly skew:
+weekly skew        -1.5     -1.0     -0.5      0.0      0.5      1.0      1.5      2.0
+Sharpe needed     0.581    0.623    0.665    0.706    0.748    0.790    0.832    0.873
+
+   (c) HOW MANY INDEPENDENT STREAMS of our own quality reach it?
+       K streams at pairwise rho: Sharpe_K = S*sqrt(K)/sqrt(1+(K-1)*rho), and for
+       independent sums the skew shrinks as 1/sqrt(K), which helps a second time.
+
+rho            K=1       K=2       K=3       K=4       K=6       K=8      K=12      K=16   K for 76%
+0.0          48.5%     58.1%     64.3%     68.9%     75.6%     80.3%     86.6%     90.6%           7
+0.1          48.5%     57.2%     62.3%     65.6%     69.9%     72.6%     75.7%     77.5%          13
+0.3          48.5%     55.8%     59.4%     61.6%     64.1%     65.5%     67.1%     67.9%       never
+0.5          48.5%     54.7%     57.5%     59.1%     61.0%     62.0%     63.2%     63.8%       never
+
+================================================================================================================
+=== PHASE 3: is the short sleeve's consistency gain FREQUENCY or DIVERSIFICATION?
+================================================================================================================
+   daily rho(P1, short) = -0.0031   |   P1 Sharpe 0.314 skew +2.11   |   SHORT Sharpe 0.162 skew +0.81
+
+   THE PREDICTION IS MADE FROM PORTFOLIO ALGEBRA ONLY, before comparison:
+w         pred Sharpe  real Sharpe   pred wk+% (P1 skew)   pred wk+% (real skew)   REAL wk+%
+0.10            0.322        0.322                 48.8%                   48.3%       59.3%
+0.20            0.329        0.329                 49.1%                   48.3%       60.3%
+0.30            0.333        0.333                 49.3%                   48.6%       61.8%
+0.40            0.332        0.332                 49.2%                   49.3%       63.2%
+0.50            0.323        0.323                 48.9%                   50.3%       63.7%
+
+   mean |real - predicted(from Sharpe and skew alone)| = 12.71 pp
+   -> the gain EXCEEDS what the moments explain: genuine shape/dependence value
+
+================================================================================================================
+=== PHASE 4: the SKEW lever priced - what the session target actually buys
+================================================================================================================
+target      cells  med Sharpe   med skew   med wk+%   med weekly $
+500            36       0.235       1.05      56.4%          1,006
+750            36       0.260       1.11      57.4%          1,154
+1000           36       0.254       1.05      57.4%          1,177
+1500           36       0.270       1.30      57.4%          1,352
+2500           36       0.251       1.12      55.9%          1,341
+inf            36       0.252       1.52      53.2%          1,505
+
+   wk+%  =  48.1  +  45.4 * Sharpe  -2.99 * skew      (216 cells, OLS)
+   -> one unit of weekly skew costs 2.99 pp of positive weeks; one
+      0.10 of weekly Sharpe buys 4.54 pp. The exchange rate between
+      the owner's consistency goal and the 'positive skew is his money structure'
+      design prior is now a number.
+
+================================================================================================================
+=== PHASE 5: the honest ceiling from cloning our own engine
+================================================================================================================
+   P1 weekly lag-1 autocorrelation -0.087 -> effective independent weeks 243 of 204
+
+   scaling P1 by contracts changes NOTHING here: the positive-week rate is
+   scale-invariant. Only adding streams or reshaping the distribution moves it.
+   at pairwise rho = 0.0, the K -> infinity ceiling is 100.0 % positive weeks
+   at pairwise rho = 0.1, the K -> infinity ceiling is 83.9 % positive weeks
+   at pairwise rho = 0.3, the K -> infinity ceiling is 71.6 % positive weeks
+
+=== STATUS: planning instrument. NOTHING ADOPTED. ===

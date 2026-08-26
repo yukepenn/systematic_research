@@ -1,0 +1,68 @@
+run_id: WE_W74_WEEKMATH
+amendment: 1
+date: 2026-08-26
+status: PREREGISTERED — written and committed BEFORE the corrected arms were run
+
+two_defects_in_my_own_spec_and_verdict_logic:
+
+  defect_1_the_falsifier_was_mis_specified: >
+    The spec's falsifier was "mean absolute error > 5 pp". Read 1 returned MAE 3.84 pp for M0 and
+    3.31 pp for M1, so it did not fire — and BOTH MODELS HAVE NEGATIVE R^2 (M0 -1.087, M1 -0.531)
+    with large opposite biases (+3.40 pp and -2.65 pp). Negative R^2 means each model is WORSE
+    than predicting the sample mean: they do not track cross-sectional variation at all. A
+    low-MAE threshold cannot detect a predictor that simply sits near the middle of a tight
+    distribution, so my stopping rule was the wrong statistic. This is the third time in this
+    campaign that one of my own stopping rules has been mis-specified and had to be tightened
+    before use (W55, W57, and now W74), and it is recorded as such rather than repaired quietly.
+
+    CORRECTED RULE, binding: a moment model is usable only if it has POSITIVE R^2 across the
+    object set. Both fail. Therefore:
+    > RECORDED: the positive-week rate is NOT a function of the first three weekly moments for
+    > these objects. P1's weekly distribution has skew +2.11 and excess kurtosis +8.97, far
+    > outside where a Cornish-Fisher expansion is valid — P1 is not even inside the |skew| < 2
+    > band the spec used to select the fit set. Every Cornish-Fisher number in read 1's phases
+    > 2, 3 and 5 is WITHDRAWN.
+
+  defect_2_phase_3s_verdict_assumed_the_broken_model: >
+    Read 1 printed "the gain EXCEEDS what the moments explain: genuine shape/dependence value"
+    because the real 59-64 % beat the CF prediction of 48-50 % by 12.71 pp. But the CF prediction
+    is broken — it under-predicts P1 ALONE by 9.8 pp — so nearly all of that discrepancy is model
+    error, not sleeve value. The verdict does not follow from the evidence and is WITHDRAWN.
+
+what_survives_read_1: >
+  The EMPIRICAL cross-sectional regression across the 216 W59 cells, which needs no distributional
+  assumption:
+        wk+%  =  48.1  +  45.4 * weekly Sharpe  -  2.99 * weekly skew
+  This is the exchange rate the wave existed to produce: +0.10 of weekly Sharpe buys 4.54 pp of
+  positive weeks; one unit of weekly skew costs 2.99 pp. It is used as ALGEBRA, never as evidence
+  that any object will achieve anything.
+
+corrected_phases:
+  2b_requirement_empirically: >
+    Hold-out validation first: fit the regression on the 216 cells ONLY, then predict the
+    positive-week rate of the 19 objects that were NOT in the fit (P1, the short sleeve, the five
+    blends, the twelve W72 channel arms). Report R^2 and MAE on that held-out set. The exchange
+    rate is quoted only if it survives its own hold-out.
+  3b_the_assumption_free_null: >
+    Replace the Cornish-Fisher prediction with a NON-PARAMETRIC one. Randomly re-pair the short
+    sleeve's weekly outcomes with P1's (1,000 draws), destroying alignment while preserving both
+    marginal distributions exactly, and combine at each weight. The shuffled distribution IS the
+    prediction for "a generic independent stream with this sleeve's own distribution". The real
+    combination's percentile in it is the answer, and it makes no distributional assumption at
+    all. This is the same N1 logic W56 and W61 used, applied to the positive-week rate rather
+    than to money.
+  5b_streams_by_bootstrap: >
+    Answer "how many independent streams reach 76 %" by bootstrap instead of by Cornish-Fisher:
+    draw K weekly outcomes independently from P1's own 204 empirical weeks, average them, and
+    measure the positive rate over 20,000 draws, for K = 1..24 and for correlated draws
+    constructed by mixing a common factor at rho = 0.1 and 0.3. No normal or CF assumption.
+
+preregistered_decision_rule:
+  - "if the hold-out R^2 in 2b is negative, the exchange rate is withdrawn too and the wave's
+     only surviving output is the raw empirical table of where each object sits."
+  - "if the real P1+short combination sits below the 95th percentile of the shuffled draws in 3b,
+     the sleeve's consistency gain is GENERIC — any independent stream with that marginal
+     distribution buys it — and the campaign's remaining work on consistency is stream-counting,
+     not the search for a specially-decorrelated engine."
+  - "the K from 5b is reported at every rho, including the rho values at which no K suffices."
+adoption: NOTHING.
