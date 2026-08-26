@@ -1,0 +1,61 @@
+amendment: 2
+run_id: WE_W55_DURATION
+date: 2026-08-26
+status: APPEND-ONLY. Phase 1 is run and its measurements stand. This amendment REOPENS the wave
+  on the owner's instruction, and it corrects an overreach in phase 1's recorded conclusion.
+
+why the wave reopens:
+  Phase 1 stopped on a rule that tested SIXTEEN FEATURES, EACH ONE SINGLY, in five causal
+  trailing-rank buckets, against a PER-TRADE per-unit P&L target. Its conclusion was recorded as
+  "duration is forecastable; profitability is not", which is licensed, and then generalised in
+  my report to "IC is exhausted", which is NOT licensed and is withdrawn (see
+  research/weekly_edge/OWNER_CHARTER_AMENDMENT_2.md section 4).
+  The single-feature scan does not test: MULTIVARIATE combinations, INTERACTIONS, nonlinearity,
+  or a different TARGET. The owner's instruction is explicit - 永远要尝试否认自己去提升 - and the
+  prize is unchanged and still the largest number this campaign has measured: trades held under
+  37 minutes cost -15.02 pts/session and are 60 % of all trades.
+
+the overfitting risk, named up front because it is the whole danger here:
+  1,942 entries, 16 features, and I already know the answer I want. A model fitted on this
+  sample will find something whatever the truth is. Every defence below exists for that reason
+  and none of them is optional.
+
+phase 2 - THE MULTIVARIATE CAUSAL MODEL:
+  M1 ridge regression on per-unit P&L, causally standardised features, trained on a TRAILING
+     window of prior entries only, refit on a schedule, predicting entries it has never seen.
+  M2 logistic regression on the win/loss label, same protocol.
+  M3 logistic regression on the SHORT-TRADE label (hold < 37 min), same protocol - this is the
+     target phase 1 showed is forecastable, tested here for whether forecasting it is USEFUL.
+  Minimum history before any prediction: 500 entries. No feature selection is performed inside
+  the sample; all 16 features go in every time and the ridge penalty does the shrinking.
+  A blocked entry is DELETED, not delayed - the whole stretch is refused at the flip bar - since
+  W54 measured that delay costs -2.44 pts/trade and -5.89 on eventual winners.
+
+phase 3 - THE NULLS, and the first one is the one that matters:
+  N1 LABEL PERMUTATION. Refit the ENTIRE pipeline on shuffled labels, 200 times. This asks the
+     only question that matters for a fitted model: does the real model beat the same fitting
+     procedure applied to noise? A model that cannot clear this is a description of the sample.
+  N2 count-matched random stretch deletion at the same rate.
+  N3 W54's duration-biased rolled masks, evaluated WITHOUT their delay cost - the structural
+     bias that needs no forecast at all. The model must beat this to be worth building.
+  All SCAN-MATCHED: the arm's blocking rate is chosen from a grid, so every null draw takes its
+  own best of the same grid.
+  Nulls are evaluated on an ANALYTIC stretch-removal path for speed; that path is validated
+  against the full pipeline on the true arm and the error is reported. If the error exceeds 5 %
+  the nulls are re-run through the full pipeline.
+
+phase 4 - REPORTED AGAINST THE OWNER'S ACTUAL OBJECTIVE (Charter Amendment 2 section 5):
+  Consistency first: % positive days, % positive TRADED days, % positive weeks, longest losing
+  streak in days and weeks, median day, median week. Then weekly dollars at a FIXED max drawdown
+  of $20,245, then the drawdown distribution. Annualised Sharpe is reported as a diagnostic and
+  decides nothing.
+
+adoption bar: positive-day rate AND positive-week rate must not fall, weekly dollars at the
+  fixed drawdown must rise, the drawdown distribution must not worsen, the arm must clear N1
+  label permutation at >= 95th percentile scan-matched, and it must beat N3.
+falsifier: failing N1 - i.e. the same fitting procedure on shuffled labels does as well - is a
+  complete kill and closes the multivariate branch, not just this model.
+forbidden: [data >= 2026-08-01, any in-sample feature selection, any full-sample standardisation
+  or quantile, delaying an entry, judging on Sharpe, comparing a scanned rate to an unscanned
+  null]
+outputs: [out/w55b.txt, out/model.csv, out/nulls2.csv, REPORT.md appended]
