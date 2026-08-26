@@ -1,0 +1,56 @@
+run_id: WE_W88_TRADEABLE
+title: "Can {BMOM + X9a} actually be traded? Integer contracts, weekly rho, and the honest
+        independence recount."
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+two_debts: >
+  (a) TRADEABILITY. The leading candidate is inverse-vol weighted at 0.395 / 0.605. Nobody can
+      trade 0.395 of a contract. W41's adoption was already qualified once for exactly this
+      ("in tradeable integer form the basket improves both metrics only at >= 16:1:1"), and a
+      weight that cannot be executed is not a deliverable. The object must be re-scored at
+      INTEGER contract splits, and if it only works at fractional weights that must be said.
+  (b) THE INDEPENDENCE RECOUNT. W85 defect 3, confirmed: every stream census in this campaign
+      counted DAILY rho while W74's K-requirement bootstrap is built on WEEKLY rho. The short
+      sleeve is daily -0.003 and weekly +0.158 - the difference between "free diversification"
+      and "needs K = 25 instead of 6". Every independence number in the campaign is therefore
+      quoted in the wrong unit and must be recomputed.
+
+arms_tradeable:
+  "integer (n_BMOM : n_X9a) contract splits, each scored exactly as the fractional version was:
+   1:1, 1:2, 1:3, 2:3, 2:1, 1:4. The fractional 0.395/0.605 is carried as the reference. Note
+   that BMOM runs +-1 contract natively while X9a carries the quality layer's 1-or-2 sizing, so
+   'n_X9a = 2' means two units of an object that itself sizes 1-2."
+
+tests:
+  1: "the corrected rolling gate (oracle-battery-verified in W85/W86) for every integer split"
+  2: "full panel + per-year + 2026, at W82's measured $14.65/RT"
+  3: "the money table: contracts and drawdown for $150k and $250k per year at each split"
+  4: >
+     WEEKLY rho matrix for P1, BMOM, X9a, SHORT, AXISB and the pair - alongside the DAILY matrix,
+     so the size of the campaign's unit error is visible rather than merely asserted. Then W74's
+     K-requirement re-read at the WEEKLY rho actually measured for the streams we hold.
+  5: >
+     the honest recount: how many streams do we have at |WEEKLY rho| < 0.2 against each other AND
+     positive in 2025 and 2026? W75 said 2, W79 corrected it to 1, and both used daily rho.
+
+preregistered_decision_rule:
+  tradeable_or_not: >
+    the candidate survives only if at least one INTEGER split holds a majority on all three legs
+    of the corrected gate. If only the fractional weighting works, the object is recorded as
+    NOT TRADEABLE at retail size and the finding is that it needs ~10x scale before the rounding
+    stops mattering - the same qualification W41 carried.
+  the_recount_is_reported_whatever_it_says: >
+    including if it makes the campaign's position worse. Weekly rho is the correct unit because
+    the target is a WEEKLY positive rate; that is not a matter of preference.
+adoption: NOTHING.
+
+traps_named_before_running:
+  - "Six integer splits is a scan. The gate is the control and every split is reported, not the
+     argmax."
+  - "Integer splits change EXPOSURE, so raw drawdowns are not comparable across them. Money at a
+     fixed drawdown and drawdown-per-contract are both reported."
+  - "The weekly-rho recount may show the pair's members are less independent than the daily
+     numbers suggested. That would weaken the candidate and it will be stated in the headline,
+     not the footnotes."
