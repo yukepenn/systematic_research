@@ -1,0 +1,72 @@
+=== B1 GATE: 14.86 pts/session over 1012 sessions (expect 14.72) -> PASS [23s]
+
+================================================================================================================
+=== PHASE E1: where the change lands (W50 classes, DIAGNOSTIC only)
+================================================================================================================
+arm                                  TREND-UP   TREND-DOWN     REVERSAL        RANGE        MIXED    total
+P1 INCUMBENT                            18.58        -3.05         0.15        -1.32         0.51    14.86
+E4                                      18.78        -2.29         0.30        -1.85         0.44    15.38
+DELTA                                    0.20         0.76         0.16        -0.53        -0.07     0.52
+
+=== PHASE E2: what E4 blocks ===
+   incumbent entries 1950 | gate false at 397 (20.4 %)
+   mean P&L of incumbent trades entered where the gate is FALSE: $159  (win rate 38.3 %)
+   mean P&L of incumbent trades entered where the gate is TRUE : $152  (win rate 37.7 %)
+
+entry window       incumbent  gate FALSE  blocked %  their $/trade
+18:00-00:00              407          54      13.3%            113
+00:00-08:00              649         124      19.1%             99
+08:00-10:30              554         143      25.8%            281
+10:30-14:00              254          51      20.1%            110
+14:00-17:00               86          25      29.1%            -45
+
+session class      incumbent  gate FALSE  blocked %  their $/trade
+TREND-UP                 509          58      11.4%            422
+TREND-DOWN               198          80      40.4%           -259
+REVERSAL                 522          94      18.0%            248
+RANGE                    532         122      22.9%            232
+MIXED                    189          43      22.8%            178
+
+=== PHASE E3: is E4 the GATE, or an interaction with the sizing layer? ===
+   corr(pos_sess_range, dist_open) over all bars = 0.689   at incumbent entries = 0.660
+arm                               trds    pts     wk$  wk+%  trdD+%    worst    maxDD   top5DD   ulcer   uw%    MAR annShrp  cvEff  expo%
+P1 INCUMBENT                      1950  14.86   1,475  58.3    46.0   -7,418   20,245   14,266   6,183  61.8  14.86    2.26  0.273  100.0
+E4 entry-only lower-half block    1779  15.38   1,526  55.9    45.9   -7,623   16,604   10,713   4,553  60.8  18.75    2.38  0.286  100.3
+P1 no sizing (1 lot)              2072  10.75   1,067  58.8    47.1   -7,487   19,833   12,590   4,740  59.8  10.98    2.22  0.220   84.1
+E4 no sizing (1 lot)              1864  10.29   1,021  57.8    46.1   -7,084   20,665   10,425   3,916  59.8  10.08    2.18  0.211   83.4
+
+=== PHASE E4: the session-box interaction (why E1 made the worst week worse) ===
+arm                               sessions traded  box HALT  box TARGET   halt %
+P1 INCUMBENT                                  608       176         210    28.9%
+E4                                            593       161         205    27.2%
+E1 entry-only price>=open                     549       145         188    26.4%
+
+================================================================================================================
+=== PHASE F1: is 0.5 a spike? (STABILITY CHECK - adoption stays at 0.5)
+================================================================================================================
+arm                               trds    pts     wk$  wk+%  trdD+%    worst    maxDD   top5DD   ulcer   uw%    MAR annShrp  cvEff  expo%
+P1 INCUMBENT                      1950  14.86   1,475  58.3    46.0   -7,418   20,245   14,266   6,183  61.8  14.86    2.26  0.273  100.0
+E4 threshold 0.3                  1924  14.55   1,444  58.3    45.3   -7,623   18,615   13,274   5,337  62.3  15.82    2.25  0.249   99.7
+E4 threshold 0.4                  1853  15.39   1,527  57.8    45.8   -8,017   18,174   11,918   4,629  62.3  17.14    2.40  0.260  100.2
+E4 threshold 0.5                  1779  15.38   1,526  55.9    45.9   -7,623   16,604   10,713   4,553  60.8  18.75    2.38  0.286  100.3
+E4 threshold 0.6                  1662  13.55   1,344  56.9    44.9   -8,933   20,739   15,322   5,762  62.3  13.22    2.25  0.244   98.3
+E4 threshold 0.7                  1512  12.97   1,287  57.8    46.6  -10,593   21,440   16,835   6,858  60.8  12.25    2.05  0.212   92.2
+
+=== PHASE F2: per year (pts/session) ===
+arm                                     2022        2023        2024        2025        2026
+P1 INCUMBENT                           11.59        3.04       19.59       23.17       15.79
+E4                                      9.41        5.51       19.87       22.58       18.22
+DELTA                                  -2.18        2.47        0.28       -0.60        2.43
+
+=== PHASE F3: the drawdown DISTRIBUTION (max drawdown is one observation) ===
+arm                                                    5 deepest drawdowns ($)   mean top5    ulcer    uw%
+P1 INCUMBENT                                [20245, 16388, 15344, 12607, 6747]      14,266    6,183   61.8
+E4 entry-only lower-half block                [16604, 12504, 9457, 7623, 7379]      10,713    4,553   60.8
+
+=== PHASE F4: E4 combined with the VWAP gate (reported, not adopted) ===
+arm                               trds    pts     wk$  wk+%  trdD+%    worst    maxDD   top5DD   ulcer   uw%    MAR annShrp  cvEff  expo%
+P1 INCUMBENT                      1950  14.86   1,475  58.3    46.0   -7,418   20,245   14,266   6,183  61.8  14.86    2.26  0.273  100.0
+E4 entry-only lower-half block    1779  15.38   1,526  55.9    45.9   -7,623   16,604   10,713   4,553  60.8  18.75    2.38  0.286  100.3
+E4 and price>=VWAP                1761  14.99   1,487  56.4    46.0   -7,623   16,779   11,350   4,813  58.3  18.08    2.32  0.268   99.7
+
+=== STATUS: nothing adopted. run_we_w51d.py holds the binding nulls. ===

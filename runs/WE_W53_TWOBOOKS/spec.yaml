@@ -1,0 +1,84 @@
+run_id: WE_W53_TWOBOOKS
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: dictated by a measurement made for the first time in W51b, not by intuition.
+
+the fact that opens this wave (FACT, runs/WE_W51_DONTTRADE/out/tod.csv):
+  The object's 14.74 pts/session by ENTRY WINDOW (ET) had never been measured in 52 waves:
+    18:00-20:00 +2.43 | 20:00-00:00 +1.63 | 00:00-04:00 +2.04 | 04:00-08:00 +1.07
+    08:00-09:30 +2.31 | 09:30-10:30 +1.39 | 10:30-12:00 -0.06 | 12:00-14:00 +2.97
+    14:00-17:00 +0.94
+  HALF THE MONEY (7.17 of 14.74, 49 %) IS EARNED OVERNIGHT, 18:00-08:00 ET, on roughly half
+  the entries. The campaign has always treated the 18:00->17:00 session as ONE book.
+
+why this is a real hypothesis and not a slice:
+  The overnight tape and the RTH tape are different markets - different participants, different
+  liquidity, different information arrival (macro/Asia/Europe vs US order flow and the cash
+  open). The same ratchet run on those two tapes is therefore not obviously ONE bet repeated;
+  it may be TWO bets whose errors are close to independent. The fundamental law of active
+  management says the annualised Sharpe goes as IC x sqrt(N), and W36 already verified that
+  identity holds for this object to within 8 % (IC 0.0928 x sqrt(500) = 2.08 vs measured
+  2.07-2.25). Breadth is therefore the ONE lever that raises risk-adjusted return without
+  needing a better signal, and it is the lever this campaign has never actually pulled: every
+  previous "portfolio" test added a small fixed weight of a second sleeve rather than
+  optimising weights at CONSTANT TOTAL EXPOSURE.
+
+what makes this different from W25/W27/W40/W43 (which all failed to diversify):
+  Those looked for a DIFFERENT SIGNAL. This looks for a different TAPE under the same signal.
+  Model concentration is not reduced - law 9 stands - but exposure concentration might be.
+  That is a weaker claim and it is the honest one.
+
+the prior this wave must respect, and can falsify:
+  THE UNIFYING LAW (W42/W45/W47, three independent instances): anything that REDUCES THE NUMBER
+  OF EVENTS worsens the tail faster than it improves per-event quality. Splitting one book into
+  two and re-weighting them at constant total exposure does NOT reduce events; setting a weight
+  to zero DOES. So the law makes a sharp preregistered prediction: INTERIOR weights may win,
+  CORNER weights (0 or 1) must not. If a corner weight wins, the law is wrong and gets reopened.
+
+phase 1 - THE TWO BOOKS, MEASURED (diagnostic, no adoption):
+  Split the incumbent's realised trades by ENTRY time into NIGHT (18:00-08:00 ET) and DAY
+  (08:00-17:00 ET). For each book and for the combined object report, on the FULL window and
+  PER YEAR: pts/session, weekly mean, positive-week %, positive-traded-day %, worst week, the
+  DRAWDOWN DISTRIBUTION (5 deepest, mean top-5, Ulcer, % under water), MAR, annualised Sharpe,
+  CVaR-efficiency, stress-net, contract-minutes, and trades.
+  Then the two numbers that decide whether there is anything here at all:
+    (a) the weekly P&L correlation between the two books;
+    (b) the SAME correlation computed INSIDE the worst decile of the combined object's weeks -
+        W43's lesson, bought with RTY/YM: unconditional decoupling is NECESSARY AND NOT
+        SUFFICIENT, because RTY/YM correlated 0.04/0.03 with NQ and still failed.
+
+phase 2 - CONSTANT-TOTAL-EXPOSURE WEIGHT SCAN:
+  For w in 0.0, 0.1, ... 1.0, hold NIGHT at weight w and DAY at (1-w), rescaled so total
+  contract-minutes equal the incumbent's within +-2 %. Report the full metric set at each w.
+  The incumbent is the point where both books run at their natural weight; it must appear in
+  the scan as a reference and be reproduced.
+  ADOPTION requires an INTERIOR w that improves MAR and the drawdown distribution while
+  CVaR-efficiency and annualised Sharpe do not degrade, and requires the improvement to be
+  monotone-ish rather than a single-w spike (a spike is a fit).
+
+phase 3 - SEPARATE RISK TRUNCATION:
+  The session box (-$1,300 / +$1,000) currently truncates the COMBINED book, so a bad night
+  can halt the day book and vice versa. W22/W26 established that the box works because it
+  truncates where the loss is FORMED. If the two books are different tapes, the loss is formed
+  separately in each. Test per-book boxes at the SAME dollar levels (no re-tuning; re-tuning
+  the levels is forbidden here and would need its own wave), against the combined box.
+
+phase 4 - CONTROL ARMS THAT TEST MY OWN LAW, not the hypothesis:
+  C1 stand aside 10:30-12:00 ET, the only measured-negative window (-0.06 pts/session). This
+     REDUCES events, so the unifying law predicts it fails. If it wins, the law is wrong.
+  C2 a RANDOM time-of-day split into two books of matched contract-minutes, weight-scanned the
+     same way. If a random split produces the same benefit as the NIGHT/DAY split, the benefit
+     is variance-reduction arithmetic and not a property of the two tapes. THIS IS THE BINDING
+     NULL for phase 2 and it is run with 200 draws.
+
+adoption bar: an interior w that beats the incumbent on MAR and on mean-top-5 drawdown and
+  Ulcer, does not degrade CVaR-efficiency or annualised Sharpe, is not negative in more than
+  one year, has stress-net > 0, and sits at >= 95th percentile of the C2 random-split null on
+  BOTH pts and MAR. Exposure must match the incumbent within +-2 % in contract-minutes.
+falsifier: if the two books correlate highly, or correlate highly inside the worst decile, or
+  if the random-split null reproduces the benefit, the recorded conclusion is that the
+  NIGHT/DAY split is one bet sampled twice and breadth must come from somewhere else.
+forbidden: [data >= 2026-08-01, re-tuning the box levels, tuning the 08:00 split point on the
+  measurement window, adopting a corner weight, adopting on max drawdown alone, quoting a
+  weight scan before the C2 null]
+outputs: [out/twobooks.txt, out/books.csv, out/wscan.csv, out/nulls.csv, REPORT.md]
