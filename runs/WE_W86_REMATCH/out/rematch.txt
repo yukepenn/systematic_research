@@ -1,0 +1,140 @@
+=== 1058 sessions, 213 weeks, 2022-07-04 -> 2026-07-31  [all in-sample; 2026-05-31..07-31 is BURNED per W85]
+
+============================================================================================================================
+=== PHASE 0 (PRECONDITION): oracle battery on THIS wave's gate
+============================================================================================================================
+   P1 + $200/session        ALL-THREE   100 %
+   P1 losses halved         ALL-THREE   100 %
+   P1 + $500/session        ALL-THREE   100 %
+   P1 losses x0.75          ALL-THREE   100 %
+   -> gate is USABLE
+
+============================================================================================================================
+=== PHASE 1: CORRECTED ROLLING GATE vs P1, at $14.65/RT
+============================================================================================================================
+object                  n    money     wk+%   raw top5DD   ALL THREE
+PAIR w=0.30            25      84%     100%         100%         84%
+PAIR 2:1               25      84%     100%         100%         84%
+CLIQUE equal           25      92%      72%         100%         68%
+CLIQUE inv-vol         25      84%      72%         100%         68%
+
+============================================================================================================================
+=== PHASE 2: WALK-FORWARD, THREE OBJECTIVES. W78 used money only, which is
+===          the wrong objective under the owner's stated ordering.
+============================================================================================================================
+challenger          objective          churn   chosen   WF wk+%   WF wk$@DD   WF top5
+PAIR w=0.30         positive weeks       18%   11/12      59.5%       1,073    10,397
+PAIR w=0.30         raw top-5 DD          0%   12/12      60.1%       1,045    10,501
+PAIR w=0.30         money @ fixed DD     27%    9/12      56.8%         785    12,411
+PAIR 2:1            positive weeks       18%   11/12      60.8%       1,030    10,402
+PAIR 2:1            raw top-5 DD          0%   12/12      61.5%       1,001    10,518
+PAIR 2:1            money @ fixed DD     27%    9/12      57.4%         752    12,450
+CLIQUE equal        positive weeks        9%    7/12      59.6%       1,333     8,907
+CLIQUE equal        raw top-5 DD         27%   10/12      58.8%       1,038    10,233
+CLIQUE equal        money @ fixed DD     27%    8/12      55.8%         657    11,477
+CLIQUE inv-vol      positive weeks        9%    7/12      61.0%       1,423     8,385
+CLIQUE inv-vol      raw top-5 DD         18%   11/12      58.8%         994     9,900
+CLIQUE inv-vol      money @ fixed DD     36%    9/12      55.8%         544    11,750
+
+============================================================================================================================
+=== PHASE 3: NULLS on the RAW drawdown leg (W78 measured the OLD metric)
+============================================================================================================================
+object              metric                    real   null mean   pctile          
+PAIR w=0.30         positive-week %           58.7        55.8      92%   generic
+PAIR w=0.30         money @ fixed DD         851.7       996.9      24%   generic
+PAIR w=0.30         RAW top-5 DD          12,187.6    12,920.7      65%   generic
+
+CLIQUE inv-vol      positive-week %           57.7        57.1      54%   generic
+CLIQUE inv-vol      money @ fixed DD         832.2       699.4      79%   generic
+CLIQUE inv-vol      RAW top-5 DD           9,489.3    12,080.4      97%  SPECIFIC
+
+============================================================================================================================
+=== PHASE 4: THE MONEY TABLE. Everything at the measured $14.65/RT.
+============================================================================================================================
+
+--- full 2022-07..2026-07 ---
+object                 wk+%  strk   weekly$  annualised    max DD   top5 DD  worst wk
+P1 (champion)         52.6%     8     1,152      59,895    27,328    18,458    -7,581
+PAIR w=0.30           58.7%     4       946      49,212    22,494    12,188    -6,476
+PAIR 2:1              59.6%     4       924      48,029    22,865    11,837    -6,472
+CLIQUE equal          56.8%     6       697      36,258    17,130     9,778    -6,108
+CLIQUE inv-vol        57.7%     5       650      33,804    15,815     9,489    -5,103
+
+--- trailing 12 months ---
+object                 wk+%  strk   weekly$  annualised    max DD   top5 DD  worst wk
+P1 (champion)         49.1%     6       716      37,215    27,328     9,261    -6,508
+PAIR w=0.30           54.7%     3       489      25,432    22,494     6,968    -6,476
+PAIR 2:1              56.6%     3       464      24,127    22,865     7,079    -6,472
+CLIQUE equal          58.5%     5       773      40,212    17,130     7,361    -6,108
+CLIQUE inv-vol        58.5%     5       697      36,254    15,815     7,014    -4,965
+
+--- 2026 YTD ---
+object                 wk+%  strk   weekly$  annualised    max DD   top5 DD  worst wk
+P1 (champion)         51.6%     6       249      12,945    27,328    16,694    -6,508
+PAIR w=0.30           48.4%     3        20       1,049    22,494    12,007    -6,476
+PAIR 2:1              51.6%     3        -5        -268    22,865    12,282    -6,472
+CLIQUE equal          48.4%     5       382      19,839    17,130     5,394    -5,085
+CLIQUE inv-vol        51.6%     5       439      22,802    15,815     5,072    -4,645
+
+=== WHAT $150,000/YEAR COSTS, at the TRAILING-12-MONTH rate ===
+    Two risk units, because max drawdown is ONE observation (method rule 15) while the
+    mean of the top five is what a trader actually lives through more than once.
+
+object                 units  NQ contracts   implied max DD   implied top5 DD   implied worst wk
+P1 (champion)           4.03          5.12          110,149            37,326            -26,229
+PAIR w=0.30             5.90          7.49          132,671            41,097            -38,193
+PAIR 2:1                6.22          7.90          142,152            44,008            -40,237
+CLIQUE equal            3.73          4.74           63,900            27,456            -22,783
+CLIQUE inv-vol          4.14          5.25           65,436            29,020            -20,541
+
+=== AT A MATCHED TOP-5 DRAWDOWN (P1's $9,261) ===
+object                 scale  NQ contracts   weekly $   annualised     max DD
+P1 (champion)           1.00          1.27        716       37,215     27,328
+PAIR w=0.30             1.33          1.69        650       33,800     29,896
+PAIR 2:1                1.31          1.66        607       31,565     29,914
+CLIQUE equal            1.26          1.60        973       50,593     21,553
+CLIQUE inv-vol          1.32          1.68        921       47,868     20,882
+
+============================================================================================================================
+=== PHASE 5: PER YEAR at $14.65/RT (positive-week % | weekly $)
+============================================================================================================================
+object                           2022             2023             2024             2025             2026
+P1 (champion)               42% | 996        54% | 139      55% | 1,751      57% | 2,102        52% | 249
+PAIR w=0.30                 50% | 953        56% | 132      62% | 1,587      68% | 1,601         48% | 20
+PAIR 2:1                    50% | 948        56% | 131      64% | 1,569      68% | 1,546         52% | -5
+CLIQUE equal                50% | 537        48% | 200        60% | 959      72% | 1,156        48% | 382
+CLIQUE inv-vol              50% | 408        50% | 127        58% | 948      72% | 1,078        52% | 439
+
+============================================================================================================================
+=== PREREGISTERED VERDICT (four conditions, stricter than W78's two)
+============================================================================================================================
+
+   PAIR w=0.30
+      (1) all three legs, majority        :    84 %   -> PASS
+      (2) choice stable under >=2 of 3    : 3/3 objectives churn<35 % -> PASS
+      (3) drawdown null SPECIFIC          :    65 %   -> FAIL (generic)
+      (4) positive in 2026                : $     20/wk -> PASS
+      => NOT promoted
+
+   PAIR 2:1
+      (1) all three legs, majority        :    84 %   -> PASS
+      (2) choice stable under >=2 of 3    : 3/3 objectives churn<35 % -> PASS
+      (3) drawdown null SPECIFIC          :   nan %   -> FAIL (generic)
+      (4) positive in 2026                : $     -5/wk -> FAIL
+      => NOT promoted
+
+   CLIQUE equal
+      (1) all three legs, majority        :    68 %   -> PASS
+      (2) choice stable under >=2 of 3    : 3/3 objectives churn<35 % -> PASS
+      (3) drawdown null SPECIFIC          :   nan %   -> FAIL (generic)
+      (4) positive in 2026                : $    382/wk -> PASS
+      => NOT promoted
+
+   CLIQUE inv-vol
+      (1) all three legs, majority        :    68 %   -> PASS
+      (2) choice stable under >=2 of 3    : 2/3 objectives churn<35 % -> PASS
+      (3) drawdown null SPECIFIC          :    97 %   -> PASS
+      (4) positive in 2026                : $    439/wk -> PASS
+      => PROMOTED to recommended object, with its full cost stated
+
+=== STATUS: [0s] ===
