@@ -1,0 +1,39 @@
+run_id: WE_W37_PARAMFREE
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: self-directed, dictated by W36's diagnosis.
+
+two defects this wave fixes: >
+  1. THRESHOLD LOOK-AHEAD (found while writing this spec). The quality score's cut points were
+     computed as np.nanquantile(feature[ALL entries in the window]) - i.e. from the full-sample
+     entry distribution, which includes FUTURE entries. Every fixed-calibration quality number
+     (W34's 15.86/0.331, W35's 17.78/0.338) carries this contamination. W36's walk-forward arm
+     did NOT (it used fit-window entries only), which is part of why it scored lower. This
+     wave makes the score fully causal: thresholds come from a TRAILING window of prior
+     entries only.
+  2. PARAMETER CHURN. W36's walk-forward failed with 67 % choice churn across three free
+     parameters (score threshold k, cut length, big target). C1 already showed the big target
+     is worthless. The fix is to REMOVE free parameters rather than tune them:
+     size up when a MAJORITY of the five quality features are favourable - k = 3 is derived
+     from "majority of 5", not selected from a grid. With no parameter to select, there is
+     nothing for a walk-forward to churn on, and the fixed result IS the out-of-sample result.
+
+arms (all long-only, 1-2 contracts, on the W29-validated base: vote >= 0.5, throttle 0.8,
+  session box -1300/+1000):
+  P0 BASE                : no quality layer (reference, 10.62 pts/session, Sharpe 0.305)
+  P1 CAUSAL MAJORITY     : score from trailing-250-entry quantiles; size 2 when score >= 3
+  P2 P1 + CAUSAL CUT     : plus a time cut for low-score entries at the base object's own
+                           TRAILING median hold (data-derived, not chosen)
+  P3 WINDOW ROBUSTNESS   : P1 with trailing windows of 100 and 500 entries, to show the
+                           trailing-window length is not itself a hidden parameter
+  P4 CONTAMINATED REF    : the old full-sample-quantile version, reported ONLY to quantify how
+                           much of W34/W35's gain was the look-ahead
+adoption: P1/P2 must beat P0 on pts/session AND on weekly-mean-per-unit-of-worst-week (the
+  owner's stated objective), and must not worsen the worst week. Sharpe is reported but is no
+  longer the sole gate, per W36's finding that it penalises the upside variance this layer
+  deliberately adds. A binding circular-shift null on whatever is adopted.
+falsifier: if the causal score's advantage over P0 disappears, then the entire quality finding
+  (W33-W35) was threshold look-ahead, and the layer is removed.
+forbidden: [data >= 2026-08-01, fill-bar information, any full-sample quantile in an adopted
+  arm, adopting without the null]
+outputs: [out/pf.txt, out/summary.csv, REPORT.md]
