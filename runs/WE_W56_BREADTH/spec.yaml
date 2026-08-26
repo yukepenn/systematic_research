@@ -1,0 +1,120 @@
+run_id: WE_W56_BREADTH
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: W55 closed the last lever inside the object's own information. Breadth is what is
+  left, and Charter Amendment 1 has just made three shelved candidates re-examinable.
+
+THE HEADLINE THE OWNER ASKED FOR, IN HIS OWN UNITS:
+  Contracts scale money and drawdown together, so "how much money" is only a question once the
+  drawdown is fixed. Every portfolio in this wave is therefore rescaled to the SAME max
+  drawdown as the incumbent ($20,245) and the deliverable is one column: WEEKLY DOLLARS AT
+  THAT DRAWDOWN. That is exactly "use the smallest drawdown to make the most money" and it is
+  exposure-neutral by construction. MAR, the drawdown distribution and the positive-week rate
+  are reported beside it.
+
+why breadth and not another filter (FACT, W55):
+  Across 16 causal features available at the entry bar, NOT ONE predicts per-unit P&L with
+  |Spearman| above 0.11, and the object's own vote strength is +0.022. Sixteen tries inside the
+  object's own information found nothing. IR = IC x sqrt(N) and W36 verified that identity holds
+  for this object to within 8 %; with IC exhausted, only N is left.
+
+the candidates, and what the repo actually holds (verified, not assumed):
+  DROPPED BEFORE TESTING - HTFDIR01 ARM_LONGONLY. Correlation with the Solar incumbent measured
+    directly from research/system_master/HTFDIR01_DIRECTIONAL_TILT/out/daily_ledgers_dev.csv is
+    rho = 0.994 daily over 1,139 sessions; the two columns differ on 129 of 1,139 rows. It is a
+    7 % perturbation of Solar, not a second engine. Adding it at constant total risk is
+    re-sizing Solar. It is excluded and the reason is recorded.
+  C1 B-MOM. research/scalping_lab/artifacts/w10_bmom_hist/w10bmom_daily.csv (4,077 rows,
+    2006-01-25 -> 2021-12-31) + artifacts/w8_bmom/w8bmom_w14_daily.csv (1,122 rows,
+    2022-01-21 -> 2026-05-29), verified continuous at exact zero difference on the overlap.
+    Unit: US DOLLARS at 1 NQ contract, C1 friction 2.872 ticks/RT and C2 stress 4.872.
+    Same instrument and point value as P1.
+  C2 BREADTH01 ARM_FULL. research/breadth_lab/BREADTH01_TSMOM_REPLICATION/out/book_daily_full.csv
+    (5,867 rows, 2003-02-04 -> 2026-05-29). Unit: DAILY FRACTIONAL BOOK RETURN, annualised vol
+    4.94 %. No dollar notional is documented anywhere, so the bridge is vol-normalisation and
+    the implied notional is REPORTED, never assumed.
+  C3 WE_W40 axis B. No series exists on disk; it is regenerated from
+    axis_volexp(D, X, up=1.6, down=1.0, look=15) -> sfills(halt=1300, target=1000) at 1 contract.
+    It is the ONLY candidate with a documented correlation against P1 ITSELF.
+
+the correlation problem this wave must fix, and which invalidates the shelf numbers:
+  Every published correlation for B-MOM and BREADTH01 is against the SYSTEM_MASTER E10 / Solar
+  v1 object on a 3-minute substrate - NOT against weekly_edge P1. P1 and E10 are both Solar
+  ratchets but they are distinct constructions on distinct substrates. Treating one rho as the
+  other is an unverified substitution and this wave does not make it. Phase 1 computes every
+  correlation against P1 directly, for the first time.
+
+phase 0 - FIX THE INFRASTRUCTURE GAP (this is why the wave is expensive to start):
+  Across all 55 runs/WE_* directories there is NO P1 daily or weekly P&L series on disk. Every
+  wave has regenerated it in memory and thrown it away. Phase 0 regenerates P1 behind its own
+  B1 gate (14.72 +- 0.6 pts/session) and PERSISTS out/p1_daily.csv and out/p1_weekly.csv with
+  sha256 hashes, so no future wave pays this cost again. Axis B is regenerated and persisted
+  the same way.
+
+phase 1 - THE CORRELATION MATRIX AGAINST P1, computed for the first time:
+  On the intersection window (all series overlap 2022-07-01 -> 2026-05-29), report weekly and
+  daily correlation of each candidate with P1, plus:
+   a) the correlation INSIDE P1's OWN worst-decile weeks. This conditions on ONE series being
+      extreme, not on the SUM, so it does NOT carry the selection artifact I created and caught
+      in W53 - but it is ~20 weeks, so SE(rho) is about 0.24 and the number is reported WITH
+      its standard error and never quoted as if it were precise.
+   b) the drawdown-series correlation (correlation of the two underwater curves), which is what
+      actually determines whether a sleeve shortens the drawdown rather than the week.
+   c) overlap of the 20 best days and the 20 worst days.
+
+phase 2 - CONSTANT-TOTAL-RISK COMBINATION, reported at a FIXED DRAWDOWN:
+  Union weekly calendar, zero-fill; each sleeve scaled to a common weekly sigma; risk share w
+  scanned over [0, 0.05 ... 0.60] for each candidate and for the best pair; EVERY portfolio
+  rescaled so its max drawdown equals the incumbent's $20,245; then report weekly dollars,
+  mean-of-5-deepest drawdown, Ulcer, positive-week %, annualised Sharpe, CVaR-efficiency.
+  Fractional-contract arithmetic is disclosed, and the implied integer contract counts are
+  reported beside every accepted weight - W41's lesson, where the adopted weight turned out to
+  be 0.04 contracts.
+
+phase 3 - THE NULLS, and they are the whole wave:
+  N1 CIRCULAR SHIFT of the candidate's weekly series (preserves its mean and its vol, destroys
+     its alignment with P1). This separates "the sleeve makes money" from "the sleeve makes
+     money WHEN P1 does not". Both are legitimate, they are different claims, and the campaign
+     has never separated them.
+  N2 SCAN-MATCHED (W53's binding rule): the arm's w is chosen from a 13-point grid, so every
+     null draw takes its own best of 13. W53 measured that a 21-point scan inflates MAR about
+     20 % on average and up to 2x in the tail on structureless data.
+  N3 SYNTHETIC SLEEVE with the candidate's mean, vol and lag-1 autocorrelation but drawn
+     independently of P1. If the real sleeve does not beat this, its correlation structure
+     contributes nothing beyond its own expectancy.
+  200 draws each. Note in advance, so it cannot be claimed as a result: a ZERO-mean uncorrelated
+  sleeve STRICTLY HURTS at constant total risk (a^2 + b^2(sigma_s/sigma_1)^2 = 1 forces a < 1),
+  so any improvement necessarily requires the sleeve to have positive expectancy of its own.
+
+phase 4 - THE HONEST WEAKNESSES, stated as measurements rather than caveats:
+  W1 B-MOM's positive expectancy is 2022-2026. Its 2006-2021 record is Sharpe 0.066 with a
+     -$73,738 max drawdown. Under Charter Amendment 1 that is not disqualifying by itself, but
+     2(a) and 2(b) apply: report the sub-period's sessions, weeks, trades and standard error,
+     and NAME the causal regime variable that separates the eras. If no regime variable
+     separates them, say so and treat the sleeve as a 4-year sample.
+  W2 axis B's standalone stress-net is +$114/wk, i.e. approximately zero after the $14.36/RT
+     stress line. W43 established that decoupling is NECESSARY AND NOT SUFFICIENT - RTY and YM
+     correlated 0.04/0.03 inside NQ's worst-decile weeks and the basket still lost badly,
+     because a zero-expectancy sleeve cannot help however uncorrelated it is. Axis B is
+     therefore expected to fail, and it is included precisely so that expectation is tested.
+  W3 BREADTH01's own red-team found the blend's CDaR improvement is manufactured by the dead
+     2006-2021 simulated Solar era and that dev-era-only blending WORSENS CDaR5 by 32 %. The
+     dev-era-only result is the one this wave reports.
+  W4 coverage: B-MOM and BREADTH01 end 2026-05-29 against P1's 2026-08-01. The intersection is
+     used and the discarded weeks are counted.
+
+adoption bar: weekly dollars AT THE INCUMBENT'S DRAWDOWN must rise, the mean-of-5-deepest
+  drawdown and Ulcer must not worsen, positive-week % must not fall, the weight must be
+  reachable in integer contracts at a stated account size, N1 and N3 must both be cleared at
+  >= 95th percentile scan-matched, and phase 4's weaknesses must be reported with the numbers
+  Amendment 1 sections 2(a)-(c) require.
+falsifier: if no candidate raises weekly dollars at fixed drawdown, the recorded conclusion is
+  that this repo currently holds no engine that diversifies P1, that model concentration is the
+  binding constraint on the owner's objective, and that the next move is to BUILD or BUY a
+  genuinely different information source rather than to recombine what exists.
+forbidden: [data >= 2026-08-01, substituting an E10/Solar-v1 correlation for a P1 correlation,
+  conditioning a tail correlation on the SUM of the series, comparing a scanned weight to an
+  unscanned null, adopting a weight that is not reachable in integer contracts, quoting
+  BREADTH01 dollars without disclosing the assumed notional]
+outputs: [out/breadth.txt, out/p1_daily.csv, out/p1_weekly.csv, out/axisb_daily.csv,
+  out/corr.csv, out/wscan.csv, out/nulls.csv, out/frontier.csv, REPORT.md]
