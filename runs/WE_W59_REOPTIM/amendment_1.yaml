@@ -1,0 +1,52 @@
+amendment: 1
+run_id: WE_W59_REOPTIM
+date: 2026-08-26
+status: APPEND-ONLY, written BEFORE phase 2 ran and before the phase-0 grid finished. It adds a
+  branch the original spec did not contain.
+
+the idea the spec missed, and the campaign's own law predicts it:
+  The spec's phase 2 asks which CELL to SELECT. But this campaign's mechanism law 2 says:
+     "selection is noise -> AGGREGATE, when the members estimate the SAME quantity"
+  and that is exactly the situation here. All 216 cells are the same object with different
+  outer parameters - the same 32-config vote, the same substrate, the same fills - so they ARE
+  members estimating one quantity. The object already aggregates over its 32 INNER configs and
+  has never aggregated over its OUTER ones: the session box, the vote threshold and the quality
+  cut are each a single point estimate chosen by a scan.
+  W19 established that aggregating the inner configs beats selecting among them, with PBO
+  0.48-0.90 for selection. There is no reason that stops at the vote boundary, and a portfolio
+  of cells has a mechanical consistency benefit a single cell cannot have: DIFFERENT BOXES FIRE
+  ON DIFFERENT DAYS, so the halt and the target are no longer all-or-nothing events for the
+  whole book.
+  This is also the owner's own words - "甚至参数 portfolio management 各种" - and it costs nothing
+  now that phase 0 persists every cell's daily series.
+
+phase 2 (revised) - SELECT versus AGGREGATE, both, and the comparison is the point:
+  S1 WALK-FORWARD SELECTION as originally specified: each quarter pick the cell that was best on
+     trailing data by the consistency objective, trade it next quarter, report turnover.
+  S2 EQUAL-WEIGHT AGGREGATE of ALL cells, selection-free, no parameter chosen at any point.
+  S3 equal-weight aggregate of each one-parameter FAMILY (all targets at the incumbent's other
+     three parameters; all halts; all vote thresholds; all cuts) - this isolates WHICH parameter
+     benefits from being aggregated rather than fixed.
+  S4 the hindsight-best single cell, which bounds S1 from above and is NOT achievable.
+  All rescaled to the same $20,245 max drawdown so weekly dollars compare directly, and all
+  reported consistency-first.
+  PREREGISTERED PREDICTION, so the wave can be wrong: law 2 says S2 beats S1. If S1 beats S2,
+  the law's scope is narrower than stated and gets amended.
+
+phase 3 (revised) - the nulls differ by arm and must not be swapped:
+  For S1 (a selector) the null is SCAN-MATCHED: every null draw takes its own best of 216, plus
+    a selector run on PERMUTED trailing performance - does choosing by real trailing consistency
+    beat choosing at random from the same grid?
+  For S2 (no selection) a scan-matched null is meaningless. Its null is a RANDOM SUBSET of cells
+    of the same size, and the question is whether the specific 216 do better than any 216 - which
+    they cannot, since they are all of them. So S2's real test is different and simpler: it must
+    beat the INCUMBENT CELL, and it must beat the AVERAGE cell, on the consistency objective.
+    Stating this here so no one later dresses S2 in a null it does not need and cannot fail.
+  The exposure of every arm is reported in contract-minutes; an aggregate of 216 cells is not
+  216 contracts, it is the average position, and the fixed-drawdown rescaling handles the rest.
+
+adoption bar unchanged, applied to whichever of S1/S2 wins: traded-day rate and positive-week
+  rate rise, weekly dollars at fixed drawdown do not fall, the drawdown distribution does not
+  worsen, and for S1 only, both nulls clear at >= 95th percentile.
+forbidden: additions [dressing S2 in a scan-matched null, quoting S4 as achievable, reporting an
+  aggregate without its implied average position]
