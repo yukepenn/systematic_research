@@ -1,0 +1,62 @@
+run_id: WE_W47_CROSSCLOCK
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: self-directed. Closing a gap in W41's own scope: the owner's W41 brief listed
+  "mixed clocks; event aggregation across clocks; coarse-clock CONFIRMATION of a 1m flip;
+  coarse-clock event as an independent sleeve". W41 tested only the LAST of those four.
+
+why this matters more than another sleeve: >
+  Every diversification result this campaign has produced adds a SEPARATE SLEEVE, which means
+  adding EXPOSURE. W41's basket improves profit-per-unit-of-tail by 5.6 % and needs >= 16:1:1
+  to be tradeable at all. The owner's objective needs eff to roughly TRIPLE for $10,000/week at
+  a -$15,000 worst week, and exposure cannot deliver that by construction - eff is
+  exposure-invariant.
+  A CROSS-CLOCK DECISION RULE is different in kind: it changes WHICH events are taken at ONE
+  contract of exposure. That is the only class of change that can raise eff without raising
+  the tail, and this campaign has never tested it.
+
+what makes it plausible rather than a fishing expedition:
+  * W31: the edge lives in the FLIP EVENT, not the trend state.
+  * W44: a 3-minute clock is a DIFFERENT EVENT GENERATOR of the same rule, not a smoothed
+    version - weekly P&L correlation only 0.32-0.48 with the 1-minute version.
+  * W42: the quality score pays because it forecasts EXCURSION SIZE, and a 1-minute flip that
+    is ALSO a 3-minute flip is, mechanically, part of a larger move.
+  So "confirmed by the coarser clock" is a candidate proxy for the same thing the quality score
+  measures, obtained from the signal itself rather than from a fitted feature set.
+  It is also the construction the SHIPPED PRODUCT is closest to: the product IS the 3-minute
+  object, and our object is the 1-minute one.
+
+arms (all long-only, ONE contract, no quality layer unless stated, with the campaign's standard
+  context: range throttle q = 0.8, delta gate, session box -$1,300 / +$1,000):
+  X0  1-min base vote                                    (reference: 10.62 pts/session)
+  X0q 1-min full object with the quality layer           (B1 gate: must reproduce 14.72)
+  X1  CONFIRMATION: long only when the 1-min vote >= 0.5 AND the 3-min vote >= 0.5
+  X2  CONFIRMATION, weaker: 1-min vote >= 0.5 AND the 3-min vote >= 0.25 (the coarse clock
+      must merely not disagree). 0.25 is derived as half the entry threshold, not fitted.
+  X3  POOLED VOTE: all 64 configs (32 on the 1-min clock + 32 on the 3-min clock) in ONE
+      majority vote >= 0.5. This is "event aggregation across clocks", and it is the direct
+      test of whether W20's aggregation law extends across clocks or whether W39's scoping
+      ("aggregation helps only when the members estimate the SAME quantity") forbids it.
+  X4  TIMING SPLIT: the 3-min vote decides DIRECTION, the 1-min vote decides ENTRY TIMING
+      within it (enter on the first 1-min flip in the 3-min direction, exit on the 3-min flip).
+  X5  the best of X1-X4, PLUS the causal quality layer, to test whether the two stack or
+      whether confirmation and quality are measuring the same thing.
+
+measurements: pts/session, $/trade, % of bars in position, POINTS PER BAR-IN-POSITION (edge
+  density - the metric that reveals an exposure-driven gain), weekly, worst week, CVaR5,
+  Sharpe, eff, CVaR-efficiency, stress-net at $14.36/RT, per year, and correlation with the
+  incumbent object. Exposure is reported in time-weighted contract-minutes for every arm, so
+  no arm can win by quietly holding more.
+adoption: eff AND CVaR-efficiency both above the incumbent X0q, at NO MORE exposure than X0q,
+  not negative in more than one year, and BOTH nulls at >= 95th percentile on whatever is
+  adopted (count-matched binding). If an arm wins only by cutting exposure, that is reported
+  as a DEFENSIVE result and judged against X0q scaled DOWN to the same exposure, not against
+  X0q at full size.
+falsifier: if no cross-clock decision rule beats the incumbent at equal exposure, the recorded
+  conclusion is that the clocks are useful only as SEPARATE SLEEVES (W41) and not as a joint
+  decision rule - which would mean the campaign's only remaining eff lever is paid information
+  (VWAP Flux) and would be a clean, honest end to the internal search.
+forbidden: [data >= 2026-08-01, comparing arms at unequal exposure without saying so,
+  fitting the confirmation thresholds, adopting without edge density beside production,
+  adopting without the per-year read and both nulls]
+outputs: [out/crossclock.txt, out/summary.csv, REPORT.md]
