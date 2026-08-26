@@ -1,0 +1,71 @@
+run_id: WE_W51_DONTTRADE
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: dictated by W50's measurement, not by intuition.
+
+the target, measured rather than assumed: >
+  W50 decomposed the object exactly. It earns +18.53 pts/session from TREND-UP days (20.9 % of
+  sessions, 24.60 % capture) and gives back 3.70 on the other 79 %:
+      TREND-DOWN  13.9 % of sessions, -21.89 pts/session  ->  -3.04 overall
+      RANGE       27.1 % of sessions,  -4.86 pts/session  ->  -1.32 overall
+      REVERSAL    26.0 %, +0.56        MIXED 12.1 %, +4.19
+  Being FLAT on TREND-DOWN and RANGE is worth +4.36 pts/session, a 29 % increase in production,
+  and it requires no signal that forecasts anything except "do not be long today".
+  W50 also showed the worst decile of weeks is over-weighted in exactly those classes
+  (TREND-DOWN 23 % against a 14 % base rate, TREND-UP 7 % against 21 %), so the same filter
+  should cut the tail as well as raise production. That is the only place in this campaign
+  where one mechanism plausibly does both, and the last one was the session box.
+
+why this is not W07 and not W09 repeated:
+  * W07 tried to predict the session's DIRECTION (right side vs wrong side) from cross-asset
+    agreement, overnight structure and opening range, and failed. This wave does not predict
+    direction. It predicts ONE BIT: is today a day this engine can win on.
+  * W09's range throttle already blocks entries when the session's realised range is below its
+    time-of-day norm, and it works. It targets QUIET sessions. W50 shows the expensive class is
+    TREND-DOWN, where the range is LARGE - the throttle lets those through by construction.
+  * Neither was aimed at this target because until W50 the target had never been measured.
+
+hard constraint - this is where the wave can most easily fool itself: >
+  W50's session classes use END-OF-SESSION information and are DIAGNOSTIC ONLY. No arm here may
+  use them. Every gate must be computable from information available at or before the bar it
+  blocks, and the ledger of what is knowable when is asserted in code.
+  The honest version of the question is therefore: how much of the +4.36 is reachable with a
+  CAUSAL, intraday-observable rule, and how early in the session is it reachable?
+
+phase 1 - THE CEILING AND THE CLOCK (diagnostic, no adoption):
+  For horizons m in {0 (prior close), 30, 60, 120, 240, 390 minutes into the session},
+  measure how separable TREND-DOWN+RANGE sessions are from TREND-UP sessions using only
+  information through minute m, and what the object's remaining P&L for the session is after
+  minute m. A perfect classifier at minute m can only save the P&L that has not yet happened,
+  so this produces the REAL ceiling by decision time - a number that has never existed.
+
+phase 2 - CAUSAL GATES, each one a single bit, entries frozen otherwise:
+  G1 OVERNIGHT/PRIOR-SESSION state: prior session class proxy (its own realised body/range),
+     the overnight gap, and the prior session's close relative to its range - all known before
+     the session starts, so this gate can block the whole session.
+  G2 OPENING STRUCTURE: the first m minutes' body/range ratio, position of price within the
+     opening range, and signed volume - decided once, at minute m, for the rest of the session.
+  G3 RUNNING STATE: a per-bar gate on the session's realised directional efficiency so far
+     (|close - open| / range through bar i-1) - blocks new entries while the session looks
+     like RANGE or like a down-trend.
+  G4 the DELTA/flow state already in the object, isolated: the object's delta gate is a
+     per-bar sign filter; here it is tested as a SESSION-level bit.
+  G5 the best combination of the above by a rule that is DERIVED (majority of the admitted
+     bits), never fitted.
+  Each gate reports, on the FULL window and PER YEAR: pts/session, what it blocked and what
+  that would have earned, eff, CVaR-efficiency, stress-net, worst week, and - the number that
+  decides it - the split of blocked sessions across W50's diagnostic classes, which says
+  whether the gate is actually finding what it was aimed at or is just cutting exposure.
+
+adoption: eff AND CVaR-efficiency above the incumbent, stress-net > 0, not negative in more
+  than one year, AND both nulls at >= 95th percentile with the count-matched one binding, AND
+  the count-matched null must be EXPOSURE-matched in contract-minutes, not trade-matched -
+  the defect the W41 meta-audit found. Any gate that improves only by reducing exposure is
+  compared against the incumbent SCALED DOWN to the same exposure.
+falsifier: if no causal gate captures a meaningful share of the +4.36, the recorded conclusion
+  is that the classes are not separable in advance with the information we have, that the drag
+  is the price of the edge, and that the remaining levers are breadth and paid information.
+forbidden: [data >= 2026-08-01, using W50's end-of-session classes in any arm, fitting a gate
+  threshold on the measurement window, adopting without an exposure-matched count-matched null,
+  quoting a phase-1 ceiling as an achievable result]
+outputs: [out/donttrade.txt, out/gates.csv, out/summary.csv, REPORT.md]

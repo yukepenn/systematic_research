@@ -1,0 +1,47 @@
+=== B1: 14.74 pts/session over 1012 sessions (expect 14.72) -> PASS [24s]
+
+=== PHASE 1: SESSION TAXONOMY (diagnostic; uses end-of-session facts) ===
+class           sessions  share%  avail/ses  availShare%  ourPts/ses  capture%  trades/ses  inMkt%
+TREND-UP             212    20.9      360.6         22.7       88.68     24.60        2.40    22.8
+TREND-DOWN           141    13.9      430.1         18.0      -21.89     -5.09        1.40     5.4
+REVERSAL             263    26.0      338.9         26.4        0.56      0.17        1.95     9.4
+RANGE                274    27.1      271.0         22.0       -4.86     -1.79        1.94    10.7
+MIXED                122    12.1      301.8         10.9        4.19      1.39        1.55     9.6
+ALL                 1012   100.0      333.3        100.0       14.86      4.46        1.92    12.0
+
+=== PHASE 2: LEAKAGE LEDGER (points per session; sums to available) ===
+   ledger closes to 126.0 % of available (RESIDUAL - attribution approximate, see note)
+class                got     never      late     early     wrong      chop     avail
+TREND-UP            88.7      85.3      96.0     110.0       0.0      69.0     360.6
+TREND-DOWN         -21.9     220.7      81.4     164.4      23.9      19.1     430.1
+REVERSAL             0.6     124.8      93.1     142.0       8.7      56.7     338.9
+RANGE               -4.9     100.9      87.8     119.5      10.1      58.0     271.0
+MIXED                4.2     128.4      86.2     111.9      11.3      46.0     301.8
+ALL                 14.9     123.9      89.8     128.7       9.7      53.1     333.3
+
+=== PHASE 3: RISK LEDGER - what makes the worst weeks ===
+   worst 20 weeks of 204: mean -4,514 $, total -90,271 $
+   their session classes: REVERSAL 30 %, RANGE 25 %, TREND-DOWN 23 %, MIXED 14 %, TREND-UP 7 %
+   all-sessions classes:  RANGE 27 %, REVERSAL 26 %, TREND-UP 21 %, TREND-DOWN 14 %, MIXED 12 %
+   inside those weeks: 69 losing sessions of 99, mean -1,417 $, worst single session -3,159 $
+   concentration: worst single session is 3.5 % of the whole worst-decile loss -> ACCUMULATION
+
+=== PHASE 4: COMPLEMENT TEST - is the un-captured movement actually takeable? ===
+class           capture%  perfect pts/ses  open-to-close  O2C net stress                 verdict
+TREND-UP           24.60            360.6          285.1           284.6OPPORTUNITY - rank by size
+TREND-DOWN         -5.09            430.1          325.4           324.9OPPORTUNITY - rank by size
+REVERSAL            0.17            338.9          155.2           154.7OPPORTUNITY - rank by size
+RANGE              -1.79            271.0           35.0            34.5OPPORTUNITY - rank by size
+MIXED               1.39            301.8          120.9           120.4OPPORTUNITY - rank by size
+
+   note: the open-to-close column is a CEILING that requires knowing the session's
+   direction in advance. It bounds what any engine in that class could earn; it is
+   not an achievable result.
+
+=== RANKED AGENDA (un-captured movement x whether a simple rule could take it) ===
+   TREND-UP     un-captured   56.95 pts/session | simple-rule ceiling   59.63 | current capture  24.60 %
+   TREND-DOWN   un-captured   62.98 pts/session | simple-rule ceiling   45.27 | current capture  -5.09 %
+   REVERSAL     un-captured   87.93 pts/session | simple-rule ceiling   40.20 | current capture   0.17 %
+   MIXED        un-captured   35.88 pts/session | simple-rule ceiling   14.52 | current capture   1.39 %
+   RANGE        un-captured   74.70 pts/session | simple-rule ceiling    9.34 | current capture  -1.79 %
+done [34s]
