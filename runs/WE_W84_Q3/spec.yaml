@@ -1,0 +1,94 @@
+run_id: WE_W84_Q3
+title: "Q3 vs the incumbent quality layer: a proper champion-vs-challenger, because W83 rejected
+        it on a threshold I invented and it missed by 1.6 points."
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+why_this_wave_exists_and_the_correction_that_forced_it: >
+  W83 tested six maps from causal score to contracts and reported Q3_selective (size 2 only at
+  score >= 4, instead of the incumbent's >= 3) as "no". The ONLY reason was W83's own preregistered
+  bar: "gives up no more than 10 % of weekly $ at a fixed drawdown". Q3 gives up 11.6 %.
+  **It failed an arbitrary line by 1.6 percentage points, not a law**, and the owner challenged the
+  framing directly. That challenge is correct and this wave exists because of it.
+
+  On the metrics the owner has stated he ranks first, Q3 is ahead:
+      positive weeks   54.0 % vs 52.6 %      (+1.4 pp)
+      MEDIAN WEEK      $292   vs $116        (2.5x)
+      weekly skew      +1.23  vs +2.10       (lower is better for a hit rate)
+      max drawdown     $25,950 vs $27,319    (-5 %)
+  and behind on the tail and the money:
+      mean top-5 DD    $14,745 vs $13,674
+      worst week       -$8,612 vs -$7,581
+      longest streak   9 vs 8
+      money @ fixed DD $755 vs $854          (-11.6 %)
+  Sharpe is a tie (0.2445 vs 0.2457).
+
+the_contradiction_that_must_be_resolved_first: >
+  W83's full-sample table says Q3's mean top-5 drawdown is WORSE (14,745 vs 13,674), while W83's
+  rolling test says Q3 beats Q0 on that same metric in **84 % of 25 rolling 24-month windows**.
+  Both cannot be a simple description of the same object. The resolution decides the wave:
+    * if Q0's full-sample advantage comes from a small number of episodes Q3 happened to miss,
+      then the ROLLING number is the honest one and Q3's drawdown profile is genuinely better;
+    * if it comes from Q3 having a fatter tail that the 24-month windows systematically truncate,
+      then the FULL-SAMPLE number is the honest one.
+  Phase 0 answers this by locating the drawdown episodes explicitly, before any verdict.
+
+arms:
+  Q0: "size 2 when causal score >= 3 (incumbent)."
+  Q3: "size 2 when causal score >= 4."
+  Q1: "size 1 always (layer off) - carried as the floor, so the reader can see whether Q3 is
+       simply a partial step toward turning the layer off."
+  Q4: "size 3 when score >= 3 - carried because it was W83's only arm above 0 % on all-three."
+
+two_gates_reported_side_by_side_and_neither_is_relaxed:
+  campaign_standard: >
+    ALL THREE of (weekly $ at a fixed $20,245 drawdown, positive-week %, mean top-5 drawdown)
+    better than the champion in a MAJORITY of rolling 24-month windows. This is the bar that has
+    killed seven consecutive candidates and it is applied unchanged.
+  owner_ordering: >
+    The owner's stated ordering is CONSISTENCY, then DRAWDOWN, then MONEY - money is THIRD, not
+    co-equal. The corresponding gate, fixed here before running: positive-week % better in a
+    majority of windows AND mean top-5 drawdown better in a majority AND money at a fixed drawdown
+    not worse by more than 15 % in the FULL-SAMPLE panel.
+    THIS IS A DIFFERENT GATE, NOT A LOOSER ONE - it demands a majority on two metrics where the
+    campaign standard demands a majority on three, and it is stricter than the standard on
+    consistency because it will not accept a money win as compensation for a hit-rate loss.
+    Both results are reported. A pass on one and a fail on the other is reported as exactly that.
+
+further_tests_all_binding:
+  walk_forward: "quarterly, choose between Q0 and Q3 on a trailing year, trade the next quarter.
+                 W29 bar: >= 80 % retention of the better fixed arm. Churn reported - a choice
+                 that churns is noise."
+  null: >
+    the specific question for a SIZING rule: is Q3's hit-rate gain about WHICH trades get two
+    contracts, or merely about having fewer size-2 trades? Null: keep Q3's exact count of size-2
+    entries but assign them at RANDOM among the scored entries, 200 draws. If the real Q3 does not
+    exceed the 95th percentile, the gain is a pure exposure effect and Q3 is a worse Q1.
+  per_year: "every year at the measured $14.65/RT, positive-week % and money."
+  tails: >
+    distribution across the 25 windows of worst week and longest losing streak, not only the
+    full-sample values, since W83's full-sample tail figures are what the phase-0 contradiction
+    puts in doubt.
+  friction: "both lines - $4.36/RT commission only and W82's measured $14.65/RT all-in."
+
+preregistered_decision_rule:
+  promote_to_challenger_confirmed_only_if: >
+    it passes the OWNER-ORDERING gate AND the walk-forward AND the null. Passing the campaign
+    standard as well would make it unambiguous; passing only the owner gate is reported as a
+    Pareto move - better on what he ranks first and second, worse on money - and the decision is
+    explicitly HIS, not mine, with both columns in front of him.
+  if_it_fails_the_null: >
+    Q3 is a worse version of turning the layer off, and the honest recommendation becomes Q1, not
+    Q3. That is a real possible outcome: Q1 wins positive weeks in 64 % of windows too.
+  adoption: NOTHING is adopted by me in this wave.
+
+traps_named_before_running:
+  - "I am running this wave because the owner objected to a rejection. That is a legitimate reason
+     to re-test and an illegitimate reason to lower a bar. Both gates are written above, in
+     advance, and the campaign-standard one is unchanged from W78/W79/W80."
+  - "Q3 differs from Q0 only in a threshold (4 vs 3) on a score whose five features and quantiles
+     were themselves chosen by a full-sample scan in W33. That look-ahead is inside BOTH arms so
+     it cannot bias the comparison, but neither arm is clean in absolute terms."
+  - "Four arms x two gates x two friction lines is a scan. The null and the walk-forward are the
+     controls."
