@@ -83,7 +83,7 @@ def round_away(x):
 def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False,
             volmults=None, entry_level=3.0, exit_level=1.0, tilt_on=True, blocks_on=True,
             restore=None, type3=False, smin_pts=None, smax_pts=None, stopm_pts=None,
-            return_debug=False):
+            return_debug=False, return_members=False):
     """Faithful port of SolarWaveOneContractNQ_v5 decision stack to 1-min bars.
 
     Declared port choices (spec): B-MOM reset at bar-end 09:31, signal cutoff 15:54, flatten
@@ -127,8 +127,14 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
     tgt_arr = np.zeros(n, np.int8)                                    # decision at bar close
     # W52: optional per-bar trace of the SHARED state (bmom, tilt). Off by default, so
     # every existing caller is bit-identical.
-    dbg_bmom = np.zeros(n, np.int8) if return_debug else None
-    dbg_tilt = np.zeros(n, np.int8) if return_debug else None
+    dbg_bmom = np.zeros(n, np.int8) if (return_debug or return_members) else None
+    dbg_tilt = np.zeros(n, np.int8) if (return_debug or return_members) else None
+    # W66: optional per-bar matrix of the PER-MEMBER pending positions. A member's ratchet
+    # state depends only on price and its own VolMult - never on which set it belongs to (the
+    # property W52 verified when it collapsed the 32 voters to 13 shared members) - so this
+    # matrix lets any SUBSET ladder and any hysteresis be recomputed without re-running the
+    # engine. Off by default, so every existing caller stays bit-identical.
+    mem_arr = np.zeros((n, NMEM), np.int8) if return_members else None
     for i in range(n):
         px = c[i]
         # apply pending
@@ -228,6 +234,10 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
             if len(sess_closes) > 600:
                 sess_closes.pop(0)
         # combiner
+        if return_members:
+            for m in range(NMEM):
+                mem_arr[i, m] = m_pend[m]
+            dbg_bmom[i] = bmom; dbg_tilt[i] = tilt
         sum_next = sum(m_pend) if with_solar else 0
         T = max(-10, min(10, round_away(sum_next / float(NMEM) * 10.0)))
         mm = 1.25 if (tilt_on and sum_next != 0 and tilt != 0
@@ -267,6 +277,8 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
         if return_debug:
             dbg_bmom[i] = bmom; dbg_tilt[i] = tilt
 
+    if return_members:        # W66 hook
+        return tgt_arr, mem_arr, dbg_bmom, dbg_tilt
     if return_debug:
         return tgt_arr, dbg_bmom, dbg_tilt
     if return_targets:        # W02 hook (no behavior change for existing callers)
