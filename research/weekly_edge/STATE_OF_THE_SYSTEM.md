@@ -3,7 +3,35 @@
 
 # STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7)
 
-> ## CURRENT TRUTH after W42 (2026-08-26) — supersedes everything below
+> ## CURRENT TRUTH after W52 (2026-08-26) — supersedes everything below
+>
+> **THE OBJECT IS P1 / P2, LONG-ONLY.** Nothing else is adopted. The W41 clock basket adoption
+> was **WITHDRAWN** on 2026-08-26 (see `runs/WE_W41_CLOCK2/amendment_2.yaml`): its range sleeve
+> carried a FULL-SAMPLE quantile as its bar size — the 4th such casualty in this campaign.
+>
+> | | value |
+> |---|---|
+> | pts/session · weekly per ~**1.27 time-weighted contracts** | **14.72** · **$1,470** |
+> | **annualised Sharpe** (weekly 0.311 × √52) | **2.25** |
+> | max drawdown (weekly equity) · **MAR** | −$20,245 · **3.77** |
+> | worst week · positive weeks · positive days | −$7,418 · 58.6 % · 27.6 % |
+> | eff (weekly ÷ \|worst\|) — NEVER quote alone | 0.198 (P2 0.232) |
+> | per year | 2022 $1,024/wk · **2023 $308/wk** · 2024 $1,951 · 2025 $2,265 · 2026 $1,521 |
+>
+> **NOW A VALIDATED NINJASCRIPT** (W52): `WeeklyEdgeP1_v3.cs`, confirmed through NT8's own
+> Strategy Analyzer over the full window at **−0.64 % net, annualised Sharpe 2.24 vs 2.25,
+> weekly series correlation 0.9752**, decision series 99.985 %.
+>
+> **WHAT IT CAPTURES** (W50): **+18.53 pts/session from the 20.9 % of days that TREND UP**
+> (24.60 % capture there), minus 3.70 given back on the other 79 %. Being FLAT on TREND-DOWN and
+> RANGE is worth **+4.36 pts/session** and needs no forecast except "do not be long today" —
+> that is W51, preregistered.
+>
+> **"No look-ahead anywhere" is WITHDRAWN**: bar-level causality is clean, specification-level is
+> not (W33 chose the five features on a full-sample scan). Bounded by W39's random-five-feature
+> control (95th/97th) and W36's walk-forward on the same five (14.41).
+>
+> ## CURRENT TRUTH after W42 — superseded above, kept for the detail
 >
 > **Adopted since W39**: the **clock basket** (W41) — `long quality + 3-min clock + range clock`
 > at w = 0.03 each, constant total exposure. eff 0.198 → **0.209**, CVaR-eff 0.272 → **0.282**,
