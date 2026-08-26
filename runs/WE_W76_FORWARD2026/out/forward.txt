@@ -1,0 +1,70 @@
+=== EXTENDED substrate 1,620,044 bars, 1,187 sessions, 2022-01-02T18:01:00 -> 2026-07-31T16:59:00 [23s]
+    overlap with the old substrate asserted BIT-EXACT at load time on all six columns.
+    window 2022-07-04 -> 2026-07-31: 1058 sessions, 213 weeks
+    IN-SAMPLE  (seen by all 75 prior waves): 1012 sessions
+    HELD OUT   (never read by any code):     46 sessions / 9 weeks, 2026-06-01 -> 2026-07-31
+    member matrix built on the extended window [61s]
+    P1 / SHORT / BMOM rebuilt on the extended window [71s]
+    10 W72 channel arms rebuilt [171s]
+
+======================================================================================================================================================
+=== THE FORWARD READ. Frozen parameters. Nothing re-derived, nothing selected.
+======================================================================================================================================================
+object          |           IN-SAMPLE 2022-07 -> 2026-05-29            |             HELD OUT 2026-05-30 -> 2026-07-31              |  retain
+                |     pts      net $   wk+%   wk mean    worst |     pts     net $   stress$   wk+%  wk mean    (SE)   worst |        
+P1              |   14.86    300,817  58.3%     1,475   -7,418 |  -22.49   -20,686   -21,557  11.1%   -2,298     838  -5,015 |   -151%
+SHORT           |    6.00    121,454  49.5%       595   -8,269 |   12.46    11,464    10,467  44.4%    1,274   2,160  -5,780 |    208%
+BMOM            |   13.35    270,210  58.8%     1,325  -16,322 |  -19.51   -17,952   -18,406  33.3%   -1,995   3,003 -16,907 |   -146%
+w72:X1          |    9.83    198,919  57.8%       975   -8,918 |  -20.24   -18,617   -19,780  11.1%   -2,069     936  -4,891 |   -206%
+w72:X2          |   13.08    264,805  55.9%     1,298   -9,100 |  -21.98   -20,221   -21,096  11.1%   -2,247     838  -5,015 |   -168%
+w72:X3          |    9.17    185,577  55.9%       910   -8,918 |  -19.73   -18,152   -19,317  11.1%   -2,017     937  -4,891 |   -215%
+w72:X4          |    9.08    183,719  50.5%       901   -9,442 |  -13.34   -12,273   -13,189  11.1%   -1,364     960  -4,535 |   -147%
+w72:X5          |    9.02    182,579  53.9%       895   -6,714 |   -6.98    -6,420    -7,289  22.2%     -713     812  -3,127 |    -77%
+w72:X6          |    8.64    174,905  54.4%       857   -8,952 |   -7.00    -6,438    -7,433  22.2%     -715     934  -4,856 |    -81%
+w72:X7          |    9.46    191,422  51.5%       938   -8,735 |  -10.77    -9,908   -10,873  22.2%   -1,101     800  -4,781 |   -114%
+w72:X8          |   10.10    204,478  53.4%     1,002   -8,307 |  -12.92   -11,891   -12,911  22.2%   -1,321     927  -4,867 |   -128%
+w72:X9a         |   10.73    217,079  54.4%     1,064   -8,658 |   18.15    16,702    15,856  33.3%    1,856   2,891  -3,127 |    169%
+w72:X9b         |   12.74    257,830  53.9%     1,264  -10,313 |   40.96    37,683    36,883  55.6%    4,187   2,684  -4,221 |    322%
+
+=== THE PREREGISTERED VERDICT (W29's standing bar: >= 80 % retention) ===
+   P1 in-sample 14.86 pts/session -> held out -22.49 = -151 % retention over 46 sessions / 9 weeks
+   weekly mean $-2,298 +- $838 (SE), positive weeks 11.1 %, worst week $-5,015
+
+   -> FAIL. The headline figures are PROVISIONAL and must be re-quoted with the
+      forward window folded in. Stated plainly regardless of how it reads.
+
+   best challengers on the held-out window (OBSERVATION ONLY - explicitly NOT
+   promoted; 9 weeks cannot rank anything):
+      w72:X9b          40.96 pts/session, weekly $4,187 +- $2,684
+      w72:X9a          18.15 pts/session, weekly $1,856 +- $2,891
+      SHORT            12.46 pts/session, weekly $1,274 +- $2,160
+
+======================================================================================================================================================
+=== 2026 AS IT NOW STANDS (all sessions, extended window)
+======================================================================================================================================================
+   2026 now has 152 sessions / 31 weeks (was 106 / 22 before the extension - a 43 % larger sample)
+
+object             2026 net $  pts/sess   per week    wk+%   worst wk    max DD
+P1                     12,781      4.20        412   51.6%     -6,344    24,225
+SHORT                 -11,054     -3.64       -357   38.7%     -6,244    29,069
+BMOM                    2,197      0.72         71   45.2%    -16,907    43,712
+w72:X1                 17,559      5.78        566   45.2%     -6,698    18,617
+w72:X2                 14,486      4.77        467   51.6%     -6,344    23,760
+w72:X3                 18,165      5.98        586   45.2%     -6,698    18,152
+w72:X4                  3,125      1.03        101   38.7%     -6,617    21,042
+w72:X5                  9,274      3.05        299   45.2%     -6,617    20,287
+w72:X6                  9,656      3.18        311   45.2%     -8,200    19,831
+w72:X7                 14,474      4.76        467   48.4%     -8,735    13,513
+w72:X8                 13,654      4.49        440   48.4%     -7,168    12,021
+w72:X9a                49,456     16.27      1,595   54.8%     -6,149    11,211
+w72:X9b                77,693     25.56      2,506   58.1%     -8,541    13,043
+
+   P1's 2026 RATE, ANNUALISED, at N contracts (net $4.36/RT; the C1 stress line costs ~$95/wk/contract):
+contracts       annualised $    2026 max DD   2026 worst wk    weekly $
+1                     21,189         24,225          -6,344         412
+2                     42,378         48,449         -12,688         825
+3                     63,567         72,674         -19,033       1,237
+4                     84,757         96,899         -25,377       1,649
+7                    148,324        169,572         -44,410       2,886
+
+=== STATUS: forward measurement. NOTHING ADOPTED, NOTHING SELECTED. [171s] ===
