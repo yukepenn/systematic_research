@@ -81,7 +81,8 @@ def round_away(x):
 
 
 def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False,
-            volmults=None, entry_level=3.0, exit_level=1.0, tilt_on=True, blocks_on=True):
+            volmults=None, entry_level=3.0, exit_level=1.0, tilt_on=True, blocks_on=True,
+            restore=None, type3=False):
     """Faithful port of SolarWaveOneContractNQ_v5 decision stack to 1-min bars.
 
     Declared port choices (spec): B-MOM reset at bar-end 09:31, signal cutoff 15:54, flatten
@@ -102,6 +103,7 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
     diffs = []                                                        # rolling |dClose| buffer
     m_up = [False] * NMEM; m_anchor = [0.0] * NMEM; m_S = [STOPM] * NMEM
     m_sig = [0] * NMEM; m_pos = [0] * NMEM; m_pend = [0] * NMEM
+    m_ext = [False] * NMEM              # W31: leg extended to a new extreme on this bar
     initialized = False
     sess_closes = []; tilt = 0
     bmom = 0; rth_open = False; open0930 = 0.0; vpv = 0.0; vv = 0.0
@@ -136,19 +138,21 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
             if not initialized:
                 m_up[m] = False; m_anchor[m] = px; m_S[m] = resolve_s(VOLM[m])
                 continue
+            m_ext[m] = False
             if m_up[m]:
                 if px >= m_anchor[m]:
-                    m_anchor[m] = px
+                    m_anchor[m] = px; m_ext[m] = True
                 elif px < m_anchor[m] - m_S[m]:
                     m_up[m] = False; m_S[m] = resolve_s(VOLM[m]); m_anchor[m] = px; m_sig[m] = -1
             else:
                 if px <= m_anchor[m]:
-                    m_anchor[m] = px
+                    m_anchor[m] = px; m_ext[m] = True
                 elif px > m_anchor[m] + m_S[m]:
                     m_up[m] = True; m_S[m] = resolve_s(VOLM[m]); m_anchor[m] = px; m_sig[m] = 1
         if not initialized:
             initialized = True
         # Decide
+        first_dec = fb[i]          # W31: first decision bar of the session
         for m in range(NMEM):
             if i < 20:
                 m_pend[m] = m_pos[m]; continue
@@ -160,7 +164,20 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
             elif m_pos[m] != 0:
                 m_pend[m] = m_pos[m]
             else:
-                m_pend[m] = m_sig[m]
+                sg = m_sig[m]
+                # W31 R3: admit an intra-session STRENGTHEN re-entry (leg extended to a new
+                # extreme while flat) as an entry, not only a fresh flip
+                if sg == 0 and type3 and m_ext[m]:
+                    sg = 1 if m_up[m] else -1
+                # W31 R1/R2: at the session's first decision bar, a member whose ratchet is
+                # still in a valid leg re-arms instead of waiting for a fresh flip
+                if sg == 0 and restore is not None and first_dec:
+                    valid = True
+                    if restore == "conf":
+                        valid = (px > xl) if m_up[m] else (px < xl)
+                    if valid:
+                        sg = 1 if m_up[m] else -1
+                m_pend[m] = sg
         # BmomBar
         se = bool(lb[i]); hmv = int(hhmmss[i])
         if hmv == 93100:
