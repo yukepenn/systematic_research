@@ -1,0 +1,58 @@
+amendment: 1
+run_id: WE_W38_SHORTQ
+date: 2026-08-25
+status: appended AFTER the first readout; the first readout stands unchanged in out/shortq.txt
+
+what the first readout established (both preregistered answers were NEGATIVE):
+  Q1 - the SEL screen admitted ZERO of 16 candidates x 2 signs. Max |t| = 1.48
+       (prev_range_rel, sign -1). K = 0, so S2 collapsed to S0 by construction, as designed.
+  Q2 - the SEL-derived hour restriction (block 06,10,15,18,20,21 ET) DID lift EVAL production
+       6.49 -> 8.25 pts/session with a slightly better worst week, but its binding
+       circular-shift null returned the 65th percentile, p = 0.350 -> NOT EVIDENCE. Shifting
+       the block schedule to arbitrary hours produces the same lift on average (null mean
+       0.087 vs base 0.079), i.e. the gain is GENERIC EXPOSURE REDUCTION, not hour selection.
+  and one result that was not asked for but is the most consequential:
+       on EVAL, adding the short sleeve to the long P2 object REDUCES profit per unit of tail
+       (0.348 -> 0.220 with S0, -> 0.264 with S3) at matched exposure, while raising the
+       positive-week rate (61.6 % -> 65.0 %) and leaving Sharpe flat (0.350 -> 0.355).
+       The short sleeve is therefore NOT insurance in the tail sense; it is a consistency
+       trade. That is a Pareto trade-off and both objects are kept, per the owner charter.
+
+why this amendment exists (declared BEFORE its arm is read):
+  The screen's admission gate (|t| >= 2 per feature) is the wrong gate for the mechanism the
+  long side actually uses. The long score has never had a feature that would pass t >= 2 alone
+  either - it works because FIVE weak features are combined, and the combination is what the
+  null test judges. Rejecting every short feature individually therefore does not answer
+  "can weak short features combine into a usable score?"
+  Separately, the SEL point estimates are informative about SHAPE even where insignificant,
+  and they are ANTI-MIRROR on the two features that matter most:
+      dist_open  sign +1 (t 1.34)  - short better when price is far ABOVE the session open
+      dist_vwap  sign +1 (t 1.00)  - short better when price is far ABOVE session VWAP
+  the mirrored long score uses sign -1 on both, i.e. it sizes up exactly the entries the SEL
+  data weakly says are worst. That is a mechanistic explanation for why S1 (mirror) widened
+  the worst week from -$8,269 to -$11,892, and it is the first evidence in this campaign that
+  the short side is a FADE-EXTENSION problem rather than a mirrored-trend problem.
+  STATUS of that reading: INFERENCE (point estimates below significance), not SUPPORTED.
+
+added arm (signs and ranking taken from SEL ONLY; EVAL untouched by the choice):
+  S5 SHORT COMBINED SCORE - the top 5 SEL features by t at their SEL-chosen signs, no
+     significance gate, scored with trailing-250-entry causal quantiles, size 2 when >= 3 of 5
+     are favourable (the same "majority of five" rule the long side derives, not a new choice).
+  S6 S5 + the SEL hour restriction, reported for completeness only, since Q2's null already
+     demoted the restriction to NOT EVIDENCE.
+
+added reporting (owner charter of 2026-08-25, section 2 and 3):
+  every arm now reports CVaR5 (mean of the worst 5 % of weeks), positive-DAY rate, longest
+  losing-week streak, top-5 %-of-days P&L concentration, and an EXPOSURE-MATCHED portfolio
+  table (long P2 at 2 contracts vs long P2 at 1 + short at 1), so no portfolio claim rests on
+  an unmatched comparison. SEL-window numbers are printed alongside EVAL because EVAL is the
+  STRONGER half for the long object (20.22 vs 13.50 pts/session full-window) and EVAL-only
+  figures are therefore flattering; that must be visible, not buried.
+
+adoption for S5: unchanged from the original spec - EVAL pts/session > S0 AND
+  weekly/|worst| >= S0 AND worst >= S0 x 1.02 AND stress > 0 AND null percentile >= 95.
+falsifier for S5: if it fails, the recorded conclusion is that short flips are not gradeable
+  by pre-entry state in this feature universe (power: the screen resolves per-trade effects of
+  about $110 at t = 2 on 1,298 SEL entries, well below the $600+ per-trade separation the long
+  score achieves, so the null result is informative rather than merely underpowered), and the
+  short sleeve stays a CONSISTENCY object at size 1 with no quality layer.

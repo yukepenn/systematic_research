@@ -1,0 +1,57 @@
+=== B1 HARNESS CHECK (must reproduce W37 long P2: 13.50 pts/session, Sharpe 0.291) ===
+   cut bars derived = 23 (W37: 23) | pts/session 13.50 | Sharpe 0.291  -> PASS
+   sfills vs fills_daily on the short base: IDENTICAL
+
+=== SEL SCREEN (1298 short entries 2022-07 -> 2024-07, 16 candidates x 2 signs) ===
+        feature  sign  n_fav   eff    t  eff_h1  eff_h2  admit
+ prev_range_rel    -1    433 79.79 1.48   97.86   61.22  False
+      dist_open     1    433 77.05 1.34   47.69  104.37  False
+          mom60    -1    433 66.38 1.13  110.87   22.55  False
+      delta_mag     1    433 60.38 1.10   48.12   71.83  False
+    upvol_share    -1    542 54.95 1.10  176.09  -65.23  False
+      dist_vwap     1    433 57.23 1.00  -33.37  140.80  False
+         runlen    -1    465 54.11 0.98  108.59    2.94  False
+       hour_cos    -1    448 49.25 0.81  115.18  -14.58  False
+bars_since_open     1    437 49.25 0.81   71.99   27.08  False
+ gap_prev_close    -1    433 18.36 0.33    3.41   35.07  False
+        atr_rel     1    433 12.58 0.21   93.12  -61.62  False
+       hour_sin     1    433  6.49 0.14  -63.00   74.48  False
+ sess_extension     1    433  6.65 0.13  -37.16   52.40  False
+   delta_signed    -1    433  2.13 0.04    1.58    2.25  False
+
+   ADMITTED (max-t sign per feature): []
+   K = 0 features -> majority rule k >= 1 (derived, not chosen)
+
+   SEL hour buckets (ET), short base:
+     02h n=  35 $  105.8 | 03h n=  92 $   34.9 | 04h n=  76 $   10.9 | 05h n=  61 $  124.7
+     06h n=  59 $  -29.5 | 07h n=  67 $  131.2 | 08h n= 139 $   12.8 | 09h n= 237 $  111.9
+     10h n= 118 $  -36.5 | 11h n=  56 $   75.2 | 12h n=  38 $   87.9 | 15h n=  33 $ -207.4
+     18h n=  49 $  -33.2 | 20h n=  38 $  -17.4 | 21h n=  37 $  -39.8
+   blocked hours (SEL mean < 0, n>=30): [6, 10, 15, 18, 20, 21]
+
+   scoring 2225 short entries causally (trailing 250) [160s]
+
+=== SHORT ARMS on EVAL (honest) ===
+arm                                  n  avgSz  pts/ses    $/tr   wkMean   wk+%     worst sharpe wk/|wst|  stress
+S0 base short [EVAL]               927   1.00     6.49    69.5      657   50.0    -8,269  0.153    0.079     563
+S1 mirror score [EVAL]             835   1.28     6.89    81.8      697   49.0   -11,892  0.129    0.059     612  reject
+S2 short-specific score [EVAL]     927   1.00     6.49    69.5      657   50.0    -8,269  0.153    0.079     563  reject
+S3 hour restriction [EVAL]         920   1.00     8.25    88.9      835   49.0    -8,200  0.177    0.102     741  ADOPT?
+S4 S2 + S3 [EVAL]                  920   1.00     8.25    88.9      835   49.0    -8,200  0.177    0.102     741  ADOPT?
+
+=== SHORT ARMS on FULL (selection-contaminated) ===
+arm                                  n  avgSz  pts/ses    $/tr   wkMean   wk+%     worst sharpe wk/|wst|  stress
+S0 base short [FULL]              2225   1.00     5.99    54.6      601   50.0    -8,269  0.162    0.073     491
+S1 mirror score [FULL]            2020   1.25     7.36    73.8      738   52.0   -11,892  0.161    0.062     638  reject
+S2 short-specific score [FULL]    2225   1.00     5.99    54.6      601   50.0    -8,269  0.162    0.073     491  reject
+S3 hour restriction [FULL]        2091   1.00     7.97    77.2      800   55.4    -8,200  0.204    0.098     696  ADOPT?
+S4 S2 + S3 [FULL]                 2091   1.00     7.97    77.2      800   55.4    -8,200  0.204    0.098     696  ADOPT?
+
+=== NULL (binding) on S3 hour restriction [EVAL]: 100 circular shifts ===
+   real wk/|worst| 0.102 | null mean 0.087 | p95 0.132 | percentile 65.0 | p 0.350 -> NOT EVIDENCE
+
+=== C1 COMBINED PORTFOLIO (long P2 + short arm), EVAL window ===
+arm                                  n  avgSz  pts/ses    $/tr   wkMean   wk+%     worst sharpe wk/|wst|  stress
+C1a long P2 alone [EVAL]          1426   1.11    20.22   140.6    2,026   61.6    -5,818  0.350    0.348   1,882
+C1 P2 + S0 [EVAL]                 2353   1.07    26.71   112.6    2,650   66.0   -12,062  0.320    0.220   2,414
+C1 P2 + S3 [EVAL]                 2346   1.07    28.46   120.4    2,824   65.0   -10,677  0.355    0.264   2,589

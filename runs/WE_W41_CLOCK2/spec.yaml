@@ -1,0 +1,73 @@
+run_id: WE_W41_CLOCK2
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: improvement-queue items 4 AND 3, self-directed; owner standing instruction of
+  2026-08-25 that defended priors may be reopened by a NEW mechanism, a NEW data
+  representation or a STRONGER falsifier - not by rerunning an old experiment unchanged.
+
+what is new here, so this is not a W32 rerun:
+  1. TRUE ENGINE. W32 re-implemented the ratchet to make the clock a parameter and silently
+     dropped the HTF tilt, the hysteresis and the combiner; its 1-min arm scored 4.85 against
+     the real object's 10.62, so its verdict ("coarser clocks are worse") is only established
+     inside a weaker engine. This wave runs the SHIPPED sm14_1m unchanged on aggregated bars,
+     with a mandatory B1 reproduction check on the 1-min clock first.
+  2. A NEW DATA REPRESENTATION. W32 only tested TIME aggregates (3-min, 5-min). A VOLUME clock
+     and a RANGE clock sample a different information process, not a coarser sample of the
+     same one. Neither has ever been run in this campaign.
+  3. A DIFFERENT QUESTION. W32 asked "does a coarser clock produce more?" and answered no.
+     This wave asks the question that actually matters for the owner's objective:
+     "is an alternative-clock sleeve INDEPENDENT enough that adding it raises profit per unit
+     of tail AT MATCHED EXPOSURE?" - a sleeve that is worse stand-alone can still be worth
+     owning. W32 never measured a single correlation. This is the campaign's standing
+     largest risk (every sleeve is the same Solar ratchet, W25/W27) attacked from a new angle.
+
+data: NQ 1-min, 2022-01-01 load / 2022-07-01 -> 2026-08-01. No data >= 2026-08-01.
+
+construction (declared):
+  - TIME clocks k in {3, 5} minutes, aggregated WITHIN a session and ANCHORED so that a block
+    ENDS exactly at the 09:31 bar. The anchoring is not cosmetic: sm14_1m arms B-MOM on
+    `hhmmss == 93100` and keys its time-of-day baseline on the bar-end minute, so an unanchored
+    aggregate would silently disable B-MOM and the "true engine" claim would be false.
+  - VOLUME clocks: a bar closes when cumulative session volume >= V, with a forced close at
+    the session end. V chosen so that the mean bars/session matches the 3-min and 5-min clocks
+    (V3, V5) - i.e. the clocks are matched on EVENT RATE, so any difference is the sampling
+    process, not the coarseness.
+  - RANGE clock: a bar closes when its high-low span >= R ticks, R matched the same way.
+  - On every alternative clock the ratchet advances on aggregated closes; the throttle, the
+    delta gate, the session box and ALL FILLS stay on the 1-min clock. Position mapping:
+    a coarse bar's decision becomes the 1-min position from its own last minute onward, so the
+    existing fill layer (reads bar i-1, fills at bar i's open) is causal by construction.
+  - sigma window on each alternative clock is run at BOTH 460 bars (same bar count) and
+    460/k_equiv bars (same wall-clock span), so the window is not a hidden confound.
+  - B-MOM is reported ON and OFF on every clock, with a 1-min B-MOM-OFF reference, so the
+    time-clock and volume-clock arms are compared on the same engine.
+
+arms:
+  R0  1-min, full 32-config vote + box                    (B1 check: 10.62 pts, Sharpe 0.305)
+  R1  1-min single sleeve (narrow6, q=0.8, delta gate on) (the screen's like-for-like ref)
+  A1  time clock 3-min, single sleeve, sigma x2, bmom x2
+  A2  time clock 5-min, same
+  A3  volume clock V3 and V5, same
+  A4  range clock R, same
+  B   INDEPENDENCE: weekly-P&L correlation of every arm above with R1, and the daily
+      overlap of in-position bars. Reported for EVERY arm, profitable or not.
+  C   PORTFOLIO AT MATCHED EXPOSURE: for each alternative sleeve, compare
+        (i)  R1 alone at 2 contracts
+        (ii) R1 at 1 + alternative at 1
+      on weekly mean, worst week, Sharpe and weekly-mean-per-unit-of-worst-week. Matched
+      exposure is the whole point: an unmatched comparison would just be leverage (W06/W10/W22).
+  D   if any alternative clock passes C, the full 32-config vote is built on that clock and
+      combined with the campaign's P2 long object.
+
+adoption (a second model is adopted only if ALL hold):
+  stand-alone stress-net (at $14.36/RT) > 0
+  AND weekly correlation with R1 < 0.7
+  AND arm C(ii) beats C(i) on weekly-mean-per-unit-of-worst-week
+  AND a binding circular-shift null on the combined object at >= 95th percentile.
+falsifier: if no alternative clock clears C, then W32's provisional closure becomes FINAL on
+  the true engine, the clock axis is closed for good, and the model-concentration risk is
+  recorded as NOT solvable by re-clocking the same rule - which redirects queue item 3 to a
+  genuinely different RULE rather than a different clock.
+forbidden: [data >= 2026-08-01, fill-bar information, unmatched-exposure portfolio claims,
+  adopting without the null, quoting any arm before the B1 check passes]
+outputs: [out/clock2.txt, out/summary.csv, REPORT.md]
