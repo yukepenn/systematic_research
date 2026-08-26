@@ -1,0 +1,78 @@
+=== 1058 sessions, 213 weeks, 2,139 scored entries [16s]
+
+==============================================================================================================================
+=== PHASE 0: FULL-SAMPLE says Q0's drawdown profile is better; ROLLING says Q3's is,
+===          in 84 % of windows. Locate the episodes and settle it.
+==============================================================================================================================
+   Q0: five deepest drawdown EPISODES (weekly equity, $, at $14.65/RT): [27319, 22851, 18668, 16484, 6940]
+      mean of top 5 = $18,452   max = $27,319
+   Q3: five deepest drawdown EPISODES (weekly equity, $, at $14.65/RT): [25950, 22825, 21076, 17902, 6747]
+      mean of top 5 = $18,900   max = $25,950
+
+   Q3 - Q0 on each of the five: [-1369, -26, 2408, 1418, -193]
+   -> Q3 is worse across the episode distribution
+
+==============================================================================================================================
+=== PHASE 1: ROLLING 24-MONTH WINDOWS vs Q0, at $14.65/RT
+==============================================================================================================================
+arm       n   wk+% win   money win   top5DD win   ALL THREE  worst-wk win  streak win
+Q3       25        88%          4%          84%          0%           32%          0%
+Q1       25        64%          4%          64%          0%           32%         20%
+Q4       25        64%        100%          36%         24%            0%          0%
+
+=== PANEL, commission only $4.36/RT ===
+arm      wk+%  wStrk   skew  Sharpe   medWk$  weekly$   wk$@DD   top5DD    maxDD    worst
+Q0      56.3%      8   2.10   0.280      279    1,315    1,099   13,864   24,225   -7,418
+Q3      55.9%      9   1.23   0.283      443    1,119      963   14,778   23,531   -8,461
+Q1      57.3%      7   0.98   0.270      443      947      966   15,183   19,851   -7,487
+Q4      55.4%      8   3.06   0.282      551    1,732    1,595   15,922   21,991   -9,175
+
+=== PANEL, MEASURED all-in $14.65/RT ===
+arm      wk+%  wStrk   skew  Sharpe   medWk$  weekly$   wk$@DD   top5DD    maxDD    worst
+Q0      52.6%      8   2.10   0.246      116    1,152      854   13,674   27,319   -7,581
+Q3      54.0%      9   1.23   0.244      292      968      755   14,745   25,950   -8,612
+Q1      54.9%      7   0.98   0.228      296      800      716   14,836   22,636   -7,633
+Q4      54.0%      8   3.06   0.253      373    1,555    1,280   16,040   24,595   -9,353
+
+=== PER YEAR at $14.65/RT (positive-week % | weekly $) ===
+arm               2022            2023            2024            2025            2026
+Q0           42% | 996       54% | 139     55% | 1,752     57% | 2,102       52% | 249
+Q3           38% | 522       56% | 231     60% | 1,447     55% | 1,447       55% | 867
+Q1           38% | 539       62% | 314     58% | 1,088     53% | 1,241       58% | 529
+Q4           50% | 945       54% | 105     57% | 2,612     55% | 2,721       55% | 583
+
+==============================================================================================================================
+=== PHASE 3: NULL - is Q3's gain about WHICH trades get 2 contracts, or just about
+===          having FEWER size-2 trades? Keep the count, randomise the assignment.
+==============================================================================================================================
+   Q3 gives 2 contracts to 113 of 1581 scored entries (7.1 %); Q0 gives it to 425 (26.9 %)
+
+   60 draws (random size-2 assignment at Q3's exact count)
+metric                   real Q3   null mean    null p95   pctile          
+positive-week %             54.0        54.0        55.9      40%   generic
+money @ fixed DD           755.1       654.6       827.8      78%   generic
+mean top-5 DD           14,744.9    13,776.9    11,238.1      23%   generic
+
+==============================================================================================================================
+=== PHASE 4: WALK-FORWARD over the choice Q0 vs Q3
+==============================================================================================================================
+   12 refits: ['Q3', 'Q3', 'Q3', 'Q3', 'Q3', 'Q3', 'Q3', 'Q0', 'Q0', 'Q0', 'Q0', 'Q3']   churn 18 %   Q3 chosen 8/12
+
+                          wk+%   weekly$    wk$@DD    top5DD
+walk-forward             55.5%     1,117       776    10,021
+Q3 fixed                 56.2%     1,243     1,103    11,244
+Q0 fixed                 54.8%     1,459     1,081     9,551
+
+==============================================================================================================================
+=== THE TWO GATES, BOTH REPORTED, NEITHER RELAXED
+==============================================================================================================================
+   CAMPAIGN STANDARD (all three in a majority)        : wk+% 88 % | money 4 % | dd5 84 %  -> FAIL
+   OWNER ORDERING (consistency & drawdown majorities,
+                   money not worse than -15 %)        : wk+% 88 % | dd5 84 % | money 88.4 % of Q0  -> PASS
+   NULL (is the gain about WHICH trades?)             : FAIL - generic
+   WALK-FORWARD churn                                 : 18 %
+
+   -> Q3 passes the owner-ordering gate. The trade is EXPLICIT: better on what he ranks first and second, -11.6 % on money. THE DECISION IS HIS.
+
+=== STATUS: NOTHING ADOPTED BY ME. [34s] ===
+done [34s]
