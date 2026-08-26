@@ -1,0 +1,103 @@
+=== B1 GATE: 14.74 pts/session over 1012 sessions (expect 14.72) -> PASS [23s]
+
+====================================================================================================
+=== PHASE A1: P(session class | prior session sign) vs the base rate
+====================================================================================================
+If the prior session's sign does not shift the probability of TREND-UP - the only class
+we are paid on - then the D2 result is a P&L artifact and the arm dies here.
+
+prior session       sessions     TREND-UP   TREND-DOWN     REVERSAL        RANGE        MIXED
+ALL (base rate)         1012        20.9%        13.9%        26.0%        27.1%        12.1%
+prev DOWN                466        23.6%        13.5%        23.8%        26.4%        12.7%
+prev UP                  545        18.7%        14.1%        27.9%        27.7%        11.6%
+
+   TREND-UP share after a DOWN session minus after an UP session: +4.9 pp   permutation p = 0.0635  (NOT SIGNIFICANT - the arm is a P&L artifact)
+   TREND-DOWN share, same comparison: -0.8 pp   permutation p = 0.7810
+
+====================================================================================================
+=== PHASE A2: the incumbent's P&L by TIME OF DAY x class (never measured)
+====================================================================================================
+entry window (ET)        TREND-UP   TREND-DOWN     REVERSAL        RANGE        MIXED     total
+18:00-20:00                  3.37        -0.08        -0.48        -0.03        -0.35      2.43
+20:00-00:00                  1.72        -0.62        -0.40         0.33         0.59      1.63
+00:00-04:00                  1.10        -0.19         0.36        -0.17         0.94      2.04
+04:00-08:00                  2.15        -0.27        -0.27        -0.52        -0.02      1.07
+08:00-09:30                  2.45        -0.13         0.03         0.23        -0.26      2.31
+09:30-10:30                  3.46        -1.10         0.02        -0.76        -0.22      1.39
+10:30-12:00                  0.41        -0.26         0.24        -0.31        -0.13     -0.06
+12:00-14:00                  3.68        -0.28        -0.22        -0.08        -0.12      2.97
+14:00-17:00                  0.24        -0.12         0.75        -0.00         0.08      0.94
+TOTAL                       18.58        -3.05         0.02        -1.32         0.51     14.74
+
+====================================================================================================
+=== PHASE B: ENTRY-ONLY gates (event count preserved; no forced exit)
+====================================================================================================
+arm                                 trds    pts     wk$  wk+%  day+%  trdD+%    worst    maxDD    MAR annShrp    eff  cvEff  expo%  stress
+P1 INCUMBENT                        1950  14.86   1,475  58.3   27.6    46.0   -7,418   20,245  14.86    2.26  0.199  0.273  100.0   1,379
+E1 entry-only price>=open           1610  13.81   1,370  57.8   25.3    46.7  -12,525   21,633  12.92    2.17  0.109  0.227   95.1   1,291
+E2 entry-only price>=VWAP           1787  14.91   1,479  56.9   26.8    45.4   -7,623   20,919  14.42    2.30  0.194  0.258   99.8   1,391
+E3 entry-only >=50-sess mean        1384  10.49   1,040  45.1   20.2    47.2  -14,207   17,058  12.44    2.04  0.073  0.225   70.8     973
+E4 entry-only upper half range      1779  15.38   1,526  55.9   26.9    45.9   -7,623   16,604  18.75    2.38  0.200  0.286  100.3   1,439
+
+====================================================================================================
+=== PHASE C: the prior-session bit, with the SIGN learned causally
+====================================================================================================
+C1 uses the sign W33/W34 picked on a full-sample scan and is reference only.
+C2 learns the sign from the trailing 250 sessions of the INCUMBENT's realised P&L,
+   which is information the object already had; no gate at all before 250 sessions.
+C3 additionally moves the split point to the trailing-250 median of prev_ret.
+
+arm                                 trds    pts     wk$  wk+%  day+%  trdD+%    worst    maxDD    MAR annShrp    eff  cvEff  expo%  stress
+P1 INCUMBENT                        1950  14.86   1,475  58.3   27.6    46.0   -7,418   20,245  14.86    2.26  0.199  0.273  100.0   1,379
+C1 prev down (contaminated)         1084  13.54   1,344  50.5   16.8    51.1   -4,975   10,850  25.26    2.27  0.270  0.330   64.8   1,290
+C2 causal sign learner              1292  13.44   1,333  51.5   19.2    49.2   -4,975   20,245  13.43    2.22  0.268  0.333   71.2   1,270
+C3 causal sign + threshold          1349  13.79   1,368  52.9   20.2    49.3   -4,975   20,245  13.79    2.23  0.275  0.337   74.3   1,302
+
+   causal learner agreed with the fixed sign on 87.2 % of sessions; it chose 'favour prev-down' on 100.0 % of the sessions it gated.
+
+=== PER YEAR (pts/session) ===
+arm                                       2022        2023        2024        2025        2026
+P1 INCUMBENT                             11.59        3.04       19.59       23.17       15.79
+C1 prev down (contaminated)               8.76        6.29       12.43       22.85       17.04
+C2 causal sign learner                   11.59        4.45       12.43       22.85       17.04
+C3 causal sign + threshold               11.59        4.45       13.75       21.70       20.04
+
+====================================================================================================
+=== PHASE D: NULLS
+====================================================================================================
+   analytic vs full pipeline on C1: pts 13.07 vs 13.54 (3.5 % error), maxDD 10,589 vs 10,850, MAR 24.98 vs 25.26
+   -> analytic nulls are ACCEPTED (bar: < 5 % error)
+
+C1 prev down (contaminated)   blocks 546 of 1012 sessions, 34.5 % of contract-minutes
+metric             arm   N1 mean   N1 pct   N2 mean   N2 pct     verdict
+pts             13.540     6.763   100.0%     9.761    99.4%        PASS
+wk            1344.000   671.060   100.0%   968.454    99.4%        PASS
+maxdd        10850.000 18312.805    96.1% 19014.320    99.0%        PASS
+mar             25.260     8.377    99.9%    11.083    99.7%        PASS
+eff              0.270     0.126    99.5%     0.158    99.5%        PASS
+cveff            0.330     0.180    99.2%     0.223    98.5%        PASS
+annshrp          2.270     1.464    99.3%     1.789    98.0%        PASS
+worst        -4975.000 -5471.408    80.6% -6239.103    97.6%        PASS
+
+C2 causal sign learner   blocks 416 of 1012 sessions, 28.6 % of contract-minutes
+metric             arm   N1 mean   N1 pct   N2 mean   N2 pct     verdict
+pts             13.440     8.768    99.8%    10.590    97.5%        PASS
+wk            1333.000   869.902    99.8%  1050.705    97.5%        PASS
+maxdd        20245.000 18890.335    25.2% 19673.334    40.2%        fail
+mar             13.430    10.023    83.0%    11.550    75.5%        fail
+eff              0.268     0.134    99.9%     0.166    99.0%        PASS
+cveff            0.333     0.205    99.2%     0.234    98.5%        PASS
+annshrp          2.220     1.686    98.8%     1.864    95.9%        PASS
+worst        -4975.000 -6502.579    96.5% -6434.902    98.8%        PASS
+
+C3 causal sign + threshold   blocks 390 of 1012 sessions, 25.9 % of contract-minutes
+metric             arm   N1 mean   N1 pct   N2 mean   N2 pct     verdict
+pts             13.790     9.074    99.9%    10.915    98.1%        PASS
+wk            1368.000   900.277    99.9%  1082.890    98.1%        PASS
+maxdd        20245.000 19219.285    28.0% 19769.607    41.1%        fail
+mar             13.790    10.220    84.5%    11.754    75.9%        fail
+eff              0.275     0.139    99.8%     0.167    99.9%        PASS
+cveff            0.337     0.208    99.7%     0.235    99.3%        PASS
+annshrp          2.230     1.715    98.6%     1.892    94.8%        fail
+worst        -4975.000 -6520.856    97.0% -6570.891    99.3%        PASS
+

@@ -1,0 +1,95 @@
+amendment: 2
+run_id: WE_W51_DONTTRADE
+date: 2026-08-26
+status: APPEND-ONLY. amendment_1's phases A-D are RUN (out/w51b.txt, out/mechanism.csv,
+  out/tod.csv, out/entryonly.csv, out/causal.csv, out/nulls.csv). Nothing adopted.
+  This amendment preregisters the follow-up BEFORE its results exist.
+
+RESULT 1 - THE PRIOR-SESSION BIT IS FALSIFIED ON ITS OWN PREREGISTERED TERMS (FACT):
+  phase A1 (the mechanism test, which was required to run FIRST):
+    P(TREND-UP | prev session down) 23.6 % vs P(TREND-UP | prev session up) 18.7 %,
+    a +4.9 pp lift on a 20.9 % base rate - permutation p = 0.0635, which does NOT clear the
+    preregistered 0.05 bar. P(TREND-DOWN) does not move at all (-0.8 pp, p = 0.781).
+  phase C (the causal sign re-derivation), against C1's contaminated version:
+    max drawdown  C1 $10,850  ->  C2 $20,245  ->  C3 $20,245  =  the incumbent's, exactly
+    MAR           C1 25.26    ->  C2 13.43    ->  C3 13.79    =  BELOW the incumbent's 14.86
+    The learner agreed with W33/W34's fixed sign on 87.2 % of sessions and still lost the
+    entire drawdown advantage, because the drawdown C1 dodged happens inside the 250-session
+    warm-up where a causal learner has no opinion.
+  phase D nulls: C2 and C3 FAIL both nulls on max drawdown (25th/40th percentile) and on MAR
+    (75th-83rd). They PASS on worst week, eff, CVaR-efficiency and pts.
+  RECORDED CONCLUSION: the prior session's sign lowers the SINGLE WORST WEEK but does not lower
+  the DRAWDOWN, because the drawdown is an accumulation across weeks (W50 already measured that
+  the worst decile is accumulation, not one bad session). Cutting the worst week is not cutting
+  the drawdown. prev_ret stays a SIZING feature; it is not promoted to a gate. Not adopted.
+
+RESULT 2 - A NEW MEASUREMENT, NEVER MADE IN THIS CAMPAIGN (FACT, out/tod.csv):
+  the object's 14.74 pts/session by ENTRY WINDOW (ET):
+    18:00-20:00 +2.43 | 20:00-00:00 +1.63 | 00:00-04:00 +2.04 | 04:00-08:00 +1.07
+    08:00-09:30 +2.31 | 09:30-10:30 +1.39 | 10:30-12:00 -0.06 | 12:00-14:00 +2.97
+    14:00-17:00 +0.94
+  HALF THE MONEY (7.17 of 14.74, 49 %) IS EARNED OVERNIGHT, 18:00-08:00 ET. The best single
+  window is 12:00-14:00 (+2.97). The only dead window is 10:30-12:00 (-0.06). 09:30-10:30 has
+  the largest TREND-UP contribution (+3.46) AND the largest bad-day bill (-1.10 TREND-DOWN,
+  -0.76 RANGE) - it is the highest-variance hour of the day for this object.
+
+RESULT 3 - THE LIVE CANDIDATE (out/entryonly.csv):
+  Re-running the price-location gates as PURE ENTRY BLOCKERS (the gate may not close a position
+  it did not prevent) reverses the phase-2 verdict completely, and one arm improves the owner's
+  objective directly:
+    E4  do not START a long while price is in the LOWER HALF of the session's realised range
+        so far (causal: range through bar i-1, close at bar i-1)
+      pts 15.38 vs 14.86 (+3.5 %) | weekly $1,526 vs $1,475 | max drawdown $16,604 vs $20,245
+      (-18.0 %) | MAR 18.75 vs 14.86 (+26 %) | annualised Sharpe 2.38 vs 2.26 |
+      CVaR-efficiency 0.286 vs 0.273 | eff 0.200 vs 0.199 | worst week -$7,623 vs -$7,418 |
+      trades 1,779 vs 1,950 | EXPOSURE 100.3 % OF THE INCUMBENT'S
+    It makes MORE money on the SAME exposure with LESS drawdown, so it is not a leverage or
+    exposure effect and cannot be explained by the count-matched-random-sizing mechanism that
+    killed four earlier candidates.
+  The same four gates as EXIT-forcing rules (W51 phase 2) all lost. E1 (price >= session open)
+  is the sharpest case: as an entry-only rule its WORST WEEK gets much worse (-$12,525 vs
+  -$7,418) - INFERENCE to be tested below: the session box halts at -$1,300 REALISED, so
+  blocking the small early losers stops the box from ever firing and lets a later large loss
+  through. If true, that is a real interaction between the entry layer and the risk layer and
+  it has never been documented.
+
+phase E - E4 ATTRIBUTION AND MECHANISM (before any adoption):
+  E1 per-class delta (W50 classes, diagnostic) - does E4 improve TREND-DOWN and RANGE, or is it
+     just improving TREND-UP timing? Either is a valid mechanism but they are different claims.
+  E2 what does E4 actually block - distribution of blocked entries by time of day, by session
+     class, and by the incumbent's realised P&L on the blocked entries.
+  E3 is E4 redundant with the quality score? pos_sess_range is NOT one of the five features,
+     but it correlates with dist_open. Report the correlation and E4's effect with the sizing
+     layer OFF, so the gain is attributed to the gate and not to an interaction.
+  E4 the session-box interaction hypothesis: for E1 and for E4, count how often the box fires
+     with and without the gate, and the P&L of sessions where the box fired in one and not the
+     other.
+
+phase F - ROBUSTNESS, not selection:
+  F1 the threshold 0.5 is the structural midpoint and is NOT tuned. Report 0.4 and 0.6 as a
+     STABILITY CHECK ONLY - if 0.5 is a spike and the neighbours are bad, the arm is rejected
+     as a fit. Adoption remains at 0.5 regardless of which neighbour scores best.
+  F2 per year, all five years, full window.
+  F3 drawdown as a DISTRIBUTION, not one number: the 5 deepest drawdowns, mean drawdown,
+     % of weeks under water, and the Ulcer index. Max drawdown is a single-observation
+     statistic exactly like eff and must not be quoted alone.
+  F4 E4 combined with E2 (price >= VWAP), reported but not adopted separately.
+
+phase G - NULLS for E4, both required, full pipeline (no analytic shortcut - E4 is a per-bar
+  gate and the session-removal approximation does not apply):
+  N1 WITHIN-SESSION circular shift of the gate mask by a random offset - preserves the gate's
+     duty cycle and intra-session autocorrelation, destroys its alignment with price.
+  N2 WRONG-DAY mask: the gate mask taken from a randomly chosen OTHER session - a real feature
+     with real structure, applied to the wrong day. Realised trade count and contract-minutes
+     of every draw are reported so the match is auditable rather than asserted.
+  150 draws each.
+
+adoption bar for E4: MAR and the drawdown DISTRIBUTION (F3) improve, CVaR-efficiency and
+  annualised Sharpe do not degrade, exposure within +-5 % of the incumbent, stress-net > 0,
+  not negative in any year, N2 >= 95th percentile on pts AND on MAR, and phase E must produce
+  a mechanism sentence that is not "it traded less".
+falsifier: if E4 fails N2 on MAR, or F1 shows 0.5 is a spike, or phase E shows the gain is a
+  sizing interaction rather than the gate, E4 is rejected and recorded in PARKED_NOT_DEAD.
+forbidden: [data >= 2026-08-01, W50 classes inside any arm, tuning the 0.5 midpoint, adopting
+  on max drawdown alone, quoting E4 before its nulls]
+outputs: [out/w51c.txt, out/e4_attrib.csv, out/e4_robust.csv, out/e4_nulls.csv]
