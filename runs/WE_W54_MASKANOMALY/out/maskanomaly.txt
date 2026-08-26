@@ -1,0 +1,81 @@
+=== B1 GATE: 14.86 pts/session over 1012 sessions (expect 14.72) -> PASS [24s]
+   incumbent at a flat 1 lot: 10.75 pts/session, 2064 trades, MAR 10.98
+
+   2,794 long stretches in the window; 1,942 of them produced an incumbent trade (the rest are suppressed by the session box).
+
+========================================================================================================
+=== PHASE 1: the incumbent's P&L by holding duration (exact, no backtest)
+========================================================================================================
+decile             minutes  trades    mean $     total $  pts/session   win %  mean size
+2                      1-3     348       -81     -28,146        -1.39    36.8       1.05
+3                      3-7     222      -315     -69,833        -3.45    18.5       1.14
+4                     7-12     207      -349     -72,253        -3.57    14.5       1.14
+5                    12-22     184      -406     -74,729        -3.69    17.9       1.20
+6                    22-37     199      -297     -59,018        -2.92    20.1       1.20
+7                    37-60     191       202      38,536         1.90    42.4       1.24
+8                   60-104     202        67      13,615         0.67    48.5       1.24
+9                  104-248     193       603     116,315         5.75    64.8       1.30
+10                248-1359     196     2,226     436,330        21.56    81.1       1.28
+
+   deciles with NEGATIVE contribution: #2 (1-3 min, -1.39), #3 (3-7 min, -3.45), #4 (7-12 min, -3.57), #5 (12-22 min, -3.69), #6 (22-37 min, -2.92)
+   median hold 22 min | mean 86 | share under 30 min 55.4 % | under 60 min 69.6 %
+
+========================================================================================================
+=== PHASE 1b: what the masks DELETE, and PHASE 3: the price they pay
+========================================================================================================
+   trades deleted per draw : 537 of 1942 (27.7 %)
+   their mean duration     : 25 min   vs kept 109 min   -> H1 deletion bias CONFIRMED
+   their total P&L per draw: $-89,153  = -4.40 pts/session REMOVED (a GAIN when removed)
+
+   matched-flip entry price improvement (positive = the mask bought LOWER):
+      all matched stretches : -2.443 points
+      on eventual WINNERS   : -5.892 points
+      on eventual LOSERS    : +0.011 points
+
+========================================================================================================
+=== PHASE 2 (H2): the same 50 masks, sizing layer OFF (flat 1 lot)
+========================================================================================================
+   10/50 draws [53s]
+   20/50 draws [80s]
+   30/50 draws [108s]
+   40/50 draws [135s]
+   50/50 draws [163s]
+
+                                pts      MAR     maxDD    top5DD   trades   expo%   size2%
+incumbent  SIZED              14.86    14.86    20,245    14,266     1942   100.0     18.4
+N1 masks   SIZED (mean)       15.45    17.66    18,693    12,656     1507    91.9     18.8
+incumbent  FLAT 1 lot         10.75    10.98    19,833    12,590     2064    84.1      0.0
+N1 masks   FLAT (mean)        11.55    15.23    16,575    10,519     1594    76.2      0.0
+
+   delta with sizing ON : +0.59 pts/session
+   delta with sizing OFF: +0.79 pts/session
+   -> H2 verdict: the advantage survives without sizing - H2 is eliminated as the sole explanation
+
+========================================================================================================
+=== PHASE 4: does the ledger close? (flat 1 lot, where the parts are clean)
+========================================================================================================
+component                                      pts/session
+measured delta (flat lot)                            0.792
+  + deleted stretches (event effect)                 4.490
+  + entry price on matched stretches                -3.657
+  = ledger                                           0.833
+  residual (exit paths, box re-timing)              -0.040
+
+   ledger closes to 95 % -> ACCEPTED, the mechanism sentence below is licensed
+   dominant component: deleted stretches (H1 event effect) (+4.490 of +0.792)
+
+========================================================================================================
+=== PHASE 5: is hold duration forecastable at entry? (number, not an arm)
+========================================================================================================
+causal feature at entry   Spearman vs duration    vs trade P&L
+dist_open                                0.226          -0.008
+dist_vwap                                0.160          -0.018
+prev_ret                                -0.055          -0.037
+runlen                                   0.404          -0.101
+delta_mag                                0.367          -0.080
+ratio                                    0.134          -0.037
+atr_l                                   -0.068          -0.089
+
+   (a |Spearman| below about 0.10 on 1942 entries is not tradeable information)
+
+=== STATUS: diagnostic wave, nothing adopted. ===
