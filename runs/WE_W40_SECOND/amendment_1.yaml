@@ -1,0 +1,66 @@
+amendment: 1
+run_id: WE_W40_SECOND
+date: 2026-08-25
+status: appended AFTER read 1; read 1 stands unchanged in out/second.txt
+
+what read 1 established (3 of 4 axes FAIL, 1 is the campaign's first tail-decoupled sleeve):
+  A FADE EVENT - FALSIFIED, decisively: -11.39 and -12.38 pts/session, Sharpe -0.22/-0.25,
+    in the market on 88-90 % of the long object's bars. The reopening was legitimate (W11/W18
+    falsified fade as a STATE rule, before W31 established that this instrument pays events)
+    and the answer is still no. Value reversion on NQ 1-min loses as an EVENT too.
+  C SWEEP-AND-RECLAIM - FALSIFIED: -3.08 pts/session, Sharpe -0.082. The stop-run story does
+    not pay at this cadence with these frictions.
+  D COMPLEMENT-SET RIDGE - FALSIFIED on frictions: +2.14 pts/session gross of the stress line
+    but stress-net -$55/week, Sharpe 0.048, eff 0.015. Structural orthogonality was achieved
+    (2.7 % overlap by construction) and there was nothing there to extract. This is a
+    substantive negative: the 83 % of bars where Solar is flat are poor for a linear model on
+    42 causal features, not merely unexploited by Solar.
+  B VOLATILITY-EXPANSION EVENT - the one positive, and independent in exactly the way the
+    campaign needs:
+      standalone  5.90 pts/session | $28.7/trade | $596/wk | 56.0 % weeks + | worst -$9,142
+                  Sharpe 0.138 | eff 0.065 | stress-net +$390 (positive at $14.36/RT)
+      corr with the long object 0.07
+      CONDITIONAL corr inside the long object's WORST-DECILE weeks  -0.18   <- negative
+      overlap with the long object's in-position bars 10.2 %
+    No sleeve in this campaign has previously combined positive stress-net expectancy with a
+    NEGATIVE drawdown-conditional correlation. W25/W27's orthogonal engines all lost money.
+
+why this amendment exists (a defect in read 1's portfolio test): >
+  Read 1 paired each axis with the long object at ONE CONTRACT EACH, which gave axis B 34 % of
+  total exposure. A sleeve whose standalone efficiency is 0.065 against the long object's
+  0.229 cannot survive a 34 % allocation no matter how well it diversifies - and indeed it did
+  not (eff 0.168 vs 0.229 for long-alone-scaled). That result answers "should B get a third of
+  the book", which nobody asked. The diversification question is whether ANY positive weight
+  improves the tail, and read 1 never scanned weight. This is the same class of error as the
+  exposure-naive gate corrected in W39 amendment 1: an arbitrary allocation masquerading as a
+  verdict.
+
+added arms:
+  W  WEIGHT SCAN - allocate w of total contract-minutes to B and (1-w) to the long object, at
+     CONSTANT total exposure, for w in {0, 0.05, 0.10, 0.15, 0.20, 0.30, 0.50}. Also report the
+     tradeable integer ratios 6:1, 4:1, 3:1, 2:1 (long:B). Adoption needs some w > 0 to improve
+     eff OR CVaR efficiency over w = 0.
+  R  ROBUSTNESS OF B - the parameter surface (expansion trigger 1.4/1.6/1.8/2.0, exit 0.9/1.0/
+     1.1, displacement look-back 10/15/30). Reported to show whether B is knife-edge, NOT to
+     select a winner; the headline stays the preregistered 1.6/1.0/15.
+  WF WALK-FORWARD OF B - quarterly re-pick of B's three parameters on the trailing 12 months,
+     traded the next quarter, with churn reported. If churn is high, B is fixed at its
+     preregistered parameters and the walk-forward number is the honest one.
+  N  NULLS ON B - circular shift of B's entry mask (alignment) and, for the weight decision,
+     a count-matched random-entry control that fires the same number of trades at random times
+     inside the same sessions.
+
+adoption for B as the campaign's SECOND MODEL (all required):
+  standalone stress-net > 0 (already true)
+  AND corr < 0.5 and drawdown-conditional corr < 0.5 (already true: 0.07 and -0.18)
+  AND some weight w > 0 improves eff or CVaR efficiency at constant total exposure
+  AND B's entry mask clears its circular-shift null at >= 95th percentile
+  AND B's walk-forward retains >= 80 % of its fixed-parameter Sharpe, or B is quoted at fixed
+      preregistered parameters with the churn disclosed.
+falsifier: if no weight improves the tail, the recorded statement is that B is a real but
+  UNPROFITABLE-TO-OWN diversifier - positive expectancy and negative drawdown correlation are
+  necessary but not sufficient; the sleeve's own efficiency floor decides. That would make the
+  next escalation a different instrument or data representation (W41), not more NQ 1-min rules.
+forbidden: [selecting B's parameters on the full window and quoting that as the headline,
+  claiming diversification without the constant-total-exposure constraint, adopting on the
+  alignment null alone]
