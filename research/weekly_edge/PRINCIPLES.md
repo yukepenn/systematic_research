@@ -237,3 +237,35 @@ and low and exiting at bar i's open turned 6.03 pts/session into 18.08 and Sharp
 
 **6. The incumbent 23-bar cut is now null-tested** against randomised stop distances:
 100th percentile, p = 0.000.
+
+## W41 — W32 overturned, and the first adopted diversification (2026-08-25)
+
+**1. A defective harness produced a wrong verdict, and the disclosure was right to suspect it.**
+W32's re-implemented ratchet scored 3.84 (3-min) vs 4.85 (1-min) and closed the clock axis
+provisionally. The SHIPPED engine on aggregated bars scores 9.40 vs 10.62, and per-trade
+economics reverse: $170.8 (3-min) and $236.5 (range) against $103.9 (1-min). B1c - the clock
+harness at k=1 reproducing the incumbent vote BAR FOR BAR - is the check that made this
+testable.
+
+**2. A different clock is a different EVENT GENERATOR (`INFERENCE`, derived from W31).**
+Because the edge lives in the flip EVENT and not the trend state, changing the sampling changes
+WHICH events exist rather than smoothing the same ones. Measured consequence: weekly P&L
+correlation with the long object of 0.32-0.48 (the 1-min base object is 0.89) and 0.02-0.33
+inside its worst-decile weeks. All four clocks clear BOTH nulls at the 100th percentile and
+every one is positive and stress-positive in EVERY year.
+
+**3. SAMPLING diversification is not MODEL diversification.** Every clock is the same Solar
+ratchet. The basket lowers the tail; it does not reduce the risk that the ratchet itself decays.
+Nothing in W41 changes the model-concentration prior.
+
+**4. Adopted, and honest about how much.** `w = 0.03 each: long + 3-min + range` improves eff
+0.198 -> 0.209, CVaR-eff 0.272 -> 0.282, Sharpe 0.311 -> 0.318 and the worst week -$7,418 ->
+-$6,968, for 0.7 % less money, and beats matched long-alone on eff in 4 of 5 years. Its binding
+count-matched null is the 95.0th percentile, p = 0.050 - it clears the bar by nothing at all.
+
+**5. CONTINUOUS WEIGHTS ARE NOT ORDERS - a new standing check.** w = 0.03 is 0.04 contracts;
+the clock sleeve only rounds to one contract when the base sleeve runs at ~22-25x. Converted to
+integer ratios: >= 16 : 1 : 1 (about $25,000/week) improves both metrics; 4 : 1 : 1 to
+12 : 1 : 1 improves Sharpe and CVaR-efficiency but WORSENS eff and the single worst week (the
+clocks remove many moderately bad weeks and add a few very bad ones); below 4 : 1 : 1 there is
+no benefit. Every portfolio adoption from now on reports its smallest tradeable integer form.
