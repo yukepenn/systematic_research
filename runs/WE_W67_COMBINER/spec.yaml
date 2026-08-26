@@ -1,0 +1,73 @@
+run_id: WE_W67_COMBINER
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: owner instruction - every parameter can be changed and questioned. This wave applies
+  that to the combiner, and it applies it in the right order.
+
+the combiner, verbatim from run_we_w01.sm14_1m, six inherited magic numbers in a chain:
+    sum_next = sum(member positions in {-1, 0, +1})
+    T   = clamp( round_away( sum_next / NMEM * 10.0 ), -10, +10 )
+    mm  = 1.25 if the 50-session tilt agrees with sign(sum_next) else 1.0
+    Tp  = clamp( round_away( T * mm * 0.9026 ), -13, +13 )
+    M   = 0.7086 * Tp + 2.83 * bmom
+    entry if |M| >= 3.0 ; exit if M crosses back through 1.0
+  Six constants - 10.0, 1.25, 0.9026, 13, 0.7086, 2.83 - plus two hysteresis levels. Not one has
+  ever been examined by this campaign, and they were inherited from the vendor's Solar Wave.
+
+WHY THE ORDER MATTERS, and this is the whole design of the wave:
+  Scanning six magic numbers is a six-dimensional parameter search, and W59 measured that
+  selection here loses at every scale (2.0th percentile free, 18.7th constrained). But the chain
+  is DETERMINISTIC and its domain is TINY - sum_next takes at most 2*NMEM+1 values, tilt takes
+  3, bmom takes 3 - so the entire mapping can be ENUMERATED EXACTLY, with no backtest, and
+  reduced to the handful of quantities that actually decide anything.
+  That is the W48 rule: where the mechanism can be written down, count it before sweeping it.
+
+the algebra I expect to find, written down BEFORE running it so the wave can be wrong:
+  With NMEM = 13 and mm = 1: T = 10 gives Tp = round(9.026) = 9, so the +-13 clamp on Tp CANNOT
+  BE REACHED and is DEAD CODE. With mm = 1.25: 10 * 1.25 * 0.9026 = 11.28 -> 11, still under 13.
+  Entry needs |M| >= 3. Without B-MOM that needs 0.7086 * Tp >= 3, i.e. Tp >= 5, i.e.
+  T >= 5 (mm=1) or T >= 4 (mm=1.25), i.e. roughly 45 % of members net-long without tilt
+  agreement and roughly 35 % with it.
+  WITH B-MOM agreeing, 2.83 is already 94 % of the entry level, so Tp >= 1 suffices - i.e.
+  ABOUT 5 % OF MEMBERS. If that is right, the B-MOM constant is by far the largest lever in the
+  combiner and it is hidden inside a chain of decimals: B-MOM agreement converts a 45 %-consensus
+  requirement into a 5 % one.
+  All of this is arithmetic and phase 1 either confirms it or corrects it.
+
+phase 1 - EXACT ENUMERATION (no backtest, no fitting):
+  a) tabulate the full map (sum_next, tilt-agreement, bmom) -> (T, Tp, M, decision) for
+     NMEM in {13, 18}, and report which clamps are ever reachable.
+  b) express the entry and exit conditions as a THRESHOLD ON THE FRACTION OF MEMBERS NET-LONG,
+     one number per (tilt, bmom) state. Six constants collapse to a small table.
+  c) measure the EMPIRICAL frequency of each state on the real bars: how often does the tilt
+     agree, how often is B-MOM non-zero, and what share of actual entries came from each state.
+     A lever that never fires is not a lever.
+
+phase 2 - QUESTION ONLY WHAT PHASE 1 SHOWS MATTERS, and by aggregation not selection:
+  Whatever phase 1 identifies as the effective decision thresholds, question those - and per
+  W19's law and W59's boundary, question them by AGGREGATING over a small ladder of neighbouring
+  values whose members are near-exchangeable, never by picking one.
+  Any constant phase 1 proves inert is reported as inert and left alone; changing dead code is
+  not research.
+
+phase 3 - THE B-MOM WEIGHT, if phase 1 confirms it is the big lever:
+  B-MOM is a separate signal (14-day slot noise band + RTH VWAP) welded into the combiner by a
+  single constant. Report the object with the B-MOM term at weights {0, 1.4, 2.83, 4.2} - not to
+  select one, but to measure how much of the object's behaviour is Solar and how much is B-MOM
+  entering through a constant nobody has examined. If the answer is "most of the entries", then
+  this campaign has been studying a two-engine object while describing it as one.
+
+phase 4 - EVALUATION, unchanged: consistency-first per Charter Amendment 2, at a fixed $20,245
+  drawdown, with the per-year table and the rolling-window table BOTH reported and BOTH labelled
+  with their effective sample size (the 22 rolling 24-month windows overlap 23/24, so their
+  effective independent count is about 1, and the 5 years are the closer thing to independent).
+
+adoption bar: nothing is adopted. Any arm that beats the incumbent must clear the same bars as
+  W66's - a majority of quasi-independent sub-periods and a random-neighbour null - and this
+  wave's job is to produce the MAP, not a winner.
+falsifier: if phase 1 shows the six constants collapse to thresholds the object is insensitive
+  to, then the combiner is not a lever and the wave records that and stops.
+forbidden: [data >= 2026-08-01, scanning constants before enumerating what they do, selecting a
+  constant rather than aggregating over neighbours, changing a constant phase 1 proves inert,
+  quoting a rolling-window fraction without its effective sample size]
+outputs: [out/combiner.txt, out/map.csv, out/states.csv, out/arms.csv, REPORT.md]

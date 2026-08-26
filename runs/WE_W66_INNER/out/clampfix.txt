@@ -1,0 +1,50 @@
+   building member matrix (clamp) [22s]
+      done [68s]
+   building member matrix (noclamp) [68s]
+      done [114s]
+
+=====================================================================================================================================
+=== PHASE 5: the tick clamp REMOVED. All arms are pure aggregations with the incumbent nested.
+=====================================================================================================================================
+arm                                 mem   trds    pts  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   ulcer   worst$
+C0 incumbent, clamp ON               13   1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   6,183   -7,418   <- B1 reference
+C1 incumbent, clamp OFF              13   1899  14.91   26.7    45.8   56.4      8      464     1,656   15,075   6,535   -8,305
+C2 ladder 6-40, clamp OFF            18   1885  14.12   25.7    45.0   52.5      6      269     1,287   12,367   5,040   -7,038
+C3 ladder 4-40 step1, clamp OFF      37   2393  11.16   28.8    44.2   55.4      8      206       651    9,856   4,234   -6,687
+C2r ladder 6-40, clamp ON            18   1930  14.80   27.0    46.0   56.9      6      634     1,350   10,521   3,686   -7,038
+
+   B1 GATE: 14.86 pts/session (expect 14.72) -> PASS
+
+=== per year (pts/session) ===
+arm                                     2022      2023      2024      2025      2026
+C0 incumbent, clamp ON                 11.59      3.04     19.59     23.17     15.79
+C1 incumbent, clamp OFF                11.56      2.43     19.89     23.69     15.79
+C2 ladder 6-40, clamp OFF              13.24      1.98     22.11     16.74     18.81
+C3 ladder 4-40 step1, clamp OFF         5.74      3.37     15.53     16.50     13.02
+C2r ladder 6-40, clamp ON              13.71      5.19     21.85     17.06     16.83
+
+=====================================================================================================================================
+=== SUB-PERIOD STABILITY vs the incumbent (the bar is a MAJORITY)
+=====================================================================================================================================
+arm                                 windows   trdD+% wins   weekly$ wins   top5DD wins   ALL THREE   verdict
+C1 incumbent, clamp OFF                  22           50%            64%           36%          0%      fail
+C2 ladder 6-40, clamp OFF                22           36%            23%          100%         14%      fail
+C3 ladder 4-40 step1, clamp OFF          22           23%            36%           59%          0%      fail
+C2r ladder 6-40, clamp ON                22           77%            36%           86%         23%      fail
+
+=====================================================================================================================================
+=== NULL: does the SPECIFIC ladder beat a RANDOM ensemble of the same size?
+=====================================================================================================================================
+These arms perform no selection, so the right null is a random-member aggregate of equal
+size drawn from the same 4-40 pool (W59 amendment_1: an aggregate must not be dressed in
+a scan-matched null it cannot fail).
+
+metric                  real   null mean    null p95  percentile   verdict
+pts                    14.12       10.42       13.62       96.7%      PASS
+weekly              1,286.96      774.13    1,332.58       91.7%      fail
+trdpos                 44.98       44.28       46.65       68.3%      fail
+wkpos                  52.45       56.09       59.80       11.7%      fail
+dd_top5            12,366.93   11,705.50    8,598.74       31.7%      fail
+ulcer               5,039.66    5,186.45    3,914.50       48.3%      fail
+
+=== STATUS: nothing adopted. ===
