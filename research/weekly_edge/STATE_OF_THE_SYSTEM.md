@@ -3,30 +3,39 @@
 
 # STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7)
 
-> ## CURRENT TRUTH after W57 (2026-08-26) — supersedes everything below
+> ## CURRENT TRUTH after W57 + CHARTER AMENDMENT 2 (2026-08-26) — supersedes everything below
 >
-> **THE OBJECT IS STILL P1 / P2, LONG-ONLY. W51–W57 adopted nothing.** Numbers unchanged:
-> 14.86 pts/session, $1,475/week per ~1.27 time-weighted contracts, annualised Sharpe 2.26,
-> max drawdown −$20,245, MAR 14.86, worst week −$7,418, positive weeks 58.3 %.
+> **THE OBJECT IS STILL P1 / P2, LONG-ONLY. W51–W57 adopted nothing.** Against the owner's
+> ACTUAL objective (consistency, then drawdown — Sharpe is demoted to a diagnostic):
+> **positive days 27.6 %, positive TRADED days 46.0 %, positive weeks 58.3 %**, median day ≈ 0,
+> $1,475/week at a −$20,245 max drawdown, 14.86 pts/session per ~1.27 time-weighted contracts.
+> **The 27.6 % positive-day rate is the campaign's weakest number against what the owner wants
+> and no wave has ever attacked it.**
 >
-> **THE BINDING CONSTRAINT IS NOW IDENTIFIED AND IT IS NOT A MISSING FILTER.**
-> - W55: across **16 causal features available at the entry bar, not one predicts per-unit P&L
->   with |ρ| above 0.11**, and the object's own vote strength is +0.022. IC is exhausted.
-> - W56: one loosely-correlated *profitable* sleeve at w = 0.30 is worth **+43 % money at the
->   same $20,245 drawdown with a slightly better drawdown distribution**. Portfolio arithmetic
->   is the largest lever ever measured here.
-> - W57: **no engine in this repo qualifies as that sleeve on present evidence.** B-MOM is a
->   4-year in-sample result (2006–2021 t = 0.27 on 4,077 sessions; 2022–2026 t = 2.66 on 1,122)
->   and no measurable causal regime variable separates the eras — its own 60-cell scan is
->   indistinguishable from chance (12 hits vs 10.6 expected, p = 0.340).
+> **⚠️ TWO CLAIMS OF MINE ARE WITHDRAWN — see `OWNER_CHARTER_AMENDMENT_2.md`:**
+> - **"IC is exhausted" / "the object cannot be improved from inside itself" — WITHDRAWN.**
+>   What W55 supports: *sixteen features, each tested SINGLY, in five causal trailing-rank
+>   buckets, against PER-TRADE per-unit P&L, did not exceed |ρ| = 0.11.* Multivariate
+>   combinations, nonlinear learners, interactions, a session- or portfolio-level target,
+>   features outside that set, other setups and other objects are all UNTESTED and open.
+> - **W57's verdict — WITHDRAWN.** It gated on "does B-MOM work pre-2022?", and the owner's
+>   criterion is **recent effectiveness is MANDATORY; old-era weakness is not disqualifying**.
+>   W57's regime findings survive as attribution, not as a verdict.
 >
-> **W56's falsifier has fired: model concentration is the binding constraint on the owner's
-> objective, and the next move is to BUILD or BUY genuinely different information.** The
-> specification for what to build is now exact: an engine with a real edge whose *underwater
-> curve* is not P1's (B-MOM's was −0.171 against P1 — the right shape, on the wrong evidence).
+> **WHAT STANDS as measurement:**
+> - W56: a loosely-correlated *profitable* sleeve at w = 0.30 is worth **+43 % money at the same
+>   $20,245 drawdown** with a slightly better drawdown distribution and a higher positive-week
+>   rate. The number that makes it work is the **underwater-curve correlation** (B-MOM −0.171),
+>   not the weekly ρ. This is the largest lever **measured so far**.
+> - The only live objection to it is **statistical, not chronological**: 2022–2026 is B-MOM's own
+>   development sample.
+> - **W40 axis B is REOPENED**: its rejection cited "negative in 2024, flat in 2023", which the
+>   corrected criterion voids, and its recent record is **+$1,946/wk in 2025 and +$846/wk in
+>   2026** — a pass on the recency gate, not a fail.
 >
-> **CHARTER AMENDMENT 1 (2026-08-26) is binding**: the "positive in every year" adoption gate is
-> WITHDRAWN, replaced by sample adequacy + a causal regime variable + the walk-forward number.
+> **ADOPTION CHRONOLOGY GATE (the only one): effective over roughly the trailing two years,
+> reported with sessions/weeks/events and SE. Old-era weakness is not disqualifying. A regime
+> explanation is valuable attribution, NOT a gate.**
 >
 > **New infrastructure**: `runs/WE_W56_BREADTH/out/p1_daily.csv` — P1's daily P&L series now
 > exists on disk for the first time in 56 waves.

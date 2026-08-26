@@ -471,3 +471,29 @@ arithmetic — **decoupling is necessary and not sufficient, third confirmation.
 - **Compute the power before opening a forward window (W57).** The 40-session June–July 2026
   read has an expected net of $11k ± $23k. A number with no information content is worse than no
   number, because it gets quoted.
+
+### ⚠️ RETRACTIONS (2026-08-26, owner correction — see OWNER_CHARTER_AMENDMENT_2.md)
+
+Item 11's closing sentence and item 12's framing overreached and are corrected here:
+
+- **"IC is exhausted" is WITHDRAWN.** What W55 licenses: *sixteen features, each tested SINGLY,
+  in five causal trailing-rank buckets, against PER-TRADE per-unit P&L, on the P1 object, did
+  not exceed |ρ| = 0.11.* Untested and therefore open: multivariate combinations of the same
+  features, nonlinear learners, interaction terms, a session-level or portfolio-level target
+  instead of a per-trade one, features outside the set, other setups, other objects, and
+  parameter/portfolio management as its own axis.
+- **"model concentration is THE binding constraint" is WITHDRAWN** as a universal. It is the
+  binding constraint *among the combinations measured so far*.
+- **W57's closing verdict is WITHDRAWN.** It gated on pre-2022 performance; the owner's actual
+  criterion is that **recent effectiveness is MANDATORY and old-era weakness is not
+  disqualifying**. W57's regime measurements stand as attribution.
+- Standing instruction: *永远要尝试否认自己去提升*. No sentence in this file, including this one,
+  is exempt from being re-opened by a better measurement.
+
+### THE OBJECTIVE, CORRECTED (owner, 2026-08-26)
+
+Annualised Sharpe is **demoted to a diagnostic**. The objective is **consistency of profit plus
+small drawdown**: positive-day rate, positive-traded-day rate, positive-week rate, longest
+losing streak, median day and week, weekly dollars at a fixed max drawdown, and the drawdown
+distribution. P1 is **27.6 % positive days / 46.0 % positive traded days / 58.3 % positive
+weeks**, and the positive-day rate has never been attacked by any wave.
