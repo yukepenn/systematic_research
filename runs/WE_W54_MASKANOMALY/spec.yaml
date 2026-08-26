@@ -1,0 +1,101 @@
+run_id: WE_W54_MASKANOMALY
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+supersedes: the first draft of this spec, which proposed an ENTRY-TIMING family. That draft is
+  withdrawn BEFORE being run, for the reason recorded below. Nothing from it was executed.
+
+WHY THE FIRST DRAFT WAS WITHDRAWN (this is the important part of the record):
+  A repo search - run before writing any code, exactly to avoid re-inventing a wheel - found
+  that entry timing has already been built, run and adjudicated TWICE, in campaign #3:
+    R2 / R2V1  fixed k-bar delay (ConfirmBars = 1 and 2)  -> NOT PROMOTED
+               runs/R2_ENTRY_TIMING/R2V1_VERDICT.md
+    R2B        pullback -> reclaim adaptive entry, K = 6   -> NOT PROMOTED
+               runs/R2B_PULLBACK_RECLAIM/R2B_VERDICT.md
+  Both showed the SAME disqualifying chronology: 2022-2025 delta -$4,431 and -$4,551 (a wash,
+  slightly negative), with the entire positive headline coming from the 106-session 2026 stub,
+  confirmed by LOYO-2026. The record carries a standing bar:
+    "No further entry-timing family authorized without new information."
+    (research/system_master/RESEARCH_FRONTIER.md:23)
+  R2V1's own decomposition is decisive about the mechanism: the 2-bar delay is a NET COST on
+  92.9 % of entries (-$81,630) and the benefit comes entirely from 7.1 % where the delay caught
+  a reversal (+$106,847). R2B measured the pullback version directly: adverse excursion within
+  6 bars is MONOTONICALLY associated with a WORSE outcome (Spearman -0.32; no-pullback entries
+  +$1,002 at 61 % win, 1.0-ATR-pullback entries -$286 at 34 % win). And this campaign's own
+  W31 measured that holding long BECAUSE THE RATCHET JUST FLIPPED earns 0.0603 pts/bar against
+  0.0025 for the state - the edge is AT the flip, which argues against moving away from it -
+  while W42 measured that early adversity decides the trade by bar 5 and is FLAT in horizon,
+  i.e. WAITING ADDS NO INFORMATION. The scalping lab separately priced passive/limit entries
+  and they lost to market fills (adverse selection > spread saving).
+  Six independent measurements point the same way. Writing an entry-timing wave on top of that
+  would have been me pattern-matching a suggestive null against the weight of the evidence.
+
+WHAT IS ACTUALLY UNEXPLAINED, AND IS THIS WAVE'S SUBJECT:
+  W51d's N1 null (FACT, runs/WE_W51_DONTTRADE/out/e4_null_N1.csv). 150 entry-only masks - the
+  E4 mask rolled by a random offset within each session - produce, on average:
+      15.59 pts/session   MAR 17.80   mean-top-5 drawdown $12,702   1,514 trades   92 % exposure
+  against the incumbent's 14.86 / 14.86 / $14,266 / 1,950 / 100 %. A null that beats the object
+  it is a null for is not a null; it is an unexplained measurement, and it is the ONLY thing in
+  three waves that improved production and the drawdown distribution simultaneously.
+  Given the six measurements above, the explanation is probably NOT "delay buys a better price".
+  This wave finds out what it actually is, by exact accounting, before any arm is written.
+
+  Note the construction, because it constrains the answer: `entry_only` blocks the START of a
+  long stretch but never closes a position. So a rolled mask can only (i) DELAY the start of a
+  stretch, or (ii) DELETE a stretch entirely, when the mask is false for the whole of it. Since
+  long stretches almost surely contain a true bar, (ii) is biased towards SHORT stretches.
+
+the three candidate explanations, mutually exclusive in their signatures:
+  H1 DURATION SELECTION. Random masks preferentially delete SHORT holds, and the object's short
+     trades are net negative. If true, the finding has nothing to do with masks, alignment or
+     timing - it is "this object loses money on its short trades" - and the actionable question
+     becomes whether hold duration is FORECASTABLE at entry, which is a different wave.
+  H2 SIZING-POOL INTERACTION. Thinning entries changes the trailing-250-ENTRY quantile pool that
+     the causal quality score uses, and thereby changes which entries get size 2. W51c already
+     found E4's production gain vanishes at a flat 1 lot, so this mechanism is live.
+  H3 PRICE / DELAY. Matched flips get a better entry price under the mask. This is the branch
+     the six prior measurements argue against; it therefore needs the strongest evidence, and
+     if it wins it constitutes the "new information" the standing bar requires - in which case
+     the entry-timing family may be reopened, citing R2V1 and R2B explicitly and stating what
+     makes it not a rerun.
+
+phase 1 - THE DURATION LEDGER (exact, no backtest):
+  The incumbent's trades by holding-duration decile: count, mean and total P&L, share of
+  pts/session, win rate, mean size, and contribution to the 5 deepest drawdowns. Then the same
+  for the trades that N1 draws DELETE versus those they KEEP, so H1 is measured rather than
+  assumed. Also report the duration distribution itself, since a heavy short-duration mass is
+  what makes the deletion bias possible.
+
+phase 2 - H2, DECISIVE AND CHEAP:
+  Re-run 50 N1 draws with the sizing layer OFF (flat 1 lot). If the advantage disappears, H2 is
+  the explanation and the arm is a sizing artifact. If it survives, H2 is eliminated.
+  Also report the size-2 share of N1 draws against the incumbent's 18.4 %.
+
+phase 3 - H3, MATCHED-FLIP PRICE COMPARISON:
+  For 50 N1 draws, match each surviving stretch to the incumbent's stretch it came from and
+  compare ENTRY PRICES on the matched pairs only. Report the mean and median price improvement
+  in points and in ATR, split by whether the trade eventually won. Deleted stretches are
+  excluded from this comparison by construction - that is the point of matching.
+
+phase 4 - THE DECOMPOSITION THAT DECIDES:
+  Rebuild the N1 average from its parts and check it closes:
+     delta(N1) = delta(deleted stretches) + delta(price on matched stretches)
+                 + delta(sizing on matched stretches)
+  The part that dominates is the explanation. If the ledger does not close to within 15 % of
+  the measured delta, the decomposition is reported as approximate and NO conclusion about the
+  mechanism is drawn - the same standard W50's leakage ledger failed at 126 %.
+
+phase 5 - only if H1 dominates, and diagnostic only:
+  Is hold duration forecastable at entry from causal information? Report the rank correlation
+  between each of the object's existing causal features and the realised duration, on the
+  incumbent's entries. This produces a number, not an arm; any arm needs its own wave and its
+  own nulls, and an event-count reduction has failed four times.
+
+adoption: NOTHING IS ADOPTABLE IN THIS WAVE. It is a diagnostic. The output is a mechanism
+  sentence plus a ranked, preregistered agenda for the wave that follows.
+falsifier: if the phase-4 ledger does not close, the recorded conclusion is that the N1 anomaly
+  is not decomposable with this construction and the mask family is parked with that as its
+  revival condition.
+forbidden: [data >= 2026-08-01, adopting anything, writing an entry-timing arm before H3 wins,
+  quoting the N1 mean as an achievable result, using end-of-session information in any feature]
+outputs: [out/maskanomaly.txt, out/duration.csv, out/h2_nosizing.csv, out/h3_matched.csv,
+  out/decomp.csv, REPORT.md]
