@@ -1,0 +1,75 @@
+run_id: WE_W62_INSURANCE
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: test the hypothesis W61 ended on, because it would OVERTURN W61's own recommendation.
+
+W61's recommendation and why it may be wrong:
+  W61 measured that the short sleeve is durable (22 of 22 rolling 24-month windows positive,
+  median t +2.13) and is in the worst stretch of its own history (latest t +1.44, 0th
+  percentile; 2026 at -10.62 pts/session against +13.92 in 2024). It therefore recommended
+  waiting for a REVIVAL CONDITION - the trailing-24-month t returning to its own median.
+  That recommendation assumes the sleeve is a DECAYING EDGE. But W61 also noted, as an untested
+  hypothesis, that a long engine and its mirror decaying in OPPOSITE phases is what a
+  directional regime looks like, and that 2026 has been a strong up-market.
+  IF THE SHORT SLEEVE IS INSURANCE, WAITING IS EXACTLY WRONG. You do not buy insurance after
+  the fire. The whole value of a negatively-regime-loaded sleeve is that you hold it through the
+  premium-paying stretch because you cannot predict when the regime flips.
+  So the recommendation and its opposite follow from two different readings of the same data,
+  and this wave decides which reading the data supports.
+
+the distinction that decides it, stated precisely so it cannot be fudged:
+  CONTEMPORANEOUS relation - the short sleeve does badly IN up-regimes and well IN down-regimes,
+    measured on the same window. That is INSURANCE. It says nothing about prediction and it
+    argues for holding the sleeve permanently at a weight chosen ex ante.
+  PREDICTIVE relation - a CAUSAL, lagged regime variable forecasts the short sleeve's next
+    period. That is REGIME TIMING. It would argue for a conditional weight, and it carries all
+    the usual dangers: this campaign has failed at regime identification four times
+    (W03 gate, W37 thresholds, W40 regime band, W41 bar size were all full-sample artifacts).
+  DECAY - performance falls over time with no regime relation at all. That is a broken edge and
+    W61's wait-for-revival recommendation stands.
+  These three make different predictions and the wave reports which one the data fits.
+
+phase 1 - THE REGIME VARIABLES, all causal, all computable over the full window:
+  M1 trailing 24-month NQ return (the direct market-direction variable)
+  M2 trailing 6-month NQ return (a faster version, since 24-month windows are the unit of the
+     performance measurement and a same-length regime variable is nearly tautological)
+  M3 trailing realised volatility of NQ daily returns
+  M4 the fraction of sessions in the window that closed above their open (a direction measure
+     that does not depend on magnitude)
+  Reported with the CAVEAT that M1 and the 24-month performance window overlap by construction,
+  so M2 and M4 carry more information about whether the relation is real.
+
+phase 2 - CONTEMPORANEOUS: is it insurance?
+  For every rolling 24-month window, regress/correlate the short sleeve's t against each regime
+  variable measured OVER THE SAME WINDOW, and do the same for P1. The insurance signature is:
+  short sleeve loads NEGATIVELY on market direction, P1 loads POSITIVELY, and the two loadings
+  are of comparable magnitude.
+  Report the effective number of independent windows (windows / 24) beside every correlation,
+  because 22 overlapping windows are not 22 observations and a correlation on them is not what
+  it looks like. This is the caveat W58 already had to attach to the same kind of table.
+
+phase 3 - PREDICTIVE: could it be timed, and should it be?
+  The same regressions with the regime variable LAGGED by one full window, so it is knowable
+  before the period it would predict. If the predictive relation is materially weaker than the
+  contemporaneous one - which is what an insurance asset looks like - the conclusion is HOLD,
+  not TIME.
+  Any predictive claim must additionally beat a permutation null on the same overlapping-window
+  structure, because 22 overlapping windows will produce large-looking correlations by chance.
+
+phase 4 - THE DECISION, priced rather than argued:
+  Split the sample by the regime variable and report the COMBINATION versus P1 alone in each
+  regime, at a fixed $20,245 drawdown, consistency-first. The question that decides it:
+  DOES THE COMBINATION GAIN MORE IN DOWN-REGIMES THAN IT GIVES UP IN UP-REGIMES?
+  If yes, the sleeve is insurance that pays for itself and W61's wait-for-revival is withdrawn.
+  If it merely loses less, it is a hedge with a positive cost and the owner should be told the
+  premium in dollars per week rather than sold the idea.
+
+adoption: nothing is adopted. The output is which of the three readings the data supports, and
+  a corrected recommendation for the short sleeve - which may be the opposite of W61's.
+falsifier: if the short sleeve's performance shows no material relation to any regime variable,
+  contemporaneous or lagged, then it is decaying and W61's recommendation stands unchanged.
+forbidden: [data >= 2026-08-01, treating 22 overlapping windows as 22 independent observations,
+  a predictive claim without a permutation null on the overlapping structure, fitting a regime
+  threshold on the measurement window, recommending a conditional weight on a contemporaneous
+  relation]
+outputs: [out/insurance.txt, out/regimes.csv, out/loadings.csv, REPORT.md]
