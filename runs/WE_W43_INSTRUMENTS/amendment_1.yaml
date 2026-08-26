@@ -1,0 +1,37 @@
+amendment: 1
+run_id: WE_W43_INSTRUMENTS
+date: 2026-08-26
+status: read 1 is VOID on its own built-in identity check; its output is preserved as
+  out/instruments_VOID_read1.txt and none of its numbers may be quoted.
+
+the check that caught it: >
+  The re-derivation maps NQ's clamp of [10, 300] POINTS to [10/sigma_NQ, 300/sigma_NQ] x sigma
+  and back, so the NQ arm must reproduce the incumbent EXACTLY ($1,470/wk, eff 0.198). It
+  produced $1,529/wk and eff 0.160. The re-derivation arithmetic was right (the clamp printed
+  back as [10.00, 300.00] pts); the FILL LAYER was wrong.
+the defect: >
+  fills_pv took a single array that multiplied direction by size. The incumbent fill layer
+  takes DIRECTION from bar i-1 and reads SIZE at the entry bar i separately. With the two
+  conflated, any bar where the vote had just turned off drove the size to zero and suppressed
+  an entry the incumbent would have taken - a different object, not a different instrument.
+the fix: fills_pv now takes pos_arr and size_arr separately with the incumbent's exact
+  semantics, and the NQ identity is a HARD GATE that aborts the run rather than a number to
+  inspect afterwards.
+
+what read 1 nevertheless makes very likely, to be confirmed or refuted by read 2 (recorded now
+so the confirmation cannot be a post-hoc story):
+  * the re-derivation matters in the direction predicted. NQ's median sigma is 3.253 pts, so
+    the incumbent clamp is [3.07, 92.22] x sigma - it essentially NEVER binds on NQ, since the
+    VolMults are 6-16 x sigma. Transplanted to ES (sigma 0.721) and RTY (sigma 0.451) the same
+    TICK clamp becomes about [11, 333] x sigma, and the LOWER bound at ~11 sigma collapses
+    VolMult 6, 8 and 10 onto a single threshold. W11 was not running the same engine on the
+    other instruments; it was running a 3-member engine.
+  * ES/RTY/YM still do not clear frictions after re-derivation (read 1: ES stress +$137/wk,
+    RTY -$39, YM +$3 per week), so W11's headline conclusion looks likely to survive - for a
+    better reason.
+  * the correlations are the valuable part and are unaffected by the fill defect in DIRECTION:
+    NQ-RTY 0.09 and NQ-YM 0.08 overall, and 0.08 / 0.27 inside NQ's worst-decile weeks. Those
+    two instruments ARE genuinely uncorrelated with NQ; they simply do not earn.
+adoption and falsifier: unchanged from the spec.
+forbidden: [quoting any read-1 number, treating the NQ identity as a tolerance rather than a
+  hard gate]

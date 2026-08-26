@@ -119,7 +119,14 @@ def ctx(D):
                                           (np.abs(cd) / np.maximum(volnorm, 1e-9))[:-1]]))
 
 
-def fills_pv(D, size_arr, pv, halt, target, comm=COMM_RT):
+def fills_pv(D, pos_arr, pv, halt, target, size_arr=None, comm=COMM_RT):
+    """Identical semantics to fills_qexit: DIRECTION from bar i-1, SIZE read at the entry bar.
+
+    W43 amendment 1: read 1 conflated direction and size into one array, so a bar where the
+    vote had just turned off suppressed an entry the incumbent would have taken. That broke
+    the built-in identity check (NQ 're-derived' must reproduce the incumbent exactly) and
+    voided read 1.
+    """
     t, o, c = D["t"], D["o"], D["c"]
     fb, lb, n = D["fb"], D["lb"], D["n"]
     trades = []
@@ -127,7 +134,7 @@ def fills_pv(D, size_arr, pv, halt, target, comm=COMM_RT):
     for i in range(n):
         if fb[i]:
             spnl = 0.0; stopped = False
-        want = int(size_arr[i - 1]) if i > 0 and not fb[i] else 0
+        want = int(pos_arr[i - 1]) if i > 0 and not fb[i] else 0
         if stopped:
             want = 0
         if (want > 0) != (u > 0):
@@ -137,9 +144,14 @@ def fills_pv(D, size_arr, pv, halt, target, comm=COMM_RT):
                 spnl += pnl
                 if spnl <= -halt or (target is not None and spnl >= target):
                     stopped = True; want = 0
-            u = int(size_arr[i]) if want > 0 else 0
-            if u > 0:
-                epx, eti = o[i], i
+            if want > 0:
+                u = int(size_arr[i]) if size_arr is not None else 1
+                if u < 1:
+                    u = 0
+                else:
+                    epx, eti = o[i], i
+            else:
+                u = 0
         if lb[i] and u > 0:
             pnl = u * (c[i] - epx) * pv - comm * u
             trades.append(dict(d=1, u=u, et=str(t[eti]), xt=str(t[i]), pnl=pnl))
@@ -212,9 +224,10 @@ def main():
                 P_(f"   {tag}: only {len(ent)} trades, skipped")
                 continue
             sc, _ = causal_score(X, ent, window=WIN)
-            trl = fills_pv(D, np.where(sc >= 3, 2, 1).astype(np.int8) * pos, pv,
+            trl = fills_pv(D, pos, pv,
                            halt if tag == "re-derived" else 1300.0,
-                           tgt if tag == "re-derived" else 1000.0)
+                           tgt if tag == "re-derived" else 1000.0,
+                           size_arr=np.where(sc >= 3, 2, 1).astype(np.int8))
             d = weekly(trl, wk_of, A, B)
             ks = sorted(d)
             v = np.array([d[k] for k in ks])
@@ -232,6 +245,12 @@ def main():
                              wk=round(float(v.mean())), worst=round(float(v.min())),
                              cvar5=round(cv), sharpe=round(s_, 3), eff=round(eff, 3),
                              stress=round(st)))
+            if sym == "NQ":
+                okid = abs(float(v.mean()) - 1470.0) < 25 and abs(eff - 0.198) < 0.01
+                P_(f"   B1 IDENTITY (NQ re-derived must equal the incumbent "
+                   f"$1,470/wk, eff 0.198): {'PASS' if okid else 'FAIL - RUN VOID'}")
+                if not okid:
+                    out.close(); return
             if tag == "re-derived":
                 series[sym] = dict(zip(ks, v))
             # per year
