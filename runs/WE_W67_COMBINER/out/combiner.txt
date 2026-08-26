@@ -1,0 +1,46 @@
+======================================================================================================================
+=== PHASE 1a: the full combiner map, enumerated exactly. No backtest, no fitting.
+======================================================================================================================
+   NMEM=13: T reaches -10..10 (clamp is +-10 -> REACHED) | Tp reaches -11..11 (clamp is +-13 -> DEAD CODE)
+   NMEM=18: T reaches -10..10 (clamp is +-10 -> REACHED) | Tp reaches -11..11 (clamp is +-13 -> DEAD CODE)
+
+======================================================================================================================
+=== PHASE 1b: six constants collapse to a table of thresholds
+======================================================================================================================
+The entry condition, expressed as the FRACTION OF MEMBERS NET-LONG required, per state.
+
+NMEM   tilt agrees   B-MOM       min members net-long to ENTER   as a fraction                     to HOLD
+13     False         0                                 6 of 13           46.2%             2 of 13 (15.4%)
+13     False         1                                 1 of 13            7.7%              1 of 13 (7.7%)
+13     True          0                                 5 of 13           38.5%             2 of 13 (15.4%)
+13     True          1                                 1 of 13            7.7%              1 of 13 (7.7%)
+18     False         0                                 9 of 18           50.0%             3 of 18 (16.7%)
+18     False         1                                 1 of 18            5.6%              1 of 18 (5.6%)
+18     True          0                                 7 of 18           38.9%             3 of 18 (16.7%)
+18     True          1                                 1 of 18            5.6%              1 of 18 (5.6%)
+
+   Read that table as the whole combiner. Everything else in the chain is scaling
+   that cancels out of the decision.
+
+======================================================================================================================
+=== PHASE 1c: how often is each state actually live? (1,558,497 bars) [22s]
+======================================================================================================================
+   tilt AGREES with the member consensus on 37.5 % of bars
+   B-MOM is non-zero on 25.4 % of bars (+1 on 12.4 %, -1 on 13.0 %)
+
+state                                     bars    share   net-long members needed
+tilt agrees + B-MOM long                81,594     5.2%                   1 of 13
+tilt agrees, no B-MOM                  423,098    27.1%                   5 of 13
+no tilt agreement + B-MOM long         112,433     7.2%                   1 of 13
+no tilt agreement, no B-MOM            739,367    47.4%                   6 of 13
+B-MOM SHORT (any tilt)                 202,005    13.0%                   6 of 13
+
+   Of the 1,805 bars where the all13 target turns LONG:
+      tilt agreed                          63.2 %
+      B-MOM was long                       37.3 %
+      B-MOM was long AND tilt agreed       22.8 %
+      NEITHER (pure member consensus)      22.3 %
+
+   And the member consensus AT those entries: median 5 of 13 net-long (38%), 10th pct 1, 90th pct 9
+
+=== STATUS: phase 1 is measurement only. Phase 2 and 3 depend on what it found. ===
