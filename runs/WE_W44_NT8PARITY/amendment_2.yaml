@@ -1,0 +1,48 @@
+amendment: 2
+run_id: WE_W44_NT8PARITY
+date: 2026-08-26
+status: CORRECTION of amendment 1's own comparison. Amendment 1's numbers are superseded;
+  its files are kept. The REPORT is rewritten accordingly.
+
+the confound I introduced and then found: >
+  SolarWaveOneContractNQ_v5 hardcodes `SignalInstrument = "NQ 09-26"` and calls
+  `AddDataSeries(SignalInstrument, BarsPeriodType.Minute, 3)`. I ran the backtest with
+  NQ 06-26 as the PRIMARY (execution) series, so the C# was computing its entire decision
+  stack from a DEFERRED, thinly traded contract while executing on the front month. My price
+  check compared NT8's ENTRY prices - which come from the execution series - against the
+  parquet, found a constant -282.25 basis, and I concluded the data was identical. It was
+  identical for EXECUTION and not for the SIGNAL. The check was right and I drew too broad a
+  conclusion from it.
+  Re-running with SignalInstrument = "NQ 06-26" so signal and execution share one contract
+  also changes the C# materially: net profit -$24,269 -> +$8,326 over the same window.
+
+corrected measurement (warm window 2026-04-01 -> 2026-05-28, 56,485 one-minute bars):
+  NT8 reference                                agree 100 %   in market 39.7 %   137 flips
+  port on 1-min (incumbent)                    73.19 %       43.1 %   285 flips  dir 89.5 %
+  port on 3-min, session-anchored, sigma=460   94.42 %       36.3 %   140 flips  dir 99.9 %
+  port on 3-min, anchored at 09:31, sigma=460  93.50 %       38.2 %   137 flips  dir 99.9 %
+  port on 3-min, sigma=153 (wall-clock equiv)  83.6-84.0 %            125 flips  dir 98.2 %
+
+what changes from amendment 1:
+  WITHDRAWN: "exposure management is not faithful even on the right clock" (36 % vs 52 %).
+    That gap was the signal-instrument confound. Corrected figures are 36.3 % vs 39.7 %, and
+    the 09:31-anchored variant reproduces NT8's flip count EXACTLY (137 vs 137).
+  WITHDRAWN: the "PORT SUSPECT" verdict. At 94.42 % the preregistered band is PORT MOSTLY
+    RIGHT, with the residual localised to 3-minute bar-boundary alignment (the two anchorings
+    differ by only 0.9 points of agreement and bracket NT8's flip count).
+  CONFIRMED AND STRENGTHENED: on the product's own clock the ratchet is faithful - direction
+    agreement 99.9 % whenever both hold a position, and sigma counted in BARS (460) beats the
+    wall-clock equivalent (153) by more than 10 points of agreement, which settles a W01
+    port ambiguity in favour of what the code does.
+  CONFIRMED: the incumbent 1-minute object is a genuinely different system from the product -
+    285 flips against 137, i.e. 2.1x as active, and only 73.19 % decision agreement.
+  UNCHANGED: the quantifier correction. The object is a Solar-family ratchet transcribed from
+    the product and run on a 3x finer clock, NOT "the product ported to 1-minute bars". The
+    research results stand; none of them assumed replica fidelity.
+
+lesson recorded: >
+  A price check on the EXECUTION series does not validate the SIGNAL series. When a strategy
+  reads more than one data series, every series it reads must be checked separately, and any
+  hardcoded instrument name in the source is a parameter until proven otherwise.
+forbidden: [quoting amendment 1's exposure-gap numbers, treating a single-series price check
+  as covering a multi-series strategy]

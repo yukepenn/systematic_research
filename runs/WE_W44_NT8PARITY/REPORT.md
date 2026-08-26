@@ -1,5 +1,17 @@
 # WE_W44 — INDEPENDENT NT8 PARITY CHECK · REPORT
 
+> **SUPERSEDED IN PART BY AMENDMENT 2.** Sections 3, 5 and 6 below were written
+> before I found that the C# hardcodes `SignalInstrument = "NQ 09-26"`, so its
+> decision stack was reading a DEFERRED contract while executing on the front
+> month. With signal and execution on one contract the numbers are:
+> **94.42 % decision agreement, 99.9 % direction agreement, 140 flips against
+> NT8's 137** (and the 09:31-anchored variant reproduces 137 exactly).
+> The "PORT SUSPECT" verdict and the "exposure management is not faithful"
+> claim are **WITHDRAWN**. What stands: the port is faithful ON THE PRODUCT'S
+> CLOCK, and the incumbent 1-minute object is a different system (285 flips vs
+> 137, 73.19 % agreement). See `amendment_2.yaml`.
+
+
 Spec + amendment 1. NinjaTrader 8.1.8.1, Strategy Analyzer engine, isolated **Backtest**
 account. No order placed, no strategy enabled or deployed, no account or connection touched.
 
