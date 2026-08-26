@@ -1,0 +1,94 @@
+run_id: WE_W82_FILLAUDIT
+title: "What does a round turn ACTUALLY cost? The first quote-level audit of the campaign's fill
+        assumption."
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+why_this_is_now_the_highest_value_measurement_available: >
+  Every number this campaign has ever produced is "net of $4.36/RT commission", with fills
+  simulated as a market order at the NEXT 1-MINUTE BAR'S OPEN and NO spread cost whatsoever. The
+  C1 "stress line" adds $10/RT, described in run_we_w01.py:37 as "2 NQ ticks on top of
+  commission". That 2-tick figure is an ASSUMPTION and has never been checked against a quote.
+
+  A first look at the 1-second substrate says it is probably wrong in the expensive direction:
+  `spread_t` is in TICKS, and the per-session MEDIAN spread across the 47 usable sessions has a
+  median of 3.0 ticks, with individual sessions at 4-5 and a mean of 4.93 on the most recent one.
+  NQ is 1 tick wide in liquid RTH conditions, so those medians are being driven by the overnight
+  hours - and W79 measured that **P1 takes 59.0 % of its in-market bars and 59.7 % of its net
+  overnight**. The object lives exactly where the spread is widest.
+
+  If the true all-in cost is 3 ticks per round turn rather than 0, that is $15/RT against a
+  headline that assumes $0 and a stress line that assumes $10. At P1's 9.4 round turns per week
+  it is roughly $141/week against a full-window $1,315 - an 11 % haircut - and about 34 % of
+  2026's $412/week. This is not a rounding error and it has never been measured.
+
+data: >
+  research/scalping_lab/substrate/grid1s/NQ/*.parquet - 48 session files, 3.9 M second-bars,
+  2025-08-11 -> 2026-05-20, columns time/last/trades/vol/sflow/bid/bid_upd/ask/ask_upd/mid/
+  spread_t/ret1s_t. s20250811 has no quote data (bid = 0 on every row) and is EXCLUDED, leaving
+  47 sessions. This data is already on disk; nothing is collected. The DOM/Level-II collection
+  pause (owner risk-control, 2026-08-12) concerns COLLECTION and is not touched by reading files
+  that already exist.
+
+design:
+  0_coverage: >
+    How many of P1's entries and exits fall inside the 47 usable sessions, and how does the
+    time-of-day distribution of those fills compare with P1's full 1,058-session distribution.
+    If the overlapping sample is unrepresentative in time-of-day, the direct estimate is biased
+    and the weighted estimate below is the one that counts.
+  1_the_spread_where_we_actually_trade: >
+    (a) DIRECT: the bid, ask and spread at the exact second of each simulated fill. Our fill is
+        the OPEN of the 1-minute bar end-stamped T, i.e. the first second of [T-60s, T-1s], so
+        the quote is read at T-60s.
+    (b) WEIGHTED, and this is the better-powered estimate: build the spread profile by
+        minute-of-day across all 3.9 M seconds, then weight it by P1's entry time-of-day
+        distribution over the FULL 1,058 sessions. This uses every second of quote data and
+        every one of P1's ~2,000 entries instead of only the ~90 that overlap.
+    Both are reported by session segment (overnight 18:00-09:29, RTH 09:30-16:00, post).
+  2_the_honest_fill_price: >
+    A market BUY fills at the ask or worse; a market SELL at the bid or worse. The simulated fill
+    uses the bar's OPEN, which is a TRADE price and therefore sits somewhere between them.
+    Measure, per fill, `ask - open` for buys and `open - bid` for sells: the per-side cost the
+    simulation omits. Report the distribution, not just the mean, and report how often the open
+    is already outside the quote (a sign the second-grid and minute-grid disagree, which must be
+    disclosed rather than averaged away).
+  3_repricing: >
+    Re-quote P1's full record at the measured all-in cost: weekly $, positive-week %, max
+    drawdown, and the annualised figures in WHAT_P1_ACTUALLY_DELIVERS.md, for the full window,
+    the trailing twelve months and 2026. Report at the measured cost AND at the old $4.36 and
+    $14.36 lines so the delta is visible.
+  4_microstructure_power_test: >
+    The secondary question - does quote-level information predict P1's per-trade outcome? Method
+    rule 25 says compute the power FIRST: with N overlapping entries the smallest |Spearman|
+    detectable at t = 2 is 2/sqrt(N). If that number is far above the |rho| < 0.11 ceiling W55
+    measured for 16 minute-level features, the test cannot resolve anything of the size this
+    problem actually produces, and it will be reported as descriptive only rather than as a
+    result. Features: spread, quote-update intensity (bid_upd, ask_upd), signed flow (sflow),
+    trade intensity, 1-second realised volatility, quote imbalance.
+
+preregistered_decision_rule:
+  the_deliverable_is_a_number: >
+    the measured all-in round-turn cost at P1's actual trading times, and P1's record re-quoted
+    at it. There is nothing to adopt or reject.
+  what_would_change_the_campaign: >
+    if the measured cost exceeds the $14.36 stress line, then the C1 line has been OPTIMISTIC for
+    82 waves, every stress-net figure in the repository is overstated, and W80's deep-history
+    result (P1 stress-net -$36,494 over sixteen years) gets worse rather than better. That would
+    have to be said plainly and propagated.
+    If the measured cost is at or below $14.36, the stress line is vindicated and the campaign's
+    conservative column was doing its job.
+  power_honesty: >
+    phase 4 reports its detectable effect size before its measured one, and if the former exceeds
+    the latter the section is labelled UNDERPOWERED in its heading, not in a footnote.
+
+traps_named_before_running:
+  - "47 sessions out of 1,058 is a 4.4 % sample, drawn from 2025-08 to 2026-05 only. It cannot
+     represent 2022-2024 spreads, and NQ's spread in points is not stationary as the index level
+     changes. Every conclusion is stated as 'at 2025-2026 spreads' and the tick-denominated
+     figure is quoted alongside the dollar one."
+  - "A wide median spread over a 23-hour session is not the spread we pay if we trade in the
+     liquid hours. The time-of-day weighting exists precisely to stop that error, and the
+     unweighted number will NOT be quoted as the answer."
+  - "If the 1-second grid and the 1-minute bars disagree about the open price, the discrepancy is
+     reported and the audit is scoped to fills where they agree, rather than silently averaged."
