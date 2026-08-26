@@ -73,53 +73,65 @@ with it is withdrawn.
 
 **Every table below §3 that quotes the old $94/week line is superseded by this one.**
 
-## 4. What has to be true for the top row to be the right one
+## 4. ⚠️ THIS DOCUMENT IS SUPERSEDED FOR THE FORWARD-LOOKING PARTS — READ §5
 
-The full-window row ($68k/unit/year, MAR 2.8) is the flattering one and it is **not** a forecast.
-It assumes the 2024–2025 regime returns. The campaign's own evidence says to discount it:
+Everything above is P1's measured record and it stands. Everything that WAS below this line has
+been retracted or superseded by W85–W88, and is replaced here rather than left to mislead:
 
-- **W72**: eleven independently-constructed intraday directional gates are all flat-or-negative
-  over 2006–2021 and all positive over 2022–2026, and all sit at the 85th–98th percentile of
-  their own histories. Half of P1's net rests on that class of signal.
-- **W76**: the first genuinely held-out window this campaign has ever read produced
-  −22.49 pts/session at t = −2.74, broadly (median traded day −$1,447, 19.6 % positive days), in
-  a market that fell 8.1 % with double the TREND-DOWN share.
-- **W50**: the object earns +88.68 pts/session on TREND-UP days and loses 21.89 on TREND-DOWN
-  days. It is a directional bet on the regime and always was.
+- ~~"W76: the first genuinely held-out window this campaign has ever read"~~ — **FALSE**
+  (W85 defect 2). `run_we_w01.py`'s own docstring reads *"holdout 2026-05-31 → 07-31, read once
+  at the end"*, its report ranked objects on it, and the vol_period the campaign uses (460) ties
+  on dev and **separates only there**. The −22.49 pts/session measurement stands; the label does
+  not. That window is **burned**.
+- ~~"six consecutive full-sample winners did not survive sub-period testing"~~ — **RETRACTED**
+  (W85). The gate's drawdown leg was a shape ratio `top5/maxdd`; an oracle handed **$200 of free
+  money every session scored ALL-THREE 0 %** while its raw drawdown improved in 100 % of windows.
+  Four of those "failures" reverse on the corrected gate.
+- ~~"we have one stream"~~ — superseded. On **weekly** ρ (the correct unit; every census used
+  daily), the admissible set is P1, BMOM, X9a, and **{BMOM, X9a} at weekly ρ +0.009 is the one
+  independent, recently-effective pair in the repository.**
+- ~~"$150k on ~4 contracts with a ~$80k drawdown"~~ — superseded by §5.
 
-## 5. What cannot be fixed by sizing
+## 5. WHAT TO ACTUALLY TRADE — the current answer
 
-**The positive-week rate is scale-invariant.** Contracts move money and drawdown together and
-leave the hit rate exactly where it is. So:
+**`2 BMOM : 3 X9a`** (= 0.400 / 0.600, the executable form of the preregistered inverse-vol
+weights). Trailing-12-month rate, net of the measured $14.65/RT:
 
-| | where we are | the campaign's binding target | reachable by size? |
-|---|---|---|---|
-| weekly $ at his tail tolerance (−$42,235) | ≈$8,398 net | $8,583 **gross** | **already there** |
-| positive-week rate | **56.3 %** (2026: 51.6 %) | **76 %** | **never** |
+| basket | contracts | ALL-3 | weekly $ | **annual** | max DD | worst week | week + % |
+|---|---|---|---|---|---|---|---|
+| 1 BMOM : 1 X9a | **2** | 64 % | $2,383 | **$123,918** | $42,485 | −$20,133 | **58.5 %** |
+| 1 BMOM : 2 X9a | **3** | 64 % | $3,358 | **$174,591** | $47,034 | −$23,287 | 56.6 % |
+| **2 BMOM : 3 X9a** | **5** | **92 %** | $5,741 | **$298,509** | $86,272 | −$43,420 | **60.4 %** |
 
-**W74** measured what the hit rate does require: **six genuinely independent streams** at our
-current quality (ten at ρ = 0.1; unreachable at ρ ≥ 0.2). **W75 + W79** counted what we have:
-**one.** Every clock sleeve, member-set variant and channel arm is 0.30–0.89 correlated with P1
-and cannot contribute; the three candidates that were decorrelated (SHORT, AXISB, S_sig) all
-fail the 2025-and-2026 recency gate on corrected data.
+**P1 for the same income:** ~$175k needs **6.2 contracts and a $133,647 drawdown**; ~$300k needs
+**10.4 contracts and $223,235**. **Half the contracts, roughly 35–40 % of the drawdown.**
 
-## 6. The honest summary
+Evidence: 5 of 6 preregistered conditions (rolling gate ALL-THREE **96 %** fractional / **92 %**
+tradeable; walk-forward stable on 2 of 3 objectives; positive in 2026; and **not P1 in disguise** —
+P1 scaled to the basket's own top-5 drawdown gives 52.6 % / $696 / ALL-THREE 0 % against the
+basket's 57.7 % / $1,044 / 96 %). Plus **W87**: at frozen weights over the 16 years the
+combination had never touched, its top-5 drawdown is **28.2 % smaller than P1's** and its max
+drawdown **34.5 % smaller** — the preregistered bar was ≥25 %.
 
-- P1 is a **real** edge — 89 % of its net is timing, not market drift (W73), it beats its own
-  circular-shift null at the 100th percentile, and it survived an independent NinjaScript
-  reproduction at 0.64 % (W52).
-- It is a **single directional stream** whose profitability tracks a regime that has been
-  favourable since 2022 and turned against it in June–July 2026.
-- At the trailing-year rate it can produce **$150k on ~4 contracts with a ~$80k drawdown**. At
-  2026's rate it cannot produce that at any acceptable drawdown.
-- **Every remaining improvement the repo has tested inside this object has failed** (W72, W74,
-  W77, W78, W79 — six consecutive full-sample winners that did not survive sub-period testing).
-- The one thing that would change the picture is **more independent streams**, and the binding
-  constraint on those is **information**: this repository holds one instrument at one resolution
-  (NQ 1-minute, 2006–2026) plus 48 sessions of 1-second data. That is the ceiling, and it is not
-  a cleverness problem.
+**It is NOT adopted, and here is everything wrong with it:**
 
-## 7. Files
-Computed from `runs/WE_W76_FORWARD2026/out/streams_extended.csv`.
-Supporting: `runs/WE_W74_WEEKMATH/REPORT.md`, `runs/WE_W75_STREAMCENSUS/REPORT.md` (+ amendment 1),
-`runs/WE_W76_FORWARD2026/REPORT.md`, `runs/WE_W78_PAIR/REPORT.md`, `runs/WE_W79_CLIQUE/REPORT.md`.
+- it **fails** the specificity null (92nd percentile against a 95th bar) — the drawdown gain is
+  "two independent streams", W74's mechanism, not these two specifically;
+- **BMOM is regime-local** (flat pre-2022, t = 0.93, latest window at the 98th percentile of its
+  own history) and carries 40 % of the weight;
+- **X9a is weekly ρ 0.613 with P1** and W81 found them statistically indistinguishable as
+  objects — so this is *P1's cousin plus the B-MOM leg run standalone*, not two new engines;
+- its **2026 hit rate is worse** than P1's (48.4 % vs 51.6 %) despite 3.6× the money, and its
+  **worst week is worse in every period**;
+- **everything is in-sample.** The forward window and the deep window are both spent.
+
+**Switching the baseline is the owner's decision.** The honest one-line summary:
+
+> *the same money on roughly half the contracts and 35–40 % of the drawdown, at a slightly worse
+> worst week, built from two components this repository has itself flagged, evidenced on a fully
+> in-sample modern window plus a sixteen-year risk test it passed at frozen weights.*
+
+## 6. Files
+`runs/WE_W85_GATEFIX/REPORT.md` (the broken gate) · `runs/WE_W87_DEEPPAIR/REPORT.md` (the
+candidate) · `runs/WE_W88_TRADEABLE/REPORT.md` (contracts + the weekly-ρ recount) ·
+`runs/WE_W82_FILLAUDIT/` (the fill cost, + amendments 1–2).
