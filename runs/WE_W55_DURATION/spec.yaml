@@ -1,0 +1,87 @@
+run_id: WE_W55_DURATION
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: go after the largest number this campaign has ever measured, and resolve the
+  contradiction that stands in front of it BEFORE spending a backtest.
+
+the prize (FACT, runs/WE_W54_MASKANOMALY/REPORT.md and out/duration.csv):
+  The incumbent's P&L by holding duration, exact accounting on 1,942 trades:
+    1-3 min   -1.39 pts/session (348 trades, 36.8 % win)
+    3-7       -3.45 (222, 18.5 %)      7-12     -3.57 (207, 14.5 %)
+    12-22     -3.69 (184, 17.9 %)      22-37    -2.92 (199, 20.1 %)
+    37-60     +1.90 (191, 42.4 %)      60-104   +0.67 (202, 48.5 %)
+    104-248   +5.75 (193, 64.8 %)      248-1359 +21.56 (196, 81.1 %)
+  Trades held under 37 minutes cost -15.02 pts/session and are 55 % of all trades. Win rate is
+  monotone in duration from 18.5 % to 81.1 %. W54 further measured that a random duration-biased
+  deletion of 27.7 % of trades is worth +4.49 pts/session gross, and that the masks only net
+  +0.79 because the same construction pays -3.66 in entry price for the delay. A rule that
+  refused those trades AT THE FLIP BAR would keep the +4.49 and pay none of the -3.66.
+
+the contradiction that must be resolved first (FACT, W54 phase 5, Spearman on 1,942 entries):
+  vs realised DURATION            vs realised P&L
+    runlen      +0.404              -0.101
+    delta_mag   +0.367              -0.080
+    dist_open   +0.226              -0.008
+    dist_vwap   +0.160              -0.018
+    ratio       +0.134              -0.037
+  Duration is strongly forecastable at entry. P&L is not - by the SAME features, with the sign
+  reversed on the strongest one. Yet realised duration and realised P&L are almost perfectly
+  monotone in each other. Something is wrong with at least one of those three statements and
+  the wave is not allowed to proceed until it is understood.
+
+  The candidate resolutions, each with a distinct signature:
+   X1 SIZE CONFOUND. The P&L column is SIZED P&L and runlen is one of the five quality-score
+      features with a + sign, so high-runlen entries are systematically size 2. If per-UNIT P&L
+      behaves differently from sized P&L, this is the answer.
+   X2 NON-MONOTONICITY. The duration->P&L relation may be monotone in the DECILE MEANS while
+      being non-monotone or heavy-tailed within, so a rank correlation with a feature that
+      predicts duration need not inherit it. Spearman on decile means vs on raw pairs will say.
+   X3 IT IS REAL AND IT KILLS THE WAVE. runlen predicts long HOLDS that are not long WINNERS -
+      i.e. it predicts the ratchet staying flipped, not the market moving. If so, the -15.02 is
+      not reachable through these features and the honest conclusion is recorded.
+
+phase 1 - RESOLVE THE CONTRADICTION (exact accounting, no backtest, no arm):
+  a) redo the whole phase-5 table on PER-UNIT P&L and on the flat-1-lot object -> tests X1
+  b) Spearman of duration vs P&L on raw pairs, on decile means, and per size bucket -> tests X2
+  c) the joint table: bucket entries by each feature's causal trailing quantile and report BOTH
+     mean duration AND mean per-unit P&L in each bucket, so the two are read off one grid
+  d) the decisive number: P(trade is in the bottom-3 duration deciles | feature bucket), causal,
+     and the realised per-unit P&L of the entries that bucket would refuse
+  If (d) shows no bucket whose refused entries are materially negative, the wave STOPS at
+  phase 1 and records X3. That is the preregistered stopping rule and it costs one script.
+
+phase 2 - only if phase 1 survives: THE CAUSAL SHORT-TRADE FILTER
+  A causal, trailing-window score built ONLY from features that passed phase 1, thresholded at
+  a trailing quantile (never a full-sample one - four casualties), refusing entry AT THE FLIP
+  BAR so no delay cost is incurred. Report the full metric set, full window and per year, plus
+  the realised duration distribution of what it refused vs what it kept.
+
+phase 3 - THE THREE NULLS, all required:
+  N1 count-matched RANDOM refusal at the same rate - the floor.
+  N2 DURATION-BIASED random refusal, i.e. W54's rolled masks, evaluated WITHOUT their delay
+     cost by deleting the stretches they would delete and leaving the survivors' entries alone.
+     This is the real bar: the filter must beat a structural bias that needs no forecast.
+  N3 circular-shift of the filter's own score.
+  All three are SCAN-MATCHED (W53's rule): if the arm's threshold is chosen from a grid of k,
+  every null draw takes its own best of k.
+
+phase 4 - THE EVENT-COUNT LAW, tested at the largest scale it has ever faced:
+  This arm deliberately removes ~25 % of events. The law (4 instances: W42, W45, W47, W53-C1)
+  says the tail worsens faster than production improves. Report the drawdown DISTRIBUTION
+  (5 deepest, mean top-5, Ulcer, % under water), not max drawdown alone. If production rises
+  AND the drawdown distribution improves, the law is falsified at a scale that matters and it
+  gets rewritten - the removed events would be the first ones that were negative in aggregate
+  rather than merely low-quality.
+
+adoption bar (Charter Amendment 1 applies - no every-year gate):
+  MAR and the drawdown distribution improve, pts/session does not fall, CVaR-efficiency and
+  annualised Sharpe do not degrade, stress-net > 0, exposure reported in contract-minutes with
+  the incumbent scaled to match, N2 cleared at >= 95th percentile scan-matched, and a mechanism
+  sentence that survives phase 1. If performance is concentrated in a sub-period, report the
+  sub-period's sessions/weeks/events and standard error, name the causal regime variable, and
+  give the walk-forward number - per Amendment 1 sections 2(a), 2(b), 2(c).
+falsifier: phase 1(d) empty, or the filter loses to N2, or the drawdown distribution worsens.
+forbidden: [data >= 2026-08-01, filtering on realised duration or any outcome variable, any
+  full-sample quantile, delaying an entry (the entry-timing family is closed on mechanism),
+  adopting on max drawdown alone, comparing a scanned threshold to an unscanned null]
+outputs: [out/duration2.txt, out/contradiction.csv, out/filter.csv, out/nulls.csv, REPORT.md]
