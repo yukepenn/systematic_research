@@ -1,0 +1,43 @@
+run_id: WE_W35_QEXIT
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: self-directed. Owner: "不要认为第一性原理这个目前想法一定对，也说不定肯定有更好的"
+
+why now: >
+  W34 applied the flip-quality score to the ENTRY side only (sizing). Three surfaces remain
+  untested, and one assumption underneath the whole frame has never been challenged.
+  Context: W30 measured that perfect knowledge of each session's DIRECTION, with our machinery,
+  yields 31.6 pts/session. The quality-sized object is now at 15.86 - HALF that bound. So the
+  headroom inside this machinery is ~2x, and EXIT GEOMETRY is now the binding constraint,
+  because W34 only moved the entry side.
+
+axes:
+  A QUALITY-CONDITIONED EXIT (the symmetric half of W34, never tested):
+    A1 wider box on quality: session target +$1,000 normally, +$2,000 when the session's first
+       entry had score >= 3 (high-quality sessions get more room to run)
+    A2 early cut on low quality: hard time exit after {60, 120} bars for entries with score
+       <= 1, normal exit otherwise
+    A3 both
+  B RESTORE, RE-OPENED WITH THE QUALITY GATE:
+    W31 restored EVERY member at session open unconditionally and production collapsed
+    (10.62 -> 0.70). That test could not distinguish "restoring is wrong" from "restoring
+    indiscriminately is wrong". Re-run restore, admitting a restored position ONLY when the
+    quality score at the session's first decision bar is >= 3.
+  C QUALITY ON THE SHORT SIDE:
+    shorts are currently insurance (standalone Sharpe 0.067). Build the mirror score (the same
+    five features with their signs reversed where directional) and size the short sleeve the
+    same way. If a high-quality short subset exists, shorts become production, not insurance.
+  D CEILING RECOMPUTED on the current object, so the headroom statement is current.
+  E FRAME CHALLENGE (the point of this wave):
+    Does the quality score work because it grades FLIPS, or is it a general market-state edge
+    that would improve ANY entry rule? Test: apply the identical score, thresholds and sizing
+    to (i) a RANDOM entry rule matched on trade count and session distribution, and (ii) the
+    EMA-cross entry from W25. If the score lifts those too, the frame "the edge is in the flip
+    and the score grades it" is WRONG - the score is a market-state edge and should be
+    developed as a standalone signal, which would be a bigger finding than W34 itself.
+adoption: A/B/C follow the standing rule (production up, density not down >15 %, Sharpe not
+  down, stress positive) plus a binding circular-shift null on anything adopted.
+  E is diagnostic and has no adoption; it reframes or confirms.
+forbidden: [data >= 2026-08-01, fill-bar information, adopting without the null, reporting E
+  as a result rather than a frame test]
+outputs: [out/qexit.txt, out/summary.csv, REPORT.md]
