@@ -3,6 +3,77 @@
 
 # STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7)
 
+> ## ⚠️ CURRENT TRUTH after W72–W76 (2026-08-26) — supersedes everything below
+>
+> ### The campaign's problem is now a single number, and it is not a signal problem.
+>
+> `CAMPAIGN_STATE.md`'s binding target is **>76 % positive weeks / >$8,583 per week**. Measured
+> against it:
+>
+> | | where we are | target | closable by contracts? |
+> |---|---|---|---|
+> | weekly $ **at his tail tolerance** (−$42,235 worst week) | **≈$8,398 net** at ~7.2 contracts | $8,583 **gross** | **already there** |
+> | **positive-week rate** | **58.3 %** (2026: **68.2 %**) | 76 % | **never — it is scale-invariant** |
+>
+> **W74** (`FACT`, bootstrap from P1's own 204 empirical weeks, Gaussian copula, no
+> distributional assumption): **76 % needs SIX genuinely independent streams at our quality; TEN
+> at ρ = 0.1; and at ρ ≥ 0.2 it is unreachable at any K.**
+> **W75** (`FACT`, census of 20 streams on one grid): **K_admissible = 2 — {P1, AXISB}** — stable
+> at ρ < 0.15, 0.20 and 0.25. Only three streams in the whole repo are ρ<0.2 with P1, and two of
+> them (SHORT, S_sig) fail the owner's 2025+2026 recency gate.
+>
+> > **We need six streams. We have two. The brief is now "find four more mechanisms", not
+> > "find a better signal".** Decorrelation is a THRESHOLD, not a quality to maximise (W74 §5:
+> > the short sleeve's consistency gain is GENERIC — it never reaches the 95th percentile of a
+> > shuffle null that preserves both marginals and destroys only alignment).
+>
+> ### W72 — the OR slot: B-MOM is genuinely special, and the ANCHOR is the fragility
+> Ten alternative occupants; **none reaches 90 % of production**, so the 51 % dependence is
+> irreducible from outside as well as inside (W68). B-MOM beats its own session-shift null at the
+> **100th percentile**. What it measures is now known: *price has travelled further from the
+> 09:31 open than it typically does by this time of day*; the VWAP conjunction is worth ~12 % of
+> production and has **no** durability (alone: pre-2022 t = −0.37).
+> **The same rule anchored at the 18:00 session open is the ONLY durable channel of eleven**
+> (pre-2022 t = 1.83 vs the incumbent's 0.93) and costs 28 % of production. Six anchor-combination
+> arms; **0 of 22 rolling windows win on all three metrics.** Unfixable.
+> **And all eleven gates are flat-or-negative pre-2022 and positive post-2022**, all sitting at
+> the 85th–98th percentile of their own histories. **The fragility is a regime bet shared by the
+> entire family — not diversifiable inside it.**
+>
+> ### W73 — the drift decomposition, first ever computed
+> `net = drift + timing`. **P1: $300,817 = $33,365 drift + $267,452 timing (89 % timing).** We are
+> not merely long a rising market. **SHORT sleeve: $121,454 = −$23,078 drift + $144,532 timing** —
+> 54 % of the long side's skill, fighting a headwind. Per year the short's TIMING beat the long's
+> in 2022 (+29,907 vs +27,458) and nearly tripled it in 2023 (+20,790 vs +7,387); it collapsed
+> only in 2026 (−20,748, t = −1.55 on 22 weeks — not proven broken, but not delivering).
+> H2 (mis-scaled σ) tested: signed-σ **hurts** the short side (4.79 vs 6.00 pts) and flattens the
+> long side's year profile (2022 16.44 vs 11.59; 2023 6.90 vs 3.04) for 15 % less money at a fixed
+> drawdown. Null still owed; nothing adopted.
+>
+> ### `CORRECTION`s recorded this session
+> - **The substrate was silently truncated.** `load_deep` hardcoded a file ending **2026-05-29**
+>   while every caller asked for 2026-07-31. **~46 sessions of 2026 have never been read by any
+>   code.** Fixed with an opt-in `extend=` (overlap asserted bit-exact on all six columns);
+>   W76 reads that window once, under a protocol written first.
+> - **CLKRANGE and CLKVOL are contaminated and may not be quoted** — `we_clocks.size_for_rate()`
+>   sets the range clock's bar size from a full-sample QUANTILE and the volume clock's from a
+>   full-sample MEAN. They produced the two best 2026 figures in W75's census ($46,007 and
+>   $60,833 vs P1's $33,467). Both void. Only CLK3/CLK5 are clean.
+> - **The C1 stress line ($10/RT on top of commission) went unreported from W54 to W72.** No
+>   published number is wrong — the fills have always charged commission only and the stress line
+>   was always a separate column — but the column lapsed. Cost: **≈$95/week ≈ 6.4 %**
+>   ($1,475 → $1,380). Both lines are quoted from W74 on.
+> - **My W74 falsifier used the wrong statistic** (MAE, not R²) — third mis-specified stopping
+>   rule of this campaign (W55, W57, W74). Every Cornish-Fisher number in W74 read 1 is withdrawn.
+>
+> ### The best object measured (`OBSERVATION`, not a promotion — no null yet)
+> The 3-stream admissible clique **{AXISB, BMOM, w72:X9a}**, equal-weighted, mean pairwise
+> |ρ| 0.069: **max drawdown $7,810 against P1's $20,245 (2.6× smaller)**, so at a matched
+> drawdown **$2,346/week vs $1,475 (+59 %)**, median week $820 vs $455, weekly losing streak 6
+> vs 8. Inverse-vol weighting: **61.8 % positive weeks, streak 4.** Queued for its own wave.
+>
+> ### Everything below this block is earlier truth, kept for the detail.
+
 > ## ⚠️ CURRENT TRUTH after W67 (2026-08-26) — supersedes everything below
 >
 > ### THE OBJECT IS NOT WHAT THIS CAMPAIGN HAS BEEN CALLING IT.
