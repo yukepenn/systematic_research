@@ -1,0 +1,69 @@
+=== loaded W61's ledger: 1012 sessions 2022-07-04 -> 2026-05-29 | P1 net $300,817, short net $121,454
+   NQ daily closes 2006-01-05 -> 2026-05-29 (6223)
+
+================================================================================================================
+=== PHASE 2: CONTEMPORANEOUS loadings - is it insurance?
+================================================================================================================
+22 rolling 24-month windows stepped monthly, which overlap by 23/24. The
+EFFECTIVE number of independent observations is about 1. Every correlation below
+must be read against that, not against 22.
+
+regime variable         corr with P1 t   corr with SHORT t                   signature
+M1_ret24                        -0.291               0.439                weak / mixed
+M2_ret6                          0.285               0.194              both same sign
+M3_vol                           0.634              -0.683             INSURANCE shape
+M4_upshare                       0.617              -0.407             INSURANCE shape
+
+   the INSURANCE signature is: P1 loads POSITIVELY on market direction, the short
+   sleeve loads NEGATIVELY, and the magnitudes are comparable.
+
+   direct correlation of the two performance series across windows: corr(t_P1, t_SHORT) = -0.473
+
+================================================================================================================
+=== PHASE 3: PREDICTIVE - could it be timed, and should it be?
+================================================================================================================
+The regime variable LAGGED a full 24-month window, so it is knowable before the period
+it would predict. A permutation null on the same overlapping structure is required,
+because 22 overlapping windows produce large-looking correlations by chance.
+
+regime variable (lagged)     corr with SHORT t    perm p                     verdict
+M1_ret24                       too few windows
+M2_ret6                        too few windows
+M3_vol                         too few windows
+M4_upshare                     too few windows
+
+================================================================================================================
+=== PHASE 4: split by regime and price the combination against P1 alone
+================================================================================================================
+   regime label: trailing 6-month NQ return > 0, known before each session (causal).
+   UP-regime sessions 746 (73.7 %), DOWN 266 (26.3 %)
+
+regime      arm                     sessions   weekly$    wk+%   trdD+%    top5DD
+UP          P1 alone                     746     2,362    58.3     47.7    12,573
+UP          P1 + short w=0.30            746     2,534    64.4     48.0    13,257
+
+DOWN        P1 alone                     266       768    44.6     41.3     7,235
+DOWN        P1 + short w=0.30            266     1,142    49.2     44.4    11,748
+
+   weekly-dollar delta from adding the sleeve at w=0.30:
+      in UP regimes         +172 $/wk  (746 sessions)
+      in DOWN regimes       +374 $/wk  (266 sessions)
+   -> INSURANCE THAT PAYS FOR ITSELF: it gains more in DOWN than it gives up in UP
+
+================================================================================================================
+=== PHASE 5: per year. 2026 is the test - the sleeve LOST that year.
+================================================================================================================
+At a fixed $20,245 max drawdown WITHIN each year. If the combination still beats P1
+alone in 2026, the benefit survives a losing sleeve and W61's revival condition is the
+wrong recommendation. If it does not, the benefit tracks the sleeve's expectancy.
+
+year      sleeve pts/ses   P1 weekly$  combo weekly$     delta   P1 wk+%  combo wk+%   P1 maxDD  combo maxDD
+2022               10.11        1,818          4,339    +2,521      46.2        57.7     12,909        5,593
+2023                2.76          373            899      +527      59.6        59.6     16,388        7,120
+2024               13.92        5,745          5,832       +87      60.4        66.0      6,747        6,461
+2025                6.05        2,988          3,449      +460      58.5        69.8     15,344       10,637
+2026              -10.62        2,443            845    -1,598      68.2        59.1     12,607       16,125
+
+   2026 is the decisive row.
+
+=== STATUS: diagnostic. The output is which reading the data supports. ===

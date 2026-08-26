@@ -190,6 +190,32 @@ def main():
               if (dd > 0 and dd > -du) else
               ("a HEDGE WITH A POSITIVE COST - the premium is the UP-regime figure above"
                if dd > du else "NOT regime-shaped at all")))
+    # =====================================================================================
+    # PHASE 5 (amendment_1) - THE DECISIVE NUMBER: does the benefit survive a LOSING sleeve?
+    # =====================================================================================
+    P_(f"\n{'='*112}\n=== PHASE 5: per year. 2026 is the test - the sleeve LOST that year.")
+    P_(f"{'='*112}")
+    P_("At a fixed $20,245 max drawdown WITHIN each year. If the combination still beats P1")
+    P_("alone in 2026, the benefit survives a losing sleeve and W61's revival condition is the")
+    P_("wrong recommendation. If it does not, the benefit tracks the sleeve's expectancy.\n")
+    P_(f"{'year':<8}{'sleeve pts/ses':>16}{'P1 weekly$':>13}{'combo weekly$':>15}"
+       f"{'delta':>10}{'P1 wk+%':>10}{'combo wk+%':>12}{'P1 maxDD':>11}{'combo maxDD':>13}")
+    comb30 = 0.70 * p1 + 0.30 * shn
+    for y in sorted(set(dates.year)):
+        mk = (dates.year == y)
+        if mk.sum() < 60:
+            continue
+        a_, b_ = met(p1, mk), met(comb30, mk)
+        if a_ is None or b_ is None:
+            continue
+        cnt = np.bincount(wk_idx[mk], minlength=NW) > 0
+        va = np.bincount(wk_idx[mk], weights=p1[mk], minlength=NW)[cnt]
+        vb = np.bincount(wk_idx[mk], weights=comb30[mk], minlength=NW)[cnt]
+        P_(f"{y:<8}{sh[mk].sum()/PV/mk.sum():>16.2f}{a_['weekly']:>13,.0f}"
+           f"{b_['weekly']:>15,.0f}{b_['weekly']-a_['weekly']:>+10,.0f}"
+           f"{a_['wkpos']:>10.1f}{b_['wkpos']:>12.1f}"
+           f"{dd_profile(va)['maxdd']:>11,.0f}{dd_profile(vb)['maxdd']:>13,.0f}")
+    P_(f"\n   2026 is the decisive row.")
     P_(f"\n=== STATUS: diagnostic. The output is which reading the data supports. ===")
     out.close()
     print(f"done [{_time.time()-t0:.0f}s]")
