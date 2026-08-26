@@ -396,3 +396,78 @@ The conclusion is now licensed by the whole surface.
 answered the question more completely than the backtests did, including levels a sweep would
 never have tried. Where the mechanism can be written down, compute it on the measured paths
 first.
+
+---
+
+## W51–W57 (2026-08-26) — the IC ceiling, and what it implies
+
+**6. THE CEILING BY DECISION TIME (W51, `FACT`).** A perfect oracle that knows the session's
+final class can save 4.37 pts/session if it decides pre-session, 2.82 by 08:01 ET, 1.54 by
+10:00, 0.32 by 11:30 — while the AUC of the causal signed-move feature only rises 0.582 → 0.769
+over the same clock. **The information about which kind of day it is arrives at roughly the
+same rate as the opportunity to act on it disappears.** This bounds *any* classifier, not ours.
+
+**7. CUTTING THE WORST WEEK IS NOT CUTTING THE DRAWDOWN (W51b, `FACT`).** The prior-session bit,
+causally derived, clears both nulls on the worst week (98.8th/99.3rd percentile) and **fails
+both on max drawdown (25th/40th) and MAR (75th–83rd)**. W50 had already measured that the worst
+decile of weeks is an accumulation across sessions rather than one bad session; this is the
+consequence. A tail statistic and a path statistic are different objectives.
+
+**8. HALF THE MONEY IS EARNED OVERNIGHT (W51b, `FACT`).** 7.17 of 14.74 pts/session comes from
+entries between 18:00 and 08:00 ET. But the DAY book earns 51.7 % of the money on 28.4 % of the
+contract-minutes (W53) — it is **2.6× more productive per unit of exposure**. The object's
+night/day weighting is already essentially optimal by accident (best interior w = 0.65 gives
+MAR 15.44 against the incumbent's 14.86 at w = 0.716).
+
+**9. THE SESSION BOX BELONGS ON THE COMBINED BOOK (W53, `SUPPORTED`).** Giving the night and day
+books their own −$1,300/+$1,000 boxes makes the drawdown **25 % worse** for the same money.
+W22/W26's mechanism confirmed from the other side: the box works because it truncates where the
+loss is actually formed.
+
+**10. DELAY PAYS, IT DOES NOT BUY (W54, `FACT`, four independent confirmations).** On matched
+flips a delayed entry costs **−2.44 points per trade and −5.89 on the trades that were going to
+work**. Confirmed by R2V1 (−$81,630 across 1,838 delayed entries), R2B (Spearman −0.32 of
+pullback depth against outcome), W31 (flip 0.0603 vs state 0.0025 pts/bar) and W54's own
+matched-flip comparison. The entry-timing family is closed **on mechanism**, not on chronology.
+
+**11. DURATION IS FORECASTABLE; PROFITABILITY IS NOT (W55, `FACT`).** Trades held under 37
+minutes cost −15.02 pts/session and are 60 % of all trades — the largest number this campaign
+has measured. `runlen` predicts duration at Spearman +0.404. **And across 16 causal entry
+features not one predicts per-unit P&L with |ρ| above 0.11** (best: `atr_l` at −0.108;
+`vote_margin`, the object's own signal strength, at +0.022). The highest P(short) any causal
+bucket reaches is 69.6 % against a 59.7 % baseline — and that bucket is *profitable*.
+The ratchet's features predict how long it stays flipped, which is a fact about the SIGNAL, not
+about the market. This is law 3 in a new form: **duration is a P&L symptom and an unusually
+convincing one.**
+Method note carried with it: W54's monotone win-rate table (18.5 % → 81.1 % across duration
+deciles) is largely a BINNING effect — the pairwise Spearman is +0.249 against +0.750 on the
+decile means. The accounting fact stands; the strength of the relation did not.
+
+**12. PORTFOLIO ARITHMETIC IS THE LARGEST LEVER, AND WE HAVE NO INGREDIENT (W56/W57).**
+`FACT`: a loosely-correlated *profitable* sleeve at w = 0.30 is worth **+43 % money at the same
+$20,245 drawdown with a slightly better drawdown distribution**. The number that makes it work
+is the **underwater-curve correlation** (B-MOM's is −0.171 against P1), not the weekly
+correlation and not the much-quoted worst-decile correlation, which on 20 weeks has SE ≈ 0.24
+and is indistinguishable from zero for every candidate.
+`FACT`: **no engine in this repo qualifies on present evidence.** B-MOM is 4 years in-sample
+(t = 2.66 on 1,122 sessions against t = 0.27 on 4,077 before) with no regime variable separating
+the eras; the mechanically obvious candidate — its fixed 2.872-tick friction falling from
+1.70 % to 0.28 % of the median daily range as NQ's range went 42 → 259 points — is measured and
+**does not rescue the pre-2022 era** (largest-range pre-2022 quintile: $22/day, t = 0.49).
+BREADTH01 sits at the 4th percentile of its own null. Axis B behaves exactly as W43's law
+predicts: real decoupling, near-zero expectancy, +16 % of which the nulls say ~95 % is
+arithmetic — **decoupling is necessary and not sufficient, third confirmation.**
+
+**13. Method rules bought this week.**
+- **Scan-matched nulls (W53).** Taking the best of a 21-point weight scan inflates MAR ~20 % on
+  average and up to 2× in the tail on data with no structure at all. A scan may never be
+  compared against an unscanned reference.
+- **Permutation multiplicity on any bucket/cell scan (W55, W57).** Both times my own
+  preregistered stopping rule was itself an unscanned comparison, and both times the corrected
+  rule reversed the printed verdict. W55: 2 negative buckets of 77 against a permuted average of
+  3.0. W57: 12 cells at t ≥ 1.65 of 60 against a permuted 10.6.
+- **A null that beats the object it is a null for is a finding, not a null (W51d → W54).** It
+  cost one wave to explain and the explanation retired an entire family.
+- **Compute the power before opening a forward window (W57).** The 40-session June–July 2026
+  read has an expected net of $11k ± $23k. A number with no information content is worse than no
+  number, because it gets quoted.

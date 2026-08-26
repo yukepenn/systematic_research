@@ -3,7 +3,40 @@
 
 # STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7)
 
-> ## CURRENT TRUTH after W52 (2026-08-26) — supersedes everything below
+> ## CURRENT TRUTH after W57 (2026-08-26) — supersedes everything below
+>
+> **THE OBJECT IS STILL P1 / P2, LONG-ONLY. W51–W57 adopted nothing.** Numbers unchanged:
+> 14.86 pts/session, $1,475/week per ~1.27 time-weighted contracts, annualised Sharpe 2.26,
+> max drawdown −$20,245, MAR 14.86, worst week −$7,418, positive weeks 58.3 %.
+>
+> **THE BINDING CONSTRAINT IS NOW IDENTIFIED AND IT IS NOT A MISSING FILTER.**
+> - W55: across **16 causal features available at the entry bar, not one predicts per-unit P&L
+>   with |ρ| above 0.11**, and the object's own vote strength is +0.022. IC is exhausted.
+> - W56: one loosely-correlated *profitable* sleeve at w = 0.30 is worth **+43 % money at the
+>   same $20,245 drawdown with a slightly better drawdown distribution**. Portfolio arithmetic
+>   is the largest lever ever measured here.
+> - W57: **no engine in this repo qualifies as that sleeve on present evidence.** B-MOM is a
+>   4-year in-sample result (2006–2021 t = 0.27 on 4,077 sessions; 2022–2026 t = 2.66 on 1,122)
+>   and no measurable causal regime variable separates the eras — its own 60-cell scan is
+>   indistinguishable from chance (12 hits vs 10.6 expected, p = 0.340).
+>
+> **W56's falsifier has fired: model concentration is the binding constraint on the owner's
+> objective, and the next move is to BUILD or BUY genuinely different information.** The
+> specification for what to build is now exact: an engine with a real edge whose *underwater
+> curve* is not P1's (B-MOM's was −0.171 against P1 — the right shape, on the wrong evidence).
+>
+> **CHARTER AMENDMENT 1 (2026-08-26) is binding**: the "positive in every year" adoption gate is
+> WITHDRAWN, replaced by sample adequacy + a causal regime variable + the walk-forward number.
+>
+> **New infrastructure**: `runs/WE_W56_BREADTH/out/p1_daily.csv` — P1's daily P&L series now
+> exists on disk for the first time in 56 waves.
+>
+> **New binding method rules**: a weight scan may never be compared against an unscanned
+> reference (W53 measured that best-of-21 inflates MAR ~20 % on structureless data); any scan
+> over buckets/cells needs a permutation multiplicity check (W55, W57 — both of my own stopping
+> rules were mis-specified without one and both were tightened before use).
+>
+> ## CURRENT TRUTH after W52 — superseded above, kept for the NinjaScript validation
 >
 > **THE OBJECT IS P1 / P2, LONG-ONLY.** Nothing else is adopted. The W41 clock basket adoption
 > was **WITHDRAWN** on 2026-08-26 (see `runs/WE_W41_CLOCK2/amendment_2.yaml`): its range sleeve
