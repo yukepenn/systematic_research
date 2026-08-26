@@ -1,0 +1,69 @@
+=== quote grid: 48 files, 3 excluded for missing quotes (s20250811.parquet, s20250924.parquet, s20260430.parquet), 3,689,792 second-bars with a two-sided quote
+    2025-08-13 18:00:00 -> 2026-05-20 16:59:59 [1s]
+
+=== PHASE 1a: the raw spread, by session segment (2025-08 -> 2026-05) ===
+segment                      seconds  median tk   mean tk   p90 tk   median $/RT
+OVERNIGHT 18:00-09:29      2,511,000       3.00      3.87     5.00         15.00
+RTH 09:30-16:00            1,029,565       2.00      2.51     4.00         10.00
+POST 16:00-17:00             149,227       2.00      2.64     4.00         10.00
+ALL                        3,689,792       3.00      3.44     5.00         15.00
+
+    P1: 2,010 trades on the extended window [18s]
+
+=== PHASE 0: where P1's 4,020 fills sit in the day ===
+segment                     fills    share
+OVERNIGHT 18:00-09:29       2,476    61.6%
+RTH 09:30-16:00             1,428    35.5%
+POST 16:00-17:00              116     2.9%
+
+=== PHASE 1b: THE WEIGHTED ESTIMATE (the one the spec says counts) ===
+    P1's own fill time-of-day distribution x the spread profile from all 3.9 M seconds.
+
+    spread at P1's trading times = 2.93 ticks = $14.65 per round turn
+    (a round turn crosses once: buy the ask, sell the bid)
+    campaign assumptions: headline $0.00, C1 stress line $10.00 (= 2 ticks)
+       OVERNIGHT 18:00-09:29     3.19 ticks = $ 15.97/RT
+       RTH 09:30-16:00           2.55 ticks = $ 12.76/RT
+
+=== PHASE 2: THE DIRECT MEASUREMENT at overlapping fills ===
+    128 of 4,020 fills fall inside the 47 quote sessions (3.2 %)
+    the simulated open sits OUTSIDE the quote on 100.0 % of them (minute grid vs second grid disagreement - disclosed, not averaged away)
+    on the 0 fills where they agree, the cost the simulation OMITS is
+       median nan ticks = $nan per SIDE
+       mean   nan ticks = $nan per side
+       -> $nan per ROUND TURN (both sides)
+    direct median spread at those fills: nan ticks
+
+======================================================================================================================
+=== PHASE 3: P1 RE-QUOTED AT THE MEASURED COST
+======================================================================================================================
+    P1: 2,010 trades, 2,376 contract round turns, 11.15 per week
+
+cost line                           $/RT extra    $/week   full-window wk$   trailing-12m wk$    2026 wk$
+headline (commission only)                0.00         0             1,315                879         412
+C1 stress line (assumed 2 tk)            10.00       112             1,204                767         301
+MEASURED (2.93 ticks)                    14.65       163             1,152                716         249
+
+    annualised at 1 unit: full 59,888  |  trailing-12m 37,209  |  2026 12,938
+
+======================================================================================================================
+=== PHASE 4: MICROSTRUCTURE PREDICTIVE POWER
+======================================================================================================================
+    POWER FIRST (method rule 25): 64 of 2,010 entries have quote data.
+    smallest |Spearman| detectable at t = 2 is 2/sqrt(64) = 0.250
+    W55's ceiling across 16 minute-level features was |rho| < 0.11.
+    -> this test is UNDERPOWERED for effects of the size this problem produces
+
+feature          Spearman rho     |t|            
+spread                 +0.123    0.98            
+sflow                  -0.039    0.31            
+qimb                   -0.104    0.82            
+updint                 -0.034    0.27            
+trades                 -0.127    1.01            
+vol                    -0.147    1.17            
+
+    Reported as DESCRIPTIVE ONLY where the detectable size exceeds the effects
+    this problem is known to produce. 47 sessions cannot settle this question, and
+    the useful output of this wave is the fill cost above, not this table.
+
+=== STATUS: measurement. [36s] ===

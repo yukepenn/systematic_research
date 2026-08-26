@@ -1,0 +1,40 @@
+run_id: WE_W82_FILLAUDIT
+amendment: 1
+date: 2026-08-26
+status: DEFECT FOUND AND FIXED — read 1's DIRECT estimate was void; its WEIGHTED estimate is not.
+
+the_defect: >
+  Read 1 reported "the simulated open sits OUTSIDE the quote on 100.0 % of fills". 100 % is not a
+  disagreement, it is a systematic misalignment, and the spec required it to be diagnosed rather
+  than averaged away. Diagnosed:
+
+  THE 1-MINUTE SUBSTRATE IS BACK-ADJUSTED CONTINUOUS; THE 1-SECOND GRID IS THE RAW FRONT MONTH.
+  Measured on 2026-05-20 across 1,379 overlapping minutes, minute-close minus 1-second-last is
+      median +282.25, mean +282.25, sd 0.18, range [+281.00, +285.00]
+  i.e. a CONSTANT ADDITIVE OFFSET - the accumulated roll back-adjustment. Comparing a
+  back-adjusted price to a raw quote puts every fill outside the quote by construction.
+
+  A second, smaller defect in the same code: read 1 read the quote at T-60s for a bar end-stamped
+  T. The grids align as (T-59s .. T], so a bar's OPEN corresponds to the 1-second row at T-59s.
+  Verified: the 1-second row at 04:01:00 has last 29,040.00 and the minute bar ending 04:01:00 has
+  close 29,322.25 - exactly the 282.25 offset - so both grids are bar-END stamped.
+
+what_is_NOT_affected: >
+  THE HEADLINE. A spread is `ask - bid`, both from the SAME raw series, so an additive
+  back-adjustment offset cancels exactly. The weighted estimate - P1's own fill time-of-day
+  distribution applied to the spread profile from all 3.7 M two-sided seconds - is untouched:
+      2.93 ticks = $14.65 per round turn at P1's actual trading times
+      overnight 3.19 ticks = $15.97/RT   |   RTH 2.55 ticks = $12.76/RT
+  and so is the repricing that follows from it. That estimate never used a price LEVEL.
+
+what_is_void_and_re_run: >
+  The DIRECT per-fill estimate ("the cost the simulation omits"), which did use levels. It is
+  re-run with a per-session offset removed and the T-59s alignment corrected. It is the SECONDARY
+  estimate; the spec already named the weighted one as the one that counts.
+
+method_note_for_the_record: >
+  This is the fourth cross-substrate alignment defect in the repository's history (W44's constant
+  basis check on the wrong series, W52's timestamp shift, W76's truncated loader, now this).
+  The rule that keeps catching them: ASSERT THE JOIN, DO NOT ASSUME IT. Read 1 printed the
+  disagreement rate because the spec required it - had it not, a $14.65 conclusion would have
+  shipped alongside a silently nonsensical direct estimate.
