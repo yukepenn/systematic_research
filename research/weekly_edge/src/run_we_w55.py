@@ -157,8 +157,10 @@ def main():
     # =====================================================================================
     P_(f"\n{'='*104}\n=== PHASE 1c/1d: causal trailing-rank buckets - duration AND per-unit P&L")
     P_(f"{'='*104}")
-    P_(f"Rank of each entry against the PRIOR {HIST} entries only. Bottom-3 duration deciles =")
-    P_(f"holds under {dq[3]:.0f} minutes, which W54 priced at {-15.02:.2f} pts/session in aggregate.\n")
+    SHORT_MIN = 37.0        # W54's boundary: holds under 37 min cost -15.02 pts/session
+    P_(f"Rank of each entry against the PRIOR {HIST} entries only. SHORT is defined as W54")
+    P_(f"defined it - a hold under {SHORT_MIN:.0f} minutes - which W54 priced at -15.02 pts/session in")
+    P_(f"aggregate across {100*float((dur < SHORT_MIN).mean()):.0f} % of all trades.\n")
 
     def causal_rank(v):
         r = np.full(len(v), np.nan)
@@ -168,7 +170,7 @@ def main():
             if len(h) >= 50 and np.isfinite(v[j]):
                 r[j] = float((h < v[j]).mean())
         return r
-    short = dur < dq[3]
+    short = dur < SHORT_MIN
     best = []
     P_(f"{'feature':<18}{'bucket':>8}{'n':>7}{'mean dur':>10}{'P(short)':>10}"
        f"{'per-unit $':>12}{'total $':>12}{'pts/sess':>10}")
@@ -178,7 +180,8 @@ def main():
         if ok.sum() < 500:
             continue
         for b in range(NB):
-            m = ok & (rk >= b / NB) & (rk < (b + 1) / NB if b < NB - 1 else 1.0001)
+            hi = ((b + 1) / NB) if b < NB - 1 else 1.0001
+            m = ok & (rk >= b / NB) & (rk < hi)
             if m.sum() < 60:
                 continue
             row = dict(feature=k, bucket=b, n=int(m.sum()), dur=float(dur[m].mean()),
@@ -202,6 +205,42 @@ def main():
     P_(f"\n   baseline: P(short) = {100*base_short:.1f} %, mean per-unit P&L = "
        f"${base_unit:,.0f} over {len(trs)} trades")
     cand = Bf[(Bf["unit"] < 0) & (Bf["n"] >= 100)].sort_values("pts")
+
+    # --- MULTIPLICITY, applied to phase 1's OWN scan (amendment_1) --------------------
+    # Phase 1 is itself a scan: 16 features x 5 buckets. W53's rule says a scanned quantity
+    # must be compared against a null that is scanned the same way. So: hold the bucket
+    # memberships fixed, permute the per-unit P&L across entries, and ask how many negative
+    # buckets and how negative a minimum a STRUCTURELESS assignment produces.
+    P_(f"\n=== MULTIPLICITY CHECK on phase 1's own {len(Bf)}-bucket scan (amendment_1) ===")
+    masks = []
+    for _, w in Bf.iterrows():
+        if w["n"] >= 100:
+            rk = causal_rank(FEATS[w["feature"]][ei])
+            b = int(w["bucket"])
+            hi = ((b + 1) / NB) if b < NB - 1 else 1.0001
+            masks.append(np.isfinite(rk) & (rk >= b / NB) & (rk < hi))
+    RNG = np.random.default_rng(20260855)
+    nneg, minmean = [], []
+    for _ in range(500):
+        p = RNG.permutation(per_unit)
+        mm = np.array([p[m].mean() for m in masks])
+        nneg.append(int((mm < 0).sum())); minmean.append(float(mm.min()))
+    nneg = np.array(nneg); minmean = np.array(minmean)
+    obs_n = int(len(cand))
+    obs_min = float(cand["unit"].min()) if len(cand) else 0.0
+    P_(f"   observed: {obs_n} negative buckets (n>=100), most negative ${obs_min:,.0f}/unit")
+    P_(f"   permuted: {nneg.mean():.1f} negative buckets on average "
+       f"(5th-95th pct {np.percentile(nneg,5):.0f}-{np.percentile(nneg,95):.0f}), "
+       f"most negative ${minmean.mean():,.0f} on average "
+       f"(5th pct ${np.percentile(minmean,5):,.0f})")
+    p_n = float((nneg >= obs_n).mean())
+    p_min = float((minmean <= obs_min).mean())
+    P_(f"   p(as many negative buckets by chance) = {p_n:.3f}   "
+       f"p(one as negative by chance) = {p_min:.3f}")
+    survives = (p_n < 0.05) or (p_min < 0.05)
+    P_(f"   -> {'SURVIVES multiplicity' if survives else 'DOES NOT SURVIVE - chance produces this or more'}")
+    if not survives:
+        cand = cand.iloc[0:0]
     P_(f"\n=== THE PREREGISTERED STOPPING RULE ===")
     if not len(cand):
         P_("   NO causal bucket of >= 100 entries has negative per-unit P&L.")

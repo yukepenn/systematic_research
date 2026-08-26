@@ -1,0 +1,47 @@
+amendment: 1
+run_id: WE_W55_DURATION
+date: 2026-08-26
+status: APPEND-ONLY, and written BEFORE the amended check was run. Phase 1a and 1b are already
+  run and their output stands (out/duration2.txt, out/contradiction.csv).
+
+the defect in my own preregistered stopping rule:
+  The spec's phase-1(d) stopping rule reads "if (d) shows no bucket whose refused entries are
+  materially negative, the wave STOPS". I wrote that rule without noticing that phase 1(d) IS
+  ITSELF A SCAN - 16 causal features x 5 trailing-rank buckets = 80 cells - and W53's own new
+  binding rule, which I wrote this morning, says a scanned quantity may never be compared
+  against an unscanned reference.
+  The first run found 2 negative buckets of 80 and I was about to call phase 2 "AUTHORISED" on
+  them. Back of the envelope: per-unit P&L has a standard deviation near $1,700, so a bucket of
+  ~330 trades has a standard error near $95 around the +$98 baseline; a bucket at -$63 is about
+  1.7 SE below, and 80 draws at 1.7 SE would produce roughly 3 to 5 such cells BY CHANCE.
+  Finding 2 is FEWER than chance expectation. The rule as written would have licensed a wave on
+  noise.
+
+the amendment, which tightens the rule and cannot loosen it:
+  Phase 1(d) now requires a PERMUTATION MULTIPLICITY CHECK before the stopping rule is applied.
+  Bucket memberships are held fixed; the per-unit P&L is permuted across entries 500 times; and
+  the observed (number of negative buckets, most-negative bucket mean) is compared against that
+  null. Phase 2 is authorised only if p < 0.05 on at least one of those two statistics.
+  This is strictly harder than the original rule. No candidate that would have passed before can
+  pass now unless it also survives the multiplicity null.
+
+what phase 1a and 1b already established, unchanged by this amendment (FACT):
+  X1 ELIMINATED. Per-unit and sized correlations are essentially identical (largest gap 0.05),
+     so the flat P&L correlations are not a sizing confound. Per-unit P&L is +$51 at size 1 and
+     +$307 at size 2, which is the quality layer working, not a distortion of the diagnostic.
+  X2 CONFIRMED, and it partially retracts W54's own headline. Spearman(duration, per-unit P&L)
+     is +0.249 on the RAW PAIRS but +0.750 on the ten DECILE MEANS. W54's monotone table -
+     win rate climbing 18.5 % -> 81.1 % across duration deciles - is largely a BINNING effect.
+     The -15.02 pts/session in sub-37-minute trades remains an exact accounting FACT, but the
+     strength of the duration -> profitability relation was overstated by presenting it through
+     decile means, and that is corrected here.
+  NEW FACT, and the one that most constrains this campaign: across 16 causal features available
+     at entry, NOT ONE predicts per-unit P&L with |Spearman| above 0.11. The strongest is
+     atr_l at -0.108 (a higher ATR at entry is associated with worse per-unit P&L) and the next
+     is runlen at -0.098, whose sign is OPPOSITE to its +0.404 correlation with duration.
+  NEW FACT about the object's own signal: vote_margin - the closed form's own
+     nMem x nThr x (1+dL) product, lagged to the entry bar - correlates +0.022 with per-unit
+     P&L and -0.059 with duration. The strength of the object's own vote carries NO information
+     about whether the resulting trade makes money. That is mechanism law 5 measured directly
+     rather than inferred from four failed sizing constructions.
+outputs: unchanged, plus out/buckets.csv and the multiplicity block in out/duration2.txt
