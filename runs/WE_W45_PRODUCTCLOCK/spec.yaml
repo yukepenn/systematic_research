@@ -1,0 +1,46 @@
+run_id: WE_W45_PRODUCTCLOCK
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: self-directed, dictated by W44's finding.
+
+what W44 established, and the question it creates: >
+  The shipped C# runs its decision stack on a 3-MINUTE secondary series. Our object runs it on
+  1-minute bars and is 3.1x as active (285 flips vs 92 over the same window). On the correct
+  clock the ratchet is faithful - direction agreement 99.3 % whenever both hold a position.
+  W41, separately and beforehand, measured the 3-minute clock as a BASE VOTE sleeve: 9.40
+  pts/session against 1-min's 10.62, but at $170.8 per trade against $103.9, with weekly P&L
+  correlated only 0.48 with the 1-minute object.
+  W41 never put the QUALITY LAYER on it. The quality layer is worth +39 % on the 1-minute
+  object (10.62 -> 14.72). If it transfers, the 3-minute object lands near 13 pts/session on
+  roughly HALF the trades - which is a materially better stress-net object, because the
+  friction line is charged per round turn and the 3-minute clock pays it half as often.
+  This is the single cheapest untested combination in the campaign and it uses the product's
+  own clock.
+
+arms (all on the campaign's standard stack: 32-config long-only vote >= 0.5, range throttle
+  q = 0.8 and the delta gate on the 1-MINUTE clock, session box -$1,300 / +$1,000, causal
+  quality score with trailing-250-entry quantiles and the majority-of-five size rule):
+  C0 1-minute clock, full object                    (B1: must reproduce 14.72 pts/session)
+  C1 3-minute clock, session-anchored, sigma = 460 bars, full object   <- the product's clock
+  C2 C1 with sigma = 153 bars (the wall-clock equivalent), reported because W44 found 460 BARS
+     beats 153 against the C#, so this arm should be worse and is a consistency check
+  C3 C1 with blocks_on = False (no 30/21-minute pre-close blocking) - a DIAGNOSTIC of the
+     exposure gap W44 found (the C# is in market 52 % of bars against the port's 36 %), NOT a
+     candidate, since removing a risk control is not an improvement to adopt on production
+  C4 the exposure-matched pair 1-min + 3-min full objects, at constant total exposure in
+     time-weighted contract-minutes, weights scanned
+
+measurements: full window 2022-07 -> 2026-08 AND per year (standing policy since W40 am.2);
+  pts/session, $/trade, stress-net at $14.36/RT, worst week, CVaR5, Sharpe, eff, CVaR-eff;
+  weekly correlation with the 1-minute object and correlation inside its worst-decile weeks.
+adoption: C1 replaces or joins C0 only if it improves eff AND CVaR-efficiency on the full
+  window, is not negative in more than one year, and clears BOTH nulls at >= 95th percentile
+  (circular shift and count-matched, the latter binding). If C1 wins only on stress-net, that
+  is reported as a FRICTION advantage and not as an edge.
+falsifier: if the quality layer does not transfer to the 3-minute clock, the recorded
+  conclusion is that the layer is specific to the 1-minute event stream - which would be a
+  real narrowing of W34/W37/W39's finding and would explain why the product itself never
+  needed one.
+forbidden: [data >= 2026-08-01, adopting C3, quoting a per-trade figure without the trade
+  count beside it, adopting without the per-year read]
+outputs: [out/productclock.txt, out/summary.csv, REPORT.md]
