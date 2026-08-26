@@ -1,0 +1,98 @@
+run_id: WE_W74_WEEKMATH
+title: "What does 76 % positive weeks actually REQUIRE? The arithmetic of the campaign's own
+        binding target, and which lever is cheapest."
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+why_this_wave_exists: >
+  research/weekly_edge/CAMPAIGN_STATE.md fixes the campaign's success criterion:
+      positive-week rate > 76 %, mean weekly net > $8,583, worst week materially better
+      than -$42,235.
+  We are at 58.3 % positive weeks (61.9 % over the trailing two years). W71 measured all 216
+  halt x target x period cells and THE BEST OF THEM REACHES 64.8 %. Seventy-three waves have
+  attacked this by trying to find better signals. Not one has asked what the target requires
+  ARITHMETICALLY - and that question has an answer that does not depend on finding anything.
+
+  If a week's P&L is a sum of N per-trade outcomes with mean mu and dispersion sigma, the
+  positive-week rate is a function of the weekly Sharpe mu*sqrt(N)/sigma and of the weekly SKEW.
+  Both are measurable. So is the target's implied requirement. The campaign has never written
+  the identity down, and it has been choosing between levers without knowing their exchange rate.
+
+  The tension this wave exists to price: CAMPAIGN_STATE records "positive skew IS his money
+  structure" as a design prior, while W64 concluded P1's 3.2x mean/median skew is a WEAKNESS.
+  Both cannot be simply true. Positive skew is exactly what DEPRESSES the positive-week rate at a
+  given Sharpe. The owner wants consistency first. So the two priors are in direct conflict and
+  the conflict is quantitative, not verbal.
+
+no_new_data: >
+  Everything is computed from artifacts already on disk:
+    runs/WE_W59_REOPTIM/out/cells_daily.parquet   (216 cells x 1,012 sessions)
+    runs/WE_W56_BREADTH/out/p1_daily.csv          (P1 daily)
+    runs/WE_W61_SHORTSLEEVE/out/ledger.csv        (P1 and short sleeve daily, aligned)
+    runs/WE_W72_ORCHANNEL/out/ledgers_*.npz       (11 channel-substituted objects, daily)
+  No engine runs, no new simulation, no parameter search.
+
+phases:
+  1_the_identity: >
+    For every object on disk - the 216 cells, P1, P2, the short sleeve, the 11 W72 arms and every
+    P1+short blend - compute weekly mean, sd, skew, excess kurtosis, positive-week rate and
+    trades/week. Then test two predictors of the positive-week rate:
+      M0  Phi(weekly Sharpe)                       - the normal model
+      M1  Cornish-Fisher with the measured skew    - the skew-corrected model
+    Report R^2 and mean absolute error of each across the ~240 objects. Whichever predicts is
+    the relation the rest of the wave uses; if neither does, that is itself the finding and the
+    wave reports the empirical surface instead of a model.
+  2_the_requirement: >
+    Under the phase-1 relation, draw the iso-76 % curve in (weekly Sharpe, weekly skew) space and
+    mark where P1 sits, where each of the 216 cells sits, and where the original trader's
+    published 21-week sheet sits. State the required weekly Sharpe at our measured skew, and the
+    required skew at our measured Sharpe. Convert the Sharpe requirement into a required number
+    of INDEPENDENT streams at our per-stream quality, at pairwise correlations rho = 0, 0.1, 0.3.
+  3_frequency_or_diversification: >
+    THE DECISIVE TEST, and it settles a two-year-old open question. W61 measured that adding the
+    short sleeve at w = 0.30 raises the positive-week rate 58.3 -> 63.7 %. Predict that gain from
+    FREQUENCY ALONE using the phase-1 relation, the measured pairwise rho (-0.003) and the
+    combined trade count. If the measured gain equals the predicted gain, the short sleeve's
+    consistency value is generic - ANY independent stream of that size would do it - and the
+    campaign should stop searching for a specially-decorrelated engine and start counting
+    streams. If the measured gain EXCEEDS the prediction, the sleeve carries genuine
+    negative-dependence value beyond its correlation, which would be the first such finding here.
+  4_the_skew_lever_priced: >
+    Across the 216 cells the session TARGET is the only parameter that truncates the right tail.
+    Regress positive-week rate on (weekly Sharpe, weekly skew) and use the fit to separate, for
+    each target level, how much of its positive-week effect is a Sharpe effect and how much is a
+    skew effect. This prices "give up right tail to buy consistency" in the campaign's own units
+    and connects W27 (target weak at the 88th percentile), W59, W70 and W71.
+  5_the_honest_ceiling: >
+    Daily and weekly P&L are serially dependent and clustered (W50: the tail is accumulation).
+    Estimate the effective independent sample per week from the measured autocorrelation, and
+    report the maximum positive-week rate reachable by adding independent copies of our OWN
+    engine - the ceiling that scaling and cloning alone can reach.
+
+preregistered_decision_rule:
+  this_wave_adopts_nothing: >
+    It produces one number - the requirement - and one exchange rate between the levers. It is a
+    planning instrument, not a candidate.
+  falsifier_for_the_whole_framing: >
+    if in phase 1 NEITHER M0 nor M1 predicts the positive-week rate across the ~240 objects
+    (mean absolute error > 5 pp), then the positive-week rate is not a function of the weekly
+    moments here, the arithmetic in phases 2-5 is void, and the wave reports the raw empirical
+    surface with that failure stated in the headline rather than proceeding as if it fitted.
+  what_would_change_the_campaign: >
+    if phase 2 shows the required number of independent streams at our per-stream quality is
+    small (<= 4), the campaign's remaining work is stream-counting and the search for a single
+    better signal is misallocated effort. If it is large (>= 10), the target is not reachable by
+    diversification at this quality and the campaign must say so plainly to the owner rather
+    than continuing to imply it is one good wave away.
+
+traps_named_before_running:
+  - "Fitting a relation across 240 objects that share a substrate and overlap heavily is NOT an
+     out-of-sample validation of that relation. The fit is used as ALGEBRA - to convert between
+     units the owner cares about - never as evidence that any object will achieve anything."
+  - "The trader's 21-week sheet is curated, in-sample and version-churned (W23). His point is
+     plotted for orientation and is never used as a fitted observation."
+  - "Cornish-Fisher is unreliable for large |skew|. Any object outside |skew| < 2 is excluded
+     from the fit and reported separately."
+  - "Phase 3's prediction must be made and written down BEFORE the measured 63.7 % is compared to
+     it, and the prediction is computed from W61's own rho and trade counts, not tuned to match."
