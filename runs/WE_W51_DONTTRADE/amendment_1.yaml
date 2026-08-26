@@ -1,0 +1,84 @@
+amendment: 1
+run_id: WE_W51_DONTTRADE
+date: 2026-08-26
+status: APPEND-ONLY. Phases 1-3 of the original spec are RUN and their output is in
+  out/donttrade.txt, out/ceiling.csv, out/gates.csv, out/per_class.csv, out/summary.csv.
+  Nothing was adopted. This amendment preregisters the follow-up BEFORE its results exist.
+
+what phase 1 established (FACT, out/ceiling.csv):
+  The ceiling by decision time, which had never been measured. A perfect oracle that knows the
+  session's final class can save, from decision time m onward:
+    pre-session 4.37 (reproduces the +4.36 target - phase 1's own B1)   20:01 4.26
+    04:01 3.61   08:01 2.82   09:30 2.92   10:00 1.54   10:30 1.06   11:30 0.32   13:30 0.29
+  and the AUC of the single causal feature (signed move so far) rises 0.582 -> 0.769 over the
+  same clock. INFERENCE, stated as such: the information about which kind of day it is arrives
+  at roughly the same rate as the opportunity to act on it disappears. By 10:00 ET, 65 % of the
+  prize is already gone and only then does the day become half-way readable.
+
+what phase 2 established (FACT, out/gates.csv):
+  NO a-priori-signed price-location gate beat the incumbent on both eff and MAR. The closest,
+  A1 (price >= session open), cuts max drawdown 18 % ($20,245 -> $16,658) and raises MAR 16 %
+  (14.74 -> 17.06) for 5 % less money, but loses eff. Its per-class ledger explains why it is
+  not the intended mechanism: it halves the TREND-DOWN loss (-3.05 -> -1.18) and TRIPLES the
+  RANGE loss (-1.32 -> -3.94), because on a range day the gate re-enters exactly when price
+  crosses back above the open. It also RAISES the trade count 1,950 -> 2,005 - because
+  `pos = posL & allow` makes the gate an exit rule as well as an entry rule. That was not the
+  intended construction and is corrected in phase B below.
+
+the finding that drives this amendment (out/gates.csv rows D1/D2):
+  The strongest conditional in the table is the prior session's sign, and its COMPLEMENT is
+  almost empty, which is what distinguishes a real conditional from an exposure cut:
+    D2 prev session DOWN: 64.4 % of the exposure carries 89.6 % of the money
+    D1 prev session UP  : 35.4 % of the exposure carries 13.6 % of the money
+    D2 vs incumbent: pts 13.20 vs 14.74 | worst week -$4,975 vs -$7,418 (-33 %) |
+       max drawdown $10,850 vs $20,245 (-46 %) | MAR 24.63 vs 14.74 | ann Sharpe 2.22 vs 2.25
+       | eff 0.265 vs 0.198 | per class TREND-UP 18.58 -> 14.10, TREND-DOWN -3.05 -> -1.53,
+       RANGE -1.32 -> +0.50
+  THE HONEST PROBLEM WITH IT: its DIRECTION is not independent evidence. `prev_ret` with a
+  mean-reversion sign is one of the five features of the quality score, and that sign was chosen
+  by W33/W34's FULL-SAMPLE scan on this same window. Promoting it from a sizing feature to a
+  gate inherits that specification-level contamination. So D2 as it stands is NOT adoptable and
+  is not being adopted. The binding test is whether a version that learns the sign CAUSALLY,
+  from trailing sessions only, survives - and whether the mechanism is visible in the market
+  rather than only in our P&L.
+
+phase A - MECHANISM FIRST, before any more backtests:
+  A1 P(session class | prior session sign), against the base rate. If the prior session's sign
+     shifts the probability of the class we are paid on (TREND-UP), the conditional is a market
+     fact and not a P&L artifact. If it does not, D2 is a P&L artifact and dies here.
+  A2 the incumbent's P&L by TIME OF DAY x class - never measured in this campaign. Phase 1 says
+     33 % of the damage lands 20:01-08:01, 29 % 08:01-10:00, 35 % after 10:00; A2 resolves that
+     to the hour and says whether an overnight rule is even a candidate.
+
+phase B - ENTRY-ONLY GATES (the construction the original spec actually asked for):
+  Re-run the A-arms as pure entry blockers: once a position is open the gate does not close it.
+  This preserves the event count, which the unifying law (W42/W45/W47) says is what protects
+  the tail, and separates "do not start" from "get out".
+
+phase C - CAUSAL RE-DERIVATION of the prior-session conditional:
+  C1 fixed sign prev_ret < 0                      (= D2, contaminated, reference only)
+  C2 CAUSAL SIGN LEARNER: at each session, using only sessions strictly before it (trailing
+     250, minimum history 250), compare the incumbent's realised mean pts/session on prev-down
+     vs prev-up sessions and trade only the currently-favoured bucket. The sign is never taken
+     from the measurement window.
+  C3 C2 plus a CAUSAL THRESHOLD: the trailing-250 median of prev_ret rather than zero.
+  If C2/C3 lose most of C1's advantage, the recorded conclusion is that the advantage was the
+  full-sample sign, and prev_ret stays a sizing feature.
+
+phase D - NULLS for anything that survives A-C, both required:
+  N1 circular shift of the session-level gate by a random session offset.
+  N2 count-matched AND EXPOSURE-MATCHED in CONTRACT-MINUTES (+-2 %) random session blocking.
+  Both evaluated by the same analytic session-removal path as the true arm, so the comparison
+  is like-for-like. The analytic path's error against the full pipeline is measured once on C1
+  and reported; if it exceeds 5 % of pts/session the nulls are re-run through the full pipeline.
+
+adoption bar (unchanged from the spec, plus the owner's stated objective):
+  MAR and max drawdown must improve, eff and CVaR-efficiency must not degrade, stress-net > 0,
+  not negative in more than one year, N2 at >= 95th percentile, and the mechanism in phase A
+  must be present in the MARKET, not only in our P&L.
+falsifier: if C2/C3 fail, or phase A finds no class shift, the conclusion recorded is that the
+  +4.36 is not reachable by a prior-session bit and that phase 1's ceiling curve - information
+  arriving only as the opportunity expires - is the reason.
+forbidden: [data >= 2026-08-01, W50 classes inside any arm, fitting any threshold or sign on
+  the measurement window, adopting on eff alone, quoting a phase-1 ceiling as achievable]
+outputs: [out/w51b.txt, out/mechanism.csv, out/entryonly.csv, out/causal.csv, out/nulls.csv]

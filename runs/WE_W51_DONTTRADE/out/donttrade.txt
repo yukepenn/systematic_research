@@ -1,0 +1,79 @@
+=== B1 GATE: 14.74 pts/session over 1012 sessions (expect 14.72) -> PASS [23s]
+
+==============================================================================================
+=== PHASE 1: THE CEILING BY DECISION TIME (diagnostic, nothing adopted)
+==============================================================================================
+A perfect oracle at decision time m knows the session's final class but can only act
+on P&L that has not happened yet. Two action models are priced:
+  BLOCK  = refuse NEW entries from m onward (what every gate in phase 2 actually does)
+  FLATTEN= block AND close any position open at m (strictly stronger, needs an exit)
+
+decide at           sessions  BLOCK save  as % of 4.36  FLATTEN save  as % of 4.36  oracle AUC
+pre-session             1012        4.37          100%          4.37          100%            
+20:01                   1012        4.26           98%          4.34          100%       0.582
+00:01                   1012        3.97           91%          4.84          111%       0.586
+04:01                   1012        3.61           83%          4.37          100%       0.614
+08:01                   1012        2.82           65%          3.12           72%       0.650
+09:30 RTH open          1012        2.92           67%          3.12           72%       0.678
+10:00                   1012        1.54           35%          2.55           59%       0.716
+10:30                   1012        1.06           24%          1.51           35%       0.738
+11:30                   1012        0.32            7%          1.09           25%       0.757
+13:30                   1012        0.29            7%          0.71           16%       0.769
+
+   The BLOCK column at 'pre-session' must reproduce +4.36 - that is phase 1's own B1.
+   AUC is a SINGLE causal feature (signed move so far); it is a floor on separability,
+   not a ceiling, and it is reported to show how early the information arrives.
+
+==============================================================================================
+=== PHASE 2: CAUSAL GATES, entries otherwise frozen, sizing recomputed causally
+==============================================================================================
+eff and annualised Sharpe are exposure-INVARIANT (scaling contracts multiplies weekly
+mean and worst week together), so a gate that only cuts exposure cannot win on them.
+expo% is the gate's contract-minutes as a share of the incumbent's - it is the number
+the count-matched null in run_we_w51b.py has to match.
+
+arm                             trds    pts     wk$  wk+%  day+% trdDay+%    worst    maxDD   MAR annShrp    eff  cvEff  expo%  stress
+P1 INCUMBENT                    1950  14.74   1,470  58.6   27.6     46.0   -7,418   20,245 14.74    2.25  0.198  0.272  100.0   1,374
+A1 price >= session open        2005  14.04   1,400  56.2   23.5     43.4   -7,377   16,658 17.06    2.20  0.190  0.258   94.7   1,301
+A2 price >= session VWAP        2736   9.81     978  55.7   24.6     41.7   -7,259   18,162 10.93    1.90  0.135  0.175   91.2     843
+A3 price >= 50-sess mean        1493   9.22     919  44.3   19.7     46.1   -5,865   18,946  9.85    2.00  0.157  0.218   67.8     846
+A4 upper half of sess range     2402   9.97     994  55.2   24.7     42.2   -6,908   19,226 10.50    1.86  0.144  0.187   94.7     876
+A5 A1 and A3                    1473   9.47     944  43.3   17.6     45.4   -4,515   15,931 12.03    2.13  0.209  0.271   64.9     872
+A6 >=3 of A1..A4                2502  12.53   1,249  57.6   24.1     42.4   -8,224   20,765 12.21    1.95  0.152  0.216   93.7   1,126
+A7 >=2 of A1..A4                2253  10.44   1,041  55.2   25.2     42.8   -6,113   18,570 11.38    1.99  0.170  0.216   97.1     930
+B1 gap up (whole session)       1147   6.65     663  45.8   15.8     47.8   -7,418   23,779  5.66    1.61  0.089  0.157   60.8     607
+B2 RTH-OR upper half            2043  11.40   1,137  53.7   25.9     43.5   -7,675   23,314  9.90    2.00  0.148  0.210   96.1   1,036
+D1 prev session up               880   2.01     200  33.0   11.1     40.9   -5,079   21,108  1.93    0.65  0.039  0.055   35.4     157
+D2 prev session down            1085  13.20   1,317  50.7   16.9     51.2   -4,975   10,850 24.63    2.22  0.265  0.324   64.4   1,263
+D3 ATR below its norm           2306   3.05     304  54.7   23.6     49.2   -6,183   12,906  4.78    1.08  0.049  0.082   53.9     190
+D4 ATR above its norm           2237   5.91     589  55.2   26.6     46.3   -9,582   26,331  4.54    1.22  0.061  0.090   35.0     479
+
+=== WHERE THE CHANGE CAME FROM (pts/session by W50 class; diagnostic classes) ===
+arm                                TREND-UP   TREND-DOWN     REVERSAL        RANGE        MIXED    total
+P1 INCUMBENT                          18.58        -3.05         0.15        -1.32         0.51    14.86
+A1 price >= session open              18.37        -1.18        -0.07        -3.94         0.93    14.11
+A2 price >= session VWAP              13.76        -2.31        -0.18        -2.69         1.32     9.90
+A3 price >= 50-sess mean              12.49        -1.54        -0.47        -1.64         0.38     9.22
+A4 upper half of sess range           15.85        -2.12        -1.00        -2.79         0.09    10.04
+A5 A1 and A3                          12.79        -0.57        -0.57        -2.73         0.55     9.47
+A6 >=3 of A1..A4                      17.63        -1.74        -0.68        -3.17         0.55    12.59
+A7 >=2 of A1..A4                      15.51        -2.25        -0.42        -2.87         0.54    10.51
+B1 gap up (whole session)              8.59        -1.30        -0.16        -0.64         0.16     6.65
+B2 RTH-OR upper half                  14.88        -2.87         0.31        -1.54         0.70    11.48
+D1 prev session up                     4.96        -1.51         0.96        -1.71        -0.69     2.01
+D2 prev session down                  14.10        -1.53        -0.71         0.50         0.97    13.33
+D3 ATR below its norm                  3.50        -1.10        -0.09         0.44         0.25     3.00
+D4 ATR above its norm                 10.48        -2.03         0.55        -1.55        -1.44     6.00
+
+   A gate aimed at TREND-DOWN + RANGE must IMPROVE those two columns while leaving
+   TREND-UP roughly intact. A gate that mostly shrinks TREND-UP is cutting exposure,
+   not finding the bad days.
+
+==============================================================================================
+=== PHASE 3: PER YEAR (only arms that beat the incumbent on BOTH eff and MAR)
+==============================================================================================
+   NO ADOPTABLE ARM beat the incumbent on both. Per-year is not run.
+
+=== STATUS ===
+   Nothing is adopted in this file. run_we_w51b.py runs the two nulls (circular-shift
+   and EXPOSURE-matched count-matched) on whatever survived phase 2 and phase 3.
