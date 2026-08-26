@@ -204,3 +204,36 @@ time-weighted contract-minutes.
 cleared all five preregistered conditions on 2023-07 -> 2026-08 - a window chosen in W39 for a
 different comparison - and the adoption was withdrawn on the full-window read. A window chosen
 for one purpose will flatter something else.
+
+## W42 — the payoff's own shape, and why exits cannot be engineered here (2026-08-25)
+
+**1. What we actually own (`FACT`, measured for the first time).** 37.8 % of trades win; the
+median trade gives back MORE than its entire MFE (1.384); winners keep only 41.4 % of theirs.
+It is a LOW-HIT-RATE, HIGH-PAYOFF object whose winners pay for everything else.
+
+**2. The quality score forecasts EXCURSION SIZE, not hit rate.** Win rate is flat at 35-40 %
+across every score; MFE goes 1.30-1.51 ATR at score 0-1 to 3.10-5.45 ATR at score 3-4, at
+similar MAE. That is the mechanism behind sizing, and it explains why FILTERING on the score
+destroyed production (W34) while SIZING on it works: the score is not finding likelier winners,
+it is finding bigger ones.
+
+**3. Early adversity predicts failure and it is decided by BAR 5.** P(win | MAE <= -1 ATR by
+bar 5) = 24.0 % against 37.8 % unconditional, monotone in the threshold and FLAT in the horizon.
+Knowing this is not the same as being able to trade it - see 4.
+
+**4. Stops are structurally incompatible with this payoff, and phase 1 predicts it.** WINNERS'
+median MAE is 0.86 ATR: the trades that eventually work routinely go a full ATR against us
+first. Any stop at the level winners endure cuts the winners, and the winners are the whole
+P&L. Causally implemented: MAE stop 6.03 pts/session (eff 0.080), give-back stop 2.38
+(eff 0.024), partial 10.96 (0.146), high-score-only stops 7.66 (0.139) - all against the
+incumbent's 14.72 / 0.198. The exits are not badly tuned; they are the wrong instrument.
+
+**5. The largest look-ahead the campaign has found.** Updating MAE/MFE with bar i's own high
+and low and exiting at bar i's open turned 6.03 pts/session into 18.08 and Sharpe 0.179 into
+0.465 - the campaign's highest-ever number, entirely artificial. Standing addition:
+> a stop or trailing rule must be a RESTING ORDER at a level known before the bar trades, and
+> every stop arm must be reported beside its RE-ENTRY-ALLOWED control - without that control a
+> "stop" can silently be nothing but a one-bar skip.
+
+**6. The incumbent 23-bar cut is now null-tested** against randomised stop distances:
+100th percentile, p = 0.000.
