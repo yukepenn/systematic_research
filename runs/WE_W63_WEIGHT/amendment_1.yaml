@@ -1,0 +1,49 @@
+amendment: 1
+run_id: WE_W63_WEIGHT
+date: 2026-08-26
+status: APPEND-ONLY, correcting a VACUOUS verdict my own code printed. The numbers stand; the
+  sentence the code drew from them does not.
+
+the defect:
+  Phase 2 printed "4 of 5 held-out years hold -> MAJORITY: the procedure survives leave-one-
+  year-out". That reading is empty. The folds were:
+      held out 2022  ->  w chosen on the other four = 0.00  ->  delta +$0   "holds"
+      held out 2023  ->  w = 0.00  ->  +$0   "holds"
+      held out 2024  ->  w = 0.00  ->  +$0   "holds"
+      held out 2025  ->  w = 0.00  ->  +$0   "holds"
+      held out 2026  ->  w = 0.31  ->  -$1,643   FAILS
+  In four of the five folds the procedure chose w = 0.00 - it DECLINED TO USE THE SLEEVE AT ALL -
+  because 2026 was in the training set and 2026's delta is negative at every w > 0. A delta of
+  exactly zero produced by doing nothing is not a fold that "holds"; it is a fold in which the
+  procedure abstained. Counting an abstention as a success is exactly the kind of scoring error
+  that would let a rule look robust by never firing.
+  The ONLY fold in which the procedure selected a non-zero weight is the one where 2026 was held
+  out, and there it selected 0.31 and lost $1,643/week on the held-out year.
+
+the corrected verdict, and it is the opposite of the printed one:
+  THE PROCEDURE FAILS. It produces a usable weight in 0 of 5 folds: four abstentions and one
+  live selection that loses badly. W63's preregistered falsifier - "if the LOYO folds are
+  negative in a majority of held-out years, the recorded conclusion is that no unconditional
+  weight is defensible" - fires, and it fires harder than the falsifier anticipated, because the
+  failure mode is not "the weight is wrong" but "there is no weight".
+  Phase 1 says the same thing directly: the worst-year delta is >= 0 only at w = 0.00. 2026 is
+  negative at EVERY positive weight, starting at -$132/wk at w = 0.02.
+  Phase 3's nulls also fail (N1 81.0 %, N2 72.3 % against a 95th-percentile bar).
+
+corrected scoring rule for any future leave-one-out on a CHOICE PROCEDURE:
+  a fold in which the procedure selects the null action must be scored as ABSTAINED, never as a
+  success. A procedure's out-of-sample record is its record ON THE FOLDS WHERE IT ACTED.
+  This is added to the campaign's method rules.
+
+what stands from the wave, unchanged and worth keeping:
+  the full curve, which is the honest deliverable. Per year at each weight, each year rescaled
+  to a $20,245 drawdown within itself:
+      w      2022     2023     2024     2025     2026
+      0.02   +96      +17      +230     +37      -132
+      0.10   +603     +99      +1,292   +131     -617
+      0.20   +1,765   +258     +726     +275     -1,141
+      0.30   +2,521   +527     +87      +460     -1,598
+  and the full-sample money curve peaks at w = 0.12 (+$504/wk, +34 %) while the consistency
+  metrics keep improving out to w = 0.50 (positive weeks 65.2 %, longest weekly losing streak 3).
+  THE SLEEVE HELPS IN FOUR YEARS OF FIVE AND HURTS IN THE MOST RECENT ONE - and the most recent
+  one is precisely the year the owner's criterion says must work.

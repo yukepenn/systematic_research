@@ -82,7 +82,7 @@ def main():
     def comb(w):
         return (1 - w) * p1 + w * shn
     base = met(p1)
-    yb = {y: met(p1, (dates.year == y).values) for y in yrs}
+    yb = {y: met(p1, (dates.year == y)) for y in yrs}
 
     # =====================================================================================
     # PHASE 1 - THE TWO CURVES
@@ -97,7 +97,7 @@ def main():
             continue
         deltas = {}
         for y in yrs:
-            m = (dates.year == y).values
+            m = (dates.year == y)
             a_ = met(c, m)
             if a_ and yb[y]:
                 deltas[y] = a_["weekly"] - yb[y]["weekly"]
@@ -155,7 +155,7 @@ def main():
         okw = [float(r["w"]) for _, r in C.iterrows()
                if min(r[f"d{z}"] for z in tr) >= 0]
         wsel = max(okw) if okw else 0.0
-        m = (dates.year == y).values
+        m = (dates.year == y)
         a_ = met(comb(wsel), m)
         d = (a_["weekly"] - yb[y]["weekly"]) if (a_ and yb[y]) else np.nan
         P_(f"{y:<16}{wsel:>26.2f}{d:>+22,.0f}"
@@ -220,7 +220,7 @@ def main():
     # =====================================================================================
     P_(f"\n{'='*118}\n=== PHASE 4: what each weight costs and buys, in the owner's units")
     P_(f"{'='*118}")
-    m22 = (dates.year == 2022).values
+    m22 = (dates.year == 2022)
     P_(f"{'w':<7}{'cost $/wk':>12}{'wk+% delta':>13}{'wStrk':>8}{'top5DD delta':>15}"
        f"{'2022 maxDD':>13}{'2026 delta $/wk':>18}")
     for w in (0.02, 0.04, 0.05, 0.08, 0.10, 0.15, 0.20, 0.30):

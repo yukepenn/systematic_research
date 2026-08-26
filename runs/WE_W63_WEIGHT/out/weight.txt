@@ -1,0 +1,71 @@
+=== B1: 1012 sessions 2022-07-04 -> 2026-05-29 | P1 net $300,817 | short net $121,454 | vol-normalisation factor 1.277
+
+======================================================================================================================
+=== PHASE 1: the two curves. No argmax is taken.
+======================================================================================================================
+w         weekly$    vs P1   wk+%   medWk$  wStrk   top5DD   ulcer  WORST-YEAR delta   which
+0.00        1,475       +0   58.3      455      8   14,266   6,183                +0  2022.0
+0.02        1,537      +62   58.3      464      8   14,573   6,236              -132  2026.0
+0.04        1,606     +131   57.8      577      8   14,931   6,307              -260  2026.0
+0.05        1,643     +168   57.8      583      8   15,126   6,348              -322  2026.0
+0.06        1,682     +208   58.3      596      8   15,336   6,396              -383  2026.0
+0.08        1,769     +294   59.3      690      4   15,864   6,509              -502  2026.0
+0.10        1,867     +392   60.3      802      4   16,462   6,650              -617  2026.0
+0.12        1,979     +504   60.3      939      4   17,145   6,828              -729  2026.0
+0.15        1,936     +462   60.8      980      4   16,320   6,385              -890  2026.0
+0.20        1,814     +340   61.8    1,028      4   14,766   5,613            -1,141  2026.0
+0.30        1,582     +108   63.7      959      4   12,159   4,619            -1,598  2026.0
+0.40        1,344     -130   63.2      822      4   11,090   4,260            -2,002  2026.0
+0.50        1,149     -325   65.2      731      3   11,112   4,361            -2,333  2026.0
+
+   the worst-year delta stays >= 0 up to w = 0.00; there the full-sample
+   benefit is +0 $/wk (+0.0 %), positive weeks 58.3 % vs 58.3 %, weekly streak 8 vs 8
+
+   per-year delta at a few weights (each year rescaled to the fixed drawdown within itself):
+w              2022        2023        2024        2025        2026
+0.02            +96         +17        +230         +37        -132
+0.05           +260         +44        +612         +70        -322
+0.10           +603         +99      +1,292        +131        -617
+0.20         +1,765        +258        +726        +275      -1,141
+0.30         +2,521        +527         +87        +460      -1,598
+
+======================================================================================================================
+=== PHASE 2: leave-one-year-out on the PROCEDURE, not on the weight
+======================================================================================================================
+Rule, fixed in advance: choose the LARGEST w whose worst delta among the TRAINING years
+is >= 0. Then evaluate that w on the held-out year. If the procedure only works when the
+bad year is in training, it is a fit.
+
+held-out year      w chosen on the other 4   held-out delta $/wk     verdict
+2022                                  0.00                    +0       holds
+2023                                  0.00                    +0       holds
+2024                                  0.00                    +0       holds
+2025                                  0.00                    +0       holds
+2026                                  0.31                -1,643       FAILS
+
+   4 of 5 held-out years hold -> MAJORITY: the procedure survives leave-one-year-out
+   in-sample control (w chosen on all five years): w = 0.00, which by
+   construction has a non-negative delta everywhere - that is the gap to compare against.
+
+======================================================================================================================
+=== PHASE 3: nulls, scan-matched over the same w grid
+======================================================================================================================
+                       real best $    N1 mean   N1 pct    N2 mean   N2 pct   verdict
+short sleeve                 1,988      1,772    81.0%      1,867    72.3%      fail
+
+======================================================================================================================
+=== PHASE 4: what each weight costs and buys, in the owner's units
+======================================================================================================================
+w         cost $/wk   wk+% delta   wStrk   top5DD delta   2022 maxDD   2026 delta $/wk
+0.02            +62         +0.0       8           +307       12,288              -132
+0.04           +131         -0.5       8           +665       11,667              -260
+0.05           +168         -0.5       8           +860       11,356              -322
+0.08           +294         +1.0       4         +1,598       10,424              -502
+0.10           +392         +2.0       4         +2,196        9,803              -617
+0.15           +462         +2.5       4         +2,055        8,251              -890
+0.20           +340         +3.4       4           +500        6,698            -1,141
+0.30           +108         +5.4       4         -2,107        5,593            -1,598
+
+   P1 alone: 2022 raw max drawdown $12,909, weekly streak 8, positive weeks 58.3 %
+
+=== STATUS: nothing adopted. The curve and the LOYO folds are the deliverable. ===
