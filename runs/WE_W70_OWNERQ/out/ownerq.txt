@@ -1,0 +1,77 @@
+=== 1,011 sessions 2022-07-04 -> 2026-05-29 | P1 traded 607 of them (60.0 %) | net $300,817 at ~1.27 contracts
+
+==============================================================================================================================
+=== Q1: do we make money almost every day and every week - AND SPECIFICALLY IN THE LAST TWO YEARS?
+==============================================================================================================================
+All figures at 2.6 contracts, the size at which the FULL-WINDOW average is ~$3,000/week.
+
+period            sessions   day+%  tradedDay+%  weeks   week+%  worst wk streak  worst day streak  median week $  mean week $
+full window           1010   27.6%        46.0%    204    58.3%                8                12            933        3,019
+last 3 years           776   28.4%        46.7%    157    59.2%                4                 7            979        3,383
+LAST 2 YEARS           517   29.2%        48.6%    105    61.9%                4                 7          1,866        4,225
+last 12 months         259   29.3%        51.7%     53    62.3%                4                 7          1,866        3,958
+last 6 months          128   31.2%        48.8%     26    61.5%                3                 7          1,424        2,946
+
+   'worst day streak' counts consecutive LOSING TRADED sessions, skipping the days
+   the object sits out - it is the run of red days you would actually experience.
+
+==============================================================================================================================
+=== Q2/Q3: what do we actually do, and did we catch the BIG multi-day trends?
+==============================================================================================================================
+Big up-moves found by a swing algorithm on session closes: a run ends when price
+retraces more than RETR of the run so far. Nothing about P1 is used to find them.
+
+   retracement threshold 20%: 146 up-runs, 80,506 points of total up-movement, we captured 17,418 points = 21.6 %
+
+rank          from          to  sessions  move (pts)  we made (pts)   capture  we were long % of it
+1       2025-04-21  2025-10-29       138       7,855        4,184.3     53.3%                   53%
+2       2026-03-30  2026-05-29        45       7,283          140.3      1.9%                   64%
+3       2023-10-26  2023-12-27        44       2,711          531.9     19.6%                   55%
+4       2025-04-08  2025-04-09         2       2,122        1,858.3     87.6%                   50%
+5       2024-08-07  2024-08-21        11       2,063          233.2     11.3%                   64%
+6       2025-11-20  2025-12-11        16       1,761         -277.2    -15.7%                   44%
+7       2024-09-06  2024-09-26        15       1,733          894.1     51.6%                   60%
+8       2024-05-01  2024-05-27        19       1,476          137.3      9.3%                   58%
+9       2024-05-31  2024-06-19        14       1,400          689.1     49.2%                   79%
+10      2022-07-26  2022-08-04         8       1,132           85.8      7.6%                   62%
+
+   retracement threshold 33%: 63 up-runs, 55,319 points of total up-movement, we captured 14,070 points = 25.4 %
+
+   and the intraday picture (W50's classes), for comparison:
+      TREND-UP      21.0 % of sessions     18.60 pts/session of the total
+      TREND-DOWN    13.9 % of sessions     -3.05 pts/session of the total
+      REVERSAL      26.0 % of sessions      0.15 pts/session of the total
+      RANGE         27.0 % of sessions     -1.32 pts/session of the total
+      MIXED         12.1 % of sessions      0.51 pts/session of the total
+
+==============================================================================================================================
+=== Q4: why -$1,300 and +$1,000? What else was tried?
+==============================================================================================================================
+   W59 scanned 216 cells: halt x target x vote threshold x quality cut.
+   The incumbent's RANK among them, on each metric the owner named:
+
+metric                       incumbent  best in the grid            rank                   best cell
+trdpos                           45.96             56.31       96 of 216         hinf_t500_v0.375_c2
+wkpos                            58.33             63.24       60 of 216         hinf_t500_v0.500_c4
+medwk                           455.50            766.69       51 of 216        h2000_t750_v0.500_c3
+weekly                        1,474.58          1,656.67        4 of 216         h800_t750_v0.500_c3
+dd_top5                      14,265.94          6,732.28      178 of 216         h800_t500_v0.625_c4
+ulcer                         6,182.78          2,992.14      185 of 216        hinf_t2500_v0.500_c2
+wstreak                           8.00              4.00      131 of 216         hinf_t500_v0.375_c2
+
+   The two response surfaces, holding everything else at the incumbent:
+target       traded-day +%   week +%   weekly$    top5DD
+500                  49.3%     57.4%     1,146    12,465
+750                  47.3%     58.8%     1,429    13,044
+1000                 46.0%     58.3%     1,475    14,266   <- INCUMBENT
+1500                 44.0%     57.8%     1,522    16,235
+2500                 42.2%     55.9%     1,228    14,398
+none                 41.7%     52.9%     1,072    12,282
+
+halt         traded-day +%   week +%   weekly$    top5DD
+800                  41.4%     56.4%     1,446    14,077
+1300                 46.0%     58.3%     1,475    14,266   <- INCUMBENT
+2000                 49.6%     60.8%     1,281    12,407
+none                 52.9%     61.3%       759    10,830
+
+=== STATUS: reporting only. Nothing adopted. ===
