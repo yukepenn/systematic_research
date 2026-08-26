@@ -25,10 +25,29 @@ OUT = os.path.join(ROOT, "runs", "WE_W17_DEEPHISTORY", "out")
 os.makedirs(OUT, exist_ok=True)
 
 
-def load_deep(a, b):
+def load_deep(a, b, extend=False):
+    """W76: `extend` concatenates the newer substrate beyond the base file's end.
+
+    The base file ends 2026-05-29 16:59 while every caller in this campaign asks for
+    2026-07-31 - so the whole campaign has been silently truncated by ~44 sessions. `extend`
+    defaults to OFF so all 75 preceding waves stay bit-reproducible; only W76 onward opts in.
+    The overlap is asserted bit-exact at load time rather than assumed."""
     df = pd.read_parquet(os.path.join(ROOT, "research", "scalping_lab", "substrate",
                                       "minute", "NQ", "nq1m_2005_202605.parquet"))
     df["time"] = pd.to_datetime(df["time"])
+    if extend:
+        nf = os.path.join(ROOT, "runs", "SM1M_SUBSTRATE", "out", "nq_1m_2022_2026.parquet")
+        nd = pd.read_parquet(nf)
+        nd["time"] = pd.to_datetime(nd["time"])
+        cut = df["time"].max()
+        ov_a = df[df["time"] >= nd["time"].min()].sort_values("time").reset_index(drop=True)
+        ov_b = nd[nd["time"] <= cut].sort_values("time").reset_index(drop=True)
+        if len(ov_a) != len(ov_b):
+            raise ValueError(f"extend: overlap row mismatch {len(ov_a)} vs {len(ov_b)}")
+        for c in ("time", "open", "high", "low", "close", "volume"):
+            if not (ov_a[c].to_numpy() == ov_b[c].to_numpy()).all():
+                raise ValueError(f"extend: overlap differs on column {c} - refusing to join")
+        df = pd.concat([df, nd[nd["time"] > cut]], ignore_index=True)
     df = df[(df["time"] >= a) & (df["time"] <= b)].sort_values("time").reset_index(drop=True)
     t = df["time"].values.astype("datetime64[s]")
     n = len(df)
