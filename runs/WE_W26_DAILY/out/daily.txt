@@ -1,0 +1,19 @@
+M1/M2 — daily truth. 'pos%all' counts every session in the sample; a no-trade day is
+       neither a win nor a loss but is included in the denominator, as declared.
+
+object                         tdDays  pos%td pos%all     mean   median     worst   top5%   strk  wkPos%  wkShrp   wkWorst
+E5halt1300 (1 contract)           683    43.2    25.9      333     -279    -5,407   109.2     17    57.6   0.273    -8,769
+E5halt + S1 (<=2)                1134    51.9    51.6      485      187   -13,991   119.9     10    59.5   0.259   -21,514
+E5halt + S1 + short (<=3)        1136    50.5    50.3      533       59   -14,935   128.9      9    63.4   0.248   -24,667
+
+M3 — daily hit-rate levers on E5halt1300 (guards: weekly Sharpe, worst week)
+lever                          tdDays  pos%td pos%all     mean   median     worst   top5%   strk  wkPos%  wkShrp   wkWorst
+L1 partial +30pts (2 legs)        683    43.6    26.1      347     -627    -7,435   122.4      9    58.6   0.222   -14,517
+L1 partial +60pts (2 legs)        683    39.1    23.4      406     -886    -8,376   119.5     12    56.2   0.236   -10,905
+L2 daily target +$1000            683    46.1    27.6      318     -179    -5,118    96.8     11    59.1   0.305    -7,487
+L2 daily target +$2000            683    44.1    26.4      338     -247    -5,407    93.1     11    58.6   0.284    -8,769
+L3 early flat 15:00 ET            664    43.1    25.1      246     -258    -3,957   136.5     21    53.5   0.245    -7,510
+
+=== ADOPTION: daily pos% up AND weekly Sharpe not down AND worst week not worse ===
+  ADOPT  L2 daily target 1000: daily 46.1% vs 43.2%, Sharpe 0.305 vs 0.273
+  ADOPT  L2 daily target 2000: daily 44.1% vs 43.2%, Sharpe 0.284 vs 0.273
