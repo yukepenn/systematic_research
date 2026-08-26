@@ -158,7 +158,7 @@ def axis_complement(D, F, names, flat, horizon=30, lam=10.0, q=0.90):
         if qs < WF0:
             continue
         fitm = (t >= qs - np.timedelta64(365, "D")) & (t < qs - np.timedelta64(1, "D")) & flat
-        tstm = (qtr == qp).values
+        tstm = np.asarray(qtr == qp)
         if fitm.sum() < 5000 or tstm.sum() == 0:
             continue
         Xf = M[fitm].astype(np.float64); yf = fwd[fitm]
