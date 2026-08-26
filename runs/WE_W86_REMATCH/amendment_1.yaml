@@ -1,0 +1,35 @@
+run_id: WE_W86_REMATCH
+amendment: 1
+date: 2026-08-26
+status: PREREGISTERED — written before the leave-one-out was run.
+
+why: >
+  CLIQUE inv-vol passed all four preregistered conditions and is the first object this campaign
+  has promoted since W37. Two things must be checked before it is put in front of the owner, and
+  both are implied by the spec's own trap list rather than being new bars:
+
+  (a) LEAVE-ONE-MEMBER-OUT on the corrected gate. The spec's traps say "AXISB is 2025-only on the
+      extended window (weekly $ per year -436/-48/-41/+1201/-126) and BMOM is the component
+      W67-W69 disclosed as regime-local. A portfolio of flawed components can still be a good
+      portfolio, but the flaw travels with every number." If the clique's advantage disappears
+      when AXISB is removed, then a one-year engine is carrying it and the promotion is void.
+  (b) THE TWO MISSING NULLS. Read 1 only ran the null for PAIR w=0.30 and CLIQUE inv-vol; PAIR 2:1
+      and CLIQUE equal were scored `nan` on condition (3) and therefore recorded FAIL by default.
+      That is a code limitation, not a measurement, and it must not stand as a verdict.
+
+tests:
+  - "the clique on the corrected rolling gate with each member dropped in turn, and with each
+     member alone, at the measured $14.65/RT"
+  - "per-year weekly $ for every subset, so AXISB's 2025 concentration is visible"
+  - "the independent-shift null for PAIR 2:1 and CLIQUE equal, same construction as read 1"
+  - "the clique's 2026 figures with AXISB dropped - the owner's binding recency constraint"
+
+preregistered_decision_rule:
+  the_promotion_is_VOID_if: >
+    dropping AXISB removes the clique's majority on any of the three legs, OR the two-member
+    subset {BMOM, X9a} performs as well as the three-member clique - in which case the clique is
+    not a three-stream portfolio at all and the third member is decoration.
+  the_promotion_SURVIVES_if: >
+    the three-member clique beats every two-member subset on the corrected gate, i.e. each member
+    is contributing. Then AXISB's own weakness is a disclosed risk carried by a 24-38 % weight,
+    not a load-bearing dependency, and the object is presented with that stated.
