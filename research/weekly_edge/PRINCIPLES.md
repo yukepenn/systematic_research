@@ -329,3 +329,29 @@ incumbent's $1,470 and the run was VOID. The re-derivation arithmetic was right;
 conflated direction and size, so a bar where the vote had just turned off suppressed an entry.
 The identity is now a HARD GATE that aborts the run. Design every cross-context wave so that
 one of its arms MUST reproduce a known result exactly.
+
+## W45 — the quality layer's domain is the 1-minute event stream (2026-08-26)
+
+**The layer does not transfer to the product's own clock.** On 1-min it takes the base object
+from 10.62 pts/session and eff 0.142 to 14.72 and 0.198 (+39 % eff). On the 3-min clock it takes
+9.40 / 0.079 to 11.02 / 0.071 - **+17 % production bought with a 30 % worse worst week**
+(-$11,842 -> -$15,410) - and at NO weight does the 3-minute FULL object help the portfolio
+(monotone degradation from eff 0.198 to 0.119).
+
+**Mechanism, following W42:** the score forecasts EXCURSION SIZE, so sizing up concentrates the
+week's P&L into the trades it picks. On 1-min that bet is spread over 1,950 short holds; on
+3-min the object already holds fewer, longer positions, so doubling a subset CONCENTRATES risk
+instead of diversifying it. **Quality sizing needs a high enough event rate for the sizing bet
+itself to be diversified.**
+
+**It retroactively validates W41's adopted shape.** The basket is `1-min QUALITY object +
+3-min BASE sleeve + range BASE sleeve`, and it was built that way by accident of ordering.
+W45 shows the clock sleeves MUST skip the quality layer: adding it turns a +5.6 % eff
+contribution into a -10 % one.
+
+**The layer's domain, now fully mapped rather than assumed:** long side only (W38), 1-minute
+event stream only (W45), forecasts excursion size not hit rate (W42), and beats both a
+count-matched random-sizing control and a random-five-feature control (W39 am.2).
+
+Also confirmed independently of W44: sigma counted in BARS (460) beats the wall-clock
+equivalent (153) - C2 loses to C1 on every metric.
