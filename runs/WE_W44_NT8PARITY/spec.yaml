@@ -1,0 +1,52 @@
+run_id: WE_W44_NT8PARITY
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: owner, 2026-08-25 - "最终你还可以用 Ninjatrader crosstrade 验证 strategy analyzer 等等".
+
+question: >
+  Every number this campaign has produced rests on ONE re-implementation: `sm14_1m`, a Python
+  port of SolarWaveOneContractNQ_v5's decision stack to 1-minute bars, transcribed by hand in
+  W01. Every B1 check since has compared new code against THAT port - which validates the new
+  code and not the port. If the port is wrong, forty-three waves inherit the error.
+  NinjaTrader can run the ORIGINAL C# through its own Strategy Analyzer engine on the same
+  bars. That is the only genuinely INDEPENDENT check available, and it has never been run
+  against the 1-minute port.
+
+what makes this a real test (and its limits, stated first):
+  * the shipped strategy's own defaults match the port's constants exactly - VolPeriod 460,
+    SMinTicks 40, SMaxTicks 1200, StopMultiplier 179, TiltSma 50, TiltMult 1.25,
+    TiltRescale 0.9026, EntryLevel 3.0, ExitLevel 1.0 - so no configuration choice is being
+    made here; the C# runs at its shipped settings.
+  * LIMIT 1: NT8's continuous NQ series and our back-adjusted parquet are not the same series
+    across roll boundaries, so the comparison is scoped to a window INSIDE one contract, where
+    the two should agree bar for bar.
+  * LIMIT 2: the port made three DECLARED choices W01 recorded (B-MOM reset at bar-end 09:31,
+    signal cutoff 15:54, flatten 15:57, VolPeriod counted in 1-min bars). A mismatch localised
+    to those is a port-choice difference, not a port error, and must be reported as such.
+  * LIMIT 3: this validates the ENGINE, not the layers built on top (vote aggregation, range
+    throttle, session box, quality sizing) - those are arithmetic on the engine's output and
+    are separately unit-checked by the B1 identities in W38-W43.
+
+arms:
+  N1 NT8 Strategy Analyzer, SolarWaveOneContractNQ_v5 at shipped defaults, 1-minute NQ,
+     Standard fill, NinjaTrader Brokerage Lifetime commission, inside a single contract window.
+  P1 the Python port `sm14_1m(D, 460)` on the same instrument and window, same commission,
+     next-bar-open fills.
+comparison (declared before the run):
+  primary   - trade count, net P&L, and the per-trade entry/exit timestamps
+  secondary - the DECISION series: fraction of bars on which the two objects hold the same
+              position. This is the number that matters; P&L can agree by luck and a decision
+              series cannot.
+verdict rule:
+  >= 99 % decision agreement and trade counts within 2 %  -> PORT VALIDATED
+  90-99 %                                                  -> PORT MOSTLY RIGHT; the
+              disagreement is localised and reported bar by bar before anything else proceeds
+  < 90 %                                                   -> PORT SUSPECT; the campaign's
+              numbers are quoted with that caveat attached until it is resolved, and resolving
+              it becomes the top priority ahead of any new research.
+safety: Strategy Analyzer BACKTEST ONLY, on NT8's isolated Backtest account. No order is
+  placed, no strategy is enabled or deployed, no account or connection is touched, no vendor
+  assembly is modified. This is the same operation campaign #1 used for its UI/MCP parity.
+forbidden: [enabling or deploying any strategy, touching Sim101 or any live account, tuning
+  the C# inputs to improve agreement, quoting agreement computed on a window spanning a roll]
+outputs: [out/parity.txt, out/nt8_trades.csv, out/py_trades.csv, REPORT.md]
