@@ -1,0 +1,63 @@
+amendment: 1
+run_id: WE_W66_INNER
+date: 2026-08-26
+status: APPEND-ONLY, written before the added arm ran. Phases 0-4 are run and stand.
+
+the infrastructure result, first:
+  The rebuild reproduced sm14_1m BIT-FOR-BIT on all four incumbent member sets - 0 disagreeing
+  bars out of 1,558,497 on each. The entire inner parameter space is now reachable from THREE
+  engine runs instead of seventy-two, and every future wave inherits that.
+
+what phase 1 found (FACT):
+  L2, the incumbent ladder EXTENDED UP to VolMult 40 (18 members instead of 13, incumbent
+  nested inside it, no selection anywhere):
+     pts/session 14.80 vs 14.86        trades 1,930 vs 1,942
+     mean top-5 drawdown 10,521 vs 14,266   (-26 %)
+     Ulcer 3,686 vs 6,183                   (-40 %)
+     longest weekly losing streak 6 vs 8
+     median week $634 vs $455               (+39 %)
+     weekly $ at fixed drawdown 1,350 vs 1,475 (-8 %)
+     per year 13.71 / 5.19 / 21.85 / 17.06 / 16.83 against 11.59 / 3.04 / 19.59 / 23.17 / 15.79
+       - BETTER IN FOUR YEARS OF FIVE, INCLUDING 2023 (+71 %), worse only in 2025
+     sub-period: traded-day wins 77 %, drawdown-distribution wins 86 %, ALL THREE 23 %
+  IT FAILS ITS PREREGISTERED BAR, which was a MAJORITY of rolling 24-month windows on all
+  three. 23 % is not a majority and L2 is not adopted. But every arm in W60 scored 0 % on that
+  measure and this is the first non-zero, on a pure aggregation with the incumbent nested inside.
+  The sigma-timescale axis did NOT help: most sigma combinations win the traded-day comparison in
+  0 % of windows. Diversifying the volatility TIMESCALE is not the same as diversifying the
+  volatility MULTIPLE, and only the second one worked.
+
+the defect phase 0 exposed, which is why this amendment exists:
+  S = clamp(VolMult x sigma, 40 ticks, 1200 ticks). VolMult x sigma is a VOLATILITY-SCALED
+  quantity; 40 and 1200 ticks are FIXED. That is dimensionally inconsistent, and NQ moved from
+  ~11,000 to ~20,000 across this window while sigma scaled with it. Measured, per year, the
+  fraction of bars on which the clamp BINDS:
+        VolMult 4 floor: 24.1 / 55.8 / 41.8 / 24.9 / 6.6 %   (2022..2026)
+        VolMult 6 floor:  6.3 / 31.0 / 18.7 /  5.5 / 0.0 %
+        VolMult 30 cap :  1.4 /  0.1 /  0.7 /  4.5 / 5.2 %
+        VolMult 40 cap :  6.0 /  0.3 /  3.0 / 11.2 / 20.0 %
+  So the ensemble's LOW end was collapsed onto a single fixed threshold on 31 % of 2023's bars -
+  the worst year - and its HIGH end is collapsed on 20 % of 2026's bars. THE EFFECTIVE WIDTH OF
+  THE LADDER HAS BEEN CHANGING OVER TIME WITHOUT ANYONE NOTICING, and it is narrowest exactly
+  where the extension that helps (L2) is trying to add members.
+  W19's law says the aggregation IS the edge. A clamp that collapses members onto each other is
+  therefore removing edge, and it does so most in the years the object performed worst.
+
+phase 5 - REMOVE THE CLAMP, which is what a sigma-relative clamp actually means:
+  Note the algebra before running it: clamping S to [c1 x sigma, c2 x sigma] is IDENTICAL to
+  clamping VolMult to [c1, c2], which the ladder already does by construction. A sigma-relative
+  clamp is therefore a NO-OP, and the honest form of the fix is simply to REMOVE THE TICK CLAMP.
+  Arms, all at sigma 460, all pure aggregations with the incumbent nested:
+     C0  incumbent ladder, clamp ON      (the B1 reference, must reproduce 14.72 +- 0.6)
+     C1  incumbent ladder, clamp OFF
+     C2  L2 ladder (6-40), clamp OFF
+     C3  L5 ladder (4-40 step 1), clamp OFF
+  The initial STOPM (179 ticks) is kept - it is a warm-up value used before sigma exists, not a
+  clamp on a scaled quantity.
+  Evaluation and the bar are unchanged: consistency-first, and a MAJORITY of rolling 24-month
+  windows on the traded-day rate AND weekly dollars AND the drawdown distribution.
+falsifier: if removing the clamp does not improve the ladder's behaviour, the dimensional
+  argument is correct and irrelevant, which is worth knowing and is recorded as such.
+forbidden additions: [selecting a clamp level - it is either on as inherited or off, no third
+  option is tested, because a tuned clamp would be exactly the parameter search this wave exists
+  to avoid]

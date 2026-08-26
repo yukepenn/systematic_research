@@ -1,0 +1,98 @@
+   building member matrix sigma=230, 37 members x 1,558,497 bars [23s]
+      done [61s]
+   building member matrix sigma=460, 37 members x 1,558,497 bars [61s]
+      done [106s]
+   building member matrix sigma=920, 37 members x 1,558,497 bars [106s]
+      done [167s]
+
+=== IDENTITY GATE: rebuild must reproduce sm14_1m bit-for-bit ===
+   narrow5      5 members  disagreeing bars        0  (EXACT)
+   narrow6      6 members  disagreeing bars        0  (EXACT)
+   narrow7      7 members  disagreeing bars        0  (EXACT)
+   all13       13 members  disagreeing bars        0  (EXACT)
+   -> EXACT on all four member sets. Every ladder below is a column subset of one engine run. [175s]
+
+============================================================================================================================
+=== PHASE 0: does the S clamp bind? S = clamp(VolMult x sigma, 40 ticks, 1200 ticks)
+============================================================================================================================
+VolMult               2022            2023            2024            2025            2026
+               floor% cap%     floor% cap%     floor% cap%     floor% cap%     floor% cap%
+4             24.1     0.0    55.8     0.0    41.8     0.0    24.9     0.0     6.6     0.0
+6              6.3     0.0    31.0     0.0    18.7     0.0     5.5     0.0     0.0     0.0
+10             0.2     0.0     4.3     0.0     2.5     0.0     0.0     0.1     0.0     0.0
+20             0.0     0.0     0.0     0.0     0.0     0.2     0.0     1.3     0.0     0.1
+30             0.0     1.4     0.0     0.1     0.0     0.7     0.0     4.5     0.0     5.2
+40             0.0     6.0     0.0     0.3     0.0     3.0     0.0    11.2     0.0    20.0
+
+============================================================================================================================
+=== PHASE 1: the ladder's ends and density (aggregate, never select)
+============================================================================================================================
+Every arm is a strictly LARGER near-exchangeable set that CONTAINS the incumbent's 13.
+All at a fixed $20,245 max drawdown so weekly$ compares directly.
+
+arm                                 mem   trds    pts  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   ulcer
+L0 incumbent 6-30 step2              13   1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   6,183   <- INCUMBENT
+L1 extend down 4-30                  14   2453  12.42   30.0    45.2   54.9      8      339       861   10,496   5,820
+L2 extend up 6-40                    18   1930  14.80   27.0    46.0   56.9      6      634     1,350   10,521   3,686
+L3 extend both 4-40                  19   2404  12.65   29.3    44.7   57.4      8      491       954   10,947   4,669
+L4 denser 6-30 step1                 25   2161  14.71   27.9    45.1   57.8      8      547     1,643   17,150   6,339
+L5 wide+dense 4-40 step1             37   2485  14.55   31.6    46.6   60.8      6      794     1,371   11,529   3,759
+
+============================================================================================================================
+=== PHASE 2: the SIGMA TIMESCALE - the axis that has never been varied
+============================================================================================================================
+sigma in (230, 460, 920): the same ratchet estimating the same quantity at different speeds.
+
+arm                                 mem   trds    pts  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   ulcer
+L0 incumbent sigma230                13   1865  11.39   26.8    45.1   59.3      7      479       738   13,184   5,444
+L0 incumbent sigma920                13   2162  12.26   27.4    43.5   55.9      7      202       630   10,362   4,741
+L0 incumbent sigma230+460            13   2139  14.16   28.0    42.7   56.9      9      426     1,062   13,678   6,017
+L0 incumbent sigma460+920            13   2372  15.36   29.9    42.9   59.8      7      436       699    8,312   4,178
+L0 incumbent sigma230+460+920        13   2519  15.51   30.3    41.7   59.3      6      562       848   10,685   4,707
+L5 wide+dense sigma230               37   2402  12.18   31.3    46.1   63.2      5      719       785    9,637   4,533
+L5 wide+dense sigma920               37   2738   8.14   29.8    42.8   55.4      8      244       478   10,617   6,806
+L5 wide+dense sigma230+460           37   2695  15.44   33.1    45.2   63.7      5    1,221     1,619   15,544   4,972
+L5 wide+dense sigma460+920           37   2936  13.47   33.3    44.3   60.8      9      533       655    8,852   4,371
+L5 wide+dense sigma230+460+920       37   2997  14.59   34.3    44.4   59.3      9      430       745   10,099   4,433
+
+============================================================================================================================
+=== PHASE 4: sub-period stability - every W60 arm scored 0 % on 'all three'
+============================================================================================================================
+arm                                 windows   trdD+% wins   weekly$ wins   top5DD wins   ALL THREE
+L1 extend down 4-30                      22           59%            18%           45%          0%
+L2 extend up 6-40                        22           77%            36%           86%         23%
+L3 extend both 4-40                      22           59%            36%           68%          0%
+L4 denser 6-30 step1                     22           32%            36%            9%          0%
+L5 wide+dense 4-40 step1                 22           86%            36%           59%          0%
+L0 incumbent sigma230                    22           45%             0%           36%          0%
+L0 incumbent sigma920                    22            0%             0%           64%          0%
+L0 incumbent sigma230+460                22            0%             5%            5%          0%
+L0 incumbent sigma460+920                22            0%            36%           64%          0%
+L0 incumbent sigma230+460+920            22            0%             0%           59%          0%
+L5 wide+dense sigma230                   22           86%            36%           64%          0%
+L5 wide+dense sigma920                   22            0%             0%           82%          0%
+L5 wide+dense sigma230+460               22           32%            41%           32%          0%
+L5 wide+dense sigma460+920               22            9%            36%           64%          0%
+L5 wide+dense sigma230+460+920           22           23%            36%           64%          0%
+
+   per year (pts/session), incumbent first:
+arm                                     2022      2023      2024      2025      2026
+L0 incumbent 6-30 step2                11.59      3.04     19.59     23.17     15.79
+L1 extend down 4-30                     7.99      4.29     18.69     16.75     11.77
+L2 extend up 6-40                      13.71      5.19     21.85     17.06     16.83
+L3 extend both 4-40                     8.14      6.72     18.91     13.86     14.32
+L4 denser 6-30 step1                   11.61      6.31     20.74     22.29      5.65
+L5 wide+dense 4-40 step1                7.46     10.06     14.53     21.86     16.35
+L0 incumbent sigma230                   8.89      3.70     12.12     16.77     18.27
+L0 incumbent sigma920                  11.16      5.83      9.75     13.98     31.18
+L0 incumbent sigma230+460               8.36      6.09     13.14     26.47     13.34
+L0 incumbent sigma460+920              13.29     11.33     15.18     17.95     21.86
+L0 incumbent sigma230+460+920           7.16      7.59     10.70     22.63     39.42
+L5 wide+dense sigma230                 14.39      8.45     15.93     11.77     10.45
+L5 wide+dense sigma920                  4.75      1.25      4.98      9.78     32.76
+L5 wide+dense sigma230+460              6.71      9.40     15.11     27.07     13.22
+L5 wide+dense sigma460+920              7.95      7.48     16.30     12.16     31.11
+L5 wide+dense sigma230+460+920          6.04     10.05     16.98     16.77     24.94
+
+=== STATUS: nothing adopted. Nulls are in run_we_w66b.py. ===
+done [399s]
