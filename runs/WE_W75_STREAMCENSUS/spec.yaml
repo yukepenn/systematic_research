@@ -1,0 +1,96 @@
+run_id: WE_W75_STREAMCENSUS
+title: "The stream census: how many genuinely independent income streams does this repo
+        actually have, and are they any good in 2025-2026?"
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+owner_directive_this_wave_implements: >
+  Two instructions, both binding, both narrowing what counts as a result:
+    (1) "先把有几条 rho<0.2 的流数清楚" - count the streams.
+    (2) "我不能接受2026收益这么点。我们不在乎那么遥远的过去。至少这两年要好吧。"
+        RECENT PERFORMANCE IS THE GATE. A stream that works only in the distant past does not
+        count. 2025 AND 2026 must both be good. Deep-history durability is informative but it is
+        NOT what admits a stream to the portfolio.
+
+why_now: >
+  W74 established, by bootstrap from P1's own 204 empirical weeks with a Gaussian copula and no
+  distributional assumption, that the campaign's binding target of 76 % positive weeks requires
+  SIX genuinely independent streams of our current quality; TEN at pairwise rho = 0.1; and that
+  at rho >= 0.2 it is unreachable at any K. It also showed the positive-week rate is
+  scale-invariant, so contracts cannot contribute to it at all.
+  That makes the stream COUNT the only open lever, and this repo has never counted them.
+
+streams_to_census:  # every one on the same 1,012-session grid, 2022-07-01 -> 2026-08-01
+  already_on_disk:
+    - "P1 - the incumbent long object (runs/WE_W61_SHORTSLEEVE/out/ledger.csv)"
+    - "SHORT - the mirrored short sleeve (same file)"
+    - "AXISB - the volatility-expansion event engine (runs/WE_W56_BREADTH/out/axisb_daily.csv)"
+    - "the twelve W72 channel-substituted objects (runs/WE_W72_ORCHANNEL/out/ledgers_*.npz)"
+  rebuilt_here_from_persisted_state:
+    - "BMOM - the B-MOM leg as a direct +-1 position, from W66's cached channel array"
+    - "L_sig / S_sig - the signed-sigma long object and short sleeve (W73), from its cached
+       member matrix"
+    - "CLK3 / CLK5 / CLKRANGE / CLKVOL - the four clock sleeves, from W41's persisted position
+       arrays (runs/WE_W41_CLOCK2/out/pos_*.npy)"
+  deliberately_excluded:
+    - "the 216 W59 cells - they are the SAME object at different halt/target settings and would
+       pad the census with near-duplicates. Their pairwise rho range against P1 is reported as a
+       single line so the exclusion is evidenced rather than assumed."
+
+method:
+  1_the_matrix: >
+    Full pairwise Pearson correlation of DAILY P&L and of WEEKLY P&L across every stream, with
+    the number of overlapping sessions for each pair. Daily rho is the primary because it is the
+    unit W56/W61 used; weekly is reported alongside because that is the unit the target is in.
+  2_the_clique: >
+    Build the graph whose nodes are streams and whose edges join pairs with |daily rho| < 0.20,
+    then enumerate ALL maximal cliques exactly (Bron-Kerbosch; the node count is small enough
+    that no heuristic is needed). Report the largest clique and every clique of size >= 3.
+  3_the_recency_gate: >
+    Applied to every node BEFORE the clique is quoted, per the owner's directive. A stream is
+    ADMISSIBLE only if it is positive standalone in 2025 AND positive standalone in 2026 AND
+    positive over the full window. Two cliques are reported: the raw one over all streams, and
+    the ADMISSIBLE one over streams that pass the gate. The second is the real answer.
+  4_the_portfolio: >
+    Equal-weight and inverse-volatility-weight the admissible clique at constant total exposure.
+    Measure the ACTUAL positive-week rate, weekly $ at a fixed $20,245 drawdown, longest weekly
+    losing streak, median week, drawdown distribution - and compare the achieved positive-week
+    rate against W74's bootstrap prediction for that K at the realised pairwise rho. If the
+    achieved rate falls short of the prediction, the shortfall is the cost of the streams not
+    being equal in quality, and it is reported rather than absorbed.
+  5_the_2026_ledger: >
+    Every table in this wave carries a 2026 column. In addition, a standalone 2026 section:
+    per-stream 2026 net, pts/session, positive-week rate and worst week; and the admissible
+    portfolio's 2026 figures at 1, 2, 4 and 7 contracts with the drawdown each implies. This is
+    what the owner is actually asking about and it is not buried in a full-window average.
+
+preregistered_decision_rule:
+  the_deliverable_is_a_number: >
+    K_admissible = the size of the largest clique of streams that are pairwise |rho| < 0.20 AND
+    pass the 2025+2026 recency gate. W74 says 6 is needed. This wave says what we have.
+  honest_outcomes:
+    - "K_admissible >= 6: the target is reachable with what already exists and the campaign's
+       next work is portfolio construction, not signal discovery."
+    - "2 <= K_admissible < 6: the shortfall is stated as a number, and the campaign's remaining
+       work is finding exactly (6 - K) more streams - a far more specific brief than 'find a
+       second model', which is what W40/W56/W57/W65 were all given."
+    - "K_admissible <= 1: the honest statement to the owner is that the 76 % target is not
+       reachable on the current evidence and the campaign must either lower the target or accept
+       a much longer search. This is a real possible outcome and it will not be softened."
+  nothing_is_adopted: >
+    A census is not a promotion. Any portfolio this wave constructs is a MEASUREMENT of what the
+    admissible set can do, quoted with its nulls owed, not a proposed object.
+
+traps_named_before_running:
+  - "Choosing the clique by looking at which combination scores best IS a scan. The clique is
+     defined by the rho threshold and the recency gate ALONE, both fixed in this spec before
+     running. The portfolio weights are equal and inverse-vol - no optimisation."
+  - "rho < 0.20 measured on 1,012 overlapping sessions has a standard error near 0.031, so a
+     measured 0.19 and a measured 0.21 are not distinguishable. Every edge within 2 SE of the
+     threshold is flagged and the clique is re-reported with the threshold at 0.15 and 0.25 so
+     the answer's sensitivity to the cut is visible rather than hidden."
+  - "Several candidate streams have never faced a null of their own. A stream entering the census
+     is NOT thereby validated; the census measures independence and recency, not edge."
+  - "2026 is roughly 106 sessions / 21 weeks. Every 2026 figure carries its session count and a
+     standard error, and no 2026 comparison is quoted as if it were a settled fact."
