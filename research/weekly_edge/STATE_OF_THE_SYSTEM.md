@@ -26,8 +26,9 @@ fills     decision at bar close, market at next bar open, flat at every session 
 
 | object | contracts | % days + | weekly | % weeks + | worst week | Sharpe |
 |---|---|---|---|---|---|---|
-| **E5 box** | 1 | 46.1 % | $1,060 | 59.1 % | **−$7,487** | **0.305** |
-| **E5 box + S1 + short box** | ≤3 | 52.7 % | **$3,030** | **64.9 %** | −$23,374 | 0.285 |
+| **E5 quality-sized** (W34) | ≤2, avg 1.19 | 45.1 % | **$1,583** | 59.6 % | **−$7,418** | **0.331** |
+| **E5 quality-sized + S1 + short box** | ≤4 | 52.1 % | **$3,548** | **65.4 %** | −$23,579 | 0.308 |
+| (superseded) E5 box | 1 | 46.1 % | $1,060 | 59.1 % | −$7,487 | 0.305 |
 | at his tail tolerance (−$42k) | ~2 of the pair | — | ~$4,900 | — | ≈ −$43,000 | same |
 
 Per-year **with the session box** (W28 correction — the earlier "weak 2025 = 0.113" measured
