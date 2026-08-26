@@ -1,0 +1,67 @@
+run_id: WE_W72_ORCHANNEL
+amendment: 1
+date: 2026-08-26
+status: PREREGISTERED — written and committed BEFORE any arm below was run
+
+why: >
+  Read 1 returned OUTCOME 3 by the letter of the rule (no non-B-MOM occupant reaches 90 % of
+  modern production). But two rows in read 1 are more informative than the verdict and neither
+  was anticipated by the spec, so they get their own preregistered test rather than being
+  quoted out of the read-1 table.
+
+  FINDING 1 - what B-MOM's information actually IS. X2_disp (the displacement condition with
+  the VWAP conjunction REMOVED) delivers 13.08 pts/session against the incumbent's 14.86, and
+  its standalone era profile is indistinguishable from the incumbent's in both eras
+  (pre-2022 t 1.02 vs 0.93, $10.8 vs $10.3/trade; post-2022 t 2.49 vs 2.50, $229 vs $241).
+  X1_vwap alone is 9.83 and is NEGATIVE pre-2022 (t = -0.37). So the OR slot's information is
+  "price has travelled further from the anchor than it typically does by this time of day";
+  the VWAP leg is a minor filter worth ~12 % of production and no durability.
+
+  FINDING 2 - and this is the one that matters. X9a_disp_sessanchor is the SAME displacement
+  rule with ONE arbitrary inherited choice changed: it measures displacement from the 18:00
+  SESSION open instead of the 09:31 RTH open. That single change is the ONLY channel of the
+  eleven that is durable: pre-2022 t = 1.83 on 3,948 trades, +$28.6/trade, PF 1.105 across
+  sixteen years the incumbent is flat over (t = 0.93, PF 1.042) - while giving up modern
+  production (10.73 vs 14.86).
+
+  That is the textbook in-sample signature, and it is a signature of the CHOICE, not of the
+  mechanism: the anchor that wins on the development window is the one that fails out of it.
+  Nothing in 72 waves has tested the obvious third option, which is to stop choosing.
+
+new_arms:  # every arm changes ONLY the OR-slot occupant; nothing else is re-tuned
+  - A0_incumbent      : "X0 bmom (cached). The reference."
+  - A1_sess           : "X9a alone - displacement from the SESSION open."
+  - A2_or_both        : "sign(X0 + X9a): fires if either anchor fires, 0 when they conflict."
+  - A3_or_disp_both   : "sign(X2 + X9a): the VWAP filter dropped, BOTH anchors."
+  - A4_disp_rth       : "X2 alone - displacement from the RTH open, no VWAP filter."
+  - A5_and_both       : "X0 where the two anchors AGREE, else 0. The conservative version."
+
+tests:
+  - "the full Amendment-2 consistency panel and the per-year table, as in read 1"
+  - "the standalone two-era table for A2/A3/A5 (A0/A1/A4 already have theirs)"
+  - "ROLLING 24-MONTH: the fraction of windows in which each arm beats A0 on weekly $, on
+     positive-week %, and on the mean top-5 drawdown - and on ALL THREE. This is the test that
+     has killed four previous candidates and it is applied here before any promotion."
+  - "N_shift null, 40 draws, on A0 and on the best challenger: session-wise circular shift of
+     the occupant's path preserves firing rate, latch-run distribution and intraday shape and
+     destroys only which day it lands on."
+
+preregistered_decision_rule:
+  promote_to_head_to_head: >
+    an arm is promoted to a full champion-vs-challenger wave (W75) only if it (a) reaches
+    >= 95 % of A0's modern pts/session, (b) has pre-2022 standalone t >= 1.65 with positive
+    $/trade, (c) beats A0 on all three rolling-window metrics in a MAJORITY of windows, and
+    (d) exceeds the 95th percentile of its own N_shift null on modern pts/session.
+  honest_alternative: >
+    if an arm passes (b), (c) and (d) but NOT (a), it is recorded as a DURABILITY-FOR-
+    PRODUCTION TRADE and quoted with both numbers - the production it gives up and the sixteen
+    years it buys. It is NOT quietly promoted and NOT quietly dropped. The owner's rule is that
+    recent effectiveness is mandatory, so such an arm must ALSO show a positive trailing-24-month
+    record or it fails outright regardless of its deep history.
+  no_arm_passes: >
+    recorded as: the anchor choice is a real in-sample dependency that cannot be repaired
+    without paying more production than the durability is worth. The disclosure is sharpened
+    from "B-MOM is fragile" to "the ANCHOR is fragile", which is a more specific and more
+    useful statement, and it stands.
+
+adoption: NOTHING is adopted in this amendment.
