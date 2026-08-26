@@ -1,0 +1,58 @@
+amendment: 1
+run_id: WE_W65_RELVALUE
+date: 2026-08-26
+status: APPEND-ONLY, written before the extension ran. Phase 1 on NQ/ES is run and its stopping
+  rule fired.
+
+what phase 1 established on NQ/ES (FACT):
+  THE DIVERGENCE IS GENUINELY MEAN-REVERTING, and this is the first time the repo has measured
+  it. Variance ratio of the causal beta-adjusted within-session divergence, with a session-block
+  bootstrap (200 draws), on 1,557,681 exactly-matched minutes over 1,141 sessions:
+      1 min  1.0000        5 min  0.8264 [0.761, 0.853]      15 min 0.7776 [0.692, 0.818]
+      30 min 0.7647 [0.671, 0.818]   60 min 0.7608 [0.659, 0.822]   120 min 0.7624 [0.669, 0.832]
+  A variance ratio near 0.76 with a bootstrap interval entirely below 1.0 is a real, solid
+  mean-reverting property. The repo's own prior - "at best weakly mean-reverting standalone" -
+  is CONFIRMED and now quantified rather than asserted.
+
+  AND THE ECONOMICS KILL IT. Best cell of 24 (q99 threshold, 120-minute horizon, 26,317 events):
+  mean reversion $12.76 against $8.72 of PURE COMMISSION on two legs - a net of $4.04 per event
+  before any slippage at all - and -$18.46 against the $31.22 stress line. Every other cell is
+  negative even against commission alone. On a ~$400,000 dollar-neutral position, $12.76 is
+  0.003 %.
+  The stopping rule fired as designed, for one script and 14 seconds.
+
+an observation worth carrying, though it changes nothing here:
+  at the 120-minute horizon the MEDIAN reversion ($21.83) exceeds the MEAN ($12.76). The
+  distribution is left-skewed - many events revert more than average and a few blow out. That is
+  the classic relative-value payoff and it is the EXACT OPPOSITE SHAPE to P1, which has a 37.8 %
+  hit rate whose rare winners carry everything. A left-skewed sleeve is what would raise P1's
+  MEDIAN week, which W64 identified as the object's actual weakness. The shape is right; the
+  magnitude is not.
+
+the extension this amendment adds, and why it is not a fishing expedition:
+  NQ and ES are two capitalisation-weighted US large-cap index futures whose constituents
+  overlap heavily. Their divergence being arbitraged to inside two round turns is what efficient-
+  markets reasoning predicts, and the measurement above is consistent with it. The interesting
+  question is therefore whether a WIDER pair - one whose legs are genuinely different exposures -
+  has a divergence large enough to clear the same cost floor.
+  W43 already measured that RTY and YM are the most decoupled instruments this campaign has
+  seen: weekly correlation with NQ 0.10 each, and 0.04 / 0.03 INSIDE NQ's worst-decile weeks.
+  That decoupling is the reason they failed as directional sleeves (no expectancy) and it is
+  exactly what makes them candidates for a SPREAD, which needs divergence rather than direction.
+  1-minute RTY and YM data covering 2022-01-02 -> 2026-07-31 is on disk.
+
+phase 1b - THE SAME MEASUREMENT ON THREE MORE PAIRS, identical construction, no new parameters:
+  NQ/RTY, NQ/YM, ES/RTY. Same causal trailing beta, same within-session divergence, same
+  variance ratio with the same bootstrap, same economic test against the same TWO-round-turn
+  floor computed from each pair's own point values and tick sizes.
+  RTY is $50/point with a 0.10 tick; YM is $5/point with a 1.0 tick. The friction floor differs
+  per pair and MUST be recomputed from each instrument's own contract spec, not carried over
+  from NQ/ES. Getting that wrong is exactly the error W43's read 1 was VOIDed for.
+  STOPPING RULE, unchanged and applied per pair: if the mean reversion after a causal threshold
+  does not exceed TWO round turns at stress friction at any horizon or threshold, that pair is
+  recorded as not tradeable and no rule is built for it.
+falsifier: all four pairs failing the economic test closes relative value at the minute-to-hour
+  frequency on the instruments this repo holds, and records that the divergence between US index
+  futures is arbitraged to inside transaction costs - a first-principles result, measured.
+forbidden additions: [carrying NQ/ES friction to another pair, using a full-sample beta,
+  quoting a variance ratio as if it were an economic result]

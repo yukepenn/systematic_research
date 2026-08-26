@@ -1,0 +1,61 @@
+=== joined on exact minute timestamps: 1,557,681 bars 2022-01-02 18:01:00 -> 2026-05-29 16:59:00 [3s]
+   1,141 sessions detected on the joined clock
+   causal beta (trailing 390 min, lagged): median 1.156, 5th-95th 0.919-1.406
+
+================================================================================================================
+=== PHASE 1a: VARIANCE RATIO of the divergence (<1 mean-reverting, 1 random walk, >1 trending)
+================================================================================================================
+With a circular-BLOCK bootstrap by session, because a variance ratio on 1.5 M
+overlapping observations looks precise and is not.
+
+horizon (min)      variance ratio        bootstrap 5th-95th   OU half-life (min)  autocorr of changes
+1                          1.0000           0.9845 - 0.9864               1838.7              -0.0973
+5                          0.8264           0.7607 - 0.8525               1838.7               0.0001
+15                         0.7776           0.6919 - 0.8175               1838.7               0.0040
+30                         0.7647           0.6713 - 0.8176               1838.7               0.0005
+60                         0.7608           0.6594 - 0.8220               1838.7              -0.0016
+120                        0.7624           0.6688 - 0.8320               1838.7               0.0015
+
+================================================================================================================
+=== PHASE 1d: THE STOPPING RULE - is the reversion bigger than TWO round turns?
+================================================================================================================
+A dollar-neutral position: 1 NQ against beta x (PV_NQ x price_NQ)/(PV_ES x price_ES) ES.
+Friction charged on BOTH legs. Base = commission only; stress adds 2 ticks a leg.
+   base friction  = $8.72 per round turn of the PAIR
+   stress friction= $31.22 (2 ticks each leg)
+
+threshold     horizon    events   mean reversion $    median $  vs base friction   vs stress     verdict
+q80                 1    322443               0.28        0.00             -8.44      -30.94          no
+q80                 5    320013               0.11        0.34             -8.61      -31.11          no
+q80                15    313948              -0.83        0.36             -9.55      -32.05          no
+q80                30    304832              -1.64        0.27            -10.36      -32.86          no
+q80                60    286842              -4.08       -0.09            -12.80      -35.30          no
+q80               120    251263              -3.67        8.49            -12.39      -34.89          no
+q90                 1    169242               0.33        0.00             -8.39      -30.89          no
+q90                 5    167762               0.30        0.07             -8.42      -30.92          no
+q90                15    164036              -0.64       -0.08             -9.36      -31.86          no
+q90                30    158556              -1.42       -1.24            -10.14      -32.64          no
+q90                60    147711              -5.39       -3.88            -14.11      -36.61          no
+q90               120    125962             -10.34       -3.81            -19.06      -41.56          no
+q95                 1     92486               0.42        0.00             -8.30      -30.80          no
+q95                 5     91594               0.14        0.05             -8.58      -31.08          no
+q95                15     89335              -0.97       -0.63             -9.69      -32.19          no
+q95                30     85978              -2.56       -4.73            -11.28      -33.78          no
+q95                60     79450              -7.54       -6.28            -16.26      -38.76          no
+q95               120     67263              -5.40       -5.27            -14.12      -36.62          no
+q99                 1     34833               1.67        0.84             -7.05      -29.55          no
+q99                 5     34554               3.31        2.39             -5.41      -27.91          no
+q99                15     33867               5.09        5.39             -3.63      -26.13          no
+q99                30     32762               5.49        6.21             -3.23      -25.73          no
+q99                60     30438               3.19       11.05             -5.53      -28.03          no
+q99               120     26317              12.76       21.83             +4.04      -18.46   base only
+
+=== THE PREREGISTERED STOPPING RULE ===
+   NO threshold x horizon cell has a mean reversion exceeding TWO round turns at
+   stress friction (best is -18.46 $). The wave STOPS HERE.
+   RECORDED: the NQ/ES divergence is not tradeable at this frequency with this
+   construction. That is one script and no backtest, and it is consistent with the
+   repo's own prior ('at best weakly mean-reverting standalone').
+
+=== STATUS: measurement only. Nothing adopted, no rule built. ===
+done [14s]
