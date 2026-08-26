@@ -1,0 +1,65 @@
+
+========================================================================================================================================
+=== PHASE 1: ladder x B-MOM weight. The incumbent and Solar-only are CORNERS of this grid, not baselines outside it.
+========================================================================================================================================
+BMOM% is the share of net from entries the member consensus alone would NOT have made.
+An arm that improves the numbers while RAISING it is not an improvement (spec, phase 4).
+
+arm                                trds    pts  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   ulcer   worst$   BMOM%
+ladder13 w_bmom=2.83               1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   6,183   -7,418    27.6   <- INCUMBENT
+ladder13 w_bmom=2.00               1986  13.41   26.0    44.9   58.8      8      311     1,117   10,720   6,350   -5,786    28.8
+ladder13 w_bmom=0.00               1841   7.26   20.5    43.7   53.9      8      153       891   15,020   6,709  -10,746     0.0
+ladder18 w_bmom=2.83               1930  14.80   27.0    46.0   56.9      6      634     1,350   10,521   3,686   -7,038    27.9
+ladder18 w_bmom=2.00               1964  11.55   25.5    45.3   54.4      6      201       806    9,925   4,408   -4,941    16.9
+ladder18 w_bmom=0.00               1772   7.25   19.8    43.9   49.0      4        0       943   12,590   5,115   -7,966     0.0
+
+   B1 GATE: 14.86 pts/session (expect 14.72) -> PASS [78s]
+
+========================================================================================================================================
+=== PHASE 2: the consensus threshold k, the only other live constant
+========================================================================================================================================
+W67 proved the Solar side reduces to 'at least k of NMEM net-long'. k=6 of 13 is the
+vendor's. Questioned by AGGREGATING over k in {5,6,7}, never by selecting one.
+
+arm                                trds    pts  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   ulcer   worst$   BMOM%
+ladder13 k=5 single                1334  14.06   27.6    45.2   60.8      8      556       791   11,862   5,575   -5,746    22.0
+ladder13 k=6 single                1080  11.84   25.5    46.3   53.9      6      386       740   12,395   4,358   -5,794    48.5
+ladder13 k=7 single                 954  13.22   24.7    47.2   56.9      6      491       788   10,414   4,276   -5,765    34.6
+ladder13 k AGGREGATE (5, 6, 7)     1137  11.69   25.1    45.9   54.9      6      295       760   12,489   4,606   -5,985    49.5   <- aggregate
+ladder18 k=7 single                 994  15.99   25.9    45.7   59.3      6      677     1,188   13,073   4,150  -14,345    28.7
+ladder18 k=8 single                 893  15.82   25.3    46.3   58.8      4      608     1,357   13,553   4,199  -14,688    29.5
+ladder18 k=9 single                 740  11.84   21.3    44.5   54.4      5      226       839   14,107   4,755  -11,484    16.1
+ladder18 k AGGREGATE (7, 8, 9)      917  15.55   24.3    45.2   55.4      5      557     1,479   15,230   4,969  -14,654    27.7   <- aggregate
+
+========================================================================================================================================
+=== PHASE 3: the tilt - agrees on 37.5 % of bars, drops the requirement 6 -> 5, never examined
+========================================================================================================================================
+arm                                trds    pts  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   ulcer   worst$   BMOM%
+tilt OFF (mult 1.0)                1808  13.44   26.4    44.8   56.9      8      437     1,107   13,003   5,620   -6,870    28.9
+tilt 1.25 INCUMBENT                1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   6,183   -7,418    27.6   <- INCUMBENT
+tilt 1.5                           1984  13.87   27.7    46.1   58.3      8      350     1,332   14,395   6,317   -7,495    30.1
+
+========================================================================================================================================
+=== PHASE 4: per year (5 quasi-independent) and rolling 24-month (22 windows, EFFECTIVE independent count about 1)
+========================================================================================================================================
+arm                                   2022      2023      2024      2025      2026   years won
+ladder13 w_bmom=2.83                 11.59      3.04     19.59     23.17     15.79        0 of 5
+ladder13 w_bmom=2.00                  6.83      1.75     18.52     22.30     15.70        0 of 5
+ladder13 w_bmom=0.00                  5.31      3.27      5.66     10.95     14.32        1 of 5
+ladder18 w_bmom=2.83                 13.71      5.19     21.85     17.06     16.83        4 of 5
+ladder18 w_bmom=2.00                  7.42      3.53     20.93      9.36     18.55        3 of 5
+ladder18 w_bmom=0.00                  4.33      6.69      6.25      5.71     18.37        2 of 5
+ladder13 k AGGREGATE (5, 6, 7)        6.86      9.09     13.13     14.13     14.44        1 of 5
+ladder18 k AGGREGATE (7, 8, 9)       15.60     12.46     10.94     14.93     35.80        3 of 5
+
+arm                               windows   trdD+% wins   weekly$ wins   top5DD wins   ALL THREE
+ladder13 w_bmom=2.00                   22           32%             0%          100%          0%
+ladder13 w_bmom=0.00                   22           14%             0%           55%          0%
+ladder18 w_bmom=2.83                   22           77%            36%           86%         23%
+ladder18 w_bmom=2.00                   22           77%            36%           68%          5%
+ladder18 w_bmom=0.00                   22           14%            36%           59%          0%
+ladder13 k AGGREGATE (5, 6, 7)         22           41%             0%           59%          0%
+ladder18 k AGGREGATE (7, 8, 9)         22           27%            23%           18%         18%
+
+=== STATUS: nothing adopted. ===
+done [136s]
