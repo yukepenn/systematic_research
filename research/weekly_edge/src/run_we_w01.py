@@ -11,6 +11,7 @@ from __future__ import annotations
 import os
 import sys
 import time as _time
+from collections import deque as _deque
 
 import numpy as np
 import pandas as pd
@@ -83,7 +84,7 @@ def round_away(x):
 def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False,
             volmults=None, entry_level=3.0, exit_level=1.0, tilt_on=True, blocks_on=True,
             restore=None, type3=False, smin_pts=None, smax_pts=None, stopm_pts=None,
-            return_debug=False, return_members=False):
+            return_debug=False, return_members=False, sigma_mode=None):
     """Faithful port of SolarWaveOneContractNQ_v5 decision stack to 1-min bars.
 
     Declared port choices (spec): B-MOM reset at bar-end 09:31, signal cutoff 15:54, flatten
@@ -107,6 +108,14 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
 
     vol_sum, vol_cnt, prev_close = 0.0, 0, np.nan
     diffs = []                                                        # rolling |dClose| buffer
+    # W73: OPTIONAL direction-split volatility. The vendor derives ONE sigma from |dClose| and
+    # uses it for the retracement distance S of BOTH the up-leg and the down-leg. Equity index
+    # returns are not symmetric, so a single sigma is the wrong scale for at least one of them.
+    # sigma_mode="signed" keeps the SAME 460-bar window and only splits the same observations
+    # by sign, so the timescale is held fixed and direction is the only thing that varies.
+    # Default None reproduces the vendor byte-for-byte.
+    sbuf = _deque() if sigma_mode == "signed" else None
+    su_sum = su_cnt = sd_sum = sd_cnt = 0
     m_up = [False] * NMEM; m_anchor = [0.0] * NMEM; m_S = [STOPM] * NMEM
     m_sig = [0] * NMEM; m_pos = [0] * NMEM; m_pend = [0] * NMEM
     m_ext = [False] * NMEM              # W31: leg extended to a new extreme on this bar
@@ -118,8 +127,16 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
     def sigma():
         return (vol_sum / vol_cnt) if vol_cnt >= 30 else np.nan
 
-    def resolve_s(mult):
-        sg = sigma()
+    def sigma_dir(going_up):
+        """A new UP leg is stopped by a DOWN move and a new DOWN leg by an UP move, so the
+        retracement scale for a leg is the volatility of the OPPOSITE sign. Falls back to the
+        symmetric sigma until a direction has 15 observations in the window."""
+        if going_up:
+            return (sd_sum / sd_cnt) if sd_cnt >= 15 else sigma()
+        return (su_sum / su_cnt) if su_cnt >= 15 else sigma()
+
+    def resolve_s(mult, going_up=None):
+        sg = sigma() if (sbuf is None or going_up is None) else sigma_dir(going_up)
         if np.isnan(sg) or sg <= 0:
             return STOPM
         return min(max(mult * sg, SMIN), SMAX)
@@ -147,24 +164,39 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
             if vol_cnt > vol_period:
                 diffs = diffs[-vol_period:]
                 vol_sum = float(sum(diffs)); vol_cnt = len(diffs)
+            if sbuf is not None:                                       # W73, same window
+                sgn = 1 if px > prev_close else (-1 if px < prev_close else 0)
+                sbuf.append((d, sgn))
+                if sgn > 0:
+                    su_sum += d; su_cnt += 1
+                elif sgn < 0:
+                    sd_sum += d; sd_cnt += 1
+                while len(sbuf) > vol_period:
+                    od, os_ = sbuf.popleft()
+                    if os_ > 0:
+                        su_sum -= od; su_cnt -= 1
+                    elif os_ < 0:
+                        sd_sum -= od; sd_cnt -= 1
         prev_close = px
         # UpdateMachine
         for m in range(NMEM):
             m_sig[m] = 0
             if not initialized:
-                m_up[m] = False; m_anchor[m] = px; m_S[m] = resolve_s(VOLM[m])
+                m_up[m] = False; m_anchor[m] = px; m_S[m] = resolve_s(VOLM[m], False)
                 continue
             m_ext[m] = False
             if m_up[m]:
                 if px >= m_anchor[m]:
                     m_anchor[m] = px; m_ext[m] = True
                 elif px < m_anchor[m] - m_S[m]:
-                    m_up[m] = False; m_S[m] = resolve_s(VOLM[m]); m_anchor[m] = px; m_sig[m] = -1
+                    m_up[m] = False; m_S[m] = resolve_s(VOLM[m], False)
+                    m_anchor[m] = px; m_sig[m] = -1
             else:
                 if px <= m_anchor[m]:
                     m_anchor[m] = px; m_ext[m] = True
                 elif px > m_anchor[m] + m_S[m]:
-                    m_up[m] = True; m_S[m] = resolve_s(VOLM[m]); m_anchor[m] = px; m_sig[m] = 1
+                    m_up[m] = True; m_S[m] = resolve_s(VOLM[m], True)
+                    m_anchor[m] = px; m_sig[m] = 1
         if not initialized:
             initialized = True
         # Decide
