@@ -30,8 +30,11 @@ fills     decision at bar close, market at next bar open, flat at every session 
 | **E5 box + S1 + short box** | ≤3 | 52.7 % | **$3,030** | **64.9 %** | −$23,374 | 0.285 |
 | at his tail tolerance (−$42k) | ~2 of the pair | — | ~$4,900 | — | ≈ −$43,000 | same |
 
-Per-year (the audited vote, before the box): 2022 0.260 · 2023 0.271 · 2024 0.307 ·
-2025 0.113 · 2026 0.315 — **every year positive**.
+Per-year **with the session box** (W28 correction — the earlier "weak 2025 = 0.113" measured
+the PRE-BOX object): 2022 0.102 · 2023 0.189 · 2024 0.376 · 2025 **0.311** · 2026 0.454 —
+every year positive, and **per-trade expectancy rises monotonically $35.7 → $41.2 → $104.2 →
+$160.9 → $207.4** (2026 is double his $103 gross; ~2.4× of the 5.8× is NQ's price level). The
+weak year is **2022** — a bear year, structurally the worst case for a long-biased system.
 
 ## 3. What it is NOT
 
@@ -64,7 +67,10 @@ raw weekly figures suggest (W23).
 | The vote is not noise | circular-shift null at the **98th percentile, p = 0.020** (W21) |
 | Not a disguised selection | leave-one-subfamily-out spread 0.034 (W21) |
 | Range throttle is real | own null at 95th pctile (W13) + blocked bars would have LOST $9,540 (W23) |
-| Session box is real | both halves improve Sharpe and tail together (W22, W26) |
+| Session HALT is real | own circular-shift null at the **98th percentile, p = 0.020** (W28) |
+| Session TARGET | **weak, 88th percentile p = 0.120** (W27) — kept on its four-way improvement, never called proven |
+| Vote hysteresis (0.6/0.4) | looked better on Sharpe and tail, **REJECTED at the 63rd percentile** (W28) |
+| Mixed-model vote | **fails** — non-Solar voters cut Sharpe 0.305 → 0.23–0.24 (W27); model concentration is permanent |
 | Long bias is real | replicated in four independent tests incl. the deep sample (W16/17/19/20) |
 | Delta gate | weak (p = 0.10); kept on its leave-one-out cost, never described as understood |
 | Everything else | see `PARKED_NOT_DEAD.md` |
