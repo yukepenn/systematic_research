@@ -148,6 +148,22 @@ frozen. Beating his numbers under our measurement standard is therefore a STRICT
   every year. LONG-ONLY is now the campaign's most replicated finding (W16/W17/W19/W20).
   W21 audits E5 (circular-shift null, subfamily sensitivity, S1 combination, deep history).
 
+- 2026-08-25 (W21-W26, consolidation): **W21** the vote clears its circular-shift null at the
+  98th pctile (p=0.020) - the campaign's strongest statistical result; robust to subfamily
+  removal; E5+S1 = 0.241 at corr 0.18; deep history +0.056 (modern-regime object).
+  **W22** SESSION HALT on the vote halves the tail AND raises Sharpe (0.214->0.273, worst
+  -17,440->-8,769); threshold curve flat; conviction sizing is leverage a third time.
+  **W23** at matched tail we make $4,923/wk NET vs his $8,583 GROSS (1.74x efficiency gap);
+  the throttle declines LOSSES (blocked bars = -$9,540). **W24** five purpose-built short
+  engines all rejected; "don't fight the drift" was the WORST; shorts are hit-rate insurance.
+  **W25** MODEL RISK: every engine we own is the same Solar ratchet; orthogonal non-Solar
+  engines lose, profitable ones aren't orthogonal. **W26** daily truth: 43-52% of days
+  positive, best 5% of days carry >100% of P&L, streaks 9-17 days; but the SESSION PROFIT
+  TARGET (+$1,000) improves daily hit, weekly Sharpe (0.305, best), worst week and
+  concentration simultaneously -> the SESSION BOX.
+  Definitive reference written: `research/weekly_edge/STATE_OF_THE_SYSTEM.md`;
+  recombination registry: `research/weekly_edge/PARKED_NOT_DEAD.md`.
+
 ## Relationship to campaign #6 (OTR)
 OTR stays open (purchase gate awaiting owner action; free follow-ups queued). #7 consumes #6's
 conclusions but never its sealed evidence. Nothing in #7 feeds back into #6's identification
