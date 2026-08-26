@@ -1,0 +1,58 @@
+run_id: WE_W46_RESTORE3M
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: self-directed, dictated by W44/W45; a reopening under the owner charter's rule that a
+  defended prior may be reopened by a NEW DATA REPRESENTATION or when the earlier test's context
+  has changed - not by rerunning an old experiment unchanged.
+
+the prior being reopened: >
+  W31 killed "restore" - re-arming a member at the session's first decision bar when its ratchet
+  is still in a valid leg - and killed it hard: exposure rose 12.9 % -> 20.7 % of bars while
+  edge density collapsed from 0.0603 to 0.0025 points per bar-in-position and production fell
+  from 10.62 to 0.70 pts/session. W35 re-tested it WITH a quality gate and it failed again.
+  That is a strong prior and it is not being doubted on the clock it was measured on.
+
+why this is not a rerun:
+  * W31 and W35 both ran on the ONE-MINUTE clock. W44 established that the shipped product runs
+    its decision stack on a THREE-MINUTE series and that our 1-minute object is 2.1x as active
+    (285 flips against 137 over the same window).
+  * W45 established that mechanisms do NOT transfer between these two clocks: the quality layer
+    is +39 % on eff at 1-min and -10 % at 3-min, and the mechanism (sizing concentrates the
+    week's P&L into the picked trades; the 3-min object already holds fewer, longer positions)
+    is exactly the kind of event-rate dependence that would also govern restore.
+  * W44 measured the product itself in the market 39.7 % of bars against our 3-minute port's
+    36.3 % - the product holds slightly MORE, which is the direction restore moves.
+  So the question "does re-arming across the session boundary help on the clock the product
+  actually uses" has never been asked, and there is a specific reason to think the answer
+  differs from W31's.
+
+arms (all on the 3-MINUTE clock, session-anchored, sigma = 460 bars - the settings W44/W45
+  established, with the campaign's standard stack: 32-config long-only vote >= 0.5, range
+  throttle q = 0.8 and the delta gate on the 1-minute clock, session box -$1,300 / +$1,000,
+  NO quality layer, since W45 showed the layer must not be applied to a clock sleeve):
+  B0  1-min full object                          (B1 gate: must reproduce 14.72 pts/session)
+  B1c 1-min BASE + restore="plain"               (CONTROL: must reproduce W31's collapse, i.e.
+                                                  production far below the 1-min base's 10.62 -
+                                                  if it does not, the restore machinery is
+                                                  broken and the whole run is VOID)
+  R0  3-min base sleeve                          (reference: W41 measured 9.40 pts/session)
+  R1  3-min + restore="plain"
+  R2  3-min + restore="conf"   (re-arm only when the leg is still confirmed past its exit level)
+  R3  3-min + type3            (admit an intra-session STRENGTHEN re-entry while flat)
+  R4  3-min + restore="plain" + type3
+
+primary metric, because it is what killed W31: POINTS PER BAR-IN-POSITION (edge density),
+  reported beside % of bars in position, so any production gain that is really just exposure is
+  visible immediately. Then pts/session, worst week, CVaR5, Sharpe, eff, CVaR-efficiency,
+  stress-net at $14.36/RT, per year, and correlation with the 1-minute object both overall and
+  inside its worst-decile weeks.
+adoption: an arm is adopted only if it improves the 3-minute sleeve's eff AND CVaR-efficiency,
+  does NOT reduce edge density by more than 15 %, is not negative in more than one year, AND
+  improves the W41 adopted basket when substituted for the plain 3-minute sleeve at w = 0.03.
+  Then both nulls, the count-matched one binding.
+falsifier: if restore fails on the 3-minute clock too, the W31 prior is promoted from
+  "measured on the 1-minute clock" to "holds on both clocks the campaign has tested", which
+  materially strengthens it and closes the re-entry question for good.
+forbidden: [data >= 2026-08-01, applying the quality layer to a clock sleeve, adopting on
+  production without edge density beside it, adopting without the per-year read and both nulls]
+outputs: [out/restore3m.txt, out/summary.csv, REPORT.md]
