@@ -1,0 +1,23 @@
+arm                                     n  avgSz  pts/ses     $/tr   wkMean   pos%     worst  sharpewk/|wst|  stress
+P0 BASE (no quality)                 2072   1.00    10.62    103.9    1,060   59.1    -7,487   0.305   0.142     958
+
+=== P4 CONTAMINATED REFERENCE (full-sample quantiles - look-ahead) ===
+P4 full-sample quantiles             1946   1.19    15.86    165.2    1,583   59.6    -7,418   0.331   0.213   1,487
+P4 + cut 120 + bigT (=A3)            2113   1.21    17.78    170.5    1,774   59.1    -7,418   0.338   0.239   1,670
+
+=== P1/P3 CAUSAL SCORE, MAJORITY RULE (k=3 derived from 5 features) ===
+P3 causal w=100                      1936   1.19    13.42    140.4    1,339   58.1    -8,275   0.314   0.162   1,244  reject
+P1 causal w=250                      1950   1.18    14.72    153.0    1,470   58.6    -7,418   0.311   0.198   1,374  ADOPT
+P3 causal w=500                      1953   1.18    15.62    162.0    1,559   59.6    -7,418   0.331   0.210   1,463  ADOPT
+
+=== P2 CAUSAL SCORE + CAUSAL CUT (trailing median hold of the base object) ===
+   trailing median hold of the base object = 23 bars (data-derived)
+P2 causal + cut@23b                  3326   1.11    13.50     82.2    1,347   56.7    -5,818   0.291   0.232   1,183  ADOPT
+
+=== HOW MUCH OF THE OLD GAIN WAS THE LOOK-AHEAD? ===
+   A3 (contaminated) 17.78 pts / Sharpe 0.338
+   causal equivalent 14.72 pts / Sharpe 0.311
+   look-ahead was worth +3.05 pts/session and +0.027 Sharpe
+
+=== NULL (binding) on P2 causal + cut@23b: 100 circular shifts of the score ===
+real wk/|worst| 0.232 | null mean 0.142 | p95 0.144 | percentile 100.0 | p 0.000 -> EVIDENCE
