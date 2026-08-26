@@ -1,0 +1,88 @@
+run_id: WE_W57_BMOMREGIME
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: W56 measured that P1 + B-MOM at w=0.30 pays +43 % more per week at a slightly BETTER
+  drawdown distribution than P1 alone. The arithmetic is sound. The whole claim rests on one
+  question and this wave asks it properly.
+
+the question, in Charter Amendment 1's own words:
+  B-MOM earns t = 2.66 on 1,122 sessions (2022-2026) and t = 0.27 on 4,077 sessions
+  (2006-2021), and 2022-2026 is its own development sample. Amendment 1 section 2(b) says a
+  recency-concentrated edge is admissible if - and only if - the arm tracks a MEASURABLE CAUSAL
+  REGIME VARIABLE rather than the calendar, so that (i) it also works in earlier stretches where
+  that variable was in the same state, and (ii) we can say in advance when it would stop.
+  No regime variable is named anywhere in the record. This wave finds one or closes the case.
+
+  Note the power arithmetic before starting, so no one mistakes a weak read for a verdict: the
+  2026-06/07 "health" window (post-development, and NOT part of the >= 2026-08-01 seal, which
+  research/operational/LOCKED_FORWARD.md declares virgin from 2026-08-01 only) is about 40
+  sessions. At a daily sigma near $3,577 that is SE ~ $566/day, so a 40-session read has an
+  expected net of $11k +- $23k. IT CANNOT SETTLE ANYTHING. It is run as a did-it-break check
+  and reported with that power statement attached, never as confirmation.
+  The >= 2026-08-01 data is governed by MONITOR-02, whose first eligible read is >= 2027-08-01
+  and whose rules are frozen. THIS WAVE DOES NOT TOUCH IT.
+
+  The real test uses the 4,077 pre-2022 sessions that already exist. That is where the power is.
+
+phase 0 - B1 REPRODUCTION, and the wave is VOID without it:
+  B-MOM's saved series (w10bmom_daily.csv 2006-2021 + w8bmom_w14_daily.csv 2022-2026, verified
+  continuous at exact zero difference) is the object. Every arm below re-buckets THAT series;
+  no rule is re-implemented and no parameter is touched. Assert the two files concatenate to
+  5,199 sessions and that the dev-era sum equals $319,123 before proceeding.
+
+phase 1 - CANDIDATE REGIME VARIABLES, all causal, all computable on the whole 20 years:
+  R1 REALISED VOLATILITY LEVEL - trailing 60-session mean of the daily true range in POINTS and,
+     separately, in PERCENT of price. B-MOM is a breakout rule; the obvious hypothesis is that
+     it needs a minimum amount of movement to clear a fixed friction of 2.872 ticks/RT.
+  R2 PRICE LEVEL / TICK GRANULARITY - NQ went from roughly 1,500 to roughly 20,000 over this
+     sample while the tick stayed 0.25. A fixed tick-denominated friction is therefore ~13x
+     cheaper in percentage terms now than in 2006. This is a MECHANICAL regime change, it is
+     measurable, and it predicts exactly the observed era split.
+  R3 INTRADAY TREND PERSISTENCE - trailing variance ratio of RTH returns (a value above 1 means
+     trends persist). A breakout rule should need persistence.
+  R4 RTH-to-OVERNIGHT range ratio - how much of the day's movement happens in the session the
+     rule trades.
+  R5 PARTICIPATION - trailing RTH volume relative to its own long trailing mean.
+  Each variable is lagged so it is known before the session it classifies.
+
+phase 2 - THE DECISIVE TEST (this is the whole wave):
+  For each regime variable, split all 5,199 sessions into quintiles of the CAUSAL trailing
+  variable and report B-MOM's net, daily mean, SE and t IN EACH QUINTILE, SEPARATELY FOR
+  2006-2021 AND 2022-2026.
+  The hypothesis is REGIME if, in the top quintile, B-MOM is positive with a meaningful t IN
+  THE PRE-2022 ERA TOO. The hypothesis is DATE if the top quintile is flat pre-2022 and only
+  the post-2022 rows earn - and in that case, no variable in this list explains it.
+  A variable also has to pass a MECHANICAL coherence check: the era split must be driven by the
+  variable actually having moved between the eras, not by a coincidental correlation. Report the
+  fraction of pre-2022 vs post-2022 sessions landing in the top quintile.
+
+phase 3 - IF a variable qualifies, the CONDITIONAL SLEEVE:
+  Re-run W56's constant-total-risk / fixed-drawdown scan using B-MOM GATED to the qualifying
+  regime, on the pre-2022 era as an out-of-development check and on 2022-2026 separately. The
+  gate must be causal (trailing quantile, never full-sample - four casualties) and it must be
+  scan-matched against its own null (W53's rule).
+  If the gated sleeve works in BOTH eras, W56's +43 % becomes defensible and the wave writes
+  the "when would it stop" sentence Amendment 1 section 2(b) demands.
+
+phase 4 - the underpowered health read, reported with its power:
+  Extend the FROZEN B-MOM rule through 2026-07-31 if and only if a 3-minute substrate covering
+  June-July 2026 can REPRODUCE the existing 2022-01 -> 2026-05 daily series to within 1 % of
+  net and 99 % of session-level sign agreement. runs/AUDIT03_BARS/nq_3m_2022_2026.csv is the
+  candidate substrate but it is an NT8 export whose bar construction may not match the scalping
+  lab's 1-minute aggregation; the reproduction gate decides. If it fails, record that the
+  extension is unavailable and why. Either way, ~40 sessions is a did-it-break check.
+
+adoption: NOTHING IS ADOPTABLE IN THIS WAVE. It is the evidence gate in front of W56's result.
+  Its output is one of exactly two sentences:
+   (a) "B-MOM's edge tracks <variable>, it is present pre-2022 in the same regime state at
+       t = <x>, and it would stop when <variable> falls below <causal threshold>" - in which
+       case W56's combination becomes a live adoption candidate with its own wave; or
+   (b) "no measurable regime variable separates the eras; B-MOM is a 4-year in-sample result"
+       - in which case W56's falsifier fires: this repo holds no engine that diversifies P1,
+       model concentration is the binding constraint on the owner's objective, and the next
+       move is to build or buy genuinely different information.
+falsifier: phase 2 finding no variable whose top quintile is positive pre-2022.
+forbidden: [any data >= 2026-08-01, touching MONITOR-02's protocol or its window, re-tuning any
+  B-MOM parameter, a full-sample quantile in any gate, quoting the 40-session health read as
+  confirmation, comparing a scanned gate to an unscanned null]
+outputs: [out/regime.txt, out/quintiles.csv, out/gated.csv, out/health.csv, REPORT.md]
