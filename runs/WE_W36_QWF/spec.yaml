@@ -1,0 +1,40 @@
+run_id: WE_W36_QWF
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: self-directed. Owner: "最能赚，当然相对回撤最少sharpe高就好…怎么知道自己怎么赚的
+  以及怎么赚更多亏更少"
+
+why this before anything else: >
+  W29 walk-forwarded the object and returned STRONG (WF 0.290 vs FIXED 0.300, 97 %), which is
+  what licenses quoting our numbers. W34 and W35 then added TWO NEW FITTED LAYERS on the same
+  data - the quality score (five features, three quantile thresholds, a size threshold) and
+  the quality exits (a cut length and a bigger target). Those layers have never been
+  walk-forwarded. Adding fitted layers on top of a validated object without re-validating
+  spends the validation. This wave pays it back before any further improvement.
+
+axis A FULL WALK-FORWARD OF THE QUALITY LAYER:
+  protocol identical to W29 (warm-up 2022-01..06; quarterly refits 2022-07..2026-07; fit on
+  the trailing 12 months; trade only the next quarter; stitch).
+  the box, vote threshold and throttle q are FIXED at the W29-validated values, so this wave
+  isolates the new layer. choice set per refit (3 x 3 x 2 = 18):
+    score_threshold in {2, 3, 4}   cut_bars in {none, 120, 240}   big_target in {none, 2000}
+  the score's quantile thresholds are ALSO refit each quarter from the trailing window's own
+  entry distribution, so nothing about the score is carried forward from the full sample.
+  comparisons: WF_QUALITY | FIXED_A3 (the quoted object) | BASE (no quality layer at all,
+  the W29-validated object) | BESTFIXED (hindsight upper bound over the 18).
+  verdicts: STRONG if WF >= 0.8 x FIXED and WF > BASE; WEAK if WF > BASE only; FAIL if
+  WF <= BASE, in which case the quality layer is a fitted artifact and is REMOVED.
+axis B QUANTILE SENSITIVITY: the score's cut points (2/3, 1/3, 0.9) were chosen once. Perturb
+  each one at a time to {0.5, 2/3, 0.75}, {0.25, 1/3, 0.5}, {0.8, 0.9, 0.95} and report the
+  Sharpe surface. A knife-edge surface means the layer is fitted regardless of what A says.
+axis C ATTRIBUTION - "how do we actually make the money":
+  C1 layer decomposition: base vote -> + sizing -> + cut -> + big target, marginal pts/session
+     and marginal Sharpe of each step.
+  C2 where the extra points come from: split A3's P&L by score bucket (0-5), by session
+     regime (big-day vs small-day, W08 definition), and by ET segment.
+  C3 the money concentration: what share of A3's total P&L comes from the top 5 % of days,
+     versus the base object's 109 % (W26). If sizing has made the object MORE concentrated,
+     that is a hidden risk the Sharpe does not show.
+forbidden: [data >= 2026-08-01, fill-bar information, quoting A3 forward without axis A's
+  verdict, presenting C as a result rather than an explanation]
+outputs: [out/qwf.txt, out/summary.csv, REPORT.md]
