@@ -1,0 +1,25 @@
+arm                         pts/sess   inPos%   pts/bar   tr/wk  $/trade   wkMean  wkPos%     worst   shrp  stress
+=== AXIS C: MULTI-CLOCK MEMBERS (decisions and fills stay 1-min) ===
+C clock=1min                    4.85    17.13    0.0208    23.8     20.1      480    52.2    -9,427  0.139     241
+   clock 1 done, flips 553,982 [95s]
+C clock=3min                    3.84    16.65    0.0169    21.4     17.7      379    53.7   -11,570  0.105     165
+   clock 3 done, flips 414,027 [166s]
+C clock=5min                    0.72    15.67    0.0034    19.1      3.8       72    50.5    -9,419  0.021    -119
+   clock 5 done, flips 350,943 [237s]
+C union {1,3,5}min              2.49    14.95    0.0122    20.5     12.1      248    51.0    -7,346  0.073      43
+   flips: 1min 553,982 | 3min 414,027 | 5min 350,943
+
+=== AXIS T: TOD-NORMALISED THRESHOLD ===
+   f range 0.200-8.000; 09:31 slot mean 5.225; 14:00 0.779; 19:00 0.377
+   M1 failure signature: E[f|flip] 1.122 vs E[f|all] 1.064  (M1 failed at 1.536 vs 1.000)
+T tod-normalised                3.17    24.41    0.0095    25.5     12.3      313    50.2   -10,637  0.075      59
+   flips: normalised 544,747 vs raw 1min 553,982
+
+=== ADOPTION (pts up, density loss <15%, Sharpe not down, stress>0) ===
+  C clock=3min               pts 3.84 vs 4.85 | dens 81% | shrp 0.105 vs 0.139 | reject
+  C clock=5min               pts 0.72 vs 4.85 | dens 16% | shrp 0.021 vs 0.139 | reject
+  C union {1,3,5}min         pts 2.49 vs 4.85 | dens 59% | shrp 0.073 vs 0.139 | reject
+  T tod-normalised           pts 3.17 vs 4.85 | dens 46% | shrp 0.075 vs 0.139 | reject
+  NONE -> falsifier: production is capped at ~10.6 pts/session per contract with
+  this model; the remaining levers are exposure and a different model.
+done [324s]

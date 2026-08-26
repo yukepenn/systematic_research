@@ -1,0 +1,31 @@
+base object: 2334 trades [149s]
+HARNESS: Sharpe 0.305 (expect 0.305), pts/session 10.62 (expect 10.62) -> PASS
+features built on 2072 entries [152s]
+base: 2072 entries, mean $103.9/trade, total $215,186, Sharpe 0.305, 10.62 pts/session
+
+Every filter is compared against 200 RANDOM count-matched subsets (R29 protocol):
+filter                               kept    mean$   delta$  nullMean   nullP95  pctile  verdict
+F1 range ratio top decile             208    351.4   +247.6      93.7     216.4   100.0  EVIDENCE
+F2 |delta| vs vol top tercile         691    162.7    +58.8     102.9     163.8    94.5  weak
+F2 |delta| vs vol top decile          208    263.0   +159.1     104.7     223.7    96.0  EVIDENCE
+F4 dist to VWAP /ATR top tercile      691    183.1    +79.3     102.8     163.4    98.0  EVIDENCE
+F5 dist to open /ATR top tercile      691    208.2   +104.3     102.1     164.1   100.0  EVIDENCE
+F5 dist to open /ATR top decile       208    253.2   +149.4     102.1     243.2    96.0  EVIDENCE
+F6 minute of day top tercile          693    138.0    +34.1     107.2     168.2    81.0  weak
+F8 ATR 1h change bottom tercile       691    148.6    +44.8     103.3     152.8    90.5  weak
+F11 prior sess ret bottom tercile     693    195.6    +91.7     103.5     159.5    99.5  EVIDENCE
+F11 prior sess ret bottom decile      211    180.4    +76.5      98.8     218.5    84.5  weak
+F12 gap /ATR bottom tercile           691    144.2    +40.3     105.2     165.3    86.0  weak
+F12 gap /ATR bottom decile            208    178.2    +74.4      95.8     219.8    84.5  weak
+F13 range position bottom tercile     691    141.2    +37.4     100.7     155.1    86.5  weak
+F13 range position top decile         549    148.8    +45.0     104.9     180.6    83.0  weak
+F13 range position bottom decile      208    168.6    +64.7     100.7     225.4    83.0  weak
+F14 run length top tercile            833    128.6    +24.8     103.0     152.2    81.0  weak
+F14 run length top decile             249    257.0   +153.2     107.8     212.1    99.0  EVIDENCE
+F16 volume ratio top tercile          691    134.1    +30.3     103.6     164.5    82.0  weak
+
+tests run 59; at the 95th percentile the expected false-positive count is 3.0; observed EVIDENCE count 7
+-> survivors exceed chance; applying the strongest to the full object:
+   strongest: F1 range ratio top decile (pctile 100.0, delta $+247.6/trade)
+   applied: 208 trades, 3.61 pts/session (base 10.62), Sharpe 0.275 (base 0.305), worst $-3,259 (base $-7,487)
+done [152s]
