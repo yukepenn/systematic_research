@@ -105,19 +105,25 @@ def main():
                              daypos=100 * float((w > 0).mean())))
     RW = pd.DataFrame(rows)
     RW.to_csv(os.path.join(OUT, "rolling24.csv"), index=False)
-    P_(f"{'sleeve':<10}{'windows':>9}{'% positive':>12}{'median t':>10}"
-       f"{'LATEST window: end':>22}{'net $':>12}{'t':>8}{'percentile of its own history':>32}")
+    P_("Compared on the SCALE-FREE t, not on dollars: NQ's price and daily range grew ~6x over")
+    P_("this sample, so a dollar comparison across decades measures the instrument, not the edge.\n")
+    P_(f"{'sleeve':<10}{'windows':>9}{'eff. indep.':>12}{'% positive':>12}{'median t':>10}"
+       f"{'latest end':>13}{'latest t':>10}{'pct of own t-history':>22}")
     for k in ("P1", "AXISB", "BMOM", "BREADTH"):
         q = RW[RW["sleeve"] == k].sort_values("end")
         if not len(q):
             continue
         last = q.iloc[-1]
-        pct = 100 * float((q["net"].values < last["net"]).mean())
-        P_(f"{k:<10}{len(q):>9}{100*float((q['net'] > 0).mean()):>11.1f}%"
-           f"{q['t'].median():>10.2f}{str(last['end']):>22}{last['net']:>12,.0f}"
-           f"{last['t']:>8.2f}{pct:>31.0f}%")
-    P_(f"\n   A sleeve positive in most rolling windows has a recent record that means")
-    P_(f"   something. One positive only in the latest window does not.")
+        pct_t = 100 * float((q["t"].values < last["t"]).mean())
+        eff = max(1, int(round(len(q) / 24.0)))          # 24-month windows step monthly
+        P_(f"{k:<10}{len(q):>9}{eff:>12}{100*float((q['net'] > 0).mean()):>11.1f}%"
+           f"{q['t'].median():>10.2f}{str(last['end']):>13}{last['t']:>10.2f}"
+           f"{pct_t:>21.0f}%")
+    P_(f"\n   'eff. indep.' is windows / 24: consecutive 24-month windows stepped monthly")
+    P_(f"   overlap by 23/24, so the effective number of independent observations is that many.")
+    P_(f"   A sleeve whose LATEST t sits at the top of its own t-history is having an")
+    P_(f"   exceptional run, not demonstrating a durable edge - and 'recent effectiveness' is")
+    P_(f"   then being satisfied by luck. That is this wave's preregistered falsifier.")
 
     # =====================================================================================
     # PHASE 2 - THE CONSISTENCY LEDGER
