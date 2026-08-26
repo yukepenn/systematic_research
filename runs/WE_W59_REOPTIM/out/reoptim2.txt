@@ -1,0 +1,51 @@
+=== loaded 216 cells x 1012 sessions, 204 weeks | incumbent column present: True
+
+================================================================================================================================
+=== PHASE 2: SELECT vs AGGREGATE over the OUTER parameters
+================================================================================================================================
+'avg pos' is the arm's average position as a multiple of one cell's, before the
+fixed-drawdown rescaling - an aggregate of 216 cells is NOT 216 contracts.
+
+arm                                       day+%  trdD+%  flat%   wk+%  dStrk  wStrk   medWk$   weekly$   top5DD   worst$  avg pos
+P1 INCUMBENT cell                          27.6    46.0   40.0   58.3      6      8      455     1,475   14,266   -7,418     1.00
+S2 AGGREGATE of all cells (no selection)   27.4    43.7   37.4   58.8      8      7      438       909   10,722   -7,328     1.00
+   (the AVERAGE single cell, for reference)   26.4    45.1   41.5   56.2      6      7      331       879   12,219   -8,969     1.00
+S3 aggregate over TARGET (6 cells)         27.2    45.3   40.0   58.3      6      8      367     1,443   14,631   -7,978     1.00
+S3 aggregate over HALT (4 cells)           29.0    48.3   40.0   59.3      6      7      336     1,249   12,297   -8,484     1.00
+S3 aggregate over VOTE (3 cells)           27.1    43.2   37.4   57.4      7      6      461     1,471   14,371   -7,693     1.00
+S3 aggregate over CUT (3 cells)            27.8    46.3   40.0   58.3      6      9      411     1,139   12,688   -7,072     1.00
+S1 WALK-FORWARD quarterly selection        25.9    45.7   43.4   55.4      6      8      192       462    9,008   -9,523     1.00
+      -> it changed its pick in 5 of 12 live quarters (42 % turnover); 5 distinct cells used; it held the incumbent in 0 of them
+S4 hindsight best (h2000_t750_v0.500_c3) - NOT ACHIEVABLE   30.5    50.9   40.0   59.8      5      7      767     1,445   12,455   -8,190     1.00
+
+   PREREGISTERED PREDICTION (amendment_1): law 2 says the AGGREGATE beats the
+   SELECTOR. Result: aggregate weekly $909 vs selector $462, traded-day 43.7 % vs 45.7 % -> LAW HOLDS
+
+================================================================================================================================
+=== PHASE 3: nulls. Different by arm, and not interchangeable.
+================================================================================================================================
+S1 is a SELECTOR: its null is a selector run on PERMUTED trailing performance, i.e.
+choosing at random from the same 216. S2 has NO selection, so a scan-matched null is
+meaningless for it - its test is simply whether it beats the incumbent and the average
+cell, which is reported above and needs no null.
+
+arm                                          weekly$   null mean    null p95  percentile   verdict
+S1 walk-forward selector                         462         897       1,384        2.0%      fail
+S2 aggregate (no null needed)                    909       1,475           -      loses to incumbent
+
+================================================================================================================================
+=== PHASE 4: the profit target, by exact accounting on the measured days
+================================================================================================================================
+Compares each target level against the SAME cell with no target, session by session.
+
+target      sessions saved  sessions capped     $ saved   $ given up       net $  net +days  trdD+% delta
+500                     50               78     124,406      259,105     -76,702         46          +7.6
+750                     38               64     109,410      192,872     -29,387         34          +5.6
+1000                    29               59      93,227      174,208     -27,979         26          +4.3
+1500                    16               40      61,806      137,763     -26,236         14          +2.3
+2500                     4               28      19,813      104,656     -39,686          3          +0.5
+
+   'sessions saved' = red without the target, green with it. That is the
+   consistency mechanism, priced. 'sessions capped' is what it costs.
+
+=== STATUS: nothing adopted here. ===

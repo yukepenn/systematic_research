@@ -1,0 +1,80 @@
+=== B1 GATE: 14.86 pts/session over 1012 sessions (expect 14.72) -> PASS [23s]
+
+   computing 216 cells and persisting their daily series [23s]
+      24/216 [41s]
+      48/216 [60s]
+      72/216 [79s]
+      96/216 [99s]
+      120/216 [120s]
+      144/216 [140s]
+      168/216 [162s]
+      192/216 [184s]
+      216/216 [206s]
+   persisted 216 cells x 1012 sessions -> out/cells_daily.parquet [206s]
+
+======================================================================================================================
+=== PHASE 1a: THE PROFIT TARGET, holding everything else at the incumbent
+======================================================================================================================
+Under production this was a cap. Under consistency it LOCKS A DAY GREEN.
+
+cell                        trades    pts  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   worst$
+h1300_t500_v0.500_c3          1753  12.46   29.5    49.3   57.4      9      444     1,146   12,465   -6,879
+h1300_t750_v0.500_c3          1859  14.79   28.4    47.3   58.8      8      569     1,429   13,044   -7,223
+h1300_t1000_v0.500_c3         1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   -7,418   <- INCUMBENT
+h1300_t1500_v0.500_c3         2056  14.95   26.4    44.0   57.8      8      327     1,522   16,235  -10,223
+h1300_t2500_v0.500_c3         2163  14.28   25.3    42.2   55.9      8      339     1,228   14,398   -8,632
+h1300_tinf_v0.500_c3          2282  16.24   25.0    41.7   52.9      8      116     1,072   12,282   -6,623
+
+=== PHASE 1b: THE HALT, everything else at the incumbent ===
+cell                        trades    pts  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   worst$
+h800_t1000_v0.500_c3          1678  13.47   24.8    41.4   56.4      8      452     1,446   14,077   -6,865
+h1300_t1000_v0.500_c3         1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   -7,418   <- INCUMBENT
+h2000_t1000_v0.500_c3         2149  15.52   29.7    49.6   60.8      7      666     1,281   12,407   -7,193
+hinf_t1000_v0.500_c3          2409  14.65   31.7    52.9   61.3      7      494       759   10,830   -9,873
+
+=== PHASE 1c: THE VOTE THRESHOLD and THE QUALITY CUT ===
+cell                        trades    pts  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   worst$
+h1300_t1000_v0.375_c3         1983  13.69   27.8    44.3   57.4      9      560     1,206   16,894  -13,173
+h1300_t1000_v0.500_c3         1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   -7,418   <- INCUMBENT
+h1300_t1000_v0.625_c3         1855  10.63   22.8    43.2   55.4      7      290     1,171   13,660   -8,383
+h1300_t1000_v0.500_c2         1769  13.65   27.3    45.5   56.4      9      331       948   12,831   -6,526
+h1300_t1000_v0.500_c3         1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   -7,418   <- INCUMBENT
+h1300_t1000_v0.500_c4         2027  12.42   28.4    47.3   57.4      9      406     1,060   13,703   -7,279
+
+======================================================================================================================
+=== PHASE 1c: how badly did the OLD objective mislead? the incumbent's rank among 216 cells
+======================================================================================================================
+metric                   incumbent   best cell value   incumbent rank                   best cell
+trdpos                       45.96             56.31        96 of 216         hinf_t500_v0.375_c2
+daypos                       27.57             35.28        83 of 216         hinf_t500_v0.375_c2
+wkpos                        58.33             63.24        60 of 216         hinf_t500_v0.500_c4
+weekly                    1,474.58          1,656.67         4 of 216         h800_t750_v0.500_c3
+medwk                       455.50            766.69        51 of 216        h2000_t750_v0.500_c3
+dd_top5                  14,265.94          6,732.28       178 of 216         h800_t500_v0.625_c4
+ulcer                     6,182.78          2,992.14       185 of 216        hinf_t2500_v0.500_c2
+worst                    -7,417.77         -3,493.44        90 of 216        h1300_t500_v0.625_c2
+wstreak                       8.00              4.00       131 of 216         hinf_t500_v0.375_c2
+pts                          14.86             19.67        48 of 216        hinf_t1500_v0.500_c2
+
+=== PHASE 1d: is the best consistency cell a PLATEAU or a SPIKE? ===
+   cells that beat the incumbent on weekly$ AND the top-5 drawdown: 2 of 216
+   best of those by TRADED-day rate: h1300_t1000_v0.500_c3
+cell                        trades    pts  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   worst$
+P1 INCUMBENT                  1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   -7,418   <- INCUMBENT
+h1300_t1000_v0.500_c3         1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   -7,418   <- candidate
+
+   its one-step neighbourhood (9 cells):
+h800_t750_v0.500_c3           1601  13.55   25.9    43.2   55.9      8      515     1,657   15,172   -7,821
+h800_t1000_v0.500_c3          1678  13.47   24.8    41.4   56.4      8      452     1,446   14,077   -6,865
+h800_t1500_v0.500_c3          1788  13.79   23.4    39.0   55.9      8      427     1,399   15,068   -9,598
+h1300_t750_v0.500_c3          1859  14.79   28.4    47.3   58.8      8      569     1,429   13,044   -7,223
+h1300_t1000_v0.500_c3         1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   -7,418
+h1300_t1500_v0.500_c3         2056  14.95   26.4    44.0   57.8      8      327     1,522   16,235  -10,223
+h2000_t750_v0.500_c3          2055  15.37   30.5    50.9   59.8      7      767     1,445   12,455   -8,190
+h2000_t1000_v0.500_c3         2149  15.52   29.7    49.6   60.8      7      666     1,281   12,407   -7,193
+h2000_t1500_v0.500_c3         2271  16.22   28.4    47.3   59.3      7      518     1,061   11,737   -7,585
+
+   PLATEAU if the neighbours agree, SPIKE if they do not. neighbour traded-day rates: 43.2, 41.4, 39.0, 47.3, 46.0, 44.0, 50.9, 49.6, 47.3
+
+=== STATUS: surface only. A grid winner is NOT a result - run_we_w59b holds the
+    walk-forward selector and the scan-matched nulls, which are the binding tests. ===
