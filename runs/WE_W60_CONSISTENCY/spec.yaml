@@ -1,0 +1,74 @@
+run_id: WE_W60_CONSISTENCY
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: build the CONSISTENCY object the charter has always named and this campaign has never
+  built, using only what W59 licensed - and let the owner choose the point on the curve rather
+  than choosing it for him.
+
+what W59 licensed and what it forbade:
+  FORBIDDEN: free selection over the 216 outer cells. The walk-forward selector earned $462/week
+    against a random-choice null mean of $897 - the 2.0th percentile. It is worse than noise.
+  LICENSED: (i) the SELECTION-FREE aggregate over an axis whose cells are near-exchangeable, and
+    (ii) movement along a response surface that is MONOTONE, which is much stronger evidence
+    than a grid argmax. Both surfaces are monotone in the owner's objective:
+      target 500 -> none : traded-day + % 49.3, 47.3, 46.0, 44.0, 42.2, 41.7
+      halt   800 -> none : traded-day + % 41.4, 46.0, 49.6, 52.9
+  PRICED: the exchange rate. At target $750 the profit cap buys 34 net green days for $29,387
+    over four years - about $860 per extra green day, ~$142/week. Consistency is not free and
+    the curve is now labelled.
+
+the arms, all built from W59's persisted daily series, no re-simulation:
+  A  SELECTION-FREE AGGREGATE OVER THE HALT (4 cells: 800, 1300, 2000, none; target, vote and
+     cut at the incumbent). No parameter is chosen at any point. Mechanically it is the only
+     arm here that changes the RISK LAYER's character: with one halt the book is all-or-nothing
+     each session; with four, the halt becomes graded. W59 measured it at +2.3 pp traded-day,
+     +1.0 pp weekly, -14 % drawdown distribution, -15 % money.
+  B  SELECTION-FREE AGGREGATE OVER HALT x TARGET (24 cells), the two monotone axes together.
+  C  CONSTRAINED WALK-FORWARD: allowed to move at most ONE STEP per quarter along the two
+     monotone axes only, and only when trailing evidence supports the move. The hypothesis space
+     is 24 cells with a step constraint, not 216 free choices - a different and much smaller
+     hypothesis than the one W59's S1 tested and lost.
+  D  the fixed cell h2000_t750, one step from the incumbent on each monotone axis. Reported as a
+     HINDSIGHT-FLAGGED reference. Not adoptable on this wave's evidence and labelled so.
+  E  the incumbent, unchanged.
+
+phase 1 - SUB-PERIOD STABILITY, which decides whether any of this is real:
+  A full-sample argmax proves nothing. For every arm report the metrics PER YEAR and over every
+  rolling 24-month window, and the fraction of sub-periods in which the arm beats the incumbent
+  on the traded-day rate, on weekly dollars at fixed drawdown, and on the drawdown distribution.
+  An arm that wins in most sub-periods is a finding. One that wins only in aggregate is a fit.
+
+phase 2 - THE MECHANISM of the halt aggregate, measured not asserted:
+  On how many sessions do the four halt cells DISAGREE about being halted, and what is the P&L
+  of those sessions? If the aggregate's benefit does not come from graded halting on exactly
+  those sessions, it is coming from somewhere else and the stated mechanism is wrong.
+
+phase 3 - NULLS, chosen per arm as W59's amendment_1 requires:
+  A and B perform NO selection, so a scan-matched null is meaningless for them. Their null is a
+    RANDOM-AXIS aggregate: aggregate 4 (or 24) cells drawn at random from the 216 and ask
+    whether the HALT axis specifically does better than an arbitrary set of the same size. That
+    tests the claim actually being made - that this axis is the near-exchangeable one.
+  C is a selector over a constrained space, so it gets a scan-matched null over THAT space plus
+    a permuted-trailing version, exactly as W59's S1 did over the full space.
+  300 draws each.
+
+phase 4 - THE CURVE, which is the deliverable:
+  Plot the achievable frontier in the owner's own units: traded-day positive rate on one axis,
+  weekly dollars at a fixed $20,245 drawdown on the other, with the incumbent marked and every
+  arm placed on it. State the marginal exchange rate at each point. The owner picks the point;
+  this wave does not pick it for him, and it does not present one point as if it were the answer.
+
+adoption bar: an arm may be RECOMMENDED (not adopted) if it beats the incumbent on the
+  traded-day rate and the drawdown distribution in a MAJORITY of rolling 24-month windows, gives
+  up no more than 5 % of weekly dollars at fixed drawdown, performs no free parameter selection,
+  and clears its own null at >= 95th percentile. Adoption itself is an owner decision because
+  the trade-off it makes is a preference, not a fact.
+falsifier: if no selection-free arm beats the incumbent in a majority of sub-periods, the
+  recorded conclusion is that the incumbent's parameters are already a consistency optimum given
+  the object, and that consistency must come from breadth instead - which W58 already showed is
+  the same problem.
+forbidden: [data >= 2026-08-01, free selection over the 216, judging on Sharpe, presenting a
+  hindsight cell as adoptable, choosing the owner's point on the curve for him, comparing a
+  constrained selector to an unconstrained null or vice versa]
+outputs: [out/consistency.txt, out/arms.csv, out/subperiod.csv, out/nulls.csv, out/curve.csv,
+  REPORT.md]
