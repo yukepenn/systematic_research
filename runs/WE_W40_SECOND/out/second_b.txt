@@ -1,0 +1,50 @@
+=== B1: 14.72 pts/session (expect 14.72) -> PASS [25s]
+
+=== W WEIGHT SCAN at constant total exposure (long 170,547 contract-min, B 89,520) [25s] ===
+   w = share of TOTAL contract-minutes given to B; total held at the long object's own
+   exposure so every row is directly comparable to w = 0.
+arm                                   wk$   wk+%     worst     CVaR5    shrp     eff   cvEff   stress
+w=0.00 (long x1.00 + B x0.00)       1,698   60.0    -7,418    -5,868   0.331   0.229   0.289    1,601
+w=0.05 (long x0.95 + B x0.10)       1,670   61.3    -6,935    -5,379   0.340   0.241   0.310    1,558
+w=0.10 (long x0.90 + B x0.19)       1,642   58.0    -7,124    -4,955   0.346   0.230   0.331    1,515
+w=0.15 (long x0.85 + B x0.29)       1,614   58.0    -7,313    -4,962   0.350   0.221   0.325    1,472
+w=0.20 (long x0.80 + B x0.38)       1,586   60.7    -7,502    -5,284   0.351   0.211   0.300    1,429
+w=0.30 (long x0.70 + B x0.57)       1,529   60.7    -8,502    -6,109   0.340   0.180   0.250    1,344
+w=0.50 (long x0.50 + B x0.95)       1,417   60.0   -10,662    -8,465   0.283   0.133   0.167    1,172
+
+   weights improving eff OR CVaR-eff over w=0: [0.05, 0.1, 0.15, 0.2]
+
+   tradeable integer ratios (long contracts : B contracts), same construction:
+arm                                   wk$   wk+%     worst     CVaR5    shrp     eff   cvEff   stress
+6 long : 1 B                       10,785   59.3   -46,004   -33,151   0.344   0.234   0.325    9,997
+4 long : 1 B                        7,388   57.3   -32,510   -22,206   0.348   0.227   0.333    6,794
+3 long : 1 B                        5,690   58.0   -25,764   -17,480   0.350   0.221   0.326    5,193
+2 long : 1 B                        3,992   60.7   -19,017   -13,492   0.350   0.210   0.296    3,592
+   (compare each against long-alone at the SAME contract-minutes:)
+long alone x6.52 (match 6:1)       11,080   60.0   -48,401   -38,290   0.331   0.229   0.289   10,447
+long alone x4.52 (match 4:1)        7,684   60.0   -33,565   -26,553   0.331   0.229   0.289    7,245
+long alone x3.52 (match 3:1)        5,986   60.0   -26,147   -20,685   0.331   0.229   0.289    5,644
+long alone x2.52 (match 2:1)        4,288   60.0   -18,729   -14,817   0.331   0.229   0.289    4,043
+
+=== R PARAMETER SURFACE of B (reported, NOT selected) [25s] ===
+up/down/look                          n     pts    $/tr      wk$    shrp     eff   stress
+1.4/1.0/15                         5040    6.56    19.6      687   0.159   0.064      351
+1.6/0.9/15                         2965    8.05    40.9      825   0.175   0.086      627
+1.6/1.0/10                         5090    8.60    25.4      848   0.204   0.097      509
+1.6/1.0/15                         3090    5.90    28.7      596   0.138   0.065      390
+1.6/1.0/30                         1112    6.27    84.9      593   0.145   0.031      519
+1.6/1.1/15                         3210    5.13    24.0      510   0.118   0.045      296
+2.0/1.0/15                         1182    4.51    57.5      419   0.095   0.023      341
+   surface: 36 settings | stress-positive in 81 % | Sharpe -0.082..0.231 | pts -0.03..10.21  -> NOT knife-edge
+
+=== WF QUARTERLY WALK-FORWARD of B's parameters [48s] ===
+   quarters 12 | unchanged pick 36% -> CHURN 64%
+   picks: [(1.6, 1.1, 15), (1.6, 1.1, 15), (1.6, 0.9, 30), (1.6, 0.9, 30), (1.6, 1.1, 30), (1.6, 1.1, 30), (2.0, 1.0, 15), (1.6, 1.1, 10), (1.6, 1.1, 10), (1.8, 1.1, 10), (1.8, 0.9, 10), (1.4, 1.1, 30)]
+arm                                   wk$   wk+%     worst     CVaR5    shrp     eff   cvEff   stress
+B fixed 1.6/1.0/15                    596   56.0    -9,142    -8,077   0.138   0.065   0.074      390
+B quarterly walk-forward              273   49.3    -9,973    -7,529   0.070   0.027   0.036       99
+
+=== N NULLS on B's entry mask [48s] ===
+B real (reference)                    596   56.0    -9,142    -8,077   0.138   0.065   0.074      390
+   N1 circular shift                real 0.065 | null mean -0.009 | p95 0.052 | pctile 100.0 | p 0.000 -> EVIDENCE
+   N2 count-matched random entries  real 0.065 | null mean -0.012 | p95 0.025 | pctile 100.0 | p 0.000 -> EVIDENCE
