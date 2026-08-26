@@ -1,0 +1,100 @@
+run_id: WE_W76_FORWARD2026
+title: "The 44 sessions of 2026 nobody has ever read: a preregistered forward test of every
+        object this campaign has produced."
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED — written and committed BEFORE the window was read
+
+the_discovery_that_forced_this_wave: >
+  `run_we_w17.load_deep()` hardcodes
+      research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet
+  which ENDS 2026-05-29 16:59. Every wave in this campaign calls it through
+  `run_we_w51c.setup()` as `load_deep("2022-01-01", "2026-07-31 17:00")` with
+  `DEV_END = 2026-07-31` and the window bound `B = 2026-08-01`.
+
+  So the campaign's stated intent has always been to evaluate through 2026-07-31, and it has in
+  fact been silently truncated at 2026-05-29 for its entire life. Meanwhile
+  `runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet` runs to 2026-07-31 16:59.
+
+  VERIFIED BEFORE WRITING THIS SPEC: the two files are BIT-EXACT on all 1,558,497 overlapping
+  rows — every one of open, high, low, close, volume, and the timestamp index — and the newer
+  file carries 61,547 additional bars covering 2026-05-29 17:00 -> 2026-07-31 16:59, roughly
+  44 trading sessions.
+
+why_this_is_valuable_rather_than_merely_a_bug: >
+  Nothing has ever been fitted, selected, tuned, screened or even LOOKED AT on those 44 sessions,
+  because no code in this campaign has ever been able to see them. They are therefore a genuine
+  out-of-sample window for every object and every decision made up to today — the only truly
+  held-out data this campaign possesses that is not under the 2026-08-01 forward seal.
+  `research/operational/LOCKED_FORWARD.md` seals data from 2026-08-01. June and July 2026 are
+  BEFORE that seal and are legitimately usable. They are read here ONCE, under this protocol.
+
+owner_directive_this_serves: >
+  "我不能接受2026收益这么点 ... 至少这两年要好吧" — recent performance is the gate. The campaign has
+  been reporting 2026 on 106 sessions when 150 exist. That is a 42 % undercount of the sample the
+  owner actually cares about, and it is fixed here.
+
+protocol_binding_before_the_read:
+  champion: "P1 — the incumbent long object, at its frozen parameters. No re-derivation of
+             anything. The quality score's five features, the halt/target, the throttle q, the
+             member sets, the vote threshold and the clamp are all as recorded."
+  challengers: >
+    every stream in W75's census, at frozen parameters: SHORT, AXISB, BMOM, L_sig, S_sig,
+    CLK3, CLK5, and the twelve W72 channel-substituted objects. CLKRANGE and CLKVOL are EXCLUDED
+    — see the contamination note below.
+  what_is_reported: >
+    For the held-out window 2026-05-30 -> 2026-07-31 ONLY, and separately for the full extended
+    window: net, pts/session, trades, positive-day %, positive-week %, weekly mean and its SE,
+    worst week, max drawdown. Both friction lines: net of $4.36/RT and the C1 stress line at
+    $14.36/RT.
+  the_comparison_that_matters: >
+    Each object's held-out pts/session against its OWN 2022-2026-05 in-sample rate, expressed as
+    a ratio and with the held-out standard error. The campaign's standing out-of-sample bar,
+    from W29, is that 80 % of the in-sample figure should survive; W29's actual retention was
+    97 %. That bar is applied here.
+
+preregistered_decision_rule:
+  this_is_a_measurement_not_a_selection: >
+    NOTHING is chosen on the held-out window. No parameter is re-derived, no object is promoted,
+    no ranking from this window is used to pick anything. Selecting on a forward window is
+    exactly how a held-out sample is destroyed, and it is what this protocol exists to prevent.
+  what_each_outcome_means:
+    - "P1 retains >= 80 % of its in-sample pts/session: the object's recorded numbers survive
+       their first genuine forward test and the campaign's headline figures stand."
+    - "P1 retains < 80 %: the headline figures are provisional and must be re-quoted with the
+       forward window folded in. This will be said plainly regardless of how it reads."
+    - "any challenger beating P1 on the held-out window is recorded as an OBSERVATION ONLY and
+       explicitly NOT promoted — 44 sessions is 9 weeks, the standard error on a weekly mean over
+       9 weeks is large, and the campaign has killed four candidates for exactly this kind of
+       selection."
+  after_this_read: >
+    the extended window becomes the campaign's standard evaluation window and every subsequent
+    wave uses it. This read can only be taken once; from here on 2026-05-30 -> 2026-07-31 is
+    in-sample like everything else, and the next genuinely virgin window is >= 2026-08-01 under
+    the existing seal and its existing rules, which this wave does not touch.
+
+contamination_note_carried_from_w75: >
+  W75's census included CLKRANGE and CLKVOL. Both are DISQUALIFIED and neither may be quoted:
+  `we_clocks.size_for_rate()` sets the range clock's bar size from a FULL-SAMPLE quantile — the
+  defect that withdrew W41's adoption — and sets the volume clock's bar size as
+  `D["v"].sum() / target`, a FULL-SAMPLE MEAN over the same measurement array. Under the
+  campaign's categorical rule ("any threshold or cut on the measurement sample must be re-derived
+  causally"), a full-sample mean used as a bar size is the same class of defect as a quantile.
+  This matters because CLKVOL showed the single best 2026 figure in the census ($60,833 against
+  P1's $33,467) and CLKRANGE the second best ($46,007). Both numbers are void. Only CLK3 and CLK5
+  carry no full-sample parameter — their bar sizes are a fixed 3 and 5 minutes.
+
+engine_change: >
+  `load_deep` gains an OPTIONAL `extend=` argument that concatenates the newer substrate beyond
+  the old file's end. It defaults to OFF so every one of the 75 preceding waves remains
+  bit-reproducible; only this wave and its successors opt in. The concatenation is asserted
+  bit-exact on the overlap at load time and raises rather than silently proceeding if it is not.
+
+traps_named_before_running:
+  - "44 sessions is 9 weeks. A weekly mean over 9 weeks has an enormous standard error and NO
+     ranking over this window is stable. Every figure is quoted with its SE and its n."
+  - "The held-out window is a single calendar slice — one market regime, not a sample of regimes.
+     A good result is evidence the object was not fitted to 2022-05/2026-05; it is NOT evidence
+     the object works in general."
+  - "Reading this window uses it up. It is read once, in this wave, with the full challenger set
+     at frozen parameters, so that the read cannot be repeated selectively later."
