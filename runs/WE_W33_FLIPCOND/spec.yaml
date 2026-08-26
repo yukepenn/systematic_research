@@ -1,0 +1,44 @@
+run_id: WE_W33_FLIPCOND
+date: 2026-08-25
+campaign: WEEKLY_EDGE (#7)
+directive: owner — "为什么不是solar结合其他strategies或者features的强信号呢？我以为这些全面的你都想过了"
+
+the gap, owned: >
+  Combination has been tested in THREE forms and all failed or came out weak:
+    - as a REGIME GATE (W03 delta/FV, W07 cross-asset/overnight/opening-range/efficiency)
+    - as an independent SLEEVE (W25: orthogonal engines lose, profitable ones correlate)
+    - as VOTERS inside the vote (W27: Sharpe 0.305 -> 0.231-0.244, dilution)
+  A FOURTH form was never tested and is the one aligned with W31's finding that the edge lives
+  entirely in the FLIP EVENT (0.0603 pts/bar at a flip vs 0.0025 holding state, 24x):
+  CONDITIONING THE FLIP ITSELF - at each Solar flip, read a causal feature vector and decide
+  whether to ACCEPT that flip. This is event selection, not state overlay, and it is the only
+  combination geometry consistent with where the edge was measured to be.
+
+method (campaign #6 R29's null-calibrated filter protocol, which this campaign owns):
+  1. enumerate every accepted entry of the current object (E5 box) and record, at the ENTRY
+     BAR using decision-bar information only, a feature vector:
+     F1  range ratio (session realised range vs TOD norm)      F2  |delta| percentile
+     F3  delta sign agreement                                   F4  distance to session VWAP / ATR
+     F5  distance to session open / ATR                         F6  minute-of-day segment
+     F7  ATR level vs its own 60-session median                 F8  ATR 1h change
+     F9  fraction of members flipping within +-15 bars (flip clustering)
+     F10 the member threshold S at the flip / ATR               F11 prior-session return sign
+     F12 overnight gap / ATR                                    F13 position in trailing 240-bar range
+     F14 consecutive same-direction closes before the flip      F15 new session high at the flip?
+  2. for each feature, split accepted entries at terciles and deciles; measure mean P&L per
+     trade in each bucket.
+  3. NULL CALIBRATION (binding): for every candidate filter that would drop k trades, draw 200
+     RANDOM count-matched subsets of the same size and compute the distribution of the
+     resulting mean-P&L improvement. A filter counts as evidence only above the 95th
+     percentile of its own count-matched null.
+  4. MULTIPLICITY: 15 features x (terciles + deciles) is ~45 tests; at p<=0.01 the expected
+     false-positive count is ~0.45. Any surviving filter must beat that expectation and is
+     reported with the count.
+  5. survivors are then applied to the full object and judged on production (pts/session),
+     density, weekly Sharpe, worst week, stress - the same adoption rule as W31/W32.
+falsifier: if no feature separates profitable from unprofitable flips beyond its count-matched
+  null, then Solar flips are UNCONDITIONALLY informative - there is no state at the flip that
+  predicts its quality - and the combination question is closed in all four geometries.
+forbidden: [data >= 2026-08-01, fill-bar information, reporting a filter without its
+  count-matched null percentile, selecting a bucket boundary after seeing the P&L]
+outputs: [out/flipcond.txt, out/summary.csv, REPORT.md]
