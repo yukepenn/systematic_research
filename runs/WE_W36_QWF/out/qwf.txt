@@ -1,0 +1,78 @@
+HARNESS A3 0.338/17.78 (expect 0.338/17.78) -> PASS
+
+=== A WALK-FORWARD OF THE QUALITY LAYER (score quantiles refit each quarter) ===
+quarter     chosen (k,cut,bigT)       fitShrp    oosNet  oosShrp
+2022-10-01  (4, None, 2000)             0.191     5,989    0.130
+2023-01-01  (3, None, None)             0.211    -7,406   -0.189
+2023-04-01  (4, None, 2000)             0.232    21,819    0.814
+2023-07-01  (2, None, 2000)             0.270     3,354    0.122
+2023-10-01  (2, None, 2000)             0.206    15,329    0.251
+2024-01-01  (2, None, 2000)             0.207    15,644    0.265
+2024-04-01  (3, 120, None)              0.363    35,360    0.711
+2024-07-01  (3, 240, None)              0.387    21,762    0.321
+2024-10-01  (3, 120, None)              0.482    25,669    0.345
+2025-01-01  (3, 120, None)              0.524     6,143    0.102
+2025-04-01  (3, 120, None)              0.419    80,069    0.521
+2025-07-01  (4, 120, 2000)              0.388    26,749    0.379
+2025-10-01  (3, 240, None)              0.375     3,294    0.099
+2026-01-01  (3, None, None)             0.355    31,134    0.455
+2026-04-01  (4, None, 2000)             0.529     7,022    0.323
+2026-07-01  (4, None, 2000)             0.444         0      nan
+
+object                        pts/ses   wkMean  wkPos%     worst  sharpe
+WF_QUALITY                      14.41    1,545    59.3    -7,418   0.303
+FIXED_A3 (quoted)               17.78    1,774    59.1    -7,418   0.338
+BASE (no quality layer)         10.62    1,060    59.1    -7,487   0.305
+BESTFIXED (4, 120, 2000)                                           0.338
+
+VERDICT: WF 0.303 | 0.8xFIXED 0.270 | BASE 0.305 -> FAIL
+choice churn 6 distinct / 16 refits, 10 changes (67%)
+   chosen  4x: (4, None, 2000)
+   chosen  4x: (3, 120, None)
+   chosen  3x: (2, None, 2000)
+   chosen  2x: (3, None, None)
+
+=== B QUANTILE SENSITIVITY (one cut point at a time) ===
+perturbation                  pts/ses   sharpe    delta
+baseline (2/3,1/3,.9)           17.78    0.338   +0.000
+dist-open q=0.50                17.31    0.327   -0.011
+dist-open q=0.75                16.70    0.321   -0.017
+prior-ret q=0.25                17.38    0.334   -0.004
+prior-ret q=0.50                18.43    0.346   +0.009
+runlen q=0.80                   17.37    0.326   -0.012
+runlen q=0.95                   17.33    0.333   -0.004
+dist-vwap q=0.50                17.08    0.320   -0.018
+delta q=0.50                    17.42    0.313   -0.024
+
+=== C1 LAYER DECOMPOSITION (marginal of each step) ===
+object                              pts/ses   d pts   sharpe   d shrp
+base vote + box                       10.62   +0.00    0.305   +0.000
++ quality sizing                      15.86   +5.24    0.331   +0.026
++ cut low-quality 120b                17.10   +1.24    0.338   +0.007
++ big target on quality (A3)          17.78   +0.68    0.338   -0.000
+
+=== C2 WHERE THE POINTS COME FROM ===
+score bucket      trades  avgSize        net$   $/trade  share%
+0                    466     1.00      -3,377      -7.2    -0.9
+1                    763     1.00      41,683      54.6    11.6
+2                    440     1.00      35,957      81.7    10.0
+3                    324     2.00     210,075     648.4    58.3
+4                    106     2.00      65,626     619.1    18.2
+5                     14     2.00      10,208     729.1     2.8
+
+regime            trades        net$   $/trade  share%
+big days             185     125,288     677.2    34.8
+small days          1928     234,883     121.8    65.2
+
+ET segment        trades        net$   $/trade  share%
+ASIA 18-03           466     107,724     231.2    29.9
+ASIA2 00-03          164      46,519     283.7    12.9
+EUROPE 03-08         581      38,963      67.1    10.8
+PREOPEN              139      44,494     320.1    12.4
+RTH_AM               574      52,457      91.4    14.6
+RTH_PM               173      64,377     372.1    17.9
+CLOSE                 16       5,639     352.4     1.6
+
+=== C3 CONCENTRATION (has sizing made us more fragile?) ===
+base vote + box      top-5%-of-days share 96.8%  days positive 46.1%  worst day $-5,118
+A3                   top-5%-of-days share 94.6%  days positive 44.1%  worst day $-5,933
