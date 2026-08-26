@@ -1,0 +1,61 @@
+=== RE-DERIVATION CONSTANTS (from NQ, applied to each instrument's OWN units) ===
+   NQ median sigma 3.253 pts -> clamp multiples [3.07, 92.22] x sigma, initial stop 13.76 x sigma
+   NQ median session $ range (1 contract) $5,990 -> halt is 21.70 % of it, target 16.69 %
+
+=== NQ: sigma 3.253 pts | clamp [10.00, 300.00] pts | box -$1,300 / +$1,000 | PV $20 [24s] ===
+arm                            n     $/tr      wk$   wk+%     worst     CVaR5    shrp     eff   stress
+NQ re-derived               1950    153.0    1,470   58.6    -7,418    -5,398   0.311   0.198    1,374
+   B1 IDENTITY (NQ re-derived must equal the incumbent $1,470/wk, eff 0.198): PASS
+     2022: $   1,024/wk  worst $    -3,879  stress $     944
+     2023: $     308/wk  worst $    -5,784  stress $     200
+     2024: $   1,951/wk  worst $    -6,747  stress $   1,837
+     2025: $   2,265/wk  worst $    -7,418  stress $   2,184
+     2026: $   1,521/wk  worst $    -6,344  stress $   1,447
+
+=== ES: sigma 0.721 pts | clamp [2.22, 66.51] pts | box -$715 / +$550 | PV $50 [174s] ===
+arm                            n     $/tr      wk$   wk+%     worst     CVaR5    shrp     eff   stress
+ES re-derived               2008     19.7      188   45.7    -5,243    -3,425   0.083   0.036       92
+     2022: $     160/wk  worst $    -3,435  stress $      84
+     2023: $      -7/wk  worst $    -2,440  stress $    -116
+     2024: $     276/wk  worst $    -4,959  stress $     169
+     2025: $     296/wk  worst $    -5,243  stress $     214
+     2026: $     197/wk  worst $    -3,251  stress $     110
+
+ES W11 transplant           2370     21.7      243   49.8   -13,139    -6,223   0.080   0.019      131
+
+=== RTY: sigma 0.451 pts | clamp [1.39, 41.60] pts | box -$433 / +$333 | PV $50 [468s] ===
+arm                            n     $/tr      wk$   wk+%     worst     CVaR5    shrp     eff   stress
+RTY re-derived              2326      2.2       24   45.0    -3,301    -2,399   0.017   0.007      -87
+     2022: $     241/wk  worst $    -2,447  stress $     150
+     2023: $     116/wk  worst $    -2,058  stress $      -4
+     2024: $     -96/wk  worst $    -1,908  stress $    -206
+     2025: $     107/wk  worst $    -3,301  stress $       0
+     2026: $    -249/wk  worst $    -2,884  stress $    -366
+
+RTY W11 transplant          2081     10.3      101   49.3    -3,997    -3,179   0.055   0.025        2
+
+=== YM: sigma 5.143 pts | clamp [15.81, 474.31] pts | box -$510 / +$392 | PV $5 [752s] ===
+arm                            n     $/tr      wk$   wk+%     worst     CVaR5    shrp     eff   stress
+YM re-derived               2331      9.2      101   43.6    -3,338    -2,222   0.062   0.030       -9
+     2022: $     260/wk  worst $    -3,338  stress $     186
+     2023: $    -171/wk  worst $    -2,120  stress $    -282
+     2024: $    -145/wk  worst $    -2,308  stress $    -260
+     2025: $      73/wk  worst $    -2,355  stress $     -36
+     2026: $     891/wk  worst $    -1,782  stress $     761
+
+YM W11 transplant           3070      6.2       90   45.0    -4,641    -3,622   0.045   0.019      -55
+
+=== WEEKLY P&L CORRELATIONS (re-derived arms) [1022s] ===
+              NQ      ES     RTY      YM
+NQ          1.00    0.61    0.10    0.10
+ES          0.61    1.00    0.23    0.28
+RTY         0.10    0.23    1.00    0.17
+YM          0.10    0.28    0.17    1.00
+   inside NQ's worst-decile weeks:
+NQ          1.00    0.40    0.04    0.03
+
+=== EQUAL-RISK BASKET vs NQ alone at the SAME total weekly sigma ===
+   sleeves with positive mean weekly P&L: ['NQ', 'ES', 'RTY', 'YM']
+basket                           wk$   wk+%     worst     CVaR5    shrp     eff   cvEff
+equal-risk NQ+ES+RTY+YM            0   52.3        -5        -4   0.176   0.095   0.118
+NQ alone at same sigma             1   55.6        -4        -3   0.303   0.188   0.258

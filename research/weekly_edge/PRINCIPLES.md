@@ -304,3 +304,28 @@ against it; running the existing C# would trade a materially different system.
 3-minute clock is a genuinely different event generator (correlation 0.48 with the 1-minute
 version, 0.12 inside its worst-decile weeks) and worth owning in the portfolio. That clock is
 the product's own. The campaign rediscovered the product's clock without knowing it.
+
+## W43 — "NQ-specific" is now supported rather than assumed (2026-08-26)
+
+**1. W11 did not test what it claimed.** Its clamp is [40, 1200] TICKS, which is [3.07, 92.22]
+x sigma on NQ (never binds, since VolMults are 6-16 sigma) but [13.9, 416] on ES, [8.9, 266] on
+RTY and [7.8, 233] on YM - the LOWER bound collapses VolMult 6, 8 and 10 onto a single
+threshold. W11 ran a 3-to-4-member engine on the other instruments, not the 6-member one.
+
+**2. Re-derived properly, it still does not travel.** Clamp as the same multiple of each
+instrument's own sigma, box as the same fraction of its own median session dollar range: the
+tail improves markedly (ES worst week -$13,139 -> -$5,243, eff 0.019 -> 0.036) and the sleeves
+still fail frictions - ES +$92/wk stress-net on 2,008 trades, RTY -$87, YM -$9. The claim
+"the edge is NQ-specific" is now SUPPORTED instead of being an artifact.
+
+**3. DECOUPLING IS NECESSARY AND NOT SUFFICIENT - the cleanest example the campaign has.**
+RTY and YM correlate 0.10 with NQ overall and **0.04 and 0.03 inside NQ's worst-decile weeks**,
+better decoupling than any other sleeve ever measured here (axis B -0.25, the clocks 0.12-0.33).
+The equal-risk basket still loses badly: eff 0.095 against NQ alone at the same total weekly
+sigma at 0.188. A sleeve with no expectancy cannot help however uncorrelated it is.
+
+**4. A built-in identity check earned its keep.** Read 1's NQ arm gave $1,529/wk against the
+incumbent's $1,470 and the run was VOID. The re-derivation arithmetic was right; the fill layer
+conflated direction and size, so a bar where the vote had just turned off suppressed an entry.
+The identity is now a HARD GATE that aborts the run. Design every cross-context wave so that
+one of its arms MUST reproduce a known result exactly.
