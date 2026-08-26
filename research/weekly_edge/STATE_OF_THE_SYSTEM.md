@@ -26,7 +26,8 @@ fills     decision at bar close, market at next bar open, flat at every session 
 
 | object | contracts | % days + | weekly | % weeks + | worst week | Sharpe |
 |---|---|---|---|---|---|---|
-| **A3: quality-sized + quality exits** (W35) | ≤2, avg 1.21 | 44.1 % | **$1,774** | 59.1 % | **−$7,418** | **0.338** |
+| **quality layer, WALK-FORWARD (honest, W36)** | ≤2 | — | **$1,545** | 59.3 % | **−$7,418** | **0.303** |
+| A3 fixed-calibration (in-sample, superseded as a quote) | ≤2, avg 1.21 | 44.1 % | $1,774 | 59.1 % | −$7,418 | 0.338 |
 | **A3 + S1 + short box** | ≤4 | 51.8 % | **$3,737** | **64.9 %** | −$24,826 | 0.313 |
 | (superseded) E5 box | 1 | 46.1 % | $1,060 | 59.1 % | −$7,487 | 0.305 |
 | at his tail tolerance (−$42k) | ~2 of the pair | — | ~$4,900 | — | ≈ −$43,000 | same |
