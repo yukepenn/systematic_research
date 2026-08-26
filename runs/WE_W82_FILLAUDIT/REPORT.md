@@ -24,9 +24,14 @@ spread is widest.
 | segment | seconds | **median (ticks)** | mean | p90 | median $/RT |
 |---|---|---|---|---|---|
 | **OVERNIGHT 18:00–09:29** | 2,511,000 | **3.00** | 3.87 | 5.00 | **$15.00** |
-| RTH 09:30–16:00 | 1,029,565 | **2.00** | 2.51 | 4.00 | $10.00 |
+| RTH 09:30–16:00 | 1,029,565 | **2.00** | 2.51 | ~~4.00~~ **3.00** | $10.00 |
 | POST 16:00–17:00 | 149,227 | 2.00 | 2.64 | 4.00 | $10.00 |
-| **ALL** | 3,689,792 | **3.00** | 3.44 | 5.00 | $15.00 |
+| **ALL** | 3,689,792 | **3.00** | ~~3.44~~ **3.22** | 5.00 | $15.00 |
+
+> **Amendment 2**: four sessions carry frozen forward-filled feeds that the `bid>0` filter cannot
+> see (a dead quote scores 1.00); 6 % of all second-quotes sit in runs longer than 60 s. The
+> **means and the RTH p90 above are corrected** for that. **The medians — and therefore the
+> headline — are unchanged**, because the weighted estimate is built from per-minute medians.
 
 **NQ is not 1 tick wide.** Even in RTH the median is 2 ticks; overnight it is 3, with a 90th
 percentile of 5.
@@ -60,9 +65,12 @@ full window **$59,888** · trailing 12 months **$37,209** · **2026 $12,938**.
 The haircut is **−12 % on the full window, −19 % on the trailing year and −40 % on 2026** — the
 cost is fixed per trade while the edge has shrunk, so it bites hardest exactly where it hurts.
 
-**This also worsens W80's deep-history result.** P1's stress-net over 2006–2021 was −$36,494 at
-the assumed $10/RT; at $14.65 it is roughly **−$81,000**. Sixteen unseen years are more negative
-after realistic friction, not less.
+> ⚠️ **WITHDRAWN (amendment 2).** This paragraph originally read *"at $14.65 it is roughly
+> −$81,000"* and it was wrong twice. (a) It charged the stress line **per trade** (9,557) when
+> W80 charges it **per contract** (11,557) — the correct arithmetic is **−$90,234**. (b) More
+> importantly, **the whole extrapolation is unsupported**: the $14.65 is measured at NQ
+> 23,036–29,479 and 2006–2021 traded at NQ 1,600–16,000. A point-denominated spread does not
+> transport across a 10× price level. **No deep-history re-quote is made.**
 
 ## 4. `CORRECTION` — the secondary estimate was void, and why the headline is not
 
@@ -119,8 +127,11 @@ cost.
 
 ## 6. Consequences
 
-1. **Every stress-net figure in the repository is overstated.** The C1 line is 32 % too cheap
-   against the working estimate and 58 % too cheap against the pessimistic one.
+1. **Every stress-net figure for 2022–2026 is overstated** — the C1 line is 32 % too cheap
+   against the working estimate. ⚠️ **Amendment 2 narrows this**: the original sentence said
+   *"every stress-net figure in the repository"*, which over-reached. The estimate covers
+   **2.5 %** of P1's contract round turns, all at 2025–26 price levels, and **does not transport
+   to 2006–2021**.
 2. **`WHAT_P1_ACTUALLY_DELIVERS.md` is re-quoted** at the measured cost.
 3. **The fourth cross-substrate alignment defect in this repository's history** (W44's basis check
    on the wrong series, W52's timestamp shift, W76's truncated loader, now this). The rule that

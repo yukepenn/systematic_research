@@ -66,6 +66,11 @@ A pessimistic bound of **$24/RT** comes from a direct per-fill measurement on a 
 subsample; it agrees on direction and cannot establish magnitude. Carry $14.65 as the working
 number and $24 as the bound.
 
+⚠️ **Scope (W82 amendment 2)**: the estimate is measured on 45 sessions at **NQ 23,036–29,479**
+and directly overlaps **2.5 %** of P1's contract round turns. It is applied to 2022–2026 only.
+**It does not transport to 2006–2021** (NQ 1,600–16,000) and every deep-history re-quote made
+with it is withdrawn.
+
 **Every table below §3 that quotes the old $94/week line is superseded by this one.**
 
 ## 4. What has to be true for the top row to be the right one
