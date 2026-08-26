@@ -1,0 +1,66 @@
+run_id: WE_W63_WEIGHT
+date: 2026-08-26
+campaign: WEEKLY_EDGE (#7)
+directive: the question W62 left open, asked with the discipline that makes the answer usable.
+
+what W62 established and what it left:
+  ESTABLISHED: the short sleeve's contribution is REGIME-SHAPED with real sample behind it. Per
+    year, each rescaled to a $20,245 max drawdown within itself:
+      2022 sleeve +10.11 pts/ses -> combo $4,339 vs P1 $1,818 (+139 %), maxDD $12,909 -> $5,593
+      2026 sleeve -10.62         -> combo $845   vs P1 $2,443 (-65 %),  maxDD $12,607 -> $16,125
+    At w = 0.30 the hedge is unaffordable in a bull year. The insurance READING is refuted.
+  LEFT OPEN: a much SMALLER unconditional weight. The 2026 damage and the 2022 benefit both
+    scale with w, so there may be a weight at which the worst year is carryable and the
+    bear-year protection is still meaningful.
+
+why this is worth doing rather than dropping the sleeve entirely:
+  P1 is a LONG-ONLY trend harvester. Its structural worst case is a sustained bear market, and
+  W48 established the tail cannot be attacked at the trade level while W50 established the
+  drawdown is an ACCUMULATION across sessions rather than one bad day. A bear-regime hedge
+  attacks exactly the failure mode nothing else in this repo touches - and in the one bear year
+  in the sample it cut the drawdown 57 % and more than doubled the money. That is worth sizing
+  correctly even if it is not worth sizing at 0.30.
+
+the trap, named first: choosing w to make the WORST YEAR tolerable is choosing on the worst
+  year, which is one observation out of five. That is the same single-observation error that eff
+  has been demoted for twice. The wave therefore does NOT report a chosen w as a result. It
+  reports the whole curve, and it tests the CHOICE PROCEDURE by leave-one-year-out.
+
+phase 1 - THE TWO CURVES, w from 0.00 to 0.60 in steps of 0.01:
+  a) full-sample benefit: weekly dollars at a fixed $20,245 drawdown, positive-week %, median
+     week, longest weekly losing streak, drawdown distribution.
+  b) the WORST-YEAR delta: min over years of (combo weekly $ - P1 weekly $), each year rescaled
+     to the fixed drawdown within itself, exactly as W62 did.
+  Report where (b) crosses zero and what (a) is worth there. Both curves in full; no argmax.
+
+phase 2 - LEAVE-ONE-YEAR-OUT on the CHOICE PROCEDURE, which is the actual test:
+  For each held-out year: choose w on the other four years by the stated rule (the largest w
+  whose worst remaining-year delta is >= 0), then evaluate that w on the held-out year.
+  Report the held-out delta for every fold. If the procedure only works when the bad year is in
+  the training set, it is a fit and the wave says so.
+  Also run the degenerate control: w chosen with all five years (in-sample), to show the gap.
+
+phase 3 - THE NULLS:
+  N1 circular shift of the sleeve's daily series, scan-matched over the same w grid, 300 draws.
+     W61 already measured that ~91 % of the benefit is the sleeve's expectancy rather than its
+     alignment; this re-runs it at the smaller weights, where the balance may differ.
+  N2 a synthetic sleeve with the same mean, vol and lag-1 autocorrelation drawn independently of
+     P1 - if the real sleeve does not beat that, the bear-year protection is not in the timing.
+
+phase 4 - WHAT IT COSTS AND BUYS, in the owner's units, at each candidate weight:
+  weekly dollars given up per week, against: the 2022-style bear-year drawdown reduction, the
+  change in positive-week rate, and the change in the longest weekly losing streak. The owner
+  chooses the point; the wave labels it.
+
+adoption bar: nothing is adopted. An arm is RECOMMENDED only if the leave-one-year-out folds are
+  positive in a MAJORITY of held-out years, both nulls clear at >= 95th percentile scan-matched,
+  and the full-sample cost is under 5 % of weekly dollars at the fixed drawdown.
+falsifier: if the LOYO folds are negative in a majority of held-out years, the recorded
+  conclusion is that no unconditional weight is defensible, the short sleeve requires regime
+  timing that this campaign has failed at four times, and it stays parked with W61's revival
+  condition as the only route back.
+forbidden: [data >= 2026-08-01, reporting a chosen w without its LOYO folds, choosing w on the
+  full sample and presenting it as achievable, judging on eff or Sharpe, comparing a scanned
+  weight to an unscanned null, calling a bear-year result 'insurance' after W62 refuted that
+  reading]
+outputs: [out/weight.txt, out/curves.csv, out/loyo.csv, out/nulls.csv, REPORT.md]
