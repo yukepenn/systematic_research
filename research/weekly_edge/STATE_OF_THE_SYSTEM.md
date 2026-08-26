@@ -1,3 +1,6 @@
+> Full component-by-component explanation with every parameter and its evidence:
+> **`THE_STRATEGY.md`**
+
 # STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7), as of 2026-08-25 after 26 waves
 
 Single reference. Everything here is measured, net of $4.36/RT, on NQ 1-minute bars,
@@ -26,8 +29,10 @@ fills     decision at bar close, market at next bar open, flat at every session 
 
 | object | contracts | % days + | weekly | % weeks + | worst week | Sharpe |
 |---|---|---|---|---|---|---|
-| **quality layer, WALK-FORWARD (honest, W36)** | ≤2 | — | **$1,545** | 59.3 % | **−$7,418** | **0.303** |
-| A3 fixed-calibration (in-sample, superseded as a quote) | ≤2, avg 1.21 | 44.1 % | $1,774 | 59.1 % | −$7,418 | 0.338 |
+| **P1 causal quality sizing (W37)** | ≤2, avg 1.18 | — | **$1,470** | 58.6 % | −$7,418 | **0.311** |
+| **P2 = P1 + causal cut (best profit-per-tail)** | ≤2, avg 1.11 | — | $1,347 | 56.7 % | **−$5,818** | 0.291 |
+| quarterly walk-forward of the layer (W36) | ≤2 | — | $1,545 | 59.3 % | −$7,418 | 0.303 |
+| ~~A3 fixed (17.78 / 0.338)~~ | — | — | — | — | — | RETIRED: threshold look-ahead (W37) |
 | **A3 + S1 + short box** | ≤4 | 51.8 % | **$3,737** | **64.9 %** | −$24,826 | 0.313 |
 | (superseded) E5 box | 1 | 46.1 % | $1,060 | 59.1 % | −$7,487 | 0.305 |
 | at his tail tolerance (−$42k) | ~2 of the pair | — | ~$4,900 | — | ≈ −$43,000 | same |
