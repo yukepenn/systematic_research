@@ -1,0 +1,102 @@
+run_id: WE_W72_ORCHANNEL
+title: "Is B-MOM special, or is the OR-GATE ARCHITECTURE what carries the money?"
+date: 2026-08-26
+campaign: weekly_edge (#7)
+status: PREREGISTERED
+
+owner_question: >
+  "我们base不是solar吗，怎么最后又变成了bmom volmul之类的，这一定是最好的吗"
+  Translation of the objection into a testable claim: the object was designed as a Solar
+  ratchet ensemble, but W67 proved it is a Solar ensemble OR-GATED WITH B-MOM, and W67+W69
+  proved B-MOM supplies 51 % of the net while being flat pre-2022 (t = 0.94 on 5,640 trades,
+  PF 1.043) and at the 95th percentile of its own 220-window history. W68 asked whether the
+  dependence can be reduced FROM INSIDE (ladder, consensus k, tilt, w_bmom) and answered no.
+
+  THE QUESTION W68 NEVER ASKED, AND THE ONLY ONE THAT CAN FIX THIS:
+  is the value in B-MOM SPECIFICALLY, or in HAVING A SECOND, LOW-THRESHOLD ENTRY CHANNEL?
+
+  W67's decoding makes this precisely testable. The combiner reduces to:
+      enter long if (>= k of NMEM members net-long) OR (channel == +1 and >= 1 member long)
+  B-MOM occupies one named slot in that expression. Nothing in 71 waves has ever put a
+  DIFFERENT signal in that slot.
+
+mechanism_hypothesis: >
+  A trend ensemble with a high consensus threshold (6 of 13) is late by construction. Any
+  low-threshold second channel that is roughly right about intraday direction will recover the
+  early part of the move the consensus misses. If that is the mechanism, the slot is
+  ARCHITECTURAL and B-MOM is one of many possible occupants - in which case we can choose the
+  most DURABLE occupant instead of the one that happened to be inherited from the vendor.
+  If instead only B-MOM works, the slot is not architectural, the 51 % dependence is real and
+  irreducible, and the disclosure stands permanently.
+
+design:
+  substrate: NQ 1-min. Modern window 2022-01-01 -> 2026-07-31 (identical to W66/W68, cached
+             members reused). Deep window 2006-01-05 -> 2021-12-31 for the era test.
+  method: >
+    W66's return_members hook already stores (mem, bmom, tilt) per bar. Every arm is produced
+    by REBUILDING the combiner with the bmom vector replaced by a candidate channel vector.
+    The Solar side, the range throttle, the delta gate, the 32-config vote, the causal quality
+    score, the session box and the fills are all UNCHANGED and shared across arms, so the only
+    thing that varies between arms is the occupant of the OR slot. No re-tuning of anything.
+
+  channels:  # every one is LATCHED with B-MOM's exact discipline: reset 09:31, zeroed from
+             # 15:57, decision at bar close, causal. Only the TRIGGER differs.
+    - X0_bmom      : "INCUMBENT. px > max(open0930 + mtod14, RTHvwap) / mirrored. mtod14 = mean
+                      over the last 14 sessions of |px - open0930| at the SAME slot-of-day."
+    - X1_vwap      : "px > RTHvwap / px < RTHvwap. The noise band removed."
+    - X2_disp      : "px > open0930 + mtod14 / mirrored. The VWAP condition removed."
+    - X3_dispORvwap: "the same two conditions joined by OR instead of AND. Tests the conjunction."
+    - X4_orb30     : "px > high of 09:31-10:00 / px < low of 09:31-10:00."
+    - X5_pdhl      : "px > prior session's high / px < prior session's low."
+    - X6_ema       : "EMA(20) > EMA(100) on 1-min closes."
+    - X7_don60     : "px > max(high[i-60:i]) / px < min(low[i-60:i])."
+    - X8_openside  : "px > open0930 / px < open0930. The crudest possible occupant."
+    - X9_disp_ovn  : "as X2 but anchored at the 18:00 SESSION open, not 09:31. Tests whether the
+                      RTH anchoring is load-bearing or incidental."
+
+  nulls:
+    - N_shift: "100 draws. Session-wise circular shift of the INCUMBENT bmom path: session s
+                receives session (s+k mod NS)'s channel values indexed by position within RTH.
+                Preserves firing rate, latch-duration distribution and intraday shape EXACTLY;
+                destroys only day-alignment. Gives the distribution of 'what any channel with
+                B-MOM's statistics but no information would deliver in this slot'."
+
+metrics: >
+  Amendment-2 order. Per arm, on the modern window: trades, pts/session, positive-day %,
+  positive-TRADED-day %, positive-week %, longest weekly losing streak, median week, weekly $
+  at a FIXED $20,245 max drawdown, mean top-5 drawdown, Ulcer, worst week. Per year pts/session.
+  Plus, for each channel STANDALONE as a direct +-1 position with the same session box, on BOTH
+  eras: trades, net, $/trade, SE, t, PF - the exact table W69 produced for B-MOM.
+
+preregistered_decision_rule:
+  b1_gate: "arm X0 must reproduce 14.72 +- 0.6 pts/session. Otherwise the wave is VOID."
+  a_production : "arm reaches >= 90 % of the incumbent's modern pts/session."
+  b_durability : "the channel STANDALONE has pre-2022 t >= 1.65 with positive $/trade.
+                  The incumbent FAILS this (W69: t = 0.94). This is the whole point."
+  c_not_null   : "the arm's modern pts/session is >= the 95th percentile of N_shift."
+  outcomes:
+    - "if some channel passes A and B and C -> a DURABLE occupant of the OR slot exists. It is
+       not adopted in this wave; it is promoted to a preregistered head-to-head with the
+       incumbent (W74) including a walk-forward and a per-year table. Reported as the first
+       structural improvement candidate since W37."
+    - "if several channels pass A but none passes B -> the slot is ARCHITECTURAL (the money is
+       in having a second low-threshold channel, not in B-MOM) but no durable occupant exists
+       in this universe. Recorded as such; the fragility is confirmed to be a property of the
+       ARCHITECTURE, which is a materially different and more useful disclosure than W68's."
+    - "if ONLY X0 passes A -> B-MOM is genuinely special, the 51 % dependence is irreducible
+       from outside as well as inside, and the disclosure becomes permanent. This is a real
+       possible outcome and it is recorded without softening."
+
+adoption: "NOTHING is adopted in this wave under any outcome. The output is a verdict on which
+           of the three outcomes above obtains, plus the ranked channel table."
+
+traps_named_before_running:
+  - "Ten channels x one metric is a scan. The N_shift null and the per-year table are the
+     multiplicity control; no channel is quoted on modern pts/session alone."
+  - "A channel that fires MORE often than B-MOM buys production with exposure, not information.
+     Firing rate and in-market % are reported for every channel and any arm whose production
+     gain tracks its firing-rate gain is called leverage, not edge."
+  - "The deep-era standalone test is run on the channel ALONE, not on the object, because the
+     object's members are fitted to the modern era and would contaminate the era comparison."
+  - "X0's own reproduction of 14.72 is the only B1. If the rebuild path is wrong, every arm is
+     wrong together and the wave says nothing."
