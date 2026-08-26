@@ -1,0 +1,19 @@
+=== THE C# RUNS ITS DECISION STACK ON A 3-MINUTE SECONDARY SERIES ===
+   SolarWaveOneContractNQ_v5.cs line 150: AddDataSeries(SignalInstrument, BarsPeriodType.Minute, 3)
+   line 367: `if (BarsInProgress != 1) return;` - the whole stack is driven by the
+   3-minute series; only execution happens on the primary series.
+   sm14_1m runs the same stack on 1-MINUTE bars (a declared W01 port choice).
+
+   data already proven identical: constant basis -282.25 pts, std 0.00, and every
+   quantity in the ratchet is a price DIFFERENCE, so the offset changes no decision.
+
+port variant                         agree%    inMkt%   bothIn%  sameDir%    flips
+NT8 reference                        100.00      52.3         -         -       92
+port on 1-min (incumbent)             66.89      43.1      34.5      80.7      285
+3-min, anchored at 09:31, sigma=460 bars    82.49      38.2      36.6      99.3      137
+3-min, anchored at 09:31, sigma=153 bars (=460/3 wall-clock)    76.41      37.8      33.9      96.7      125
+3-min, session-anchored, sigma=460 bars    83.41      36.3      36.1      99.3      140
+3-min, session-anchored, sigma=153 bars (=460/3 wall-clock)    76.01      37.5      33.5      96.5      125
+
+=== BEST: 3-min, session-anchored, sigma=460 bars at 83.41 % decision agreement ===
+   verdict thresholds from the spec: >=99 % validated | 90-99 % mostly right | <90 % suspect

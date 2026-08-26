@@ -269,3 +269,38 @@ integer ratios: >= 16 : 1 : 1 (about $25,000/week) improves both metrics; 4 : 1 
 12 : 1 : 1 improves Sharpe and CVaR-efficiency but WORSENS eff and the single worst week (the
 clocks remove many moderately bad weeks and add a few very bad ones); below 4 : 1 : 1 there is
 no benefit. Every portfolio adoption from now on reports its smallest tradeable integer form.
+
+## W44 — the independent check the campaign had never run (2026-08-26)
+
+**1. Every B1 check since W01 validated new code AGAINST the port, never the port.** NinjaTrader
+can run the original C# through its own Strategy Analyzer engine. It had never been done.
+
+**2. The data was proven identical first**, so any difference is logic: NT8's NQ 06-26 prices
+differ from our back-adjusted parquet by a CONSTANT -282.25 points, standard deviation 0.00,
+and every quantity in the ratchet is a price DIFFERENCE.
+
+**3. The shipped C# runs its decision stack on a 3-MINUTE secondary series**
+(`AddDataSeries(..., BarsPeriodType.Minute, 3)`; `if (BarsInProgress != 1) return;`) and uses
+the primary series only for execution. `sm14_1m` runs it on 1-MINUTE bars - a declared W01 port
+choice whose magnitude was never measured: **285 flips against the C#'s 92, i.e. 3.1x as active**.
+
+**4. On the correct clock the ratchet is FAITHFUL.** 3-minute port vs C#: direction agreement
+**99.3 %** whenever both hold a position. The threshold, tilt, combiner and hysteresis are
+transcribed correctly, and sigma counted in BARS (460) beats the wall-clock equivalent (153),
+resolving a W01 ambiguity in favour of what the code does.
+
+**5. What is NOT faithful is EXPOSURE MANAGEMENT**: in market 36 % vs 52 %, 140 flips vs 92,
+even on the right clock. The residual is WHEN to hold, not WHICH WAY - most likely the port's
+session-close flatten and its inability to re-enter without a fresh flip.
+
+**6. Quantifier correction, binding on every document.** The object is NOT "our shipped product
+ported to 1-minute bars". It is **a Solar-family ratchet transcribed from the product and run on
+a 3x finer clock**. The research RESULTS stand unchanged - they measure a well-defined object
+with causal construction, both nulls, walk-forwards and per-year re-measurement, none of which
+assumed replica fidelity. Deployment, however, must implement the PYTHON object and validate
+against it; running the existing C# would trade a materially different system.
+
+**7. It closes a loop with W41.** W41 found, from the data side and before this check, that a
+3-minute clock is a genuinely different event generator (correlation 0.48 with the 1-minute
+version, 0.12 inside its worst-decile weeks) and worth owning in the portfolio. That clock is
+the product's own. The campaign rediscovered the product's clock without knowing it.

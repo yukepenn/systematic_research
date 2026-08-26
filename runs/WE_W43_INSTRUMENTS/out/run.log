@@ -1,3 +1,26 @@
 === RE-DERIVATION CONSTANTS (from NQ, applied to each instrument's OWN units) ===
    NQ median sigma 3.253 pts -> clamp multiples [3.07, 92.22] x sigma, initial stop 13.76 x sigma
    NQ median session $ range (1 contract) $5,990 -> halt is 21.70 % of it, target 16.69 %
+
+=== NQ: sigma 3.253 pts | clamp [10.00, 300.00] pts | box -$1,300 / +$1,000 | PV $20 [24s] ===
+arm                            n     $/tr      wk$   wk+%     worst     CVaR5    shrp     eff   stress
+NQ re-derived               1950    153.0    1,470   58.6    -7,418    -5,398   0.311   0.198    1,374
+   B1 IDENTITY (NQ re-derived must equal the incumbent $1,470/wk, eff 0.198): PASS
+     2022: $   1,024/wk  worst $    -3,879  stress $     944
+     2023: $     308/wk  worst $    -5,784  stress $     200
+     2024: $   1,951/wk  worst $    -6,747  stress $   1,837
+     2025: $   2,265/wk  worst $    -7,418  stress $   2,184
+     2026: $   1,521/wk  worst $    -6,344  stress $   1,447
+
+=== ES: sigma 0.721 pts | clamp [2.22, 66.51] pts | box -$715 / +$550 | PV $50 [174s] ===
+arm                            n     $/tr      wk$   wk+%     worst     CVaR5    shrp     eff   stress
+ES re-derived               2008     19.7      188   45.7    -5,243    -3,425   0.083   0.036       92
+     2022: $     160/wk  worst $    -3,435  stress $      84
+     2023: $      -7/wk  worst $    -2,440  stress $    -116
+     2024: $     276/wk  worst $    -4,959  stress $     169
+     2025: $     296/wk  worst $    -5,243  stress $     214
+     2026: $     197/wk  worst $    -3,251  stress $     110
+
+ES W11 transplant           2370     21.7      243   49.8   -13,139    -6,223   0.080   0.019      131
+
+=== RTY: sigma 0.451 pts | clamp [1.39, 41.60] pts | box -$433 / +$333 | PV $50 [468s] ===
