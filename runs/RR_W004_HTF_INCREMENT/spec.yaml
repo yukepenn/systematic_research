@@ -1,0 +1,112 @@
+run_id: RR_W004_HTF_INCREMENT
+campaign: "#7 WEEKLY_EDGE - causal monetization branch"
+date: 2026-08-27
+status: PREREGISTERED
+run_class: BOUNDED_SELECTION
+authority: >
+  Owner directive 2026-08-27 section 9 - continue autonomously by EVI while runnable branches remain.
+  RESEARCH_FRONTIER row 1 after RR_W003 closed X9a. HIGHER-TIMEFRAME is the last information surface
+  INFORMATION_COVERAGE still marks LIGHT rather than closed.
+
+title: >
+  Does HIGHER-TIMEFRAME (multi-session) state add INCREMENTAL causal information about full-horizon
+  action value, beyond the within-session features RR_W002A already tested?
+  STAGE A INFORMATION ONLY. No router, no policy, no sizing, no exit change, no HMM.
+
+# ================================================================= honest prior
+why_this_is_LOW_MED_and_run_anyway:
+  why_low: >
+    HTF is a transformation of an NQ price path already labelled DEEP. THESIS_TO_REPO_ADAPTATION
+    identifies "another transformation of NQ path already deeply measured" as the lowest-prior
+    category there is. RR_W002A has ALREADY returned NULL for a 12-feature within-session NQ state
+    arm (72.0th percentile of its own refitted null), and its full 18-feature primary sat at the
+    51.0th. The honest expectation here is another null.
+  why_run_it: >
+    It is the last surface INFORMATION_COVERAGE marks LIGHT rather than closed, its evidence is
+    HTFMECH01 from CAMPAIGN #3 on a DIFFERENT OBJECT, it has never been tested at P1/PCT's own
+    decision events, and the entire RR_W002A pipeline already exists so the marginal cost is small.
+    Leaving a surface un-closed because the prior is low is how "not separable by ANY information
+    source" became an overclaim on 2026-08-27.
+  what_a_null_here_buys: >
+    It closes the last LIGHT surface and makes the statement "no tested current information surface
+    separates P1 action quality" complete rather than partial.
+
+# ================================================================= disclosure
+prior_knowledge_disclosure:
+  already_seen: >
+    RR_W002A's full result is known: every arm at or below its refitted null, the negative control
+    scoring HIGHER (77.0th) than any real arm, quintiles U-shaped, top-decile AUC 0.4990. The target
+    distribution is known from RR_W001. The pipeline, folds, null construction and gate structure are
+    all inherited UNCHANGED from RR_W002A, which is what makes this a clean increment rather than a
+    new search.
+  what_is_new: "only the six HTF features and the incremental comparison."
+  prev_ret_note: >
+    prev_ret - the PREVIOUS SESSION's return - is already in RR_W002A's ARM2 and stays there. It is
+    the one multi-session feature already tested, and it is NOT re-counted as an HTF feature.
+
+# ================================================================= features
+htf_arm:
+  rule: >
+    SIX features, frozen here, no search over horizons, no alternatives held in reserve. They
+    implement the SLOW SESSION CONTEXT tier named in the owner thesis Part VIII, which
+    THESIS_TO_REPO_ADAPTATION already classifies - so this is implementing a named family, not
+    inventing indicators.
+  columns:
+    htf_ret_5d: "log return over the prior 5 COMPLETED sessions' closes, divided by atr_l"
+    htf_ret_20d: "log return over the prior 20 COMPLETED sessions' closes, divided by atr_l"
+    htf_pdr_pos: "position of the last closed bar within the PRIOR session's high-low range, in [0,1]"
+    htf_gap: "(this session's open - prior session's close) / atr_l"
+    htf_vol_20d: "standard deviation of the prior 20 COMPLETED sessions' returns, divided by atr_l"
+    htf_trend_r2_20d: "R-squared of a linear fit to the prior 20 COMPLETED sessions' closes"
+  causality: >
+    Every column uses COMPLETED PRIOR SESSIONS plus bars <= i-1 only. This is ASSERTED BY THE SAME
+    BLOCKING PERTURBATION GATE RR_W002A used, including its injected leak and lag probes, and any
+    feature that moves when its own decision bar is perturbed is DROPPED, never hand-repaired.
+
+# ================================================================= design
+design:
+  target: "delta_total_window - the FULL-HORIZON causal action value. UNCHANGED from RR_W002A."
+  population: "the same 2,131 in-window P1/PCT decisions."
+  validation: "UNCHANGED - expanding prequential, first fit after 250 calendar sessions, 63-session blocks, 13 folds, training-only scaling and imputation, no sealed data."
+  null: "UNCHANGED - 200 session-boundary circular shifts with the ENTIRE walk-forward refitted inside every shift."
+  models: "Ridge alpha 10.0 only. RR_W002A already showed the shallow GBM does WORSE than ridge here; adding it back would be a second bite with no rationale."
+  arms:
+    HTF_ONLY: "the six HTF features alone"
+    X_ONLY: "RR_W002A's primary feature set - ARM1 + ARM2 + ARM3 - rerun unchanged as the baseline"
+    X_PLUS_HTF: "the union. THIS IS THE PRIMARY."
+    NEGCTRL: "the same two known-null columns, carried again so the pipeline's integrity is re-checked rather than assumed"
+
+primary: >
+  The INCREMENT: rank correlation of X_PLUS_HTF minus that of X_ONLY, on the same folds and the same
+  decisions. Directive section 28 - the comparison is Router(X) vs Router(X + new), never
+  new-vs-zero.
+
+falsifiers_ALL_must_be_cleared:
+  H1: "X_PLUS_HTF pooled OOS rank correlation > X_ONLY's"
+  H2: "X_PLUS_HTF exceeds the 95th percentile of its own refitted dependence-preserving null"
+  H3: "HTF_ONLY also exceeds the 95th percentile of ITS own null - i.e. the arm carries information standing alone, not only as a fitting artifact in a wider matrix"
+  H4: "the increment is positive in at least 60 % of the 13 folds"
+  H5: "BOTH negative controls FAIL their nulls. If a known-null family clears, the pipeline is broken and the wave is VOID rather than positive."
+  gate_reporting: >
+    A GATE / SPEC / OBSERVED / PASS-FAIL table is printed by the program, and each statistic is
+    checked for whether it CAN take a failing value before the gates are read.
+
+outcomes_fixed_in_advance:
+  FAIL: >
+    HIGHER-TIMEFRAME moves from LIGHT to CLOSED in INFORMATION_COVERAGE. The statement "no tested
+    current information surface separates P1 action quality" becomes COMPLETE, and every remaining
+    frontier row is then either owner-gated acquisition or LOW-EVI engineering.
+  PASS: >
+    Record REAL INFORMATION and STOP. Do not build a policy in this wave. RR_W001's G3 still blocks
+    economic certification of anything small, and that limit is unchanged by an information result.
+
+trial_budget:
+  model_families: 1
+  arms: 4
+  targets: 1
+  note: "One primary cell. The best-of-K bar over the nulled arms is printed beside it."
+
+decision_rule:
+  - "STAGE A ONLY. NOTHING PROMOTED. No policy, threshold or economic rule leaves this wave."
+  - "No feature, horizon, arm, model or fold scheme is re-chosen after results are seen."
+  - "If the causality gate drops an HTF feature, it is dropped and the arm runs smaller - it is not repaired."
