@@ -1,0 +1,70 @@
+    substrate 1,620,044 bars / 1,058 in-window sessions [4s]
+    938 usable sessions, 17 features, E|move| = $1,754, cost $14.36/RT, p* = 0.5041
+    features: dir_eff, vwap_disp, mr_fail, close_ext, range_exp, xbreadth, morn_net_pts, morn_path_pts, rng_pts, vol_rel, pos_in_range, on_range_rel, gap_pts, prev_ret, seg_vol, dow, is_ann
+
+==========================================================================================================================
+=== WALK-FORWARD, EXPANDING WINDOW. First fit at 250 sessions, 63-session blocks.
+===   Every prediction is made by a model that never saw its own session or any later one.
+==========================================================================================================================
+    11 blocks, 688 out-of-sample sessions (2023-08-07 onward)
+
+cell                           N  dir acc   vs p*   OOS R2    $/ctr      net $  wk$@fixDD  pos wk%      t
+M0_MEAN / P_SIGN             688   55.04%    4.63   0.0000        1        510          1    40.8%   0.01
+M0_MEAN / P_WEIGHT           688   55.04%    4.63   0.0000      -93     -1,827        -58    41.3%  -0.80
+
+M1_RIDGE / P_SIGN            688   53.58%    3.17  -0.0238      181    124,610        395    42.7%   1.52
+M1_RIDGE / P_WEIGHT          688   53.58%    3.17  -0.0238      199    157,523        365    39.0%   1.43
+
+M2_GBT / P_SIGN              688   47.74%   -2.67  -0.2304      -42    -28,690        -40    32.9%  -0.38
+M2_GBT / P_WEIGHT            688   47.74%   -2.67  -0.2304       92     63,799        105    34.3%   0.48
+
+    UNCONDITIONAL CONTROLS on the SAME out-of-sample sessions (W111b's binding rule):
+CONTROL always LONG          688   55.04%    4.63                 1        510          1    40.8%   0.01
+CONTROL always SHORT         688   44.96%   -5.45               -29    -20,270        -39    31.9%  -0.31
+CONTROL FADE morning dir     688   44.96%   -5.45              -216   -148,570        -87    34.7%  -1.64
+CONTROL FOLLOW morning dir   688   55.04%    4.63               190    130,460        246    37.6%   1.44
+
+==========================================================================================================================
+=== THE PRIMARY: M1_RIDGE under P_SIGN, walk-forward
+==========================================================================================================================
+    real $181/contract   coin null mean $-14 p95 $180  -> 95.2th percentile
+    directional accuracy 53.58% vs p* 50.41%  -> CLEARS
+    VERDICT: PASSES     best-of-4 bar $321
+
+==========================================================================================================================
+=== THE CAUSAL_MODEL_FRONTIER ESTIMATE for AFT 11:49 -> 15:44
+==========================================================================================================================
+level                                           $/session                            source
+1. EX_POST_PATH_ORACLE                      not computed here                                  
+2. EX_POST_EXECUTION_FEASIBLE_ORACLE                1,170       W103 capture ledger v3, AFT
+3. CAUSAL_MODEL_FRONTIER (this wave)                  229       M1_RIDGE/P_WEIGHT, walk-fwd
+4. REAL_SYSTEM_CAPTURE (P1/PCT)                         3       W103 capture ledger v3, AFT
+
+    READ THIS WITH THE PROTOCOL ATTACHED: expanding-window walk-forward, 63-session
+    blocks, first fit at 250 sessions, hyperparameters frozen in the spec, no search.
+    It is a LOWER BOUND on the frontier - a better model could exist - and an estimate
+    from ONE feature set on ONE segment. It is not 'the' frontier.
+
+==========================================================================================================================
+=== STABILITY of the primary, by period. Recency is primary (section 5).
+==========================================================================================================================
+period               N   dir acc    $/trade       net $
+2023                97    48.45%       -134     -12,968
+2024               231    55.41%         64      14,788
+2025               229    56.83%        615     140,822
+2026               131    48.46%       -138     -18,031
+t12m               230    55.90%        259      59,507
+t6m                114    51.33%        -36      -4,147
+t3m                 55    49.09%         14         795
+
+    RIDGE COEFFICIENTS on the full sample - DESCRIPTION ONLY, not a result:
+        rng_pts               -756.0
+        morn_path_pts          748.5
+        morn_net_pts           370.4
+        vwap_disp              212.4
+        xbreadth              -187.9
+        pos_in_range          -184.9
+        on_range_rel          -184.9
+        dir_eff                171.2
+
+[done 11s]

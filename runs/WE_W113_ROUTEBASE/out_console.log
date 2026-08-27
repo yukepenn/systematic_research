@@ -1,0 +1,70 @@
+    substrate 1,620,044 bars / 1,058 in-window sessions [4s]
+
+============================================================================================================================
+=== 0. B1 HARNESS CHECK - the blocked engine with NOTHING blocked must be gfills verbatim
+============================================================================================================================
+    gfills 2,401 trades   gfills_blocked(empty) 2,401 trades   byte-identical: True
+
+============================================================================================================================
+=== 1. HOW MUCH OF P1/PCT's MONEY IS EVEN AT RISK HERE? Reported FIRST, per the spec.
+============================================================================================================================
+    entries BEFORE 11:49 :  1475 trades   net $     166,837
+    entries AT/AFTER 11:49:   656 trades   net $     129,994   = 43.8 % of P1/PCT's net
+
+    Only the second row can be changed by this wave, in either direction.
+
+============================================================================================================================
+=== 2. THE 3 x 3 GRID. Veto polarity is LOW = range-like = block P1's new afternoon
+===    entries. Fixed by mechanism in the spec BEFORE any P&L.
+============================================================================================================================
+cell                      veto%  trades       net $     wk $  wk$@fixDD  pos wk%     maxDD    CVaR5      t
+BASELINE (no veto)         0.0%    2131     296,831    1,394      1,230    56.3%    22,931   -2,754   4.16
+D1_DIR_EFF @ 0.25         24.4%    2035     257,802    1,210        865    56.8%    28,322   -2,736   3.63
+D1_DIR_EFF @ 0.50         49.5%    1925     170,987      803        443    51.6%    36,705   -2,697   2.73
+D1_DIR_EFF @ 0.75         74.9%    1797     168,169      790        534    52.1%    29,956   -2,570   2.79
+
+D4_VWAP_DISP @ 0.25       24.9%    2041     259,037    1,216      1,062    54.9%    23,184   -2,735   3.68
+D4_VWAP_DISP @ 0.50       48.8%    1917     244,421    1,148        879    54.5%    26,442   -2,735   3.47
+D4_VWAP_DISP @ 0.75       74.2%    1800     194,052      911        606    54.0%    30,430   -2,610   3.21
+
+D5_MR_FAIL @ 0.25         45.9%   UNCALIBRATED - excluded (W107b rule)
+D5_MR_FAIL @ 0.50         54.1%    1930     201,659      947        579    54.0%    33,085   -2,640   3.23
+D5_MR_FAIL @ 0.75         76.5%    1830     193,753      910        650    53.5%    28,345   -2,573   3.14
+
+    UNCONDITIONAL CONTROL (W111b's binding rule) - block on EVERY session:
+BLOCK ALL sessions       100.0%    1736     184,928      868        622    52.6%    28,272   -2,587   3.09
+
+============================================================================================================================
+=== 3. THE PRIMARY: best of 8 cells = D4_VWAP_DISP @ 0.25, $1,062/wk at fixed DD vs the baseline's $1,230
+===    RATE-MATCHED RANDOM VETO null: 200 draws, each blocking post-11:49 entries on
+===    the same 263 sessions chosen uniformly at random. Charged as a best-of-8.
+============================================================================================================================
+    ... 50/200 draws [35s]
+    ... 100/200 draws [47s]
+    ... 150/200 draws [59s]
+    ... 200/200 draws [71s]
+
+    REAL   $1,062/wk at fixed DD
+    NULL   mean $1,018  sd $194  p95 $1,325  -> 58.0th percentile
+    BASELINE $1,230    BLOCK-ALL $622
+    VERDICT: FAILS
+
+============================================================================================================================
+=== 4. IS THE DETECTOR REDUNDANT WITH WHAT P1 ALREADY DOES?
+============================================================================================================================
+    P1/PCT takes a post-11:49 entry on 367 of 1058 in-window sessions - it is ALREADY flat after 11:49 on the rest.
+
+cell                      veto n   of which P1 had no entry  sessions actually changed
+D1_DIR_EFF @ 0.25            258                        172                         86
+D1_DIR_EFF @ 0.50            524                        335                        189
+D1_DIR_EFF @ 0.75            792                        504                        288
+D4_VWAP_DISP @ 0.25          263                        181                         82
+D4_VWAP_DISP @ 0.50          516                        343                        173
+D4_VWAP_DISP @ 0.75          785                        508                        277
+D5_MR_FAIL @ 0.50            572                        376                        196
+D5_MR_FAIL @ 0.75            809                        528                        281
+
+    A veto that lands mostly on sessions where P1 was already flat after 11:49 cannot
+    be doing much, whatever its headline number says.
+
+[done 71s]
