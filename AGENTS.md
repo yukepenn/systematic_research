@@ -1,5 +1,12 @@
-# Agent instructions
+# AGENTS.md
 
-Read `CLAUDE.md` (same directory) — it is the single source of agent guidance for this repository, including the hard safety boundary, frozen baseline, NT8/CrossTrade conventions, and workflow rules. The research constitution lives in `research/Research_Thesis.txt` §17 and governs all experiments.
+Read [`CLAUDE.md`](CLAUDE.md) first. It is the operating contract.
 
-For repo orientation and current state (which CLAUDE.md's campaign-#1 body predates — see its 2026-08-18 addendum): `STATE_OF_RESEARCH_20260818.md`, `README.md`, `MAP.md`, and `BASELINE_MODELS.md` at repo root.
+- **Active campaign:** #7 `WEEKLY_EDGE` (`research/weekly_edge/`).
+- **Current research state:** `research/weekly_edge/CURRENT_BASELINE.md`.
+- **Current executable state:** `research/operational/EXECUTION_MANIFEST.md`.
+- **Bootstrap = README + CLAUDE + CURRENT_BASELINE.** Nothing else by default.
+- **Do not read `research/archive/` or `runs/` recursively** to orient yourself.
+- Backtest/research only. Never place an order or enable a strategy.
+- Spec committed before results. No force-push. No history rewrites.
+- Data ≥ 2026-08-01 is sealed.

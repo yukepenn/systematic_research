@@ -1,448 +1,253 @@
-# CURRENT BASELINE — campaign #7 WEEKLY_EDGE
+# CURRENT BASELINE — campaign #7 `WEEKLY_EDGE`
 
-_Authoritative as of **2026-08-27**, through wave **W120**. Git `HEAD` at time of writing: see the
-commit that carries this edit._
+**Authoritative for current RESEARCH state. 2026-08-27, through wave W123 + both parity runs.**
 
-_Original header text: authoritative through W111._ Where this file and any older
-weekly_edge doc disagree, **this file governs**. Every number is cited to a committed run. This is
-the campaign-#7 equivalent of the root `BASELINE_MODELS.md`, which covers campaign #3's three
-shipped objects and is unaffected by anything here._
-
-> **CHANGE LOG since the W103 edition** — nothing about the base moved; one status label did.
-> - **`XM_CONFLICT` → `ACTIVE COMPONENT`**, raised from the reduced-confidence position W105 left
->   it in, on the strength of **W110**. The +0.464 six-month ρ is **not** downside coupling: ρ
->   conditioned on P1's losing weeks is **−0.165 at the 5.2nd percentile** of a circular-shift
->   null, worst-decile overlap at the **7.1st**, tail beta **−0.660** against an all-week +0.073.
->   And the concentration is **mechanism-consistent** — the pre-entry state predicts the top-20
->   winners at **AUC 0.735, p = 0.000** under a fully re-fitted permutation null.
-> - **W109, W110, W111 promoted nothing and closed three things.** The causal trend-day veto, the
->   volume-exhaustion family, and two of my own statistics were withdrawn. See
->   `MECHANISM_COVERAGE_20260826.md` footnotes ⁶ and ⁷.
-> - **A new binding rule:** a class-conditional table requires its **matched unconditional
->   control** in the same wave. W111b showed W108's headline signature is reproduced exactly by an
->   unconditional fade.
->
-> **— W117 → W120 —**
-> - **W119 built the `BOOK_LOSS_LEDGER`** (`runs/WE_W119_BOOKLOSS/out/book_loss_ledger.csv`,
->   1,058 sessions × 25 columns). **The gap is NOT coverage** — `E_NO_ENGINE` = **0 sessions**.
->   **The gap is TURNOVER**: on losing sessions P1 takes **3.04 trades vs 1.38**, for **18 % fewer
->   contract-minutes**, on sessions moving **31 % less**. And **XM is the book's tail** — active on
->   33 % of sessions, present in **69.8 %** of the worst decile.
-> - **W119 narrows W117.** At session resolution the REVERSAL excess is **+1.7 pp**, not the +6.9 pp
->   weekly aggregation showed; **RANGE is the larger dollar class (−$114,807 vs −$91,216)**. The
->   TREND-UP deficit (−8.6 pp) and the TREND-DOWN null (+0.8 pp) both survive.
-> - **W120: `MIRROR_CONT` fails its four-gate test on gate 2 only** and is **not** promoted — but it
->   passes **both gates FOLLOW_MORNING failed**, and adding it would take book max DD **$11,489 →
->   $8,143**. Its value is **tail, not average** (tail beta −1.861, 0.9th pctile, on **21 weeks**).
->   It becomes the standing **`MIRROR_CONTINUATION_CONTROL`** required of every future fade idea.
-> - **Validation harness built once** (`research/weekly_edge/src/we_harness.py`, 7/7) after three
->   consecutive waves had harness rather than market defects.
+_This is a **state document, not a changelog.** Wave-by-wave history lives in
+`runs/WE_W*/REPORT.md` and is linked, never reproduced. Execution truth lives in
+[`research/operational/EXECUTION_MANIFEST.md`](../operational/EXECUTION_MANIFEST.md)._
 
 ---
 
-## 0. THE FOUR BASELINES (POST-W118 directive §1) — research and execution are SEPARATE
+## 0. THE FOUR BASELINES
 
-> ⚠️ **The repository must never again use one ambiguous "current baseline" to mix research truth
-> with execution truth.** Four distinct objects, and two of them are legitimately empty.
+> ⚠️ **Research truth and execution truth are different claims and this repo keeps them apart.**
 
-| # | baseline | object | why |
+| # | baseline | object | evidence |
 |---|---|---|---|
-| **A** | **RESEARCH_SINGLE_BASELINE** | **`P1/PCT`** | $1,394/wk raw · **$1,230/wk at fixed $20,245 DD** · 56.3 % positive weeks · max DD $22,931 · t 4.16 |
-| **B** | **RESEARCH_PORTFOLIO_FRONTIER** | **`{P1/PCT + XM_CONFLICT}`** inverse-vol | **$2,012/wk at fixed DD** · max DD **$11,489** · 59.2 % positive weeks · t 4.90. XM is an **ACTIVE COMPONENT** (W110) |
-| **C** | **EXECUTABLE_SINGLE_BASELINE** | **NONE** | `WeeklyEdgeP1PCT_v1.cs` is written and copied into NT8 but **not compiled and not reconciled**. Compilation is an owner action |
-| **D** | **EXECUTABLE_PORTFOLIO_BASELINE** | **NONE** | neither leg has cleared Strategy Analyzer parity |
+| **A** | **RESEARCH_SINGLE** | **`P1/PCT`** | $1,394/wk raw · **$1,230/wk at fixed $20,245 DD** · 56.3 % positive weeks · max DD $22,931 · t 4.16 |
+| **B** | **RESEARCH_PORTFOLIO_FRONTIER** | **`{P1/PCT + XM_CONFLICT}`** inverse-vol | **$2,012/wk at fixed DD** · max DD **$11,489** · 59.2 % positive weeks · t 4.90 |
+| **C** | **EXECUTABLE_SINGLE** | **`WeeklyEdgeP1PCT_v1`** | ✅ **PARITY-CERTIFIED 2026-08-27** · `runs/WE_P1PCT_PARITY_20260827/` |
+| **D** | **EXECUTABLE_PORTFOLIO** | **`WeeklyEdgeP1PCT_v1` + `WeeklyEdgeXMConflict_v2`** | ✅ both legs certified · `runs/WE_XM_PARITY_20260827/` |
 
-> **C and D being empty does NOT erase B.** The research frontier is real and measured; it simply has
-> not yet been proven to reproduce inside NinjaTrader. Those are different claims and this file keeps
-> them apart.
+**Every weekly figure above is at a fixed $20,245 max drawdown** — algebraically scale-invariant, so
+it cannot be inflated by leverage. Cost model: $4.36/ctrRT commission **plus** candidate-specific
+modelled spread (P1 $14.44, XM $12.50). **NT8 nets are a different quantity** — see the manifest.
 
----
+> **EXECUTABLE ≠ ENABLED.** C and D reproduce inside NinjaTrader. Neither is deployed or connected.
+> **Evidence status of A and B: `DISCOVERY_CONSUMED`** — the 2022-07 → 2026-08 window has been mined
+> for 123 waves. Forward evidence on the sealed ≥2026-08-01 data is the only clean test remaining.
 
-## 0a. OBJECT TAXONOMY — what is in each category
+## 0a. Object taxonomy
 
-> This table is the answer to "what is actually going on right now". Everything below it is detail.
-> **REGIME** uses the directive §5 vocabulary: `STRUCTURAL` · `CURRENT_REGIME_EXPLAINED` ·
-> `CURRENT_REGIME_UNEXPLAINED` · `TRANSITIONING/WATCH` · `DEAD/FALSIFIED`.
+Regime vocabulary: `STRUCTURAL` · `CURRENT_REGIME_EXPLAINED` · `CURRENT_REGIME_UNEXPLAINED` ·
+`TRANSITIONING/WATCH` · `DEAD/FALSIFIED`.
 
-| category | object | regime | engineering | evidence |
-|---|---|---|---|---|
-| **CURRENT_SINGLE_BASELINE** | **`P1/PCT`** | `CURRENT_REGIME_UNEXPLAINED` — the box-denominator correction reverses on 2006–2021 (−31.4 %) for a *known and stated* reason (a $1,300 box was 84 % of a typical session range then, 19 % now) | source written, **copied into NT8, NOT compiled** | §1 below |
-| **CURRENT_ACTIVE_COMPONENTS** | **`XM_CONFLICT`** | `CURRENT_REGIME_UNEXPLAINED` · **REGIME_LOCAL BY DATA AVAILABILITY** — ES/RTY/YM substrates begin 2022-01-02, so no deep test exists *or can be built* | source written, **not copied, not compiled** | §2 below, W110 |
-| **CURRENT_PORTFOLIO_BASELINE** | *(none yet — the combination below is a CANDIDATE, not a baseline)* | — | — | — |
-| **PORTFOLIO CANDIDATE** | `{P1/PCT + XM_CONFLICT}` inverse-vol | inherits both | neither leg compiled | §2 below |
-| **RESEARCH_CHALLENGERS** | `PAIR23` (2 BMOM : 3 X9a) | `STRUCTURAL` — it is the one object that beats P1 over the 16 unseen years on money, maxDD, top-5, positive weeks *and* streak simultaneously | none | §3 below |
-| **WATCHLIST** | ⭐ **`MIRROR_CONT`** (W120) — 3 of 4 gates, tail-driven, `CURRENT_REGIME_UNEXPLAINED`; ahead of FOLLOW_MORNING on every gate · **`FOLLOW_MORNING`** | **`CURRENT_REGIME_UNEXPLAINED`** — W115 searched for a causal driver and found none | none | §3b below, W114 + W116 |
-| **DEMOTED** | `NETFUSE_1` · `VWAP_RECLAIM` · the trend-day state layer · volume exhaustion · AFT as a research target | `DEAD / FALSIFIED` | — | §6 below |
-| **HISTORICAL_REFERENCE** | Product A (`SolarWaveSMMaster_v4.cs`), Product B (`SolarWaveOneContractNQ_v5.cs` / `MNQ_v5.cs`) | campaign #3, closed Aug 2026 | **the only objects ever taken through full NT8 parity** | root `BASELINE_MODELS.md` |
-
-> ⚠️ **`CURRENT_PORTFOLIO_BASELINE` is deliberately empty.** `{P1/PCT + XM_CONFLICT}` is the best
-> combination measured and it is **not promoted**, because neither leg has cleared NT8 Strategy
-> Analyzer parity and promotion under directive §35 PATH B still requires *executable* evidence.
-> Quoting it as "the baseline" would skip that gate.
-
----
-
-## 0b. ⭐ WHAT THE BOOK LOSES ON — measured for the first time (W117, 2026-08-27)
-
-The candidate portfolio loses in **87 of 213 weeks (40.8 %)** and spends **55.4 % of weeks in
-drawdown**. After 116 waves nobody had ever asked what those weeks look like.
-
-| market state | LOSING weeks | WINNING weeks | perm p |
+| category | object | regime | engineering |
 |---|---|---|---|
-| **share of TREND-UP sessions** | **0.167** | **0.238** | **0.005** ✱ |
-| **share of REVERSAL sessions** | **0.299** | **0.230** | **0.011** ✱ |
-| NQ weekly return % | −0.218 | +0.660 | 0.006 ✱ |
-| **share of TREND-DOWN sessions** | **0.147** | **0.143** | **0.880** — no difference |
-| daily vol · weekly range · announcement days | — | — | 0.26 – 0.74, nothing |
-
-> ### **THE BOOK LOSES WHEN THE MARKET STOPS TRENDING UP — NOT WHEN IT FALLS.**
-> **P(NQ week down ∣ book loses) = 0.471** vs an unconditional **0.437**: *53 % of losing weeks are
-> weeks NQ rose.* ρ(book, NQ weekly return) = only **+0.243**. **TREND-DOWN sessions are no more
-> common on losing weeks than on winning ones.**
->
-> ⚠️ **This falsifies the natural assumption** — that a long-only P1 plus an opening-auction XM must
-> be short of *downside* exposure — which W117 wrote into its own spec in advance and which the data
-> then killed. **The missing engine is a REVERSAL engine, not a downside engine.**
-
-**And nothing the campaign owns is positive there.** Six frozen objects screened; **zero survivors**.
-`FOLLOW_MORNING`'s long leg earns **$482/week unconditionally and −$2 on the book's losing weeks** —
-a circular-shift null says a *random* alignment would have given **+$484**. It is not weak there;
-it is **absent**. `ALWAYS_SHORT`, the crudest downside exposure, gives −$23.
-
-**The named information gap, and the standing caution:** the W51 REVERSAL class is 23–30 % of weeks
-and is where the book bleeds. Seven fade mechanisms have been killed in this campaign — but all of
-them were tested as **afternoon fades at the single 11:49 → 15:44 clock**, and W111b then showed
-that clock sits on the wrong side of a live momentum effect. **The kills constrain the clock, not
-the class.** Whether reversal sessions can be monetised is **UNKNOWN**.
+| **BASE** | **`P1/PCT`** | `CURRENT_REGIME_UNEXPLAINED` | ✅ certified |
+| **ACTIVE COMPONENT** | **`XM_CONFLICT`** | `CURRENT_REGIME_UNEXPLAINED` · **REGIME_LOCAL by data availability** | ✅ certified (`_v2`) |
+| **CHALLENGER** | `PAIR23` (2 BMOM : 3 X9a) | `STRUCTURAL` — the one object beating P1 over the 16 unseen years on money, maxDD, top-5, positive weeks *and* streak | none |
+| **WATCHLIST** | `MIRROR_CONT` · `FOLLOW_MORNING` | `CURRENT_REGIME_UNEXPLAINED` | none |
+| **DEAD / FALSIFIED** | `NETFUSE_1` · `VWAP_RECLAIM` · trend-day state layer · volume exhaustion · AFT as a target · cross-market intraday support · turnover | — | — |
+| **HISTORICAL** | campaign #3 Products A/B | closed Aug 2026 | `research/archive/campaign3_system_master/BASELINE_MODELS.md` |
 
 ---
 
-## 3b. `FOLLOW_MORNING` — WATCHLIST, and why it is not in the book (W114 + W115 + W116)
+## 1. `P1/PCT` — the base
 
-Buy at the 11:49 open if the 11:29 close is above the 09:31 open, sell if below, exit at the 15:44
-close, size 1, no stop. **Zero-threshold and parameter-light with a broad timing plateau** — not
-"zero parameter" (directive §4; the decision minute was inherited from W108's LANE C spec, before
-this object existed).
+13-member Solar volatility-ratchet ensemble, four combiners, 32-config vote, **OR-gated with the
+B-MOM channel**, long-only, range throttle q = 0.8, delta gate, causal quality sizing (size 2 when
+score ≥ 3, ~20 % of entries), flat at every session close, **session box −$1,300 / +$1,000
+denominated PER CONTRACT**.
 
-**Standalone alpha: CONFIRMED.**
-
-| | |
-|---|---|
-| modern 2022-07 → 2026-08 | **$179/trade · 55.00 % · +4.95 pp above p\* · net $180,651 / 1,009 sessions** |
-| single-cell coin null | p95 $129 → **98.6th percentile** |
-| **conservative best-of-15 bar**, shared per-session sign | p95 **$166** → **96.3rd percentile, CLEARS** |
-| position within its own 15-cell plateau | **53rd percentile** — mid-plateau, not the max |
-| two-sidedness | long leg $198, short leg $158, **both positive**; always-long earns $21 |
-| controls | always-long $21 · always-short −$50 · fade −$208 · matched-random −$16 |
-| cost | dies at roughly **18×** the measured spread |
-| t12m *(the defensible recent window)* | **$236/trade, +2.87 pp** — the *weakest* recent window |
-| 2006–2021 *(diagnostic)* | −$9/trade, −0.74 pp — and the failure is **behaviour, not cost** (implied edge 0.70 % then vs 5.62 % now at zero spread) |
-
-**Portfolio value: FAILS, and the preregistered falsifier fired.**
-
-| statistic vs the P1/PCT+XM book | REAL | null mean | null p95 | percentile |
-|---|---|---|---|---|
-| ρ, all weeks | +0.253 | −0.001 | +0.120 | **100.0th** |
-| **worst-decile overlap** | **0.023** | 0.011 | **0.019** | **95.8th** ❌ |
-| **$ it earns on book-losing weeks** | **+$66** | **+$842** | +$1,792 | **9.9th** ❌ |
-| incremental fixed-DD weekly $ | **+$74 (inv-vol) / −$291 (income-matched)** — the range **straddles zero** | | | |
-
-> ### **`XM_CONFLICT` diversifies the book's LOSSES. `FOLLOW_MORNING` diversifies its WINS.** That is the whole difference, and it is why one is an active component and the other is on the watchlist.
-
-**W114's `REGIME_LOCAL` verdict is `SUPERSEDED BY DOCTRINE`, not withdrawn on evidence.** The
-measurement was correct; the owner replaced the rule that turned it into a demotion. Under the
-current doctrine it is **not** held out for failing 2006–2021 — it is held out because it does not
-help when the book is losing.
-
-**What would change this** (recorded now so it cannot be invented later): forward evidence on
-sealed ≥2026-08-01 data (parameter-light, no refit needed — see `MONITORING_CALENDAR.md`), or a
-pairing against a genuinely mean-reverting or short-biased engine. **It does not get another timing
-wave, another anchor, or a conditional variant** — §23 and §39, and W115 already spent the family's
-one attribution wave.
-
----
-
-## 1. THE BASE — what it is right now
-
-### `P1/PCT`
-
-Unchanged from `P1` in every respect except one, and that one change is a **unit correction, not a
-new strategy**:
-
-| component | status |
-|---|---|
-| 13-member Solar volatility-ratchet ensemble, four combiners, 32-config vote | unchanged |
-| **OR-gated with the B-MOM channel** (latched ±1, `px > max(open₀₉₃₀ + mtod14, RTH VWAP)`, reset 09:31, killed 15:57) | unchanged |
-| long-only | unchanged |
-| range throttle q = 0.8 · delta gate | unchanged |
-| causal quality sizing — size 2 when score ≥ 3 (18.3 % of trades) | unchanged |
-| **session box −$1,300 / +$1,000** | ⭐ **CHANGED: now denominated PER CONTRACT, not per position** |
-| flat at every session close | unchanged |
-
-**Why the change** (`runs/WE_W98_BOXDENOM/`): a dollar stop on a variable-size position halts a
-2-lot at **half** the adverse point move of a 1-lot. That is a mis-specification by construction.
-Under the incumbent, loss-halts fired at **55.68 points on size-1 sessions and 37.18 on size-2**.
-
-**What it bought** — full modern window 2022-07-01 → 2026-08-01, 1,058 sessions / 213 weeks, net of
-$14.44/ctrRT candidate-specific spread plus $4.36 commission:
+The per-contract box is the *only* difference from `P1`, and it is a **unit correction, not a new
+strategy** (`runs/WE_W98_BOXDENOM/`): a dollar stop on a variable-size position halted a 2-lot at
+**half** the adverse point move of a 1-lot (55.68 pts on size-1 sessions vs 37.18 on size-2).
 
 | | `ABS` (old) | **`PCT` (current)** |
 |---|---|---|
-| weekly $ | $1,154 | **$1,394** |
-| **weekly $ at fixed $20,245 max DD** | $885 | **$1,231  (+39.0 %)** |
+| weekly $ at fixed DD | $885 | **$1,231 (+39.0 %)** |
 | positive weeks | 53.1 % | **56.3 %** |
 | max drawdown | $26,388 | **$22,931** |
-| top-5 drawdown | $18,421 | $17,835 |
 | t | 3.58 | **4.16** |
 
-**The controls, which are the actual evidence:** a *uniformly* looser dollar box is worth
-**+$6/week (paired p = 0.940)**; holding the average budget fixed while making it size-conditional
-keeps **+39.6 %**; both size-1 objects (BMOM, NETFUSE_1) show **exactly $0.00** across all 213
-weeks; the real gap sits at the **99th percentile** of 200 size-label permutations.
+**The controls are the evidence, not the headline:** a *uniformly* looser box is worth +$6/week
+(paired p = 0.940); holding the average budget fixed while making it size-conditional keeps
++39.6 %; both size-1 objects show **exactly $0.00** across all 213 weeks; the real gap sits at the
+**99th percentile** of 200 size-label permutations.
 
-**Label: `REGIME_LOCAL`.** On 2006–2021 the change **reverses (−31.4 %)** — a $1,300 box was 84 %
-of a typical session's range then and is 19 % now, so it fires **5.7× more often today**. `ABS` is
-retained beside `PCT` in every table and is not deleted. Paired weekly p = 0.057, and **90.8 % of
-the gross difference lives in 53 of 1,058 sessions**.
+⚠️ **`REGIME_LOCAL`.** On 2006–2021 the change **reverses (−31.4 %)** for a stated reason: a $1,300
+box was 84 % of a typical session range then and is 19 % now, so it fires **5.7× more often today**.
+Paired weekly p = 0.057, and **90.8 % of the gross difference lives in 53 of 1,058 sessions**. `ABS`
+is retained beside `PCT` in every table.
 
----
+## 2. `XM_CONFLICT` — active component
 
-## 2. THE BEST CANDIDATE PORTFOLIO — not the base, not promoted
+At 09:45 ET take NQ's own opening drive — `sign(close₀₉₄₅ − open of the 09:31 bar)` — **only on the
+~34 % of sessions where the ES/RTY/YM composite moves the opposite way.** Fill at the 09:46 open,
+hold to 15:45, size 1, **no stop**. N = 348 canonical (09:31 anchor); 346 under the sequential
+implementation the NinjaScript uses. `runs/WE_W101_DIRECTION/`, `WE_W102_XMENGINE/`.
 
-### `{P1/PCT + XM_CONFLICT}`, inverse-volatility weights
-
-`XM_CONFLICT` (`runs/WE_W101_DIRECTION/`, `WE_W102_XMENGINE/`): at 09:45 ET take NQ's own opening
-drive — sign(close₀₉₄₅ − open of the 09:31 bar) — **only on the ~34 % of sessions where the
-ES/RTY/YM composite is moving the opposite way**. Fill at the 09:46 open, hold to 15:45, size 1,
-**no stop**.
-
-| | P1/PCT alone | **P1/PCT + XM_CONFLICT** |
+| | P1/PCT alone | **+ XM_CONFLICT** |
 |---|---|---|
-| **weekly $ at fixed $20,245 DD** | $1,230 | **$2,012  (+63.5 %)** |
-| positive weeks | 56.3 % | 59.2 % |
-| **max drawdown** | $22,931 | **$11,489** |
-| **top-5 drawdown** | $17,835 | **$8,735** |
+| weekly $ at fixed DD | $1,230 | **$2,012 (+63.5 %)** |
+| max drawdown | $22,931 | **$11,489** |
+| top-5 drawdown | $17,835 | **$8,735** |
 | t | 4.16 | **4.90** |
 
-⚠️ **Quote the range, not a point: +45 % (income-matched, W102) to +64 % (inverse-vol, W103).**
-**The STRUCTURAL result — that adding XM substantially reduces drawdown overlap with P1/PCT — is
-the sturdy one. The exact income number is not a forecast and is the weaker half.** Max drawdown
-and top-5 drawdown roughly halve in the studied modern window; that is what is believable.
+⚠️ **Quote the range, not a point: +45 % (income-matched) to +64 % (inverse-vol).** The
+**structural** result — adding XM roughly halves drawdown overlap with P1/PCT — is the sturdy half.
+**The exact income number is not a forecast.**
 
-**Why it works and nothing else does:** ρ(weekly, P1) = **0.081**. Every other object in the
-campaign correlates 0.27–0.72 with P1. Adding the 2:3 pair on top makes the portfolio **worse**
-(−12 %), and an independent 63-cell integer grid puts its argmax at **2 P1 : 0 PAIR : 1 XM** —
-zero pair. Two weighting methods converge on "drop the pair".
+**Why it and nothing else:** ρ(weekly, P1) = **0.081**; every other object in the campaign
+correlates 0.27–0.72 with P1. Two independent weighting methods both say "drop the pair".
 
-**Status (updated W110, directive V5 §4/§39):** EVIDENCE **STRONG (current regime) · REGIME_LOCAL**
-· PORTFOLIO ROLE **ACTIVE COMPONENT** · ENGINEERING **SOURCE_READY / PARITY_PENDING**
-(`WeeklyEdgeXMConflict_v1.cs` written, **not compiled, not reconciled**) · **NOT ENABLED**.
-Caveats that travel with every quotation:
+### Standing caveats — these travel with every quotation
 
-- **N = 348** trades, ~1.6 sessions/week.
-- **The window is discovery-consumed** (2022-07 → 2026-08, mined for 103 waves).
-- **ρ = +0.446 with B-MOM.** A diversifier against P1, only partly against the pair.
-- **REGIME_LOCAL by DATA AVAILABILITY, not by choice** — ES/RTY/YM substrates begin 2022-01-02, so
-  no 2006–2021 test exists and none can be built from anything on disk.
-- **The only intra-trade risk control is the clock.** Worst adverse excursion ever: **−$10,865
-  (543 points)** — **a sample maximum, not a bound**. Every ALPHA stop from 20 to 300 points makes
-  it worse at fixed drawdown, but that is *not* an argument that no stop is the right live policy.
-  A separate **DISASTER** layer is priced in `runs/WE_W105_XMAUDIT/`: a 300-point account-survival
-  stop costs **0.7 %** of gross edge and would have triggered 13 times; 500 points costs 4.1 % and
-  triggered twice. **No level is selected — the owner sets capital risk.**
-- It was **selected as the best of 27 cells** (W101) and its combination as the **best of 6**
-  (W103). It cleared a best-of-27 coin null, a rate-matched subsample null at the 99.6th, and a
-  |drive|-**decile**-matched null at the **99.7th** — but the selections happened.
-- **Last three months are weak**: the primary combination is $499/wk at fixed DD, 35.7 % positive
-  weeks, **t = 0.25** over 14 weeks — inside the BURNED span.
-- ⚠️→✅ **W105: ~20 sessions of 348 carry 85 % of the money.** Dropping the top 5 costs 28 %, top 10
-  costs 49 %, top 20 costs **85 %**. Inside individual years the top-10 contribution *exceeds
-  100 % of net*, i.e. the other trades lost. Any income figure must carry "carried by ~20 sessions
-  in four years". **W110 answers §25's question about that concentration: it is MECHANISM-CONSISTENT,
-  not accidental.** Using only features known at or before 09:45 on the trade's own session — no
-  MFE, no MAE, no realized path — a cross-validated model ranks the tail winners at **AUC 0.735 /
-  0.783 / 0.869** for the top 20 / 10 / 5, **p = 0.000 / 0.003 / 0.000** against 400 permutations
-  that each re-run the entire fit. The separating state is a **wide overnight range** (1.62× vs
-  1.14× median), a **scheduled CPI/NFP/FOMC day** (35 % vs 11.3 %), and — at the tightest cuts — a
-  **small opening drive that barely disagrees with the complex** (divergence 0.26 vs 1.05). It is
-  genuinely multivariate: the announcement flag **alone** ranks at AUC 0.498.
-  ⚠️ **WITHDRAWN from W110's own first pass:** an AUC null that permuted labels while holding
-  leave-one-out predictions fixed, reported as 0.697/0.758/0.863 at the "99.7th/99.9th/99.9th
-  percentile". That null was too easy; the corrected figures above replace it and are stronger.
-  ⚠️ **THE CAVEAT THAT TRAVELS WITH IT:** "tail winner" is defined by these same 348 trades.
-  Cross-validation controls overfitting, it does not create a holdout. This is **descriptive**, and
-  per the W110 spec **no filter was built from it.**
-  ⚠️ **RIDER ADDED BY W123 (2026-08-27).** On exactly these features, this n and this protocol,
-  tail **WINNERS** are identifiable (**AUC 0.727, p = 0.000**) and tail **LOSERS are NOT**
-  (**AUC 0.513, p = 0.380**). And `on_range_rel` is elevated in **both** tails — 1.620 for winners,
-  **1.406 for losers**, ~1.13 for the rest — so it is substantially a **MAGNITUDE** marker.
-  **"XM's big winners are predictable" must now travel with: "and the same state also marks its big
-  losers, which the model cannot separate."** The clean surviving statement: *XM's pre-entry state
-  predicts WHEN a session will be large; among large sessions it separates winners from the field
-  but not losers from it* — the profile of a convex, unstopped directional forecast, which is what
-  W102 established the object is. Per §11 no gate was built; **XM's architecture is unchanged and it
-  keeps ACTIVE COMPONENT status** (§10: session-tail composition does not withdraw weekly loss
-  diversification). `runs/WE_W123_XMTAIL/`.
-- ⚠️→✅ **W105 flagged the correlation as unstable; W110 measured what it actually means.** ρ(XM,
-  P1) is **+0.081 full-window and +0.464 over the trailing 26 weeks** — both reproduce exactly.
-  **But the 26-week series has ranged −0.537 to +0.566 with a median of +0.021 over these four
-  years, 12.2 % of all 26-week windows have exceeded +0.30, and the 52-week ρ has NEVER exceeded
-  +0.30.** More decisively, **the coupling is not on the downside**, against 212 circular shifts:
+- **N = 348**, ~1.6 sessions/week, in a **discovery-consumed** window.
+- **REGIME_LOCAL by DATA AVAILABILITY** — ES/RTY/YM substrates begin 2022-01-02, so no 2006–2021
+  test exists *or can be built*. This is not a choice.
+- **ρ = +0.446 with B-MOM** — a diversifier against P1, only partly against the pair.
+- **The only intra-trade risk control is the clock.** Worst adverse excursion **−$10,865 (543 pts)**
+  — **a sample maximum, not a bound**. Every *alpha* stop 20–300 pts makes it worse at fixed
+  drawdown; a separate *disaster* layer is priced in `runs/WE_W105_XMAUDIT/` and **no level is
+  selected — the owner sets capital risk.**
+- **Selected as best of 27 cells**, its combination best of 6. It cleared best-of-27 coin, rate-
+  matched subsample (99.6th) and |drive|-decile-matched (99.7th) nulls — **but the selections
+  happened.**
+- **Last three months are weak**: $499/wk at fixed DD, 35.7 % positive weeks, **t = 0.25** over 14
+  weeks — inside the **BURNED** span.
+- **~20 of 348 trades carry 85 % of the money.** Dropping the top 5 costs 28 %, top 20 costs 85 %.
+  Inside individual years the top-10 contribution *exceeds 100 % of net*.
 
-  | | REAL | null mean | percentile |
-  |---|---|---|---|
-  | ρ, all weeks | +0.081 | −0.000 | 89.2th |
-  | **ρ ∣ P1 < 0** | **−0.165** | +0.000 | **5.2th** |
-  | P(XM<0 ∣ P1<0) | 0.341 | 0.352 | 33.0th |
-  | worst-decile overlap | 0.005 | 0.011 | 7.1th |
-  | **tail beta**, P1's bottom decile | **−0.660** | +0.003 | 13.7th |
-  | joint max DD | $11,489 | $13,382 | 18.9th |
-  | **joint DD duration** | **7 wk** | 18.2 wk | **beyond the null** |
+### Two questions the campaign answered about those caveats
 
-  **The two engines are mildly coupled when they WIN and anti-coupled when P1 LOSES.** Still watch
-  the trailing 26-week ρ — and note the one statistic that did move adversely: P(XM<0 ∣ P1<0) rose
-  from 0.200 to 0.500 between the first and last 26 weeks, on about eleven P1-losing weeks.
-  ⚠️ **WITHDRAWN from W110's own first pass:** "zero overlap between the two ten-worst-week sets,
-  0.0th percentile" — 61.3 % of circular shifts also produce zero overlap. The fact is true, the
-  inference was not.
-- ✅ **W105b: it is NOT an event trade.** Against the committed CPI/NFP/FOMC calendar, the
-  **304 non-announcement trades earn $408/trade at a 54.9 % hit rate**. Announcement sessions are
-  3.9× richer ($1,611/trade, 36 % of net from 13 % of trades) and **NFP is extreme** (n = 12,
-  83.3 % hit, $3,556/trade) — recorded, **not** turned into a filter.
-- ✅ **W105: it is genuinely two-sided** (longs 60.5 % hit / $701, shorts 48.0 % / $415 — both
-  positive) and **not an early-sample artifact** ($540 in 2022-23 vs $569 from 2024 on).
-- ⚠️ **W105 withdraws the per-year improvement story.** At the canonical anchor the profile is
-  $853 / $441 / $654 / $317 / $751 — **no trend**. W101b's "$186 → $1,064 monotone" was an
-  artifact of the one-minute-early anchor.
-- **N = 348 is canonical** (09:31 anchor). N = 342 is the same object at the 09:30-stamped
-  anchor. Both reproduce exactly; they are two anchors, not a discrepancy.
+**Is the concentration accidental?** No — `runs/WE_W110_XMDIVERSE/`. Using only pre-09:45 features,
+a cross-validated model ranks tail winners at **AUC 0.735 / 0.783 / 0.869** (top 20/10/5),
+**p = 0.000 / 0.003 / 0.000** against 400 permutations that each re-run the entire fit. The
+separating state: wide overnight range, a scheduled CPI/NFP/FOMC day, and a small opening drive
+barely disagreeing with the complex. Genuinely multivariate — the announcement flag alone reaches
+AUC 0.498.
+⚠️ **W123's rider** (`runs/WE_W123_XMTAIL/`): tail **winners** are identifiable (AUC 0.727,
+p = 0.000), tail **losers are NOT** (0.513, p = 0.380), and `on_range_rel` is elevated in **both**
+tails (1.620 / 1.406 vs ~1.13) — substantially a **magnitude** marker. **The clean surviving
+statement: XM's pre-entry state predicts WHEN a session will be large; among large sessions it
+separates winners from the field but not losers from it.** No gate was built.
+
+**Is the +0.464 six-month ρ downside coupling?** No — the decisive result, against 212 circular
+shifts:
+
+| | REAL | percentile |
+|---|---|---|
+| ρ, all weeks | +0.081 | 89.2th |
+| **ρ ∣ P1 < 0** | **−0.165** | **5.2th** |
+| worst-decile overlap | 0.005 | 7.1th |
+| **tail beta**, P1's bottom decile | **−0.660** | 13.7th |
+| **joint DD duration** | **7 wk** vs null 18.2 | beyond the null |
+
+**The two engines are mildly coupled when they WIN and anti-coupled when P1 LOSES.** Still watch the
+trailing 26-week ρ; P(XM<0 ∣ P1<0) rose 0.200 → 0.500 between the first and last 26 weeks on ~11
+P1-losing weeks.
+
+✅ **Not an event trade** (`WE_W105B`): the 304 non-announcement trades earn **$408/trade at 54.9 %**.
+✅ **Genuinely two-sided** (longs 60.5 % / $701, shorts 48.0 % / $415) and **not an early-sample
+artifact** ($540 in 2022-23 vs $569 from 2024).
 
 ---
 
-## 3. STRONGEST CHALLENGER, still not promoted
+## 3. ⭐ What the book loses on — and it is not what anyone assumed
 
-`PAIR23` = **2 BMOM : 3 X9a**, sleeves boxed independently, per-unit:
-**$1,309/wk at fixed DD · 60.6 % positive weeks · max DD $18,088 · top-5 $11,362 · t 4.36** — the
-best *single* object in the campaign, better than P1/PCT's $1,230.
+`runs/WE_W117_LOSESTATE/` + `runs/WE_W119_BOOKLOSS/`. The candidate portfolio loses in **87 of 213
+weeks (40.8 %)**.
 
-It beats P1 on money, max drawdown, top-5 drawdown, positive-week rate **and** losing streak
-simultaneously over the 16 unseen years 2006–2021 (`runs/WE_W97_AUDITFIX/`). It is **not promoted**
-because W86's specificity null said the gain is *"two independent streams"* rather than *these two*,
-and because W103 now shows it **adds nothing on top of P1 + XM_CONFLICT**.
+| market state | LOSING weeks | WINNING weeks | p |
+|---|---|---|---|
+| share of **TREND-UP** sessions | 0.167 | 0.238 | **0.005** |
+| share of **REVERSAL** sessions | 0.299 | 0.230 | **0.011** |
+| share of **TREND-DOWN** sessions | 0.147 | 0.143 | **0.880 — no difference** |
 
-**Demoted:** `NETFUSE_1` — the only object ever to clear a specificity null, and **deep-negative**
-(−$8,951 over 2006–2021) with a top-5 drawdown 32.9 % worse than P1's.
+> ### **THE BOOK LOSES WHEN THE MARKET STOPS TRENDING UP — NOT WHEN IT FALLS.**
+> **53 % of losing weeks are weeks NQ rose.** This **falsifies** the natural assumption that a
+> long-only P1 plus an opening-auction XM must be short of *downside* exposure — an assumption W117
+> wrote into its own spec in advance. **The missing engine is a REVERSAL engine, not a downside
+> engine.** Six frozen objects were screened for it; **zero survivors.**
 
----
+**W119's `BOOK_LOSS_LEDGER`** (1,058 sessions × 25 columns) narrows it further: **`E_NO_ENGINE` = 0
+sessions** — coverage is not the gap. **Turnover is**: on losing sessions P1 takes **3.04 trades vs
+1.38**, for **18 % fewer contract-minutes**, on sessions moving **31 % less**.
 
-## 4. WHAT THE BASE DOES NOT DO
+## 4. Watchlist
 
-> ⚠️ **READ `OPPORTUNITY_LANGUAGE.md` BEFORE QUOTING ANY NUMBER IN THIS SECTION.** The ceiling
-> below is `EX_POST_EXECUTION_FEASIBLE_ORACLE` — **it knows the future direction of each segment.**
-> It is an upper bound after turnover and friction constraints, **not causally available money**,
-> and the gap to what we capture is not money we failed to collect. The four levels are
-> `EX_POST_PATH_ORACLE` > `EX_POST_EXECUTION_FEASIBLE_ORACLE` > `CAUSAL_MODEL_FRONTIER` >
-> `REAL_SYSTEM_CAPTURE`, and **`CAUSAL_MODEL_FRONTIER` has never been measured in this repo.**
+**`FOLLOW_MORNING`** — buy at the 11:49 open if the 11:29 close is above the 09:31 open, sell if
+below, exit 15:44, size 1. Parameter-light with a broad timing plateau (*not* "zero parameter" — the
+decision minute was inherited from an earlier spec). `runs/WE_W114_INTRAMOM/`, `WE_W116_FMADJUDICATE/`.
+**Standalone: CONFIRMED** — $179/trade, 55.00 %, clears the corrected best-of-15 shared-sign bar at
+the **96.3rd percentile**, mid-plateau at the 53rd, two-sided, dies only at ~18× the measured spread.
+**Portfolio: FAILS** — worst-decile overlap 95.8th, and it earns **+$66** on book-losing weeks where
+chance gives **+$842** (9.9th percentile).
 
-From `runs/WE_W103_CONSOLIDATE/` (capture ledger v3):
+> ### **`XM_CONFLICT` diversifies the book's LOSSES. `FOLLOW_MORNING` diversifies its WINS.**
+> That is the whole difference, and it is why one is an active component and the other is not.
 
-| segment | **level-2 oracle** $/session | base takes | **ratio** | p\* *(this geometry only)* |
-|---|---|---|---|---|
-| MORN 09:45–11:29 | $1,744 | $78 | **4.4 %** | **0.5048** |
-| ON_EU 00:00–07:59 | $1,224 | $18 | 1.5 % | 0.5078 |
-| MID | $1,197 | $19 | 1.6 % | 0.5059 |
-| AFT 13:30–15:44 | $1,170 | $3 | **0.3 %** | 0.5058 |
-| ON_ASIA | $1,026 | $39 | 3.8 % | 0.5139 |
-
-> ### 🚨 POST-W115 §37 — HOW THIS TABLE MUST NOW BE READ.
-> ### The meaningful residual is **`CAUSAL_MODEL_FRONTIER` − `REAL_SYSTEM_CAPTURE`**, *not*
-> ### oracle − real. W112 measured level 3 directly for AFT and found **no fitted causal model beat
-> ### a one-line momentum rule** (ridge OOS R² −0.024, directional accuracy *below* always-long).
-> ### So AFT's $1,167/session gap is **mostly the oracle's foreknowledge, not alpha debt**, and AFT
-> ### has moved DOWN the queue. **Do not headline any level-2 gap as missed alpha again.**
-> ### Level 3 has been measured twice in this repo, and only twice: ≈20 % of level 2 at the RTH
-> ### open (XM, W104) and ≈16 % on AFT with **none of it from a fitted model** (W112 / W114).
-
-> **After 103 waves the base captures 0.2 %–5.1 % of the LEVEL-2 EX-POST ORACLE in every
-> segment** — a ceiling that knows each segment's direction in advance — and
-> ex-post movement per session has **risen 83 %** while P1's own production went negative.
-> By class: TREND-DOWN and REVERSAL have **flipped positive** for the first time (+$195, +$27
-> income-matched, from −$495 and −$64) — with **$10,953 and $9,073 per session of those classes
-> still open**.
-
----
+**`MIRROR_CONT`** (`runs/WE_W120_MOMMARGINAL/`) — fails gate 2 only, but passes **both gates
+FOLLOW_MORNING failed**, and would take book max DD **$11,489 → $8,143**. Its value is **tail, not
+average** (tail beta −1.861, 0.9th percentile) on **21 weeks**. It is now the standing
+**`MIRROR_CONTINUATION_CONTROL`** required of every future fade idea.
 
 ## 5. Frozen conventions (do not change without a wave)
 
 | | |
 |---|---|
-| window | 2022-07-01 → 2026-08-01, 1,058 sessions, 213 weeks |
-| substrate | `load_deep(..., extend=True)` — deep file to 2026-05-29 joined to `SM1M_SUBSTRATE` |
-| cost | $4.36/ctrRT commission **inside** the fill engine + candidate's own contract-weighted spread from `WE_W82_FILLAUDIT/out/spread_by_minute.csv` (P1 $14.44, BMOM $13.02, XM_CONFLICT $12.50) |
-| headline metric | weekly $ at a fixed **$20,245** max drawdown — algebraically scale-invariant |
-| opportunity language | **`OPPORTUNITY_LANGUAGE.md` is binding.** Every ceiling figure names its level or is not quotable |
-| exposure convention | **income-matched** (W97: the only one with no free parameter) |
-| seal | ≥ **2026-08-01 VIRGIN**; **2026-05-31 → 07-31 BURNED** |
-| known data holes | **2026-07-17 is truncated** (ends 10:53, 83 RTH bars vs 390); spread profile has 1,380 minutes, the missing 60 being the 17:00–17:59 CME break |
+| window | 2022-07-01 → 2026-08-01 · 1,058 sessions · 213 weeks |
+| substrate | `load_deep(..., extend=True)` |
+| cost | $4.36/ctrRT commission **inside** the fill engine + candidate-specific spread (`WE_W82_FILLAUDIT`) |
+| headline metric | weekly $ at fixed **$20,245** max drawdown |
+| exposure convention | **income-matched** — the only one with no free parameter |
+| seal | ≥ **2026-08-01 VIRGIN** · **2026-05-31 → 07-31 BURNED** |
+| known data holes | **2026-07-17 truncated** (ends 10:53); spread profile missing the 17:00–17:59 CME break |
+| opportunity language | [`OPPORTUNITY_LANGUAGE.md`](OPPORTUNITY_LANGUAGE.md) is **binding** |
 
----
+## 6. Closed and falsified — do not re-run these
 
-## 6. Engineering status, active challengers, and the next residual (directive V5 §31)
+`NETFUSE_1` (deep-negative 2006–21) · `VWAP_RECLAIM` (a trend follower wearing a reversal label) ·
+**causal trend-day veto** (two independent failures, on losing fades *and* on the profitable
+baseline — `WE_W109`, `WE_W113`) · **volume exhaustion** (0.0th percentile, three of five
+*anti*-predictive — `WE_W111`) · **AFT as a research target** (`WE_W112` — de-prioritised with a
+reason, not another null) · **cross-market intraday support** (all four gates fail; matched Q5−Q1
+**−$157** against a $503 family bar — `WE_W122`) · **turnover as a causal state** (caps lose at
+every K and sit at the **0.0th percentile** of a count-matched random-halt placebo — *removing the
+same entries at random does better* — `WE_W121`).
 
-### Engineering — P0-B
+### ⚠️ Standing corrections the campaign must carry
 
-| object | source | compiled | Analyzer parity | enabled |
-|---|---|---|---|---|
-| `P1/PCT` — `WeeklyEdgeP1PCT_v1.cs` | ✅ written, 14-line mechanical diff from the parity-tested `P1_v3` | ⏳ **copied into NT8 `bin/Custom/Strategies/`, awaiting owner F5** | ⏳ pending | ❌ |
-| `XM_CONFLICT` — `WeeklyEdgeXMConflict_v1.cs` | ✅ written, first multi-series signal strategy in the repo | ❌ **deliberately not yet copied** — owner sequenced P1PCT first so a first-compile failure cannot take the whole `NinjaTrader.Custom.dll` down | ❌ | ❌ |
-| `WeeklyEdgeX9a_v1.cs`, `WeeklyEdgeBmom_v1.cs` | ✅ written (W89 era) | ❌ never installed | ❌ | ❌ |
+1. **Seven fade mechanisms were killed and the family recorded dead. That is too strong.** W114
+   measures the **mirror** of those fades at **+$179/trade** on the same sessions and costs, while
+   the matched FADE arm earns **−$208**. They were not failing because mean reversion is impossible
+   on NQ — **they were on the wrong side of a live momentum effect.** The kills constrain the
+   *clock*, not the class. Whether reversal sessions can be monetised is **UNKNOWN**.
+2. **W111b withdrew W108's headline**: the fade class signature is definitional — an *unconditional*
+   fade reproduces it exactly. **Binding rule since: a class-conditional table requires its matched
+   unconditional control in the same wave.**
+3. **W109's failure was at the POLICY layer, not the information layer.** Three causal states known
+   at 11:48 discriminate ex-post TREND from RANGE/MIXED at **AUC 0.613–0.621**, well above 2,000-draw
+   permutation nulls. A *binary* veto on information that weak removes good and bad sessions in equal
+   proportion (selectivity 0.74–1.12 across all 18 cells).
+4. **W112 measured the `CAUSAL_MODEL_FRONTIER` for the first time and it is a negative** — ridge OOS
+   R² **−0.024**, directional accuracy **below always-long**, beaten by an unfitted control. **The
+   meaningful residual is `CAUSAL_MODEL_FRONTIER − REAL_SYSTEM_CAPTURE`, not oracle − real. Do not
+   headline a level-2 oracle gap as missed alpha.**
 
-**Both remaining steps are owner-only interactive actions.** Parity protocol is binding from WE_W52:
-compare the **decision series** first — ≥99 % agreement plus trade counts within 2 % = VALIDATED;
-90–99 % = classify every mismatch; <90 % = the C# is not the object.
+## 7. The information gap, and what is next
 
-### Active challengers
+Full matrix: [`INFORMATION_COVERAGE_20260827.md`](INFORMATION_COVERAGE_20260827.md). Four distinct
+coverages — **PRESENCE / INFORMATION / ACTION_VALUE / REAL_CAPTURE** — and they are never collapsed
+into one word.
 
-| object | status |
-|---|---|
-| `PAIR23` (2 BMOM : 3 X9a) | best *single* object ($1,309/wk at fixed DD) but **adds nothing on top of P1/PCT + XM** (W103, two independent weighting methods) — **not promoted** |
-| `D1_DIR_EFF` @ 0.50 as a fade veto | **CLOSED by W113.** The same state layer that failed to route five losing fades also fails to route P1/PCT — all 8 cells below baseline, best at the 58.0th percentile of a random-veto null, and max DD *rises* in every cell |
-| ⭐ **`FOLLOW_MORNING`** — buy at 11:49 if the 11:29 close is above the 09:31 open, sell if below, exit 15:44, size 1, **no parameters at all** | **`REGIME_LOCAL` · WATCH.** W114: **$179/trade, 55.00 %, 98.9th percentile** on 2022-07 → 2026-08, genuinely two-sided (long leg $198, short leg $158, always-long only $21), 14 of 15 decision-time cells between $146 and $196, positive in 4 of 5 calendar years, **t12m $236**. ⚠️ **FAILS its 16-year out-of-window half** (2006–2021: −$9/trade, 49.40 % vs p\* 51.76 %) and the failure is **behavioural, not cost** — implied directional edge **0.70 % then vs 5.62 % now** at zero spread. ρ **+0.279** with P1/PCT, so it is *not* an orthogonal source; adds +3.6 % at fixed DD to the candidate portfolio while lowering t from 4.90 to 4.58. **Decided by the sealed forward data and nothing else.** |
+> ### **P1 entry quality is not separable by any information source currently held.**
+> Cross-market intraday: **null**. 1-min participation: **anti-predictive**. Order flow:
+> **unmeasurable** — `runs/DATAGATE_ORDERFLOW_20260827/` covers 71 of 2,131 entries (**3.3 %**) at an
+> MDE of **$564/entry = 4× the mean**, so it was CLOSED-BY-DATA *before* a feature was written.
+> Turnover: **worse than random**. Regime state: **real information, null policy**.
 
-### Demoted / closed since W103
+**Two surfaces remain open, and both are gated by data or by sequencing — not by ideas:**
 
-`NETFUSE_1` (deep-negative 2006–21) · `VWAP_RECLAIM` (trend follower wearing a reversal label) ·
-**`CAUSAL TREND-DAY VETO`** (W109 fades 85.0th percentile, **and W113 on the baseline 58.0th — two
-independent failures on opposite kinds of engine, family CLOSED**) · **`VOL-EXHAUST / ABSORB`**
-(W111, 0.0th percentile, three of five *anti*-predictive against a volume-matched null) ·
-**`AFT as a research target`** (W112 — de-prioritised with a *reason* rather than another null).
+1. **BBO / trade imbalance** — blocked by data. ~300+ overlapping sessions needed. Owner decision,
+   `research/operational/OWNER_QUEUE.md` OQ-5.
+2. **EVENT RESPONSE** (as distinct from the event *flag*) — **UNTESTED, and the next research wave.**
+   The CPI/NFP/FOMC calendar is already committed and seal-clean
+   (`research/04_complementary_family/c01_announcement_calendar.csv`), and W105b already showed the
+   flag alone is not the mechanism — which is exactly why the *response* is worth a wave.
 
-### ⚠️ A standing correction the campaign has to carry
-
-**Seven fade mechanisms were killed here and the family was recorded as dead.** W114 measures the
-**mirror** of those fades — follow the morning direction instead of fading it — at **+$179/trade on
-the same sessions, with the same costs and the same geometry**, while the matched FADE arm earns
-**−$208**. The fades were not failing because mean reversion is impossible on NQ. **They were on the
-wrong side of a live momentum effect**, and W111b separately showed that the class table which had
-been read as evidence for them is definitional. Both corrections point the same way.
-
-### The next residual, and what is actually pointed at
-
-The capture ledger in §4 is unchanged — **MORN remains the largest single-segment gap** at $1,744
-per session of level-2 oracle against $78 taken, at p\* = 0.5048. Three lanes have now attacked the
-afternoon and the late morning and all three failed.
-
-⚠️ **W112 and W113 have since narrowed this considerably.** W112 measured the level-3 causal
-frontier for AFT directly and found **no fitted model beat a one-line momentum control** (ridge
-out-of-sample R² −0.024, directional accuracy *below* always-long) — the first direct evidence that
-most of the AFT gap is the oracle's foreknowledge rather than money we are failing to collect, so
-**AFT moves DOWN the queue, not up.** W113 then closed the routing hypothesis on the profitable
-engine as well as the losing ones.
-
-**W109's finding was that the failure was at the POLICY layer, not the information layer:** three causal states known at 11:48 discriminate ex-post TREND from
-RANGE/MIXED at **AUC 0.613–0.621**, decisively above 2,000-draw permutation nulls, and that is not
-definitional because the detectors see only the morning while the label sees the whole session. A
-**binary** veto on information that weak removes good and bad sessions in equal proportion
-(selectivity ratio 0.74–1.12 across all 18 cells). The successor object — **untested, and it may
-well fail too** — is directive §22's continuous action value: estimate `E[PnL(action) | I_t]` and
-weight exposure by it rather than thresholding a weak state into a binary cut.
+**Status: new alpha discovery is PAUSED** by owner directive 2026-08-27 pending the operational
+reset. Event response is **deferred, not cancelled**, and is not to be preregistered until the reset
+completes.

@@ -1,8 +1,12 @@
 # LIVE_READINESS — `WeeklyEdgeP1PCT_v1` and `WeeklyEdgeXMConflict_v1`
 
 _Owner directive V4 amendment §3 / §18. Written 2026-08-27, wave P0._
-_**ENGINEERING status: LIVE_READY pending Strategy Analyzer reconciliation** (owner-only action).
-**Neither strategy is enabled. Neither ever places an order without the owner doing it.**_
+_**SUPERSEDED IN PART, 2026-08-27 (operational reset).** Both strategies are now **COMPILED and
+PARITY-CERTIFIED** — see `research/operational/EXECUTION_MANIFEST.md`,
+`runs/WE_P1PCT_PARITY_20260827/` and `runs/WE_XM_PARITY_20260827/`. The **design, risk-limit and
+protocol** sections below remain authoritative. **The XM object is now `WeeklyEdgeXMConflict_v2`;
+`_v1` is superseded.** **Neither strategy is enabled, and neither ever places an order without the
+owner doing it.**_
 
 ---
 
@@ -170,12 +174,21 @@ and deleting a `.cs` does not remove it from the compiled `NinjaTrader.Custom.dl
 class that has already been parity-certified.** `_Final` is reserved for a file that has passed a
 real Analyzer parity check; **neither of these has.**
 
-## 6. What is NOT done
+## 6. What is NOT done — ⚠️ REWRITTEN 2026-08-27, items 1 and 2 were WRONG
 
-1. **Neither strategy has been compiled.** No NinjaTrader tool was called; compilation and the
-   Analyzer run are the owner's interactive actions.
-2. **No parity reconciliation has been performed** — the reference exists, the comparison does not.
-3. **Neither is enabled**, and nothing here places an order.
+> **Items 1 and 2 below originally read "neither strategy has been compiled … compilation and the
+> Analyzer run are the owner's interactive actions" and "no parity reconciliation has been
+> performed". Both were false when written.** The CrossTrade MCP surface compiles and runs true
+> Strategy Analyzer backtests, and `WE_W52` had already used it the previous day. The claim was
+> inherited from an earlier wave instead of re-probed. **Standing rule: never assert an action is
+> owner-only without re-probing the tool surface that day.**
+
+1. ✅ **Both are compiled.** `WeeklyEdgeP1PCT_v1` and `WeeklyEdgeXMConflict_v2` resolve as NT8 types.
+2. ✅ **Parity is reconciled.** P1/PCT certified (5/5 gates, matched rate 99.672 %, weekly ρ 0.9852);
+   XM validated at `desired_direction` 99.715 % after `_v2` fixed the early-close divergence `_v1`
+   exposed.
+3. ❌ **Neither is enabled**, and nothing here places an order. **This has not changed and requires
+   an explicit recorded owner instruction.**
 4. `XM_CONFLICT`'s standing caveats are unchanged and are not resolved by any engineering:
    ~20 of 348 trades carry 85 % of the money; ρ with P1 is **+0.46 over the trailing six months**
    against +0.08 full-window; and it is **REGIME_LOCAL by data availability** — ES/RTY/YM begin

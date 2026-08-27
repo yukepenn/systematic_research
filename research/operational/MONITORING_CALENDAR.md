@@ -42,5 +42,6 @@ authority — regenerate/extend it whenever a protocol changes. Dates are "due o
 ## Standing invalidation triggers (data-triggered, not scheduled)
 
 - B-MOM decay below SM13 floor ($60/day rolling mean) → decision per SM13.
-- Product invalidation criteria in `/BASELINE_MODELS.md` ("what would invalidate" per object).
+- Product invalidation criteria in `research/archive/campaign3_system_master/BASELINE_MODELS.md`
+  ("what would invalidate" per object). _Moved from repo root 2026-08-27; campaign #3 is closed._
 - CME/broker schedule changes (margin windows, early-close calendar) → re-check C4 compliance assumptions.

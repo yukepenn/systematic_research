@@ -1,0 +1,102 @@
+# OWNER_QUEUE — open owner actions only
+
+_Rewritten 2026-08-27 (operational reset). **Only genuinely open items appear here.** Resolved and
+superseded entries were removed, not archived into prose — they live in git history. Nothing here
+halts research; each entry records what is needed and what was done instead._
+
+Moved from repo root to `research/operational/` in the same reset.
+
+---
+
+## OQ-1 · Repository is PUBLIC and remote retention of the vendor DLL is UNVERIFIED
+**Opened** 2026-08-09 · **OPEN** · **Severity: highest in this file.** Licensing/exposure, not research.
+
+**Action needed.** (a) Decide whether `github.com/yukepenn/systematic_research` should be public at
+all, given it contains a licensed vendor's reverse-engineered indicator math. (b) If removing the
+vendor blob from the remote matters, file a **GitHub Support request to garbage-collect unreachable
+objects** — the only action that actually erases them.
+
+**Why blocked.** Only the owner can change repo visibility or file a support request.
+
+**State of evidence.** `git rev-list --objects --all` finds zero `.dll` objects in the *local*
+clone. That cannot test what the GitHub *remote* still serves by direct SHA. The honest finding is
+**"not reachable via normal history traversal; REMOTE RETENTION UNVERIFIED."** (A Wave-16 claim that
+the remediation was already live was overstated and was downgraded.)
+
+**Impact if resolved.** Nothing numerical. Zero effect on any research result.
+
+---
+
+## OQ-2 · Exact NinjaTrader Lifetime all-in commission for NQ and MNQ
+**Opened** 2026-08-09 · **OPEN** · Severity low for rankings, moderate for absolute net.
+
+**Action needed.** The exact all-in per-side (or round-turn) Lifetime commission on NQ and MNQ,
+including exchange and NFA components.
+
+**Why blocked.** NinjaTrader's instrument-filtered pricing table does not render through automated
+fetch; inventing a rate is forbidden.
+
+**What was done instead.** Every backtest codes **$4.36/ctrRT NQ, $1.30 MNQ** — verified directly
+(NT8 reports `commission: 2.18` per side on NQ fills; trade lists reconcile to the cent). A
+sensitivity band brackets the point estimate (`runs/W17_C4_COMPLIANCE/V4_FRICTION.md`). **No ranking
+or verdict depends on it.** A single static rate across 2022–2026 is not historical truth either.
+
+---
+
+## OQ-5 · Data-acquisition funding decision
+**Opened** 2026-08-19, extended 2026-08-27 · **OPEN** · The one decision that changes what research
+is *possible*.
+
+The free-data tier is fully adjudicated. These are additive, not exclusive:
+
+| option | cost | unlocks |
+|---|---|---|
+| **Order-flow / BBO history** | CrossTrade renewal + capture time | The **largest current gap**. `runs/DATAGATE_ORDERFLOW_20260827/`: order flow covers **71 of 2,131** P1 entries (**3.3 %**), MDE **$564/entry = 4× the mean**. **~300+ overlapping sessions** would bring the MDE near the unconditional mean. |
+| Futures daily data (Norgate/CSI class) | ~$30–60/mo | 40–60 markets, preregistered TSMOM+carry book; the only path to a confirmable ~1.0-Sharpe complementary book |
+| Options data (`GAMMA00`) | $80–199/mo | top NQ-side unlock |
+| Hold | free | `MONITOR-01 #2` (≥ 2026-11-01) adjudicates two NQ shadow candidates |
+
+**Why blocked.** All require payment. **No research action is possible on any of them without you,
+and this will not be re-requested every wave.**
+
+---
+
+## OQ-6 · Live enablement — standing, never assumed
+**OPEN by design.** Both `WeeklyEdgeP1PCT_v1` and `WeeklyEdgeXMConflict_v2` are now **EXECUTABLE and
+PARITY-CERTIFIED** and **NOT ENABLED**. Enabling either — or any SIM forward run on a real account —
+requires an explicit recorded owner instruction naming strategy version, instrument, account,
+parameters, session, quantity and risk settings. See `EXECUTION_MANIFEST.md`.
+
+**Two live-policy choices the owner still owns, both priced and neither selected:**
+1. **`DisasterStopPoints` for XM.** Default **0 = OFF**. 300 pts costs 0.7 % of gross edge (13
+   historical triggers); 500 pts 4.1 % (2); 200 pts 15.9 % (50). Worst adverse excursion ever
+   **−$10,865 (543 pts)** — a sample maximum, **not a bound**.
+2. **Holiday half-days.** `XMConflict_v2` **declines** sessions with no 15:45 exit bar, matching the
+   research object. `v1` traded them: 15 trades in four years at **−$225/trade** versus **+$576** on
+   the measured 346. Trading them is a *new research question at n = 15*, not a flag to flip.
+
+---
+
+## OQ-4 · Data-collection lanes — authorized, deliberately not started
+**Authorized** 2026-08-19 · **NOT STARTED** · No owner action required unless you want it stopped.
+
+Confirmation-pool **BBO archival** (ARCHIVE_ONLY, oldest-first) and **DATA03 Market Replay probe
+dates** (single date at a time) are owner-authorized. They remain unstarted: execution is
+deliberately conservative after the 2026-08-12 resource-instability incident, and **continuous
+full-depth Level-II capture stays PAUSED and must not be resumed autonomously**.
+
+⏳ **Time-decay, for information only:** Market Replay server retention is ~90 days rolling, so the
+oldest planned probe dates (2026-05/06) are at or past the edge. Doing nothing forfeits them —
+which may be an acceptable cost of the pause; it just should be a decision rather than a side
+effect.
+
+---
+
+### Closed in the 2026-08-27 reset (recorded once, then dropped from this queue)
+
+- **OQ-3 · "press F5 to compile NinjaScript" — RESOLVED, and it was never a real blocker.**
+  CrossTrade MCP compiles and runs true Strategy Analyzer backtests (add-on v1.13.9, NT8 8.1.8.1).
+  Dropping a `.cs` into the Strategies folder is picked up without an F5. **Standing rule: never
+  assert an action is owner-only without re-probing the tool surface that day.**
+- **C-drive space drain (2026-08-12)** — resolved by observation (recovered 22.2 → 34.5 GB, cause
+  never identified). Standing rule: check free space before any bulk download.
