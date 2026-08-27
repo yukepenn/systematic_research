@@ -8,6 +8,7 @@ _Structural map only. It does not restate current state; `CURRENT_BASELINE.md` a
 | path | what |
 |---|---|
 | `research/weekly_edge/` | **campaign #7 — the only live campaign** |
+| `research/router/` | **campaign #7's active research branch** — the causal action-value router. Working documents only; it does **not** own current truth |
 | `research/operational/` | cross-campaign operational truth: execution manifest, owner queue, data seals, monitoring calendar |
 | `research/archive/` | closed-campaign material pulled out of the bootstrap path |
 | `runs/` | immutable experiment directories, one per run: `spec.yaml` + `REPORT.md` + `out/` |
@@ -30,7 +31,19 @@ _Structural map only. It does not restate current state; `CURRENT_BASELINE.md` a
 | `src/we_harness.py` (under `research/weekly_edge/`) | validation harness (7/7) |
 
 Runs: `runs/WE_W<n>_<NAME>/` for waves, `runs/WE_*_PARITY_*/` for reconciliations,
-`runs/DATAGATE_*/` for data-gate determinations.
+`runs/DATAGATE_*/` for data-gate determinations, `runs/RR_W<n>_<NAME>/` for router waves.
+
+## Router branch — `research/router/`
+
+| file | role |
+|---|---|
+| `Regime_Router_Research_Thesis.txt` | the owner-supplied thesis, **verbatim and unmodified** (sha256 `6c7df1a6…32638e`) |
+| `THESIS_TO_REPO_ADAPTATION.md` | adjudicates every thesis recommendation against committed evidence; owns the **action-branch oracle vocabulary** |
+| `EXPERT_UNIVERSE.md` | decision-event contracts and admission verdicts for every candidate expert |
+| `RESEARCH_FRONTIER.md` | **EVI-ranked next questions.** Updated after every wave |
+
+**These are working documents.** `CURRENT_BASELINE.md` still owns research truth and
+`EXECUTION_MANIFEST.md` still owns execution truth; the router branch points at them.
 
 ## Operational — `research/operational/`
 

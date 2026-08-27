@@ -1,0 +1,2530 @@
+# PART I — Executive conclusion
+
+## The answer I would bet the research program on
+
+**Do not build one master classifier whose job is to label every NQ minute as TREND, RANGE, or CHOP.**
+
+Build a **causal, state-aware strategy router** with four distinct layers:
+
+```text
+NQ 1-minute bars + overnight/session context
+                    ↓
+Training-only time-of-day normalization
+                    ↓
+Continuous multi-horizon state vector
+[persistence, volatility, path efficiency, auction state,
+ flow/liquidity, transition uncertainty]
+                    ↓
+Frozen strategy-specific utility and downside models
+                    ↓
+Constrained soft router
+[strategy weights + cash + switching penalty + risk limits]
+                    ↑
+Optional auxiliary signals:
+filtered HMM/HSMM probabilities, posterior entropy,
+BOCPD/change alarms, cross-timescale disagreement
+```
+
+The central object should be:
+
+$$
+P(\text{strategy }i\text{ is favorable}\mid X_t)
+$$
+
+and, preferably,
+
+$$
+E[U_{i,t}\mid X_t],\qquad
+Q_{0.10}(U_{i,t}\mid X_t),\qquad
+P(U_{i,t}>0\mid X_t),
+$$
+
+not merely:
+
+$$
+P(\text{REGIME}_t=\text{TREND}\mid X_t).
+$$
+
+Your uploaded specification correctly makes **system-level after-cost value** the test, including strategy activation, capital allocation, uncertainty, abstention, and conflict resolution—not visually appealing regime labels. 
+
+## My ranked conclusion
+
+1. **Best practical architecture:** continuous causal state features → strategy-specific utility/downside models → constrained soft router with a cash expert.
+2. **Best statistical challenger:** a sticky robust HMM or practical HSMM, using strictly **filtered** probabilities, plus an independent transition alarm; its outputs enter the same router as features.
+3. **Best high-upside later challenger:** a small causal TCN or self-supervised time-series encoder feeding the strategy-utility models—not a giant Transformer directly controlling positions.
+4. **Benchmark all sophistication must beat:** signed path efficiency × time-of-day-normalized volatility × auction acceptance/reentry, with hysteresis, UNKNOWN, and a shallow regularized router.
+5. **What I would not lead with:** rolling Hurst, raw K-means/HDBSCAN, HDP-HMM, Transformers, VAEs, reinforcement learning, or Level-II deep learning.
+
+## Why this is my conclusion
+
+A universal market label is underidentified. A high-volatility market can be:
+
+* a clean trend,
+* a violent two-sided range,
+* a shock followed by continuation,
+* or an expansion that immediately fails.
+
+The same state can also affect strategies differently. An opening-range breakout and a slower pullback-continuation strategy can have different conditional edges even when both are called “trend strategies.”
+
+The direct NQ/MNQ literature I found is sparse and mostly recent exploratory work rather than high-quality evidence of a deployable regime router. One recent MNQ study found a statistically identifiable descriptive day type but did not turn it into a robust after-cost strategy; another broad MNQ OHLCV falsification study found no tested signal family passing all of its robustness gates. Those studies are directly relevant by instrument but remain recent, independent, and unreplicated, so I classify them as **LOW/EXPLORATORY evidence**, not established conclusions. ([arXiv][1])
+
+The strongest scientifically defensible approach is therefore:
+
+* make market state **multidimensional and continuous**;
+* ask models to predict **frozen strategy efficacy**;
+* treat latent-state models as challengers or regularizers;
+* evaluate every apparent gain at equal volatility and exposure;
+* preserve NQ trend convexity;
+* keep an explicit cash/abstain action;
+* and reject the whole regime layer if raw features route just as well.
+
+This is a research conclusion, not a claim that the architecture already has an NQ edge. I did not have your NQ bars and frozen strategy event logs, so I could not run the decisive historical test. I did run a controlled synthetic experiment, reported in Part IX.
+
+---
+
+# PART II — What “market regime” should mean here
+
+## 1. A regime is not a market personality
+
+For this problem, define market state operationally:
+
+> A market state is a persistent configuration of observable price, volatility, auction, volume, and liquidity conditions that changes the conditional payoff distribution of one or more frozen strategies.
+
+That definition matters. It ties a regime to something falsifiable:
+
+$$
+F_{i,t}(u)=P(U_{i,t}\leq u\mid X_t),
+$$
+
+where \(U_{i,t}\) is the net utility of strategy \(i\) at an eligible decision time.
+
+A valid state must change at least one of:
+
+* expected strategy payoff,
+* downside or stop probability,
+* attainable position size,
+* execution cost,
+* cross-strategy correlation,
+* or value of abstaining.
+
+A cluster that changes feature means but does not change strategy outcomes is not a trading regime.
+
+## 2. Separate three jobs
+
+### Current-state inference
+
+Estimate what is happening now:
+
+$$
+z_t=f(X_{\leq t}).
+$$
+
+Examples:
+
+* current signed directional efficiency,
+* current volatility percentile,
+* current auction acceptance,
+* current liquidity stress.
+
+This is descriptive, but it must be causal.
+
+### Transition detection
+
+Estimate whether the previous state description may have broken:
+
+$$
+q_t=P(\text{structural change near }t\mid X_{\leq t}).
+$$
+
+This is not equivalent to knowing the new state. The correct action after a break may be to reduce risk temporarily.
+
+### Short-horizon efficacy forecasting
+
+Estimate which strategy is likely to benefit over its relevant horizon:
+
+$$
+\hat U_{i,t,h}=E[U_{i,t,h}\mid X_{\leq t}].
+$$
+
+This is the economically decisive task. A model can classify the present extremely well and still have no forward strategy-selection value.
+
+## 3. Recommended market-state representation
+
+Use six axes.
+
+### A. Signed persistence
+
+$$
+D_h(t)=
+\frac{C_t-C_{t-h}}
+{\sum_{j=1}^{h}|C_{t-j+1}-C_{t-j}|+\epsilon}.
+$$
+
+* Sign indicates direction.
+* Magnitude indicates endpoint displacement relative to total traveled path.
+* Compute at several horizons, such as 10, 30, and 60 minutes.
+
+### B. Volatility and energy
+
+Use:
+
+* realized volatility,
+* short/long volatility ratio,
+* volatility-of-volatility,
+* semivariance,
+* jump score,
+* range expansion.
+
+Every volatility feature should be normalized relative to the historically expected value for that minute of the session.
+
+### C. Path quality or noise
+
+Use:
+
+* regression \(R^2\),
+* normalized slope,
+* reversal frequency,
+* sign entropy,
+* VWAP crossing frequency,
+* path tortuosity.
+
+### D. Auction and location state
+
+Represent:
+
+* position relative to session VWAP,
+* VWAP slope,
+* opening/overnight/prior-day range position,
+* time accepted outside a range,
+* excursion and reentry,
+* failed expansion,
+* value reacceptance.
+
+### E. Flow and liquidity
+
+Start with OHLCV/L1-compatible variables:
+
+* relative volume,
+* volume acceleration,
+* volume-price agreement,
+* trade count if available,
+* spread and top-of-book depth if reliable.
+
+Add true order-flow imbalance later.
+
+### F. Transition uncertainty
+
+Use:
+
+* derivatives of the preceding axes,
+* cross-timescale disagreement,
+* HMM posterior entropy,
+* probability-vector velocity,
+* BOCPD or drift-detector alarms,
+* sudden standardized feature-distance changes.
+
+## 4. Labels are useful only as summaries
+
+Labels such as:
+
+* CLEAN_DIRECTIONAL_DISCOVERY,
+* BALANCED_AUCTION,
+* COMPRESSION,
+* DISORDERLY_EXPANSION,
+* FAILED_EXPANSION,
+* TRANSITION,
+* UNKNOWN
+
+can help reporting and diagnostics.
+
+They should not be the only information supplied to the router. The router should see the underlying continuous measurements and probabilities.
+
+---
+
+# PART III — Technique landscape
+
+## Comprehensive research scorecard
+
+Scores are research priorities for **this NQ intraday problem**, not general judgments about the methods.
+
+| Method family                               | What it estimates                        | Key advantage                               | Main failure mode                                     |              Live suitability |    Priority | Verdict            |
+| ------------------------------------------- | ---------------------------------------- | ------------------------------------------- | ----------------------------------------------------- | ----------------------------: | ----------: | ------------------ |
+| Transparent continuous state score          | Interpretable state axes                 | Causal, stable, easy to falsify             | Threshold arbitrariness                               |                     Excellent |     **9.0** | **GO / BUILD NOW** |
+| Deterministic state machine with hysteresis | Persistent hard/soft state               | Low variance, controllable switching        | Misses nonlinear interactions                         |                     Excellent |     **8.8** | **GO**             |
+| Regularized logistic strategy model         | Conditional strategy probability         | Sample efficient, calibrated, interpretable | Mostly linear unless engineered                       |                     Excellent |     **9.3** | **GO**             |
+| Shallow boosting utility model              | Nonlinear conditional strategy utility   | Handles interactions and thresholds well    | Easy to oversearch                                    |                     Excellent |     **9.6** | **GO**             |
+| Soft mixture-of-experts router              | Strategy weights                         | Matches the actual portfolio problem        | Counterfactual target difficulty                      |                     Excellent |     **9.2** | **GO**             |
+| GMM                                         | Memoryless latent clusters               | Soft probabilities, simple benchmark        | No persistence; clusters may lack economic meaning    |                          Good |     **5.5** | CONDITIONAL        |
+| K-means                                     | Geometric clusters                       | Cheap diagnostic                            | Hard labels, spherical geometry, unstable semantics   |                          Good |     **3.5** | LOW PRIORITY       |
+| Bayesian GMM                                | Flexible cluster count/uncertainty       | More flexible than fixed GMM                | Still lacks temporal persistence                      |                      Moderate |     **4.8** | LOW PRIORITY       |
+| HDBSCAN                                     | Variable-density clusters/noise          | Can identify outliers                       | Weak online assignment; unstable temporal labels      |                 Weak/moderate |     **3.3** | LOW PRIORITY       |
+| Hierarchical/spectral/SOM                   | Exploratory topology                     | Visualization and hypothesis generation     | High researcher degrees of freedom                    |                 Weak/moderate | **3.0–4.0** | RESEARCH ONLY      |
+| Gaussian HMM                                | Persistent latent states                 | Natural filtering and transition matrix     | Gaussian tails, geometric duration, semantic drift    |    Good with custom filtering |     **7.0** | TEST NOW           |
+| Student-t HMM                               | Robust persistent states                 | Better resistance to jumps/outliers         | More difficult estimation                             |                          Good |     **7.5** | CONDITIONAL GO     |
+| AR-HMM / Markov-switching AR                | Regime-dependent return dynamics         | Models serial dependence explicitly         | Fragile short-horizon parameter estimation            |                          Good |     **6.2** | TEST LATER         |
+| HSMM                                        | State plus explicit duration             | Realistic dwell-time distributions          | Implementation and estimation burden                  | Good if implemented carefully |     **7.6** | CONDITIONAL GO     |
+| Sticky HMM                                  | Persistence-biased HMM                   | Suppresses rapid state chatter              | Can hide genuine rapid transitions                    |                          Good |     **7.7** | CONDITIONAL GO     |
+| HDP-HMM / sticky HDP-HMM                    | Nonparametric state count                | Avoids fixing \(K\)                         | Complexity, unstable semantics, weak deployment value |                      Moderate |     **4.3** | LOW PRIORITY       |
+| Switching linear dynamical system           | Continuous latent dynamics plus switches | Rich temporal model                         | Identification, estimation, and overfit burden        |                      Moderate |     **4.8** | RESEARCH LATER     |
+| BOCPD                                       | Posterior run length/change probability  | Explicit online break detection             | Does not identify the new economic state              |                     Excellent |     **7.8** | TEST AS AUXILIARY  |
+| CUSUM/Page-Hinkley                          | Mean/process shift alarms                | Simple, fast, interpretable                 | Narrow assumptions and tuning sensitivity             |                     Excellent |     **7.2** | TEST AS BASELINE   |
+| ADWIN                                       | Adaptive-window distribution shift       | Truly online and bounded-memory             | May react to nuisance distribution changes            |                     Excellent |     **6.5** | TEST AS CHALLENGER |
+| PELT/binary segmentation                    | Offline structural breaks                | Strong exploratory teacher                  | Uses future sequence; not live                        |                  Offline only |     **5.8** | DIAGNOSTIC ONLY    |
+| Boosted market-behavior classifier          | Future path class                        | Direct forecast objective                   | Arbitrary labels and horizons                         |                     Excellent |     **7.4** | TEST               |
+| Strategy-specific utility models            | Conditional expert efficacy              | Directly aligned with portfolio objective   | Noisy/censored targets                                |                     Excellent |     **9.6** | BUILD NOW          |
+| Offline teacher → causal student            | Mimic ex-post segmentation               | Can distill richer structures               | Student may inherit arbitrary teacher errors          |                          Good |     **5.8** | CONDITIONAL        |
+| TCN                                         | Causal sequence representation           | Strong local temporal modeling              | Larger model-search burden                            |                          Good |     **6.2** | TEST LATER         |
+| LSTM/GRU                                    | Sequential nonlinear state               | Flexible memory                             | Training instability and limited independent samples  |                          Good |     **5.0** | LOW PRIORITY       |
+| Transformer/TFT                             | Long-context representation              | Flexible attention and covariates           | Data hunger, leakage/search complexity                |                      Moderate |     **3.8** | RESEARCH LATER     |
+| Autoencoder/VAE                             | Latent representation                    | Dimensionality reduction                    | Reconstruction need not preserve trading information  |                      Moderate |     **3.5** | LOW PRIORITY       |
+| Contrastive/TS2Vec-style embedding          | Generic temporal representation          | Stronger objective than reconstruction      | Financial transfer remains unproven                   |                          Good |     **5.8** | TEST LATER         |
+| Contextual bandit                           | Online expert allocation                 | Designed for conditional action choice      | Missing counterfactual rewards                        |                      Moderate |     **4.5** | LATER              |
+| Full RL                                     | Sequential position policy               | Can represent long-term tradeoffs           | Simulator exploitation and enormous research freedom  |                Weak initially |     **2.0** | NO-GO NOW          |
+
+## What the literature supports—and does not support
+
+Hamilton-style Markov switching established a principled framework for persistent latent economic states, and the HMM literature supplies the standard filtering, smoothing, and decoding machinery. HSMMs generalize the standard HMM by specifying state-duration distributions explicitly rather than inheriting the HMM’s geometric duration structure. These are strong methodological foundations, but they do not prove an intraday NQ routing edge. ([Users SSC Wisc][2])
+
+Recent high-frequency financial work has combined HMM-derived information with discriminative classifiers. One peer-reviewed study used trade-time data from FTSE 100 stocks, constructed six intraday regimes, and reported improved classification from generative-discriminative combinations. It is useful methodological evidence, but it is equity—not NQ—and the study is principally a classification exercise rather than an after-cost multi-strategy routing proof. ([Springer][3])
+
+Representation-learning methods such as TS2Vec, temporal neighborhood coding, and TCNs have performed well across broad time-series benchmarks. That justifies their use as later challengers, not as evidence that they beat engineered features for NQ strategy allocation. ([arXiv][4])
+
+---
+
+# PART IV — Deep HMM/HSMM analysis
+
+## 1. What an HMM actually gives you
+
+Let:
+
+* \(S_t\in\{1,\ldots,K\}\) be a latent state,
+* \(Y_t\) be the observed feature vector,
+* \(A_{jk}=P(S_t=k\mid S_{t-1}=j)\),
+* \(b_k(Y_t)=p(Y_t\mid S_t=k)\).
+
+The causal forward recursion is:
+
+$$
+\tilde\alpha_t(k)
+=
+b_k(Y_t)\sum_j \alpha_{t-1}(j)A_{jk},
+$$
+
+$$
+\alpha_t(k)
+=
+\frac{\tilde\alpha_t(k)}
+{\sum_\ell \tilde\alpha_t(\ell)}.
+$$
+
+This produces:
+
+$$
+\alpha_t(k)=P(S_t=k\mid Y_{1:t}),
+$$
+
+which is a **filtered probability** and is live-implementable.
+
+## 2. Filtered versus smoothed versus Viterbi
+
+### Filtered
+
+$$
+P(S_t\mid Y_{1:t})
+$$
+
+Uses information through time \(t\). Valid for routing at \(t\), subject to when the bar becomes known.
+
+### Smoothed
+
+$$
+P(S_t\mid Y_{1:T}),\qquad T>t
+$$
+
+Uses later observations. Excellent for historical interpretation and offline teacher labels; invalid for a live backtest if treated as contemporaneously known.
+
+### Full Viterbi path
+
+The most probable joint state sequence over the complete sample. This also uses future observations and may revise earlier state labels.
+
+This is one of the most common regime-backtest errors. A chart may show the “correct” regime beginning exactly at a turning point because later data allowed the model to redraw the past.
+
+One implementation warning is especially important: convenient library methods named `predict_proba` may calculate full-sequence posterior probabilities rather than live forward-only filtering. The current hmmlearn documentation describes posterior computation and decoding over an input sequence; for a trading implementation, use a verified forward recursion and parity-test it bar by bar rather than assuming an API is causal. ([hmmlearn][5])
+
+## 3. Standard Gaussian HMM
+
+### Model
+
+$$
+Y_t\mid S_t=k\sim\mathcal N(\mu_k,\Sigma_k).
+$$
+
+### Why it could work
+
+* persistent state probabilities;
+* interpretable state centroids;
+* simple online forward filter;
+* reasonable benchmark;
+* allows soft rather than hard states.
+
+### Why it may fail on NQ
+
+* minute returns and jump measures are heavy-tailed;
+* a shock can be mistaken for a new persistent state;
+* covariance estimates can be unstable;
+* a state may merely encode OPEN/MIDDAY/CLOSE;
+* a standard HMM imposes geometric dwell times;
+* state semantics can relabel across refits.
+
+### Recommendation
+
+Use it as a **bounded benchmark**, not the presumed solution.
+
+Initial specification:
+
+* \(K=3,4,5\);
+* 6–10 carefully chosen standardized features;
+* diagonal covariance first;
+* shrinkage full covariance only as a challenger;
+* 15–20 random initializations;
+* reject degenerate occupancy below roughly 5%;
+* strictly causal test filtering.
+
+## 4. Student-t or robust-emission HMM
+
+Use:
+
+$$
+Y_t\mid S_t=k\sim t_{\nu_k}(\mu_k,\Sigma_k).
+$$
+
+Advantages:
+
+* shocks receive less leverage over state assignments;
+* more realistic tails;
+* potentially more stable state centroids.
+
+Risks:
+
+* harder optimization;
+* degrees of freedom can become another overfit dimension;
+* jumps may be economically meaningful rather than “noise” to robustify away.
+
+Practical first version:
+
+* fix \(\nu\) to a small bounded set, such as 4, 6, or 10;
+* do not estimate a separate unconstrained \(\nu_k\) for every state initially;
+* compare state and router stability against Gaussian HMM.
+
+## 5. AR-HMM and Markov-switching autoregression
+
+A regime-specific AR model is:
+
+$$
+r_t=\mu_{S_t}+\sum_{\ell=1}^{p}\phi_{S_t,\ell}r_{t-\ell}
++\sigma_{S_t}\epsilon_t.
+$$
+
+This is appealing because trend/range distinctions involve persistence. The danger is that one-minute autocorrelation is small, unstable, execution-sensitive, and distorted by microstructure. A rich AR-HMM can spend degrees of freedom fitting transitory return dynamics that do not improve strategy routing.
+
+Use only low orders such as \(p=1\) or \(2\), and compare against giving causal autocorrelation and efficiency measures directly to the router.
+
+## 6. HSMM
+
+A standard HMM’s self-transition implies approximately geometric dwell times:
+
+$$
+P(D=d\mid S=k)
+=
+A_{kk}^{d-1}(1-A_{kk}).
+$$
+
+An HSMM instead models:
+
+$$
+P(D=d\mid S=k)=g_k(d),
+$$
+
+where \(g_k\) might be:
+
+* negative binomial,
+* Poisson,
+* lognormal,
+* or a bounded nonparametric duration mass function.
+
+This may better match intraday states with:
+
+* minimum meaningful durations,
+* a modal duration,
+* and a long but non-geometric tail.
+
+The methodological case for HSMM is real: explicit duration is the core distinction from a conventional HMM. ([Massachusetts Institute of Technology][6])
+
+### Why HSMM is not automatically superior
+
+A regime relevant to an ORB may last ten minutes; a regime relevant to a 60-minute trend strategy may last two hours. There may be no single natural duration process.
+
+Also, live HSMM filtering is more complex than retrospective segmentation. The deployment implementation must produce the correct online posterior over both state and elapsed duration.
+
+### Recommendation
+
+Research HSMM only after the Gaussian HMM and transparent state model have established:
+
+* plausible persistent state structure;
+* economically differentiated strategy outcomes;
+* and a measurable HMM duration mismatch.
+
+## 7. Sticky HMM
+
+A sticky prior or transition penalty favors \(A_{kk}\), reducing chatter.
+
+This is often more practical than jumping immediately to a full HSMM. It solves a narrower problem:
+
+> We believe states should persist and want to discourage gratuitous switching.
+
+It does not solve arbitrary dwell-time shapes.
+
+Test:
+
+* a small diagonal transition prior grid;
+* equivalent post-filter hysteresis;
+* and a switching-cost-aware router.
+
+If all three behave similarly, use the simplest.
+
+## 8. Bayesian nonparametric models
+
+HDP-HMM and sticky HDP-HMM infer an effective number of states rather than fixing \(K\). HDP-HSMM extends this to explicit durations. They are methodologically elegant, but the deployment problem is not just discovering states—it is keeping their semantics stable enough to route capital. These models can create, merge, or split states across refits, making auditability difficult. ([Brown University Computer Science][7])
+
+My verdict: **research later, not in the first serious NQ campaign**.
+
+## 9. Recurrent transitions and switching dynamical systems
+
+A recurrent HMM or rSLDS permits:
+
+$$
+P(S_t\mid S_{t-1},X_t),
+$$
+
+so transitions depend on observables such as:
+
+* volatility acceleration,
+* time of day,
+* range reentry,
+* event proximity.
+
+This is conceptually appropriate because NQ transition probabilities are unlikely to be stationary throughout the session. But it introduces a problem: once transitions depend richly on \(X_t\), the model begins resembling a supervised nonlinear router while retaining latent-state identification issues.
+
+Use only after simpler direct models plateau. ([Columbia Computer Science][8])
+
+## 10. State alignment across refits
+
+At each retrain, match new states to prior semantic states using a weighted cost:
+
+$$
+C_{jk}
+=
+w_\mu d(\mu_j^{old},\mu_k^{new})
++w_A d(A_j^{old},A_k^{new})
++w_D d(g_j^{old},g_k^{new})
++w_U d(U_j^{old},U_k^{new}).
+$$
+
+Where:
+
+* \(d(\mu)\): standardized feature-centroid distance;
+* \(d(A)\): transition-profile distance;
+* \(d(g)\): duration-profile distance;
+* \(d(U)\): frozen-strategy payoff-profile distance.
+
+Use Hungarian assignment for one-to-one matching.
+
+Reject the refit or label states UNKNOWN if:
+
+* assignments are ambiguous,
+* state occupancy collapses,
+* or the economic signatures reverse.
+
+## 11. How HMM output should enter the system
+
+Do **not** hard-code:
+
+```text
+HMM state 2 → trend strategy
+HMM state 3 → mean reversion
+```
+
+Instead give the router:
+
+* filtered probabilities \(\alpha_t\);
+* normalized posterior entropy;
+* probability-vector velocity;
+* expected remaining state duration if available;
+* state transition probability;
+* changepoint probability.
+
+Then compare:
+
+1. raw features only;
+2. HMM probabilities only;
+3. raw features + HMM probabilities.
+
+If version 3 does not outperform version 1, the latent compression is not adding value.
+
+---
+
+# PART V — Changepoint detection
+
+## 1. BOCPD answers a different question
+
+Bayesian online changepoint detection maintains a posterior over run length:
+
+$$
+P(r_t\mid Y_{1:t}),
+$$
+
+where \(r_t\) is the number of observations since the most recent change.
+
+A large posterior mass at \(r_t=0\) indicates a possible new segment.
+
+BOCPD is therefore best interpreted as:
+
+> How plausible is it that the preceding process has just ceased to apply?
+
+It does not inherently tell you:
+
+* whether the new state is trend or range;
+* which strategy should be activated;
+* or how long the new process will last.
+
+The foundational BOCPD method is explicitly online, whereas PELT is an offline segmentation procedure. ([arXiv][9])
+
+## 2. What to feed BOCPD
+
+Do not initially run a high-dimensional BOCPD over dozens of correlated indicators.
+
+Use one or several low-dimensional processes:
+
+* signed efficiency;
+* log realized volatility;
+* VWAP distance and crossing behavior;
+* strategy residual or utility residual;
+* first principal component fitted only on training data;
+* HMM predictive log-likelihood;
+* standardized feature-distance score.
+
+Different changepoint detectors can monitor different failure modes.
+
+## 3. Hazard-rate design
+
+With constant hazard \(H=1/\lambda\), \(\lambda\) represents expected segment length.
+
+Use a bounded sensitivity study corresponding to expected durations such as:
+
+* 15 bars,
+* 30 bars,
+* 60 bars,
+* 120 bars.
+
+Do not select the hazard solely by portfolio PnL. Evaluate:
+
+* alarms per session;
+* false alarm rate;
+* median detection lag;
+* persistence of post-alarm changes;
+* strategy loss immediately after alarms.
+
+## 4. PELT and offline segmentation
+
+PELT is useful for:
+
+* diagnosing whether apparent state durations are multimodal;
+* constructing offline teacher segments;
+* identifying historical structural breaks;
+* comparing online alarms against an ex-post reference.
+
+It must not be used directly as a live state series.
+
+## 5. CUSUM, Page-Hinkley, ADWIN
+
+### CUSUM
+
+Good for a known shift in the mean or standardized residual. Transparent, fast, and a strong baseline.
+
+### Page-Hinkley
+
+Useful for persistent deviations from an expected mean. Easier to operate online than a large Bayesian model.
+
+### ADWIN
+
+Maintains an adaptive window and detects distributional change through comparisons of subwindows. River provides a current online implementation suitable for experimentation. ([RiverML][10])
+
+The danger is nuisance alarms. A detector can react correctly to a distributional change that has no strategy-level economic significance.
+
+## 6. Recommended transition layer
+
+Construct:
+
+$$
+T_t=
+w_1q_t^{BOCPD}
++w_2q_t^{CUSUM}
++w_3H(\alpha_t)
++w_4\|\alpha_t-\alpha_{t-1}\|_1
++w_5\text{MTFDisagreement}_t.
+$$
+
+Then use \(T_t\) as:
+
+* a cash-weight modifier;
+* a maximum-risk modifier;
+* a confidence discount;
+* and a feature for each strategy utility model.
+
+A transition alarm should initially **reduce confidence**, not automatically reverse the position.
+
+Example:
+
+$$
+w_{cash,t}
+\leftarrow
+\max\left(w_{cash,t},
+\min(1,\gamma T_t)\right).
+$$
+
+Maintain the reduction for a short bounded interval or until the state becomes confident again.
+
+---
+
+# PART VI — Feature universe
+
+## Tier A — Build first
+
+| Feature                                | Definition or intuition                            |    Horizons | Expected role                          |
+| -------------------------------------- | -------------------------------------------------- | ----------: | -------------------------------------- |
+| Signed displacement efficiency         | Endpoint move divided by total path length         | 10, 30, 60m | Best simple persistence/direction axis |
+| Regression slope / residual volatility | Trend slope scaled by unexplained movement         | 15, 30, 60m | Clean directional movement             |
+| Regression \(R^2\)                     | Fraction of path variation explained by time trend | 15, 30, 60m | Path quality                           |
+| Realized volatility                    | \(\sqrt{\sum r_j^2}\)                              | 10, 30, 60m | Energy/risk                            |
+| Short/long volatility ratio            | \(RV_{10}/RV_{60}\)                                |      10/60m | Expansion/compression                  |
+| Volatility-of-volatility               | Dispersion/change in rolling RV                    |     30–120m | Instability                            |
+| Range expansion                        | Current range versus same-minute historical range  |       5–60m | Breakout energy                        |
+| Reversal frequency                     | Sign changes or swing reversals per window         |      10–60m | Chop/two-sidedness                     |
+| Sign run statistics                    | Directional run lengths and imbalance              |      10–60m | Persistence                            |
+| VWAP distance                          | \((C_t-VWAP_t)/\text{vol scale}\)                  |    Intraday | Auction location                       |
+| VWAP slope                             | Causal slope of running VWAP                       |      15–60m | Value migration                        |
+| VWAP crossing frequency                | Number of causal crosses                           |      15–60m | Balance/reversion                      |
+| Range location                         | Position relative to OR, ONH/ONL, PDH/PDL          |    Intraday | Auction structure                      |
+| Acceptance outside range               | Bars/time outside boundary plus retest behavior    |       3–30m | Valid expansion                        |
+| Excursion then reentry                 | Escape and causal return into prior range/value    |       3–30m | Failed persistence                     |
+| Relative volume                        | Volume versus historical same-minute expectation   |       1–60m | Participation                          |
+| Volume-price agreement                 | Directional move aligned with volume expansion     |       5–30m | Continuation quality                   |
+| Time/session variables                 | Cyclical minute-of-session plus segment indicators |     Current | Residual seasonality                   |
+| Scheduled-event flags                  | Known-in-advance event proximity                   |     Current | Event/shock context                    |
+| Feature derivatives                    | Change in efficiency, RV, entropy, VWAP state      |       3–15m | Transition                             |
+| Cross-timescale disagreement           | Dispersion among fast/medium/slow estimates        |     Current | Instability/pullback                   |
+
+## Time-of-day normalization is non-negotiable
+
+Intraday volatility and trading activity have strong periodic structure. Without train-only seasonal adjustment, clustering or HMMs may simply discover the open, midday, and close. Research on intraday return volatility established that these periodicities materially affect high-frequency volatility dynamics. ([Duke University Economics][11])
+
+For positive features such as RV and volume, use an expanding or training-fold-only seasonal baseline:
+
+$$
+z_{f,t}
+=
+\frac{
+\log(f_t+\epsilon)-m_{\tau(t)}
+}{
+1.4826\,MAD_{\tau(t)}+\epsilon
+},
+$$
+
+where \(m_{\tau}\) and \(MAD_{\tau}\) are historical median and median absolute deviation for minute-of-session \(\tau\).
+
+Retain minute-of-session as a model feature afterward. Normalization removes scale seasonality; it need not erase genuine time-dependent strategy opportunity.
+
+## Tier B — Test after Tier A
+
+### Autocorrelation and variance ratio
+
+Useful but noisy over short windows. They may add something beyond signed efficiency, especially in distinguishing persistent paths from endpoint moves caused by one jump.
+
+### Realized semivariance
+
+Separate positive and negative realized variation. NQ downside shocks can have different liquidity and continuation behavior.
+
+### Bipower variation and jump scores
+
+Realized bipower variation provides a way to separate continuous variation from jumps under suitable assumptions. Use it as a diagnostic for shock/discontinuous movement, not as a guaranteed tradable signal. ([Duke University Economics][12])
+
+### Permutation or sign entropy
+
+Potentially useful for path disorder, but likely redundant with:
+
+* efficiency,
+* reversals,
+* \(R^2\),
+* VWAP crossings.
+
+Require incremental ablation evidence.
+
+### Cross-market context
+
+Candidates:
+
+* ES relative movement;
+* NQ–ES divergence;
+* VIX/VXN if synchronized;
+* Treasury-futures movement;
+* semiconductor basket;
+* breadth/internal data.
+
+Do not assume they add value. They also introduce timestamp, feed, and historical-availability risks.
+
+## Tier C — Conditional data-quality studies
+
+### Volume profile, POC, and value area
+
+Auction-market concepts are relevant, but historical reconstruction must be causal:
+
+* only volume printed through \(t\);
+* no final-session POC used intraday;
+* explicit price-bin method;
+* stable treatment of contract rolls.
+
+Start with simpler VWAP and range-acceptance variables.
+
+### Order-flow imbalance
+
+Order-flow imbalance has strong empirical relationships with short-interval price changes in equity data, with price impact linked to market depth. This supports an L1/tick-data study, but it is not direct proof that OFI improves an NQ regime router. ([ResearchGate][13])
+
+Test:
+
+* aggressor imbalance;
+* cumulative delta;
+* quote imbalance;
+* depth;
+* price impact per signed volume.
+
+Require incremental value after OHLCV and relative-volume features.
+
+## Tier D — Deprioritize initially
+
+* full Level-II queue reconstruction;
+* sweep classifiers;
+* VPIN variants;
+* multifractal spectra;
+* spectral entropy banks;
+* dozens of correlated technical indicators.
+
+These create data and multiple-testing burdens before the core routing hypothesis has been established.
+
+## Hurst exponent verdict
+
+**LOW PRIORITY: 2.8/10.**
+
+The common rule “\(H>0.5\) means trend” is too crude for rolling NQ decisions.
+
+Problems:
+
+* finite-sample estimators have wide uncertainty;
+* short-range dependence biases classical rescaled-range statistics;
+* estimator choice matters;
+* a long-memory parameter is not naturally aligned with the next 15–60 minutes;
+* rolling estimates are slow and unstable;
+* path-efficiency, \(R^2\), reversal rate, and variance ratio are simpler and more directly horizon-matched.
+
+Finite-sample work documents substantial Hurst-estimation uncertainty, while Lo’s modified rescaled-range framework was designed specifically because classical R/S statistics can confuse short-range dependence with long memory. ([Prac.im][14])
+
+Keep one or two estimators in a **research-only ablation**, not the production core.
+
+---
+
+# PART VII — Regime labeling versus direct strategy utility
+
+## 1. Future behavior labels
+
+Possible targets:
+
+* future signed efficiency;
+* future volatility expansion;
+* future trend \(R^2\);
+* future range reentry;
+* TREND_UP/DOWN;
+* BALANCE;
+* EXPANSION;
+* FAILED_EXPANSION.
+
+These are useful for:
+
+* feature diagnostics;
+* interpretability;
+* testing whether market structure is forecastable;
+* training a behavior model independent of the strategies.
+
+But thresholds are arbitrary and horizon-dependent. A 30-minute trend can contain a failed five-minute breakout.
+
+## 2. Strategy-relative utility is the primary target
+
+For each frozen strategy \(i\), define net outcome:
+
+$$
+R_{i,t}^{net}
+=
+R_{i,t}^{gross}
+-
+\text{commission}_{i,t}
+-
+\text{slippage}_{i,t}.
+$$
+
+Then define a bounded research utility:
+
+$$
+U_{i,t}
+=
+R_{i,t}^{net}
+-\lambda_{MAE}\,\widetilde{MAE}_{i,t}
+-\lambda_{tail}\,L_{i,t}^{tail}
+-\lambda_{capital}\,K_{i,t}
+-\lambda_{turn}\,TO_{i,t}.
+$$
+
+Do not use only one target. Estimate:
+
+1. \(P(R_{i,t}^{net}>0\mid X_t)\);
+2. \(E[R_{i,t}^{net}\mid X_t]\);
+3. downside quantile \(Q_{0.10}(R_{i,t}^{net}\mid X_t)\);
+4. probability of stop-out;
+5. expected MAE and MFE.
+
+This separates upside from risk.
+
+## 3. Avoid an ex-post “best strategy” class as the only target
+
+A target such as:
+
+$$
+Y_t=\arg\max_i U_{i,t}
+$$
+
+is unstable because:
+
+* small payoff differences flip the class;
+* it discards magnitude;
+* it creates a winner’s-curse target;
+* one strategy may not have been eligible;
+* multiple strategies can both be good;
+* cash should sometimes dominate.
+
+Separate per-strategy models are cleaner.
+
+## 4. Counterfactual construction
+
+At each strategy’s genuine eligible decision time, evaluate its frozen historical rules regardless of whether the old portfolio would have selected it.
+
+This produces counterfactual outcomes for the **frozen experts**.
+
+Do not fabricate counterfactuals where:
+
+* simultaneous fills would compete for the same market liquidity;
+* strategy rules depend on prior portfolio-level position;
+* or one strategy’s execution changes another’s state.
+
+Handle those conflicts in the portfolio simulator.
+
+## 5. Market state still has a role
+
+The best architecture is not “ignore state, predict PnL blindly.”
+
+Use interpretable state variables as:
+
+* model inputs;
+* interaction variables;
+* reporting dimensions;
+* risk constraints;
+* monitoring tools.
+
+Then test whether latent probabilities provide additional value.
+
+## 6. Offline teacher → online student
+
+Acceptable uses:
+
+* PELT identifies ex-post segments;
+* smoothed HSMM identifies candidate structural states;
+* an oracle characterizes future behavior;
+* a causal student predicts those targets.
+
+Required safeguards:
+
+* teacher fitted only within each training partition;
+* labels near fold boundaries purged;
+* student evaluated on untouched future sequences;
+* teacher thresholds fixed before outer tests;
+* student compared against direct utility prediction;
+* no smoothed teacher output used directly in historical trading.
+
+My verdict: **useful diagnostic, not the first production path**.
+
+---
+
+# PART VIII — Multi-timescale architecture
+
+## Recommended hierarchy
+
+### Slow session context
+
+Updated no more than once at the open and at explicitly allowed checkpoints.
+
+Inputs:
+
+* prior-session signed efficiency and volatility;
+* overnight return and range;
+* opening gap normalized by prior volatility;
+* overnight inventory/location;
+* prior-day high/low and value references;
+* scheduled-event flags;
+* recent multi-session realized volatility;
+* contract/expiration context.
+
+Output:
+
+$$
+c_t^{slow}
+$$
+
+This is a prior, not a deterministic day-type label.
+
+### Medium state
+
+Horizons:
+
+* 15 minutes;
+* 30 minutes;
+* 60 minutes;
+* optionally 120 minutes.
+
+Outputs:
+
+* directional efficiency;
+* volatility;
+* path quality;
+* value migration;
+* acceptance/reentry;
+* relative participation.
+
+This is likely the most important layer for ordinary intraday strategy selection.
+
+### Fast state
+
+Horizons:
+
+* 3–5 minutes;
+* 10 minutes;
+* 15 minutes.
+
+Focus on:
+
+* expansion acceleration;
+* range break/reentry;
+* flow reversal;
+* volatility jump;
+* posterior-probability change;
+* immediate strategy-entry quality.
+
+This layer should not be allowed to overturn a medium state on every noisy bar without confidence.
+
+## Cross-timescale coherence
+
+For a standardized state axis \(x_{h,t}\), define:
+
+$$
+Coherence_t
+=
+1-\frac{\operatorname{Var}_h(x_{h,t})}
+{c+\operatorname{Mean}_h(x_{h,t}^2)}.
+$$
+
+Also retain signed patterns rather than only a scalar.
+
+Examples:
+
+| Fast         | Medium    | Slow    | Interpretation hypothesis              |
+| ------------ | --------- | ------- | -------------------------------------- |
+| Trend        | Trend     | Trend   | High-coherence directional discovery   |
+| Trend        | Balance   | Balance | Early expansion or temporary excursion |
+| Reverse      | Trend     | Trend   | Pullback or trend failure beginning    |
+| Balance      | Trend     | Trend   | Consolidation inside broader trend     |
+| Reentry      | Expansion | Balance | Failed breakout/value reacceptance     |
+| All disagree | Mixed     | Mixed   | Transition/UNKNOWN                     |
+
+The table is a hypothesis map, not a trading rule. Each row must be validated against frozen strategy outcomes.
+
+## Update cadence
+
+* Recompute causal features at every completed one-minute bar.
+* Permit model probabilities to update every minute.
+* Limit **material capital reallocation** using:
+
+  * switching costs;
+  * weight smoothing;
+  * minimum score margin;
+  * or a short dwell rule.
+
+A target of roughly 4–6 material router changes per RTH session is a sensible initial governance constraint, not an optimized truth.
+
+---
+
+# PART IX — Synthetic simulation
+
+## 1. What I simulated
+
+I ran a modest controlled benchmark with known latent states.
+
+Six regimes:
+
+1. persistent uptrend;
+2. persistent downtrend;
+3. mean-reverting range;
+4. high-volatility Student-t random state;
+5. low-volatility chop;
+6. shock/jump state.
+
+The process included:
+
+* lognormally variable state durations;
+* fat-tailed innovations;
+* U-shaped intraday volatility;
+* occasional jumps;
+* abrupt and gradual changes;
+* noisy OHLCV-like features;
+* 390 bars per synthetic session.
+
+Training/validation/testing was chronological:
+
+* 65% training sessions;
+* 15% validation sessions;
+* 20% test sessions.
+
+I repeated the experiment over eight random seeds.
+
+Models:
+
+* transparent rule state;
+* diagonal GMM;
+* Gaussian HMM;
+* fixed-degree-of-freedom Student-t HMM;
+* histogram-gradient-boosted state classifier;
+* direct boosted strategy-utility router.
+
+HMM test-state probabilities were generated through a forward-only filter.
+
+## 2. State-identification results
+
+Median across eight simulations:
+
+| Model                    |  Accuracy |  Macro F1 |       ARI |       NMI |   Brier ↓ | Transition precision | Transition recall | Median lag |
+| ------------------------ | --------: | --------: | --------: | --------: | --------: | -------------------: | ----------------: | ---------: |
+| Boosted state classifier | **0.654** | **0.564** | **0.362** | **0.351** | **0.441** |            **0.349** |         **0.599** |     6 bars |
+| Transparent rule         |     0.498 |     0.439 |     0.171 |     0.193 |     0.874 |                0.223 |             0.478 |          5 |
+| GMM                      |     0.441 |     0.364 |     0.150 |     0.169 |     0.927 |                0.252 |             0.435 |          5 |
+| Student-t HMM            |     0.439 |     0.362 |     0.157 |     0.164 |     1.037 |                0.243 |             0.482 |          4 |
+| Gaussian HMM             |     0.429 |     0.356 |     0.153 |     0.157 |     1.059 |                0.236 |             0.484 |          5 |
+
+The supervised state classifier had access to true synthetic regime labels during training. Historical NQ does not provide such labels, so this is an upper-quality comparator, not a directly available NQ method.
+
+## 3. Strategy-routing results
+
+I created simple trend, reversion, and cash experts and measured arbitrary normalized utility units.
+
+Median seed-level results:
+
+| Router                  | Net utility | Oracle-uplift recovery | Trade rate | Action-switch rate |
+| ----------------------- | ----------: | ---------------------: | ---------: | -----------------: |
+| Ex-post oracle          |   **0.296** |                   100% |          — |                  — |
+| Boosted state router    |   **0.056** |                   7.6% |      0.635 |              0.115 |
+| GMM router              |       0.055 |                   6.7% |      0.474 |              0.084 |
+| Direct utility router   |       0.051 |                   7.0% |      0.562 |              0.186 |
+| Gaussian HMM router     |       0.050 |                   4.6% |          — |              0.036 |
+| Student-t HMM router    |       0.049 |                   4.9% |          — |              0.033 |
+| Transparent rule router |       0.045 |                   3.3% |          — |              0.042 |
+| Best static expert      |       0.038 |                     0% |          — |                  0 |
+
+## 4. What this means
+
+The most accurate state classifier was not proportionally better at strategy routing.
+
+The HMMs produced smoother action paths but did not produce superior utility.
+
+The direct utility router was competitive despite not identifying the latent state explicitly.
+
+All causal methods recovered only a small fraction of the ex-post oracle advantage.
+
+That is the most important synthetic conclusion:
+
+> **Regime classification quality and economic routing quality are different objectives.**
+
+It also shows why oracle opportunity must be reported. A giant oracle advantage can coexist with only a tiny realizable causal advantage.
+
+## 5. BOCPD result
+
+In a separate six-seed run, a simple BOCPD configuration produced approximately:
+
+* median transition precision: 0.236;
+* median recall: 0.267;
+* median F1: 0.251;
+* median detection lag: 5 bars;
+* roughly 8 alarms per session.
+
+That is not good enough to act as a master state detector. It is plausible as an **auxiliary uncertainty or risk feature**.
+
+## 6. Limitations
+
+This simulation was intentionally modest. It does not establish:
+
+* the true state process of NQ;
+* realistic NQ strategy payoffs;
+* real fill/slippage behavior;
+* or the best hyperparameters.
+
+Its role was falsification and architecture selection. It successfully demonstrated that “best regime classifier” need not mean “best strategy router.”
+
+---
+
+# PART X — Historical NQ experiment design
+
+## 1. Data construction
+
+### Use individual listed contracts as the primary truth
+
+Retain:
+
+* actual contract identifier;
+* raw tradeable OHLCV;
+* exchange timestamps;
+* session identifier;
+* roll flag;
+* days to expiration;
+* active-contract selection reason.
+
+Use a continuous series only as a derived analytical view.
+
+### Preregister the active-contract rule
+
+Compare two fixed definitions as a data sensitivity test:
+
+1. calendar-based roll;
+2. volume-based migration rule.
+
+Do not choose the rule based on strategy performance.
+
+At a roll:
+
+* do not calculate a return across two unrelated contract prices;
+* reset features requiring continuous price levels;
+* or calculate returns within contract and splice returns rather than levels;
+* preserve raw execution prices in the simulator.
+
+CME NQ and MNQ are different contract multipliers but share the same underlying Nasdaq-100 futures market structure, so NQ-derived signals can later be executed at MNQ granularity when appropriate. Exact current contract specifications should be taken from CME’s product documentation at implementation time. ([CME Group][15])
+
+## 2. Session scope
+
+Primary study:
+
+* RTH decision window;
+* overnight data used as causal context;
+* exchange calendar for holidays and early closes;
+* no hard-coded 390 bars on shortened sessions.
+
+Later:
+
+* separate Globex study;
+* do not combine RTH and overnight states before proving they share feature semantics.
+
+## 3. Data-quality gates
+
+Reject or flag sessions with:
+
+* duplicate timestamps;
+* impossible OHLC relationships;
+* nonpositive prices;
+* unexplained volume resets;
+* excessive missing minutes;
+* unhandled early closes;
+* cross-contract jumps;
+* timestamp/DST ambiguity.
+
+Missing bars should be represented explicitly. Forward-filling a price is sometimes acceptable for calculating elapsed-time features, but synthetic zero-volume bars must not be treated as genuine observations by every feature.
+
+## 4. Strategy freeze
+
+Before any regime work, freeze:
+
+* entry logic;
+* stop/target logic;
+* maximum holding time;
+* side permissions;
+* session filters;
+* cost assumptions;
+* candidate eligibility;
+* sizing convention.
+
+The router must improve a fixed expert set.
+
+## 5. Unit of observation
+
+Run two complementary datasets.
+
+### Bar-level state dataset
+
+One row per completed minute for:
+
+* descriptive state analysis;
+* behavior labels;
+* transition detection;
+* calibration.
+
+### Strategy-opportunity dataset
+
+One row per genuine frozen strategy opportunity for:
+
+* conditional utility modeling;
+* strategy selection;
+* portfolio routing.
+
+The second is the primary economic dataset. Millions of overlapping bar rows do not equal millions of independent trading examples.
+
+## 6. Chronological validation
+
+Recommended outer design, assuming sufficient history:
+
+* minimum initial training window: 3–5 years;
+* internal calibration/validation: following 6 months;
+* outer test: following 3 months;
+* advance quarterly;
+* refit only on information available before the test quarter;
+* retain a final untouched 18–24-month holdout after architecture selection.
+
+If the data history is shorter, reduce windows while preserving chronology and enough distinct sessions.
+
+Use:
+
+* purging equal to the longest label/trade horizon;
+* embargo where overlapping trade paths can cross folds;
+* day/week block bootstrap for uncertainty;
+* no random row-level train/test split.
+
+## 7. Normalization
+
+Within every outer fold:
+
+1. fit minute-of-session medians/MADs on training only;
+2. transform validation;
+3. freeze;
+4. transform test;
+5. never recalculate test percentiles using later test data.
+
+The same applies to:
+
+* PCA;
+* feature clipping;
+* winsorization;
+* GMM/HMM scaling;
+* calibration;
+* threshold quantiles.
+
+## 8. Primary model comparisons
+
+At minimum:
+
+* static frozen portfolio;
+* volatility-only control;
+* signed-efficiency control;
+* 2-D efficiency × volatility matrix;
+* deterministic state machine;
+* regularized logistic utility models;
+* shallow boosted utility models;
+* GMM probabilities;
+* Gaussian HMM filtered probabilities;
+* features + HMM probabilities;
+* transition-overlay ablations.
+
+## 9. Cost model
+
+Report at:
+
+* base commissions/fees;
+* base estimated slippage;
+* 1.5× slippage;
+* 2× slippage.
+
+Separate:
+
+* market entry;
+* stop/market exit;
+* passive/limit fill assumptions;
+* event/open slippage;
+* NQ versus MNQ execution.
+
+A router that increases switching should pay for that switching.
+
+## 10. Placebos
+
+Require:
+
+* shuffled target labels within training blocks;
+* time-shifted features;
+* randomized regime placement with matched durations;
+* random router with matched activity;
+* volatility-only matched router;
+* time-of-day-only model;
+* cost stress;
+* removal of top five days/months;
+* session-block bootstrap.
+
+## 11. Evaluation
+
+### Economic
+
+* net PnL;
+* Sharpe and Sortino;
+* Calmar;
+* true bar-level MTM drawdown;
+* EOD drawdown;
+* CDaR;
+* expected shortfall;
+* worst day/week/month/quarter;
+* time under water;
+* turnover;
+* exposure;
+* strategy overlap;
+* right-tail contribution.
+
+### Model
+
+* Brier score;
+* log loss;
+* calibration curves;
+* state occupancy;
+* state duration;
+* switches per day;
+* transition lag;
+* state alignment;
+* feature drift;
+* parameter-neighborhood stability.
+
+### Comparability
+
+Report:
+
+* native dollars;
+* equal volatility;
+* equal gross exposure;
+* equal average capital at risk;
+* and, where useful, equal trade count.
+
+---
+
+# PART XI — Economic/router evaluation
+
+## 1. Strategy score
+
+For strategy \(i\):
+
+$$
+s_{i,t}
+=
+\hat\mu_{i,t}
+-\kappa_q |\hat q_{i,t}^{0.10}|
+-\kappa_s P(\text{stop}_{i,t})
+-\widehat{Cost}_{i,t}
+-\kappa_u Uncertainty_{i,t}.
+$$
+
+Where:
+
+* \(\hat\mu\): expected net utility;
+* \(\hat q^{0.10}\): lower-tail utility quantile;
+* stop probability: conditional loss risk;
+* cost: expected incremental execution cost;
+* uncertainty: calibration or ensemble dispersion.
+
+## 2. Router optimization
+
+At each decision time:
+
+$$
+\max_{w_t}
+\quad
+w_t^\top s_t
+-\lambda_{risk}w_t^\top\Sigma_tw_t
+-\lambda_{switch}\|w_t-w_{t-1}\|_1
+-\lambda_{conc}\|w_t\|_2^2
+$$
+
+subject to:
+
+$$
+w_{i,t}\geq0,\qquad
+\sum_i w_{i,t}\leq1,
+$$
+
+plus:
+
+* per-strategy caps;
+* family-level caps;
+* correlation caps;
+* position/exchange limits;
+* cash as the residual.
+
+A simpler first version can use a temperature-scaled softmax plus cash:
+
+$$
+\tilde w_{i,t}
+=
+\frac{\exp(s_{i,t}/\tau)}
+{\exp(s_{cash,t}/\tau)+\sum_j\exp(s_{j,t}/\tau)}.
+$$
+
+Then smooth:
+
+$$
+w_t=(1-\rho)w_{t-1}+\rho\tilde w_t.
+$$
+
+## 3. Hard versus soft routing
+
+Hard routing amplifies estimation error:
+
+```text
+trend probability 0.51 → all trend
+trend probability 0.49 → no trend
+```
+
+Soft routing preserves uncertainty and reduces turnover.
+
+Hard suppression may still be appropriate for:
+
+* invalid liquidity;
+* contract-roll contamination;
+* scheduled no-trade windows;
+* catastrophic data-quality failures;
+* strategy-specific hard risk constraints.
+
+## 4. Abstention
+
+Cash should be an actual expert.
+
+Increase cash when:
+
+* all expected utilities are below costs;
+* downside estimates dominate upside;
+* posterior entropy is high;
+* models disagree;
+* transition score is elevated;
+* state lies outside training support;
+* the router would otherwise make an unstable switch.
+
+## 5. Conditional strategy matrix
+
+The following is a **research prior**, not an accepted rule:
+
+| State hypothesis                          |         Trend |      Breakout | Mean reversion | Failed breakout | Value reacceptance |      Initial risk prior |
+| ----------------------------------------- | ------------: | ------------: | -------------: | --------------: | -----------------: | ----------------------: |
+| Clean accepted directional discovery      |            ↑↑ |             ↑ |             ↓↓ |               ↓ |                  ↓ |         Normal/adaptive |
+| Balanced auction, repeated VWAP crossings |             ↓ |             ↓ |             ↑↑ |               ↑ |                 ↑↑ |                  Normal |
+| Low-vol compression                       |       Neutral |         Watch |        Neutral |         Neutral |            Neutral |                 Reduced |
+| Expansion with acceptance                 |             ↑ |            ↑↑ |              ↓ |               ↓ |                  ↓ |                Adaptive |
+| Expansion followed by reentry             |             ↓ |             ↓ |              ↑ |              ↑↑ |                 ↑↑ | Reduced until confirmed |
+| High-vol random/disorderly shock          |     Uncertain |     Uncertain |      Uncertain |       Uncertain |          Uncertain |                Low/cash |
+| Transition/high disagreement              |       Reduced |       Reduced |        Reduced |           Watch |              Watch |                     Low |
+| Unknown/out of distribution               | Off or capped | Off or capped |  Off or capped |   Off or capped |      Off or capped |              Cash-heavy |
+
+To promote any cell, require:
+
+* enough eligible strategy observations;
+* positive net expectancy after costs;
+* lower confidence bound not dominated by zero;
+* consistency across outer folds;
+* persistence after equal-volatility normalization;
+* no unacceptable right-tail loss;
+* and parameter-neighborhood stability.
+
+## 6. Decompose every uplift
+
+For a candidate router, report:
+
+$$
+\Delta PnL
+=
+\Delta Alpha
++\Delta Exposure
++\Delta VolTarget
++\Delta Tail
++\Delta Diversification
++\Delta Cost
++\Delta Residual.
+$$
+
+Practical decompositions:
+
+* rerun with matched exposure;
+* rerun with matched daily volatility;
+* rerun with the same no-trade intervals but randomized strategy selection;
+* rerun with static strategy weights during selected periods;
+* isolate loss avoidance versus winner removal;
+* remove the top contributing month.
+
+## 7. Right-tail preservation
+
+Report:
+
+$$
+RightTailRetention
+=
+\frac{
+\text{candidate PnL on baseline top-decile sessions}
+}{
+\text{baseline PnL on those sessions}
+}.
+$$
+
+Also:
+
+* share of worst losses avoided;
+* share of top winners lost;
+* top 1%, 5%, and 10% session contribution;
+* conditional MFE/MAE;
+* large-trend-day capture.
+
+For your trend-heavy NQ work, I would set a high bar: a risk overlay should normally retain at least **85–90% of baseline top-decile positive contribution**, unless it creates a very large and broad tail-risk improvement.
+
+---
+
+# PART XII — Candidate architecture scorecard
+
+| Candidate                                           | Interpretability | Persistence        | Transition handling        | Heavy-tail robustness | Data/sample efficiency | OOS risk    | Priority | Decision              |
+| --------------------------------------------------- | ---------------- | ------------------ | -------------------------- | --------------------- | ---------------------- | ----------- | -------: | --------------------- |
+| **Added: raw continuous features → utility router** | High             | Router-controlled  | Features/alarms            | Feature-dependent     | High                   | Medium      |  **9.7** | **BUILD NOW**         |
+| 1. Transparent two-axis rule + UNKNOWN              | Very high        | Hysteresis         | Basic derivatives          | High if robust scales | Very high              | Low         |  **9.0** | **BUILD NOW**         |
+| 2. GMM state model                                  | Medium           | None intrinsically | Weak                       | Low/medium            | High                   | Medium      |  **5.5** | Diagnostic challenger |
+| 3. Gaussian HMM                                     | Medium           | Explicit Markov    | Moderate                   | Low                   | Medium/high            | Medium      |  **7.0** | Test now              |
+| 4. Heavy-tailed HSMM                                | Medium           | Explicit duration  | Moderate                   | High                  | Medium                 | Medium/high |  **7.6** | Test after HMM        |
+| 5. HMM + BOCPD                                      | Medium           | HMM persistence    | Stronger uncertainty layer | Medium/high           | Medium                 | Medium/high |  **8.0** | Serious challenger    |
+| 6. Boosted future-behavior predictor                | Medium           | None unless added  | Good forecast potential    | Good                  | Medium                 | Medium/high |  **7.4** | Test                  |
+| 7. Strategy-specific meta-model                     | Medium/high      | Router-controlled  | Directly feature-driven    | Good                  | Medium                 | Medium      |  **9.6** | **BUILD NOW**         |
+| 8. Learned embedding + HMM                          | Low              | HMM                | Moderate                   | Potentially good      | Low                    | High        |  **5.2** | Research later        |
+| 9. Soft mixture-of-experts router                   | Medium           | Switching penalty  | Direct                     | Model-dependent       | Medium                 | Medium      |  **9.2** | **BUILD NOW**         |
+| 10. Hierarchical multi-timescale model              | High/medium      | Multi-horizon      | Strong                     | Good                  | Medium                 | Medium      |  **8.6** | Build after core      |
+| Contextual bandit router                            | Medium           | Online adaptation  | Indirect                   | Model-dependent       | Low/medium             | High        |  **4.5** | Later                 |
+| Full RL router                                      | Low              | Flexible           | Flexible                   | Model-dependent       | Low                    | Very high   |  **2.0** | Reject now            |
+
+## Architecture ordering matters
+
+Candidate 9, the soft mixture-of-experts router, is not a substitute for feature and target design. It is the allocation layer.
+
+Candidate 7 supplies the scores.
+
+Candidate 1 supplies the benchmark and interpretable state representation.
+
+Candidates 3–5 supply optional latent-state and uncertainty features.
+
+Candidate 10 organizes the state variables across horizons.
+
+That combined interpretation is stronger than choosing one row as an isolated winner.
+
+---
+
+# PART XIII — Recommended finalists
+
+## #1 — Continuous state + strategy-specific utility router
+
+### Components
+
+* causal multi-horizon features;
+* train-only intraday seasonal adjustment;
+* separate models for each frozen strategy;
+* expected utility, downside, and stop probability;
+* cash expert;
+* soft weights;
+* switching and concentration penalties;
+* explicit OOD/uncertainty control.
+
+### Why it is first
+
+* directly optimizes the actual decision;
+* avoids arbitrary universal labels;
+* allows the same state to affect strategies differently;
+* easy to compare against latent-state compression;
+* supports transparent attribution;
+* works with 1-minute OHLCV;
+* can begin with logistic models and shallow trees.
+
+### Main risk
+
+Noisy counterfactual strategy targets. Control this with:
+
+* frozen strategy rules;
+* actual opportunity-time sampling;
+* shrinkage;
+* calibration;
+* bounded model search;
+* and fold-level consistency.
+
+## #2 — Sticky Student-t HMM or practical HSMM + transition overlay
+
+### Components
+
+* 3–5 states;
+* 6–10 robust features;
+* Student-t emissions;
+* sticky transitions or explicit duration;
+* forward-only filtering;
+* state-alignment protocol;
+* BOCPD/CUSUM plus posterior entropy;
+* probabilities supplied to the same utility router.
+
+### Why it is second
+
+It tests whether latent persistence adds information beyond engineered features. It is especially useful if:
+
+* feature relationships vary by persistent state;
+* posterior uncertainty predicts strategy losses;
+* or explicit durations reduce false state changes.
+
+### Promotion requirement
+
+It must beat:
+
+$$
+X_t\rightarrow Router
+$$
+
+with:
+
+$$
+[X_t,\alpha_t,T_t]\rightarrow Router.
+$$
+
+If not, remove it.
+
+## #3 — Small causal sequence encoder → utility models
+
+Recommended sequence:
+
+1. TCN;
+2. TS2Vec/TNC-style representation;
+3. small GRU;
+4. Transformer only much later.
+
+### Why it is third
+
+A sequence encoder may discover:
+
+* expansion/reentry geometry;
+* nonlinear state trajectories;
+* transition motifs;
+* interactions lost in rolling summaries.
+
+### Why not first
+
+General time-series benchmark success does not establish financial routing value, and overlapping NQ sequences provide far fewer independent observations than the raw row count suggests. ([arXiv][4])
+
+## Simplest benchmark all finalists must beat
+
+```text
+Inputs
+  signed efficiency: 10/30/60
+  normalized RV: 10/30/60
+  short/long RV ratio
+  slope/R²: 30/60
+  VWAP distance/slope/crossings
+  OR/ON/PD range acceptance/reentry
+  reversal rate
+  relative volume
+  time/event context
+  cross-timescale disagreement
+
+Models
+  elastic-net logistic per strategy
+  shallow boosted model per strategy
+
+Router
+  cash expert
+  soft weights
+  uncertainty threshold
+  switching penalty
+```
+
+---
+
+# PART XIV — Methods to deprioritize
+
+## 1. Rolling Hurst as the trend/range engine
+
+**No-go as the main detector.**
+
+Use only as an ablation. Its finite-sample instability and horizon mismatch make it inferior to direct path geometry for this purpose.
+
+## 2. Raw K-means or HDBSCAN as a production router
+
+They can reveal feature topology but do not model temporal persistence or economic meaning. A geometrically clean cluster can still have identical strategy-payoff distributions.
+
+## 3. Full HDP-HMM/HDP-HSMM initially
+
+The problem is not a lack of possible states. It is the inability to prove stable, causal, economically meaningful states. Nonparametric complexity worsens auditability before addressing that bottleneck.
+
+## 4. Transformers and Temporal Fusion Transformers initially
+
+The likely constraints are:
+
+* effective sample size;
+* nonstationarity;
+* target noise;
+* strategy counterfactual quality;
+* multiple testing.
+
+Model capacity is not the first constraint.
+
+## 5. VAE or reconstruction autoencoder as the main representation
+
+A representation that reconstructs bars well need not preserve conditional strategy utility. Contrastive or supervised utility-aware objectives are more defensible.
+
+## 6. Reinforcement learning
+
+RL should wait until all of the following have been demonstrated:
+
+* stable feature/utility relationships;
+* a reliable portfolio simulator;
+* credible fill and impact assumptions;
+* bounded action space;
+* stable static router baselines;
+* and a forward logging program for policy evaluation.
+
+NQ history gives one realized sequence, and historical data do not reveal the reward of every unchosen action without counterfactual simulation.
+
+## 7. Level-II deep learning before OHLCV/L1 ablation
+
+Level-II adds:
+
+* feed dependency;
+* reconstruction assumptions;
+* queue ambiguity;
+* enormous storage;
+* contract-specific microstructure drift.
+
+Research it only after an OHLCV/L1 router has a verified residual weakness that L2 could plausibly solve.
+
+## 8. Hard state gating
+
+Rules like:
+
+```text
+if HMM_state == 2:
+    enable trend
+else:
+    disable trend
+```
+
+are brittle. Use probabilities and utility scores unless a hard safety constraint applies.
+
+---
+
+# PART XV — Phased implementation roadmap
+
+| Phase                                    | Objective                                        | Exact work                                                        | Required outputs                                                   | Acceptance/kill gate                                             | Explicitly prohibited                             |
+| ---------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------- | ------------------------------------------------- |
+| **0. Data and contract audit**           | Establish trustworthy NQ truth                   | Contract map, roll rules, sessions, missing bars, cost model      | Data audit, session manifest, roll diagnostics, leakage checklist  | Zero unexplained roll/session discontinuities                    | No model comparisons                              |
+| **1. Strategy freeze and oracle map**    | Measure opportunity before modeling              | Freeze experts; compute opportunity-time outcomes; ex-post oracle | Strategy outcome matrix, oracle gap, overlap/correlation report    | Enough independent opportunities and meaningful oracle advantage | No strategy retuning                              |
+| **2. Feature diagnostics**               | Establish causal state axes                      | Tier-A features, train-only seasonality, stability/ablation tests | Feature registry, drift report, conditional utility surfaces       | Stable relationships across several folds                        | No HMM/deep models                                |
+| **3. Simple router baseline**            | Test direct utility hypothesis                   | Logistic and shallow boosting; cash; soft router                  | Calibration, economic results, placebos, right-tail report         | Broad OOS improvement versus static and 2-D controls             | No final holdout                                  |
+| **4. Latent-state challengers**          | Test whether latent persistence adds information | GMM, Gaussian HMM, Student-t HMM; filtered probabilities          | State signatures, occupancy, alignment, incremental-ablation table | Features+state must beat features alone                          | No HSMM if HMM adds nothing                       |
+| **5. Transition layer**                  | Test instability as risk information             | CUSUM, BOCPD, entropy, probability velocity, MTF disagreement     | Alarm precision/lag, post-alarm strategy loss, router ablation     | Reduces downside without excessive right-tail loss               | No automatic reversal rule                        |
+| **6. Hierarchical state model**          | Add slow/medium/fast organization                | Session prior, medium state, fast transitions, coherence          | Multi-horizon attribution, stability surfaces                      | Incremental OOS value over flat feature model                    | No deep sequence model yet                        |
+| **7. Robust HSMM / sequence challenger** | Test higher-capacity hypotheses                  | Explicit duration and small TCN/contrastive encoder               | Duration fit, sequence ablations, complexity-adjusted results      | Must beat strong simple baseline broadly                         | No unbounded architecture search                  |
+| **8. Optional L1/L2 frontier**           | Measure incremental microstructure value         | OFI, depth, spread, trade intensity, then selective L2            | Data-quality report, incremental utility study                     | Clear after-cost incremental value                               | No feed-dependent promotion from one era          |
+| **9. Frozen adjudication**               | Final architecture decision                      | Lock specifications; run untouched holdout                        | Final validation, PBO/DSR-style audit, deployment risks            | All preregistered gates pass                                     | No rescue tuning                                  |
+| **10. Forward shadow monitoring**        | Test live-causal behavior without orders         | Generate states/weights/logs only                                 | Latency, calibration, drift, discrepancy logs                      | Stable before any execution discussion                           | No live/paper orders unless separately authorized |
+
+## Research governance
+
+Financial backtest selection can materially inflate reported performance when many variants are tried. Probability-of-backtest-overfitting and Deflated Sharpe frameworks were developed to address this selection problem and should inform the campaign’s experiment registry and final adjudication. ([eScholarship][16])
+
+Maintain one registry row for every:
+
+* feature set;
+* target;
+* horizon;
+* model;
+* state count;
+* duration choice;
+* router;
+* threshold;
+* retraining schedule;
+* cost assumption.
+
+Failed tests count.
+
+---
+
+# PART XVI — First experiment specification
+
+## Experiment name
+
+**NQ_REGIME_ROUTER_V1_CONTINUOUS_STATE_VS_LATENT_STATE**
+
+## A. Objective
+
+Determine whether causal multi-horizon state information improves the after-cost performance of a frozen NQ intraday strategy portfolio, and whether latent-state probabilities add incremental value beyond the raw state features.
+
+## B. Primary hypotheses
+
+### H1
+
+Strategy-specific utility is conditionally predictable from causal state features.
+
+### H2
+
+A soft direct router improves the frozen static portfolio after costs and at equal risk.
+
+### H3
+
+HMM probabilities add incremental information beyond the original features.
+
+### H4
+
+Transition uncertainty reduces downside without destroying the right tail.
+
+## C. Inputs
+
+### Market data
+
+* individual-contract NQ one-minute OHLCV;
+* exchange timestamp;
+* contract ID;
+* session ID;
+* roll and expiration metadata;
+* overnight bars;
+* holiday/early-close calendar;
+* optional L1 spread/depth only if historically reliable.
+
+### Frozen strategy records
+
+For each strategy:
+
+* strategy family;
+* eligible decision timestamp;
+* side;
+* entry reference;
+* actual deterministic entry rule;
+* stop/target/exit path;
+* gross and net PnL;
+* MAE;
+* MFE;
+* holding time;
+* required capital/exposure;
+* overlap/conflict identifiers.
+
+At minimum include economically distinct families:
+
+* directional continuation;
+* breakout/expansion;
+* reversion/balance;
+* failed persistence;
+* value reacceptance;
+* cash.
+
+## D. Feature set V1
+
+### Direction and path
+
+* signed efficiency: 10, 30, 60;
+* normalized regression slope: 15, 30, 60;
+* regression \(R^2\): 15, 30, 60;
+* sign imbalance: 10, 30;
+* reversal rate: 10, 30.
+
+### Volatility
+
+* log RV: 10, 30, 60;
+* RV 10/60;
+* volatility-of-volatility: 30, 60;
+* range expansion: 5, 15, 30;
+* negative and positive semivariance: 30;
+* simple jump score: 30.
+
+### Auction
+
+* normalized VWAP distance;
+* VWAP slope: 15, 30;
+* VWAP crossing count: 15, 30;
+* opening-range location;
+* overnight-range location;
+* prior-day-range location;
+* bars accepted outside each range;
+* range excursion/reentry indicator.
+
+### Participation/context
+
+* same-minute relative volume;
+* volume acceleration;
+* volume-price agreement;
+* minute-of-session sine/cosine;
+* open/midday/close segment;
+* scheduled-event proximity;
+* overnight return/range;
+* gap normalized by prior-session RV.
+
+### Transition
+
+* first differences of efficiency, RV, and VWAP distance;
+* fast/medium/slow disagreement;
+* rolling feature-distance score.
+
+Target total: approximately 30–45 features. Avoid hundreds.
+
+## E. Targets
+
+For every eligible strategy opportunity:
+
+1. net \(R\);
+2. positive-outcome indicator;
+3. stop-out indicator;
+4. normalized MAE;
+5. normalized MFE;
+6. 10th-percentile/downside target through quantile regression;
+7. composite utility using preregistered risk penalties.
+
+Do not choose penalties from outer-test PnL.
+
+## F. Model candidates
+
+### Controls
+
+* static equal-weight portfolio;
+* best frozen static portfolio;
+* volatility-only routing;
+* signed-efficiency-only routing;
+* 2-D efficiency × volatility state;
+* deterministic hysteresis state machine.
+
+### Direct models
+
+1. elastic-net logistic classification;
+2. Huber/regularized regression for expected utility;
+3. shallow LightGBM or CatBoost;
+4. quantile model for downside.
+
+Bounded tree grid:
+
+* maximum depth: 2, 3, 4;
+* leaves: 7, 15, 31;
+* minimum leaf observations: 250, 500, 1,000;
+* learning rate: 0.02 or 0.05;
+* early stopping inside chronological validation;
+* maximum rounds fixed generously but selected by early stopping;
+* L1/L2 regularization from a very small fixed grid.
+
+### Latent challengers
+
+#### GMM
+
+* states: 3, 4, 5;
+* diagonal covariance;
+* 10 initializations.
+
+#### Gaussian HMM
+
+* states: 3, 4, 5;
+* diagonal covariance;
+* optional shrinkage full covariance;
+* 20 initializations;
+* minimum state occupancy: 5%;
+* forward-only outer-test inference.
+
+#### Student-t HMM
+
+Not in the first code pass unless Gaussian HMM plumbing is validated. Then:
+
+* fixed \(\nu=4,6,10\);
+* states: 3, 4, 5.
+
+## G. Router variants
+
+1. hard best-score router for diagnostic comparison;
+2. softmax router;
+3. softmax plus cash;
+4. softmax plus cash and switching penalty;
+5. features + HMM probabilities;
+6. features + HMM probabilities + transition uncertainty.
+
+No strategy-specific parameter retuning.
+
+## H. Validation
+
+Assuming adequate history:
+
+* expanding training: minimum 3 years;
+* validation: 6 months;
+* test: 3 months;
+* quarterly advance;
+* purge/embargo at least the maximum trade/label horizon;
+* final 18–24 months untouched.
+
+Within every training period:
+
+* fit same-minute seasonal normalization;
+* fit clipping/scaling;
+* tune hyperparameters;
+* fit probability calibration;
+* freeze everything for test.
+
+## I. Metrics
+
+### Primary economic
+
+* net Sharpe;
+* Sortino;
+* true MTM max drawdown;
+* CDaR95;
+* expected shortfall;
+* Calmar;
+* worst month;
+* time under water;
+* right-tail retention;
+* turnover;
+* costs;
+* strategy concentration.
+
+### Model
+
+* Brier;
+* log loss;
+* calibration slope/intercept;
+* utility MAE/rank correlation;
+* downside coverage;
+* state occupancy/duration;
+* switches/session;
+* state-alignment cost;
+* transition lag.
+
+### Incremental tests
+
+Compare:
+
+$$
+Router(X)
+$$
+
+versus:
+
+$$
+Router(\alpha)
+$$
+
+versus:
+
+$$
+Router(X,\alpha)
+$$
+
+versus:
+
+$$
+Router(X,\alpha,T).
+$$
+
+## J. Expected artifacts
+
+* `data_quality_audit.md`
+* `contract_roll_manifest.csv`
+* `fold_manifest.csv`
+* `feature_registry.csv`
+* `feature_stability_by_fold.csv`
+* `strategy_opportunity_summary.csv`
+* `oracle_upper_bound.csv`
+* `conditional_strategy_utility.csv`
+* `model_registry.csv`
+* `calibration_results.csv`
+* `economic_results_native.csv`
+* `economic_results_equal_risk.csv`
+* `right_tail_preservation.csv`
+* `state_signature_by_fold.csv`
+* `state_alignment_report.csv`
+* `transition_alarm_results.csv`
+* `placebo_results.csv`
+* `parameter_stability_surfaces.csv`
+* `research_test_count.csv`
+* `validation_results.csv`
+* `NEXT_HANDOFF.md`
+
+## K. Proposed acceptance gates
+
+These are governance thresholds, not laws of nature.
+
+A router can proceed to the next phase if it satisfies either:
+
+### Economic improvement route
+
+* median OOS Sharpe improvement at least **0.15** at equal volatility;
+* and positive incremental net PnL in at least **70% of outer folds**;
+
+or:
+
+### Risk improvement route
+
+* at least **10% reduction** in MTM drawdown or CDaR;
+* with no more than roughly **3% degradation** in equal-risk net PnL.
+
+And all of:
+
+* nonnegative incremental value at 1.5× slippage;
+* right-tail retention at least 85–90%;
+* no single month contributing more than 25% of total uplift;
+* positive results in at least three materially different market environments;
+* broad parameter plateau;
+* calibration better than unconditional/base-rate predictions;
+* no unexplained feature or state drift.
+
+For HMM promotion specifically:
+
+* features + HMM beats features alone;
+* state signatures remain alignable;
+* no state occupancy collapse;
+* filtered probabilities verified against a hand-coded recursion;
+* gain does not arise from mere reduction in exposure.
+
+## L. Kill gates
+
+Kill or quarantine a candidate if:
+
+* it works only at one exact state count or lookback;
+* state labels reverse across refits;
+* it mainly identifies time of day;
+* it loses all advantage at equal volatility;
+* it removes a disproportionate share of top trend days;
+* it fails 1.5× cost stress;
+* top month removal eliminates the result;
+* performance is indistinguishable from a matched random router;
+* HMM probabilities add no incremental value;
+* or final gains require strategy retuning.
+
+## M. Explicit non-runs
+
+During V1:
+
+* no deep learning;
+* no Transformer;
+* no RL;
+* no HDP-HMM;
+* no full HSMM;
+* no Level-II;
+* no strategy retuning;
+* no final untouched holdout;
+* no paper/live orders.
+
+---
+
+# PART XVII — Research-risk audit
+
+## 1. Lookahead and leakage
+
+Highest-risk errors:
+
+* full-sample normalization;
+* full-sample minute-of-day profiles;
+* global feature clipping;
+* full-history PCA;
+* HMM fitted using future test data;
+* smoothed probabilities used as live states;
+* Viterbi path used in trading;
+* future session VWAP or POC;
+* completed opening range used before it completed;
+* final-day high/low used intraday;
+* overlapping forward labels crossing folds;
+* calibration on outer test;
+* future strategy outcomes embedded in features;
+* revised event/economic data;
+* cross-market timestamp misalignment.
+
+## 2. Futures construction
+
+* return across a contract splice;
+* model learns roll gaps;
+* volume migration mistaken for participation regime;
+* inconsistent contract timestamps;
+* expiration-week effects leaked through continuous construction;
+* early close treated as missing data;
+* unadjusted historical tick-value or fee assumptions.
+
+## 3. Research overfitting
+
+* hundreds of feature variants;
+* state counts selected by portfolio PnL;
+* changing labels after seeing results;
+* repeatedly viewing the final holdout;
+* pretending correlated horizons are independent hypotheses;
+* selecting the one favorable cost model;
+* reporting only the best initialization;
+* rescuing a failed family with a new threshold.
+
+Use:
+
+* experiment registry;
+* explicit family-level hypothesis counts;
+* PBO-style diagnostics where applicable;
+* Deflated Sharpe;
+* block/bootstrap uncertainty;
+* untouched adjudication data.
+
+## 4. State-model risks
+
+* label switching;
+* state splitting/merging;
+* tiny occupancy;
+* covariance collapse;
+* shock state absorbing every outlier;
+* time-of-day states;
+* states that are descriptively different but economically identical;
+* overly sticky states;
+* delayed transition recognition;
+* refit-induced discontinuity.
+
+## 5. Supervised-model risks
+
+* noisy strategy utility;
+* overlapping trade outcomes;
+* class imbalance;
+* winner-label instability;
+* target leakage through entry construction;
+* sample weighting that overrepresents busy sessions;
+* poor probability calibration;
+* model learns strategy eligibility rather than efficacy;
+* outcome truncation by stop/target structure.
+
+## 6. Portfolio risks
+
+* apparently independent strategy counterfactuals share the same move;
+* two strategies compete for capital;
+* netting changes actual execution;
+* strategy correlation rises in stress;
+* switching creates hidden turnover;
+* a no-trade filter removes positive convexity;
+* risk reduction is mislabeled as alpha.
+
+## 7. Deployment risks
+
+* feature/library discrepancy;
+* bar-close latency;
+* data revisions;
+* historical versus live feed differences;
+* incomplete bars;
+* out-of-order messages;
+* model-state reset;
+* retraining failure;
+* state mapping failure;
+* unbounded behavior outside training support.
+
+Every live-capable model should have:
+
+* deterministic fallback weights;
+* stale-data guard;
+* model-version ID;
+* feature checksum;
+* state-reset protocol;
+* OOD alarm;
+* audit log.
+
+---
+
+# PART XVIII — Key references and evidence quality
+
+## HIGH methodological evidence
+
+### Hamilton regime switching
+
+Foundational econometric framework for persistent latent-state processes. Strong theoretical relevance, but low directness to one-minute NQ routing. ([Users SSC Wisc][2])
+
+### Rabiner HMM tutorial
+
+Foundational HMM filtering, smoothing, decoding, and duration implications. Essential for avoiding causal-inference errors. ([Massachusetts Institute of Technology][6])
+
+### Yu HSMM overview
+
+Clear methodological treatment of explicit-duration hidden semi-Markov models and why they differ from standard HMMs. ([Computer Science at UBC][17])
+
+### Adams and MacKay BOCPD
+
+Foundational online run-length and changepoint posterior method. Directly relevant to transition uncertainty, not state identity. ([arXiv][9])
+
+### Killick, Fearnhead, and Eckley PELT
+
+Strong offline segmentation method. Useful for research teachers and diagnostics; not a live contemporaneous signal. ([arXiv][18])
+
+### Andersen and Bollerslev intraday periodicity
+
+Strong evidence that high-frequency volatility has systematic intraday periodicity, supporting strict minute-of-day normalization. ([Duke University Economics][11])
+
+### Andersen et al. realized volatility
+
+Foundational realized-volatility measurement and distributional evidence. Relevant to the volatility axis. ([Duke University Economics][12])
+
+### Barndorff-Nielsen and Shephard bipower variation
+
+Foundational continuous-variation/jump decomposition. Relevant as a shock feature, with assumptions. ([Duke University Economics][19])
+
+### Cont, Kukanov, and Stoikov order-flow imbalance
+
+Strong microstructure evidence relating short-interval price changes to order-flow imbalance and depth in equities. Methodologically relevant, but market transfer to NQ must be tested. ([ResearchGate][13])
+
+### Probability of Backtest Overfitting and Deflated Sharpe
+
+Core research-governance references for multiple testing and selection-adjusted performance. ([eScholarship][16])
+
+## MEDIUM evidence
+
+### HMM plus discriminative high-frequency classification
+
+Recent peer-reviewed evidence that HMM-generated structure can complement discriminative classifiers on intraday FTSE 100 trade data. Useful architectural precedent, but not a direct after-cost NQ portfolio result. ([Springer][3])
+
+### TS2Vec, temporal neighborhood coding, and TCN research
+
+Strong general time-series representation and sequence-model evidence. Supports later challengers but does not establish an intraday futures edge. ([arXiv][4])
+
+### Sticky HDP-HMM and HDP-HSMM
+
+Methodologically important for persistent nonparametric state discovery and duration modeling. Lower practical priority because semantic stability matters more than unconstrained state discovery here. ([Brown University Computer Science][7])
+
+## LOW/EXPLORATORY direct-market evidence
+
+### Recent MNQ descriptive-regime work
+
+Direct instrument relevance but recent and unreplicated. Its failure to convert a descriptive pattern into a robust strategy is a useful warning against equating classification with economic value. ([arXiv][1])
+
+### Recent broad MNQ OHLCV falsification
+
+Direct instrument and useful skeptical design, but still an independent recent preprint rather than established evidence. ([arXiv][20])
+
+### Recent HMM-conditioned high-frequency studies
+
+Some recent preprints find descriptively distinct latent regimes while reporting limited or negative incremental benefit for the downstream application. This again supports strict incremental tests rather than assuming the state labels add value. ([arXiv][21])
+
+## Useful implementation stack
+
+* **hmmlearn:** quick Gaussian/GMM-HMM prototyping, but verify causal filtering yourself. ([hmmlearn][5])
+* **statsmodels:** Markov-switching regression benchmarks. ([StatsModels][22])
+* **Dynamax/JAX:** more flexible state-space experimentation. ([ProbML][23])
+* **ruptures:** offline changepoint diagnostics and PELT-style segmentation. ([ar5iv][24])
+* **River ADWIN:** online drift-detection challenger. ([RiverML][10])
+* **PyMC or Stan:** custom Bayesian HMM/HSMM work where estimation transparency matters. ([PyMC][25])
+
+---
+
+# Final decision: the exact next five experiments
+
+If this were my own money and my own NQ research program, I would run these in order.
+
+## Experiment 1 — Is there enough routing opportunity to justify the project?
+
+Freeze the strategies and calculate:
+
+* opportunity-time net outcomes;
+* ex-post oracle strategy/cash allocation;
+* strategy payoff correlations;
+* conditional payoff surfaces across simple causal state axes.
+
+**Why first:** If the oracle advantage is small, or if all strategies win and lose together, no detector will rescue the portfolio.
+
+## Experiment 2 — Continuous-state direct utility router
+
+Build:
+
+* Tier-A causal features;
+* regularized logistic models;
+* shallow boosted utility/downside models;
+* soft router with cash and switching penalty.
+
+Compare against:
+
+* static portfolio;
+* volatility-only;
+* signed-efficiency-only;
+* 2-D trend × volatility state;
+* deterministic hysteresis.
+
+**Why second:** This is the shortest path to testing the economically correct target.
+
+## Experiment 3 — Latent-state incremental-value test
+
+Fit:
+
+* GMM;
+* Gaussian HMM;
+* Student-t HMM if Gaussian plumbing passes.
+
+Use only forward-filtered test probabilities.
+
+Compare:
+
+* features only;
+* latent probabilities only;
+* features plus latent probabilities.
+
+**Why third:** It directly answers whether an HMM adds information or merely repackages the features.
+
+## Experiment 4 — Transition/uncertainty overlay
+
+Test:
+
+* CUSUM/Page-Hinkley;
+* BOCPD;
+* HMM entropy;
+* probability velocity;
+* cross-timescale disagreement.
+
+Use them first as risk/cash modifiers.
+
+**Why fourth:** State failure may be more valuable than static state identity, but it should not be assumed.
+
+## Experiment 5 — Hierarchical multi-timescale and duration challenger
+
+Only after the first four:
+
+* slow/medium/fast coherence;
+* sticky Student-t HMM;
+* HSMM if state-duration diagnostics support it;
+* small TCN as a bounded nonlinear challenger.
+
+**Why fifth:** This adds complexity only after the simple architecture has established a measurable target and benchmark.
+
+The most likely successful end state is not a single “regime detector.” It is:
+
+> **An interpretable continuous state engine, a strategy-specific conditional-utility layer, a probabilistic soft router with cash, and a separate uncertainty mechanism—with HMM/HSMM retained only if they demonstrate incremental causal value.**
+
+[1]: https://arxiv.org/abs/2605.11423v2 "https://arxiv.org/abs/2605.11423v2"
+[2]: https://users.ssc.wisc.edu/~behansen/718/Hamilton1989.pdf "https://users.ssc.wisc.edu/~behansen/718/Hamilton1989.pdf"
+[3]: https://link.springer.com/article/10.1007/s11009-025-10148-8 "https://link.springer.com/article/10.1007/s11009-025-10148-8"
+[4]: https://arxiv.org/pdf/2106.10466 "https://arxiv.org/pdf/2106.10466"
+[5]: https://hmmlearn.readthedocs.io/en/latest/api.html "https://hmmlearn.readthedocs.io/en/latest/api.html"
+[6]: https://web.mit.edu/6.435/www/Rabiner89.pdf "https://web.mit.edu/6.435/www/Rabiner89.pdf"
+[7]: https://cs.brown.edu/people/sudderth/papers/aoas11hdphmm.pdf "https://cs.brown.edu/people/sudderth/papers/aoas11hdphmm.pdf"
+[8]: https://www.cs.columbia.edu/~blei/papers/LindermanJohnsonMillerAdamsBleiPaninski2017.pdf "https://www.cs.columbia.edu/~blei/papers/LindermanJohnsonMillerAdamsBleiPaninski2017.pdf"
+[9]: https://arxiv.org/abs/0710.3742 "https://arxiv.org/abs/0710.3742"
+[10]: https://riverml.xyz/0.13.0/api/drift/ADWIN/ "https://riverml.xyz/0.13.0/api/drift/ADWIN/"
+[11]: https://public.econ.duke.edu/~boller/Published_Papers/joef_97.pdf "https://public.econ.duke.edu/~boller/Published_Papers/joef_97.pdf"
+[12]: https://public.econ.duke.edu/~boller/Published_Papers/ecta_03.pdf "https://public.econ.duke.edu/~boller/Published_Papers/ecta_03.pdf"
+[13]: https://www.researchgate.net/profile/Rama-Cont/publication/47860140_The_Price_Impact_of_Order_Book_Events/links/5bd8d92992851c6b279b841e/The-Price-Impact-of-Order-Book-Events.pdf "https://www.researchgate.net/profile/Rama-Cont/publication/47860140_The_Price_Impact_of_Order_Book_Events/links/5bd8d92992851c6b279b841e/The-Price-Impact-of-Order-Book-Events.pdf"
+[14]: https://prac.im.pwr.wroc.pl/~hugo/publ/RWeron02_PHYSA.pdf "https://prac.im.pwr.wroc.pl/~hugo/publ/RWeron02_PHYSA.pdf"
+[15]: https://www.cmegroup.com/markets/equities/nasdaq/e-mini-nasdaq-100.contractSpecs.html?videoId=6366578885112 "https://www.cmegroup.com/markets/equities/nasdaq/e-mini-nasdaq-100.contractSpecs.html?videoId=6366578885112"
+[16]: https://escholarship.org/content/qt4w1110bb/qt4w1110bb.pdf "https://escholarship.org/content/qt4w1110bb/qt4w1110bb.pdf"
+[17]: https://www.cs.ubc.ca/~murphyk/Teaching/CS540-Spring10/projects/Yu-hsmm09.pdf "https://www.cs.ubc.ca/~murphyk/Teaching/CS540-Spring10/projects/Yu-hsmm09.pdf"
+[18]: https://arxiv.org/pdf/1101.1438v1 "https://arxiv.org/pdf/1101.1438v1"
+[19]: https://public.econ.duke.edu/~get/browse/courses/883/Spr15/COURSE-MATERIALS/Z_Papers/BNSJFEC2004.pdf "https://public.econ.duke.edu/~get/browse/courses/883/Spr15/COURSE-MATERIALS/Z_Papers/BNSJFEC2004.pdf"
+[20]: https://arxiv.org/abs/2605.04004v1 "https://arxiv.org/abs/2605.04004v1"
+[21]: https://arxiv.org/html/2608.05373v1 "https://arxiv.org/html/2608.05373v1"
+[22]: https://www.statsmodels.org/stable//_modules/statsmodels/tsa/regime_switching/markov_regression.html "https://www.statsmodels.org/stable//_modules/statsmodels/tsa/regime_switching/markov_regression.html"
+[23]: https://probml.github.io/dynamax/ "https://probml.github.io/dynamax/"
+[24]: https://ar5iv.labs.arxiv.org/html/1801.00826 "https://ar5iv.labs.arxiv.org/html/1801.00826"
+[25]: https://www.pymc.io/projects/examples/en/latest/mixture_models/discrete_markov_chain_marginalization.html "https://www.pymc.io/projects/examples/en/latest/mixture_models/discrete_markov_chain_marginalization.html"
