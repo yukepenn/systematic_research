@@ -1,0 +1,68 @@
+    1,059 sessions [4s]
+    event scans done [5s]
+    THE GATE IS NOW APPLIED AT THE TRIGGER BAR, not after the fact - see the CORRECTION
+    note in scan(). The first run's output is preserved as reversal_DEFECTIVE_gate_at_1200.txt
+
+==============================================================================================================================
+=== 1. FIRE RATES AND ENTRY TIMES. No P&L yet. (The W111 specification gate in spirit.)
+==============================================================================================================================
+retracement     sessions firing    rate  median entry     p25     p75   short/long
+0.25                        476   44.9%         10:24   10:03   11:02    216 / 260
+0.5                         348   32.9%         10:44   10:11   11:35    154 / 194
+0.75                        226   21.3%         11:03   10:20   12:04    109 / 117
+
+    12:00 excursion: median 140.5 pts, p25 94.2, p75 200.2
+
+==============================================================================================================================
+=== 2. ECONOMICS. Entry at the trigger bar's OPEN, exit at the 15:44 close, size 1.
+===    MOMENTUM_AT_SAME_BARS is the control that decides the wave.
+==============================================================================================================================
+cell                     N    hit%      p*   $/trade      net $   MOMENTUM     delta  coin p95
+R=0.25 gate=0.25       243   45.7%  0.5027      -485   -117,959        454      -940       435
+R=0.25 gate=0.5        472   42.8%  0.5030      -426   -201,200        394      -821       293
+R=0.25 gate=0.75       713   42.9%  0.5032      -385   -274,431        352      -737       220
+
+R=0.5 gate=0.25        148   45.9%  0.5026      -437    -64,673        407      -844       640
+R=0.5 gate=0.5         347   44.1%  0.5028      -438   -151,948        407      -845       339
+R=0.5 gate=0.75        568   44.9%  0.5031      -337   -191,359        305      -642       253
+
+R=0.75 gate=0.25        84   54.8%  0.5025      -355    -29,861        326      -681       953
+R=0.75 gate=0.5        225   48.9%  0.5027      -350    -78,814        320      -670       464
+R=0.75 gate=0.75       399   48.6%  0.5030      -267   -106,510        236      -502       299
+
+==============================================================================================================================
+=== 3. THE PRIMARY - mean $/trade across the three retracement levels at gate 0.50
+==============================================================================================================================
+    REAL reversal      $-405/trade
+    MOMENTUM same bars $374/trade      delta $-778
+    coin null (shared per-session sign) mean $-15  p95 $373  -> 4.0th percentile
+    conditions: positive False   beats coin False   BEATS MOMENTUM False
+    VERDICT: FAILS     best-of-9 bar (shared sign) $999
+
+    OTHER CONTROLS at the same entry bars (gate 0.50, R=0.50):
+        ALWAYS LONG      $     -9/trade   N 347
+        ALWAYS SHORT     $    -22/trade   N 347
+
+==============================================================================================================================
+=== 4. DIAGNOSTIC - session class, and value ON THE BOOK'S LOSING WEEKS
+===    A reversal mechanism not positive on REVERSAL sessions has falsified its own name.
+==============================================================================================================================
+cell                         TREND-UP       TREND-DOWN         REVERSAL            RANGE            MIXED
+R=0.25 gate=0.50        81     -1,528    95     -1,859   121       -134   120        592    55        807
+R=0.5 gate=0.50         50     -2,088    59     -1,506    90       -216   101        311    47        625
+R=0.75 gate=0.50        34     -2,609    32       -686    59        233    71        139    29        283
+
+cell                   all weeks $   BOOK-LOSING wks $   null mean    null p95   pctile
+R=0.25 gate=0.50              -945                -145        -948        -191    96.2th
+R=0.5 gate=0.50               -713                -670        -714        -122    56.6th
+R=0.75 gate=0.50              -370                -242        -371          94    66.0th
+
+==============================================================================================================================
+=== 5. 2006-2021 - SECTION 6 DIAGNOSTIC ONLY. NOT a promotion veto (section 5).
+==============================================================================================================================
+cell                      N    hit%   $/trade       net $   MOMENTUM     delta
+R=0.25 gate=0.50       1939   47.9%       -31     -60,137         -1       -30
+R=0.5 gate=0.50        1394   49.6%       -17     -23,108        -14        -2
+R=0.75 gate=0.50        965   48.7%       -28     -27,235         -2       -26
+
+[done 12s]

@@ -104,6 +104,32 @@ Legend: **STRONG** · **SUPPORTED** · **WEAK** · **REGIME_LOCAL** · **NULL** 
 > estimate `E[PnL(fade) | I_t]` and weight exposure by it, instead of thresholding a weak state into
 > a binary cut that discards the magnitude information an AUC-0.62 signal carries.
 
+> ⁸ ⭐ **W114 / W117 / W118 (2026-08-27) — THE ROW THAT REPLACES THE FADE ROWS.**
+> **Intraday CONTINUATION is live and REVERSAL is on the wrong side of it, at every geometry tested.**
+> W118 built the reversal mechanism at its OWN event-driven geometry - the running excursion must
+> clear a causal trailing threshold, then a retracement of R triggers entry, so entries are
+> endogenous and spread across 10:00-12:00 rather than sitting on W108's fixed midday clock.
+> **Primary −$405/trade; the MOMENTUM mirror at the exact same entry bars earns +$374, a delta of
+> $778.** Always-long and always-short at those bars earn −$9 and −$22, so it is continuation and
+> not drift. All nine cells negative, all nine mirrors positive.
+> **§6 DIAGNOSTIC, and it is the valuable part: on 2006-2021 BOTH sides are ≈zero** (reversal −$31,
+> momentum −$1). So the continuation edge is a MODERN phenomenon confirmed now by three independent
+> constructions - W114's fixed 11:49 clock, W111b's unconditional control, and W118's event-driven
+> entry - and absent in the old era at every one of them.
+> ⚠️ **Defect disclosed:** W118's first run applied the excursion gate to the 12:00 excursion after
+> the fact instead of at the trigger bar, so it fired on the first 2-point wiggle (median entry
+> 09:32, 99.4 % of sessions). Repaired; the defective output is preserved in the run directory.
+> **Status: REVERSAL is CLOSED AT TWO GEOMETRIES.** Reopening requires NEW INFORMATION, not another
+> clock and not another retracement depth.
+>
+> ⁹ **W117 (2026-08-27) — what the BOOK loses on, measured for the first time.** The candidate
+> portfolio loses 87 of 213 weeks. Losing weeks have **fewer TREND-UP sessions (0.167 vs 0.238,
+> p=0.005) and more REVERSAL sessions (0.299 vs 0.230, p=0.011)** - and **identical TREND-DOWN share
+> (0.147 vs 0.143, p=0.880)**, with 53 % of losing weeks being weeks NQ ROSE. **The book's hole is
+> not directional.** Six frozen objects screened against those weeks: **zero survivors**.
+> FOLLOW_MORNING's long leg earns $482/week unconditionally and **−$2** on book-losing weeks against
+> a random-alignment null of +$484 - absent, not merely weak.
+
 ## 2. ⭐ The single largest hole — **CLOSED as a direction by W111, 2026-08-27**
 
 > ### ⚠️ **THE CLAIM BELOW WAS TRUE WHEN WRITTEN AND IS NOW SUPERSEDED.** W111 used volume as a
