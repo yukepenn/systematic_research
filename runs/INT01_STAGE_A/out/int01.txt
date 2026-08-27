@@ -1,0 +1,71 @@
+==========================================================================================================================
+=== INT01 - MARKET INTERNALS STAGE-A.  Spec 96a0019, committed before this code existed.
+=== STAGE A INFORMATION ONLY. No router, no policy, no threshold, nothing promoted.
+==========================================================================================================================
+[     0s] base population (RR_W002A features.csv)          2,131
+[     0s] RTH and internals-covered                        760   (spec pre-declared ~764 off the 2,139 base; this is the 2,131 base)
+
+==========================================================================================================================
+=== G1. CAUSALITY GATE - the contract is TESTED, not asserted.
+=== Every bar strictly after each row's info_cutoff is replaced with garbage and the
+=== features are rebuilt. Anything that MOVES was reading the future.
+==========================================================================================================================
+    tick_last        moved on   0.00 % of rows   -> KEEP
+    tick_cum15       moved on   0.00 % of rows   -> KEEP
+    tick_persist15   moved on   0.00 % of rows   -> KEEP
+    tick_extreme15   moved on   0.00 % of rows   -> KEEP
+    trin_log         moved on   0.00 % of rows   -> KEEP
+    trin_chg15       moved on   0.00 % of rows   -> KEEP
+    vix_last         moved on   0.00 % of rows   -> KEEP
+    vix_chg15        moved on   0.00 % of rows   -> KEEP
+    vix_shock        moved on   2.63 % of rows   -> DROP
+    PROBE_LEAK       moved on 100.00 % of rows   -> DROP
+    PROBE_SAFE       moved on   0.00 % of rows   -> KEEP
+
+    injected LEAK dropped : True      injected SAFE kept : True
+    G1 PASS - the gate discriminates. Proceeding.
+    internals features surviving: 8 of 9  ['tick_last', 'tick_cum15', 'tick_persist15', 'tick_extreme15', 'trin_log', 'trin_chg15', 'vix_last', 'vix_chg15']
+[     4s] 1,059 calendar sessions, 13 folds
+[     4s] target delta_total_window   mean $198.17  sd $2,460.67
+
+==========================================================================================================================
+=== ARMS - declared in the spec before any of this ran
+==========================================================================================================================
+    X             20 features   OOS rho -0.0481
+    X_plus_INT    28 features   OOS rho -0.0265
+    INT            8 features   OOS rho +0.0062
+    NEGCTRL       28 features   OOS rho -0.0400
+
+==========================================================================================================================
+=== NULL - session-boundary circular shifts, ENTIRE walk-forward refitted inside each
+==========================================================================================================================
+[     8s]    50/200 shifts
+[    13s]    100/200 shifts
+[    17s]    150/200 shifts
+[    21s]    200/200 shifts
+
+    arm            OOS rho   null p50   null p95  percentile
+    --------------------------------------------------------
+    X              -0.0481    -0.0204    +0.0576       29.5th
+    X_plus_INT     -0.0265    -0.0100    +0.0557       37.5th
+    INT            +0.0062    -0.0225    +0.0570       69.5th
+    NEGCTRL        -0.0400    -0.0083    +0.0492       28.0th
+
+==========================================================================================================================
+=== GATES - all declared in spec 96a0019 before results existed
+==========================================================================================================================
+    G1  PASS   causality gate drops the leak and keeps the safe probe
+    G2  PASS   X_plus_INT OOS rho exceeds X
+    G3  FAIL   X_plus_INT exceeds the 95th pctile of its OWN refitted null
+    G4  PASS   X_plus_INT beats NEGCTRL and NEGCTRL does not beat its own null
+    G5  FAIL   increment positive in a majority of folds
+
+    fold-level increment positive in 44 % of 9 folds
+
+    DECLARED READING RULES, applied:
+      both arms worse than chance?            True   -> any G2 pass carries NO WEIGHT
+      NEGCTRL >= every real arm?              False   
+
+    VERDICT: NULL
+
+[    21s] done
