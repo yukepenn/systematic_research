@@ -26,7 +26,7 @@ _**This file answers "what exactly is installed and reproducible?"** They are di
 | **A** | RESEARCH_SINGLE | `P1/PCT` | research object — see `CURRENT_BASELINE.md` §0 |
 | **B** | RESEARCH_PORTFOLIO_FRONTIER | `{P1/PCT + XM_CONFLICT}` inverse-vol | research object — see `CURRENT_BASELINE.md` §0 |
 | **C** | **EXECUTABLE_SINGLE** | **`WeeklyEdgeP1PCT_v1`** | **EXECUTABLE · PARITY-CERTIFIED · NOT ENABLED** |
-| **D** | **EXECUTABLE_PORTFOLIO** | **`WeeklyEdgeP1PCT_v1` + `WeeklyEdgeXMConflict_v2`** | **both legs individually certified · NOT ENABLED** |
+| **D** | **EXECUTABLE_COMPONENT_SET** | **`WeeklyEdgeP1PCT_v1` + `WeeklyEdgeXMConflict_v2`** | **both legs individually PARITY-CERTIFIED · NOT ENABLED** — a component set, **not** an executable implementation of B |
 
 ## Certified objects
 
@@ -102,11 +102,25 @@ Both legs on one account, 2022-07 → 2026-08 at minute resolution:
 > commission even when their fills net**; that duplicate cost is already inside each certified
 > backtest, so it is priced, not missing.
 
-**Weighting.** Baseline B is the **inverse-volatility** research weighting. The certified executable
-legs are each **quantity 1** (P1/PCT additionally sizes 2 on ~20 % of entries via its own causal
-quality layer). **The research weighting has not been silently changed** — mapping inverse-vol
-weights onto integer contract counts is an open capital-allocation decision that belongs to the
-owner, and no such mapping is asserted here.
+### ⚠️ Weighting — why D is a COMPONENT SET and not portfolio B
+
+Baseline B is the **inverse-volatility** research weighting. The certified executable legs are each
+**quantity 1** (P1/PCT additionally sizes 2 on ~20 % of entries via its own causal quality layer).
+
+> ### **Running both legs at their default quantity 1 is NOT an implementation of B and does NOT
+> ### reproduce B's economics.**
+> B's **$2,012/wk at fixed $20,245 DD** is a *research* figure computed under **inverse-vol weights**
+> and the **research cost model** (commission **plus** modelled spread). A 1 + 1 contract book is a
+> different allocation under a different cost model, and quoting B's number for it would be wrong in
+> both directions at once.
+>
+> **What IS established:** each leg reproduces its own research object inside NinjaTrader. **What is
+> NOT established:** any executable allocation that reproduces the portfolio.
+
+**The research weighting has not been silently changed.** Mapping inverse-vol weights onto integer
+contract counts is an open **owner capital-allocation decision**, and no such mapping is asserted
+anywhere in this repo. Until it is selected, **`EXECUTABLE_PORTFOLIO` proper remains PENDING** and
+what exists is the certified component set above.
 
 ## Active NT8 strategy set
 

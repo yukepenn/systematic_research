@@ -38,7 +38,7 @@ does *not* work is the most reused asset here.
 | **A** | RESEARCH_SINGLE | **`P1/PCT`** |
 | **B** | RESEARCH_PORTFOLIO_FRONTIER | **`{P1/PCT + XM_CONFLICT}`**, inverse-vol |
 | **C** | EXECUTABLE_SINGLE | **`WeeklyEdgeP1PCT_v1`** — parity-certified 2026-08-27 |
-| **D** | EXECUTABLE_PORTFOLIO | **`WeeklyEdgeP1PCT_v1` + `WeeklyEdgeXMConflict_v2`** — both legs certified 2026-08-27 |
+| **D** | EXECUTABLE_COMPONENT_SET | **`WeeklyEdgeP1PCT_v1` + `WeeklyEdgeXMConflict_v2`** — both legs individually parity-certified 2026-08-27 |
 
 Economics, evidence labels and caveats: **[`CURRENT_BASELINE.md`](research/weekly_edge/CURRENT_BASELINE.md)**.
 Exactly what is installed, compiled and reproducible:
@@ -47,6 +47,11 @@ Exactly what is installed, compiled and reproducible:
 > **EXECUTABLE ≠ ENABLED.** Both objects reproduce inside NinjaTrader's Strategy Analyzer. Neither
 > is deployed, started, or connected to any account. Live enablement is an owner action that has
 > **not** been taken.
+>
+> **D is a certified COMPONENT SET, not an executable version of B.** B is inverse-vol weighted;
+> the integer-contract / capital mapping has **not** been selected, and running both legs at
+> quantity 1 does **not** reproduce B's economics. **The executable implementation of B is PENDING**
+> an owner capital-allocation decision.
 
 ## What is running / blocked right now
 

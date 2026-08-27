@@ -17,12 +17,20 @@ _This is a **state document, not a changelog.** Wave-by-wave history lives in
 | **A** | **RESEARCH_SINGLE** | **`P1/PCT`** | $1,394/wk raw · **$1,230/wk at fixed $20,245 DD** · 56.3 % positive weeks · max DD $22,931 · t 4.16 |
 | **B** | **RESEARCH_PORTFOLIO_FRONTIER** | **`{P1/PCT + XM_CONFLICT}`** inverse-vol | **$2,012/wk at fixed DD** · max DD **$11,489** · 59.2 % positive weeks · t 4.90 |
 | **C** | **EXECUTABLE_SINGLE** | **`WeeklyEdgeP1PCT_v1`** | ✅ **PARITY-CERTIFIED 2026-08-27** · `runs/WE_P1PCT_PARITY_20260827/` |
-| **D** | **EXECUTABLE_PORTFOLIO** | **`WeeklyEdgeP1PCT_v1` + `WeeklyEdgeXMConflict_v2`** | ✅ both legs certified · `runs/WE_XM_PARITY_20260827/` |
+| **D** | **EXECUTABLE_COMPONENT_SET** | **`WeeklyEdgeP1PCT_v1` + `WeeklyEdgeXMConflict_v2`** | ✅ **both legs individually PARITY-CERTIFIED** · `runs/WE_XM_PARITY_20260827/`. ⚠️ a certified component set, **NOT** an executable implementation of B — see below |
 
 **Every weekly figure above is at a fixed $20,245 max drawdown** — algebraically scale-invariant, so
 it cannot be inflated by leverage. Cost model: $4.36/ctrRT commission **plus** candidate-specific
 modelled spread (P1 $14.44, XM $12.50). **NT8 nets are a different quantity** — see the manifest.
 
+> ### ⚠️ **D IS A CERTIFIED COMPONENT SET, NOT PORTFOLIO B.**
+> **B is inverse-volatility weighted. The integer-contract / capital mapping that would implement it
+> has NOT been selected.** Running both legs at their default quantity 1 is **not** that mapping and
+> **does not reproduce B's economics** — B's $2,012/wk at fixed DD is a research figure under
+> research weights and the research cost model. Selecting the mapping is an owner capital-allocation
+> decision (see `research/operational/EXECUTION_MANIFEST.md`), and until it is made the
+> **executable implementation of B remains PENDING.**
+>
 > ### 🔒 LIVE STATUS: **NOT LIVE ENABLED** — every object above, without exception.
 > **EXECUTABLE ≠ ENABLED.** C and D reproduce inside NinjaTrader's Strategy Analyzer on the
 > isolated Backtest account. Neither is deployed, started or connected to any account, no live
@@ -149,10 +157,20 @@ artifact** ($540 in 2022-23 vs $569 from 2024).
 
 ---
 
-## 3. ⭐ What the book loses on — and it is not what anyone assumed
+## 3. ⭐ What the book loses on — the measurement, and how its interpretation moved
 
-`runs/WE_W117_LOSESTATE/` + `runs/WE_W119_BOOKLOSS/`. The candidate portfolio loses in **87 of 213
-weeks (40.8 %)**.
+> ### ⚠️ TWO EARLIER CONCLUSIONS FROM THIS SECTION ARE **SUPERSEDED**. They are named here rather
+> ### than deleted, because both were quoted for several waves and a future reader will meet them in
+> ### the run reports.
+> ### 1. ~~"The missing engine is a REVERSAL engine."~~ — **SUPERSEDED by W118 + W119.**
+> ### 2. ~~"Coverage is not the gap. TURNOVER is."~~ — **SUPERSEDED by W121.**
+> ### **Every measurement below still stands. Only the inferences drawn from them were wrong.**
+
+### 3a. The measurement that stands — an EX-POST weekly phenotype
+
+`runs/WE_W117_LOSESTATE/`. The candidate portfolio loses in **87 of 213 weeks (40.8 %)**. Weeks are
+classified by an **ex-post** session-class mix, so this is a **phenotype of a losing week, never a
+usable state** — every field is known only after the week has ended.
 
 | market state | LOSING weeks | WINNING weeks | p |
 |---|---|---|---|
@@ -160,15 +178,55 @@ weeks (40.8 %)**.
 | share of **REVERSAL** sessions | 0.299 | 0.230 | **0.011** |
 | share of **TREND-DOWN** sessions | 0.147 | 0.143 | **0.880 — no difference** |
 
-> ### **THE BOOK LOSES WHEN THE MARKET STOPS TRENDING UP — NOT WHEN IT FALLS.**
+> ### **THE BOOK LOSES WHEN THE MARKET STOPS TRENDING UP — NOT WHEN IT FALLS.** ✅ **still current**
 > **53 % of losing weeks are weeks NQ rose.** This **falsifies** the natural assumption that a
 > long-only P1 plus an opening-auction XM must be short of *downside* exposure — an assumption W117
-> wrote into its own spec in advance. **The missing engine is a REVERSAL engine, not a downside
-> engine.** Six frozen objects were screened for it; **zero survivors.**
+> wrote into its own spec in advance. Six frozen objects were screened for a fix; **zero survivors.**
 
-**W119's `BOOK_LOSS_LEDGER`** (1,058 sessions × 25 columns) narrows it further: **`E_NO_ENGINE` = 0
-sessions** — coverage is not the gap. **Turnover is**: on losing sessions P1 takes **3.04 trades vs
-1.38**, for **18 % fewer contract-minutes**, on sessions moving **31 % less**.
+### 3b. Why "a REVERSAL engine" is no longer the conclusion
+
+- **W119** (`runs/WE_W119_BOOKLOSS/`, the `BOOK_LOSS_LEDGER`, 1,058 sessions × 25 columns)
+  re-measured the same thing at **session** resolution and the REVERSAL excess collapses to
+  **+1.7 pp**, against the +6.9 pp the weekly aggregation showed. **`RANGE` is the larger dollar
+  class** (−$114,807 vs −$91,216). **REVERSAL is not the dominant supported explanation.**
+- **W118** (`runs/WE_W118_REVERSAL/`) then built a reversal at the mechanism's **own event-driven
+  geometry** instead of a fixed clock — the fairest test the family has ever had. It earns
+  **−$405/trade**, while the **momentum mirror at the same trigger bars earns +$374**. On
+  2006–2021 **both are ≈ zero**.
+
+> **A weekly phenotype is not a mechanism.** "Losing weeks contain more ex-post REVERSAL sessions"
+> was read as "build a reversal engine". Every reversal object actually built then lost to its own
+> same-trigger continuation control. **The class label described the weather, not a tradeable edge.**
+
+### 3c. Why "turnover is the gap" is no longer the conclusion
+
+W119 also found **`E_NO_ENGINE` = 0 sessions** — coverage is genuinely not the gap — and that on
+losing sessions P1 takes **3.04 trades vs 1.38**, for **18 % fewer contract-minutes**, on sessions
+moving **31 % less**. ✅ **Those numbers stand.** The inference drawn from them did not.
+
+**W121** (`runs/WE_W121_TURNOVER/`) tested turnover as a *causal state*. Entry-count caps lose to
+baseline at **every** K **and sit at the 0.0 / 4.0 / 1.0 / 0.0th percentile of a count-matched
+random-halt placebo.**
+
+> ### **Removing the same number of entries AT RANDOM does better than removing them by the rule.**
+> That is stronger than a null: the ordinal position of an entry carries **negative** information
+> about which entry to drop. The 4th entry is the *best* cell ($253 against a $139 mean).
+> **A high trade count on a losing session is a SYMPTOM of a hard session — not a cause of the loss,
+> and not a lever.**
+
+### 3d. ⭐ What the gap actually is now
+
+**W122** (`runs/WE_W122_XSUPPORT/`) then closed the nearest available information lane: cross-market
+intraday support at P1's own decision events fails **all four** gates — matched Q5−Q1 **−$157**
+against a **$503** dependence-preserving family bar, **−$227** prequential, and **below** an NQ-only
+control. What little existed was **NQ momentum wearing a cross-market label**.
+
+> ### **The unresolved gap is NOT "a reversal engine" and NOT "a turnover policy".**
+> ### **It is genuinely NEW CAUSAL INFORMATION about action / signal quality at the decision event**
+> ### — `E[PnL(action) | I_t]` from a source the book does not currently observe.
+> Everything reachable from price, ex-post class labels, trade counts and currently-held
+> cross-market series has now been tested and is closed. **§7 names the surfaces that remain and
+> why each is blocked.**
 
 ## 4. Watchlist
 

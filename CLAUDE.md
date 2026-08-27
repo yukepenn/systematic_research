@@ -36,6 +36,12 @@ Never collapse these. `CURRENT_BASELINE.md` §0 owns A and B; `EXECUTION_MANIFES
 A baseline being empty does not erase the others. **EXECUTABLE · PARITY-CERTIFIED · LIVE-ENABLED
 are three separate statuses.**
 
+⚠️ **Certifying both legs of a portfolio does NOT produce an executable portfolio.** Slot D currently
+holds an **`EXECUTABLE_COMPONENT_SET`** — two individually parity-certified strategies. The research
+portfolio is **inverse-vol weighted**, and the integer-contract / capital mapping has not been
+selected, so **running both legs at quantity 1 is not that mapping and does not reproduce the
+research economics.** Never quote a research portfolio figure for a component set.
+
 ## 4. Method (non-negotiable — each rule was bought with a measured failure)
 
 - **Spec first.** Every run gets `runs/<RUN_ID>/spec.yaml` **committed before results exist**.
