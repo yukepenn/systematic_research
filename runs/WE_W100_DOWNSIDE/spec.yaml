@@ -1,0 +1,107 @@
+run_id: WE_W100_DOWNSIDE
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-26
+status: PREREGISTERED
+authority: >
+  Owner directive V4 section 7 TRACK A (downside / bear persistence) and TASK 8/9, with the target
+  chosen from W99's ranked table and from nowhere else, as section 6 requires.
+
+title: >
+  DOES ANY INFORMATION WE HAVE NEVER USED SEPARATE A GOOD DOWNSIDE CONTINUATION FROM A BAD ONE?
+  Two axes, both empty on every row of MECHANISM_COVERAGE_20260826.md, both free and already
+  on disk for twenty years: BAR VOLUME and REALIZED DOWNSIDE SEMIVARIANCE.
+
+# ---------------------------------------------------------------------------------------------
+# 1. WHY THIS TARGET
+# ---------------------------------------------------------------------------------------------
+why:
+  - "W99: TREND-DOWN carries 63.71 pts of segment-level movement per session against TREND-UP's
+     49.72 - 28 % MORE - and is the one class the object is negative on (-$495/session). Residual
+     $11,609 per session of that class, on 14.5 % of sessions, at a break-even direction accuracy
+     of 0.5072. Nothing else in the ranked table is close."
+  - "W90: the short leg we DO have is real but GENERIC - 82.0 / 30.5 / 76.0 percentiles against
+     count-matched controls. Generic means the schedule is worth something and the SELECTION is
+     worth nothing. That is exactly the thing a new information axis could fix."
+  - "Owner directive section 7: 'The failed mirrored Solar short experiments do NOT falsify all
+     short alpha.' They falsify mirroring. This tests information, not mirroring."
+
+# ---------------------------------------------------------------------------------------------
+# 2. DESIGN - filters on ONE fixed schedule, never a new object with a new scale parameter
+# ---------------------------------------------------------------------------------------------
+design_principle: >
+  Every previous short attempt here invented a new object with its own thresholds, so a null had to
+  disentangle schedule, scale and selection at once. This wave holds the SCHEDULE COMPLETELY FIXED
+  and varies ONLY the information used to accept or reject each trigger. There is no new scale
+  parameter anywhere in it.
+
+base_schedule: >
+  The SHORT leg of the incumbent B-MOM channel, `we_channels.X0v_bmom`, traded alone:
+  c < min(open_0930 - mtod14(|c - open_0930|), RTH VWAP), latched, reset at 09:31, killed 15:57,
+  flat at session close. This is an object the campaign already owns and has already measured.
+
+filters:                          # all causal, all self-normalising, no scanned constants
+  F_VOL:  "accept the trigger only if relvol = v / mean20(v) >= 1.0 at the trigger bar"
+  F_SEMI: >
+    accept only if rsv_share = sigma_down / (sigma_down + sigma_up), from the trailing 30 bars,
+    is >= its own trailing-250-SESSION median at that bar. The median is causal and rolling, so
+    there is no fitted threshold.
+  F_BOTH: "both"
+
+controls:
+  F_RAND: >
+    THE CONTROL THAT DECIDES EVERYTHING. For each treatment, 200 random filters accepting the SAME
+    NUMBER of triggers, drawn uniformly from the same trigger set. A filter that removes half the
+    trades changes exposure, drawdown and everything derived from them; the only honest comparison
+    is against random filters at the identical acceptance rate.
+  LONG_LEG: >
+    The identical battery on the LONG leg. If F_SEMI helps shorts and NOT longs, the downside
+    semivariance is carrying downside-specific information. If it helps both equally it is a
+    plain volatility filter wearing a costume, and the mechanism claim is FALSE even if the
+    money is real.
+
+# ---------------------------------------------------------------------------------------------
+# 3. METRICS AND FALSIFIERS - fixed before the run
+# ---------------------------------------------------------------------------------------------
+primary: >
+  MEAN $ PER CONTRACT ROUND TURN of the accepted trades, net of the arm's own contract-weighted
+  spread friction. This is chosen over any drawdown metric deliberately: filtering changes
+  exposure, and $/ctrRT is the only statistic that is free of that confound. It is a pure test of
+  whether the information separates good triggers from bad ones.
+secondary:
+  - "the full directive-13 dashboard at a fixed $20,245 max drawdown, for completeness"
+  - "paired weekly difference vs the unfiltered base, with SE, t, N (CHARTER AMENDMENT 2 sec 2a)"
+  - "recency strip t12m / t6m / 2026YTD, with the BURNED label on t6m and t3m"
+  - "Tier-3 2006-2021, recorded, NOT a veto (directive section 3)"
+
+falsifiers:
+  H1_volume:    "F_VOL's mean $/ctrRT <= the 95th percentile of its 200 rate-matched random
+                 filters  =>  bar volume carries NO information about downside continuation, and
+                 the largest empty column in the coverage matrix is empty for a reason."
+  H2_semivar:   "F_SEMI's mean $/ctrRT <= the 95th percentile of its rate-matched random filters."
+  H3_asymmetry: "F_SEMI's improvement on the SHORT leg <= its improvement on the LONG leg  =>  it
+                 is a volatility filter, not a downside mechanism. H3 can fail while H2 passes;
+                 both outcomes are reported and the mechanism claim dies with H3 either way."
+
+multiple_testing: >
+  Three treatments x two legs = 6 tests. Each carries its OWN rate-matched null, so there is no
+  best-of-K selection across treatments - nothing is chosen after seeing results. The
+  Bonferroni-corrected bar for the family is the 99.17th percentile (0.05/6) and is reported
+  alongside the 95th so the reader can apply either.
+
+# ---------------------------------------------------------------------------------------------
+# 4. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "NOTHING IS PROMOTED IN THIS WAVE. A pass here buys the right to build an engine on that axis
+     in a later wave, and nothing else."
+  - "A treatment that clears its 95th-percentile bar but NOT the Bonferroni bar is recorded as
+     WEAK, not as SUPPORTED."
+  - "If H1 and H2 both fail, the volume column and the semivariance column of the coverage matrix
+     are marked TESTED-NULL for this mechanism - which is itself worth the wave, because the
+     coverage matrix currently ranks them #1 and #2 on the strength of never having been tried."
+  - "No threshold in this wave may be adjusted after seeing a result. If relvol >= 1.0 is the
+     wrong constant, that is a finding about the constant and a new wave, not an edit to this one."
+b1_check: >
+  The reconstructed base schedule must reproduce the committed BMOM object's short-leg trade count
+  before any filter is applied. If it does not, the base is not the incumbent and nothing here is
+  comparable to anything.
