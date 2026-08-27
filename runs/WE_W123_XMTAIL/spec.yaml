@@ -1,0 +1,70 @@
+run_id: WE_W123_XMTAIL
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "POST-W121 owner directive, sections 10, 11, 19, 23, 26, 28, 31, 32, 44 LANE C."
+
+title: >
+  XM SESSION-TAIL INFORMATION. W119 measured that XM_CONFLICT is active on 33 % of sessions but
+  present in 69.8 % of the book's worst-decile sessions (+34.3 pp). Is there PRE-09:45 information
+  that distinguishes XM's tail-loss trades from ordinary ones? STAGE A ONLY - INFORMATION, NOT A
+  VETO.
+
+what_this_is_not:
+  not_a_contradiction_of_W110: >
+    W110 measured WEEKLY LOSS DIVERSIFICATION and found XM genuinely diversifies P1's losing weeks
+    (rho | P1<0 = -0.165 at the 5.2nd percentile of a circular-shift null). W119 measures
+    SESSION-LEVEL TAIL COMPOSITION. Both are true at different horizons, and section 10 is explicit
+    that the session finding does NOT withdraw XM's ACTIVE COMPONENT status. This wave does not
+    reopen that question.
+  not_a_stop_study: >
+    Section 32 - ordinary XM price stops are CLOSED (W102: every level from 20 to 300 points reduces
+    expectancy at fixed drawdown). The disaster/account-survival level is an owner capital-risk
+    constraint that W105 already priced and no level was selected. This wave touches neither.
+  not_a_rerun_of_W110: >
+    Section 11 forbids rerunning W110's model on losers without preregistering the new target. The
+    TARGET IS DECLARED HERE BEFORE ANY FIT, the FEATURE SET IS FROZEN to exactly W110's committed
+    columns so no new search occurs, and the null is W110b's corrected construction.
+
+# ---------------------------------------------------------------- the target, declared before any fit
+target:
+  primary: "TAIL_LOSS = the trade is in the WORST DECILE of XM's own realised net P&L (35 of 348 trades)."
+  secondary: ["WORST 5 % (17 trades)", "realised MAE below its own 10th percentile"]
+  why_a_rank_target: "XM's payoff is convex and its dollar scale drifts with the index level, so an absolute dollar threshold would mostly select recent sessions. A within-sample rank is scale-free."
+
+features:
+  source: "runs/WE_W110_XMDIVERSE/out/trade_features.csv - EXACTLY the committed columns, unchanged."
+  list: [drive_pts, abs_comp_z, divergence, nq_sigma, morn_vol_rel, gap_pts, on_range_rel, is_long, dow, is_ann]
+  causality: "every one is known at or before 09:45 on the trade's own session. No MFE, no MAE, no realised path, no future bar. This is the same strict rule W110 operated under and it is re-asserted numerically, not assumed."
+  frozen: "NO new feature may be added in this wave. Adding features to a 348-row sample after seeing a null is the purest form of the search this campaign controls for."
+
+method:
+  stage_1_stratification: "per-feature: mean and median in the tail-loss group vs the rest, with a 2,000-draw label-permutation p-value. Simple and first, per section 26."
+  stage_2_model: "ONE regularised logistic on the frozen feature set, evaluated by stratified 10-fold cross-validation."
+  null: >
+    W110b's CORRECTED construction, and it is mandatory: each of 400 permutations RE-RUNS THE ENTIRE
+    cross-validated fit on its permuted labels, so the null model gets exactly the same opportunity
+    to overfit that the real one had. Holding predictions fixed while permuting labels - W110's
+    original error - makes the null far too easy.
+  no_search: "no hyperparameter search, no feature selection, no threshold optimisation. Section 26."
+
+power_disclosure_stated_in_advance: >
+  348 trades, 35 in the tail-loss group. This is a SMALL-N wave and the report must lead with that
+  rather than discover it. A logistic on ten features with 35 positives is at the edge of what
+  cross-validation can adjudicate, and only a LARGE effect is interpretable. If the answer is null,
+  the honest conclusion is "not detectable at n=348", NOT "no such information exists".
+
+primary_gate: "cross-validated AUC for TAIL_LOSS exceeds the 95th percentile of the re-fitted permutation null."
+gate_reporting: "section 29 - a GATE / SPEC / OBSERVED / PASS-FAIL table is printed by the code, every clause coded."
+
+secondary:
+  - "the same three tests at the 5 % cut and on the MAE target, so a result existing at only one arbitrary cut is visible as such"
+  - "symmetry check: the SAME model on TAIL_WINNERS, which W110 found identifiable at AUC 0.735 - if losers are unidentifiable while winners are identifiable on the same features and the same n, that asymmetry is itself the finding"
+  - "the session-tail contribution restated: XM's share of the book's worst decile, and what it would be if the identified tail-loss trades could be removed - AS AN UPPER BOUND ONLY, explicitly not a policy"
+
+decision_rule:
+  - "STAGE A ONLY. NOTHING PROMOTED. NO VETO IS BUILT, tested or costed in this wave - section 11 and section 23."
+  - "A pass buys ONE preregistered Stage-B wave and nothing else."
+  - "If no strong causal loss-state information exists: KEEP THE XM ARCHITECTURE UNCHANGED, rely on portfolio diversification plus the owner's catastrophe-risk policy, and DO NOT data-mine a gate. Section 11 states this outcome in advance so it cannot be re-litigated afterwards."
+  - "Any improvement found here is classified as RISK POLICY or CATASTROPHE CONTROL, never as alpha (section 31)."
+  - "No feature, target, cut or model is re-chosen after results are seen."
