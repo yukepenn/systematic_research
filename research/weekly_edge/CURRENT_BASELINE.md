@@ -48,6 +48,41 @@ shipped objects and is unaffected by anything here._
 
 ---
 
+## 0b. ⭐ WHAT THE BOOK LOSES ON — measured for the first time (W117, 2026-08-27)
+
+The candidate portfolio loses in **87 of 213 weeks (40.8 %)** and spends **55.4 % of weeks in
+drawdown**. After 116 waves nobody had ever asked what those weeks look like.
+
+| market state | LOSING weeks | WINNING weeks | perm p |
+|---|---|---|---|
+| **share of TREND-UP sessions** | **0.167** | **0.238** | **0.005** ✱ |
+| **share of REVERSAL sessions** | **0.299** | **0.230** | **0.011** ✱ |
+| NQ weekly return % | −0.218 | +0.660 | 0.006 ✱ |
+| **share of TREND-DOWN sessions** | **0.147** | **0.143** | **0.880** — no difference |
+| daily vol · weekly range · announcement days | — | — | 0.26 – 0.74, nothing |
+
+> ### **THE BOOK LOSES WHEN THE MARKET STOPS TRENDING UP — NOT WHEN IT FALLS.**
+> **P(NQ week down ∣ book loses) = 0.471** vs an unconditional **0.437**: *53 % of losing weeks are
+> weeks NQ rose.* ρ(book, NQ weekly return) = only **+0.243**. **TREND-DOWN sessions are no more
+> common on losing weeks than on winning ones.**
+>
+> ⚠️ **This falsifies the natural assumption** — that a long-only P1 plus an opening-auction XM must
+> be short of *downside* exposure — which W117 wrote into its own spec in advance and which the data
+> then killed. **The missing engine is a REVERSAL engine, not a downside engine.**
+
+**And nothing the campaign owns is positive there.** Six frozen objects screened; **zero survivors**.
+`FOLLOW_MORNING`'s long leg earns **$482/week unconditionally and −$2 on the book's losing weeks** —
+a circular-shift null says a *random* alignment would have given **+$484**. It is not weak there;
+it is **absent**. `ALWAYS_SHORT`, the crudest downside exposure, gives −$23.
+
+**The named information gap, and the standing caution:** the W51 REVERSAL class is 23–30 % of weeks
+and is where the book bleeds. Seven fade mechanisms have been killed in this campaign — but all of
+them were tested as **afternoon fades at the single 11:49 → 15:44 clock**, and W111b then showed
+that clock sits on the wrong side of a live momentum effect. **The kills constrain the clock, not
+the class.** Whether reversal sessions can be monetised is **UNKNOWN**.
+
+---
+
 ## 3b. `FOLLOW_MORNING` — WATCHLIST, and why it is not in the book (W114 + W115 + W116)
 
 Buy at the 11:49 open if the 11:29 close is above the 09:31 open, sell if below, exit at the 15:44

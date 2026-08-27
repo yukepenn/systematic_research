@@ -1,0 +1,59 @@
+    1,059 sessions [4s]
+    book = 0.473 x P1/PCT + 0.527 x XM (inverse-vol), 213 weeks, 87 losing (40.8 %)
+
+============================================================================================================================
+=== PART A - CHARACTERISE THE LOSING STATE. Diagnostic; nothing is traded here.
+============================================================================================================================
+    book: $1,142/wk, maxDD $11,489, 87 losing weeks, worst $-7,611, mean loss $-1,649
+    longest losing streak 5 weeks; weeks in drawdown 118 of 213 (55.4 %)
+
+market state           LOSING weeks   WINNING weeks   difference   perm p
+NQ weekly return %           -0.218           0.660       -0.878    0.006  *
+daily vol %                   0.893           0.982       -0.089    0.258
+weekly range pts            765.500         742.054       23.446    0.644
+announcement days             0.621           0.587        0.033    0.736
+share TREND-UP                0.167           0.238       -0.071    0.005  *
+share TREND-DOWN              0.147           0.143        0.004    0.880
+share RANGE                   0.283           0.258        0.025    0.361
+share MIXED                   0.104           0.131       -0.027    0.199
+share REVERSAL                0.299           0.230        0.069    0.011  *
+
+    correlation of book weekly $ with NQ weekly return: +0.243
+    P(NQ week down | book loses) = 0.471   unconditional P(NQ week down) = 0.437
+
+    WHICH LEG LOST on the book's losing weeks:
+        BOTH legs lost                 31 weeks  ( 35.6 % of losing weeks)
+        P1 only                        32 weeks  ( 36.8 % of losing weeks)
+        XM only                        24 weeks  ( 27.6 % of losing weeks)
+        neither (rounding/zero XM)      0 weeks  (  0.0 % of losing weeks)
+
+============================================================================================================================
+=== PART B - WHAT IS POSITIVE THERE? Six ALREADY-FROZEN objects, no new mechanism.
+============================================================================================================================
+candidate         all wks $  LOSING wks $  null mean   null p95   pctile  vs ALWAYS_SHORT
+FM_LONG                 482            -2        484      1,102     9.4th              +21
+FM_SHORT                356            69        358        898    18.9th              +92
+XM_LONG                 583          -849        589        992     0.0th             -826
+XM_SHORT                333        -1,017        339        790     0.0th             -993
+ALWAYS_SHORT           -226           -23       -227        422    68.9th               +0
+FADE_MORNING           -974          -203       -978        -80    90.1th             -180
+
+    survivors of the per-candidate bar: NONE
+    No candidate clears its own bar, so the best-of-6 bar is not computed.
+
+    POWER, disclosed in the spec: 87 losing weeks. sd of the weekly series
+    per candidate implies the smallest detectable mean at 80 % power is roughly:
+        FM_LONG          sd $4,408  -> ~$1,323/wk
+        FM_SHORT         sd $3,821  -> ~$1,147/wk
+        XM_LONG          sd $2,831  -> ~$850/wk
+        XM_SHORT         sd $3,357  -> ~$1,008/wk
+        ALWAYS_SHORT     sd $4,920  -> ~$1,477/wk
+        FADE_MORNING     sd $6,641  -> ~$1,994/wk
+
+============================================================================================================================
+=== PART C - marginal value, run only for survivors
+============================================================================================================================
+    NOT RUN - nothing survived part B. Per the spec that is a RESULT: the book's losses
+    are not addressable by anything currently owned at this geometry.
+
+[done 4s]
