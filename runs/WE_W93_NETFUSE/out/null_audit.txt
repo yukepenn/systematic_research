@@ -1,0 +1,66 @@
+=== 1,620,044 bars / 1187 sessions / 213 weeks [15s]
+    REAL object: long fires 17.028 % of bars, short 15.585 %,
+    BOTH 0.0000 % (0 bars)
+    real (unscaled, own exposure): wk+% 58.69  top5 15,611  money@fixDD 1,068
+
+================================================================================================================
+=== DIAGNOSTIC: how badly does a session shift damage the object's STRUCTURE?
+================================================================================================================
+    over 200 shifts, bars where BOTH books fire (-> forced FLAT by the tie rule):
+      real object         0 bars  (0.0000 %)
+      shifted     mean    46,820   median    46,818   max    56,870
+      as a share of all bars: mean 2.890 %, max 3.510 %
+      as a share of the SHORT book's own firing bars: mean 18.54 %
+
+    -> a session shift silently DELETES 18.5 % of the short book by
+       colliding it with the long book. The preregistered C2 null is therefore
+       CONTAMINATED at the 5 % threshold set here.
+
+================================================================================================================
+=== NULL 2 (collision-free): shift the short book, then RESTRICT it to bars where the
+===         long book is silent - so mutual exclusivity is preserved by construction
+===         and the tie rule can never fire. Firing rate is re-matched by construction
+===         to the post-restriction rate, and that rate is reported.
+================================================================================================================
+      50/200 [30s]
+      100/200 [44s]
+      150/200 [58s]
+      200/200 [72s]
+
+    real short-book firing rate 15.585 %; collision-free nulls mean 12.488 %
+
+leg                             real   null mean    null p95  percentile
+positive-week %                58.69       51.88       55.87       99.0%
+raw mean top-5 DD             15,611      24,735      17,750       98.5%
+weekly $ at fixed DD           1,068         284         609       99.5%
+
+    C2 ON THE COLLISION-FREE NULL: PASS
+    This null is STRICTLY HARDER than the preregistered one: it hands the alternative
+    short book the same protection the real one has. If C2 survives here it survives.
+    RESIDUAL HANDICAP, stated: the collision-free null still carries a lower short firing
+    rate than the real object, because mutual exclusivity is exactly the property the
+    real object's construction supplies and a shifted book cannot have it for free.
+
+================================================================================================================
+=== NULL 3 (the strongest available): hold the POSITION SCHEDULE completely fixed and
+===         randomise DIRECTION. Latched runs are identified in the real target array;
+===         the multiset of run signs is PERMUTED across runs. Same bars in a position,
+===         same run lengths, same count of long runs and short runs - only WHICH run
+===         gets which sign changes. This cannot damage the structure at all, and it
+===         asks the deepest version of the question: is the short DIRECTION real
+===         information, or is the object simply well-scheduled?
+================================================================================================================
+    7,326 latched runs: 3,368 long, 3,958 short
+      50/200 [86s]
+      100/200 [100s]
+      150/200 [114s]
+      200/200 [128s]
+
+leg                             real   null mean    null p95  percentile
+positive-week %                58.69       46.15       53.05      100.0%
+raw mean top-5 DD             15,611      68,019      23,904      100.0%
+weekly $ at fixed DD           1,068         -47          47      100.0%
+
+    SIGN-PERMUTATION NULL: PASS
+
+[done 128s]
