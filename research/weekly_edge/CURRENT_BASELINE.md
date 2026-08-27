@@ -1,7 +1,15 @@
 # CURRENT BASELINE — campaign #7 `WEEKLY_EDGE`
 
 **Authoritative for current RESEARCH state. 2026-08-27, through wave W123, both parity runs,
-the `RR_W000`–`RR_W006` action-value programme, and `DATA_CAPABILITY_AUDIT_20260827`.**
+the `RR_W000`–`RR_W006` action-value programme, `DATA_CAPABILITY_AUDIT_20260827`, the
+`ORDERFLOW_EXPAND` / `INTERNALS_ACQUIRE` / `MULTIMARKET_INVENTORY` acquisition wave, and
+`MS01` / `INT01` / `FWD_BOOTSTRAP`.**
+
+> **Evidence depth per object lives in
+> [`research/operational/ALPHA_EVIDENCE_CLASSIFICATION.md`](../operational/ALPHA_EVIDENCE_CLASSIFICATION.md).**
+> **What could trade today lives in
+> [`research/operational/TOMORROW_PRODUCTION_CANDIDATE.md`](../operational/TOMORROW_PRODUCTION_CANDIDATE.md).**
+> **Data assets live in [`research/data/DATA_ASSET_REGISTRY.md`](../data/DATA_ASSET_REGISTRY.md).**
 
 _This is a **state document, not a changelog.** Wave-by-wave history lives in
 `runs/WE_W*/REPORT.md` and is linked, never reproduced. Execution truth lives in

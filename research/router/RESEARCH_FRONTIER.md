@@ -31,7 +31,9 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | 10 | Does options / dealer-gamma state carry NQ information? | MEDIUM | **OWNER-GATED** · owner OQ-5 · **confirmed by probe** — no option-chain surface exists in this tool set at all |
 | 11 | Do more event TYPES reopen the event-response lane? | MEDIUM | **DATA-BLOCKED** · owner OQ-5 · free-source construction not yet probed |
 | **16** | Does a multi-market TSMOM / carry book add marginal portfolio value? | **HIGH ceiling** | ✅ **RUNNABLE — UNIVERSE ESTABLISHED** · **24 roots · 6 sectors · 2016–2025 · $0** · next step is the contract-level substrate with an explicit roll · `runs/MULTIMARKET_INVENTORY_20260827/` |
-| **17** | Do market internals (`$TICK` / `$TRIN` / `$VIX`) carry NQ information? | MEDIUM | ✅ **ACQUIRED · GATE MARGINAL · HIGHEST-EVI RUNNABLE ROW** · 1.34 M bars free; **35.7 % decision coverage, MDE 1.07×** — needs a preregistered Stage-A wave on the **764 RTH entries, population declared in advance** · `runs/INTERNALS_ACQUIRE_20260827/` |
+| — | ~~Do market internals predict P1 ACTION VALUE?~~ | — | ❌ **CLOSED — NULL** · `INT01`: 37.5th pctile of its own refitted null, G3+G5 fail, `NEGCTRL` behaviour matches `RR_W002A`/`RR_W004` · `runs/INT01_STAGE_A/` |
+| **17** | Do market internals predict **DIRECT RTH NQ RETURN**? | MEDIUM | ✅ **RUNNABLE · NOT CLOSED BY `INT01`** — different target, different variance (§41 scope discipline) · needs its own preregistration |
+| **18** | Can current tick/BBO generate **STANDALONE** NQ alpha at 15–60 s? | **HIGH ceiling** | ✅ **RUNNABLE · HIGHEST-EVI ROW** · `MS01`: friction **payable**, break-even **54.16 % at 60 s**, MDE below friction · **no model exists yet** · `runs/MS01_STANDALONE_FEASIBILITY/` |
 | 12 | Does an individual-contract substrate change any verdict? | LOW | DEFERRED by design · directive §52 |
 | 13 | Does the frozen architecture survive the sealed forward pool? | — | **CALENDAR-GATED** · needs an architecture freeze |
 | 14 | Can position management (exit / reversal) be routed? | UNKNOWN | **EXCLUDED from V1** · directive §7 |
@@ -54,6 +56,27 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 > **Nothing measured is retracted.** `RR_W002A`, `RR_W004`, `RR_W005`, `RR_W006` all stand
 > exactly as recorded. What is withdrawn is the *scope word* attached to them: those waves
 > exhausted the **information this repo had materialized**, not the information it can reach.
+
+---
+
+## EVI RE-RANK — 2026-08-27, under the current-regime evidence doctrine
+
+| # | runnable row | why it ranks here |
+|---|---|---|
+| **1** | **Microstructure standalone at 60 s** | the ONLY lane with a measured, **payable** friction bar (break-even 54.16 %) and **no model built**. Highest information-per-unit-effort |
+| **2** | **Multi-market TSMOM V1** | 24 roots · 6 sectors · 2016–2025 at **$0**. Slow signals genuinely need the long history, and it is the only lane offering **economically independent** exposure |
+| **3** | **Internals → direct RTH NQ return** | cheap, data already built, and `INT01` closed only the routing mapping |
+| **4** | **ES tick/BBO cross-market** (§32) | 103 sessions on disk; W122's NULL was a **1-minute** family and does not close **tick-level** ES/NQ interaction |
+| **5** | Shadow / execution engineering | needed before any new sleeve can be trusted, but earns nothing on its own |
+
+**Deliberately NOT ranked:** anything requiring owner spend, live enablement, or calendar time.
+
+> ⚠️ **A note against this campaign's own optimism (§53).** The owner doctrine now prefers
+> current-regime profitability over decades of robustness. That preference is **itself a hypothesis**,
+> and its failure mode is recency overfitting. Every regime-local promotion must answer: *was the
+> window chosen after seeing it? did performance begin before the window? does the mechanism
+> plausibly depend on current structure? does an adjacent earlier window agree?* **The doctrine does
+> not get a free pass because the owner stated it.**
 >
 > ### ⚠️ **The action-value information question is now ASKED and ANSWERED: NULL.**
 > `RR_W002A` fitted it directly against a refitted dependence-preserving null and every gate but the
