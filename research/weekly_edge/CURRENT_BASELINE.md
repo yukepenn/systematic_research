@@ -48,7 +48,7 @@ Regime vocabulary: `STRUCTURAL` · `CURRENT_REGIME_EXPLAINED` · `CURRENT_REGIME
 |---|---|---|---|
 | **BASE** | **`P1/PCT`** | `CURRENT_REGIME_UNEXPLAINED` | ✅ certified |
 | **ACTIVE COMPONENT** | **`XM_CONFLICT`** | `CURRENT_REGIME_UNEXPLAINED` · **REGIME_LOCAL by data availability** | ✅ certified (`_v2`) |
-| **CHALLENGER** | `PAIR23` (2 BMOM : 3 X9a) | `STRUCTURAL` — the one object beating P1 over the 16 unseen years on money, maxDD, top-5, positive weeks *and* streak | none |
+| **CHALLENGER** | `PAIR23` (2 BMOM : 3 X9a) | `STRUCTURAL` — the one object beating P1 over the 16 unseen years on money, maxDD, top-5, positive weeks *and* streak. ⚠️ **It is a raw B-MOM channel + a `P1` VARIANT, not two independent sleeves** — `runs/RR_W003_X9A_CONTRACT/` | none |
 | **WATCHLIST** | `MIRROR_CONT` · `FOLLOW_MORNING` | `CURRENT_REGIME_UNEXPLAINED` | none |
 | **DEAD / FALSIFIED** | `NETFUSE_1` · `VWAP_RECLAIM` · trend-day state layer · volume exhaustion · AFT as a target · cross-market intraday support · turnover | — | — |
 | **HISTORICAL** | campaign #3 Products A/B | closed Aug 2026 | `research/archive/campaign3_system_master/BASELINE_MODELS.md` |
@@ -321,7 +321,18 @@ same entries at random does better* — `WE_W121`).
    simulator to recover the last 15–31 % unless that margin is the object of study.** A `P1/PCT`
    counterfactual must also state whether it is **session-scoped or full-horizon**: the cross-session
    *size* channel is worth **−$101,217** and flips 226 signs.
-6. **Two gate-construction errors are now on the record and must not recur.** A gate whose statistic
+6. **A NAME IS NOT AN OBJECT** (`runs/RR_W003_X9A_CONTRACT/`). Two economically different objects
+   carried the identifier **`X9a`** for many waves: W72's **raw two-sided channel** (weekly ρ with
+   `P1/PCT` **+0.07**, $61,404 over the campaign window) and the stored `w72:X9a` stream that
+   `PAIR23` actually uses (**+0.613**, $233,781). **Daily ρ between them is +0.15.** The stored one is
+   `long_obj(TG_for(X9a))` — **`P1`'s entire Solar ensemble with X9a substituted for B-MOM as one
+   additive term in the tilt.** So `PAIR23` is **a raw channel plus a `P1` variant**, and its
+   ρ(BMOM, X9a) = **+0.009 "INDEPENDENT"** is a fact about the two **wrappers**, not about two
+   signals. **Nothing measured about `PAIR23` is withdrawn** — only what it *is*. ⚠️ Every
+   `w72:*` column in `streams_extended.csv` is built the same way and carries the same caveat.
+   **Any reference to a stream by name must resolve to a construction: signal + wrapper + cost model
+   + window.**
+7. **Two gate-construction errors are now on the record and must not recur.** A gate whose statistic
    is a **one-sided sum over a majority-negative distribution cannot fail** (RR_W001's G4 was VOID —
    check the sign structure before committing a spec). And a **concentration gate must be stated on
    the SUM, not on total absolute value**: RR_W001's G2 read 39.28 % on \|value\| and **104.9 %** on

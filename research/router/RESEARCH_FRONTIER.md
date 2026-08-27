@@ -20,8 +20,8 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | — | ~~Is there enough ACTION-VALUE DISPERSION to justify routing?~~ | — | ✅ **CLOSED** · `runs/RR_W001_ACTION_VALUE_LEDGER/` |
 | — | ~~Does EVENT RESPONSE carry incremental action-value information?~~ | — | ✅ **CLOSED-BY-DATA** · `runs/DATAGATE_EVENTRESPONSE_20260827/` |
 | — | ~~Do causal features predict FULL-HORIZON `delta_action_value`?~~ | — | ✅ **CLOSED — NULL** · `runs/RR_W002A_ACTION_VALUE_INFORMATION/` |
-| **1** | **Is `X9a` a coherent standalone expert?** | **MEDIUM** | **RUNNABLE NOW** |
-| **2** | Does HIGHER-TIMEFRAME state carry anything at P1's decision events? | LOW-MED | RUNNABLE — still `LIGHT`, never closed |
+| — | ~~Is `X9a` a coherent standalone expert?~~ | — | ✅ **CLOSED — NOT ADMITTED** · `runs/RR_W003_X9A_CONTRACT/` |
+| **1** | **Does HIGHER-TIMEFRAME state carry anything at P1's decision events?** | **LOW-MED** | **RUNNABLE NOW** — the last surface still `LIGHT` |
 | 4 | Is SELECTIVE box un-latching worth anything? *(new, from RR_W001)* | LOW | RUNNABLE |
 | 5 | Is book COVERAGE actually a gap? *(reopened by `RR_W000`)* | LOW | RUNNABLE |
 | 6 | Does a soft allocation with cash beat the static book? | — | **DE-PRIORITISED by RR_W001** · gated on #1 |
@@ -125,7 +125,28 @@ event TYPES** — acquisition, not research (row 10, OQ-5).
 | **B** information exists, economics underpowered | **REAL INFORMATION / ECONOMIC POLICY UNRESOLVED** | **do not force a router** → row 2 |
 | **C** strong information exists | — | **then and only then** preregister a separate economic router wave |
 
-## 1. `X9a` as a standalone expert — the highest-EVI RUNNABLE item
+## ✅ CLOSED — NOT ADMITTED — `X9a`, and the premise was false (`RR_W003`)
+
+W72's era table **reproduced exactly** — 3,948 / +$28.6 / t 1.83 / PF 1.105 and 950 / +$123.0 /
+t 1.05 / PF 1.095, all four figures in both eras. The contract is well defined: a latched channel
+with the same session box as `P1/PCT`, so RR_W001's replay applies unchanged.
+
+**But two different objects carry the name `X9a`**, and `PAIR23` uses the one that contains the
+incumbent. The stored `w72:X9a` is `long_obj(TG_for(X9a))` — **`P1`'s entire Solar ensemble with X9a
+substituted for B-MOM as one additive term in the tilt** — weekly ρ with `P1/PCT` **+0.613**, net
+$233,781. W72's *raw* channel is a different object: ρ **+0.07**, net $61,404. **Daily ρ between the
+two is +0.15.**
+
+> **The frontier's own premise — "`X9a` is the one component of `PAIR23` not already double-counted
+> inside `P1/PCT`'s B-MOM OR-gate" — was FALSE. It is the MOST double-counted component.**
+> Not admitted under either reading: the `PAIR23` member fails R3 by construction, and the raw
+> channel passes R3 but is not the object the question asked about, so admitting it would not
+> decompose `PAIR23`.
+>
+> **`PAIR23` keeps its `STRUCTURAL` status and all its economics.** What changed is what it is: a raw
+> channel plus a `P1` variant — which also makes ρ(BMOM, X9a) = +0.009 a fact about **wrappers**.
+
+## 1. Higher-timeframe state — the last RUNNABLE surface, and it is LOW-MED on purpose
 
 | | |
 |---|---|
@@ -162,7 +183,6 @@ coverage is **UNMEASURED**.
 > engine present" is frequently correct behaviour. Pricing those 32 sessions needs a directional
 > oracle — level 2, not available money. n = 32 cannot support a new engine.
 
-## 2. Higher-timeframe state — still LIGHT, and listed because it was never closed
 
 `INFORMATION_COVERAGE` carries **higher-timeframe** at **`LIGHT`**, evidenced only by `HTFMECH01`
 from **campaign #3** — a different campaign on a different object. It has never been tested at
@@ -237,5 +257,6 @@ decision; slot D is an `EXECUTABLE_COMPONENT_SET` and `EXECUTABLE_PORTFOLIO` rem
 | date | change |
 |---|---|
 | 2026-08-27 | Created at Phase 0, pre-result. |
+| 2026-08-27 | **RR_W003 closed `X9a`: NOT ADMITTED**, and found the frontier's own premise false — two objects share the name and `PAIR23` uses the one containing `P1`. HTF becomes row 1. |
 | 2026-08-27 | **RR_W002A closed the information question: NULL.** Primary at the 51.0th percentile of its own refitted null; a known-null family scored higher (77.0th) than any real arm; top-decile AUC 0.4990. `X9a` becomes row 1. |
 | 2026-08-27 | **RR_W001 closed the dispersion question** (router de-prioritised, HMM not run); **the event-response data gate closed row 2 without a wave**; `X9a` becomes the highest-EVI runnable item; selective box un-latching and book coverage added; more-event-types added as an acquisition row. |

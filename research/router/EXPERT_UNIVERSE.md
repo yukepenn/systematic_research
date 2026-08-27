@@ -33,7 +33,7 @@ An object enters the router only if **all five** hold. Existing ≠ admissible.
 | **`MIRROR_CONT`** | WATCHLIST / standing control | **21 weeks**, event-driven | ✅ | ✅ | ⚠️ | ❌ **too few** | ✅ | **NO — retained as MANDATORY CONTROL** |
 | **`PAIR23`** (2 BMOM : 3 X9a) | STRUCTURAL CHALLENGER | basket, not an event stream | ✅ | ⚠️ | ❌ **fails R3 as one object** | — | ⚠️ | **NOT AS A UNIT** — see §3 |
 | `BMOM` (channel) | inside P1/PCT's OR-gate | — | ✅ | ⚠️ | ❌ **already inside P1/PCT** | — | ⚠️ | **NO — double-counting** |
-| `X9a` | uncertified sleeve | — | ✅ | ⚠️ | ✅ | ? | ? | **DEFERRED** — see §3 |
+| `X9a` | ⚠️ **TWO OBJECTS SHARE THIS NAME** | 842 raw-channel trades in-window | ✅ | ✅ | ❌ **ρ +0.613 with P1** | ✅ | ✅ | **NO — NOT ADMITTED** (`RR_W003`) — see §3 |
 | **`CASH`** | — | every event | ✅ | ✅ | ✅ | ✅ | ✅ | **YES — cash is a real expert** |
 | `NETFUSE_1` · `VWAP_RECLAIM` · trend-day state layer · volume exhaustion · AFT-as-target · cross-market intraday support · turnover | **DEAD / FALSIFIED** | — | — | — | — | — | — | **NO** |
 | campaign #3 Products A/B, Solar Wave objects | HISTORICAL, closed Aug 2026 | — | — | — | — | — | — | **NO** — different campaign, different substrate |
@@ -210,11 +210,22 @@ kind of joint retune).
    as an independent expert would double-count it, and ρ(XM, B-MOM) = **+0.446** is already a known
    coupling.
 
-**Disposition.** `X9a` is the only genuinely un-double-counted component. It is **DEFERRED, not
-rejected**: admitting it requires first establishing a reproducible decision-event contract and a
-coherent counterfactual, which no committed artifact currently supplies. **That is a bounded
-engineering task, and it is recorded on the frontier rather than done inside RR_W001** — adding a new
-expert while measuring the ledger would confound the two.
+> ### ⚠️ **DISPOSITION — RESOLVED 2026-08-27, and the sentence that stood here was FALSE.**
+> It read: *"`X9a` is the only genuinely un-double-counted component."* **It is the MOST
+> double-counted component.** `runs/RR_W003_X9A_CONTRACT/` established that **two different objects
+> carry the name `X9a`**, and the one `PAIR23` actually uses — `w72:X9a` from
+> `WE_W79_CLIQUE/out/members.csv` — is `long_obj(TG_for(X9a))`: **`P1`'s entire Solar ensemble with
+> X9a substituted for B-MOM as one additive term inside the tilt.** Weekly ρ with `P1/PCT` is
+> **+0.613**. W72's *raw* channel, a different object, sits at **+0.07**; daily ρ between the two is
+> **+0.15**.
+>
+> **`X9a` is NOT ADMITTED, under either reading.** The `PAIR23` member fails **R3** decisively — it
+> contains the incumbent by construction. The raw channel passes R3 but is **not the object the
+> question asked about**, so admitting it would not decompose `PAIR23`.
+>
+> **`PAIR23` keeps its `STRUCTURAL` status and all its measured economics.** What changed is what it
+> is: **a raw B-MOM channel plus a `P1` variant**, not two independent sleeves — which also means
+> ρ(BMOM, X9a) = +0.009 is a statement about the two **wrappers**.
 
 ---
 
@@ -251,7 +262,7 @@ expert while measuring the ledger would confound the two.
 EXPERTS  = { P1PCT (primary), XM_CONFLICT (secondary), FOLLOW_MORNING (shadow), CASH }
 CONTROLS = { MIRROR_CONTINUATION_CONTROL, matched-random router, matched-exposure,
              always-accept, always-cash, expert-internal score }
-DEFERRED = { X9a }
+DEFERRED = { }   -- X9a was adjudicated and NOT ADMITTED (RR_W003)
 SUBSTRATE = load_deep(..., extend=True)   -- UNCHANGED (directive §52)
 WINDOW    = 2022-07-01 -> 2026-08-01      -- the seal is NOT touched
 COST      = $4.36/ctrRT commission + candidate-specific modelled spread (P1 $14.44, XM $12.50)

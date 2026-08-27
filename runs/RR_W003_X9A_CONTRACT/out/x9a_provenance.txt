@@ -1,0 +1,71 @@
+========================================================================================================================
+=== RR_W003b - TWO OBJECTS, ONE NAME.  ENGINEERING_ONLY / AUDIT.
+========================================================================================================================
+
+=== 1. THE TWO SERIES, side by side over the same 1,058 campaign sessions
+
+                                                STORED w72:X9a    REBUILT W72 chan
+net $                                                  233,781              61,404
+sessions active                                            580                 842
+daily sd                                               2,077.8             3,137.6
+weekly rho with P1                                      0.6131              0.0697
+weekly rho with BMOM                                    0.0094              0.3027
+
+    daily rho BETWEEN the two objects called X9a : +0.1527
+    W88 recorded daily +0.673 / weekly +0.613 for P1-X9a and BMOM-X9a +0.009.
+    Both reproduce here EXACTLY - on the STORED series. The rebuilt channel is a
+    different object and neither number describes it.
+
+========================================================================================================================
+=== 2. WHY THEY DIFFER - it is the EXECUTION WRAPPER, not the signal
+========================================================================================================================
+    run_we_w76.py:167-172 builds every w72 stream as   long_obj(TG_for(channel)).
+    run_we_w76.py:123-132  TG_for(chan) = hyst(0.7086 * Tp + 2.83 * chan)
+    run_we_w76.py:146-153  long_obj(TGx) = the 13-member Solar ensemble vote, the tilt,
+                           fills_daily, causal_score, quality sizing and fills_qexit.
+    run_we_w76.py:156-157  S['P1'] = long_obj(TG_for(bmom))
+
+    So the STORED w72:X9a is P1's ENTIRE MACHINERY with X9a substituted for B-MOM as ONE
+    ADDITIVE TERM inside the tilt. It is a P1 VARIANT, not a standalone strategy.
+    W72's era table, which RR_W003 reproduced to all four figures in both eras, measured
+    something else: the RAW two-sided channel through sfills with a session box
+    (run_we_w72b.py:251).
+
+    That is the whole explanation for +0.613 versus +0.07. The stored object shares the
+    Solar ensemble with the incumbent, so of course it correlates with it. The raw channel
+    does not, and is two-sided where P1/PCT is long-only.
+
+========================================================================================================================
+=== 3. WHAT THIS MEANS FOR PAIR23
+========================================================================================================================
+    PAIR23 is '2 BMOM : 3 X9a'. Its members come from WE_W79_CLIQUE/out/members.csv, where
+      BMOM = d['BMOM']    = sfills(raw B-MOM channel)        -> a RAW CHANNEL
+      X9a  = d['w72:X9a'] = long_obj(TG_for(X9a channel))    -> a P1 VARIANT
+
+    PAIR23 is therefore NOT a basket of two independent channel sleeves. It is a raw
+    B-MOM channel plus a full P1-variant, and rho(BMOM, X9a) = +0.009 'INDEPENDENT' is
+    exactly what one expects when comparing a two-sided raw channel against a long-only
+    Solar ensemble - it is a statement about the two WRAPPERS, not about two signals.
+
+    Nothing measured about PAIR23 is withdrawn. Its economics stand. What changes is what
+    it IS, and therefore what a decomposition of it could ever mean.
+
+========================================================================================================================
+=== 4. ADMISSION VERDICT - EXPERT_UNIVERSE criterion R3
+========================================================================================================================
+candidate                                 weekly rho w/ P1    R3 distinct?   admissible?
+STORED w72:X9a (the PAIR23 member)                  0.6131              NO            NO
+REBUILT W72 raw channel                             0.0697             yesNO - see below
+
+    THE PAIR23 MEMBER FAILS R3 DECISIVELY. R3 requires that a candidate not be a
+    re-weighting of an object already present. This one CONTAINS the incumbent's entire
+    ensemble by construction, and weekly rho +0.613 measures that fact.
+
+    THE RAW CHANNEL PASSES R3 BUT IS NOT THE OBJECT THE QUESTION ASKED ABOUT. Admitting it
+    would not decompose PAIR23, because PAIR23 does not contain it. On its own it earns
+    $61,404 over the campaign window with t = 1.05 in W72's 2022-26 era
+    row - which is not a candidate, it is a channel.
+
+    VERDICT: X9a is NOT ADMITTED as a standalone expert, under either reading.
+    The frontier's premise - 'X9a is the one component of PAIR23 not already double-counted
+    inside P1/PCT's B-MOM OR-gate' - is FALSE. It is the MOST double-counted component.

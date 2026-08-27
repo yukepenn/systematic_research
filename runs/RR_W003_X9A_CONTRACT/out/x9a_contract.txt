@@ -1,0 +1,53 @@
+==========================================================================================================================
+=== RR_W003 - X9a DECISION-EVENT CONTRACT.  ENGINEERING_ONLY.
+=== Nothing is selected, tuned or promoted. Economics are REPRODUCED, never newly chosen.
+==========================================================================================================================
+[    11s] deep substrate 6,466,783 bars / 5,420 sessions; channel rebuilt
+
+==========================================================================================================================
+=== 1. REPRODUCTION GATE - is this the SAME object W72 measured?  BLOCKING.
+==========================================================================================================================
+era            trades      W72   $/trade       W72      t    W72     PF    W72          
+2006-2021       3,948    3,948      28.6      28.6   1.83   1.83  1.105  1.105        OK
+2022-2026         950      950     123.0     123.0   1.05   1.05  1.095  1.095        OK
+
+    GATE PASSED - the channel and its economics reproduce. The object is the same one.
+
+==========================================================================================================================
+=== 2. THE DECISION-EVENT CONTRACT
+==========================================================================================================================
+    signal array          latched int8, one value per bar, exactly like P1/PCT's
+    contiguous same-sign session-bounded runs        5,105
+    run length bars       mean  305.6   median   372   max 386
+    trades produced                                  4,898
+    runs that never become a trade (box latched)       207
+    trades in the campaign-#7 window                   842
+    direction balance     long 52.7 %   short 47.3 %   <- TWO-SIDED, unlike P1/PCT
+
+    | field | value |
+    | expert_id            | X9A_DISP_SESSANCHOR |
+    | family_id            | DISPLACEMENT_CHANNEL |
+    | eligibility          | the latched channel changes to a new non-zero value |
+    | decision timestamp   | the OPEN of bar i |
+    | information cutoff   | close of bar i-1 (sfills reads dir_arr[i-1], as gfills does) |
+    | allowed actions      | ACCEPT / ABSTAIN |
+    | exits                | FROZEN: session box halt -1300 / target +1000, flat 21 min before session end |
+    | path dependent       | YES - same session-box latch as P1/PCT |
+    | counterfactual       | WELL DEFINED - suppress the contiguous run, replay the frozen policy |
+
+==========================================================================================================================
+=== 3. ADMISSION - the five EXPERT_UNIVERSE criteria
+==========================================================================================================================
+    weekly rho(P1/PCT, X9a) on the campaign window, 213 weeks : +0.1103
+    W88 recorded +0.613 and called it TOO CORRELATED; XM_CONFLICT sits at +0.081
+
+     criterion                                            verdict   evidence
+R1   deterministic, frozen rule                              PASS   build_channels is committed code; no parameter is chosen here
+R2   reproducible opportunity timestamps                     PASS   5,105 runs -> 4,898 trades, and the W72 era table reproduces
+R3   meaningful economic DISTINCTNESS from the incumbent      PASS   weekly rho with P1/PCT = +0.1103
+R4   enough observations for its proposed role               PASS   842 in-window trades
+R5   a coherent counterfactual                               PASS   latched channel + session box = the RR_W001 replay applies unchanged
+
+    5 of 5 criteria pass.
+
+[    16s] done
