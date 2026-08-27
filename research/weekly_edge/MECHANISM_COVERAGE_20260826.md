@@ -243,7 +243,7 @@ result; every row is a hypothesis with a named falsifier.
 | DOM / Level-II / Market Replay | **owner risk-control PAUSE, 2026-08-12.** No history exists anyway |
 | options / dealer gamma | purchase decision (`GAMMA00_..._FEASIBILITY/DATA_PURCHASE_OPTION.md`) |
 | VWAP Flux | owner purchase (OTR R33 decision: buy as *instrument*, not proof) |
-| NT8 Strategy Analyzer parity for `WeeklyEdgeX9a_v1.cs` / `WeeklyEdgeBmom_v1.cs` | owner-only interactive action |
+| ~~NT8 Strategy Analyzer parity for `WeeklyEdgeX9a_v1.cs` / `WeeklyEdgeBmom_v1.cs`~~ | ⚠️ **NOT GATED — this row was false and is removed from the gate list, 2026-08-27.** CrossTrade MCP compiles and runs the real Strategy Analyzer (add-on v1.13.9, NT8 8.1.8.1); both legs of the book were parity-certified through it on 2026-08-27. The claim was **inherited, never probed**, and cost a full day. **Standing rule, CLAUDE.md §6: never assert an action is owner-only without re-probing the tool surface that day.** Parity for these two is simply *not done*, which is a queue position, not a gate |
 | MONITOR-01 read #2 | calendar, on/after **2026-11-01** |
 | frozen-champion annual evaluation | calendar, on/after **2027-08-01** |
 

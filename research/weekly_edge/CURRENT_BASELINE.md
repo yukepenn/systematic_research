@@ -200,9 +200,35 @@ usable state** — every field is known only after the week has ended.
 
 ### 3c. Why "turnover is the gap" is no longer the conclusion
 
-W119 also found **`E_NO_ENGINE` = 0 sessions** — coverage is genuinely not the gap — and that on
-losing sessions P1 takes **3.04 trades vs 1.38**, for **18 % fewer contract-minutes**, on sessions
-moving **31 % less**. ✅ **Those numbers stand.** The inference drawn from them did not.
+W119 also reported that on losing sessions P1 takes **3.04 trades**, for fewer contract-minutes, on
+sessions **moving less**.
+
+> ### ⚠️ **THE COMPARATOR IN THOSE FIGURES WAS WRONG — corrected 2026-08-27, `runs/RR_W000_LEDGER_AUDIT/`.**
+> W119 compared losing sessions against `~(book_pnl < 0)`, which is **winning *plus* flat** (653 =
+> 371 + 282). **All 282 flat sessions have `p1_trades == 0` by construction**, so they dragged the
+> comparator toward zero.
+>
+> | | LOSING | *quoted* comparator | **WINNING** (correct) |
+> |---|---:|---:|---:|
+> | P1 trades / session | **3.042** | ~~1.377~~ | **2.423** |
+> | P1 contract-minutes | 199.0 | ~~242.1~~ | **426.1** |
+> | \|RTH move\| pts | 116.5 | ~~168.0~~ | **175.4** |
+>
+> **The turnover contrast is 3.04 vs 2.42, not 3.04 vs 1.38 — overstated ~1.75×.** The
+> contract-minute gap is **53 %**, not 18 %, and in the direction the label implies. The
+> session-move claim survives almost unchanged (31 % → **34 %** less). **Every LOSING-column number
+> is unchanged; only the comparator was wrong.**
+>
+> ### ⚠️ **`E_NO_ENGINE` = 0 was FORCED BY CONSTRUCTION and measured nothing.**
+> The lens is "neither leg held a position" — which makes `book_pnl == 0` — and it was counted
+> *inside* the `book_pnl < 0` population. **It was empty before any data was read.** On its raw mask
+> there are **32 sessions** where no engine was present while the session's \|RTH move\| was in its
+> top decile (mean **452 pts**). Those are **absences, not losses**, and pricing them needs a
+> directional oracle, so **no dollar figure is attached.**
+>
+> **Consequence:** *"coverage is genuinely not the gap"* **is withdrawn.** Book coverage is
+> **UNMEASURED**, not closed. **This does not reopen turnover** — W121 killed that inference on
+> independent evidence, and the corrected, *weaker* contrast is more consistent with W121, not less.
 
 **W121** (`runs/WE_W121_TURNOVER/`) tested turnover as a *causal state*. Entry-count caps lose to
 baseline at **every** K **and sit at the 0.0 / 4.0 / 1.0 / 0.0th percentile of a count-matched

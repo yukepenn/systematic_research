@@ -1,0 +1,52 @@
+============================================================================================================
+=== RR_W000 - AUDIT of the W119 BOOK_LOSS_LEDGER denominators.  NOTHING IS PROMOTED.
+============================================================================================================
+    artifact: runs/WE_W119_BOOKLOSS/out/book_loss_ledger.csv   1,058 rows x 25 cols
+
+--- FINDING 1: the 'winning sessions' denominator contains structurally flat sessions ---
+    book_pnl <  0  LOSING          n =   405
+    book_pnl >  0  WINNING         n =   371
+    book_pnl == 0  FLAT            n =   282
+    ~(book_pnl < 0) NOT-LOSING     n =   653   = WINNING + FLAT
+    flat sessions with p1_trades == 0 : 282 of 282
+    flat sessions with xm_active == 0 : 282 of 282
+    -> every flat session is GUARANTEED to have zero trades. Putting them in the
+       'winning' bucket mechanically drags its trade count toward zero.
+
+statistic                           LOSING    NOT-LOSING       WINNING    quoted ratio   correct ratio
+P1 trades / session                 3.0420        1.3767        2.4232          2.210x          1.255x
+P1 contract-minutes                  199.0         242.1         426.1          0.822x          0.467x
+|RTH move| pts                      116.54        168.03        175.36          0.694x          0.665x
+RTH range pts                       268.17        281.58        293.14          0.952x          0.915x
+
+    CURRENT_BASELINE quoted '3.04 trades vs 1.38', '18 % fewer contract-minutes' and
+    'sessions moving 31 % less'. All three used the NOT-LOSING denominator.
+    Against genuinely WINNING sessions the turnover contrast is 3.04 vs 2.42, not 3.04 vs 1.38.
+
+--- FINDING 2: E_NO_ENGINE = 0 is FORCED BY CONSTRUCTION, not measured ---
+    W119 spec defines E_NO_ENGINE as 'neither leg held a position while the session's
+    absolute RTH move was in its own top decile'.
+    top-decile |RTH move| threshold        : 295.0 pts   (NaN moves: 46)
+    sessions with NEITHER leg active       :   282
+    ... AND in the top |move| decile       :    32   <- E_NO_ENGINE on the RAW mask
+    ... AND ALSO book_pnl < 0              :     0   <- what the report printed
+    distinct book_pnl values on the raw mask: [0.0]
+
+    A session in which neither leg holds a position has book_pnl == 0 by definition and can
+    NEVER satisfy book_pnl < 0. The lens was evaluated INSIDE the losing-session population,
+    so it was empty before any data was read. It measured nothing.
+    On the raw mask: n = 32, mean |RTH move| 452.2 pts, mean RTH range 587.9 pts
+    Those are ABSENCES, not losses. Pricing them requires a directional oracle, so any dollar
+    figure attached to them is EX_POST_EXECUTION_FEASIBLE_ORACLE (level 2) and NOT available
+    money - OPPORTUNITY_LANGUAGE.md is binding on exactly this.
+
+============================================================================================================
+=== WHAT CHANGES AND WHAT DOES NOT
+============================================================================================================
+    CHANGES : the claim 'E_NO_ENGINE = 0, so coverage is genuinely not the gap' is NOT
+              supported by this artifact. Coverage was never measured on that lens.
+    CHANGES : the turnover contrast is overstated ~1.75x by the denominator.
+    DOES NOT: W121 killed the turnover INFERENCE on independent evidence - entry-count caps
+              lose to a count-matched random-halt placebo. The corrected, WEAKER contrast is
+              consistent with W121 and does not reopen turnover.
+    DOES NOT: no result is reversed, no object changes status, nothing is promoted.
