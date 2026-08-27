@@ -10,7 +10,8 @@
 
 > ### **`"NO RUNNABLE ROW REMAINS"` WAS TRUE OF LEVEL 1 AND FALSE OF LEVEL 2.**
 > ### The order-flow lane **reopens at zero cost** — the data is already on this disk.
-> ### **262 NQ tick sessions have been sitting in the local NT8 store, never extracted.**
+> ### **197 NQ tick sessions have been sitting in the local NT8 store, never extracted.**
+> ### _(§4's first-pass figure of 262 is corrected in the CORRECTION block below.)_
 
 ---
 
@@ -131,6 +132,51 @@ The exporter (`SWScalpTickExport_v3.cs`) requires **one NT8 Strategy Analyzer ru
 driven by hand. There is no capture loop anywhere in the repo. **`RunStrategyBacktest` removes
 exactly that constraint** — the same lesson as the "owner-only F5" blocker that never existed.
 The bottleneck was never entitlement, provider limits, or money. **It was manual labour.**
+
+---
+
+## ⚠️ CORRECTION — issued 2026-08-27, same day, before any of it was used
+
+**The session counts in §4 above were measured at DATE granularity and are WRONG. The corrected
+numbers are materially smaller and one headline claim is RETRACTED.**
+
+An NQ session dated `D` runs **`D-1` 18:00 → `D` 17:00 ET**, so it draws on **two calendar dates**
+of `.ncd` files. Asking *"does date `D` have Bid and Ask files?"* therefore does **not** establish
+that session `sD` has quotes. Two pilot extractions proved it:
+
+| session | date-level verdict | what extraction actually produced |
+|---|---|---|
+| `s20260319` | "BBO-complete" | quotes **only** `03-19 00:00 → 16:59` — the whole `03-18 18:00 → 23:59` evening leg **missing** |
+| `s20260318` | "BBO-complete" | quotes **only** `03-17 18:00 → 23:59` — the whole day leg **missing**. Date `2026-03-18` holds **one** Bid hour file |
+
+Recomputed at hour granularity (`src/bbo_hourly_truth.py`, mapping **label = ET hour + 1**,
+established empirically from the fact that `Last` is missing label 18 on every date and the NQ
+maintenance break is 17:00–18:00 ET):
+
+| lane | first pass | **corrected** | ~300-session target |
+|---|---:|---:|---|
+| **BBO / quote** (≥ 90 % of session hours) | ~~168~~ | **99** | ❌ **33 % of it** |
+| **signed flow** (`Last` ≥ 90 %) | ~~310~~ | **243** | ❌ **81 % of it** |
+| new BBO sessions to extract | ~~123~~ | **57** | |
+| new `Last` sessions to extract | ~~262~~ | **197** | |
+
+> ### ❌ **RETRACTED: "signed flow MEETS the ~300-session target."** It does not. At 243 it
+> ### reaches **81 %** of it. **Neither lane clears its own preregistered bar.**
+
+**The model is validated, not merely asserted.** It reproduces all four sessions whose true coverage
+was measured by extraction (`s20260319` 0.74 PARTIAL, `s20260318` 0.26 PARTIAL, `s20260206` 1.00
+FULL, `s20250813` 0.74 PARTIAL), and independently reproduces `DATA_CENSUS`'s *"quotes are missing
+on 3 of the 48"* — 42 of the substrate's 48 classify FULL and exactly 3 PARTIAL.
+
+**What survives unchanged.** The lane still reopens at **zero cost**; the blocker was still manual
+labour, not money; **BBO still more than doubles, 45 → 99**, and **signed flow still goes 46 → 243,
+a 5.3× expansion**. What changes is that **neither reaches the bar `DATAGATE_ORDERFLOW_20260827`
+set**, so any result must be reported against 99 and 243 — not against a target it never met.
+
+**Why the error happened, recorded so it is not repeated:** I inferred a session-level property from
+a date-level file listing without checking that the session and the file key share a calendar. The
+pilot caught it because the pilot checked **per-series time ranges**, not just row counts. A row
+count would have looked entirely healthy.
 
 ## 5. Market internals — `"no data"` is falsified
 
