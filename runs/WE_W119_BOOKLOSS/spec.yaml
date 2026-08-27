@@ -1,0 +1,65 @@
+run_id: WE_W119_BOOKLOSS
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "POST-W118 owner directive, sections 9, 10, 11, 12, 13, 36 LANE A."
+
+title: >
+  THE BOOK_LOSS_LEDGER - where does the research book actually lose DOLLARS, at session resolution?
+  W117 answered this at weekly resolution on 87 observations and produced a PHENOTYPE (fewer ex-post
+  TREND-UP sessions, more ex-post REVERSAL sessions). Section 12 says the dollar DECOMPOSITION must
+  come before any further feature search, because it determines EVI: do not spend a wave solving a
+  loss source worth 5 % of the damage.
+
+what_this_wave_is_and_is_not:
+  is: "a measurement. One authoritative per-session artifact plus the dollars-and-frequency decomposition section 12 names."
+  is_not: >
+    a classifier. Section 11 forbids building `book_week_loss = 1/0` and mining a hundred features:
+    low N, high selection. And section 13 forbids EXPOST_ labels becoming production inputs - they
+    appear here PREFIXED and for diagnosis only.
+
+# ---------------------------------------------------------------- the artifact
+ledger:
+  scope: "every session in the modern window 2022-07-01 -> 2026-08-01, 1,058 sessions."
+  book: "RESEARCH_PORTFOLIO_FRONTIER = {P1/PCT + XM_CONFLICT} at inverse-volatility weights, exactly as W110/W117 constructed it."
+  columns_per_session:
+    identity: [date, session_index, week]
+    pnl: [p1_pnl, xm_pnl, book_pnl, p1_gross, p1_cost, xm_gross, xm_cost]
+    activity: [p1_active, xm_active, p1_trades, p1_contract_minutes, p1_max_size, xm_direction]
+    market: [rth_open, rth_close, rth_move_pts, rth_range_pts, session_volume]
+    diagnostic_expost: "EXPOST_CLASS from the W51 taxonomy, PREFIXED, diagnosis only, never an input"
+    causal: >
+      a small set of pre-decision variables each carrying its EXACT availability minute, so a later
+      wave can use them without re-deriving causality: overnight range and gap (known 09:31),
+      opening drive and the ES/RTY/YM composite (known 09:45), morning path efficiency and VWAP
+      displacement (known 11:48). Nothing later than 11:48 is recorded as causal.
+
+# ---------------------------------------------------------------- section 12 decomposition
+decomposition:
+  rule: "report BOTH dollars and frequency for every category. A category that is frequent but cheap is not where the money is."
+  categories:
+    A_P1_WRONGWAY: "P1 traded and lost, and the RTH session move was DOWN. A long-only engine participating into a falling session."
+    B_P1_WHIPSAW: "P1 traded and lost, and the RTH session move was UP. The direction was available and the engine still lost it - an entry/exit timing failure, not a directional one."
+    C_XM_LOSS: "XM traded and lost."
+    D_BOTH: "both legs lost on the same session."
+    E_NO_ENGINE: "neither leg held a position while the session's absolute RTH move was in its own top decile. Opportunity absent rather than mishandled."
+    F_COST: "the commission plus spread actually charged on losing sessions - reported as a share of gross loss."
+    G_RISK_TRUNCATION: "P1's per-contract session box fired (loss halt or profit target) on a losing session."
+    H_OTHER: "residual."
+  overlap_rule: >
+    A and B are mutually exclusive by construction. C, D, F and G OVERLAP with them by design -
+    a session can be both B and G. The report must present them as OVERLAPPING LENSES with the
+    overlaps stated, NOT as a partition summing to 100 %. Presenting overlapping categories as a
+    partition would be a arithmetic fiction.
+
+secondary:
+  - "the same decomposition restricted to the book's WORST DECILE of sessions, because tail damage and typical damage need not share a cause"
+  - "session-level vs weekly-level reconciliation: does the weekly phenotype W117 found survive at session resolution, or was it a weekly aggregation artifact"
+  - "EXPOST_CLASS distribution on losing sessions WITH its matched unconditional control (W108's binding rule) - the class shares of ALL sessions printed alongside"
+  - "P1's contract-minutes and max size on losing sessions vs winning ones - is the book losing while over-exposed or while under-exposed"
+
+decision_rule:
+  - "NOTHING PROMOTED. This wave produces an artifact and a decomposition, and it sets the EVI ranking for the next lane."
+  - "The wave must state, in one sentence and in dollars, WHICH loss source is largest - and the next information wave must target that source or explain why not."
+  - "If the largest source is E_NO_ENGINE, the gap is COVERAGE and the answer is a new engine. If it is B_P1_WHIPSAW, the gap is POLICY inside an engine we already own. Those are very different research programmes and the wave must say which one the money points at."
+  - "No category definition is re-chosen after the dollars are seen."
