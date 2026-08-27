@@ -1,0 +1,52 @@
+run_id: WE_W106_MORN
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "Owner directive V4 amendment section 6 LANE A. Target from W103's ledger v3."
+
+title: >
+  LANE A - the MORN residual that XM_CONFLICT does not touch. MORN is the largest
+  EX_POST_EXECUTION_FEASIBLE_ORACLE gap ($1,667/session unclaimed, p-star 0.5048) and W104 showed
+  MORN's own opening drive is NEGATIVE (-$59/trade), so the answer is not more momentum.
+
+geometry: >
+  Decide at the bar stamped 10:01 ET, fill at the 10:02 open, hold to 11:29, size 1, no stop.
+  This is the SAME shape W104 already measured as NEGATIVE on plain drive, so any positive result
+  here is attributable to the INFORMATION and not to the geometry.
+
+mechanisms:                    # each yields a DIRECTION, not a filter
+  VOL_DECAY:     "3+ consecutive same-sign bars with strictly decreasing volume -> exhaustion -> FADE the run"
+  EFFORT_NO_RES: "a bar with max volume over the trailing window but NON-max body and NON-max range, closing near the bar mid -> absorption -> FADE"
+  DISP_PER_VOL:  "abs(price move) per unit volume over 09:31-10:01. HIGH means the market moved cheaply, i.e. no opposing inventory -> CONTINUE"
+  VOL_SURPRISE:  "causal z-score of 09:31-10:01 volume against its own trailing-250-session distribution -> CONTINUE when high"
+  OPEN_ACCEPT:   "price at 10:01 accepted OUTSIDE the 09:31-09:45 opening range (closed beyond it on k of the last m bars) -> CONTINUE; rejected back inside -> FADE"
+
+# ---------------------------------------------------------------------------------------------
+# THE PROCEDURE THE AMENDMENT MANDATES - outcome-blind rate calibration
+# ---------------------------------------------------------------------------------------------
+rate_calibration:
+  step_1: "inspect each feature's distribution using FEATURE VALUES ONLY. No P and L is computed or looked at. The distribution table is printed BEFORE any economics."
+  step_2: "preregister three broad acceptance-rate arms: 25 percent, 50 percent, 75 percent."
+  step_3: "thresholds are TRAILING CAUSAL QUANTILES of the feature over the prior 250 sessions, so the rate is achieved without any fitted constant."
+  step_4: "freeze, then read P and L. The threshold is NEVER chosen from P and L."
+  why: >
+    W100 failed because its gates accepted about 92 percent of the target leg and therefore could
+    not separate anything. Here the rate is calibrated first, by construction.
+
+primary: >
+  the equal-weight mean of dollars per trade across the five mechanisms at the 50 percent
+  acceptance arm. ONE statistic, fixed in advance, so no mechanism and no rate can be picked after
+  the fact.
+falsifier: "the primary is <= 0, or <= the 95th percentile of a coin null on the same statistic."
+secondary:
+  - "each mechanism x each rate (15 cells) read against a BEST-OF-15 coin null."
+  - "each cell's own p-star for the 10:02 -> 11:29 horizon, computed and not assumed."
+  - "weekly correlation with P1/PCT and with XM_CONFLICT - a third copy of the same trade is not a sleeve."
+  - "results split by W51 session class."
+
+decision_rule:
+  - "NOTHING PROMOTED. A pass buys a preregistration for an engine and nothing else."
+  - "No threshold, rate or window is re-chosen after seeing P and L."
+  - "A cell clearing its own p-star but not the best-of-15 null is WEAK, not SUPPORTED."
+  - "If the primary fails, the honest conclusion is recorded: none of the five participation
+     mechanisms carries directional information about the late morning at this geometry."

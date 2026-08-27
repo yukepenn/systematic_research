@@ -105,6 +105,10 @@ zero pair. Two weighting methods converge on "drop the pair".
 - ⚠️ **W105: the correlation that justifies this whole portfolio is not stable.** ρ(XM, P1) is
   **+0.081 full-window but +0.464 over the trailing six months** (26 weeks, z ≈ 2.2). The
   diversification benefit may already have degraded. **This is the quantity to watch.**
+- ✅ **W105b: it is NOT an event trade.** Against the committed CPI/NFP/FOMC calendar, the
+  **304 non-announcement trades earn $408/trade at a 54.9 % hit rate**. Announcement sessions are
+  3.9× richer ($1,611/trade, 36 % of net from 13 % of trades) and **NFP is extreme** (n = 12,
+  83.3 % hit, $3,556/trade) — recorded, **not** turned into a filter.
 - ✅ **W105: it is genuinely two-sided** (longs 60.5 % hit / $701, shorts 48.0 % / $415 — both
   positive) and **not an early-sample artifact** ($540 in 2022-23 vs $569 from 2024 on).
 - ⚠️ **W105 withdraws the per-year improvement story.** At the canonical anchor the profile is

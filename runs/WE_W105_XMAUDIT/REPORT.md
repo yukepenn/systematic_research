@@ -103,9 +103,40 @@ the edge would be a reason to withdraw the candidate, never to restrict it to th
 **n = 13 of four classes tested**, so it is one cell of a small family and nothing more. Recorded,
 not acted on.
 
-> **CPI, FOMC and mega-cap earnings are `UNTESTED`.** No causal calendar for them was located on
-> disk, and the spec forbids inventing an external label. The first-Friday NFP figure is a
-> **PROXY** — a rule, not a release calendar — and is labelled as one everywhere it appears.
+### ⚠️ `CORRECTION` (W105b) — "no causal calendar exists" was WRONG, and the test is now run
+
+I wrote that CPI and FOMC were `UNTESTED` because no calendar was on disk. **A committed one
+exists**: `research/04_complementary_family/c01_announcement_calendar.csv` — 145 rows,
+**CPI 54 / NFP 54 / FOMC-statement 37**, 2022-01-07 → 2026-07-29, **zero rows past the seal**,
+hand-committed from official sources and already the labelling behind two prior waves. It was
+reused, not rebuilt.
+
+| event class | calendar days | N traded | hit % | $/trade | net $ | **% of net** | % of N |
+|---|---|---|---|---|---|---|---|
+| **NFP** | 54 | **12** | **83.3 %** | **$3,556** | $42,668 | **21.9 %** | 3.4 % |
+| FOMC (statement) | 37 | 15 | 46.7 % | $1,315 | $19,722 | 10.1 % | 4.3 % |
+| CPI | 54 | 17 | 29.4 % | $500 | $8,503 | 4.4 % | 4.9 % |
+| **ANY announcement** | 144 | 44 | 50.0 % | **$1,611** | $70,893 | **36.4 %** | 12.6 % |
+| **NON-announcement** | — | **304** | **54.9 %** | **$408** | $124,110 | **63.6 %** | 87.4 % |
+
+> ### **The edge SURVIVES on non-announcement sessions — $408/trade at a 54.9 % hit rate over 304
+> ### trades. `XM_CONFLICT` is NOT an event trade.** That is the question this test existed to
+> ### answer.
+>
+> Announcement sessions are nonetheless **3.9× richer per trade** and produce 36 % of the net from
+> 13 % of the trades. **NFP is the extreme cell** — 12 trades, 83.3 % hit, $3,556/trade — and it is
+> **n = 12 of three classes tested**, so it is one cell of a small family. Mechanically coherent
+> (an 08:30 release is exactly what makes NQ diverge from the broad index by the 09:45 decision),
+> but **not actionable**: the spec forbids turning any of this into a filter, and restricting the
+> object to 12 sessions would be fitting the survivor.
+
+**Still `UNTESTED`, confirmed absent from disk:** FOMC *minutes* days, mega-cap earnings, CME roll
+dates, and macro *surprise magnitudes*. PCE exists only as a `RULE_APPROX` list with 3 of 12 misses
+more than three days off and is not used.
+
+The rule-derivable table above stands as a cross-check: its first-Friday **NFP proxy** (n = 13,
+69.2 %, $2,029) points the same way as the real NFP calendar (n = 12, 83.3 %, $3,556), which is
+mild independent support that the proxy was tracking the right thing.
 
 ## 5. ⚠️ The correlation that justifies the portfolio is not stable
 
