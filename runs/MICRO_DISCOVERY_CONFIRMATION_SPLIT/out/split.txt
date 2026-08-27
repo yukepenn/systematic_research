@@ -1,0 +1,60 @@
+========================================================================================================
+=== MICROSTRUCTURE DISCOVERY / CONFIRMATION SPLIT
+=== Determined from evidence. A holdout is NOT manufactured where none exists.
+========================================================================================================
+
+--- BBO (quote-complete) LANE
+    quote-FULL ceiling on disk                  99
+    in v2 substrate  (read by MS01, MS01A)      58
+    in OLD substrate only                       40
+    quote-FULL never materialized                1
+
+    Runs that read the OLD substrate's PRICE CONTENT and built forward/future returns:
+      AUCTION03_MECHANISM_DECOMPOSITION          5 source file(s)
+      AUCTION04_CLEAN_CAUSAL_SUBSTRATE           5 source file(s)
+      FLOW01_AGGRESSIVE_PARTICIPATION            2 source file(s)
+      U9B_MICROSTRUCTURE_ALPHA                   1 source file(s)
+      U9_TRUE_MICROSTRUCTURE                     1 source file(s)
+      ACTIONMAP01_AUCTION_ACTION_VALUE           1 source file(s)
+      AUCTION01_VALUE_STATE                      1 source file(s)
+      AUCTION02_ACTION_RELEVANCE                 2 source file(s)
+      MS01_STANDALONE_FEASIBILITY                1 source file(s)
+      MS01A_BBO_SEMANTICS_AUDIT                  1 source file(s)
+
+    >>> VERDICT: NO VALID BLIND BBO POOL EXISTS.
+    >>> The 40 old-substrate quote-complete sessions were consumed by AUCTION01-04,
+    >>> ACTIONMAP01, FLOW01 and the U9 microstructure waves, all of which computed forward
+    >>> returns on them. The 58 v2 sessions were consumed by MS01 and MS01A.
+    >>> Any BBO result is therefore DISCOVERY-GRADE ONLY and cannot be blind-confirmed.
+
+--- LAST-ONLY (trade-flow) LANE
+    Last-usable ceiling                        243
+    materialized anywhere (consumed)           102
+    NEVER EXTRACTED, price content UNREAD      141
+    span                                     2025-08-12 -> 2026-05-08
+
+    >>> VERDICT: A GENUINE BLIND POOL EXISTS HERE, and only here.
+
+========================================================================================================
+=== FROZEN: MICRO_BLIND_HISTORICAL_CONFIRMATION_POOL  (Last-only lane)
+========================================================================================================
+    sessions            141
+    span                2025-08-12 -> 2026-05-08
+    contracts           ['NQ 03-26', 'NQ 06-26', 'NQ 09-25', 'NQ 12-25']
+    quote classes       {'NONE': 101, 'PARTIAL': 40}
+    all pre-seal        True
+    manifest sha256     597a153b24f3b6817fea009a6a5fbdc26cfe3ccd5e31662fe35b06e446106b13
+    frozen at commit    fd7b05f
+
+    EXCLUSION RULES, fixed now:
+      - any session with last_frac < 0.90 is excluded
+      - any session dated >= 2026-08-01 is excluded (VIRGIN seal)
+      - early-close/holiday sessions are QUARANTINED by the same span gate the v2 QA uses
+        (< 20 h span), and a quarantine does NOT permit substituting another session
+      - no session may be added to or removed from this pool after this commit
+
+    WHAT THIS IS, EXACTLY: BLIND HISTORICAL CONFIRMATION. Its price content has never been
+    read by any alpha-discovery process in this repo. It is NOT prospective forward
+    evidence - it is historical data that happens to be unread, and it overlaps the
+    discovery period in calendar time rather than following it. That is weaker than a
+    forward pool and stronger than nothing, and it is called by its right name.
