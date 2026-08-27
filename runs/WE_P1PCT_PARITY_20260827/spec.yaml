@@ -1,0 +1,93 @@
+run_id: WE_P1PCT_PARITY_20260827
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "OWNER MEGA DIRECTIVE 2026-08-27 (OPERATIONAL RESET), sections 15, 16, 17, 18, 19, 46, 47."
+
+title: >
+  STRATEGY ANALYZER PARITY for WeeklyEdgeP1PCT_v1, with WeeklyEdgeP1_v3 as the environment control.
+  ENGINEERING RECONCILIATION, not a research experiment. Nothing is being selected, tuned or
+  promoted on evidence generated here; the only question is whether the C# reproduces the Python
+  object that research already measured.
+
+# ---------------------------------------------------------------- honesty about ordering
+what_was_already_known_when_this_spec_was_written:
+  - "CrossTrade capability discovery (section 15) was run FIRST and returned addon v1.13.9 / NT8 8.1.8.1 with backtest_engine.available=true. The repo's standing claim that compilation is an owner-only F5 action is therefore STALE and is corrected by this run."
+  - "A 7-session smoke probe of WeeklyEdgeP1PCT_v1 resolved the type and ran. COMPILE STATUS IS GREEN. That was established before this spec existed."
+  - "The P1_v3 CONTROL headline (2,261 trades / net $282,981 on 2022-01-03 -> 2026-07-31) was read before this spec was written. It is disclosed here rather than presented as if it were predicted."
+  - "NO VERDICT BAND IS CHOSEN IN THIS FILE. The bands are lifted verbatim from runs/WE_W52_NINJASCRIPT/spec.yaml phase 4, restated in research/weekly_edge/ninjascript/LIVE_READINESS.md section 4, and preregistered long before today."
+
+verdict_bands_preregistered_elsewhere_and_quoted_unchanged:
+  validated: "decision-series agreement >= 99 % AND trade counts within 2 %"
+  classify_every_mismatch: "90-99 %"
+  not_the_object: "< 90 %"
+  note: "For P1/PCT the DECISION layer is already certified at 99.985 % by W52 on P1_v3 and is byte-identical between the two files. The 14-line diff touches ONLY the session-box denominator at its two sessPnl accumulation sites, so the discriminating comparison here is the TRADE SCHEDULE, which is what the box perturbs."
+
+# ---------------------------------------------------------------- the two objects
+objects:
+  candidate:
+    class: WeeklyEdgeP1PCT_v1
+    repo: research/weekly_edge/ninjascript/WeeklyEdgeP1PCT_v1.cs
+    sha256_16: ee4c765bc5cab230
+    installed: "C:\\Users\\Yuke Zhang\\Documents\\NinjaTrader 8\\bin\\Custom\\Strategies\\WeeklyEdgeP1PCT_v1.cs - VERIFIED byte-identical to repo before the run"
+  control:
+    class: WeeklyEdgeP1_v3
+    repo: research/weekly_edge/ninjascript/WeeklyEdgeP1_v3.cs
+    sha256_16: e8bb9caface37462
+    why: "section 18 - separates a generic NT8 environment mismatch from a PCT implementation mismatch. If P1_v3 no longer reproduces its own W52 reference, PCT is not the suspect."
+
+analyzer_settings:
+  instrument: "NQ 09-26 (resolves NQU6)"
+  bars: "1-Minute, Last"
+  trading_hours: "CME US Index Futures ETH"
+  commission: "NinjaTrader Brokerage Lifetime"
+  fill: "Standard"
+  slippage_ticks: 0
+  account: "Backtest (isolated, reset) - never Sim101, never a live account"
+  from: "2022-01-03T00:00:00Z"
+  to: "2026-07-31T21:59:59Z"
+  to_rationale: "Session-boundary convention: one second before the next 18:00 ET open, so the last included session is the one ending 2026-07-31 17:00 ET. This stops strictly BEFORE the >= 2026-08-01 VIRGIN seal in research/operational/LOCKED_FORWARD.md. No sealed data is touched."
+  lead_in: "2022-01-03 -> 2022-06-30 is warm-up only and is EXCLUDED from every comparison. W52 documented the residual cold-start effect (slow ratchet members carry a sigma-stale threshold); it is expected, disclosed, and not a logic difference."
+
+python_reference:
+  engine: "run_we_w98.gfills(D, dir, size_at_entry=sz, halt=1300, target=1000, per_ctr=True) - the PCT arm exactly as W98 defined it, imported rather than reimplemented."
+  signal: "run_we_w97.votes(...) on the B-MOM channel; causal quality size frozen from the size-1 entry schedule, identical to W98."
+  window_filter: "sessions with 2022-07-01 <= session start < 2026-08-01"
+  exporter: "research/weekly_edge/src/export_p1pct_reference.py (written by this run)"
+
+cost_convention_and_why_it_matters:
+  statement: >
+    THE PYTHON RESEARCH HEADLINE AND THE NT8 NUMBER ARE NOT THE SAME QUANTITY AND MUST NOT BE
+    COMPARED DIRECTLY. Research nets $4.36/ctrRT commission PLUS a candidate-specific $14.44/ctrRT
+    modelled spread (WE_W82_FILLAUDIT). NinjaTrader applies the commission template and zero
+    slippage. The parity reference is therefore generated at COMMISSION ONLY, which is what gfills
+    already computes. Any report that puts the $1,394/week research figure beside an NT8 net is
+    comparing two different cost models.
+  spread_is_not_reintroduced_here: "0 slippage ticks. $14.44/ctrRT is 2.888 NQ ticks round turn, which is not an integer number of ticks per side, so forcing it into NT8 would be a third convention. The spread stays where it belongs - in the research layer."
+
+primary_comparisons:
+  - "trade count, in-window"
+  - "net P&L, in-window, commission-only both sides"
+  - "entry timestamp / exit timestamp / direction / quantity, trade by trade"
+  - "size-2 share (the quality layer, which W52 could only validate on a full-window run)"
+  - "session-box halt count and halt timing - THE ACTUAL SUBJECT OF THE 14-LINE DIFF"
+  - "weekly P&L series correlation"
+  - "max drawdown"
+
+gates:
+  G1: "in-window trade counts agree within 2 %"
+  G2: "matched-trade rate (same entry timestamp AND same direction) >= 99 %"
+  G3: "net P&L agrees within 2 %, commission-only on both sides"
+  G4: "size-2 share agrees within 3 pp"
+  G5: "the CONTROL P1_v3 reproduces its own W52 reference within the same bands - if G5 fails, sections 18 and 47 forbid blaming PCT"
+
+decision_rule:
+  - "All of G1-G5 pass -> EXECUTABLE_SINGLE_BASELINE moves from NONE to WeeklyEdgeP1PCT_v1, labelled EXECUTABLE / PARITY-CERTIFIED / NOT LIVE ENABLED. Those are three separate statuses and section 19 forbids collapsing them."
+  - "Any gate fails -> localize in the section 47 order (instrument/data, session template, timestamp, date boundary, warmup, commission, fill convention, signal state, session box, exit convention) and classify the cause. DO NOT TUNE UNTIL P&L MATCHES."
+  - "NO RESEARCH LOGIC MAY BE CHANGED BY THIS RUN. Section 16: engineering defects only. If a fix would alter trading behaviour it stops and is reclassified as a SEMANTIC change requiring a version bump and its own reconciliation."
+  - "Nothing is enabled. No live order authorization exists and none is sought."
+
+known_differences_declared_in_advance:
+  - "Cold start: NT8 begins with no state on 2022-01-03 while the Python object's substrate is loaded from 2022-01-01 with extend=True. W52 measured this as 2 trades of 1,950 (-0.1 %)."
+  - "Last-bar-of-session flatten: the Python ledger books at that bar's CLOSE, NinjaTrader fills at the next open. The forced-flat window (-21 min) should make this path near-dead, but it is a disclosed difference, not an assumed equivalence."
+  - "NT8 counts a position open at data end in TradesCount/NetProfit while a session-close exit exactly at the data boundary may be missing from the serialized trade list (CLAUDE.md convention)."
