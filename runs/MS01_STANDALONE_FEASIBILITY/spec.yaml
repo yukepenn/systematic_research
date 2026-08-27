@@ -1,0 +1,83 @@
+run_id: MS01_STANDALONE_FEASIBILITY
+date: 2026-08-27
+run_class: FEASIBILITY_AND_POWER          # no model, no hypothesis test, nothing promoted
+committed_before_results: true
+
+question: >
+  Can current NQ tick/BBO information plausibly generate STANDALONE executable alpha at any
+  execution-compatible horizon, AFTER realistic cost? This is the gate that must precede any
+  microstructure model. It does not test whether an edge exists; it tests whether an
+  economically meaningful edge COULD be detected and COULD survive friction.
+
+why_this_is_not_the_order_flow_gate: >
+  DATAGATE_ORDERFLOW_V2 closed P1 FULL-HORIZON ACTION-VALUE ROUTING on power. That target has
+  sd $2,193 per decision against a $112 mean. A direct short-horizon price target is a
+  different object with potentially far lower variance, and directive s8/s40 is explicit that
+  the router MDE must not lower the prior for the standalone question. Scope discipline: the
+  order-flow null closed ONE MAPPING, not a data surface.
+
+population:
+  substrate: research/data_microstructure_v2 (NEW v2 only - uniform, untruncated, hash-stamped)
+  reason_old_excluded: >
+    15 of the old 48 session files are truncated at the v1 12,000,000-row cap and end
+    mid-session. Mixing them into a horizon study would let DATA COMPLETENESS select
+    time-of-day, which directive s34 forbids. The old substrate is excluded here, not merged.
+  sessions: all v2 sessions passing QA (58), quote coverage >= 0.999
+  seal: nothing at or after 2026-08-01
+
+horizons_declared_in_advance: [15s, 30s, 60s, 180s, 300s]
+horizon_rationale: >
+  Execution-compatible only. No sub-second horizon is considered because the stack is
+  NinjaTrader + CrossTrade + broker routing, and directive s9 forbids sub-second fantasy
+  without end-to-end execution evidence.
+
+cost_model:
+  tick_value_usd: 5.00                    # NQ: 0.25 index points = $5.00 per contract
+  commission_usd_per_ctr_rt: 4.36         # NinjaTrader Brokerage Lifetime, the frozen convention
+  spread: MEASURED from the substrate, not assumed - quoted ask-bid at decision time
+  slippage_scenarios_ticks: [0.0, 0.5, 1.0]   # conservative ladder, declared before results
+
+dependence:
+  outer_cluster: trading SESSION
+  reason: >
+    Observations inside a session are strongly dependent. Treating ticks as iid is the exact
+    error directive s38 names. Effective N is computed with a session-level cluster correction,
+    and both raw N and effective N are reported.
+  overlap: >
+    Forward-return labels at horizon h overlap. Evaluation uses NON-OVERLAPPING sampling at
+    each horizon so labels are independent within a session before clustering is applied.
+
+metrics_computed:
+  - quoted spread distribution in ticks (median, mean, p90)
+  - unconditional |forward mid move| per horizon, in ticks and dollars
+  - sd of forward return per horizon (the label variance that drives MDE)
+  - raw N and effective clustered N per horizon
+  - all-in round-turn friction in ticks and dollars, per slippage scenario
+  - MDE of after-cost edge per horizon at ~80% power
+  - BREAK-EVEN: the gross edge (in ticks) a strategy must achieve to net zero
+
+decision_rule_declared_in_advance:
+  OPEN: >
+    A horizon is OPEN for modelling if the detectable after-cost edge (MDE) is BELOW a
+    plausible gross edge for that horizon - i.e. the study cannot rule out an economically
+    meaningful effect.
+  CLOSED_BY_FRICTION: >
+    A horizon is CLOSED if required break-even gross edge exceeds a large fraction of the
+    unconditional |move| at that horizon. If a strategy must capture most of the average
+    move just to pay costs, it is not production alpha (directive s13).
+  CLOSED_BY_POWER: >
+    A horizon is CLOSED if MDE exceeds any plausible edge even ignoring friction.
+
+what_this_run_will_NOT_do:
+  - fit any model
+  - build any feature
+  - select any threshold
+  - test any hypothesis
+  - promote or demote anything
+  - read sealed data
+
+falsifier_of_the_owner_thesis: >
+  Directive s40 says the standalone question "may be far easier" than the router question.
+  That is an owner intuition and it is tested here, not assumed. If friction dominates at every
+  execution-compatible horizon, the honest answer is that the standalone lane is CLOSED BY
+  FRICTION, and the owner thesis is falsified on measurement.
