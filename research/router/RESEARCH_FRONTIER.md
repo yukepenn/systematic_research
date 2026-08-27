@@ -27,7 +27,7 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | 6 | Does a soft allocation with cash beat the static book? | — | **DE-PRIORITISED by RR_W001** · gated on #1 |
 | 7 | Does latent state add information beyond raw features? | — | **NOT RUN** — RR_W001's continuation rule forbids it |
 | 8 | Does transition uncertainty carry risk information? | — | blocked on #6 |
-| **9** | Does BBO / order flow separate P1 entry quality? | **HIGH ceiling** | ✅ **RUNNABLE — REOPENED FREE** · **197 `Last`-complete + 57 quote-complete** NQ sessions sit unextracted on local disk (hour-granularity corrected) · `runs/DATA_CAPABILITY_AUDIT_20260827/` |
+| **9** | Does BBO / order flow separate P1 entry quality? | **HIGH ceiling** | ⚠️ **EXTRACTED, THEN RE-CLOSED ON POWER** · 98 quote-complete sessions extracted free; gate re-run at 141 of 2,139 entries, MDE **4.61×** the mean. **Primary target needs 998 sessions and 713 exist — unreachable at ANY coverage.** Session-scoped needs ~455 · `runs/DATAGATE_ORDERFLOW_V2_20260827/` · `runs/DATA_CAPABILITY_AUDIT_20260827/` |
 | 10 | Does options / dealer-gamma state carry NQ information? | MEDIUM | **OWNER-GATED** · owner OQ-5 · **confirmed by probe** — no option-chain surface exists in this tool set at all |
 | 11 | Do more event TYPES reopen the event-response lane? | MEDIUM | **DATA-BLOCKED** · owner OQ-5 · free-source construction not yet probed |
 | **16** | Does a multi-market TSMOM / carry book add marginal portfolio value? | **HIGH ceiling** | ✅ **RUNNABLE — REOPENED FREE** · ≥ 15 y daily across 5 sectors, no purchase needed · `runs/DATA_CAPABILITY_AUDIT_20260827/` |

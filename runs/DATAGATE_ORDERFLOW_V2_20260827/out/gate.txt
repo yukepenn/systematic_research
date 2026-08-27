@@ -1,0 +1,71 @@
+============================================================================================================
+=== DATAGATE_ORDERFLOW v2 - has the expanded substrate changed the verdict?
+=== POWER ONLY. No model, no feature, no hypothesis, nothing promoted.
+============================================================================================================
+
+    old substrate (scalping_lab)               48 sessions
+    new substrate (data_microstructure_v2)     58 sessions
+    overlap                                     2
+    UNION                                     104 sessions
+    ... of which QUOTE-COMPLETE                98 sessions
+
+============================================================================================================
+=== TARGET: delta_action_value  (session-scoped)
+============================================================================================================
+    unconditional mean  $    160.64    sd $  2,119.96    n 2,139
+
+    lane                               sessions  entries    share   MDE/entry   x mean  verdict
+    ----------------------------------------------------------------------------------------------------
+    v1 gate - 48-session substrate           26       58     2.7%$        779     4.85  UNDERPOWERED
+    signed flow - UNION (Last)               64      141     6.6%$        500     3.11  UNDERPOWERED
+    BBO / quote - quote-complete             64      141     6.6%$        500     3.11  UNDERPOWERED
+    full window (reference)                 713     2139   100.0%$        128     0.80  POWERED
+
+============================================================================================================
+=== TARGET: delta_total_window  (FULL-HORIZON (primary))
+============================================================================================================
+    unconditional mean  $    112.26    sd $  2,193.63    n 2,139
+
+    lane                               sessions  entries    share   MDE/entry   x mean  verdict
+    ----------------------------------------------------------------------------------------------------
+    v1 gate - 48-session substrate           26       58     2.7%$        807     7.18  UNDERPOWERED
+    signed flow - UNION (Last)               64      141     6.6%$        517     4.61  UNDERPOWERED
+    BBO / quote - quote-complete             64      141     6.6%$        517     4.61  UNDERPOWERED
+    full window (reference)                 713     2139   100.0%$        133     1.18  UNDERPOWERED
+
+============================================================================================================
+=== XM decisions
+============================================================================================================
+    v1 gate - 48-session                  16 of 346 XM decisions   (4.6 %)
+    UNION                                 35 of 346 XM decisions   (10.1 %)
+    quote-complete                        33 of 346 XM decisions   (9.5 %)
+
+============================================================================================================
+=== WHAT CHANGED, AND WHAT DID NOT
+============================================================================================================
+    entries: 58 -> 141 (signed flow), 141 (quote-based)
+    MDE shrinks by sqrt(n) only: x1.56 (flow), x1.56 (quote)
+    total sessions in the modern window: 713
+
+    A larger substrate reduces MDE as 1/sqrt(n). It does NOT change the per-entry sd,
+    which is what makes this lane hard. The verdict above is the whole finding.
+
+============================================================================================================
+=== THE CEILING - what would FULL coverage of every session actually buy?
+=== This is the question acquisition has to answer, and it is not the same as 'more data'.
+============================================================================================================
+    P1 scoring entries per session (mean)   3.00
+    sessions in the modern window           713
+    entries at 100 % session coverage       2,139
+
+    target                            sd      mean   n needed  n at 100%  sessions needed  reachable?
+    ----------------------------------------------------------------------------------------------------
+    delta_action_value        $    2,120$      161      1,365      2,139              455  YES
+    delta_total_window        $    2,194$      112      2,994      2,139              998  NO - NOT ENOUGH DATA EXISTS
+
+    'n needed' = the sample at which MDE falls to 1.0x the unconditional mean, i.e. the
+    point where an effect the SIZE OF THE MEAN becomes detectable at ~80 % power.
+
+    >>> For the FULL-HORIZON primary target this is NOT a coverage problem. Even complete
+    >>> order-flow coverage of EVERY session in the window leaves the MDE above the mean.
+    >>> Acquisition cannot rescue that. Only a LARGER effect than the mean is reachable.
