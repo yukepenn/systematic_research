@@ -1,0 +1,39 @@
+======================================================================================================================
+=== XM_CONFLICT at 09:45: 342 of 1009 sessions (33.9 %), $675/trade, hit 57.60 %
+======================================================================================================================
+
+  1. RATE-MATCHED SUBSAMPLE NULL - 2,000 random 341-of-1,005 subsets of the DRIVE book.
+     $/trade  real $675   null mean $235 sd $171   p95 $513   -> 99.6th percentile
+     hit %    real 57.60 %  null mean 53.78 % sd 2.18   p95 57.31 %   -> 95.9th percentile
+
+  2. SESSION-SHIFT NULL - the SAME cross-market construction, landing on other days.
+     null $/trade mean $241 sd $128   p95 $436   real $675   -> 100.0th percentile of 200
+     null selects 492 sessions on average vs the real 342 - RATE MISMATCH, read with care
+
+  3. PER-YEAR and the weekly risk profile it has never been measured on.
+     year        n    hit %    $/trade       net $
+     2022       24   58.33%        186       4,475
+     2023       80   56.25%        628      50,236
+     2024      111   55.86%        583      64,734
+     2025       77   59.74%        758      58,337
+     2026       50   60.00%      1,064      53,207
+
+     weeks 213   weekly $1,084   wk+ 51.2 %   maxDD $23,480   top5DD $13,760   worst $-10,069   streak 6
+     wk$ @ fixed $20,245 DD = $935   t = 3.81
+
+  4. IS IT THE INCUMBENT IN A HAT? Weekly correlation with P1 and with the 2:3 pair.
+     spread charged per contract RT: P1 $14.44, X9a $14.46, BMOM $13.02, XM_CONFLICT $12.50 + $4.36 commission
+     vs          weekly rho       z   daily rho
+     P1             -0.0048   -0.07      0.0380
+     X9a             0.0456    0.66      0.0547
+     BMOM            0.4080    5.91      0.3887
+     PAIR 2:3        0.3145    4.56      0.3051
+
+     MARGINAL PORTFOLIO VALUE - P1/PCT alone vs P1/PCT + XM_CONFLICT scaled to
+     contribute the same weekly income as P1 does (income-matched, W97's convention):
+     object                          wk$    wk+%     maxDD     top5  wk$@fixDD
+     P1/PCT                        1,394   56.3%    22,931   17,835      1,230
+     XM_CONFLICT (scaled)          1,394   51.2%    30,173   17,682        935
+     P1/PCT + XM_CONFLICT          2,787   61.5%    23,146   16,772      2,438
+
+[done 29s]
