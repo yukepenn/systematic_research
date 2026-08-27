@@ -1,6 +1,7 @@
 # CURRENT BASELINE — campaign #7 `WEEKLY_EDGE`
 
-**Authoritative for current RESEARCH state. 2026-08-27, through wave W123 + both parity runs.**
+**Authoritative for current RESEARCH state. 2026-08-27, through wave W123, both parity runs,
+the `RR_W000`–`RR_W006` action-value programme, and `DATA_CAPABILITY_AUDIT_20260827`.**
 
 _This is a **state document, not a changelog.** Wave-by-wave history lives in
 `runs/WE_W*/REPORT.md` and is linked, never reproduced. Execution truth lives in

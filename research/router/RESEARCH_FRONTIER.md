@@ -44,11 +44,16 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 > integrity check failed. Direct routing is de-prioritised **on evidence**, not on the letter of a
 > power gate. The **HMM stays NOT RUN**.
 >
-> **This tests the information THIS REPO HOLDS.** Order flow, options and a wider event calendar are
-> untested because they are **unavailable**, not because they failed — rows 8–10, all owner-gated,
-> and the only rows left with genuinely high ceilings. **Higher-timeframe (row 2) also remains
-> `LIGHT` and was never closed**; it is a transformation of an NQ path already `DEEP`, which is the
-> lowest-prior category, but it is not swept away here.
+> **This tests the information THIS REPO HELD AT THE TIME.** Order flow, options and a wider event
+> calendar were untested because they were **unavailable**, not because they failed — rows 9–11,
+> and the only rows left with genuinely high ceilings.
+>
+> ⚠️ **`DATA_CAPABILITY_AUDIT_20260827` has since falsified the "unavailable" premise for row 9.**
+> See the Level-1/2 hierarchy below — the audit was run precisely because "this repo holds no such
+> file" is **not** the same claim as "the owner's connections cannot serve it."
+>
+> **Higher-timeframe (row 2) is CLOSED, not `LIGHT`** — `RR_W004` closed it the same day; the
+> sentence that once said otherwise here was stale and is corrected.
 
 ---
 
