@@ -1,0 +1,115 @@
+    substrate 1,620,044 bars / 1,058 in-window sessions 2022-07-04 -> 2026-07-31  [6s]
+    every bar assigned to a segment: YES
+    every bar's minute covered by the spread profile: YES   (1,136 bars at 17:00 carry the forward-filled 16:59 spread, 0.070 % of bars)
+    10,510 session x segment groups  [6s]
+    oracles built  [6s]
+    12 causal rules: MOM5, REV5, MOM15, REV15, MOM30, REV30, MOM60, REV60, VWAPMOM, VWAPREV, OPENMOM, ORB
+    rule family evaluated  [7s]
+    objects built  [39s]
+
+    B1  vectorised open-to-open MTM on P1/PCT's realised position .. $333,730.8400
+    B1  the same object's committed trade list ..................... $333,730.8400
+    B1  |difference| = 0.000000   PASS
+
+==========================================================================================================================
+=== PHASE 2 - THE CAUSAL RULE FAMILY. Best SINGLE rule chosen once over the whole window
+===           is executable; best-of-12 selection is disclosed, not hidden.
+==========================================================================================================================
+rule          net $ FULL   $/session   net $ t12m   $/session
+MOM5          -5,861,556      -5,540   -1,558,259      -5,970
+REV5          -5,778,216      -5,461   -1,282,139      -4,912
+MOM15         -3,399,992      -3,214     -919,887      -3,524
+REV15         -3,436,882      -3,248     -753,277      -2,886
+MOM30         -2,438,855      -2,305     -639,060      -2,449
+REV30         -2,443,485      -2,310     -562,420      -2,155
+MOM60         -1,523,535      -1,440     -364,168      -1,395
+REV60         -1,946,385      -1,840     -485,008      -1,858
+VWAPMOM         -855,667        -809      -86,814        -333
+VWAPREV       -1,409,787      -1,333     -420,344      -1,611
+OPENMOM         -744,959        -704     -335,273      -1,285
+ORB             -746,754        -706     -343,660      -1,317
+
+    FIXED-BEST = OPENMOM at $-744,959 ($-704/session). Best of 12; a family-wise read is
+    that 0 of 12 rules are positive at all.
+    ORACLE-OVER-FAMILY (perfect PER-SESSION rule choice) = $14,792,026 ($13,981/session).
+    THE VALUE OF A PERFECT ROUTER OVER THIS RULE SET = $14,685/session.
+
+==========================================================================================================================
+=== PHASE 3 - THE LEDGER, BY SEGMENT (FULL window, $ per session)
+==========================================================================================================================
+segment     mins  oracle1 pt  zigzag10  net move  FIXBEST $  FAMORC $   P1/ABS   P1/PCT  2:3/PCT  capture%
+ON_ASIA      360        95.0      49.9       4.0       -744     1,152       58       58       55      5.1%
+ON_EU        480       125.1      62.3       3.5          0     1,577       43       39       18      2.4%
+PRE           90        80.6      45.3      -1.0          0     1,385       42       51       33      3.7%
+OPEN          15        73.8      45.0      -0.9        -25     1,412       24       34       94      2.4%
+MORN         105       159.3      87.6       1.1         20     2,844      -11       34       18      1.2%
+MID          120       114.5      60.7       3.8         63     2,049       51       49       13      2.4%
+AFT          135       116.5      61.2      -0.9         43     2,037       16        9        2      0.5%
+CLOSE         15        42.5      27.5       2.8        -34       741        4        3        0      0.4%
+POST         120        46.0      25.8       1.0        -27       784        5        3        1      0.3%
+TOTAL       1380       841.7     458.8                 -704    13,981      231      280      234      2.0%
+
+    THE EX-POST NUMBER, printed only next to the causal one as the spec requires:
+      sum of segment oracle1 = 841.7 pts/session = $16,834; P1/PCT takes $280 = 1.66 % of it.
+      against the EXECUTABLE fixed-rule denominator it is 29590584000000000.0 %.
+      The first number is the one W50 reported. It is not a capture rate; it is a ratio
+      to something no one can trade.
+
+==========================================================================================================================
+=== PHASE 4 - BY SESSION CLASS (FULL window, $ per session of that class)
+==========================================================================================================================
+class          share  oracle1 pt  FIXBEST $  FAMORC $   P1/ABS   P1/PCT  2:3/PCT  capture%
+TREND-UP       21.0%       740.2        329    12,011    1,680    1,991    1,572     16.6%
+TREND-DOWN     14.5%       979.5      1,473    16,377     -484     -495      355     -3.0%
+REVERSAL       25.7%       864.9       -439    14,300      -40      -64      -99     -0.5%
+RANGE          26.8%       830.7     -2,143    14,028     -175     -217     -419     -1.5%
+MIXED          12.0%       827.9     -2,484    13,753       51       69      -77      0.5%
+
+==========================================================================================================================
+=== PHASE 5 - WHAT RECOGNITION LAG COSTS (the same best swing, entered h minutes late)
+==========================================================================================================================
+segment          +0m       +5m      +15m      +30m      +60m     +120m   half-life
+ON_ASIA         95.0      81.6      73.1      64.3      52.4      33.3        120m
+ON_EU          125.1     114.7     106.2      96.8      84.0      61.0        120m
+PRE             80.6      61.7      45.6      27.3       7.0       0.0         30m
+OPEN            73.8      25.7       0.0       0.0       0.0       0.0          5m
+MORN           159.3     123.5      94.1      64.9      26.3       0.0         30m
+MID            114.5      91.7      73.6      54.9      28.9       0.0         30m
+AFT            116.5      95.1      77.2      60.7      33.3       2.9         60m
+CLOSE           42.5      17.2       0.0       0.0       0.0       0.0          5m
+POST            46.0      26.3      16.3       7.3       0.0       0.0         15m
+
+    This is a RECOGNITION-LAG ceiling, not an information ceiling. It says how much of
+    the move is still there once you would plausibly have identified it - nothing about
+    whether it was identifiable.
+
+==========================================================================================================================
+=== PHASE 6 - WHY WE MISS IT. P1/PCT, groups where the fixed-best rule made money
+=== and we made less. Codes applied in the fixed priority order of the spec.
+==========================================================================================================================
+code                 groups   share   missed $/session
+NO_ENGINE             2,655   79.0%              2,446
+WRONG_DIRECTION         119    3.5%                131
+ENTRY_LATE               60    1.8%                 86
+SESSION_BOX              89    2.6%                125
+EXIT_EARLY               70    2.1%                 59
+OTHER                   369   11.0%                394
+TOTAL                 3,362  100.0%              3,241
+
+    NO_ENGINE means we had ZERO exposure in that segment for the whole session. It is
+    the only code that names a MISSING MECHANISM rather than a flaw in an existing one.
+
+==========================================================================================================================
+=== PHASE 7 - RECENCY (directive sec 3). t3m lies ENTIRELY inside the BURNED span
+===           2026-05-31 -> 07-31; t6m largely does. Labelled, not hidden.
+==========================================================================================================================
+window     sess   oracle1   FIXBEST    FAMORC   P1/ABS   P1/PCT  2:3/PCT  capture% vs FAMORC
+FULL       1058     841.7      -704    13,981      231      280      234                2.0%
+2024+       670     960.6      -860    16,225      316      369      286                2.3%
+2025        259     976.7      -592    16,498      433      421      227                2.6%
+2026YTD     152    1331.2    -1,893    23,302       57      250      251                1.1%
+t12m        261    1134.6    -1,285    19,621      150      247      263                1.3%
+t6m         131    1391.1    -1,947    24,413      -80      109      238                0.4%
+t3m          67    1541.0    -2,549    27,135     -248      -67      133               -0.2%
+
+[done 39s]
