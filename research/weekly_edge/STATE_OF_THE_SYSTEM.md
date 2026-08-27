@@ -3,6 +3,74 @@
 
 # STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7)
 
+> ## 🚨🚨 CURRENT TRUTH after W97 (2026-08-26) — CORRECTS THE W89–W93 BLOCK BELOW
+>
+> A 5-agent adversarial audit of W89–W93, every finding re-tested by a skeptic told to refute it,
+> returned **33 confirmed defects (10 MAJOR, 23 MINOR)** and 12 refuted. `runs/WE_W97_AUDITFIX/`.
+>
+> ### 1. ⭐ THE DEEP VERDICT INVERTS, AND IT FAVOURS THE PAIR
+> W87 measured its 16-year drawdown bar against a **wrong P1 baseline**. All four objects rebuilt
+> on 2006–2021 in ONE run (this run's P1 reproduces W93's/W80's bit-for-bit; **W87's is the
+> anomaly** — and not a rescaling, because its positive-week rate differs):
+>
+> | | trades | **net $** | wk + % | **max DD** | **top-5 DD** | worst wk | streak |
+> |---|---|---|---|---|---|---|---|
+> | P1 | 9,557 | $79,076 | 44.5 % | $39,555 | $18,925 | −$7,019 | 7 |
+> | X9a | 9,504 | **$120,461** | 45.1 % | $40,933 | $15,866 | **−$6,249** | 10 |
+> | BMOM | 5,640 | $58,645 | **51.2 %** | $39,743 | $28,361 | −$12,687 | 7 |
+> | **PAIR 2:3** | 39,792 | **$95,734** | **47.7 %** | **$24,686** | **$12,384** | −$7,250 | **6** |
+> | **NETFUSE_1** | 20,147 | **−$8,951** | 42.4 % | **$49,961** | **$25,148** | −$8,572 | 8 |
+>
+> **The pair's top-5 reduction is 34.6 % nominal / 43.5 % contract-minute-matched / 45.9 %
+> income-matched — not the published 28.2 %. It beats P1 on money, max drawdown, top-5 drawdown,
+> positive-week rate AND losing streak simultaneously, over sixteen years it never touched.**
+> **NETFUSE_1 is deep-NEGATIVE and its drawdown is 32.9 % WORSE than P1's at nominal exposure**
+> (W93's "11.4 % better" was contract-minute-matched and the scaling was undisclosed).
+>
+> ### 2. ❌ MY "TEMPORAL DISJOINTNESS" `FACT` IS FALSIFIED (§4 below is WRONG)
+> Deconfounding control — split each object's P&L by ENTRY SEGMENT, correlate weekly vs BMOM:
+> **`X9a_RTH` shares B-MOM's clock completely and correlates +0.0205 (z 0.30); `P1_RTH` shares the
+> same clock and correlates +0.2744 (z 3.98) — because P1 CONTAINS the bmom channel.**
+> **The clock never varies with ρ. SIGNAL SHARING does.** The "hunt streams three and four on the
+> session clock" directive is **WITHDRAWN**; W96 was preregistered on it and failed its own null.
+>
+> ### 3. ❌ THE ROLLING GATE'S ALL-THREE IS A DIVISOR CHOICE
+> Two of three legs are **algebraically scale-invariant** (verified: weekly_dd = 1922.4349378102
+> and wkpos = 60.0000000000 identical at scale 0.05 and 7.30). Only the raw top-5 leg
+> discriminates, so the published number depends entirely on the divisor:
+>
+> | basket | NOMINAL (published) | PEAK | time-weighted | **income-matched** |
+> |---|---|---|---|---|
+> | 1:1 | 64 % | 16 % | 72 % | 24 % |
+> | 1:2 | 52 % | **48 %** | 52 % | 52 % |
+> | **2:3** | **92 %** | 36 % | **92 %** | **64 %** |
+>
+> At any COMMON scale 1:1 ≥ 2:3. **The defensible figure for 2:3 is ~64 % (income-matched), not
+> 92 %.** Every future gate must fix its exposure convention in the instrument — recommended
+> income-matched, the only one with no free parameter.
+>
+> ### 4. ❌ "THE QUALITY LAYER HURTS THE TWO-SIDED OBJECT" IS WITHDRAWN — IT HELPS
+> `sfills`' box is a **dollar** limit on **total position** P&L, so a size-2 entry trips the
+> −$1,300 halt at **32.28 points instead of 64.78**. That is an EXIT-policy change, not sizing.
+> Per-contract box, everything else identical: **$1,177 vs $1,068 at fixed DD, 59.15 % vs 58.69 %
+> positive weeks, top-5 $14,401 vs $15,611, t 3.79 vs 3.67.** Wins every column.
+> **P1 runs size 2 on 18.3 % of trades — its box has been tripping early on all of them for the
+> whole campaign.** A per-contract box is a live candidate; it needs its own null.
+>
+> ### 5. WITHDRAWN: "NETFUSE_1 beats P1 in 2026 / 2×"
+> Paired weekly difference **+$288, SE $599, t = 0.48, p = 0.635, N = 31 weeks**, 95 % CI
+> [−$936, +$1,511]. McNemar on the +5.2 pp positive-week claim: **p = 0.193**.
+>
+> ### 6. Corrections whose verdicts survive
+> W89 quote-coverage tested on calendar dates (**P1 128/4,004 = 3.2 %**, not 206/5.1 %) ·
+> W90's H4 null scored the full book against count-matched controls (**82.0/30.5/76.0**, still
+> GENERIC) · W90's two-box arm ran 31 % more exposure (matched: top-5 a dead heat, **max DD
+> reverses**, streak a tie; H3 still 0/3) · **W67's 7.26 pts/session is NET and W91's 6.64 is
+> GROSS** — like-for-like **7.26 → 6.19 (−14.85 %)**, P1 14.86 → **13.24** · W91's `one_budget()`
+> charged deleted trades (**$471/wk not $330**, ordering reverses; E_a still FALSIFIED).
+>
+> ### Everything below is the W89–W93 block. §4 of it is FALSIFIED by §2 above.
+
 > ## 🚨 CURRENT TRUTH after W89–W93 (2026-08-26) — SUPERSEDES EVERY BLOCK BELOW
 >
 > ### 1. `FACT` — "X9a" IS NOT A SECOND ENGINE. Say this before quoting anything about the pair.

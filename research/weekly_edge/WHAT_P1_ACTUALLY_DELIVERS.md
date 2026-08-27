@@ -136,12 +136,24 @@ it now sits on the bar rather than above it.
 > ≈37 % of its maximum drawdown, at matched income.** *"Roughly half the contracts"* is true on
 > peak and overstated on time-weighted. *"35–40 % of the drawdown"* stands.
 
-### 5.3 THERE ARE NOW TWO CHALLENGERS, AND THEY FAIL ON OPPOSITE AXES
+### 5.3 TWO CHALLENGERS — and W97's audit response CHANGED THIS TABLE
 
-| | specificity null | deep 16 years (risk) | deep 16 years (return) | recent |
-|---|---|---|---|---|
-| **{BMOM + X9a} 2:3** | **FAIL** (92nd vs 95th) | **PASS** (top-5 DD −28.2 %) | positive | 2026 +$784/wk |
-| **NETFUSE_1** (W92/W93) | **PASS** (98.5th–100th, three nulls) | **FAIL** (−11.4 % vs a −25 % bar) | **−$5,970** | 2026 +$575/wk |
+| | specificity null | **deep 16 years (risk)** | **deep 16 years (return)** |
+|---|---|---|---|
+| **{BMOM + X9a} 2:3** | **FAIL** (92nd vs 95th) | **PASS — top-5 DD −34.6 %** (nominal), −43.5 % (ctr-min), −45.9 % (income) | **+$95,734** |
+| **NETFUSE_1** (W92/W93) | **PASS** (98.5th–100th, three nulls) | **FAIL — top-5 DD +32.9 % WORSE** at nominal exposure | **−$8,951** |
+
+> ⚠️ **`CORRECTION` (W97).** The previously published deep figures (−28.2 % and −11.4 %) were
+> ratios against **two different P1 baselines**, and W87's was the wrong one. Rebuilt in one run:
+> **the pair beats P1 on money, max drawdown, top-5 drawdown, positive-week rate AND losing
+> streak simultaneously over sixteen unseen years** ($95,734 vs $79,076 · $24,686 vs $39,555 ·
+> $12,384 vs $18,925 · 47.7 % vs 44.5 % · 6 vs 7). **The pair is stronger than the campaign
+> believed; NETFUSE_1 is weaker.**
+>
+> ⚠️ Also withdrawn (W97): **"NETFUSE_1 beats P1 in 2026 / 2×"** — paired t = 0.48, p = 0.635 on
+> 31 weeks. And the **ALL-THREE gate figures are divisor-dependent**: 2:3 is 92 % on nominal
+> order count but **64 % income-matched and 36 % peak-matched**; 1:2 is the only rung stable
+> across all four conventions (48–52 %).
 
 **`NETFUSE_1`** is new and is a *single strategy*, not a basket: one target in {−1, 0, +1}, **one
 session box, one ledger**, direct reversals — P1's long vote netted against P1's own mirrored
