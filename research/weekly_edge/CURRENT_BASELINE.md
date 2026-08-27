@@ -23,7 +23,11 @@ _This is a **state document, not a changelog.** Wave-by-wave history lives in
 it cannot be inflated by leverage. Cost model: $4.36/ctrRT commission **plus** candidate-specific
 modelled spread (P1 $14.44, XM $12.50). **NT8 nets are a different quantity** — see the manifest.
 
-> **EXECUTABLE ≠ ENABLED.** C and D reproduce inside NinjaTrader. Neither is deployed or connected.
+> ### 🔒 LIVE STATUS: **NOT LIVE ENABLED** — every object above, without exception.
+> **EXECUTABLE ≠ ENABLED.** C and D reproduce inside NinjaTrader's Strategy Analyzer on the
+> isolated Backtest account. Neither is deployed, started or connected to any account, no live
+> order authorization exists, and enabling either requires an explicit recorded owner
+> instruction. **EXECUTABLE · PARITY-CERTIFIED · LIVE-ENABLED are three separate statuses.**
 > **Evidence status of A and B: `DISCOVERY_CONSUMED`** — the 2022-07 → 2026-08 window has been mined
 > for 123 waves. Forward evidence on the sealed ≥2026-08-01 data is the only clean test remaining.
 
