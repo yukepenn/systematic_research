@@ -1,0 +1,101 @@
+=== substrate 1,558,497 bars, 1012 sessions, 204 weeks [23s]
+
+========================================================================================================================
+=== PHASE 0c: is NQ's 1-minute volatility direction-asymmetric at all?
+========================================================================================================================
+horizon             n up        n dn    sigma_up    sigma_dn     dn/up     verdict
+1                756,700     743,467      3.8767      3.9292    1.0135   symmetric
+5                777,461     749,451      8.4684      8.7010    1.0275   symmetric
+15               783,834     743,100     14.6382     15.1889    1.0376   symmetric
+60               774,965     708,518     30.0759     31.9383    1.0619  ASYMMETRIC
+460              547,117     486,012     90.7987     96.8373    1.0665  ASYMMETRIC
+
+   every horizon inside [0.95, 1.05]? -> False
+
+========================================================================================================================
+=== PHASE 0b: the ratchet's OWN geometry, up-legs vs down-legs.
+===          If one sigma were the right scale for both, these would coincide.
+========================================================================================================================
+VolMult  dir       legs  med bars   med MFE  med |MAE|  med retrace    med S  retrace/S    MFE/S
+6        up      23,321        18     14.25      10.50        23.00    19.02     1.1332    0.775
+6        down    23,321        16     13.75      10.75        22.75    18.93     1.1309    0.721
+
+16       up       4,310        79     39.50      28.00        62.00    56.25     1.0654    0.742
+16       down     4,311        62     37.75      28.00        59.50    54.33     1.0576    0.706
+
+30       up       1,253       319     86.75      58.75       128.25   121.92     1.0397    0.735
+30       down     1,254       208     81.00      55.25       119.25   113.61     1.0304    0.716
+
+   max |up/down - 1| on retrace/S across the three members: 0.0090
+   max |up/down - 1| on MFE/S     across the three members: 0.0751
+
+   H2 FALSIFIER (spec): symmetric at every horizon AND both geometry gaps < 5 % -> H2 SURVIVES phase 0
+
+=== B1 GATE: 14.86 pts/session (expect 14.72) -> PASS [76s]
+   short sleeve (symmetric sigma): 2,225 trades, 6.00 pts/session
+
+========================================================================================================================
+=== PHASE 0a: HOW MUCH OF OUR MONEY IS THE MARKET RISING UNDERNEATH US?
+========================================================================================================================
+   per-minute drift over the window: +0.007866 pts/min (SE 0.005157, 1,557,356 bars)
+   = +10.855 pts per full session, +2735 pts/year at 1 contract
+
+arm               trades        net $   signed c-min     DRIFT $      (SE)     TIMING $  timing %
+P1 long            1,942      300,817        212,087      33,365    21,875      267,452       89%
+SHORT sleeve       2,225      121,454       -146,696     -23,078    15,130      144,532      119%
+
+   per year (net $ = drift $ + timing $):
+year            LONG net      LONG drift     LONG timing       SHORT net     SHORT drift    SHORT timing
+2022              30,136           2,678          27,458          26,276          -3,632          29,907
+2023              15,697           8,310           7,387          14,257          -6,533          20,790
+2024             101,476          10,048          91,428          72,099          -5,934          78,033
+2025             120,040           8,770         111,270          31,341          -5,208          36,549
+2026              33,467           3,558          29,909         -22,519          -1,771         -20,748
+
+   READ: the SHORT sleeve's TIMING component is the answer to the owner's question.
+   If it is positive and of the same order as the long object's, the short side has
+   skill and the deficit is DIRECTIONAL - a portfolio problem, not a signal problem.
+
+========================================================================================================================
+=== PHASE 1: THE SAME 460 OBSERVATIONS, SPLIT BY SIGN. Timescale unchanged.
+========================================================================================================================
+   signed-sigma member matrix loaded from cache [76s]
+   control: bmom identical True, tilt identical True (neither depends on sigma)
+   member signals differ on 57.67 % of bars
+   REBUILD CONTROL: the rebuilt symmetric object gives 14.86 pts/session against the engine's 14.86 -> OK
+
+arm                          trds    pts   $/trd  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   worst$
+L_sym  (P1 incumbent)        1942  14.86     155   27.6    46.0   58.3      8      455     1,475   14,266   -7,418   <- INCUMBENT
+L_sig  (signed sigma)        1808  14.99     168   27.5    46.7   58.3      7      518     1,247   11,024   -6,216
+S_sym  (mirror short)        2225   6.00      55   28.1    42.2   49.5      9        0       371   12,703   -5,148
+S_sig  (signed sigma)        2252   4.79      43   27.5    40.5   51.0      8       80       223   11,250   -4,899
+
+=== PER YEAR (pts/session) ===
+arm                            2022     2023     2024     2025     2026
+L_sym                         11.59     3.04    19.59    23.17    15.79
+L_sig                         16.44     6.90    18.81    18.26    15.58
+S_sym                         10.11     2.76    13.92     6.05   -10.62
+S_sig                         11.31     2.97     9.91     6.73   -16.03
+
+========================================================================================================================
+=== PHASE 2: P1 + the short arm at w = 0.30 (W61's weight, NOT re-tuned)
+========================================================================================================================
+arm                          trds    pts   $/trd  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   worst$
+P1 + S_sym w=0.20            1942  13.09     136   42.3    45.7   60.3      4      976     1,902   15,825   -9,322   rho=-0.003
+P1 + S_sym w=0.30            1942  12.20     127   43.1    46.5   61.8      4    1,022     1,698   13,414   -8,856   rho=-0.003
+P1 + S_sym w=0.40            1942  11.32     118   44.1    47.6   63.2      3      792     1,474   11,342   -8,274   rho=-0.003
+P1 + S_sig w=0.20            1942  12.85     134   41.9    45.2   60.8      4      852     1,862   16,815   -9,073   rho=-0.014
+P1 + S_sig w=0.30            1942  11.84     123   42.4    45.7   60.3      4      968     1,577   14,273   -8,248   rho=-0.014
+P1 + S_sig w=0.40            1942  10.83     113   43.7    47.1   61.8      3      777     1,255   12,068   -7,097   rho=-0.014
+
+========================================================================================================================
+=== PHASE 3: THE RECENCY GATE - the one that disqualified the short sleeve
+========================================================================================================================
+arm                         windows   % pos  median t  latest t   pctile
+S_sym                            22    100%      2.12      1.47       0%
+S_sig                            22    100%      1.65      1.02       0%
+L_sym                            22    100%      3.11      3.52      64%
+L_sig                            22    100%      3.24      3.11      32%
+
+=== STATUS: diagnostic. NOTHING ADOPTED. [95s] ===
+done [95s]

@@ -84,7 +84,7 @@ def round_away(x):
 def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False,
             volmults=None, entry_level=3.0, exit_level=1.0, tilt_on=True, blocks_on=True,
             restore=None, type3=False, smin_pts=None, smax_pts=None, stopm_pts=None,
-            return_debug=False, return_members=False, sigma_mode=None):
+            return_debug=False, return_members=False, sigma_mode=None, sigma_signs=None):
     """Faithful port of SolarWaveOneContractNQ_v5 decision stack to 1-min bars.
 
     Declared port choices (spec): B-MOM reset at bar-end 09:31, signal cutoff 15:54, flatten
@@ -165,7 +165,11 @@ def sm14_1m(D, vol_period, with_solar=True, with_bmom=True, return_targets=False
                 diffs = diffs[-vol_period:]
                 vol_sum = float(sum(diffs)); vol_cnt = len(diffs)
             if sbuf is not None:                                       # W73, same window
-                sgn = 1 if px > prev_close else (-1 if px < prev_close else 0)
+                # sigma_signs supplies a SUBSTITUTE sign vector. Passing a permutation of the
+                # true signs is the exact null for "does the SIGN carry information, or does
+                # any two-bucket split of the same magnitudes work as well?"
+                sgn = (int(sigma_signs[i]) if sigma_signs is not None
+                       else (1 if px > prev_close else (-1 if px < prev_close else 0)))
                 sbuf.append((d, sgn))
                 if sgn > 0:
                     su_sum += d; su_cnt += 1

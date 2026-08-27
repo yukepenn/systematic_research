@@ -1,0 +1,79 @@
+=== substrate 1,558,497 bars, 1012 sessions in window, 204 weeks [24s]
+
+================================================================================================================================
+=== PHASE 1: THE SIX ARMS. Only the OR-slot occupant differs.
+================================================================================================================================
+arm                      trds    pts  day+%  trdD+%   wk+%  wStrk   medWk$   weekly$   top5DD   ulcer   worst$
+A0_incumbent             1942  14.86   27.6    46.0   58.3      8      455     1,475   14,266   6,183   -7,418   <- INCUMBENT
+A1_sess                  1897  10.73   23.5    43.0   54.4      7      261       895   13,873   6,858   -7,280
+A2_or_both               1921  13.42   26.2    45.5   53.4      8      289     1,465   15,604   6,961   -6,766
+A3_or_disp_both          1918  11.10   25.8    44.8   52.9      8      128     1,125   15,578   7,051   -6,280
+A4_disp_rth              1951  13.08   27.4    45.4   55.9      8      342     1,278   15,241   6,909   -8,959
+A5_and_both              1879  10.04   24.3    44.9   55.4      7      225       825   14,592   6,855   -6,092
+
+   B1 GATE: 14.86 pts/session (expect 14.72) -> PASS [81s]
+
+=== PER YEAR (pts/session) ===
+arm                        2022     2023     2024     2025     2026   yrs>0
+A0_incumbent              11.59     3.04    19.59    23.17    15.79       5
+A1_sess                    7.96     1.58    22.00     8.02    15.45       5
+A2_or_both                 9.62     2.51    18.56    19.10    18.20       5
+A3_or_disp_both            9.35     2.64    16.94    11.79    17.86       5
+A4_disp_rth               11.44     2.43    19.81    16.45    16.37       5
+A5_and_both                5.70    -0.05    19.00    10.23    17.57       4
+
+================================================================================================================================
+=== PHASE 2: ROLLING 24-MONTH WINDOWS vs A0. The test that has killed four candidates.
+================================================================================================================================
+   22 windows, 2022-07-31 -> 2026-04-30
+
+arm                      weekly$ win%   wk+% win%   top5DD win%   ALL THREE
+A1_sess                           18%          9%           64%          0%
+A2_or_both                        41%          0%           36%          0%
+A3_or_disp_both                    0%          0%           50%          0%
+A4_disp_rth                        0%          0%           77%          0%
+A5_and_both                        0%          9%           82%          0%
+
+================================================================================================================================
+=== PHASE 3: THE COMBINED CHANNELS STANDALONE, BOTH ERAS
+================================================================================================================================
+   deep 6,466,783 bars, 5,420 sessions [99s]
+
+arm                   era            trades        net $    $/trd       t   win%     PF
+A0_incumbent          2006-2021       5,643       58,182     10.3    0.93  43.0%  1.042
+A0_incumbent          2022-2026       1,123      270,309    240.7    2.50  46.0%  1.220
+                      roll24            220 windows, median t +0.65, latest t +2.03 at the 96th pctile of its own history
+
+A1_sess               2006-2021       3,948      112,872     28.6    1.83  48.9%  1.105
+A1_sess               2022-2026         950      116,838    123.0    1.05  52.9%  1.095
+                      roll24            220 windows, median t +0.28, latest t +1.03 at the 80th pctile of its own history
+
+A2_or_both            2006-2021       5,501       51,721      9.4    0.87  37.6%  1.042
+A2_or_both            2022-2026       1,267      168,506    133.0    1.64  38.4%  1.139
+                      roll24            220 windows, median t +0.48, latest t +1.42 at the 96th pctile of its own history
+
+A3_or_disp_both       2006-2021       5,503       66,522     12.1    1.11  38.0%  1.054
+A3_or_disp_both       2022-2026       1,231      156,423    127.1    1.53  38.8%  1.130
+                      roll24            220 windows, median t +0.54, latest t +1.23 at the 91th pctile of its own history
+
+A4_disp_rth           2006-2021       6,013       64,778     10.8    1.02  41.2%  1.045
+A4_disp_rth           2022-2026       1,182      271,046    229.3    2.49  43.2%  1.217
+                      roll24            220 windows, median t +0.74, latest t +1.95 at the 97th pctile of its own history
+
+A5_and_both           2006-2021       3,511       59,837     17.0    1.17  45.4%  1.069
+A5_and_both           2022-2026         814      182,081    223.7    2.01  51.2%  1.208
+                      roll24            220 windows, median t +0.82, latest t +1.39 at the 85th pctile of its own history
+
+
+================================================================================================================================
+=== PHASE 4: N_shift NULL (40 draws) on A0 and on the best challenger
+================================================================================================================================
+   session-wise circular shift of the occupant's path: preserves firing rate, latch-run
+   distribution and intraday shape EXACTLY; destroys only which day the path lands on.
+   best challenger by weekly $ at a fixed drawdown: A2_or_both
+
+arm                     real pts  null mean  null p95   pctile   real wk$   null wk$   pctile
+A0_incumbent               14.86      10.05     12.14     100%      1,475        886      98%
+A2_or_both                 13.42       9.24     11.84     100%      1,465        828     100%
+
+=== STATUS: diagnostic. NOTHING ADOPTED. [869s] ===
