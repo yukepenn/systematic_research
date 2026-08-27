@@ -1,0 +1,51 @@
+{
+  "_note": "Verbatim GetMcpCapabilities + McpSelfTest results, 2026-08-27. Probed, not inferred.",
+  "GetMcpCapabilities": {
+    "protocol_version": "1.0.0",
+    "addon_version": "v1.13.9",
+    "features": ["compile", "strategy_state", "alert_relay", "backtest"],
+    "backtest_engine": {
+      "available": true,
+      "engine": "nt8_strategy_analyzer",
+      "nt8_version": "8.1.8.1",
+      "fingerprint": "sha256:b4255f1b0dd7fba1",
+      "supports_optimization": true,
+      "supported_optimizers": ["DefaultOptimizer", "GeneticOptimizer", "StrategyGenerator"]
+    }
+  },
+  "McpSelfTest": {
+    "without_instrument": {"passed": 8, "failed": 0, "skipped": 4, "total": 12},
+    "with_instrument_NQ_09_26": {"passed": 11, "failed": 0, "skipped": 1, "total": 12},
+    "per_feature": {
+      "capabilities": "pass",
+      "job_manager": "pass",
+      "job_list_cancel": "pass",
+      "compile": "pass (0 errors, 142 referenced assemblies)",
+      "compile_cleanup": "pass",
+      "indicator_ema": "pass (last_value 29656.909534807557)",
+      "volume_profile": "pass (poc 29575.4)",
+      "order_flow": "pass (delta 97211)",
+      "drawing_crud": "pass",
+      "workspace_list": "pass (2 workspaces)",
+      "alerts_crud": "pass",
+      "backtest": "skip (deep=false; NOT run - deep backtest deferred to the real extraction job)"
+    }
+  },
+  "CRITICAL_DISTINCTION": {
+    "claim": "volume_profile and order_flow PASS inside McpSelfTest, but NO CALLABLE MCP TOOL EXPOSES THEM.",
+    "evidence": "The session tool surface contains no GetOrderFlow and no GetVolumeProfile. Two independent ToolSearch sweeps ('order flow volume profile footprint depth market replay historical tick' and '+crosstrade delta profile poc indicator value bars study') returned only order-management and strategy-lifecycle tools.",
+    "classification": "TOOL_LIMIT, not PROVIDER_LIMIT. The add-on backend computes them; this client cannot ask for them.",
+    "why_it_matters": "An earlier statement in this session said these tools 'do not exist'. That was wrong about the BACKEND and right only about the CLIENT SURFACE. The corrected claim is the narrower one.",
+    "workaround": "NinjaScript running inside RunStrategyBacktest sees the full NT8 API surface, including tick/bid/ask series. The repo already has such an exporter (SWScalpTickExport_v3.cs)."
+  },
+  "GetBars_limits": {
+    "periodType_enum_enforced_by_server": ["day", "minute", "month", "week", "year"],
+    "rejected": {
+      "Tick": "rpc_error: Invalid periodType 'tick'",
+      "Second": "rpc_error: Invalid periodType 'second'",
+      "Volumetric": "rpc_error: Invalid periodType 'volumetric'"
+    },
+    "no_marketDataType_parameter": "GetBars cannot request Bid or Ask series. RunStrategyBacktest.bars_period CAN (market_data_type).",
+    "continuous_contract": "'NQ ##-##' resolves but returns count=0 for every window tried. Contract-level names ('NQ 09-26' -> NQU6) work. Consistent with directive s13 preferring contract truth anyway."
+  }
+}

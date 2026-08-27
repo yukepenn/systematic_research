@@ -27,17 +27,33 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | 6 | Does a soft allocation with cash beat the static book? | — | **DE-PRIORITISED by RR_W001** · gated on #1 |
 | 7 | Does latent state add information beyond raw features? | — | **NOT RUN** — RR_W001's continuation rule forbids it |
 | 8 | Does transition uncertainty carry risk information? | — | blocked on #6 |
-| 9 | Does BBO / order flow separate P1 entry quality? | **HIGH ceiling** | **DATA-BLOCKED** · owner OQ-5 |
-| 10 | Does options / dealer-gamma state carry NQ information? | MEDIUM | **OWNER-GATED** · owner OQ-5 |
-| 11 | Do more event TYPES reopen the event-response lane? | MEDIUM | **DATA-BLOCKED** · owner OQ-5 |
+| **9** | Does BBO / order flow separate P1 entry quality? | **HIGH ceiling** | ✅ **RUNNABLE — REOPENED FREE** · 262 `Last` + 123 BBO-complete NQ sessions sit unextracted on local disk · `runs/DATA_CAPABILITY_AUDIT_20260827/` |
+| 10 | Does options / dealer-gamma state carry NQ information? | MEDIUM | **OWNER-GATED** · owner OQ-5 · **confirmed by probe** — no option-chain surface exists in this tool set at all |
+| 11 | Do more event TYPES reopen the event-response lane? | MEDIUM | **DATA-BLOCKED** · owner OQ-5 · free-source construction not yet probed |
+| **16** | Does a multi-market TSMOM / carry book add marginal portfolio value? | **HIGH ceiling** | ✅ **RUNNABLE — REOPENED FREE** · ≥ 15 y daily across 5 sectors, no purchase needed · `runs/DATA_CAPABILITY_AUDIT_20260827/` |
+| **17** | Do market internals (`$TICK` / `$TRIN`) carry NQ information? | MEDIUM | ✅ **RUNNABLE — REOPENED FREE** · `$TICK` 1-min back to 2018 · `runs/DATA_CAPABILITY_AUDIT_20260827/` |
 | 12 | Does an individual-contract substrate change any verdict? | LOW | DEFERRED by design · directive §52 |
 | 13 | Does the frozen architecture survive the sealed forward pool? | — | **CALENDAR-GATED** · needs an architecture freeze |
 | 14 | Can position management (exit / reversal) be routed? | UNKNOWN | **EXCLUDED from V1** · directive §7 |
 | 15 | What integer-contract mapping implements portfolio B? | — | **OWNER CAPITAL DECISION** · OQ-6 |
 
-> ### ⚠️ **NO RUNNABLE ROW REMAINS.** Every question this repo can answer with data it holds
-> ### has now been asked and answered. What is left is **owner-gated acquisition** (rows with the
-> ### only high ceilings), **calendar-gated** forward reads, and **owner capital decisions**.
+> ### ⚠️ **WITHDRAWN 2026-08-27: "NO RUNNABLE ROW REMAINS" WAS A LEVEL-1 CLAIM
+> ### PRESENTED AS A LEVEL-2 ONE.**
+>
+> It quantified over **materialized substrate files** — a strictly narrower population than
+> **"what the owner's already-paid, already-connected sources can serve."** The second was
+> never probed. `runs/DATA_CAPABILITY_AUDIT_20260827/` probed it, and **three lanes reopened at zero cost**.
+>
+> | level | question | status |
+> |---|---|---|
+> | **1** | answerable from **materialized substrates** | **largely exhausted** — the old claim, still true |
+> | **2** | answerable from **existing connected sources** | ⚠️ **NOT exhausted** — rows 9, 16, 17 |
+> | **3** | requires **new paid data** | owner-gated — and **smaller than it was** |
+> | **4** | requires **calendar time** | calendar-gated — unchanged |
+>
+> **Nothing measured is retracted.** `RR_W002A`, `RR_W004`, `RR_W005`, `RR_W006` all stand
+> exactly as recorded. What is withdrawn is the *scope word* attached to them: those waves
+> exhausted the **information this repo had materialized**, not the information it can reach.
 >
 > ### ⚠️ **The action-value information question is now ASKED and ANSWERED: NULL.**
 > `RR_W002A` fitted it directly against a refitted dependence-preserving null and every gate but the

@@ -1,0 +1,33 @@
+{
+  "_note": "Verbatim GetConnections(refresh=true) + ListAccounts, 2026-08-27. No connection was altered.",
+  "connections": [
+    {"name": "Simulation", "provider": "Provider31", "providerId": 50, "user": "rainazur",
+     "status": "Connected", "priceStatus": "Connected",
+     "establishedAt": "2026-08-27T15:23:06Z", "uptimeSeconds": 17426.73,
+     "role": "THE ONLY LIVE MARKET-DATA CONNECTION. Every probe below resolved through it."},
+    {"name": "Kinetick - End Of Day (Free)", "provider": "Provider7", "providerId": 26,
+     "status": "Disconnected",
+     "role": "EOD-only tier. Not connected; not needed - the live connection already serves intraday."},
+    {"name": "Playback", "provider": "Playback", "providerId": 13, "status": "Disconnected",
+     "role": "Market Replay playback. Store holds exactly ONE replay day."},
+    {"name": "Simulated Data Feed", "provider": "Simulator", "providerId": 15, "status": "Disconnected",
+     "role": "Synthetic data generator. Never a research source."},
+    {"name": "Live", "provider": "Unknown", "status": "Disconnected",
+     "role": "Not probed. Out of scope - LIVE ENABLED = NO remains binding."}
+  ],
+  "accounts": [
+    {"name": "Backtest", "status": "Enabled", "role": "NT8 isolated Strategy Analyzer scratch account. All backtests land here."},
+    {"name": "Playback101", "status": "Enabled", "role": "Playback simulation."},
+    {"name": "Sim101", "status": "Enabled", "role": "Simulation. NOT TOUCHED."},
+    {"name": "2047681", "status": "Enabled", "role": "NOT TOUCHED, NOT PROBED."},
+    {"name": "DEMO8383477", "status": "Enabled", "role": "Tradovate demo. NOT TOUCHED, NOT PROBED."}
+  ],
+  "entitlement_findings": {
+    "historical_intraday": "YES - 1-minute served for every root tried, including roots with no local file.",
+    "historical_daily_depth": ">= 15 years (ES and ZN both served 2011-11 daily).",
+    "instrument_breadth": "Provider-backed, NOT limited to the local store. 6E, ZC, ZN, GC all served despite being absent from db/minute and db/tick entirely.",
+    "market_internals": "$TICK and $TRIN served at 1-minute; $VIX served daily; $ADD returns empty; $VXN not found.",
+    "tick_bid_ask": "NOT reachable through GetBars at all. Reachable only through NinjaScript inside the backtest engine, against whatever the local db/tick store holds.",
+    "caution": "No probe was run against the 'Live' connection and no order-side surface was exercised. Absence of evidence there is not evidence of absence."
+  }
+}

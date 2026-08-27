@@ -1,0 +1,31 @@
+instrument,resolved,period_type,window,result,n_bars,classification,note
+NQ 09-26,NQU6,Day,2026-07-01..07-31,AVAILABLE,5,OK,local store cached; ~10ms
+NQ 09-26,NQU6,Minute,2026-07-29..07-30,AVAILABLE,5,OK,~6ms
+NQ 09-26,NQU6,Tick,2026-07-29 5min,REJECTED,0,TOOL_LIMIT,"rpc_error: Invalid periodType 'tick'. Must be one of: day, minute, month, week, year"
+NQ 09-26,NQU6,Second,2026-07-29 5min,REJECTED,0,TOOL_LIMIT,rpc_error: Invalid periodType 'second'
+NQ 09-26,NQU6,Volumetric,2026-07-29 5min,REJECTED,0,TOOL_LIMIT,rpc_error: Invalid periodType 'volumetric'
+NQ ##-##,NQ ##-##,Day,2006-01..03,EMPTY,0,TOOL_LIMIT,continuous symbol resolves but never returns rows
+NQ ##-##,NQ ##-##,Day,2026-07-01..07-31,EMPTY,0,TOOL_LIMIT,same - continuous is not a usable route
+NQ 09-25,NQU5,Minute,2025-07-28..29,AVAILABLE,2,OK,1 year back
+NQ 09-24,NQU4,Minute,2024-07-29..30,AVAILABLE,2,OK,2 years back
+NQ 09-21,NQU1,Minute,2021-07-29..30,AVAILABLE,2,OK,5 years back
+6E 09-26,6EU6,Day,2026-07-01..07-31,AVAILABLE,2,OK,"ABSENT from local store - proves provider-backed, not store-limited; ~164ms"
+ZC 12-26,ZCZ6,Day,2026-07-01..07-31,AVAILABLE,2,OK,absent from local store; agriculture reachable
+ZN 09-26,ZNU6,Day,2026-07-01..07-31,AVAILABLE,2,OK,absent from local store; rates reachable
+GC 12-26,GCZ6,Day,2026-07-01..07-31,AVAILABLE,2,OK,absent from local store; metals reachable
+ZN 09-26,ZNU6,Minute,2026-07-29..30,AVAILABLE,2,OK,intraday for a root with no local minute file
+ES 12-16,ESZ6,Day,2016-10..11,AVAILABLE,2,OK,10 years back
+ES 12-11,ESZ1,Day,2011-10..11,AVAILABLE,2,OK,15 years back - deepest daily probe run
+ZN 12-16,ZNZ6,Day,2016-10..11,AVAILABLE,2,OK,15y-class depth is not equity-index-only
+ES 12-26,ESZ6,Minute,2018-07-10..11,EMPTY,0,OK,"CORRECT negative - contract did not exist in 2018. Sanity check on contract semantics."
+^VIX,$VIX,Day,2026-07-01..07-31,AVAILABLE,2,OK,volume field is 0 - index, not a traded contract
+^VIX,$VIX,Day,2024-01..03,AVAILABLE,2,OK,
+^VIX,$VIX,Day,2021-01..03,EMPTY,0,PROVIDER_LIMIT,VIX daily depth is roughly 2-3 years
+^VIX,$VIX,Day,2011-01..03,EMPTY,0,PROVIDER_LIMIT,
+^VXN,-,Day,2026-07,NOT_FOUND,0,PROVIDER_LIMIT,"rpc_error: Instrument '^VXN' not found"
+^TICK,$TICK,Minute,2026-07-29..30,AVAILABLE,2,OK,NYSE TICK at 1-minute
+^TICK,$TICK,Minute,2023-07-10..11,AVAILABLE,2,OK,
+^TICK,$TICK,Minute,2018-07-10..11,AVAILABLE,2,OK,8 YEARS of 1-minute NYSE TICK - repo currently records this as 'no data'
+^TRIN,$TRIN,Minute,2026-07-29..30,AVAILABLE,2,OK,
+^TRIN,$TRIN,Minute,2022-07-11..12,AVAILABLE,2,OK,4 years of 1-minute TRIN
+^ADD,$ADD,Minute,2026-07-29..30,EMPTY,0,PROVIDER_LIMIT,symbol resolves but no data served
