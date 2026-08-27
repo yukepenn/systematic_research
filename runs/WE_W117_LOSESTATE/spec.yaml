@@ -1,0 +1,76 @@
+run_id: WE_W117_LOSESTATE
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "POST-W115 owner directive, sections 22, 26, 27, 29, 37, 38, 44 LANE 4."
+
+title: >
+  WHAT DOES THE BOOK ACTUALLY LOSE ON - and is anything we already own positive there?
+  Section 27 says the most valuable new information is whatever earns when P1 loses, when XM loses,
+  or when both are flat. Before searching for that, the losing state itself has to be described,
+  and after 116 waves it never has been. This wave describes it first and screens second.
+
+why_this_is_the_right_next_wave: >
+  W116 established that FOLLOW_MORNING - the strongest modern standalone object the campaign has -
+  contributes $66 on the combined book's losing weeks against $842 from a random re-alignment.
+  That is a portfolio failure, and the obvious next question is not "find another standalone
+  alpha". It is "what IS the book losing on, and does anything already built pay there?" Section 22
+  says explicitly that a good standalone alpha adding little marginal value may still be useful at
+  a different state or scale.
+
+the_asymmetry_that_motivates_it: >
+  P1/PCT is LONG-ONLY. XM_CONFLICT is two-sided but is an opening-auction object active on ~34 % of
+  sessions. So the book is structurally short of DOWNSIDE exposure, and W99 already measured that
+  TREND-DOWN sessions carry 28 % MORE movement than TREND-UP and are the class the campaign is
+  negative on. If the book's losing weeks turn out to be DOWN weeks, the required engine is named
+  precisely rather than searched for blindly - and that is worth more than the screen itself.
+
+# --------------------------------------------------------------- PART A: describe the state
+part_a_characterise:
+  status: "DIAGNOSTIC. No trade is simulated and nothing is promoted from this part."
+  book: "{P1/PCT + XM_CONFLICT} at inverse-volatility weights, the campaign's candidate portfolio, 213 weeks from runs/WE_W110_XMDIVERSE/out/weekly.csv."
+  report:
+    - "how many weeks the book loses, how deep, how they cluster, and the drawdown episodes"
+    - "correlation of book weekly dollars with: NQ weekly return, weekly realised volatility, weekly high-low range, the share of sessions classed TREND-DOWN, the share classed RANGE, and announcement density"
+    - "the same split by which LEG lost - P1 only, XM only, or both"
+  the_question_it_must_answer_in_one_sentence: "the book loses when ___."
+  labels_warning: >
+    W51 session classes are EX-POST. In this part they are used ONLY to describe what happened, as
+    W111b's binding rule allows for description. Nothing in part B may condition on them.
+
+# --------------------------------------------------------------- PART B: what is positive there
+part_b_screen:
+  rule: >
+    ONLY objects that already exist and are already frozen. This wave invents NO new mechanism and
+    fits NO parameter. It is a re-reading of what we own against a new objective function, which is
+    what section 20 asks for and what section 27 prioritises.
+  candidates:
+    FM_LONG:  "FOLLOW_MORNING's LONG leg alone, 11:49 -> 15:44. W114 measured it standalone at $198/trade."
+    FM_SHORT: "FOLLOW_MORNING's SHORT leg alone. W114: $158/trade. This is the campaign's only two-sided modern object's downside half."
+    XM_LONG:  "XM_CONFLICT's long trades only."
+    XM_SHORT: "XM_CONFLICT's short trades only."
+    ALWAYS_SHORT: "unconditional short 11:49 -> 15:44. The crudest possible downside exposure and the mandatory simple control (section 29) - if it does as well as the others, none of them is information."
+    FADE_MORNING: "the mirror of FOLLOW. Known to lose overall (-$208/trade); carried because a mechanism that loses overall can still be positive on a subset, and that must be visible rather than assumed away."
+  primary: "mean weekly dollars ON THE BOOK'S LOSING WEEKS, per candidate, at unit scale."
+  falsifier: >
+    A candidate fails unless its mean on book-losing weeks is > 0 AND > the 95th percentile of a
+    1,000-shift CIRCULAR null of its own weekly series against the book's - the instrument W110
+    established - AND it beats ALWAYS_SHORT. Six candidates are searched, so a best-of-6 bar is
+    charged on the winner.
+  power_disclosure: >
+    213 weeks, of which roughly 40 % are expected to be losing weeks - so about 85 observations per
+    candidate. This wave is UNDERPOWERED for small effects and must say so in its own report rather
+    than presenting a marginal result as a finding. Only a LARGE effect is interpretable here.
+
+# --------------------------------------------------------------- PART C: does it help the book
+part_c_marginal:
+  run_only_if: "a candidate clears part B."
+  measure: "add the surviving candidate to {P1/PCT + XM} at BOTH inverse-vol and income-matched weights and report the RANGE, never the better one."
+  required_to_be_useful: "fixed-DD weekly dollars UP, CVaR5 improved, worst-decile overlap with the book no worse than its null - all three, not any one."
+
+decision_rule:
+  - "NOTHING PROMOTED. Part A is a description; part B buys a preregistration at most."
+  - "If ALWAYS_SHORT matches the best candidate, the wave reports that the book's gap is EXPOSURE, not information, and says so plainly. That would be a real and useful answer, not a failure."
+  - "If NOTHING is positive on book-losing weeks, the wave reports that the book's losses are not addressable by anything currently owned, which names the information gap precisely and is the most valuable outcome available here."
+  - "A leg-split of an existing object is a SELECTION of one of two halves and is charged as such; it is not a new object and does not escape the best-of-6 bar."
+  - "No candidate, weighting, window or threshold is re-chosen after results are seen."
