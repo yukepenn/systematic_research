@@ -19,36 +19,41 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 |---|---|:--:|---|
 | — | ~~Is there enough ACTION-VALUE DISPERSION to justify routing?~~ | — | ✅ **CLOSED** · `runs/RR_W001_ACTION_VALUE_LEDGER/` |
 | — | ~~Does EVENT RESPONSE carry incremental action-value information?~~ | — | ✅ **CLOSED-BY-DATA** · `runs/DATAGATE_EVENTRESPONSE_20260827/` |
-| **1** | **Is `X9a` a coherent standalone expert?** | **MEDIUM** | **RUNNABLE — the highest-EVI runnable item** |
-| 2 | Is SELECTIVE box un-latching worth anything? *(new, from RR_W001)* | LOW | RUNNABLE |
-| 3 | Is book COVERAGE actually a gap? *(reopened by `RR_W000`)* | LOW | RUNNABLE |
-| **3b** | **Does HIGHER-TIMEFRAME state carry anything at P1's decision events?** | **LOW-MED** | **RUNNABLE** — still `LIGHT`, never closed |
-| 4 | Can causal features predict action value better than matched controls? | LOW until new information exists | **DE-PRIORITISED by RR_W001** |
-| 5 | Does a soft allocation with cash beat the static book? | LOW | blocked on #4 |
-| 6 | Does latent state add information beyond raw features? | — | **NOT RUN** — RR_W001's continuation rule forbids it |
-| 7 | Does transition uncertainty carry risk information? | — | blocked on #5 |
-| 8 | Does BBO / order flow separate P1 entry quality? | **HIGH ceiling** | **DATA-BLOCKED** · owner OQ-5 |
-| 9 | Does options / dealer-gamma state carry NQ information? | MEDIUM | **OWNER-GATED** · owner OQ-5 |
-| 10 | Do more event TYPES reopen the event-response lane? | MEDIUM | **DATA-BLOCKED** · owner OQ-5 |
-| 11 | Does an individual-contract substrate change any verdict? | LOW | DEFERRED by design · directive §52 |
-| 12 | Does the frozen architecture survive the sealed forward pool? | — | **CALENDAR-GATED** · needs an architecture freeze |
-| 13 | Can position management (exit / reversal) be routed? | UNKNOWN | **EXCLUDED from V1** · directive §7 |
-| 14 | What integer-contract mapping implements portfolio B? | — | **OWNER CAPITAL DECISION** · OQ-6 |
+| **1** | **Do causal features predict FULL-HORIZON `delta_action_value`?** — `RR_W002A`, STAGE A INFORMATION ONLY | **HIGH** | **RUNNABLE NOW — the missing test** |
+| **2** | Is `X9a` a coherent standalone expert? | MEDIUM | **RUNNABLE** |
+| 3 | Does HIGHER-TIMEFRAME state carry anything at P1's decision events? | LOW-MED | RUNNABLE — still `LIGHT`, never closed |
+| 4 | Is SELECTIVE box un-latching worth anything? *(new, from RR_W001)* | LOW | RUNNABLE |
+| 5 | Is book COVERAGE actually a gap? *(reopened by `RR_W000`)* | LOW | RUNNABLE |
+| 6 | Does a soft allocation with cash beat the static book? | — | **DE-PRIORITISED by RR_W001** · gated on #1 |
+| 7 | Does latent state add information beyond raw features? | — | **NOT RUN** — RR_W001's continuation rule forbids it |
+| 8 | Does transition uncertainty carry risk information? | — | blocked on #6 |
+| 9 | Does BBO / order flow separate P1 entry quality? | **HIGH ceiling** | **DATA-BLOCKED** · owner OQ-5 |
+| 10 | Does options / dealer-gamma state carry NQ information? | MEDIUM | **OWNER-GATED** · owner OQ-5 |
+| 11 | Do more event TYPES reopen the event-response lane? | MEDIUM | **DATA-BLOCKED** · owner OQ-5 |
+| 12 | Does an individual-contract substrate change any verdict? | LOW | DEFERRED by design · directive §52 |
+| 13 | Does the frozen architecture survive the sealed forward pool? | — | **CALENDAR-GATED** · needs an architecture freeze |
+| 14 | Can position management (exit / reversal) be routed? | UNKNOWN | **EXCLUDED from V1** · directive §7 |
+| 15 | What integer-contract mapping implements portfolio B? | — | **OWNER CAPITAL DECISION** · OQ-6 |
 
-> ### ⚠️ **Every information surface this campaign listed as OPEN is now closed.**
-> Rows 1–3 are engineering and decomposition, not discovery. Rows 8–10 have the only genuinely high
-> ceilings and **all three are owner-gated acquisition.**
+> ### ⚠️ **The ACTION-VALUE INFORMATION frontier is UNTESTED, not closed.**
+> RR_W001 fitted **zero** models — that was its design (trial budget 0). It measured dispersion,
+> selection value, concentration and power. **It did not ask whether causal features predict
+> `delta_action_value`.** Row 1 is that question and it is runnable now.
 >
-> **Two surfaces remain `LIGHT` rather than closed** — the scheduled-event **flag** and
-> **higher-timeframe** (row 3b). Neither was ever fully worked in campaign #7; both are inherited at
-> `LIGHT` from earlier waves. They are listed honestly rather than swept into "everything is closed",
-> **but both are transformations of an NQ price path already labelled `DEEP`**, which
-> `THESIS_TO_REPO_ADAPTATION.md` identifies as the lowest-prior category there is. **That is the
-> honest state of the frontier and it should not be dressed up in either direction.**
+> What RR_W001 *does* justify is narrower: the **full economic router** is de-prioritised and the
+> **HMM is not run**. Rows 6–8 stay parked behind row 1.
+>
+> Rows 9–11 have the only genuinely high ceilings and **all three are owner-gated acquisition** —
+> recorded, not re-requested. Two surfaces also remain `LIGHT` rather than closed (the scheduled-event
+> **flag**, and **higher-timeframe**, row 3); both are transformations of an NQ path already `DEEP`,
+> which is the lowest-prior category, but neither was ever closed and neither is swept away here.
 
 ---
 
-## ✅ CLOSED — action-value dispersion (`RR_W001`)
+## ✅ CLOSED — action-value DISPERSION, and the ECONOMIC router (`RR_W001`)
+
+_Closed: the dispersion measurement and the full economic router. **Not** closed: whether causal
+features predict action value — that is row 1 and was never asked here._
 
 **G1 PASS · G2 PASS-ON-CLAUSE / FAIL-ON-RATIONALE · G3 FAIL · G4 VOID.** `gates_ALL_must_be_cleared`
 is not met, so the preregistered continuation de-prioritises the router branch and does **not** run
@@ -60,9 +65,12 @@ money at every fraction and the oracle beats **40/40** random draws — the inve
 
 **Four facts closed it anyway:**
 
-1. **The counterfactual apparatus buys only 15–31 %** over ranking by the trade's own P&L — the label
-   W122 already had (own-net recovers **68.8–85.5 %**) — and it **damages the right tail more**
-   (205/214 top-decile winners survive vs **213/214**).
+1. ⚠️ **RETIRED AS A CONTROL.** RR_W001 reported that ranking by the trade's own P&L recovers
+   **68.8–85.5 %** of the causal oracle and read it as "the apparatus buys only 15–31 %". **Trade P&L
+   is an OUTCOME, not decision-time information**, so it is not a live control. The finding stands as
+   what it is — *a cheaper ex-post label is highly correlated with ΔU*, which bounds the value of the
+   counterfactual machinery **for building a ledger** and says **nothing** about causal
+   predictability. The right-tail observation stands (205/214 survive vs 213/214).
 2. **The oracle is majority REGENERATION, not avoidance.** **63.8 %** of the f = 0.05 uplift is the
    P&L of trades the policy takes because the session box stops latching — a **box-policy** finding.
 3. **Concentration is fatal for identification.** The top 107 events carry **104.9 %** of the total
@@ -71,8 +79,10 @@ money at every fraction and the oracle beats **40/40** random draws — the inve
    **$13.93** bar, so a router must capture **~15–28 %** of the ex-post oracle — at or above the only
    two level-3 recovery rates this repo owns (**16 %**, **20 %**).
 
-> **A sequencing decision, not a kill.** New information at the decision event raises achievable
-> capture, and the certified ledger now exists, so this becomes cheap the moment a new surface lands.
+> **A sequencing decision, not a kill — and narrower than first written.** What is de-prioritised is
+> the **full economic router**. The **information** question was never asked in this wave and is now
+> row 1. G3 is the single valid substantive failure; **G4 was VOID and therefore contributes no
+> evidence in either direction**, so stability is neither established nor refuted.
 
 ## ✅ CLOSED-BY-DATA — event response (`DATAGATE_EVENTRESPONSE_20260827`)
 
@@ -96,18 +106,39 @@ event TYPES** — acquisition, not research (row 10, OQ-5).
 
 ---
 
-## 1. `X9a` as a standalone expert — the highest-EVI RUNNABLE item
+## 1. Do causal features predict FULL-HORIZON action value? — `RR_W002A`, STAGE A ONLY
+
+| | |
+|---|---|
+| **question** | Do causal features available **at** the `P1/PCT` decision event predict **full-horizon** `delta_action_value` better than simple causal controls and a dependence-preserving null? |
+| **why it is first** | **RR_W001 fitted zero models.** This is the missing test, and until it runs, "current information cannot separate P1 action quality" is an assertion rather than a result |
+| **what it is NOT** | a request to prove a profitable router. **No policy, no abstention, no sizing, no exits, no HMM.** Stage A information only |
+| **primary target** | continuous **FULL-HORIZON** `delta_action_value` — the whole-object figure (mean +$115.30), not the session-scoped decomposition (+$162.79) |
+| **budget** | **very small and preregistered.** Existing information families only; no inventing indicators; at most ONE shallow nonlinear challenger; no large hyperparameter search |
+| **null** | the **entire modelling procedure re-fitted inside every dependence-preserving permutation/shift** — W110b's corrected construction, not a fixed-prediction shortcut |
+| **validation** | expanding chronological / prequential, session-clustered, training-only scaling, no random row split, **no sealed ≥ 2026-08-01 data** |
+| **power** | ⚠️ reported explicitly. RR_W001's G3 already establishes this sample cannot certify *small economic* improvements — an information result here does **not** overturn that |
+
+**Three outcomes, fixed in advance:**
+
+| outcome | classification | continuation |
+|---|---|---|
+| **A** no causal model beats simple controls or the null | current-data **ACTION-VALUE INFORMATION is NULL / LOW-EVI** | de-prioritise direct routing *confidently* → row 2 |
+| **B** information exists, economics underpowered | **REAL INFORMATION / ECONOMIC POLICY UNRESOLVED** | **do not force a router** → row 2 |
+| **C** strong information exists | — | **then and only then** preregister a separate economic router wave |
+
+## 2. `X9a` as a standalone expert — runnable, and independent of row 1
 
 | | |
 |---|---|
 | **question** | Does `X9a` have a reproducible decision-event contract and a coherent counterfactual, so it can be judged on its own rather than only inside the `PAIR23` basket? |
-| **why it is first** | **Not because it rose — because everything above it closed.** It is the only remaining item that is neither owner-gated nor already measured |
+| **why it is here** | It is **independent of row 1** and needs no owner authorization, so it proceeds alongside `RR_W002A` rather than waiting on it |
 | **why it matters** | `X9a` is the one component of `PAIR23` **not** already double-counted inside `P1/PCT`'s B-MOM OR-gate, and `PAIR23` is this campaign's only `STRUCTURAL` challenger — the one object beating `P1` over the 16 unseen years on money, maxDD, top-5, positive weeks *and* streak |
 | **what it is NOT** | a revival of the withdrawn **92 %** claim. That figure is divisor-dependent; the defensible income-matched number is **~64 %** and must not be reinterpreted (§35) |
 | **cost** | LOW-MEDIUM. Bounded engineering, no new data |
 | **honest EVI** | **MEDIUM.** It unlocks a *decomposition*, not an edge. It creates no new information, and this campaign's record is that decompositions of existing objects have not produced promotions |
 
-## 2. Selective box un-latching — new, from RR_W001, ranked LOW on purpose
+## 4. Selective box un-latching — new, from RR_W001, ranked LOW on purpose
 
 RR_W001 found **35–64 %** of its abstention oracle is **regeneration**: trades the policy takes
 because the box stops latching once a bad early decision is removed. Those entries are the `r0+1`
@@ -121,7 +152,7 @@ survives is not that experiment.
 > cannot identify which early decisions to suppress. Only ~**247** of 1,058 in-window sessions hold a
 > latched-out run. **Named because it is new, not because it looks promising.**
 
-## 3. Book coverage — reopened by an audit, ranked LOW on purpose
+## 5. Book coverage — reopened by an audit, ranked LOW on purpose
 
 `runs/RR_W000_LEDGER_AUDIT/` found W119's `E_NO_ENGINE = 0` was **forced by construction** — the lens
 is "neither leg held a position", which makes `book_pnl == 0`, and it was counted *inside* the
@@ -133,7 +164,7 @@ coverage is **UNMEASURED**.
 > engine present" is frequently correct behaviour. Pricing those 32 sessions needs a directional
 > oracle — level 2, not available money. n = 32 cannot support a new engine.
 
-## 3b. Higher-timeframe state — still LIGHT, and listed because it was never closed
+## 3. Higher-timeframe state — still LIGHT, and listed because it was never closed
 
 `INFORMATION_COVERAGE` carries **higher-timeframe** at **`LIGHT`**, evidenced only by `HTFMECH01`
 from **campaign #3** — a different campaign on a different object. It has never been tested at
@@ -147,7 +178,7 @@ from **campaign #3** — a different campaign on a different object. It has neve
 >
 > **It is on the list because it is genuinely un-closed, not because it is promising.**
 
-## 4–7. The router stack — de-prioritised, and the HMM is NOT RUN
+## 6–8. The economic router stack — de-prioritised, and the HMM is NOT RUN
 
 Blocked behind new information, per RR_W001's continuation rule. Two independent reasons the prior
 was already low before RR_W001 ran: the owner thesis's **own synthetic experiment** (best state
@@ -159,7 +190,7 @@ prior is **dominated, not worthless**).
 
 **If `Router(X + α) ≤ Router(X)`, the latent layer is removed. It is not rescued with HSMM.**
 
-## 8–10. Owner-gated acquisition — recorded once, not re-requested
+## 9–11. Owner-gated acquisition — recorded once, not re-requested
 
 | lane | what is needed | why it stays open |
 |---|---|---|
@@ -172,7 +203,7 @@ prior is **dominated, not worthless**).
 **These are not re-requested every wave** (§49). They sit here with their required sample size and
 MDE stated. **1-minute volume is not order flow and will never be substituted for it.**
 
-## 12. The sealed forward pool — a real constraint
+## 13. The sealed forward pool — a real constraint
 
 | pool | span | status |
 |---|---|---|
@@ -184,7 +215,7 @@ Opening needs all seven freezes (§4) and a **committed opening spec before any 
 ⚠️ **It can adjudicate a direction, not a magnitude.** Any plan needing the seal to *estimate* an
 effect is not a plan. Nothing in this campaign has touched it.
 
-## 13–14. Out of scope for V1
+## 14–15. Out of scope for V1
 
 **Position-management routing** (early exit, reversal, stop rewrite) — §7; its own campaign if and
 only if entry routing ever succeeds. **Integer-contract mapping of portfolio B** — an owner capital

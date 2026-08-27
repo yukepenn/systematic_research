@@ -11,12 +11,37 @@
 
 ---
 
+> # ⚠️ CORRECTION — 2026-08-27, owner review. §0 and §4 overreached.
+> **The measurements below stand. Two inferences drawn from them do not.**
+>
+> **1. Ranking by the trade's own P&L is NOT a live control.** §2.3 and §4 treat the fact that an
+> own-P&L ranking recovers **68.8–85.5 %** of the causal oracle as evidence that "the apparatus buys
+> only 15–31 %". **Trade P&L is an OUTCOME, not information available at the decision event.** The
+> comparison shows that *a cheaper ex-post label is highly correlated with ΔU* — which is a different
+> claim from *ΔU is causally predictable*. It bounds the value of the counterfactual machinery **for
+> constructing an ex-post ledger**; it says nothing about causal predictability.
+>
+> **2. This wave did not test the information question at all.** **Zero causal models were fitted**
+> (trial budget: 0, by design). What RR_W001 establishes is real action-value dispersion, real
+> selection value rather than exposure reduction, severe concentration, and limited power for *small*
+> economic improvements. **`RR_W002A_ACTION_VALUE_INFORMATION` is the missing test.**
+>
+> **Justified:** `FULL ECONOMIC ROUTER = DE-PRIORITISED` and `HMM = NOT RUN`.
+> **Not justified:** calling the action-value **information** frontier closed.
+>
+> **3. The primary causal target is FULL-HORIZON `delta_action_value`** (mean **+$115.30**, sum
+> **$245,698**, 226 sign flips), not the session-scoped **+$162.79** headlined below. Session-scoped
+> remains a valid decomposition and §2.1 already flagged the spec's justification for it as wrong.
+
 ## 0. Verdict
 
 > ### **GATES: G1 PASS · G2 PASS-ON-CLAUSE / FAIL-ON-RATIONALE · G3 FAIL · G4 VOID**
 > ### The preregistered rule is `gates_ALL_must_be_cleared`. **It is not met.**
-> ### Per `outcomes_fixed_in_advance`, the router branch is **DE-PRIORITISED**, the next wave is
-> ### **EVENT RESPONSE**, and **the HMM is not run.**
+> ### G3 is the **one valid substantive FAIL**. G2's literal preregistered clause **passed** and only
+> ### its rationale was later found defective. **G4 was VOID — no evidence, not evidence of stability.**
+> ### Per `outcomes_fixed_in_advance`: the **full economic router** is **DE-PRIORITISED** and **the
+> ### HMM is not run.** ~~the next wave is EVENT RESPONSE~~ — superseded; see the correction above and
+> ### `runs/DATAGATE_EVENTRESPONSE_20260827/`.
 
 **Only one of four gates is a clean pass**, and an independent five-lens adversarial audit found the
 other three compromised in ways that all point the same direction. The reason for de-prioritising is

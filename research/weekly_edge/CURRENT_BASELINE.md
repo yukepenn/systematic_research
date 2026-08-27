@@ -333,7 +333,12 @@ Full matrix: [`INFORMATION_COVERAGE_20260827.md`](INFORMATION_COVERAGE_20260827.
 coverages — **PRESENCE / INFORMATION / ACTION_VALUE / REAL_CAPTURE** — and they are never collapsed
 into one word.
 
-> ### **P1 entry quality is not separable by any information source currently held.**
+> ### **No TESTED current information surface has yet demonstrated reliable incremental separation
+> ### of P1 action quality.**
+> ⚠️ **This is deliberately narrower than the claim it replaces** (*"not separable by any information
+> source currently held"*, retired 2026-08-27). That was an overclaim on two counts: **higher-timeframe
+> remains `LIGHT`, never closed**, and the direct question — **do causal features predict FULL-HORIZON
+> `delta_action_value`?** — **has never been fitted at all.** `RR_W002A` is that test.
 > Cross-market intraday: **null**. 1-min participation: **anti-predictive**. Order flow:
 > **unmeasurable** — `runs/DATAGATE_ORDERFLOW_20260827/` covers 71 of 2,131 entries (**3.3 %**) at an
 > MDE of **$564/entry = 4× the mean**, so it was CLOSED-BY-DATA *before* a feature was written.
@@ -377,6 +382,24 @@ apparatus buys only **15–31 %** over ranking by trade P&L, **35–64 %** of it
 total, and the sample **cannot certify** a router below **$41–80/decision** against a **$13.93**
 materiality bar. Full verdict and the two bugs an adversarial audit caught: the run's `REPORT.md`.
 
-**Status: the next wave is EVENT RESPONSE** — frontier row 1 in
-[`research/router/RESEARCH_FRONTIER.md`](../router/RESEARCH_FRONTIER.md). The HMM / latent-state
-branch is **NOT RUN**, per RR_W001's continuation rule.
+> ### ⚠️ **WHAT RR_W001 DID *NOT* ESTABLISH** — correction, 2026-08-27
+> **It did not show that current causal information cannot predict action value. No causal model has
+> been fitted to the target at all.** The comparison that made the apparatus look marginal — ranking
+> by the trade's **own P&L**, which recovers 68.8–85.5 % of the causal oracle — **is not a live
+> control.** Trade P&L is an **OUTCOME**, not information available at the decision. It shows only
+> that *a cheaper ex-post label is highly correlated with ΔU*, which is a different claim from
+> *ΔU is causally predictable*. Conflating the two was an error and is retired here.
+>
+> Justified by RR_W001: **FULL ECONOMIC ROUTER = DE-PRIORITISED · HMM = NOT RUN** (G3 is the one
+> valid substantive FAIL; G4 was VOID, so it is *no evidence*, not evidence of stability).
+> **NOT justified: calling the action-value INFORMATION frontier closed.** It is **UNTESTED.**
+
+> ### 🎯 **The primary causal target from now on is FULL-HORIZON `delta_action_value`.**
+> Session-scoped (**mean +$162.79**) remains a valid *decomposition*, but it truncates the
+> trailing-250-entry size channel that propagates across sessions. The honest whole-object figure is
+> **mean +$115.30, sum $245,698, with 226 events flipping sign.** **A naked +$162.79 must not be
+> quoted as the complete causal action value.**
+
+**Status:** the current task queue is
+[`research/router/RESEARCH_FRONTIER.md`](../router/RESEARCH_FRONTIER.md). **EVENT RESPONSE is
+CLOSED-BY-DATA and is no longer next.** The HMM / latent-state branch is **NOT RUN**.
