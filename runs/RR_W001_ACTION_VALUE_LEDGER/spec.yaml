@@ -1,0 +1,254 @@
+run_id: RR_W001_ACTION_VALUE_LEDGER
+campaign: "#7 WEEKLY_EDGE - causal monetization branch"
+date: 2026-08-27
+status: PREREGISTERED
+run_class: DIAGNOSTIC
+authority: >
+  Owner directive FIRST-PRINCIPLES CAUSAL MONETIZATION / ACTION-VALUE ROUTER, sections 5-6, 9-14,
+  20, 24, 37, 50, 57 (PHASE 1 + PHASE 2). Adaptation of the owner thesis recorded in
+  research/router/THESIS_TO_REPO_ADAPTATION.md. Expert admission recorded in
+  research/router/EXPERT_UNIVERSE.md. Both committed at c3e0857, before this spec.
+
+title: >
+  THE ACTION-VALUE LEDGER, and the feasibility verdict it buys. For every genuine decision event of
+  every admitted frozen expert, what is the CAUSAL VALUE OF THE ACTION - the full downstream
+  economic difference between acting and abstaining on the same realized price path - and is its
+  dispersion large enough, broad enough and stable enough that ANY router could matter?
+  NO MODEL IS FITTED IN THIS WAVE.
+
+# ================================================================= why now, and why this shape
+why_this_and_why_now: >
+  Every routing attempt in this campaign has predicted a STATE and then gated on it. W109 proved the
+  state information is real (AUC 0.613-0.621, 100th percentile of 2,000-draw nulls) and its binary
+  veto null (selectivity 0.74-1.12 across all 18 cells). W113 repeated the failure on the profitable
+  baseline. W112 measured the causal model frontier once and got OOS R2 -0.024 with directional
+  accuracy BELOW always-long. W121 and W122 then closed turnover and intraday cross-market support.
+  CURRENT_BASELINE section 3d concluded by elimination that the remaining gap is new causal
+  information about ACTION QUALITY - E[PnL(action) | I_t].
+  .
+  Nothing in this repo has ever measured the left-hand side of that expression. W122 built a
+  2,131-row decision ledger but labelled each row with THAT TRADE'S OWN P&L. Directive section 10
+  is explicit that a trade's own P&L is NOT its causal action value when the intervention has
+  downstream effects - and P1/PCT's engine has two such channels, both measured (see
+  counterfactual_semantics below). This wave builds the missing object.
+  .
+  It is placed FIRST because directive section 13 forbids model search before the opportunity is
+  measured, and because it is cheap: one full recompute chain costs 0.82 s and the whole P1/PCT
+  ledger is ~33 minutes.
+
+# ================================================================= section 15 disclosure
+prior_knowledge_disclosure:
+  note: >
+    Stated because this campaign's standard is that what was already seen is disclosed in the spec,
+    not discovered in the report. The following were run as ENGINEERING RECONNAISSANCE during
+    Phase 0 and are recorded in research/router/EXPERT_UNIVERSE.md.
+  already_known:
+    - "gfills is a sequential bar loop; a full pass over 1,620,044 bars costs 0.23 s and is byte-identical on repeat."
+    - "The frozen baseline produces 2,401 trades total; 2,139 under the entry-timestamp window filter and 2,131 under the session-start filter."
+    - "There are 3,368 contiguous same-sign session-bounded runs in the desired-direction array, of which 967 (28.7 %) never become trades because the session box had already latched."
+    - "p is long-only: p == -1 on 0.00 % of bars."
+    - "Under per_ctr=True the session box accumulates pnl/u, which contains no u, so the trade SCHEDULE is size-invariant. Verified: fills_daily and gfills both yield 2,401 trades."
+    - "ONE toggle was executed end-to-end as a mechanism proof (2024-03-05, entry bar 768907). It removed one trade and that session went 2 trades -> 1. NO delta-U was computed, no distribution was examined, and no economics were read."
+  not_known: >
+    Nothing in the outcome space has been observed. No action-value distribution, no oracle level,
+    no concentration, no stability, no gate quantity has been computed or seen.
+
+# ================================================================= the artifact
+the_ledger:
+  unit: "one row per GENUINE DECISION EVENT of an admitted expert, per directive section 9."
+  window: "2022-07-01 -> 2026-08-01. The >= 2026-08-01 VIRGIN seal is NOT touched. load_deep is called with b <= '2026-07-31 17:00'."
+  substrate: "load_deep(..., extend=True) - UNCHANGED. Directive section 52 forbids changing the substrate while judging router value."
+  populations_named_explicitly:
+    P1PCT: "2,131 decisions under the SESSION-START filter in_win[sid[entry_bar]] - the filter that produced every published P1/PCT headline and W122's ledger. The ENTRY-TIMESTAMP filter yields 2,139 and is NOT used for reporting. Both counts are printed so the difference is never silent."
+    XM_CONFLICT: "346 under the sequential implementation the NinjaScript uses; 348 canonical at the 09:31 anchor. 346 is the reporting population. Reproduction gate: anchor 571 must give 348 and anchor 570 must give 342, else nothing is quotable (W110/W123 rule)."
+    FOLLOW_MORNING: "one decision per session with the required bars, ~1,058."
+  columns:
+    identity: [event_id, expert_id, family_id, session_date, session_id, decision_ts, info_cutoff_ts, entry_ordinal_in_session]
+    eligibility: [eligible, baseline_action, baseline_qty, side]
+    state_before: [strategy_position_before, strategy_session_pnl_before_per_ctr, box_stopped_before, causal_quality_score, size_at_entry, portfolio_position_before]
+    baseline_outcome: [baseline_trade_pnl, baseline_future_session_pnl, baseline_mae, baseline_mfe, baseline_hold_minutes]
+    counterfactual_outcome: [cf_future_session_pnl, cf_trade_count_in_session, cf_mae, cf_mfe]
+    action_value: [delta_action_value, delta_book_value, future_event_count_delta, end_session_state_delta]
+    provenance: [cost_model_id, replay_arm, schedule_changed_flag, size_changed_downstream_flag]
+  hard_rule: >
+    INPUT columns and OUTCOME columns are separated, and every input records AVAILABLE_AT <= the
+    decision bar. Bars are END-stamped: gfills reads dir_arr[i-1] and fills at the open of bar i, so
+    every state column uses bars up to and INCLUDING i-1 and nothing later. No MAE, no MFE, no
+    realized path, no ex-post class label may ever be an input column - they are outcomes.
+
+# ================================================================= section 6 decision contracts
+decision_event_contracts:
+  note: "Frozen in research/router/EXPERT_UNIVERSE.md section 2 and reproduced here by reference, not restated."
+  P1PCT:
+    decision_ts: "open of bar i"
+    info_cutoff: "close of bar i-1"
+    actions_V1: [ACCEPT, ABSTAIN]
+    exits: "FROZEN. Box halt -1300 / target +1000 PER CONTRACT; forced flat at lb. The router never touches an open position (directive section 7)."
+    path_dependent: true
+  XM_CONFLICT:
+    decision_ts: "09:45 ET"
+    info_cutoff: "09:45 close"
+    actions_V1: [ACCEPT_QTY1, ABSTAIN]
+    exits: "fill 09:46 open, hold to 15:45, no stop. Sessions with no 15:45/15:46 exit bar are DECLINED - part of the frozen object, not a choice."
+    path_dependent: false
+    forbidden: "Sizing is NOT an action for XM in this wave. Directive section 11: conditional sizing must not be data-mined from 346 observations."
+  FOLLOW_MORNING:
+    decision_ts: "11:49 open"
+    info_cutoff: "11:29 close"
+    actions_V1: [ACCEPT, ABSTAIN]
+    exits: "15:44, size 1."
+    path_dependent: false
+
+# ================================================================= section 10 counterfactual
+counterfactual_semantics:
+  definition_of_ABSTAIN: >
+    Zero the desired-direction array over the ENTIRE contiguous same-sign, session-bounded run that
+    the entry belongs to, then recompute the whole downstream chain on the SAME realized price path.
+    Zeroing a single bar is forbidden: gfills compares want != p, so a one-bar suppression causes
+    immediate re-entry at bar i+1 and measures a DELAY, not an abstention.
+  recompute_chain: "fills_daily -> causal_score -> size_at_entry -> gfills. Full horizon, not session-scoped."
+  the_two_channels_are_one_way_and_this_is_asserted_in_code: >
+    Channel 1 (session box latch) changes the SCHEDULE, within-session only. Channel 2 (causal
+    quality score, trailing 250 ENTRIES) changes SIZE only and propagates across sessions. Under
+    per_ctr=True the box accumulates pnl/u which contains no u, so size cannot feed back into the
+    schedule. The run ASSERTS this rather than assuming it: it verifies that fills_daily(D,p) and
+    gfills(D,p,size_at_entry=sz) produce identical entry/exit schedules. If that assertion fails,
+    the wave stops and the design is revised - there would be a fixed point to solve.
+  two_arms_both_reported:
+    SELF_CONSISTENT: "PRIMARY. causal_score recomputed from the counterfactual entry schedule - what the strategy would actually have done."
+    FROZEN_SCORE: "SENSITIVITY. causal_score held at baseline values. Isolates Channel 1 from Channel 2."
+    rule: "Neither arm is chosen after seeing the result. Both are printed in every table."
+  delta_action_value: >
+    delta_action_value = FullFutureUtility(policy WITH the action) - FullFutureUtility(policy
+    WITHOUT it), on the same realized path, both arms fully costed. FullFutureUtility is evaluated
+    to SESSION END for P1PCT, because the engine carries no cross-session position state and is
+    forced flat at lb. The cross-session SIZE channel is captured separately by the global recompute
+    and reported as size_changed_downstream_flag.
+  explicitly_not_done: >
+    A trade's own realized P&L is NOT used as its action value anywhere in this wave. Where the two
+    coincide that is a RESULT (gate G1), never an assumption.
+
+# ================================================================= section 10 certification
+replay_certification:
+  gate: "MANDATORY and BLOCKING. Runs before any counterfactual arm is read."
+  test: >
+    The replay harness reproduces the frozen engine BYTE-IDENTICALLY on the unperturbed baseline,
+    checked with run_we_w98.same(), which compares direction, size, entry timestamp, exit timestamp
+    and P&L to 1e-9.
+  additional_checks:
+    - "The frozen policy is IMPORTED from run_we_w98.gfills, never reimplemented (standing convention from WE_P1PCT_PARITY spec)."
+    - "Baseline trade count reproduces 2,401 total / 2,131 session-filtered."
+    - "The size-invariance assertion above."
+  on_failure: "STOP. Fix the simulator. Interpret nothing. Directive section 10 is explicit and W99's B1 gate is the precedent."
+
+# ================================================================= section 12 oracle hierarchy
+oracle_levels_computed:
+  vocabulary: "The ACTION branch defined in research/router/THESIS_TO_REPO_ADAPTATION.md section 3, which extends the BINDING four-level direction branch in OPPORTUNITY_LANGUAGE.md rather than competing with it."
+  A_LOCAL_MARGINAL_ACTION_ORACLE: "toggle one event, full downstream replay, all other policy logic frozen. COMPUTED."
+  B_SESSION_POLICY_ORACLE: "best subset of that session's decisions, chosen with future knowledge. COMPUTED ONLY for sessions with <= 8 decision events (2^8 = 256 replays); sessions above the cap are reported as NOT COMPUTED with their count, never silently dropped."
+  C_CONSTRAINED_PORTFOLIO_ORACLE: "best allocation over eligible admitted experts + cash per session, subject to the stated action sets. COMPUTED."
+  D_and_E: "NOT COMPUTED IN THIS WAVE. D requires a fitted model and E requires a router; this wave fits nothing."
+  binding_language_rule: >
+    A, B and C are EX-POST CEILINGS. They must never be called causal, available, or opportunity
+    without the qualifier, and A - E is NOT money we failed to collect. Every figure prints its
+    level name. OPPORTUNITY_LANGUAGE.md is binding and this is the exact error it exists to prevent.
+
+# ================================================================= section 14 portfolio
+portfolio_relative_value:
+  requirement: "Directive section 14. Every event carries BOTH its standalone action value and its book-marginal action value."
+  book_definition: >
+    The inverse-vol weighted P1/PCT + XM_CONFLICT weekly series, w1 = (1/sd_p1)/((1/sd_p1)+(1/sd_xm)),
+    computed on WEEKLY-summed P&L over exactly this window - the same construction as
+    runs/WE_W110_XMDIVERSE/out/weekly.csv. The weights are inherited, not re-derived on a different
+    window, because re-deriving them changes every dollar figure (W119 constraint).
+  delta_book_value: "the change in the weighted book series attributable to the toggled action."
+  why: >
+    An action can have mediocre standalone expectancy and real diversification value. This campaign
+    already knows the discriminator: XM_CONFLICT diversifies the book's LOSSES and FOLLOW_MORNING
+    diversifies its WINS, which is the entire reason one is an active component and the other is not.
+
+# ================================================================= section 13 THE GATE
+feasibility_gate:
+  declared_before_any_oracle_number_is_read: true
+  materiality_bar:
+    definition: "BAR = 0.10 * (the expert's own realized net over the window) / (its in-window decision count)."
+    rationale: >
+      Derived from the campaign's own frozen economics and a stated 10 % materiality threshold, NOT
+      chosen from a result. It is expressed as a FORMULA so the number is fully determined before
+      the run without hard-coding a figure that could be mis-transcribed. Both the raw-dollar and
+      the fixed-$20,245-DD translations are printed; the raw form is primary because the fixed-DD
+      figure is a scaled quantity and mixing the two is a units error.
+  why_the_raw_oracle_is_NOT_the_gate: >
+    A marginal-action oracle that may drop every negative-value action will always look enormous -
+    it is close to "remove all losing trades". Gating on its size would be a gate that cannot fail
+    and would repeat exactly the error OPPORTUNITY_LANGUAGE.md was written to stop. The gates below
+    are therefore about whether the dispersion is REAL, BROAD, DETECTABLE and STABLE.
+  gates_ALL_must_be_cleared:
+    G1_THE_MACHINERY_WAS_NECESSARY: >
+      The share of P1/PCT decision events where |delta_action_value - baseline_trade_pnl| > $50
+      exceeds 10 %. RATIONALE: if the action value equals the trade's own P&L nearly everywhere,
+      path dependence is economically inert, W122's simpler ledger was already sufficient, and this
+      wave's machinery adds nothing. A FAIL here is a genuine, useful negative that saves future
+      effort and simplifies every downstream wave.
+    G2_NOT_CONCENTRATED_BEYOND_REACH: >
+      The top 5 % of events by |delta_action_value| account for LESS than 80 % of the total
+      absolute action value. RATIONALE: if essentially all of it sits in ~100 events, no causal
+      model can be expected to identify them, and the honest verdict is outcome 3 or 4.
+    G3_POWERED: >
+      The minimum detectable effect for a session-CLUSTERED top-minus-bottom quintile contrast in
+      delta_action_value, at 80 % power and two-sided alpha 0.05, is <= the materiality bar.
+      RATIONALE: if the smallest contrast we could detect is larger than the improvement we would
+      need to earn, the question is UNDERPOWERED and no model can settle it. Clustering is by
+      SESSION because multiple entries in one session are not independent (directive section 20).
+    G4_STABLE: >
+      The sign of the f=20 % abstention value is positive in at least 3 of the 4 calendar years
+      2022(H2)-2026(H1). RATIONALE: an oracle positive in only one year describes one year.
+  gate_reporting: >
+    A GATE / SPEC / OBSERVED / PASS-FAIL table is PRINTED BY THE PROGRAM, never assembled by hand.
+    EVERY clause of every gate is a coded assertion - W121's Stage-A falsifier had two clauses and
+    only one was implemented, and the wave proceeded past a gate its own spec had closed.
+
+# ================================================================= section 13 outcomes
+outcomes_fixed_in_advance:
+  ALL_PASS: "outcome 1 or 3 - LARGE ROUTABLE OPPORTUNITY, or OPPORTUNITY EXISTS AND IDENTIFIABILITY IS UNKNOWN. Proceed to RR_W002 direct utility frontier."
+  G1_FAILS: "The counterfactual machinery is unnecessary. Record that a trade's own P&L IS its action value for this engine, use the simpler ledger from here on, and proceed to RR_W002 with that simplification. This is a SIMPLIFYING negative, not a stop."
+  G2_or_G3_FAILS: "outcome 4 - ROUTER LOW-EVI. De-prioritise the whole router branch. Move to EVENT RESPONSE (frontier row 3) and the data-blocked surfaces. DO NOT run the HMM. Directive section 45."
+  G4_FAILS: "the dispersion is regime-local. Report with the quantifier attached and de-prioritise; do not restrict the population to the surviving years."
+  tail_only: "If mean dispersion is small but the DOWNSIDE structure is real, that is outcome 2 - proceed to RR_W002 with a RISK target, not an alpha target, and classify any benefit as risk reduction under directive section 42."
+
+# ================================================================= secondary, reported always
+secondary_measurements:
+  - "the full delta_action_value distribution per expert: mean, sd, quantiles, fraction positive/negative."
+  - "concentration curves - share of total absolute action value in the top 1 / 5 / 10 / 25 % of events."
+  - "stability by calendar year and by 63-session block."
+  - "the relationship between delta_action_value and the expert's OWN historical trade P&L - scatter, rank correlation, and the disagreement share that G1 tests."
+  - "degree of path dependence: share of toggles that changed the session schedule, changed a downstream SIZE, or changed the session's trade count. This is the measurement that tells future waves whether replay is needed at all."
+  - "overlap between experts - how often two admitted experts are simultaneously eligible, and whether their action values co-move."
+  - "impact of the f = 5/10/20/30 % ex-post abstention on book max drawdown, CDaR and the right tail."
+  - "RIGHT-TAIL RETENTION at every f: share of the baseline top 1 / 5 / 10 % winning events retained. Directive section 26. A ceiling that is reached by deleting the best trades is not an opportunity."
+  - "power / MDE table per expert, with the session-clustered effective N stated."
+  - "evidence-status labels on every figure: DISCOVERY_CONSUMED for the whole window; DIRECTLY_BURNED for 2026-05-31 -> 07-31."
+
+# ================================================================= budget and prohibitions
+trial_budget:
+  model_trials: 0
+  note: >
+    NO MODEL IS FITTED. No feature is selected. No threshold is tuned. No policy is proposed. The
+    action sets, the intervention definition, the oracle levels, the gates and the materiality
+    formula are all fixed above. There is nothing in this wave for a multiplicity bar to price,
+    which is exactly why it is safe to run first.
+
+explicitly_not_done:
+  - "No model, no fit, no feature selection, no threshold, no router - those are RR_W002 and later."
+  - "No position-management intervention. Exits, stops and holding periods are FROZEN (directive section 7)."
+  - "No XM sizing action at n = 346 (directive section 11)."
+  - "No new expert is invented, and X9a is DEFERRED - adding an expert while measuring the ledger would confound both (directive section 43)."
+  - "No substrate change (directive section 52)."
+  - "The >= 2026-08-01 VIRGIN seal is not touched."
+  - "Nothing is promoted, demoted or re-labelled. No object changes status."
+
+decision_rule:
+  - "STAGE A / MEASUREMENT ONLY. Nothing is promoted."
+  - "A pass buys exactly ONE wave: RR_W002, the direct action-value frontier with mandatory matched controls."
+  - "No gate, threshold, population, action set, intervention definition, oracle level or materiality formula is re-chosen after results are seen."
+  - "If the replay certification fails, the wave produces a SIMULATOR REPORT and no economics. That is a complete and acceptable outcome."
