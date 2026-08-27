@@ -3,6 +3,10 @@
 _Owner directive §44. **Rewritten after every wave, not appended to.** The next wave is always the
 highest-EVI **runnable** row — not the most interesting one, and not the one a previous plan named._
 
+**CURRENT AS OF 2026-08-27, after `MS01` · `INT01` · `FWD_BOOTSTRAP` · `DATA_ASSET_REGISTRY`
+· `RECENT_REGIME_PANEL`.** Any earlier "as of" wording below this line is historical narrative,
+not a timestamp.
+
 ```
 EVI  ~  economic ceiling x information novelty x P(learnable) x portfolio usefulness x data quality
         ---------------------------------------------------------------------------------------
@@ -33,7 +37,7 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | **16** | Does a multi-market TSMOM / carry book add marginal portfolio value? | **HIGH ceiling** | ✅ **RUNNABLE — UNIVERSE ESTABLISHED** · **24 roots · 6 sectors · 2016–2025 · $0** · next step is the contract-level substrate with an explicit roll · `runs/MULTIMARKET_INVENTORY_20260827/` |
 | — | ~~Do market internals predict P1 ACTION VALUE?~~ | — | ❌ **CLOSED — NULL** · `INT01`: 37.5th pctile of its own refitted null, G3+G5 fail, `NEGCTRL` behaviour matches `RR_W002A`/`RR_W004` · `runs/INT01_STAGE_A/` |
 | **17** | Do market internals predict **DIRECT RTH NQ RETURN**? | MEDIUM | ✅ **RUNNABLE · NOT CLOSED BY `INT01`** — different target, different variance (§41 scope discipline) · needs its own preregistration |
-| **18** | Can current tick/BBO generate **STANDALONE** NQ alpha at 15–60 s? | **HIGH ceiling** | ✅ **RUNNABLE · HIGHEST-EVI ROW** · `MS01`: friction **payable**, break-even **54.16 % at 60 s**, MDE below friction · **no model exists yet** · `runs/MS01_STANDALONE_FEASIBILITY/` |
+| **18** | Can current tick/BBO generate **STANDALONE** NQ alpha at 60 s? | **HIGH ceiling** | ⚠️ **BLOCKED ON `MS01A`** · `MS01` showed friction is **payable** and did **not** show alpha · the BBO data contract must be certified before any model · `runs/MS01_STANDALONE_FEASIBILITY/` |
 | 12 | Does an individual-contract substrate change any verdict? | LOW | DEFERRED by design · directive §52 |
 | 13 | Does the frozen architecture survive the sealed forward pool? | — | **CALENDAR-GATED** · needs an architecture freeze |
 | 14 | Can position management (exit / reversal) be routed? | UNKNOWN | **EXCLUDED from V1** · directive §7 |
@@ -63,13 +67,31 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 
 | # | runnable row | why it ranks here |
 |---|---|---|
-| **1** | **Microstructure standalone at 60 s** | the ONLY lane with a measured, **payable** friction bar (break-even 54.16 %) and **no model built**. Highest information-per-unit-effort |
+| **1** | **`MS01A` BBO semantics audit + uniform ~99-session substrate** | `MS02` cannot be fitted until the data contract is certified. Quote freshness, event ordering, quote-size semantics and trade-vs-BBO consistency are all **unverified** |
+| **1b** | **Last-only / signed-flow substrate** (up to ~243 sessions) | a **separate lane** with its own trial budget — trade-flow features do not need quotes and must not inherit the quote lane's sample limit |
 | **2** | **Multi-market TSMOM V1** | 24 roots · 6 sectors · 2016–2025 at **$0**. Slow signals genuinely need the long history, and it is the only lane offering **economically independent** exposure |
 | **3** | **Internals → direct RTH NQ return** | cheap, data already built, and `INT01` closed only the routing mapping |
 | **4** | **ES tick/BBO cross-market** (§32) | 103 sessions on disk; W122's NULL was a **1-minute** family and does not close **tick-level** ES/NQ interaction |
 | **5** | Shadow / execution engineering | needed before any new sleeve can be trusted, but earns nothing on its own |
 
 **Deliberately NOT ranked:** anything requiring owner spend, live enablement, or calendar time.
+
+> ### ⚠️ **`54.16 %` IS RETIRED AS AN ADMISSION GATE.**
+> `MS01`'s `p* = 0.5 + friction / (2·E|move|)` is interpretable **only under a symmetry
+> assumption** — that correct predictions are comparable in magnitude to wrong ones. **Accuracy
+> does not determine P&L**: a strategy right 60 % of the time that is wrong on the big moves loses
+> money. It survives as a **descriptive heuristic** and nothing more.
+>
+> **The admission object is direct executable net P&L**, built from `Ask_t → Bid_{t+h}` for longs
+> and `Bid_t → Ask_{t+h}` for shorts, which carries entry spread, exit spread, spread variation,
+> direction and magnitude automatically — with no median spread subtracted a second time.
+
+> ### ⚠️ **WHAT `MS01` DID AND DID NOT ESTABLISH.**
+> **DID:** the standalone question is not obviously killed by arithmetic friction or power.
+> **DID NOT:** that a 54.16 %-accuracy strategy would make money; that the quoted-spread
+> reconstruction is correct; that **effective N = 12,442** is a fact; or that microstructure
+> contains alpha. The effective-N figure rests on a scalar-ICC design effect that is acceptable for
+> feasibility scoping and **not sufficient for any promotion claim**.
 
 > ⚠️ **A note against this campaign's own optimism (§53).** The owner doctrine now prefers
 > current-regime profitability over decades of robustness. That preference is **itself a hypothesis**,

@@ -1,85 +1,99 @@
 # ALPHA EVIDENCE CLASSIFICATION
 
-**Authoritative for _how strong the evidence is_ for every alpha object. 2026-08-27.**
+**Authoritative for _how deep the evidence is_ behind every alpha object. 2026-08-27.**
 
-Two axes, deliberately kept separate (§44): **LADDER STATUS** — how far a component has come — and
-**EVIDENCE CLASS** — how deep the evidence behind it is. **A component can be high on one and low
-on the other, and merging them is how a one-year result gets treated as a twenty-year fact.**
+Two axes, kept separate (§44): **LADDER STATUS** — how far a component has come — and **EVIDENCE
+CLASS** — how deep the evidence behind it is. **Merging them is how a modern-window result gets
+treated as a multi-era fact.**
+
+> ## ⚠️ CORRECTION — this file's first version was wrong and is replaced
+> Its first version flattened `P1/PCT`, `XM_CONFLICT_v2`, `Portfolio B` and multi-market TSMOM all
+> to **STRUCTURAL**. That **contradicted `CURRENT_BASELINE`**, which already recorded the opposite
+> in plain text. Caught by adversarial review before it became canonical. **The composite objects
+> below now carry composite classes, and an untested prior is no longer called evidence.**
 
 ---
 
-## The two axes
+## Two standing rules
 
-**LADDER (§44)** — `IDEA → DATA-CAPABLE → INFORMATION-SUPPORTED → AFTER-COST ALPHA-SUPPORTED →
-PORTFOLIO-ADDITIVE → EXECUTABLE → PARITY-CERTIFIED → SHADOW-VALIDATED → LIVE-ELIGIBLE →
-LIVE-ENABLED`
+> ### **1. A STRUCTURAL PRIOR IS NOT STRUCTURAL EVIDENCE.**
+> That a mechanism is well-supported in the literature, or economically plausible, is a **prior**.
+> It says nothing about what *this repo* has measured. Until a preregistered result exists in this
+> repo, the empirical class is **UNTESTED** — no matter how respectable the mechanism.
 
-**EVIDENCE CLASS (§1)**
+> ### **2. A COMPOSITE OBJECT INHERITS THE SHALLOWEST EVIDENCE IT DEPENDS ON.**
+> A portfolio containing a modern-window-only component is **not** structural because its other leg
+> has deep history. Evidence does not average; the weakest dependency binds.
 
-| class | meaning |
-|---|---|
-| **STRUCTURAL** | long support across materially different eras or markets |
-| **REGIME-LOCAL** | strong over the recent environment we intend to trade; **not second-class** |
-| **MICROSTRUCTURE-CURRENT** | short recent history, mechanism tied to current market structure |
-| **EMERGING / SHADOW** | interesting, not sufficient for material capital |
-| **FALSIFIED · NULL · CLOSED-BY-POWER · CLOSED-BY-DATA** | preserved as distinct verdicts |
+**EVIDENCE CLASSES (§1):** `STRUCTURAL` · `REGIME-LOCAL` · `MICROSTRUCTURE-CURRENT` ·
+`EMERGING/SHADOW` · `UNTESTED` · `FALSIFIED` · `NULL` · `CLOSED-BY-POWER` · `CLOSED-BY-DATA`.
+
+**LADDER (§44):** `IDEA → DATA-CAPABLE → INFORMATION-SUPPORTED → AFTER-COST ALPHA-SUPPORTED →
+PORTFOLIO-ADDITIVE → EXECUTABLE → PARITY-CERTIFIED → SHADOW-VALIDATED → LIVE-ELIGIBLE → LIVE-ENABLED`
 
 ---
 
 ## Register
 
-| object | ladder status | evidence class | sample | the one-line reason |
-|---|---|---|---|---|
-| **`P1/PCT`** | **PARITY-CERTIFIED** · not live | **STRUCTURAL** | 213 wks · 2006 substrate | 5/5 parity gates; 1,908 of 2,124 matched trades reproduce to $0.00 |
-| **`XM_CONFLICT_v2`** | **PARITY-CERTIFIED** · not live | **STRUCTURAL** | 346 trades | direction 99.715 %, composite max\|diff\| 0.000000 |
-| `Portfolio B` (P1+XM inverse-vol) | **RESEARCH ONLY** | STRUCTURAL (research weighting) | 213 wks | **no integer-contract mapping exists** — `OQ-6`. Not implementable as specified |
-| `PAIR23` | research challenger | STRUCTURAL | 16 unseen years | economics stand; **`RR_W003` showed its `X9a` leg *contains* P1**, so it is the most double-counted component, not the least |
-| **Microstructure standalone** | **DATA-CAPABLE** | MICROSTRUCTURE-CURRENT | 58 sessions | `MS01`: friction payable at 15–60 s, **break-even 54–58 % accuracy**. No model exists |
-| **Market internals → P1 routing** | **CLOSED** | **NULL / CLOSED-BY-POWER** | 760 decisions | `INT01`: 37.5th pctile of its own refitted null; G3 and G5 fail |
-| Market internals → direct NQ return | **IDEA** | untested | — | **not closed by `INT01`** (§41). Different target, different variance |
-| Multi-market TSMOM | **IDEA** | STRUCTURAL *(candidate)* | 24 roots · 2016–2025 | universe inventoried; **no substrate, no roll, no signal, no result** |
-| Order flow → P1 action value | **CLOSED** | **CLOSED-BY-POWER** | 141 of 2,139 | needs **998 sessions; 713 exist**. Unreachable at any coverage |
-| Event response | **CLOSED** | **CLOSED-BY-DATA** | 71 effective events | underpowered on sample, **not** falsified |
-| Higher-timeframe | **CLOSED** | **NULL** | — | `RR_W004`: negative control beat both real arms |
-| Action-value information (NQ path) | **CLOSED** | **NULL** | 2,139 | `RR_W002A`: 51.0th pctile; known-null control scored higher |
-| Options / dealer gamma | **BLOCKED** | — | — | **no option-chain surface exists in the tool set at all** |
-| DOM / Level-II | **BLOCKED** | — | 1 replay day | owner risk-control pause; no history exists anyway |
+| object | ladder status | **evidence class** | the reason, in one line |
+|---|---|---|---|
+| **`P1/PCT`** | **PARITY-CERTIFIED** · not live | **STRUCTURAL CORE + REGIME-LOCAL `PCT` POLICY** | the Solar/B-MOM core has deep-history support; **the `PCT` sizing layer reverses −31.4 % on 2006–2021** and 90.8 % of its gross difference lives in 53 of 1,058 sessions. **`ABS` is retained beside `PCT` in every table** |
+| **`XM_CONFLICT_v2`** | **PARITY-CERTIFIED** · not live | **REGIME-LOCAL by data availability** | ES/RTY/YM substrates **begin 2022-01-02**, so no 2006–2021 test exists *or can be built*. Strong modern evidence + coherent mechanism ≠ structural evidence. N = 348, discovery-consumed |
+| `Portfolio B` (P1+XM inverse-vol) | **RESEARCH ONLY** | **REGIME-LOCAL** *(inherited)* | contains XM and is measured only on the modern common window — **rule 2**. Also: **no integer-contract mapping exists** (`OQ-6`) |
+| `PAIR23` | research challenger | STRUCTURAL *(economics)*, but see reason | economics stand over 16 unseen years; **`RR_W003` showed its `X9a` leg *contains* P1**, making it the most double-counted component, not the least |
+| **Microstructure standalone** | **DATA-CAPABLE** | **MICROSTRUCTURE-CURRENT** | `MS01` feasibility only. **No model, no signal, no economic result.** See the gate note below |
+| Multi-market TSMOM | **IDEA** | **UNTESTED** | universe inventoried (24 roots, 2016–2025). **No substrate, no roll, no signal, no backtest.** The literature's structural prior is a **prior**, not this repo's evidence — **rule 1** |
+| Internals → direct RTH NQ return | **IDEA** | **UNTESTED** | not closed by `INT01` (§41) — different target, different variance |
+| Internals → P1 action value | **CLOSED** | **NULL / CLOSED-BY-POWER** | `INT01`: 37.5th pctile of its own refitted null; G3 and G5 fail |
+| Order flow → P1 action value | **CLOSED** | **CLOSED-BY-POWER** | needs **998 sessions; 713 exist**. Unreachable at any coverage |
+| Event response | **CLOSED** | **CLOSED-BY-DATA** | underpowered on sample; **not** falsified |
+| Higher-timeframe | **CLOSED** | **NULL** | `RR_W004`: negative control beat both real arms |
+| NQ-path action-value information | **CLOSED** | **NULL** | `RR_W002A`: 51.0th pctile; known-null control scored higher |
+| ES tick/BBO → NQ short horizon | **IDEA** | **UNTESTED** | W122's NULL was a **1-minute** family; tick-level interaction is untested |
+| Options / dealer gamma | **BLOCKED** | — | **no option-chain surface exists in the tool set at all** |
+| DOM / Level-II | **BLOCKED** | — | owner risk-control pause; no history exists anyway |
 
 ---
 
-## ⚠️ What this session added to the *admitted* book: **nothing**
+## ⚠️ `54.16 %` is a descriptive heuristic, NOT an admission gate
 
-This is the honest headline and it should not be softened. The session built a great deal —
-a 780 M-event substrate, three new data assets, a registry, a freeze, an empirical forward
-protocol — and **admitted zero new alpha components**. Two candidate mappings were **closed**,
-one lane was **opened for modelling but has no model**, and one universe was **inventoried but not
-built**.
+`MS01` derived `p* = 0.5 + friction / (2·E|move|)` → **54.16 % at 60 s**. That figure is **retired
+as a promotion criterion** and survives only as a descriptive heuristic **under a stated symmetry
+assumption**: it is valid only if the magnitude of correct predictions is comparable to the
+magnitude of wrong ones.
 
-**Infrastructure is not alpha.** A campaign that produces substrate and closes questions is doing
-its job, but it has not yet produced a component that earns capital.
+**Accuracy does not determine trading P&L.** A strategy right 60 % of the time that is wrong on the
+big moves loses money. **The admission object is direct executable net P&L**, built from
+`Ask_t → Bid_{t+h}` for longs and `Bid_t → Ask_{t+h}` for shorts, which carries entry spread, exit
+spread, spread variation, direction and magnitude automatically. Accuracy is reported as a
+diagnostic only.
+
+## What this session added to the *admitted* book: **nothing**
+
+The session built a 780 M-event substrate, three data assets, a measured registry, an incumbent
+freeze and an empirical forward protocol — and **admitted zero new alpha components**. Two mappings
+closed, one lane opened with no model, one universe inventoried but not built.
+
+**Infrastructure is not alpha**, and **negative information is progress when the experiment was
+capable of succeeding** (§34).
 
 ## The standing question (§52)
 
-> **What observation, if true, would make `P1/PCT + XM` no longer the best current book?**
+> **What observation would make `P1/PCT + XM` no longer the best current book?**
 
-Concretely, any of:
-
-1. a microstructure expert sustaining **> 54.2 %** net directional accuracy at 60 s on the 58-session
-   substrate, surviving a session-block null and a same-trigger mirror control;
-2. a multi-market TSMOM book with **low or negative** correlation to P1 in P1's worst decile,
+1. a microstructure expert with **positive executable net P&L** at 60 s on the uniform substrate,
+   surviving a session-block refitted null and a same-trigger mirror control;
+2. a multi-market TSMOM book with low or negative correlation to P1 **in P1's worst decile**,
    improving fixed-DD income on the common window;
-3. internals predicting **direct RTH NQ return** where they failed to predict P1's action value;
-4. the sealed forward pool putting P1 below its **empirical** CPB/CPC `INVALIDATION` band.
+3. internals predicting **direct RTH NQ return** where they failed on P1's action value;
+4. the sealed pool putting P1 below its **empirical** CPB/CPC `INVALIDATION` band.
 
-**Rows 1–3 are runnable now. Row 4 is calendar-gated.** None of them is being assumed.
+**1–3 runnable now. 4 calendar-gated. None assumed.**
 
-## Admission rule reminders that bind the next promotion
+## Binding admission rules
 
-- **Same-window comparison is mandatory** (§19). A 58-session candidate is compared to
-  `P1/XM on those same 58 sessions`, never to a 20-year headline.
-- **Same-window profit alone is insufficient** (§20). It must also survive chronological subperiod
-  stability, a multiplicity-aware null, concentration diagnostics, realistic costs, and an
-  **exposure-matched placebo** — otherwise "improvement" may just be *added exposure*.
-- **Admission ≠ capital weight** (§21). A regime-local alpha may be admitted and still carry a
-  small, uncertainty-aware allocation.
-- **Replacement is on the table** (§47). Incumbency carries **zero** statistical privilege.
+- **Same-window comparison mandatory** (§19) — never a 98-session candidate against a 20-year headline.
+- **Same-window profit insufficient** (§20) — needs subperiod stability, multiplicity-aware null,
+  concentration diagnostics, realistic costs, and an **exposure/activity-matched placebo**.
+- **Admission ≠ capital weight** (§21).
+- **Replacement is on the table** (§47) — incumbency carries **zero** statistical privilege.
