@@ -1,0 +1,66 @@
+run_id: WE_W115_MOMDRIVER
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "Owner MEGA DIRECTIVE V5 sections 2, 5, 20, 32, 44. Raised by W114."
+
+title: >
+  WHY did intraday momentum strengthen eight-fold, and is the driver OBSERVABLE at decision time?
+  W114 measured the implied directional edge of "the afternoon continues the morning" at 0.70 % on
+  2006-2021 and 5.62 % on 2022-2026, monotone across four blocks, and the difference is NOT the
+  cost hurdle - it survives stripping every cent of spread. That is a mechanism question with a
+  falsifiable answer, and answering it is worth more than another momentum variant.
+
+why_this_and_not_a_rescue: >
+  Section 32 allows one clean primary, one repair of a defective specification, and ONE narrowly
+  justified follow-up where genuine information remains. W114 was the first test of this object and
+  this is the follow-up, but it is deliberately NOT "tune FOLLOW_MORNING until 2006-2021 passes".
+  The question is about the MARKET, not the rule: if a structural variable explains when
+  end-of-day continuation pays, that variable is new information usable by more than one engine,
+  and if it does not exist the object stays REGIME_LOCAL and the family closes.
+
+the_hypothesis:
+  statement: >
+    Intraday continuation into the close is a FLOW effect, so it should be stronger when a larger
+    share of the session's volume trades in the final hour - the structural shift produced by
+    passive rebalancing, index tracking and closing-auction participation over twenty years.
+  the_prediction_that_makes_it_falsifiable: >
+    If the hypothesis is right, a CAUSAL, TRAILING measure of late-session volume share should
+    order the edge WITHIN each window, not merely BETWEEN them. A variable that only separates
+    2006-2021 from 2022-2026 is a proxy for the calendar and explains nothing.
+
+drivers:
+  note: "Small and mechanistic per section 13. Four candidates, one lookback each, all CAUSAL - each is a trailing average over PRIOR sessions only, never the session being traded."
+  V_CLOSE_SHARE: "trailing-60-session mean of (volume 15:00-15:59) / (volume 09:31-15:59)."
+  V_LASTHOUR_RATIO: "trailing-60-session mean of (volume 15:00-15:59) / (volume 09:31-10:29) - the close against the open, which removes the overall level."
+  SESSION_VOL_LEVEL: "trailing-60-session mean total RTH volume, relative to its own trailing-250 median. A control: if THIS orders the edge equally well, the story is participation in general, not the close specifically."
+  PRICE_LEVEL: "the index level itself. THE NULL DRIVER - it rises monotonically over twenty years and therefore MUST correlate with any monotone trend. If it orders the edge as well as the volume variables, none of them has explained anything and the wave reports that."
+
+design:
+  pooled_window: "2006-01-05 to 2026-08-01 in ONE pooled sample, ~5,300 sessions, so that within-window ordering can be separated from between-window ordering."
+  primary: >
+    Split the POOLED sample into quintiles of V_CLOSE_SHARE and report FOLLOW_MORNING's dollars per
+    trade and directional accuracy versus that quintile's OWN p-star. The primary statistic is the
+    top-versus-bottom quintile spread in ACCURACY POINTS ABOVE p-star, not in dollars, because the
+    index level makes dollars incomparable across twenty years.
+  falsifier: >
+    The spread is <= 0, OR <= the 95th percentile of 2,000 session-label permutations, OR
+    PRICE_LEVEL produces a spread as large - in which case the volume story is not identified and
+    the wave reports NO DRIVER FOUND.
+  the_test_that_matters_most: >
+    WITHIN-WINDOW ordering. Run the same quintile split SEPARATELY inside 2006-2021 and inside
+    2022-2026. A driver that orders the edge inside BOTH windows is real. A driver that orders it
+    only in the pooled sample is the calendar wearing a volume costume, and must be reported as
+    such however good the pooled table looks.
+
+secondary:
+  - "the four drivers' pairwise rank correlations, printed FIRST, so nobody reads four variables as four hypotheses"
+  - "per-decade trailing values of each driver, as description - has late-session volume share actually risen, and by how much"
+  - "if a driver survives: the SAME quintile split applied to the FADE arm, which must show the mirror ordering or the driver is not acting through continuation"
+  - "cost sensitivity at 0x/1x/2x spread within each quintile, because the old window's dollar edge is small in absolute terms"
+
+decision_rule:
+  - "NOTHING PROMOTED. A surviving driver buys a preregistration for a conditional engine and a coverage-matrix entry; it does not create one here."
+  - "A driver that orders the edge in the pooled sample but NOT within both windows is reported as NOT IDENTIFIED, and FOLLOW_MORNING stays REGIME_LOCAL with no conditional version built."
+  - "If no driver survives, the momentum family is CLOSED for mechanism work and FOLLOW_MORNING's only remaining evidence path is the sealed forward data. Say that plainly rather than trying a fifth variable."
+  - "No driver, lookback, quantile count or window is re-chosen after results are seen."
