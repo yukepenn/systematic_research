@@ -1,0 +1,44 @@
+    substrate 1,620,044 bars / 1,058 in-window sessions [4s]
+    eligible sessions for the diagnostic: 1012
+
+==========================================================================================================================
+=== STAGE 1 - DIAGNOSTIC ONLY. Conditional mean and sign-rate of the 13:30 -> 15:44 move
+===   by QUINTILE of each causal state known at 13:29. NO TRADE IS SIMULATED HERE.
+===   Survivor rule, fixed in the spec BEFORE this table: top-vs-bottom sign-rate spread
+===   >= 8 pp AND monotone or single-peaked.
+==========================================================================================================================
+state                         Q1              Q2              Q3              Q4              Q5  spread pp        shape  SURVIVES
+                  n  sign% mean$  n  sign% mean$  n  sign% mean$  n  sign% mean$  n  sign% mean$
+MORNING_DIR       481  49.5   -154    4  75.0  1,384  527  57.3    105                                       25.5  single-peak       YES
+MIDDAY_DIR        456  50.0    -88    3  33.3    290  553  56.8     47                                       23.4    irregular        no
+MID_RANGE_POS     203  53.7     25  202  50.5   -179  202  55.0     31  202  56.4    180  203  52.7   -121        5.9    irregular        no
+COMPRESSION       203  53.2   -167  202  54.0     -6  202  55.0    107  202  52.0   -197  203  54.2    198        3.0    irregular        no
+VWAP_SIDE         437  49.9    -74  575  56.5     34                                                        6.6     monotone        no
+VWAP_DIST         203  52.2     44  202  49.0   -143  202  51.0   -204  202  55.9     59  203  60.1    179       11.1    irregular        no
+PATH_EFF          203  46.8   -247  202  52.0      2  202  53.5     97  202  59.9    121  203  56.2    -36       13.1  single-peak       YES
+VOL_REACCEL       203  54.7   -170  202  54.5    -66  202  48.0    -78  202  55.9    128  203  55.2    121        7.9    irregular        no
+OPEN_RANGE_ST     336  49.7    -69  246  48.0   -334  430  60.0    215                                       12.0    irregular        no
+
+    STAGE-1 SURVIVORS: 2 of 9 -> MORNING_DIR, PATH_EFF
+
+==========================================================================================================================
+=== STAGE 2 - the 2 survivor(s) only. Decide 13:50, fill 13:51, hold 15:44.
+===   Carrying 2 of 9 variables IS a selection and is charged in the null.
+==========================================================================================================================
+state              rate     N    hit%      p*   vs p*   $/trade      net $  wk$@fixDD     t
+MORNING_DIR        0.25   481  51.56%  0.5067    0.89       145     69,863        246  1.83
+MORNING_DIR        0.50   485  51.34%  0.5067    0.67       134     65,160        255  1.68
+MORNING_DIR        0.75   485  51.34%  0.5067    0.67       134     65,160        255  1.68
+PATH_EFF           0.25   245  52.24%  0.5067    1.58        40      9,727         40  0.41
+PATH_EFF           0.50   503  52.88%  0.5067    2.22        64     31,967        106  0.82
+PATH_EFF           0.75   751  52.33%  0.5067    1.66        70     52,856        138  1.14
+
+    PRIMARY (50 % arm, mean over survivors): $99/trade
+    coin null p95 $82  -> 98.5th percentile   VERDICT: PASSES
+    best-of-6 bar for individual cells: $179
+
+state                    TREND-UP       TREND-DOWN         REVERSAL            RANGE            MIXED
+MORNING_DIR         35       -996   124      1,102   112         47   149       -165    65       -266
+PATH_EFF           111        174    84        161   126         -4   123        -52    59        101
+
+[done 4s]

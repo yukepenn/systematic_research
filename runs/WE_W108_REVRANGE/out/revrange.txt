@@ -1,0 +1,74 @@
+    substrate 1,620,044 bars / 1,058 in-window sessions [4s]
+
+==========================================================================================================================
+=== STEP 1 - FEATURE DISTRIBUTIONS ONLY. No P&L has been computed at this point.
+==========================================================================================================================
+mechanism          defined  nonzero dir        p25        p50        p75    long/short
+VALUE_REACCEPT        1058         1050     0.0000     0.0000     0.0000     457 / 593
+FAILED_BREAK          1058          308     0.0000     0.0000     0.0000     127 / 181
+EXHAUST_VOL           1058         1047     1.3920     1.9121     2.7335     500 / 547
+EFFORT_NO_RES         1051         1047     0.7519     0.8800     1.0214     500 / 547
+VWAP_RECLAIM          1058         1051     1.0000     1.0000     1.0000     579 / 472
+PATH_EFF_TRANS        1051         1050     0.6244     0.8379     1.1199     457 / 593
+
+    Thresholds now FROZEN as trailing causal quantiles. Economics follows.
+
+==========================================================================================================================
+=== STEP 2 - ECONOMICS. Decide 11:48, fill 11:49, hold 15:44, size 1, no stop.
+==========================================================================================================================
+mechanism          rate     N    hit%      p*  vs p*   $/trade      net $  wk$@fixDD     t
+VALUE_REACCEPT     0.25  1011  45.80%  0.5042  -4.62       -21    -21,323        -29 -0.32
+VALUE_REACCEPT     0.50  1011  45.80%  0.5042  -4.62       -21    -21,323        -29 -0.32
+VALUE_REACCEPT     0.75  1011  45.80%  0.5042  -4.62       -21    -21,323        -29 -0.32
+
+FAILED_BREAK       0.25   299  43.81%  0.5042  -6.60      -225    -67,379        -80 -1.51
+FAILED_BREAK       0.50   299  43.81%  0.5042  -6.60      -225    -67,379        -80 -1.51
+FAILED_BREAK       0.75   299  43.81%  0.5042  -6.60      -225    -67,379        -80 -1.51
+
+EXHAUST_VOL        0.25   247  40.49%  0.5042  -9.93      -300    -74,112        -97 -2.25
+EXHAUST_VOL        0.50   491  42.36%  0.5042  -8.05      -309   -151,781        -86 -2.45
+EXHAUST_VOL        0.75   741  43.86%  0.5042  -6.56      -202   -149,431        -88 -2.04
+
+EFFORT_NO_RES      0.25   282  44.33%  0.5042  -6.09      -452   -127,400        -77 -1.62
+EFFORT_NO_RES      0.50   540  44.44%  0.5042  -5.97      -320   -172,634        -92 -2.02
+EFFORT_NO_RES      0.75   784  44.64%  0.5042  -5.77      -238   -186,293        -92 -2.04
+
+VWAP_RECLAIM       0.25   797  54.20%  0.5042   3.79        53     42,265        154  0.67
+VWAP_RECLAIM       0.50   797  54.20%  0.5042   3.79        53     42,265        154  0.67
+VWAP_RECLAIM       0.75   800  54.12%  0.5042   3.71        74     58,892        215  0.88
+
+PATH_EFF_TRANS     0.25   317  47.95%  0.5042  -2.47       -75    -23,742        -45 -0.53
+PATH_EFF_TRANS     0.50   556  47.30%  0.5042  -3.12       -38    -21,319        -51 -0.43
+PATH_EFF_TRANS     0.75   777  47.23%  0.5042  -3.18         3      2,692          6  0.04
+
+    CONTROLS - what an unconditional trade earns at this exact geometry:
+CONTROL always LONG        1012  54.25%  0.5042   3.83        19     19,033         38  0.27
+CONTROL always SHORT        1012  45.26%  0.5042  -5.16       -48    -48,097        -73 -0.67
+
+==========================================================================================================================
+=== THE PRIMARY: equal-weight mean of $/trade across the six mechanisms at the 50 % arm
+==========================================================================================================================
+    real $-143/trade   coin null mean $-15 p95 $66  -> 0.5th percentile
+    VERDICT: FAILS     best-of-18 bar for individual cells $419
+
+mechanism          rate   $/trade   own p* cleared   beats best-of-K
+VWAP_RECLAIM       0.75        74              YES                no
+VWAP_RECLAIM       0.50        53              YES                no
+VWAP_RECLAIM       0.25        53              YES                no
+PATH_EFF_TRANS     0.75         3               no                no
+VALUE_REACCEPT     0.50       -21               no                no
+VALUE_REACCEPT     0.25       -21               no                no
+
+==========================================================================================================================
+=== BY SESSION CLASS at the 50 % arm. A mechanism positive OVERALL but negative on
+===   REVERSAL and RANGE has FALSIFIED its own stated mechanism.
+==========================================================================================================================
+mechanism                 TREND-UP       TREND-DOWN         REVERSAL            RANGE            MIXED
+VALUE_REACCEPT      210       -611   146       -790   264        -44   274        524   117        772
+FAILED_BREAK         71       -781    36     -1,400    88       -379    68        720    36        636
+EXHAUST_VOL          91       -847    73     -1,174   132       -250   140        216    55        251
+EFFORT_NO_RES        82     -1,249    88     -1,374   144       -321   154        470    72        342
+VWAP_RECLAIM        188        995   116      1,165   194        -87   204       -913    95       -807
+PATH_EFF_TRANS       94       -258   107     -1,080   141       -363   152        701    62      1,017
+
+[done 4s]

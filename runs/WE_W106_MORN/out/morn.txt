@@ -1,0 +1,70 @@
+    substrate 1,620,044 bars / 1,058 in-window sessions [4s]
+
+==========================================================================================================================
+=== STEP 1 - FEATURE DISTRIBUTIONS ONLY. No P&L has been computed at this point.
+==========================================================================================================================
+mechanism         defined  nonzero dir        p25        p50        p75        p90   long/short of dir
+VOL_DECAY            1058            3     0.0000     0.0000     0.0000     0.0000               1 / 2
+EFFORT_NO_RES        1058         1047     1.1266     2.3239     3.7015     4.7213           541 / 506
+DISP_PER_VOL         1051         1050     0.0003     0.0007     0.0013     0.0020           554 / 496
+VOL_SURPRISE         1058         1057 61424.5000 73655.0000 85770.0000 96699.4000           554 / 496
+OPEN_ACCEPT          1058          818     0.0625     0.2500     0.6875     0.8750           435 / 383
+
+    Thresholds are now FROZEN as trailing causal quantiles at 25/50/75 % acceptance.
+    Only after this line is any economics computed.
+
+==========================================================================================================================
+=== STEP 2 - ECONOMICS. Decide 10:01, fill 10:02, hold to 11:29, size 1, no stop.
+==========================================================================================================================
+    eligible sessions 1050
+
+mechanism          rate     N  accept%    hit%      p*   vs p*   $/trade      net $  wk$@fixDD     t
+VOL_DECAY          0.25   too few
+VOL_DECAY          0.50   too few
+VOL_DECAY          0.75   too few
+
+EFFORT_NO_RES      0.25   267    25.4%  52.43%  0.5056    1.88       166     44,368        261  1.33
+EFFORT_NO_RES      0.50   531    50.6%  50.66%  0.5056    0.10         9      4,972         15  0.11
+EFFORT_NO_RES      0.75   786    74.9%  50.51%  0.5056   -0.05        17     13,018         29  0.25
+
+DISP_PER_VOL       0.25   283    27.0%  51.59%  0.5056    1.03       -73    -20,766        -32 -0.53
+DISP_PER_VOL       0.50   536    51.0%  51.49%  0.5056    0.94       -50    -26,952        -38 -0.53
+DISP_PER_VOL       0.75   795    75.7%  50.44%  0.5056   -0.12       -40    -32,104        -39 -0.53
+
+VOL_SURPRISE       0.25   258    24.6%  46.51%  0.5056   -4.04        14      3,570         10  0.10
+VOL_SURPRISE       0.50   509    48.5%  47.15%  0.5056   -3.40       -85    -43,062        -51 -0.86
+VOL_SURPRISE       0.75   746    71.0%  49.87%  0.5056   -0.69       -53    -39,623        -41 -0.66
+
+OPEN_ACCEPT        0.25   286    27.2%  48.25%  0.5056   -2.30      -102    -29,222        -58 -0.87
+OPEN_ACCEPT        0.50   550    52.4%  49.45%  0.5056   -1.10      -100    -54,958        -50 -1.07
+OPEN_ACCEPT        0.75   817    77.8%  50.55%  0.5056   -0.00      -102    -83,625        -67 -1.25
+
+==========================================================================================================================
+=== THE PRIMARY: equal-weight mean of $/trade across the five mechanisms at the 50 % arm
+==========================================================================================================================
+    real $-56/trade
+    coin null on the same statistic: mean $-18 sd $45  p95 $55   -> 18.0th percentile
+    VERDICT: FAILS
+
+    best-of-12 coin null for reading individual cells: p95 $266
+mechanism          rate   $/trade   own p* cleared   beats best-of-K
+EFFORT_NO_RES      0.25       166              YES                no
+EFFORT_NO_RES      0.75        17               no                no
+VOL_SURPRISE       0.25        14               no                no
+EFFORT_NO_RES      0.50         9              YES                no
+DISP_PER_VOL       0.75       -40               no                no
+DISP_PER_VOL       0.50       -50              YES                no
+VOL_SURPRISE       0.75       -53               no                no
+DISP_PER_VOL       0.25       -73              YES                no
+
+==========================================================================================================================
+=== BY SESSION CLASS, 50 % arm ($/trade, n)
+==========================================================================================================================
+mechanism                TREND-UP       TREND-DOWN         REVERSAL            RANGE            MIXED
+VOL_DECAY            0        nan     1     -4,742     0        nan     1       -297     0        nan
+EFFORT_NO_RES      109         91    86       -109   131         78   139       -182    66        296
+DISP_PER_VOL       112         60    81        506   123        -94   153       -350    67       -142
+VOL_SURPRISE       101       -219    87        248   125         88   124        -36    72       -681
+OPEN_ACCEPT        120        122    85        189   136       -178   150       -346    59       -160
+
+[done 4s]
