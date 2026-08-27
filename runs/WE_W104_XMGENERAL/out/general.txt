@@ -1,0 +1,65 @@
+==========================================================================================================================
+=== B1: the zero-lag known-answer test, recomputed on OVERNIGHT bars specifically.
+===     A join that is sound at 10:00 is not automatically sound at 03:00.
+==========================================================================================================================
+    ES   RTH    lag-2 +0.0013  lag-1 +0.0028  lag+0 +0.9350  lag+1 +0.0101  lag+2 -0.0031   argmax +0  PASS
+    ES   NIGHT  lag-2 -0.0032  lag-1 +0.0018  lag+0 +0.9262  lag+1 +0.0006  lag+2 +0.0145   argmax +0  PASS
+    RTY  RTH    lag-2 +0.0018  lag-1 +0.0028  lag+0 +0.7349  lag+1 +0.0155  lag+2 +0.0007   argmax +0  PASS
+    RTY  NIGHT  lag-2 -0.0054  lag-1 +0.0089  lag+0 +0.7868  lag+1 +0.0370  lag+2 +0.0021   argmax +0  PASS
+    YM   RTH    lag-2 +0.0015  lag-1 -0.0007  lag+0 +0.7499  lag+1 +0.0087  lag+2 -0.0003   argmax +0  PASS
+    YM   NIGHT  lag-2 +0.0019  lag-1 +0.0015  lag+0 +0.7961  lag+1 +0.0110  lag+2 +0.0165   argmax +0  PASS
+
+==========================================================================================================================
+=== THE SEVEN CELLS. Same construction, nothing re-fitted. p* computed per cell.
+==========================================================================================================================
+segment   decide  hold         N   share  E|move| $   cost      p*    hit%   vs p*   $/trade      net $  AGREE $/tr
+ON_ASIA    too few sessions (0)
+ON_EU     01:12   07:59      149   14.3%      1,168  19.36  0.5083  51.01%    0.18        33      4,915          80
+PRE       08:15   09:29      198   19.0%        848  19.36  0.5114  50.51%   -0.64        71     14,142          27
+MORN      10:01   11:29      295   28.2%      1,517  16.86  0.5056  48.47%   -2.08       -59    -17,379          41
+MID       11:48   13:29      179   17.7%      1,109  14.36  0.5065  53.07%    2.43        51      9,175         -39
+AFT       13:50   15:44      175   17.3%      1,078  14.36  0.5067  54.29%    3.62       146     25,637          36
+POST      16:18   16:59      260   25.8%        311  16.86  0.5271  51.92%   -0.79         1        381         -37
+
+==========================================================================================================================
+=== THE PRIMARY: equal-weight mean of $/trade across all seven cells - ONE statistic,
+===   fixed before the run so no segment can be cherry-picked.
+==========================================================================================================================
+    real  $41/trade
+    coin null on the same statistic: mean $-14 sd $44   p95 $57   -> 90.0th percentile
+    VERDICT: DOES NOT GENERALISE - the mechanism is opening-auction-specific
+
+    best-of-7 coin null (for reading the INDIVIDUAL cells): mean $123  p95 $251
+segment      $/trade   own p* cleared   beats best-of-7 p95
+AFT              146              YES                    no
+PRE               71               no                    no
+MID               51              YES                    no
+ON_EU             33              YES                    no
+POST               1               no                    no
+MORN             -59               no                    no
+
+==========================================================================================================================
+=== DOES IT CONCENTRATE NEAR A SESSION OPEN? (18:00 CME open, 09:30 RTH open)
+==========================================================================================================================
+segment   starts at      minutes after an open   $/trade
+ON_EU     00:00                            360        33
+PRE       08:00                            840        71
+MORN      09:45                             15       -59
+MID       11:30                            120        51
+AFT       13:30                            240       146
+POST      16:00                            390         1
+    reference (not a test): RTH open 09:31 -> decide 09:45 -> hold 15:45 = $560/trade
+
+==========================================================================================================================
+=== IS ANY SURVIVOR A SECOND COPY OF THE SAME TRADE? weekly rho vs P1/PCT and vs the
+===   known RTH-open object.
+==========================================================================================================================
+segment         wk$  wk$@fixDD    wk+%   rho vs P1   rho vs RTH-open
+ON_EU            23         24   25.4%      -0.078            -0.017
+PRE              66        104   30.5%       0.013             0.068
+MORN            -82        -66   36.6%      -0.099            -0.018
+MID              43         42   31.9%      -0.183             0.035
+AFT             120        123   27.2%       0.223             0.065
+POST              2          5   41.3%      -0.149             0.020
+
+[done 17s]
