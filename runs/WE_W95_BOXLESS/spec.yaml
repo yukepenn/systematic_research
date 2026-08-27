@@ -1,0 +1,109 @@
+run_id: WE_W95_BOXLESS
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-26
+status: PREREGISTERED
+authority: >
+  W91 section 4 raised this as an OBSERVATION with no null and queued it. Owner directive
+  section 8 ("do not freeze research around this pair") and section 9 (nulls are binding).
+
+title: >
+  IS THE SESSION BOX WORTH HAVING ON A PORTFOLIO? It is one of this campaign's best-evidenced
+  components - and every piece of that evidence is on a SINGLE FUSED OBJECT.
+
+# ---------------------------------------------------------------------------------------------
+# 0. WHAT IS ESTABLISHED, AND EXACTLY HOW FAR IT REACHES
+# ---------------------------------------------------------------------------------------------
+established:
+  - "W22 + W26: the session box (halt -$1,300, target +$1,000) improves Sharpe AND the tail
+     simultaneously - both halves."
+  - "W28: the session HALT clears its own circular-shift null at the 98th percentile, p = 0.020."
+  - "W27: the session TARGET is WEAK - 88th percentile, p = 0.120 - kept on a four-way
+     improvement and never called proven."
+  - "W29: (1300, 1000) is chosen in 15 of 17 honest quarterly refits ON P1."
+scope_of_all_of_it: >
+  Every one of those measurements is on P1 - a SINGLE, FUSED, LONG-ONLY object. Not one of them
+  is on a portfolio of sleeves. W91 section 4 measured, at matched contract-minutes, that a
+  {Solar, BMOM} portfolio scores 60.1 % positive weeks and $923/week at a fixed drawdown with NO
+  BOX AT ALL, against 55.9 % and $629 with one box per sleeve - and a SMALLER max drawdown.
+  That is an OBSERVATION with no null and it is what this wave adjudicates.
+
+why_it_is_plausible_rather_than_an_artifact:
+  - "Both leading metrics are SCALE-INVARIANT. weekly-$-at-fixed-drawdown is weekly x
+     (20245/maxdd) and both numerator and denominator scale linearly with position size; the
+     positive-week rate depends only on the sign of each week and costs are scaled with the
+     series. So the exposure match cannot manufacture the result."
+  - "MECHANISM LAW 6 (W42/W45/W47, three independent instances) predicts it: anything that
+     REDUCES THE NUMBER OF EVENTS worsens the tail faster than it improves per-event quality.
+     Box-free sleeves produced 63 % more trades in W91. At matched exposure, more roughly-
+     independent events per week buys a better tail. The box is an event-reducer."
+
+known_defect_in_the_observation_to_be_fixed_here: >
+  W91's long_obj_nobox still called fills_daily(halt=1300, target=1000) to pick the entry indices
+  the causal quality quantiles are built from. That does not leak the box into P&L, but it means
+  the box-free object's scores were derived from a box-limited entry set. This wave rebuilds the
+  score from the box-free entry set and reports whether it changes anything.
+
+# ---------------------------------------------------------------------------------------------
+# 1. ARMS - the control comes first, per the charter's B1 rule
+# ---------------------------------------------------------------------------------------------
+arms:
+  B1_control: >
+    P1 WITH the box must reproduce the incumbent figures before any other arm is interpreted.
+    Bar: pts/session and weekly $ within 0.5 % of the committed W89/W91/W92 rebuild.
+  A_P1_box:        "P1, box (1300, 1000)                      <- incumbent"
+  B_P1_nobox:      "P1, no box"
+  C_pair_2box:     "2 BMOM : 3 X9a, one box per sleeve        <- incumbent challenger"
+  D_pair_nobox:    "2 BMOM : 3 X9a, no box on either sleeve"
+  E_netfuse_box:   "NETFUSE_1, box"
+  F_netfuse_nobox: "NETFUSE_1, no box"
+  all_matched: "in CONTRACT-MINUTES to the corresponding boxed arm, per repo rule N1 != N2."
+
+# ---------------------------------------------------------------------------------------------
+# 2. HYPOTHESES
+# ---------------------------------------------------------------------------------------------
+H1_interaction:
+  statement: >
+    The box HELPS the single fused object and HURTS the portfolio. Formally: A beats B on >= 2 of
+    the three gate legs, AND D beats C on >= 2.
+  falsifier: "either half fails -> there is no interaction and the simpler story is right,
+              whichever way it points."
+
+H2_null:
+  statement: "the box's effect on the PORTFOLIO is specific, not an artifact of trade count."
+  construction: >
+    W28's protocol, adapted. Circular-shift the session-box STATE by k sessions: session s is
+    halted/targeted according to session (s+k)'s realised box events, preserving the frequency and
+    the intraday timing distribution of box interventions while destroying which session they land
+    on. 200 shifts. If the real box sits inside the null distribution, the box is doing nothing
+    the same number of arbitrary interventions would not do.
+  note: "This is the null W28 used to certify the halt at the 98th percentile on P1. Running the
+         SAME null on the portfolio makes the two directly comparable, which is the point."
+
+H3_events:
+  statement: "the box's damage on a portfolio is explained by event reduction (mechanism law 6)."
+  test: "regress the change in top-5 drawdown on the change in trade count across a grid of halt
+         and target levels; report R-squared and the sign. A monotone relationship between events
+         and tail is the prediction."
+  falsifier: "no monotone relationship -> law 6 does not explain it and the mechanism is UNKNOWN."
+
+# ---------------------------------------------------------------------------------------------
+# 3. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "NOTHING IS ADOPTED. Removing a component that clears a 98th-percentile null on the incumbent
+     requires more than one wave, and a reversal caused by a scope correction needs MORE scrutiny,
+     not less - the W85 lesson."
+  - "If H1 and H2 both pass -> a box-free portfolio becomes a CHALLENGER and goes to a full
+     five-condition adjudication like W93's."
+  - "If H2 fails -> the observation is reported as GENERIC and the box stays everywhere by
+     default, because it is cheap and it is validated on the incumbent."
+  - "Under no outcome is the box removed from P1. W28's 98th percentile is not overturned by a
+     portfolio measurement."
+
+honesty_clauses:
+  - "Everything is 2022-07 -> 2026-07 and in-sample."
+  - "The box has a real operational value this wave cannot measure: it caps intraday loss on a
+     live account. A backtest that removes it is removing a risk control, and the drawdown
+     statistics here are weekly-equity statistics, not intraday ones."
+  - "W27 already labelled the TARGET half WEAK (88th percentile). If the result is driven by the
+     target rather than the halt, say so - they are separable and must be reported separately."
