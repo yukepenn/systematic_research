@@ -1,0 +1,114 @@
+    substrate 1,620,044 bars / 1,058 in-window sessions [4s]
+
+============================================================================================================================
+=== 0. REPRODUCTION GATE - are these the SAME five engines W108 measured?
+============================================================================================================================
+fade                N here   N W108   $/tr here   $/tr W108    
+EFFORT_NO_RES          540      540     -319.69     -319.69  OK
+EXHAUST_VOL            491      491     -309.13     -309.13  OK
+FAILED_BREAK           299      299     -225.35     -225.35  OK
+PATH_EFF_TRANS         556      556      -38.34      -38.34  OK
+VALUE_REACCEPT        1011     1011      -21.09      -21.09  OK
+
+    PASS - all five reproduce exactly. The veto below acts on W108's own engines.
+    DISCLOSED: VALUE_REACCEPT's score is 0 on most sessions, so its causal quantile is 0
+    at every rate and it accepts all 1,011 eligible sessions. It is effectively an
+    ALWAYS-ON fade toward the morning midpoint. That makes it the cleanest veto subject in
+    the set, and it is one of the two HELD-OUT engines.
+
+============================================================================================================================
+=== 1. DETECTOR DISTRIBUTIONS ONLY. No P&L has been computed at this point.
+===    Sign convention fixed in the spec: HIGH = HOSTILE TO FADING, for all six.
+============================================================================================================================
+detector         defined       p25       p50       p75       p90     realised veto rate @ 0.25/0.50/0.75
+D1_DIR_EFF          1051     0.039     0.081     0.139     0.194          0.24 / 0.50 / 0.75
+D2_CLOSE_EXT        1052     0.507     0.527     0.551     0.569          0.26 / 0.49 / 0.73
+D3_RANGE_EXP        1052     0.673     0.928     1.270     1.714          0.29 / 0.53 / 0.74
+D4_VWAP_DISP        1051     0.392     0.853     1.446     2.106          0.25 / 0.51 / 0.74
+D5_MR_FAIL          1051     0.000     0.017     0.100     0.200          0.26 / 0.56 / 0.99   UNCALIBRATED
+D6_XBREADTH         1051     0.254     0.583     1.003     1.507          0.25 / 0.49 / 0.72
+
+    Thresholds now FROZEN as trailing causal quantiles. Economics follows.
+
+============================================================================================================================
+=== 2. THE FULL 6 x 3 TABLE. Development mean is what SELECTS; holdout mean is the ANSWER.
+===    delta = dollars per trade WITH the veto minus WITHOUT it, per engine, then averaged.
+============================================================================================================================
+detector         rate  veto%  EFFORT_NO_R  EXHAUST_VOL  FAILED_BREA  PATH_EFF_TR  VALUE_REACC   DEV mean  HOLD mean
+D1_DIR_EFF       0.25  24.5%          -30          -34            3           26           17        -20         22
+D1_DIR_EFF       0.50  49.8%           50          -70            7          314          192         -4        253
+D1_DIR_EFF       0.75  75.0%            2          -65         -151           12          -51        -71        -19
+
+D2_CLOSE_EXT     0.25  25.9%          -27          -40          -39           55           30        -35         43
+D2_CLOSE_EXT     0.50  49.1%           62           14           12          166          118         30        142
+D2_CLOSE_EXT     0.75  73.2%          -94         -207          107          278          147        -64        212
+
+D3_RANGE_EXP     0.25  29.0%          109           12          119          142           49         80         95
+D3_RANGE_EXP     0.50  53.4%          283           96          184          327           81        188        204
+D3_RANGE_EXP     0.75  74.0%          262          169           90          nan           68        173        nan
+
+D4_VWAP_DISP     0.25  25.1%           55           46          -70          110           69         10         89
+D4_VWAP_DISP     0.50  50.6%          169           98           90          111          133        119        122
+D4_VWAP_DISP     0.75  74.5%          280           64          nan          276          176        nan        226
+
+D5_MR_FAIL       0.25  26.5%           12           26          -60           79           36         -7         58
+D5_MR_FAIL       0.50  56.1%         -228          -56         -148           35           46       -144         41
+D5_MR_FAIL       0.75  99.3%          nan          nan          nan          nan          nan        nan        nan
+
+D6_XBREADTH      0.25  24.7%           27          -13          158           98           79         57         88
+D6_XBREADTH      0.50  49.3%          -10            9          129         -163          -20         43        -91
+D6_XBREADTH      0.75  72.4%         -152          -84          461         -248           48         75       -100
+
+    EXCLUDED as UNCALIBRATED (W107b rule): D5_MR_FAIL
+============================================================================================================================
+=== 3. SELECTED ON THE DEVELOPMENT SET ONLY: D3_RANGE_EXP at veto rate 0.50
+===    development mean delta $188/trade. This is a best-of-15 selection and is charged as one.
+============================================================================================================================
+engine                 role  N base  N veto  $/tr base  $/tr veto    delta    net base    net veto
+EFFORT_NO_RES           DEV     540     176       -320        -36      283    -172,634      -6,412
+EXHAUST_VOL             DEV     491     246       -309       -213       96    -151,781     -52,358
+FAILED_BREAK            DEV     299     113       -225        -42      184     -67,379      -4,693
+PATH_EFF_TRANS     HELD OUT     556      43        -38        288      327     -21,319      12,393
+VALUE_REACCEPT     HELD OUT    1011     451        -21         60       81     -21,323      27,014
+
+============================================================================================================================
+=== 4. THE PRIMARY - the two HELD-OUT engines, nothing re-tuned
+============================================================================================================================
+    PATH_EFF_TRANS    vetoed  513 of  556 trades   delta $     327/trade
+    VALUE_REACCEPT    vetoed  560 of 1011 trades   delta $      81/trade
+
+    REAL held-out mean delta        $204/trade
+    RATE-MATCHED RANDOM VETO null   mean $-29  sd $232  p95 $338
+    percentile of the null          85.0th
+    VERDICT                         FAILS
+
+============================================================================================================================
+=== 5. DIAGNOSTIC ONLY - what the detector learned, against the EX-POST class labels.
+===    These labels are NEVER an input. This measures the detector, it does not build it.
+============================================================================================================================
+detector         rate P(hostile|TREND-UP)P(hostile|TREND-DOWN) P(hostile|REVERSAL)    P(hostile|RANGE)    P(hostile|MIXED)
+D1_DIR_EFF       0.50               57.2%               57.5%               51.5%               40.1%               45.7%
+D2_CLOSE_EXT     0.50               44.6%               52.9%               48.5%               52.5%               46.5%
+D3_RANGE_EXP     0.50               48.2%               66.7%               53.7%               52.1%               48.8%
+D4_VWAP_DISP     0.50               64.9%               53.6%               51.1%               40.5%               43.3%
+D5_MR_FAIL       0.50               64.9%               56.2%               64.0%               45.8%               47.2%
+D6_XBREADTH      0.50               46.8%               61.4%               48.2%               47.2%               46.5%
+
+============================================================================================================================
+=== 6. SECTION 12 STEP 6 - range profit RETAINED and trend loss REMOVED, separately
+============================================================================================================================
+engine             RANGE+MIXED base  RANGE+MIXED veto  retained   TREND base   TREND veto   removed
+EFFORT_NO_RES                96,975             8,432        9%     -223,331      -31,329       86%
+EXHAUST_VOL                  44,025            19,835       45%     -162,765      -58,327       64%
+FAILED_BREAK                 71,837            18,991       26%     -105,832      -35,260       67%
+PATH_EFF_TRANS              169,647             9,127        5%     -139,811        6,771      105%
+VALUE_REACCEPT              233,995            63,196       27%     -243,657      -82,684       66%
+
+============================================================================================================================
+=== 7. THE FIVE-ENGINE FADE BOOK, size 1 each, with and without the selected veto
+============================================================================================================================
+book                trades        net $   $/trade      wk $  wk$@fixDD  pos wk%      maxDD     CVaR5      t
+ALWAYS ON             2897     -434,436      -150    -2,040        -91    42.7%    455,363   -18,551  -2.01
+VETO D3_RANGE_EXP@0.50     1029      -24,056       -23      -113        -26    39.4%     87,854   -10,641  -0.25
+
+[done 5s]

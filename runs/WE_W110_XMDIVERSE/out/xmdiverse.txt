@@ -1,0 +1,105 @@
+    substrate 1,620,044 bars / 1,058 in-window sessions [4s]
+
+==============================================================================================================================
+=== 0. REPRODUCTION GATE - the canonical object, or no table is issued
+==============================================================================================================================
+    anchor 570 (bar stamped 09:30) N = 342   expected 342
+    anchor 571 (bar stamped 09:31, CANONICAL) N = 348   expected 348
+    PASS.
+    P1/PCT rebuilt: 2,401 trades, spread $14.44/ctrRT [16s]
+    213 weeks. P1/PCT $1,394/wk, XM $916/wk, XM active in 179 of them.
+
+==============================================================================================================================
+=== 1. ROLLING CORRELATION - the full path, per section 9, not one number
+==============================================================================================================================
+window         last      min      p25   median      p75      max  frac > +0.30
+13-week       0.369   -0.743   -0.235    0.046    0.266    0.689         21.9%
+26-week       0.464   -0.537   -0.179    0.021    0.229    0.566         12.2%
+52-week       0.258   -0.348   -0.199    0.036    0.133    0.258          0.0%
+
+    FULL-WINDOW rho = +0.081
+    TRAILING 26 WEEKS rho = +0.464   (W105 reported +0.464)
+
+==============================================================================================================================
+=== 2. LOSS DIVERSIFICATION - every statistic against a CIRCULAR-SHIFT null
+===    212 shifts of the XM weekly vector against P1's. Both marginals and both
+===    autocorrelation structures are preserved exactly; only the alignment is destroyed.
+==============================================================================================================================
+statistic                      REAL  null mean   null p5  null p95  percentile                   reading
+rho                           0.081     -0.000    -0.109     0.113       89.2th     higher = more coupled
+rho|P1<0                     -0.165      0.000    -0.165     0.183        5.2th   higher = losses coupled
+rho|XM<0                     -0.075      0.001    -0.170     0.183       27.8th   higher = losses coupled
+P(XM<0|P1<0)                  0.341      0.352     0.292     0.418       33.0th     higher = XM loses too
+P(P1<0|XM<0)                  0.413      0.427     0.354     0.507       33.0th     higher = P1 loses too
+worst-decile overlap          0.005      0.011     0.000     0.023        7.1th   higher = tails coincide
+joint worst-10                0.000      0.472     0.000     2.000        0.0th   higher = tails coincide
+tail beta                    -0.660      0.003    -0.873     0.871       13.7thhigher = worse in P1 tails
+all-week beta                 0.073     -0.000    -0.098     0.102       89.2th   reference for tail beta
+rho|XM active                 0.099     -0.000    -0.116     0.138       90.6th    the honest conditional
+joint maxDD               11489.404  13382.055  9748.550 17158.113       18.9th           LOWER is better
+joint DD weeks                7.000     18.236    11.000    26.450        0.0th           LOWER is better
+
+    UNCONDITIONAL RATES, for reading the conditionals above:
+        P(P1 < 0) = 0.427     P(XM < 0) = 0.352
+        so independence would give P(XM<0|P1<0) = 0.352
+
+    HAS THE COUPLING ACTUALLY MOVED? Same statistics on the first and last 26 weeks:
+statistic                  first 26w    last 26w        full
+rho                            0.018       0.464       0.081
+rho|P1<0                      -0.450      -0.027      -0.165
+P(XM<0|P1<0)                   0.200       0.500       0.341
+worst-decile overlap           0.038       0.000       0.005
+tail beta                        nan         nan      -0.660
+
+==============================================================================================================================
+=== 3. THE TAIL WINNERS - is there a common CAUSAL PRE-ENTRY state?
+===    Every feature is known at or before 09:45 on the trade's own session. No MFE, no
+===    MAE, no realized move: using the future path would make the answer circular.
+==============================================================================================================================
+
+    --- TOP 20 WINNERS (86 % of net) vs the other 328 ---
+feature             top mean   rest mean     top med    rest med   perm p
+drive_pts             48.625      34.925      27.875      26.750    0.086
+abs_comp_z             0.545       0.532       0.303       0.443    0.904
+divergence             0.959       1.048       0.893       0.931    0.595
+nq_sigma               0.003       0.003       0.003       0.002    0.306
+morn_vol_rel           1.062       1.011       1.046       0.995    0.320
+gap_pts              125.763      90.746     112.625      62.250    0.104
+on_range_rel           1.620       1.144       1.488       1.016    0.002  *
+is_long                0.400       0.515       0.000       1.000    0.360
+dow                    2.350       1.875       2.000       2.000    0.153
+is_ann                 0.350       0.113       0.000       0.000    0.006  *
+
+    LEAVE-ONE-OUT logistic AUC = 0.697   permutation null mean 0.500 p95 0.613  -> 99.7th percentile   MECHANISM-CONSISTENT
+
+    --- TOP 10 WINNERS (51 % of net) vs the other 338 ---
+feature             top mean   rest mean     top med    rest med   perm p
+drive_pts             17.575      36.249      10.000      27.000    0.084
+abs_comp_z             0.398       0.537       0.303       0.443    0.326
+divergence             0.420       1.061       0.320       0.943    0.009  *
+nq_sigma               0.003       0.003       0.003       0.002    0.382
+morn_vol_rel           0.980       1.014       0.880       1.007    0.627
+gap_pts              137.000      91.475     127.250      62.875    0.124
+on_range_rel           1.583       1.159       1.488       1.024    0.022  *
+is_long                0.400       0.512       0.000       1.000    0.539
+dow                    2.400       1.888       2.500       2.000    0.322
+is_ann                 0.500       0.115       0.500       0.000    0.006  *
+
+    LEAVE-ONE-OUT logistic AUC = 0.758   permutation null mean 0.499 p95 0.655  -> 99.9th percentile   MECHANISM-CONSISTENT
+
+    --- TOP 5 WINNERS (29 % of net) vs the other 343 ---
+feature             top mean   rest mean     top med    rest med   perm p
+drive_pts             11.300      36.069       7.750      27.000    0.092
+abs_comp_z             0.381       0.535       0.316       0.443    0.446
+divergence             0.255       1.054       0.305       0.936    0.013  *
+nq_sigma               0.003       0.003       0.003       0.002    0.601
+morn_vol_rel           1.021       1.013       0.903       1.004    0.942
+gap_pts              171.700      91.639     227.000      64.250    0.055
+on_range_rel           1.746       1.163       1.304       1.026    0.018  *
+is_long                0.400       0.510       0.000       1.000    0.686
+dow                    2.200       1.898       2.000       2.000    0.751
+is_ann                 0.800       0.117       1.000       0.000    0.001  *
+
+    LEAVE-ONE-OUT logistic AUC = 0.863   permutation null mean 0.498 p95 0.717  -> 99.9th percentile   MECHANISM-CONSISTENT
+
+[done 19s]

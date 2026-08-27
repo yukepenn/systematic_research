@@ -87,3 +87,35 @@ What the wave bought:
    unconditional long tilt (54.20 % vs 54.25 %).
 4. The seven previously-killed fades stay killed, but the *reason* recorded for them is corrected:
    not "fading fails" but "fading has no trend-day veto".
+
+---
+
+## ⚠️ CORRECTION APPENDED 2026-08-27 — see `runs/WE_W111_VOLDECAY/`
+
+**Nothing above has been altered.** This block is appended because W111's control falsifies an
+interpretation in §3 of this report.
+
+§3 called the −TREND / +RANGE class signature *"exactly what the mechanisms predict"* and treated
+nine-of-nine agreement across mechanisms as evidence. `run_we_w111b.py` ran the matched control this
+wave owed and did not run — **an unconditional fade of the morning direction, no mechanism, no
+filter, same geometry**:
+
+| arm | $/trade | TREND-UP | TREND-DOWN | REVERSAL | RANGE | MIXED |
+|---|---|---|---|---|---|---|
+| FADE morning direction, unconditional | −$206 | −$943 | −$1,121 | −$138 | +$470 | +$516 |
+
+The signature is identical, at identical magnitudes. The W51 taxonomy defines TREND by
+|close − open| ≥ 0.60 × session range, and the afternoon close finishes on the same side of 09:31
+as the 11:29 close on 86.1 % of TREND-UP sessions versus 73.3 % of RANGE sessions — so **any** rule
+trading against the morning direction must show this. **The signature carries no information about
+any mechanism and §3's interpretation is WITHDRAWN.**
+
+Also unreported here and material: the unconditional fade earns **−$206/trade**, and the mean of
+this wave's five mechanisms at the 50 % arm is **−$183**. Two beat it, three are worse. **None of
+the six was ever shown to beat simply fading the morning direction.**
+
+What survives is the *target*, on different grounds: an unconditional afternoon fade does lose most
+of its money on trending sessions, so a causal veto remains the right object — and `WE_W109` has now
+tested one. Its verdict: three pre-11:48 causal states genuinely predict the ex-post class at
+**AUC 0.61–0.62** (which is *not* definitional), but a **binary veto** built on information that
+weak removes good and bad sessions in equal proportion and **fails its transfer test**.

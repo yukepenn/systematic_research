@@ -1,0 +1,54 @@
+    348 XM trades, 213 weeks reloaded from W110's own artifacts.
+
+============================================================================================================================
+=== 1. TIE-AWARE PERCENTILES for the DISCRETE downside statistics
+===    W110 printed 'fraction of shifts strictly below the real value'. For a statistic
+===    whose null has mass exactly AT the real value that reads as 0.0th percentile and
+===    overstates the finding. Reported here as the exceedance probability instead.
+============================================================================================================================
+    joint worst-10 overlap   REAL     0.0   null mean    0.47   P(null <= real) = 0.613   -> as good or better by chance in 61.3 % of shifts
+    joint drawdown, weeks    REAL     7.0   null mean   18.24   P(null <= real) = 0.000   -> BEYOND the null (p < 0.05)
+
+============================================================================================================================
+=== 2. THE CORRECTED TAIL-WINNER NULL
+===    400 permutations, and each one RE-RUNS the whole 10-fold cross-validated
+===    fit on its permuted labels, so the null model gets exactly the same opportunity to
+===    overfit that the real one had. The scaler is fitted inside each fold.
+============================================================================================================================
+cut         % of net   real AUC  null mean  null p95   p-value                 verdict
+top 20           86%      0.735      0.492     0.630     0.000    MECHANISM-CONSISTENT
+top 10           51%      0.783      0.481     0.683     0.003    MECHANISM-CONSISTENT
+top 5            29%      0.869      0.453     0.752     0.000    MECHANISM-CONSISTENT
+
+    For reference, W110's defective figures were 0.697 / 0.758 / 0.863 at the 99.7th,
+    99.9th and 99.9th percentiles. Those are WITHDRAWN and replaced by the line above.
+
+============================================================================================================================
+=== 3. FEATURE ABLATION - is the whole result just 'announcement day + wide overnight'?
+============================================================================================================================
+feature set                                AUC  delta vs full
+ALL 10 FEATURES                          0.735          0.000
+drop drive_pts                           0.670         -0.065
+drop abs_comp_z                          0.727         -0.008
+drop divergence                          0.689         -0.046
+drop nq_sigma                            0.735         -0.000
+drop morn_vol_rel                        0.739          0.004
+drop gap_pts                             0.741          0.006
+drop on_range_rel                        0.691         -0.044
+drop is_long                             0.721         -0.014
+drop dow                                 0.737          0.003
+drop is_ann                              0.730         -0.005
+
+ONLY is_ann                              0.498         -0.237
+ONLY on_range_rel                        0.712         -0.023
+ONLY is_ann + on_range_rel               0.703         -0.032
+ONLY is_ann + on_range_rel + divergence   0.695         -0.040
+ONLY drive_pts + abs_comp_z + divergence + nq_sigma + morn_vol_rel + gap_pts + is_long + dow   0.662         -0.073
+
+    THE CAVEAT THAT TRAVELS WITH EVERY NUMBER ABOVE: 'tail winner' is defined by the P&L of
+    these same 348 trades. Cross-validation controls OVERFITTING, it does not create a
+    holdout. This is a DESCRIPTIVE claim about which pre-entry states the big winners came
+    from. It is NOT a demonstration that the next big winner can be picked in advance, and
+    the spec forbids turning any of it into a filter.
+
+[done 14s]

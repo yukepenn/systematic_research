@@ -15,8 +15,9 @@ Legend: **STRONG** · **SUPPORTED** · **WEAK** · **REGIME_LOCAL** · **NULL** 
 |---|---|---|---|---|---|---|---|---|---|---|
 | **trend persistence** | **STRONG** | **WEAK**² | SUPPORTED | ✗ | ✗ | NULL | NULL | **STRONG** | WEAK | ✗ |
 | **downside persistence** | **WEAK** | **NULL**¹ | WEAK | ✗ | ✗ | · | · | **NULL**¹ | WEAK | ✗ |
-| **reversal / failed persistence** | NULL | **NULL**³ | **NULL**³ | ✗ | ✗ | · | · | **NULL**³ | · | ✗ |
-| **range / value** | NULL | **WEAK**³ | **WEAK**³ | ✗ | ✗ | · | · | **WEAK**³ | · | ✗ |
+| **reversal / failed persistence** | NULL | **NULL**³ ⁶ | **NULL**³ | ✗ | ✗ | · | · | **NULL**³ | · | ✗ |
+| **range / value** | NULL | **NULL**³ ⁶ | **NULL**³ | ✗ | ✗ | · | · | **NULL**³ | · | ✗ |
+| **market state / action value** | **NULL**⁷ | · | **NULL**⁷ | ✗ | ✗ | **NULL**⁷ | · | · | · | ✗ |
 | **volatility transition** | WEAK | **·** | · | ✗ | ✗ | · | · | WEAK | **·** | ✗ |
 | **opening auction** | **·** | **·** | · | ✗ | ✗ | · | · | · | · | ✗ |
 | **overnight inventory** | NULL | **·** | · | ✗ | ✗ | · | · | · | · | ✗ |
@@ -38,6 +39,9 @@ Legend: **STRONG** · **SUPPORTED** · **WEAK** · **REGIME_LOCAL** · **NULL** 
 > null but not the Bonferroni bar for the family of six. **WEAK**, and it was a control arm, not a
 > hypothesis. High-participation *upside* continuation is the one live corner of the volume column.
 
+> ⚠️ **³ IS CORRECTED BY ⁶ BELOW. Read them together — the striking part of ³ turned out to be
+> definitional.** The original text is kept verbatim because this repo does not rewrite results.
+>
 > ³ **W108 (2026-08-27), and this is the most important cell in the table.** Six fade mechanisms
 > with participation and path-efficiency terms: primary **−$143/trade, 0.5th percentile**. But
 > **all five genuine fades are POSITIVE on RANGE and MIXED and heavily NEGATIVE on both TREND
@@ -58,8 +62,60 @@ Legend: **STRONG** · **SUPPORTED** · **WEAK** · **REGIME_LOCAL** · **NULL** 
 > for the afternoon; the ninth (path efficiency, 13.1 pp spread) is not significant as a trade
 > ($53/trade, 78.5th percentile). The afternoon's unconditional tilt is now measured: always-long
 > −$66/trade, always-short +$37.
+>
+> ⁶ ⚠️ **W111 (2026-08-27) — THE VOLUME COLUMN IS NOW MARKED FROM EVIDENCE, AND IT CORRECTS ³.**
+> Five continuous participation mechanisms (decay slope, decay ratio, effort-without-result,
+> absorption bar, extreme exhaustion) as fade DIRECTIONS at 11:48 held to 15:44, all five clearing
+> a preregistered specification gate at 89–99 % of sessions: primary **−$233/trade, 0.0th
+> percentile**, all 15 cells negative, and **three of five sit BELOW the 5th percentile of a
+> volume-decile-matched null** — anti-predictive, not merely absent. Row #1 of the frontier moves
+> **UNTESTED → NULL** after two prior specification failures of mine (W100 accepted 92 %, W106
+> fired on 3 of 1,058). Quantifier: *as a fade direction, at this geometry.* Volume as a
+> **confidence weight** or as a **threshold scale inside an existing channel** is still untested.
+>
+> **AND THE CORRECTION TO ³:** `run_we_w111b.py` ran the matched control W108 owed — an
+> **unconditional** fade of the morning direction, no mechanism at all — and it produces the same
+> −TREND/+RANGE signature at the same magnitudes (**−$943 / −$1,121 / +$470 / +$516**, −$206/trade).
+> The W51 taxonomy defines TREND by |close−open| ≥ 0.60 × session range and the afternoon close
+> lands on the same side of 09:31 as the 11:29 close on 86.1 % of TREND-UP vs 73.3 % of RANGE
+> sessions, so **any** rule trading against the morning direction must show it. **The signature is
+> a property of the labels and W108's interpretation of it is WITHDRAWN.** Also: the unconditional
+> fade earns −$206/trade against W108's five-mechanism mean of −$183; two of five beat it, three
+> are worse. **None of the six was ever shown to beat fading the morning direction unconditionally.**
+> Binding from here: **a class-conditional table requires its matched unconditional control in the
+> same wave.** This is the second time a striking class table was reproduced by a matched control
+> (the first was `VWAP_RECLAIM` 54.20 % vs always-long 54.25 %).
+>
+> ⁷ **W109 (2026-08-27) — the FADE_HOSTILE_STATE transfer test, and it splits in two.**
+> *The policy fails:* six causal states at 11:48 as a binary veto on five frozen fades, three
+> alphabetically-fixed for development and **two held out**. Primary **$204/trade on the held-out
+> engines vs a rate-matched RANDOM-VETO null whose p95 is $338 → 85.0th percentile, FAILS**; the
+> clean single-holdout variant fails at the 82.0th. The mechanism of failure is the **SELECTIVITY
+> RATIO** — trend loss removed ÷ range profit removed — which lies between **0.74 and 1.12 across
+> all 18 cells**. A veto at this discrimination is exposure reduction, not selection.
+> *The information is REAL:* three of the six detectors discriminate ex-post TREND from RANGE/MIXED
+> using only pre-11:48 information at **AUC 0.621 (VWAP displacement), 0.617 (directional
+> efficiency), 0.613 (repeated extremes)**, all at the 100th percentile of 2,000-draw label
+> permutation nulls (bar ≈ 0.535). **That is not definitional** — the detectors see the morning, the
+> label sees the whole session. And the detector development P&L selected, `D3_RANGE_EXP`, is one of
+> the three carrying **no** class information (AUC 0.525, null).
+> **Conclusion: the failure is at the POLICY layer, not the information layer.** This detector family
+> is closed to further tuning (§13/§38). The untested successor is §22's continuous action value —
+> estimate `E[PnL(fade) | I_t]` and weight exposure by it, instead of thresholding a weak state into
+> a binary cut that discards the magnitude information an AUC-0.62 signal carries.
 
-## 2. ⭐ The single largest hole, and it is free
+## 2. ⭐ The single largest hole — **CLOSED as a direction by W111, 2026-08-27**
+
+> ### ⚠️ **THE CLAIM BELOW WAS TRUE WHEN WRITTEN AND IS NOW SUPERSEDED.** W111 used volume as a
+> ### signal, five ways, and it **FAILED**: −$233/trade at the 0.0th percentile, and three of the
+> ### five mechanisms sit *below* the 5th percentile of a volume-decile-matched null. The
+> ### opportunity was real, the data was there, the two prior failures were specification defects
+> ### of mine — and once specified so it could actually be measured, **the answer was no**.
+> ###
+> ### What is *still* open in this column is narrower and must be quoted with its quantifier:
+> ### volume as a **CONFIDENCE WEIGHT** on an existing signal, and volume as a **THRESHOLD SCALE**
+> ### inside the ratchet or the B-MOM channel. Volume as a standalone **DIRECTION** at 11:48 or at
+> ### 10:01 is tested and null. The original text follows unaltered.
 
 > ### **VOLUME HAS NEVER ONCE BEEN USED AS A SIGNAL IN THIS PROGRAM.**
 > Every engine ever built here — Solar ratchet, B-MOM, X9a, NETFUSE, the scalping families, the
@@ -102,12 +158,19 @@ Ranked by (monetizable opportunity) × (weakness of current coverage) × (data o
 (plausible causal mechanism) × (expected independence from existing P&L). Nothing here is a
 result; every row is a hypothesis with a named falsifier.
 
+> ### ⚠️ **RE-RANKED 2026-08-27 after W109 / W110 / W111.** Rows **#0** and **#1** — the two the
+> ### ledger ranked highest — have both been **TESTED AND CLOSED**, and their strikeout rows are
+> ### kept below with the evidence. The new **#0** is the successor W109 pointed at, and it is a
+> ### different object, not a retune of anything.
+
 | # | candidate | information that is NEW | data | why it is not already closed | main falsifier |
 |---|---|---|---|---|---|
-| **1** | **VOL-EXHAUST / ABSORB** — monotone body+range+**volume** decay over N bars; and effort-no-result (max volume, non-max body, non-max range, close at bar mid) | volume, first time ever | 1-min OHLCV **2006–2026** | every dead fade here was a *structure* fade (failed break, gap, value area) with no participation term | effect survives holding volume rank fixed ⇒ it is just "big bar" |
+| **0** | ⭐ **CONTINUOUS FADE ACTION VALUE** — estimate `E[PnL(fade) \| I_t]` at 11:48 and weight exposure by it, instead of thresholding a state into a binary veto | nothing new is needed; it re-uses the three detectors W109 proved carry real class information (AUC 0.613–0.621, 100th pctile of permutation nulls) | 1-min OHLCV + the ES/RTY/YM substrates already joined | **W109 showed the failure is at the POLICY layer, not the information layer.** A 25/50/75 % binary cut discards the magnitude information an AUC-0.62 signal carries, and its selectivity ratio is 0.74–1.12 — pure exposure reduction. A continuous weight has never been tried here | the continuous weight's selectivity ratio is also ≈1, i.e. the information is too weak at any policy; **or** it needs fresh held-out engines because W109 consumed these five |
+| ~~**1**~~ | ~~**VOL-EXHAUST / ABSORB**~~ **CLOSED by W111** — −$233/trade, 0.0th percentile, all 15 cells negative, three of five *below* the 5th percentile of the volume-decile-matched null this row itself named as the falsifier | volume, and it was genuinely the first time | 1-min OHLCV 2006–2026 | it *was* open; two prior attempts were specification failures | **the falsifier fired** |
+| ~~**0(old)**~~ | ~~**CAUSAL TREND-DAY DETECTOR as a fade veto**~~ **CLOSED by W109** — held-out primary 85.0th percentile against a rate-matched random veto; and W111b showed the class signature that motivated it is definitional | — | — | — | **both falsifiers fired**: the veto did not beat a random veto of the same rate, and the class table it rested on is reproduced by an unconditional fade |
 | **2** | **SEMIVAR-SKEW** — σ_down for short legs, σ_up for long legs inside the existing ratchet | realized semivariance; every vol conditioning ever run used total RV | 1-min OHLCV 2006–2026 | attacks the campaign's **named** weakness from inside the engine rather than adding a sleeve; corroborated by HTFMECH01 (+$11.9k long / −$22.0k short) | RSV−/RSV+ share carries no forward information on NQ at 1 min |
 | **3** | **CROSS-MARKET, CONDITIONAL ONLY** — does NQ/ES disagreement predict *failed* persistence; does RTY weakness mark bad NQ longs | ES/RTY/YM, as a **condition on an NQ trade**, never as a standalone signal | **on disk, aligned, same 1,058 sessions**, zero cost | the 0-for-15 record is on *standalone* cross-market engines; the conditional form has never been run | **run the zero-lag timestamp known-answer test FIRST** or this manufactures a beautiful artifact |
-| **0** | ⭐ **CAUSAL TREND-DAY DETECTOR** — a statement at ~11:45 about whether today is a trend day, used ONLY as a veto on fades | nothing new is needed; it re-uses five mechanisms already built | 1-min OHLCV | **W108 measured that five fade mechanisms have the right class signature and are only killed by trend-day exposure.** A veto makes all five tradeable at once — the highest-leverage single object the ledger has ever pointed at | the detector cannot beat its own p\* on the classes that matter, or a veto with a random detector of the same rate does as well |
+| ~~**0**~~ | ~~**CAUSAL TREND-DAY DETECTOR** — a statement at ~11:45 about whether today is a trend day, used ONLY as a veto on fades~~ ⚠️ **row superseded — see the CLOSED entry at the top of this table** | nothing new is needed; it re-uses five mechanisms already built | 1-min OHLCV | **W108 measured that five fade mechanisms have the right class signature and are only killed by trend-day exposure.** A veto makes all five tradeable at once — the highest-leverage single object the ledger has ever pointed at | *(fired)* the detector cannot beat its own p\* on the classes that matter, **or a veto with a random detector of the same rate does as well** |
 | **4** | **OPENTYPE-FREEZE** — Dalton/Steidlmayer opening taxonomy (drive / test-drive / rejection-reverse / auction) as an **exposure weight**, never a trade | opening-auction structure; zero fitted parameters | 1-min OHLCV 2006–2026 | unique clean geometry: freeze the taxonomy on 2006–2021, read once on 2022+ | tag carries no expectancy separation on 2022+ after the freeze |
 | **5** | **MIDDAY-VWAP-BAND** — ±2σ same-slot band around session VWAP, **11:00–14:00 only**, hard flat at 14:00 | window-restriction; the dead fades were all-day rules | 1-min OHLCV | fires exactly where P1's channel decays and where P1 is thin | the edge is present outside 11:00–14:00 too ⇒ not the mechanism |
 | **6** | **CASCADE-EXHAUSTION** — −2.5σ 30-min move **and** volume z>3 **and** range z>3 **and** a rejection close | three simultaneous extremes; a different population from unconditional fades | 1-min OHLCV | the fade kills (SMV2K t=−2.35, SMV2P t=−2.17) are unconditional | fires < 20×/yr, or negative |

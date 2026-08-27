@@ -1,0 +1,95 @@
+    substrate 1,620,044 bars / 1,058 sessions [4s]
+
+============================================================================================================================
+=== (a) A DEFECT IN MY OWN SPEC. The overlap rule was written for the wrong detector.
+============================================================================================================================
+    rank correlation( D1_DIR_EFF   , PATH_EFF_TRANS score ) = +0.229
+    rank correlation( D3_RANGE_EXP , PATH_EFF_TRANS score ) = +0.968
+
+    PATH_EFF_TRANS = (1 - path efficiency) x (range / trailing mean range).
+    D3_RANGE_EXP   =                          range / trailing mean range.
+    D3 IS A MULTIPLICATIVE FACTOR INSIDE THE HELD-OUT ENGINE'S OWN SCORE. That is a
+    strictly worse overlap than the D1 case the spec disclosed, and by the spec's own
+    logic the same discount must apply. The clean holdout is VALUE_REACCEPT alone.
+
+    CLEAN HOLDOUT (VALUE_REACCEPT only), D3_RANGE_EXP @ 0.50:
+        real delta $81/trade   random-veto null mean $-3 p95 $170  -> 82.0th percentile   FAILS
+    The wave's verdict does not change - the primary already failed at the 85th
+    percentile. This makes the failure cleaner, it does not rescue anything.
+
+============================================================================================================================
+=== (b) THE SELECTIVITY RATIO - does the veto SELECT, or does it only REDUCE EXPOSURE?
+===     trend loss removed (%) divided by range profit removed (%).
+===     A causal trend-day veto is well above 1. Pure exposure reduction sits at 1.
+============================================================================================================================
+detector         rate  EFFORT_NO_R  EXHAUST_VOL  FAILED_BREA  PATH_EFF_TR  VALUE_REACC    POOLED
+D1_DIR_EFF       0.25         0.56         0.39         0.97         1.46         1.19      0.90
+D1_DIR_EFF       0.50         0.61         0.39         0.90         1.55         1.33      0.96
+D1_DIR_EFF       0.75         0.74         0.55         0.95         1.00         0.96      0.89
+
+D2_CLOSE_EXT     0.25         0.94         0.74         0.75         1.65         1.10      1.08
+D2_CLOSE_EXT     0.50         1.40         2.62         0.86         1.39         1.13      1.12
+D2_CLOSE_EXT     0.75         1.07         0.90         1.02         1.35         1.14      1.08
+
+D3_RANGE_EXP     0.25         0.72         0.47         0.92         1.26         0.94      0.89
+D3_RANGE_EXP     0.50         0.94         1.17         0.91         1.11         0.91      0.96
+D3_RANGE_EXP     0.75         0.94         1.13         0.93         1.00         0.99      0.97
+
+D4_VWAP_DISP     0.25         0.78          nan         0.66         1.57         1.24      1.02
+D4_VWAP_DISP     0.50         1.05         1.22         1.07         1.10         1.12      1.06
+D4_VWAP_DISP     0.75         0.89         0.82         1.02         1.07         1.05      0.98
+
+D5_MR_FAIL       0.25         0.56         0.77         0.87         1.46         1.24      0.93
+D5_MR_FAIL       0.50         0.57         0.52         0.89         1.29         1.18      0.89
+D5_MR_FAIL       0.75         1.00         1.00         1.00         1.00         1.00      1.00
+
+D6_XBREADTH      0.25         0.54         0.29         0.97         1.19         1.07      0.80
+D6_XBREADTH      0.50         0.73         0.63         0.85         0.64         0.72      0.74
+D6_XBREADTH      0.75         0.82         0.89         1.06         0.87         0.94      0.91
+
+============================================================================================================================
+=== (c) THE HELD-OUT NULL FOR EVERY CALIBRATED CELL. Would ANY of them have passed?
+===     D5_MR_FAIL is excluded as UNCALIBRATED. This is a best-of-15 diagnostic and the
+===     primary has already failed; nothing here can promote anything.
+============================================================================================================================
+detector         rate  DEV delta  HOLD delta   null p95   pctile           CLEAN (VALUE_REACCEPT only)
+D1_DIR_EFF       0.25        -20          22         80    70.0th    fail        $17 vs p95 $78    fail
+D1_DIR_EFF       0.50         -4         253        113   100.0th    PASS      $192 vs p95 $137    PASS
+D1_DIR_EFF       0.75        -71         -19        267    47.5th    fail      $-51 vs p95 $211    fail
+D2_CLOSE_EXT     0.25        -35          43         74    81.5th    fail        $30 vs p95 $88    fail
+D2_CLOSE_EXT     0.50         30         142        126    97.0th    PASS      $118 vs p95 $153    fail
+D2_CLOSE_EXT     0.75        -64         212        264    92.0th    fail      $147 vs p95 $217    fail
+D3_RANGE_EXP     0.25         80          95        123    89.0th    fail        $49 vs p95 $78    fail
+D3_RANGE_EXP     0.50        188         204        420    83.5th    fail       $81 vs p95 $153    fail
+D3_RANGE_EXP     0.75        173  too few survivors on a holdout
+D4_VWAP_DISP     0.25         10          89         75    96.5th    PASS        $69 vs p95 $81    fail
+D4_VWAP_DISP     0.50        119         122        145    90.0th    fail      $133 vs p95 $132    PASS
+D4_VWAP_DISP     0.75        nan         226        249    92.5th    fail      $176 vs p95 $242    fail
+D6_XBREADTH      0.25         57          88        100    93.0th    fail        $79 vs p95 $89    fail
+D6_XBREADTH      0.50         43         -91        166    14.0th    fail      $-20 vs p95 $163    fail
+D6_XBREADTH      0.75         75        -100        200    30.5th    fail       $48 vs p95 $285    fail
+
+    3 of 15 calibrated cells clear their own held-out null. At a 5 % bar, 0.75 are expected by chance alone.
+
+============================================================================================================================
+=== (d) THE DECOMPOSITION THAT MATTERS - does a CAUSAL TREND-DAY STATE EXIST at 11:48?
+===     AUC for discriminating ex-post TREND-UP/DOWN from RANGE/MIXED, using ONLY
+===     information available at 11:48. REVERSAL sessions are excluded as neither.
+===     This is a DIAGNOSTIC of the information, not a tradeable object.
+============================================================================================================================
+    786 sessions: 375 TREND, 411 RANGE/MIXED
+
+detector            AUC   perm p95   pctile   verdict
+D1_DIR_EFF        0.617      0.535   100.0th      REAL
+D2_CLOSE_EXT      0.497      0.533    45.2th      null
+D3_RANGE_EXP      0.525      0.535    88.4th      null
+D4_VWAP_DISP      0.621      0.534   100.0th      REAL
+D5_MR_FAIL        0.613      0.532   100.0th      REAL
+D6_XBREADTH       0.528      0.535    89.6th      null
+
+    Reading: AUC 0.50 is a coin. An AUC that clears its permutation null means the
+    information to distinguish a trend day from a range day IS present at 11:48.
+    Whether that information is worth money to a fade is a SEPARATE question, and
+    section (b) above is the one that answers it.
+
+[done 6s]

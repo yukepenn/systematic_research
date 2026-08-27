@@ -1,9 +1,23 @@
 # CURRENT BASELINE — campaign #7 WEEKLY_EDGE
 
-_Authoritative as of **2026-08-27**, wave **W103**. Where this file and any older weekly_edge doc
-disagree, **this file governs**. Every number is cited to a committed run. This is the campaign-#7
-equivalent of the root `BASELINE_MODELS.md`, which covers campaign #3's three shipped objects and
-is unaffected by anything here._
+_Authoritative as of **2026-08-27**, through wave **W111**. Where this file and any older
+weekly_edge doc disagree, **this file governs**. Every number is cited to a committed run. This is
+the campaign-#7 equivalent of the root `BASELINE_MODELS.md`, which covers campaign #3's three
+shipped objects and is unaffected by anything here._
+
+> **CHANGE LOG since the W103 edition** — nothing about the base moved; one status label did.
+> - **`XM_CONFLICT` → `ACTIVE COMPONENT`**, raised from the reduced-confidence position W105 left
+>   it in, on the strength of **W110**. The +0.464 six-month ρ is **not** downside coupling: ρ
+>   conditioned on P1's losing weeks is **−0.165 at the 5.2nd percentile** of a circular-shift
+>   null, worst-decile overlap at the **7.1st**, tail beta **−0.660** against an all-week +0.073.
+>   And the concentration is **mechanism-consistent** — the pre-entry state predicts the top-20
+>   winners at **AUC 0.735, p = 0.000** under a fully re-fitted permutation null.
+> - **W109, W110, W111 promoted nothing and closed three things.** The causal trend-day veto, the
+>   volume-exhaustion family, and two of my own statistics were withdrawn. See
+>   `MECHANISM_COVERAGE_20260826.md` footnotes ⁶ and ⁷.
+> - **A new binding rule:** a class-conditional table requires its **matched unconditional
+>   control** in the same wave. W111b showed W108's headline signature is reproduced exactly by an
+>   unconditional fade.
 
 ---
 
@@ -79,8 +93,10 @@ campaign correlates 0.27–0.72 with P1. Adding the 2:3 pair on top makes the po
 (−12 %), and an independent 63-cell integer grid puts its argmax at **2 P1 : 0 PAIR : 1 XM** —
 zero pair. Two weighting methods converge on "drop the pair".
 
-**Status:** EVIDENCE **STRONG (current regime) · REGIME_LOCAL** · ENGINEERING **RESEARCH_ONLY** ·
-**NOT ENABLED**. Caveats that travel with every quotation:
+**Status (updated W110, directive V5 §4/§39):** EVIDENCE **STRONG (current regime) · REGIME_LOCAL**
+· PORTFOLIO ROLE **ACTIVE COMPONENT** · ENGINEERING **SOURCE_READY / PARITY_PENDING**
+(`WeeklyEdgeXMConflict_v1.cs` written, **not compiled, not reconciled**) · **NOT ENABLED**.
+Caveats that travel with every quotation:
 
 - **N = 348** trades, ~1.6 sessions/week.
 - **The window is discovery-consumed** (2022-07 → 2026-08, mined for 103 waves).
@@ -98,13 +114,45 @@ zero pair. Two weighting methods converge on "drop the pair".
   |drive|-**decile**-matched null at the **99.7th** — but the selections happened.
 - **Last three months are weak**: the primary combination is $499/wk at fixed DD, 35.7 % positive
   weeks, **t = 0.25** over 14 weeks — inside the BURNED span.
-- ⚠️ **W105: ~20 sessions of 348 carry 85 % of the money.** Dropping the top 5 costs 28 %, top 10
+- ⚠️→✅ **W105: ~20 sessions of 348 carry 85 % of the money.** Dropping the top 5 costs 28 %, top 10
   costs 49 %, top 20 costs **85 %**. Inside individual years the top-10 contribution *exceeds
   100 % of net*, i.e. the other trades lost. Any income figure must carry "carried by ~20 sessions
-  in four years".
-- ⚠️ **W105: the correlation that justifies this whole portfolio is not stable.** ρ(XM, P1) is
-  **+0.081 full-window but +0.464 over the trailing six months** (26 weeks, z ≈ 2.2). The
-  diversification benefit may already have degraded. **This is the quantity to watch.**
+  in four years". **W110 answers §25's question about that concentration: it is MECHANISM-CONSISTENT,
+  not accidental.** Using only features known at or before 09:45 on the trade's own session — no
+  MFE, no MAE, no realized path — a cross-validated model ranks the tail winners at **AUC 0.735 /
+  0.783 / 0.869** for the top 20 / 10 / 5, **p = 0.000 / 0.003 / 0.000** against 400 permutations
+  that each re-run the entire fit. The separating state is a **wide overnight range** (1.62× vs
+  1.14× median), a **scheduled CPI/NFP/FOMC day** (35 % vs 11.3 %), and — at the tightest cuts — a
+  **small opening drive that barely disagrees with the complex** (divergence 0.26 vs 1.05). It is
+  genuinely multivariate: the announcement flag **alone** ranks at AUC 0.498.
+  ⚠️ **WITHDRAWN from W110's own first pass:** an AUC null that permuted labels while holding
+  leave-one-out predictions fixed, reported as 0.697/0.758/0.863 at the "99.7th/99.9th/99.9th
+  percentile". That null was too easy; the corrected figures above replace it and are stronger.
+  ⚠️ **THE CAVEAT THAT TRAVELS WITH IT:** "tail winner" is defined by these same 348 trades.
+  Cross-validation controls overfitting, it does not create a holdout. This is **descriptive**, and
+  per the W110 spec **no filter was built from it.**
+- ⚠️→✅ **W105 flagged the correlation as unstable; W110 measured what it actually means.** ρ(XM,
+  P1) is **+0.081 full-window and +0.464 over the trailing 26 weeks** — both reproduce exactly.
+  **But the 26-week series has ranged −0.537 to +0.566 with a median of +0.021 over these four
+  years, 12.2 % of all 26-week windows have exceeded +0.30, and the 52-week ρ has NEVER exceeded
+  +0.30.** More decisively, **the coupling is not on the downside**, against 212 circular shifts:
+
+  | | REAL | null mean | percentile |
+  |---|---|---|---|
+  | ρ, all weeks | +0.081 | −0.000 | 89.2th |
+  | **ρ ∣ P1 < 0** | **−0.165** | +0.000 | **5.2th** |
+  | P(XM<0 ∣ P1<0) | 0.341 | 0.352 | 33.0th |
+  | worst-decile overlap | 0.005 | 0.011 | 7.1th |
+  | **tail beta**, P1's bottom decile | **−0.660** | +0.003 | 13.7th |
+  | joint max DD | $11,489 | $13,382 | 18.9th |
+  | **joint DD duration** | **7 wk** | 18.2 wk | **beyond the null** |
+
+  **The two engines are mildly coupled when they WIN and anti-coupled when P1 LOSES.** Still watch
+  the trailing 26-week ρ — and note the one statistic that did move adversely: P(XM<0 ∣ P1<0) rose
+  from 0.200 to 0.500 between the first and last 26 weeks, on about eleven P1-losing weeks.
+  ⚠️ **WITHDRAWN from W110's own first pass:** "zero overlap between the two ten-worst-week sets,
+  0.0th percentile" — 61.3 % of circular shifts also produce zero overlap. The fact is true, the
+  inference was not.
 - ✅ **W105b: it is NOT an event trade.** Against the committed CPI/NFP/FOMC calendar, the
   **304 non-announcement trades earn $408/trade at a 54.9 % hit rate**. Announcement sessions are
   3.9× richer ($1,611/trade, 36 % of net from 13 % of trades) and **NFP is extreme** (n = 12,
@@ -175,3 +223,47 @@ From `runs/WE_W103_CONSOLIDATE/` (capture ledger v3):
 | exposure convention | **income-matched** (W97: the only one with no free parameter) |
 | seal | ≥ **2026-08-01 VIRGIN**; **2026-05-31 → 07-31 BURNED** |
 | known data holes | **2026-07-17 is truncated** (ends 10:53, 83 RTH bars vs 390); spread profile has 1,380 minutes, the missing 60 being the 17:00–17:59 CME break |
+
+---
+
+## 6. Engineering status, active challengers, and the next residual (directive V5 §31)
+
+### Engineering — P0-B
+
+| object | source | compiled | Analyzer parity | enabled |
+|---|---|---|---|---|
+| `P1/PCT` — `WeeklyEdgeP1PCT_v1.cs` | ✅ written, 14-line mechanical diff from the parity-tested `P1_v3` | ⏳ **copied into NT8 `bin/Custom/Strategies/`, awaiting owner F5** | ⏳ pending | ❌ |
+| `XM_CONFLICT` — `WeeklyEdgeXMConflict_v1.cs` | ✅ written, first multi-series signal strategy in the repo | ❌ **deliberately not yet copied** — owner sequenced P1PCT first so a first-compile failure cannot take the whole `NinjaTrader.Custom.dll` down | ❌ | ❌ |
+| `WeeklyEdgeX9a_v1.cs`, `WeeklyEdgeBmom_v1.cs` | ✅ written (W89 era) | ❌ never installed | ❌ | ❌ |
+
+**Both remaining steps are owner-only interactive actions.** Parity protocol is binding from WE_W52:
+compare the **decision series** first — ≥99 % agreement plus trade counts within 2 % = VALIDATED;
+90–99 % = classify every mismatch; <90 % = the C# is not the object.
+
+### Active challengers
+
+| object | status |
+|---|---|
+| `PAIR23` (2 BMOM : 3 X9a) | best *single* object ($1,309/wk at fixed DD) but **adds nothing on top of P1/PCT + XM** (W103, two independent weighting methods) — **not promoted** |
+| `D1_DIR_EFF` @ 0.50 as a fade veto | **WATCH only.** Clears both W109 holdout nulls at the 100th percentile *and* is the cell the development set ranked 13th of 15. Needs fresh held-out engines — W109 consumed these five |
+
+### Demoted / closed since W103
+
+`NETFUSE_1` (deep-negative 2006–21) · `VWAP_RECLAIM` (trend follower wearing a reversal label) ·
+**`CAUSAL TREND-DAY VETO`** (W109, 85.0th percentile) · **`VOL-EXHAUST / ABSORB`** (W111, 0.0th
+percentile, three of five *anti*-predictive against a volume-matched null).
+
+### The next residual, and what is actually pointed at
+
+The capture ledger in §4 is unchanged — **MORN remains the largest single-segment gap** at $1,744
+per session of level-2 oracle against $78 taken, at p\* = 0.5048. Three lanes have now attacked the
+afternoon and the late morning and all three failed.
+
+**The one thing W109 found that is genuinely new is that the failure was at the POLICY layer, not
+the information layer:** three causal states known at 11:48 discriminate ex-post TREND from
+RANGE/MIXED at **AUC 0.613–0.621**, decisively above 2,000-draw permutation nulls, and that is not
+definitional because the detectors see only the morning while the label sees the whole session. A
+**binary** veto on information that weak removes good and bad sessions in equal proportion
+(selectivity ratio 0.74–1.12 across all 18 cells). The successor object — **untested, and it may
+well fail too** — is directive §22's continuous action value: estimate `E[PnL(action) | I_t]` and
+weight exposure by it rather than thresholding a weak state into a binary cut.
