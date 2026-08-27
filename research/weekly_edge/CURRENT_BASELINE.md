@@ -88,12 +88,30 @@ zero pair. Two weighting methods converge on "drop the pair".
 - **REGIME_LOCAL by DATA AVAILABILITY, not by choice** — ES/RTY/YM substrates begin 2022-01-02, so
   no 2006–2021 test exists and none can be built from anything on disk.
 - **The only intra-trade risk control is the clock.** Worst adverse excursion ever: **−$10,865
-  (543 points)**. Every stop distance from 20 to 300 points makes it worse at fixed drawdown.
+  (543 points)** — **a sample maximum, not a bound**. Every ALPHA stop from 20 to 300 points makes
+  it worse at fixed drawdown, but that is *not* an argument that no stop is the right live policy.
+  A separate **DISASTER** layer is priced in `runs/WE_W105_XMAUDIT/`: a 300-point account-survival
+  stop costs **0.7 %** of gross edge and would have triggered 13 times; 500 points costs 4.1 % and
+  triggered twice. **No level is selected — the owner sets capital risk.**
 - It was **selected as the best of 27 cells** (W101) and its combination as the **best of 6**
   (W103). It cleared a best-of-27 coin null, a rate-matched subsample null at the 99.6th, and a
   |drive|-**decile**-matched null at the **99.7th** — but the selections happened.
 - **Last three months are weak**: the primary combination is $499/wk at fixed DD, 35.7 % positive
   weeks, **t = 0.25** over 14 weeks — inside the BURNED span.
+- ⚠️ **W105: ~20 sessions of 348 carry 85 % of the money.** Dropping the top 5 costs 28 %, top 10
+  costs 49 %, top 20 costs **85 %**. Inside individual years the top-10 contribution *exceeds
+  100 % of net*, i.e. the other trades lost. Any income figure must carry "carried by ~20 sessions
+  in four years".
+- ⚠️ **W105: the correlation that justifies this whole portfolio is not stable.** ρ(XM, P1) is
+  **+0.081 full-window but +0.464 over the trailing six months** (26 weeks, z ≈ 2.2). The
+  diversification benefit may already have degraded. **This is the quantity to watch.**
+- ✅ **W105: it is genuinely two-sided** (longs 60.5 % hit / $701, shorts 48.0 % / $415 — both
+  positive) and **not an early-sample artifact** ($540 in 2022-23 vs $569 from 2024 on).
+- ⚠️ **W105 withdraws the per-year improvement story.** At the canonical anchor the profile is
+  $853 / $441 / $654 / $317 / $751 — **no trend**. W101b's "$186 → $1,064 monotone" was an
+  artifact of the one-minute-early anchor.
+- **N = 348 is canonical** (09:31 anchor). N = 342 is the same object at the 09:30-stamped
+  anchor. Both reproduce exactly; they are two anchors, not a discrepancy.
 
 ---
 
