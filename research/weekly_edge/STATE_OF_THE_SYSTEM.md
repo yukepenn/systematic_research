@@ -70,6 +70,30 @@
 > availability** — the ES/RTY/YM substrates begin 2022-01-02 and no deep test is possible.
 > Zero-lag known-answer test passed on all three joins (lag-0 0.93/0.75/0.77 vs ~0.00 at ±1).
 >
+> ### 4b. ⚠️ W102 + the adversarial pass — the object survives, and my headline was inflated
+> **Every exit policy makes it worse.** A stop-distance curve from 20 to 300 points never beats no
+> stop at all at fixed drawdown; a stopped arm earns so little per trade that matching P1's income
+> needs 3–6 contracts, so **stopping this object INCREASES portfolio risk**. The engine is the
+> forecast. MAE, which W101 never reported: mean **−$2,033**, worst ever **−$10,865 (543 pts)**;
+> the only intra-trade risk control is the clock, and a 300-pt catastrophic stop costs 1.3 %.
+>
+> ⚠️ **`CORRECTION`, found by the adversarial pass.** Bars are END-STAMPED and `we_channels` treats
+> **09:31** as the RTH open bar, so W101/W102 anchored the drive at the bar stamped 09:30 — whose
+> *open* is the **09:29** price, one minute inside the pre-open. Not a lookahead; not free:
+>
+> | anchor | $/trade | hit % | portfolio wk$ @ fixed DD | vs P1 alone |
+> |---|---|---|---|---|
+> | 09:30 bar (= 09:29 px) — **as first published** | $675 | 57.3 % | $2,438 | **+98.1 %** |
+> | **09:31 bar (TRUE RTH open) — the defensible row** | **$560** | **54.3 %** | **$1,785** | **+45.1 %** |
+> | 09:31 anchor, decide 09:46 | $450 | 53.6 % | $1,608 | +30.7 % |
+>
+> **Quote $560 and +45.1 %, not $675 and +98 %.** ρ with P1 runs **−0.105 to +0.081** across the
+> three anchors (all |z| ≤ 1.5) — say **"indistinguishable from zero"**, never a point estimate.
+> **PASSING adversarially:** the confound that would have killed it — CONFLICT sessions really are
+> smaller-drive (mean |drive| **37.65 vs 53.54 pts**) — is controlled by a |drive|-**decile**-matched
+> null and the object still sits at the **99.7th percentile**. All six composite constructions are
+> positive and **ES, RTY or YM alone each carries it**. A 1–2 minute fill delay costs **5 %**.
+>
 > ### 5. Two standing corrections found by harness checks looking for something else
 > **2026-07-17 is a TRUNCATED session** in the extended substrate — it ends 10:53 with 83 RTH bars
 > against a normal 390 — and `X9a` is built through the same `we_channels` path.
