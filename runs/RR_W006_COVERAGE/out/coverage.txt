@@ -1,0 +1,46 @@
+======================================================================================================================
+=== RR_W006 - IS BOOK COVERAGE ACTUALLY A GAP?  DIAGNOSTIC.  Nothing promoted.
+=== No dollar figure is attached to an absence. Pricing one needs a directional oracle,
+=== which is LEVEL 2 and not available money (OPPORTUNITY_LANGUAGE.md, binding).
+======================================================================================================================
+
+    in-window sessions                                    1,058
+    neither leg active                                      282
+    ... and |RTH move| in its own top decile (>= 295 pts)      32   <- the RAW E_NO_ENGINE mask
+
+======================================================================================================================
+=== 1. DIRECTION - P1/PCT is LONG-ONLY, so a top-decile move DOWN is not its gap
+======================================================================================================================
+    of the 32 sessions, moves UP   :   9  (28.1 %)
+                          moves DOWN :  23  (71.9 %)
+    mean |move| on the UP sessions   :   357.3 pts
+    mean |move| on the DOWN sessions :   489.3 pts
+
+    A long-only engine declining a large DOWN session is the design working, not a miss.
+    The coverage question therefore concerns AT MOST the 9 UP sessions.
+
+======================================================================================================================
+=== 2. SIGNAL vs POLICY - did the engine's signal fire and get suppressed, or never fire?
+======================================================================================================================
+    sessions matched to the substrate                        24
+    signal FIRED at least once but no trade resulted         16   (66.7 %)   <- POLICY, not coverage
+    signal NEVER fired all session                            8   (33.3 %)   <- genuine coverage absence
+
+    restricting to the 7 UP sessions, the ones a long-only book could own:
+      signal fired but no trade                               3
+      signal never fired                                      4   <- THE ACTUAL COVERAGE GAP
+
+======================================================================================================================
+=== 3. VERDICT
+======================================================================================================================
+    The coverage gap, correctly scoped, is 4 sessions out of 1,058 (0.38 %).
+
+    That is too few to support a new engine, and it cannot be priced without a directional
+    oracle. The remainder of the raw mask is either a DOWN move a long-only book is right to
+    decline, or a session where the signal DID fire and policy suppressed it - which is not a
+    coverage question at all, and whose policy half RR_W005 just closed.
+
+    COVERAGE moves from UNMEASURED to CLOSED. Nothing is promoted. No dollar figure is
+    attached to any absence.
+
+[15s] done

@@ -23,7 +23,7 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | — | ~~Is `X9a` a coherent standalone expert?~~ | — | ✅ **CLOSED — NOT ADMITTED** · `runs/RR_W003_X9A_CONTRACT/` |
 | — | ~~Does HIGHER-TIMEFRAME state carry anything at P1's decision events?~~ | — | ✅ **CLOSED — NULL** · `runs/RR_W004_HTF_INCREMENT/` |
 | — | ~~Is SELECTIVE box un-latching worth anything?~~ | — | ✅ **CLOSED** · `runs/RR_W005_BOX_LATCH_VALUE/` |
-| **1** | Is book COVERAGE actually a gap? *(reopened by `RR_W000`)* | **LOW** | RUNNABLE — the only runnable row left |
+| — | ~~Is book COVERAGE actually a gap?~~ | — | ✅ **CLOSED — 0.38 %** · `runs/RR_W006_COVERAGE/` |
 | 6 | Does a soft allocation with cash beat the static book? | — | **DE-PRIORITISED by RR_W001** · gated on #1 |
 | 7 | Does latent state add information beyond raw features? | — | **NOT RUN** — RR_W001's continuation rule forbids it |
 | 8 | Does transition uncertainty carry risk information? | — | blocked on #6 |
@@ -35,6 +35,10 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | 14 | Can position management (exit / reversal) be routed? | UNKNOWN | **EXCLUDED from V1** · directive §7 |
 | 15 | What integer-contract mapping implements portfolio B? | — | **OWNER CAPITAL DECISION** · OQ-6 |
 
+> ### ⚠️ **NO RUNNABLE ROW REMAINS.** Every question this repo can answer with data it holds
+> ### has now been asked and answered. What is left is **owner-gated acquisition** (rows with the
+> ### only high ceilings), **calendar-gated** forward reads, and **owner capital decisions**.
+>
 > ### ⚠️ **The action-value information question is now ASKED and ANSWERED: NULL.**
 > `RR_W002A` fitted it directly against a refitted dependence-preserving null and every gate but the
 > integrity check failed. Direct routing is de-prioritised **on evidence**, not on the letter of a
@@ -163,8 +167,6 @@ at the 77.0th — higher than either real arm.** Adding HTF made fold-sign consi
 **This was the last surface marked `LIGHT`.** The statement *"no tested current information surface
 separates P1 action quality"* is now **complete rather than partial**.
 
-## The one remaining runnable row
-
 | | |
 |---|---|
 | **question** | Does `X9a` have a reproducible decision-event contract and a coherent counterfactual, so it can be judged on its own rather than only inside the `PAIR23` basket? |
@@ -199,30 +201,21 @@ cost of latching is drawdown control being paid for, and `t` falls monotonically
 > gain as a cost avoided. Any finding in raw dollars must be re-expressed at fixed drawdown before
 > it is believed.
 
-## 1. Book coverage — reopened by an audit, ranked LOW on purpose
+## ✅ CLOSED — coverage is not a gap, and now it is measured (`RR_W006`)
 
-`runs/RR_W000_LEDGER_AUDIT/` found W119's `E_NO_ENGINE = 0` was **forced by construction** — the lens
-is "neither leg held a position", which makes `book_pnl == 0`, and it was counted *inside* the
-`book_pnl < 0` population. On the raw mask there are **32 sessions** where no engine was present while
-\|RTH move\| was top-decile (mean **452 pts**). *"Coverage is genuinely not the gap"* is **withdrawn**;
-coverage is **UNMEASURED**.
+`RR_W000` withdrew W119's `E_NO_ENGINE = 0` as a tautology, leaving coverage **UNMEASURED**. Measured
+properly on the raw mask: of the **32** sessions where neither leg held a position while
+\|RTH move\| was top-decile, **23 (71.9 %) were moves DOWN** — which a **long-only** book is right
+to decline. Of the 24 that matched the substrate, **16 had the signal FIRE and get suppressed**,
+which is a policy question, not coverage, and `RR_W005` closed its policy half.
 
-> **Why LOW.** `P1/PCT` is **long-only** and declines to trade for stated mechanical reasons, so "no
-> engine present" is frequently correct behaviour. Pricing those 32 sessions needs a directional
-> oracle — level 2, not available money. n = 32 cannot support a new engine.
+> ### **The coverage gap, correctly scoped, is 4 sessions of 1,058 — 0.38 %.**
+> 8 of the 32 did not match by date and are excluded; **even if all eight were UP-and-never-fired the
+> gap would be 1.1 %.** Too few to support an engine, and unpriceable without a directional oracle
+> (level 2, not available money).
 
-
-`INFORMATION_COVERAGE` carries **higher-timeframe** at **`LIGHT`**, evidenced only by `HTFMECH01`
-from **campaign #3** — a different campaign on a different object. It has never been tested at
-`P1/PCT`'s own decision events, so calling it closed would be false.
-
-> **Why LOW-MED and not higher.** HTF is a transformation of the NQ price path, which is already
-> `DEEP`. The adaptation document's own test — *"what NEW observable information does this add?"* —
-> answers "another transformation of NQ path already deeply measured", and that is explicitly the
-> lowest-prior category. The same reasoning applies to the scheduled-event **flag**, which W110
-> measured alone at **AUC 0.498**.
->
-> **It is on the list because it is genuinely un-closed, not because it is promising.**
+W119's original conclusion was **right for the wrong reason**. It now has an argument instead of an
+artifact of masking, and a number — 0.38 % — instead of a structurally guaranteed zero.
 
 ## 6–8. The economic router stack — de-prioritised, and the HMM is NOT RUN
 

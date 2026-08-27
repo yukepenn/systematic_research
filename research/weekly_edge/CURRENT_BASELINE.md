@@ -236,8 +236,13 @@ sessions **moving less**.
 > top decile (mean **452 pts**). Those are **absences, not losses**, and pricing them needs a
 > directional oracle, so **no dollar figure is attached.**
 >
-> **Consequence:** *"coverage is genuinely not the gap"* **is withdrawn.** Book coverage is
-> **UNMEASURED**, not closed. **This does not reopen turnover** — W121 killed that inference on
+> **Consequence:** *"coverage is genuinely not the gap"* was **withdrawn** as unsupported, and
+> **`RR_W006` has since MEASURED it**: of the 32 raw-mask sessions, **23 (71.9 %) were moves
+> DOWN** — which a **long-only** book is right to decline — and most of the rest had the signal
+> **fire and get suppressed**, which is policy, not coverage. **The gap, correctly scoped, is
+> 4 sessions of 1,058 = 0.38 %** (≤ 1.1 % even if all 8 unmatched sessions went the wrong way).
+> **W119's conclusion was right for the wrong reason, and now has an argument instead of a
+> masking artifact.** **This does not reopen turnover** — W121 killed that inference on
 > independent evidence, and the corrected, *weaker* contrast is more consistent with W121, not less.
 
 **W121** (`runs/WE_W121_TURNOVER/`) tested turnover as a *causal state*. Entry-count caps lose to
