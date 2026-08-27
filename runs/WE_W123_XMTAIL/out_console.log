@@ -1,0 +1,65 @@
+    348 XM trades, 336 with all 10 frozen features finite
+
+    ***  SMALL-N WAVE, stated first as the spec requires  ***
+    336 trades; the tail-loss group is 33 of them. A logistic on
+    ten features with ~35 positives is at the edge of what cross-validation can adjudicate.
+    A NULL RESULT HERE MEANS 'not detectable at n=348', NOT 'no such information exists'.
+
+==========================================================================================================================
+=== STAGE 1 - per-feature stratification, simple and first (section 26)
+==========================================================================================================================
+    TAIL_LOSS worst 10 %: n=34, mean $-4,758 vs $1,181 for the rest
+
+feature            tail mean   rest mean    tail med    rest med   perm p
+drive_pts             41.412      34.921      32.375      26.000    0.282
+abs_comp_z             0.445       0.543       0.265       0.461    0.240
+divergence             1.017       1.048       0.846       0.920    0.812
+nq_sigma               0.003       0.003       0.003       0.002    0.238
+morn_vol_rel           1.059       1.007       1.057       0.990    0.215
+gap_pts              123.463      89.382      76.250      62.250    0.039  *
+on_range_rel           1.406       1.132       1.310       1.023    0.005  *
+is_long                0.441       0.510       0.000       1.000    0.480
+dow                    1.912       1.957       2.000       2.000    0.883
+is_ann                 0.088       0.136       0.000       0.000    0.615
+
+==========================================================================================================================
+=== STAGE 2 - one regularised logistic, frozen features, W110b's CORRECTED null
+===   400 permutations, each RE-RUNNING the entire cross-validated fit.
+==========================================================================================================================
+target                                        n pos   real AUC  null mean  null p95   p-value
+TAIL_LOSS worst 10%                              34      0.513      0.490     0.611     0.380
+TAIL_LOSS worst 5%                               17      0.630      0.488     0.650     0.077
+TAIL_WINNER top 10% (W110 symmetry check)        34      0.727      0.495     0.603     0.000
+
+==========================================================================================================================
+=== GATES - every clause coded (section 29)
+==========================================================================================================================
+gate  spec                                                            observed   verdict
+G1    TAIL_LOSS AUC > permutation-null p95                      0.513 vs 0.611      FAIL
+
+    STAGE-A VERDICT: NO DETECTABLE TAIL-LOSS INFORMATION
+
+==========================================================================================================================
+=== THE SYMMETRY CHECK - W110 found tail WINNERS identifiable at AUC 0.735 on these
+===   same features and this same n. Are LOSERS?
+==========================================================================================================================
+    TAIL_LOSS worst 10%                          AUC 0.513   p 0.380   not identifiable
+    TAIL_WINNER top 10% (W110 symmetry check)    AUC 0.727   p 0.000   IDENTIFIABLE
+
+    If winners are identifiable on exactly these features and losers are not, that
+    ASYMMETRY is itself the finding: XM's right tail has a causal pre-entry signature
+    and its left tail does not.
+
+==========================================================================================================================
+=== SESSION-TAIL CONTRIBUTION - restated, AS AN UPPER BOUND ONLY. Not a policy.
+==========================================================================================================================
+    book worst decile: 106 sessions carrying $-189,670
+    XM active in 77 of them (72.6 %), against a 32.9 % overall activation rate
+    XM dollars inside the book's worst decile: $-231,273
+
+    An ORACLE that removed XM's own worst-decile trades would recover $161,778 - but that oracle knows the
+    outcome. Stage A just measured whether it is knowable in advance. Per the spec, no
+    veto is built, tested or costed here, and any future improvement of this kind is
+    classified as RISK POLICY or CATASTROPHE CONTROL, never as alpha (section 31).
+
+[done 18s]

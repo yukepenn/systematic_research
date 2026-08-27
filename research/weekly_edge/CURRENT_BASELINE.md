@@ -272,6 +272,17 @@ Caveats that travel with every quotation:
   ⚠️ **THE CAVEAT THAT TRAVELS WITH IT:** "tail winner" is defined by these same 348 trades.
   Cross-validation controls overfitting, it does not create a holdout. This is **descriptive**, and
   per the W110 spec **no filter was built from it.**
+  ⚠️ **RIDER ADDED BY W123 (2026-08-27).** On exactly these features, this n and this protocol,
+  tail **WINNERS** are identifiable (**AUC 0.727, p = 0.000**) and tail **LOSERS are NOT**
+  (**AUC 0.513, p = 0.380**). And `on_range_rel` is elevated in **both** tails — 1.620 for winners,
+  **1.406 for losers**, ~1.13 for the rest — so it is substantially a **MAGNITUDE** marker.
+  **"XM's big winners are predictable" must now travel with: "and the same state also marks its big
+  losers, which the model cannot separate."** The clean surviving statement: *XM's pre-entry state
+  predicts WHEN a session will be large; among large sessions it separates winners from the field
+  but not losers from it* — the profile of a convex, unstopped directional forecast, which is what
+  W102 established the object is. Per §11 no gate was built; **XM's architecture is unchanged and it
+  keeps ACTIVE COMPONENT status** (§10: session-tail composition does not withdraw weekly loss
+  diversification). `runs/WE_W123_XMTAIL/`.
 - ⚠️→✅ **W105 flagged the correlation as unstable; W110 measured what it actually means.** ρ(XM,
   P1) is **+0.081 full-window and +0.464 over the trailing 26 weeks** — both reproduce exactly.
   **But the 26-week series has ranged −0.537 to +0.566 with a median of +0.021 over these four
