@@ -1,0 +1,77 @@
+================================================================================================================
+=== MS01 - MICROSTRUCTURE STANDALONE FEASIBILITY. Cost first, model never.
+=== Spec committed at 0b6a088 before any of this ran. Nothing is promoted here.
+================================================================================================================
+    sessions: 58   substrate: data_microstructure_v2 (v2 only, untruncated)
+    ... 10/58 sessions  [5s]
+    ... 20/58 sessions  [11s]
+    ... 30/58 sessions  [17s]
+    ... 40/58 sessions  [23s]
+    ... 50/58 sessions  [28s]
+
+================================================================================================================
+=== 1. QUOTED SPREAD - measured, not assumed
+================================================================================================================
+    all session  median 4.000 ticks   mean 4.811   p90 7.000   p99 11.000   share == 1 tick 0.2 %
+    RTH only     median 3.000 ticks   mean 3.567   p90 5.000   p99 11.000   share == 1 tick 0.6 %
+
+================================================================================================================
+=== 2. THE MOVE vs THE TOLL, per horizon
+================================================================================================================
+    commission 4.36 $/ctrRT = 0.872 ticks
+    RTH median spread 3.000 ticks -> crossing both sides costs 3.000 ticks
+
+     horiz       rawN     effN   E|move|       sd  friction@0     @0.5     @1.0      MDE  MDE/E|mv|  verdict
+    --------------------------------------------------------------------------------------------------------
+       15s     90,454   48,752    22.943   33.618       3.872    4.872    5.872    0.426       0.02  OPEN
+       30s     45,227   24,888    32.903   47.845       3.872    4.872    5.872    0.849       0.03  OPEN
+       60s     22,610   12,442    46.499   66.952       3.872    4.872    5.872    1.681       0.04  OPEN
+      180s      7,536    4,061    80.867  116.496       3.872    4.872    5.872    5.119       0.06  UNDERPOWERED_vs_BREAKEVEN
+      300s      4,519    2,500   107.223  153.238       3.872    4.872    5.872    8.581       0.08  UNDERPOWERED_vs_BREAKEVEN
+
+================================================================================================================
+=== 3. BREAK-EVEN DIRECTIONAL ACCURACY - the economically interpretable quantity
+=== A forecaster right with probability p nets (2p-1)*E|move| gross. Break-even solves
+===     p* = 0.5 + friction / (2 * E|move|)
+================================================================================================================
+     horiz   E|move|  friction   p* @0 slip   p* @0.5   p* @1.0
+    ------------------------------------------------------------------
+       15s    22.943     3.872       58.44%    60.62%    62.80%
+       30s    32.903     3.872       55.88%    57.40%    58.92%
+       60s    46.499     3.872       54.16%    55.24%    56.31%
+      180s    80.867     3.872       52.39%    53.01%    53.63%
+      300s   107.223     3.872       51.81%    52.27%    52.74%
+
+================================================================================================================
+=== 4. SENSITIVITY OF THE VERDICT TO THE DEPENDENCE ASSUMPTION
+=== The design-effect ICC is an approximation. The verdict must not rest on it, so here is
+=== the MDE under three assumptions, including the MOST CONSERVATIVE one possible:
+===   raw      : every observation independent          (indefensible, shown for contrast)
+===   deff     : session-clustered design effect        (what section 2 used)
+===   1-per-day: ONE independent observation per session (maximally conservative)
+================================================================================================================
+     horiz  friction   MDE raw   MDE deff  MDE 1/day   verdict under 1/day
+    ----------------------------------------------------------------------------
+       15s     3.872     0.313      0.426     12.360   UNDERPOWERED_vs_BREAKEVEN
+       30s     3.872     0.630      0.849     17.591   UNDERPOWERED_vs_BREAKEVEN
+       60s     3.872     1.247      1.681     24.615   UNDERPOWERED_vs_BREAKEVEN
+      180s     3.872     3.757      5.119     42.831   UNDERPOWERED_vs_BREAKEVEN
+      300s     3.872     6.383      8.581     56.339   UNDERPOWERED_vs_BREAKEVEN
+
+    >>> Under the maximally conservative assumption the verdict FLIPS at every horizon.
+    >>> So this study does NOT establish that the lane is well powered. It establishes
+    >>> that power depends entirely on how much independent information a session carries,
+    >>> which is an empirical question a feasibility study cannot settle by assumption.
+
+================================================================================================================
+=== 5. CROSS-CHECK against the campaign's own independently-derived spread
+================================================================================================================
+    measured here (RTH median quoted spread)     3.000 ticks
+    W82 modelled spread for P1, frozen convention  2.888 ticks  ($14.44 / ctrRT)
+    difference                                     0.112 ticks
+
+    These were derived by completely different routes - W82 from a per-minute fill audit,
+    this from raw quoted BBO on a different session set. Agreement to ~0.1 tick is a real
+    check on the measurement, not a coincidence I arranged.
+
+[33s] done
