@@ -1,0 +1,129 @@
+=== 1058 sessions / 213 weeks [6s]
+    five trade lists built [43s]
+
+object        trades  ctrRT/wk     ctr-min        net $  pts/sess
+SOLAR          1,890     10.43     188,969      130,876      6.64
+P1             2,002     11.12     220,039      280,131     13.73
+X9a            1,946     10.79     221,327      233,781     11.52
+BMOM_std       1,043      4.90     275,497      252,258     12.14
+BMOM_L_std       677      3.18     174,275      130,808      6.32
+    (pts/session is gross of commission, the unit W67 used: Solar alone = 7.26)
+
+==========================================================================================================================
+=== PHASE 1: FUSED vs PORTFOLIO, matched in CONTRACT-MINUTES to P1
+==========================================================================================================================
+object                      scale     wk $    wk+%  strk     maxDD   top5DD     worst  wk$@fixDD     eff
+SOLAR                        1.16      539   47.4%     9    26,194   18,019   -10,296        417   0.052
+P1                           1.00    1,154   52.6%     8    27,292   18,436    -7,579        856   0.152
+X9a                          0.99      935   52.1%     8    26,492   17,658    -8,763        715   0.107
+BMOM_std                     0.80      895   56.8%     4    35,624   22,200   -13,554        509   0.066
+
+PORT_SB  (Solar+BMOM)        0.95      750   55.9%     4    24,134   12,718    -8,482        629   0.088
+PORT_SBL (Solar+BMOM_L)      1.21      627   53.5%     6    35,769   19,465   -12,133        355   0.052
+PORT_XB  (X9a+BMOM 2:3)      0.91      917   57.7%     7    15,693   10,373    -7,871      1,183   0.116
+
+    THE DECISION RULE: PORT_SB vs P1, same two ingredients, matched contract-minutes
+      weekly $ at fixed DD     portfolio      629.4   fused      855.8   FUSED
+      positive-week %          portfolio       55.9   fused       52.6   PORTFOLIO
+      raw mean top-5 DD        portfolio   12,717.6   fused   18,435.6   PORTFOLIO
+      -> portfolio wins 2/3  =>  owner's hypothesis SUPPORTED
+
+==========================================================================================================================
+=== PHASE 2: E_b - ENTRY TIMING AND OVERLAP (the owner's named measurements)
+==========================================================================================================================
+pair                    both-sess %  minute Jaccard  A solo %  B solo %  OPPOSED %
+SOLAR / BMOM_std              46.7%            4.4%     87.8%     93.5%      34.2%
+X9a / BMOM_std                54.7%            8.2%     80.5%     87.7%      13.6%
+SOLAR / X9a                   76.0%           75.6%      6.1%     20.5%       0.0%
+P1 / BMOM_std                 60.5%            8.7%     79.2%     87.0%       2.8%
+    'OPPOSED %' is the share of SHARED minutes in which the two hold opposite signs -
+    the minutes a single netted brokerage account would cross internally. PHASE 5.
+
+    entry minute-of-day, median and IQR:
+      SOLAR        median 09:43   IQR 05:44 - 15:24   RTH share 31.5 %
+      P1           median 09:40   IQR 06:06 - 14:35   RTH share 35.0 %
+      X9a          median 09:40   IQR 05:55 - 15:46   RTH share 32.6 %
+      BMOM_std     median 09:34   IQR 09:33 - 09:39   RTH share 100.0 %
+      BMOM_L_std   median 09:36   IQR 09:33 - 09:54   RTH share 100.0 %
+
+==========================================================================================================================
+=== PHASE 3: E_c - IS THE PORTFOLIO'S ADVANTAGE THE DISCARDED SHORT LEG?
+==========================================================================================================================
+                               wk $    wk+%    top5DD  wk$@fixDD     worst
+P1 (fused, long-only)         1,154   52.6%    18,436        856    -7,579
+PORT_SBL (long-only BMOM)       627   53.5%    19,465        355   -12,133
+PORT_SB  (both sides)           750   55.9%    12,718        629    -8,482
+
+    E_c isolated = PORT_SB minus PORT_SBL (the ONLY difference is B-MOM's short leg):
+      weekly $ at fixed DD      +274.2
+      positive-week %            +2.35
+      raw mean top-5 DD         -6,747  (negative = better)
+    Combiner effect  = PORT_SBL minus P1 (both long-only; the ONLY difference is fusion):
+      weekly $ at fixed DD      -500.7
+      positive-week %            +0.94
+      raw mean top-5 DD         +1,029  (negative = better)
+
+==========================================================================================================================
+=== PHASE 4: E_a - IS IT THE TWO INDEPENDENT RISK BUDGETS?
+==========================================================================================================================
+    TWO BUDGETS = each sleeve carries its own box (the incumbent portfolio form).
+    ONE BUDGET  = the sleeves are RE-SIMULATED WITH NO BOX AT ALL, and a single
+                  portfolio-level box is applied to the combined stream.
+    A first draft of this phase layered an EXTRA box on top of the per-sleeve boxes,
+    which tests 'three budgets', not 'one'. That draft is discarded, not reported.
+
+    box-free sleeve rebuild: SOLAR 3,090 tr  X9a 2,886 tr  BMOM_std 1,450 tr  BMOM_L_std 713 tr
+
+    PORT_SB
+                               wk $    wk+%    top5DD  wk$@fixDD     worst
+      TWO budgets               750   55.9%    12,718        629    -8,482
+      ONE budget                330   54.5%    11,869        332    -6,644
+      NO budget (control)       735   60.1%    11,750        923   -10,092
+      vs FUSED P1             1,154   52.6%    18,436        856    -7,579
+
+    PORT_XB
+                               wk $    wk+%    top5DD  wk$@fixDD     worst
+      TWO budgets               917   57.7%    10,373      1,183    -7,871
+      ONE budget                167   54.5%    13,485        157    -5,783
+      NO budget (control)       810   61.5%    10,881      1,110    -7,611
+
+    weight sensitivity for PORT_SB - reported for SHAPE only. No weight is selected on
+    the outcome; a best-of-K choice would need a family-wise null (repo rule, W53).
+  w_BMOM     wk $    wk+%    top5DD  wk$@fixDD
+     0.0      539   47.4%    18,019        417
+     0.2      634   56.8%    13,233        533
+     0.3      676   57.7%    11,462        590
+     0.4      715   56.8%    11,560        648
+     0.5      750   55.9%    12,718        629
+     0.6      783   54.0%    14,450        607
+     0.8      843   56.3%    17,782        567
+     1.0      895   56.8%    22,200        509
+
+==========================================================================================================================
+=== PHASE 5: weekly rho, underwater rho, per-year
+==========================================================================================================================
+weekly rho           SOLAR          P1         X9a    BMOM_std  BMOM_L_std
+SOLAR                1.000       0.602       0.655       0.020       0.027
+P1                   0.602       1.000       0.613       0.287       0.407
+X9a                  0.655       0.613       1.000       0.009       0.060
+BMOM_std             0.020       0.287       0.009       1.000       0.605
+BMOM_L_std           0.027       0.407       0.060       0.605       1.000
+
+underwater rho       SOLAR          P1         X9a    BMOM_std  BMOM_L_std
+SOLAR                1.000       0.614       0.412       0.225       0.150
+P1                   0.614       1.000       0.576       0.120       0.202
+X9a                  0.412       0.576       1.000      -0.171      -0.191
+BMOM_std             0.225       0.120      -0.171       1.000       0.506
+BMOM_L_std           0.150       0.202      -0.191       0.506       1.000
+
+per-year wk $                   2022      2023      2024      2025      2026
+SOLAR                            442       201       467     1,069       358
+P1                               998       140     1,753     2,103       251
+X9a                              635        -0     1,981       623     1,430
+BMOM_std                       1,265       657       878     1,449         6
+BMOM_L_std                       988     1,152       664     1,019      -671
+PORT_SB  (Solar+BMOM)            930       472       711     1,294       149
+PORT_SBL (Solar+BMOM_L)          704       657       562     1,045      -136
+PORT_XB  (X9a+BMOM 2:3)          921       298     1,481       997       784
+
+[done 68s]
