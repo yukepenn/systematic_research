@@ -1,0 +1,73 @@
+run_id: WE_W121_TURNOVER
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "POST-W118 owner directive, sections 11, 12, 19, 20, 21, 26, 36. Raised directly by W119."
+
+title: >
+  TURNOVER AS A CAUSAL STATE. W119's decomposition says the book does not lose because an engine was
+  absent (E_NO_ENGINE = 0 sessions) and does not lose because the market fell (TREND-DOWN +0.8 pp).
+  It loses on sessions where P1 takes 3.042 entries against 1.377, for 18 % FEWER contract-minutes,
+  while the market moves 31 % LESS. This wave asks the one question that follows: DOES THE MARGINAL
+  ENTRY OF A SESSION HAVE DECLINING EXPECTANCY, AND IS THAT KNOWABLE AT THE TIME IT IS TAKEN?
+
+why_this_is_causal_and_not_a_regime_forecast: >
+  The state is "how many entries have I already taken in this session". It is known exactly, with no
+  estimation and no lookahead - the engine counts its own fills. It is NOT a forecast of what kind
+  of session today will be, which is the family W109 and W113 already closed (AUC 0.61-0.62
+  information, but a veto built on it fails on both losing fades and the profitable baseline).
+
+# ---------------------------------------------------------------- the objection, stated first
+the_objection_this_spec_must_survive:
+  what: >
+    Entry count is correlated with intra-session P&L: a session where P1 is on its third entry by
+    noon is usually a session where the first two were stopped out. So "cap the entry count" is
+    adjacent to "stop trading after you have lost today" - and INTRADAY LOSS-REACTIVITY IS A CLOSED
+    FAMILY in this repo. The coverage matrix records three independent constructions converging:
+    SMV2AH was beaten by a COUNT-MATCHED RANDOM-HALT PLACEBO in 16 of 16 cells, SMV2V's
+    time-under-water delta was literally zero days, and SM03B's 2006-21 max drawdown was 6.1-6.8 %
+    WORSE.
+  therefore: >
+    The COUNT-MATCHED RANDOM-HALT PLACEBO is the binding control of this wave, not an optional
+    secondary. It is the instrument that killed the family three times and it must kill this too
+    unless something genuinely different is present. The wave additionally reports the correlation
+    between entry ordinal and cumulative session P&L at that point, so the reader can see directly
+    how much of "entry count" is really "already losing today".
+
+# ---------------------------------------------------------------- STAGE A: information
+stage_a:
+  question: "conditional on having already taken N-1 entries this session, what is the expectancy of the Nth?"
+  report:
+    - "per-ordinal expectancy: n, mean net $, hit rate, mean holding minutes, mean size, for N = 1, 2, 3, 4, 5+"
+    - "the unconditional mean beside every row - a conditional mean without its unconditional reference is uninterpretable"
+    - "the same table split by whether the session's box had already fired"
+    - "correlation and a 2x2 table between entry ordinal and cumulative session P&L before that entry - the honest measure of how much this is loss-reactivity in disguise"
+    - "mean entry MINUTE by ordinal, because a count cap is partly a time-of-day cap and the two must be separated"
+  falsifier_for_stage_a: "expectancy does not decline in N, or the decline is not monotone-ish over N = 1..4."
+
+# ---------------------------------------------------------------- STAGE B: policy
+stage_b:
+  run_only_if: "Stage A shows a decline. Section 19 - information first, policy second, and never conflate them."
+  policy: "cap P1/PCT at K new entries per session, K in {1, 2, 3, 4}. Positions already open are untouched; only NEW entries are blocked, using the gfills_blocked engine W113 built and B1-verified byte-identical."
+  primary: "weekly $ at fixed $20,245 max drawdown for the capped baseline, best over K, CHARGED as a best-of-4."
+  falsifiers_ALL_of_which_must_be_cleared:
+    - "the capped book must beat the uncapped baseline"
+    - "it must beat the COUNT-MATCHED RANDOM-HALT PLACEBO at its 95th percentile - 200 draws, each removing the SAME NUMBER of entries per session, chosen uniformly at random among that session's entries"
+    - "it must beat a TIME-MATCHED HALT - stop taking new entries after the clock minute that removes, on average, the same number of entries. This separates 'stop after K trades' from 'stop trading in the afternoon'"
+  note_on_the_null_construction: >
+    Per the W116b correction and directive section 21, the placebo draws are generated ONCE PER
+    SESSION and shared across the K arms so the four arms retain their real dependence. Independent
+    draws per arm would inflate the best-of-4 bar.
+
+secondary:
+  - "the same on 2006-2021, SECTION 2 DIAGNOSTIC ONLY and explicitly not a veto"
+  - "effect on the FULL BOOK (P1/PCT capped + XM unchanged) at inverse-vol, since the book is what matters"
+  - "trades removed, contract-minutes removed, and friction saved - the cap's mechanical effect before any edge claim"
+  - "the standard recency dashboard on the best K"
+
+decision_rule:
+  - "NOTHING PROMOTED. A pass buys a preregistration for a baseline-change wave, which is the only route by which P1/PCT itself may be modified."
+  - "If the cap beats the baseline but NOT the count-matched placebo, the verdict is EXPOSURE REDUCTION, not information - the exact W109 lesson, where a veto's selectivity ratio sat at 0.74-1.12 and the whole effect was trading less."
+  - "If the cap beats both placebos, the finding is that TURNOVER IS A CAUSAL STATE and it is the first policy-layer improvement to the incumbent engine this campaign has found."
+  - "If Stage A shows no decline, the wave stops at Stage A and W119's turnover signature is a property of losing SESSIONS rather than of marginal ENTRIES - which is still a result and must be reported as one."
+  - "No K, placebo construction, clock or cap definition is re-chosen after results are seen."
