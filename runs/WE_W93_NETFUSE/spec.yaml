@@ -1,0 +1,106 @@
+run_id: WE_W93_NETFUSE
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-26
+status: PREREGISTERED
+authority: >
+  W92 decision rule: "If NETFUSE passes H2 and H3 it becomes a CHALLENGER and must then face the
+  corrected rolling gate with the oracle battery as a precondition, a specificity null, and
+  walk-forward - none of which is in this wave's scope." It passed both. This is that wave.
+  Owner directive sections 9 (nulls/gates are binding) and 8 (do not freeze research).
+
+title: >
+  NETFUSE_1 as a challenger to P1. Five preregistered conditions. It must pass at least four,
+  including the specificity null, or it is not adopted - and it is not adopted in this wave
+  under ANY outcome.
+
+# ---------------------------------------------------------------------------------------------
+# 0. THE OBJECT, FROZEN
+# ---------------------------------------------------------------------------------------------
+object: |
+  NETFUSE_1:
+    tgt[i] = +1 if vote_long(TG_for(bmom))  >= 0.5
+             -1 if vote_short(TG_for(bmom)) >= 0.5
+              0 otherwise (and 0 if both - measured at 0 bars, so this branch is dead)
+    sfills(D, tgt, size 1 both sides, halt = -1300, target = +1000)
+  Not one parameter of this was chosen by W92. halt/target/threshold/throttle/delta gate are all
+  inherited from the incumbent. The ONLY new decision is "net the two sides into one book".
+
+w92_results_carried_in: |
+  matched contract-minutes to P1:  wk$@fixedDD 1,148 vs 914 | wk+% 59.2 vs 54.0 | streak 5 vs 8
+  maxDD 16,212 vs 26,642 | top5DD 10,597 vs 17,882 | worst -6,738 vs -7,496 | 2026 575 vs 287
+  full-window t 3.91, t24 t 2.84, t12 t 1.46 (and t12 wk+% is 52.8 % - decaying)
+
+# ---------------------------------------------------------------------------------------------
+# 1. THE FIVE CONDITIONS - all fixed before the read
+# ---------------------------------------------------------------------------------------------
+C1_gate:
+  test: "corrected rolling gate vs P1 over 25 rolling 24-month windows, EXPOSURE-MATCHED in
+         contract-minutes, at W89's candidate-specific costs. Legs: (x1) weekly $ at a fixed
+         $20,245 max drawdown, (x2) positive-week %, (x3) RAW mean top-5 drawdown."
+  precondition: "ORACLE BATTERY FIRST. Four strictly-dominant synthetic objects must score
+                 ALL-THREE >= 75 %. If any fails, NO VERDICT IS ISSUED (W85 rule)."
+  bar: "ALL-THREE in > 50 % of windows."
+
+C2_specificity_null:
+  question: "is this 'netting a long book with ANY roughly-similar short book', or these two?"
+  construction: >
+    SESSION-WISE CIRCULAR SHIFT of the SHORT target array by k sessions, k = 1..200, re-netted
+    against the UNSHIFTED long target under the same single box. This preserves the short book's
+    firing rate, run-length distribution, intraday shape and marginal P&L distribution, and
+    destroys ONLY which session it lands on - i.e. only the alignment between the two books.
+    It is the null W74 section 5 named and the one W78 used to reach its 98th percentile.
+  bar: ">= 95th percentile on the mean top-5 drawdown AND on positive-week %."
+  falsifier_stated_plainly: >
+    if the shifted versions do as well, then the finding is 'adding a decorrelated short book to
+    a long book inside one risk budget helps', which is GENERIC portfolio arithmetic and already
+    known (W74). It would NOT be a property of the mirrored Solar short specifically.
+
+C3_walk_forward:
+  note: "NETFUSE_1 has no parameter this wave chose, so a parameter walk-forward tests the
+         INHERITED constants, not a fit. That is still the right test - it asks whether a trader
+         refitting honestly would have chosen them."
+  test: >
+    W29's protocol: refit (halt, target) quarterly on a trailing year, trade only the next
+    quarter. Grid halt in {800, 1000, 1300, 1600, 2000}, target in {600, 800, 1000, 1400, None}.
+    Report retention vs the fixed quote, choice churn, and how often (1300, 1000) is chosen.
+  bar: "retention >= 80 % of the fixed-quote weekly $ at fixed drawdown (W29's own bar)."
+
+C4_deep_history:
+  test: >
+    Run NETFUSE_1 on 2006-2021 (4,279 sessions, 16 years the combination has never touched) at
+    FROZEN parameters, using the cached deep member matrix from W80. Compare its RISK GEOMETRY to
+    P1's on the same window.
+  bar: "mean top-5 drawdown at matched nominal exposure at least 25 % smaller than P1's - the
+        same bar W87 used, so the two are comparable."
+  binding_caveat: >
+    This validates RISK GEOMETRY, not modern expected return. The quality-score features, the
+    delta gate and the vote threshold were all specified on 2022-2026. W82's $14.65 spread does
+    NOT transport to 2006-2021 (NQ 1,600-16,000) so NO dollar cost line is quoted deep - only
+    commission, and points/session.
+
+C5_concentration:
+  test: "top-k-day concentration: remove the best 1, 3, 5 and 10 sessions and re-measure. W76's
+         standing lesson - three objects 'won' its forward window on 1-3 days each."
+  bar: "the object stays positive over the full window and over the trailing 24 months with its
+        best 5 sessions removed."
+
+# ---------------------------------------------------------------------------------------------
+# 2. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "NOTHING IS ADOPTED IN THIS WAVE UNDER ANY OUTCOME. A challenger that passes goes to the
+     owner as a recommendation with its full defect list, and the owner decides."
+  - "4 or 5 of 5 including C2 -> 'the strongest object this campaign has produced', stated with
+     every failure attached."
+  - "C2 fails -> the headline becomes 'generic portfolio arithmetic, correctly applied' and the
+     object is described that way in every document, exactly as W86 describes the pair."
+  - "C1 fails -> challenger dies. The gate is the campaign's primary instrument and it has been
+     power-checked."
+
+honesty_clauses:
+  - "2022-2026 is in-sample for every ingredient. There is no unspent forward window in this
+     campaign. C4 is the only genuinely unseen data and it is a RISK test."
+  - "NETFUSE_1's trailing-12-month positive-week rate (52.8 %) is BELOW its full-window rate
+     (59.2 %). Whatever else this wave finds, that decay is reported in the headline."
+  - "Weekly rho vs P1 is +0.556 and vs SHORT is +0.719. It is NOT an independent stream and may
+     never be counted as one in a census."
