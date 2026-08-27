@@ -1,0 +1,76 @@
+run_id: WE_W104_XMGENERAL
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: >
+  Owner directive V4 sections 7 (TRACK G) and 21, with the target taken from W103's capture ledger
+  v3 and from nowhere else.
+
+title: >
+  DOES "NQ MOVES ALONE, SO NQ KEEPS MOVING" GENERALISE ACROSS THE SESSION, OR IS IT AN OPENING-
+  AUCTION PHENOMENON? W101/W102 found it at the RTH open. W103's ledger says the base still takes
+  0.2-5.1 % of every segment and that the OVERNIGHT segments have a 120-minute recognition
+  half-life - the most forgiving timing on the board. The cross-market data covers all 23 hours.
+
+# ---------------------------------------------------------------------------------------------
+# 1. THE CONSTRUCTION - identical in every segment, nothing re-fitted
+# ---------------------------------------------------------------------------------------------
+construction: >
+  In each segment S: anchor at S's first bar, decide at anchor + off(S), fill at the NEXT bar's
+  open, hold to S's last bar, size 1, no stop (W102's stop curve found none helps at any distance).
+  drive = sign(price_decision - price_anchor); the ES/RTY/YM composite is built over the SAME
+  window, each market's return divided by its own trailing-60-session sigma, averaged; the trade is
+  taken ONLY when the composite's sign is OPPOSITE the drive. This is W102c's corrected definition
+  transplanted, with no constant re-chosen.
+offset_rule: "off(S) = max(15, round(0.15 * length(S))) minutes. Fixed here; not scanned."
+segments_tested:
+  ON_ASIA: "18:00 -> 23:59, decide +54"
+  ON_EU:   "00:00 -> 07:59, decide +72"
+  PRE:     "08:00 -> 09:29, decide +15"
+  MORN:    "09:45 -> 11:29, decide +16"
+  MID:     "11:30 -> 13:29, decide +18"
+  AFT:     "13:30 -> 15:44, decide +20"
+  POST:    "16:00 -> 16:59, decide +18"
+excluded: "OPEN and CLOSE are 15 minutes long - there is no room to decide inside and still hold."
+reference: "the known RTH-open object (anchor 09:31, decide 09:45, hold to 15:45) is carried
+            through unchanged as the reference row, not as a test."
+
+# ---------------------------------------------------------------------------------------------
+# 2. PRIMARY - one number, no selection
+# ---------------------------------------------------------------------------------------------
+primary: >
+  The EQUAL-WEIGHT MEAN of $/trade across all seven segments. One statistic, chosen before the run
+  precisely so that no segment can be cherry-picked. It tests GENERALISATION, which is the actual
+  question.
+falsifier: >
+  The seven-segment mean is <= 0, OR <= the 95th percentile of a best-matched coin null on the same
+  statistic. Then the mechanism is an opening-auction phenomenon and the RTH-open object stands
+  alone - which would itself be a mechanism statement worth having.
+secondary:
+  - "each segment individually, with a BEST-OF-7 coin null (200 draws, sign replaced by a fair
+     coin on the same sessions, maximum over the seven cells recorded). Seven cells will produce
+     one good-looking number by construction."
+  - "each segment's own p* = 0.5*(1 + cost/E|move from decision to segment end|), computed not
+     assumed, so a cell can be read against its own bar."
+  - "the OVERNIGHT tax: W96 measured overnight friction at $19.77/ctrRT against P1's $14.52. Every
+     overnight cell is charged its OWN minute-of-day spread from W82's committed profile, and the
+     realised rate is printed per segment so the reader can see what the night costs."
+  - "does the effect concentrate near a session open (18:00 CME, 09:30 RTH)? That is the mechanism
+     question and it is answered whichever way the primary goes."
+  - "weekly correlation of every surviving cell with P1/PCT and with the RTH-open object - a
+     second copy of the same trade is not a second sleeve."
+
+# ---------------------------------------------------------------------------------------------
+# 3. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "NOTHING IS PROMOTED. A pass buys a preregistration for an engine, nothing more."
+  - "No offset, threshold or composite is re-chosen after seeing a result. If off(S) is wrong that
+     is a finding about off(S) and a new wave."
+  - "Any surviving cell inherits every XM_CONFLICT caveat verbatim, including REGIME_LOCAL BY DATA
+     AVAILABILITY - the cross-market substrates begin 2022-01-02 and no deep test can exist."
+  - "A cell that clears its own p* but not the best-of-7 null is WEAK, not SUPPORTED."
+b1_check: >
+  The zero-lag known-answer test on the ES/RTY/YM join is re-run and printed. It passed in W101 on
+  RTH minutes; the overnight hours are thinner and a join that is sound at 10:00 is not
+  automatically sound at 03:00, so the lag profile is recomputed on OVERNIGHT bars specifically.
