@@ -70,7 +70,9 @@ ES/RTY/YM composite is moving the opposite way**. Fill at the 09:46 open, hold t
 | t | 4.16 | **4.90** |
 
 ⚠️ **Quote the range, not a point: +45 % (income-matched, W102) to +64 % (inverse-vol, W103).**
-The drawdown halving is the more robust half of the result.
+**The STRUCTURAL result — that adding XM substantially reduces drawdown overlap with P1/PCT — is
+the sturdy one. The exact income number is not a forecast and is the weaker half.** Max drawdown
+and top-5 drawdown roughly halve in the studied modern window; that is what is believable.
 
 **Why it works and nothing else does:** ρ(weekly, P1) = **0.081**. Every other object in the
 campaign correlates 0.27–0.72 with P1. Adding the 2:3 pair on top makes the portfolio **worse**
@@ -113,10 +115,16 @@ and because W103 now shows it **adds nothing on top of P1 + XM_CONFLICT**.
 
 ## 4. WHAT THE BASE DOES NOT DO
 
-From `runs/WE_W103_CONSOLIDATE/` (capture ledger v3), against an executable ceiling of one
-perfect-direction trade per segment:
+> ⚠️ **READ `OPPORTUNITY_LANGUAGE.md` BEFORE QUOTING ANY NUMBER IN THIS SECTION.** The ceiling
+> below is `EX_POST_EXECUTION_FEASIBLE_ORACLE` — **it knows the future direction of each segment.**
+> It is an upper bound after turnover and friction constraints, **not causally available money**,
+> and the gap to what we capture is not money we failed to collect. The four levels are
+> `EX_POST_PATH_ORACLE` > `EX_POST_EXECUTION_FEASIBLE_ORACLE` > `CAUSAL_MODEL_FRONTIER` >
+> `REAL_SYSTEM_CAPTURE`, and **`CAUSAL_MODEL_FRONTIER` has never been measured in this repo.**
 
-| segment | executable ceiling / session | base takes | **covered** | break-even accuracy |
+From `runs/WE_W103_CONSOLIDATE/` (capture ledger v3):
+
+| segment | **level-2 oracle** $/session | base takes | **ratio** | p\* *(this geometry only)* |
 |---|---|---|---|---|
 | MORN 09:45–11:29 | $1,744 | $78 | **4.4 %** | **0.5048** |
 | ON_EU 00:00–07:59 | $1,224 | $18 | 1.5 % | 0.5078 |
@@ -124,7 +132,8 @@ perfect-direction trade per segment:
 | AFT 13:30–15:44 | $1,170 | $3 | **0.3 %** | 0.5058 |
 | ON_ASIA | $1,026 | $39 | 3.8 % | 0.5139 |
 
-> **After 103 waves the base captures 0.2 %–5.1 % of what is executable in every segment**, and
+> **After 103 waves the base captures 0.2 %–5.1 % of the LEVEL-2 EX-POST ORACLE in every
+> segment** — a ceiling that knows each segment's direction in advance — and
 > ex-post movement per session has **risen 83 %** while P1's own production went negative.
 > By class: TREND-DOWN and REVERSAL have **flipped positive** for the first time (+$195, +$27
 > income-matched, from −$495 and −$64) — with **$10,953 and $9,073 per session of those classes
@@ -140,6 +149,7 @@ perfect-direction trade per segment:
 | substrate | `load_deep(..., extend=True)` — deep file to 2026-05-29 joined to `SM1M_SUBSTRATE` |
 | cost | $4.36/ctrRT commission **inside** the fill engine + candidate's own contract-weighted spread from `WE_W82_FILLAUDIT/out/spread_by_minute.csv` (P1 $14.44, BMOM $13.02, XM_CONFLICT $12.50) |
 | headline metric | weekly $ at a fixed **$20,245** max drawdown — algebraically scale-invariant |
+| opportunity language | **`OPPORTUNITY_LANGUAGE.md` is binding.** Every ceiling figure names its level or is not quotable |
 | exposure convention | **income-matched** (W97: the only one with no free parameter) |
 | seal | ≥ **2026-08-01 VIRGIN**; **2026-05-31 → 07-31 BURNED** |
 | known data holes | **2026-07-17 is truncated** (ends 10:53, 83 RTH bars vs 390); spread profile has 1,380 minutes, the missing 60 being the 17:00–17:59 CME break |

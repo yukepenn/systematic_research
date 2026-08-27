@@ -1,5 +1,14 @@
 # WE_W103 — WHAT IS THE BASE, ACTUALLY? · REPORT
 
+> ⚠️ **LANGUAGE CORRECTION (2026-08-27, owner directive V4 §2), binding on every number below.**
+> `SIGN_ORACLE` **knows the future direction of each segment.** It is
+> `EX_POST_EXECUTION_FEASIBLE_ORACLE` — an upper bound after turnover and friction, **NOT causally
+> available money** — and it must never be called a causal or executable opportunity. See
+> `research/weekly_edge/OPPORTUNITY_LANGUAGE.md`. The durable finding of this wave is the **bar**,
+> not the ceiling: for the one-trade-per-segment geometry, break-even directional accuracy is
+> **≈50.5 %–51.4 %, MORN ≈50.48 %** — and that figure is **geometry-specific and does not
+> generalise to other strategy shapes**.
+
 Preregistered (`spec.yaml`, committed at `f68839d` before any result was read). Owner directive V4
 TASK 12 + TASK 13, §12.
 
