@@ -1,0 +1,119 @@
+run_id: WE_W90_BMOMSIDES
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-26
+status: PREREGISTERED
+authority: "OWNER DIRECTIVE post-W88 section 7 (decompose BMOM long and short)"
+
+title: >
+  B-MOM is genuinely bi-directional and the campaign has never treated its two sides as
+  separable objects. Test them as sleeves, not as a decomposition table.
+
+# ---------------------------------------------------------------------------------------------
+# 0. WHY THIS IS NOT A REPEAT OF W38 / W61 / W75 / W78
+# ---------------------------------------------------------------------------------------------
+context:
+  - "The campaign rejected a short sleeve FIVE times (W38, W39, W61, W75, W78). Every one of
+     those was a MIRRORED SOLAR RATCHET - the long side's vote with the signs flipped, or the
+     long side's quality features applied to short entries. The charter records this explicitly:
+     'every short test to date used the LONG side's feature signs'."
+  - "B-MOM's short side is NOT that. It is the displacement channel's own negative leg:
+     price has travelled further BELOW the 09:31 open than it typically does by this time of
+     day. It is the same estimator, not a sign flip of a different estimator."
+  - "The owner's instruction is explicit: 'The campaign repeatedly failed with mirrored Solar
+     shorts. Do NOT infer short alpha is weak.' and 'Do not optimize away a useful short sleeve
+     just because its standalone return is lower.'"
+
+established_going_in:
+  - "W89 FACT: BMOM is 1,043 trades / 1,043 contract RT / 4.90 per week / 100 % RTH / $12.99 per
+     contract round turn / 0 % size-2."
+  - "W73 FACT (drift decomposition): the mirrored SHORT sleeve is $121,454 = -$23,078 drift +
+     $144,532 timing. Short timing alpha is real; it fights a rising-market headwind."
+  - "W89 FACT: BMOM alone t12 = $73,671/yr at 60.4 % positive weeks and a $44,603 max drawdown -
+     the most productive and least safe single object in the repository."
+
+# ---------------------------------------------------------------------------------------------
+# 1. THE TWO MEASUREMENTS, AND WHY BOTH ARE NEEDED
+# ---------------------------------------------------------------------------------------------
+measurement_A_attribution:
+  what: "split the EXISTING BMOM object's realised trade list by x['d'] into long and short."
+  reads: "where the money in the object we already have comes from."
+  caveat_stated_in_advance: >
+    These two series are NOT independent objects. The session box (-$1,300 / +$1,000) halts on
+    COMBINED realised session P&L, so a long loss can stop a short trade from ever opening and
+    vice versa. An attribution split therefore cannot be traded and must never be quoted as if
+    it were a sleeve. This is exactly the error class the campaign made with 'the short sleeve
+    is decorrelated' before W88 recomputed it in the right unit.
+
+measurement_B_sleeves:
+  what: >
+    RE-SIMULATE each side as its own object with its OWN session box:
+      BMOM_L  = sfills(D, where(bmom > 0, 1, 0), halt=1300, target=1000)
+      BMOM_S  = sfills(D, where(bmom < 0, -1, 0), halt=1300, target=1000)
+      BMOM_B  = the incumbent (both sides, one shared box)
+  reads: "what could actually be traded, and whether one box or two is better."
+  note: "W51b/W53 already established for the day/night split that the session box belongs on the
+         COMBINED book - per-book boxes were 25 % worse on drawdown. This is the direct test of
+         whether the same holds for the long/short split, and it may not, because the two sides
+         are mutually exclusive in time within a session whereas day and night are sequential."
+
+# ---------------------------------------------------------------------------------------------
+# 2. HYPOTHESES AND FALSIFIERS
+# ---------------------------------------------------------------------------------------------
+H1:
+  statement: "BMOM's short leg has standalone positive expectancy over the trailing two years."
+  gate: "owner charter amendment 2 (a): effective over roughly the trailing two years, reported
+         with sessions / weeks / trades / mean / SE. Old-era weakness is NOT disqualifying."
+  falsifier: "BMOM_S trailing-24-month mean weekly <= 0 -> the short leg fails the only
+              chronology gate and is carried as attribution only."
+
+H2:
+  statement: "BMOM_L and BMOM_S are near-independent WEEKLY (rho < 0.2), so they are two streams
+              and not one."
+  unit: "WEEKLY rho. W85 defect 3 / W88: daily rho is the wrong unit and every prior census used it."
+  falsifier: "weekly rho >= 0.2 -> they are one stream and the campaign's stream count does not
+              rise. This is the honest outcome and it is stated in advance because the campaign
+              has an incentive to want the answer to be yes."
+
+H3:
+  statement: "splitting the box (two independent boxes) beats one shared box."
+  falsifier: "BMOM_L + BMOM_S summed is worse than BMOM_B on >= 2 of {weekly $ at fixed DD,
+              positive-week %, raw mean top-5 DD} -> the shared box stays."
+
+H4:
+  statement: "the short leg's contribution to the {BMOM, X9a} basket is SPECIFIC, not generic."
+  null: >
+    count-matched random-subset null. Draw 200 random subsets of BMOM's trades matched on
+    (a) trade count and (b) total contract-minutes of exposure, and compare the basket's three
+    gate legs with the real short leg against the null distribution. Per repo rule N1 != N2 the
+    count-matched null is the binding one and it must be exposure-matched in contract-minutes.
+  falsifier: "below the 95th percentile on all three legs -> the short leg is generic exposure and
+              must be described as such."
+
+H5:
+  statement: "the two sides carry different REGIME exposure."
+  test: "per-year weekly $, and per-session-class (W50's TREND-UP / TREND-DOWN / REVERSAL /
+         RANGE / MIXED taxonomy, which is causal only as a descriptive partition and is labelled
+         as outcome-conditioned where it is)."
+  note: "W77 amendment 1 rule: A SORT KEY IS A GATE. Any bucket table here that uses a terminal
+         variable is labelled TERMINAL and carries no verdict."
+
+# ---------------------------------------------------------------------------------------------
+# 3. DECISION RULE - fixed before the read
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "If H1 passes and H2 passes -> BMOM_S is a THIRD CANDIDATE STREAM and goes to its own
+     champion-vs-challenger wave. It is NOT promoted here."
+  - "If H1 passes and H2 fails -> the short leg is retained inside BMOM (status quo) and the
+     stream count is UNCHANGED at two. Say so plainly."
+  - "If H1 fails -> the short leg is carried as attribution only and the basket keeps it only
+     because removing it is untested; that must then be tested."
+  - "If H3 fires -> a two-box variant becomes a new object and needs its own null before anything
+     is said about it. Do not adopt inside this wave."
+  - "NOTHING IS PROMOTED IN THIS WAVE under any outcome."
+
+honesty_clauses:
+  - "2022-2026 is B-MOM's own development sample. Every number here is in-sample and the
+     in-sample objection (charter amendment 2 (d)) is untouched by anything measured."
+  - "The pre-compact session reported 573 long / 579 short trades. This wave's rebuild will
+     produce its own counts from the committed trade list; if they disagree, the DISAGREEMENT is
+     reported and the earlier figure is withdrawn, not quietly replaced."
