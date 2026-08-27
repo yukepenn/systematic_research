@@ -1,0 +1,38 @@
+========================================================================================================
+=== MARKET INTERNALS - acquired, then gated. INFORMATION_COVERAGE said 'no data'.
+========================================================================================================
+
+    $TICK      445,625 bars   2022-01-03 09:31:00  ->  2026-07-31 15:59:00    1147 sessions
+    $TRIN      445,235 bars   2022-01-03 09:31:00  ->  2026-07-31 15:59:00    1146 sessions
+    $VIX       444,640 bars   2022-01-03 09:32:00  ->  2026-07-31 15:59:00    1148 sessions
+
+========================================================================================================
+=== COVERAGE OF P1 DECISIONS - the question that closed the order-flow lane
+========================================================================================================
+    P1 scoring entries                         2,139
+    ... inside RTH 09:31-15:59                   765   (35.8 %)
+    ... AND on a session internals cover         764   (35.7 %)
+
+    order-flow lane, for contrast                141     (6.6 %)
+
+========================================================================================================
+=== POWER
+========================================================================================================
+
+    session-scoped
+      n covered                     764
+      mean on covered entries  $   226.07   (unconditional $160.64)
+      sd                       $ 2,383.94
+      MDE at ~80 % power       $   241.49   = 1.07x the covered mean
+      VERDICT                  UNDERPOWERED
+
+    FULL-HORIZON (primary)
+      n covered                     764
+      mean on covered entries  $   190.66   (unconditional $112.26)
+      sd                       $ 2,457.77
+      MDE at ~80 % power       $   248.97   = 1.31x the covered mean
+      VERDICT                  UNDERPOWERED
+
+    NOTE ON WHAT THIS DOES AND DOES NOT LICENSE. A passing power gate says a mean-scale
+    effect WOULD BE DETECTABLE. It says nothing about whether one EXISTS. The information
+    test is a separate, preregistered wave and is NOT run here.
