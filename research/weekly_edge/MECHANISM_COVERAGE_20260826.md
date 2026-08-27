@@ -15,8 +15,8 @@ Legend: **STRONG** · **SUPPORTED** · **WEAK** · **REGIME_LOCAL** · **NULL** 
 |---|---|---|---|---|---|---|---|---|---|---|
 | **trend persistence** | **STRONG** | **WEAK**² | SUPPORTED | ✗ | ✗ | NULL | NULL | **STRONG** | WEAK | ✗ |
 | **downside persistence** | **WEAK** | **NULL**¹ | WEAK | ✗ | ✗ | · | · | **NULL**¹ | WEAK | ✗ |
-| **reversal / failed persistence** | NULL | **·** | · | ✗ | ✗ | · | · | · | · | ✗ |
-| **range / value** | NULL | **·** | **·** | ✗ | ✗ | · | · | · | · | ✗ |
+| **reversal / failed persistence** | NULL | **NULL**³ | **NULL**³ | ✗ | ✗ | · | · | **NULL**³ | · | ✗ |
+| **range / value** | NULL | **WEAK**³ | **WEAK**³ | ✗ | ✗ | · | · | **WEAK**³ | · | ✗ |
 | **volatility transition** | WEAK | **·** | · | ✗ | ✗ | · | · | WEAK | **·** | ✗ |
 | **opening auction** | **·** | **·** | · | ✗ | ✗ | · | · | · | · | ✗ |
 | **overnight inventory** | NULL | **·** | · | ✗ | ✗ | · | · | · | · | ✗ |
@@ -37,6 +37,27 @@ Legend: **STRONG** · **SUPPORTED** · **WEAK** · **REGIME_LOCAL** · **NULL** 
 > ² **W100**: `relvol >= 1.0` on the LONG leg reached the 98.5th percentile of its rate-matched
 > null but not the Bonferroni bar for the family of six. **WEAK**, and it was a control arm, not a
 > hypothesis. High-participation *upside* continuation is the one live corner of the volume column.
+
+> ³ **W108 (2026-08-27), and this is the most important cell in the table.** Six fade mechanisms
+> with participation and path-efficiency terms: primary **−$143/trade, 0.5th percentile**. But
+> **all five genuine fades are POSITIVE on RANGE and MIXED and heavily NEGATIVE on both TREND
+> classes** — the signs are exactly what the mechanisms predict, and the trend-day losses run
+> 2–3× the range-day gains. **So "fading does not work on modern NQ" is TOO STRONG.** The correct
+> statement is: **fading works on the sessions it is designed for, and there is no causal trend-day
+> veto to keep it off the others.** The missing object is not a better fade — it is a **causal
+> trend-day detector**, and building one would make five already-built mechanisms tradeable at
+> once. `VWAP_RECLAIM` is separately closed: it earns on trend classes, loses on the two it was
+> written for, and its 54.20 % hit rate is indistinguishable from an always-long control's 54.25 %.
+>
+> ⁴ **W106 (2026-08-27):** four participation mechanisms as DIRECTIONS at 10:01 held to 11:29 —
+> primary −$56/trade, 18.0th percentile. `EFFORT_NO_RES` at 25 % acceptance is WEAK ($166,
+> clears its own p\*, not the family bar). **`VOL_DECAY` is STILL UNTESTED** — my specification
+> fired on 3 of 1,058 sessions.
+>
+> ⁵ **W107 (2026-08-27):** eight of nine causal states known at 13:29 carry no separating structure
+> for the afternoon; the ninth (path efficiency, 13.1 pp spread) is not significant as a trade
+> ($53/trade, 78.5th percentile). The afternoon's unconditional tilt is now measured: always-long
+> −$66/trade, always-short +$37.
 
 ## 2. ⭐ The single largest hole, and it is free
 
@@ -86,6 +107,7 @@ result; every row is a hypothesis with a named falsifier.
 | **1** | **VOL-EXHAUST / ABSORB** — monotone body+range+**volume** decay over N bars; and effort-no-result (max volume, non-max body, non-max range, close at bar mid) | volume, first time ever | 1-min OHLCV **2006–2026** | every dead fade here was a *structure* fade (failed break, gap, value area) with no participation term | effect survives holding volume rank fixed ⇒ it is just "big bar" |
 | **2** | **SEMIVAR-SKEW** — σ_down for short legs, σ_up for long legs inside the existing ratchet | realized semivariance; every vol conditioning ever run used total RV | 1-min OHLCV 2006–2026 | attacks the campaign's **named** weakness from inside the engine rather than adding a sleeve; corroborated by HTFMECH01 (+$11.9k long / −$22.0k short) | RSV−/RSV+ share carries no forward information on NQ at 1 min |
 | **3** | **CROSS-MARKET, CONDITIONAL ONLY** — does NQ/ES disagreement predict *failed* persistence; does RTY weakness mark bad NQ longs | ES/RTY/YM, as a **condition on an NQ trade**, never as a standalone signal | **on disk, aligned, same 1,058 sessions**, zero cost | the 0-for-15 record is on *standalone* cross-market engines; the conditional form has never been run | **run the zero-lag timestamp known-answer test FIRST** or this manufactures a beautiful artifact |
+| **0** | ⭐ **CAUSAL TREND-DAY DETECTOR** — a statement at ~11:45 about whether today is a trend day, used ONLY as a veto on fades | nothing new is needed; it re-uses five mechanisms already built | 1-min OHLCV | **W108 measured that five fade mechanisms have the right class signature and are only killed by trend-day exposure.** A veto makes all five tradeable at once — the highest-leverage single object the ledger has ever pointed at | the detector cannot beat its own p\* on the classes that matter, or a veto with a random detector of the same rate does as well |
 | **4** | **OPENTYPE-FREEZE** — Dalton/Steidlmayer opening taxonomy (drive / test-drive / rejection-reverse / auction) as an **exposure weight**, never a trade | opening-auction structure; zero fitted parameters | 1-min OHLCV 2006–2026 | unique clean geometry: freeze the taxonomy on 2006–2021, read once on 2022+ | tag carries no expectancy separation on 2022+ after the freeze |
 | **5** | **MIDDAY-VWAP-BAND** — ±2σ same-slot band around session VWAP, **11:00–14:00 only**, hard flat at 14:00 | window-restriction; the dead fades were all-day rules | 1-min OHLCV | fires exactly where P1's channel decays and where P1 is thin | the edge is present outside 11:00–14:00 too ⇒ not the mechanism |
 | **6** | **CASCADE-EXHAUSTION** — −2.5σ 30-min move **and** volume z>3 **and** range z>3 **and** a rejection close | three simultaneous extremes; a different population from unconditional fades | 1-min OHLCV | the fade kills (SMV2K t=−2.35, SMV2P t=−2.17) are unconditional | fires < 20×/yr, or negative |
