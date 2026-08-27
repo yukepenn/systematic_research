@@ -16,10 +16,25 @@ using NinjaTrader.NinjaScript;
 //  is the B-MOM channel as a direct +-1 position, 1 contract, inside the SAME session box and
 //  the SAME private fill ledger the P1 file was validated with.
 //
-//  IT TRADES BOTH DIRECTIONS. Measured on 2022-07..2026-07: 573 long trades ($166,047, $289.8
-//  each, 48.9 % win) and 579 SHORT ($86,216, $148.9 each, 43.4 % win). P1_v3 is long-only, so
-//  the order and ledger blocks below are the one place this file adds rather than removes -
+//  IT TRADES BOTH DIRECTIONS. Measured on 2022-07..2026-07 by WE_W90 (committed artifact,
+//  runs/WE_W90_BMOMSIDES/out/sides.txt): 518 long trades ($168,567, $325.4 each, 50.2 % win)
+//  and 525 SHORT ($83,691, $159.4 each, 43.6 % win), 1,043 total. P1_v3 is long-only, so the
+//  order and ledger blocks below are the one place this file adds rather than removes -
 //  `myDir` carries the sign that P1 did not need.
+//    CORRECTION: an earlier revision of this header read "573 long ($166,047, $289.8, 48.9 %) /
+//    579 short ($86,216, $148.9, 43.4 %)". That came from an uncommitted heredoc and is
+//    WITHDRAWN - it was 10 % high on trade count. The direction of the finding is unchanged.
+//
+//  WHAT W90 ALSO ESTABLISHED, and it belongs on this file rather than in a report nobody opens:
+//    * the SHORT leg fails its own count- and contract-minute-matched specificity null (86th /
+//      81st / 74th percentile against a 95th bar). It is additional roughly-independent events,
+//      NOT a second information source. Median short trade is -$864.
+//    * splitting the session box - one box per side - loses on all three legs and DOUBLES the
+//      worst week (-$33,492 vs -$16,970). The single shared box below is correct and tested.
+//    * neither side is individually significant (t = 0.69 long / 0.66 short over the trailing
+//      24 months); only the combination is (full-window t = 2.42). Do not trade one side.
+//    * 2026 is +$7/week for the whole object. This is a REGIME-LOCAL engine and that is the
+//      single largest disclosed risk in carrying it.
 //
 //  WHY IT EXISTS: W86-W88 found that BMOM standalone paired with the X9a arm at 2:3 contracts
 //  holds the corrected rolling gate in 92 % of 24-month windows and earns P1's money on roughly

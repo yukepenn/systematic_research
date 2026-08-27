@@ -1,0 +1,81 @@
+=== substrate 1,620,044 bars / 1058 in-window sessions / 213 weeks [4s]
+
+======================================================================================================================
+=== MEASUREMENT A: ATTRIBUTION of the object we already have
+    NOT TRADEABLE. The session box halts on COMBINED realised P&L, so these two series
+    are coupled by construction and neither can be run on its own from this split.
+======================================================================================================================
+side       trades    share         net $    $/trade    win %    median
+LONG          518    49.7%       168,567      325.4    50.2%      23.1
+SHORT         525    50.3%        83,691      159.4    43.6%    -864.4
+BOTH        1,043   100.0%       252,258      241.9    46.9%    -434.4
+
+    pre-compact session reported 573 long / 579 short. This rebuild says 518 / 525.
+    DISAGREES - the earlier figure is WITHDRAWN
+
+======================================================================================================================
+=== MEASUREMENT B: RE-SIMULATED SLEEVES, each with its OWN session box
+======================================================================================================================
+sleeve        trades  ctrRT/wk     wk $    wk+%  streak     maxDD   top5DD     worst  wk$@fixDD
+BMOM_L           677      3.18      573   54.9%       5    41,547   26,392   -16,543        279
+BMOM_S           692      3.25      277   46.5%       8    51,830   36,612   -16,949        108
+BMOM_B         1,043      4.90    1,121   56.8%       4    44,603   27,795   -16,970        509
+BMOM_L+S       1,369      6.43      850   52.6%       4    56,239   36,571   -33,492        306
+
+=== H1: the ONLY chronology gate - effective over roughly the trailing two years
+sleeve      period    weeks  trades      wk $       SE      t    wk+%
+BMOM_L      full        213     677       573      369   1.55   54.9%
+BMOM_L      t24         105     315       431      626   0.69   53.3%
+BMOM_L      t12          53     159       205      854   0.24   50.9%
+
+BMOM_S      full        213     692       277      364   0.76   46.5%
+BMOM_S      t24         105     326       401      608   0.66   48.6%
+BMOM_S      t12          53     162       797      856   0.93   54.7%
+
+BMOM_B      full        213   1,043     1,121      464   2.42   56.8%
+BMOM_B      t24         105     484     1,310      784   1.67   59.0%
+BMOM_B      t12          53     241     1,417    1,133   1.25   60.4%
+
+    H1 (BMOM_S t24 weekly > 0): 401 -> PASS
+
+=== H2: WEEKLY rho (the correct unit - W85 defect 3 / W88)
+              BMOM_L    BMOM_S    BMOM_B       X9a        P1     SHORT
+BMOM_L         1.000    -0.093     0.605     0.060     0.407    -0.010
+BMOM_S        -0.093     1.000     0.542    -0.030    -0.093     0.371
+BMOM_B         0.605     0.542     1.000     0.009     0.287     0.261
+X9a            0.060    -0.030     0.009     1.000     0.613     0.027
+P1             0.407    -0.093     0.287     0.613     1.000     0.156
+SHORT         -0.010     0.371     0.261     0.027     0.156     1.000
+
+    H2 (weekly rho(BMOM_L, BMOM_S) < 0.20): -0.093 -> PASS - two streams
+    daily rho for the same pair: 0.030  (quoted only to show the unit matters)
+    UNDERWATER-curve rho(BMOM_L, BMOM_S) = 0.041   (W56 found this, not weekly rho, is what makes a sleeve pay)
+
+=== H3: one shared box (incumbent) vs two independent boxes
+    weekly $ at fixed DD     two boxes      306.1   one box      508.7   ONE
+    positive-week %          two boxes       52.6   one box       56.8   ONE
+    raw mean top-5 DD        two boxes   36,571.3   one box   27,795.3   ONE
+    H3 (two boxes win >= 2 legs): 0/3 -> does not fire
+    NOTE: two boxes doubles the risk budget (each side can lose $1,300), so a money
+    win here is partly a leverage effect and would need its own exposure-matched null.
+
+=== H4: is the SHORT leg specific, or is it generic exposure?
+    count-matched AND contract-minute-matched random subsets of BMOM's own trades
+    basket 2:3 with the REAL short leg : money    1,183  wk+%  57.7  top5    57,273
+    basket 2:3 with NO short leg       : money    1,101  wk+%  54.5  top5    56,699
+
+    200 count- and contract-minute-matched removals of the SAME NUMBER of trades:
+leg                      real (short kept)   null mean    null p95   pctile
+weekly $ at fixed DD               1,183.0       866.2     1,340.6    86.5%
+positive-week %                       57.7        55.4        58.7    81.0%
+raw mean top-5 DD                 57,273.2    63,735.3    48,584.4    73.5%
+    H4 (>= 95th on all three): ['86', '81', '74'] -> GENERIC on at least one leg
+
+=== H5: per-year weekly $ (causal partition - the calendar is known in advance)
+sleeve            2022      2023      2024      2025      2026
+BMOM_L             782       912       526       807      -531
+BMOM_S             760        11       112       714      -164
+BMOM_B           1,584       823     1,099     1,814         7
+X9a                639         0     1,993       627     1,438
+
+[done 11s]
