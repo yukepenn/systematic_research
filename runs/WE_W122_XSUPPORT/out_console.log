@@ -1,0 +1,89 @@
+    substrate 1,620,044 bars [4s]
+    2,131 P1 entry events [18s]
+    ES/RTY/YM joined [19s]
+D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\research\weekly_edge\src\run_we_w122.py:198: RuntimeWarning: Mean of empty slice
+  FEAT[("B_SUPPORT_MAG", W)] = np.nanmean(Z, axis=1) * dsign
+C:\Users\Yuke Zhang\AppData\Local\Programs\Python\Python311\Lib\site-packages\numpy\lib\nanfunctions.py:1879: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\research\weekly_edge\src\run_we_w122.py:200: RuntimeWarning: Mean of empty slice
+  FEAT[("D_NQ_IDIO", W)] = (znj - np.nanmean(Z, axis=1)) * dsign
+D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\research\weekly_edge\src\run_we_w122.py:206: RuntimeWarning: Mean of empty slice
+  late = np.nanmean(np.column_stack([np.where(ok, rn3[k][j], np.nan) for k in CM]), axis=1)
+D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\research\weekly_edge\src\run_we_w122.py:207: RuntimeWarning: Mean of empty slice
+  early = np.nanmean(np.column_stack([np.where(ok, rn3[k][np.maximum(j - W + h3, 0)], np.nan)
+    features built. same-session availability: 5m 98.1%, 15m 97.2%, 30m 96.1%
+    2071 events in 58 matched strata (NQ-move quintile x 4 time buckets x 3 ordinal buckets)
+
+==============================================================================================================================
+=== 1. THE 5 x 3 GRID. POOLED vs MATCHED. The matched column is the one that matters:
+===    it holds NQ's own pre-entry move, time-of-day and entry ordinal fixed (section 15).
+==============================================================================================================================
+primitive           window   n Q1   n Q5   POOLED Q5-Q1 $   MATCHED Q5-Q1 $  matched/pooled
+A_SIGN_BREADTH          5m    452      0              nan               nan             nan
+A_SIGN_BREADTH         15m    523      0              nan               nan             nan
+A_SIGN_BREADTH         30m    590      0              nan               nan             nan
+
+B_SUPPORT_MAG           5m    418    417              105               -58           -0.55
+B_SUPPORT_MAG          15m    414    414               12              -157          -13.17
+B_SUPPORT_MAG          30m    409    409               82                48            0.59
+
+C_DISPERSION            5m    418    417               98                19            0.19
+C_DISPERSION           15m    414    414              183                68            0.37
+C_DISPERSION           30m    409    409               51               251            4.95
+
+D_NQ_IDIO               5m    418    417               76               122            1.62
+D_NQ_IDIO              15m    414    414              167               131            0.78
+D_NQ_IDIO              30m    409    409              172               262            1.52
+
+E_DELAYED_CONF          5m    418    417             -203              -244            1.20
+E_DELAYED_CONF         15m    414    414               97                19            0.19
+E_DELAYED_CONF         30m    409    409              -38              -102            2.70
+
+    LEVEL 2 CONTROL - NQ's OWN standardised 15m pre-entry move, same quintile statistic:
+        pooled Q5-Q1 = $90/entry   (matched is undefined: it IS the strata)
+
+==============================================================================================================================
+=== 2. THE PRIMARY - B_SUPPORT_MAG at 15m, matched Q5-Q1 in net dollars per entry
+==============================================================================================================================
+    REAL matched Q5-Q1                     $-157/entry
+    own-cell null (outcome permutation)    mean $0  p95 $343  -> 22.1th pctile
+    DEPENDENCE-PRESERVING FAMILY null      p95 $503   (one outcome permutation shared by all 15 cells, so cross-feature and
+                                           cross-window correlation is retained)
+
+==============================================================================================================================
+=== 3. PREQUENTIAL - 8 chronological blocks. Quintile cuts from PRIOR events only.
+==============================================================================================================================
+block     events                     dates   matched Q5-Q1 $
+1            266  2023-01-31 -> 2023-07-10              -648
+2            267  2023-07-10 -> 2023-12-22              -459
+3            266  2023-12-22 -> 2024-05-09                -2
+4            266  2024-05-09 -> 2024-10-29             1,507
+5            267  2024-10-29 -> 2025-05-02              -864
+6            266  2025-05-02 -> 2025-12-11            -1,211
+7            267  2025-12-14 -> 2026-07-29                86
+
+    prequential mean of the matched statistic: $-227/entry   (2 of 7 blocks positive)
+
+==============================================================================================================================
+=== 4. GATES - every clause of the preregistered falsifier, checked in code (section 29)
+==============================================================================================================================
+gate  spec                                                                observed   verdict
+G1    matched Q5-Q1 > 0                                                      $-157      FAIL
+G2    > family-null p95 ($503), dependence-preserving                        $-157      FAIL
+G3    survives prequential (mean > 0)                                        $-227      FAIL
+G4    beats LEVEL-2 NQ-only control ($90)                                    $-157      FAIL
+
+    STAGE-A VERDICT: NO INCREMENTAL INFORMATION
+
+==============================================================================================================================
+=== 5. THE BOOK-LOSS TARGET - the same statistic on P1's LOSING sessions only
+==============================================================================================================================
+    P1 losing sessions        n= 1257   matched Q5-Q1 $      202/entry
+    P1 winning sessions       n=  814   matched Q5-Q1 $     -726/entry
+C:\Users\Yuke Zhang\AppData\Local\Programs\Python\Python311\Lib\site-packages\numpy\lib\nanfunctions.py:1384: RuntimeWarning: All-NaN slice encountered
+  return _nanquantile_unchecked(
+
+    EVIDENCE STATUS (section 9): the entire 2022-07 -> 2026-08 window is
+    DISCOVERY_CONSUMED; 2026-05-31 -> 07-31 is DIRECTLY_BURNED. Nothing here is FORWARD.
+
+[done 21s]
