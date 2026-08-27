@@ -351,10 +351,13 @@ into one word.
    no model moves it.** Marked **UNDERPOWERED**, not NULL. `XM_CONFLICT` is worse still — 29 of 346
    decisions, and FOMC at 14:00 is not even in its 09:45 information set.
 
-> ### **Every information lane reachable from data this repo currently holds is now measured.**
-> What remains is **owner-gated acquisition** (order flow, options, more event types) or **bounded
-> engineering** (`X9a`'s decision contract). That is the honest state of the frontier, and it is the
-> reason the next runnable item is engineering rather than discovery.
+> ### **Every information surface this campaign listed as OPEN is now closed.**
+> What remains is **owner-gated acquisition** (order flow, options, more event types), **bounded
+> engineering** (`X9a`'s decision contract), or the **two surfaces still marked `LIGHT` rather than
+> closed** — the scheduled-event *flag* and **higher-timeframe**. Both are transformations of an NQ
+> price path already labelled `DEEP`, which is the lowest-prior category in
+> `research/router/THESIS_TO_REPO_ADAPTATION.md`, so neither is a discovery lane. **The next runnable
+> item is engineering, not discovery**, and that is the honest state of the frontier.
 
 ### ⭐ What `RR_W001` added, and what it closed
 

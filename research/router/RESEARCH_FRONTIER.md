@@ -22,6 +22,7 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | **1** | **Is `X9a` a coherent standalone expert?** | **MEDIUM** | **RUNNABLE — the highest-EVI runnable item** |
 | 2 | Is SELECTIVE box un-latching worth anything? *(new, from RR_W001)* | LOW | RUNNABLE |
 | 3 | Is book COVERAGE actually a gap? *(reopened by `RR_W000`)* | LOW | RUNNABLE |
+| **3b** | **Does HIGHER-TIMEFRAME state carry anything at P1's decision events?** | **LOW-MED** | **RUNNABLE** — still `LIGHT`, never closed |
 | 4 | Can causal features predict action value better than matched controls? | LOW until new information exists | **DE-PRIORITISED by RR_W001** |
 | 5 | Does a soft allocation with cash beat the static book? | LOW | blocked on #4 |
 | 6 | Does latent state add information beyond raw features? | — | **NOT RUN** — RR_W001's continuation rule forbids it |
@@ -34,10 +35,16 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | 13 | Can position management (exit / reversal) be routed? | UNKNOWN | **EXCLUDED from V1** · directive §7 |
 | 14 | What integer-contract mapping implements portfolio B? | — | **OWNER CAPITAL DECISION** · OQ-6 |
 
-> ### ⚠️ **Every information lane reachable from data this repo currently holds is now measured.**
-> Rows 1–3 are engineering and decomposition, not discovery. Rows 8–10 are the only rows with a
-> genuinely high ceiling, and **all three are owner-gated acquisition.** That is the honest state of
-> the frontier and it should not be dressed up.
+> ### ⚠️ **Every information surface this campaign listed as OPEN is now closed.**
+> Rows 1–3 are engineering and decomposition, not discovery. Rows 8–10 have the only genuinely high
+> ceilings and **all three are owner-gated acquisition.**
+>
+> **Two surfaces remain `LIGHT` rather than closed** — the scheduled-event **flag** and
+> **higher-timeframe** (row 3b). Neither was ever fully worked in campaign #7; both are inherited at
+> `LIGHT` from earlier waves. They are listed honestly rather than swept into "everything is closed",
+> **but both are transformations of an NQ price path already labelled `DEEP`**, which
+> `THESIS_TO_REPO_ADAPTATION.md` identifies as the lowest-prior category there is. **That is the
+> honest state of the frontier and it should not be dressed up in either direction.**
 
 ---
 
@@ -125,6 +132,20 @@ coverage is **UNMEASURED**.
 > **Why LOW.** `P1/PCT` is **long-only** and declines to trade for stated mechanical reasons, so "no
 > engine present" is frequently correct behaviour. Pricing those 32 sessions needs a directional
 > oracle — level 2, not available money. n = 32 cannot support a new engine.
+
+## 3b. Higher-timeframe state — still LIGHT, and listed because it was never closed
+
+`INFORMATION_COVERAGE` carries **higher-timeframe** at **`LIGHT`**, evidenced only by `HTFMECH01`
+from **campaign #3** — a different campaign on a different object. It has never been tested at
+`P1/PCT`'s own decision events, so calling it closed would be false.
+
+> **Why LOW-MED and not higher.** HTF is a transformation of the NQ price path, which is already
+> `DEEP`. The adaptation document's own test — *"what NEW observable information does this add?"* —
+> answers "another transformation of NQ path already deeply measured", and that is explicitly the
+> lowest-prior category. The same reasoning applies to the scheduled-event **flag**, which W110
+> measured alone at **AUC 0.498**.
+>
+> **It is on the list because it is genuinely un-closed, not because it is promising.**
 
 ## 4–7. The router stack — de-prioritised, and the HMM is NOT RUN
 
