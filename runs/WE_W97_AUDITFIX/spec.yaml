@@ -1,0 +1,136 @@
+run_id: WE_W97_AUDITFIX
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-26
+status: PREREGISTERED
+authority: >
+  Owner directive section 9 (adversarial audit) and the standing rule that a correction wave is a
+  wave. A 5-agent adversarial audit of W89-W93, each finding independently verified by a skeptic
+  instructed to refute it, returned 33 CONFIRMED defects (10 MAJOR, 23 MINOR) and 12 refuted.
+
+title: >
+  Act on the audit. Verify the conclusion-changing findings MYSELF, recompute what they break, and
+  reissue every number that moves - including the ones already given to the owner.
+
+# ---------------------------------------------------------------------------------------------
+# 0. WHAT IS ALREADY VERIFIED BY ME, BEFORE THIS SPEC WAS WRITTEN
+# ---------------------------------------------------------------------------------------------
+M1_verified_independently: |
+  CONFIRMED. Two of the corrected rolling gate's three legs are ALGEBRAICALLY SCALE-INVARIANT:
+  weekly_dd = mean(w)*DDT/maxdd(w) is a shape ratio and wkpos is a sign rate; the cost is scaled
+  with the series, so both are exactly invariant. Measured on the 2:3 basket over one 24-month
+  window: weekly_dd = 1922.4349378102 and wkpos = 60.0000000000 at BOTH scale 0.05 and scale 7.30,
+  identical to 10 dp, while top5 moves exactly linearly (2,154.85 / 314,608.79).
+  Therefore ONLY the raw top-5 leg discriminates, and the published ALL-THREE is a property of
+  the chosen divisor. Measured across four candidate units:
+      basket   NOMINAL(published)   PEAK   time-weighted   income-matched
+      1:1              64 %          16 %       72 %            24 %
+      1:2              52 %          48 %       52 %            52 %
+      2:3              92 %          36 %       92 %            64 %
+  And at any COMMON scale 1:1 >= 2:3 (s=0.20: 92/92; 0.25: 92/36; 0.333: 92/0; 0.50: 64/0).
+  The published ordering 2:3 > 1:1 > 1:2 exists only because each rung was divided by its OWN
+  nominal order count (1/5, 1/2, 1/3).
+  WHERE I DISAGREE WITH THE AUDITOR: it concluded "under peak matching the ranking becomes
+  1:2 > 1:3 > 2:3 and agrees with the matched-income table". That is true under PEAK matching
+  only. Under INCOME matching - the one scale with no free choice, since income is what is being
+  bought and drawdown is its price - 2:3 still leads at 64 %. The correct statement is that the
+  ranking is UNIT-DEPENDENT, 2:3 leads in 3 of 4 units at a REDUCED figure, and 1:2 is the only
+  rung that is stable across all four (48-52 %).
+  Oracle battery re-run at every scale the table uses: 100 % at 0.20 / 0.25 / 0.333 / 0.50 / 1.0,
+  and 0 % at 2.0. The battery had only ever been run at 1.0.
+
+# ---------------------------------------------------------------------------------------------
+# 1. THE MEASUREMENT THIS WAVE OWES - it can flip a preregistered verdict
+# ---------------------------------------------------------------------------------------------
+M10_the_one_that_can_flip_a_verdict:
+  finding: >
+    W93 compared "the pair delivers 28.2 % (PASS)" against "NETFUSE_1 delivers 11.4 % (FAIL)" on
+    the deep 16-year drawdown bar, and labelled them "reused so the two are comparable". They are
+    ratios against two DIFFERENT P1 deep baselines:
+      WE_W87_DEEPPAIR/out/deep.csv  P1: top5 21,645.704  maxdd 47,250.40  net 57,343.44  wkpos 44.844
+      WE_W93_NETFUSE/out/deep.csv   P1: top5 18,925.096  maxdd 39,555.24  net 79,076.48  wkpos 44.484
+    These are not the same series rescaled - a scale factor cannot change wkpos, and it differs.
+    W93's P1 reproduces W80's deep run bit-for-bit. W87's does not.
+  why_it_can_flip_a_verdict: >
+    On W93's baseline the pair's reduction is 1 - 15,548/18,925 = 17.8 %, BELOW the 25 % bar it
+    was recorded as passing. If W93's baseline is the correct one, BOTH challengers fail C4 and
+    the campaign's "the pair's drawdown advantage survives sixteen unseen years" - which is in
+    STATE_OF_THE_SYSTEM.md, WHAT_P1_ACTUALLY_DELIVERS.md and memory - is withdrawn.
+  method_fixed_in_advance: >
+    Rebuild P1, BMOM, X9a and NETFUSE_1 on the 2006-2021 substrate in ONE run so all four share a
+    baseline BY CONSTRUCTION rather than by assertion. Use the cached deep member matrix from W80.
+    Report the pair and NETFUSE_1 against that single P1, at BOTH nominal and income-matched
+    exposure, and state which of W87 / W93 the rebuilt P1 agrees with.
+  decision_rule: >
+    Whatever it says is recorded. If the pair drops below 25 %, W87's C4 PASS is WITHDRAWN and
+    every document that cites 28.2 % is corrected in the same commit. If it holds, W87 stands and
+    W93's comparison is restated on the common baseline. NO OUTCOME PROMOTES ANYTHING.
+
+M3_the_one_that_kills_a_research_directive:
+  finding: >
+    W89 labelled "BMOM and X9a are substantially disjoint IN TIME ... a structural reason for
+    their weekly rho = +0.009" as SUPPORTED, and it preregistered W96 (which then failed its own
+    null at the 88th percentile). The auditor's deconfounding control: split each object's daily
+    P&L by ENTRY SEGMENT and correlate weekly against BMOM. Claimed X9a_RTH vs BMOM = +0.0205 -
+    i.e. ZERO clock disjointness and rho still ~ 0 - while P1_RTH vs BMOM = +0.2744.
+  test: "reproduce that control myself. If it holds, the clock is not what produces the low rho,
+          SIGNAL SHARING is, and the SUPPORTED tag plus the 'hunt on the session clock' directive
+          are both withdrawn."
+  note: "W96's failure is already consistent with the auditor being right."
+
+M8_the_one_that_reverses_a_reported_FACT:
+  finding: >
+    W92 section 4 concluded `FACT` "the quality layer hurts the two-sided object". NETFUSE_Q
+    differs from NETFUSE_1 in EXIT POLICY as well as sizing: sfills' box is a DOLLAR limit on
+    total position P&L, so a size-2 entry trips the -$1,300 halt at 32.28 points instead of
+    64.78. The auditor's isolation control (box accumulating PER-CONTRACT P&L, trade timing
+    byte-identical to NETFUSE_1) reverses it: quality sizing loses 7 of 8 columns as reported and
+    0 of 8 once the exit policy is held fixed.
+  test: "reproduce the isolation control. If it holds, section 4's FACT is WITHDRAWN."
+
+M9_already_actionable_without_new_computation:
+  finding: >
+    W92's banner "beats P1 in 2026" and the row "2026 weekly $ | $287 | $575 | 2x" carry NO
+    standard error, which OWNER_CHARTER_AMENDMENT_2 section 2(a) requires for any sub-period
+    claim. Paired weekly difference: +$288/wk, SE $599, t = 0.48, p = 0.635, N = 31 weeks,
+    95 % CI [-$936, +$1,511]. McNemar on the "+5.2 pp positive weeks" claim: p = 0.193.
+  action: "WITHDRAW the 2x and the 'beats P1 in 2026' banner. I repeated this figure to the owner
+           in conversation and the correction goes to him explicitly, not just into a file."
+
+# ---------------------------------------------------------------------------------------------
+# 2. THE REST - corrections whose verdicts survive
+# ---------------------------------------------------------------------------------------------
+corrections_without_verdict_change:
+  M2_W89:  "quote-session membership tested on CALENDAR DATES; the 45 sessions span 78 calendar
+            days. Correct coverage is P1 128/4,004 (3.2 %), BMOM 84, X9a 148 - not 206/118/228.
+            P1's 128 reproduces W82's committed fillaudit.txt verbatim. Nothing downstream moves:
+            direct_cov has no consumer and every cost figure comes from the minute-weighted
+            profile at 100 % minute coverage."
+  M4_W90:  "H4's null scored the FULL 1,043-trade book against 518-trade controls - 2.01x the
+            exposure. The correctly count-matched arm was computed and never used. Corrected
+            percentiles 82.0 / 30.5 / 76.0 against the published 86.5 / 81.0 / 73.5. Verdict
+            GENERIC either way, and the corrected positive-week leg (30.5th) is MORE unflattering."
+  M5_W90:  "the two-box arm ran 31 % more exposure. Matched: top-5 DD is a dead heat (+0.24 %),
+            maxDD REVERSES to two boxes, worst week is 1.50x not 'doubles', streak is a TIE.
+            'beats on every column' and the REPRODUCED tag are withdrawn; H3 stays 0/3 because
+            both scale-invariant legs still favour one box."
+  M6_W91:  "W67's 7.26 pts/session is NET; W91's 6.64 is GROSS. Like-for-like: 7.26 -> 6.19 net,
+            a 14.85 % deterioration, not 8.5 %. P1: 14.86 -> 13.24 net, not 13.73. W95's B1 gate
+            enshrined the GROSS 13.73; it is relabelled, not loosened."
+  M7_W91:  "one_budget() charged cost and exposure on trades whose P&L it had deleted (23.3 % of
+            contract-RTs). Corrected, the ONE-budget row is $471/wk not $330, and the ordering
+            REVERSES - one budget is worse than two on top-5 DD and worst week, not better.
+            E_a FALSIFIED and 'separate budgets are necessary' both survive."
+  minors: "23 MINOR findings are listed in the report with their corrections. None changes a
+           verdict; several are mislabelled artifact columns and prose-only numbers."
+
+# ---------------------------------------------------------------------------------------------
+# 3. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "NOTHING IS PROMOTED OR ADOPTED. This wave only corrects."
+  - "Every correction propagates to STATE_OF_THE_SYSTEM.md, WHAT_P1_ACTUALLY_DELIVERS.md and
+     memory in the SAME commit as the report, per the standing rule that corrections propagate to
+     every citing document."
+  - "Numbers already given to the owner in conversation are corrected TO HIM, explicitly."
+  - "The audit itself is not above audit: where I disagree with a finding after reproducing it,
+     the disagreement is recorded with its evidence (see M1)."
