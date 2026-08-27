@@ -60,31 +60,30 @@ def main():
     P("=" * 104)
     P(f"    weekly observations         {n}   {d['week'].min().date()} -> {d['week'].max().date()}")
 
-    # ---------------------------------------------------------------- FROZEN scaling
-    # Directive s29: freeze the RESEARCH-derived scaling factor. The frozen baseline reports
-    # raw $1,394/wk, maxDD $22,931, fixed-DD $1,230/wk, so k_frozen = 20245/22931 = 0.882866,
-    # and 1394 * k_frozen = $1,230.72 reproduces the headline exactly.
-    K_FROZEN = TARGET_DD / 22931.0
+    # ---------------------------------------------------------------- CORRECTED scaling
+    # FWD_DD_RECONCILIATION established that the canonical $22,931 denominator was computed on a
+    # COMMISSION-ONLY cost model while the $1,394 numerator is NET OF THE MODELLED SPREAD. Mixing
+    # them flattered the fixed-DD headline by 5.2 %. The internally consistent factor uses the
+    # FROZEN spread-inclusive stream on BOTH sides. Correcting a defect before the seal is read is
+    # legal pre-read repair (s29), not outcome-driven retuning.
     dd_series = max_dd(np.cumsum(x))
-    k_series = TARGET_DD / dd_series
+    K_FROZEN = TARGET_DD / dd_series
+    k_series = K_FROZEN
     xs = x * K_FROZEN
     P(f"    raw weekly mean             ${x.mean():>10,.2f}   <- baseline quotes $1,394  MATCHES")
-    P(f"    FROZEN scaling factor k     {K_FROZEN:>10.6f}   (= {TARGET_DD:,.0f} / 22,931 baseline maxDD)")
-    P(f"    scaled weekly mean          ${xs.mean():>10,.2f}   <- protocol quotes $1,230  MATCHES")
-    P(f"    scaled weekly sd            ${xs.std(ddof=1):>10,.2f}   <- Gaussian version implied $4,317")
+    P(f"    weekly maxDD (same stream)  ${dd_series:>10,.2f}   <- NOT the canonical $22,931")
+    P(f"    CORRECTED scaling factor k  {K_FROZEN:>10.6f}   (= {TARGET_DD:,.0f} / {dd_series:,.2f})")
+    P(f"    scaled weekly mean          ${xs.mean():>10,.2f}   <- CORRECTED; was quoted $1,230")
+    P(f"    scaled weekly sd            ${xs.std(ddof=1):>10,.2f}")
     P("")
     P("    " + "!" * 92)
-    P("    !! UNRECONCILED DISCREPANCY - flagged, not silently resolved")
-    P(f"    !! This weekly series' own max drawdown is ${dd_series:,.2f}, implying k = {k_series:.6f},")
-    P(f"    !! but the frozen baseline reports maxDD $22,931, implying k = {K_FROZEN:.6f}.")
-    P("    !! Weekly-resolution drawdown CANNOT exceed daily-resolution drawdown - a weekly curve is")
-    P("    !! a subsample of the daily one - so these two are NOT the same object. The raw MEAN")
-    P("    !! matches to $0.05, so the P&L stream is right; the DRAWDOWN basis is not.")
-    P("    !! The frozen factor is used here because s29 says freeze the research-derived one.")
-    P("    !! THIS MUST BE CLOSED BEFORE THE BANDS ARE USED AT A CHECKPOINT.")
-    P(f"    !! Impact if the series' own k were right instead: every band scales by "
-      f"{k_series/K_FROZEN:.4f} (a {100*(k_series/K_FROZEN-1):+.1f} % shift).")
-    P("    !! P(cum<0) is SCALE-INVARIANT and is therefore unaffected by this discrepancy.")
+    P("    !! DISCREPANCY RESOLVED by FWD_DD_RECONCILIATION - the canonical $22,931 was DEFECTIVE.")
+    P("    !! The $1,394 numerator is NET OF THE MODELLED SPREAD (`baseline_trade_net`).")
+    P("    !! The $22,931 denominator matches a COMMISSION-ONLY stream (`pnl_commonly`) to $78.")
+    P("    !! Mixing them flattered the fixed-DD headline: $1,230/wk instead of $1,166/wk, +5.2 %.")
+    P("    !! Both sides now use the FROZEN spread-inclusive stream. Corrected BEFORE the seal was")
+    P("    !! read, which is legal pre-read repair, not outcome-driven retuning.")
+    P("    !! P(cum<0) is SCALE-INVARIANT and is unchanged by this correction.")
     P("    " + "!" * 92)
 
     # ---------------------------------------------------------------- distribution shape
@@ -154,6 +153,40 @@ def main():
     P("    and would have raised a false INVALIDATION. Where it is ABOVE, the Gaussian was TOO")
     P("    LOOSE and a genuinely broken strategy could have passed. Either way the Gaussian band")
     P("    was the wrong instrument, and the empirical one is now primary.")
+
+    # ------------------------------------------------------------------ s30 block sensitivity
+    P("")
+    P("=" * 104)
+    P("=== s30  BLOCK-LENGTH SENSITIVITY - 40,000 resamples reduce Monte-Carlo noise, they do NOT")
+    P("=== create historical information. If p01 is unstable across reasonable dependence choices,")
+    P("=== the protocol must say so rather than pick the most forgiving band.")
+    P("=" * 104)
+    P(f"    {'CP':<4}{'wk':>5}   " + "".join(f"{'L='+str(L2):>14}" for L2 in (3, 6, 12))
+      + f"{'spread':>12}")
+    P("    " + "-" * 72)
+    srows = []
+    for cp, sess in CHECKPOINTS.items():
+        w = sess // 5
+        vals = []
+        for L2 in (3, 6, 12):
+            r2 = np.random.default_rng(SEED)
+            nb = int(np.ceil(w / L2))
+            st = r2.integers(0, n, size=(B, nb))
+            ix = (st[:, :, None] + np.arange(L2)[None, None, :]).reshape(B, -1)[:, :w]
+            vals.append(float(np.percentile(xt[ix].sum(axis=1), 1)))
+        P(f"    {cp:<4}{w:>5}   " + "".join(f"{v:>14,.0f}" for v in vals)
+          + f"{max(vals)-min(vals):>12,.0f}")
+        srows.append(dict(checkpoint=cp, weeks=w, p01_L3=vals[0], p01_L6=vals[1],
+                          p01_L12=vals[2], spread=max(vals) - min(vals)))
+    pd.DataFrame(srows).to_csv(os.path.join(OUT, "block_sensitivity.csv"), index=False)
+    mx = max(r["spread"] for r in srows)
+    P("")
+    P(f"    Largest p01 movement across block lengths: ${mx:,.0f}")
+    if mx > 3000:
+        P("    >>> THE INVALIDATION THRESHOLD IS NOT STABLE across reasonable dependence choices.")
+        P("    >>> The protocol must carry this as a RANGE, not a single number.")
+    else:
+        P("    >>> p01 is stable across block lengths; the single reported band is defensible.")
     _fh.close()
 
 

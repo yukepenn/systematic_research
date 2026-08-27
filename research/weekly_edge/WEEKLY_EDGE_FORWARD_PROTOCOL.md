@@ -19,9 +19,9 @@ research weeks ⇒ implied weekly sd **$4,317**; Portfolio B $2,012 at t = 4.90 
 
 | checkpoint | sessions | expected cum. | what it can actually resolve |
 |---|---:|---:|---|
-| **A** | 60 (~3 mo) | $14,768 | **t = 0.99.** Resolves essentially nothing about the mean |
-| **B** | 126 (~6 mo) | $30,767 | **t = 1.43.** Still cannot confirm |
-| **C** | 252 (~1 yr) | $61,533 | **t = 2.02.** Weak confirmation at best |
+| **A** | 60 (~3 mo) | $13,986 | **t = 0.99.** Resolves essentially nothing about the mean |
+| **B** | 126 (~6 mo) | $29,138 | **t = 1.43.** Still cannot confirm |
+| **C** | 252 (~1 yr) | $58,276 | **t = 2.02.** Weak confirmation at best |
 
 > ### ⚠️ **A LOSING QUARTER HAS A 14.5 % PROBABILITY IF NOTHING IS WRONG AT ALL.**
 > _(empirical bootstrap, `runs/FWD_BOOTSTRAP_20260827/`; the Gaussian said 16.1 %)_
@@ -73,9 +73,9 @@ Weekly P&L is **not Gaussian** and the test says so unambiguously: **skew +1.888
 
 | checkpoint | expected cum. | P(neg) | **HEALTHY** ≥ p25 | **WATCH** p05→p25 | **INVALIDATION** < p01 |
 |---|---:|---:|---|---|---|
-| CPA — 60 sessions | $14,768 | **14.5 %** | ≥ $5,000 | −$7,587 → $5,000 | **< −$16,456** |
-| CPB — 126 sessions | $30,767 | **6.3 %** | ≥ $16,510 | −$2,097 → $16,510 | **< −$14,420** |
-| CPC — 252 sessions | $61,533 | **1.6 %** | ≥ $41,406 | $14,301 → $41,406 | **< −$4,610** |
+| CPA — 60 sessions | $13,986 | **14.5 %** | ≥ $4,736 | −$7,185 → $4,736 | **< −$15,585**  _(range −$11,486 … −$15,585)_ |
+| CPB — 126 sessions | $29,138 | **6.3 %** | ≥ $15,636 | −$1,986 → $15,636 | **< −$13,657**  _(range −$12,235 … −$14,136)_ |
+| CPC — 252 sessions | $58,276 | **1.6 %** | ≥ $39,214 | $13,544 → $39,214 | **< −$4,366**  _(range −$1,533 … −$4,077)_ |
 
 ### Gaussian — SECONDARY DIAGNOSTIC ONLY, retained to show what it got wrong
 
@@ -90,13 +90,16 @@ Weekly P&L is **not Gaussian** and the test says so unambiguously: **skew +1.888
 > ### INVALIDATION threshold sat **$3.5–4.9k too low**, and **a genuinely broken strategy could have
 > ### passed it.** The empirical bands trigger earlier and are now primary.
 
-> ⚠️ **UNRECONCILED — must be closed before any checkpoint is read.** The weekly series reproduces
-> the frozen raw mean to **$0.05** ($1,393.95 vs $1,394), but its own max drawdown is **$24,212.92**
-> against the baseline's **$22,931**. Weekly-resolution drawdown *cannot* exceed daily-resolution
-> drawdown, so these are **not the same object** — the P&L stream is right, the drawdown basis is
-> not. The **frozen** factor `k = 20,245/22,931 = 0.882866` is used here per §29. **If the series'
-> own factor were correct instead, every dollar band shifts by −5.3 %.** `P(neg)` is
-> scale-invariant and unaffected.
+> ### ✅ **RESOLVED 2026-08-27** — `runs/FWD_DD_RECONCILIATION/` found the canonical **$22,931** was computed on a
+> **commission-only** stream while the **$1,394** numerator is **net of the modelled spread**. Mixing
+> them flattered the headline by **5.2 %**. All bands above now use **`k = 0.836124`**, the frozen
+> spread-inclusive stream on **both** sides. `P(neg)` is scale-invariant and unchanged.
+>
+> ### ⚠️ **THE INVALIDATION THRESHOLD IS NOT A SINGLE NUMBER.** Across preregistered block
+> lengths (3 / 6 / 12 weeks) p01 moves by up to **$4,099**. The ranges are shown above and the **most
+> forgiving band is NOT selected**. **A result landing inside the range is INCONCLUSIVE, not an
+> invalidation** — 40,000 resamples reduce Monte-Carlo noise, they do not create historical
+> information.
 
 **HEALTHY** = at or above the 25th percentile · **WATCH** = 5th–25th · **INVESTIGATE** = 1st–5th ·
 **INVALIDATION** = below the **1st percentile** of what the frozen object itself predicts.

@@ -87,8 +87,20 @@ scale-invariant and therefore cannot be inflated by leverage.
 
 | object | weekly $ at fixed DD | positive weeks | max DD | t |
 |---|---:|---:|---:|---:|
-| **A** `P1/PCT` | **$1,230** ($1,394 raw) | 56.3 % | $22,931 | 4.16 |
-| **B** `{P1/PCT + XM}` inverse-vol | **$2,012** | 59.2 % | $11,489 | 4.90 |
+| **A** `P1/PCT` | ⚠️ **$1,166** ($1,394 raw) | 56.3 % | **$24,213** | 4.16 |
+| **B** `{P1/PCT + XM}` inverse-vol | ⚠️ **$2,012 SUSPECT — unaudited** | 59.2 % | $11,489 | 4.90 |
+
+> ### ⚠️ **AMENDED 2026-08-27 — the freeze is RE-STAMPED, not broken.**
+> `runs/FWD_DD_RECONCILIATION/` found the canonical **$22,931** drawdown was computed on a **commission-only**
+> stream while the **$1,394** numerator is **net of the modelled spread**. A weekly curve is a
+> subsample of the daily one, so its drawdown **cannot exceed** it — yet $22,931 sits *below*
+> the weekly $24,212.92, which is impossible for one stream. Mixing the two cost models
+> **flattered the fixed-DD headline by 5.2 %**.
+>
+> **Corrected: `k = 20,245 / 24,212.92 = 0.836124`, giving `$1,166/wk`.** The **source hashes,
+> parameters, cost model and semantics are UNCHANGED** — only a derived reporting figure was
+> wrong. **The seal was not read**, so this is legal **pre-read defect repair** (§29), not
+> outcome-driven retuning.
 
 Parity evidence, frozen as the executable claim:
 

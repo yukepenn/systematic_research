@@ -4,21 +4,19 @@
 ========================================================================================================
     weekly observations         213   2022-07-10 -> 2026-08-02
     raw weekly mean             $  1,393.95   <- baseline quotes $1,394  MATCHES
-    FROZEN scaling factor k       0.882866   (= 20,245 / 22,931 baseline maxDD)
-    scaled weekly mean          $  1,230.67   <- protocol quotes $1,230  MATCHES
-    scaled weekly sd            $  4,306.77   <- Gaussian version implied $4,317
+    weekly maxDD (same stream)  $ 24,212.92   <- NOT the canonical $22,931
+    CORRECTED scaling factor k    0.836124   (= 20,245 / 24,212.92)
+    scaled weekly mean          $  1,165.51   <- CORRECTED; was quoted $1,230
+    scaled weekly sd            $  4,078.76
 
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    !! UNRECONCILED DISCREPANCY - flagged, not silently resolved
-    !! This weekly series' own max drawdown is $24,212.92, implying k = 0.836124,
-    !! but the frozen baseline reports maxDD $22,931, implying k = 0.882866.
-    !! Weekly-resolution drawdown CANNOT exceed daily-resolution drawdown - a weekly curve is
-    !! a subsample of the daily one - so these two are NOT the same object. The raw MEAN
-    !! matches to $0.05, so the P&L stream is right; the DRAWDOWN basis is not.
-    !! The frozen factor is used here because s29 says freeze the research-derived one.
-    !! THIS MUST BE CLOSED BEFORE THE BANDS ARE USED AT A CHECKPOINT.
-    !! Impact if the series' own k were right instead: every band scales by 0.9471 (a -5.3 % shift).
-    !! P(cum<0) is SCALE-INVARIANT and is therefore unaffected by this discrepancy.
+    !! DISCREPANCY RESOLVED by FWD_DD_RECONCILIATION - the canonical $22,931 was DEFECTIVE.
+    !! The $1,394 numerator is NET OF THE MODELLED SPREAD (`baseline_trade_net`).
+    !! The $22,931 denominator matches a COMMISSION-ONLY stream (`pnl_commonly`) to $78.
+    !! Mixing them flattered the fixed-DD headline: $1,230/wk instead of $1,166/wk, +5.2 %.
+    !! Both sides now use the FROZEN spread-inclusive stream. Corrected BEFORE the seal was
+    !! read, which is legal pre-read repair, not outcome-driven retuning.
+    !! P(cum<0) is SCALE-INVARIANT and is unchanged by this correction.
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     WHY A GAUSSIAN IS THE WRONG MODEL HERE:
@@ -35,17 +33,32 @@
 ========================================================================================================
     CP     wk   expected   source      p01 (INVALID)   p05 (WATCH)  p25 (HEALTHY)   P(cum<0)
     ------------------------------------------------------------------------------------------------
-    A      12     14,768   EMPIRICAL         -16,456        -7,587          5,000      14.5%
-                           gaussian          -19,938        -9,772          4,705      16.1%
-                           DELTA               3,482         2,185            295      -1.6%
-    B      25     30,767   EMPIRICAL         -14,420        -2,097         16,510       6.3%
-                           gaussian          -19,328        -4,654         16,242       7.7%
-                           DELTA               4,908         2,557            268      -1.3%
-    C      50     61,533   EMPIRICAL          -4,610        14,301         41,406       1.6%
-                           gaussian           -9,311        11,440         40,993       2.2%
-                           DELTA               4,701         2,861            414      -0.6%
+    A      12     13,986   EMPIRICAL         -15,585        -7,185          4,736      14.5%
+                           gaussian          -18,883        -9,255          4,456      16.1%
+                           DELTA               3,298         2,070            280      -1.6%
+    B      25     29,138   EMPIRICAL         -13,657        -1,986         15,636       6.3%
+                           gaussian          -18,304        -4,408         15,382       7.7%
+                           DELTA               4,648         2,422            253      -1.3%
+    C      50     58,276   EMPIRICAL          -4,366        13,544         39,214       1.6%
+                           gaussian           -8,818        10,835         38,822       2.2%
+                           DELTA               4,452         2,709            392      -0.6%
 
     READ THE DELTA ROW. Where EMPIRICAL is BELOW gaussian, the Gaussian band was TOO TIGHT
     and would have raised a false INVALIDATION. Where it is ABOVE, the Gaussian was TOO
     LOOSE and a genuinely broken strategy could have passed. Either way the Gaussian band
     was the wrong instrument, and the empirical one is now primary.
+
+========================================================================================================
+=== s30  BLOCK-LENGTH SENSITIVITY - 40,000 resamples reduce Monte-Carlo noise, they do NOT
+=== create historical information. If p01 is unstable across reasonable dependence choices,
+=== the protocol must say so rather than pick the most forgiving band.
+========================================================================================================
+    CP     wk              L=3           L=6          L=12      spread
+    ------------------------------------------------------------------------
+    A      12          -13,861       -15,585       -11,486       4,099
+    B      25          -12,354       -14,136       -12,235       1,902
+    C      50           -2,789        -4,077        -1,533       2,544
+
+    Largest p01 movement across block lengths: $4,099
+    >>> THE INVALIDATION THRESHOLD IS NOT STABLE across reasonable dependence choices.
+    >>> The protocol must carry this as a RANGE, not a single number.

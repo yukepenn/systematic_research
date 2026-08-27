@@ -23,8 +23,8 @@ _This is a **state document, not a changelog.** Wave-by-wave history lives in
 
 | # | baseline | object | evidence |
 |---|---|---|---|
-| **A** | **RESEARCH_SINGLE** | **`P1/PCT`** | $1,394/wk raw · **$1,230/wk at fixed $20,245 DD** · 56.3 % positive weeks · max DD $22,931 · t 4.16 |
-| **B** | **RESEARCH_PORTFOLIO_FRONTIER** | **`{P1/PCT + XM_CONFLICT}`** inverse-vol | **$2,012/wk at fixed DD** · max DD **$11,489** · 59.2 % positive weeks · t 4.90 |
+| **A** | **RESEARCH_SINGLE** | **`P1/PCT`** | $1,394/wk raw · ⚠️ **$1,166/wk at fixed $20,245 DD — CORRECTED 2026-08-27, was $1,230** · 56.3 % positive weeks · max DD **$24,213** (was $22,931) · t 4.16 · `runs/FWD_DD_RECONCILIATION/` |
+| **B** | **RESEARCH_PORTFOLIO_FRONTIER** | **`{P1/PCT + XM_CONFLICT}`** inverse-vol | ⚠️ **$2,012/wk SUSPECT — NOT audited, may carry the same cost-model defect as A. Do not quote as clean** · max DD $11,489 · 59.2 % positive weeks · t 4.90 · `runs/FWD_DD_RECONCILIATION/` |
 | **C** | **EXECUTABLE_SINGLE** | **`WeeklyEdgeP1PCT_v1`** | ✅ **PARITY-CERTIFIED 2026-08-27** · `runs/WE_P1PCT_PARITY_20260827/` |
 | **D** | **EXECUTABLE_COMPONENT_SET** | **`WeeklyEdgeP1PCT_v1` + `WeeklyEdgeXMConflict_v2`** | ✅ **both legs individually PARITY-CERTIFIED** · `runs/WE_XM_PARITY_20260827/`. ⚠️ a certified component set, **NOT** an executable implementation of B — see below |
 
