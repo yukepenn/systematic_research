@@ -1,0 +1,71 @@
+run_id: WE_W113_ROUTEBASE
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "Owner MEGA DIRECTIVE V5 sections 30, 37, 26, 45 (baseline review loop; can one state layer route more than one engine)."
+
+title: >
+  ROUTE THE ACTUAL BASELINE. W109 proved three causal states known at 11:48 carry real information
+  about whether the session ahead trends, and proved that a binary veto does not pay ON FADES.
+  Section 37 says the next question is whether ONE state layer can route MORE THAN ONE engine. The
+  engines it failed on lose money; the engine that matters makes money. This wave asks the same
+  question of P1/PCT, where the answer is worth real dollars either way.
+
+the_question: >
+  Does blocking P1/PCT's NEW ENTRIES after 11:48, on the sessions a proven causal state calls
+  RANGE-LIKE, improve the baseline at fixed drawdown - beyond what blocking the same NUMBER of
+  sessions at random achieves?
+
+mechanistic_prior_fixed_here:
+  polarity: >
+    P1/PCT is a long-only TREND-FOLLOWING engine: a 13-member volatility ratchet OR-gated with a
+    momentum channel. Its breakouts fail on range days. So the veto polarity is the OPPOSITE of
+    W109's: veto when the detector is LOW (range-like), not high. That polarity is fixed by
+    mechanism here, before any P and L is read, and may not be flipped afterwards.
+  the_honest_caveat: >
+    The W109 detectors discriminate TREND from RANGE without a SIGN. P1 is long-only, so it is
+    helped by TREND-UP and hurt by TREND-DOWN, and an unsigned trend state is therefore of
+    AMBIGUOUS value to it a priori. This is disclosed now rather than discovered later, and it
+    makes the test genuinely two-sided.
+  the_redundancy_that_must_be_controlled: >
+    P1/PCT ALREADY CONTAINS A RANGE THROTTLE (q = 0.8) and a delta gate. A detector that merely
+    re-expresses that throttle would produce a real-looking improvement that is not new
+    information. The wave therefore reports the detector's overlap with the throttle's own accept
+    set and an arm in which the throttle is held fixed.
+
+detectors:
+  note: "ONLY the three W109 PROVED at AUC 0.613-0.621 against 2,000-draw permutation nulls. The three W109 found null are NOT carried forward - re-testing them here would be a second bite at a family already closed."
+  D1_DIR_EFF:   "abs(C_1148 - O_0931) / summed abs delta close over 09:31-11:48. AUC 0.617."
+  D4_VWAP_DISP: "abs(C_1148 - session VWAP_1148) / trailing-60-session mean of the same. AUC 0.621."
+  D5_MR_FAIL:   "fraction of the 60 bars before 11:48 that set a new running session extreme. AUC 0.613."
+  calibration: "identical trailing causal quantiles, 250 sessions, shifted one. Veto rates 0.25 / 0.50 / 0.75 of sessions, preregistered."
+  d5_disclosure: >
+    W109 recorded D5_MR_FAIL as UNCALIBRATED at the 0.75 arm (realised veto rate 0.99 because the
+    feature has an atom at zero). It is carried here for its AUC but its 0.75 arm is expected to be
+    degenerate and will be reported as UNCALIBRATED rather than silently included.
+
+intervention: >
+  On a vetoed session, P1/PCT takes NO NEW ENTRIES from the bar stamped 11:49 onward. Positions
+  already open are managed by the unchanged engine - the session box, the target and the
+  session-close flatten all still apply. Nothing else about the strategy changes: same ensemble,
+  same B-MOM gate, same range throttle, same quality sizing, same per-contract box.
+
+primary: "weekly dollars at a fixed $20,245 maximum drawdown, the campaign's headline metric, best over the 9 cells and CHARGED as a best-of-9."
+falsifier: >
+  The best cell does not exceed the 95th percentile of a RATE-MATCHED RANDOM VETO null - 200 draws,
+  each blocking post-11:48 entries on the same NUMBER of sessions chosen uniformly at random. That
+  null is the whole test: it subtracts the value of simply trading less in the afternoon.
+
+secondary:
+  - "the full 3 x 3 table with net, trades, positive weeks, max DD, top-5 DD, CVaR5 and t"
+  - "the UNCONDITIONAL control: block post-11:48 entries on EVERY session, and on NO session. W111b's rule - a conditional result requires its matched unconditional control in the same wave"
+  - "overlap between each detector's veto set and P1's existing range-throttle rejections, as a Jaccard index and as a 2x2 table"
+  - "how much of P1/PCT's money is even AT RISK here: net and trade count from entries at or after 11:49, versus before"
+  - "the same table on 2006-2021, where the detectors have never been looked at, reported as an out-of-window read and NOT as part of the primary"
+  - "marginal portfolio value: does the routed baseline change the P1/PCT + XM_CONFLICT combination at inverse-vol weights"
+
+decision_rule:
+  - "NOTHING PROMOTED BY THIS WAVE. The baseline changes only through the §31 procedure - old version, new version, reason, evidence, commit - and a single wave is not that."
+  - "A cell that beats the random-veto null but whose veto set is largely the existing range throttle is recorded as REDUNDANT, not as new information."
+  - "If P1/PCT's post-11:49 entries carry little of its money, the wave reports that FIRST and states plainly that the intervention could not have mattered much either way."
+  - "No detector, rate, polarity or cutoff time is re-chosen after P and L is seen."

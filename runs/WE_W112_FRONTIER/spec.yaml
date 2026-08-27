@@ -1,0 +1,86 @@
+run_id: WE_W112_FRONTIER
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "Owner MEGA DIRECTIVE V5 sections 15, 22, 17, 44. Coverage-matrix row #0 (re-ranked after W109)."
+
+title: >
+  THE FIRST MEASUREMENT OF THE CAUSAL_MODEL_FRONTIER. OPPORTUNITY_LANGUAGE.md, which is binding,
+  states that of the four opportunity levels the third - the best actual forecast obtainable from
+  information available at decision time - HAS NEVER BEEN MEASURED IN THIS REPO. Every capture
+  ratio the campaign has ever quoted compares REAL_SYSTEM_CAPTURE against an EX-POST oracle that
+  knows the future, so the gap between them has never been decomposed into "money a causal model
+  could have reached" and "money no causal model could ever reach". This wave measures the middle
+  term for one segment.
+
+why_now: >
+  W109 established that three causal states known at 11:48 carry REAL information about the session
+  ahead - AUC 0.613 to 0.621 against 2,000-draw permutation nulls - and that a BINARY VETO is too
+  blunt a policy to monetise it. Section 22 says the target should be an ACTION VALUE, E[PnL | I_t],
+  not a categorical regime. This wave is that object, and it is a measurement first and a trade
+  second.
+
+segment: >
+  AFT, decide 11:48 / fill 11:49 / exit 15:44. Chosen because it is the geometry W108, W109 and W111
+  all used, so the answer lands beside three existing results instead of in a new incomparable
+  frame; because the ledger puts AFT's level-2 oracle at $1,170/session against $3 captured, the
+  LOWEST capture ratio of any segment; and because every prior attempt on it has failed, which
+  makes it the honest place to ask whether the residual is reachable at all.
+
+target: "the 11:49 open to 15:44 close move in dollars per NQ contract, net of the same cost model."
+
+information_set:
+  rule: "STRICTLY pre-decision. Every feature uses only bars stamped at or before 11:48 on the trade's own session, or completed prior sessions. Fixed here, before any model is fitted."
+  features:
+    - "the three states W109 PROVED carry class information: directional efficiency 09:31-11:48, VWAP displacement, fraction of the last 60 bars setting a new session extreme"
+    - "the three W109 detectors that did NOT: close-location within bar, range expansion, cross-market breadth - kept so the model is not pre-filtered by a prior result"
+    - "morning net move and morning absolute path, both in points"
+    - "session range so far, and it relative to its trailing-250 mean"
+    - "total volume 09:31-11:48 relative to its trailing-250 median"
+    - "position of the 11:48 close inside the morning range"
+    - "overnight range relative to trailing median, and the opening gap"
+    - "prior-session close-to-close return and prior-session class-free realized range"
+    - "trailing-20-session realized volatility of the SAME 11:49-15:44 segment"
+    - "day of week, and the committed CPI/NFP/FOMC flag from c01_announcement_calendar.csv"
+  forbidden: "no MFE, no MAE, no realized afternoon path, no ex-post session class, no future bar of any kind."
+
+model_family:
+  note: "Section 22: start simple, always compare the complex model to a simple baseline. Two families, no tuning grid, hyperparameters fixed HERE."
+  M0_MEAN: "predict the trailing mean of the target. The null model - if nothing beats this, there is no causal frontier at this geometry."
+  M1_RIDGE: "ridge regression, alpha = 10.0, features standardised on the training block only."
+  M2_GBT: "gradient-boosted trees, 200 estimators, depth 2, learning rate 0.03, subsample 0.8. Depth 2 is deliberate: with ~1,000 sessions a deeper tree would be memorising."
+  no_search: "No hyperparameter search of any kind. These values are frozen in this file."
+
+evaluation:
+  protocol: >
+    WALK-FORWARD, EXPANDING WINDOW. Fit on all sessions strictly before the block, predict the
+    block, never refit on anything it will predict. First fit needs 250 sessions; blocks are 63
+    sessions (one quarter). This is the ONLY protocol quoted. K-fold is not used anywhere in this
+    wave - on a discovery-consumed time series it leaks future information into the past and this
+    campaign's own discipline note forbids quoting it.
+  metrics:
+    - "out-of-sample R-squared against the trailing-mean model"
+    - "out-of-sample DIRECTIONAL accuracy against p-star for this geometry, computed not assumed"
+    - "net dollars per trade of the sign policy, and of the magnitude-weighted policy"
+
+policies:
+  P_SIGN: "trade sign(prediction) on every eligible session, size 1."
+  P_WEIGHT: "trade sign(prediction) with exposure proportional to |prediction|, normalised so mean exposure equals 1 contract. This is the CONTINUOUS ACTION VALUE that W109 named as the untested successor to the binary veto."
+
+primary: "the walk-forward net dollars per trade of M1_RIDGE under P_SIGN."
+falsifier: >
+  The primary is <= 0, OR <= the 95th percentile of a coin null on the same trades, OR its
+  out-of-sample directional accuracy is <= p-star. Any one of the three fails the wave.
+
+secondary:
+  - "the full 2 models x 2 policies grid with a best-of-4 bar, and M0_MEAN beside them"
+  - "UNCONDITIONAL CONTROLS in the same table - always long, always short, and the unconditional fade of the morning direction - because W111b established that a class-conditional or model-conditional result must be shown against its matched unconditional control IN THE SAME WAVE"
+  - "the CAUSAL_MODEL_FRONTIER estimate itself: best achieved walk-forward causal expectancy per session, placed between the level-2 oracle above it and REAL_SYSTEM_CAPTURE below it"
+  - "stability: the same metrics per calendar year, and over the trailing 3 / 6 / 12 months"
+  - "feature importance / coefficients, reported as description only"
+
+decision_rule:
+  - "NOTHING PROMOTED. A pass buys a preregistration for an engine and a number for OPPORTUNITY_LANGUAGE.md."
+  - "A FAIL is still a result and is the more likely one: it would mean the AFT residual is largely UNREACHABLE by a causal model on the information we hold, which re-prioritises every other lane and should be written down as such rather than treated as a disappointment."
+  - "The frontier number is quoted with its protocol attached or is not quoted. 'Walk-forward, expanding window, 63-session blocks' travels with it permanently."
+  - "No feature, model, hyperparameter, block size or policy is re-chosen after results are seen."
