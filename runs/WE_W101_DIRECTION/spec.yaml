@@ -1,0 +1,88 @@
+run_id: WE_W101_DIRECTION
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-26
+status: PREREGISTERED
+authority: >
+  Owner directive V4 sections 2, 6, 7 (TRACK G) and TASK 8/9. The target is chosen from W99's
+  ranked table and W100's finding, and from nowhere else.
+
+title: >
+  THE DIRECTION QUESTION. W99 priced the bar exactly - a one-trade direction call on NQ breaks
+  even between 50.5 % and 51.4 % - and W100 showed the entire short book is that one question
+  asked 1,058 times (+$3,111/ctrRT when the session trends down, -$2,163 when it does not).
+  So: does ANY causal statement we can make at 09:45 clear that bar?
+
+# ---------------------------------------------------------------------------------------------
+# 1. THE OBJECT UNDER TEST - a forecast, not an engine
+# ---------------------------------------------------------------------------------------------
+object: >
+  At decision time T, take one position in the sign a predictor gives, hold to 15:45 ET, one entry
+  and one exit, size 1. Nothing else: no box, no throttle, no sizing layer, no latch. This is
+  deliberately the crudest possible instrument, because the question is whether the INFORMATION
+  clears the bar, not whether an engine can be built around it.
+decision_times: ["09:45", "10:30", "11:30"]
+horizon: "the decision bar's next open -> 15:45 ET close"
+
+predictors:            # all causal at T; all fixed here; no thresholds are scanned
+  DRIVE:        "sign(price_T - open_0930)  -- the primary"
+  ON_RET:       "sign(price_0930 - session open at 18:00 the previous evening)"
+  GAP:          "sign(open_0930 - prior session's close)"
+  VWAP_SIDE:    "sign(price_T - session VWAP at T)"
+  PREV_DAY:     "sign(prior session's close - prior session's 09:30 open)"
+  XM_AGREE:     >
+    sign of the mean of ES/RTY/YM returns 09:30 -> T, each divided by its own trailing-60-session
+    realized sigma so the three are commensurable. CROSS-MARKET, using data already on disk.
+  XM_CONFIRM:   "DRIVE, but only on sessions where XM_AGREE has the SAME sign (else flat)"
+  XM_CONFLICT:  "DRIVE, but only on sessions where XM_AGREE has the OPPOSITE sign (else flat)"
+  VOL_CONFIRM:  >
+    DRIVE, but only when the 09:30-T relative volume is above its own trailing-250-session median.
+    This is VOLUME AS A CONFIDENCE WEIGHT - the form W100 explicitly did NOT test.
+
+# ---------------------------------------------------------------------------------------------
+# 2. THE BAR, AND IT IS COMPUTED NOT ASSUMED
+# ---------------------------------------------------------------------------------------------
+bar: >
+  For each T, p*(T) = 0.5 * (1 + cost / E|price_1545 - price_T|), with cost the round-turn
+  commission plus the minute-specific spread at T and at 15:45 from W82's committed profile. A
+  predictor must beat p*(T) to be worth anything at all. Reported with an exact binomial CI on the
+  hit rate and, separately, mean $ per trade - because a 51 % hit rate with large winners and a
+  49 % hit rate with large losers are different objects and the hit rate alone cannot tell them
+  apart.
+
+# ---------------------------------------------------------------------------------------------
+# 3. HARNESS CHECKS - any failure stops the wave
+# ---------------------------------------------------------------------------------------------
+b1_checks:
+  - "ZERO-LAG KNOWN-ANSWER TEST for cross-market, and it is the reason this wave can be trusted at
+     all: corr(NQ 1-min return, ES 1-min return) must be MAXIMAL AT LAG 0 and materially lower at
+     lag -1 and +1. If ES leads NQ by one bar in the join, every cross-market result would be a
+     manufactured lookahead. The repo has had four cross-substrate alignment defects (W44, W52,
+     W76, W82); this is the check that catches the fifth."
+  - "the ES/RTY/YM minute index must join NQ's exactly on the overlapping minutes; the count of
+     joined minutes is printed, not assumed."
+  - "E|move| and the cost at each T are printed so p* can be recomputed by hand from the report."
+
+# ---------------------------------------------------------------------------------------------
+# 4. MULTIPLE TESTING - stated before the run, not after
+# ---------------------------------------------------------------------------------------------
+multiple_testing: >
+  9 predictors x 3 decision times = 27 tests. PRIMARY is DRIVE at 09:45 - one test, no selection.
+  Everything else is a disclosed family and carries a BEST-OF-K null: 200 draws in which each
+  session's predictor sign is replaced by a fair coin, the same statistic recomputed, and the
+  MAXIMUM over all 27 cells recorded. A cell is only called SUPPORTED if it beats the 95th
+  percentile of that best-of-27 distribution. This is the W53 discipline and it is not optional
+  here, because 27 cells will produce a 55 % hit rate somewhere by construction.
+
+# ---------------------------------------------------------------------------------------------
+# 5. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "NOTHING IS PROMOTED. A pass buys the right to build an engine on that predictor in a later
+     wave; it is not an engine and must never be quoted as one."
+  - "If the PRIMARY fails and no cell beats the best-of-27 null, the honest conclusion is recorded
+     plainly: we have no causal statement about NQ's daily direction that clears a 50.5-51.4 %
+     bar, and the campaign's short-side problem is not a tuning problem."
+  - "Cross-market is reported with its 0-for-15 prior attached to every line. A single positive
+     cell does not overturn that record; it identifies where to look next."
+  - "Recency (2024+/2025/2026YTD/t12m) is reported for every cell, with the BURNED label on
+     anything touching 2026-05-31 -> 07-31, and the seal at 2026-08-01 is not crossed."
