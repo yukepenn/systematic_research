@@ -1,0 +1,90 @@
+run_id: WE_W98_BOXDENOM
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-26
+status: PREREGISTERED
+authority: "OWNER MEGA DIRECTIVE V4, section 5 (TASK 2) - the highest-EVI architectural issue."
+
+title: >
+  SHOULD THE SESSION RISK BUDGET SCALE WITH POSITION SIZE?
+  W97/M8 found the session box is a DOLLAR limit on TOTAL position P&L, so a size-2 entry trips
+  the -$1,300 halt at 32.28 points instead of 64.78. P1 runs size 2 on 18.3 % of trades. This is
+  not a tuning question - it is a question about what the budget is denominated in.
+
+# ---------------------------------------------------------------------------------------------
+# 1. THE ARMS - only the fill engine's accumulator differs; signal, sizing and timing are frozen
+# ---------------------------------------------------------------------------------------------
+algebraic_note: >
+  "budget scaled by current contract quantity" and "per-contract accumulation" are THE SAME ARM:
+  sum(pnl_j)/u_j <= -1300  <=>  pnl_j <= -1300*u_j. Directive 5's variants B and C collapse to one.
+  They are not listed twice.
+
+arms:
+  ABS:        "INCUMBENT. spnl += pnl_j ; halt -1300, target +1000."
+  PCT:        "HYPOTHESIS. spnl += pnl_j / u_j ; halt -1300, target +1000. (= budget scales with size)"
+  ABS_LOOSE:  >
+    NULL FOR PCT. spnl += pnl_j ; halt -1300*k, target +1000*k, where k is the object's OWN mean
+    contracts per trade (P1 1.183, X9a 1.181, BMOM 1.000). PCT raises the average dollar budget by
+    exactly k. If a UNIFORMLY looser dollar box does as well, the win is loosening, not scaling -
+    and W95 already showed a box-level scan's argmax sits at the 87.5th percentile of pure noise.
+  PCT_MATCH:  >
+    CONTROL IN THE OTHER DIRECTION. spnl += pnl_j / u_j ; halt -1300/k, target +1000/k, so the
+    AVERAGE dollar budget equals ABS's. If PCT_MATCH still beats ABS, the size-conditioning itself
+    is the win and not the extra budget.
+  NOBOX:      "halt = inf, target = None. Bound on how much the box is worth at all."
+
+objects: [P1, X9a, BMOM, NETFUSE_1, "1:1", "1:2", "2:3"]
+note_on_objects: >
+  BMOM is 100 % size 1, so ABS and PCT MUST be byte-identical on it. That is a built-in negative
+  control, not a result. Baskets box each SLEEVE independently (W91: separate budgets); the basket
+  is the nominal-weighted daily sum of its boxed sleeves.
+
+frozen_across_arms: >
+  The causal quality score is computed ONCE, from the incumbent size-1 entry schedule, and reused
+  by every arm. At size 1 the two denominators coincide, so for ABS/PCT this is not even an
+  approximation. It IS an isolation choice for ABS_LOOSE/PCT_MATCH/NOBOX and is declared as one.
+  A self-consistent rebuild of the winning arm (score recomputed from its own entries) is run as a
+  faithfulness check; if it moves the verdict, the isolated result is withdrawn.
+
+# ---------------------------------------------------------------------------------------------
+# 2. HARNESS CHECKS - run and printed BEFORE any arm is read. Any failure stops the wave.
+# ---------------------------------------------------------------------------------------------
+b1_checks:
+  - "H-A: sfills_perctr(size=None) reproduces sfills byte-for-byte (same trade count, same pnl sum to 1e-9)."
+  - "H-B: BMOM ABS vs PCT byte-identical (0 % size-2). If they differ, the engines differ in something
+     other than the denominator and nothing here is interpretable."
+  - "H-C: the ABS arm reproduces the committed W89 trade/contract counts for P1, BMOM, X9a."
+  - "H-D: spread profile joined from W82's committed spread_by_minute.csv, max|diff| asserted."
+
+# ---------------------------------------------------------------------------------------------
+# 3. METRIC - fixed in advance
+# ---------------------------------------------------------------------------------------------
+primary: >
+  P1's weekly $ at a FIXED $20,245 max drawdown (the campaign's standing scale-invariant
+  money-at-risk metric), net of candidate-specific spread friction RECOMPUTED per arm from that
+  arm's own contract-weighted fill minute-of-day distribution, over the full modern window
+  2022-07-01 -> 2026-08-01.
+h1: "PCT > ABS on the primary."
+falsifier: "PCT <= ABS on the primary. Then the dollar box is not costing P1 anything and W97 sec 4
+            was a NETFUSE-only artifact."
+secondary:
+  - "paired weekly (PCT - ABS) mean, SE, t, N - required by CHARTER AMENDMENT 2 sec 2(a)."
+  - "PCT vs ABS_LOOSE. THIS is the question that decides whether anything is learned."
+  - "sign of (PCT - ABS) on all 7 objects."
+  - "recency dashboard: t3m / t6m / t12m / 2026YTD / 2025 / 2024+ / full (directive sec 13)."
+  - "Tier-3 stress on 2006-2021. Per directive sec 3 this is NOT a promotion veto; it is recorded."
+
+# ---------------------------------------------------------------------------------------------
+# 4. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "The box denominator is CHANGED IN THE INSTRUMENT only if ALL of:
+       (i)   PCT > ABS on P1's primary;
+       (ii)  PCT > ABS_LOOSE - it is scaling, not loosening;
+       (iii) sign(PCT - ABS) >= 0 on at least 4 of the 7 objects, and BMOM is exactly 0;
+       (iv)  the self-consistent rebuild does not reverse it."
+  - "The Tier-3 deep result is reported whatever it says and does NOT veto (directive sec 3), but a
+     REVERSAL there is recorded on the object's card as REGIME_LOCAL."
+  - "No box LEVEL is tuned in this wave. -1300/+1000 and k are all fixed before the run. There is
+     no best-of-K and therefore no scan null; if a level scan is wanted it is a separate wave with
+     the family-wise null W95 already built."
+  - "Every headline that this changes is reissued in the SAME commit, per the standing rule."
