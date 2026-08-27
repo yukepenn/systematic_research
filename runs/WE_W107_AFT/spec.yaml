@@ -1,0 +1,57 @@
+run_id: WE_W107_AFT
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "Owner directive V4 amendment section 6 LANE B."
+
+title: >
+  LANE B - AFT (13:30-15:44). $1,170/session of EX_POST_EXECUTION_FEASIBLE_ORACLE and the base
+  captures $3 of it, 0.3 percent, the lowest ratio of any segment. DIAGNOSTICS FIRST, not a
+  strategy. W104 killed the mechanical XM transplant here, so nothing is transplanted.
+
+stage_1_diagnostics:
+  question: "does ANY causal state known at 13:29 separate the sign or the size of the 13:30 -> 15:44 move?"
+  state_variables:
+    MORNING_DIR:   "sign of 09:31 -> 11:29"
+    MIDDAY_DIR:    "sign of 11:30 -> 13:29"
+    MID_RANGE_POS: "where the 13:29 price sits inside the 11:30-13:29 range, 0 to 1"
+    COMPRESSION:   "MID range divided by MORN range - lunch balance tightness"
+    VWAP_SIDE:     "sign of price_1329 minus the session VWAP at 13:29"
+    VWAP_DIST:     "(price_1329 - VWAP) divided by the trailing-session sigma"
+    PATH_EFF:      "abs(net move) divided by the summed abs(bar moves) over 09:31-13:29"
+    VOL_REACCEL:   "MID-window volume over MORN-window volume, causal z against its own 250-session history"
+    OPEN_RANGE_ST: "is the 13:29 price above, inside, or below the 09:31-09:45 opening range"
+  measurement: >
+    for each variable, the conditional MEAN and SIGN-RATE of the AFT move by QUINTILE, the session
+    count per cell, and a monotonicity read. This is a DIAGNOSTIC TABLE. No P and L, no thresholds,
+    no trade is simulated in stage 1.
+  survivor_rule: >
+    a variable SURVIVES stage 1 if the spread between its top and bottom quintile sign-rate is at
+    least 8 percentage points AND the pattern is monotone or single-peaked across the five
+    quintiles. Both conditions are fixed here, before the table is produced.
+
+stage_2: >
+  ONLY stage-1 survivors are carried into a simple causal trade: decide at the bar stamped 13:50,
+  fill at the 13:51 open, hold to 15:44, size 1, no stop. Acceptance rates 25 / 50 / 75 percent set
+  by TRAILING CAUSAL QUANTILES of the surviving variable over the prior 250 sessions. The direction
+  is the sign implied by the stage-1 table, fixed before P and L is read.
+
+primary: >
+  the equal-weight mean of dollars per trade across the stage-1 survivors at the 50 percent arm.
+  If stage 1 produces NO survivor the wave reports that and stops - a null diagnostic IS the result
+  and it is worth having, because it would mean the afternoon is not forecastable from anything the
+  morning leaves behind.
+falsifier: >
+  stage 1 finds no separating variable, OR the stage-2 primary is <= the 95th percentile of its
+  coin null.
+secondary:
+  - "each survivor x each rate with a best-of-K coin null, K = the number of cells actually run"
+  - "AFT's own p-star for the 13:51 -> 15:44 horizon, computed not assumed"
+  - "weekly correlation with P1/PCT and with XM_CONFLICT"
+  - "split by W51 session class"
+
+decision_rule:
+  - "NOTHING PROMOTED. Stage 1 may legitimately end the wave."
+  - "Carrying a variable from stage 1 to stage 2 IS a selection. The number carried is disclosed
+     and charged in the stage-2 best-of-K null."
+  - "No threshold, rate or window is re-chosen after seeing P and L."
