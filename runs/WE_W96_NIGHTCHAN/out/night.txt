@@ -1,0 +1,79 @@
+=== 1058 sessions / 213 weeks [6s]
+    NIGHT channel: fires on 61.46 % of in-window bars, 50.6 % long
+    BMOM channel : fires on 25.69 % of in-window bars (for reference)
+    bars where BOTH fire: 0 (0.0000 %) - disjoint by construction
+    NIGHT traded directly: 1,395 trades, net $103,433, 6.55 ctrRT/wk [7s]
+      LONG     702 trades  $    145,174  $  206.8/trade  40.5 % win
+      SHORT    693 trades  $    -41,741  $  -60.2/trade  34.3 % win
+
+=== ITS OWN FRICTION (W89's method - never assume the champion's cost line)
+    3.953 ticks = $19.77 per contract round turn (BMOM $12.99 RTH-only, X9a $14.55, P1 $14.52)
+    6.55 contract RT/week -> $129/week of spread
+
+=== HOURLY BREAKDOWN - if the money is 08:00-09:29 this is B-MOM's opening drive
+entry hour (ET)      trades       net $    share   $/trade
+00:00                    12       5,348     5.2%     445.6
+01:00                    17      -1,904    -1.8%    -112.0
+02:00                    28      -3,992    -3.9%    -142.6
+03:00                    35      -1,418    -1.4%     -40.5
+04:00                    16       1,295     1.3%      81.0
+05:00                    15       4,390     4.2%     292.6
+06:00                     8        -715    -0.7%     -89.4
+07:00                     6       4,319     4.2%     719.8
+08:00                    17     -12,814   -12.4%    -753.8
+09:00                     3        -543    -0.5%    -181.0
+18:00                   964      96,187    93.0%      99.8
+19:00                   109      -2,925    -2.8%     -26.8
+20:00                    91      11,113    10.7%     122.1
+21:00                    45      12,339    11.9%     274.2
+22:00                    23      -8,330    -8.1%    -362.2
+23:00                     6       1,084     1.0%     180.6
+    08:00-09:59 share of net: -12.9 %  -> not concentrated in the pre-open
+
+=== H1: the only chronology gate
+period    weeks      wk $       SE      t    wk+%     maxDD
+full        213       356      346   1.03   50.2%    51,374
+t24         105       858      571   1.50   54.3%    32,456
+t12          53     1,095      859   1.27   58.5%    32,456
+    H1 (t24 weekly > 0): 858 -> PASS
+
+per-year wk $         2022      2023      2024      2025      2026
+NIGHT                 -682      -390       514       402     2,099
+
+=== H2: WEEKLY rho against the library (daily quoted only to show the unit matters)
+vs            WEEKLY rho   daily rho   <0.20?
+P1                 0.020       0.103      yes
+X9a                0.193       0.182      yes
+BMOM              -0.163      -0.062      yes
+SHORT              0.150       0.207      yes
+NETFUSE_1          0.164       0.270      yes
+    H2 (|weekly rho| < 0.20 against ALL): PASS
+    HONEST READING, written in the spec before the read: temporal disjointness
+    produces low rho BY CONSTRUCTION. This is the SAME mechanism on a different
+    clock, not a different mechanism. It counts for portfolio arithmetic and it is
+    NOT evidence of independent information.
+
+=== H3: session-shift null (W72's, which the incumbent B-MOM channel cleared at 100th)
+      50/200 [29s]
+      100/200 [41s]
+      150/200 [53s]
+      200/200 [65s]
+    real 5.176 pts/session   null mean 0.475   p95 7.410   percentile 88.0 %
+    H3 (>= 95th): FAIL
+
+=== H4: does adding NIGHT to the 2:3 basket help? (inverse-vol, fixed in advance)
+    inverse-vol weights BMOM 0.261 / X9a 0.399 / NIGHT 0.340
+    oracle battery (precondition):
+      pair + $200/sess       ALL-THREE   100 %
+      pair + $500/sess       ALL-THREE   100 %
+      pair losses halved     ALL-THREE   100 %
+      -> gate USABLE
+    3-sleeve (inv-vol) vs the 2:3 pair, 25 windows:
+      money    20 %   wk+%    28 %   top-5 DD   100 %   ALL-THREE    12 %
+
+                         wk $    wk+%     maxDD   top5DD     worst  wk$@fixDD
+2:3 pair (1 unit)       1,013   57.7%    17,330   11,455    -8,692      1,183
++ NIGHT (inv-vol)         789   56.8%    11,214    9,411    -6,209      1,424
+    H4 (>= 2 of 3 full-window legs): 2/3 PASS   [gate ALL-THREE 12 %]
+
+[done 66s]

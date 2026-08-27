@@ -52,3 +52,25 @@ revive it**. A future teardown-and-rebuild should start here rather than re-deri
 | The consistency object inside ONE engine | W59+W60 | four independent routes tested - lowering the profit target, raising the halt, aggregating the halt axis, constrained selection - and EVERY ONE buys green days with money at a stable rate. The target's exact accounting prices it at ~$860 per extra green day; the halt aggregate loses $4,792 on precisely the 254 sessions where it acts while raising their positive-day rate 23.2 % -> 28.7 %. NOT ONE arm beats the incumbent on traded-day rate AND money AND the drawdown distribution in a single rolling 24-month window | a second engine whose green days are not this one's. W58 reached the same place from the other direction: P1 is flat on 40 % of sessions BY DESIGN, so the consistency objective and the breadth objective are the same problem |
 | The h2000_t750 parameter move | W60 | the ONE direction with evidence: +4.9 pp traded-day rate, stable in 100 % of 22 rolling 24-month windows and in the same direction for two other constructions, for -2.0 % money (which wins 41 % of windows, i.e. free). The curve KINKS there - beyond it green days cost $2,029-$2,580 each against $207 up to it. But its -13 % drawdown improvement is NOT stable (36 % of windows) and the specific stopping point is a hindsight pick | a walk-forward that only moves along the monotone direction rather than choosing freely - a constrained selector, which W60 tested and which failed at the 18.7th percentile on money. So: the direction is real, the stopping point needs an out-of-sample warrant that does not exist yet |
 | The mirrored SHORT sleeve as a consistency sleeve | W61, W62, W63 | the best decoupling ever measured here (daily rho **-0.003** with P1, weekly +0.158) and it trades **81.5 %** of the sessions P1 sits out - the highest of any candidate. At w=0.30: +7 % money, +5.4 pp positive weeks, longest weekly losing streak HALVED 8 -> 4, median week more than doubled, drawdown distribution -15 %. Money improvement stable in 95-100 % of rolling windows, the most stable improvement in the campaign. KILLED BY THE MOST RECENT YEAR: 2026 standalone is **-10.62 pts/session** against +13.92 in 2024, its own trailing-24-month t sits at the **0th percentile** of its history, and in 2026 the combination earns 65 % LESS than P1 alone with a 28 % LARGER drawdown. No unconditional weight survives: the worst-year delta is >= 0 only at w = 0.00, and the leave-one-year-out procedure produced a usable weight in **0 of 5 acted folds**. Both nulls fail, so ~91 % of the benefit is the sleeve's own expectancy rather than its alignment | the trailing-24-month t returning toward its own median of +2.1 - equivalently, 2026's -10.62 reversing. It is not a decaying edge (22 of 22 rolling windows positive, median t +2.13) and not holdable insurance (W62 refuted that reading); it is a bear-market hedge whose premium must fall to something the book can carry |
+
+## NIGHT — the overnight displacement channel traded directly (W96, 2026-08-26)
+**What it is**: the B-MOM displacement rule anchored at the 18:01 session open, live 18:00–09:29
+only, latched per session, traded directly long+short at 1 contract with its own session box.
+Zero firing bars in common with B-MOM — disjoint by construction.
+
+**Why it is parked**: it **fails W72's session-shift null at the 88th percentile** against a 95th
+bar — the same null the incumbent B-MOM channel clears at the 100th. It is exposure to the
+overnight drive, not a specific edge. Adding it to the 2:3 basket wins 2 of 3 *full-window* legs
+but scores **ALL-THREE 12 %** on the corrected rolling gate (money 20 %, wk+% 28 %, top-5 100 %).
+
+**What it measured that is worth keeping** (`FACT`, and both are standing constraints):
+- **the overnight SHORT does not work**: −$41,741 over 693 trades, −$60.2 each, 34.3 % win, while
+  B-MOM's RTH short is +$83,691. **The short edge is an RTH phenomenon.**
+- **overnight friction is $19.77 per contract round turn** against P1's $14.52 — any future
+  overnight engine starts $5.25/RT in the hole. A standing tax on this whole axis.
+- it does pass the chronology gate (t24 +$858/wk, t = 1.50) and is **overwhelmingly a 2026
+  object** (−682 / −390 / +514 / +402 / **+2,099** by year).
+
+**REVIVAL CONDITION**: a version of this channel — or any other overnight mechanism — that clears
+the session-shift null at ≥ 95th percentile. Low ρ alone does not revive it; W96 established that
+temporal disjointness delivers ρ < 0.20 on demand and does not deliver specificity.
