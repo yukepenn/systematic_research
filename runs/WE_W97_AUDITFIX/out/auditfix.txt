@@ -1,0 +1,62 @@
+========================================================================================================================
+=== M10: P1 / 2:3 pair / NETFUSE_1 on 2006-2021 in ONE RUN - a shared baseline BY
+===      CONSTRUCTION. W87 and W93 used different P1 deep series; only one can be right.
+========================================================================================================================
+    deep substrate 4,908,286 bars / 4,279 sessions [cache mem_deep_4908286.npz] [11s]
+    four deep objects built [120s]
+
+object         trades     ctr-min        net $    wk+%      maxDD    top5DD     worst  strk
+P1              9,557   1,022,157       79,076   44.5%     39,555    18,925    -7,019     7
+BMOM            5,640   1,393,702       58,645   51.2%     39,743    28,361   -12,687     7
+X9a             9,504   1,044,284      120,461   45.1%     40,933    15,866    -6,249    10
+PAIR23         39,792   1,184,051       95,734   47.7%     24,686    12,384    -7,250     6
+NETFUSE_1      20,147   1,532,556       -8,951   42.4%     49,961    25,148    -8,572     8
+
+    Which committed P1 does this rebuild agree with?
+      THIS RUN        top5  18,925.096  maxdd   39,555.24  net   79,076.48  wkpos 44.484
+      W87 deep.csv    top5  21,645.704  maxdd   47,250.40  net   57,343.44  wkpos 44.844
+      W93 deep.csv    top5  18,925.096  maxdd   39,555.24  net   79,076.48  wkpos 44.484
+
+    THE BAR (W87's, >= 25 % smaller mean top-5 drawdown than P1) - on ONE baseline:
+object          NOMINAL exposure    INCOME-matched
+PAIR23                     34.6%             45.9%
+NETFUSE_1                 -32.9%           -910.3%
+
+========================================================================================================================
+=== M3: IS THE LOW rho THE CLOCK, OR IS IT SIGNAL SHARING?
+===     Split each object's daily P&L by ENTRY SEGMENT and correlate WEEKLY vs BMOM.
+========================================================================================================================
+
+series                RTH share of net    weekly rho vs BMOM       z
+P1_ALL                          100.0%                0.2869    4.16
+P1_RTH                           35.3%                0.2744    3.98
+P1_ON                            64.7%                0.1097    1.59
+
+X9a_ALL                         100.0%                0.0094    0.14
+X9a_RTH                          14.3%                0.0205    0.30
+X9a_ON                           85.7%               -0.0017   -0.02
+
+SOLAR_ALL                       100.0%                0.0197    0.29
+SOLAR_RTH                        -7.6%                0.0528    0.77
+SOLAR_ON                        107.6%               -0.0109   -0.16
+
+    THE TEST: if the low rho is TEMPORAL DISJOINTNESS, X9a_RTH - which shares BMOM's
+    clock completely - must correlate strongly with BMOM. If it is SIGNAL SHARING,
+    X9a_RTH stays near zero (X9a has no bmom channel) while P1_RTH is elevated.
+
+========================================================================================================================
+=== M8: DOES THE QUALITY LAYER HURT, OR IS IT THE EXIT POLICY?
+===     sfills' box is a DOLLAR limit on TOTAL position P&L, so a size-2 entry trips the
+===     -$1,300 halt at half the point move. Control: box accumulates PER CONTRACT.
+========================================================================================================================
+
+arm                         trades    ctr  scale  wk$@fixDD    wk+%   top5DD  strk      t  2026 wk$
+NETFUSE_1                    3,893  3,893  1.000      1,068  58.69%   15,611     5   3.67       767
+NETFUSE_Q (published)        3,536  4,120  0.866        903  56.81%   16,289     5   3.41       196
+NETFUSE_QN (per-ctr box)     3,893  4,601  0.789      1,177  59.15%   14,401     5   3.79       831
+NETFUSE_1N (per-ctr box)     3,893  3,893  1.000      1,068  58.69%   15,611     5   3.67       767
+
+    Compare NETFUSE_QN against NETFUSE_1N - both per-contract box, so the ONLY
+    difference is the sizing layer. That is the isolated effect of quality sizing.
+
+[done 178s]
