@@ -1,0 +1,67 @@
+    1,059 sessions, W118 triggers rebuilt [5s]
+    MIRROR_CONT (R=0.50, gate=0.50): N=347, $407/trade, net $141,162
+
+============================================================================================================================
+=== 1. STANDALONE DASHBOARD (section 29). All standardised windows together.
+============================================================================================================================
+window               N   $/trade   edge pp    hit%       net $     wk $
+t3m                 41     1,243    13.22pp   63.4%      50,971      238
+t6m                 65       884     5.17pp   55.4%      57,487      269
+t12m               108       811    10.87pp   61.1%      87,554      409
+YTD 2026            75       844     8.44pp   58.7%      63,278      296
+prior yr 2025       92       417     4.13pp   54.3%      38,374      179
+t24m               219       337     3.19pp   53.4%      73,710      344
+2022-current       347       407     5.50pp   55.6%     141,162      660
+2006-2021 [diag]  1394       -14              47.3%     -20,118
+
+============================================================================================================================
+=== 2. REDUNDANCY - does it earn only when the book already earns? (section 24)
+===    The three slices are EX-POST OUTCOMES used as diagnostics. Not inputs.
+============================================================================================================================
+    MIRROR_CONT trades on 347 of 1058 in-window sessions (32.8 %)
+
+correlation (session-level, on MIRROR trade days)         rho
+   with P1/PCT                                          0.388
+   with XM_CONFLICT                                     0.258
+   with the research book                               0.450
+
+slice                                             N   MIRROR $/trade   unconditional   difference
+ALL MIRROR trade sessions                       347              407             407           +0
+... where P1/PCT lost that session              129              277             407         -130
+... where XM lost that session                   50           -1,048             407       -1,455
+... where the BOOK lost that session            138             -297             407         -704
+... where the BOOK won that session             126            1,315             407         +908
+
+============================================================================================================================
+=== 3. PORTFOLIO - the SAME FOUR GATES W116 applied to FOLLOW_MORNING (section 28)
+============================================================================================================================
+    213 weeks. Unconditional P(MIRROR<0) = 0.329
+statistic                        REAL  null mean   null p95   pctile
+rho                             0.145     -0.001      0.099    99.5th
+rho | book losing              -0.158      0.001      0.173     7.5th
+P(cand<0 | book<0)              0.310      0.329      0.379    24.5th
+worst-decile overlap            0.019      0.011      0.023    80.2th
+$ on book-losing weeks        614.021    662.963   1247.316    42.9th
+tail beta                      -1.861      0.009      1.014     0.9th
+
+book                              conv           wk $     maxDD  wk$@fixDD  pos wk%    CVaR5
+P1/PCT + XM (incumbent)           invvol        1,142    11,489      2,012    59.2%   -4,737
+P1/PCT + XM + MIRROR_CONT         invvol          971     8,143      2,414    62.4%   -4,112
+
+P1/PCT + XM (incumbent)           income        1,105    12,533      1,785    60.1%   -4,971
+P1/PCT + XM + MIRROR_CONT         income          904     9,014      2,030    62.4%   -4,691
+
+    INCREMENTAL fixed-DD weekly $: inverse-vol +402, income-matched +245   -> RANGE +245 to +402
+
+============================================================================================================================
+=== 4. THE FOUR GATES, applied identically to how W116 applied them to FOLLOW_MORNING
+============================================================================================================================
+    earns > 0 on book-losing weeks                            PASS
+    beats its circular-shift null there                       FAIL
+    incremental fixed-DD > 0 at either convention             PASS
+    worst-decile overlap NOT worse than the null's 95th       PASS
+
+    CLASSIFICATION: REDUNDANT / NOT DIVERSIFYING
+    (FOLLOW_MORNING failed gates 2 and 4 in W116, for direct comparison.)
+
+[done 11s]

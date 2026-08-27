@@ -14,7 +14,8 @@ three objects are **HISTORICAL SHIPPED BASELINES** — they are real, they are c
 
 | you want | read |
 |---|---|
-| **what is being researched and built right now** | [`research/weekly_edge/CURRENT_BASELINE.md`](research/weekly_edge/CURRENT_BASELINE.md) — the **living baseline**, updated after every material frontier change |
+| **what is being researched and built right now** | [`research/weekly_edge/CURRENT_BASELINE.md`](research/weekly_edge/CURRENT_BASELINE.md) — the **living baseline**. §0 carries the **four-way distinction**: research-single, research-portfolio, executable-single, executable-portfolio. **Both executable baselines are currently EMPTY** — nothing has cleared NT8 parity |
+| where the book actually loses money | [`runs/WE_W119_BOOKLOSS/`](runs/WE_W119_BOOKLOSS/) — the `BOOK_LOSS_LEDGER`, 1,058 sessions × 25 columns, causal fields named by availability minute |
 | what is known / falsified, by information source | [`research/weekly_edge/MECHANISM_COVERAGE_20260826.md`](research/weekly_edge/MECHANISM_COVERAGE_20260826.md) |
 | what data exists and where it is sealed | [`research/weekly_edge/DATA_CENSUS_20260826.md`](research/weekly_edge/DATA_CENSUS_20260826.md) · [`research/operational/LOCKED_FORWARD.md`](research/operational/LOCKED_FORWARD.md) |
 | how opportunity numbers may be quoted (**binding**) | [`research/weekly_edge/OPPORTUNITY_LANGUAGE.md`](research/weekly_edge/OPPORTUNITY_LANGUAGE.md) |

@@ -1,6 +1,6 @@
 # CURRENT BASELINE — campaign #7 WEEKLY_EDGE
 
-_Authoritative as of **2026-08-27**, through wave **W116**. Git `HEAD` at time of writing: see the
+_Authoritative as of **2026-08-27**, through wave **W120**. Git `HEAD` at time of writing: see the
 commit that carries this edit._
 
 _Original header text: authoritative through W111._ Where this file and any older
@@ -21,10 +21,44 @@ shipped objects and is unaffected by anything here._
 > - **A new binding rule:** a class-conditional table requires its **matched unconditional
 >   control** in the same wave. W111b showed W108's headline signature is reproduced exactly by an
 >   unconditional fade.
+>
+> **— W117 → W120 —**
+> - **W119 built the `BOOK_LOSS_LEDGER`** (`runs/WE_W119_BOOKLOSS/out/book_loss_ledger.csv`,
+>   1,058 sessions × 25 columns). **The gap is NOT coverage** — `E_NO_ENGINE` = **0 sessions**.
+>   **The gap is TURNOVER**: on losing sessions P1 takes **3.04 trades vs 1.38**, for **18 % fewer
+>   contract-minutes**, on sessions moving **31 % less**. And **XM is the book's tail** — active on
+>   33 % of sessions, present in **69.8 %** of the worst decile.
+> - **W119 narrows W117.** At session resolution the REVERSAL excess is **+1.7 pp**, not the +6.9 pp
+>   weekly aggregation showed; **RANGE is the larger dollar class (−$114,807 vs −$91,216)**. The
+>   TREND-UP deficit (−8.6 pp) and the TREND-DOWN null (+0.8 pp) both survive.
+> - **W120: `MIRROR_CONT` fails its four-gate test on gate 2 only** and is **not** promoted — but it
+>   passes **both gates FOLLOW_MORNING failed**, and adding it would take book max DD **$11,489 →
+>   $8,143**. Its value is **tail, not average** (tail beta −1.861, 0.9th pctile, on **21 weeks**).
+>   It becomes the standing **`MIRROR_CONTINUATION_CONTROL`** required of every future fade idea.
+> - **Validation harness built once** (`research/weekly_edge/src/we_harness.py`, 7/7) after three
+>   consecutive waves had harness rather than market defects.
 
 ---
 
-## 0. OBJECT TAXONOMY (POST-W115 directive §17) — the seven categories, and what is in each
+## 0. THE FOUR BASELINES (POST-W118 directive §1) — research and execution are SEPARATE
+
+> ⚠️ **The repository must never again use one ambiguous "current baseline" to mix research truth
+> with execution truth.** Four distinct objects, and two of them are legitimately empty.
+
+| # | baseline | object | why |
+|---|---|---|---|
+| **A** | **RESEARCH_SINGLE_BASELINE** | **`P1/PCT`** | $1,394/wk raw · **$1,230/wk at fixed $20,245 DD** · 56.3 % positive weeks · max DD $22,931 · t 4.16 |
+| **B** | **RESEARCH_PORTFOLIO_FRONTIER** | **`{P1/PCT + XM_CONFLICT}`** inverse-vol | **$2,012/wk at fixed DD** · max DD **$11,489** · 59.2 % positive weeks · t 4.90. XM is an **ACTIVE COMPONENT** (W110) |
+| **C** | **EXECUTABLE_SINGLE_BASELINE** | **NONE** | `WeeklyEdgeP1PCT_v1.cs` is written and copied into NT8 but **not compiled and not reconciled**. Compilation is an owner action |
+| **D** | **EXECUTABLE_PORTFOLIO_BASELINE** | **NONE** | neither leg has cleared Strategy Analyzer parity |
+
+> **C and D being empty does NOT erase B.** The research frontier is real and measured; it simply has
+> not yet been proven to reproduce inside NinjaTrader. Those are different claims and this file keeps
+> them apart.
+
+---
+
+## 0a. OBJECT TAXONOMY — what is in each category
 
 > This table is the answer to "what is actually going on right now". Everything below it is detail.
 > **REGIME** uses the directive §5 vocabulary: `STRUCTURAL` · `CURRENT_REGIME_EXPLAINED` ·
@@ -37,7 +71,7 @@ shipped objects and is unaffected by anything here._
 | **CURRENT_PORTFOLIO_BASELINE** | *(none yet — the combination below is a CANDIDATE, not a baseline)* | — | — | — |
 | **PORTFOLIO CANDIDATE** | `{P1/PCT + XM_CONFLICT}` inverse-vol | inherits both | neither leg compiled | §2 below |
 | **RESEARCH_CHALLENGERS** | `PAIR23` (2 BMOM : 3 X9a) | `STRUCTURAL` — it is the one object that beats P1 over the 16 unseen years on money, maxDD, top-5, positive weeks *and* streak simultaneously | none | §3 below |
-| **WATCHLIST** | ⭐ **`FOLLOW_MORNING`** | **`CURRENT_REGIME_UNEXPLAINED`** — W115 searched for a causal driver and found none | none | §3b below, W114 + W116 |
+| **WATCHLIST** | ⭐ **`MIRROR_CONT`** (W120) — 3 of 4 gates, tail-driven, `CURRENT_REGIME_UNEXPLAINED`; ahead of FOLLOW_MORNING on every gate · **`FOLLOW_MORNING`** | **`CURRENT_REGIME_UNEXPLAINED`** — W115 searched for a causal driver and found none | none | §3b below, W114 + W116 |
 | **DEMOTED** | `NETFUSE_1` · `VWAP_RECLAIM` · the trend-day state layer · volume exhaustion · AFT as a research target | `DEAD / FALSIFIED` | — | §6 below |
 | **HISTORICAL_REFERENCE** | Product A (`SolarWaveSMMaster_v4.cs`), Product B (`SolarWaveOneContractNQ_v5.cs` / `MNQ_v5.cs`) | campaign #3, closed Aug 2026 | **the only objects ever taken through full NT8 parity** | root `BASELINE_MODELS.md` |
 

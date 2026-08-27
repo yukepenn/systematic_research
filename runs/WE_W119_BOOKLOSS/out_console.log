@@ -1,0 +1,71 @@
+    1,058 in-window sessions [4s]
+    P1/PCT 2,401 trades, spread $14.44/ctrRT [16s]
+    XM 348 active sessions
+    book = 0.473 x P1/PCT + 0.527 x XM  (inverse-vol on weekly, as W110/W117)
+    ledger written: 1058 rows x 25 cols -> out/book_loss_ledger.csv  [16s]
+    causal columns carry their availability minute in the name: c0931_ / c0945_ / c1148_.
+    EXPOST_CLASS is DIAGNOSIS ONLY and is prefixed so it cannot be mistaken for an input.
+
+============================================================================================================================
+=== SECTION 12 DECOMPOSITION - dollars AND frequency. OVERLAPPING LENSES, not a partition.
+============================================================================================================================
+    405 losing sessions of 1058 (38.3 %). Total book loss on them: $-338,490. Book net over the window: $243,177
+
+lens                                                sessions  % of all   book $ there  % of total loss
+A_P1_WRONGWAY  (P1 traded & lost, session DOWN)          161     15.2%       -149,059           -44.0%
+B_P1_WHIPSAW   (P1 traded & lost, session UP)            145     13.7%       -110,248           -32.6%
+C_XM_LOSS      (XM active & lost)                        144     13.6%       -179,668           -53.1%
+D_BOTH         (both legs lost)                           54      5.1%       -102,665           -30.3%
+E_NO_ENGINE    (neither active, top-decile |move|)         0      0.0%              0             0.0%
+G_RISK_TRUNC   (P1 session box fired)                    169     16.0%       -194,735           -57.5%
+F_COST         (P1 friction on losing sessions)            -         -        -26,860             7.9%
+    (P1 gross on losing sessions $-356,800; friction $26,860 = 7.5 % of |gross|)
+
+    OVERLAPS, stated rather than hidden:
+        A and B are mutually exclusive by construction: 0 sessions in both
+        D_BOTH ∩ C_XM_LOSS: 54 sessions
+        G_RISK_TRUNC ∩ A_P1_WRONGWAY: 81 sessions
+        G_RISK_TRUNC ∩ B_P1_WHIPSAW: 71 sessions
+
+============================================================================================================================
+=== WORST DECILE of sessions - does tail damage share a cause with typical damage?
+============================================================================================================================
+    106 sessions at or below $-1,047; they carry $-189,670 = -56.0 % of all loss
+lens                                                in worst decile   share of decile   vs all-loss share
+A_P1_WRONGWAY  (P1 traded & lost, session DOWN)                  44             41.5%               +1.8pp
+B_P1_WHIPSAW   (P1 traded & lost, session UP)                    31             29.2%               -6.6pp
+C_XM_LOSS      (XM active & lost)                                74             69.8%              +34.3pp
+D_BOTH         (both legs lost)                                  43             40.6%              +27.2pp
+E_NO_ENGINE    (neither active, top-decile |move|)                0              0.0%               +0.0pp
+G_RISK_TRUNC   (P1 session box fired)                            62             58.5%              +16.8pp
+
+============================================================================================================================
+=== EXPOST_CLASS on losing sessions, WITH its matched unconditional control (W108 rule)
+============================================================================================================================
+class           losing sess    share   ALL sess share   difference   book $ there
+TREND-UP                 50    12.3%            21.0%        -8.6pp        -34,140
+TREND-DOWN               62    15.3%            14.5%        +0.8pp        -58,059
+REVERSAL                111    27.4%            25.7%        +1.7pp        -91,216
+RANGE                   126    31.1%            26.8%        +4.3pp       -114,807
+MIXED                    56    13.8%            12.0%        +1.8pp        -40,268
+
+============================================================================================================================
+=== EXPOSURE - is the book losing while OVER-exposed or UNDER-exposed?
+============================================================================================================================
+                         losing sessions   winning sessions   difference
+P1 trades                          3.042              1.377       +1.665
+P1 contract-minutes              199.032            242.093      -43.061
+P1 max size                        1.123              0.654       +0.470
+P1 box fired rate                  0.417              0.322       +0.096
+XM active rate                     0.402              0.283       +0.119
+|RTH move| pts                   116.540            168.026      -51.485
+RTH range pts                    268.168            281.582      -13.414
+
+============================================================================================================================
+=== SESSION vs WEEKLY - did W117's weekly phenotype survive at session resolution?
+============================================================================================================================
+    W117 (weekly, n=87): TREND-UP share 0.167 losing vs 0.238 winning (p 0.005);
+    REVERSAL 0.299 vs 0.230 (p 0.011); TREND-DOWN 0.147 vs 0.143 (p 0.880).
+    Session-resolution equivalents are the EXPOST_CLASS table above. Compare directly.
+
+[done 16s]
