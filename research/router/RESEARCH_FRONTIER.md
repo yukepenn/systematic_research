@@ -19,22 +19,54 @@ Inputs are **qualitative and are labelled qualitative.** No fake precision (dire
 
 ## The ranking
 
+_Re-ranked **2026-08-27 after RR_W001**. The router branch moved down; event response moved to the
+top. Nothing below is a plan written in advance of evidence — this ordering is what RR_W001's
+preregistered continuation produced._
+
 | # | question | EVI | status | gate |
 |---|---|:--:|---|---|
-| **1** | **Is there enough ACTION-VALUE DISPERSION to justify routing at all?** | **HIGHEST** | **RUNNABLE NOW** | — |
-| **2** | Can causal features predict action value better than trivial matched controls? | **HIGH** | blocked on #1 | #1 verdict |
-| **3** | Does **EVENT RESPONSE** carry incremental action-value information? | **HIGH** | RUNNABLE (sequenced after #1) | — |
-| 4 | Does a soft allocation with cash beat the static book? | MED-HIGH | blocked on #2 | #2 verdict |
-| 5 | Is `X9a` a coherent standalone expert? | MEDIUM | RUNNABLE, bounded | — |
-| **5b** | **Is book COVERAGE actually a gap?** *(reopened by audit, not by an idea)* | **LOW** | RUNNABLE | — |
-| 6 | Does latent state add information beyond raw features? | LOW-MED | blocked on #2 | #2 verdict |
-| 7 | Does transition uncertainty carry risk information? | LOW-MED | blocked on #4 | #4 verdict |
-| 8 | Does BBO / order flow separate P1 entry quality? | **HIGH ceiling** | **DATA-BLOCKED** | owner OQ-5 |
-| 9 | Does options / dealer-gamma state carry NQ information? | MEDIUM | **OWNER-GATED** | owner OQ-5 |
-| 10 | Does an individual-contract substrate change any verdict? | LOW | DEFERRED by design | directive §52 |
-| 11 | Does the frozen architecture survive the sealed forward pool? | — | **CALENDAR-GATED** | architecture freeze |
-| 12 | Can position management (exit/reversal) be routed? | UNKNOWN | **EXCLUDED from V1** | directive §7 |
-| 13 | What integer-contract mapping implements portfolio B? | — | **OWNER CAPITAL DECISION** | OQ-6 |
+| ~~1~~ | ~~Is there enough ACTION-VALUE DISPERSION to justify routing?~~ | — | ✅ **CLOSED — `runs/RR_W001_ACTION_VALUE_LEDGER/`** | see §1 |
+| **1** | **Does EVENT RESPONSE carry incremental action-value information?** | **HIGHEST** | **RUNNABLE NOW — the next wave** | — |
+| 2 | Is `X9a` a coherent standalone expert? | MEDIUM | RUNNABLE, bounded | — |
+| 3 | Can causal features predict action value better than trivial matched controls? | **LOW until new information exists** | **DE-PRIORITISED by RR_W001** | needs #1 |
+| 4 | Does a soft allocation with cash beat the static book? | LOW | blocked on #3 | #3 verdict |
+| 5 | Does latent state add information beyond raw features? | **—** | **NOT RUN** — RR_W001's continuation rule forbids it | — |
+| 6 | Does transition uncertainty carry risk information? | — | blocked on #4 | #4 verdict |
+| **6b** | **Is SELECTIVE box un-latching worth anything?** *(new, from RR_W001)* | **LOW** | RUNNABLE | — |
+| 6c | **Is book COVERAGE actually a gap?** *(reopened by `RR_W000` audit)* | **LOW** | RUNNABLE | — |
+| 7 | Does BBO / order flow separate P1 entry quality? | **HIGH ceiling** | **DATA-BLOCKED** | owner OQ-5 |
+| 8 | Does options / dealer-gamma state carry NQ information? | MEDIUM | **OWNER-GATED** | owner OQ-5 |
+| 9 | Does an individual-contract substrate change any verdict? | LOW | DEFERRED by design | directive §52 |
+| 10 | Does the frozen architecture survive the sealed forward pool? | — | **CALENDAR-GATED** | architecture freeze |
+| 11 | Can position management (exit/reversal) be routed? | UNKNOWN | **EXCLUDED from V1** | directive §7 |
+| 12 | What integer-contract mapping implements portfolio B? | — | **OWNER CAPITAL DECISION** | OQ-6 |
+
+## ✅ CLOSED — action-value dispersion (`RR_W001`, 2026-08-27)
+
+**G1 PASS · G2 PASS-ON-CLAUSE / FAIL-ON-RATIONALE · G3 FAIL · G4 VOID.** `gates_ALL_must_be_cleared`
+is not met, so the preregistered continuation de-prioritises the router branch.
+
+**The opportunity is real:** 2,131 decisions, mean action value **+$162.79**, sd **$2,123.55**,
+**59 % negative**; activity-matched random abstention **loses** money at every fraction and the
+oracle beats **40/40** random draws, so it is **selection, not exposure reduction**.
+
+**Four facts closed it anyway:**
+
+1. **The counterfactual apparatus buys only 15–31 %** over ranking by the trade's own P&L — the label
+   W122's simpler ledger already carried (own-net recovers **68.8–85.5 %** of the causal oracle) —
+   and it **damages the right tail more** (205/214 top-decile winners survive vs **213/214**).
+2. **The oracle is majority REGENERATION, not avoidance** — **63.8 %** of the f = 0.05 uplift is the
+   P&L of trades the frozen policy takes because the session box stops latching. That is a
+   **box-policy** finding, and W98 already measured a uniformly looser box at **+$6/wk, p = 0.940**.
+3. **Concentration is fatal for identification** — the top 107 events carry **104.9 %** of the total
+   action-value sum; the other 2,024 sum to **−$16,872**.
+4. **The sample cannot certify a router** — smallest detectable per-decision gain **$41–80** against a
+   **$13.93** materiality bar, so a router must capture **~15–28 %** of the ex-post oracle before its
+   gain is distinguishable from zero. The only two level-3 recovery rates this repo owns are **16 %**
+   and **20 %**.
+
+> **This is a sequencing decision, not a kill.** New information at the decision event raises
+> achievable capture, and the certified ledger now exists, so #3 becomes cheap the moment #1 lands.
 
 ---
 
@@ -141,7 +173,22 @@ So *"coverage is genuinely not the gap"* is **withdrawn**, and coverage is **UNM
 > **It is on the frontier because the claim was withdrawn, not because the opportunity looks real.**
 > It is **not** the next wave.
 
-## 6–7. Latent state and transition — deferred, with a *lowered* prior
+## 6b. Selective box un-latching — new, from RR_W001, and ranked LOW on purpose
+
+RR_W001 found that **35–64 % of its abstention oracle is REGENERATION**: trades the frozen policy
+takes because the session box stops latching once a bad early decision is removed. Those entries are
+the `r0+1` bars of latched-out runs and are not decision events at all.
+
+That is a question about the **box policy**, not about routing — and it is a *different* object from
+what W98 tested. W98 loosened the box **uniformly** and got **+$6/week at paired p = 0.940**.
+Suppressing *specific* early losers so the box survives is not that experiment.
+
+> **Why LOW anyway.** The selection is **ex-post** — the whole point of RR_W001's G3 is that we
+> cannot identify which early decisions to suppress. Only **~247** of 1,058 in-window sessions hold a
+> latched-out run, so the population is small, and W98's uniform result gives no encouragement.
+> **It is named because it is new, not because it looks promising.**
+
+## 5–6. Latent state and transition — NOT RUN, per RR_W001's continuation rule
 
 Both are gated on #2 producing something. Two independent reasons the prior is low before we start:
 

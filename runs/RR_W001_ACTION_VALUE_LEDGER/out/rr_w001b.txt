@@ -1,0 +1,215 @@
+============================================================================================================================
+=== RR_W001 PHASES 2-5 - oracles, portfolio value, gates.  NO MODEL IS FITTED.
+=== A / B / C are EX-POST CEILINGS, never 'opportunity' (OPPORTUNITY_LANGUAGE.md, binding).
+============================================================================================================================
+[    17s] substrate rebuilt; baseline 2,401 trades
+[    17s] ledger 2,401 rows, in-window 2,131
+
+============================================================================================================================
+=== 1. THE MATERIALITY BAR - derived from the object's own economics, per spec
+============================================================================================================================
+    P1/PCT realized net over the window, research cost model   $       296,911
+    in-window decision events                                            2,131
+    BAR = 0.10 * net / events                                  $         13.93 per decision
+    (= 10 % of the object's own realized net. A router must move at least this much
+     per decision to be worth its research and engineering cost.)
+
+============================================================================================================================
+=== 2. LOCAL_MARGINAL_ACTION_ORACLE (level A) - the distribution of the value OF ACTING
+============================================================================================================================
+    n = 2,131   mean $162.79   sd $2,123.55   median $-64.36
+    share positive 40.92 %   share negative 59.03 %   share exactly zero 0.05 %
+    quantiles  p1:$-4,996  p5:$-1,547  p10:$-906  p25:$-410  p50:$-64  p75:$261  p90:$1,488  p95:$3,206  p99:$7,655
+    total absolute action value  $1,974,503
+    sum of action values         $346,915   (vs realized net $296,911)
+
+    BOTH ARMS, as the spec requires (neither is chosen after the result):
+arm                                       mean          sd           sum  % positive
+SELF-CONSISTENT (primary)         $     162.79$   2,123.55$      346,915      40.92%
+FROZEN-SCORE (sensitivity)        $     166.16$   1,986.03$      354,095      40.59%
+FULL-HORIZON (both channels)      $     115.30$   2,196.37$      245,698      44.30%
+    the two arms differ on 114 of 2,131 events; max |difference| $11,213
+
+    EVIDENCE STATUS (spec secondary_measurements, CLAUDE.md section 4):
+      whole window 2022-07-01 -> 2026-08-01 : DISCOVERY_CONSUMED (123 waves)
+      2026-05-31 -> 2026-07-31              : DIRECTLY_BURNED - 67 events (3.14 %), own net $-7,888, action-value sum $-21,578
+      >= 2026-08-01                          : VIRGIN / SEALED - NOT TOUCHED
+
+============================================================================================================================
+=== 3. G1 - WAS THE COUNTERFACTUAL MACHINERY NECESSARY?
+============================================================================================================================
+    |delta_action_value - the trade's OWN net| > $50 on 488 of 2,131 events = 22.90 %
+    mean |difference| $366.06   median $0.00   max $22,426
+    rank correlation(action value, own net) = 0.7611
+    events where the SIGN differs: 221 (10.37 %)
+    schedule changed by more than the toggled trade (future_event_count_delta != -1): 488
+    size changed downstream in another session: 666
+
+============================================================================================================================
+=== 4. G2 - CONCENTRATION
+============================================================================================================================
+top share of events            share of total |action value|
+     1 %                                               14.17 %
+     5 %                                               39.28 %
+    10 %                                               55.92 %
+    25 %                                               77.95 %
+
+============================================================================================================================
+=== 5. G3 - POWER.  Session-clustered MDE for a Q5-Q1 contrast an external model would sort
+============================================================================================================================
+    sd(delta_action_value)                    $    2,123.55
+    sessions (clusters)                                 638
+    mean cluster size                                 3.340
+    intra-session ICC                                0.3929
+    effective N after clustering                      1,110  (raw 2,131)
+    MDE for the Q5-Q1 CONTRAST at 80 % power  $      564.63
+    materiality bar                           $       13.93 per decision
+
+    >> UNITS DEFECT IN THE SPEC, found and fixed BEFORE this ledger was read.
+    The spec compares an MDE for a Q5-Q1 CONTRAST against a PER-DECISION materiality bar.
+    Those are not the same unit: a router that abstains on the bottom quintile does not
+    earn the contrast, it earns roughly 0.2 x (the amount by which Q1 sits below the mean).
+    Under a symmetric contrast that is 0.1 x MDE_contrast per decision. Both readings are
+    printed. The LITERAL spec reading is the binding gate; the corrected reading is
+    reported beside it because the gate's stated RATIONALE - 'if the smallest contrast we
+    could detect is larger than the improvement we would need to earn, the question is
+    UNDERPOWERED' - is a statement about policy value, not about a raw contrast.
+    G3  LITERAL  : MDE_contrast $564.63  vs bar $13.93   -> FAIL
+    G3' CORRECTED: smallest DETECTABLE per-decision policy gain $56.46  vs bar $13.93   -> FAIL
+
+============================================================================================================================
+=== 6. THE JOINT ABSTENTION CURVE - replayed, not summed.  Marginal values are NOT
+===    additive within a session, so the f-curve is computed by JOINT replay.
+============================================================================================================================
+
+    RANKING: by CAUSAL action value (the object this wave built)
+     f  dropped         net      uplift  uplift %  trades     maxDD     AVOIDED     CREATED   REPRICED  created %  top10 kept   top10 $
+  0.05      107     634,613     337,702    113.7%   2,119    14,328     117,316     215,480      4,906      63.8%    205/214      97.6%
+  0.10      213     765,150     468,239    157.7%   2,031    11,554     214,471     243,121     10,647      51.9%    201/214      97.6%
+  0.20      426     901,816     604,905    203.7%   1,869     7,040     343,512     244,800     16,593      40.5%    197/214      97.0%
+  0.30      639     974,416     677,505    228.2%   1,682     6,282     415,085     238,599     23,820      35.2%    194/214      96.1%
+
+    RANKING: by the trade's OWN net (what W122's simpler ledger already had)
+     f  dropped         net      uplift  uplift %  trades     maxDD     AVOIDED     CREATED   REPRICED  created %  top10 kept   top10 $
+  0.05      107     529,298     232,387     78.3%   2,166    17,964     193,000      28,270     11,117      12.2%    213/214     101.2%
+  0.10      213     642,596     345,685    116.4%   2,125    16,912     306,019      26,767     12,900       7.7%    213/214     101.7%
+  0.20      426     788,624     491,713    165.6%   1,985     8,707     443,742      24,549     23,422       5.0%    212/214     100.7%
+  0.30      639     876,134     579,224    195.1%   1,801     7,748     533,484      18,585     27,155       3.2%    210/214      99.5%
+
+    BASELINE: net $296,911   trades 2,131   maxDD $29,454
+
+    ⚠ THE CURVE IS NOT PURE ABSTENTION. 'CREATED' is the P&L of trades the frozen policy
+    takes because the session box no longer LATCHES once a bad early decision is removed.
+    Those entries are not decision events in the ledger at all - they are the r0+1 bars of
+    latched-out runs. A large share of the headline uplift is REGENERATION, not avoidance,
+    and that is a statement about the BOX POLICY rather than about action-value routing.
+
+    ⚠ THE OWN-NET RANKING IS THE CONTROL THAT MATTERS. It uses only the trade's own P&L -
+    the label W122's ledger already carried - and needs none of this wave's machinery.
+    Whatever the causal ranking earns ABOVE it is the true incremental value of the
+    counterfactual replay for the purpose of choosing which actions to drop.
+
+============================================================================================================================
+=== 7. G4 - STABILITY of the f = 20 % abstention value, by calendar bucket
+============================================================================================================================
+bucket         events   mean action value    f=20% abstention value    sign
+2022              219              32.08                    79,344       +
+2023              582              75.11                   119,802       +
+2024              628             178.73                   137,415       +
+2025              457             371.25                   128,854       +
+2026              245              58.26                   177,202       +
+
+    positive buckets: 5 of 5
+    NOTE the spec wrote 'at least 3 of the 4 calendar years 2022(H2)-2026(H1)'. There are
+    5 buckets, not 4 - 2022 and 2026 are half years. The binding threshold is
+    the number 3, which is unchanged; only the arithmetic slip in the label is corrected.
+    Within-bucket f=20% values are ex-post SUMS OF MARGINALS, not joint replays - stated.
+
+============================================================================================================================
+=== 8. SESSION_POLICY_ORACLE (level B) - best subset of a session's decisions, ex post
+=== FROZEN-SIZE arm: the baseline size array is reused, so a run that the box had latched
+=== out and that this oracle re-enables carries size 1. Stated, not hidden.
+============================================================================================================================
+    sessions enumerated                     570
+    sessions SKIPPED (> 8 runs)              68   holding 508 baseline trades
+    B - baseline, summed over ENUMERATED sessions   $     779,024
+    baseline net over the ENUMERATED sessions only  $     347,111
+    baseline net over ALL in-window sessions        $     296,911
+    LIKE-FOR-LIKE multiple (enumerated only)                3.244x
+    (an earlier version divided the enumerated GAIN by the ALL-SESSION net and printed
+     3.624x. That mixed populations; the like-for-like figure above is the correct one.)
+
+============================================================================================================================
+=== 9. XM_CONFLICT and FOLLOW_MORNING ledgers, and CONSTRAINED_PORTFOLIO_ORACLE (level C)
+============================================================================================================================
+    XM modelled spread at its own fill minutes $12.50/ctrRT is ALREADY inside
+    pnl_research (export_xm_reference.py:117, cst = $4.36 + $12.50 = $16.86, verified as a
+    constant $16.8600 gross-minus-net on all 346 rows). No further charge is applied.
+    XM taken decisions 346   net $199,766   mean $577.36   share positive 54.62 %
+    XM action value == trade P&L EXACTLY (one shot, no box, no latch, size 1) - the
+    counterfactual is trivial and this is a structural fact, not a measurement.
+    FM taken decisions 1,009   net $180,651   mean $179.04   share positive 55.00 %
+
+    LEVEL C decomposes additively: the three experts hold independent positions with no
+    shared state, so the best portfolio subset per session is the per-expert best.
+    C - (B + XM + FM as run) = $1,099,601   (the value of ex-post abstention on the
+    two one-shot experts). Stated as a CEILING.
+
+============================================================================================================================
+=== 10. PORTFOLIO-RELATIVE MARGINAL VALUE (directive section 14)
+============================================================================================================================
+    inverse-vol weights on WEEKLY sums: w(P1/PCT) = 0.472807  w(XM) = 0.527193
+    (same construction as WE_W110_XMDIVERSE/out/weekly.csv; weights inherited, not
+     re-derived on a different window - W119 constraint)
+    weekly rho(P1, XM) = 0.0977
+    A P1 action's book-marginal value is w1 x its action value; an XM action's is
+    (1-w1) x its own. The ORDERING of P1 events is therefore unchanged by the weighting,
+    so no separate book ranking is produced - stating this rather than printing a
+    rescaled copy of the same column.
+
+============================================================================================================================
+=== 11. THE PREREGISTERED GATE TABLE.  Every clause is a coded assertion.
+============================================================================================================================
+gate  spec                                                                              observed   verdict
+G1    share with |dAV - own net| > $50 exceeds 10 %                                      22.90 %      PASS
+G2    top 5 % of events hold < 80 % of |action value|                                    39.28 %      PASS
+G3    session-clustered Q5-Q1 MDE <= materiality bar (LITERAL spec reading)           $564.63 vs $13.93      FAIL
+G3'   smallest DETECTABLE per-decision policy gain <= bar (units-corrected)            $56.46 vs $13.93      FAIL
+G4    f=20 % abstention value positive in >= 3 calendar buckets                           5 of 5      PASS
+
+    ALL GATES: NOT ALL PASS
+
+============================================================================================================================
+=== 11b. GATE INTEGRITY - what an adversarial audit found wrong with these gates.
+=== Recorded here rather than by quietly restating the gates. No coded clause was changed.
+============================================================================================================================
+    G4 IS VOID. It cannot fail. Its statistic is minus the sum of the most-negative 20 % of
+    action values, and 59.03 % of all action values are negative, so every
+    bucket's bottom quintile is entirely negative and the statistic is positive by
+    arithmetic. Largest element of each bucket's bottom quintile:
+        2022: $     -609.36   (all negative: True)
+        2023: $     -508.72   (all negative: True)
+        2024: $     -418.72   (all negative: True)
+        2025: $     -484.36   (all negative: True)
+        2026: $   -1,028.72   (all negative: True)
+    '5 of 5' therefore carries ZERO evidential content. This is exactly the un-failable-gate
+    error the spec's own why_the_raw_oracle_is_NOT_the_gate section forbids. G4 is recorded
+    VOID, not PASS. Stability is NOT established by this wave.
+
+    G2 PASSES ITS CODED CLAUSE AND FAILS ITS OWN RATIONALE. The clause measures the top 5 %
+    share of TOTAL ABSOLUTE action value (39.28 %). The rationale asks whether 'essentially
+    all of it sits in ~100 events' - which is a question about the SUM a router would earn:
+        top 107 events by |action value| contribute $363,787 = 104.9 % of the $346,915 SUM
+        the remaining 2,024 events sum to $-16,872 (mean $-8.34 per decision)
+        single largest |action value| event = $42,980 = 12.39 % of the total sum
+    By the economically relevant measure the concentration condition IS met. G2 is recorded
+    PASS-ON-CLAUSE / FAIL-ON-RATIONALE and must not be quoted as a clean pass.
+
+    G3 IS TOO GENEROUS BY sqrt(2). The 0.1x conversion is valid only if Q1 and Q5 are
+    constrained symmetric about the mean, which borrows precision from Q5 that a router
+    abstaining on Q1 does not have. Assumption-free: MDE_gain = 0.2 * Z80 * sd / sqrt(neff/5).
+        symmetric (as coded)   $     56.46
+        assumption-free        $     79.85   = sqrt(2) x the above
+        materiality bar        $     13.93
+    G3 fails under BOTH (5.7x the bar assumption-free). The failure is robust.
+[    35s] done

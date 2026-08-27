@@ -1,0 +1,6 @@
+check,assertion,observed,verdict
+H-A,gfills is deterministic (byte-identical on repeat),"2,401 trades",PASS
+H-B,"session-scoped replay == full pass, byte for byte","2,401 vs 2,401, 0 mismatches",PASS
+H-C,trade SCHEDULE is size-invariant (gfills == fills_daily),equal=True,PASS
+H-D,doubling size doubles P&L and moves no schedule (re-pricing exact),"2,401 vs 2,401 trades",PASS
+H-E,"populations: 2,401 total / 2,131 session-filter / 2,139 ts-filter","2,401 / 2,131 / 2,139",PASS

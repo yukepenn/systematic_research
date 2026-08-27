@@ -370,8 +370,6 @@ def main(certify_only: bool, limit: int = 0):
     L = pd.DataFrame(rows)
     L.to_csv(os.path.join(OUT, "ledger_p1pct%s.csv" % ("_SMOKE" if limit else "")), index=False)
     P_(f"{el()} P1/PCT ledger: {len(L):,} rows written")
-    np.save(os.path.join(OUT, "_base_pc.npy"), base_pc)
-    L.to_pickle(os.path.join(OUT, "_L.pkl"))
     P_(f"{el()} PHASE 1 complete. Ledger persisted; analysis continues in run_rr_w001b.py")
     _fh.close()
 

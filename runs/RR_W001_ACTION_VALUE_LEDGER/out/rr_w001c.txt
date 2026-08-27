@@ -1,0 +1,30 @@
+====================================================================================================================
+=== RR_W001c - SESSION BLOCK BOOTSTRAP CHECK ON G3.  The gate is NOT re-run; G3 failed and
+=== stays failed. This asks only whether the failure survives dropping the normal assumption.
+====================================================================================================================
+    n = 2,131 decisions in 638 session clusters
+    mean $162.79   sd $2,123.55   skew 4.704   kurtosis 90.3
+
+    A model sorts events; we ask how big a Q5-Q1 contrast must be to be distinguished from
+    zero. Under RANDOM sorting the true contrast is 0, so the bootstrap distribution of the
+    randomly-sorted contrast IS the null. Sessions are resampled whole, so intra-session
+    dependence is preserved without estimating an ICC.
+
+    bootstrap draws                                     4,000
+    SE of a randomly-sorted Q5-Q1 contrast             $    147.92
+    bootstrap MDE for the CONTRAST (80 % power)        $    414.41
+    normal-approximation MDE reported by the gate      $    564.63
+    ratio bootstrap / normal                                 0.734x
+
+    smallest DETECTABLE per-decision policy gain (0.1x) $     41.44
+    materiality bar                                     $     13.93
+    -> G3 under the bootstrap: FAIL  (2.97x the bar)
+
+    The ORACLE for comparison, so the ratio that actually matters is visible:
+    f = 20 % ex-post abstention uplift                  $    283.86 per decision
+    fraction of that oracle a router must CAPTURE before its gain is certifiable:
+        normal approx    19.9 %
+        bootstrap        14.6 %
+
+    OPPORTUNITY_LANGUAGE calibration of level-3 recovery in this repo: ~16 % (AFT, W112/W114)
+    and ~20 % (RTH open, XM_CONFLICT, W104). Those are the only two data points that exist.

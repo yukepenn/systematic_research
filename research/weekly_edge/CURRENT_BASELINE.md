@@ -314,6 +314,18 @@ same entries at random does better* — `WE_W121`).
    R² **−0.024**, directional accuracy **below always-long**, beaten by an unfitted control. **The
    meaningful residual is `CAUSAL_MODEL_FRONTIER − REAL_SYSTEM_CAPTURE`, not oracle − real. Do not
    headline a level-2 oracle gap as missed alpha.**
+5. **A `P1/PCT` trade's own P&L is NOT its causal action value — but for RANKING it is 69–86 % of it**
+   (`runs/RR_W001_ACTION_VALUE_LEDGER/`). Path dependence is **inert on 76.9 %** of decisions and
+   flips the **sign** on **10.4 %**, and the divergence is a **box-latch phenomenon** (56.7 % in
+   sessions holding a latched-out run, **3.5 %** elsewhere). **Do not pay for a counterfactual
+   simulator to recover the last 15–31 % unless that margin is the object of study.** A `P1/PCT`
+   counterfactual must also state whether it is **session-scoped or full-horizon**: the cross-session
+   *size* channel is worth **−$101,217** and flips 226 signs.
+6. **Two gate-construction errors are now on the record and must not recur.** A gate whose statistic
+   is a **one-sided sum over a majority-negative distribution cannot fail** (RR_W001's G4 was VOID —
+   check the sign structure before committing a spec). And a **concentration gate must be stated on
+   the SUM, not on total absolute value**: RR_W001's G2 read 39.28 % on \|value\| and **104.9 %** on
+   the sum, and only the sum is what a router earns.
 
 ## 7. The information gap, and what is next
 
@@ -336,6 +348,24 @@ into one word.
    (`research/04_complementary_family/c01_announcement_calendar.csv`), and W105b already showed the
    flag alone is not the mechanism — which is exactly why the *response* is worth a wave.
 
-**Status: new alpha discovery is PAUSED** by owner directive 2026-08-27 pending the operational
-reset. Event response is **deferred, not cancelled**, and is not to be preregistered until the reset
-completes.
+### ⭐ What `RR_W001` added, and what it closed
+
+**`runs/RR_W001_ACTION_VALUE_LEDGER/`** built the object §3d said was missing — a certified
+counterfactual replay of the frozen engine, giving `E[ΔU]` at every one of `P1/PCT`'s 2,131 decision
+events instead of the trade's own P&L.
+
+> ### **59 % of `P1/PCT`'s individual decisions have NEGATIVE causal marginal value.**
+> Mean **+$162.79**, sd **$2,123.55**, median **−$64.36**. The object is profitable because a
+> minority of very large positives carries it. **Genuine selection, not exposure reduction** —
+> activity-matched random abstention *loses* money at every fraction and the ex-post oracle beats
+> **40/40** random draws, which is the inverse of the W121 failure mode.
+
+**Conditional routing is nevertheless DE-PRIORITISED**, on its own preregistered gates: the
+apparatus buys only **15–31 %** over ranking by trade P&L, **35–64 %** of its oracle is *regeneration*
+(the box ceasing to latch) rather than avoidance, the top **107** events carry **104.9 %** of the
+total, and the sample **cannot certify** a router below **$41–80/decision** against a **$13.93**
+materiality bar. Full verdict and the two bugs an adversarial audit caught: the run's `REPORT.md`.
+
+**Status: the next wave is EVENT RESPONSE** — frontier row 1 in
+[`research/router/RESEARCH_FRONTIER.md`](../router/RESEARCH_FRONTIER.md). The HMM / latent-state
+branch is **NOT RUN**, per RR_W001's continuation rule.

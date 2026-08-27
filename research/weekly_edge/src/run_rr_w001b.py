@@ -140,6 +140,26 @@ def main():
     P_("    quantiles  " + "  ".join(f"p{q}:${np.percentile(dav, q):,.0f}" for q in qs))
     P_(f"    total absolute action value  ${np.abs(dav).sum():,.0f}")
     P_(f"    sum of action values         ${dav.sum():,.0f}   (vs realized net ${realized_net:,.0f})")
+    P_("")
+    P_("    BOTH ARMS, as the spec requires (neither is chosen after the result):")
+    fz = LW["delta_action_value_frozen"].to_numpy()
+    tw = LW["delta_total_window"].to_numpy()
+    P_(f"{'arm':<34}{'mean':>12}{'sd':>12}{'sum':>14}{'% positive':>12}")
+    for lab, v in (("SELF-CONSISTENT (primary)", dav), ("FROZEN-SCORE (sensitivity)", fz),
+                   ("FULL-HORIZON (both channels)", tw)):
+        P_(f"{lab:<34}${v.mean():>11,.2f}${v.std(ddof=1):>11,.2f}${v.sum():>13,.0f}"
+           f"{100 * (v > 0).mean():>11.2f}%")
+    P_(f"    the two arms differ on {int((np.abs(dav - fz) > 1e-9).sum()):,} of {len(dav):,} events; "
+       f"max |difference| ${np.abs(dav - fz).max():,.0f}")
+    P_("")
+    P_("    EVIDENCE STATUS (spec secondary_measurements, CLAUDE.md section 4):")
+    bd = pd.to_datetime(LW["session_date"])
+    burn = (bd >= "2026-05-31") & (bd <= "2026-07-31")
+    P_(f"      whole window 2022-07-01 -> 2026-08-01 : DISCOVERY_CONSUMED (123 waves)")
+    P_(f"      2026-05-31 -> 2026-07-31              : DIRECTLY_BURNED - {int(burn.sum()):,} events "
+       f"({100 * burn.mean():.2f} %), own net ${LW.loc[burn.to_numpy(), 'baseline_trade_net'].sum():,.0f}, "
+       f"action-value sum ${dav[burn.to_numpy()].sum():,.0f}")
+    P_(f"      >= 2026-08-01                          : VIRGIN / SEALED - NOT TOUCHED")
 
     # ---------------------------------------------------------------- G1
     P_("")
@@ -253,32 +273,71 @@ def main():
     ordr = np.argsort(dav)          # most-negative action value first
     lw_idx = LW.index.to_numpy()
     Lidx_of_LW = {i: int(LW.loc[i, "event_id"].split("-")[1]) for i in LW.index}
+    base_eti_set = set(int(e) for e in base_eti_arr[base_in])
+    base_net_of = {int(e): float(v) for e, v in zip(base_eti_arr[base_in], base_net_arr[base_in])}
     curve = []
-    P_(f"{'f':>6}{'events dropped':>16}{'net after':>14}{'uplift $':>13}{'uplift %':>11}"
-       f"{'trades':>9}{'maxDD':>12}{'top1% ret':>11}{'top5% ret':>11}{'top10% ret':>12}")
-    for f in FRACS:
-        k = int(round(f * len(dav)))
-        keys = [Lidx_of_LW[lw_idx[j]] for j in ordr[:k]]
-        TR = joint(keys)
-        net = float(sum(net_res(t) for t in TR))
-        surv = {t["eti"]: net_res(t) for t in TR}
-        ret = {}
-        for q in (1, 5, 10):
-            m = base_in & (base_net_arr >= win_thresh[q])
-            denom = float(base_net_arr[m].sum())
-            num = float(sum(surv.get(int(e), 0.0) for e in base_eti_arr[m]))
-            ret[q] = num / denom if denom else np.nan
-        eq = np.cumsum([net_res(t) for t in TR])
-        dd = float((np.maximum.accumulate(eq) - eq).max()) if len(eq) else 0.0
-        curve.append(dict(f=f, k=k, net=net, uplift=net - base_total, trades=len(TR),
-                          maxdd=dd, r1=ret[1], r5=ret[5], r10=ret[10]))
-        P_(f"{f:>6.2f}{k:>16,}{net:>14,.0f}{net - base_total:>13,.0f}"
-           f"{100 * (net - base_total) / abs(base_total):>10.1f}%{len(TR):>9,}{dd:>12,.0f}"
-           f"{100 * ret[1]:>10.1f}%{100 * ret[5]:>10.1f}%{100 * ret[10]:>11.1f}%")
+
+    def run_curve(order, label):
+        P_("")
+        P_(f"    RANKING: {label}")
+        P_(f"{'f':>6}{'dropped':>9}{'net':>12}{'uplift':>12}{'uplift %':>10}{'trades':>8}"
+           f"{'maxDD':>10}{'AVOIDED':>12}{'CREATED':>12}{'REPRICED':>11}{'created %':>11}"
+           f"{'top10 kept':>12}{'top10 $':>10}")
+        rows = []
+        for f in FRACS:
+            k = int(round(f * len(dav)))
+            keys = [Lidx_of_LW[lw_idx[j]] for j in order[:k]]
+            TR = joint(keys)
+            net = float(sum(net_res(t) for t in TR))
+            cf_net_of = {int(t["eti"]): net_res(t) for t in TR}
+            cf_set = set(cf_net_of)
+            kept = base_eti_set & cf_set
+            removed = base_eti_set - cf_set
+            created = cf_set - base_eti_set
+            avoided = -float(sum(base_net_of[e] for e in removed))
+            createdv = float(sum(cf_net_of[e] for e in created))
+            repriced = float(sum(cf_net_of[e] - base_net_of[e] for e in kept))
+            up = net - base_total
+            # RIGHT-TAIL RETENTION, corrected. The earlier metric credited whatever trade now
+            # starts at a baseline winner's entry bar AT ITS NEW SIZE, so it could exceed 100 %
+            # and was not a retention rate. Report the COUNT that survives as the same trade and
+            # the dollars those survivors carry at their NEW size, both explicitly.
+            m = base_in & (base_net_arr >= win_thresh[10])
+            tops = [int(e) for e in base_eti_arr[m]]
+            keptn = sum(1 for e in tops if e in kept)
+            dollars = float(sum(cf_net_of[e] for e in tops if e in kept))
+            denom = float(sum(base_net_of[e] for e in tops))
+            eq = np.cumsum([net_res(t) for t in TR])
+            dd = float((np.maximum.accumulate(eq) - eq).max()) if len(eq) else 0.0
+            rows.append(dict(ranking=label, f=f, k=k, net=net, uplift=up, trades=len(TR),
+                             maxdd=dd, avoided=avoided, created=createdv, repriced=repriced,
+                             n_created=len(created), n_removed=len(removed),
+                             created_share=createdv / max(up, 1e-9),
+                             top10_kept=keptn, top10_n=len(tops),
+                             top10_dollar=dollars / denom if denom else np.nan))
+            P_(f"{f:>6.2f}{k:>9,}{net:>12,.0f}{up:>12,.0f}{100 * up / abs(base_total):>9.1f}%"
+               f"{len(TR):>8,}{dd:>10,.0f}{avoided:>12,.0f}{createdv:>12,.0f}{repriced:>11,.0f}"
+               f"{100 * createdv / max(up, 1e-9):>10.1f}%{keptn:>7,}/{len(tops):<4,}"
+               f"{100 * dollars / denom:>9.1f}%")
+        return rows
+
+    curve += run_curve(ordr, "by CAUSAL action value (the object this wave built)")
+    curve += run_curve(np.argsort(own), "by the trade's OWN net (what W122's simpler ledger already had)")
     eqb = np.cumsum(base_net_arr[base_in])
     ddb = float((np.maximum.accumulate(eqb) - eqb).max())
-    P_(f"{'BASE':>6}{0:>16,}{base_total:>14,.0f}{0:>13,.0f}{0:>10.1f}%"
-       f"{int(base_in.sum()):>9,}{ddb:>12,.0f}{100:>10.1f}%{100:>10.1f}%{100:>11.1f}%")
+    P_("")
+    P_(f"    BASELINE: net ${base_total:,.0f}   trades {int(base_in.sum()):,}   maxDD ${ddb:,.0f}")
+    P_("")
+    P_("    ⚠ THE CURVE IS NOT PURE ABSTENTION. 'CREATED' is the P&L of trades the frozen policy")
+    P_("    takes because the session box no longer LATCHES once a bad early decision is removed.")
+    P_("    Those entries are not decision events in the ledger at all - they are the r0+1 bars of")
+    P_("    latched-out runs. A large share of the headline uplift is REGENERATION, not avoidance,")
+    P_("    and that is a statement about the BOX POLICY rather than about action-value routing.")
+    P_("")
+    P_("    ⚠ THE OWN-NET RANKING IS THE CONTROL THAT MATTERS. It uses only the trade's own P&L -")
+    P_("    the label W122's ledger already carried - and needs none of this wave's machinery.")
+    P_("    Whatever the causal ranking earns ABOVE it is the true incremental value of the")
+    P_("    counterfactual replay for the purpose of choosing which actions to drop.")
     pd.DataFrame(curve).to_csv(os.path.join(OUT, "abstention_curve.csv"), index=False)
 
     # ---------------------------------------------------------------- G4
@@ -346,9 +405,14 @@ def main():
         b_sess += 1
     P_(f"    sessions enumerated              {b_sess:>10,}")
     P_(f"    sessions SKIPPED (> {B_CAP} runs)      {skipped:>10,}   holding {skipped_tr:,} baseline trades")
-    P_(f"    B - baseline, summed             ${b_gain:>10,.0f}")
-    P_(f"    baseline net over those sessions ${base_total:>10,.0f}")
-    P_(f"    B as a multiple of baseline       {(base_total + b_gain) / base_total:>10.3f}x")
+    enum_base = sum(v for s, v in base_sess_net.items()
+                    if in_win[s] and 0 < len(runs_in(p, fb, sess_lo[s], sess_hi[s])) <= B_CAP)
+    P_(f"    B - baseline, summed over ENUMERATED sessions   ${b_gain:>12,.0f}")
+    P_(f"    baseline net over the ENUMERATED sessions only  ${enum_base:>12,.0f}")
+    P_(f"    baseline net over ALL in-window sessions        ${base_total:>12,.0f}")
+    P_(f"    LIKE-FOR-LIKE multiple (enumerated only)         {(enum_base + b_gain) / enum_base:>12.3f}x")
+    P_(f"    (an earlier version divided the enumerated GAIN by the ALL-SESSION net and printed")
+    P_(f"     3.624x. That mixed populations; the like-for-like figure above is the correct one.)")
 
     # ---------------------------------------------------------------- XM + FM + C
     P_("")
@@ -359,13 +423,18 @@ def main():
     XM["session_date"] = pd.to_datetime(XM["session_date"])
     XM = XM[(XM["session_date"] >= "2022-07-01") & (XM["session_date"] < "2026-08-01")]
     xt = XM[(XM["desired_direction"] != 0) & (XM["disqualified"] == 0)].copy()
-    # The reference file's pnl columns are COMMISSION-ONLY (the two differ only by the 15:45-close
-    # vs 15:46-open exit convention, ~$0.95/trade). The P1 ledger is priced under the RESEARCH cost
-    # model, so XM must be too or the two experts are not comparable and level C is meaningless.
+    # CORRECTED after adversarial audit. An earlier version of this file asserted the reference
+    # pnl columns were COMMISSION-ONLY and subtracted $12.50, which DOUBLE-CHARGED the spread.
+    # export_xm_reference.py:117 computes cst_c = COMM_RT + TICKV*(prof[ENTM]+prof[EXITM])/2
+    # = 4.36 + 12.50 = 16.86 and subtracts it at line 121. Verified numerically: gross minus
+    # pnl_research is CONSTANT $16.8600 on all 346 taken rows. The ~$0.95 gap between the two pnl
+    # columns is the 15:45-close vs 15:46-open EXIT CONVENTION (cst_c vs cst_n), not a missing
+    # spread. pnl_research is therefore already the research cost model and is used as-is.
     xm_sp = TICKV * (prof_d[9 * 60 + 46] + prof_d[15 * 60 + 45]) / 2.0
-    P_(f"    XM modelled spread from the W82 profile at its OWN fill minutes: ${xm_sp:.2f}/ctrRT"
-       f"   (CURRENT_BASELINE records $12.50 - reconciliation, not a new number)")
-    xt["net_research"] = xt["pnl_research"] - xm_sp
+    P_(f"    XM modelled spread at its own fill minutes ${xm_sp:.2f}/ctrRT is ALREADY inside")
+    P_(f"    pnl_research (export_xm_reference.py:117, cst = $4.36 + $12.50 = $16.86, verified as a")
+    P_(f"    constant $16.8600 gross-minus-net on all 346 rows). No further charge is applied.")
+    xt["net_research"] = xt["pnl_research"]
     xt["delta_action_value"] = xt["net_research"]
     P_(f"    XM taken decisions {len(xt):,}   net ${xt['net_research'].sum():,.0f}   "
        f"mean ${xt['net_research'].mean():,.2f}   share positive "
@@ -425,6 +494,15 @@ def main():
     P_("=" * 124)
     P_("=== 11. THE PREREGISTERED GATE TABLE.  Every clause is a coded assertion.")
     P_("=" * 124)
+    # --- audit-driven diagnostics printed WITH the gate table, not instead of it ---
+    k5 = max(1, int(round(G2_TOP * len(dav))))
+    absord = np.argsort(np.abs(dav))[::-1]        # ONE ranking, by |action value|
+    top_idx, rest_idx = absord[:k5], absord[k5:]
+    top_sum = float(dav[top_idx].sum())
+    rest_sum = float(dav[rest_idx].sum())
+    top5_sum_share = top_sum / dav.sum()
+    biggest = float(dav[absord[0]])
+
     g = [
         ("G1", f"share with |dAV - own net| > ${G1_DOLLARS:.0f} exceeds {100*G1_SHARE:.0f} %",
          f"{100 * share_diff:.2f} %", share_diff > G1_SHARE),
@@ -445,6 +523,44 @@ def main():
     P_("")
     allp = all(x[3] for x in g)
     P_(f"    ALL GATES: {'PASS' if allp else 'NOT ALL PASS'}")
+    P_("")
+    P_("=" * 124)
+    P_("=== 11b. GATE INTEGRITY - what an adversarial audit found wrong with these gates.")
+    P_("=== Recorded here rather than by quietly restating the gates. No coded clause was changed.")
+    P_("=" * 124)
+    P_("    G4 IS VOID. It cannot fail. Its statistic is minus the sum of the most-negative 20 % of")
+    P_(f"    action values, and {100 * (dav < 0).mean():.2f} % of all action values are negative, so every")
+    P_("    bucket's bottom quintile is entirely negative and the statistic is positive by")
+    P_("    arithmetic. Largest element of each bucket's bottom quintile:")
+    yy = pd.to_datetime(LW["session_date"]).dt.year.to_numpy()
+    for y in sorted(set(yy)):
+        dv = dav[yy == y]
+        kk = max(1, int(round(0.2 * len(dv))))
+        P_(f"        {y}: ${np.sort(dv)[:kk].max():>12,.2f}   (all negative: {np.sort(dv)[:kk].max() < 0})")
+    P_("    '5 of 5' therefore carries ZERO evidential content. This is exactly the un-failable-gate")
+    P_("    error the spec's own why_the_raw_oracle_is_NOT_the_gate section forbids. G4 is recorded")
+    P_("    VOID, not PASS. Stability is NOT established by this wave.")
+    P_("")
+    P_("    G2 PASSES ITS CODED CLAUSE AND FAILS ITS OWN RATIONALE. The clause measures the top 5 %")
+    P_("    share of TOTAL ABSOLUTE action value (39.28 %). The rationale asks whether 'essentially")
+    P_("    all of it sits in ~100 events' - which is a question about the SUM a router would earn:")
+    P_(f"        top {k5} events by |action value| contribute ${top_sum:,.0f} "
+       f"= {100 * top5_sum_share:.1f} % of the ${dav.sum():,.0f} SUM")
+    P_(f"        the remaining {len(rest_idx):,} events sum to ${rest_sum:,.0f} "
+       f"(mean ${rest_sum / len(rest_idx):,.2f} per decision)")
+    P_(f"        single largest |action value| event = ${biggest:,.0f} = "
+       f"{100 * biggest / dav.sum():.2f} % of the total sum")
+    P_("    By the economically relevant measure the concentration condition IS met. G2 is recorded")
+    P_("    PASS-ON-CLAUSE / FAIL-ON-RATIONALE and must not be quoted as a clean pass.")
+    P_("")
+    P_("    G3 IS TOO GENEROUS BY sqrt(2). The 0.1x conversion is valid only if Q1 and Q5 are")
+    P_("    constrained symmetric about the mean, which borrows precision from Q5 that a router")
+    P_("    abstaining on Q1 does not have. Assumption-free: MDE_gain = 0.2 * Z80 * sd / sqrt(neff/5).")
+    mde_free = 0.2 * Z80 * sd / np.sqrt(neff / 5.0)
+    P_(f"        symmetric (as coded)   ${0.1 * mde:>10,.2f}")
+    P_(f"        assumption-free        ${mde_free:>10,.2f}   = sqrt(2) x the above")
+    P_(f"        materiality bar        ${BAR:>10,.2f}")
+    P_(f"    G3 fails under BOTH ({mde_free / BAR:.1f}x the bar assumption-free). The failure is robust.")
     P_(f"{el()} done")
     _fh.close()
 

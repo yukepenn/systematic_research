@@ -1,0 +1,19 @@
+========================================================================================================================
+=== RR_W001 - ACTION-VALUE LEDGER.  Spec f3dd814.  NO MODEL IS FITTED IN THIS WAVE.
+========================================================================================================================
+[    20s] substrate 1,620,044 bars / 1,187 sessions
+[    21s] baseline: fills_daily 2,401 trades, causal_score on 2,139 entries, gfills 2,401 trades
+
+========================================================================================================================
+=== PHASE 0 - REPLAY CERTIFICATION.  BLOCKING.  Nothing downstream is read if this fails.
+========================================================================================================================
+check  assertion                                                                                   observed  verdict
+H-A    gfills is deterministic (byte-identical on repeat)                                      2,401 trades     PASS
+H-B    session-scoped replay == full pass, byte for byte                       2,401 vs 2,401, 0 mismatches     PASS
+H-C    trade SCHEDULE is size-invariant (gfills == fills_daily)                  2,401 vs 2,401, equal=True     PASS
+H-D    P&L is exactly proportional to size (re-pricing is exact)                       2,401 trades checked     PASS
+H-E    populations: 2,401 total / 2,131 session-filter / 2,139 ts-filter                 2,401 / 2,131 / 2,139     PASS
+
+    CERTIFICATION: PASS - the replay reproduces the frozen engine
+
+[    21s] --certify: stopping here by request. No counterfactual arm was read.
