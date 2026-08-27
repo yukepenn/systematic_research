@@ -1,0 +1,58 @@
+    P1 signal rebuilt on 1,620,044 bars / 1,058 in-window sessions [16s]
+
+======================================================================================================================
+=== 1. DOES THE BOX ACTUALLY FIRE EARLIER ON SIZE-2 SESSIONS? (direct mechanism)
+======================================================================================================================
+arm      sess  halt-loss  halt-tgt   no box   pts@halt sz1   pts@halt sz2
+ABS     1,058        194       219      645          55.68          37.18
+PCT     1,058        166       213      679          55.68          42.11
+
+    PREDICTION IF THE STORY IS TRUE: under ABS the mean point excursion at which a
+    LOSS-halt fires is roughly HALF on size-2 sessions; under PCT the two are equal.
+
+======================================================================================================================
+=== 3. WHERE DOES THE GAP COME FROM? Sessions the two arms halt differently.
+======================================================================================================================
+    sessions where the halt outcome differs: 53 of 1,058 (5.0 %)
+    gross P&L difference PCT - ABS, ALL sessions ............ $      53,600
+    ... of which comes from those divergent sessions ........ $      48,670 (90.8 %)
+
+======================================================================================================================
+=== 2. NULL: permute WHICH entries carry size 2 (count preserved). Is the gap bigger
+===    because the box was cutting short the trades the SCORE liked, or is it accounting?
+======================================================================================================================
+    real: ABS 885 -> PCT 1,231   gap +346   (2,002 entry bars, 366 carry size 2)
+    [1 permutation costs 0.5s; 200 will take ~2 min]
+      25/200  null gap mean +110  real +346  pct 100.0  [28s]
+      50/200  null gap mean +82  real +346  pct 100.0  [40s]
+      75/200  null gap mean +85  real +346  pct 98.7  [52s]
+     100/200  null gap mean +80  real +346  pct 99.0  [64s]
+     125/200  null gap mean +80  real +346  pct 99.2  [76s]
+     150/200  null gap mean +79  real +346  pct 98.7  [88s]
+     175/200  null gap mean +81  real +346  pct 98.9  [100s]
+     200/200  null gap mean +77  real +346  pct 99.0  [112s]
+
+    null gap: mean +77  sd 129  min -389  max +423
+    REAL gap +346  ->  99.0th percentile of 200 permutations
+
+    READ: the quality score INTERACTS with the box - the size-2 trades the dollar box
+          was cutting short are specifically the ones worth not cutting short.
+
+======================================================================================================================
+=== 4. W98's Tier-3 stress REVERSED for P1 (-31.4 % on 2006-2021). Is the box simply a
+===    different animal at NQ 1,200 than at NQ 23,000? Measure how often it fires.
+======================================================================================================================
+    deep P1 rebuilt [151s]
+
+era           arm      sess  halt-loss %  halt-tgt %   pts@halt sz1   pts@halt sz2  mean sess range pts
+2006-2021     ABS     4,279         3.2%        5.6%          48.28          33.37                 77.7
+2006-2021     PCT     4,279         2.5%        3.9%          48.28          40.38                 77.7
+
+2022-2026     ABS     1,058        18.3%       20.7%          55.68          37.18                350.2
+2022-2026     PCT     1,058        15.7%       20.1%          55.68          42.11                350.2
+
+    A $1,300 box is 65 NQ points in BOTH eras, but the mean session range is not the
+    same number of points in both eras. If the box binds far more often in one era, the
+    denominator question is being asked of two different instruments.
+
+[done 153s]

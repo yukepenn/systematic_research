@@ -1,0 +1,106 @@
+run_id: WE_W99_CAPTURE2
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-26
+status: PREREGISTERED
+authority: "OWNER MEGA DIRECTIVE V4 sections 2, 6, 13 (TASK 4 + TASK 5 + TASK 7)."
+
+title: >
+  CURRENT MOVEMENT CAPTURE LEDGER v2. Where is the money moving, what part of it was causally
+  identifiable, what part was executable after cost, what did we take, and WHY did we miss the rest?
+  W50 answered a version of this for the old P1 against an EX-POST denominator and produced
+  "4.46 % capture", a number that is nearly meaningless because nobody captures a session's range.
+  This wave replaces that denominator.
+
+# ---------------------------------------------------------------------------------------------
+# 1. WHAT IS BEING MEASURED
+# ---------------------------------------------------------------------------------------------
+path_decomposition:
+  note: "sessions run 18:00 -> 17:00 ET; segments are disjoint and exhaust the session"
+  segments:
+    ON_ASIA:  "18:00 - 23:59"
+    ON_EU:    "00:00 - 07:59"
+    PRE:      "08:00 - 09:29"
+    OPEN:     "09:30 - 09:44"
+    MORN:     "09:45 - 11:29"
+    MID:      "11:30 - 13:29"
+    AFT:      "13:30 - 15:44"
+    CLOSE:    "15:45 - 15:59"
+    POST:     "16:00 - 16:59"
+  session_classes: "W51's classify() verbatim - TREND-UP / TREND-DOWN / REVERSAL / RANGE / MIXED.
+                    DIAGNOSTIC ONLY: it uses end-of-session facts and is never a signal."
+
+three_ceilings:
+  A_EX_POST_ORACLE: >
+    Knows the future path. TWO variants, both diagnostic:
+      oracle1  - the single best directional trade inside the segment (max drawup vs max drawdown)
+      oracleK  - the perfect zigzag with a 10-point pivot threshold, i.e. every monotone leg
+    Reported so the reader can see how large the ex-post number is and therefore how little it means.
+  B_CAUSAL: >
+    TWO honest bounds, because the true causal ceiling is not knowable:
+      LOWER  - a FIXED, preregistered family of 12 simple causal rules (below). The best SINGLE
+               rule chosen ONCE over the whole window is genuinely executable, so whatever it earns
+               is a LOWER bound on causal opportunity. Its best-of-12 selection is charged with a
+               family-wise null.
+      UPPER  - LAGGED ORACLE(h): the oracle's own best swing, but entry delayed h minutes from the
+               swing's true start, h in {0, 5, 15, 30, 60, 120}. This is a RECOGNITION-LAG ceiling,
+               not an information ceiling, and is labelled as such wherever it appears.
+    A third quantity is recorded because it is the value of a router: ORACLE-OVER-FAMILY, the best
+    rule chosen PER SESSION. The gap (oracle-over-family minus fixed-best) IS the maximum value of
+    perfect regime routing over this rule set, and nothing else in this repo has measured it.
+  C_EXECUTABLE: >
+    Every rule P&L above is already next-bar-open entry, flat at segment end, and charged
+    per-minute spread from W82's committed profile plus $4.36/RT commission. There is no
+    separate "executable" number: B's lower bound IS the executable one.
+
+rule_family_fixed_in_advance:
+  - "MOM(h)  target = sign(p_t - p_{t-h}),  h in {5, 15, 30, 60}"
+  - "REV(h)  target = -sign(p_t - p_{t-h}), h in {5, 15, 30, 60}"
+  - "VWAPMOM target = sign(p_t - session VWAP_t)"
+  - "VWAPREV target = -sign(p_t - session VWAP_t)"
+  - "OPENMOM target = sign(p_t - open_0930)   (0 before 09:30)"
+  - "ORB     target = +1 above the 09:30-09:44 high, -1 below its low, else 0"
+  note: "12 rules, no parameter search beyond the four listed lookbacks, all causal, all fixed here."
+
+our_capture:
+  objects: ["P1 / ABS (incumbent)", "P1 / PCT (W98's corrected box)", "2:3 pair / ABS", "2:3 pair / PCT"]
+  attribution: "by ENTRY segment (money) and by EXPOSURE minutes (presence). Both are reported;
+                they answer different questions and W89 already got burned conflating two units."
+
+miss_reason_codes:
+  applied_per: "session x segment where executable opportunity > 0 and our capture < it"
+  codes: [NO_ENGINE, WRONG_DIRECTION, ENTRY_LATE, EXIT_EARLY, SESSION_BOX, QUALITY_SIZE, COST, OTHER]
+  definitions:
+    NO_ENGINE:       "zero exposure in that segment for the whole session"
+    WRONG_DIRECTION: "held a position whose sign is opposite the segment's net move"
+    ENTRY_LATE:      "first entry after 50 % of the segment's best swing had already happened"
+    EXIT_EARLY:      "flat before the segment end while the favourable move continued >= 10 pts"
+    SESSION_BOX:     "the box had halted the session at or before that segment"
+    QUALITY_SIZE:    "size 1 on a segment whose realised P&L per contract was in the top quartile"
+    COST:            "gross P&L positive, net of friction negative"
+
+# ---------------------------------------------------------------------------------------------
+# 2. WINDOWS
+# ---------------------------------------------------------------------------------------------
+windows: [FULL 2022-07-01..2026-08-01, "2024+", 2025, 2026YTD, t12m, t6m, t3m]
+recency_note: >
+  Directive section 3 puts TIER 1 (t3m/t6m/t12m) first. The seal must travel with them:
+  2026-05-31 -> 2026-07-31 is BURNED (already consumed by development) and >= 2026-08-01 is VIRGIN
+  and not touched here. t3m lies entirely inside the burned span; t6m largely does. Every recency
+  figure carries that label.
+
+# ---------------------------------------------------------------------------------------------
+# 3. WHAT THIS WAVE MAY AND MAY NOT CONCLUDE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "NOTHING IS PROMOTED. This wave produces a RANKED AGENDA and a denominator, not a candidate."
+  - "No capture percentage may be quoted against the ex-post denominator without the causal one
+     printed beside it in the same table."
+  - "The output that matters is the ranked missing-opportunity table required by directive
+     section 6: MISSING OPPORTUNITY | $/SESSION AVAILABLE (executable) | OUR CAPTURE | CAUSAL
+     CEILING | RESIDUAL AFTER COST | DATA AVAILABLE? | BEST NEXT ENGINE FAMILY | EVI."
+  - "The next research family is chosen FROM that table and from nowhere else."
+b1_check: >
+  The rule-family engine must reproduce a known object before any of its numbers are read: run the
+  vectorised P&L engine on P1's own realised position series and assert it matches the committed
+  trade-list P&L to within the documented mark-to-market difference. If it does not, no ceiling is
+  issued.
