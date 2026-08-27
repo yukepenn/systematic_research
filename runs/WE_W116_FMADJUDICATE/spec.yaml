@@ -1,0 +1,108 @@
+run_id: WE_W116_FMADJUDICATE
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "POST-W115 owner directive, sections 4, 5, 7, 8, 22, 23, 29, 33, 35, 41, 44 LANE 2."
+
+title: >
+  FOLLOW_MORNING - full adjudication under the NEW regime doctrine. W114 demoted it to
+  REGIME_LOCAL because it failed a 2006-2021 conjunction. The owner has now superseded that rule:
+  old-regime failure is NO LONGER an automatic promotion veto, and REGIME_LOCAL is a RISK
+  CLASSIFICATION rather than a demotion. So the object has to be judged again, on the criteria that
+  now govern, and the previous verdict has to be stated as superseded rather than quietly dropped.
+
+what_this_wave_does_NOT_do: >
+  It does not re-run 2006-2021 hoping for a different answer, and it does not optimise anything.
+  Section 23 is explicit: do not optimise the entry minute, the exit minute, the stop, or the
+  direction threshold. The plateau is measured, not searched. No new arm of this object is created.
+
+# -------------------------------------------------------------------- section 4: timing provenance
+timing_audit:
+  the_question: >
+    Section 4 forbids calling this rule "zero parameter" if 11:49 was chosen after inspecting a
+    timing family. The provenance must be established from committed artifacts, not from memory.
+  what_is_to_be_verified_from_the_repo:
+    - "when the decision minute 11:48 first appears in a committed spec, and for what object"
+    - "whether any wave ever selected it by comparing FOLLOW_MORNING outcomes across minutes"
+    - "the exact end-stamped semantics: bar 571 OPEN is the 09:30:00 print, bar 689 CLOSE is 11:29, bar 709 OPEN is the 11:48:00 print, bar 944 CLOSE is 15:44"
+  the_gap_that_must_be_audited: >
+    The direction is fixed from the 11:29 close but the fill is at the 11:49 open. Bars 690-708
+    (11:30-11:48) EXIST and are NOT used. That gap was inherited, not designed. The wave must
+    report (a) that those nineteen minutes are genuinely unused, as a causal-ledger check, and
+    (b) what the SAME rule does when the direction is taken from the 11:48 close instead - which is
+    a DIFFERENT rule using a fresher information set, reported as a diagnostic and explicitly NOT
+    substituted for the primary.
+  selection_burden: >
+    Report BOTH readings and let the reader choose the conservative one: the single-cell null W114
+    used (defensible because the geometry was inherited from W108's LANE C spec before this object
+    existed), AND a best-of-15 bar across the whole 5 x 3 timing plateau (conservative, treats the
+    minute as though it had been chosen here). If the object clears the conservative bar too, the
+    provenance argument stops mattering.
+  language_rule: >
+    From this wave on the object is described as ZERO-THRESHOLD and PARAMETER-LIGHT with a BROAD
+    TIMING PLATEAU. It is not described as "zero parameter". The plateau is the evidence, not the
+    cell.
+
+# -------------------------------------------------------------------- section 41: the dashboard
+dashboard:
+  windows: [t3m, t6m, t12m, YTD, prior_year, t24m, "2022-current", "2006-2021 (diagnostic only)"]
+  economics: [net_per_trade, net_per_week, fixed_DD_net_per_week, costs, round_turns]
+  consistency: [positive_week_rate, median_week, positive_trade_rate, median_trade]
+  risk: [maxDD, CVaR5, worst_week, worst_trade, MAE, time_under_water]
+  concentration: [top1, top5, top10, top20, trimmed_mean, median, skew]
+  execution: [exact_decision_and_fill_timestamps, spread_charged, sensitivity_at_0x_1x_2x_3x]
+  window_rule: >
+    Section 33 - all standardised windows are printed TOGETHER and none is chosen after seeing
+    P and L. A rule that works only in one cherry-picked recent slice is not current-regime alpha,
+    and the table has to make that visible rather than hide it.
+  warmup_rule: >
+    Section 20 - every recency figure states CONTINUATION semantics. This object has no state, no
+    warmup and no memory: its direction depends only on two prices from the same session, so
+    fresh-start and sliced windows are identical BY CONSTRUCTION. That is asserted numerically in
+    the wave, not assumed.
+
+# -------------------------------------------------------------------- section 22: portfolio value
+portfolio:
+  note: >
+    Section 22 is the heart of this wave. +$179/trade standalone does not earn a place in the book.
+    rho with P1/PCT is approximately +0.279 - far above XM's +0.081 - so the question is whether it
+    pays when the CURRENT BOOK is losing.
+  measure_against: ["P1/PCT", "XM_CONFLICT", "P1/PCT + XM_CONFLICT (inverse-vol)"]
+  required:
+    - "contribution during P1/PCT losing weeks, and during XM losing weeks"
+    - "contribution during the combined book's drawdown periods specifically"
+    - "downside rho, worst-decile overlap, conditional loss overlap - all against a 1,000-draw circular-shift null, the instrument W110 established for this question"
+    - "incremental fixed-DD weekly dollars, CVaR5 effect, maxDD effect, positive-week effect"
+    - "the same at two weighting conventions (inverse-vol and income-matched), with the RANGE quoted rather than the better one"
+
+# -------------------------------------------------------------------- section 29: controls
+controls:
+  mandatory_in_this_wave: [always_long, always_short, fade_morning_direction, matched_random_participation, unconditional_exposure_time_matched]
+  rule: "A sophisticated result that loses to one line of code is CLOSED. These run on the SAME sessions in the SAME table."
+
+# -------------------------------------------------------------------- section 5: classification
+regime_classification:
+  categories: [STRUCTURAL, CURRENT_REGIME_EXPLAINED, CURRENT_REGIME_UNEXPLAINED, "TRANSITIONING / WATCH", "DEAD / FALSIFIED"]
+  how_this_wave_decides:
+    - "STRUCTURAL requires the mechanism to hold in materially different eras. W114 already showed it does not. This category is unavailable and that is settled, not re-litigated."
+    - "CURRENT_REGIME_EXPLAINED requires W115 to identify a causal observable driver. This wave does NOT decide that; it defers to W115 and states the dependency."
+    - "CURRENT_REGIME_UNEXPLAINED is the default if current evidence is strong and no driver is identified."
+    - "TRANSITIONING / WATCH if the recent windows show the edge leaving its supported region."
+    - "DEAD / FALSIFIED if a simple control catches up, cost destroys it, or the recent windows collapse."
+
+primary: >
+  A CLASSIFICATION plus a PORTFOLIO VERDICT, not a P and L number. Specifically: (1) which of the
+  five regime categories the object belongs to on current evidence; (2) whether it adds marginal
+  value to P1/PCT + XM_CONFLICT measured on DOWNSIDE statistics rather than ordinary correlation.
+
+falsifier_for_the_portfolio_half: >
+  The object does not enter the active book if its incremental fixed-DD contribution is <= 0 at
+  BOTH weighting conventions, OR if its downside overlap with the combined book is worse than the
+  95th percentile of the circular-shift null, OR if a matched simple control reproduces its
+  contribution.
+
+decision_rule:
+  - "NOTHING IS PROMOTED TO THE BASELINE BY THIS WAVE. Section 17's object taxonomy is updated instead - the wave may move the object between CHALLENGER, WATCHLIST and ACTIVE COMPONENT and must say which and why."
+  - "W114's REGIME_LOCAL verdict is recorded as SUPERSEDED BY DOCTRINE, not as withdrawn on evidence. The measurement was correct; the rule that converted it into a demotion has been replaced by the owner. Both statements go in the report."
+  - "If the object clears the conservative best-of-15 timing bar as well as the single-cell one, say so explicitly, because that retires the provenance objection permanently."
+  - "No minute, exit, cost model, weighting or window is re-chosen after results are seen."
