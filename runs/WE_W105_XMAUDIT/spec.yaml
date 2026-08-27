@@ -1,0 +1,82 @@
+run_id: WE_W105_XMAUDIT
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "Owner directive V4 amendment, sections 4 and 5. Measurement, not retuning."
+
+title: >
+  ONE AUTHORITATIVE XM_CONFLICT TABLE, and a risk architecture that separates the ALPHA EXIT from
+  the ACCOUNT-SURVIVAL STOP. Nothing in this wave may create a parameter.
+
+# ---------------------------------------------------------------------------------------------
+# 0. THE RECONCILIATION THIS WAVE OWES
+# ---------------------------------------------------------------------------------------------
+n_reconciliation: >
+  The record contains both N = 342 and N = 348 and they are NOT a discrepancy - they are two
+  anchors. 342 is the 09:30-STAMPED bar (whose open is the 09:29 price, W101/W102). 348 is the
+  09:31-STAMPED bar (the TRUE RTH open under this repo's end-stamping, W102c/W103). This wave
+  prints both counts side by side, states which is canonical, and every table below uses the
+  CANONICAL 09:31 anchor. If the two counts do not reproduce exactly as 342 and 348 the wave stops.
+
+# ---------------------------------------------------------------------------------------------
+# 1. SECTION 4 - the recency audit
+# ---------------------------------------------------------------------------------------------
+periods: [2022, 2023, 2024, 2025, 2026YTD, t12m, t6m, t3m]
+per_period_columns:
+  - N, long N, short N
+  - hit rate, $/trade, net $
+  - positive weeks %
+  - max drawdown, worst trade, worst MAE
+  - top-5 trade contribution %, top-10 trade contribution %
+  - event-day contribution
+  - weekly correlation with P1/PCT
+
+concentration_and_carrier_tests:      # each is a question, each gets a plain answer
+  longs_only:   "restrict to long trades. Does the edge survive?"
+  shorts_only:  "restrict to short trades. Does the edge survive?"
+  drop_extremes: >
+    remove the top-5 and then the top-10 trades by P&L and recompute. If the edge dies without
+    them it is a lottery ticket, not a system.
+  early_years_only: "2022+2023 vs 2024+2025+2026. Is it an early-sample artifact?"
+  event_days: >
+    CPI / FOMC / NFP if and only if a CAUSAL calendar already exists on disk. RULE-DERIVABLE dates
+    (OPEX = third Friday, month-end, quarter-end, first-Friday-of-month as an NFP proxy) are
+    computed deterministically and are always available. Mega-cap earnings only if a calendar
+    exists. NO EXTERNAL LABEL IS INVENTED - a missing calendar is reported as UNTESTED.
+
+decision_rule_section_4:
+  - "This is MEASUREMENT. No parameter, threshold, filter or date-exclusion may be created from
+     any result in it. If longs carry the edge and shorts do not, that is RECORDED, not acted on."
+  - "A carrier test that kills the edge is a reason to withdraw the candidate, never a reason to
+     restrict it to the surviving subset - that would be fitting the survivor."
+
+# ---------------------------------------------------------------------------------------------
+# 2. SECTION 5 - the risk architecture
+# ---------------------------------------------------------------------------------------------
+two_layers:
+  ALPHA_EXIT: >
+    the 15:45 clock exit. W102's stop curve (20 -> 300 points, eleven levels) established that no
+    alpha stop helps at any distance. This layer is CLOSED and is not reopened.
+  DISASTER_STOP: >
+    an OPERATIONAL account-survival control. It is not an alpha device, it is not expected to make
+    money, and its job is to bound a tail the backtest cannot bound.
+disaster_levels: >
+  BROAD, ROUND, NON-OPTIMISED reference levels only: 200, 300, 400, 500, 750, 1000 NQ points.
+  They are chosen for being round numbers spanning the plausible range, NOT for performance, and
+  NO LEVEL IS SELECTED BY THIS WAVE. For each, report: NQ points, $ per NQ contract, $ per MNQ
+  contract, % of historical XM gross edge lost, number of historical triggers, and the worst
+  single loss that survives the level.
+required_statement: >
+  "no stop" must NOT be claimed as the correct live risk policy merely because it maximises
+  historical P&L. The report states explicitly that the historical worst adverse excursion is a
+  SAMPLE MAXIMUM, not a bound, and that the owner selects capital risk.
+
+# ---------------------------------------------------------------------------------------------
+# 3. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "NOTHING PROMOTED, NOTHING ENABLED, NO PARAMETER CREATED."
+  - "The output is one authoritative table and one non-prescriptive risk menu."
+  - "Every XM caveat travels: REGIME_LOCAL by DATA AVAILABILITY (cross-market substrates begin
+     2022-01-02), discovery-consumed window, rho +0.446 with B-MOM, selected as best of 27 cells,
+     and W104's constraint that it is an RTH OPENING-AUCTION object and not a general one."
