@@ -1,0 +1,88 @@
+run_id: WE_W122_XSUPPORT
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "POST-W121 owner directive, sections 12-19, 23, 25-29, 44 LANE A."
+
+title: >
+  CROSS-MARKET INTRADAY SUPPORT AT THE P1 DECISION EVENT - is a continuation SUPPORTED or FRAGILE,
+  and is that knowable before we act? STAGE A ONLY. No policy is tested in this wave.
+
+why_this_lane_and_why_now: >
+  W119 established that the book's gap is not presence coverage (E_NO_ENGINE = 0 sessions) and that
+  P1's losing sessions carry 3.042 entries against 1.377 while the market moves 31 % less. W121 then
+  falsified the causal reading of that - the 4th entry of a session is the BEST cell at $253/entry
+  against a $139 mean, and a count cap sits BELOW its own count-matched random placebo. So the
+  missing variable is ENTRY QUALITY, not entry count. XM already proved cross-market information
+  can carry orthogonal value, but only as an opening-auction disagreement mechanism. This asks
+  whether broad-market support carries information at P1's OWN decision events, all day.
+
+# ---------------------------------------------------------------- the artifact
+decision_quality_ledger:
+  unit: "one row per P1/PCT ENTRY EVENT in 2022-07-01 -> 2026-08-01 (2,131 events), not one row per session."
+  hard_rule: >
+    INPUT columns and OUTCOME columns are separated and every input documents AVAILABLE_AT <= the
+    decision bar. P1 fills at the open of bar i on a signal read from bar i-1, so every feature uses
+    bars up to and INCLUDING i-1 and nothing later. This is asserted numerically by the W115/harness
+    single-observation perturbation test, not assumed.
+  inputs:
+    identity: [date, entry_bar, entry_minute, direction, size, entry_ordinal_in_session]
+    nq_state: [nq_move_5m, nq_move_15m, nq_move_30m, nq_path_eff_30m, nq_atr_z, session_move_so_far]
+    p1_state: [causal_quality_score, box_pnl_so_far_per_contract]
+    cross_market: "the primitive family below"
+  outcomes:
+    - [trade_net_pnl, trade_gross_pnl, hold_minutes, mfe, mae, continuation_return_30m, session_p1_total]
+
+# ---------------------------------------------------------------- section 16: the primitives
+primitives:
+  note: "SMALL and preregistered. Five primitives x three windows = fifteen cells. No composite scores, no fitted weights, no lookback search (section 17)."
+  A_SIGN_BREADTH: "how many of ES, RTY, YM moved the SAME way as NQ over the window. Integer 0-3, signed by NQ's own direction."
+  B_SUPPORT_MAG: "mean over the three markets of (that market's window log return / its own trailing-60-session sigma), signed by NQ's direction. Positive = the complex is moving WITH NQ."
+  C_DISPERSION: "standard deviation across the three markets' standardised returns. High = the complex disagrees with itself."
+  D_NQ_IDIO: "NQ's own standardised window return MINUS the equal-weight complex standardised return. High = NQ is moving alone."
+  E_DELAYED_CONF: "support magnitude over the most recent third of the window MINUS support over the earliest third. Positive = the complex is arriving late to NQ's move."
+  windows: [5, 15, 30]
+  window_justification: "three economically distinct horizons at 1-minute resolution, predeclared. NOT searched. Section 17 forbids scanning lookbacks."
+
+# ---------------------------------------------------------------- section 15/25: the real question
+the_incremental_question:
+  statement: >
+    A cross-market feature is only NEW INFORMATION if it adds predictive value AFTER controlling for
+    NQ's own pre-entry move, P1's own state, time-of-day and entry ordinal. Section 15 is explicit.
+    The headline number of this wave is LEVEL 4 minus LEVEL 3, never LEVEL 4 alone.
+  control_hierarchy:
+    LEVEL_0: "random participation at the same rate"
+    LEVEL_1: "always long / always short at the same events"
+    LEVEL_2: "NQ-only momentum - the sign and size of NQ's own pre-entry move"
+    LEVEL_3: "P1's incumbent action itself, i.e. take every entry (the status quo)"
+    LEVEL_4: "L3 + cross-market support"
+  matched_strata_test: >
+    The primary robustness instrument, per section 18. Within strata matched on NQ pre-entry move
+    QUINTILE x time-of-day BUCKET x entry-ordinal BUCKET, compare high-support against low-support
+    entries. If support carries information incremental to NQ, the within-stratum difference
+    survives. If it is a repackaging of NQ momentum, it collapses.
+
+primary: >
+  The top-versus-bottom support-quintile difference in NET P1 TRADE DOLLARS, computed WITHIN matched
+  strata, for B_SUPPORT_MAG at the 15-minute window - one preregistered cell, chosen as the middle
+  window and the most direct primitive, NOT chosen from results.
+
+falsifiers_ALL_must_be_cleared:
+  G1: "the within-stratum top-minus-bottom difference is > 0"
+  G2: "it exceeds the 95th percentile of a DEPENDENCE-PRESERVING family null - events resampled jointly across all 15 cells so cross-feature and cross-window correlation is retained (section 28). Independent per-cell draws are forbidden; W116b measured that they inflate a best-of-K bar by 1.65x on a correlated family"
+  G3: "it survives PREQUENTIAL evaluation - chronological blocks, fit on past, read next, fixed feature definitions (section 27). If pooled is strong and prequential vanishes, the wave downgrades heavily, as W115's SESSION_VOL_LEVEL did (+7.9 pp descriptive -> +0.23 pp causal)"
+  G4: "it beats LEVEL 2 - a control using only the sign and magnitude of NQ's own pre-entry move over the same window"
+  gate_reporting: "section 29 - a GATE / SPEC / OBSERVED / PASS-FAIL table is PRINTED BY THE CODE. W121's Stage-A falsifier had two clauses and only one was implemented; every clause here is a coded assertion."
+
+secondary:
+  - "the full 5 x 3 grid with the dependence-preserving family null, so a lucky cell is visible"
+  - "the same analysis on P1's LOSING sessions specifically - the book-loss target that motivates the lane"
+  - "SECTION 19 TRANSFER, corroboration only and not required: does the SAME support state at 09:45 distinguish XM tail-loss sessions? Reported with its small-N caveat and NOT retuned"
+  - "evidence-status labels on every recency figure per section 9: DISCOVERY_CONSUMED for the whole modern window, DIRECTLY_BURNED for 2026-05-31 -> 07-31"
+
+decision_rule:
+  - "STAGE A ONLY. NOTHING PROMOTED. No policy is tested, no veto, no size change, no reversal - section 23 is binding and W113/W121 already showed why optimising policy before proving information is wasteful."
+  - "A pass buys ONE simple Stage-B policy wave and an INFORMATION_COVERAGE matrix entry."
+  - "If the pooled result is strong but the matched-strata or prequential arms collapse, the verdict is REPACKAGED NQ MOMENTUM and the family is closed - not 'promising, needs tuning'."
+  - "If nothing survives, the honest conclusion is that P1 entry quality is not separable by cross-market support with the data we hold, which - combined with the order-flow data gate - would mean the book's decision quality is not currently improvable from information we own."
+  - "No primitive, window, quantile count, stratum definition or control is re-chosen after results are seen."
