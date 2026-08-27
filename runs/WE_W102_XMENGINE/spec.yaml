@@ -1,0 +1,95 @@
+run_id: WE_W102_XMENGINE
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: >
+  Owner directive V4 sections 4 and 18 (no long freeze; convert a strong candidate to a live-ready
+  artifact as soon as minimum engineering truth is satisfied) and W101's own "next, in order".
+
+title: >
+  DOES `XM_CONFLICT` SURVIVE BECOMING AN ENGINE? W101 measured a FORECAST - one entry, one exit at
+  15:45, no stop, no box, no sizing, adverse excursion completely unmanaged. Most forecasts do not
+  survive being given an exit policy. This wave gives it one and re-measures everything.
+
+# ---------------------------------------------------------------------------------------------
+# 1. THE OBJECT
+# ---------------------------------------------------------------------------------------------
+entry: >
+  At the 09:46 open, direction = sign(close_0945 - open_0930), taken ONLY on sessions where the
+  cross-market composite (ES, RTY, YM 09:30->09:45 returns, each divided by its own trailing-60-
+  session sigma, averaged) has the OPPOSITE sign. Identical to W101's XM_CONFLICT, unchanged.
+size: "1 contract. The quality layer is NOT added in this wave - one change at a time."
+flat: "15:45 ET at the latest, and at every session close regardless."
+
+exit_arms:                    # the whole point of the wave
+  X0_HOLD:   "hold to 15:45. The W101 forecast, carried through unchanged as the control."
+  X2_ORSTOP: >
+    hold to 15:45, but exit at the opposite extreme of the 09:30-09:45 opening range - the low for
+    a long, the high for a short. ZERO FREE PARAMETERS: the level is the object's own entry window.
+  X3_FLIP:   >
+    hold to 15:45, but exit if the drive sign flips (close back through open_0930). ZERO FREE
+    PARAMETERS.
+  X1_ATR2:   >
+    hold to 15:45, but exit at entry -/+ 2.0 x ATR20 measured at 09:45. THIS ONE HAS A PARAMETER
+    (2.0) and it is disclosed as such; it is included because it is the conventional choice and
+    the reader should see what it costs relative to the parameter-free arms.
+
+# ---------------------------------------------------------------------------------------------
+# 2. WHAT MUST BE MEASURED THAT W101 DID NOT
+# ---------------------------------------------------------------------------------------------
+new_measurements:
+  - "MAE and MFE per trade. W101's forecast held an unmanaged position for six hours and never
+     reported how far offside it went. Without that number the risk is unknown, not small."
+  - "the full directive-13 dashboard on every arm: net, weekly $, weekly $ at fixed $20,245 DD,
+     positive-day and positive-week %, max DD, worst week, CVaR5, top-5 DD, losing streak,
+     contract-minutes, peak contracts, profit per contract-minute, candidate-specific friction."
+  - "the portfolio combination with P1/PCT at income-matched scale, for every arm."
+  - "per-year and recency strip, with the BURNED label on anything after 2026-05-31."
+
+# ---------------------------------------------------------------------------------------------
+# 3. PRIMARY, FALSIFIER, AND THE SELECTION BURDEN
+# ---------------------------------------------------------------------------------------------
+primary: >
+  MARGINAL PORTFOLIO VALUE: weekly $ at a fixed $20,245 max drawdown of (P1/PCT + arm) at
+  income-matched scale, against P1/PCT alone at $1,230. This is the primary rather than the arm's
+  standalone number because W101 already established the object is WORSE than P1 standalone
+  ($935 vs $1,230) and its entire value is as a diversifier - directive section 14.
+falsifier: >
+  If NO exit arm leaves the portfolio combination above P1/PCT alone, XM_CONFLICT does not survive
+  becoming an engine and W101's result stays a forecast with no tradeable form.
+selection_burden: >
+  Four arms are compared and the best will be reported. The burden is disclosed rather than
+  nulled: three of the four arms have NO free parameter, so the selection is over EXIT POLICY, not
+  over a threshold, and the two parameter-free arms are reported side by side whatever the ranking.
+  X1_ATR2's 2.0 is a single conventional constant fixed here and not scanned. If the winner is
+  X1_ATR2 by a margin smaller than the spread between X2 and X3, the honest reading is that the
+  exit policy does not matter and that is what will be written.
+
+# ---------------------------------------------------------------------------------------------
+# 4. LIVE-READINESS CHECKS (directive section 18) - run here, not later
+# ---------------------------------------------------------------------------------------------
+live_checks:
+  - "no lookahead: the entry uses only bars <= 09:45 and fills at the 09:46 OPEN; every exit level
+     is computable at or before the bar it acts on; asserted by construction and re-stated."
+  - "correct bar timing: entry index = the bar stamped 09:46, exit index = the bar stamped 15:45 or
+     the first bar whose stop level is breached, whichever is first."
+  - "correct session reset: the opening range, the drive anchor and the cross-market sigma all
+     reset at the session's own 09:30, never at midnight."
+  - "the cross-market inputs are available AT 09:45 in real time - ES/RTY/YM last prices. Stated
+     explicitly because a signal that needs a vendor file at 09:45 is not live-ready."
+  - "deterministic: same input, same trade list, asserted by re-running the builder twice."
+  - "explicit risk limits: worst single trade, worst day, worst week, and the maximum adverse
+     excursion ever seen, all printed so a kill-switch level can be chosen from evidence."
+
+# ---------------------------------------------------------------------------------------------
+# 5. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "NOTHING IS ENABLED. Directive section 18 separates EVIDENCE status from ENGINEERING status;
+     the most this wave can produce is `STRONG (current regime) + LIVE_READY`, and enabling real
+     capital remains the owner's action alone."
+  - "Every caveat from W101 travels verbatim: N ~ 342, discovery-consumed window, rho = +0.41 with
+     B-MOM, and REGIME_LOCAL by DATA AVAILABILITY - the cross-market substrates begin 2022-01-02
+     and no deep test is possible from anything on disk."
+  - "If the object survives, the NinjaScript is written in a following wave, not this one, and the
+     Strategy Analyzer reconciliation is the owner's interactive action."
