@@ -3,6 +3,84 @@
 
 # STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7)
 
+> ## 🚨🚨🚨 CURRENT TRUTH after W98–W101 (2026-08-27) — SUPERSEDES EVERYTHING BELOW
+>
+> Owner MEGA DIRECTIVE V4. Four waves, one repaired denominator, two new artifacts
+> (`DATA_CENSUS_20260826.md`, `MECHANISM_COVERAGE_20260826.md`).
+>
+> ### 1. ⭐ **THE SESSION BOX WAS DENOMINATED IN THE WRONG UNIT** (W98)
+> A dollar stop on a variable-size position halts a 2-lot at **half** the adverse point move of a
+> 1-lot. P1 runs size 2 on 18.3 % of trades. Per-contract denomination:
+> **$885 → $1,231/wk at fixed $20,245 drawdown (+39.0 %), 53.1 → 56.3 % positive weeks,
+> max DD $26,388 → $22,928.** The controls carry it: a **uniformly** looser dollar box is worth
+> **+$6/wk (p = 0.940)**, and holding the average budget fixed while making it size-conditional
+> keeps **+39.6 %**. Both size-1 objects show **exactly $0.00** on all 213 weeks. Null: 99.0th
+> percentile of 200 size-label permutations.
+> **Adopted as `PCT`, labelled REGIME_LOCAL** — Tier-3 2006–2021 **reverses (−31.4 %)** because a
+> $1,300 box was 84 % of a typical session's range then and is 19 % now (it fires 5.7× more often
+> today). `ABS` is retained beside it in every table. Paired weekly p = 0.057; 90.8 % of the gross
+> difference lives in **53 of 1,058 sessions**.
+>
+> ### 2. ⭐ **THE FRICTION BAR IS A 50.5 %–51.4 % DIRECTION CALL** (W99)
+> One trade per segment, computed exactly as `p* = ½(1 + cost/E|move|)`. The morning needs
+> **50.48 %**. Ranked residual per session: **MORN $1,710** (p* 0.5048) · **ON_EU $1,185**
+> (recognition half-life **120 min**, the most forgiving square on the board) · **AFT $1,160**
+> (we take $9) · MID $1,148 · ON_ASIA $968. **OPEN and CLOSE have a 5-minute half-life** and are
+> the hardest, not the easiest.
+> **The class assumption INVERTS: TREND-DOWN carries 63.71 pts of segment movement against
+> TREND-UP's 49.72 — 28 % MORE — and is the one class we are negative on.** $11,609 per session of
+> that class, on 14.5 % of sessions. `NO_ENGINE` is **79 %** of deficient groups; every flaw in the
+> engine we have accounts for **10 %** between them.
+> **Ex-post movement per session is up 83 %** (841.7 → 1,541.0 pts) while P1 has gone negative.
+> **WITHDRAWN in the same wave:** W99's own preregistered rule family (0 of 12 profitable when
+> always-in — turnover, not the market), its "$13,981/session router value" (a **causal** router
+> LOSES money at every K and never beats the best fixed rule), and my first control for it, which
+> permuted rules independently and inflated its own null above the real value.
+>
+> ### 3. ❌ **THE TWO NEVER-USED AXES FAILED IN THE FORM I TESTED THEM** (W100)
+> `relvol ≥ 1.0` as a gate on B-MOM's short triggers: **25.5th percentile** of rate-matched random
+> filters, and it makes the book worse. `rsv_share ≥ trailing median`: looks like +35 %, sits at the
+> **77.5th**. **And the design flaw is mine** — both accepted ~92 % of the target leg, so neither
+> could separate much. H3 is **VOID**, not supported: the semivariance gate accepts 92 % of SHORT
+> and 3.5 % of LONG triggers, so it is nearly collinear with the channel's own direction.
+> Two facts worth more than the hypotheses: **the short book is one unanswered question about daily
+> direction** (+$3,111/ctrRT on TREND-DOWN vs −$2,163 on TREND-UP, and no gate on the trigger moves
+> any class), and any downside-vol gate on a directional channel is mostly a restatement of the
+> direction.
+>
+> ### 4. ⭐⭐ **THE FIRST CROSS-MARKET RESULT IN THIS REPO THAT CLEARS A FAMILY-WISE NULL** (W101)
+> `DRIVE` at 09:45 — the preregistered primary, one test, no selection — hits **53.93 %** against a
+> computed **50.31 %** bar, **$255/trade**. And the decomposition is the finding:
+>
+> | | N | hit % | $/trade |
+> |---|---|---|---|
+> | XM_AGREE alone | 1,008 | 48.71 % | **−$221** |
+> | XM_CONFIRM (broad index agrees) | 664 | 51.96 % | **+$34** |
+> | **XM_CONFLICT (ES/RTY/YM disagree)** | **341** | **57.77 %** | **+$685** |
+>
+> **The entire intraday-momentum edge on NQ lives in the third of sessions where NQ moves ALONE.
+> When the broad index confirms, the move is already priced.** This is the opposite of the
+> hypothesis the directive floated — disagreement predicts *continued* persistence, not failure.
+> 99.6th percentile of 2,000 rate-matched subsamples; every one of five years positive
+> (2022 $186 → 2026 **$1,064**); weekly ρ with P1 **−0.005**.
+> Income-matched, **P1/PCT + XM_CONFLICT doubles the money — $1,230 → $2,438/wk at fixed drawdown,
+> positive weeks 56.3 → 61.5 %, max DD +0.9 %, top-5 DD LOWER.**
+> **NOT PROMOTED.** It is a forecast, not an engine (no stop, no box, no sizing); N = 342; the
+> window is discovery-consumed; ρ = **+0.41 with B-MOM**; and it is **REGIME_LOCAL by data
+> availability** — the ES/RTY/YM substrates begin 2022-01-02 and no deep test is possible.
+> Zero-lag known-answer test passed on all three joins (lag-0 0.93/0.75/0.77 vs ~0.00 at ±1).
+>
+> ### 5. Two standing corrections found by harness checks looking for something else
+> **2026-07-17 is a TRUNCATED session** in the extended substrate — it ends 10:53 with 83 RTH bars
+> against a normal 390 — and `X9a` is built through the same `we_channels` path.
+> The W82 spread profile has **1,380** minutes, not 1,440; the absent 60 are the 17:00–17:59 CME
+> break, and one bar per session is stamped 17:00 and needs the 16:59 value forward-filled.
+>
+> ### 6. ⭐ **VOLUME HAS NEVER ONCE BEEN USED AS A SIGNAL IN THIS PROGRAM** — see
+> `MECHANISM_COVERAGE_20260826.md`. Twenty years of clean 1-minute NQ volume are on disk. W100
+> closed one threshold of one form of it; the column is otherwise still empty.
+>
+
 > ## 🚨🚨 CURRENT TRUTH after W97 (2026-08-26) — CORRECTS THE W89–W93 BLOCK BELOW
 >
 > A 5-agent adversarial audit of W89–W93, every finding re-tested by a skeptic told to refute it,
