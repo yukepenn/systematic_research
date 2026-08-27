@@ -83,6 +83,16 @@ box was 84 % of a typical session range then and is 19 % now, so it fires **5.7�
 Paired weekly p = 0.057, and **90.8 % of the gross difference lives in 53 of 1,058 sessions**. `ABS`
 is retained beside `PCT` in every table.
 
+> ### ⭐ **THE BOX IS WORTH FAR MORE THAN IT COSTS — measured 2026-08-27,
+> ### `runs/RR_W005_BOX_LATCH_VALUE/`.**
+> Ex post the latch "costs" **−$44,806** over the **247** sessions where it binds, and perfect
+> *selective* un-latching would be worth **$283,856**. **Both evaporate at the fixed-DD metric.**
+> Every uniform relaxation is **16–41 % WORSE** at fixed $20,245 DD and raises exposure **11–26 %**:
+> no box at all **−40.7 %**, no halt **−34.3 %**, no target **−16.0 %**, box × 2 **−32.6 %**;
+> `t` falls monotonically **4.17 → 3.62**. **The box is not a free lever and is not modified.**
+> This also explains RR_W001's regeneration component — un-latching adds raw dollars *by adding
+> exposure* — and confirms W98 rather than contradicting it.
+
 ## 2. `XM_CONFLICT` — active component
 
 At 09:45 ET take NQ's own opening drive — `sign(close₀₉₄₅ − open of the 09:31 bar)` — **only on the

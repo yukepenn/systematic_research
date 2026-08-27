@@ -1,0 +1,20 @@
+
+======================================================================================================================
+=== SCOPING 2 - the box at the FIXED-DRAWDOWN metric.  UNIFORM arms only, no selection.
+======================================================================================================================
+arm                                     trades     raw net      maxDD  wk $ @fixDD   pos wk      t    ctr-min
+BASELINE (halt -1300 / target +1000)     2,131     296,911     29,454          972    58.6%   4.17    238,673
+NO BOX AT ALL                            2,945     341,717     57,118          577    60.0%   3.62    299,906
+no halt, keep target                     2,599     319,903     48,330          638    61.9%   3.84    270,452
+keep halt, no target                     2,432     323,958     38,242          817    56.7%   4.05    265,629
+box x2 (uniformly looser)                2,643     301,879     44,457          655    59.5%   3.76    275,581
+
+    vs BASELINE:
+      NO BOX AT ALL                      raw    +44,806   maxDD    +27,664   wk@fixDD     -395 ( -40.7 %)   exposure  +25.7 %
+      no halt, keep target               raw    +22,992   maxDD    +18,876   wk@fixDD     -334 ( -34.3 %)   exposure  +13.3 %
+      keep halt, no target               raw    +27,048   maxDD     +8,787   wk@fixDD     -155 ( -16.0 %)   exposure  +11.3 %
+      box x2 (uniformly looser)          raw     +4,968   maxDD    +15,003   wk@fixDD     -317 ( -32.6 %)   exposure  +15.5 %
+
+    CLAUDE.md: never let leverage, sizing or a reduced risk denominator masquerade as
+    information alpha. The fixed-DD column is the one that decides, not raw net.
+[   22s] done

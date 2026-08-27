@@ -22,8 +22,8 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | — | ~~Do causal features predict FULL-HORIZON `delta_action_value`?~~ | — | ✅ **CLOSED — NULL** · `runs/RR_W002A_ACTION_VALUE_INFORMATION/` |
 | — | ~~Is `X9a` a coherent standalone expert?~~ | — | ✅ **CLOSED — NOT ADMITTED** · `runs/RR_W003_X9A_CONTRACT/` |
 | — | ~~Does HIGHER-TIMEFRAME state carry anything at P1's decision events?~~ | — | ✅ **CLOSED — NULL** · `runs/RR_W004_HTF_INCREMENT/` |
-| **1** | Is SELECTIVE box un-latching worth anything? *(new, from RR_W001)* | **LOW** | RUNNABLE |
-| **2** | Is book COVERAGE actually a gap? *(reopened by `RR_W000`)* | **LOW** | RUNNABLE |
+| — | ~~Is SELECTIVE box un-latching worth anything?~~ | — | ✅ **CLOSED** · `runs/RR_W005_BOX_LATCH_VALUE/` |
+| **1** | Is book COVERAGE actually a gap? *(reopened by `RR_W000`)* | **LOW** | RUNNABLE — the only runnable row left |
 | 6 | Does a soft allocation with cash beat the static book? | — | **DE-PRIORITISED by RR_W001** · gated on #1 |
 | 7 | Does latent state add information beyond raw features? | — | **NOT RUN** — RR_W001's continuation rule forbids it |
 | 8 | Does transition uncertainty carry risk information? | — | blocked on #6 |
@@ -163,7 +163,7 @@ at the 77.0th — higher than either real arm.** Adding HTF made fold-sign consi
 **This was the last surface marked `LIGHT`.** The statement *"no tested current information surface
 separates P1 action quality"* is now **complete rather than partial**.
 
-## The remaining runnable rows — both LOW, both engineering
+## The one remaining runnable row
 
 | | |
 |---|---|
@@ -174,21 +174,32 @@ separates P1 action quality"* is now **complete rather than partial**.
 | **cost** | LOW-MEDIUM. Bounded engineering, no new data |
 | **honest EVI** | **MEDIUM.** It unlocks a *decomposition*, not an edge. It creates no new information, and this campaign's record is that decompositions of existing objects have not produced promotions |
 
-### 1. Selective box un-latching — new, from RR_W001, ranked LOW on purpose
+## ✅ CLOSED — the session box is worth keeping (`RR_W005`)
 
-RR_W001 found **35–64 %** of its abstention oracle is **regeneration**: trades the policy takes
-because the box stops latching once a bad early decision is removed. Those entries are the `r0+1`
-bars of latched-out runs and are not decision events at all.
+**Every uniform relaxation of the box adds raw dollars and destroys the scale-invariant headline.**
 
-That is a **box-policy** question, and a *different* object from W98, which loosened the box
-**uniformly** and got **+$6/week at paired p = 0.940**. Suppressing *specific* early losers so the box
-survives is not that experiment.
+| vs baseline | raw | maxDD | **wk @ fixed DD** | exposure |
+|---|---:|---:|---:|---:|
+| no box at all | +44,806 | +27,664 | **−395 (−40.7 %)** | +25.7 % |
+| no halt, keep target | +22,992 | +18,876 | −334 (−34.3 %) | +13.3 % |
+| keep halt, no target | +27,048 | +8,787 | −155 (−16.0 %) | +11.3 % |
+| box × 2 | +4,968 | +15,003 | −317 (−32.6 %) | +15.5 % |
 
-> **Why LOW anyway.** The selection is **ex-post** — RR_W001's G3 is precisely the finding that we
-> cannot identify which early decisions to suppress. Only ~**247** of 1,058 in-window sessions hold a
-> latched-out run. **Named because it is new, not because it looks promising.**
+Measured ex post, the latch itself "costs" **−$44,806** over 247 binding sessions and a perfect
+selective un-latching would be worth **$283,856**. **Both numbers evaporate at fixed drawdown.** The
+cost of latching is drawdown control being paid for, and `t` falls monotonically across the arms,
+4.17 → 3.62.
 
-### 2. Book coverage — reopened by an audit, ranked LOW on purpose
+> This also **explains** RR_W001's regeneration component rather than leaving it open — un-latching
+> adds raw dollars *by adding exposure* — and **confirms W98** (a uniformly looser box, +$6/wk at
+> p = 0.940) rather than contradicting it. The selective half needs identification, which `RR_W002A`
+> and `RR_W004` have now measured as **NULL**.
+>
+> **Constraint added, the mirror of the leverage rule:** never read an exposure-funded raw-dollar
+> gain as a cost avoided. Any finding in raw dollars must be re-expressed at fixed drawdown before
+> it is believed.
+
+## 1. Book coverage — reopened by an audit, ranked LOW on purpose
 
 `runs/RR_W000_LEDGER_AUDIT/` found W119's `E_NO_ENGINE = 0` was **forced by construction** — the lens
 is "neither leg held a position", which makes `book_pnl == 0`, and it was counted *inside* the
@@ -274,6 +285,7 @@ decision; slot D is an `EXECUTABLE_COMPONENT_SET` and `EXECUTABLE_PORTFOLIO` rem
 | date | change |
 |---|---|
 | 2026-08-27 | Created at Phase 0, pre-result. |
+| 2026-08-27 | **RR_W005 closed SELECTIVE BOX UN-LATCHING** — every uniform relaxation is 16–41 % worse at fixed drawdown and 11–26 % higher exposure. The box is worth keeping. |
 | 2026-08-27 | **RR_W004 closed HIGHER-TIMEFRAME: NULL** — the last `LIGHT` surface. Every information lane this repo can reach is now measured and closed. |
 | 2026-08-27 | **RR_W003 closed `X9a`: NOT ADMITTED**, and found the frontier's own premise false — two objects share the name and `PAIR23` uses the one containing `P1`. HTF becomes row 1. |
 | 2026-08-27 | **RR_W002A closed the information question: NULL.** Primary at the 51.0th percentile of its own refitted null; a known-null family scored higher (77.0th) than any real arm; top-decile AUC 0.4990. `X9a` becomes row 1. |
