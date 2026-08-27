@@ -1,0 +1,122 @@
+run_id: WE_W89_CANDCOST
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-26
+status: PREREGISTERED
+authority: "OWNER DIRECTIVE post-W88 section 4 (cost model must be recomputed for the challenger)"
+
+title: >
+  Candidate-specific friction. W82's $14.65/RT is P1's fill-time-distribution weighted number
+  and has never been recomputed for BMOM or X9a. And W88 appears to have charged X9a's friction
+  PER TRADE where P1's is charged PER CONTRACT.
+
+# ---------------------------------------------------------------------------------------------
+# 0. WHAT IS ALREADY ESTABLISHED, AND WHAT IS ONLY ASSUMED
+# ---------------------------------------------------------------------------------------------
+established:
+  - "W82 FACT: median NQ spread 3.00 tk overnight / 2.00 tk RTH / 2.00 tk post, measured on
+     3,689,792 two-sided second-quotes across 45 usable sessions 2025-08 -> 2026-05."
+  - "W82 FACT: weighted by P1's OWN fill time-of-day distribution the all-in cost is
+     2.93 ticks = $14.65 per contract round turn. 61.6 % of P1's fills are overnight."
+  - "W82 amendment 2: the estimate is measured at NQ 23,036-29,479 and directly overlaps 2.5 %
+     of P1's contract round turns. It DOES NOT transport to 2006-2021 and no deep-history
+     re-quote may be made with it."
+  - "W82 amendment 2 defect (c): a stress line charged PER TRADE where the campaign charges
+     PER CONTRACT understates the cost by the size-2 share."
+
+assumed_and_being_tested_here:
+  - "that $14.65/RT transports from P1 to BMOM and to X9a unchanged."
+  - "that W88's rt_per_week for X9a (9.35) is contract round turns. Reconstruction of the W88
+     ladder (see reproduction below) recovers rtB = 4.95 and rtX = 9.35, and W79's NT dict
+     hardcodes BMOM 1044 / X9a 2000 TRADES over 213 weeks = 4.90 / 9.39 per week. This is
+     evidence that X9a - which carries the quality sizing layer and therefore trades 1 OR 2
+     contracts - was charged per trade. P1's 11.15 is contract round turns (W82 computes it as
+     sum(u)/NWk against 2,010 trades = 9.44 trades/week, ratio 1.18)."
+
+w88_ladder_reproduced_before_this_wave_ran: |
+  Recipe recovered exactly (this is a precondition, not a result):
+      cost_per_week = 14.65 * (nB * 4.95 + nX * 9.35)
+      period        = trailing 12 months (date >= 2025-08-01), 53 weeks
+  gives 1:1 58.49 % / $2,383 ; 1:2 56.60 % / $3,358 ; 2:3 60.38 % / $5,741 - matching the
+  published 58.5 / 56.6 / 60.4 and $2,383 / $3,358 / $5,741 to the printed precision.
+  The W88 ladder's "week + %" column had NO committed artifact. It does now (out/ladder.csv).
+
+# ---------------------------------------------------------------------------------------------
+# 1. HYPOTHESES
+# ---------------------------------------------------------------------------------------------
+H1:
+  statement: "cost_BMOM != cost_P1 and cost_X9a != cost_P1 by more than 5 % relative."
+  why: "BMOM is an RTH-only channel (killed 15:57, reset 09:31) so essentially none of its
+        fills can be overnight, while 61.6 % of P1's are. The overnight/RTH spread gap is
+        3.00 vs 2.00 ticks, a 50 % difference. If the mix differs the cost must differ."
+  falsifier: "all three weighted costs within 5 % relative -> the blanket $14.65 is adequate and
+              W86-W88 need no repricing on this axis."
+
+H2:
+  statement: "X9a's friction in W88 was charged per TRADE, not per CONTRACT, and correcting it
+              raises the basket's cost."
+  test: "measure X9a's contract round turns directly = sum(u) over its trade list. Compare to
+         its trade count. If contract RT / trades > 1.02 the W88 ladder understated the cost."
+  falsifier: "ratio <= 1.02 -> no correction needed."
+
+H3:
+  statement: "the contract count quoted for each basket rung (2 / 3 / 5) understates peak and
+              time-weighted exposure, because X9a carries the size-2 quality layer."
+  test: "report time-weighted contracts and peak contracts for every rung alongside the nominal."
+  note: "this is a disclosure requirement, not a pass/fail gate."
+
+# ---------------------------------------------------------------------------------------------
+# 2. METHOD - fixed before the read
+# ---------------------------------------------------------------------------------------------
+method:
+  substrate: "load_deep('2022-01-01','2026-07-31 17:00', extend=True); window A=2022-07-01,
+              B=2026-08-01, identical to W76/W79/W86/W88."
+  objects:
+    P1:   "long_obj(TG_for(bmom))  - the incumbent, rebuilt not re-read"
+    BMOM: "sfills(D, where(flatm,0,bmom), halt=1300, target=1000) - long AND short, 1 contract"
+    X9a:  "long_obj(TG_for(CH['X9a_disp_sessanchor'])) - the FULL object with the X9a channel in
+           the OR slot. NOT a standalone channel. This is what streams_extended.csv 'w72:X9a' is
+           and it must be said in the report, because the campaign has been calling it a
+           'second engine' when it is P1 with one substituted gate."
+  cost_estimator:
+    profile: "per-minute-of-day MEDIAN spread in ticks, from W82's spread_by_minute.csv
+              (recomputed here from the raw grid1s parquets and asserted equal to the committed
+              file, so the join is checked and not assumed - repo rule after 4 alignment defects)"
+    weight:  "each candidate's OWN fill minute-of-day distribution, entries and exits both,
+              weighted by contract units u (a 2-lot fill crosses the spread twice)"
+    working: "sum_m profile[m] * w[m] * TICK * PV  -> $ per CONTRACT round turn"
+    pessimistic:
+      - "per-minute p75 profile instead of median (a within-substrate widening, candidate-specific)"
+      - "W82's $24.00 direct bound, carried as a P1-only figure that CANNOT be made
+         candidate-specific: it rests on 35 selected fills."
+  coverage_to_report:
+    - "fills falling inside the 45 quote sessions, per candidate, count and %"
+    - "the NQ price range those sessions span, restated"
+    - "the share of each candidate's contract round turns the direct window covers"
+  reprice:
+    - "the W88 ladder (out/ladder.csv), at three cost lines: blanket 14.65, candidate-specific
+       working, candidate-specific pessimistic"
+    - "the corrected rolling gate ALL-THREE for each rung at candidate-specific costs, with the
+       oracle battery run FIRST as a precondition (W85 rule: a gate that cannot pass free money
+       issues no verdicts)"
+    - "exposure-matched, per W88 section 5 - the drawdown leg compares RAW drawdowns"
+
+# ---------------------------------------------------------------------------------------------
+# 3. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "If H1 or H2 fires, W86/W87/W88 headline tables are REPRICED and the superseded numbers are
+     struck through in the documents that cite them. The challenger's STATUS does not change on
+     a cost correction alone - it is STRONGEST CHALLENGER / NOT PROMOTED either way."
+  - "If the repriced ladder moves the 2:3 rung's annualised figure by more than 10 %, the
+     owner-facing decision document is reissued in the same commit."
+  - "No promotion, no demotion, and no new object is created by this wave. It is a measurement."
+
+evidence_labels_required: [FACT, REPRODUCED, SUPPORTED, WEAK, INFERENCE, UNKNOWN, FALSIFIED]
+
+honesty_clauses:
+  - "The 45 quote sessions are 2025-08 -> 2026-05 at NQ 23,036-29,479. Every number this wave
+     produces inherits that scope. It is applied to 2022-2026 and to NOTHING else."
+  - "A spread profile measured on 45 sessions and applied to 1,058 is an extrapolation in time
+     even inside the modern era. It is the best available and it is not a measurement of the
+     other 1,013 sessions."
+  - "Nothing here makes the challenger more or less validated. Everything remains in-sample."
