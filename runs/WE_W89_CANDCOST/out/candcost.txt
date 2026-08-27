@@ -1,0 +1,142 @@
+======================================================================================================================
+=== PHASE 0: rebuild the spread profile and ASSERT it against W82's committed file
+======================================================================================================================
+    48 files, 3 excluded, 3,689,792 two-sided second-quotes
+    2025-08-13 18:00:00 -> 2026-05-20 16:59:59
+    max |rebuilt - W82 committed| over 1380 minutes = 0.0000000000   ASSERT OK
+    quote sessions: 78 calendar days, 2025-08-13 -> 2026-05-20
+
+======================================================================================================================
+=== PHASE 1: rebuild P1 / BMOM / X9a trade lists with timestamps, direction and size
+======================================================================================================================
+    substrate 1,620,044 bars, 1,187 sessions [7s]
+    three trade lists built [33s]
+
+    NOTE ON WHAT 'X9a' IS: it is long_obj(TG_for(X9a channel)) - the FULL P1 object with
+    the X9a channel substituted into the OR slot. It is NOT a standalone channel and it
+    is NOT a second engine. This is what streams_extended.csv calls 'w72:X9a'.
+
+candidate   trades    ctrRT  ctrRT/tr  ctrRT/wk  W88 used  size2 %
+P1          2,002    2,368     1.183     11.12     11.15    18.3%
+BMOM        1,043    1,043     1.000      4.90      4.95     0.0%
+X9a         1,946    2,299     1.181     10.79      9.35    18.1%
+
+candidate   OVERNIGHT       RTH     POST   (share of CONTRACT-weighted fills; W82 measured P1 at 61.6 / 35.5 / 2.9 on TRADE-weighted fills)
+P1             61.1%     35.6%     3.3%
+BMOM            0.0%    100.0%     0.0%
+X9a            62.6%     33.8%     3.6%
+
+======================================================================================================================
+=== PHASE 2: THE CANDIDATE-SPECIFIC COST
+======================================================================================================================
+candidate  ticks(med)   $/ctrRT   vs 14.65  ticks(p75)  $/ctrRT p75  minute cov
+P1             2.904     14.52      -0.9%       3.776        18.88      100.0%
+BMOM           2.598     12.99     -11.3%       3.144        15.72      100.0%
+X9a            2.910     14.55      -0.7%       3.782        18.91      100.0%
+
+=== sample coverage: how much of each candidate the 45 quote sessions actually touch
+    P1       206 of  4,004 fills ( 5.1 %) in the quote window;  5.0 % of contract-weighted fills
+    BMOM     118 of  2,086 fills ( 5.7 %) in the quote window;  5.7 % of contract-weighted fills
+    X9a      228 of  3,892 fills ( 5.9 %) in the quote window;  5.7 % of contract-weighted fills
+    scope inherited from W82: NQ 23,036-29,479, 2025-08 -> 2026-05. Applied to
+    2022-2026 only. It does NOT transport to 2006-2021 and no deep re-quote is made.
+
+======================================================================================================================
+=== PHASE 3: THE LADDER, REPRICED
+======================================================================================================================
+    rebuilt P1    vs committed daily series: max |diff| = 0.000000   OK
+    rebuilt BMOM  vs committed daily series: max |diff| = 0.000000   OK
+    rebuilt X9a   vs committed daily series: max |diff| = 0.000000   OK
+
+--- W88 blanket $14.65 (trade-rate) ---
+basket          nom ctr  $/wk cost   wk$ t12     ann t12  wk+% t12      maxDD    top5DD   worst wk  wk$ full
+1 BMOM:1 X9a          2        209     2,383     123,911     58.5%     42,487    25,434    -20,133     2,072
+1 BMOM:2 X9a          3        346     3,358     174,614     56.6%     47,029    34,866    -23,287     3,033
+2 BMOM:3 X9a          5        556     5,741     298,525     60.4%     86,269    56,910    -43,420     5,105
+BMOM alone            1         73     1,408      73,208     60.4%     44,727    27,856    -16,979     1,112
+X9a alone             1        137       975      50,703     47.2%     26,306    17,593     -8,795       961
+P1 (1 unit)        1.27        163       716      37,215     49.1%     27,328    18,458     -7,581     1,152
+
+--- candidate-specific WORKING ---
+basket          nom ctr  $/wk cost   wk$ t12     ann t12  wk+% t12      maxDD    top5DD   worst wk  wk$ full
+1 BMOM:1 X9a          2        221     2,372     123,329     58.5%     42,644    25,508    -20,144     2,061
+1 BMOM:2 X9a          3        378     3,327     172,987     54.7%     47,404    35,191    -23,318     3,002
+2 BMOM:3 X9a          5        598     5,698     296,317     60.4%     86,651    57,275    -43,462     5,063
+BMOM alone            1         64     1,417      73,671     60.4%     44,603    27,795    -16,970     1,121
+X9a alone             1        157       955      49,658     47.2%     26,648    17,762     -8,815       940
+P1 (1 unit)        1.27        161       718      37,317     49.1%     27,291    18,435     -7,579     1,154
+
+--- candidate-specific PESSIMISTIC (p75) ---
+basket          nom ctr  $/wk cost   wk$ t12     ann t12  wk+% t12      maxDD    top5DD   worst wk  wk$ full
+1 BMOM:1 X9a          2        281     2,311     120,189     58.5%     43,489    25,907    -20,205     2,001
+1 BMOM:2 X9a          3        485     3,219     167,401     54.7%     48,693    35,059    -23,426     2,894
+2 BMOM:3 X9a          5        766     5,531     287,590     58.5%     88,162    58,798    -43,630     4,895
+BMOM alone            1         77     1,403      72,976     60.4%     44,790    27,886    -16,984     1,107
+X9a alone             1        204       908      47,213     45.3%     27,447    18,157     -8,862       893
+P1 (1 unit)        1.27        210       669      34,793     47.2%     28,213    16,487     -7,628     1,105
+
+=== H3: what 'contracts' actually means for each rung (nominal understates it)
+basket          nominal   time-wtd   peak  X9a avg u
+1 BMOM:1 X9a          2      0.344      3      1.275
+1 BMOM:2 X9a          3      0.498      5      1.275
+2 BMOM:3 X9a          5      0.842      8      1.275
+P1 (1 unit)           1      0.152      2
+    'time-weighted' is average contracts held across every in-window minute, so it is
+    low for objects that are flat most of the time. PEAK is what the account must carry.
+
+    reconciliation with the campaign's '1.27 time-weighted contracts' for P1:
+      P1    mean size WHILE IN A POSITION = 1.273   in a position on 12.0 % of in-window minutes
+      BMOM  mean size WHILE IN A POSITION = 1.000   in a position on 19.1 % of in-window minutes
+      X9a   mean size WHILE IN A POSITION = 1.275   in a position on 12.0 % of in-window minutes
+    -> '1.27' is the mean size while holding, NOT contracts carried by the account.
+    Comparing P1's 1.27 against a basket's NOMINAL order count mixes two units. The
+    matched-income table in PHASE 5 uses PEAK and TIME-WEIGHTED for both sides.
+
+======================================================================================================================
+=== PHASE 4: the corrected rolling gate, re-scored at candidate-specific cost
+======================================================================================================================
+    PRECONDITION - oracle battery (W85 rule: a gate that cannot pass a strictly-better
+    object issues no verdicts):
+      P1 + $200/session      ALL-THREE   100 %
+      P1 + $500/session      ALL-THREE   100 %
+      P1 losses halved       ALL-THREE   100 %
+      P1 losses x0.75        ALL-THREE   100 %
+      -> gate is USABLE
+
+basket             n    money    wk+%   top5DD   ALL THREE   (exposure-matched to P1's 1 nominal unit)
+1 BMOM:1 X9a      25      92%    100%      64%         64%
+1 BMOM:2 X9a      25      52%    100%      92%         52%
+2 BMOM:3 X9a      25      92%    100%      96%         92%
+1 BMOM:3 X9a      25      44%    100%      72%         44%
+2 BMOM:1 X9a      25      44%     92%      20%         20%
+BMOM alone        25      12%    100%       0%          0%
+X9a alone         25      16%     52%      28%          8%
+
+======================================================================================================================
+=== PHASE 5: MATCHED INCOME IN CONSISTENT UNITS  (W88's table mixed two of them)
+======================================================================================================================
+    W88 quoted P1 at '6.2 contracts' = 4.89 UNITS x 1.27 mean-size-while-holding, and
+    the basket at '3 contracts' = a NOMINAL ORDER COUNT. Those are different units.
+    Here every row is scaled to the same annual income and reported three ways.
+
+target    object             scale  PEAK ctr  time-wtd      max DD   worst wk
+150,000   P1                  4.02       8.0     0.613     109,701    -30,466
+          1 BMOM:1 X9a        1.22       3.6     0.419      51,866    -24,501
+          1 BMOM:2 X9a        0.87       4.3     0.431      41,105    -20,220
+          2 BMOM:3 X9a        0.51       4.0     0.426      43,864    -22,001
+
+175,000   P1                  4.69       9.4     0.715     127,984    -35,543
+          1 BMOM:1 X9a        1.42       4.3     0.488      60,510    -28,584
+          1 BMOM:2 X9a        1.01       5.1     0.503      47,956    -23,589
+          2 BMOM:3 X9a        0.59       4.7     0.497      51,175    -25,668
+
+300,000   P1                  8.04      16.1     1.226     219,401    -60,932
+          1 BMOM:1 X9a        2.43       7.3     0.837     103,731    -49,001
+          1 BMOM:2 X9a        1.73       8.7     0.863      82,210    -40,439
+          2 BMOM:3 X9a        1.01       8.1     0.852      87,728    -44,003
+
+    scale is a CONTINUOUS multiplier and only integer rungs are executable; the
+    executable rungs are the ladder in PHASE 3. This table exists to compare RISK at
+    equal income, which is the owner's stated objective, not to propose a size.
+
+[done 34s]
