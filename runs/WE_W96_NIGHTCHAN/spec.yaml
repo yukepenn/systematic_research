@@ -1,0 +1,120 @@
+run_id: WE_W96_NIGHTCHAN
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-26
+status: PREREGISTERED
+authority: >
+  Owner directive section 8 - "BMOM + X9a is a challenger, not a stopping point. Continue mining
+  for engines that can beat or diversify it... opening/overnight transition." And section 10 of
+  the campaign's own live brief: find streams three and four.
+
+title: >
+  THE OVERNIGHT DISPLACEMENT CHANNEL, TRADED DIRECTLY. Two waves this session independently
+  pointed at the session clock. This builds the object they point at.
+
+# ---------------------------------------------------------------------------------------------
+# 0. WHY THE CLOCK, AND WHY NOW
+# ---------------------------------------------------------------------------------------------
+what_pointed_here:
+  - "W89 FACT: BMOM is 100 % RTH - it structurally cannot trade outside 09:31-15:57 - while X9a
+     takes 62.6 % of its fills OVERNIGHT. Their weekly rho of +0.009, which the whole challenger
+     rests on, is TEMPORAL DISJOINTNESS, not independent information."
+  - "W91 FACT: B-MOM's entire interquartile ENTRY range is 09:33-09:39. It is an opening-drive
+     engine that then holds. The Solar family enters across all 24 hours."
+  - "W75's live brief already named this: 'an engine restricted to the OVERNIGHT session
+     (18:00-09:29), where rho ~ 0 is guaranteed by temporal disjointness rather than by luck -
+     PARKED_NOT_DEAD's W53 entry names exactly this as its own revival condition and it has never
+     been built.'"
+
+what_is_actually_new_here_and_what_is_not:
+  NOT_new: >
+    'Solar restricted to overnight' is NOT new information - P1 and X9a already take ~62 % of
+    their fills overnight. Slicing the incumbent by clock produces a sub-book, not a stream.
+  NEW: >
+    The DISPLACEMENT CHANNEL traded DIRECTLY on the overnight session, as BMOM_std is traded
+    directly on RTH. That object has never existed. B-MOM's mechanism - 'price has travelled
+    further from the anchor than it typically does by this time of day' - is defined by a
+    slot-of-day statistic, and the slot-of-day machinery already covers the overnight hours
+    (we_channels._mtod with mask=all_bars, used by X9b). Nobody has traded it there.
+
+# ---------------------------------------------------------------------------------------------
+# 1. THE OBJECT
+# ---------------------------------------------------------------------------------------------
+NIGHT:
+  channel: |
+    anchor  = the SESSION open (18:01), the X9a anchor - NOT the 09:31 RTH open, which does not
+              exist yet during the overnight hours
+    mtod    = trailing 14-SESSION mean of |px - sessOpen| at the SAME slot-of-day, computed with
+              mask=all_bars so the statistic is defined overnight (this is X9b's machinery,
+              already in we_channels and already validated)
+    raw     = +1 when px > sessOpen + mtod, -1 when px < sessOpen - mtod, else 0
+    live    = 18:00 <= hhmmss OR hhmmss < 09:30, and seg >= 14 (the same 14-session warmup)
+    latched per SESSION, forced to 0 at 09:30 and held there for the rest of the session
+  execution: "sfills, long AND short, 1 contract, its own session box (-1300 / +1000), decision
+              at bar close, market at the next bar's open - identical discipline to BMOM_std."
+  frozen: "not one parameter of this is chosen by this wave. The 14-session window, the anchor,
+           the +-1 threshold and the box are all inherited verbatim from the incumbent channel."
+
+comparators:
+  - "BMOM_std (RTH-only, the same mechanism on the other side of the clock)"
+  - "X9a, P1, NETFUSE_1, SHORT - the existing library"
+
+# ---------------------------------------------------------------------------------------------
+# 2. HYPOTHESES
+# ---------------------------------------------------------------------------------------------
+H1_recency:
+  statement: "NIGHT is effective over roughly the trailing two years (charter amendment 2 (a),
+              the ONLY chronology gate)."
+  report: "sessions, weeks, trades, mean weekly, SE, t, positive-week % for full / t24 / t12."
+  falsifier: "t24 weekly <= 0 -> fails the only chronology gate and is not a candidate stream."
+
+H2_independence:
+  statement: "NIGHT is weekly |rho| < 0.20 against EVERY admissible object in the library
+              (P1, X9a, BMOM, NETFUSE_1)."
+  unit: "WEEKLY. Daily rho is reported alongside ONLY to show the unit matters."
+  falsifier: ">= 0.20 against any of them -> it is not a new stream and K does not rise."
+  note_written_in_advance: >
+    If H2 passes, the honest reading is the SAME as W90's: temporal disjointness produces low rho
+    BY CONSTRUCTION, so a pass is a clock fact and NOT evidence of independent information. It
+    still counts for the portfolio arithmetic - W74's K requirement is about rho, not about
+    epistemology - but it must never be described as 'a genuinely different mechanism'. It is
+    the SAME mechanism on a different clock.
+
+H3_specificity:
+  statement: "NIGHT beats its own session-shift null."
+  construction: >
+    Session-wise circular shift of the NIGHT channel by k sessions, k drawn without replacement,
+    200 draws. Preserves firing rate, latch run-lengths and intraday shape; destroys only which
+    session the path lands on. This is W72's null, which the incumbent B-MOM channel cleared at
+    the 100th percentile - so the two are directly comparable.
+  bar: ">= 95th percentile on pts/session."
+
+H4_portfolio:
+  statement: "adding NIGHT to the 2:3 basket improves it on >= 2 of the three gate legs."
+  method: "corrected rolling gate, oracle battery FIRST, exposure-matched in contract-minutes.
+           Weight fixed in advance at INVERSE-VOL over the three sleeves - no weight is scanned,
+           because a scanned weight needs a family-wise null (W53)."
+  falsifier: "<= 1 leg -> it does not help the challenger and is a standalone curiosity."
+
+# ---------------------------------------------------------------------------------------------
+# 3. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "NOTHING IS ADOPTED. A new stream needs the full five-condition adjudication (W93's) before
+     it can be more than a candidate."
+  - "H1 fail -> dead on the chronology gate, recorded in PARKED_NOT_DEAD with its revival
+     condition, and the wave still reports the measurement because a negative result on the
+     clock axis is itself informative about where NOT to look next."
+  - "H1+H2 pass -> K rises to 3 (or 4) and W74's K-requirement bootstrap must be RE-RUN with
+     heterogeneous stream quality, which W90 already flagged as owed. Do not quote the old K
+     table with unequal-quality streams."
+  - "H3 fail -> it is exposure, not an edge, and is described that way."
+
+honesty_clauses:
+  - "2022-07 -> 2026-07 is in-sample for the anchor, the 14-session window and the box, all of
+     which were specified on it for the RTH channel. Reusing them overnight is not a fresh fit,
+     but it is not out-of-sample evidence either."
+  - "The overnight session is thinner. W82 measured the median overnight spread at 3.00 ticks
+     against RTH's 2.00, so this object's friction must be computed on its OWN fill distribution
+     (W89's method) and will be WORSE than B-MOM's $12.99. Quote it before quoting any P&L."
+  - "If NIGHT turns out to be profitable mainly through the 08:00-09:29 pre-open hour it is a
+     near-duplicate of B-MOM's opening drive, not a night engine. Report the hourly breakdown."
