@@ -84,11 +84,33 @@ This is a materially different story from the one the campaign has been telling.
 of B-MOM's net ($83,691, W90) and all of its counter-directional behaviour, and the portfolio form
 is simply the only container we have that can keep it.**
 
-`INFERENCE` and it is actionable: **a long-AND-short fused object has never been built.** The
-OR-gate fires on `chan == +1`; nothing in the architecture forbids a mirrored `chan == −1` short
-gate on the same Solar ensemble. Every short attempt this campaign made (W38/W39/W61/W75/W78) was
-a mirrored *ratchet vote*, never a mirrored *OR gate*. That is a new object, it is cheap to build,
-and it is the natural next wave.
+> ## ⚠️ ~~`INFERENCE`: a long-AND-short fused object has never been built. The OR-gate fires on
+> ## `chan == +1`; nothing forbids a mirrored `chan == −1` short gate. Every short attempt
+> ## (W38/W39/W61/W75/W78) was a mirrored *ratchet vote*, never a mirrored *OR gate*.~~
+> ## **`FALSIFIED` by me before it propagated — see `amendment_1.yaml`.**
+>
+> `hyst` has a short branch, so `chan == −1` already collapses the short threshold by the exact
+> mirror of W67's long arithmetic, and the census stream `SHORT` has carried the mirrored OR gate
+> since W38. **The measurement that settled it, and it is a bigger finding than the claim was:**
+>
+> | SHORT sleeve | trades | net |
+> |---|---|---|
+> | with the B-MOM channel | 2,294 | **$132,918** |
+> | **channel ZEROED** | 2,254 | **$13,998** |
+>
+> > `FACT` **The mirrored Solar vote is worth essentially nothing on the short side — $13,998
+> > over 1,058 sessions. B-MOM supplies $118,920, i.e. 89.5 % of the SHORT sleeve's entire net,
+> > from 19.5 % of its short-target minutes.**
+>
+> This answers the owner's question from this session — *"为什么我们不能从 short 收益"* —
+> **we can, and we always could.** The five rejections rejected the *mirrored ratchet*, and the
+> mirrored ratchet deserved it. What works short is the B-MOM displacement channel, and it has
+> been sitting inside the SHORT sleeve the whole time, unattributed.
+>
+> **What IS unbuilt**: a *single netted* long-and-short object — one target in {−1, 0, +1}, ONE
+> box, ONE ledger, direct reversals. Today the two sides are separate sleeves with separate boxes
+> that can be simultaneously long and short, paying two spreads to hold nothing. That is W92, and
+> it is the same question as the owner's §6 master execution layer.
 
 ⚠️ **Tension with W90, stated rather than smoothed.** In this basket the short leg improves the
 top-5 drawdown by $6,747; in the `{X9a, BMOM}` basket W90 found it makes the drawdown *worse* and

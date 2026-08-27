@@ -1,0 +1,67 @@
+run_id: WE_W91_FUSEVSPORT
+amendment: 1
+date: 2026-08-26
+status: CORRECTION-TO-SELF, issued before the claim propagated to any other document
+
+# ---------------------------------------------------------------------------------------------
+what_i_wrote_in_section_3: >
+  "INFERENCE and it is actionable: a long-AND-short fused object has never been built. The
+  OR-gate fires on chan == +1; nothing in the architecture forbids a mirrored chan == -1 short
+  gate on the same Solar ensemble. Every short attempt this campaign made (W38/W39/W61/W75/W78)
+  was a mirrored ratchet vote, never a mirrored OR gate."
+
+verdict: FALSIFIED. It is wrong, and I checked it before it reached STATE_OF_THE_SYSTEM.
+
+why_it_is_wrong: >
+  The combiner is hyst(0.7086 * Tp + 2.83 * chan) and hyst has a SHORT branch
+  (g = -1 when M <= -3.0). So when chan == -1 the short side receives the SAME -2.83 boost the
+  long side receives at chan == +1, and the short entry threshold collapses to one net-short
+  member by exactly the mirrored arithmetic W67 enumerated for the long side. The census stream
+  called SHORT is built as -(vote_(TG_for(bmom), -1) >= 0.5), i.e. it ALREADY CARRIES THE
+  MIRRORED OR GATE. It has done so since W38.
+
+# ---------------------------------------------------------------------------------------------
+the_measurement_that_settled_it:
+  method: "rebuild the SHORT sleeve twice - once with the B-MOM channel, once with the channel
+           zeroed - on the extended window, everything else frozen."
+  result: |
+    SHORT sleeve, WITH bmom channel :  2,294 trades   net $132,918   short-target minutes 15.58 %
+    SHORT sleeve, channel ZEROED    :  2,254 trades   net $ 13,998   short-target minutes 13.45 %
+    short-target minutes: with 252,479 / without 217,956
+      -> 49,181 minutes (19.5 %) are ENABLED BY THE CHANNEL
+    bmom == -1 on 13.05 % of all bars, == +1 on 12.39 %
+
+# ---------------------------------------------------------------------------------------------
+the_finding_this_produced_instead:
+  label: FACT
+  statement: >
+    THE MIRRORED SOLAR VOTE IS WORTH ESSENTIALLY NOTHING ON THE SHORT SIDE: $13,998 over four
+    years, 2,254 trades. The B-MOM channel supplies $118,920 of the SHORT sleeve's $132,918 -
+    89.5 % of its entire net - from 19.5 % of its short-target minutes.
+  why_it_matters: >
+    It is the third independent confirmation, by a third route, that B-MOM is where this
+    campaign's short money lives. W67 found B-MOM supplies 51 % of the LONG object's net; W90
+    found B-MOM's own short leg is worth $83,691; this finds that when you strip B-MOM out of
+    the mirrored short sleeve, the Solar ratchet on the short side produces $13,998 over 1,058
+    sessions - about $13 a session before slippage, which is nothing.
+  answer_to_the_owner_question_from_this_session: >
+    "很明显 NQ 有很多东西，为什么我们不能从 short 收益" - we CAN and we always could. The five
+    rejections (W38, W39, W61, W75, W78) rejected the MIRRORED RATCHET, and the mirrored ratchet
+    deserved rejecting: on its own it makes $13,998. What works short is the B-MOM displacement
+    channel, and it has been inside the SHORT sleeve the whole time, unattributed.
+
+# ---------------------------------------------------------------------------------------------
+what_is_actually_unbuilt_after_this_correction:
+  - "A SINGLE NETTED long-and-short object: one target array in {-1, 0, +1}, ONE session box, ONE
+     fill ledger, direct reversals. Today the long and short sides are two SEPARATE sleeves with
+     two boxes that can be simultaneously long and short - paying two spreads to hold nothing."
+  - "The short side WITH the causal quality sizing layer. SHORT is flat size 1; W38 closed
+     'short-side quality' but it did so using the LONG side's feature signs, which charter
+     amendment 2 lists as a corrected quantifier."
+  - "Both go to W92, which is also the owner's section 6 (the master execution layer) - the
+     netting question and the single-object question are the same question."
+
+section_3_of_the_report_is_annotated_in_place_with_a_pointer_to_this_file: true
+nothing_else_in_w91_is_affected: >
+  The four-way decomposition, the E_a/E_b/E_c/E_d verdicts, every table and every other number
+  stand. The falsified sentence was an inference appended to a measured result, not the result.
