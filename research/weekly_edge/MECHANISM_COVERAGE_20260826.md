@@ -130,6 +130,35 @@ Legend: **STRONG** · **SUPPORTED** · **WEAK** · **REGIME_LOCAL** · **NULL** 
 > FOLLOW_MORNING's long leg earns $482/week unconditionally and **−$2** on book-losing weeks against
 > a random-alignment null of +$484 - absent, not merely weak.
 
+> ¹⁰ **W119 / W120 / W121 (2026-08-27) — THE BOOK-LOSS TRIO.**
+> **W119 (`BOOK_LOSS_LEDGER`, 1,058 sessions x 25 cols):** the book's gap is **NOT COVERAGE** —
+> `E_NO_ENGINE` = **0 sessions** in four years. It loses on sessions where P1 takes **3.042 entries
+> vs 1.377**, for **18 % fewer contract-minutes**, while the market moves **31 % less** and the range
+> is barely different. **XM is the tail**: active on 33 % of sessions, present in **69.8 %** of the
+> worst decile (+34.3 pp). W119 also **narrows W117** — at session resolution the REVERSAL excess is
+> **+1.7 pp**, not the +6.9 pp the weekly aggregation showed, and **RANGE is the larger dollar class**
+> (−$114,807 vs −$91,216). The TREND-UP deficit (−8.6 pp) and TREND-DOWN null (+0.8 pp) survive.
+>
+> **W120:** `MIRROR_CONT` (W118's construction, direction flipped) **fails its four-gate test on gate
+> 2 only** — $614 on book-losing weeks against a chance-alignment $663, the 42.9th percentile. It
+> passes **both gates FOLLOW_MORNING failed** and would take book max DD **$11,489 → $8,143**, but
+> its value is **tail not average**: session-level it is pro-cyclical (**+$1,315** when the book wins,
+> **−$297** when it loses) while its weekly tail beta is **−1.861 at the 0.9th percentile on 21
+> weeks**. **WATCHLIST**, and it becomes the standing `MIRROR_CONTINUATION_CONTROL`.
+>
+> **W121 — TURNOVER IS NOT A CAUSAL STATE, and the failure is worse than a null.** Capping P1 at K
+> new entries per session is beaten by the baseline at every K AND sits at the **0.0th / 4.0th /
+> 1.0th / 0.0th percentile of a COUNT-MATCHED RANDOM-HALT PLACEBO** — **removing the same entries at
+> random does BETTER than removing them by the rule.** Stage A shows why: the **4th** entry of a
+> session is the **best** cell at **$253/entry** against a $139 unconditional mean, so a cap deletes
+> better-than-average entries. **W119's turnover signature is a property of losing SESSIONS, not of
+> marginal ENTRIES.** The closed intraday loss-reactivity family is confirmed a fourth time — 72.5 %
+> of entries with ordinal >= 2 follow a negative running session P&L, which is the mechanism by which
+> entry count and loss count are the same variable.
+> ⚠️ **Defect disclosed:** the preregistered Stage-A falsifier had two clauses and I implemented
+> only the slope one, so the wave proceeded past a gate its own spec had closed. Binding rule:
+> **implement every clause of a multi-clause falsifier in code.**
+
 ## 2. ⭐ The single largest hole — **CLOSED as a direction by W111, 2026-08-27**
 
 > ### ⚠️ **THE CLAIM BELOW WAS TRUE WHEN WRITTEN AND IS NOW SUPERSEDED.** W111 used volume as a

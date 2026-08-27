@@ -1,0 +1,83 @@
+    1,058 in-window sessions [4s]
+
+============================================================================================================================
+=== 0. B1 - the capped engine with an unreachable cap must be gfills verbatim
+============================================================================================================================
+    gfills 2,401   gfills_capped(cap=1e9) 2,401   identical: True
+    baseline: 2,131 trades, $296,831, $1,230/wk at fixed DD, spread $14.44/ctrRT
+
+============================================================================================================================
+=== STAGE A - INFORMATION. Conditional on N-1 prior entries, what is the Nth worth?
+============================================================================================================================
+    2,131 entries. Unconditional mean $139/entry.
+
+ordinal         n  % of entries   mean net $  vs uncond    hit%  hold min  mean size  mean entry  cum $ before
+1             638         29.9%          148         +9   35.9%       131       1.22       12:24             0
+2             460         21.6%          147         +8   34.1%        74       1.22       10:21          -196
+3             335         15.7%           66        -73   34.9%        65       1.21       09:20          -231
+4             230         10.8%          253       +114   37.0%        75       1.20       09:38          -306
+5+            468         22.0%          116        -23   36.5%        61       1.15       09:49          -344
+
+    HOW MUCH OF 'ENTRY COUNT' IS REALLY 'ALREADY LOSING TODAY'?
+        corr(ordinal, cumulative session $ before that entry) = -0.265
+        corr(ordinal, entry minute)                          = -0.116
+        of entries with ordinal >= 2, 72.5 % follow a NEGATIVE running session P&L
+
+    STAGE A VERDICT: expectancy slope in ordinal = $-2 per entry   -> DECLINE PRESENT
+
+============================================================================================================================
+=== STAGE B - POLICY. Cap at K new entries per session.
+============================================================================================================================
+arm                          trades    ctr-min       net $  wk$@fixDD  pos wk%     maxDD    CVaR5      t
+BASELINE (no cap)              2131    238,695     296,831      1,230    56.3%    22,931   -2,754   4.16
+CAP K=1                         638    108,564      93,608        457    43.2%    19,460   -1,719   2.24
+CAP K=2                        1098    152,728     161,320        680    50.7%    22,536   -2,084   2.72
+CAP K=3                        1433    180,472     183,549        644    50.2%    27,102   -2,388   2.91
+CAP K=4                        1663    203,291     241,845        989    53.1%    23,232   -2,544   3.56
+
+    best K = 4 at $989/wk at fixed DD vs baseline $1,230   removes 468 of 2,131 entries
+
+============================================================================================================================
+=== THE BINDING CONTROL - COUNT-MATCHED RANDOM-HALT PLACEBO
+===   200 draws. Each removes the SAME NUMBER of entries per session as the cap did,
+===   chosen uniformly at random among that session's own entries. Draws are generated ONCE
+===   per session and SHARED across the four K arms (W116b: independent draws inflate a
+===   best-of-K bar).
+============================================================================================================================
+    ... 50/200 draws [66s]
+    ... 100/200 draws [114s]
+    ... 150/200 draws [163s]
+    ... 200/200 draws [211s]
+
+arm             real wk$@fixDD  placebo mean  placebo p95   pctile
+CAP K=1                    457           951        1,253     0.0th
+CAP K=2                    680           958        1,234     4.0th
+CAP K=3                    644         1,051        1,290     1.0th
+CAP K=4                    989         1,199        1,310     0.0th
+
+    BEST-OF-4 placebo bar (shared draws): $1,317   best real $989   FAILS
+
+============================================================================================================================
+=== TIME-MATCHED HALT - separates 'stop after K trades' from 'stop trading later in the day'
+============================================================================================================================
+    cap K=4 removes 468 entries; the closest time halt is 16:01 which removes 456
+arm                          trades       net $  wk$@fixDD  pos wk%     maxDD
+CAP K=4                        1663     241,845        989    53.1%    23,232
+TIME HALT 16:01                1940     243,449        902    54.5%    25,642
+
+============================================================================================================================
+=== VERDICT - all three falsifiers must be cleared
+============================================================================================================================
+    beats the uncapped baseline                         FAIL
+    beats the COUNT-MATCHED placebo's best-of-4 p95     FAIL
+    beats the TIME-MATCHED halt                         PASS
+
+    FAILS
+
+============================================================================================================================
+=== EFFECT ON THE FULL BOOK (capped P1 + XM unchanged, inverse-vol)
+============================================================================================================================
+    baseline         book $1,142/wk  maxDD $11,489  fixDD $2,012  pos wk 59.2%
+    cap K=4          book $1,022/wk  maxDD $12,421  fixDD $1,666  pos wk 57.3%
+
+[done 212s]
