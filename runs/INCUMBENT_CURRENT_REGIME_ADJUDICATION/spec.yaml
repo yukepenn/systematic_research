@@ -1,0 +1,89 @@
+run_id: INCUMBENT_CURRENT_REGIME_ADJUDICATION
+date: 2026-08-27
+run_class: DIAGNOSTIC_RE_ADJUDICATION
+committed_before_results: true
+directive: PHASE 2
+
+question: >
+  Is P1/PCT + XM still the strongest defensible incumbent TODAY, under the CORRECTED cost/drawdown
+  basis and under recent-regime evidence? Incumbency carries zero statistical privilege.
+
+why_this_is_needed: >
+  RECENT_REGIME_PANEL found the incumbent's recent record is weak: P1/PCT is negative over the last
+  13 weeks, its trailing mean declines monotonically as the window shortens, rho(P1,XM) has risen
+  from +0.098 full-sample to +0.393 over 13 weeks, and XM's payoff conditional on P1 losing has
+  FLIPPED from +$569 to -$1,368. None of that proves decay. All of it means the incumbent's present
+  rationale must be re-measured rather than assumed.
+
+  Separately, FWD_DD_RECONCILIATION proved the canonical fixed-DD denominator was computed on a
+  commission-only stream while the numerator was net of the modelled spread. Every fixed-DD figure
+  for XM, ABS and Portfolio B is therefore SUSPECT and must be rebuilt on one cost world.
+
+objects_fixed_no_tuning:
+  A: P1/PCT
+  B: P1/ABS
+  C: XM_CONFLICT
+  D: PCT + XM        # under the RECONCILED inverse-vol weighting only
+  E: ABS + XM        # under the same reconciled weighting rule
+  diagnostic_only: unweighted component sum, LABELLED NOT PORTFOLIO B
+
+windows_declared_before_running: [FULL, 104w, 52w, 26w, 13w]
+window_rule: >
+  These are the SAME fixed windows already used by RECENT_REGIME_PANEL. No window may be added,
+  removed or shifted after seeing a result. No "recent cutoff" may be invented that makes a
+  preferred object win.
+
+cost_world:
+  rule: ONE cost world for every object and every window - commission + modelled spread, per fill
+  P1_spread_per_ctr_rt: 14.44
+  XM_spread_per_ctr_rt: 12.50
+  commission_per_ctr_rt: 4.36
+  drawdown_basis: >
+    WEEKLY resolution for every object, so the fixed-DD denominator and the weekly numerator live in
+    the SAME cost world and the SAME resolution. This is the exact defect FWD_DD_RECONCILIATION
+    found, and it is not repeated here.
+  invariance_required: DD_trade >= DD_session >= DD_day >= DD_week, asserted per object
+
+metrics_per_object_per_window:
+  - raw net, $/week, fixed-$20,245-DD $/week
+  - maxDD, t, positive-week rate
+  - expected shortfall (worst 5% of weeks)
+  - worst-5-week contribution, top-1 and top-5 concentration
+  - time underwater
+  - rho(P1, XM), and XM conditional payoff when P1 < 0
+  - worst-decile overlap, joint drawdown duration, tail beta
+
+marginal_values:
+  XM: portfolio(P1+XM) - P1     # SAME cost world, window, risk denominator, weighting
+  PCT: PCT - ABS                # SAME cost world, window, risk denominator
+
+declared_reading_rules:
+  - >
+    THIS IS BURNED EVIDENCE, NOT CONFIRMATION. The recent weakness was OBSERVED BEFORE this wave was
+    designed. It therefore cannot be promoted to clean confirmation by measuring it more carefully.
+    RECENT HISTORICAL EVIDENCE != PROSPECTIVE FORWARD EVIDENCE.
+  - >
+    A 13-week window holds ~13 observations. The forward protocol already establishes P(losing
+    quarter) = 14.5 % with nothing wrong. NO 13-week result may be read as decay on its own.
+  - >
+    If a shorter window favours a different object, that is a HYPOTHESIS, not a finding, and it must
+    survive the recency-overfitting critique in directive s53 before it changes anything.
+
+admissible_outcomes_declared_in_advance:
+  - incumbent rationale still strong
+  - incumbent rationale weakened but unresolved
+  - XM no longer portfolio-additive recently
+  - PCT no longer superior to ABS recently
+  - ambiguity too high to adjudicate
+  rule: >
+    Whichever exists is recorded. P1+XM is NOT forced to remain the answer, and no object is
+    promoted merely because a short window flatters it.
+
+what_this_run_will_NOT_do:
+  - tune any parameter
+  - select a new window
+  - promote or demote any component
+  - read sealed data
+  - treat burned recent evidence as forward confirmation
+
+depends_on: PORTFOLIO_B_RECONCILIATION_20260827 (the reconciled inverse-vol weighting)
