@@ -2,12 +2,44 @@
 
 Historical systematic NQ/MNQ research repository.
 
+---
+
+## 🚩 READ THIS FIRST — updated 2026-08-27
+
+**The active research campaign is #7, `WEEKLY_EDGE`. It is not described anywhere else on this
+page.** Everything below this block, including the "Current canonical systems" section, describes
+**campaign #3 (SYSTEM_MASTER)**, whose engineering and parity work closed in August 2026. Those
+three objects are **HISTORICAL SHIPPED BASELINES** — they are real, they are correct, and they are
+*not* the current research frontier. Nothing there has been deleted or rewritten.
+
+| you want | read |
+|---|---|
+| **what is being researched and built right now** | [`research/weekly_edge/CURRENT_BASELINE.md`](research/weekly_edge/CURRENT_BASELINE.md) — the **living baseline**, updated after every material frontier change |
+| what is known / falsified, by information source | [`research/weekly_edge/MECHANISM_COVERAGE_20260826.md`](research/weekly_edge/MECHANISM_COVERAGE_20260826.md) |
+| what data exists and where it is sealed | [`research/weekly_edge/DATA_CENSUS_20260826.md`](research/weekly_edge/DATA_CENSUS_20260826.md) · [`research/operational/LOCKED_FORWARD.md`](research/operational/LOCKED_FORWARD.md) |
+| how opportunity numbers may be quoted (**binding**) | [`research/weekly_edge/OPPORTUNITY_LANGUAGE.md`](research/weekly_edge/OPPORTUNITY_LANGUAGE.md) |
+| what is engineered but not enabled | [`research/weekly_edge/ninjascript/LIVE_READINESS.md`](research/weekly_edge/ninjascript/LIVE_READINESS.md) |
+| scheduled/gated forward reads | [`research/operational/MONITORING_CALENDAR.md`](research/operational/MONITORING_CALENDAR.md) |
+| per-wave detail | `runs/WE_W*/spec.yaml` + `REPORT.md` — spec always committed **before** results |
+| the three **historical** shipped objects | [`BASELINE_MODELS.md`](BASELINE_MODELS.md) — still authoritative **for those three objects only** |
+
+**Nothing in this repository is authorized for live trading.** Every object fails closed in realtime
+by construction, and enabling one is an owner action that has not been taken.
+
+---
+
 > **Consolidated current-state map (2026-08-18): [`STATE_OF_RESEARCH_20260818.md`](STATE_OF_RESEARCH_20260818.md)** —
 > all four campaigns on one page: objects, merged open frontier, kill-ledger index, unified data
 > boundaries, monitoring calendar. This README's narrative sections below run through 2026-08-09;
 > per-wave truth stays in `research/system_master/CURRENT_TRUTH.md`.
 
 ## Current canonical systems
+
+> ⚠️ **HISTORICAL — campaign #3, closed August 2026.** The heading below is kept verbatim because
+> this repo does not rewrite its own record, but "current" here means *current as of 2026-08-09*.
+> For the current research frontier see the READ THIS FIRST block at the top of this file. The
+> three objects below remain correct and remain the only ones ever taken through full NT8 parity;
+> they are simply not what the campaign is working on now.
 
 **Product A** — combined NQ system, ensembles/leverage authorized.
 - Current file: `src/ninjascript/SolarWaveSMMaster_v4.cs`

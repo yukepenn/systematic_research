@@ -6,6 +6,15 @@ file's own job is to stay a stable pointer, not to duplicate content that will d
 with it. If anything below and `/BASELINE_MODELS.md` (repo root) disagree, believe
 `/BASELINE_MODELS.md` for the 3 current objects and `CURRENT_TRUTH.md` for everything else._
 
+> ## 🚩 SUPERSEDED IN PART — updated 2026-08-27
+>
+> This file was written 2026-08-09 and its "current" pointers are campaign #3's. **The active
+> campaign is #7, `WEEKLY_EDGE`**, and its living baseline is
+> [`research/weekly_edge/CURRENT_BASELINE.md`](research/weekly_edge/CURRENT_BASELINE.md). Read the
+> **READ THIS FIRST** block at the top of [`README.md`](README.md) before using anything below.
+> The structural orientation in this file is still accurate; only its notion of "current" is stale,
+> and it is kept unedited below rather than rewritten.
+
 ## Start here
 
 `README.md` (repo root) is now the current project landing page — read it first. It points to
@@ -22,6 +31,9 @@ before starting). The rest of this file is deeper structural orientation, not a 
 | 2 | **Post-campaign audit** — independent re-verification of #1 | CLOSED 2026-08-07 | `research/audit/AUDIT_EXECUTIVE.md` |
 | 3 | **SYSTEM_MASTER** — portfolio construction + one-contract product | **ACTIVE (engineering/parity CLOSED, back in research mode)** | `/BASELINE_MODELS.md` (repo root), then `research/system_master/CURRENT_TRUTH.md` |
 | 4 | **Scalping Lab** — short-horizon scalp-alpha search, parallel to #3 | phase complete, dormant | `research/scalping_lab/CAMPAIGN_STATE.md` |
+| 5 | **Repo mining / deep research packets** | folded into #7's mechanism coverage | `research/weekly_edge/MECHANISM_COVERAGE_20260826.md` |
+| 6 | **OTR** — reconstructing an external trader's method | closed except an owner purchase gate | `research/original_trader_reconstruction/` + `runs/OTR_*` |
+| **7** | ⭐ **WEEKLY_EDGE** — build the best executable current-regime NQ book | **ACTIVE — this is the campaign** | **`research/weekly_edge/CURRENT_BASELINE.md`** |
 
 **If you only read one file for the 3 current objects: `/BASELINE_MODELS.md` (repo root).** For
 "what's true right now" beyond the 3 objects themselves: `research/system_master/CURRENT_TRUTH.md`

@@ -1,0 +1,41 @@
+    1,059 sessions [4s]
+
+==========================================================================================================================
+=== 1. HOW INDEPENDENT ARE THE FIFTEEN TIMING CELLS, ACTUALLY?
+==========================================================================================================================
+    mean pairwise correlation of the 15 cells' per-session P&L: +0.800
+    min +0.584   max +0.973
+    effective independent cells  K/(1+(K-1)*rho) = 1.23   (nominal K = 15)
+
+    A best-of-K bar assumes K INDEPENDENT chances. At this correlation there are
+    effectively 1.2, so W116's independent-draw bar was answering a question about
+    fifteen unrelated strategies, not about one rule read at neighbouring minutes.
+
+==========================================================================================================================
+=== 2. THE CORRECTED BEST-OF-15 NULL - ONE coin flip per SESSION, shared across cells
+==========================================================================================================================
+null construction                              p95 bar      real     verdict
+single cell (W114, W116)                           129       179      CLEARS
+best-of-15, INDEPENDENT signs (W116, WRONG)        215       179       FAILS
+best-of-15, SHARED per-session sign (CORRECT)       166       179      CLEARS
+
+    percentile of the real value in the CORRECTED best-of-15 null: 96.3th
+
+    Reading. The independent-sign bar is inflated because it lets fifteen unrelated coins
+    each have a lucky run. The shared-sign bar asks the question that matters: given ONE
+    market with these sessions, how well would the LUCKIEST of fifteen neighbouring
+    read-out times have done by chance?
+
+==========================================================================================================================
+=== 3. THE PLATEAU AS A DISTRIBUTION, not a maximum
+==========================================================================================================================
+    fifteen cells: min $82  p25 $150  median $166  p75 $184  max $196
+    the preregistered cell (11:48 -> 15:44) is $179, which is the 53th percentile OF ITS OWN PLATEAU
+    cells above the corrected best-of-15 bar of $166: 8 of 15
+    cells above the single-cell bar of $129: 12 of 15
+
+    A cherry-picked artifact sits at the TOP of its plateau with the rest near zero.
+    This one sits mid-plateau with every neighbour in the same range - which is the
+    signature the plateau was measured for.
+
+[done 5s]

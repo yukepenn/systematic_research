@@ -1,6 +1,9 @@
 # CURRENT BASELINE — campaign #7 WEEKLY_EDGE
 
-_Authoritative as of **2026-08-27**, through wave **W111**. Where this file and any older
+_Authoritative as of **2026-08-27**, through wave **W116**. Git `HEAD` at time of writing: see the
+commit that carries this edit._
+
+_Original header text: authoritative through W111._ Where this file and any older
 weekly_edge doc disagree, **this file governs**. Every number is cited to a committed run. This is
 the campaign-#7 equivalent of the root `BASELINE_MODELS.md`, which covers campaign #3's three
 shipped objects and is unaffected by anything here._
@@ -18,6 +21,75 @@ shipped objects and is unaffected by anything here._
 > - **A new binding rule:** a class-conditional table requires its **matched unconditional
 >   control** in the same wave. W111b showed W108's headline signature is reproduced exactly by an
 >   unconditional fade.
+
+---
+
+## 0. OBJECT TAXONOMY (POST-W115 directive §17) — the seven categories, and what is in each
+
+> This table is the answer to "what is actually going on right now". Everything below it is detail.
+> **REGIME** uses the directive §5 vocabulary: `STRUCTURAL` · `CURRENT_REGIME_EXPLAINED` ·
+> `CURRENT_REGIME_UNEXPLAINED` · `TRANSITIONING/WATCH` · `DEAD/FALSIFIED`.
+
+| category | object | regime | engineering | evidence |
+|---|---|---|---|---|
+| **CURRENT_SINGLE_BASELINE** | **`P1/PCT`** | `CURRENT_REGIME_UNEXPLAINED` — the box-denominator correction reverses on 2006–2021 (−31.4 %) for a *known and stated* reason (a $1,300 box was 84 % of a typical session range then, 19 % now) | source written, **copied into NT8, NOT compiled** | §1 below |
+| **CURRENT_ACTIVE_COMPONENTS** | **`XM_CONFLICT`** | `CURRENT_REGIME_UNEXPLAINED` · **REGIME_LOCAL BY DATA AVAILABILITY** — ES/RTY/YM substrates begin 2022-01-02, so no deep test exists *or can be built* | source written, **not copied, not compiled** | §2 below, W110 |
+| **CURRENT_PORTFOLIO_BASELINE** | *(none yet — the combination below is a CANDIDATE, not a baseline)* | — | — | — |
+| **PORTFOLIO CANDIDATE** | `{P1/PCT + XM_CONFLICT}` inverse-vol | inherits both | neither leg compiled | §2 below |
+| **RESEARCH_CHALLENGERS** | `PAIR23` (2 BMOM : 3 X9a) | `STRUCTURAL` — it is the one object that beats P1 over the 16 unseen years on money, maxDD, top-5, positive weeks *and* streak simultaneously | none | §3 below |
+| **WATCHLIST** | ⭐ **`FOLLOW_MORNING`** | **`CURRENT_REGIME_UNEXPLAINED`** — W115 searched for a causal driver and found none | none | §3b below, W114 + W116 |
+| **DEMOTED** | `NETFUSE_1` · `VWAP_RECLAIM` · the trend-day state layer · volume exhaustion · AFT as a research target | `DEAD / FALSIFIED` | — | §6 below |
+| **HISTORICAL_REFERENCE** | Product A (`SolarWaveSMMaster_v4.cs`), Product B (`SolarWaveOneContractNQ_v5.cs` / `MNQ_v5.cs`) | campaign #3, closed Aug 2026 | **the only objects ever taken through full NT8 parity** | root `BASELINE_MODELS.md` |
+
+> ⚠️ **`CURRENT_PORTFOLIO_BASELINE` is deliberately empty.** `{P1/PCT + XM_CONFLICT}` is the best
+> combination measured and it is **not promoted**, because neither leg has cleared NT8 Strategy
+> Analyzer parity and promotion under directive §35 PATH B still requires *executable* evidence.
+> Quoting it as "the baseline" would skip that gate.
+
+---
+
+## 3b. `FOLLOW_MORNING` — WATCHLIST, and why it is not in the book (W114 + W115 + W116)
+
+Buy at the 11:49 open if the 11:29 close is above the 09:31 open, sell if below, exit at the 15:44
+close, size 1, no stop. **Zero-threshold and parameter-light with a broad timing plateau** — not
+"zero parameter" (directive §4; the decision minute was inherited from W108's LANE C spec, before
+this object existed).
+
+**Standalone alpha: CONFIRMED.**
+
+| | |
+|---|---|
+| modern 2022-07 → 2026-08 | **$179/trade · 55.00 % · +4.95 pp above p\* · net $180,651 / 1,009 sessions** |
+| single-cell coin null | p95 $129 → **98.6th percentile** |
+| **conservative best-of-15 bar**, shared per-session sign | p95 **$166** → **96.3rd percentile, CLEARS** |
+| position within its own 15-cell plateau | **53rd percentile** — mid-plateau, not the max |
+| two-sidedness | long leg $198, short leg $158, **both positive**; always-long earns $21 |
+| controls | always-long $21 · always-short −$50 · fade −$208 · matched-random −$16 |
+| cost | dies at roughly **18×** the measured spread |
+| t12m *(the defensible recent window)* | **$236/trade, +2.87 pp** — the *weakest* recent window |
+| 2006–2021 *(diagnostic)* | −$9/trade, −0.74 pp — and the failure is **behaviour, not cost** (implied edge 0.70 % then vs 5.62 % now at zero spread) |
+
+**Portfolio value: FAILS, and the preregistered falsifier fired.**
+
+| statistic vs the P1/PCT+XM book | REAL | null mean | null p95 | percentile |
+|---|---|---|---|---|
+| ρ, all weeks | +0.253 | −0.001 | +0.120 | **100.0th** |
+| **worst-decile overlap** | **0.023** | 0.011 | **0.019** | **95.8th** ❌ |
+| **$ it earns on book-losing weeks** | **+$66** | **+$842** | +$1,792 | **9.9th** ❌ |
+| incremental fixed-DD weekly $ | **+$74 (inv-vol) / −$291 (income-matched)** — the range **straddles zero** | | | |
+
+> ### **`XM_CONFLICT` diversifies the book's LOSSES. `FOLLOW_MORNING` diversifies its WINS.** That is the whole difference, and it is why one is an active component and the other is on the watchlist.
+
+**W114's `REGIME_LOCAL` verdict is `SUPERSEDED BY DOCTRINE`, not withdrawn on evidence.** The
+measurement was correct; the owner replaced the rule that turned it into a demotion. Under the
+current doctrine it is **not** held out for failing 2006–2021 — it is held out because it does not
+help when the book is losing.
+
+**What would change this** (recorded now so it cannot be invented later): forward evidence on
+sealed ≥2026-08-01 data (parameter-light, no refit needed — see `MONITORING_CALENDAR.md`), or a
+pairing against a genuinely mean-reverting or short-biased engine. **It does not get another timing
+wave, another anchor, or a conditional variant** — §23 and §39, and W115 already spent the family's
+one attribution wave.
 
 ---
 
@@ -201,6 +273,15 @@ From `runs/WE_W103_CONSOLIDATE/` (capture ledger v3):
 | MID | $1,197 | $19 | 1.6 % | 0.5059 |
 | AFT 13:30–15:44 | $1,170 | $3 | **0.3 %** | 0.5058 |
 | ON_ASIA | $1,026 | $39 | 3.8 % | 0.5139 |
+
+> ### 🚨 POST-W115 §37 — HOW THIS TABLE MUST NOW BE READ.
+> ### The meaningful residual is **`CAUSAL_MODEL_FRONTIER` − `REAL_SYSTEM_CAPTURE`**, *not*
+> ### oracle − real. W112 measured level 3 directly for AFT and found **no fitted causal model beat
+> ### a one-line momentum rule** (ridge OOS R² −0.024, directional accuracy *below* always-long).
+> ### So AFT's $1,167/session gap is **mostly the oracle's foreknowledge, not alpha debt**, and AFT
+> ### has moved DOWN the queue. **Do not headline any level-2 gap as missed alpha again.**
+> ### Level 3 has been measured twice in this repo, and only twice: ≈20 % of level 2 at the RTH
+> ### open (XM, W104) and ≈16 % on AFT with **none of it from a fitted model** (W112 / W114).
 
 > **After 103 waves the base captures 0.2 %–5.1 % of the LEVEL-2 EX-POST ORACLE in every
 > segment** — a ceiling that knows each segment's direction in advance — and

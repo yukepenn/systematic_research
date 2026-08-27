@@ -1,0 +1,114 @@
+    MODERN 1,059 sessions / OLD 4,279 [8s]
+
+==============================================================================================================================
+=== 1. THE CAUSAL LEDGER (directive section 4)
+==============================================================================================================================
+    end-stamped semantics, verified against the substrate:
+        bar 571 OPEN  = the 09:30:00 print (true RTH open)   present on  99.4 % of sessions
+        bar 689 CLOSE = 11:29  (the INFORMATION anchor)      present on  99.3 % of sessions
+        bar 709 OPEN  = the 11:48:00 print (the FILL)        present on  99.3 % of sessions
+        bar 944 CLOSE = 15:44  (the EXIT)                    present on  95.8 % of sessions
+
+    THE NINETEEN-MINUTE GAP. Bars 690-708 (11:30-11:48) EXIST - 19,988 of them in window
+    - and are NOT used. That gap was INHERITED from W108's LANE C geometry, not designed.
+        corrupt bars 690-708 -> the 11:29-anchored direction changes: NO  (the gap is genuinely unused)
+        the same corruption -> an 11:48-anchored direction changes: YES (the probe has teeth)
+
+    PROVENANCE of the 11:48 decision minute, from committed artifacts:
+        11:48 first appears in a committed spec in runs/WE_W108_REVRANGE/spec.yaml as the
+        decision minute for SIX FADE MECHANISMS. FOLLOW_MORNING did not exist as an object
+        then - it first appears as a CONTROL at that inherited geometry in W111b. No wave
+        ever selected the minute by comparing FOLLOW_MORNING outcomes across minutes.
+        => the single-cell null W114 used is DEFENSIBLE. The conservative best-of-15 bar is
+        computed below anyway, so the provenance argument need not be relied on.
+
+==============================================================================================================================
+=== 2. THE TIMING PLATEAU - MEASURED, NOT SEARCHED (section 23). $/trade and edge in pp.
+==============================================================================================================================
+decide                exit 15:29            exit 15:44            exit 15:59
+11:18               146    4.01pp          186    5.00pp          179    2.65pp
+11:33               158    5.34pp          190    5.25pp          182    4.76pp
+11:48               155    4.20pp          179    4.95pp          159    3.52pp
+12:03               166    4.56pp          196    2.88pp          186    4.01pp
+12:18                82    3.41pp          111    2.42pp           98    3.25pp
+
+    SELECTION BURDEN, both readings:
+        real $179/trade
+        single-cell coin null p95 $127  -> 98.6th percentile   CLEARS
+        CONSERVATIVE best-of-15 bar $217  -> FAILS   <- treats the minute as if it had been chosen here
+
+    THE FRESHER-INFORMATION DIAGNOSTIC (a DIFFERENT rule, NOT substituted for the primary):
+        direction from the 11:29 close (PRIMARY): $   179/trade   edge  4.95pp   N 1009
+        direction from the 11:48 close (fresher): $   183/trade   edge  4.89pp   N 1012
+
+==============================================================================================================================
+=== 3. THE DASHBOARD (section 41). ALL standardised windows printed together (section 33).
+===    $/trade AND edge in accuracy points above p* - W115 showed these can diverge.
+==============================================================================================================================
+window               N   $/trade   edge pp    hit%       net $     wk $  pos wk%     maxDD    CVaR5     worst
+t3m                 62       661     7.79pp   58.1%      41,010    2,929    50.0%     7,972   -6,339    -6,784
+t6m                125       564     5.34pp   55.2%      70,465    2,610    55.6%    14,749   -5,669    -6,784
+t12m               249       236     2.87pp   53.0%      58,699    1,108    49.1%    33,114   -5,621    -7,309
+YTD 2026           144       487     4.24pp   54.2%      70,177    2,264    51.6%    14,749   -5,567    -6,784
+prior yr 2025      246       205     6.20pp   56.1%      50,377      951    50.9%    41,091   -6,459    -8,369
+t24m               495       206     4.52pp   54.5%     102,122      973    49.5%    43,554   -6,479   -16,354
+2022-current      1009       179     4.95pp   55.0%     180,651      844    54.2%    43,554   -5,401   -16,354
+2006-2021 [diag]  3923        -9    -0.74pp   49.4%     -33,784
+
+    ⭐ THE ACCURACY-vs-DOLLARS DIVERGENCE W115 SURFACED, per calendar year:
+year         N   E|move| $   $/trade   edge pp
+2022       126       1,649       379    11.47pp
+2023       244       1,346        73     4.38pp
+2024       249       1,492       -22     1.33pp
+2025       246       1,998       205     6.20pp
+2026       144       2,321       487     4.24pp
+
+    CONCENTRATION and RISK (section 41):
+        median $166   trimmed(5%) $138   skew 2.80   worst $-16,354
+        top1 20.2%  top5 51.6%  top10 76.6%  top20 110.5%
+
+    COST SENSITIVITY:
+        0x $189   1x $179   2x $169   3x $159
+
+    CONTROLS on the SAME sessions (section 29):
+        always LONG      $    21/trade   N 1013
+        always SHORT     $   -50/trade   N 1013
+        FADE morning     $  -208/trade   N 1009
+        matched RANDOM   $   -16/trade  (p95 $127)
+
+==============================================================================================================================
+=== 4. MARGINAL PORTFOLIO VALUE (section 22) - the half that decides the book
+==============================================================================================================================
+    213 common weeks
+
+book                                conv             wk $     maxDD  wk$@fixDD  pos wk%    CVaR5      t
+P1/PCT                              invvol          1,394    22,931      1,230    56.3%   -6,231   4.16
+P1/PCT + XM                         invvol          1,142    11,489      2,012    59.2%   -4,737   4.90
+P1/PCT + XM + FOLLOW                invvol          1,063    10,323      2,085    62.9%   -4,364   4.58
+P1/PCT + FOLLOW                     invvol          1,158    14,976      1,566    62.4%   -5,952   3.76
+
+P1/PCT                              income          1,394    22,931      1,230    56.3%   -6,231   4.16
+P1/PCT + XM                         income          1,105    12,533      1,785    60.1%   -4,971   4.74
+P1/PCT + XM + FOLLOW                income            999    13,538      1,494    61.5%   -5,312   3.94
+P1/PCT + FOLLOW                     income          1,047    19,475      1,088    61.5%   -7,281   3.07
+
+    INCREMENTAL fixed-DD weekly $ from adding FOLLOW to P1/PCT+XM:
+        inverse-vol +74   income-matched -291   -> RANGE -291 to +74
+
+    DOWNSIDE BEHAVIOUR against a 1,000-shift circular null (W110's instrument):
+        --- vs P1/PCT  (unconditional P(FM<0) = 0.460) ---
+            higher=coupled                           0.279   null mean   -0.001   p95    0.113   -> 100.0th
+            rho | book losing                       -0.030   null mean   -0.002   p95    0.156   ->  34.9th
+            P(FM<0 | book<0)                         0.484   null mean    0.460   p95    0.527   ->  66.0th
+            worst-decile overlap                     0.019   null mean    0.011   p95    0.021   ->  82.1th
+            $ FM makes on book-losing weeks        513.664   null mean  839.795   p95 1702.480   ->  31.6th
+            tail beta in book's worst decile        -0.588   null mean    0.003   p95    1.425   ->  18.9th
+        --- vs P1/PCT+XM combined book  (unconditional P(FM<0) = 0.460) ---
+            higher=coupled                           0.253   null mean   -0.001   p95    0.120   -> 100.0th
+            rho | book losing                       -0.090   null mean    0.001   p95    0.153   ->  16.5th
+            P(FM<0 | book<0)                         0.506   null mean    0.460   p95    0.529   ->  83.5th
+            worst-decile overlap                     0.023   null mean    0.011   p95    0.019   ->  95.8th
+            $ FM makes on book-losing weeks         66.501   null mean  841.904   p95 1791.696   ->   9.9th
+            tail beta in book's worst decile        -1.853   null mean    0.009   p95    1.535   ->   2.4th
+
+[done 8s]
