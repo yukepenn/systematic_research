@@ -1,0 +1,83 @@
+=== 1058 sessions / 213 weeks / 1,620,044 bars [6s]
+    sleeves built [28s]
+
+=== PRECONDITION: does the occupancy simulator reproduce the trade ledger EXACTLY?
+    P1      occupancy MTM $   290,455.00   trade ledger (gross) $   290,455.00   |diff| 0.000000  OK
+    X9a     occupancy MTM $   243,805.00   trade ledger (gross) $   243,805.00   |diff| 0.000000  OK
+    BMOM    occupancy MTM $   256,805.00   trade ledger (gross) $   256,805.00   |diff| 0.000000  OK
+    SHORT   occupancy MTM $   142,920.00   trade ledger (gross) $   142,920.00   |diff| 0.000000  OK
+
+==========================================================================================================================
+=== PHASE 1: THE MASTER EXECUTION LAYER for 2 BMOM : 3 X9a
+==========================================================================================================================
+    gross contracts sent by two independent strategies :       17,966
+    net contracts sent by ONE master account           :       17,926
+    INTERNALLY CROSSED and never sent                  :           40  (0.223 % of gross)
+    H1 threshold was >= 2.000 % -> does NOT fire
+
+    saved round turns 20 over 213 weeks = 0.094 per week
+      commission only ($4.36/RT)         $        87 total   $   0.41/week
+      + spread at BMOM's rate ($12.99)   $       347 total   $   1.63/week
+      + spread at X9a's rate ($14.55)    $       378 total   $   1.78/week
+
+    shared minutes (both sleeves holding)          33,923  2.35 % of in-window minutes
+    ... of which OPPOSITE signs                     4,602  13.6 % of shared
+    PHANTOM FLAT (account 0, sleeves not)               0  0.000 % of in-window minutes
+
+                              PEAK   time-wtd
+    sum of sleeve |ctr|          8      0.842
+    NET account |ctr|            8      0.829
+
+2:3 basket                    $/wk cost     wk $    wk+%     maxDD   top5DD
+GROSS turnover (2 strategies)        782    5,063   57.7%    86,980   57,259
+NET turnover (master account)        781    5,065   57.7%    86,965   57,245
+    (commission is INCLUDED in these cost lines; the daily series is gross of it)
+
+==========================================================================================================================
+=== PHASE 2: NETFUSE - one target, ONE box, ONE ledger, direct reversals
+==========================================================================================================================
+    long vote fires 17.03 % of bars, short vote 15.58 %, BOTH 0.0000 % (0 bars)
+    tie rule (preregistered): both -> FLAT.
+
+object                    trades  scale     wk $    wk+%  strk     maxDD   top5DD     worst  wk$@fixDD
+P1 (long-only, fused)      2,002   1.00    1,202   54.0%     8    26,642   17,882    -7,496        914
+SHORT (mirrored fused)     2,294   1.45      748   48.4%     9    56,904   31,079   -12,133        266
+P1 + SHORT (two sleeves)   4,296   0.59    1,017   61.5%     4    28,461   12,888    -7,598        723
+NETFUSE_1 (one object)     3,893   0.70      919   59.2%     5    16,212   10,597    -6,738      1,148
+NETFUSE_Q (+quality size)   3,536   0.61      867   58.2%     5    17,804   11,038    -7,360        985
+
+    H2: NETFUSE_1 vs P1+SHORT as two sleeves, matched contract-minutes
+      weekly $ at fixed DD     NETFUSE    1,147.6   two sleeves      723.3   NETFUSE
+      positive-week %          NETFUSE       59.2   two sleeves       61.5   SLEEVES
+      raw mean top-5 DD        NETFUSE   10,597.1   two sleeves   12,887.7   NETFUSE
+      -> NETFUSE wins 2/3  =>  H2 PASSES
+
+    H3: the only chronology gate
+object                  period   weeks      wk $       SE      t    wk+%
+NETFUSE_1               full       213       919      235   3.91   59.2%
+NETFUSE_1               t24        105     1,153      406   2.84   58.1%
+NETFUSE_1               t12         53       812      555   1.46   52.8%
+
+NETFUSE_Q               full       213       867      239   3.62   58.2%
+NETFUSE_Q               t24        105     1,146      419   2.74   56.2%
+NETFUSE_Q               t12         53       598      562   1.06   45.3%
+
+P1                      full       213     1,202      321   3.74   54.0%
+P1                      t24        105     1,629      558   2.92   54.3%
+P1                      t12         53       757      606   1.25   49.1%
+
+    H3 (NETFUSE_1 t24 weekly > 0): 1,153 -> PASS
+
+per-year wk $                 2022      2023      2024      2025      2026
+NETFUSE_1                      938       351     1,241     1,305       575
+NETFUSE_Q                      773       184     1,394     1,422       171
+P1 + SHORT (sleeves)         1,153       218     1,815     1,551      -113
+P1                           1,037       195     1,811     2,146       287
+
+    weekly rho of NETFUSE_1 against the library:
+      vs P1         0.556
+      vs X9a        0.472
+      vs BMOM       0.294
+      vs SHORT      0.719
+
+[done 30s]
