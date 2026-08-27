@@ -1,0 +1,74 @@
+run_id: WE_W118_REVERSAL
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "POST-W115 owner directive, sections 6, 26, 27, 29, 38, 40, 44 LANE 4. Raised by W117."
+
+title: >
+  THE REVERSAL SESSION, at the mechanism's OWN geometry. W117 measured what the book actually loses
+  on and it is not what anyone assumed: TREND-DOWN share is identical on winning and losing weeks
+  (p = 0.880) and 53 % of losing weeks are weeks NQ ROSE. What separates them is FEWER TREND-UP
+  sessions and MORE REVERSAL sessions. So the book's hole is a reversal engine, and nothing the
+  campaign owns is positive there - FOLLOW_MORNING's long leg earns $482/week on average and MINUS
+  $2 on the weeks the book loses.
+
+the_one_thing_that_makes_this_not_an_eighth_fade: >
+  Seven fade mechanisms have been killed here and section 26 has PARKED that family. Every one of
+  them was tested as an AFTERNOON FADE AT A FIXED MIDDAY CLOCK - decide 11:48, fill 11:49 - a
+  geometry inherited from W108's LANE C spec. W111b then showed that clock sits on the wrong side of
+  a live momentum effect: an unconditional fade there loses $206/trade while its mirror earns $179.
+  THE KILLS CONSTRAIN THE CLOCK, NOT THE CLASS. This wave is EVENT-DRIVEN: the decision time is set
+  by the session's own price action, not by a clock, because "the extreme is made early and price
+  returns through it" is a statement about a SEQUENCE and cannot be tested at a fixed minute.
+
+# ---------------------------------------------------------------- the mechanism
+mechanism:
+  statement: >
+    From the true RTH open (the 09:31 bar's open, the 09:30:00 print), track the running session
+    extreme. When price has RETRACED a fraction R of the excursion from that extreme back toward the
+    open, enter in the direction of the retracement - i.e. AGAINST the extreme - on the next bar's
+    open. Exit at the 15:44 close. One trade per session, size 1, no stop.
+  why_the_entry_is_where_it_is: >
+    A reversal session is defined by an early extreme followed by a return through it. The
+    information that a reversal is underway does not exist at a fixed minute; it exists the moment
+    the retracement reaches a given depth. Entering there is what makes this a test of the CLASS
+    rather than of a clock.
+  retracement_levels: [0.25, 0.50, 0.75]
+  windows:
+    trigger_open: "the extreme must be set at or before the bar stamped 12:00, so 'early extreme' means early"
+    trigger_close: "the retracement trigger must fire at or before the bar stamped 14:30, so a trade has time to work"
+  excursion_gate: >
+    The excursion from the open to the extreme must exceed a TRAILING CAUSAL QUANTILE of the same
+    quantity over the prior 250 sessions, at acceptance rates 0.25 / 0.50 / 0.75, outcome-blind and
+    frozen before any economics - the same calibrator W106/W108/W111 used. Without it the rule fires
+    on noise excursions of a few points.
+
+# ---------------------------------------------------------------- controls, and they decide the wave
+controls:
+  binding_rule: "W111b's rule, and it is the whole point here: a conditional result requires its matched unconditional control IN THE SAME WAVE."
+  MOMENTUM_AT_SAME_BARS:
+    what: "at the EXACT entry bars this mechanism produces, trade the PREVAILING move instead - i.e. WITH the extreme, not against it."
+    why: "this is the control that killed the seven fades. If the reversal rule does not beat it, the class is dead at this geometry too and the wave says so."
+  COIN_AT_SAME_BARS: "random direction at the same entry bars, 2,000 draws."
+  ALWAYS_LONG / ALWAYS_SHORT: "at the same entry and exit bars."
+  RATE_MATCHED_RANDOM_SESSIONS: "the same NUMBER of sessions, chosen at random, entered at the same time-of-day distribution."
+
+primary: "equal-weight mean of dollars per trade across the three retracement levels at the 0.50 excursion-gate arm."
+falsifier: >
+  The primary is <= 0, OR <= the 95th percentile of the coin null on the same trades, OR it does not
+  BEAT MOMENTUM_AT_SAME_BARS. All three must be cleared. The third is the one that matters and no
+  result may be reported as positive without it.
+
+secondary:
+  - "the full 3 x 3 grid with a best-of-9 bar computed with a SHARED per-session sign, not independent signs per cell - W116b established that independent draws inflate a best-of-K bar when the cells are correlated"
+  - "each cell's own p-star for its realised holding period, computed not assumed"
+  - "the ex-post W51 class table, DIAGNOSTIC ONLY, and specifically the REVERSAL column - a reversal mechanism that is not positive on REVERSAL sessions has falsified its own name"
+  - "entry-time distribution: what time of day does this actually trade, and is it concentrated"
+  - "value ON THE BOOK'S LOSING WEEKS, which is the reason the wave exists - reported even if the primary fails"
+  - "2006-2021 as SECTION 6 DIAGNOSTIC ONLY: failure-mode archaeology and mechanism falsification. It is explicitly NOT a promotion veto (section 5) and may not be used as one."
+
+decision_rule:
+  - "NOTHING PROMOTED. A pass buys a preregistration for an engine and a coverage-matrix upgrade."
+  - "If the mechanism fails to beat MOMENTUM_AT_SAME_BARS, the conclusion is that intraday momentum dominates reversal at EVERY geometry tested so far, not merely at W108's clock - which is a materially stronger and more useful statement than the seven prior kills, and closes the class rather than the clock."
+  - "If it passes, the next question is marginal value on the book's losing weeks, NOT standalone optimisation."
+  - "No retracement level, window, gate rate or exit is re-chosen after results are seen."
