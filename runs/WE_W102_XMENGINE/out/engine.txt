@@ -1,0 +1,48 @@
+    substrate 1,620,044 bars / 1,058 in-window sessions; XM_CONFLICT fires on 342 (33.9 % of 1,009 eligible)  [4s]
+    LIVE-CHECK determinism: rebuilding every arm reproduces it exactly ... PASS
+    LIVE-CHECK no lookahead: entry index is the 09:46 bar and its price is that bar's OPEN; every stop level (opening-range extreme, 09:30 open, ATR20 at 09:45) is fixed
+                 before 09:46; exits fill at the breaching bar's open or the level, whichever is worse for us.
+    LIVE-CHECK inputs at 09:45 are ES / RTY / YM LAST prices - available in real time, no vendor file, no daily download.
+
+==============================================================================================================================
+=== THE FOUR EXIT ARMS. MAE is the number W101 never reported.
+==============================================================================================================================
+arm         trades  $/trade   hit%     net $     wk$  wk$@fixDD   wk+%    maxDD     top5  worst wk  mean MAE  worst MAE  mean min     t
+X0_HOLD        342      675  57.3%   230,989   1,084        935  51.2%   23,480   13,760   -10,069    -2,033    -10,865       359  3.81
+X2_ORSTOP      342      272  31.6%    93,094     437        479  34.3%   18,478   11,863    -6,366    -1,014     -3,940       167  2.13
+X3_FLIP        342      146  23.7%    49,854     234        335  26.8%   14,134   11,021    -4,888      -864     -4,055       126  1.23
+X1_ATR2        342      244  24.0%    83,323     391        540  29.1%   14,666   10,449    -4,681      -815     -2,650       122  1.88
+
+arm        exit reasons                              worst trade  best trade  mean MFE  $/ctr-min
+X0_HOLD    TIME 342                                       -6,467      21,008     2,740       1.88
+X2_ORSTOP  STOP 223, TIME 119                             -3,597      10,333     1,987       1.63
+X3_FLIP    FLIP 253, TIME 89                              -3,149      10,333     1,650       1.16
+X1_ATR2    STOP 257, TIME 85                              -2,046      10,333     1,821       2.00
+
+==============================================================================================================================
+=== THE PRIMARY: marginal portfolio value against P1/PCT alone, income-matched
+==============================================================================================================================
+    P1/PCT alone (spread $14.44/ctrRT): wk $1,394  wk+ 56.3%  maxDD $22,931  top5 $17,835  wk$@fixDD $1,230
+
+arm           rho wk   scale      wk$    wk+%     maxDD     top5    CVaR5  strk  wk$@fixDD  vs P1 alone
+X0_HOLD      -0.0048   1.285    2,787   61.5%    23,146   16,772   -9,624     4      2,438        98.1%
+X2_ORSTOP     0.0939   3.189    2,787   53.1%    71,612   34,483  -14,854     6        788       -36.0%
+X3_FLIP       0.0588   5.954    2,787   46.0%    64,751   57,785  -19,907     6        871       -29.2%
+X1_ATR2       0.0769   3.562    2,787   49.8%    58,060   31,072  -13,924     5        972       -21.0%
+
+==============================================================================================================================
+=== PER-YEAR and RECENCY, $/trade (2026 is partly BURNED: 2026-05-31 -> 07-31)
+==============================================================================================================================
+arm                2022        2023        2024        2025        2026        t12m         t6m
+X0_HOLD             186         628         583         758       1,064       1,093       1,683
+X2_ORSTOP           -73         320         412         228         120         232         251
+X3_FLIP            -265           8         312          96         270         197         430
+X1_ATR2            -184         132         489         167         201         207         399
+
+=== RISK LIMITS, from evidence, for a kill switch
+    X0_HOLD     worst trade $   -6,467   worst day $   -6,467   worst week $  -10,069   worst MAE ever $  -10,865   longest losing-week streak 6
+    X2_ORSTOP   worst trade $   -3,597   worst day $   -3,597   worst week $   -6,366   worst MAE ever $   -3,940   longest losing-week streak 6
+    X3_FLIP     worst trade $   -3,149   worst day $   -3,149   worst week $   -4,888   worst MAE ever $   -4,055   longest losing-week streak 6
+    X1_ATR2     worst trade $   -2,046   worst day $   -2,046   worst week $   -4,681   worst MAE ever $   -2,650   longest losing-week streak 7
+
+[done 16s]
