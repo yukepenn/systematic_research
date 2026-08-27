@@ -1,0 +1,93 @@
+run_id: INT01_STAGE_A
+date: 2026-08-27
+run_class: STAGE_A_INFORMATION_TEST
+committed_before_results: true
+directive: s14A, s15, s12, s41
+
+question: >
+  Does market-internals state ($TICK / $TRIN / $VIX) predict P1's FULL-HORIZON
+  delta_action_value INCREMENTALLY beyond the 18 causal features RR_W002A already used?
+
+population_declared_in_advance: >
+  The 764 P1 scoring decisions whose decision_ts falls inside RTH 09:31-15:59 on a session the
+  internals cover. This population was FIXED and published in runs/INTERNALS_ACQUIRE_20260827/
+  REPORT.md BEFORE this spec, precisely so it cannot be redefined after a result.
+  It is 35.7 % of the 2,139 scoring decisions. The other 64.3 % are overnight and internals
+  cannot speak to them - that is a permanent ceiling, not a sampling choice.
+
+primary_target: delta_total_window          # full-horizon, per the standing owner correction
+secondary_target: delta_action_value        # session-scoped, reported, not the decider
+
+feature_budget_small_and_declared:          # s15 - a small causal primitive set, nothing more
+  - tick_last          # $TICK close at info_cutoff
+  - tick_cum15         # cumulative $TICK over the 15 min ending at info_cutoff
+  - tick_persist15     # fraction of last 15 min with $TICK close > 0
+  - tick_extreme15     # count of minutes with |$TICK| > 600 in last 15
+  - trin_log           # log($TRIN) at info_cutoff
+  - trin_chg15         # change in log($TRIN) over 15 min
+  - vix_last           # $VIX close at info_cutoff
+  - vix_chg15          # $VIX change over 15 min
+  - vix_shock          # $VIX at info_cutoff minus $VIX at first RTH bar of the session
+  count: 9
+
+causality_contract:
+  rule: >
+    P1 fills at the OPEN of the bar following its decision. Bars are END-stamped. Every feature
+    may therefore use internals bars with time <= info_cutoff_ts and NOTHING later. Same-bar
+    ambiguity is not resolved by assumption - it is resolved by the gate below.
+  self_validating_gate:
+    injected_leak: PROBE_LEAK reads the internals bar AT decision_ts. MUST BE DROPPED.
+    injected_safe: PROBE_SAFE reads the internals bar at info_cutoff_ts. MUST BE KEPT.
+    rule: if the gate fails to drop the leak OR drops the safe probe, THE RUN ABORTS.
+    separation: perturbation points >= 5000 bars apart, per the RR_W002A contamination fix.
+
+validation:
+  scheme: expanding prequential walk-forward by SESSION, identical to RR_W002A
+  scaling_and_imputation: TRAIN ONLY
+  model: ridge only - one model family, no hyperparameter search
+  arms_declared_in_advance:
+    - X            : the 18 existing causal features (incumbent information)
+    - X_plus_INT   : X + the 9 internals primitives          <- the increment under test
+    - INT          : internals alone
+    - NEGCTRL      : a known-null family, matched in count and construction
+
+null:
+  method: session-boundary circular shifts of the target
+  refit: THE ENTIRE WALK-FORWARD IS REFITTED INSIDE EVERY SHIFT
+  reason: W110's original error was holding predictions fixed across shifts
+  n_shifts: 200
+
+gates_all_must_be_cleared:
+  G1_integrity: causality gate drops the leak and keeps the safe probe
+  G2_increment: OOS rho of X_plus_INT exceeds OOS rho of X
+  G3_null: X_plus_INT exceeds the 95th percentile of its OWN refitted null
+  G4_control: X_plus_INT exceeds NEGCTRL, and NEGCTRL does not exceed its own null
+  G5_sign: the increment is positive in a majority of folds
+
+declared_reading_rules:
+  - >
+    A "pass" on G2 between two arms that are both WORSE THAN CHANCE carries no weight and will be
+    reported as carrying no weight. This exact shape was refused in RR_W004 and will be refused
+    again.
+  - >
+    If NEGCTRL scores at or above every real arm, the run is NULL regardless of any other gate,
+    because that is what RR_W002A and RR_W004 both showed and it is the strongest single
+    diagnostic available.
+
+power_disclosure_stated_before_the_result: >
+  INTERNALS_ACQUIRE measured MDE at 1.31x the covered mean on the full-horizon target and 1.07x
+  on the session-scoped one. This wave is therefore MARGINALLY UNDERPOWERED at the strict
+  mean-scale yardstick and CANNOT establish a small effect. It can only find a LARGE one. A null
+  result here must be recorded as CLOSED-BY-POWER-AND-EVIDENCE, not as proof of absence.
+
+scope_discipline_s41: >
+  This tests ONE MAPPING: internals -> P1 action value. A null closes that mapping ONLY. It does
+  NOT close "internals contain NQ alpha" - the direct-return question is separate and untested.
+  This is the exact discipline learned from the order-flow lane.
+
+what_this_run_will_NOT_do:
+  - search horizons, thresholds or model families
+  - add features after seeing a result
+  - redefine the population
+  - read sealed data
+  - promote anything
