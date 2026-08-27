@@ -1,0 +1,205 @@
+run_id: RR_W002A_ACTION_VALUE_INFORMATION
+campaign: "#7 WEEKLY_EDGE - causal monetization branch"
+date: 2026-08-27
+status: PREREGISTERED
+run_class: BOUNDED_SELECTION
+authority: >
+  Owner correction directive 2026-08-27, sections 1-5. RR_W001 measured action-value DISPERSION and
+  fitted ZERO models; the INFORMATION question was never asked. This is that test. It supersedes
+  nothing in RR_W001 - it asks the question RR_W001 did not.
+
+title: >
+  Do causal features available AT the P1/PCT decision event predict FULL-HORIZON
+  delta_action_value better than simple causal controls and a dependence-preserving null?
+  STAGE A INFORMATION ONLY. No router, no policy, no abstention, no sizing, no exit change, no HMM.
+
+# ================================================================= what this is and is not
+scope:
+  this_is: "an INFORMATION test. Does a causal signal exist at all?"
+  this_is_not: >
+    a request to prove a profitable router. NO policy is built, NO threshold is chosen, NO abstention
+    rule is constructed, NO sizing is altered, NO exit is touched, NO latent-state model is fitted.
+    Converting scores into economics is a SEPARATE wave and is only bought by outcome C below.
+  why_now: >
+    RR_W001's headline - that ranking by the trade's own P&L recovers 68.8-85.5 % of the causal
+    oracle - is NOT a live control. Trade P&L is an OUTCOME, not information available at the
+    decision. That comparison bounds the value of the counterfactual machinery for BUILDING A LEDGER
+    and says nothing about causal predictability. The question below has never been asked.
+
+# ================================================================= the target
+target:
+  primary: >
+    delta_total_window - the FULL-HORIZON causal action value from
+    runs/RR_W001_ACTION_VALUE_LEDGER/out/ledger_p1pct.csv. Mean +$115.30, sum $245,698 over 2,131
+    in-window decisions. This is the whole-object quantity: it carries BOTH the within-session box
+    channel and the cross-session trailing-250-entry SIZE channel.
+  why_not_session_scoped: >
+    delta_action_value (session-scoped, mean +$162.79) truncates the size channel, which is worth
+    -$101,217 and flips 226 signs. It remains a valid DECOMPOSITION and is reported as a secondary
+    arm, but it is not the whole causal object and must not be the primary.
+  secondary_targets_declared_before_any_fit:
+    - "sign(delta_total_window) - a binary target"
+    - "EXTREME POSITIVE indicator: delta_total_window in its own top decile"
+    - "EXTREME NEGATIVE indicator: delta_total_window in its own bottom decile"
+  no_threshold_search: >
+    Top and bottom DECILE are fixed here and are the only tail cuts used. No other threshold is
+    scanned, tuned or reported. Deciles are chosen because RR_W001 already reported decile-level
+    concentration, so they introduce no new look.
+
+# ================================================================= section 15 disclosure
+prior_knowledge_disclosure:
+  already_seen_in_RR_W001:
+    - "the full delta_action_value and delta_total_window distributions: mean, sd, median, quantiles p1..p99, share positive."
+    - "concentration curves at the top 1 / 5 / 10 / 25 % of |action value|."
+    - "the EX-POST abstention f-curve at f = 5/10/20/30 % and its decomposition into avoided / created / repriced."
+    - "that 59.03 % of session-scoped action values are negative and 44.30 % of full-horizon ones are positive."
+    - "that the divergence between action value and own trade P&L is concentrated in box-latch sessions (56.70 % vs 3.54 %)."
+  consequence: >
+    The distribution is known. What is NOT known, and what this wave asks, is whether any causal
+    feature ORDERS it. No feature-target relationship has been examined.
+  second_look_disclosure: >
+    W113 already tested W109's three PROVEN causal states on P1/PCT, as a BINARY VETO on weekly
+    dollars. This wave uses them as CONTINUOUS features against a DIFFERENT target that has never
+    been modelled. That is a new question on an object already looked at, it is a second look, and it
+    is declared here and counted in the trial budget rather than discovered later. W109's own report
+    section 11 flagged exactly this - that a 25/50/75 % cut throws away what an AUC-0.62 signal
+    contains, and that the continuous use is UNTESTED and needs its own wave.
+  discovery_consumption_warning: >
+    The engine's own lagged context features were used to BUILD P1/PCT on this window. Predicting the
+    action value of the engine's own decisions from the engine's own features is the strongest
+    possible form of DISCOVERY_CONSUMED. A positive result on ARM 1 or ARM 2 means "the engine's own
+    state predicts its own miscalibration" - a MECHANISM-POLICY finding, NOT new information. That
+    classification is fixed here, before the result.
+
+# ================================================================= causality gate
+causality_gate:
+  status: BLOCKING. Runs before any fit. If it fails, no model is fitted and no table is issued.
+  test: >
+    SINGLE-OBSERVATION PERTURBATION, the harness TEST A pattern. For every feature, perturb the OHLCV
+    of the decision bar i itself and assert the feature value at bar i does NOT move; then perturb
+    bar i-1 and assert it DOES move. A feature that fails either clause is REMOVED, not repaired.
+  why: >
+    P1/PCT fills at the OPEN of bar i, so anything computed from bar i's own high, low, close or
+    volume is unavailable. The engine's five score features are explicitly lagged in
+    we_fastctx.fast_build_context, but `ratio` and `norm` are not obviously so. This is settled by
+    measurement rather than by reading the code.
+
+# ================================================================= features
+feature_arms:
+  rule: "SMALL and preregistered. Existing, already-defined families only. No new indicator is invented."
+  ARM1_EXPERT_INTERNAL:
+    columns: [causal_quality_score, quality_score_is_warmup, size_at_entry, strategy_session_pnl_before_per_ctr, entry_ordinal_in_session]
+    source: "runs/RR_W001_ACTION_VALUE_LEDGER/out/ledger_p1pct.csv - recorded AT the decision"
+    role: "the expert's own opinion of itself. Also supplies the SIMPLEST non-trivial control."
+  ARM2_NQ_CAUSAL_STATE:
+    engine_context: [dist_open, dist_vwap, runlen, delta_mag, prev_ret, atr_l]
+    engine_context_source: "we_fastctx.fast_build_context, indexed at the decision bar. All explicitly lagged; each still passes the causality gate or is dropped."
+    w122_primitives: [nq_move_5m, nq_move_15m, nq_move_30m, nq_path_eff_30m, nq_atr_z, session_move_so_far]
+    w122_source: "definitions frozen in runs/WE_W122_XSUPPORT/spec.yaml. Reused verbatim; NOT redefined."
+  ARM3_TIME:
+    columns: [minute_of_session]
+    role: "control. Directive: residual seasonality must be controlled, not discovered."
+  ARM4_W109_PROVEN_STATES:
+    columns: [D1_DIR_EFF, D4_VWAP_DISP, D5_MR_FAIL]
+    restriction: "these are defined ONCE per session at the 11:48 bar, so this arm runs on the RESTRICTED population of decisions at or after 11:49 and is reported separately with its own N."
+    excluded: "D2_CLOSE_EXT, D3_RANGE_EXP, D6_XBREADTH carry NO class information (W109). They are not carried forward."
+  ARM5_HTF:
+    status: "INCLUDED ONLY IF a causal definition is importable without redefinition."
+    rule: >
+      HTF is LIGHT, evidenced only by HTFMECH01 from campaign #3 on a different object. If no
+      committed causal definition transfers to this substrate, the arm is declared NOT INCLUDED with
+      that reason stated. Inventing an HTF feature here would be a new indicator and is forbidden.
+  NEGATIVE_CONTROLS:
+    columns: [rel_volume_1m, xm_support_mag_15m]
+    role: >
+      KNOWN-NULL families (W111 volume, W122 cross-market intraday support). They are NOT candidate
+      alpha. Their job is to show the pipeline returns null on inputs already proven null. If a
+      negative control scores as well as the real arms, the pipeline is broken and the wave is void.
+
+# ================================================================= models
+models:
+  budget: "FOUR. No large hyperparameter search. Every value below is frozen in this spec."
+  M0_BASE_RATE: "predict the training-fold mean. The unconditional control."
+  M1_EXPERT_SCORE_ONLY: "rank by causal_quality_score alone - the expert's own opinion, zero fitting."
+  M2_RIDGE: "Ridge, alpha = 10.0, on standardized features. Same alpha as W112, chosen for continuity, not tuned."
+  M3_SHALLOW_GBM: "HistGradientBoosting, max_depth = 2, max_iter = 200, learning_rate = 0.03, min_samples_leaf = 100, random_state = 2002. Depth 2 is deliberate - with ~1,000 sessions a deeper tree memorises (W112's stated rationale)."
+  forbidden: "no HMM, no latent state, no sequence model, no deep model, no stacking, no ensembling, no alpha grid."
+
+# ================================================================= validation
+validation:
+  scheme: "EXPANDING-WINDOW PREQUENTIAL, by SESSION. K-fold is forbidden on a discovery-consumed time series."
+  first_fit_after: "250 sessions"
+  block: "63 sessions"
+  clustering: "all inference is clustered by SESSION. Multiple decisions in one session are not independent."
+  scaling: "fitted on TRAINING FOLD ONLY and frozen before the test fold is touched. Same for any imputation."
+  forbidden: [random row split, K-fold, test-fold quantiles, full-sample normalisation, any use of >= 2026-08-01]
+  seal: ">= 2026-08-01 is VIRGIN and is NOT read. load_deep is called with b <= '2026-07-31 17:00'."
+
+null_model:
+  construction: >
+    DEPENDENCE-PRESERVING. The target is circularly shifted by whole SESSIONS against the feature
+    matrix, which preserves both marginals, the within-session dependence and the target's
+    autocorrelation, and destroys only the alignment.
+  refit_rule: >
+    THE ENTIRE MODELLING PROCEDURE - scaling, fitting, the whole expanding walk-forward - IS RE-RUN
+    INSIDE EVERY SHIFT. Holding predictions fixed while permuting labels is W110's original error and
+    makes the null far too easy. 200 shifts.
+  applies_to: "M2 and M3, each against its own null. M0 and M1 are controls and need none."
+
+# ================================================================= the gates
+falsifiers_ALL_must_be_cleared:
+  H1: "the primary model's pooled OOS Spearman rank correlation with delta_total_window is > 0"
+  H2: "it exceeds the 95th percentile of its own dependence-preserving null"
+  H3: "it beats EVERY simple control: M0 base rate, M1 expert-score-only, a time-only model and a volatility-only model"
+  H4: "score-quintile monotonicity holds and the top-minus-bottom quintile difference in mean delta_total_window is > 0"
+  H5: "the sign of the OOS rank correlation is positive in at least 60 % of test folds"
+  H6: "BOTH negative controls fail H2. If a known-null family clears the null, the pipeline is broken and the wave is VOID rather than positive."
+  gate_reporting: >
+    A GATE / SPEC / OBSERVED / PASS-FAIL table is PRINTED BY THE PROGRAM. Every clause is a coded
+    assertion - W121's falsifier had two clauses and only one was implemented, and RR_W001's own G4
+    was arithmetically incapable of failing. Before the gates are read, each statistic is checked for
+    whether it CAN take a failing value.
+
+# ================================================================= reporting
+required_reporting:
+  - "OOS Spearman rank correlation, pooled and per fold"
+  - "OOS R2, with the explicit caveat that it is dominated by the tail at sd $2,196"
+  - "score-quintile monotonicity table and top-minus-bottom action value"
+  - "fold-by-fold consistency, every fold printed - never only the pooled aggregate"
+  - "concentration: how much of any measured edge sits in the top 1 / 5 % of events"
+  - "RIGHT-TAIL IDENTIFICATION: can the model rank the extreme-positive decile? Reported separately from the mean effect"
+  - "the incremental table: ARM1 alone, ARM2 alone, ARM1+ARM2, +ARM3, +ARM4 on its restricted population"
+  - "whether ANY signal survives the matched simple causal control - stated as a number, not as prose"
+  - "POWER LIMITATION EXPLICITLY: RR_W001's G3 already showed this sample cannot certify SMALL economic improvements. An information result here does NOT overturn that and must not be read as one."
+  - "evidence-status labels: DISCOVERY_CONSUMED throughout; DIRECTLY_BURNED for 2026-05-31 -> 07-31"
+
+# ================================================================= outcomes
+outcomes_fixed_in_advance:
+  A_NO_MODEL_BEATS_CONTROLS_OR_NULL: >
+    Current-data ACTION-VALUE INFORMATION is NULL / LOW-EVI. Direct routing is then de-prioritised
+    much more confidently than RR_W001 alone allowed. Continue to X9a (frontier row 2).
+  B_INFORMATION_EXISTS_ECONOMICS_UNDERPOWERED: >
+    Classify REAL INFORMATION / ECONOMIC POLICY UNRESOLVED. DO NOT force a router. Record the
+    information, record that RR_W001's G3 blocks its economic certification, continue to X9a.
+  C_STRONG_INFORMATION: >
+    Then and only then preregister a SEPARATE economic router wave. Nothing in this wave becomes a
+    policy.
+  arm_specific: >
+    If the signal lives ONLY in ARM1/ARM2 (the engine's own features), it is classified
+    MECHANISM-POLICY, not NEW INFORMATION, per the discovery-consumption warning above.
+
+trial_budget:
+  model_families: 4
+  feature_arms: 5
+  targets: 4
+  note: >
+    Counted and disclosed. The PRIMARY is ONE cell - M2 ridge on ARM1+ARM2+ARM3 against
+    delta_total_window. Everything else is secondary and is reported against a best-of-K bar so a
+    lucky cell is visible. W112's recorded error was that its best-of-4 bar was a footnote rather
+    than a gate; here the multiplicity bar is printed beside the primary.
+
+decision_rule:
+  - "STAGE A ONLY. NOTHING IS PROMOTED. No policy, no threshold, no economic rule leaves this wave."
+  - "No feature, arm, model, target, threshold, fold scheme or control is re-chosen after results are seen."
+  - "A pass buys ONE thing: the right to preregister an economic wave. It does not buy the wave."
+  - "If the causality gate fails, the wave produces a CAUSALITY REPORT and no model output. That is a complete outcome."
