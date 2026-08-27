@@ -69,3 +69,44 @@ W104 gives one datum on where level 3 sits: a real causal rule at the RTH open
 E|move| — i.e. a genuinely good causal signal recovers **on the order of 20 %** of the
 execution-feasible oracle for its own trade shape. That is the only calibration of level 3 this
 campaign has, it comes from one object, and it should not be treated as a constant either.
+
+---
+
+## LEVEL 3 IS NOW MEASURED DIRECTLY, ONCE — and the answer was a negative (W112, 2026-08-27)
+
+`runs/WE_W112_FRONTIER/` is the first attempt in this repo to measure `CAUSAL_MODEL_FRONTIER`
+directly rather than by inference from a single object. **AFT, the segment with the lowest capture
+ratio in the table above (0.3 %).**
+
+Seventeen strictly pre-decision features — including the three states `W109` proved carry real
+class information at AUC 0.61–0.62 — under expanding-window walk-forward, 63-session blocks, first
+fit at 250 sessions, every hyperparameter frozen in the spec, no search of any kind. 688
+out-of-sample sessions.
+
+| | |
+|---|---|
+| ridge, out-of-sample **R²** | **−0.024** |
+| ridge directional accuracy | **53.58 %** — *below* always-long's 55.04 % |
+| boosted trees | 47.74 %, R² **−0.230** |
+| best fitted cell | $229/session |
+| **unfitted control** — "follow the morning direction" | **$190/contract, no features, no fitting** |
+
+> ### **Do not quote $229 as the AFT level-3 frontier.** A model with negative R² and sub-constant directional accuracy has not measured a frontier. The defensible statement is: **on AFT, no fitted causal model reached anything a one-line momentum rule did not already have.**
+
+**The consequence for how the table above is read.** The $1,167/session AFT gap between level 2 and
+real capture has been treated across four waves as unmonetized opportunity. This is the first direct
+evidence that **most of it is the oracle's foreknowledge, not money we failed to collect.** Directive
+§16 warns against spending research effort on a category that is not there. **AFT moves down the
+queue.**
+
+**What this does NOT license.** One segment, one feature set, two model families. It is a *lower
+bound* on level 3 for AFT and says nothing about MORN, ON_EU, MID or ON_ASIA, whose gaps remain
+unmeasured at level 3. The XM_CONFLICT datum above (≈ 20 % of the execution-feasible oracle at the
+RTH open) still stands and still comes from one object.
+
+**Both calibrations of level 3 that exist, side by side:**
+
+| geometry | level-3 recovery of level 2 | source |
+|---|---|---|
+| RTH open, 09:46 → 15:45 | **≈ 20 %** | `XM_CONFLICT`, W104 |
+| AFT, 11:49 → 15:44 | **≈ 16 %, and none of it from a fitted model** | W112 / W114 |

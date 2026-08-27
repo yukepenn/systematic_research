@@ -245,13 +245,25 @@ compare the **decision series** first — ≥99 % agreement plus trade counts wi
 | object | status |
 |---|---|
 | `PAIR23` (2 BMOM : 3 X9a) | best *single* object ($1,309/wk at fixed DD) but **adds nothing on top of P1/PCT + XM** (W103, two independent weighting methods) — **not promoted** |
-| `D1_DIR_EFF` @ 0.50 as a fade veto | **WATCH only.** Clears both W109 holdout nulls at the 100th percentile *and* is the cell the development set ranked 13th of 15. Needs fresh held-out engines — W109 consumed these five |
+| `D1_DIR_EFF` @ 0.50 as a fade veto | **CLOSED by W113.** The same state layer that failed to route five losing fades also fails to route P1/PCT — all 8 cells below baseline, best at the 58.0th percentile of a random-veto null, and max DD *rises* in every cell |
+| ⭐ **`FOLLOW_MORNING`** — buy at 11:49 if the 11:29 close is above the 09:31 open, sell if below, exit 15:44, size 1, **no parameters at all** | **`REGIME_LOCAL` · WATCH.** W114: **$179/trade, 55.00 %, 98.9th percentile** on 2022-07 → 2026-08, genuinely two-sided (long leg $198, short leg $158, always-long only $21), 14 of 15 decision-time cells between $146 and $196, positive in 4 of 5 calendar years, **t12m $236**. ⚠️ **FAILS its 16-year out-of-window half** (2006–2021: −$9/trade, 49.40 % vs p\* 51.76 %) and the failure is **behavioural, not cost** — implied directional edge **0.70 % then vs 5.62 % now** at zero spread. ρ **+0.279** with P1/PCT, so it is *not* an orthogonal source; adds +3.6 % at fixed DD to the candidate portfolio while lowering t from 4.90 to 4.58. **Decided by the sealed forward data and nothing else.** |
 
 ### Demoted / closed since W103
 
 `NETFUSE_1` (deep-negative 2006–21) · `VWAP_RECLAIM` (trend follower wearing a reversal label) ·
-**`CAUSAL TREND-DAY VETO`** (W109, 85.0th percentile) · **`VOL-EXHAUST / ABSORB`** (W111, 0.0th
-percentile, three of five *anti*-predictive against a volume-matched null).
+**`CAUSAL TREND-DAY VETO`** (W109 fades 85.0th percentile, **and W113 on the baseline 58.0th — two
+independent failures on opposite kinds of engine, family CLOSED**) · **`VOL-EXHAUST / ABSORB`**
+(W111, 0.0th percentile, three of five *anti*-predictive against a volume-matched null) ·
+**`AFT as a research target`** (W112 — de-prioritised with a *reason* rather than another null).
+
+### ⚠️ A standing correction the campaign has to carry
+
+**Seven fade mechanisms were killed here and the family was recorded as dead.** W114 measures the
+**mirror** of those fades — follow the morning direction instead of fading it — at **+$179/trade on
+the same sessions, with the same costs and the same geometry**, while the matched FADE arm earns
+**−$208**. The fades were not failing because mean reversion is impossible on NQ. **They were on the
+wrong side of a live momentum effect**, and W111b separately showed that the class table which had
+been read as evidence for them is definitional. Both corrections point the same way.
 
 ### The next residual, and what is actually pointed at
 
@@ -259,8 +271,14 @@ The capture ledger in §4 is unchanged — **MORN remains the largest single-seg
 per session of level-2 oracle against $78 taken, at p\* = 0.5048. Three lanes have now attacked the
 afternoon and the late morning and all three failed.
 
-**The one thing W109 found that is genuinely new is that the failure was at the POLICY layer, not
-the information layer:** three causal states known at 11:48 discriminate ex-post TREND from
+⚠️ **W112 and W113 have since narrowed this considerably.** W112 measured the level-3 causal
+frontier for AFT directly and found **no fitted model beat a one-line momentum control** (ridge
+out-of-sample R² −0.024, directional accuracy *below* always-long) — the first direct evidence that
+most of the AFT gap is the oracle's foreknowledge rather than money we are failing to collect, so
+**AFT moves DOWN the queue, not up.** W113 then closed the routing hypothesis on the profitable
+engine as well as the losing ones.
+
+**W109's finding was that the failure was at the POLICY layer, not the information layer:** three causal states known at 11:48 discriminate ex-post TREND from
 RANGE/MIXED at **AUC 0.613–0.621**, decisively above 2,000-draw permutation nulls, and that is not
 definitional because the detectors see only the morning while the label sees the whole session. A
 **binary** veto on information that weak removes good and bad sessions in equal proportion

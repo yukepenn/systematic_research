@@ -1,0 +1,127 @@
+    MODERN 1,444,282 bars / 1,059 sessions
+    OLD    4,908,286 bars / 4,279 sessions   [8s]
+
+============================================================================================================================
+=== 0. HARNESS CHECK - do the minute anchors mean the same thing in 2006 as in 2026?
+============================================================================================================================
+    MODERN 2022-07 -> 2026-08 571: 99.4%  689: 99.3%  709: 99.3%  944: 95.8%   OK
+    OUT-OF-WINDOW 2006-2021   571: 95.6%  689: 95.8%  709: 94.8%  944: 92.5%   OK
+    Both windows carry all four anchors. The rule means the same thing in both.
+
+============================================================================================================================
+=== 1. THE PRIMARY - A CONJUNCTION. Both halves must hold independently.
+===    FOLLOW the morning direction: decide 11:48, fill 11:49, hold to 15:44, size 1.
+============================================================================================================================
+window                           N    hit%      p*  vs p*   $/trade       net $  coin p95   pctile        
+MODERN 2022-07 -> 2026-08     1009  55.00%  0.5042   4.59       179     180,651       131    98.9th    PASS
+OUT-OF-WINDOW 2006-2021       3923  49.40%  0.5176  -2.36        -9     -33,784         6    69.3th    FAIL
+
+    PRIMARY VERDICT: FAILS   (modern pass, 2006-2021 FAIL)
+    -> per the spec this would be REGIME_LOCAL, which is a DEMOTION of confidence,
+       not a result. It is recorded as such.
+
+============================================================================================================================
+=== 2. THE LEGS SEPARATELY, and the matched unconditional controls (W111b's binding rule)
+===    A one-sided result is a WITHDRAWAL, not a nuance: two-sidedness is the whole reason
+===    this is not simply the uptrend.
+============================================================================================================================
+window / arm                                 N    hit%   $/trade       net $      t
+MODERN  FOLLOW - LONG leg only             528  58.90%       198     104,743   1.63
+MODERN  FOLLOW - SHORT leg only            481  50.73%       158      75,908   1.36
+MODERN  FADE (mirror)                     1009  44.50%      -208    -209,629  -2.16
+MODERN  CONTROL always LONG               1013  54.29%        21      21,133   0.29
+MODERN  CONTROL always SHORT              1013  45.21%       -50     -50,227  -0.70
+
+OUT-OF-WINDOW  FOLLOW - LONG leg only     2095  54.80%         9      19,791   0.67
+OUT-OF-WINDOW  FOLLOW - SHORT leg only    1828  43.22%       -29     -53,575  -1.63
+OUT-OF-WINDOW  FADE (mirror)              3923  47.23%       -20     -78,884  -1.71
+OUT-OF-WINDOW  CONTROL always LONG        3958  54.30%         6      23,698   0.56
+OUT-OF-WINDOW  CONTROL always SHORT       3958  42.29%       -35    -137,372  -3.25
+
+============================================================================================================================
+=== 3. RECENCY. Section 5 makes this primary, and W112's table already showed the modern
+===    result concentrated in 2025.
+============================================================================================================================
+period             N    hit%   $/trade       net $
+2022             126  61.11%       379      47,791
+2023             244  54.51%        73      17,721
+2024             249  51.81%       -22      -5,416
+2025             246  56.10%       205      50,377
+2026             144  54.17%       487      70,177
+t12m             249  53.01%       236      58,699
+t6m              125  55.20%       564      70,465
+t3m               62  58.06%       661      41,010
+
+    ...and the same for 2006-2021, five-year blocks:
+2006-2010       1202  46.76%       -16     -18,786
+2011-2015       1231  49.88%       -21     -25,292
+2016-2021       1490  51.14%         7      10,294
+
+============================================================================================================================
+=== 3b. IS THE 2006-2021 FAILURE JUST THE PRICE LEVEL? NQ traded near 1,700 in 2006 and
+===     near 20,000 in 2026, so a FIXED DOLLAR cost is a far higher hurdle in the old
+===     window. This separates the COST hurdle from the BEHAVIOUR.
+============================================================================================================================
+window                         E|move| $   cost $   p* - 0.5  $/trade @ 0x  implied edge
+MODERN 2022-07 -> 2026-08          1,721     4.36      0.13%           189         5.62%
+OUT-OF-WINDOW 2006-2021              409     4.36      0.53%             1         0.70%
+
+    Reading: the 'implied edge' is the directional accuracy above 50 % that would produce
+    the observed COMMISSION-ONLY expectancy at that window's own average move size. If the
+    old window's edge is near zero, its failure is BEHAVIOUR and not the cost hurdle.
+
+============================================================================================================================
+=== 4. COST SENSITIVITY - where does the edge die?
+===    2006-2021 is charged the MODERN spread, which is generous because spreads were
+===    wider then. The 2x and 3x rows are the honest reads for that window.
+============================================================================================================================
+window                             0x spread       1x spread       2x spread       3x spread
+MODERN 2022-07 -> 2026-08               $189            $179            $169            $159
+OUT-OF-WINDOW 2006-2021                   $1             $-9            $-19            $-29
+
+============================================================================================================================
+=== 5. SESSION CLASS (diagnostic) and CONCENTRATION (section 25)
+============================================================================================================================
+window                               TREND-UP       TREND-DOWN         REVERSAL            RANGE            MIXED
+MODERN 2022-07 -> 2026-08      209        920   146      1,092   264        110   273       -499   117       -545
+OUT-OF-WINDOW 2006-2021        851        117   513        215  1037          6  1058       -157   464       -179
+
+window                          median   trimmed    skew      worst   top1%   top5%   top10%   top20%
+MODERN 2022-07 -> 2026-08          166       138    2.80    -16,354   20.2%   51.6%    76.6%   110.5%
+OUT-OF-WINDOW 2006-2021             -4        -4   -0.89     -8,684   18.4%   78.0%   141.3%   247.6%
+
+============================================================================================================================
+=== 6. DECISION-MINUTE PLATEAU - a ROBUSTNESS READ, never an argmax.
+===    Its best cell may NOT be quoted, promoted or substituted for the 11:48 primary.
+============================================================================================================================
+    MODERN 2022-07 -> 2026-08   ($/trade)
+decide          exit 15:29    exit 15:44    exit 15:59
+11:18                 $146          $186          $179
+11:33                 $158          $190          $182
+11:48                 $155          $179          $159
+12:03                 $166          $196          $186
+12:18                  $82          $111           $98
+
+    OUT-OF-WINDOW 2006-2021   ($/trade)
+decide          exit 15:29    exit 15:44    exit 15:59
+11:18                 $-17          $-14          $-18
+11:33                 $-16          $-16          $-18
+11:48                  $-8           $-9          $-10
+12:03                 $-24          $-23          $-20
+12:18                  $-9           $-8           $-0
+
+============================================================================================================================
+=== 7. PORTFOLIO - correlation with the current base and the candidate component
+============================================================================================================================
+    213 common weeks
+    rho(FOLLOW_MORNING, P1/PCT)      = +0.279
+    rho(FOLLOW_MORNING, XM_CONFLICT) = +0.094
+    rho(P1/PCT, XM_CONFLICT)         = +0.081   (W110: +0.081)
+
+book                                    wk $      maxDD   wk$@fixDD  pos wk%      t
+P1/PCT alone                           1,394     22,931       1,230    56.3%   4.16
+P1/PCT + XM (inverse-vol)              1,142     11,489       2,012    59.2%   4.90
+P1/PCT + FOLLOW (inverse-vol)          1,158     14,976       1,566    62.4%   3.76
+P1/PCT + XM + FOLLOW (inv-vol)         1,063     10,323       2,085    62.9%   4.58
+
+[done 8s]

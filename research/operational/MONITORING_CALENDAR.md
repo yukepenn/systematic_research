@@ -25,6 +25,14 @@ authority — regenerate/extend it whenever a protocol changes. Dates are "due o
 | Preregistered spec + full gate battery (READY now — highest-EVI actionable item) | Direction-conditioned HTF construction | `../system_master/ACTIVE_RESEARCH_QUEUE.md` rank 2; evidence `HTFMECH01_TILT_MECHANISM/REPORT.md` |
 | A frozen preregistered family showing ≥ +7pp on discovery AND (forward-data) holdout | Zone-F scalp reopening | `../scalping_lab/reports/ZONE_F_FINAL_VERDICT.md` (+ 2026-08-18 post-verdict note: holdout leg must use ≥2026-08-01 data) |
 
+
+## Added 2026-08-27 — campaign #7 WEEKLY_EDGE forward reads
+
+| Gate | Item | Governing doc |
+|---|---|---|
+| Sealed sessions from **2026-08-01** accumulate (virgin; no refit needed, the rule is parameter-free) | **`FOLLOW_MORNING` forward read** — W114 found it `REGIME_LOCAL`: 98.9th percentile on 2022-07 → 2026-08 but a 16-year out-of-window FAIL whose cause is behavioural, not cost (implied directional edge 0.70 % in 2006-21 vs 5.62 % now). The forward data is the only thing that can decide whether intraday momentum genuinely strengthened or the modern window is a twenty-year excursion. Read: is $/trade > 0 on sealed sessions, at the frozen 11:48 → 15:44 geometry, size 1, no stop, unchanged cost model. | `runs/WE_W114_INTRAMOM/REPORT.md` |
+| Sealed sessions from **2026-08-01** accumulate | **`XM_CONFLICT` correlation watch** — W110 raised it to ACTIVE COMPONENT on the finding that the +0.464 six-month rho is NOT downside coupling (rho\|P1<0 = −0.165 at the 5.2nd percentile of a circular-shift null). The quantity to watch is the trailing 26-week rho **and** P(XM<0\|P1<0), which rose 0.200 → 0.500 between the first and last 26 weeks on ~11 P1-losing weeks. | `runs/WE_W110_XMDIVERSE/REPORT.md`, `../weekly_edge/CURRENT_BASELINE.md` |
+
 ## Standing per-wave (no date — every wave, mechanical)
 
 - Seal audit: `src/analytics/seal_audit.py` — verdict pasted into each wave report (W18/W19 CLEAN precedent).
