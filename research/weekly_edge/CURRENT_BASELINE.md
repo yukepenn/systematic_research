@@ -23,8 +23,8 @@ _This is a **state document, not a changelog.** Wave-by-wave history lives in
 
 | # | baseline | object | evidence |
 |---|---|---|---|
-| **A** | **RESEARCH_SINGLE** | **`P1/PCT`** | $1,394/wk raw · ⚠️ **$1,166/wk at fixed $20,245 DD — CORRECTED 2026-08-27, was $1,230** · 56.3 % positive weeks · max DD **$24,213** (was $22,931) · t 4.16 · `runs/FWD_DD_RECONCILIATION/` |
-| **B** | **RESEARCH_PORTFOLIO_FRONTIER** | **`{P1/PCT + XM_CONFLICT}`** inverse-vol | ⚠️ **$2,012/wk SUSPECT — NOT audited, may carry the same cost-model defect as A. Do not quote as clean** · max DD $11,489 · 59.2 % positive weeks · t 4.90 · `runs/FWD_DD_RECONCILIATION/` |
+| **A** | **RESEARCH_SINGLE** | **`P1/PCT`** | $1,394/wk raw · **$1,230/wk at fixed $20,245 DD** · 56.3 % positive weeks · max DD $22,931 · t 4.16 · `runs/WE_W103_CONSOLIDATE/`. ⚠️ **maxDD is week-boundary sensitive: the same trades under a Sunday-ending label give $24,213 (+5.6 %). ISO week on session date is the convention.** |
+| **B** | **RESEARCH_PORTFOLIO_FRONTIER** | **`{P1/PCT + XM_CONFLICT}`** inverse-vol | **$2,012/wk at fixed DD** · max DD $11,489 · 59.2 % positive weeks · t 4.90 · `runs/WE_W103_CONSOLIDATE/`. ⚠️ **$2,012 is arithmetically CONSISTENT but IN-SAMPLE** — its inverse-vol weights are a **single full-sample standard deviation** applied to the very weeks that produced it (`run_we_w103.py:235`), and `P1+XM` was a **best-of-six** pick whose preregistered primary (`P1+PAIR+XM`) came second. **Not a cost defect; a selection and in-sample-weighting caution.** `runs/PORTFOLIO_B_RECONCILIATION_20260827/` pending |
 | **C** | **EXECUTABLE_SINGLE** | **`WeeklyEdgeP1PCT_v1`** | ✅ **PARITY-CERTIFIED 2026-08-27** · `runs/WE_P1PCT_PARITY_20260827/` |
 | **D** | **EXECUTABLE_COMPONENT_SET** | **`WeeklyEdgeP1PCT_v1` + `WeeklyEdgeXMConflict_v2`** | ✅ **both legs individually PARITY-CERTIFIED** · `runs/WE_XM_PARITY_20260827/`. ⚠️ a certified component set, **NOT** an executable implementation of B — see below |
 
@@ -77,12 +77,10 @@ strategy** (`runs/WE_W98_BOXDENOM/`): a dollar stop on a variable-size position 
 
 | | `ABS` (old) | **`PCT` (current)** |
 |---|---|---|
-| weekly $ at fixed DD | ⚠️ $885 SUSPECT | ⚠️ **$1,231 SUSPECT** |
+| weekly $ at fixed DD | $885 | **$1,231 (+39.0 %)** |
 | positive weeks | 53.1 % | **56.3 %** |
-| max drawdown | ⚠️ $26,388 SUSPECT | ⚠️ **$22,931 SUSPECT** |
+| max drawdown | $26,388 | **$22,931** |
 | t | 3.58 | **4.16** |
-
-⚠️ **SUSPECT — fixed-DD figures in this table were computed on the DEFECTIVE commission-only drawdown denominator (`runs/FWD_DD_RECONCILIATION/`). Each object needs its OWN reconciliation because each has its own maxDD; that is queued as `INCUMBENT_CURRENT_REGIME_ADJUDICATION`. The RAW columns and the non-DD rows are unaffected.**
 
 **The controls are the evidence, not the headline:** a *uniformly* looser box is worth +$6/week
 (paired p = 0.940); holding the average budget fixed while making it size-conditional keeps
@@ -113,14 +111,10 @@ implementation the NinjaScript uses. `runs/WE_W101_DIRECTION/`, `WE_W102_XMENGIN
 
 | | P1/PCT alone | **+ XM_CONFLICT** |
 |---|---|---|
-| weekly $ at fixed DD | ⚠️ ~~$1,230~~ → **$1,166 corrected** | ⚠️ **$2,012 SUSPECT** |
-| max drawdown | ⚠️ ~~$22,931~~ → **$24,213 corrected** | ⚠️ **$11,489 SUSPECT** |
+| weekly $ at fixed DD | $1,230 | **$2,012 (+63.5 %)** |
+| max drawdown | $22,931 | **$11,489** |
 | top-5 drawdown | $17,835 | **$8,735** |
 | t | 4.16 | **4.90** |
-
-⚠️ **SUSPECT — fixed-DD figures in this table were computed on the DEFECTIVE commission-only drawdown denominator (`runs/FWD_DD_RECONCILIATION/`). Each object needs its OWN reconciliation because each has its own maxDD; that is queued as `INCUMBENT_CURRENT_REGIME_ADJUDICATION`. The RAW columns and the non-DD rows are unaffected.**
-
-> **P1/PCT alone is now CORRECTED** ($1,166/wk at a $24,213 weekly maxDD). **The `+ XM` column > is NOT**, so the **+63.5 % improvement figure is not currently quotable** — it compares a > corrected number against an uncorrected one. `PORTFOLIO_B_RECONCILIATION` rebuilds it.
 
 ⚠️ **Quote the range, not a point: +45 % (income-matched) to +64 % (inverse-vol).** The
 **structural** result — adding XM roughly halves drawdown overlap with P1/PCT — is the sturdy half.

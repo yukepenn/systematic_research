@@ -109,7 +109,7 @@ Baseline B is the **inverse-volatility** research weighting. The certified execu
 
 > ### **Running both legs at their default quantity 1 is NOT an implementation of B and does NOT
 > ### reproduce B's economics.**
-> B's **$2,012/wk at fixed $20,245 DD** — ⚠️ **SUSPECT and not currently quotable, pending `PORTFOLIO_B_RECONCILIATION`; it may carry the same defective drawdown denominator as P1's retired $1,230** — is a *research* figure computed under **inverse-vol weights**
+> B's **$2,012/wk at fixed $20,245 DD** — ⚠️ **$2,012 is arithmetically CONSISTENT but IN-SAMPLE** — its inverse-vol weights are a **single full-sample standard deviation** applied to the very weeks that produced it (`run_we_w103.py:235`), and `P1+XM` was a **best-of-six** pick whose preregistered primary (`P1+PAIR+XM`) came second. **Not a cost defect; a selection and in-sample-weighting caution.** `runs/PORTFOLIO_B_RECONCILIATION_20260827/` pending — is a *research* figure computed under **inverse-vol weights**
 > and the **research cost model** (commission **plus** modelled spread). A 1 + 1 contract book is a
 > different allocation under a different cost model, and quoting B's number for it would be wrong in
 > both directions at once.

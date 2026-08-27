@@ -174,6 +174,49 @@ def main():
         P(f"    {nm:<34}${w2.mean():>12,.2f}${m2:>14,.2f}{20245/m2:>11.6f}"
           f"${w2.mean()*20245/m2:>12,.2f}")
 
+    # ---------------------------------------------------------------- THE ACTUAL ANSWER
+    # A FIRST VERSION OF THIS SCRIPT GOT THIS WRONG. It never checked W103/W110 - the run that
+    # actually PRODUCED the canonical figures - and instead searched a space of cost-model and
+    # population variants for whatever came closest to 22,931. It found pnl_commonly at 22,852.92
+    # ($78 off) and concluded "the headline mixes two cost models". That was a FALSE POSITIVE from
+    # an under-constrained search: pick the nearest of many candidates and you will always find one.
+    # The same multiplicity error this campaign polices everywhere else.
+    P("")
+    P("=" * 108)
+    P("=== WHERE $22,931 ACTUALLY COMES FROM  (checked, not searched)")
+    P("=" * 108)
+    w110 = pd.read_csv(os.path.join(ROOT, "runs/WE_W110_XMDIVERSE/out/weekly.csv"))
+    c110 = w110["p1"].cumsum().values
+    d110, p110, t110 = dd(c110, w110["week"].astype(str).values)
+    P(f"    W103/W110 weekly P1_PCT  n {len(w110)}  mean ${w110['p1'].mean():>9,.2f}  "
+      f"maxDD ${d110:>11,.2f}   {p110} -> {t110}")
+    P(f"    canonical baseline                                  maxDD $   22,931")
+    P(f"    difference                                          ${abs(d110-22931):>11,.2f}")
+    P(f"    implied k = 20,245 / {d110:,.2f} = {20245/d110:.6f}  ->  "
+      f"fixed-DD ${w110['p1'].mean()*20245/d110:,.2f}/wk   (canonical says $1,230)")
+    P("")
+    P("    >>> THE CANONICAL PAIR IS INTERNALLY CONSISTENT. Both $1,394 and $22,931 come from THIS")
+    P("    >>> series, which IS net of commission AND the modelled spread (run_we_w103.py:95,")
+    P("    >>> `s_[si] += x['pnl'] - rate * x['u']`). There is NO cost-model mixing.")
+    P("")
+    P("=" * 108)
+    P("=== THE REAL CAUSE: WEEK-BOUNDARY CONVENTION, not cost model")
+    P("=" * 108)
+    P(f"    W103/W110 : ISO week keyed on SESSION DATE      maxDD ${d110:>11,.2f}")
+    P(f"    RR_W003   : Sunday-ending date label            maxDD ${de:>11,.2f}")
+    P(f"    same trades, totals agree to ${abs(ce[-1]-w110['p1'].sum()):,.2f}, "
+      f"but maxDD differs by ${abs(de-d110):,.2f} ({100*abs(de-d110)/d110:.1f} %)")
+    P("")
+    P("    Max drawdown is SENSITIVE TO BUCKETING because where a week boundary falls decides")
+    P("    whether a run of losses lands inside one bucket or is split across two. Both series are")
+    P("    legitimate aggregations of the same trades. Neither is defective.")
+    P("")
+    P("    >>> CONSEQUENCE FOR THE FORWARD PROTOCOL: the forward read MUST bucket weeks the same")
+    P("    >>> way the bands were derived - ISO week on session date - or it will compare a")
+    P("    >>> drawdown against a threshold built on a different convention.")
+    _fh.close()
+    return
+
     P("")
     P("    " + "!" * 92)
     P("    !! THE DEFECT, STATED EXACTLY")

@@ -87,20 +87,26 @@ scale-invariant and therefore cannot be inflated by leverage.
 
 | object | weekly $ at fixed DD | positive weeks | max DD | t |
 |---|---:|---:|---:|---:|
-| **A** `P1/PCT` | ⚠️ **$1,166** ($1,394 raw) | 56.3 % | **$24,213** | 4.16 |
-| **B** `{P1/PCT + XM}` inverse-vol | ⚠️ **$2,012 SUSPECT — unaudited** | 59.2 % | $11,489 | 4.90 |
+| **A** `P1/PCT` | **$1,230** ($1,394 raw) | 56.3 % | $22,931 | 4.16 |
+| **B** `{P1/PCT + XM}` inverse-vol | **$2,012** | 59.2 % | $11,489 | 4.90 |
 
-> ### ⚠️ **AMENDED 2026-08-27 — the freeze is RE-STAMPED, not broken.**
-> `runs/FWD_DD_RECONCILIATION/` found the canonical **$22,931** drawdown was computed on a **commission-only**
-> stream while the **$1,394** numerator is **net of the modelled spread**. A weekly curve is a
-> subsample of the daily one, so its drawdown **cannot exceed** it — yet $22,931 sits *below*
-> the weekly $24,212.92, which is impossible for one stream. Mixing the two cost models
-> **flattered the fixed-DD headline by 5.2 %**.
+> ### ✅ **UNCHANGED — an amendment proposed on 2026-08-27 was RETRACTED the same day.**
+> `runs/FWD_DD_RECONCILIATION/` briefly concluded these figures mixed two cost models and
+> should become $1,166/wk at a $24,213 drawdown. **That conclusion was FALSE and is retracted.**
+> Both $1,394 and $22,931 come from the same net series in `runs/WE_W103_CONSOLIDATE/`
+> (ISO week on session date), which reproduces **maxDD $22,930.67 to $0.33** and
+> **$1,230.36/wk**. The freeze was never broken and **nothing here changed**.
 >
-> **Corrected: `k = 20,245 / 24,212.92 = 0.836124`, giving `$1,166/wk`.** The **source hashes,
-> parameters, cost model and semantics are UNCHANGED** — only a derived reporting figure was
-> wrong. **The seal was not read**, so this is legal **pre-read defect repair** (§29), not
-> outcome-driven retuning.
+> ⚠️ **What the episode DID establish, and it matters for the forward read:** max drawdown
+> is **sensitive to week-boundary convention by $1,282 (5.6 %)** on this very series. **The
+> forward read must bucket by ISO week on session date**, or it compares a realised drawdown
+> against a threshold built on a different convention.
+>
+> ⚠️ **B's $2,012 carries a DIFFERENT caution**, established independently: its inverse-vol
+> weights are a **single full-sample standard deviation applied in-sample to the very weeks that
+> produced them** (`run_we_w103.py:235`), and `P1+XM` was a **best-of-six** selection whose
+> preregistered primary `P1+PAIR+XM` came second. **Arithmetically consistent; not causal, and
+> selected.**
 
 Parity evidence, frozen as the executable claim:
 

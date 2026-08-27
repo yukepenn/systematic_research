@@ -2,29 +2,24 @@
 === FORWARD PROTOCOL AMENDMENT - empirical bootstrap replaces the Gaussian bands
 === Directive s29. Nothing sealed is read. The scaling factor is frozen, not refitted.
 ========================================================================================================
-    weekly observations         213   2022-07-10 -> 2026-08-02
-    raw weekly mean             $  1,393.95   <- baseline quotes $1,394  MATCHES
-    weekly maxDD (same stream)  $ 24,212.92   <- NOT the canonical $22,931
-    CORRECTED scaling factor k    0.836124   (= 20,245 / 24,212.92)
-    scaled weekly mean          $  1,165.51   <- CORRECTED; was quoted $1,230
-    scaled weekly sd            $  4,078.76
+    weekly observations         213   2022-W27 -> 2026-W31  (ISO weeks)
+    raw weekly mean             $  1,393.57   <- baseline quotes $1,394  MATCHES
+    weekly maxDD (ISO-week)     $ 22,930.67   <- canonical $22,931, matches to $0.33
+    FROZEN scaling factor k       0.882879   (= 20,245 / 22,930.67)
+    scaled weekly mean          $  1,230.36   <- protocol quotes $1,230  MATCHES
+    scaled weekly sd            $  4,312.71
 
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    !! DISCREPANCY RESOLVED by FWD_DD_RECONCILIATION - the canonical $22,931 was DEFECTIVE.
-    !! The $1,394 numerator is NET OF THE MODELLED SPREAD (`baseline_trade_net`).
-    !! The $22,931 denominator matches a COMMISSION-ONLY stream (`pnl_commonly`) to $78.
-    !! Mixing them flattered the fixed-DD headline: $1,230/wk instead of $1,166/wk, +5.2 %.
-    !! Both sides now use the FROZEN spread-inclusive stream. Corrected BEFORE the seal was
-    !! read, which is legal pre-read repair, not outcome-driven retuning.
-    !! P(cum<0) is SCALE-INVARIANT and is unchanged by this correction.
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    NOTE ON BUCKETING, which is a real sensitivity and not a defect: the SAME trades under a
+    Sunday-ending date label (RR_W003) give maxDD $24,212.92 rather than $22,930.67 - a 5.6 %
+    difference from week-boundary placement alone. The bands below are built on the ISO-week
+    convention, so THE FORWARD READ MUST USE ISO WEEKS ON SESSION DATE to be comparable.
 
     WHY A GAUSSIAN IS THE WRONG MODEL HERE:
-      skew                           1.888
-      excess kurtosis                8.717
-      Jarque-Bera p             1.177e-174   NORMALITY REJECTED
-      lag-1 autocorrelation         -0.047
-      lag-2 autocorrelation         -0.056
+      skew                           1.823
+      excess kurtosis                7.300
+      Jarque-Bera p             4.829e-129   NORMALITY REJECTED
+      lag-1 autocorrelation         -0.080
+      lag-2 autocorrelation         -0.044
 
     circular block bootstrap: B = 40,000   block length L = 6 weeks   seed 20260827
 
@@ -33,15 +28,15 @@
 ========================================================================================================
     CP     wk   expected   source      p01 (INVALID)   p05 (WATCH)  p25 (HEALTHY)   P(cum<0)
     ------------------------------------------------------------------------------------------------
-    A      12     13,986   EMPIRICAL         -15,585        -7,185          4,736      14.5%
-                           gaussian          -18,883        -9,255          4,456      16.1%
-                           DELTA               3,298         2,070            280      -1.6%
-    B      25     29,138   EMPIRICAL         -13,657        -1,986         15,636       6.3%
-                           gaussian          -18,304        -4,408         15,382       7.7%
-                           DELTA               4,648         2,422            253      -1.3%
-    C      50     58,276   EMPIRICAL          -4,366        13,544         39,214       1.6%
-                           gaussian           -8,818        10,835         38,822       2.2%
-                           DELTA               4,452         2,709            392      -0.6%
+    A      12     14,764   EMPIRICAL         -14,532        -6,786          5,112      13.8%
+                           gaussian          -19,990        -9,810          4,687      16.2%
+                           DELTA               5,457         3,024            425      -2.3%
+    B      25     30,759   EMPIRICAL         -12,777          -969         16,762       5.6%
+                           gaussian          -19,404        -4,711         16,214       7.7%
+                           DELTA               6,627         3,742            548      -2.1%
+    C      50     61,518   EMPIRICAL          -2,437        15,848         42,029       1.2%
+                           gaussian           -9,424        11,356         40,949       2.2%
+                           DELTA               6,987         4,493          1,080      -0.9%
 
     READ THE DELTA ROW. Where EMPIRICAL is BELOW gaussian, the Gaussian band was TOO TIGHT
     and would have raised a false INVALIDATION. Where it is ABOVE, the Gaussian was TOO
@@ -55,10 +50,9 @@
 ========================================================================================================
     CP     wk              L=3           L=6          L=12      spread
     ------------------------------------------------------------------------
-    A      12          -13,861       -15,585       -11,486       4,099
-    B      25          -12,354       -14,136       -12,235       1,902
-    C      50           -2,789        -4,077        -1,533       2,544
+    A      12          -13,827       -14,532       -11,936       2,596
+    B      25          -12,471       -12,881       -12,490         409
+    C      50           -1,037        -1,605        -1,098         568
 
-    Largest p01 movement across block lengths: $4,099
-    >>> THE INVALIDATION THRESHOLD IS NOT STABLE across reasonable dependence choices.
-    >>> The protocol must carry this as a RANGE, not a single number.
+    Largest p01 movement across block lengths: $2,596
+    >>> p01 is stable across block lengths; the single reported band is defensible.

@@ -42,49 +42,38 @@ def max_dd(cum):
 
 
 def main():
-    d = pd.read_csv(os.path.join(ROOT, "runs/RR_W003_X9A_CONTRACT/out/weekly_p1_x9a.csv"))
+    # CANONICAL SERIES. A first version used RR_W003's weekly file, which buckets weeks by a
+    # Sunday-ending DATE LABEL and yields maxDD $24,212.92. The canonical figures come from
+    # W103/W110, which buckets by ISO WEEK ON SESSION DATE and yields $22,930.67 - matching the
+    # published $22,931 to $0.33. Same trades, totals agree to $80; only the bucketing differs.
+    d = pd.read_csv(os.path.join(ROOT, "runs/WE_W110_XMDIVERSE/out/weekly.csv"))
     d = d.rename(columns={d.columns[0]: "week"})
-    d["week"] = pd.to_datetime(d["week"])
-    # drop the final partial week: it is labelled 2026-08-02 and spans past the 2026-07-31
-    # research cutoff. It is not a seal read - the value was computed pre-seal - but a partial
-    # week would bias the block distribution.
-    # KEEP all 213 weeks. Dropping the final (partial) week moves the raw mean from $1,393.95 to
-    # $1,404.91, and $1,393.95 is what CURRENT_BASELINE's $1,394 headline is computed from. The
-    # partial week's value was computed pre-seal in a committed run - keeping it is not a seal read.
-    x = d["p1"].values.astype(float)
+    x = d["p1"].values.astype(float)   # all 213 ISO weeks, the canonical population
     n = len(x)
 
     P("=" * 104)
     P("=== FORWARD PROTOCOL AMENDMENT - empirical bootstrap replaces the Gaussian bands")
     P("=== Directive s29. Nothing sealed is read. The scaling factor is frozen, not refitted.")
     P("=" * 104)
-    P(f"    weekly observations         {n}   {d['week'].min().date()} -> {d['week'].max().date()}")
+    P(f"    weekly observations         {n}   {d['week'].iloc[0]} -> {d['week'].iloc[-1]}  (ISO weeks)")
 
-    # ---------------------------------------------------------------- CORRECTED scaling
-    # FWD_DD_RECONCILIATION established that the canonical $22,931 denominator was computed on a
-    # COMMISSION-ONLY cost model while the $1,394 numerator is NET OF THE MODELLED SPREAD. Mixing
-    # them flattered the fixed-DD headline by 5.2 %. The internally consistent factor uses the
-    # FROZEN spread-inclusive stream on BOTH sides. Correcting a defect before the seal is read is
-    # legal pre-read repair (s29), not outcome-driven retuning.
+    # ---------------------------------------------------------------- FROZEN scaling
+    # The canonical pair IS internally consistent: $1,394 and $22,931 both come from this series,
+    # which is net of commission AND the modelled spread (run_we_w103.py:95). k is therefore
+    # derived from this series' own drawdown, and it reproduces the published headline.
     dd_series = max_dd(np.cumsum(x))
     K_FROZEN = TARGET_DD / dd_series
-    k_series = K_FROZEN
     xs = x * K_FROZEN
     P(f"    raw weekly mean             ${x.mean():>10,.2f}   <- baseline quotes $1,394  MATCHES")
-    P(f"    weekly maxDD (same stream)  ${dd_series:>10,.2f}   <- NOT the canonical $22,931")
-    P(f"    CORRECTED scaling factor k  {K_FROZEN:>10.6f}   (= {TARGET_DD:,.0f} / {dd_series:,.2f})")
-    P(f"    scaled weekly mean          ${xs.mean():>10,.2f}   <- CORRECTED; was quoted $1,230")
+    P(f"    weekly maxDD (ISO-week)     ${dd_series:>10,.2f}   <- canonical $22,931, matches to $0.33")
+    P(f"    FROZEN scaling factor k     {K_FROZEN:>10.6f}   (= {TARGET_DD:,.0f} / {dd_series:,.2f})")
+    P(f"    scaled weekly mean          ${xs.mean():>10,.2f}   <- protocol quotes $1,230  MATCHES")
     P(f"    scaled weekly sd            ${xs.std(ddof=1):>10,.2f}")
     P("")
-    P("    " + "!" * 92)
-    P("    !! DISCREPANCY RESOLVED by FWD_DD_RECONCILIATION - the canonical $22,931 was DEFECTIVE.")
-    P("    !! The $1,394 numerator is NET OF THE MODELLED SPREAD (`baseline_trade_net`).")
-    P("    !! The $22,931 denominator matches a COMMISSION-ONLY stream (`pnl_commonly`) to $78.")
-    P("    !! Mixing them flattered the fixed-DD headline: $1,230/wk instead of $1,166/wk, +5.2 %.")
-    P("    !! Both sides now use the FROZEN spread-inclusive stream. Corrected BEFORE the seal was")
-    P("    !! read, which is legal pre-read repair, not outcome-driven retuning.")
-    P("    !! P(cum<0) is SCALE-INVARIANT and is unchanged by this correction.")
-    P("    " + "!" * 92)
+    P("    NOTE ON BUCKETING, which is a real sensitivity and not a defect: the SAME trades under a")
+    P("    Sunday-ending date label (RR_W003) give maxDD $24,212.92 rather than $22,930.67 - a 5.6 %")
+    P("    difference from week-boundary placement alone. The bands below are built on the ISO-week")
+    P("    convention, so THE FORWARD READ MUST USE ISO WEEKS ON SESSION DATE to be comparable.")
 
     # ---------------------------------------------------------------- distribution shape
     from scipy import stats as st

@@ -55,29 +55,27 @@ wrong in scope.** There is substantial recent evidence; it is `DISCOVERY_CONSUME
 rather than clean prospective confirmation. **`RECENT ≠ FORWARD`, and burned current-regime
 evidence is still evidence.**
 
-Fixed standard windows, declared before computing. Scaled at the **corrected `k = 0.836124`** (`runs/FWD_DD_RECONCILIATION/`).
+Fixed standard windows, declared before computing. Scaled at the canonical **`k = 0.882879`**, on the `WE_W103`/`WE_W110` ISO-week series.
 Source: `runs/RECENT_REGIME_PANEL_20260827/`.
 
 | object | window | mean $/wk | positive wks | t |
 |---|---|---:|---:|---:|
-| **`P1/PCT`** | **last 13w** | **−$241** | **38.5 %** | **−0.19** |
-| | last 26w | $508 | 50.0 % | 0.54 |
-| | last 52w | $1,054 | 51.9 % | 1.73 |
-| | last 104w | $1,618 | 56.7 % | 3.27 |
-| | FULL 213w | **$1,166** | 57.7 % | 4.17 |
-| **`XM`** | last 13w | $480 | 53.8 % | 0.31 |
-| | last 26w | $1,474 | 53.8 % | 1.42 |
-| | FULL 213w | $784 | 48.8 % | 3.13 |
-| **P1+XM** *(unweighted sum, NOT Portfolio B)* | last 13w | $239 | 38.5 % | 0.10 |
-| | FULL 213w | $1,950 | 60.1 % | 4.96 |
+| **`P1/PCT`** | **last 13w** | **−$294** | **30.8 %** | **−0.24** |
+| | last 26w | $495 | 53.8 % | 0.59 |
+| | last 52w | $1,116 | 55.8 % | 1.90 |
+| | last 104w | $1,713 | 56.7 % | 3.29 |
+| | FULL 213w | **$1,230** | 56.3 % | 4.16 |
+| **`XM`** | last 13w | $507 | 53.8 % | 0.31 |
+| | last 26w | $1,557 | 53.8 % | 1.42 |
+| | FULL 213w | $808 | 48.8 % | 3.05 |
+| **P1+XM** *(unweighted sum, NOT Portfolio B)* | last 13w | $213 | 30.8 % | 0.09 |
+| | FULL 213w | $2,039 | 59.6 % | 4.94 |
 
-**Two validations:** the FULL P1 row reproduces the **corrected** baseline **$1,166 / t 4.16**, and
-XM's full total scales back to **$199,760 raw**, reproducing the independently corrected
-**$199,766** ($577.36/trade × 346).
+**Validation:** the FULL P1 row reproduces the canonical baseline **$1,230 / 56.3 % / t 4.16** exactly.
 
 > ### ⚠️ **The incumbent's recent-regime evidence is WEAK, and this is the honest reading.**
 > `P1/PCT` is **negative over the last 13 weeks** and its trailing mean **declines monotonically as
-> the window shortens** — $1,618 (104w) → $1,054 (52w) → $508 (26w) → −$241 (13w). That is the
+> the window shortens** — $1,713 (104w) → $1,116 (52w) → $495 (26w) → −$294 (13w). That is the
 > shape of decay, or of normal variation, and **13 weeks cannot distinguish them** (the forward
 > protocol puts P(losing quarter) at 14.5 % with nothing wrong).
 >
@@ -87,23 +85,23 @@ XM's full total scales back to **$199,760 raw**, reproducing the independently c
 > ### ⚠️ **The diversification argument has deteriorated in the current regime.**
 > | window | ρ(P1, XM) | mean XM **when P1 loses** |
 > |---|---:|---:|
-> | FULL | **+0.098** | **+$569** |
-> | last 104w | +0.198 | −$205 |
-> | last 52w | +0.268 | −$548 |
-> | last 26w | +0.410 | −$586 |
-> | last 13w | **+0.393** | **−$1,368** |
+> | FULL | **+0.081** | **+$622** |
+> | last 104w | +0.193 | −$34 |
+> | last 52w | +0.258 | −$321 |
+> | last 26w | **+0.464** | **−$1,231** |
+> | last 13w | +0.369 | **−$1,243** |
 >
-> XM's role in the book was to pay *when P1 does not*. **Over the full record it does (+$569). Over
+> XM's role in the book was to pay *when P1 does not*. **Over the full record it does (+$622). Over
 > the last year it does the opposite.** Correlation has risen roughly 4× and the conditional payoff
 > has flipped sign. **This directly weakens Portfolio B's rationale in the current regime** and must
 > be carried into any capital decision.
 
-**Concentration is severe recently:** P1's last-26w net is **92.8 % from one week**, and its top-5
-weeks are **293.6 %** of net — i.e. everything else is negative. XM's last-26w top-1 is 31.0 %.
+**Concentration is severe recently:** P1's last-26w net is **88.1 % from one week**, and its top-5
+weeks are **276.7 %** of net — i.e. everything else is negative. XM's last-26w top-1 is 31.0 %.
 
 ### One number I could not reproduce
 The review quoted XM's last ~14 weeks as *~$499/wk, **35.7 %** positive, t ~0.25*. I measure
-**$480/wk, 53.8 % positive, t 0.31** over 13 weeks (at the corrected `k`; $507 at the old one). **Mean and t agree; the positive-week rate does
+**$507/wk, 53.8 % positive, t 0.31** over 13 weeks. **Mean and t agree; the positive-week rate does
 not.** My convention counts XM's silent weeks as **$0** (non-positive) rather than dropping them —
 dropping them would condition on having traded and inflate both statistics. The residual gap is
 likely window length (13 vs 14) or a different silent-week convention. **Flagged, not reconciled.**
@@ -119,7 +117,7 @@ available while these objects were being built and cannot be upgraded into confi
 
 | | |
 |---|---|
-| max DD (research) | **$24,213 P1 (corrected)** · ⚠️ $11,489 B **SUSPECT, unaudited** |
+| max DD (research) | **$22,931** P1 · $11,489 B · ⚠️ both are **ISO-week** figures; a Sunday-ending label gives P1 **$24,213 (+5.6 %)** |
 | both legs in market | **0.9 %** of all minutes · opposing directions **0.3 %** |
 | max gross / netted | **3 / 3 contracts** · netting changes exposure on **1.85 %** of in-market minutes |
 | forward tail | empirical bootstrap: skew **+1.888**, excess kurtosis **8.717** |
@@ -127,9 +125,10 @@ available while these objects were being built and cannot be upgraded into confi
 > **A master allocator is NOT required for these two** (crossover 1.85 %). ⚠️ **That is specific to
 > these two** (§23–24) and must not be generalised to a third, high-frequency NQ sleeve.
 
-✅ **Defect CLOSED.** `runs/FWD_DD_RECONCILIATION/` established the canonical $22,931 was a **commission-only** drawdown
-while the numerator is **net of the modelled spread**. Corrected to `k = 0.836124` → **$1,166/wk**.
-⚠️ **Portfolio B was NOT audited and remains SUSPECT.**
+✅ **No defect.** A claimed cost-model defect was **retracted the same day** — the canonical pair is
+internally consistent. ⚠️ **Portfolio B's $2,012 carries a different caution:** its inverse-vol
+weights are a **single full-sample std applied in-sample**, and `P1+XM` was a **best-of-six**
+selection whose preregistered primary came second.
 
 ## 5. Owner decisions outstanding
 

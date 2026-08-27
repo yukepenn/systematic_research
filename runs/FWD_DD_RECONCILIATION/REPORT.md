@@ -1,4 +1,38 @@
-# FWD_DD_RECONCILIATION — the canonical $22,931 was defective, and the headline was 5.2 % too high
+# FWD_DD_RECONCILIATION — ⚠️ THIS REPORT'S CONCLUSION WAS WRONG AND IS RETRACTED
+
+> ## ⚠️ RETRACTION — issued 2026-08-27, same day, before the seal was read
+>
+> **This report concluded that the canonical `$22,931` drawdown was computed on a commission-only
+> cost model and that the `$1,230/wk` headline therefore mixed two cost worlds. THAT CONCLUSION IS
+> FALSE.** The canonical pair is **internally consistent**.
+>
+> **What actually happened.** `$1,394` and `$22,931` both come from `runs/WE_W103_CONSOLIDATE/`
+> (persisted as `runs/WE_W110_XMDIVERSE/out/weekly.csv`), which buckets weeks by **ISO week keyed on
+> session date** and whose series **is** net of commission *and* the modelled spread
+> (`run_we_w103.py:95`, `s_[si] += x["pnl"] - rate * x["u"]`). That series gives
+> **mean $1,393.57, maxDD $22,930.67 — matching the published $22,931 to $0.33** — and
+> `k = 20,245/22,930.67 = 0.882879` reproduces **$1,230.36/wk**.
+>
+> **My error.** I assumed `RR_W003`'s weekly file was the canonical series. It is not — it buckets
+> by a **Sunday-ending date label**, giving maxDD `$24,212.92`. Same trades, totals agreeing to
+> **$80**, but a **5.6 % different drawdown from week-boundary placement alone**. Failing to match
+> it, I searched a space of cost-model and population variants and picked the nearest
+> (`pnl_commonly`, $78 away) — **a false positive from an under-constrained search, which is exactly
+> the multiplicity error this campaign polices everywhere else.** I ran a search and reported its
+> argmax as a mechanism.
+>
+> **What survives, and it is worth keeping:** *max drawdown is sensitive to week-boundary
+> convention by $1,282 (5.6 %) on this very series.* **The forward read must therefore bucket by ISO
+> week on session date**, or it will compare a realised drawdown against a threshold built on a
+> different convention.
+>
+> **Everything propagated from the false diagnosis has been reverted**: `k = 0.882879`,
+> `$1,230/wk`, `maxDD $22,931`, and the bootstrap bands are all restored to the canonical basis.
+> The sections below are left as written, for the record.
+
+---
+
+# ~~FWD_DD_RECONCILIATION — the canonical $22,931 was defective~~ (RETRACTED, see above)
 
 | | |
 |---|---|

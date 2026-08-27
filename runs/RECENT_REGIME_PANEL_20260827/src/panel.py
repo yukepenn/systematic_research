@@ -22,10 +22,9 @@ ROOT = (r"D:\OneDrive - Washington University in St. Louis\TradingResearch"
         r"\systematic_research")
 OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "out")
 os.makedirs(OUT, exist_ok=True)
-K_FROZEN = 20245.0 / 24212.92        # CORRECTED per FWD_DD_RECONCILIATION. The canonical
-                                     # 22,931 denominator was a COMMISSION-ONLY drawdown while
-                                     # the numerator is net of the modelled spread; mixing them
-                                     # flattered every fixed-DD figure by 5.2 %.
+K_FROZEN = 20245.0 / 22930.67        # canonical, W103/W110 ISO-week series. An earlier version
+                                     # used 24,212.92 on a mistaken cost-model diagnosis; see the
+                                     # CORRECTION in runs/FWD_DD_RECONCILIATION/REPORT.md.
 WINDOWS = [13, 26, 52, 104]           # fixed standard windows, declared before results
 _fh = open(os.path.join(OUT, "panel.txt"), "w", encoding="utf-8")
 
@@ -52,22 +51,17 @@ def main():
     P("=" * 100)
 
     # ---------------------------------------------------------------- P1 weekly
-    d = pd.read_csv(os.path.join(ROOT, "runs/RR_W003_X9A_CONTRACT/out/weekly_p1_x9a.csv"))
-    d = d.rename(columns={d.columns[0]: "week"})
-    d["week"] = pd.to_datetime(d["week"])
-    d = d.sort_values("week").reset_index(drop=True)
+    # CANONICAL weekly series: W103/W110, ISO week keyed on SESSION DATE, carrying BOTH legs.
+    # This is the series the published $1,394 / $22,931 / $1,230 / $2,012 figures come from.
+    # A first version of this panel read P1 from RR_W003 (Sunday-ending date labels) and rebuilt
+    # XM from the trade ledger on a THIRD convention. Three bucketings in one comparison is how a
+    # 5.6 % drawdown difference gets mistaken for a cost-model defect. One file, one axis, now.
+    d = pd.read_csv(os.path.join(ROOT, "runs/WE_W110_XMDIVERSE/out/weekly.csv"))
+    d = d.rename(columns={d.columns[0]: "week"}).reset_index(drop=True)
 
-    # ---------------------------------------------------------------- XM weekly, from the ledger
-    X = pd.read_csv(os.path.join(ROOT, "runs/RR_W001_ACTION_VALUE_LEDGER/out/ledger_xm.csv"))
-    X["session_date"] = pd.to_datetime(X["session_date"])
-    X["week"] = X["session_date"] + pd.to_timedelta(6 - X["session_date"].dt.weekday, unit="D")
-    xw = X.groupby("week")["net_research"].sum()
-    # reindex onto P1's weekly axis so a quiet XM week is a real ZERO, not a missing row
-    xm = xw.reindex(d["week"], fill_value=0.0).values
-    d["xm"] = xm
-    P(f"\n    P1 weekly rows {len(d)}   {d['week'].min().date()} -> {d['week'].max().date()}")
-    P(f"    XM trades {len(X):,}, active weeks {int((xw != 0).sum())} of {len(d)} "
-      f"({100*(xw != 0).sum()/len(d):.1f} %)")
+    P(f"\n    weekly rows {len(d)}   {d['week'].iloc[0]} -> {d['week'].iloc[-1]}  (ISO weeks)")
+    P(f"    XM active weeks {int((d['xm'] != 0).sum())} of {len(d)} "
+      f"({100*(d['xm'] != 0).mean():.1f} %)")
     P("    NOTE: XM's silent weeks are counted as $0, not dropped. Dropping them would inflate")
     P("    both its mean and its positive-week rate by conditioning on having traded.")
 

@@ -14,17 +14,17 @@
 
 ## 1. ⚠️ Read this before any checkpoint: what forward evidence CAN and CANNOT do
 
-Derived from the frozen values themselves (weekly $ at fixed DD, **$1,166 corrected** at t = 4.16 over
-213.1 research weeks. **Portfolio B's $2,012 is SUSPECT and no B band is quoted** — see §4):
+Derived from the frozen values themselves (weekly $ at fixed DD, **$1,230** at t = 4.16 over 213
+ISO research weeks, `k = 0.882879`. **No Portfolio B band is quoted** — see §4):
 
 | checkpoint | sessions | expected cum. | what it can actually resolve |
 |---|---:|---:|---|
-| **A** | 60 (~3 mo) | $13,986 | **t = 0.99.** Resolves essentially nothing about the mean |
-| **B** | 126 (~6 mo) | $29,138 | **t = 1.43.** Still cannot confirm |
-| **C** | 252 (~1 yr) | $58,276 | **t = 2.02.** Weak confirmation at best |
+| **A** | 60 (~3 mo) | $14,764 | **t = 1.03.** Resolves essentially nothing about the mean |
+| **B** | 126 (~6 mo) | $30,759 | **t = 1.49.** Still cannot confirm |
+| **C** | 252 (~1 yr) | $61,518 | **t = 2.10.** Weak confirmation at best |
 
-> ### ⚠️ **A LOSING QUARTER HAS A 14.5 % PROBABILITY IF NOTHING IS WRONG AT ALL.**
-> _(empirical bootstrap, `runs/FWD_BOOTSTRAP_20260827/`; the Gaussian said 16.1 %)_
+> ### ⚠️ **A LOSING QUARTER HAS A 13.8 % PROBABILITY IF NOTHING IS WRONG AT ALL.**
+> _(empirical bootstrap, `runs/FWD_BOOTSTRAP_20260827/`; the Gaussian said 16.2 %)_
 > ### **No checkpoint here can CONFIRM the edge. They exist to detect GROSS BREAKAGE.**
 > Anyone reading a negative CPA as evidence against the strategy is reading noise. This is stated
 > **first**, in advance, because the temptation to over-read the first quarter is the single most
@@ -58,8 +58,7 @@ An unscheduled read burns the seal and must be recorded in `LOCKED_FORWARD.md` a
 ($4.36/ctrRT commission **plus** modelled spread — P1 $14.44, XM $12.50).
 
 **Expected sign: POSITIVE.** Secondary metrics, all reported, none of them the decider:
-positive-week rate (expect **56.3 %** P1 / 59.2 % B), realised max DD (research **$24,213** P1 corrected /
-$11,489 B suspect),
+positive-week rate (expect **56.3 %** P1 / 59.2 % B), realised max DD (research **$22,931** P1 / $11,489 B, ISO-week basis),
 trade count vs the research rate, mean $/trade, right-tail retention, time under water, and
 **decision agreement** between the Python object and the NT8 executable.
 
@@ -74,27 +73,33 @@ Weekly P&L is **not Gaussian** and the test says so unambiguously: **skew +1.888
 
 | checkpoint | expected cum. | P(neg) | **HEALTHY** ≥ p25 | **WATCH** p05→p25 | **INVALIDATION** < p01 |
 |---|---:|---:|---|---|---|
-| CPA — 60 sessions | $13,986 | **14.5 %** | ≥ $4,736 | −$7,185 → $4,736 | **< −$15,585**  _(range −$11,486 … −$15,585)_ |
-| CPB — 126 sessions | $29,138 | **6.3 %** | ≥ $15,636 | −$1,986 → $15,636 | **< −$13,657**  _(range −$12,235 … −$14,136)_ |
-| CPC — 252 sessions | $58,276 | **1.6 %** | ≥ $39,214 | $13,544 → $39,214 | **< −$4,366**  _(range −$1,533 … −$4,077)_ |
+| CPA — 60 sessions | $14,764 | **13.8 %** | ≥ $5,112 | −$6,786 → $5,112 | **< −$14,532**  _(block-length range −$11,936 … −$14,532)_ |
+| CPB — 126 sessions | $30,759 | **5.6 %** | ≥ $16,762 | −$969 → $16,762 | **< −$12,777**  _(range −$12,471 … −$12,881)_ |
+| CPC — 252 sessions | $61,518 | **1.2 %** | ≥ $42,029 | $15,848 → $42,029 | **< −$2,437**  _(range −$1,037 … −$1,605)_ |
 
 ### Gaussian — SECONDARY DIAGNOSTIC ONLY, retained to show what it got wrong
 
 | checkpoint | P(neg) | HEALTHY | WATCH | INVALIDATION | **error in the INVALIDATION band** |
 |---|---:|---|---|---|---|
-| CPA | 16.1 % | ≥ $4,705 | −$9,772 → $4,705 | < −$19,938 | **$3,482 TOO LOOSE** |
-| CPB | 7.7 % | ≥ $16,242 | −$4,654 → $16,242 | < −$19,328 | **$4,908 TOO LOOSE** |
-| CPC | 2.2 % | ≥ $40,993 | $11,440 → $40,993 | < −$9,311 | **$4,701 TOO LOOSE** |
+| CPA | 16.2 % | ≥ $4,687 | −$9,810 → $4,687 | < −$19,990 | **$5,457 TOO LOOSE** |
+| CPB | 7.7 % | ≥ $16,214 | −$4,711 → $16,214 | < −$19,404 | **$6,627 TOO LOOSE** |
+| CPC | 2.2 % | ≥ $40,949 | $11,356 → $40,949 | < −$9,424 | **$6,987 TOO LOOSE** |
 
 > ### ⚠️ **The Gaussian bands erred in the dangerous direction.** Because the return distribution is
 > ### **right-skewed**, its left tail is *less* extreme than a Gaussian assumes — so the Gaussian
 > ### INVALIDATION threshold sat **$3.5–4.9k too low**, and **a genuinely broken strategy could have
 > ### passed it.** The empirical bands trigger earlier and are now primary.
 
-> ### ✅ **RESOLVED 2026-08-27** — `runs/FWD_DD_RECONCILIATION/` found the canonical **$22,931** was computed on a
-> **commission-only** stream while the **$1,394** numerator is **net of the modelled spread**. Mixing
-> them flattered the headline by **5.2 %**. All bands above now use **`k = 0.836124`**, the frozen
-> spread-inclusive stream on **both** sides. `P(neg)` is scale-invariant and unchanged.
+> ### ✅ **RESOLVED 2026-08-27, and the first resolution was WRONG.**
+> `runs/FWD_DD_RECONCILIATION/` briefly claimed the canonical $22,931 was a commission-only
+> drawdown; **that was retracted the same day.** Both $1,394 and $22,931 come from the same
+> net series (`WE_W103_CONSOLIDATE`, ISO week on session date), reproducing **$22,930.67** and
+> **$1,230.36/wk**. Bands use **`k = 0.882879`**.
+>
+> ### ⚠️ **BUCKETING IS BINDING ON THE FORWARD READ.** The same trades under a
+> Sunday-ending week label give maxDD **$24,212.92** instead of $22,930.67 — **5.6 % from
+> week-boundary placement alone.** **The forward read MUST bucket by ISO week on session
+> date**, or it compares a realised drawdown against a threshold built on another convention.
 >
 > ### ⚠️ **THE INVALIDATION THRESHOLD IS NOT A SINGLE NUMBER.** Across preregistered block
 > lengths (3 / 6 / 12 weeks) p01 moves by up to **$4,099**. The ranges are shown above and the **most
@@ -123,7 +128,7 @@ error — see `FROZEN_INCUMBENT` §1.
 
 ### ⚠️ Explicit NON-triggers — none of these may cause a parameter change
 
-- **a negative CPA** — **14.5 %** likely with nothing wrong (empirical)
+- **a negative CPA** — **13.8 %** likely with nothing wrong (empirical)
 - **any single losing week, month, or quarter**
 - **a drawdown inside the research max** ($22,931 P1 / $11,489 B)
 - **XM being quiet** — it trades ~1.6×/week and silence is its normal state
