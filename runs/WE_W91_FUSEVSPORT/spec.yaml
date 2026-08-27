@@ -1,0 +1,109 @@
+run_id: WE_W91_FUSEVSPORT
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-26
+status: PREREGISTERED
+authority: "OWNER DIRECTIVE post-W88 section 3 (the main mechanistic hypothesis)"
+
+title: >
+  FUSION vs INDEPENDENT RISK BUDGETS. W67 established that P1 is a Solar ensemble OR-GATED with
+  B-MOM. The challenger runs the same two ingredients as separate sleeves. Same ingredients, two
+  combiners. Which is better, and WHY - four candidate explanations, each separately testable.
+
+# ---------------------------------------------------------------------------------------------
+# 0. THE HYPOTHESIS, AS THE OWNER STATED IT
+# ---------------------------------------------------------------------------------------------
+owner_hypothesis: >
+  "separating BMOM and the Solar/X9-family directional engine into independently risk-budgeted
+  sleeves may be superior to fusing them through an OR-gated state machine."
+  This is a MECHANISM hypothesis, NOT a fact.
+
+why_this_is_answerable: >
+  The fused object and the portfolio object are built from the SAME TWO INGREDIENTS. P1 is
+  long_obj(TG_for(bmom)); the ingredients are the Solar ensemble and the B-MOM channel. A
+  portfolio of {Solar alone, B-MOM traded directly} uses exactly those two and nothing else.
+  Any difference is attributable to the COMBINER, which is what makes this a clean test rather
+  than another object comparison.
+
+# ---------------------------------------------------------------------------------------------
+# 1. THE LADDER - one thing changes per rung
+# ---------------------------------------------------------------------------------------------
+objects:
+  SOLAR:       "long_obj(TG_for(zeros)) - the Solar ensemble with an EMPTY OR slot. W67 measured
+                this at 7.26 pts/session and called it 'the honest floor if B-MOM's edge is a
+                4-year artifact'. It has never been run as a standalone stream in a portfolio."
+  P1:          "long_obj(TG_for(bmom)) - the incumbent FUSED object."
+  X9a:         "long_obj(TG_for(X9a channel)) - the same fusion with a different channel."
+  BMOM_std:    "sfills(bmom) - the channel traded directly, LONG AND SHORT, its own box."
+  BMOM_L_std:  "sfills(where(bmom>0,1,0)) - the channel traded directly, LONG ONLY, its own box.
+                This rung exists ONLY to isolate explanation (c)."
+  PORT_SB:     "SOLAR + BMOM_std as independent sleeves  <- the direct counterpart of P1"
+  PORT_SBL:    "SOLAR + BMOM_L_std                        <- (c) isolated: fusion is long-only,
+                                                              so does the portfolio's advantage
+                                                              come from keeping the short leg?"
+  PORT_XB:     "X9a + BMOM_std at 2:3  <- the challenger"
+
+# ---------------------------------------------------------------------------------------------
+# 2. THE FOUR CANDIDATE EXPLANATIONS, EACH WITH ITS OWN TEST
+# ---------------------------------------------------------------------------------------------
+E_a_independent_risk_budgets:
+  claim: "the portfolio wins because two sleeves carry two session boxes and therefore two
+          independent risk budgets, instead of one box gating both ingredients."
+  test: "compare PORT_SB against P1 at MATCHED nominal exposure, then re-run PORT_SB with a
+         SINGLE COMBINED box applied to the summed sleeve P&L. If the advantage survives the
+         combined box it is not the budget; if it disappears the budget IS the mechanism."
+  note: "W90 H3 found two boxes LOSE on all three legs for the BMOM long/short split, and
+         W51b/W53 found the same for the day/night split. The prior is that this explanation
+         FAILS. It is tested anyway because the partition is different."
+
+E_b_entry_timing:
+  claim: "the portfolio wins because the sleeves enter at different times."
+  test: "minute-level occupancy overlap; same-session overlap; entry-time distributions;
+         the fraction of minutes each sleeve is in a position with the other flat."
+  metric_committed_in_advance: "Jaccard overlap of occupied minutes, and share of each sleeve's
+         contract-minutes that are SOLO."
+
+E_c_short_leg:
+  claim: "the portfolio wins because fusion is long-only and discards BMOM's short leg entirely."
+  test: "PORT_SBL (long-only BMOM) vs PORT_SB (both sides). The difference IS explanation (c)."
+  size_known_going_in: "W90 FACT: the short leg is $83,691 of BMOM_std's $252,258."
+
+E_d_rescaling:
+  claim: "the portfolio does not win at all - it is leverage or a denominator effect."
+  test: "exposure-match in CONTRACT-MINUTES (repo rule N1 != N2, binding since W39 amendment 2),
+         and score the corrected rolling gate with the oracle battery run FIRST as a precondition."
+
+# ---------------------------------------------------------------------------------------------
+# 3. MEASUREMENTS THE OWNER NAMED, ALL REQUIRED
+# ---------------------------------------------------------------------------------------------
+required_outputs:
+  - "event overlap (entries within the same session, and within the same minute)"
+  - "same-session overlap"
+  - "opposing-position frequency (minutes where one sleeve is long while another is short)"
+  - "contribution by side"
+  - "contribution by regime (per year; and per W50 session class, labelled TERMINAL because that
+     taxonomy is built from the session's own realised path - W77 amendment 1 rule)"
+  - "underwater correlation (W56's criterion)"
+  - "weekly correlation (W85 defect 3: weekly, never daily)"
+  - "max and top-5 drawdowns, RAW, at matched nominal exposure"
+  - "positive-week rate"
+  - "expected return per unit real risk: weekly $ at a fixed max drawdown, and weekly / |worst week|"
+
+# ---------------------------------------------------------------------------------------------
+# 4. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "The wave ANSWERS a mechanism question. It does not promote, demote or create an object."
+  - "If PORT_SB beats P1 on >= 2 of the three gate legs at matched exposure, the owner's
+     hypothesis is SUPPORTED and the explanation is whichever of (a)-(d) survives its own test."
+  - "If PORT_SB loses, the hypothesis is FALSIFIED for the Solar/BMOM pair specifically, and the
+     challenger's advantage must be attributed to the X9a channel rather than to the combiner.
+     That would be a materially different story from the one the campaign is currently telling
+     and it must be said in those words."
+  - "If (a), (b), (c) and (d) all fail to explain a real difference, report UNKNOWN. A decomposi-
+     tion that does not close is a finding; inventing a fifth explanation post hoc is not."
+
+honesty_clauses:
+  - "SOLAR has never been run as a portfolio stream. It is not a new discovery - W67 measured it -
+     but every number produced for it here is first-time and in-sample."
+  - "All of this is 2022-07 -> 2026-07, discovery-consumed. No forward window exists."
+  - "The W50 session-class table is OUTCOME-CONDITIONED and carries no verdict."
