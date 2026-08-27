@@ -1,0 +1,85 @@
+================================================================================================================
+=== MS01A - BBO DATA CONTRACT AUDIT.  Diagnostic only. No model, no feature, no promotion.
+================================================================================================================
+    sessions 58   anchored on TRADE timestamps, ms resolution
+    ... 20/58  [27s]
+    ... 40/58  [59s]
+
+================================================================================================================
+=== s7  EVENT ORDERING - can we trust sequence across Last/Bid/Ask?
+================================================================================================================
+    sessions where the FULL stream is time-sorted        58/58
+    sessions where EACH series is individually sorted    58/58
+    adjacent events sharing an identical timestamp       632,562,679 of 780,167,968 (81.1 %)
+
+    >>> A LARGE FRACTION OF EVENTS SHARE A TIMESTAMP. Exchange ordering CANNOT be
+    >>> recovered at sub-millisecond resolution from this export. Per s7, features
+    >>> requiring exact event sequencing (true aggressor side, queue inference,
+    >>> quote-then-trade causality) ARE NOT ADMISSIBLE. Use coarser aggregation.
+
+================================================================================================================
+=== s8  WHAT IS `volume` ON THE BID/ASK SERIES?  Verified, not assumed.
+================================================================================================================
+    bip       median        mean         max   frac == 1
+    ----------------------------------------------------
+    0 Last       1.0        1.09         984      96.4%
+    1 Bid        2.0        2.00        1070      44.3%
+    2 Ask        2.0        2.01        1403      43.9%
+
+================================================================================================================
+=== s6  QUOTE FRESHNESS - is MS01's 3.000-tick RTH median stale-pair biased?
+================================================================================================================
+    trades with a missing side                     0.000 %
+    bid age    median       0 ms   p90        0   p99        16   max      16004
+    ask age    median       0 ms   p90        0   p99        16   max      17772
+    max(age)   median       0 ms   p90        0   p99        48   max      17772
+
+    locked  (ask == bid)   0.014 %
+    crossed (ask <  bid)   0.001 %
+    MS01 discarded ask <= bid, i.e. 0.015 % of observations
+
+    filter                               n    share  median spr     mean     p90
+    ----------------------------------------------------------------------------
+    RTH, MS01 convention        22,719,741    72.6%       4.000    4.451   7.000
+    RTH, both sides <= 50ms     22,599,138    72.2%       4.000    4.450   7.000
+    RTH, both sides <= 100ms    22,676,347    72.5%       4.000    4.451   7.000
+    RTH, both sides <= 250ms    22,712,987    72.6%       4.000    4.451   7.000
+    RTH, both sides <= 500ms    22,718,720    72.6%       4.000    4.451   7.000
+    RTH, both sides <= 1000ms   22,719,528    72.6%       4.000    4.451   7.000
+
+    >>> MS01 convention median 4.000 ticks   vs   strictly-fresh median 4.000
+    >>> The spread does NOT collapse under strict freshness. MS01's measurement is
+    >>> materially STRENGTHENED - the wide spread is real, not a pairing artifact.
+
+================================================================================================================
+=== s9  TRADES vs RECONSTRUCTED BBO - the strongest independent check available
+================================================================================================================
+    all fresh<=100ms   n=22,676,347
+      at bid  11.19 %   at ask  11.28 %   inside  69.62 %   ABOVE ASK   3.91 %   BELOW BID   4.00 %
+      categories sum to 100.00 %   OK
+      (Last-mid)/tick  median +0.000  p05 -2.500  p95 +2.500
+      outside-spread rate = 7.91 %
+    RTH all   n=22,719,741
+      at bid  11.21 %   at ask  11.31 %   inside  69.57 %   ABOVE ASK   3.91 %   BELOW BID   4.00 %
+      categories sum to 100.00 %   OK
+      (Last-mid)/tick  median +0.000  p05 -2.500  p95 +2.500
+      outside-spread rate = 7.91 %
+
+================================================================================================================
+=== s9b  QUOTED vs EFFECTIVE SPREAD - they are not the same cost, and the gap is the finding
+================================================================================================================
+    QUOTED    spread  median  4.000  mean  4.451 ticks
+    EFFECTIVE spread  median  2.000  mean  2.750 ticks   (2 x |Last - mid|)
+    ratio effective/quoted (mean)   0.618
+
+    >>> The median trade prints AT THE MID of a wide quoted spread. Whatever the Bid/Ask
+    >>> series represent, they are NOT a spread that most prints actually pay.
+    >>> CONSEQUENCE: the quoted spread is the correct cost for a strategy that MUST CROSS,
+    >>> and an OVERSTATEMENT for one that can rest. MS01's friction is therefore a
+    >>> CONSERVATIVE UPPER BOUND for aggressive execution, not a certified fill cost.
+    >>> This is exactly why labels must be built from Ask_t / Bid_t directly (s5) rather
+    >>> than by subtracting a median spread from a mid-to-mid return.
+
+    A healthy reconstruction puts few trades OUTSIDE the contemporaneous spread.
+
+[94s] done
