@@ -149,3 +149,81 @@ Every W101 caveat travels verbatim and none of them is weakened by this wave:
 - **The exit policy was chosen from four arms here**, and the honest reading is not "X0 won" but
   "no exit policy helps" — which the 11-point stop curve establishes far more strongly than the
   four-arm comparison did.
+
+---
+
+## 8. ⚠️ ADVERSARIAL PASS (W102c) — three checks pass decisively and **one corrects my own headline**
+
+Directive §16 requires an adversarial audit when a result changes the frontier or a candidate is
+about to become live-ready. This qualifies on both.
+
+### A. ⚠️ `CORRECTION` — the anchor was one minute early, and it inflated the number
+
+This repo's bars are **END-STAMPED** and `we_channels` treats **09:31** as the RTH open bar. W101
+and W102 anchored the opening drive at the bar stamped 09:30 — whose *open* is the **09:29** price,
+one minute inside the pre-open. That is **not a lookahead** (09:29 is known at 09:45), but it is a
+mislabel, and it is not free:
+
+| anchor | n | **$/trade** | hit % | ρ vs P1 | **portfolio wk$ @ fixed DD** | **vs P1 alone** |
+|---|---|---|---|---|---|---|
+| 09:30 bar (= 09:29 px) — **W101/W102 as published** | 342 | **$675** | 57.3 % | −0.005 | $2,438 | **+98.1 %** |
+| **09:31 bar (= TRUE RTH open)** | 348 | **$560** | 54.3 % | +0.081 | **$1,785** | **+45.1 %** |
+| 09:31 anchor, decision moved to 09:46 | 362 | $450 | 53.6 % | −0.105 | $1,608 | +30.7 % |
+
+> **The defensible figures are the middle row: $560/trade, 54.3 % hit, and +45.1 % portfolio value
+> at fixed drawdown — not $675 and +98 %.** Every W101/W102 headline above this section is
+> superseded by it. The result is not knife-edge — all three anchors are positive and substantial,
+> and a one-minute shift is a labelling choice rather than a tuning knob — but the published number
+> was the most flattering of the three and that has to be said plainly.
+>
+> ρ with P1 is likewise **not** "−0.005". Across the three anchors it is **−0.105 to +0.081**, all
+> with |z| ≤ 1.5 on 213 weeks. The correct statement is **"indistinguishable from zero"**, and the
+> point estimate should never be quoted to three decimals again.
+
+### B. ✅ The obvious confound is real — and it is not the explanation
+
+When ES/RTY/YM disagree with NQ, NQ's own drive is **smaller**: mean |drive| **37.65 pts on
+CONFLICT sessions against 53.54 on CONFIRM**, a ratio of 0.703. So `XM_CONFLICT` genuinely selects
+small-drive sessions, and the count-matched null of W101b did not control for that.
+
+| |drive|-**decile**-matched subsample null, 2,000 draws | |
+|---|---|
+| real | **$675/trade** |
+| null mean / sd | $226 / $161 |
+| null p95 | $489 |
+| **percentile** | **99.7th** |
+
+**The edge is not the small-drive selection.** This is the sharpest check in the wave and it passes.
+
+### C. ✅ Not a fit to one arrangement — every reasonable composite works
+
+| composite | n | share | $/trade | hit % | net $ |
+|---|---|---|---|---|---|
+| ES/RTY/YM z-average *(as published)* | 342 | 33.9 % | $675 | 57.3 % | $230,989 |
+| ES/RTY/YM raw-return average | 366 | 36.3 % | $557 | 56.0 % | $203,969 |
+| ES/RTY/YM 2-of-3 sign vote | 323 | 32.2 % | $602 | 56.3 % | $194,389 |
+| **ES alone** | 204 | 20.4 % | $506 | 54.9 % | $103,251 |
+| **RTY alone** | 413 | 41.3 % | $477 | 55.7 % | $197,132 |
+| **YM alone** | 448 | 45.0 % | $543 | 54.5 % | **$243,192** |
+
+All six positive, hit rates 54.5–57.3 %. The three-market z-average is the best of six, which is
+itself a mild selection — but **any single index on its own already carries it**, and `YM alone`
+produces the largest total because it fires on 45 % of sessions.
+
+### D. ✅ Latency decay is mild — this is not a microstructure artifact
+
+| fill delay | +0 | +1 min | +2 min | +5 min | +10 min | +15 min |
+|---|---|---|---|---|---|---|
+| $/trade | $675 | $641 | $634 | $639 | $590 | $557 |
+| vs +0 | — | −5.0 % | −6.2 % | −5.4 % | −12.6 % | **−17.6 %** |
+
+A realistic one-to-two-minute execution delay costs about **5 %**. The edge is a six-hour horizon,
+not a one-minute one, and it does not evaporate at the touch.
+
+### Verdict of the adversarial pass
+
+**The candidate survives.** Its magnitude is **17 % smaller per trade and roughly half as valuable
+to the portfolio** as first published, its correlation with P1 should be described as
+indistinguishable from zero rather than by a point estimate, and the confound that would have
+killed it — small-drive selection — was measured and does not explain it.
+

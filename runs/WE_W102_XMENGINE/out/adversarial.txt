@@ -1,0 +1,46 @@
+======================================================================================================================
+=== A. THE ANCHOR. Bars are END-STAMPED; we_channels treats 09:31 as the RTH open bar,
+===    so the bar stamped 09:30 opens at the 09:29 price - one minute inside the pre-open.
+======================================================================================================================
+anchor                           n   share   $/trade    hit%      net $
+09:30 bar (=09:29 px) W101     342   33.9%       675   57.3%    230,989
+09:31 bar (=TRUE RTH open)     348   34.4%       560   54.3%    195,003
+09:31 anchor, decide 09:46     362   35.8%       450   53.6%    162,917
+
+    A one-minute anchor shift is a labelling question, not a tuning knob. If the result
+    only survives at one of these it is an artifact of the anchor.
+
+======================================================================================================================
+=== B. THE OBVIOUS CONFOUND: is XM_CONFLICT just SMALL-DRIVE sessions?
+======================================================================================================================
+    |drive| on CONFLICT sessions  mean 37.65 pts   median 28.62
+    |drive| on CONFIRM  sessions  mean 53.54 pts   median 42.75
+    ratio 0.703  -> CONFLICT sessions ARE smaller-drive; the confound is real and is matched below
+
+    |drive|-DECILE-MATCHED subsample null - same count in each of 10 |drive| deciles:
+    real $675/trade   null mean $226 sd $161   p95 $489   -> 99.7th percentile of 2000
+
+======================================================================================================================
+=== C. COMPOSITE FRAGILITY. Does it need all three markets and that exact z-average?
+======================================================================================================================
+composite                          n   share   $/trade    hit%      net $
+ES/RTY/YM z-average (W101)       342   33.9%       675   57.3%    230,989
+ES/RTY/YM raw-return average     366   36.3%       557   56.0%    203,969
+ES/RTY/YM 2-of-3 sign vote       323   32.2%       602   56.3%    194,389
+ES alone                         204   20.4%       506   54.9%    103,251
+RTY alone                        413   41.3%       477   55.7%    197,132
+YM alone                         448   45.0%       543   54.5%    243,192
+
+======================================================================================================================
+=== D. LATENCY. The fill is the 09:46 bar's OPEN = the price AT 09:45 under end-stamping.
+===    That is the campaign's standard next-bar convention and a ZERO-latency assumption.
+======================================================================================================================
+fill delay           n   $/trade    hit%      net $   vs 0 min
++0 min             342       675   57.3%    230,989       0.0%
++1 min             342       641   57.6%    219,354      -5.0%
++2 min             342       634   56.1%    216,669      -6.2%
++5 min             342       639   55.8%    218,549      -5.4%
++10 min            342       590   55.6%    201,809     -12.6%
++15 min            341       557   53.7%    189,821     -17.6%
+
+[done 4s]
