@@ -1,0 +1,110 @@
+run_id: WE_W109_FADESTATE
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "Owner MEGA DIRECTIVE V5 sections 11, 12, 13 and 36 (P0-D). Coverage-matrix row #0."
+
+title: >
+  FADE_HOSTILE_STATE - the TRANSFER experiment. W108 measured that five fade mechanisms are
+  POSITIVE on RANGE and MIXED sessions and heavily NEGATIVE on both TREND classes, with trend
+  losses running 2-3x the range gains. The missing object is therefore not a better fade. It is a
+  CAUSAL statement, at the moment the fade would enter, about whether fading has negative action
+  value today. This wave asks ONE question: does any such statement TRANSFER to fade engines that
+  were held out of its development?
+
+the_question_stated_precisely: >
+  Not "was today a trend day" - TREND-UP, TREND-DOWN, RANGE, MIXED and REVERSAL are EX-POST
+  diagnostic labels computed from the whole session and they MUST NEVER become decision inputs.
+  The target is E[fade action value | I_t] at 11:48, approximated by a binary veto: is the state at
+  11:48 hostile to fading? The ex-post class labels appear in this wave ONLY as a diagnostic of
+  what the detector learned, never inside any acceptance rule.
+
+# ---------------------------------------------------------------- STEP 1: freeze the fades
+fade_inventory:
+  source: "runs/WE_W108_REVRANGE/ - identical construction, identical code path, nothing re-fitted."
+  geometry: "decide at the bar stamped 11:48, fill at the 11:49 open, hold to 15:44, size 1, no stop."
+  cost: "$4.36/ctrRT commission + W82 contract-weighted spread at minutes 709 and 944."
+  acceptance: "each fade's OWN score at its 50 percent arm, the W108 primary arm, frozen."
+  mechanisms_frozen_from_W108:
+    EFFORT_NO_RES:  "morning volume vs trailing median x (1 - path efficiency), fade morning direction. W108: TREND-UP -$1,249 / TREND-DOWN -$1,374 / RANGE +$470 / MIXED +$342"
+    EXHAUST_VOL:    "volume-z at the morning extreme over late-morning volume, fade morning direction. W108: -$847 / -$1,174 / +$216 / +$251"
+    FAILED_BREAK:   "closed beyond the morning range then back inside, trade the failure direction. W108: -$781 / -$1,400 / +$720 / +$636"
+    PATH_EFF_TRANS: "low path efficiency with high range, fade toward the morning midpoint. W108: -$258 / -$1,080 / +$701 / +$1,017"
+    VALUE_REACCEPT: "left the morning range and returned inside it, trade toward its midpoint. W108: -$611 / -$790 / +$524 / +$772"
+  excluded: >
+    VWAP_RECLAIM is EXCLUDED. W108 closed it: it earns on both TREND classes and loses on REVERSAL
+    and RANGE, so it is a trend-continuation mechanism wearing a reversal label, and its 54.20
+    percent hit rate is indistinguishable from an always-long control's 54.25 percent. Including it
+    would put a trend follower in a set whose whole premise is that its members are fades.
+
+# ---------------------------------------------------------------- STEP 2: the holdout, fixed NOW
+holdout_split:
+  rule: >
+    ALPHABETICAL by mechanism name. First three = DEVELOPMENT, last two = HELD OUT. This rule is
+    stated here, before any detector exists and before any economics is computed, precisely so the
+    split cannot be chosen from the result.
+  development: [EFFORT_NO_RES, EXHAUST_VOL, FAILED_BREAK]
+  held_out:    [PATH_EFF_TRANS, VALUE_REACCEPT]
+  disclosed_overlap: >
+    PATH_EFF_TRANS is built from path efficiency and detector D1 (DIR_EFF) is a directional-
+    efficiency statistic over an overlapping window. If D1 is the detector selected on the
+    development set, its improvement on PATH_EFF_TRANS is CONFOUNDED and is discounted in advance:
+    in that case VALUE_REACCEPT is the only clean holdout and the transfer claim must stand or fall
+    on it alone. Recorded here so this cannot be decided after seeing the numbers.
+
+# ---------------------------------------------------------------- STEP 3: a SMALL detector family
+detector_family:
+  note: >
+    Section 13 forbids turning this into the next Solar rabbit hole. Six detectors, one lookback
+    each, three acceptance rates. No grids, no combinations, no optimisation, no second family.
+    Every detector uses ONLY bars stamped at or before 11:48.
+  D1_DIR_EFF:   "abs(C_1148 - O_0931) / sum abs(delta close) over 09:31-11:48. HIGH = one-way auction."
+  D2_CLOSE_EXT: "mean over 09:31-11:48 bars of abs(2*(C-L)/(H-L) - 1). HIGH = closes pinned at bar extremes."
+  D3_RANGE_EXP: "(H-L over 09:31-11:48) / trailing-250-session mean of the same. HIGH = expanding realized range."
+  D4_VWAP_DISP: "abs(C_1148 - VWAP_1148) / trailing-60-session mean of the same. HIGH = displaced from value."
+  D5_MR_FAIL:   "fraction of the 60 bars before 11:48 that set a new running session extreme. HIGH = mean reversion keeps failing."
+  D6_XBREADTH:  "abs(mean over ES/RTY/YM of each market's own z-scored 09:31->11:48 log return). HIGH = the whole complex is moving together."
+  sign_convention: >
+    For all six, HIGH is declared HOSTILE TO FADING. That direction is fixed by the mechanism
+    BEFORE any P and L is read and is not permitted to flip afterwards. A detector that only works
+    with its sign reversed has falsified its stated mechanism, exactly as W106's VOL_SURPRISE did.
+
+# ---------------------------------------------------------------- STEP 4: outcome-blind calibration
+rate_calibration: >
+  Identical to W106/W107/W108 and mandatory. Detector distributions are printed on FEATURE VALUES
+  ONLY before any economics. Three veto rates are preregistered: 25, 50 and 75 percent of sessions
+  vetoed. Thresholds are TRAILING CAUSAL QUANTILES over the prior 250 sessions, shifted one session,
+  so the acceptance rate is achieved by construction and never chosen from P and L.
+  W107b's binding fix applies: a detector whose realised veto rates do not track its target rates
+  is reported as UNCALIBRATED and cannot be a survivor.
+
+# ---------------------------------------------------------------- STEP 5: the primary is TRANSFER
+selection_on_development: >
+  Choose the single (detector, rate) pair maximising the mean improvement in dollars per trade
+  across the THREE development fades. This is a best-of-18 selection and is charged as one.
+
+primary: >
+  That exact (detector, rate) pair, with nothing re-tuned, applied to the TWO HELD-OUT fades.
+  The statistic is the mean over the two held-out fades of delta dollars-per-trade, vetoed minus
+  always-on.
+
+falsifier: >
+  The primary is <= 0, OR <= the 95th percentile of a RATE-MATCHED RANDOM VETO null on the same two
+  held-out fades - 200 draws, each vetoing the same number of sessions uniformly at random. That
+  null is the one that matters: it is what separates a causal state from the mere fact that a losing
+  strategy trades less.
+
+secondary:
+  - "the FULL 6 x 3 transfer table, not only the winner, so a lucky pick is visible"
+  - "per-mechanism table for all five fades: N, hit percent, own p-star, dollars per trade, net, max DD, CVaR5, positive days, positive weeks, turnover"
+  - "DIAGNOSTIC ONLY - the detector's hit rate against the ex-post W51 class labels: P(hostile | TREND-UP), P(hostile | TREND-DOWN), P(hostile | RANGE), P(hostile | MIXED). This measures what the detector learned. It is NEVER an input."
+  - "range profit retained and trend loss removed, separately, per section 12 step 6"
+  - "incremental value over the always-on fade AND over the rate-matched no-trade control"
+  - "weekly correlation of the vetoed fade book with P1/PCT and with XM_CONFLICT"
+
+decision_rule:
+  - "NOTHING IS PROMOTED BY THIS WAVE. A pass buys a preregistration for an engine, nothing more."
+  - "PASS on the held-out fades -> classify as NEW INFORMATION / ROUTING LAYER per section 37, and the next wave measures whether one state layer can route more than fades."
+  - "Improves the development fades but NOT the held-out ones -> classify as STRATEGY-SPECIFIC TUNING and say so plainly. That is not universal trend detection and must not be described as one."
+  - "Fails outright -> per section 38 the conclusion is 'this detector family did not causally identify when fades should be active', NOT 'mean reversion does not work'. Move to a different information family; do not tune this family further."
+  - "No detector, lookback, rate, sign or holding period is re-chosen after P and L is seen."

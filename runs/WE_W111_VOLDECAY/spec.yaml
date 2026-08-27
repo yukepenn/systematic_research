@@ -1,0 +1,90 @@
+run_id: WE_W111_VOLDECAY
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-27
+status: PREREGISTERED
+authority: "Owner MEGA DIRECTIVE V5 sections 18 (LANE B/F), 20, 23 and 36 (P1-A). Coverage-matrix row #1."
+
+title: >
+  VOL-EXHAUST / ABSORB - the #1 ranked row of the coverage matrix, and STILL UNTESTED after two
+  attempts. W100's gates accepted ~92 percent of the target leg and could not separate anything.
+  W106's VOL_DECAY fired on 3 of 1,058 sessions and could not be measured at all. Both failures were
+  SPECIFICATION failures, not evidence about volume. This wave exists to give the mechanism a
+  specification that fires at a usable rate and then to read the answer once.
+
+why_this_matters: >
+  Volume has never once been used as a signal in this program. Every engine ever built here - Solar
+  ratchet, B-MOM, X9a, NETFUSE, the scalping families, the system_master engines - is close-only or
+  range-based, and the volume column is empty on every row of the coverage matrix. The data is clean
+  1-minute NQ volume, zero nulls and zero zeros, 2006-2026, already on disk, no purchase and no
+  owner action required. SMV2AK and VOLCLOCK are NOT counter-evidence: they tested volume as a CLOCK
+  (resampling bars). Nobody has tested it as a SIGNAL.
+
+# ---------------------------------------------------------------- the specification gate
+specification_gate:
+  rule: >
+    BINDING, and checked and printed BEFORE any economics. A mechanism whose DIRECTION is non-zero
+    on fewer than 15 percent of in-window sessions is declared MIS-SPECIFIED and reported as
+    UNTESTED. It does not enter the primary and it is not silently averaged into anything.
+  why: >
+    This is the W106 lesson turned into a preregistered gate. W106's VOL_DECAY produced a direction
+    on 3 of 1,058 sessions and its zero contributed to a primary as though it were a measurement.
+    Under the rate calibrator the ACCEPTANCE rate is 50 percent by construction, so the gate must be
+    on the DIRECTION being defined, which is where the previous specification actually died.
+
+# ---------------------------------------------------------------- geometry
+geometry:
+  primary: "decide at the bar stamped 11:48, fill at the 11:49 open, hold to 15:44, size 1, no stop."
+  why_this_one: >
+    IDENTICAL to WE_W108. That is deliberate: it makes these mechanisms directly comparable to the
+    five fades already measured there and lets them join the same session-class table, rather than
+    creating a new geometry whose results cannot be compared to anything.
+  secondary: "decide 10:01, fill 10:02, hold to 11:29 - identical to WE_W106, reported as a robustness read and explicitly labelled SECONDARY."
+  cost: "$4.36/ctrRT commission + W82 contract-weighted spread at the two traded minutes."
+
+# ---------------------------------------------------------------- mechanisms
+mechanisms:
+  V1_DECAY_SLOPE: "Spearman rank correlation between bar index and volume over the 20 bars before the decision, negated so HIGH = monotone decay. Continuous, so it cannot fail the way W106's run-length test did. Direction: FADE the prevailing move."
+  V2_DECAY_RATIO: "mean volume of the last 10 bars divided by mean volume of the 20 bars before those, inverted so HIGH = participation falling away. Direction: FADE the prevailing move."
+  V3_EFFORT_NO_RES: "volume rank vs trailing-250-session median MULTIPLIED by (1 - path efficiency): high participation that produced no net displacement. Direction: FADE. This is the vendor corpus's 'effort without result' stated as a number."
+  V4_ABSORB_BAR: "the highest-volume bar of the window is NOT the highest-body and NOT the highest-range bar, and closes within the middle third of its own range. Scored continuously as (volume rank) x (1 - body rank) x (1 - mid-distance). Direction: FADE the move that bar occurred in."
+  V5_EXHAUST_EXTREME: "volume z at the session extreme divided by mean volume z over the 10 bars since, so HIGH = the extreme was made on a participation spike that has since drained. Direction: FADE the direction of that extreme."
+  sign_convention: >
+    All five FADE the prevailing move. That is the mechanism's own claim - exhaustion and absorption
+    predict reversal. The sign is fixed here and may NOT be flipped after reading P and L. W106's
+    VOL_SURPRISE came out with the sign backwards and was recorded as a hypothesis for a separate
+    preregistration rather than flipped; the same rule binds here.
+
+rate_calibration: >
+  Outcome-blind, identical to W106/W107/W108. Feature distributions printed on FEATURE VALUES ONLY
+  before any economics; three acceptance rates 25 / 50 / 75 percent; thresholds are trailing causal
+  quantiles over the prior 250 sessions, shifted one session. No threshold is chosen from P and L.
+
+primary: "equal-weight mean of dollars per trade across the mechanisms that PASS the specification gate, at the 50 percent arm."
+falsifier: "the primary is <= 0, or <= the 95th percentile of a coin null on the same statistic."
+
+secondary:
+  - "best-of-K coin null on the individual cells, K counted from the cells that actually ran"
+  - "each cell's own p-star for its horizon, computed not assumed"
+  - "SPLIT BY W51 SESSION CLASS, directly beside W108's five fades - the diagnostic that made W108 worth running"
+  - "the SECONDARY geometry (10:01 -> 11:29), reported separately and never averaged into the primary"
+
+mandated_confound_test:
+  name: "VOLUME-DECILE-MATCHED NULL"
+  why: >
+    The coverage matrix names this exact falsifier for this exact row: 'effect survives holding
+    volume rank fixed => it is just big bar'. A decay score is mechanically correlated with the
+    session's absolute volume level, and absolute volume is correlated with range, and range is
+    correlated with everything. Without this control a positive result is not interpretable.
+  construction: >
+    Same shape as W102c's |drive|-decile-matched null, which is the construction that saved
+    XM_CONFLICT from being a small-drive artifact: bin in-window sessions by decile of total morning
+    volume, then draw random subsamples matching the accepted set's decile histogram exactly, 500
+    draws. A mechanism that does not clear this null is measuring session size, not participation
+    dynamics, and is reported that way.
+
+decision_rule:
+  - "NOTHING PROMOTED. A pass buys a preregistration for an engine and a coverage-matrix upgrade."
+  - "A mechanism failing the specification gate is reported as UNTESTED, with the acceptance rate printed, and the matrix cell stays untested. It is NOT recorded as a null."
+  - "A mechanism positive overall but negative on RANGE and MIXED has falsified its own stated mechanism, exactly as VWAP_RECLAIM did in W108."
+  - "A mechanism that fails the volume-decile-matched null is recorded as a SIZE effect, not a participation effect."
+  - "No threshold, lookback, rate, sign or holding period is re-chosen after P and L is seen."
