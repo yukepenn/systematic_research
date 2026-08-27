@@ -1,0 +1,35 @@
+======================================================================================================================
+=== PART 1: W91 SECTION 4's EXACT OBJECT - {SOLAR, BMOM} 50/50 - with the score fixed
+======================================================================================================================
+    SOLAR boxed 1,890 tr / box-free 3,090 tr   BMOM boxed 1,043 / box-free 1,450
+
+arm                           trades  scale     wk $    wk+%  strk     maxDD   top5DD     worst  wk$@fixDD
+PORT_SB with boxes             2,933  1.000      792   55.9%     4    25,472   13,422    -8,952        629
+PORT_SB NO box                 4,540  0.706      821   60.1%     6    17,112   12,375   -10,386        971
+
+    box-free wins 3/3 on {SOLAR, BMOM} - W91 section 4 reported it winning on
+    money@fixedDD (923 vs 629), wk+% (60.1 vs 55.9) and top-5 DD (11,750 vs 12,718).
+    -> W91's observation is CONFIRMED
+
+======================================================================================================================
+=== PART 2: SCAN-MATCHED NULL for the (halt, target) grid's argmax (repo rule, W53)
+=== W95's grid peaks at halt=2000 and W93's walk-forward chose halt=2000 in 7 of 12
+=== refits. Best-of-31 on structureless data inflates the winner; this measures by how
+=== much, by running the SAME 31-cell scan on 200 circular-shifted versions of the
+=== NETFUSE target and recording each scan's WINNER.
+======================================================================================================================
+
+    REAL: incumbent (1300,1000) = 1,068;  scan argmax (2000, 1000) = 1,423   uplift +33.2 %
+      10/40 [134s]
+      20/40 [225s]
+      30/40 [314s]
+      40/40 [402s]
+
+    40 shuffled scans: best-of-31 uplift over the same cell's own incumbent
+      mean -405.3 %   median -32.3 %   p95 +317.4 %
+    REAL uplift +33.2 %  -> percentile 87.5 %
+
+    Read: if the real uplift sits inside the shuffled distribution, the grid's argmax is
+    what best-of-31 produces on structureless data and means NOTHING.
+
+[done 402s]
