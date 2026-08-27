@@ -64,3 +64,53 @@ decision_rule:
   - "A driver that orders the edge in the pooled sample but NOT within both windows is reported as NOT IDENTIFIED, and FOLLOW_MORNING stays REGIME_LOCAL with no conditional version built."
   - "If no driver survives, the momentum family is CLOSED for mechanism work and FOLLOW_MORNING's only remaining evidence path is the sealed forward data. Say that plainly rather than trying a fifth variable."
   - "No driver, lookback, quantile count or window is re-chosen after results are seen."
+
+# =============================================================================================
+# AMENDMENT 1 — 2026-08-27, written and committed BEFORE the wave was run. No result exists yet.
+# Required by the POST-W115 owner directive, sections 11, 12 and 31.
+# =============================================================================================
+amendment_1:
+  status: "PREREGISTERED. Zero results had been computed when this was written; runs/WE_W115_MOMDRIVER/out did not exist."
+
+  a_more_null_drivers:
+    why: "Directive section 11 names calendar year and a linear time index alongside price level as explicit negative controls, because NQ's level is not the only thing that rises monotonically over twenty years."
+    added:
+      CAL_YEAR: "the calendar year, as a number. Pure calendar."
+      TIME_IDX: "the session's index in the pooled sample. Pure calendar."
+    rule: >
+      These join PRICE_LEVEL as NULL DRIVERS. A claimed regime driver must show a LARGER
+      within-era ordering than all three. If any null driver orders the edge as well as the volume
+      variables, the wave reports NO DRIVER IDENTIFIED. Section 31 also forbids year, date and
+      elapsed index from ever entering a production input - they appear here as placebos only.
+
+  b_the_primary_statistic_is_corrected:
+    was: "top-versus-bottom quintile spread in accuracy points above p-star, using the campaign's usual `hit` column."
+    now: >
+      the spread in RAW DIRECTIONAL ACCURACY - the fraction of sessions where sign(realised move)
+      equals the traded direction - minus that quintile's own p-star.
+    why: >
+      p-star = 0.5(1 + cost/E|move|) is DEFINED as a break-even DIRECTIONAL accuracy. The campaign's
+      `hit` column is the fraction of trades with positive NET dollars, which is a different
+      quantity. Pairing them is a type mismatch this campaign has been carrying, and it matters
+      most here because the two eras have E|move| of $409 and $1,721. Both columns are printed;
+      the DIRECTIONAL one is the primary.
+
+  c_prequential_test_added:
+    why: "Directive section 12 criterion B - a real driver should predict rolling strengthening or weakening out of sample, not merely sort a pooled table."
+    construction: >
+      Assign each session's state from a TRAILING CAUSAL QUANTILE of the driver over the prior 250
+      sessions, shifted one session, so the state is knowable at the decision bar. Then report the
+      edge in the top and bottom causal tercile, and the rolling 250-session correlation between the
+      driver and the realised per-trade edge. This is the only arm of the wave whose state
+      assignment is fully out-of-sample; the pooled and within-era quintiles are DESCRIPTIVE splits
+      and are labelled as such.
+
+  d_quantile_construction_stated_explicitly:
+    pooled_table: "quintiles computed on the pooled sample. DESCRIPTIVE - it uses full-sample information and is not a tradeable split. Labelled so in the report."
+    within_era_tables: "quintiles computed inside each era separately, so the two eras cannot be ordered by the split itself."
+    prequential_table: "trailing causal quantiles only. The only tradeable-shaped arm."
+
+  e_no_other_change: >
+    The four original drivers, the falsifier, the within-era requirement and the decision rule are
+    UNCHANGED. Nothing here relaxes a bar; it adds two null drivers, one out-of-sample arm, and
+    fixes a statistic that was defined incorrectly.
