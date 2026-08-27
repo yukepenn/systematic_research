@@ -1,0 +1,69 @@
+==========================================================================================================================
+=== RR_W004 - DOES HIGHER-TIMEFRAME STATE ADD INCREMENTAL INFORMATION?
+=== Spec 50ddd4f.  STAGE A INFORMATION ONLY.  Nothing here becomes a policy.
+==========================================================================================================================
+[     7s] 2,131 decision bars; building the six HTF columns
+
+==========================================================================================================================
+=== 1. CAUSALITY GATE for the HTF arm.  BLOCKING.  Same construction as RR_W002A.
+==========================================================================================================================
+feature                    own bar     lag1   lag400   lag2000  verdict
+htf_ret_5d                    0.0%     0.0%     0.0%      0.0%     KEEP
+htf_ret_20d                   0.0%     0.0%     0.0%      0.0%     KEEP
+htf_pdr_pos                   0.0%   100.0%    10.4%     37.0%     KEEP
+htf_gap                       0.0%     1.7%     0.0%      0.0%     KEEP
+htf_vol_20d                   0.0%     0.0%     0.0%      0.0%     KEEP
+htf_trend_r2_20d              0.0%     0.0%     0.0%      0.0%     KEEP
+PROBE_LEAK_close_i          100.0%     0.0%     0.0%      0.0%     DROP
+PROBE_SAFE_close_prev         0.0%   100.0%     0.0%      0.0%     KEEP
+
+    SELF-TEST: leak -> DROP (expect DROP)   lag -> KEEP (expect KEEP)
+    KEPT 6 of 6 HTF features: ['htf_ret_5d', 'htf_ret_20d', 'htf_pdr_pos', 'htf_gap', 'htf_vol_20d', 'htf_trend_r2_20d']
+
+==========================================================================================================================
+=== 2. PIPELINE REPRODUCTION GATE.  BLOCKING.  Is this the SAME pipeline RR_W002A ran?
+==========================================================================================================================
+    RR_W002A primary rank correlation  -0.0302
+    reproduced here                    -0.0302   OK
+    The pipeline is unchanged; the only new thing is the HTF arm.
+
+==========================================================================================================================
+=== 3. ARMS
+==========================================================================================================================
+arm               features    OOS rho   vs X_ONLY   folds +
+X_ONLY                  18    -0.0302      0.0000       54%
+HTF_ONLY                 6    -0.0184      0.0118       38%
+X_PLUS_HTF              24    -0.0185      0.0117       31%
+NEGCTRL                  2    -0.0345     -0.0043       62%
+
+==========================================================================================================================
+=== 4. NULLS - the ENTIRE walk-forward refitted inside every session-boundary shift
+==========================================================================================================================
+arm                real rho   null p50   null p95  percentile  verdict
+X_PLUS_HTF          -0.0185    -0.0292     0.0411       61.5%     fail
+HTF_ONLY            -0.0184    -0.0436     0.0329       71.0%     fail
+NEGCTRL             -0.0345    -0.0785     0.0370       77.0%     fail
+
+==========================================================================================================================
+=== 5. THE PREREGISTERED GATE TABLE
+==========================================================================================================================
+    can each statistic fail?  rho is signed -> H1 CAN FAIL; the null is refitted -> H2/H3
+    CAN FAIL; the per-fold increment is signed -> H4 CAN FAIL; H5 is symmetric -> CAN FAIL.
+
+gate  spec                                                                        observed   verdict
+H1    X_PLUS_HTF rank correlation > X_ONLY's                            -0.0185 vs -0.0302      PASS
+H2    X_PLUS_HTF above the 95th percentile of its refitted null                     61.5th      FAIL
+H3    HTF_ONLY above the 95th percentile of ITS own null                            71.0th      FAIL
+H4    the increment is positive in >= 60 % of folds                                    62%      PASS
+H5    negative controls FAIL their null                                             77.0th      PASS
+
+    ALL GATES: NOT ALL PASS
+
+    per-fold X_ONLY   : +0.008  -0.286  +0.003  +0.071  +0.116  -0.132  -0.063  -0.081  +0.014  +0.183  -0.067  -0.157  +0.003
+    per-fold X+HTF    : -0.050  -0.223  -0.012  -0.017  +0.075  -0.075  -0.016  -0.027  +0.024  +0.209  +0.011  -0.103  -0.063
+
+    POWER, restated: RR_W001's G3 showed this sample cannot certify SMALL economic
+    improvements. An information result here would not overturn that in either direction.
+    EVIDENCE STATUS: DISCOVERY_CONSUMED throughout; 2026-05-31 -> 07-31 DIRECTLY_BURNED.
+
+[    30s] done

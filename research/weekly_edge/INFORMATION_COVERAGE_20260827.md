@@ -24,20 +24,34 @@ Legend: **DEEP** · **SUPPORTED** · **LIGHT** · **NULL** (tested, failed) · *
 | **scheduled macro event flag** | **LIGHT** | committed CPI/NFP/FOMC calendar; W105b (XM is *not* an event trade); W110 (announcement flag alone AUC 0.498) |
 | **event RESPONSE (not the flag)** | **CLOSED-BY-DATA** | `DATAGATE_EVENTRESPONSE_20260827`: a response feature reaches **153 of 2,131 P1 decisions (7.18 %)** on **71** effective event sessions; MDE **$1,896.67 = 9.8×** the lane-scaled materiality bar (0.665 sd). Closing it needs ~**96× the effective N**. The binding constraint is the **calendar**. Not `NULL` — **UNDERPOWERED**, per directive §20 |
 | **overnight inventory** | **NULL** | ONRANGE01/02, W96 |
-| **higher-timeframe** | **LIGHT** | HTFMECH01 (campaign #3) |
+| **higher-timeframe** | **CLOSED** | **RR_W004**: six multi-session features added incrementally to RR_W002A's 18. `X+HTF` at the **61.5th** percentile of its refitted null, `HTF` alone at the **71.0th**, and the **known-null negative control at the 77.0th — higher than either real arm**. Adding HTF made fold-sign consistency *worse* (54 % → 31 %). Was `LIGHT` on `HTFMECH01`, campaign #3, a different object |
 | **execution / friction** | **SUPPORTED** | W82 measured the fill cost that 82 waves had assumed |
 | **market internals (TICK/ADD/TRIN)** | **✗ no data** | `DATA_CENSUS` §"market internals: NONE" |
 
-## The honest summary
+## The honest summary — rewritten 2026-08-27 after RR_W002A / RR_W004 / the event-response gate
 
-**Two surfaces are genuinely open and both are gated by data, not by ideas:**
+**No surface is both open and reachable.** The two that were listed as open here have since closed:
+**event RESPONSE** is `CLOSED-BY-DATA` (7.18 % coverage, 71 effective event sessions, MDE 9.8× the
+lane-scaled bar), and **higher-timeframe** is `CLOSED` on a direct incremental test.
 
-1. **BBO / trade imbalance / micro-price** — blocked at 3.3 % event coverage. An owner acquisition
-   decision (~300+ overlapping sessions would bring the MDE near the unconditional mean).
-2. **Event RESPONSE** as distinct from the event flag — untested, and the calendar exists.
+**And the direct question was asked.** `RR_W002A` fitted 18 causally-verified features against
+FULL-HORIZON action value under a null that refits the entire walk-forward: the primary landed at the
+**51.0th percentile**, and a **known-null family scored higher (77.0th) than any real arm**.
+`RR_W004` repeated that shape for HTF.
 
-**Everything cheap has been measured.** The campaign has now tested cross-market intraday support,
-1-minute participation, turnover, regime state and value/acceptance against P1's own decision
-quality. All are null or policy-null.
+> ### **No tested current information surface separates P1 action quality.** That statement is now
+> ### COMPLETE rather than partial — every reachable lane has been measured, not merely most of them.
 
-> ### The next material information jump requires either **data we do not own** or a **surface nobody has named yet**. It does not require another threshold on the NQ price path.
+**What remains is untested because it is UNAVAILABLE, not because it failed:**
+
+| surface | why |
+|---|---|
+| **BBO / order flow / micro-price** | 3.3 % event coverage, MDE 4× the mean. ~300+ overlapping sessions needed. Owner acquisition |
+| **options / dealer gamma** | not owned. Owner acquisition |
+| **a wider macro calendar** | ~4× the event count would take the MDE to ~5× the bar. Better, still short |
+| **market internals** | no data exists at all |
+| **DOM / Level-II** | owner risk-control pause, and no history exists anyway |
+
+> ### The next material information jump requires **data we do not own** or a **surface nobody has
+> ### named yet**. It does not require another threshold on the NQ price path — and that is now a
+> ### measured claim rather than an impression.

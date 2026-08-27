@@ -21,9 +21,9 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | — | ~~Does EVENT RESPONSE carry incremental action-value information?~~ | — | ✅ **CLOSED-BY-DATA** · `runs/DATAGATE_EVENTRESPONSE_20260827/` |
 | — | ~~Do causal features predict FULL-HORIZON `delta_action_value`?~~ | — | ✅ **CLOSED — NULL** · `runs/RR_W002A_ACTION_VALUE_INFORMATION/` |
 | — | ~~Is `X9a` a coherent standalone expert?~~ | — | ✅ **CLOSED — NOT ADMITTED** · `runs/RR_W003_X9A_CONTRACT/` |
-| **1** | **Does HIGHER-TIMEFRAME state carry anything at P1's decision events?** | **LOW-MED** | **RUNNABLE NOW** — the last surface still `LIGHT` |
-| 4 | Is SELECTIVE box un-latching worth anything? *(new, from RR_W001)* | LOW | RUNNABLE |
-| 5 | Is book COVERAGE actually a gap? *(reopened by `RR_W000`)* | LOW | RUNNABLE |
+| — | ~~Does HIGHER-TIMEFRAME state carry anything at P1's decision events?~~ | — | ✅ **CLOSED — NULL** · `runs/RR_W004_HTF_INCREMENT/` |
+| **1** | Is SELECTIVE box un-latching worth anything? *(new, from RR_W001)* | **LOW** | RUNNABLE |
+| **2** | Is book COVERAGE actually a gap? *(reopened by `RR_W000`)* | **LOW** | RUNNABLE |
 | 6 | Does a soft allocation with cash beat the static book? | — | **DE-PRIORITISED by RR_W001** · gated on #1 |
 | 7 | Does latent state add information beyond raw features? | — | **NOT RUN** — RR_W001's continuation rule forbids it |
 | 8 | Does transition uncertainty carry risk information? | — | blocked on #6 |
@@ -146,7 +146,24 @@ two is +0.15.**
 > **`PAIR23` keeps its `STRUCTURAL` status and all its economics.** What changed is what it is: a raw
 > channel plus a `P1` variant — which also makes ρ(BMOM, X9a) = +0.009 a fact about **wrappers**.
 
-## 1. Higher-timeframe state — the last RUNNABLE surface, and it is LOW-MED on purpose
+## ✅ CLOSED — NULL — higher-timeframe adds nothing (`RR_W004`)
+
+Six multi-session features added **incrementally** to RR_W002A's 18, with the pipeline certified
+unchanged by reproducing its primary ρ to **−0.0302** exactly. `X+HTF` lands at the **61.5th**
+percentile of its refitted null, `HTF` alone at the **71.0th**, and the **known-null negative control
+at the 77.0th — higher than either real arm.** Adding HTF made fold-sign consistency *worse*,
+54 % → 31 %.
+
+> ⚠️ **Two of five gates "passed" and neither counts.** H1 (X+HTF beats X) is a pass at being
+> *less negative than something already worse than chance*; H4 (increment positive in 62 % of folds)
+> is an increment between two negative quantities. **The gates that test for information — H2 and
+> H3, both against a refitted null — fail.** That shape invites "promising, needs tuning" and the
+> reading is refused on the record.
+
+**This was the last surface marked `LIGHT`.** The statement *"no tested current information surface
+separates P1 action quality"* is now **complete rather than partial**.
+
+## The remaining runnable rows — both LOW, both engineering
 
 | | |
 |---|---|
@@ -157,7 +174,7 @@ two is +0.15.**
 | **cost** | LOW-MEDIUM. Bounded engineering, no new data |
 | **honest EVI** | **MEDIUM.** It unlocks a *decomposition*, not an edge. It creates no new information, and this campaign's record is that decompositions of existing objects have not produced promotions |
 
-## 4. Selective box un-latching — new, from RR_W001, ranked LOW on purpose
+### 1. Selective box un-latching — new, from RR_W001, ranked LOW on purpose
 
 RR_W001 found **35–64 %** of its abstention oracle is **regeneration**: trades the policy takes
 because the box stops latching once a bad early decision is removed. Those entries are the `r0+1`
@@ -171,7 +188,7 @@ survives is not that experiment.
 > cannot identify which early decisions to suppress. Only ~**247** of 1,058 in-window sessions hold a
 > latched-out run. **Named because it is new, not because it looks promising.**
 
-## 5. Book coverage — reopened by an audit, ranked LOW on purpose
+### 2. Book coverage — reopened by an audit, ranked LOW on purpose
 
 `runs/RR_W000_LEDGER_AUDIT/` found W119's `E_NO_ENGINE = 0` was **forced by construction** — the lens
 is "neither leg held a position", which makes `book_pnl == 0`, and it was counted *inside* the
@@ -257,6 +274,7 @@ decision; slot D is an `EXECUTABLE_COMPONENT_SET` and `EXECUTABLE_PORTFOLIO` rem
 | date | change |
 |---|---|
 | 2026-08-27 | Created at Phase 0, pre-result. |
+| 2026-08-27 | **RR_W004 closed HIGHER-TIMEFRAME: NULL** — the last `LIGHT` surface. Every information lane this repo can reach is now measured and closed. |
 | 2026-08-27 | **RR_W003 closed `X9a`: NOT ADMITTED**, and found the frontier's own premise false — two objects share the name and `PAIR23` uses the one containing `P1`. HTF becomes row 1. |
 | 2026-08-27 | **RR_W002A closed the information question: NULL.** Primary at the 51.0th percentile of its own refitted null; a known-null family scored higher (77.0th) than any real arm; top-decile AUC 0.4990. `X9a` becomes row 1. |
 | 2026-08-27 | **RR_W001 closed the dispersion question** (router de-prioritised, HMM not run); **the event-response data gate closed row 2 without a wave**; `X9a` becomes the highest-EVI runnable item; selective box un-latching and book coverage added; more-event-types added as an acquisition row. |

@@ -351,10 +351,14 @@ into one word.
 > **51.0th percentile of its own null**, and a family already proven NULL scores **higher** (77.0th)
 > than any real arm. Quintiles are U-shaped, top-decile AUC is **0.4990**, and adding features and
 > capacity made it *worse*. **OUTCOME A — current-data action-value information is NULL / LOW-EVI.**
-> ⚠️ **Still narrower than the claim retired on 2026-08-27** (*"not separable by any information
-> source currently held"*): **higher-timeframe remains `LIGHT`, never closed**, and order flow,
-> options and a wider event calendar are untested because they are **unavailable**, not because they
-> failed.
+> **`RR_W004` then closed the last `LIGHT` surface**: six multi-session HTF features added
+> incrementally sit at the **61.5th** percentile of their refitted null, and the **known-null
+> control scores higher (77.0th) than either HTF arm**. ⚠️ Two of its five gates "passed" —
+> but on a comparison between two arms **both worse than chance**, so they carry no weight, and
+> that reading is refused on the record.
+> ### **The statement is now COMPLETE rather than partial.** What remains untested is untested
+> because it is **unavailable** — order flow (3.3 % coverage), options, a wider event calendar —
+> not because it failed.
 > Cross-market intraday: **null**. 1-min participation: **anti-predictive**. Order flow:
 > **unmeasurable** — `runs/DATAGATE_ORDERFLOW_20260827/` covers 71 of 2,131 entries (**3.3 %**) at an
 > MDE of **$564/entry = 4× the mean**, so it was CLOSED-BY-DATA *before* a feature was written.
