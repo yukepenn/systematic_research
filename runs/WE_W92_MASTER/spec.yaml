@@ -1,0 +1,108 @@
+run_id: WE_W92_MASTER
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-26
+status: PREREGISTERED
+authority: "OWNER DIRECTIVE post-W88 sections 6 (master basket engine) and 3 (mechanism)"
+
+title: >
+  THE MASTER EXECUTION LAYER. Two NinjaScript strategies on one netted NQ account are NOT the
+  algebraic portfolio. Quantify the gap, then build the single netted long-and-short object that
+  W91 amendment 1 showed is the piece that has genuinely never existed.
+
+# ---------------------------------------------------------------------------------------------
+# 0. THE OWNER'S ARCHITECTURE, RESTATED
+# ---------------------------------------------------------------------------------------------
+architecture: |
+  virtual_bmom_target  in {-2, 0, +2}          (2 BMOM contracts, long AND short)
+  virtual_x9a_target   in {0, +1, ..., +6}     (3 X9a units, each 1 or 2 contracts via the
+                                                causal quality layer - so NOT {0,+3})
+  desired_account_target = virtual_bmom_target + virtual_x9a_target
+
+  Each sleeve keeps its OWN state machine, session box, P&L ledger and entry/exit decisions.
+  ONE master execution layer manages the actual net NQ position.
+
+  NOTE ON THE OWNER'S NOTATION: the directive writes virtual_x9a_target in {0, +3}. W89
+  established X9a runs size 2 on 18.1 % of its trades, so 3 X9a units span 0..6 contracts, not
+  {0, 3}. This is recorded because it changes the peak-exposure arithmetic (W89 section 5).
+
+# ---------------------------------------------------------------------------------------------
+# 1. WHAT IS BEING TESTED, AND WHAT IS ARITHMETIC RATHER THAN A TEST
+# ---------------------------------------------------------------------------------------------
+what_is_arithmetic_and_will_be_asserted_not_discovered: >
+  Both sleeves fill at the SAME next-bar open. Mark-to-market P&L is therefore ADDITIVE across
+  sleeves by construction, and netting cannot change it. The simulator must reproduce the
+  algebraic sleeve sum EXACTLY on the gross line. If it does not, the simulator is wrong. This
+  is asserted as a precondition, in the spirit of the four cross-substrate defects this repo has
+  had: assert the join, never assume it.
+
+what_is_genuinely_uncertain_and_is_the_measurement:
+  - "how many contracts are crossed INTERNALLY - opposite-direction orders from two sleeves
+     landing on the same bar, which a netted account never sends"
+  - "the commission and spread saved by not sending them, at W89's candidate-specific costs"
+  - "how often the account is FLAT while the sleeves believe they hold opposite positions
+     ('phantom flat') - minutes ofmodel exposure that carry no real risk and no real cost"
+  - "peak and time-weighted ACCOUNT contracts vs the sum of sleeve contracts"
+  - "whether any risk statistic differs once costs are charged on NET rather than GROSS turnover"
+
+# ---------------------------------------------------------------------------------------------
+# 2. THE NEW OBJECT - what W91 amendment 1 showed is actually unbuilt
+# ---------------------------------------------------------------------------------------------
+NETFUSE:
+  why: >
+    W91 amendment 1 FALSIFIED my claim that a mirrored OR gate had never been built - it exists
+    inside the SHORT sleeve and supplies 89.5 % of its net. What does NOT exist is a SINGLE
+    NETTED object: one target array in {-1, 0, +1}, ONE session box, ONE fill ledger, direct
+    reversals. Today the long and short sides are two separate sleeves with two boxes that can
+    be simultaneously long and short - paying two spreads to hold nothing.
+  construction: |
+    tgt[i] = +1  if  vote_long(TG_for(bmom))  >= 0.5
+             -1  if  vote_short(TG_for(bmom)) >= 0.5
+              0  otherwise, AND 0 if both fire (conservative; the both-fire rate is reported)
+    NETFUSE_1 : size 1 both sides, one box (-1300 / +1000)
+    NETFUSE_Q : causal quality sizing on the LONG side only (size 2 when score >= 3), size 1
+                short - i.e. exactly P1's sizing rule, extended to a two-sided target
+  comparator: "P1 + SHORT as two independent sleeves at 1:1, matched in contract-minutes."
+  honest_note: >
+    NETFUSE_Q uses the quality score on long entries only. W38 closed 'short-side quality' but
+    charter amendment 2 records that it did so USING THE LONG SIDE'S FEATURE SIGNS. Applying the
+    long score to short entries is therefore NOT re-opened here and NOT tested; the short side is
+    deliberately left at size 1.
+
+# ---------------------------------------------------------------------------------------------
+# 3. HYPOTHESES
+# ---------------------------------------------------------------------------------------------
+H1:
+  statement: "netting saves a material amount of turnover for the 2:3 basket."
+  threshold_fixed_in_advance: "material = >= 2 % of gross contract round turns."
+  falsifier: "< 2 % -> the two-strategy deployment is economically equivalent to the algebraic
+              portfolio and the master layer is an engineering nicety, not a source of edge."
+
+H2:
+  statement: "NETFUSE beats P1 + SHORT run as two sleeves, at matched contract-minutes, on >= 2
+              of the three gate legs {weekly $ at fixed DD, positive-week %, raw mean top-5 DD}."
+  falsifier: "<= 1 leg -> netting the two sides into one object is not an improvement and the
+              separate-sleeve form stands."
+
+H3:
+  statement: "NETFUSE_1 is positive over the trailing 24 months (charter amendment 2 (a), the
+              only chronology gate), reported with sessions/weeks/trades/mean/SE."
+  falsifier: "t24 weekly <= 0 -> fails the only chronology gate."
+
+# ---------------------------------------------------------------------------------------------
+# 4. DECISION RULE
+# ---------------------------------------------------------------------------------------------
+decision_rule:
+  - "NOTHING IS PROMOTED. If NETFUSE passes H2 and H3 it becomes a CHALLENGER and must then face
+     the corrected rolling gate with the oracle battery as a precondition, a specificity null,
+     and walk-forward - none of which is in this wave's scope."
+  - "The master-layer numbers are ENGINEERING FACTS and change no verdict about any object."
+  - "If the simulator does not reproduce the algebraic sum exactly on the gross line, NO numbers
+     are issued from this wave at all."
+
+honesty_clauses:
+  - "Everything is 2022-07 -> 2026-07 and discovery-consumed. No forward window exists."
+  - "A Python execution simulator is not NinjaTrader. It establishes what the ARITHMETIC of
+     netting does; it does not establish what NT8's order engine does. That is the parity run and
+     it is the owner's action."
+  - "The both-fire (long and short vote simultaneously >= 0.5) rate is reported whatever it is,
+     because a conservative tie rule that fires often is a silent third strategy."
