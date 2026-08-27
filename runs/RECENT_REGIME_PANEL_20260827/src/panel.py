@@ -22,7 +22,10 @@ ROOT = (r"D:\OneDrive - Washington University in St. Louis\TradingResearch"
         r"\systematic_research")
 OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "out")
 os.makedirs(OUT, exist_ok=True)
-K_FROZEN = 20245.0 / 22931.0          # frozen research scaling, per s29
+K_FROZEN = 20245.0 / 24212.92        # CORRECTED per FWD_DD_RECONCILIATION. The canonical
+                                     # 22,931 denominator was a COMMISSION-ONLY drawdown while
+                                     # the numerator is net of the modelled spread; mixing them
+                                     # flattered every fixed-DD figure by 5.2 %.
 WINDOWS = [13, 26, 52, 104]           # fixed standard windows, declared before results
 _fh = open(os.path.join(OUT, "panel.txt"), "w", encoding="utf-8")
 

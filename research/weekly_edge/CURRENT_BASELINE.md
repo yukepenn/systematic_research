@@ -77,10 +77,12 @@ strategy** (`runs/WE_W98_BOXDENOM/`): a dollar stop on a variable-size position 
 
 | | `ABS` (old) | **`PCT` (current)** |
 |---|---|---|
-| weekly $ at fixed DD | $885 | **$1,231 (+39.0 %)** |
+| weekly $ at fixed DD | ⚠️ $885 SUSPECT | ⚠️ **$1,231 SUSPECT** |
 | positive weeks | 53.1 % | **56.3 %** |
-| max drawdown | $26,388 | **$22,931** |
+| max drawdown | ⚠️ $26,388 SUSPECT | ⚠️ **$22,931 SUSPECT** |
 | t | 3.58 | **4.16** |
+
+⚠️ **SUSPECT — fixed-DD figures in this table were computed on the DEFECTIVE commission-only drawdown denominator (`runs/FWD_DD_RECONCILIATION/`). Each object needs its OWN reconciliation because each has its own maxDD; that is queued as `INCUMBENT_CURRENT_REGIME_ADJUDICATION`. The RAW columns and the non-DD rows are unaffected.**
 
 **The controls are the evidence, not the headline:** a *uniformly* looser box is worth +$6/week
 (paired p = 0.940); holding the average budget fixed while making it size-conditional keeps
@@ -111,10 +113,14 @@ implementation the NinjaScript uses. `runs/WE_W101_DIRECTION/`, `WE_W102_XMENGIN
 
 | | P1/PCT alone | **+ XM_CONFLICT** |
 |---|---|---|
-| weekly $ at fixed DD | $1,230 | **$2,012 (+63.5 %)** |
-| max drawdown | $22,931 | **$11,489** |
+| weekly $ at fixed DD | ⚠️ ~~$1,230~~ → **$1,166 corrected** | ⚠️ **$2,012 SUSPECT** |
+| max drawdown | ⚠️ ~~$22,931~~ → **$24,213 corrected** | ⚠️ **$11,489 SUSPECT** |
 | top-5 drawdown | $17,835 | **$8,735** |
 | t | 4.16 | **4.90** |
+
+⚠️ **SUSPECT — fixed-DD figures in this table were computed on the DEFECTIVE commission-only drawdown denominator (`runs/FWD_DD_RECONCILIATION/`). Each object needs its OWN reconciliation because each has its own maxDD; that is queued as `INCUMBENT_CURRENT_REGIME_ADJUDICATION`. The RAW columns and the non-DD rows are unaffected.**
+
+> **P1/PCT alone is now CORRECTED** ($1,166/wk at a $24,213 weekly maxDD). **The `+ XM` column > is NOT**, so the **+63.5 % improvement figure is not currently quotable** — it compares a > corrected number against an uncorrected one. `PORTFOLIO_B_RECONCILIATION` rebuilds it.
 
 ⚠️ **Quote the range, not a point: +45 % (income-matched) to +64 % (inverse-vol).** The
 **structural** result — adding XM roughly halves drawdown overlap with P1/PCT — is the sturdy half.

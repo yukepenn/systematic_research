@@ -14,8 +14,8 @@
 
 ## 1. ⚠️ Read this before any checkpoint: what forward evidence CAN and CANNOT do
 
-Derived from the frozen values themselves (weekly $ at fixed DD, $1,230 at t = 4.16 over 213.1
-research weeks ⇒ implied weekly sd **$4,317**; Portfolio B $2,012 at t = 4.90 ⇒ sd **$5,995**):
+Derived from the frozen values themselves (weekly $ at fixed DD, **$1,166 corrected** at t = 4.16 over
+213.1 research weeks. **Portfolio B's $2,012 is SUSPECT and no B band is quoted** — see §4):
 
 | checkpoint | sessions | expected cum. | what it can actually resolve |
 |---|---:|---:|---|
@@ -58,7 +58,8 @@ An unscheduled read burns the seal and must be recorded in `LOCKED_FORWARD.md` a
 ($4.36/ctrRT commission **plus** modelled spread — P1 $14.44, XM $12.50).
 
 **Expected sign: POSITIVE.** Secondary metrics, all reported, none of them the decider:
-positive-week rate (expect **56.3 %** P1 / **59.2 %** B), realised max DD (research $22,931 / $11,489),
+positive-week rate (expect **56.3 %** P1 / 59.2 % B), realised max DD (research **$24,213** P1 corrected /
+$11,489 B suspect),
 trade count vs the research rate, mean $/trade, right-tail retention, time under water, and
 **decision agreement** between the Python object and the NT8 executable.
 

@@ -10,7 +10,7 @@ information available today, what exactly would it contain?*
 
 ## The answer
 
-> ### **`P1/PCT` + `XM_CONFLICT_v2` — a PRODUCTION-READY COMPONENT SET.**
+> ### **`P1/PCT` + `XM_CONFLICT_v2` — the CURRENT PARITY-CERTIFIED INCUMBENT COMPONENT SET.**
 > ### **Nothing discovered today earned admission.** Closing questions and building substrate is
 > ### not the same as producing a component. §22: *do not force inclusion just because a component exists.*
 
@@ -18,7 +18,7 @@ information available today, what exactly would it contain?*
 
 | | |
 |---|---|
-| **PRODUCTION-READY COMPONENT SET** | ✅ two parity-certified objects, each independently reproducing its research decisions |
+| **CURRENT PARITY-CERTIFIED INCUMBENT COMPONENT SET** | ✅ two objects, each independently reproducing its research decisions. ⚠️ **Parity proves IMPLEMENTATION REPRODUCTION, not forward alpha validity** |
 | **FULLY SPECIFIED EXECUTABLE PORTFOLIO** | ❌ **PENDING OWNER ALLOCATION** — no integer-contract mapping exists (`OQ-6`) |
 
 **Do not quote Portfolio B's $2,012/wk for any unspecified P1+XM quantity combination.** B is
@@ -55,29 +55,29 @@ wrong in scope.** There is substantial recent evidence; it is `DISCOVERY_CONSUME
 rather than clean prospective confirmation. **`RECENT ≠ FORWARD`, and burned current-regime
 evidence is still evidence.**
 
-Fixed standard windows, declared before computing. Scaled at the frozen `k = 0.882866`.
+Fixed standard windows, declared before computing. Scaled at the **corrected `k = 0.836124`** (`runs/FWD_DD_RECONCILIATION/`).
 Source: `runs/RECENT_REGIME_PANEL_20260827/`.
 
 | object | window | mean $/wk | positive wks | t |
 |---|---|---:|---:|---:|
-| **`P1/PCT`** | **last 13w** | **−$254** | **38.5 %** | **−0.19** |
-| | last 26w | $536 | 50.0 % | 0.54 |
-| | last 52w | $1,112 | 51.9 % | 1.73 |
-| | last 104w | $1,709 | 56.7 % | 3.27 |
-| | FULL 213w | $1,231 | 57.7 % | 4.17 |
-| **`XM`** | last 13w | $507 | 53.8 % | 0.31 |
-| | last 26w | $1,556 | 53.8 % | 1.42 |
-| | FULL 213w | $828 | 48.8 % | 3.13 |
-| **P1+XM** *(unweighted sum, NOT Portfolio B)* | last 13w | $252 | 38.5 % | 0.10 |
-| | FULL 213w | $2,059 | 60.1 % | 4.96 |
+| **`P1/PCT`** | **last 13w** | **−$241** | **38.5 %** | **−0.19** |
+| | last 26w | $508 | 50.0 % | 0.54 |
+| | last 52w | $1,054 | 51.9 % | 1.73 |
+| | last 104w | $1,618 | 56.7 % | 3.27 |
+| | FULL 213w | **$1,166** | 57.7 % | 4.17 |
+| **`XM`** | last 13w | $480 | 53.8 % | 0.31 |
+| | last 26w | $1,474 | 53.8 % | 1.42 |
+| | FULL 213w | $784 | 48.8 % | 3.13 |
+| **P1+XM** *(unweighted sum, NOT Portfolio B)* | last 13w | $239 | 38.5 % | 0.10 |
+| | FULL 213w | $1,950 | 60.1 % | 4.96 |
 
-**Two validations:** the FULL P1 row reproduces the baseline's **$1,230 / t 4.16**, and XM's full
-total scales back to **$199,760 raw**, reproducing the independently corrected **$199,766**
-($577.36/trade × 346).
+**Two validations:** the FULL P1 row reproduces the **corrected** baseline **$1,166 / t 4.16**, and
+XM's full total scales back to **$199,760 raw**, reproducing the independently corrected
+**$199,766** ($577.36/trade × 346).
 
 > ### ⚠️ **The incumbent's recent-regime evidence is WEAK, and this is the honest reading.**
 > `P1/PCT` is **negative over the last 13 weeks** and its trailing mean **declines monotonically as
-> the window shortens** — $1,709 (104w) → $1,112 (52w) → $536 (26w) → −$254 (13w). That is the
+> the window shortens** — $1,618 (104w) → $1,054 (52w) → $508 (26w) → −$241 (13w). That is the
 > shape of decay, or of normal variation, and **13 weeks cannot distinguish them** (the forward
 > protocol puts P(losing quarter) at 14.5 % with nothing wrong).
 >
@@ -87,13 +87,13 @@ total scales back to **$199,760 raw**, reproducing the independently corrected *
 > ### ⚠️ **The diversification argument has deteriorated in the current regime.**
 > | window | ρ(P1, XM) | mean XM **when P1 loses** |
 > |---|---:|---:|
-> | FULL | **+0.098** | **+$601** |
-> | last 104w | +0.198 | −$216 |
-> | last 52w | +0.268 | −$579 |
-> | last 26w | +0.410 | −$619 |
-> | last 13w | **+0.393** | **−$1,444** |
+> | FULL | **+0.098** | **+$569** |
+> | last 104w | +0.198 | −$205 |
+> | last 52w | +0.268 | −$548 |
+> | last 26w | +0.410 | −$586 |
+> | last 13w | **+0.393** | **−$1,368** |
 >
-> XM's role in the book was to pay *when P1 does not*. **Over the full record it does (+$601). Over
+> XM's role in the book was to pay *when P1 does not*. **Over the full record it does (+$569). Over
 > the last year it does the opposite.** Correlation has risen roughly 4× and the conditional payoff
 > has flipped sign. **This directly weakens Portfolio B's rationale in the current regime** and must
 > be carried into any capital decision.
@@ -103,7 +103,7 @@ weeks are **293.6 %** of net — i.e. everything else is negative. XM's last-26w
 
 ### One number I could not reproduce
 The review quoted XM's last ~14 weeks as *~$499/wk, **35.7 %** positive, t ~0.25*. I measure
-**$507/wk, 53.8 % positive, t 0.31** over 13 weeks. **Mean and t agree; the positive-week rate does
+**$480/wk, 53.8 % positive, t 0.31** over 13 weeks (at the corrected `k`; $507 at the old one). **Mean and t agree; the positive-week rate does
 not.** My convention counts XM's silent weeks as **$0** (non-positive) rather than dropping them —
 dropping them would condition on having traded and inflate both statistics. The residual gap is
 likely window length (13 vs 14) or a different silent-week convention. **Flagged, not reconciled.**
@@ -119,7 +119,7 @@ available while these objects were being built and cannot be upgraded into confi
 
 | | |
 |---|---|
-| max DD (research) | $22,931 P1 · $11,489 B ⚠️ **the $22,931 basis is under reconciliation** — see below |
+| max DD (research) | **$24,213 P1 (corrected)** · ⚠️ $11,489 B **SUSPECT, unaudited** |
 | both legs in market | **0.9 %** of all minutes · opposing directions **0.3 %** |
 | max gross / netted | **3 / 3 contracts** · netting changes exposure on **1.85 %** of in-market minutes |
 | forward tail | empirical bootstrap: skew **+1.888**, excess kurtosis **8.717** |
@@ -127,9 +127,9 @@ available while these objects were being built and cannot be upgraded into confi
 > **A master allocator is NOT required for these two** (crossover 1.85 %). ⚠️ **That is specific to
 > these two** (§23–24) and must not be generalised to a third, high-frequency NQ sleeve.
 
-⚠️ **Open defect:** `FWD_BOOTSTRAP` found the weekly series' own maxDD is **$24,212.92** against the
-canonical **$22,931**, and weekly-resolution drawdown cannot exceed daily. **`FWD_DD_RECONCILIATION`
-must close this before any checkpoint is read.**
+✅ **Defect CLOSED.** `runs/FWD_DD_RECONCILIATION/` established the canonical $22,931 was a **commission-only** drawdown
+while the numerator is **net of the modelled spread**. Corrected to `k = 0.836124` → **$1,166/wk**.
+⚠️ **Portfolio B was NOT audited and remains SUSPECT.**
 
 ## 5. Owner decisions outstanding
 
