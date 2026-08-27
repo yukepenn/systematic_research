@@ -1,0 +1,46 @@
+==========================================================================================================================
+=== XM_CONFLICT PARITY - NinjaTrader Strategy Analyzer vs the committed SEQUENTIAL reference
+=== DECISION SERIES FIRST (section 21/22). Dollars are reported last and are not a gate.
+==========================================================================================================================
+    reference: 1,058 sessions 2022-07-04 -> 2026-07-31; 346 non-zero directions (176 long / 170 short), 6 disqualified
+    reading the per-bar export (219 MB) in chunks ...
+    NT8 09:45 decision bars: 1,181 sessions  [2s]
+    sessions present in BOTH: 1,054 of 1,058 reference sessions
+
+==========================================================================================================================
+=== DECISION SERIES, session by session (this is the object)
+==========================================================================================================================
+field                            agreement    disagreeing sessions
+desired_direction                  99.715%                       3
+conflict_flag                      99.810%                       2
+sign(nq_drive)                     99.810%                       2
+broad_composite |diff|       mean 0.000000            max 0.000000
+
+    non-zero directions: reference 346   NT8 349   delta +0.87 %
+    reference long/short 176/170   NT8 long/short 176/173
+
+    EVERY disagreeing session, classified (section 22 forbids averaging these away):
+        2023-04-05  dir ref +0 vs nt -1 | conflict 1/1 | drive -1.0/-1.0 | comp +0.2215/+0.2215 | disq 0 | ready 1
+        2026-07-17  dir ref +0 vs nt -1 | conflict 1/1 | drive -1.0/-1.0 | comp +1.1487/+1.1487 | disq 0 | ready 1
+        2026-07-17  dir ref +0 vs nt -1 | conflict 0/1 | drive +0.0/-1.0 | comp +nan/+1.1487 | disq 0 | ready 1
+
+==========================================================================================================================
+=== DOLLARS - reported LAST and NOT a gate (section 21)
+==========================================================================================================================
+    NT8 full-run trades 372 (from 2022-01-03); IN REFERENCE WINDOW 347, net $192,937
+    reference sequential  346 trades, net $199,436 (nt8 exit convention) / $199,766 (research exit convention)
+    NT8 long/short trades 175/172
+
+==========================================================================================================================
+=== GATES - every clause coded
+==========================================================================================================================
+gate  spec                                                                observed   verdict
+G1    desired_direction agreement >= 99 %                                 99.715 %      PASS
+G2    trade counts within 2 % of sequential 346                347 vs 346 = 0.29 %      PASS
+G3    conflict_flag agreement >= 99 %                                     99.810 %      PASS
+G4    sign(nq_drive) agreement >= 99 %                                    99.810 %      PASS
+G5    two-sided on both sides                                 175 long / 172 short      PASS
+
+    VERDICT: VALIDATED
+
+[done 2s]

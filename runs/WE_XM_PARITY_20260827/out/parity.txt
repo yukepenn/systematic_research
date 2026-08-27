@@ -1,0 +1,60 @@
+==========================================================================================================================
+=== XM_CONFLICT PARITY - NinjaTrader Strategy Analyzer vs the committed SEQUENTIAL reference
+=== DECISION SERIES FIRST (section 21/22). Dollars are reported last and are not a gate.
+==========================================================================================================================
+    reference: 1,058 sessions 2022-07-04 -> 2026-07-31; 346 non-zero directions (176 long / 170 short), 6 disqualified
+    reading the per-bar export (219 MB) in chunks ...
+    NT8 09:45 decision bars: 1,181 sessions  [2s]
+    sessions present in BOTH: 1,054 of 1,058 reference sessions
+
+==========================================================================================================================
+=== DECISION SERIES, session by session (this is the object)
+==========================================================================================================================
+field                            agreement    disagreeing sessions
+desired_direction                  98.387%                      17
+conflict_flag                      99.810%                       2
+sign(nq_drive)                     99.810%                       2
+broad_composite |diff|       mean 0.000000            max 0.000000
+
+    non-zero directions: reference 346   NT8 363   delta +4.91 %
+    reference long/short 176/170   NT8 long/short 184/179
+
+    EVERY disagreeing session, classified (section 22 forbids averaging these away):
+        2022-09-05  dir ref +0 vs nt +1 | conflict 1/1 | drive +1.0/+1.0 | comp -0.1516/-0.1516 | disq 0 | ready 1
+        2022-11-24  dir ref +0 vs nt -1 | conflict 1/1 | drive -1.0/-1.0 | comp +0.0944/+0.0944 | disq 0 | ready 1
+        2022-11-25  dir ref +0 vs nt -1 | conflict 1/1 | drive -1.0/-1.0 | comp +0.1522/+0.1522 | disq 0 | ready 1
+        2023-04-05  dir ref +0 vs nt -1 | conflict 1/1 | drive -1.0/-1.0 | comp +0.2215/+0.2215 | disq 0 | ready 1
+        2023-05-29  dir ref +0 vs nt -1 | conflict 1/1 | drive -1.0/-1.0 | comp +0.0290/+0.0290 | disq 0 | ready 1
+        2023-07-04  dir ref +0 vs nt +1 | conflict 1/1 | drive +1.0/+1.0 | comp -0.0118/-0.0118 | disq 0 | ready 1
+        2023-09-04  dir ref +0 vs nt +1 | conflict 1/1 | drive +1.0/+1.0 | comp -0.1520/-0.1520 | disq 0 | ready 1
+        2023-11-23  dir ref +0 vs nt +1 | conflict 1/1 | drive +1.0/+1.0 | comp -0.1926/-0.1926 | disq 0 | ready 1
+        2023-11-24  dir ref +0 vs nt -1 | conflict 1/1 | drive -1.0/-1.0 | comp +0.1155/+0.1155 | disq 0 | ready 1
+        2024-06-19  dir ref +0 vs nt +1 | conflict 1/1 | drive +1.0/+1.0 | comp -0.1415/-0.1415 | disq 0 | ready 1
+        2024-07-03  dir ref +0 vs nt +1 | conflict 1/1 | drive +1.0/+1.0 | comp -0.4487/-0.4487 | disq 0 | ready 1
+        2024-11-28  dir ref +0 vs nt +1 | conflict 1/1 | drive +1.0/+1.0 | comp -0.0208/-0.0208 | disq 0 | ready 1
+        2025-11-27  dir ref +0 vs nt -1 | conflict 1/1 | drive -1.0/-1.0 | comp +0.0402/+0.0402 | disq 0 | ready 1
+        2025-11-27  dir ref +0 vs nt -1 | conflict 0/1 | drive +0.0/-1.0 | comp +nan/+0.0402 | disq 0 | ready 1
+        2026-06-19  dir ref +0 vs nt +1 | conflict 1/1 | drive +1.0/+1.0 | comp -0.2922/-0.2922 | disq 0 | ready 1
+        2026-07-17  dir ref +0 vs nt -1 | conflict 1/1 | drive -1.0/-1.0 | comp +1.1487/+1.1487 | disq 0 | ready 1
+        2026-07-17  dir ref +0 vs nt -1 | conflict 0/1 | drive +0.0/-1.0 | comp +nan/+1.1487 | disq 0 | ready 1
+
+==========================================================================================================================
+=== DOLLARS - reported LAST and NOT a gate (section 21)
+==========================================================================================================================
+    NT8 full-run trades 386 (from 2022-01-03); IN REFERENCE WINDOW 360, net $195,295
+    reference sequential  346 trades, net $199,436 (nt8 exit convention) / $199,766 (research exit convention)
+    NT8 long/short trades 183/177
+
+==========================================================================================================================
+=== GATES - every clause coded
+==========================================================================================================================
+gate  spec                                                                observed   verdict
+G1    desired_direction agreement >= 99 %                                 98.387 %      FAIL
+G2    trade counts within 2 % of sequential 346                360 vs 346 = 4.05 %      FAIL
+G3    conflict_flag agreement >= 99 %                                     99.810 %      PASS
+G4    sign(nq_drive) agreement >= 99 %                                    99.810 %      PASS
+G5    two-sided on both sides                                 183 long / 177 short      PASS
+
+    VERDICT: NOT VALIDATED - classify every mismatch
+
+[done 2s]

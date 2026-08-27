@@ -1,0 +1,68 @@
+==========================================================================================================================
+=== P1/PCT PARITY - NinjaTrader Strategy Analyzer vs the Python research object
+=== ENGINEERING RECONCILIATION. Nothing is selected, tuned or promoted here.
+==========================================================================================================================
+    substrate 1,620,044 bars / 1,187 sessions; in-window 1,058 sessions  [6s]
+    PYTHON P1/PCT reference: 2,401 trades total, 2,131 in-window [26s]
+
+    NT8 trace:
+        resolved type: NinjaTrader.NinjaScript.Strategies.WeeklyEdgeP1PCT_v1
+        resolved instrument: NQU6
+        bars period: Minute/1
+        trading hours: CME US Index Futures ETH
+        backtest account: Backtest (isolated, reset)
+        commission template requested: NinjaTrader Brokerage Lifetime
+        fill type: Standard
+        commission template: NinjaTrader Brokerage Lifetime (applied to backtest account)
+        loading bars for 2022-01-03T00:00:00.0000000Z → 2026-07-31T21:59:59.0000000Z
+        loaded 1620098 bars
+        bars_array_set=True via property.setter on base NinjaScriptBase
+        set From=2022-01-03T00:00:00.0000000Z To=2026-07-31T21:59:59.0000000Z
+
+    NT8 P1/PCT: 2,399 serialized trades, 2,137 in-window; engine TradesCount 2,400, net $342,922.68
+    NT8 P1_v3 CONTROL: 2,260 serialized, 2,011 in-window; engine TradesCount 2,261, net $282,981.20
+
+==========================================================================================================================
+=== IN-WINDOW HEADLINE 2022-07-01 -> 2026-08-01, COMMISSION ONLY ON BOTH SIDES
+==========================================================================================================================
+                                      PYTHON (research object)     NT8 Strategy Analyzer           delta
+trades                                                   2,131                     2,137           0.28%
+net $                                                 $333,731                  $330,221          -1.05%
+size-2 share                                             19.9%                     20.7%           3.94%
+weeks                                                      210                       211           0.48%
+weekly mean $                                           $1,589                    $1,565          -1.52%
+max drawdown $                                         $28,124                   $27,765          -1.28%
+weekly series correlation                                                         0.9852
+
+==========================================================================================================================
+=== TRADE-BY-TRADE MATCH (the discriminating test: the 14-line diff perturbs the SCHEDULE)
+==========================================================================================================================
+    entry-timestamp + direction matched : 2,124
+    in PYTHON only                      : 7
+    in NT8 only                         : 13
+    MATCHED RATE (of Python trades)     : 99.672 %
+    on matched trades: QUANTITY agrees  : 94.209 %
+    on matched trades: EXIT BAR agrees  : 95.292 %
+    on matched trades: |pnl| diff       : mean $38.41  median $0.00  max $5,745.64
+
+==========================================================================================================================
+=== SECTION 18 CONTROL - does P1_v3 still reproduce W52's reference?
+==========================================================================================================================
+    W52 recorded P1_v3 on 2022-07 -> 2026-05: 1,948 NT8 trades, net $296,423
+    THIS RUN, P1_v3 on 2022-07 -> 2026-08 : 2,011 NT8 trades, net $284,514
+    (the windows differ by two extra months, so these are consistent rather than equal;
+     the control's job is to prove the ENVIRONMENT still resolves and trades sanely)
+
+==========================================================================================================================
+=== GATES - every clause coded, spec / observed / verdict (directive section 29 habit)
+==========================================================================================================================
+gate  spec                                                                    observed   verdict
+G1    in-window trade counts within 2 %                        2,131 vs 2,137 = 0.28 %      PASS
+G2    matched rate (entry ts + direction) >= 99 %                             99.672 %      PASS
+G3    net P&L within 2 %, commission-only                $333,731 vs $330,221 = 1.05 %      PASS
+G4    size-2 share within 3 pp                                  19.9 vs 20.7 = 0.79 pp      PASS
+G5    control P1_v3 resolves and trades                                   2,011 trades      PASS
+
+    PARITY VERDICT: CERTIFIED
+
+[done 26s]
