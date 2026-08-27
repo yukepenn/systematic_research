@@ -333,12 +333,17 @@ Full matrix: [`INFORMATION_COVERAGE_20260827.md`](INFORMATION_COVERAGE_20260827.
 coverages — **PRESENCE / INFORMATION / ACTION_VALUE / REAL_CAPTURE** — and they are never collapsed
 into one word.
 
-> ### **No TESTED current information surface has yet demonstrated reliable incremental separation
-> ### of P1 action quality.**
-> ⚠️ **This is deliberately narrower than the claim it replaces** (*"not separable by any information
-> source currently held"*, retired 2026-08-27). That was an overclaim on two counts: **higher-timeframe
-> remains `LIGHT`, never closed**, and the direct question — **do causal features predict FULL-HORIZON
-> `delta_action_value`?** — **has never been fitted at all.** `RR_W002A` is that test.
+> ### **No TESTED current information surface separates P1 action quality.**
+> **`RR_W002A` (`runs/RR_W002A_ACTION_VALUE_INFORMATION/`) is now the direct test and it is a clean
+> negative.** 18 causally-verified features, four model families, five arms, a dependence-preserving
+> null that **refits the entire walk-forward inside every shift**: the primary lands at the
+> **51.0th percentile of its own null**, and a family already proven NULL scores **higher** (77.0th)
+> than any real arm. Quintiles are U-shaped, top-decile AUC is **0.4990**, and adding features and
+> capacity made it *worse*. **OUTCOME A — current-data action-value information is NULL / LOW-EVI.**
+> ⚠️ **Still narrower than the claim retired on 2026-08-27** (*"not separable by any information
+> source currently held"*): **higher-timeframe remains `LIGHT`, never closed**, and order flow,
+> options and a wider event calendar are untested because they are **unavailable**, not because they
+> failed.
 > Cross-market intraday: **null**. 1-min participation: **anti-predictive**. Order flow:
 > **unmeasurable** — `runs/DATAGATE_ORDERFLOW_20260827/` covers 71 of 2,131 entries (**3.3 %**) at an
 > MDE of **$564/entry = 4× the mean**, so it was CLOSED-BY-DATA *before* a feature was written.

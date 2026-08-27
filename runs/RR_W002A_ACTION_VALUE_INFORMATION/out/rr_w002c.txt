@@ -1,0 +1,43 @@
+======================================================================================================================
+=== RR_W002A addendum - POST-HOC null for the one positive cell.  NOT PREREGISTERED.
+=== The preregistered gates stand as recorded. This adds a curiosity, not a finding.
+======================================================================================================================
+
+    200 session-boundary circular shifts of the target.
+    M1 is UNFITTED - the raw quality score - so the shift alone is the whole null for it.
+
+    ⚠ FOR THE FITTED CELLS THIS IS THE WEAKER NULL. Predictions are held fixed while the
+    target is shifted - which is exactly W110's original error and makes the bar too easy.
+    The AUTHORITATIVE nulls for fitted cells refit the entire walk-forward inside every
+    shift and live in rr_w002b.txt. They are not re-read here. Fitted rows below are
+    printed only so M1 can be compared against the same construction, and both tables
+    agree on the verdict.
+
+cell                        real rho  null p50  null p95  percentile
+M0_BASE_RATE                 -0.0515   -0.0287    0.1505       30.0%
+M1_EXPERT_SCORE_ONLY          0.0131   -0.0020    0.0458       71.5%
+CTRL_TIME_ONLY               -0.0539   -0.0038    0.0949       26.5%
+CTRL_VOL_ONLY                -0.0536   -0.0168    0.1234       28.5%
+ARM1_INTERNAL                -0.0222    0.0021    0.0502       19.5%
+ARM2_NQ_STATE                -0.0142   -0.0028    0.0703       39.0%
+PRIMARY_ARM1+2+3_RIDGE       -0.0302    0.0023    0.0685       25.5%
+ARM1+2+3_SHALLOW_GBM         -0.0348   -0.0050    0.0590       14.5%
+NEGCTRL_KNOWN_NULL           -0.0345    0.0008    0.0716       21.0%
+
+======================================================================================================================
+=== THE MULTIPLICITY BAR - M1 was the BEST OF NINE cells, so a single-cell null is too easy
+======================================================================================================================
+    M1 real rho                                       0.0131
+    single-cell null p95                              0.0458   percentile 71.5%
+    BEST-OF-9 null p95 (the honest bar)              0.1505   percentile 18.5%
+
+    verdict against the single-cell bar : DOES NOT CLEAR
+    verdict against the best-of-K bar   : DOES NOT CLEAR
+
+    W116b measured that independent per-cell draws inflate a best-of-K bar by 1.65x on a
+    correlated family. Here the shifts are SHARED across cells - one draw per shift applied
+    to every cell - so the correlation between cells is preserved and the bar is not inflated.
+
+    Whatever this shows, it is a statement about the ENGINE'S OWN quality layer, which is
+    built from features the engine already owns and was fitted on this window. Per the spec's
+    discovery-consumption rule that is MECHANISM-POLICY, not NEW INFORMATION.

@@ -1,0 +1,92 @@
+============================================================================================================================
+=== RR_W002A - MODELLING STAGE.  Spec f5d4e01.  STAGE A INFORMATION ONLY.
+=== No router, no policy, no abstention, no sizing, no exit change, no HMM.
+============================================================================================================================
+[     0s] 2,131 decisions   target = delta_total_window   mean $115.30  sd $2,196.37
+[     4s] 1,059 in-window CALENDAR sessions define the walk-forward axis
+[     4s] 13 expanding folds: first fit after 250 sessions, 63-session test blocks
+
+    CAN THESE STATISTICS TAKE A FAILING VALUE?  (RR_W001's G4 could not, and nobody noticed)
+      H1 rank corr > 0            : rho is signed and unbounded in sign -> CAN FAIL
+      H2 above null p95           : the null is refitted, so a real model can land below -> CAN FAIL
+      H3 beats every control      : controls are fitted on the same folds -> CAN FAIL
+      H4 top-minus-bottom > 0     : the target has 55.7 % negative values -> CAN FAIL
+      H5 sign positive in >=60 %  : per-fold rho is signed -> CAN FAIL
+      H6 negative controls null   : they are fitted identically to the real arms -> CAN FAIL
+
+============================================================================================================================
+=== 1. OUT-OF-SAMPLE PERFORMANCE.  Pooled across all test folds.
+============================================================================================================================
+cell                       features   OOS rho    OOS R2   folds +     Q5-Q1 $  monotone
+M0_BASE_RATE                      1   -0.0515   -0.0041        0%        -286     False
+M1_EXPERT_SCORE_ONLY              1    0.0131       nan       62%         801     False
+CTRL_TIME_ONLY                    1   -0.0539   -0.0056       62%        -146     False
+CTRL_VOL_ONLY                     2   -0.0536   -0.0103       54%         -71     False
+ARM1_INTERNAL                     5   -0.0222    0.0004       46%         181     False
+ARM2_NQ_STATE                    12   -0.0142   -0.0419       54%        -445     False
+PRIMARY_ARM1+2+3_RIDGE           18   -0.0302   -0.0333       54%         -98     False
+ARM1+2+3_SHALLOW_GBM             18   -0.0348   -0.0371       38%        -138     False
+NEGCTRL_KNOWN_NULL                2   -0.0345   -0.0095       62%         -71     False
+
+============================================================================================================================
+=== 2. DEPENDENCE-PRESERVING NULL.  The ENTIRE walk-forward is refitted inside every shift.
+=== The target is circularly shifted by WHOLE SESSIONS, so within-session structure and the
+=== target's own autocorrelation survive and only the alignment is destroyed.
+============================================================================================================================
+    200 shifts, drawn from the 798 session-boundary offsets
+
+cell                        real rho  null p50  null p95  percentile  verdict
+PRIMARY_ARM1+2+3_RIDGE       -0.0302   -0.0317    0.0445       51.0%     fail
+[     8s]   ... PRIMARY_ARM1+2+3_RIDGE null complete
+ARM1+2+3_SHALLOW_GBM         -0.0348   -0.0206    0.0343       35.0%     fail
+[   112s]   ... ARM1+2+3_SHALLOW_GBM null complete
+NEGCTRL_KNOWN_NULL           -0.0345   -0.0785    0.0370       77.0%     fail
+[   115s]   ... NEGCTRL_KNOWN_NULL null complete
+ARM1_INTERNAL                -0.0222   -0.0449    0.0423       69.5%     fail
+[   118s]   ... ARM1_INTERNAL null complete
+ARM2_NQ_STATE                -0.0142   -0.0375    0.0359       72.0%     fail
+[   121s]   ... ARM2_NQ_STATE null complete
+
+============================================================================================================================
+=== 3. THE PREREGISTERED GATE TABLE.  Every clause is a coded assertion.
+============================================================================================================================
+gate  spec                                                                                    observed   verdict
+H1    primary OOS rank correlation > 0                                                         -0.0302      FAIL
+H2    primary exceeds the 95th percentile of its own refitted null                              51.0th      FAIL
+H3    primary beats EVERY simple control                                -0.0302 vs best control 0.0131      FAIL
+H4    quintile monotonicity AND top-minus-bottom > 0                            mono=False  Q5-Q1 $-98      FAIL
+H5    per-fold rank correlation positive in >= 60 % of folds                                       54%      FAIL
+H6    BOTH negative controls FAIL the null (else the pipeline is broken)                      none cleared      PASS
+
+    ALL GATES: NOT ALL PASS
+
+============================================================================================================================
+=== 4. DETAIL - quintiles, folds, incremental arms, tails
+============================================================================================================================
+    PRIMARY score-quintile mean action value (Q1 = lowest predicted):
+      Q1 $305  Q2 $91  Q3 $154  Q4 $86  Q5 $207
+
+    PRIMARY per-fold OOS rank correlation (every fold printed, never only the pooled):
+      +0.008  -0.286  +0.003  +0.071  +0.116  -0.132  -0.063  -0.081  +0.014  +0.183  -0.067  -0.157  +0.003
+
+    INCREMENTAL ARMS (pooled OOS rho):
+      ARM1_INTERNAL               -0.0222
+      ARM2_NQ_STATE               -0.0142
+      PRIMARY_ARM1+2+3_RIDGE      -0.0302
+      ARM1+2+3_SHALLOW_GBM        -0.0348
+
+    BEST-OF-K over the 5 nulled cells: rho -0.0142. The multiplicity bar is
+    printed HERE beside the primary rather than as a footnote - W112's recorded error.
+
+    RIGHT-TAIL IDENTIFICATION - can the primary rank the extreme-POSITIVE decile?
+      top decile       AUC 0.4990
+      bottom decile    AUC 0.5555
+
+    EVIDENCE STATUS: whole window DISCOVERY_CONSUMED; 2026-05-31 -> 07-31 DIRECTLY_BURNED
+      burned slice: 67 decisions (3.14 %)
+
+    POWER LIMITATION, restated because it is binding: RR_W001's G3 showed this sample cannot
+    certify SMALL economic improvements (smallest detectable per-decision gain $41-80 against
+    a $13.93 bar). An INFORMATION result here does NOT overturn that and is not economics.
+
+[   121s] done

@@ -19,9 +19,9 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 |---|---|:--:|---|
 | — | ~~Is there enough ACTION-VALUE DISPERSION to justify routing?~~ | — | ✅ **CLOSED** · `runs/RR_W001_ACTION_VALUE_LEDGER/` |
 | — | ~~Does EVENT RESPONSE carry incremental action-value information?~~ | — | ✅ **CLOSED-BY-DATA** · `runs/DATAGATE_EVENTRESPONSE_20260827/` |
-| **1** | **Do causal features predict FULL-HORIZON `delta_action_value`?** — `RR_W002A`, STAGE A INFORMATION ONLY | **HIGH** | **RUNNABLE NOW — the missing test** |
-| **2** | Is `X9a` a coherent standalone expert? | MEDIUM | **RUNNABLE** |
-| 3 | Does HIGHER-TIMEFRAME state carry anything at P1's decision events? | LOW-MED | RUNNABLE — still `LIGHT`, never closed |
+| — | ~~Do causal features predict FULL-HORIZON `delta_action_value`?~~ | — | ✅ **CLOSED — NULL** · `runs/RR_W002A_ACTION_VALUE_INFORMATION/` |
+| **1** | **Is `X9a` a coherent standalone expert?** | **MEDIUM** | **RUNNABLE NOW** |
+| **2** | Does HIGHER-TIMEFRAME state carry anything at P1's decision events? | LOW-MED | RUNNABLE — still `LIGHT`, never closed |
 | 4 | Is SELECTIVE box un-latching worth anything? *(new, from RR_W001)* | LOW | RUNNABLE |
 | 5 | Is book COVERAGE actually a gap? *(reopened by `RR_W000`)* | LOW | RUNNABLE |
 | 6 | Does a soft allocation with cash beat the static book? | — | **DE-PRIORITISED by RR_W001** · gated on #1 |
@@ -35,18 +35,16 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | 14 | Can position management (exit / reversal) be routed? | UNKNOWN | **EXCLUDED from V1** · directive §7 |
 | 15 | What integer-contract mapping implements portfolio B? | — | **OWNER CAPITAL DECISION** · OQ-6 |
 
-> ### ⚠️ **The ACTION-VALUE INFORMATION frontier is UNTESTED, not closed.**
-> RR_W001 fitted **zero** models — that was its design (trial budget 0). It measured dispersion,
-> selection value, concentration and power. **It did not ask whether causal features predict
-> `delta_action_value`.** Row 1 is that question and it is runnable now.
+> ### ⚠️ **The action-value information question is now ASKED and ANSWERED: NULL.**
+> `RR_W002A` fitted it directly against a refitted dependence-preserving null and every gate but the
+> integrity check failed. Direct routing is de-prioritised **on evidence**, not on the letter of a
+> power gate. The **HMM stays NOT RUN**.
 >
-> What RR_W001 *does* justify is narrower: the **full economic router** is de-prioritised and the
-> **HMM is not run**. Rows 6–8 stay parked behind row 1.
->
-> Rows 9–11 have the only genuinely high ceilings and **all three are owner-gated acquisition** —
-> recorded, not re-requested. Two surfaces also remain `LIGHT` rather than closed (the scheduled-event
-> **flag**, and **higher-timeframe**, row 3); both are transformations of an NQ path already `DEEP`,
-> which is the lowest-prior category, but neither was ever closed and neither is swept away here.
+> **This tests the information THIS REPO HOLDS.** Order flow, options and a wider event calendar are
+> untested because they are **unavailable**, not because they failed — rows 8–10, all owner-gated,
+> and the only rows left with genuinely high ceilings. **Higher-timeframe (row 2) also remains
+> `LIGHT` and was never closed**; it is a transformation of an NQ path already `DEEP`, which is the
+> lowest-prior category, but it is not swept away here.
 
 ---
 
@@ -106,7 +104,7 @@ event TYPES** — acquisition, not research (row 10, OQ-5).
 
 ---
 
-## 1. Do causal features predict FULL-HORIZON action value? — `RR_W002A`, STAGE A ONLY
+## ✅ CLOSED — NULL — causal information does not predict action value (`RR_W002A`)
 
 | | |
 |---|---|
@@ -127,7 +125,7 @@ event TYPES** — acquisition, not research (row 10, OQ-5).
 | **B** information exists, economics underpowered | **REAL INFORMATION / ECONOMIC POLICY UNRESOLVED** | **do not force a router** → row 2 |
 | **C** strong information exists | — | **then and only then** preregister a separate economic router wave |
 
-## 2. `X9a` as a standalone expert — runnable, and independent of row 1
+## 1. `X9a` as a standalone expert — the highest-EVI RUNNABLE item
 
 | | |
 |---|---|
@@ -164,7 +162,7 @@ coverage is **UNMEASURED**.
 > engine present" is frequently correct behaviour. Pricing those 32 sessions needs a directional
 > oracle — level 2, not available money. n = 32 cannot support a new engine.
 
-## 3. Higher-timeframe state — still LIGHT, and listed because it was never closed
+## 2. Higher-timeframe state — still LIGHT, and listed because it was never closed
 
 `INFORMATION_COVERAGE` carries **higher-timeframe** at **`LIGHT`**, evidenced only by `HTFMECH01`
 from **campaign #3** — a different campaign on a different object. It has never been tested at
@@ -239,4 +237,5 @@ decision; slot D is an `EXECUTABLE_COMPONENT_SET` and `EXECUTABLE_PORTFOLIO` rem
 | date | change |
 |---|---|
 | 2026-08-27 | Created at Phase 0, pre-result. |
-| 2026-08-27 | **RR_W001 closed row 1** (router de-prioritised, HMM not run); **the event-response data gate closed row 2 without a wave**; `X9a` becomes the highest-EVI runnable item; selective box un-latching and book coverage added; more-event-types added as an acquisition row. |
+| 2026-08-27 | **RR_W002A closed the information question: NULL.** Primary at the 51.0th percentile of its own refitted null; a known-null family scored higher (77.0th) than any real arm; top-decile AUC 0.4990. `X9a` becomes row 1. |
+| 2026-08-27 | **RR_W001 closed the dispersion question** (router de-prioritised, HMM not run); **the event-response data gate closed row 2 without a wave**; `X9a` becomes the highest-EVI runnable item; selective box un-latching and book coverage added; more-event-types added as an acquisition row. |

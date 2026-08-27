@@ -1,0 +1,44 @@
+============================================================================================================================
+=== RR_W002A - DOES CAUSAL INFORMATION PREDICT FULL-HORIZON ACTION VALUE?
+=== Spec f5d4e01.  STAGE A INFORMATION ONLY.  Nothing here becomes a policy.
+============================================================================================================================
+[     0s] ledger 2,131 in-window decisions
+[     6s] substrate 1,620,044 bars; 2,131 decision bars located exactly
+[     6s] cross-market substrates loaded: ['ES', 'RTY', 'YM']
+
+============================================================================================================================
+=== PHASE 0 - CAUSALITY GATE.  BLOCKING: perturb bar i and the feature must NOT move.
+===              The lag profile is DIAGNOSTIC. Liveness is tested by variation, not response.
+============================================================================================================================
+    perturbation sample: 230 decision bars, minimum separation 5,000 bars
+[    18s] perturbation rebuilds complete for lags [0, 1, 5, 30, 400]
+
+feature                     own bar    lag1    lag5   lag30  lag400  verdict
+dist_open                      0.0%  100.0%  100.0%    0.0%    0.0%     KEEP
+dist_vwap                      0.0%   98.3%   98.3%   92.6%   77.0%     KEEP
+runlen                         0.0%   19.6%   32.2%    0.0%    0.0%     KEEP
+delta_mag                      0.0%  100.0%  100.0%  100.0%   76.5%     KEEP
+prev_ret                       0.0%    0.0%    0.0%    0.0%    0.0%     KEEP
+atr_l                          0.0%    0.0%  100.0%    0.0%    0.0%     KEEP
+nq_move_5m                     0.0%  100.0%  100.0%    0.0%    0.0%     KEEP
+nq_move_15m                    0.0%  100.0%   99.6%    0.0%    0.0%     KEEP
+nq_move_30m                    0.0%  100.0%  100.0%    0.0%    0.0%     KEEP
+nq_path_eff_30m                0.0%  100.0%   99.6%  100.0%    0.0%     KEEP
+nq_atr_z                       0.0%    0.0%  100.0%  100.0%  100.0%     KEEP
+session_move_so_far            0.0%  100.0%  100.0%    0.0%    0.0%     KEEP
+minute_of_session              0.0%    0.0%    0.0%    0.0%    0.0%     KEEP
+rel_volume_1m                  0.0%  100.0%  100.0%  100.0%    0.0%     KEEP
+xm_support_mag_15m             0.0%    3.0%    0.0%    0.0%    0.0%     KEEP
+PROBE_LEAK_close_i           100.0%    0.0%  100.0%    0.0%    0.0%     DROP
+PROBE_SAFE_close_prev          0.0%  100.0%  100.0%    0.0%    0.0%     KEEP
+
+    SELF-TEST - can this gate tell a leak from a lag?
+      PROBE_LEAK_close_i   (reads its OWN bar)  -> DROP   expected DROP
+      PROBE_SAFE_close_prev(reads bar i-1)      -> KEEP   expected KEEP
+      -> the gate detects a known-bad construction and passes a known-good one.
+
+    KEPT 15 features; DROPPED 0: none
+    A DROP is not a repair. A feature that reads its own bar is removed, never hand-lagged.
+[    18s] feature matrix written: 15 market columns + 5 expert-internal
+
+[    18s] --gate: stopping. No model was fitted.
