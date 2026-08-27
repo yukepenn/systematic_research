@@ -3,6 +3,97 @@
 
 # STATE OF THE SYSTEM — WEEKLY_EDGE (campaign #7)
 
+> ## 🚨 CURRENT TRUTH after W89–W93 (2026-08-26) — SUPERSEDES EVERY BLOCK BELOW
+>
+> ### 1. `FACT` — "X9a" IS NOT A SECOND ENGINE. Say this before quoting anything about the pair.
+> `w72:X9a` is `long_obj(TG_for(X9a_channel))` — **the full P1 object** (13 shared ratchet
+> members, four combiners, range throttle, delta gate, causal quality sizing, session box) **with
+> the X9a channel substituted into the OR slot** in place of B-MOM. Weekly ρ 0.613 with P1; W81
+> found them indistinguishable as objects. **The challenger is one engine with two different OR
+> gates, plus that gate run bare** — not "two engines".
+>
+> ### 2. `FACT` — THE SHORT QUESTION IS ANSWERED, AND THE ANSWER WAS ALWAYS INSIDE THE REPO
+> `hyst` has a short branch, so `chan == −1` collapses the short entry threshold by the exact
+> mirror of W67's long arithmetic. **The SHORT sleeve has carried the mirrored OR gate since W38
+> and nobody attributed it.** Rebuilt with the channel zeroed:
+>
+> | SHORT sleeve | trades | net |
+> |---|---|---|
+> | with the B-MOM channel | 2,294 | **$132,918** |
+> | channel ZEROED | 2,254 | **$13,998** |
+>
+> **The mirrored Solar vote is worth $13,998 over 1,058 sessions — nothing. B-MOM supplies 89.5 %
+> of the short sleeve's entire net.** The five short rejections (W38/W39/W61/W75/W78) rejected the
+> *mirrored ratchet*, which deserved it. The displacement channel's short side has been working
+> the whole time. `W91 amendment 1` — I falsified my own inference here before it propagated.
+>
+> ### 3. `FACT` — FUSION vs PORTFOLIO: the combiner is NOT what pays (W91)
+> P1 and a `{Solar, BMOM}` portfolio are built from the **same two ingredients**, so any
+> difference is the combiner. Isolating it against a long-only portfolio (`PORT_SBL`):
+>
+> | isolated effect | money @ fixed DD | positive weeks | top-5 DD |
+> |---|---|---|---|
+> | **B-MOM's SHORT LEG** | **+$274** | **+2.35 pp** | **−$6,747 (better)** |
+> | **THE COMBINER ITSELF** | **−$501** | +0.94 pp | **+$1,029 (worse)** |
+>
+> **Splitting the fused object into sleeves, ingredients held constant, LOSES money and makes the
+> drawdown worse. The portfolio's entire advantage is that the long-only OR-gate structurally
+> cannot hold the short leg.** Independent risk budgets are `FALSIFIED` as the *source* but are
+> **necessary**: collapsing to one budget costs 47–87 % because the sleeves are temporally
+> disjoint. **New rule: one box when sleeves share a clock, two when they do not.**
+>
+> ### 4. `FACT` — B-MOM is 100 % RTH; X9a is 62.6 % overnight (W89)
+> Costs are **$12.99/ctrRT for BMOM** and **$14.55 for X9a** against the blanket $14.65. B-MOM's
+> entire interquartile entry range is **09:33–09:39** — an opening-drive engine that then holds.
+> **The pair's ρ = +0.009 is TEMPORAL DISJOINTNESS, not independent information** — which is
+> exactly the property W75's brief said to go looking for, and we already had it.
+> **Streams three and four should be hunted on the session clock.**
+>
+> ### 5. TWO CHALLENGERS NOW, FAILING ON OPPOSITE AXES. NEITHER IS ADOPTED.
+>
+> | | specificity null | deep 16y risk | deep 16y return |
+> |---|---|---|---|
+> | **{BMOM + X9a} 2:3** | **FAIL** 92nd vs 95th | **PASS** top-5 −28.2 % | positive |
+> | **NETFUSE_1** | **PASS** 98.5th–100th, 3 nulls | **FAIL** −11.4 % vs −25 % | **−$5,970** |
+>
+> **`NETFUSE_1`** (W92/W93): one target in {−1,0,+1}, **ONE box, ONE ledger**, direct reversals —
+> P1's long vote netted against its own mirrored short vote. At matched contract-minutes vs P1:
+> **wk$@fixedDD $1,148 vs $914 · wk+% 59.2 vs 54.0 · streak 5 vs 8 · maxDD $16,212 vs $26,642 ·
+> top-5 $10,597 vs $17,882 · 2026 $575 vs $287.** Scored **4/5**.
+> **The first object in this campaign ever to clear a specificity null**, at the 100th percentile
+> on the strongest one available (schedule held fixed, run directions permuted: real $1,068/wk at
+> fixed DD, null mean **−$47**, top-5 DD $15,611 vs $68,019).
+> ⚠️ I found the *preregistered* null was **contaminated** — a session shift silently deletes
+> 18.5 % of the short book by colliding it with the long book — rebuilt it two harder ways, and
+> it still clears.
+>
+> ### 6. `CORRECTION`s recorded this session
+> - **W88 charged X9a's friction per TRADE** (9.35/wk); its real contract rate is **10.79**.
+> - **"contracts" meant two things in the same table**: P1's 6.2 was units × mean-size-while-
+>   holding (1.27, in a position 12 % of minutes); the basket's 3 was a nominal order count.
+>   Corrected: at matched income the basket is **54 % of peak contracts, 70 % of time-weighted,
+>   37 % of max drawdown**. **Peak for the 2:3 rung is 8 contracts, not 5.**
+> - **W67's "Solar alone 7.26 pts/session" → 6.64** on the corrected extended substrate.
+> - **My pre-compaction "BMOM 573 long / 579 short" → 518 / 525** (W90). It came from an
+>   uncommitted heredoc; the `.cs` header is corrected.
+> - **The 1:2 rung's rolling-gate score fell 64 % → 52 %** on candidate-specific costs.
+>
+> ### 7. `FACT` — BUILD NO MASTER EXECUTION LAYER (W92)
+> Two NT8 strategies on one account **are** the algebraic portfolio: **0.223 %** of gross
+> contracts cross internally (40 of 17,966 over four years) = **$1.63/week**, **zero**
+> phantom-flat minutes, identical peak exposure. MTM is additive because both fill at the same
+> next-bar open.
+>
+> ### 8. B-MOM's two sides (W90): kept, but honestly described
+> Weekly ρ(long, short) = −0.093 and underwater ρ = +0.041 — but **the decorrelation is STRUCTURAL**
+> (the two signs of one latched channel are mutually exclusive in time), **neither half is
+> individually significant** (t24 t = 0.69 / 0.66; only the combination reaches 2.42), **the short
+> leg fails its own specificity null** (86th/81st/74th vs a 95th bar) and it makes the 2:3 basket's
+> top-5 drawdown *worse*. **One shared box beats two on all three legs** (two boxes double the
+> worst week, −$33,492 vs −$16,970). **2026 for the whole object is +$7/week.**
+>
+> ### Everything below this block is earlier truth, kept for the detail.
+
 > ## 🚨 CURRENT TRUTH after W85 (2026-08-26) — CORRECTS THE BLOCK BELOW
 >
 > An independent 11-agent adversarial audit found, and I re-derived, three defects of mine.

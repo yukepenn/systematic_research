@@ -92,46 +92,104 @@ been retracted or superseded by W85–W88, and is replaced here rather than left
   independent, recently-effective pair in the repository.**
 - ~~"$150k on ~4 contracts with a ~$80k drawdown"~~ — superseded by §5.
 
-## 5. WHAT TO ACTUALLY TRADE — the current answer
+## 5. WHAT TO ACTUALLY TRADE — the current answer (rewritten 2026-08-26 after W89–W93)
 
-**`2 BMOM : 3 X9a`** (= 0.400 / 0.600, the executable form of the preregistered inverse-vol
-weights). Trailing-12-month rate, net of the measured $14.65/RT:
+### 5.0 ⚠️ Three corrections to the version of this section that stood before W89
 
-| basket | contracts | ALL-3 | weekly $ | **annual** | max DD | worst week | week + % |
-|---|---|---|---|---|---|---|---|
-| 1 BMOM : 1 X9a | **2** | 64 % | $2,383 | **$123,918** | $42,485 | −$20,133 | **58.5 %** |
-| 1 BMOM : 2 X9a | **3** | 64 % | $3,358 | **$174,591** | $47,034 | −$23,287 | 56.6 % |
-| **2 BMOM : 3 X9a** | **5** | **92 %** | $5,741 | **$298,509** | $86,272 | −$43,420 | **60.4 %** |
+1. **`CORRECTION` — a row-mixing error I made verbally, never in this file.** In the session
+   summary I wrote *"the candidate `2 BMOM : 3 X9a` = 3 contracts, $174,591/yr, $47,034 DD"*.
+   That takes the **1:2** row's numbers and puts the **2:3** label on them. This file and
+   `runs/WE_W88_TRADEABLE/REPORT.md` always had it right. **`2 BMOM : 3 X9a` is 5 nominal
+   contracts and ≈$298k; `1 BMOM : 2 X9a` is 3 nominal contracts and ≈$175k.**
+2. **`CORRECTION` (W89 H2) — the friction was charged per TRADE for X9a.** Its real rate is
+   **10.79** contract round turns per week, not 9.35. Offsetting that, **BMOM is a 100 % RTH
+   object and costs $12.99/ctrRT, not $14.65** — it structurally cannot trade overnight, where
+   the spread is 3.00 ticks against RTH's 2.00. The two errors partly cancel: **−0.7 %** on the
+   2:3 rung.
+3. **⚠️ `CORRECTION` (W89 §5) — "contracts" meant two different things in the same table.**
+   P1's "6.2 contracts" was 4.89 *units* × **1.27**, and 1.27 is P1's *mean position size while
+   holding* — it is in a position on only **12 %** of minutes. The basket's "3 contracts" was a
+   *nominal order count*. **Both sides are now reported as PEAK and TIME-WEIGHTED.**
 
-**P1 for the same income:** ~$175k needs **6.2 contracts and a $133,647 drawdown**; ~$300k needs
-**10.4 contracts and $223,235**. **Half the contracts, roughly 35–40 % of the drawdown.**
+### 5.1 The executable ladder, at candidate-specific cost
 
-Evidence: 5 of 6 preregistered conditions (rolling gate ALL-THREE **96 %** fractional / **92 %**
-tradeable; walk-forward stable on 2 of 3 objectives; positive in 2026; and **not P1 in disguise** —
-P1 scaled to the basket's own top-5 drawdown gives 52.6 % / $696 / ALL-THREE 0 % against the
-basket's 57.7 % / $1,044 / 96 %). Plus **W87**: at frozen weights over the 16 years the
-combination had never touched, its top-5 drawdown is **28.2 % smaller than P1's** and its max
-drawdown **34.5 % smaller** — the preregistered bar was ≥25 %.
+| basket | nominal | **PEAK ctr** | ALL-3 | weekly $ | **annual** | max DD | worst week | wk + % |
+|---|---|---|---|---|---|---|---|---|
+| 1 BMOM : 1 X9a | 2 | **3** | 64 % | $2,372 | **$123,329** | $42,644 | −$20,144 | **58.5 %** |
+| 1 BMOM : 2 X9a | 3 | **5** | **52 %** | $3,327 | **$172,987** | $47,404 | −$23,318 | 54.7 % |
+| **2 BMOM : 3 X9a** | **5** | **8** | **92 %** | $5,698 | **$296,317** | $86,651 | −$43,462 | **60.4 %** |
 
-**It is NOT adopted, and here is everything wrong with it:**
+Trailing-12-month rate; drawdowns full-window. At the pessimistic (p75) cost profile the 2:3 rung
+is **$287,590**. Note the **1:2 rung fell from 64 % to 52 % ALL-THREE** on the corrected cost —
+it now sits on the bar rather than above it.
 
-- it **fails** the specificity null (92nd percentile against a 95th bar) — the drawdown gain is
-  "two independent streams", W74's mechanism, not these two specifically;
-- **BMOM is regime-local** (flat pre-2022, t = 0.93, latest window at the 98th percentile of its
-  own history) and carries 40 % of the weight;
-- **X9a is weekly ρ 0.613 with P1** and W81 found them statistically indistinguishable as
-  objects — so this is *P1's cousin plus the B-MOM leg run standalone*, not two new engines;
-- its **2026 hit rate is worse** than P1's (48.4 % vs 51.6 %) despite 3.6× the money, and its
-  **worst week is worse in every period**;
-- **everything is in-sample.** The forward window and the deep window are both spent.
+### 5.2 P1 at matched income — both sides in the same units
 
-**Switching the baseline is the owner's decision.** The honest one-line summary:
+| target | object | **PEAK ctr** | time-wtd | **max DD** | worst week |
+|---|---|---|---|---|---|
+| **$175k** | P1 | **9.4** | 0.715 | **$127,984** | −$35,543 |
+| | **1 BMOM : 2 X9a** | **5.1** | 0.503 | **$47,956** | −$23,589 |
+| **$300k** | P1 | **16.1** | 1.226 | **$219,401** | −$60,932 |
+| | **2 BMOM : 3 X9a** | **8.1** | 0.852 | **$87,728** | −$44,003 |
 
-> *the same money on roughly half the contracts and 35–40 % of the drawdown, at a slightly worse
-> worst week, built from two components this repository has itself flagged, evidenced on a fully
-> in-sample modern window plus a sixteen-year risk test it passed at frozen weights.*
+> **The corrected claim: ≈54 % of P1's peak contracts, ≈70 % of its time-weighted exposure, and
+> ≈37 % of its maximum drawdown, at matched income.** *"Roughly half the contracts"* is true on
+> peak and overstated on time-weighted. *"35–40 % of the drawdown"* stands.
+
+### 5.3 THERE ARE NOW TWO CHALLENGERS, AND THEY FAIL ON OPPOSITE AXES
+
+| | specificity null | deep 16 years (risk) | deep 16 years (return) | recent |
+|---|---|---|---|---|
+| **{BMOM + X9a} 2:3** | **FAIL** (92nd vs 95th) | **PASS** (top-5 DD −28.2 %) | positive | 2026 +$784/wk |
+| **NETFUSE_1** (W92/W93) | **PASS** (98.5th–100th, three nulls) | **FAIL** (−11.4 % vs a −25 % bar) | **−$5,970** | 2026 +$575/wk |
+
+**`NETFUSE_1`** is new and is a *single strategy*, not a basket: one target in {−1, 0, +1}, **one
+session box, one ledger**, direct reversals — P1's long vote netted against P1's own mirrored
+short vote. At matched contract-minutes against P1:
+
+| | P1 | **NETFUSE_1** |
+|---|---|---|
+| weekly $ at fixed drawdown | $914 | **$1,148** (+26 %) |
+| positive weeks | 54.0 % | **59.2 %** |
+| longest losing streak | 8 | **5** |
+| max drawdown | $26,642 | **$16,212** (−39 %) |
+| mean top-5 drawdown | $17,882 | **$10,597** (−41 %) |
+| 2026 weekly $ | $287 | **$575** |
+
+It scored **4 of 5** preregistered conditions and is **the first object in this campaign ever to
+clear a specificity null** — at the **100th percentile** on all three legs of the strongest null
+available (hold the position schedule completely fixed, permute the direction of the 7,326 latched
+runs: the real object earns $1,068/week at fixed drawdown, the null mean is **−$47**).
+
+**It fails C4: over the sixteen unseen years it LOSES $5,970 while P1 makes $79,076**, and its
+drawdown advantage does not replicate (11.4 % against a 25 % bar). The pair's does.
+
+### 5.4 Everything wrong with both, in one place
+
+**Shared:** all modern evidence is in-sample; there is **no unspent forward window** in this
+campaign (2026-05-31 → 07-31 is burned, ≥2026-08-01 is sealed until the calendar allows).
+
+**{BMOM + X9a}:** fails the specificity null (the drawdown gain is *"two independent streams"*,
+W74's generic mechanism); **BMOM is regime-local** (2026 = **+$7/week**, W90) at 40 % weight;
+**X9a is not a second engine** — W89 established it is *P1 with one gate swapped*, weekly ρ 0.613;
+worst week worse than P1 in every period.
+
+**NETFUSE_1:** deep-negative and its risk geometry does not replicate; **not an independent
+stream** (ρ +0.556 with P1, +0.719 with SHORT) and may never be counted in a census; its
+trailing-12-month positive-week rate is **52.8 %** against a full-window 59.2 % — decaying; and
+an honest quarterly refit picks the incumbent `(1300, 1000)` constants in **0 of 12** refits.
+
+### 5.5 The engineering answer (W92) — build nothing
+
+**Do not build a master execution layer.** Two ordinary NT8 strategies on one account are the
+algebraic portfolio: only **0.223 %** of gross contracts cross internally (40 of 17,966 over four
+years), worth **$1.63/week**; there are **zero** phantom-flat minutes; and peak account exposure is
+identical to the sum of the sleeves. Mark-to-market P&L is additive because both fill at the same
+next-bar open.
 
 ## 6. Files
-`runs/WE_W85_GATEFIX/REPORT.md` (the broken gate) · `runs/WE_W87_DEEPPAIR/REPORT.md` (the
-candidate) · `runs/WE_W88_TRADEABLE/REPORT.md` (contracts + the weekly-ρ recount) ·
-`runs/WE_W82_FILLAUDIT/` (the fill cost, + amendments 1–2).
+`runs/WE_W89_CANDCOST/` (candidate friction, the unit correction) ·
+`runs/WE_W90_BMOMSIDES/` (B-MOM's two sides) · `runs/WE_W91_FUSEVSPORT/` (fusion vs portfolio,
++ amendment 1) · `runs/WE_W92_MASTER/` (netting + NETFUSE) · `runs/WE_W93_NETFUSE/` (the
+challenge, + the null audit) · `runs/WE_W87_DEEPPAIR/` · `runs/WE_W88_TRADEABLE/` ·
+`runs/WE_W85_GATEFIX/` · `runs/WE_W82_FILLAUDIT/`.
