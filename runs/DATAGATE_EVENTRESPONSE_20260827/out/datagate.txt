@@ -1,0 +1,71 @@
+======================================================================================================================
+=== DATAGATE - EVENT RESPONSE.  Is the question ASKABLE with the calendar we hold?
+=== No hypothesis is tested. No feature is fitted. No gate is read.
+======================================================================================================================
+
+    calendar rows           145   in-window 129
+    distinct event SESSIONS in window: 128
+event          n   time ET    available to a 09:45 decision?
+CPI           48     08:30              YES - lands pre-open
+FOMC          33     14:00        NO - lands at 14:00, after
+NFP           48     08:30              YES - lands pre-open
+
+======================================================================================================================
+=== 1. COVERAGE of P1/PCT's own decision surface
+======================================================================================================================
+    in-window P1/PCT decisions                        2,131
+    ... on a scheduled-event session                    267    12.53 %
+    ... AND after that session's event time             153     7.18 %   <- the reachable surface
+    distinct event SESSIONS carrying >=1 decision        71   <- the EFFECTIVE N
+
+    Directive section 20: 12 P1 opportunities after one CPI print are ONE macro event, not
+    twelve. The row above is the sample size that governs every inference in this lane.
+
+======================================================================================================================
+=== 2. MINIMUM DETECTABLE EFFECT at that coverage
+======================================================================================================================
+    sd(action value), all decisions                $  2,123.55
+    sd(action value), reachable subset             $  2,852.24   <- event sessions are MORE volatile
+    book-wide materiality bar (per decision)       $     13.93
+    LANE-SCALED bar - the same total dollars, earned on the 153 reachable
+    decisions instead of all 2,131                    $    194.06
+
+    The lane-scaled bar is the fair target. A filter that only acts on 7.18 % of the book
+    must move those decisions ~14x harder to deliver the same book-level improvement, so
+    comparing this lane's MDE to the book-wide bar would be a units error.
+
+unit of inference                              N    MDE (top-vs-bottom half)   vs lane bar
+decisions, treated as independent            153                   1,292.04          6.7x
+EVENT SESSIONS (the honest unit)              71                   1,896.67          9.8x
+CPI/NFP sessions only (08:30)                 96                   1,631.12          8.4x
+FOMC sessions only (14:00)                    33                   2,782.04         14.3x
+
+    The MDE is for a top-half-versus-bottom-half split on a response feature - the most
+    generous two-group contrast available. A quintile contrast is strictly worse.
+
+======================================================================================================================
+=== 3. COVERAGE of the one-shot experts
+======================================================================================================================
+    XM_CONFLICT taken decisions                         346
+    ... on a PRE-OPEN event session (08:30)              29     8.38 %
+    (FOMC at 14:00 is NOT in XM's information set - its decision is at 09:45.)
+
+    W105b already measured that XM is NOT an event trade: its 304 non-announcement trades
+    earn $408/trade at 54.9 %. W110 measured the announcement FLAG alone at AUC 0.498.
+    Neither of those closes the RESPONSE question - but both bound how much room is left.
+
+======================================================================================================================
+=== 4. WHAT WOULD MAKE THIS ASKABLE
+======================================================================================================================
+    Against the LANE-SCALED bar of $194.06, the event-session MDE is
+    $1,896.67 - short by a factor of 9.8x.
+    Power scales with N, so the effective N must rise by 96x - from 71 event sessions to about 6,782.
+    At roughly 2.6 scheduled events per month that is on the order of
+    215 YEARS of additional calendar.
+
+    That number is a reductio, not a plan. It is printed to make the shape of the problem
+    explicit: the constraint is the CALENDAR, and no modelling choice moves it.
+
+    Adding event TYPES (PPI, retail sales, claims, PCE, GDP, ISM, auctions) is the only
+    lever that does not require waiting. It is a data-acquisition question, not a research
+    question, and it belongs in OWNER_QUEUE rather than in a wave.

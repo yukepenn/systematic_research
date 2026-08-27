@@ -54,6 +54,7 @@ The free-data tier is fully adjudicated. These are additive, not exclusive:
 | **Order-flow / BBO history** | CrossTrade renewal + capture time | The **largest current gap**. `runs/DATAGATE_ORDERFLOW_20260827/`: order flow covers **71 of 2,131** P1 entries (**3.3 %**), MDE **$564/entry = 4× the mean**. **~300+ overlapping sessions** would bring the MDE near the unconditional mean. |
 | Futures daily data (Norgate/CSI class) | ~$30–60/mo | 40–60 markets, preregistered TSMOM+carry book; the only path to a confirmable ~1.0-Sharpe complementary book |
 | Options data (`GAMMA00`) | $80–199/mo | top NQ-side unlock |
+| **Wider macro-event calendar** | free–cheap (PPI, retail sales, initial claims, PCE, GDP, ISM, Treasury auctions) | **`DATAGATE_EVENTRESPONSE_20260827` closed the event-response lane on sample size, not on ideas.** The CPI/NFP/FOMC calendar reaches **153 of 2,131** P1 decisions (**7.18 %**) on **71** effective event sessions, where the MDE is **9.8×** the lane-scaled bar. ~4× the event count would take effective N to ~280 and the MDE to ~5× — **better, still short.** Listed because it is the cheapest of these, not because it is sufficient |
 | Hold | free | `MONITOR-01 #2` (≥ 2026-11-01) adjudicates two NQ shadow candidates |
 
 **Why blocked.** All require payment. **No research action is possible on any of them without you,

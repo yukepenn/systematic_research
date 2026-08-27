@@ -339,14 +339,22 @@ into one word.
 > MDE of **$564/entry = 4× the mean**, so it was CLOSED-BY-DATA *before* a feature was written.
 > Turnover: **worse than random**. Regime state: **real information, null policy**.
 
-**Two surfaces remain open, and both are gated by data or by sequencing — not by ideas:**
+**Both surfaces that were open on 2026-08-27 are now closed by DATA, not by ideas:**
 
 1. **BBO / trade imbalance** — blocked by data. ~300+ overlapping sessions needed. Owner decision,
    `research/operational/OWNER_QUEUE.md` OQ-5.
-2. **EVENT RESPONSE** (as distinct from the event *flag*) — **UNTESTED, and the next research wave.**
-   The CPI/NFP/FOMC calendar is already committed and seal-clean
-   (`research/04_complementary_family/c01_announcement_calendar.csv`), and W105b already showed the
-   flag alone is not the mechanism — which is exactly why the *response* is worth a wave.
+2. **EVENT RESPONSE** — **CLOSED-BY-DATA**, `runs/DATAGATE_EVENTRESPONSE_20260827/`. A response
+   feature exists only *after* its event, which reaches **153 of 2,131 P1 decisions (7.18 %)** on
+   **71** effective event sessions — and 12 opportunities after one CPI print are **one** event, not
+   twelve. MDE there is **$1,896.67 = 9.8×** the lane-scaled bar (**0.665 sd**); closing the gap
+   needs **~96× the effective N**, i.e. ~220 years of calendar. **The constraint is the calendar and
+   no model moves it.** Marked **UNDERPOWERED**, not NULL. `XM_CONFLICT` is worse still — 29 of 346
+   decisions, and FOMC at 14:00 is not even in its 09:45 information set.
+
+> ### **Every information lane reachable from data this repo currently holds is now measured.**
+> What remains is **owner-gated acquisition** (order flow, options, more event types) or **bounded
+> engineering** (`X9a`'s decision contract). That is the honest state of the frontier, and it is the
+> reason the next runnable item is engineering rather than discovery.
 
 ### ⭐ What `RR_W001` added, and what it closed
 

@@ -22,7 +22,7 @@ Legend: **DEEP** · **SUPPORTED** · **LIGHT** · **NULL** (tested, failed) · *
 | **market state / regime (trend vs range)** | **REAL INFO, NULL POLICY** | W109: AUC 0.613–0.621, 100th pctile of permutation nulls — **genuine**. W109 + W113: the veto fails on losing fades *and* on the profitable baseline. Selectivity ratio 0.74–1.12 |
 | **turnover / own decision history** | **NULL** | W121: caps sit **below** their count-matched random placebo (0.0–4.0th pctile). Marginal entry does not decay — the 4th is the *best* |
 | **scheduled macro event flag** | **LIGHT** | committed CPI/NFP/FOMC calendar; W105b (XM is *not* an event trade); W110 (announcement flag alone AUC 0.498) |
-| **event RESPONSE (not the flag)** | **·** | untested |
+| **event RESPONSE (not the flag)** | **CLOSED-BY-DATA** | `DATAGATE_EVENTRESPONSE_20260827`: a response feature reaches **153 of 2,131 P1 decisions (7.18 %)** on **71** effective event sessions; MDE **$1,896.67 = 9.8×** the lane-scaled materiality bar (0.665 sd). Closing it needs ~**96× the effective N**. The binding constraint is the **calendar**. Not `NULL` — **UNDERPOWERED**, per directive §20 |
 | **overnight inventory** | **NULL** | ONRANGE01/02, W96 |
 | **higher-timeframe** | **LIGHT** | HTFMECH01 (campaign #3) |
 | **execution / friction** | **SUPPORTED** | W82 measured the fill cost that 82 waves had assumed |
