@@ -1,0 +1,67 @@
+======================================================================================================================
+=== B1: the reconstructed base schedule vs the engine's own cached B-MOM array
+======================================================================================================================
+    THE BASE IS THE ENGINE'S OWN CACHED B-MOM ARRAY, not a reconstruction. B1 is
+    therefore satisfied by construction; what follows is a DIAGNOSTIC on we_channels.
+    we_channels' reconstruction agrees on 1,619,679 of 1,620,044 bars (99.9775 %); W72 recorded 99.992 % on the SHORTER substrate.
+    365 divergent bars over 34 of 1187 sessions; worst: 2026-07-17 (238), 2025-12-10 (42), 2023-06-12 (19)
+    `FINDING` 2026-07-17 is a TRUNCATED SESSION in the extended substrate - it ends
+    10:53 with 83 RTH bars against a normal 390 - and accounts for most of the gap.
+    It is a data hole, not a channel defect, and it lies inside the BURNED span.
+    Recorded because X9a is built by the same module and inherits the same path.
+
+    relvol defined on 98.6 % of bars, rsv_share on 97.9 %, its causal median on 94.9 %
+    B1b  gfills_fast == gfills on both legs, byte for byte ... PASS
+
+======================================================================================================================
+=== THE BATTERY. Primary is mean $ per contract round turn - the only statistic a filter
+===   cannot flatter by changing exposure.
+======================================================================================================================
+
+  --- SHORT leg ------------------------------------------------------------------------------------------------
+arm           accept%  trades    ctr   $/ctrRT      net $  wk$@fixDD   wk+%     top5     t  null p95    pct
+BASE           100.0%     692    692     85.71     59,310        109  46.5%   36,588  0.76
+F_VOL           93.1%     652    652     63.32     41,287         71  44.1%   38,156  0.53    148.02  25.5
+                     null: mean 86.64  sd 38.96  p95 148.02  p99.17(Bonferroni 6) 173.43   [12s]
+F_SEMI          92.0%     673    673    116.07     78,113        121  47.9%   36,537  1.04    145.61  77.5
+                     null: mean 89.37  sd 36.22  p95 145.61  p99.17(Bonferroni 6) 169.08   [17s]
+F_BOTH          85.8%     629    629     72.85     45,820         76  45.5%   38,271  0.61    184.03  35.0
+                     null: mean 92.78  sd 52.16  p95 184.03  p99.17(Bonferroni 6) 210.44   [22s]
+
+  --- LONG leg ------------------------------------------------------------------------------------------------
+arm           accept%  trades    ctr   $/ctrRT      net $  wk$@fixDD   wk+%     top5     t  null p95    pct
+BASE           100.0%     677    677    180.50    122,196        279  54.9%   26,379  1.56
+F_VOL           89.8%     614    614    260.38    159,875        425  54.5%   23,612  2.11    249.97  98.5
+                     null: mean 183.49  sd 44.77  p95 249.97  p99.17(Bonferroni 6) 265.69   [27s]
+F_SEMI           3.5%      26     26  -1247.63    -32,438        -95   2.8%   32,438 -2.16   1217.93   0.5
+                     null: mean 164.99  sd 630.56  p95 1217.93  p99.17(Bonferroni 6) 1894.28   [31s]
+F_BOTH           3.0%      23     23  -1124.14    -25,855        -88   2.8%   28,053 -1.79   1154.79   1.5
+                     null: mean 126.25  sd 627.55  p95 1154.79  p99.17(Bonferroni 6) 1740.07   [35s]
+
+======================================================================================================================
+=== VERDICTS against the falsifiers fixed in the spec
+======================================================================================================================
+    H1_volume    SHORT F_VOL   $63.32/ctrRT vs p95 $148.02 / p99.17 $173.43   ->  FALSIFIED
+    H2_semivar   SHORT F_SEMI  $116.07/ctrRT vs p95 $145.61 / p99.17 $169.08   ->  FALSIFIED
+    H3_asymmetry  F_SEMI lifts SHORT by $+30.36/ctrRT and LONG by $-1428.13/ctrRT   ->  SUPPORTED
+
+======================================================================================================================
+=== RECENCY and SESSION CLASS on the SHORT leg (t6m/t3m lie in the BURNED span)
+======================================================================================================================
+window           BASE       F_VOL      F_SEMI      F_BOTH
+FULL            85.71       63.32      116.07       72.85
+2024+           87.52       63.96      128.14       71.27
+2025           237.76      279.05      305.14      259.62
+2026YTD        -51.87     -152.13      -80.14     -191.14
+t12m           261.99      233.44      261.71      234.36
+t6m            -59.74     -180.67      -69.16     -199.95
+    (mean $ per contract round turn)
+
+class          share        BASE       F_VOL      F_SEMI      F_BOTH
+TREND-UP       21.0%    -2163.29    -2158.86    -2188.27    -2184.52
+TREND-DOWN     14.5%     3110.89     3195.37     3101.56     3212.71
+REVERSAL       25.7%     -242.95     -254.25      -57.81     -159.20
+RANGE          26.8%     -596.84     -575.82     -622.05     -595.47
+MIXED          12.0%     -459.86     -563.26     -459.83     -563.24
+
+[done 36s]

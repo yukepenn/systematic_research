@@ -13,8 +13,8 @@ Legend: **STRONG** · **SUPPORTED** · **WEAK** · **REGIME_LOCAL** · **NULL** 
 
 | mechanism ↓ / information → | OHLC | **volume** | VWAP / value | bid-ask | trade flow | **cross-mkt** | calendar | volatility | higher TF | micro |
 |---|---|---|---|---|---|---|---|---|---|---|
-| **trend persistence** | **STRONG** | **·** | SUPPORTED | ✗ | ✗ | NULL | NULL | **STRONG** | WEAK | ✗ |
-| **downside persistence** | **WEAK** | **·** | WEAK | ✗ | ✗ | · | · | **·** | WEAK | ✗ |
+| **trend persistence** | **STRONG** | **WEAK**² | SUPPORTED | ✗ | ✗ | NULL | NULL | **STRONG** | WEAK | ✗ |
+| **downside persistence** | **WEAK** | **NULL**¹ | WEAK | ✗ | ✗ | · | · | **NULL**¹ | WEAK | ✗ |
 | **reversal / failed persistence** | NULL | **·** | · | ✗ | ✗ | · | · | · | · | ✗ |
 | **range / value** | NULL | **·** | **·** | ✗ | ✗ | · | · | · | · | ✗ |
 | **volatility transition** | WEAK | **·** | · | ✗ | ✗ | · | · | WEAK | **·** | ✗ |
@@ -26,6 +26,17 @@ Legend: **STRONG** · **SUPPORTED** · **WEAK** · **REGIME_LOCAL** · **NULL** 
 | **cross-market** | — | · | · | ✗ | ✗ | **NULL (0/15)** | · | · | · | ✗ |
 | **execution** | **STRONG** | · | · | SUPPORTED | · | · | · | · | · | ✗ |
 | **management / sizing** | SUPPORTED | · | · | · | · | · | · | **REGIME_LOCAL** | · | ✗ |
+
+> ¹ **W100 (2026-08-26)**, and read the quantifier: `relvol >= 1.0` and
+> `rsv_share >= trailing-250-session median`, each as an **acceptance gate on B-MOM's short-leg
+> triggers**, are TESTED-NULL — 25.5th and 77.5th percentile of rate-matched random filters.
+> Both accepted ~92 % of the target leg, so they were nearly non-binding; that is a design flaw in
+> the test as much as a fact about the axes. **Volume as a signal, volume decay, effort-without-
+> result, volume spikes, and semivariance as a THRESHOLD SCALE inside the channel remain untested.**
+>
+> ² **W100**: `relvol >= 1.0` on the LONG leg reached the 98.5th percentile of its rate-matched
+> null but not the Bonferroni bar for the family of six. **WEAK**, and it was a control arm, not a
+> hypothesis. High-participation *upside* continuation is the one live corner of the volume column.
 
 ## 2. ⭐ The single largest hole, and it is free
 
