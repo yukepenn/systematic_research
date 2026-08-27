@@ -1,0 +1,34 @@
+====================================================================================================
+=== TEST A - CAUSAL FEATURE CHECKER
+====================================================================================================
+    causal (rolling+shift(1))        -> PASS   expected PASS   OK   {'window_identity': True, 'own_obs_cannot_move_it': True, 'next_obs_does_move': True}
+    no shift - includes own obs      -> FAIL   expected FAIL   OK   {'window_identity': False, 'own_obs_cannot_move_it': False, 'next_obs_does_move': True}
+    shift(-1) - sees the future      -> FAIL   expected FAIL   OK   {'window_identity': False, 'own_obs_cannot_move_it': False, 'next_obs_does_move': True}
+
+====================================================================================================
+=== TEST B - MULTI-CANDIDATE NULL MUST PRESERVE DEPENDENCE
+====================================================================================================
+    mean pairwise rho +0.918   effective K 1.08 of 15
+    best-of-K p95, SHARED sign      $17.2
+    best-of-K p95, INDEPENDENT sign $28.3   inflation x1.65
+    -> OK - the harness detects the inflation
+
+====================================================================================================
+=== TEST C - EVENT GATE MUST BE EVALUATED AT THE TRIGGER, NOT A LATER CLOCK
+====================================================================================================
+    gate evaluated at/before trigger -> PASS   expected PASS
+    gate pinned to a fixed 12:00     -> FAIL   expected FAIL   (193 of 400 gates land AFTER their trigger)
+    realised trigger-time distribution is reported so an 'endogenous' rule firing at a
+    fixed early minute is visible before any P&L: p25 663 median 727 p75 800
+
+====================================================================================================
+=== TEST D - SESSION ALIGNMENT with an early close and a missing session
+====================================================================================================
+    sessions with a 15:44 bar: [0, 1, 4]   expected [0, 1, 4]
+    early-close session 2 correctly ABSENT: True
+    missing session 3 correctly ABSENT:     True
+    -> OK
+
+====================================================================================================
+=== 7 of 7 checks OK
+====================================================================================================
