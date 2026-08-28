@@ -364,6 +364,18 @@ def main():
     DF = pd.DataFrame(rows)
     DF.to_csv(os.path.join(OUT, "dashboard.csv"), index=False)
 
+    # ---- ADDITIVE EXPORT (2026-08-27). Changes NO computation: it dumps the same weekly series
+    # `dash()` already aggregates, so the ABS/PCT comparison can be run on the standard fixed
+    # windows (FULL/104w/52w/26w/13w) that this run's own WINDOWS list does not carry.
+    _fullmsk = MASK["FULL"]
+    _wk = pd.DataFrame({"week": wk[_fullmsk]})
+    for _key in TR:
+        if _key[0] != "P1":
+            continue
+        _wk[_key[1]] = netser(_key, _fullmsk)
+    _wk.groupby("week", as_index=True).sum().to_csv(
+        os.path.join(OUT, "weekly_arms_P1.csv"))
+
     # ================================================================= the primary read
     def show(w, objs):
         P_("")
