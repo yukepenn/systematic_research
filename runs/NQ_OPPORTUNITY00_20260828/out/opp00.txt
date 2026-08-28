@@ -1,0 +1,63 @@
+================================================================================================================
+=== NQ_OPPORTUNITY00 -- LANE A STATE CENSUS.  NO P&L, NO MODEL, NO RULE RANKED BY RETURN.
+================================================================================================================
+    bars 1,620,044   sessions 1,187   in-window sessions 1,058   max bar 2026-07-31 16:59:00
+
+--- A1  THE ARMING IDENTITY, DECOMPOSED  ->  K * g * (1+dL) >= 16
+    decomposition vs frozen votes(): disagreements 0 of 1,620,044   PASS - identity reproduced EXACTLY
+    long armed on 275,855 bars (17.03%)   short leg armed on 252,479 bars (15.58%)   overlap 0
+
+--- A0  POPULATION  (session_id, never session_date)
+    total 1,058   active 638   FLAT 420 = 39.7%   (independently cross-checked on book p1_pnl != 0)
+    session-unit guard: {'rows': 2131, 'active_sessions': 638, 'per_active_session': 3.3401253918495297, 'total_sessions': 1058, 'flat_sessions': 420, 'flat_share': 0.39697542533081287, 'per_calendar_session': 2.0141776937618148}
+    substrate in-window session indices 1,058; intersect with ledger session ids: 1,058
+
+--- A1/A2/A3/A4  PER-SESSION STATE  (descriptive; no returns anywhere)
+    per-session rows 1,058   active 638   flat 420
+
+--- A1  P1_FLAT_CAUSE_DECOMPOSITION  (mutually exclusive, fixed precedence)
+      cause                                 sessions  share of 420  median range $
+      1_K0_no_member_ever_long                   252         60.0%           5,762
+      2_K1_max_vote_0.25                          86         20.5%           5,465
+      3_throttle_wall                              3          0.7%           3,825
+      4_NEAR_product_never_reached_16             79         18.8%           4,135
+
+    sessions where the SHORT leg was armed but P1 is flat: 343 of 420 = 81.7%
+      ^ already FALSIFIED five times (W38/39/61/75/78); builds NETFUSE_1, listed DEAD/FALSIFIED.
+        Recorded, NOT a lane.
+
+--- A2  ARMING DISTANCE  (frozen definitions; no alternative compared, none picked by return)
+                                      FLAT (420)    ACTIVE (638)
+      vote_max (1.0 = armed)               0.000           2.000
+      M_max (threshold 3.0)                2.830           7.790
+      K_max                                0.000           4.000
+      g_max                                4.000           4.000
+    flat sessions within 10% of the arming boundary: 0 = 0.0%
+    flat sessions that NEVER reached M >= 3.0 on any member set: 252 = 60.0%
+
+--- A3/A4  MOVEMENT CAPACITY  (outcome-independent path geometry only)
+    median ACTIVE-session realised range   314.25 pts ($6,285)
+    A-C1 bar = 60% of it          188.55 pts ($3,771)
+
+      statistic                          FLAT median   ACTIVE median     ratio
+      realised range (pts)                    263.88          314.25      0.84
+      path length (pts)                      4181.25         4561.88      0.92
+      realised variation (pts)                178.19          194.26      0.92
+      40-tick DC count                         95.00          106.00      0.90
+      bars                                   1380.00         1380.00      1.00
+
+    >>> A-C1: share of FLAT sessions reaching the bar = 77.9%   required >= 40%   PASS
+    flat sessions with >= 1  40-tick directional change: 420 = 100.0%
+    flat sessions with >= 3  40-tick directional changes: 420 = 100.0%
+
+================================================================================================================
+=== LANE A CONTINUATION GATES  (frozen in SPEC f62575f before this measurement)
+================================================================================================================
+    GATE                                                                            OBSERVED   VERDICT
+    A-C1  >=40% of flat sessions reach >=60% of median active range                    77.9%   PASS
+    A-C2  a state family that is NOT threshold-loosening AND NOT the falsified short leg     see below   ADJUDICATE
+    A-C3  computable causally from certified fields                           yes (K,g,dL,path)   PASS
+    A-C4  occurs on >= 85 of 1,058 sessions                                         see A-C2   ADJUDICATE
+    A-C5  a distinct mechanism stateable before seeing returns                      see A-C2   ADJUDICATE
+
+    NO candidate P&L, no model, no rule ranked by subsequent return was computed.
