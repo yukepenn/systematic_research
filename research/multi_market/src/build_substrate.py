@@ -42,12 +42,16 @@ MIN_RECENT_COVER = 200
 WARMUP_DAYS = 252
 DEV_START = "2009-03-30"      # measured store floor; the frozen 2009-01-01 moves for AVAILABILITY
 DEV_END = "2018-12-31"        # frozen chronology, unchanged
+# Contract EXPIRY years to load. Extended 2019 -> 2023 so the substrate spans the VALIDATION
+# window as well. This is DATA COVERAGE ONLY: the economic-return construction, the roll engine
+# and every eligibility rule are byte-identical. No strategy parameter changes.
+Y0, Y1 = 2009, 2023
 
 
 def main():
     all_ret, all_led, rows = [], [], []
     for root in N.CORE:
-        d = load_root(root, 2009, 2019)
+        d = load_root(root, Y0, Y1)
         if len(d) == 0:
             continue
         led = R.build_roll_ledger(d, root)
