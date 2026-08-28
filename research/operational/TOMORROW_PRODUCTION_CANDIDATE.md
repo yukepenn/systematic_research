@@ -77,7 +77,7 @@ Source: `runs/RECENT_REGIME_PANEL_20260827/`.
 > `P1/PCT` is **negative over the last 13 weeks** and its trailing mean **declines monotonically as
 > the window shortens** — $1,713 (104w) → $1,116 (52w) → $495 (26w) → −$294 (13w). That is the
 > shape of decay, or of normal variation, and **13 weeks cannot distinguish them** (the forward
-> protocol puts P(losing quarter) at 14.5 % with nothing wrong).
+> protocol puts P(losing quarter) at 13.9 % with nothing wrong — `FWD_BOOTSTRAP_V2`).
 >
 > **It is recorded here rather than omitted**, and it is **not** a trigger: §5 of the forward
 > protocol makes a negative quarter an explicit NON-trigger.

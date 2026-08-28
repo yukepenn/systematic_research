@@ -23,7 +23,7 @@ ISO research weeks, `k = 0.882879`. **No Portfolio B band is quoted** — see §
 | **B** | 126 (~6 mo) | $30,759 | **t = 1.49.** Still cannot confirm |
 | **C** | 252 (~1 yr) | $61,518 | **t = 2.10.** Weak confirmation at best |
 
-> ### ⚠️ **A LOSING QUARTER HAS A 13.8 % PROBABILITY IF NOTHING IS WRONG AT ALL.**
+> ### ⚠️ **A LOSING QUARTER HAS A 13.9 % PROBABILITY IF NOTHING IS WRONG AT ALL.**
 > _(empirical bootstrap, `runs/FWD_BOOTSTRAP_20260827/`; the Gaussian said 16.2 %)_
 > ### **No checkpoint here can CONFIRM the edge. They exist to detect GROSS BREAKAGE.**
 > Anyone reading a negative CPA as evidence against the strategy is reading noise. This is stated
@@ -67,27 +67,31 @@ trade count vs the research rate, mean $/trade, right-tail retention, time under
 Weekly P&L is **not Gaussian** and the test says so unambiguously: **skew +1.888, excess kurtosis
 8.717, Jarque-Bera p ≈ 1.2 × 10⁻¹⁷⁴ — normality rejected.** Bands are therefore built by
 **circular block bootstrap** (B = 40,000, block length 6 weeks, seed 20260827) on the frozen
-213-week series, which preserves skew, tails and short serial dependence. See `runs/FWD_BOOTSTRAP_20260827/`.
+213-week series, which preserves skew, tails and short serial dependence.
+⚠️ **Bands below are `FWD_BOOTSTRAP_V2` (`B = 600,000`, MC SE ≤ $250 by a rule declared
+before measurement). `runs/FWD_BOOTSTRAP_20260827/`'s bands are SUPERSEDED** — its "primary" and
+"sensitivity" p01 at the same block length were two independent draws, and its `B = 40,000`
+carried ±$200–450 of undisclosed simulation noise. See `runs/FWD_BOOTSTRAP_V2_20260827/`.
 
 ### `P1/PCT` — PRIMARY
 
 | checkpoint | expected cum. | P(neg) | **HEALTHY** ≥ p25 | **WATCH** p05→p25 | **INVALIDATION** < p01 |
 |---|---:|---:|---|---|---|
-| CPA — 60 sessions | $14,764 | **13.8 %** | ≥ $5,112 | −$6,786 → $5,112 | **< −$14,532**  _(block-length range −$11,936 … −$14,532)_ |
-| CPB — 126 sessions | $30,759 | **5.6 %** | ≥ $16,762 | −$969 → $16,762 | **< −$12,777**  _(range −$12,471 … −$12,881)_ |
-| CPC — 252 sessions | $61,518 | **1.2 %** | ≥ $42,029 | $15,848 → $42,029 | **< −$2,437**  _(range −$1,037 … −$1,605)_ |
+| CPA — 60 sessions | $14,764 | **13.9 %** | ≥ $5,118 | −$6,786 → $5,118 | **< −$14,805**  _(block-length range −$11,936 … −$14,805)_ |
+| CPB — 126 sessions | $30,759 | **5.7 %** | ≥ $16,786 | −$1,134 → $16,786 | **< −$13,231**  _(range −$12,284 … −$13,231)_ |
+| CPC — 252 sessions | $61,518 | **1.2 %** | ≥ $41,868 | $15,837 → $41,868 | **< −$1,688**  _(range −$601 … −$1,688)_ |
 
 ### Gaussian — SECONDARY DIAGNOSTIC ONLY, retained to show what it got wrong
 
 | checkpoint | P(neg) | HEALTHY | WATCH | INVALIDATION | **error in the INVALIDATION band** |
 |---|---:|---|---|---|---|
-| CPA | 16.2 % | ≥ $4,687 | −$9,810 → $4,687 | < −$19,990 | **$5,457 TOO LOOSE** |
-| CPB | 7.7 % | ≥ $16,214 | −$4,711 → $16,214 | < −$19,404 | **$6,627 TOO LOOSE** |
-| CPC | 2.2 % | ≥ $40,949 | $11,356 → $40,949 | < −$9,424 | **$6,987 TOO LOOSE** |
+| CPA | 16.2 % | ≥ $4,687 | −$9,810 → $4,687 | < −$19,990 | **$5,185 TOO LOOSE** |
+| CPB | 7.7 % | ≥ $16,214 | −$4,711 → $16,214 | < −$19,404 | **$6,173 TOO LOOSE** |
+| CPC | 2.2 % | ≥ $40,949 | $11,356 → $40,949 | < −$9,424 | **$7,736 TOO LOOSE** |
 
 > ### ⚠️ **The Gaussian bands erred in the dangerous direction.** Because the return distribution is
 > ### **right-skewed**, its left tail is *less* extreme than a Gaussian assumes — so the Gaussian
-> ### INVALIDATION threshold sat **$3.5–4.9k too low**, and **a genuinely broken strategy could have
+> ### INVALIDATION threshold sat **$5.2–7.7k too low**, and **a genuinely broken strategy could have
 > ### passed it.** The empirical bands trigger earlier and are now primary.
 
 > ### ✅ **RESOLVED 2026-08-27, and the first resolution was WRONG.**
@@ -102,10 +106,22 @@ Weekly P&L is **not Gaussian** and the test says so unambiguously: **skew +1.888
 > date**, or it compares a realised drawdown against a threshold built on another convention.
 >
 > ### ⚠️ **THE INVALIDATION THRESHOLD IS NOT A SINGLE NUMBER.** Across preregistered block
-> lengths (3 / 6 / 12 weeks) p01 moves by up to **$4,099**. The ranges are shown above and the **most
-> forgiving band is NOT selected**. **A result landing inside the range is INCONCLUSIVE, not an
-> invalidation** — 40,000 resamples reduce Monte-Carlo noise, they do not create historical
-> information.
+> lengths (3 / 6 / 12 weeks) p01 moves by up to **$2,869** (at CPA). The ranges are shown above and
+> the **most forgiving band is NOT selected**. **A result landing inside the range is INCONCLUSIVE,
+> not an invalidation.**
+>
+> ### ✅ **AND THAT SPREAD IS NOW KNOWN TO BE REAL, WHICH V1 COULD NOT ESTABLISH.**
+> `FWD_BOOTSTRAP_V2` measured the Monte-Carlo error directly (40 independent batches) instead of
+> assuming it away. At `B = 40,000` the MC sd of p01 reached **$444** — **larger than V1's own
+> claimed CPC block-length spread of $568**, so that cell was reporting noise. At `B = 600,000` the
+> noise floor is $69–104 and the spreads are **10–41×** it. **The conclusion was right; the
+> evidence for it was not.** The old **$4,099** figure is withdrawn — it came from the
+> pre-canonical weekly series.
+>
+> ### ⚠️ **CPA's range is driven by a DEGENERATE cell and this is disclosed, not hidden.**
+> At CPA, `L = 12` over a 12-week horizon is **one block**, so the sampler enumerates the **213**
+> twelve-week windows in the record rather than resampling. Its percentiles are *quantized* and no
+> number of replicates changes that. −$11,936 is the 2nd-worst of 213 historical windows.
 
 **HEALTHY** = at or above the 25th percentile · **WATCH** = 5th–25th · **INVESTIGATE** = 1st–5th ·
 **INVALIDATION** = below the **1st percentile** of what the frozen object itself predicts.
@@ -128,7 +144,7 @@ error — see `FROZEN_INCUMBENT` §1.
 
 ### ⚠️ Explicit NON-triggers — none of these may cause a parameter change
 
-- **a negative CPA** — **13.8 %** likely with nothing wrong (empirical)
+- **a negative CPA** — **13.9 %** likely with nothing wrong (empirical)
 - **any single losing week, month, or quarter**
 - **a drawdown inside the research max** ($22,931 P1 / $11,489 B)
 - **XM being quiet** — it trades ~1.6×/week and silence is its normal state

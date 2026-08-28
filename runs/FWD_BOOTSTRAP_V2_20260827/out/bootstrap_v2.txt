@@ -1,0 +1,111 @@
+========================================================================================================
+=== FWD_BOOTSTRAP V2 - separating MONTE-CARLO NOISE from BLOCK-LENGTH SENSITIVITY
+=== Repairs an ESTIMATOR. Frozen strategy untouched. No sealed data read.
+========================================================================================================
+    weekly observations         213   2022-W27 -> 2026-W31  (ISO weeks)
+    raw weekly mean             $  1,393.57   <- canonical $1,394
+    weekly maxDD (ISO-week)     $ 22,930.67   <- canonical $22,931, matches to $0.33
+    FROZEN scaling k              0.882879
+    scaled weekly mean          $  1,230.36   <- canonical $1,230
+    primary block length L               6   (= round(n^(1/3)), preregistered in V1)
+    declared MC-SE tolerance    $       250   DECLARED BEFORE MEASUREMENT
+
+========================================================================================================
+=== 1. THE V1 DEFECT, REPRODUCED FROM V1's OWN CODE PATH
+========================================================================================================
+    V1 primary used ONE rng consumed sequentially A->B->C; V1 sensitivity reset the seed
+    in every cell. Re-running both literally:
+
+    CP      V1 primary L=6     V1 sens L=6    difference
+    ----------------------------------------------------
+    A           -14,532.45      -14,532.45          0.00
+    B           -12,777.46      -12,880.56        103.10
+    C            -2,436.60       -1,605.09       -831.51
+
+    CPA agrees to the CENT - it is drawn FIRST, while the primary stream is fresh.
+    That coincidence is exactly what disguised the defect at CPB and CPC.
+
+========================================================================================================
+=== 2. HOW BIG IS MONTE-CARLO NOISE? - measured, not assumed
+=== 40 INDEPENDENT batches of B = 40,000, per (checkpoint, block length).
+========================================================================================================
+    CP     L      mean p01   MC sd of p01    MC sd p05    MC sd p25    B needed
+    ---------------------------------------------------------------------------
+    A      3       -14,200            210          136           87      28,100
+    A      6       -14,823            244          100          102      38,055
+    A     12       -12,052            352          961           48     591,342
+    B      3       -12,237            245          166          122      38,520
+    B      6       -13,131            386          181          114      95,169
+    B     12       -12,786            282          198          146      51,021
+    C      3          -497            367          266          172      86,261
+    C      6        -1,805            444          261          178     126,291
+    C     12        -1,623            398          245          150     101,524
+
+    >>> V1 reported single-batch numbers at B = 40,000. The MC sd of p01 there reaches
+        $444 - LARGER than several of the
+        block-length 'spreads' V1 attributed to dependence.
+    >>> B_FINAL = 600,000 by the preregistered rule (worst SE, tolerance $250, cap 2,000,000).
+
+========================================================================================================
+=== 3. CHECKPOINT BANDS at B_FINAL - empirical (primary) vs Gaussian (diagnostic)
+========================================================================================================
+    CP    wk   expected   source       p01 INVALID    p05 WATCH   p25 HEALTHY   P(cum<0)
+    --------------------------------------------------------------------------------------------
+    A     12     14,764   EMPIRICAL        -14,805       -6,786         5,118      13.9%
+                          gaussian         -19,990       -9,810         4,687      16.2%
+                          DELTA              5,185        3,024           431      -2.2%
+    B     25     30,759   EMPIRICAL        -13,231       -1,134        16,786       5.7%
+                          gaussian         -19,404       -4,711        16,214       7.7%
+                          DELTA              6,173        3,577           572      -2.0%
+    C     50     61,518   EMPIRICAL         -1,688       15,837        41,868       1.2%
+                          gaussian          -9,424       11,356        40,949       2.2%
+                          DELTA              7,736        4,481           919      -1.0%
+
+========================================================================================================
+=== 4. BLOCK-LENGTH SENSITIVITY - and whether it EXCEEDS its own measurement error
+=== The V1 table could not answer this because it never measured its own MC error.
+========================================================================================================
+    CP            L=3          L=6         L=12     spread    MC sd  spread/MCsd   verdict
+    ------------------------------------------------------------------------------------------
+    A         -14,159      -14,805      -11,936      2,869       69         41.4   REAL dependence effect
+    B         -12,284      -13,231      -12,848        948       79         12.1   REAL dependence effect
+    C            -601       -1,688       -1,631      1,087      104         10.4   REAL dependence effect
+
+========================================================================================================
+=== 4b. SUPPORT SIZE - a circular block bootstrap with nb blocks over n starts has n^nb
+===     distinct paths. Where that is small, the 'distribution' is a FINITE SET OF ATOMS
+===     and a percentile of it is QUANTIZED, not merely noisy. More replicates cannot help.
+========================================================================================================
+    CP    wk   L  blocks    distinct paths   B_FINAL   note
+    ------------------------------------------------------------------------------
+    A     12   3       4     2,058,346,161   600,000   ample
+    A     12   6       2            45,369   600,000   DEGENERATE - enumerable, see below
+    A     12  12       1               213   600,000   DEGENERATE - enumerable, see below
+    B     25   3       9902,436,039,641,232,310,272   600,000   ample
+    B     25   6       5   438,427,732,293   600,000   ample
+    B     25  12       3         9,663,597   600,000   ample
+    C     50   3      173,823,431,012,410,102,084,423,135,744,875,147,821,056   600,000   ample
+    C     50   6       9902,436,039,641,232,310,272   600,000   ample
+    C     50  12       5   438,427,732,293   600,000   ample
+
+    Where the support is enumerable the EXACT percentile is computable with ZERO Monte-Carlo
+    error, so it is reported exactly rather than sampled:
+      A L=6: EXACT p01 $ -14,792.61   sampled $ -14,805.01   error $   -12.40   (45,369 atoms)
+      A L=12: EXACT p01 $ -11,926.91   sampled $ -11,936.22   error $    -9.31   (213 atoms)
+
+    >>> This is why CPA/L=12 showed a $961 MC sd on p05 in section 2 while its p25 sd was
+    >>> only $48: the tail percentile is hopping between ADJACENT ATOMS of a 213-point
+    >>> discrete distribution. That is a property of the DESIGN, not of the data, and it
+    >>> means L=12 at a 12-week checkpoint is not a bootstrap at all - it is an enumeration
+    >>> of the 213 twelve-week windows in the record. It is reported, not silently kept.
+
+========================================================================================================
+=== 5. BLOCKING ASSERTION - primary L=6 and sensitivity L=6 must be ONE estimator
+========================================================================================================
+    A    primary $-14,805.0066   sensitivity $-14,805.0066   IDENTICAL
+    B    primary $-13,231.3850   sensitivity $-13,231.3850   IDENTICAL
+    C    primary $ -1,688.0330   sensitivity $ -1,688.0330   IDENTICAL
+
+    ASSERTION PASSES. Both paths resolve to the deterministic child seed
+    [SEED, checkpoint_ordinal, block_length], so they are the SAME draw by construction
+    rather than by luck of ordering. This assert now guards the design permanently.

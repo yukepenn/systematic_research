@@ -1,0 +1,128 @@
+run_id: INCUMBENT_CURRENT_REGIME_ADJUDICATION
+spec_version: 2
+date: 2026-08-27
+run_class: DIAGNOSTIC_RE_ADJUDICATION
+committed_before_results: true
+supersedes: spec_v1_VOID.yaml
+
+supersession_reason: >
+  v1 was written while FWD_DD_RECONCILIATION's cost-model diagnosis was believed. That diagnosis
+  was a FALSE POSITIVE from an under-constrained search and was retracted the same day, before any
+  result was run against v1. v1 is preserved VOID rather than silently edited, because editing it
+  would erase the fact that a preregistration was written on a premise that did not survive.
+  The recent-regime QUESTION survives. The cost-defect RATIONALE does not.
+
+question: >
+  Is P1/PCT + XM still the strongest defensible incumbent TODAY? Incumbency carries zero
+  statistical privilege. P1+XM is NOT forced to remain the answer.
+
+# ---------------------------------------------------------------- CORRECTED FACTUAL BASIS
+canonical_basis:
+  source_run: runs/WE_W103_CONSOLIDATE  (persisted as runs/WE_W110_XMDIVERSE/out/weekly.csv)
+  week_convention: ISO WEEK KEYED ON SESSION DATE      # binding; never mix conventions
+  cost_world: net of commission AND the modelled spread, already inside the series
+  raw_weekly_mean: 1393.57
+  weekly_maxdd: 22930.67          # reproduces the published $22,931 to $0.33
+  k: 0.882879                     # = 20245 / 22930.67
+  fixed_dd_weekly: 1230.36
+  bucketing_sensitivity: >
+    The SAME trades under a Sunday-ending date label give maxDD $24,212.92 - 5.6 % from week
+    boundary placement alone. That is a real sensitivity, NOT a defect, and it is why every
+    object in this wave must be bucketed on ONE convention.
+  p_losing_quarter: 0.139         # empirical, FWD_BOOTSTRAP_V2 (B=600,000), NOT 14.5 %
+
+portfolio_b_status:
+  arithmetic: CONSISTENT           # 1141.68 * 20245/11489.40 = 2011.7. NOT a cost defect.
+  weakness_1: >
+    inverse-vol weights are a SINGLE FULL-SAMPLE standard deviation applied in-sample to the very
+    213 weeks that produced the figure (run_we_w103.py:235). No lookback, no lag, no walk-forward.
+    THE WEIGHTING IS NOT CAUSAL.
+  weakness_2: >
+    P1+XM was a BEST-OF-SIX selection. The preregistered primary was P1+PAIR+XM, which came second.
+  classification: >
+    valid historical research frontier object
+    != unbiased ex-ante portfolio estimate
+    != executable integer-contract portfolio
+    These three distinctions are permanent and may never be collapsed.
+
+recent_regime_facts_carried_in:      # from RECENT_REGIME_PANEL, corrected single-axis rebuild
+  p1_fixed_dd_by_window: {FULL: 1230, 104w: 1713, 52w: 1116, 26w: 495, 13w: -294}
+  p1_positive_weeks:     {FULL: 0.563, 13w: 0.308}
+  rho_p1_xm:             {FULL: 0.081, 104w: 0.193, 52w: 0.258, 26w: 0.464, 13w: 0.369}
+  xm_when_p1_loses:      {FULL: 622, 104w: -34, 52w: -321, 26w: -1231, 13w: -1243}
+  status: BURNED / DISCOVERY_CONSUMED. Real evidence. NOT forward confirmation.
+
+# ---------------------------------------------------------------- design
+objects_fixed_no_tuning:
+  A: P1/PCT
+  B: P1/ABS
+  C: XM_CONFLICT
+  D: PCT + XM          # under the reconciled CAUSAL weighting from PORTFOLIO_B_RECONCILIATION
+  E: ABS + XM          # under the same reconciled weighting rule
+  diagnostic_only: unweighted component sum, LABELLED NOT PORTFOLIO B
+
+windows_declared_before_running: [FULL, 104w, 52w, 26w, 13w]
+window_rule: >
+  The SAME fixed windows already used by RECENT_REGIME_PANEL. NO window may be added, removed or
+  shifted after seeing a result. No "recent cutoff" may be invented that makes a preferred object
+  win. Directive s10: do not add another window.
+
+cost_world:
+  rule: ONE cost world for every object and every window
+  commission_per_ctr_rt: 4.36
+  P1_spread_per_ctr_rt: 14.44
+  XM_spread_per_ctr_rt: 12.50
+  drawdown_basis: >
+    WEEKLY resolution for every object on the ISO-week-on-session-date convention, so numerator and
+    denominator share BOTH the cost world and the bucketing. Not because a defect was found - none
+    was - but because mixing conventions is what made a 5.6 % bucketing difference look like one.
+  invariance_required: DD_trade >= DD_session >= DD_day >= DD_week, asserted per object
+
+metrics_per_object_per_window:
+  - raw net, $/week, fixed-$20,245-DD $/week
+  - maxDD, t, positive-week rate
+  - expected shortfall (worst 5 % of weeks)
+  - worst-5-week contribution, top-1 and top-5 concentration
+  - time underwater
+  - rho(P1, XM), and XM conditional payoff when P1 < 0
+  - worst-decile overlap, joint drawdown duration, tail beta
+
+marginal_values:
+  XM:  portfolio(P1+XM) - P1     # SAME cost world, window, risk denominator, weighting
+  PCT: PCT - ABS                 # SAME cost world, window, risk denominator
+
+declared_reading_rules:
+  - >
+    THIS IS BURNED EVIDENCE, NOT CONFIRMATION. The recent weakness was OBSERVED BEFORE this wave
+    was designed. Measuring it more carefully cannot promote it to clean confirmation.
+    RECENT != FORWARD.
+  - >
+    A 13-week window holds ~13 observations and P(losing quarter) is 13.9 % with nothing wrong.
+    NO 13-week result may kill or promote an incumbent on its own. Directive s10.
+  - >
+    If a shorter window favours a different object, that is a HYPOTHESIS, not a finding, and it
+    must survive the recency-overfitting critique (was the window chosen after seeing it? did
+    performance begin before it? does the mechanism depend on current structure? does an adjacent
+    earlier window agree?) before it changes anything.
+  - >
+    The MAIN OUTPUT is what changed in the economic RATIONALE - not a retuned book.
+
+admissible_outcomes_declared_in_advance:
+  - incumbent rationale still strong
+  - incumbent rationale weakened but unresolved
+  - XM no longer portfolio-additive recently
+  - PCT no longer superior to ABS recently
+  - ambiguity too high to adjudicate
+  rule: >
+    Whichever exists is recorded. No object is promoted merely because a short window flatters it,
+    and none is demoted merely because a short window punishes it.
+
+what_this_run_will_NOT_do:
+  - tune any parameter
+  - select a new window
+  - promote or demote any component
+  - read sealed data
+  - treat burned recent evidence as forward confirmation
+  - re-litigate the retracted cost-model claim
+
+depends_on: PORTFOLIO_B_RECONCILIATION_20260827   # the reconciled CAUSAL weighting
