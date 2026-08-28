@@ -1,0 +1,77 @@
+================================================================================================================
+=== VOLUME_LIQUIDITY_V1 -- PRE-RESULT ENGINE CERTIFICATION.  NO ECONOMIC INTERPRETATION.
+================================================================================================================
+    vl_primary.py          sha256 c9de4b940d4aa6b122c1d8580ec7d38550ab1e1fbf4fc56b6321026c932cb714
+    vl_independent.py      sha256 bf6208c9ee16da3b22d5e57d28d8d5f206ca211945d30ec56d9ec6dbc789d72c
+    development window     every evaluated date < 2019-01-01
+
+--- 6E-a  THE INDEPENDENT IMPLEMENTATION MUST NOT IMPORT THE PRIMARY  (AST, not grep)
+    modules imported by vl_independent.py: ['__future__', 'bisect', 'ncd_day', 'numpy', 'os', 'pandas', 'sys']
+    'vl_primary' among them: NO -- independent
+
+--- BASELINE  (development window only)
+    weeks with positions   444   2010-06-21 -> 2018-12-31
+    (root, week) positions 8,943   roots 21
+    daily rows             44,608
+    ASSERTION max evaluated date 2018-12-31 < 2019-01-01  PASS
+
+--- 6A-NEG  CORRUPT VOLUME **AND** PRICES STRICTLY AFTER THE CUTOFF -> WEIGHTS EXACTLY UNCHANGED
+    Tested at several cutoffs, and scored ONLY on the 4 weeks immediately BEFORE each cutoff --
+    the decisions actually adjacent to the corruption.  A global cutoff scored on distant weeks
+    would be a probe with no teeth (ESNQ P0-1, discipline rule 55).
+    cutoff 2012-06-04  adjacent weeks scored  5  positions  105  max |dn| 0.000e+00   PASS
+    cutoff 2014-03-03  adjacent weeks scored  5  positions   90  max |dn| 0.000e+00   PASS
+    cutoff 2016-09-05  adjacent weeks scored  5  positions   92  max |dn| 0.000e+00   PASS
+    cutoff 2018-05-07  adjacent weeks scored  5  positions  105  max |dn| 0.000e+00   PASS
+    >>> 6A-NEG  max |dn| over 392 adjacent positions = 0.000e+00   PASS
+
+--- 6A-POS  CORRUPT ONE **CAUSALLY ADMISSIBLE PRIOR** OBSERVATION THAT MED63/MAD63 ACTUALLY USE
+    A probe that returns 'nothing moved' is not certification.  This one must have teeth.
+    perturb ES 2013-04-11 x25   positions changed    81   of which AFTER the perturbed date    81   BEFORE it   0   max |dn| 0.0692
+    perturb CL 2015-08-12 x25   positions changed    22   of which AFTER the perturbed date    22   BEFORE it   0   max |dn| 0.0358
+    perturb ZN 2011-10-19 x25   positions changed    59   of which AFTER the perturbed date    59   BEFORE it   0   max |dn| 0.7136
+    perturb GC 2017-02-15 x25   positions changed    32   of which AFTER the perturbed date    32   BEFORE it   0   max |dn| 0.1195
+    >>> 6A-POS  every probe moved FUTURE weights: PASS - the probe has teeth
+    >>> and moved NO weight dated before the perturbation: PASS
+
+--- 6B  CORRUPT FUTURE RETURNS -> WEIGHTS UNMOVED, ONLY SUBSEQUENT P&L CHANGES
+    weights dated before 2015-01-05: max |dn| 0.000e+00   PASS
+    daily gross P&L before 2015-01-05: max |d| $0.000000   PASS - unchanged
+    daily gross P&L on/after 2015-01-05: max |d| $2,104.98   PASS - it responds
+
+--- 6C  KEY SAFETY  (research_sdk/keysafe.py)
+    ES volume lookup entries                     4,433
+    every traded ES date resolves in the lookup  PASS (min_frac 1.0)
+    known-match control 2013-04-11               PASS
+    (monday, root) unique in positions           PASS  8,943 rows
+    (date, root) unique in daily                 PASS  44,608 rows
+    safe_merge daily x volume, unmatched = 0     PASS  44,608 rows
+    non-empty inputs -> non-empty output          PASS  (44,608 in, 44,608 out)
+
+--- 6D  P&L IDENTITY, PROVED INDEPENDENTLY, AND RECONCILED root -> sector -> portfolio
+    identity  n * ret_usd            == pnl_gross    max |d| 0.000e+00
+    identity  sides * cost_per_side  == cost         max |d| 0.000e+00
+    identity  gross - cost           == pnl_net      max |d| 0.000e+00
+    reconcile daily -> root          |d| $0.000000000
+    reconcile daily -> sector        |d| $0.000000000
+    reconcile daily -> weekly        |d| $0.000000000
+    exposure check: no hidden multiplication -- every daily row uses exactly ONE position
+       distinct n per (date, root): max 1 row(s)
+    basis: ret_usd comes from the certified self-financing construction, which NEVER
+       differences two contracts; merged/back-adjusted series are barred by the data contract
+    >>> 6D  PASS
+
+--- 6E  INDEPENDENT PARITY   vectorized merge_asof path  vs  explicit chronological loop
+    positions  primary 8,943   independent 8,943   common 8,943
+    positions only in primary 0   only in independent 0
+    max |dn| 9.166e-13   max relative 1.913e-13   direction disagreements 0
+    daily rows primary 44,608   independent 44,608   common 44,608   only-primary 0  only-independent 0
+    max |d turnover sides| 1.680e-12     max |d daily net| $7.162e-11
+    max per-ROOT net gap $0.000000     PORTFOLIO net gap $0.000000
+    >>> 6E  PASS
+
+================================================================================================================
+=== ENGINE CERTIFICATION: PASS -- ALL FIVE CLAUSES
+================================================================================================================
+    No Sharpe, no gate table, no economic verdict was produced by this file.
+    Development economics may proceed ONLY if the line above says PASS.
