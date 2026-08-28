@@ -1,0 +1,49 @@
+========================================================================================================
+=== INT02 - internals -> DIRECT RTH NQ 60-minute return.  Frozen by SPEC.md.
+========================================================================================================
+    decisions 5,434   sessions 1093   features 15
+    span 2022-01-18 -> 2026-05-29   (seal >= 2026-08-01 not read)
+    mean |60-min move| $879.73   PRIMARY cost $19.36   STRESS $29.36
+    THE SESSION IS THE DEPENDENCE UNIT: 1093 sessions, not 5,434 decisions.
+
+========================================================================================================
+=== ARMS
+========================================================================================================
+    RIDGE (primary)            $  -66.73/session  t  -0.81  net $   -60,723  trade  84.1%  dir acc  49.5%
+                               STRESS $  -75.96/session  net $   -69,119
+    GBM shallow (challenger)   $  -40.91/session  t  -0.45  net $   -37,225  trade  84.9%  dir acc  51.4%
+                               STRESS $  -77.75/session  net $   -70,756
+
+========================================================================================================
+=== REFITTED SESSION-BLOCK NULL - model refit from scratch inside every replicate
+========================================================================================================
+    replicates 120   DISTINCT VALUES 120   sd $77.40
+    null mean $  -98.73/session   range [$-282.37, $84.30]
+    observed  $  -66.73/session   ->  66.7th percentile
+
+    activity-matched random-direction placebo: mean $-82.54/session   observed at 57.6th percentile
+
+========================================================================================================
+=== POWER
+========================================================================================================
+    sessions 910   per-session sd $2,471.36   MDE $229.39/session
+    materiality  WEAK $49  ->  MDE/threshold 4.68x
+    materiality  STRONG $246 ->  MDE/threshold 0.93x
+    one-sided upper 95 % bound $68.16/session
+
+========================================================================================================
+=== PREREGISTERED GATES (SPEC.md, fixed before this ran)
+========================================================================================================
+    gate                                            observed   verdict
+    --------------------------------------------------------------------
+    I1 net/session > 0 at PRIMARY                    $-66.73   *** FAIL ***
+    I2 > 95th pctile of refitted null                 66.7th   *** FAIL ***
+    I3 > 95th pctile of placebo                       57.6th   *** FAIL ***
+    I4 net > 0 at STRESS                             $-75.96   *** FAIL ***
+
+    attempts counted: 2 -> ['RIDGE (primary)', 'GBM shallow (challenger)']
+
+    *** NO CANDIDATE ***
+    Verdict: NO CANDIDATE / NO DETECTED SIGNAL for THIS mapping, THIS horizon, THIS feature budget.
+    NOT generalized to 'internals are null'. Does NOT authorize a horizon sweep, a
+    feature expansion or a model upgrade - each is a new hypothesis needing its own spec.
