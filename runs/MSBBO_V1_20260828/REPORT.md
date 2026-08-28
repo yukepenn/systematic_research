@@ -102,8 +102,13 @@ order-invariant F4 controls.
 - **No clean historical holdout exists**, so no amount of in-sample rigour upgrades this.
 - An OOF correlation of 0.17 on 60-second moves in a liquid market is **large**, and results of this
   size most often do not survive prospective testing. **That is the test, and it has not been run.**
-- The signal has a **sub-minute half-life** (L2), so it is execution-latency sensitive. The frozen
+- The signal is **highly local in time** (L2), so it is execution-latency sensitive. The frozen
   8 ms-median / 1,000 ms-cap fill contract models that, but real latency is a live-system question.
+  ⚠️ **CORRECTED 2026-08-28** — this line previously read *"has a sub-minute half-life"*. No decay
+  model was fitted and no half-life was estimated; L2 tried **one** lag and the result **inverted
+  sign** rather than decaying. **The lag-sign-reversal mechanism remains UNKNOWN.** What *is*
+  established: the specific stale-quote hypothesis was tested and rejected, and momentum does not
+  explain the result. See `CORRECTION_20260828.md` §1E.
 
 ## 5. Verdict
 

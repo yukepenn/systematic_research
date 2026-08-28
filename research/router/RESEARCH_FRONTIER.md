@@ -3,9 +3,15 @@
 _Owner directive §44. **Rewritten after every wave, not appended to.** The next wave is always the
 highest-EVI **runnable** row — not the most interesting one, and not the one a previous plan named._
 
-**CURRENT AS OF 2026-08-27, after `MS01` · `MS01A` · `INT01` · `FWD_BOOTSTRAP_V2` ·
-`DATA_ASSET_REGISTRY` · `RECENT_REGIME_PANEL` · `MICRO_DISCOVERY_CONFIRMATION_SPLIT`.** Any earlier "as of" wording below this line is historical narrative,
-not a timestamp.
+**CURRENT AS OF 2026-08-28, after `MS01` · `MS01A` · `INT01` · `INT02` · `FWD_BOOTSTRAP_V2` ·
+`DATA_ASSET_REGISTRY` · `RECENT_REGIME_PANEL` · `MICRO_DISCOVERY_CONFIRMATION_SPLIT` ·
+`MSLAST_CONTRACT` · `TSMOM_V1/V2` · `ABS_PCT_ADJUDICATION` · `PORTFOLIO_B_RECONCILIATION` ·
+`TSMOM_TAIL_H1` · `MSBBO_V1`.** Any earlier "as of" wording
+below this line is historical narrative, not a timestamp.
+
+> **There is exactly ONE current ranking — §"EVI RE-RANK" below.** Every other table in this file is
+> a per-family **closure record** and is labelled HISTORICAL. If a row appears twice, the current
+> block wins.
 
 ```
 EVI  ~  economic ceiling x information novelty x P(learnable) x portfolio usefulness x data quality
@@ -93,12 +99,10 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | — | ~~**TSMOM-TAIL-H1**~~ | ❌ **FAILED 4 of 5 gates** on the one-sided-blind 2023–2026 window. TSMOM standalone −$4/wk (t −0.07); adding it cuts incumbent fixed-DD income **$3,000 → $1,397/wk**; mean TSMOM in the incumbent's worst-decile weeks **−$169.70**. ρ = 0.013 — **uncorrelated and unprofitable is ballast, not a hedge.** **TSMOM CLOSED** · `runs/TSMOM_TAIL_H1_20260828/` |
 | — | ~~**`P1/ABS` vs `PCT`**~~ | ✅ **CLOSED — KEEP PCT.** Producing run reproduced **byte-equivalently**; PCT ahead in every fixed window; `ABS_LOOSE` control shows the gain is the **per-contract denominator**, not a looser box ($5.81, p 0.940). Direction overwhelming (176/213, sign p 7.1e-23), magnitude not (paired p 0.058). ABS → prospective challenger · `runs/ABS_PCT_ADJUDICATION_20260827/` |
 | **—** | **`MS-BBO-CANDIDATE-1`** | ✅ **CANDIDATE EXISTS, FROZEN, DISCOVERY-GRADE ONLY.** 7/7 gates + 4/4 leak probes; $5,125/session, t 6.76, OOF corr 0.170; staleness hypothesis tested and **rejected**. ⚠️ 48 consumed sessions, **no clean holdout exists or can be built** · `runs/MSBBO_V1_20260828/` |
-| **1** | **PROSPECTIVE SHADOW** | ⚠️ **now the single highest-EVI action.** The project owns **zero** prospective evidence, and `MS-BBO-CANDIDATE-1` has **no other test available to it, ever** · `research/operational/PROSPECTIVE_SHADOW.md` |
-| **2** | **Multi-market CARRY / term structure** | genuinely new information relative to trend, on a substrate that **already exists** (true unmerged contracts, contract truth, causal rolls, basis-safe P&L). A **NEW family** — new spec, new attempt budget, new evidence class — **never a TSMOM rescue** |
-| **3** | **ES tick/BBO cross-market** | W122's NULL was a **1-minute** family and does not close sub-minute ES/NQ interaction. Capability must be re-measured before it is called runnable |
-| **4** | **Prospective shadow ledger** | earns nothing alone, but it is the only route to evidence that is neither burned nor historical — and the project has **none** |
-| **—** | Multi-market **carry / term structure** | genuinely new information relative to trend, and the expensive substrate already exists. A **NEW family**, not a TSMOM rescue: new spec, new attempt budget, new evidence class |
-| **—** | Portfolio-B weighting/selection optimism · incumbent adjudication v2 | **BOUNDED DIAGNOSTICS.** Real questions, capped effort. They must not become the product |
+| **1** | **PROSPECTIVE SHADOW — build it, then let it run** | ⚠️ **the single highest-EVI action.** The project owns **zero** prospective evidence, and `MS-BBO-CANDIDATE-1` has **no other test available to it, ever**. Two clocks: the shadow accrues on **calendar** time (CLOCK A) while research continues in parallel (CLOCK B) — "highest EVI" never means *idle until December* · `research/operational/PROSPECTIVE_SHADOW.md` |
+| **2** | **Multi-market CARRY / term structure** | genuinely new information relative to trend, on a substrate that **already exists** (true unmerged contracts, contract truth, causal rolls, basis-safe P&L). A **NEW family** — new spec, new attempt budget, new evidence class — **never a TSMOM rescue**. Gated on `CARRY00`: curve carry needs **simultaneous** near/deferred contracts, which trend did not |
+| **3** | **ES ↔ NQ sub-minute cross-market** | W122's NULL was a **1-minute** family and does not close sub-minute ES/NQ interaction. The sharper question is **incremental** value beyond the frozen NQ-only BBO set. Capability must be re-measured before it is called runnable |
+| **4** | Portfolio-B weighting/selection optimism · incumbent adjudication v2 | ✅ **DONE and CLOSED** — kept here only so the row is not re-opened. Weighting optimism **1.4 %**, selection optimism **13.9 %** · `runs/PORTFOLIO_B_RECONCILIATION_20260827/` · `runs/ABS_PCT_ADJUDICATION_20260827/` |
 
 > ### ⚠️ **`MS01A` COMPLETED — it is no longer a blocker, and it CONSTRAINED the lane.**
 > **PASSES:** quote freshness (median 0 ms, p99 16 ms) and spread invariance across freshness filters.

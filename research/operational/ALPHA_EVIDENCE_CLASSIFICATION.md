@@ -46,7 +46,7 @@ PORTFOLIO-ADDITIVE → EXECUTABLE → PARITY-CERTIFIED → SHADOW-VALIDATED → 
 | **`P1/ABS`** | **PROSPECTIVE CHALLENGER** | **BURNED / DISCOVERY-CONSUMED** | PCT ahead in every fixed window and the mechanism is isolated (`ABS_LOOSE` control, p 0.940), but the paired **magnitude** test is p 0.058. Direction overwhelming, dollars not established. Forward data decides · `runs/ABS_PCT_ADJUDICATION_20260827/` |
 | **TSMOM (all roles)** | **CLOSED** | **VALIDATION- AND HOLDOUT-CONSUMED** | steady-premium failed (V2-G3); tail-diversifier failed (H1, 4 of 5). ρ = 0.013 but no return — **ballast, not a hedge**. Carry/term structure remains a **separate untested family** |
 | **Multi-market TSMOM V1** | **CLOSED — GATES FAILED** | **DEVELOPMENT-ONLY, DISCOVERY-CONSUMED** | substrate, causal roll and basis-safe P&L now EXIST and passed their unit tests; V1 then **failed 3 of 6 preregistered DEVELOPMENT gates** (Sharpe 0.226, 5/9 positive years, 72.3 % equity concentration). Cost drag **47.2 % of gross**, scale-invariant. VALIDATION and FINAL HOLDOUT **unread** · `research/multi_market/TSMOM_V1_DEVELOPMENT.md` |
-| **TSMOM V2 (252d slow trend)** | **CLOSED — FAILED VALIDATION** | **VALIDATION-CONSUMED** | failed preregistered **G3** (2 of 4 positive years); **5 of 6 gates passed** (net $15,080, Sharpe 0.577, stress positive, low concentration). 2020 and 2022 carry everything; both calm years lose. **The STEADY-PREMIUM claim is CLOSED at this specification.** 2019–2022 consumed; **2023–2026 TSMOM outcomes unspent** · `runs/TSMOM_V2_SLOWTREND_20260827/` |
+| **TSMOM V2 (252d slow trend)** | **CLOSED — FAILED VALIDATION** | **VALIDATION-CONSUMED** | failed preregistered **G3** (2 of 4 positive years); **5 of 6 gates passed** (net $15,080, Sharpe 0.577, stress positive, low concentration). 2020 and 2022 carry everything; both calm years lose. **The STEADY-PREMIUM claim is CLOSED at this specification.** ⚠️ **CORRECTED 2026-08-28 — this row previously read "2023–2026 TSMOM outcomes unspent". That is now FALSE: `TSMOM-TAIL-H1` spent exactly that window.** Current truth: **V2 2019–2022 validation CONSUMED · H1 2023–2026 TSMOM outcome holdout CONSUMED · TSMOM all tested roles CLOSED** · `runs/TSMOM_V2_SLOWTREND_20260827/` · `runs/TSMOM_TAIL_H1_20260828/` |
 | **`INT02` internals → direct RTH NQ return** | **CLOSED — NO CANDIDATE** | **NO DETECTED SIGNAL** *(partial)* | all 4 gates fail; ridge −$66.73/session, directional accuracy **49.5 %**, 66.7th pctile of a real refitted null. ⚠️ **A strong-materiality ($246/session) effect is closed; a WEAK $49/session effect is NOT** — upper 95 % bound **+$68.16**. Other mappings, horizons and feature classes untested · `runs/INT02_DIRECT_RTH_20260827/` |
 | Internals → P1 action value | **CLOSED** | **NULL / CLOSED-BY-POWER** | `INT01`: 37.5th pctile of its own refitted null; G3 and G5 fail |
 | Order flow → P1 action value | **CLOSED** | **CLOSED-BY-POWER** | needs **998 sessions; 713 exist**. Unreachable at any coverage |
@@ -85,14 +85,28 @@ capable of succeeding** (§34).
 
 > **What observation would make `P1/PCT + XM` no longer the best current book?**
 
-1. a microstructure expert with **positive executable net P&L** at 60 s on the uniform substrate,
-   surviving a session-block refitted null and a same-trigger mirror control;
-2. a multi-market TSMOM book with low or negative correlation to P1 **in P1's worst decile**,
-   improving fixed-DD income on the common window;
-3. internals predicting **direct RTH NQ return** where they failed on P1's action value;
+> ⚠️ **CORRECTED 2026-08-28.** The four answers below were the 2026-08-27 list. **Three of them have
+> since been asked and answered**, and leaving them as "runnable" would have re-run closed work:
+> (1) a microstructure expert with positive executable net P&L — **`MS-BBO-CANDIDATE-1` now exists**,
+> discovery-grade, so the question moves from *"is there one"* to *"does it survive forward"*;
+> (2) a multi-market TSMOM book improving fixed-DD income — **asked and FAILED** (`TSMOM-TAIL-H1`,
+> 4 of 5 gates); (3) internals → direct RTH NQ return — **asked and produced NO CANDIDATE**
+> (`INT02`). Only the calendar-gated one is unchanged.
+
+**The current list, replacing it:**
+
+1. **Does `MS-BBO-CANDIDATE-1` survive a clean prospective shadow?** Its S60/S126/S252 gates are
+   frozen in `MSBBO_PROSPECTIVE_PROTOCOL_V1` before a single row exists. This is the only test the
+   object will ever have;
+2. **Does genuinely new multi-market CARRY / TERM STRUCTURE contain after-cost alpha?** A new family
+   on the existing unmerged-contract substrate — gated first on `CARRY00` data capability, because
+   curve carry needs **simultaneous** near/deferred contracts and trend did not;
+3. **Does sub-minute ES information add value to 60 s NQ return BEYOND the frozen NQ-only BBO set?**
+   The incremental form of the question, not "can ES predict NQ";
 4. the sealed pool putting P1 below its **empirical** CPB/CPC `INVALIDATION` band.
 
-**1–3 runnable now. 4 calendar-gated. None assumed.**
+**1 is calendar-gated on accumulation (the infrastructure is not). 2–3 runnable now. 4
+calendar-gated. None assumed.**
 
 ## Binding admission rules
 
