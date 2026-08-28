@@ -1,0 +1,25 @@
+================================================================================================
+=== BLIND-SPEND ADMISSIBILITY -- PREDECLARED, before any ESNQ result exists
+================================================================================================
+    sigma proxy (frozen)   $5,250.81/session
+    n blind                15
+    SE_blind               $1,355.75/session
+    MDE(80% power)         $3,371.05/session
+    MIN POWER TO AUTHORIZE 0.80  (reject a collapse to zero)
+
+      mu_dev $/session  power vs 0  vs sign-rev   vs $246    AUTHORIZE?
+                   246       0.072        0.100     0.000   NO -- UNSPENT
+                   500       0.101        0.182     0.072   NO -- UNSPENT
+                 1,000       0.182        0.433     0.138   NO -- UNSPENT
+                 1,500       0.295        0.715     0.236   NO -- UNSPENT
+                 1,969       0.424        0.896     0.354   NO -- UNSPENT
+                 2,500       0.579        0.979     0.507   NO -- UNSPENT
+                 3,000       0.715        0.997     0.650   NO -- UNSPENT
+                 3,372       0.800        1.000     0.746           YES
+                 4,000       0.904        1.000     0.870           YES
+                 5,125       0.984        1.000     0.975           YES
+
+    >>> THE AUTHORIZATION THRESHOLD IS mu_dev >= $3,371/session.
+    >>> That is 13.7x the incumbent per-session yardstick.
+    >>> A development effect below it leaves the pool UNSPENT and routes the object to
+    >>> prospective accumulation instead. This is declared BEFORE mu_dev is measured.
