@@ -3,8 +3,8 @@
 _Owner directive §44. **Rewritten after every wave, not appended to.** The next wave is always the
 highest-EVI **runnable** row — not the most interesting one, and not the one a previous plan named._
 
-**CURRENT AS OF 2026-08-27, after `MS01` · `INT01` · `FWD_BOOTSTRAP` · `DATA_ASSET_REGISTRY`
-· `RECENT_REGIME_PANEL`.** Any earlier "as of" wording below this line is historical narrative,
+**CURRENT AS OF 2026-08-27, after `MS01` · `MS01A` · `INT01` · `FWD_BOOTSTRAP_V2` ·
+`DATA_ASSET_REGISTRY` · `RECENT_REGIME_PANEL` · `MICRO_DISCOVERY_CONFIRMATION_SPLIT`.** Any earlier "as of" wording below this line is historical narrative,
 not a timestamp.
 
 ```
@@ -37,7 +37,8 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | **16** | Does a multi-market TSMOM / carry book add marginal portfolio value? | **HIGH ceiling** | ✅ **RUNNABLE — UNIVERSE ESTABLISHED** · **24 roots · 6 sectors · 2016–2025 · $0** · next step is the contract-level substrate with an explicit roll · `runs/MULTIMARKET_INVENTORY_20260827/` |
 | — | ~~Do market internals predict P1 ACTION VALUE?~~ | — | ❌ **CLOSED — NULL** · `INT01`: 37.5th pctile of its own refitted null, G3+G5 fail, `NEGCTRL` behaviour matches `RR_W002A`/`RR_W004` · `runs/INT01_STAGE_A/` |
 | **17** | Do market internals predict **DIRECT RTH NQ RETURN**? | MEDIUM | ✅ **RUNNABLE · NOT CLOSED BY `INT01`** — different target, different variance (§41 scope discipline) · needs its own preregistration |
-| **18** | Can current tick/BBO generate **STANDALONE** NQ alpha at 60 s? | **HIGH ceiling** | ⚠️ **BLOCKED ON `MS01A`** · `MS01` showed friction is **payable** and did **not** show alpha · the BBO data contract must be certified before any model · `runs/MS01_STANDALONE_FEASIBILITY/` |
+| **18a** | Can **LAST-ONLY** trade data generate STANDALONE NQ alpha at 60 s? | **HIGHEST** | ✅ **RUNNABLE · THE ONLY CONFIRMABLE MICROSTRUCTURE LANE** · 243 usable sessions, 102 consumed for discovery, **141 never extracted and now frozen blind** · `runs/MICRO_DISCOVERY_CONFIRMATION_SPLIT/` |
+| **18b** | Can **BBO** generate STANDALONE NQ alpha at 60 s? | HIGH info, **LOW claim ceiling** | ⚠️ **DISCOVERY-GRADE ONLY · NO BLIND HOLDOUT EXISTS** · `MS01A` certified the contract: freshness PASSES, **ordering FAILS** (81.1 % same-ms), **quote size NOT CERTIFIED** · all ~99 quote-complete sessions have had their outcomes consumed · `runs/MS01A_BBO_SEMANTICS_AUDIT/` |
 | 12 | Does an individual-contract substrate change any verdict? | LOW | DEFERRED by design · directive §52 |
 | 13 | Does the frozen architecture survive the sealed forward pool? | — | **CALENDAR-GATED** · needs an architecture freeze |
 | 14 | Can position management (exit / reversal) be routed? | UNKNOWN | **EXCLUDED from V1** · directive §7 |
@@ -63,16 +64,42 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 
 ---
 
-## EVI RE-RANK — 2026-08-27, under the current-regime evidence doctrine
+## EVI RE-RANK — 2026-08-27, after `MS01A` and the blind-pool audit
+
+> ### ⚠️ **THE MICROSTRUCTURE PROGRAM IS NOW TWO SCIENTIFICALLY DIFFERENT LANES.**
+> They must never share an evidence class.
+>
+> | | **MS-BBO** | **MS-LAST** |
+> |---|---|---|
+> | information | **richer** — quotes, spread, side | weaker — trades only |
+> | usable sessions | ~99 quote-complete | **243** |
+> | blind confirmation pool | ❌ **NONE EXISTS** — every quote-complete session has had its price outcomes consumed by AUCTION01–04, ACTIONMAP01, FLOW01, U9/U9B | ✅ **141 sessions, never extracted**, frozen with hashes at `fd7b05f` |
+> | best attainable claim | **DISCOVERY-GRADE**, needs *prospective* confirmation | **BLIND-HISTORICAL-CONFIRMED** |
+>
+> **The weaker data supports the stronger claim.** Richer features do not outrank cleaner evidence.
 
 | # | runnable row | why it ranks here |
 |---|---|---|
-| **1** | **`MS01A` BBO semantics audit + uniform ~99-session substrate** | `MS02` cannot be fitted until the data contract is certified. Quote freshness, event ordering, quote-size semantics and trade-vs-BBO consistency are all **unverified** |
-| **1b** | **Last-only / signed-flow substrate** (up to ~243 sessions) | a **separate lane** with its own trial budget — trade-flow features do not need quotes and must not inherit the quote lane's sample limit |
-| **2** | **Multi-market TSMOM V1** | 24 roots · 6 sectors · 2016–2025 at **$0**. Slow signals genuinely need the long history, and it is the only lane offering **economically independent** exposure |
-| **3** | **Internals → direct RTH NQ return** | cheap, data already built, and `INT01` closed only the routing mapping |
-| **4** | **ES tick/BBO cross-market** (§32) | 103 sessions on disk; W122's NULL was a **1-minute** family and does not close **tick-level** ES/NQ interaction |
-| **5** | Shadow / execution engineering | needed before any new sleeve can be trusted, but earns nothing on its own |
+| **1** | **LAST-ONLY microstructure → consumed discovery → candidate freeze → ONE-SHOT 141-session blind confirmation** | The **only** lane in this repo that can still produce a genuinely confirmed historical result. The blind pool is the most valuable confirmable microstructure asset here and it is spendable exactly once |
+| **1=** | **Multi-market TSMOM V1** | 24 roots · 6 sectors at **$0**, and the only lane offering **economically independent** exposure. Runs in parallel — it does not wait on microstructure |
+| **2** | **Internals → direct RTH NQ return** | cheap, data already built, and `INT01` closed only the *routing* mapping, not this target |
+| **3** | **BBO microstructure — DISCOVERY ONLY** | richer information, but its ceiling is now a *prospective* shadow candidate, not a historical claim |
+| **4** | **ES tick/BBO cross-market** (§32) | 103 sessions on disk; W122's NULL was a **1-minute** family and does not close tick-level ES/NQ interaction. After NQ |
+| **5** | Prospective shadow / execution ledger | earns nothing on its own, but no new sleeve can be trusted without it |
+| **—** | Portfolio-B weighting/selection optimism · incumbent adjudication v2 | **BOUNDED DIAGNOSTICS.** Real questions, capped effort. They must not become the product |
+
+> ### ⚠️ **`MS01A` COMPLETED — it is no longer a blocker, and it CONSTRAINED the lane.**
+> **PASSES:** quote freshness (median 0 ms, p99 16 ms) and spread invariance across freshness filters.
+> **FAILS:** event ordering — **81.1 %** of adjacent events share a millisecond, and exchange sequence
+> inside one millisecond is **not recoverable**. **NOT CERTIFIED:** quote size (median 2.0).
+>
+> **Binding consequence.** Any admitted feature must be **invariant to permutation of rows sharing a
+> timestamp**, or be built only from **prior DISTINCT timestamps**. An export-row order is not a trade
+> sequence. **Blocked without new evidence:** true aggressor side, queue position, quote-then-trade
+> causality, displayed-liquidity absorption, BBO size imbalance, true microprice, depth sweep.
+>
+> An `np.isclose` default `rtol` once made "at bid" / "at ask" / "inside" sum to **158 %** in this very
+> audit — caught only because disjoint categories cannot exceed 100 %. That assertion is now permanent.
 
 **Deliberately NOT ranked:** anything requiring owner spend, live enablement, or calendar time.
 
@@ -343,6 +370,7 @@ decision; slot D is an `EXECUTABLE_COMPONENT_SET` and `EXECUTABLE_PORTFOLIO` rem
 
 | date | change |
 |---|---|
+| 2026-08-27 | **Split the microstructure program into MS-BBO and MS-LAST**, which carry different evidence ceilings. `MS01A` completed and is no longer a blocker — it PASSED freshness, FAILED ordering, and left quote size NOT CERTIFIED, which blocks a named list of features. **No blind BBO pool exists**; a genuine **141-session Last-only** pool does and is frozen. EVI re-ranked around the two lanes that can actually produce alpha. |
 | 2026-08-27 | Created at Phase 0, pre-result. |
 | 2026-08-27 | **RR_W005 closed SELECTIVE BOX UN-LATCHING** — every uniform relaxation is 16–41 % worse at fixed drawdown and 11–26 % higher exposure. The box is worth keeping. |
 | 2026-08-27 | **RR_W004 closed HIGHER-TIMEFRAME: NULL** — the last `LIGHT` surface. Every information lane this repo can reach is now measured and closed. |
