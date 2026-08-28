@@ -35,7 +35,25 @@
     "preresult_audit_sha256": "da49e27ac68d0cc0993c238b7c66f7be7f3829bb2eae80ff5ea48ba81471ebcf"
   },
   "cross_market_es_embargo_ms": 200,
-  "declared_but_not_yet_built": {
+  "exporter": {
+    "class": "SWScalpTickExportAllow_v1",
+    "evidence": "776b09e1075a3ac7e7149fc8e68a7658bca30baebb27c97264ca1b585db3c114",
+    "sha256": "683945fce6317718a9d5171ff751871804c448cae99672286661eb02b42890c9"
+  },
+  "feature_sources": {
+    "batch": {
+      "path": "src/esnq_batch.py",
+      "sha256_normalized": "f6cd1fe8512d94dc49b268c86f0d0e0f224868324f265b439cf6e07e19f3c656"
+    },
+    "independence": "esnq_stream.py does not import esnq_batch. Both import only research_sdk/timegrid.py, a certified generic utility. Verified by source inspection and by the parity gate having FOUND a real defect in the streaming path.",
+    "streaming": {
+      "path": "src/esnq_stream.py",
+      "sha256_normalized": "49fcc79e661f8986cd5dd72fbb285a469d11e84e5c2a2185faac0269993af9ec"
+    }
+  },
+  "freeze": "ESNQ_V1_DEVELOPMENT_PIPELINE",
+  "frozen_before": "any feature, label, fit, OOF or P&L",
+  "frozen_definitions": {
     "causal_threshold": "nq_spread_tk*0.25*20 + 4.36 (spread observed strictly before t)",
     "costs": {
       "commission_rt": 4.36,
@@ -53,7 +71,6 @@
       "max_fill_wait_ms": 1000,
       "same_ms": "mean by side; row order never used"
     },
-    "feature_source_sha256": "PENDING - the runner does NOT exist. It MUST be committed, with its hash added here, BEFORE any development result is generated (A2 s8).",
     "folds": "5 chronological, split at SESSION boundaries, test strictly after train",
     "inference": "SESSION-CLUSTERED. 44 clusters. Decision-level counts are diagnostics only.",
     "model": {
@@ -84,13 +101,6 @@
     "standardization": "training-rows only, inside each fold, refit from scratch",
     "target": "NQ 60s executable: long=(NQ_bid_{t+60}-NQ_ask_t)*20, short=(NQ_bid_t-NQ_ask_{t+60})*20"
   },
-  "exporter": {
-    "class": "SWScalpTickExportAllow_v1",
-    "evidence": "776b09e1075a3ac7e7149fc8e68a7658bca30baebb27c97264ca1b585db3c114",
-    "sha256": "683945fce6317718a9d5171ff751871804c448cae99672286661eb02b42890c9"
-  },
-  "freeze": "ESNQ_V1_DEVELOPMENT_PIPELINE",
-  "frozen_before": "any feature, label, fit, OOF or P&L",
   "live_enabled": false,
   "manifests": {
     "ALLOWLIST_DEV_44.txt": "ef3c0ff08b2c13cef44ce5234d58eb5379e6992e73f15f043f635a1eef2fd281",
