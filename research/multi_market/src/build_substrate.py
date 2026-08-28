@@ -45,7 +45,8 @@ DEV_END = "2018-12-31"        # frozen chronology, unchanged
 # Contract EXPIRY years to load. Extended 2019 -> 2023 so the substrate spans the VALIDATION
 # window as well. This is DATA COVERAGE ONLY: the economic-return construction, the roll engine
 # and every eligibility rule are byte-identical. No strategy parameter changes.
-Y0, Y1 = 2009, 2023
+Y0, Y1 = 2009, 2027
+SEAL_CAP = "2026-08-01"   # HARD: no row at or beyond the global seal may enter this substrate
 
 
 def main():
@@ -65,6 +66,9 @@ def main():
         er["ret_usd"] = er["ret_points"] * N.PV[root]      # ONE contract, unit economic return
 
         # ---- eligibility (data presence only)
+        er = er[er["date"] < pd.Timestamp(SEAL_CAP)]
+        if len(er) == 0:
+            continue
         er = er.sort_values("date").reset_index(drop=True)
         days = pd.bdate_range(er["date"].min(), er["date"].max())
         present = pd.Series(0, index=days, dtype=float)
