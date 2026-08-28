@@ -1,0 +1,38 @@
+========================================================================================================
+=== LANE A step 4 - LAST-ONLY DISCOVERY.  Consumed sessions only. Blind pool NOT opened.
+========================================================================================================
+    decisions 139,371   sessions 104   features 23
+    mean |move| $125.65   mean cost $29.48
+    THE DEPENDENCE UNIT IS THE SESSION: 104, not 139,371.
+
+========================================================================================================
+=== REFERENCE ARMS - what a NON-informative policy earns under the same costs
+========================================================================================================
+    ALWAYS LONG          $-39,495.29/session   $ -29.472/decision   t -50.44
+    ALWAYS SHORT         $-39,517.50/session   $ -29.488/decision   t -51.58
+    RANDOM DIRECTION     $-38,800.07/session   $ -28.953/decision   t -55.48
+
+    These are the friction. Any model must beat them by INFORMATION, not by trading less.
+
+========================================================================================================
+=== PRIMARY (ridge) and the SINGLE nonlinear CHALLENGER
+========================================================================================================
+    RIDGE (primary)            $   -986.91/session  t  -3.92  pos  41.9%  trade   2.4%  dir acc  49.4%
+    GBM shallow (challenger)   $   -213.82/session  t  -0.77  pos  43.0%  trade   1.3%  dir acc  50.5%
+
+========================================================================================================
+=== DEPENDENCE-PRESERVING NULLS - whole SESSIONS resampled, never individual decisions
+========================================================================================================
+    RIDGE (primary)            observed $  -986.91/session
+                               activity-matched random-direction placebo: mean $  -783.70  obs at  22.4th pctile
+                               *** DOES NOT BEAT THE PLACEBO ***
+    GBM shallow (challenger)   observed $  -213.82/session
+                               activity-matched random-direction placebo: mean $  -429.50  obs at  79.2th pctile
+                               *** DOES NOT BEAT THE PLACEBO ***
+
+========================================================================================================
+=== ATTEMPT LEDGER and MULTIPLICITY
+========================================================================================================
+    model attempts counted: 2  -> ['RIDGE (primary)', 'GBM shallow (challenger)']
+    ridge alpha grid declared but NOT searched on test data (fixed at 10.0)
+    Bonferroni-adjusted two-sided 5 % threshold for 2 attempts: |t| > 2.275

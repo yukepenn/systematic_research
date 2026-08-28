@@ -1,0 +1,66 @@
+====================================================================================================
+=== LANE A step 0 - CHRONOLOGY OF THE BLIND POOL.  METADATA ONLY, NO PRICE FILE OPENED.
+====================================================================================================
+    consumed (v1 48 + v2 58, union)    104   2025-08-11 -> 2026-07-31
+    BLIND, never extracted                     141   2025-08-12 -> 2026-05-08
+
+    >>> THE TWO POOLS OVERLAP IN CALENDAR TIME. Blindness and chronology are different
+    >>> properties and only one of them is already established.
+
+====================================================================================================
+=== STRICTLY CHRONOLOGICAL CANDIDATE CUTOFFS  (discovery < T  <  blind)
+====================================================================================================
+          cutoff   discovery   blind   min arm   adequate (>=60/60)
+    --------------------------------------------------------------
+      2025-09-01           4     130         4   no
+      2025-10-01          12     115        12   no
+      2025-11-01          18      99        18   no
+      2025-12-01          23      84        23   no
+      2026-01-01          25      66        25   no
+      2026-02-01          27      48        27   no
+      2026-03-01          34      36        34   no
+      2026-04-01          39      18        18   no
+      2026-05-01          46       4         4   no
+      2026-06-01          61       0         0   no
+
+====================================================================================================
+=== *** NO STRICTLY CHRONOLOGICAL SPLIT IS ADEQUATELY POWERED. ***
+====================================================================================================
+    The best any cutoff achieves is min arm = 34 at 2026-03-01 (discovery 34, blind 36).
+    The rule required 60/60. It is NOT relaxed to manufacture a pass.
+
+    WHY, structurally: the blind pool ENDS 2026-05-08 while the consumed pool runs to
+    2026-07-31. Pushing the cutoff later buys discovery sessions by
+    destroying blind ones, and the blind pool is front-loaded in the SAME months the
+    consumed pool covers. There is no cutoff where one cleanly precedes the other.
+
+    >>> THEREFORE THE POOL IS CLASSIFIED, HONESTLY AND PERMANENTLY, AS:
+    >>>
+    >>>     BLIND SAMPLE HOLDOUT   -   its price content has never been read
+    >>>     NOT a strict time-forward holdout   -   it interleaves with discovery
+    >>>
+    >>> Chronology is NOT manufactured. A claim built on it may say 'never seen these
+    >>> outcomes'. It may NOT say 'confirmed out-of-time', and it does NOT substitute
+    >>> for prospective evidence.
+
+====================================================================================================
+=== MONTHLY INTERLEAVING - the reason chronology fails, shown rather than asserted
+====================================================================================================
+         month   consumed   blind                           
+    --------------------------------------------------------
+       2025-08          4      11   ####...........         
+       2025-09          8      14   ########..............  
+       2025-10          6      17   ######................. 
+       2025-11          5      14   #####..............     
+       2025-12          2      19   ##...................   
+       2026-01          2      18   ##..................    
+       2026-02          7      12   #######............     
+       2026-03          5      17   #####.................  
+       2026-04          7      14   #######..............   
+       2026-05         15       5   ###############.....    
+       2026-06         21       0   #####################   
+       2026-07         22       0   ######################  
+
+    '#' consumed   '.' blind.  Both appear in nearly every month of the overlap.
+
+    wrote out/cutoff_table.csv and out/consumed_sessions.csv (104 rows)

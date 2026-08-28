@@ -1,0 +1,55 @@
+====================================================================================================
+=== LANE A step 1 - LAST-ONLY DATA CONTRACT.  BLOCKING GATE.
+=== Discovery sessions only. The 141-session blind pool is NOT opened.
+====================================================================================================
+    discovery sessions available   104   (v2 58, v1 46)
+    blind sessions excluded        141
+
+====================================================================================================
+=== WITHIN-MILLISECOND PERMUTATION-INVARIANCE TEST on 12 sessions
+=== Each feature computed on the natural order, then on a random permutation INSIDE each
+=== tied-timestamp group. A feature that moves was reading export row order.
+====================================================================================================
+    s20250811 [v1]    401,811 Last events    183,142 distinct ms  tie fraction  54.4%
+    s20250912 [v1]    344,967 Last events    165,063 distinct ms  tie fraction  52.2%
+    s20251110 [v1]    558,891 Last events    254,808 distinct ms  tie fraction  54.4%
+    s20260211 [v1]    483,046 Last events    236,090 distinct ms  tie fraction  51.1%
+    s20260317 [v1]    331,806 Last events    178,953 distinct ms  tie fraction  46.1%
+    s20260506 [v1]    518,534 Last events    257,571 distinct ms  tie fraction  50.3%
+    s20260522 [v2]    451,877 Last events    221,937 distinct ms  tie fraction  50.9%
+    s20260605 [v2]    913,751 Last events    448,908 distinct ms  tie fraction  50.9%
+    s20260618 [v2]    504,010 Last events    261,150 distinct ms  tie fraction  48.2%
+    s20260706 [v2]    415,566 Last events    222,744 distinct ms  tie fraction  46.4%
+    s20260717 [v2]    564,160 Last events    305,843 distinct ms  tie fraction  45.8%
+    s20260731 [v2]    612,955 Last events    317,445 distinct ms  tie fraction  48.2%
+
+    feature                   max |abs diff|   max rel diff       moved   VERDICT
+    ------------------------------------------------------------------------------------
+    n_buckets                         0.0000      0.000e+00     0/12      INVARIANT - ADMISSIBLE
+    tot_vol                           0.0000      0.000e+00     0/12      INVARIANT - ADMISSIBLE
+    n_trades                          0.0000      0.000e+00     0/12      INVARIANT - ADMISSIBLE
+    signed_flow                       0.0000      0.000e+00     0/12      INVARIANT - ADMISSIBLE
+    abs_flow                          0.0000      0.000e+00     0/12      INVARIANT - ADMISSIBLE
+    displacement                      0.0000      0.000e+00     0/12      INVARIANT - ADMISSIBLE
+    realized_vol                      0.0000      0.000e+00     0/12      INVARIANT - ADMISSIBLE
+    rng_hi_lo                         0.0000      0.000e+00     0/12      INVARIANT - ADMISSIBLE
+    n_distinct_px                     0.0000      0.000e+00     0/12      INVARIANT - ADMISSIBLE
+    vol_concentration                 0.0000      0.000e+00     0/12      INVARIANT - ADMISSIBLE
+    rowwise_signed_flow           4,003.0000      2.736e+00    12/12      *** MOVES - DROP ***
+    rowwise_abs_flow            132,905.0000      2.982e-01    12/12      *** MOVES - DROP ***
+    rowwise_displacement              0.2500      1.266e-02     2/12      *** MOVES - DROP ***
+    rowwise_realized_vol            234.2563      6.430e-01    12/12      *** MOVES - DROP ***
+    rowwise_uptick_frac               0.0697      2.799e-01    12/12      *** MOVES - DROP ***
+
+====================================================================================================
+=== VERDICT
+====================================================================================================
+    ADMISSIBLE (10): n_buckets, tot_vol, n_trades, signed_flow, abs_flow, displacement, realized_vol, rng_hi_lo, n_distinct_px, vol_concentration
+    REJECTED   (5): rowwise_signed_flow, rowwise_abs_flow, rowwise_displacement, rowwise_realized_vol, rowwise_uptick_frac
+
+    The rejected list is the point. Those are the features a Last-only study would
+    NATURALLY write - a tick-rule signed flow, an uptick fraction, a first-to-last
+    displacement - and on THIS export they are partly a function of ROW ORDER INSIDE A
+    MILLISECOND, which carries no exchange information. They are not repaired. They are
+    replaced by the bucket construction, which is invariant BY CONSTRUCTION and is now
+    also invariant BY MEASUREMENT.

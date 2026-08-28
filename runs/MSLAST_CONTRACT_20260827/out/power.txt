@@ -1,0 +1,45 @@
+========================================================================================================
+=== LANE A step 5 - POWER, and INFORMATION vs MONETIZABILITY
+========================================================================================================
+
+=== (a) DOES THE INFORMATION EXIST?  Out-of-fold, cost-free association.
+    ------------------------------------------------------------------------------------
+    out-of-fold Pearson  r  -0.00156   session-clustered 95 % CI [-0.01150, +0.00890]
+    out-of-fold Spearman    +0.00553
+    out-of-fold R^2         -0.002079
+    prediction sd $    9.30  vs  actual move sd $  214.08   ratio 0.0434
+    >>> NO INFORMATION - the CI includes 0
+
+=== (b) WAS THE ECONOMIC TEST WELL POWERED?
+    ------------------------------------------------------------------------------------
+    sessions n                      86
+    per-session P&L sd              $  2,332.87
+    MDE at ~80 % power, 5 % 2-sided $    704.37 per session   (2.80 * sd / sqrt(n))
+    observed                        $   -986.91 per session
+
+    trades taken                    2,728  (31.7 per session, 2.37 % of decisions)
+    MDE re-expressed per TRADE      $     22.21
+    mean |move| on traded decisions $    316.28
+    mean cost on traded decisions   $     25.07
+
+=== THE 60-SECOND MOVE IS A MARTINGALE - the finding underneath the null
+    ------------------------------------------------------------------------------------
+    per-session lag-1 autocorrelation of the 60 s move: mean -0.0065   median -0.0039
+    session-clustered t on that autocorrelation:        -1.03
+    unconditional mean 60 s move  $-0.015  (sd $214.08, so a drift claim needs |t| on 104 sessions)
+    session-clustered t on the mean move:               +0.04
+
+========================================================================================================
+=== VERDICT
+========================================================================================================
+    NULL - and WELL POWERED, not closed by power:
+      * the cost-free association CI [-0.01150, +0.00890] straddles zero, so this is
+        not a case of an effect being present but undetectable;
+      * the economic MDE ($704.37/session) is far SMALLER than the friction the
+        arms already pay ($39,506/session if always on), so
+        an economically interesting edge would have been visible;
+      * directional accuracy sits at a coin flip on the decisions the model chose.
+
+    CLASSIFICATION: NULL / FALSIFIED-NULL-CLOSED for THIS feature family at THIS
+    horizon on Last-only data. NOT 'microstructure is useless' - it closes the
+    certified order-invariant trade-flow family at 60 s, which is what was asked.
