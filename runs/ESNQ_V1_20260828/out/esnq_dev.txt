@@ -1,0 +1,58 @@
+================================================================================================================
+=== ESNQ_V1 ONE-SHOT DEVELOPMENT.  Structural gates first.
+================================================================================================================
+    sessions 44   raw decisions 14,564   expected 44x331 = 14,564
+
+=== P0-2  ROW-BY-ROW TIMESTAMP ASSERTIONS (all decisions, not a sample)
+    max_es_source_ts <= t - 200ms   violations 0
+    max_nq_source_ts <  t           violations 0
+    entry_ts         >  t           violations 0
+    exit_ts          >  t + 60s     violations 0
+    realised ES information lag: min 200.0 ms  median 228.0 ms
+
+=== P0-1  TWO-SIDED CAUSALITY, WITH TEETH
+    probe session 2026-02-18
+    NEGATIVE 1 - corrupt NQ quotes AFTER t   -> NQ-native features must NOT move
+        nq_spread_tk     0.000e+00
+        nq_rvol_30s      0.000e+00
+    NEGATIVE 2 - corrupt ES quotes AFTER t-200ms -> ES features must NOT move
+        rel_move_1s      9.785e-06
+        rel_move_5s      1.708e-05
+        rel_move_15s     2.214e-05
+        rel_move_30s     3.660e-05
+        es_spread_tk     0.000e+00
+        es_rvol_30s      5.780e-02
+        es_bid_upd_30s   0.000e+00
+        es_ask_upd_30s   0.000e+00
+    POSITIVE   - corrupt ES quotes BEFORE the cutoff -> ES features MUST move
+        rel_move_1s      9.785e-06   MOVED
+        rel_move_5s      1.708e-05   MOVED
+        rel_move_15s     2.214e-05   MOVED
+        rel_move_30s     3.660e-05   MOVED
+        es_spread_tk     0.000e+00   *** DID NOT MOVE ***
+        es_rvol_30s      5.780e-02   MOVED
+        es_bid_upd_30s   0.000e+00   *** DID NOT MOVE ***
+        es_ask_upd_30s   0.000e+00   *** DID NOT MOVE ***
+    >>> NEGATIVE *** FAIL - LOOK-AHEAD ***   POSITIVE 5/8 families responded *** FAIL - NO TEETH ***
+
+    admissible decisions 14,564 of 14,564   sessions 44
+    folds: [8, 7, 7, 7, 7] test sessions per fold (expanding train)
+    >>> SESSION IS THE INFERENCE UNIT: n = 44. The 14,564 decisions are DIAGNOSTIC ONLY.
+
+================================================================================================================
+=== DEVELOPMENT ECONOMICS  (ONE evaluation, frozen object)
+================================================================================================================
+    total net        $  -18,113.79
+    net/session      $     -503.16
+    sessions         36   positive 11 (30.6 %)
+    trade rate       12.45 %   actions L/S/F 876/607/10,433
+    mean/median per trade  $-12.21 / $-11.36
+    OOF corr(pred, target)  +0.0034
+    maxDD            $   21,421.11
+    worst / best session  $-4,070.19 / $3,232.39
+    top-1 / top-5 share of positive net  20.1 % / 76.1 %
+    quartile nets    ['$-8,730', '$-6,515', '$-1,675', '$-1,194']
+    STRESS +0.5tk   $  -24,261.30
+    STRESS +1.0tk   $  -11,638.32
+    long / short net  $-4,360.59 / $-13,753.21
+    gross $-11,647.91   cost $6,465.88   cost/|gross| 55.5 %

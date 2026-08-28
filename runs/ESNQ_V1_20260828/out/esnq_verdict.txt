@@ -1,0 +1,64 @@
+================================================================================================================
+=== ESNQ_V1 DEVELOPMENT GATE TABLE  (frozen in SPEC/A1 before any result)
+================================================================================================================
+    GATE                                                               OBSERVED   VERDICT
+    X1  joint after-cost OOF net > 0                                $-18,113.79   *** FAIL ***
+    X2  > 95th pctile refitted session-block null           NOT RUN - see below   n/a
+    X3  beats activity-matched placebo                      NOT RUN - see below   n/a
+    X4  beats same-trigger mirror                     $18,113.79 for the mirror   n/a
+    X5  STRESS +0.5tk net > 0                                       $-24,261.30   *** FAIL ***
+    X6  top-5 sessions <= 50% of positive net                            76.1 %   *** FAIL ***
+    X7  net > 0 in >= 3 of 4 quartiles                                   0 of 4   *** FAIL ***
+    X8  NQ-only control (diagnostic, not a gate)                $-55.79/session   n/a
+    X9  ES-pairing mechanism null                           NOT RUN - see below   n/a
+
+    X2/X3/X9 NOT RUN, and the reason is not budget:
+      X1 FAILS. A refitted null, an activity placebo and a cross-market mechanism null all ask
+      'is this POSITIVE result real / genuinely cross-market?'. There is no positive result to
+      attribute. Running them on a losing object would answer a question nobody asked, and a
+      null percentile for a negative strategy cannot rescue it. The object closes on X1.
+
+================================================================================================================
+=== FROZEN UNCERTAINTY (A3-4): circular block bootstrap on the session nets
+================================================================================================================
+    n_sessions                   36
+    block_length                 4
+    B                            20000
+    seed                         20260828
+    percentile                   10
+    mu_hat_dev                   -503.16094977072316
+    bootstrap_mean_of_means      -503.51821758643354
+    bootstrap_sd                 209.32346820298562
+    lower_bound_raw              -765.0268060402797
+    mu_claim                     0.0
+    distinct_replicate_values    20000
+    (diagnostic only) IID session bootstrap 5th pctile  $-936.87
+
+================================================================================================================
+=== BLIND-SPEND ADMISSIBILITY  (A2 s7 + A3 s2/s4)
+================================================================================================================
+    EFFECTIVE blind n            14
+    sigma_blind (frozen)         $5,250.81/session
+    SE_blind                     $1,403.34/session
+    MDE(80% power)               $3,489.36/session
+    mu_hat_dev                   $-503.16/session
+    mu_claim (10th pctile, frozen)  $0.00/session
+    blind power at mu_claim      0.000   required >= 0.80
+
+    1_development_gates              False
+    2_es_pairing_mechanism_null      False
+    3_causality                      True
+    4_independent_parity             True
+    5_stress_economics               False
+    6_mu_claim_positive              False
+    7_blind_power_ge_80pct           False
+    >>> DECISION: WITHHELD   (DEVELOPMENT-SUPPORTED / BLIND-UNDERPOWERED / BLIND UNSPENT)
+
+================================================================================================================
+=== VERDICT: NO CANDIDATE
+================================================================================================================
+    blocking gate failures: ['X1  joint after-cost OOF net > 0', 'X5  STRESS +0.5tk net > 0', 'X6  top-5 sessions <= 50% of positive net', 'X7  net > 0 in >= 3 of 4 quartiles']
+    ESNQ_V1 is CLOSED at its exact tested scope. No 30s/15s/120s rescue, no feature addition,
+    no subset, no GBM, no nonlinear model, no event/TOD/volatility filter, no ES-only variant,
+    no alternative pairing null, no threshold relaxation. A genuinely different future
+    cross-market formulation requires a FRESH EVI adjudication and fresh preregistration.
