@@ -5,7 +5,8 @@
 | **verdict** | ⛔ **NO CANDIDATE.** `ESNQ_V1` is **CLOSED** at its exact tested scope |
 | blocking failures | **X1 · X5 · X6 · X7** |
 | headline | net **−$18,113.79** · **−$503.16/session** · 30.6 % positive sessions · OOF corr **+0.0034** |
-| structural gates | **P0-1 PASS · P0-2 PASS** (0 violations) · **P0-3 PASS on 20/44 sessions, run continuing** |
+| structural gates | **P0-1 PASS · P0-2 PASS** (0 violations) · **P0-3 PASS 44/44, ACTION DISAGREEMENTS = 0** |
+| ⚠️ corrections | **`CLOSURE_SANITATION.md`** — ordering breach · stress is a policy perturbation · n=36 not 44 · X6 non-adjudicative |
 | **blind pool** | **UNSPENT.** `mu_claim = $0.00` → power **0.000** → **WITHHELD** |
 | **LIVE ENABLED** | **NO** |
 
@@ -103,19 +104,21 @@ same-millisecond bucket**. Fixed to flush-then-decide. On the smoke session: **9
 exactly `0.000e+00`**, rvol at `1.7e−16`/`7.1e−15`, labels and source timestamps exact, `wait_ok`
 331/331. **No statistical test could have found that defect.**
 
-**Full 44-session parity — status at the time of writing: 20 of 44 complete, and continuing.**
+**Full 44-session parity — COMPLETE.**
 
 | | |
 |---|---:|
-| sessions parity-checked | **20 / 44** |
-| worst **relative** feature difference | **4.29e−15** — float summation order |
-| worst source-timestamp difference | **0 ns — EXACT on every session** |
-| sessions with any timestamp difference | **0** |
+| sessions / decision rows / OOF rows | **44 / 44** · 14,564 · 11,916 |
+| max abs feature difference | 9 features exactly **0.000e+00**; `es_rvol` 6.66e−16, `nq_rvol` 2.84e−14 |
+| max relative difference · NaN mismatches | **4.29e−15** · **0** |
+| source timestamps · labels · `wait_ok` | **0 ns** · **0.000e+00** · **0 / 14,564** |
+| **ACTION DISAGREEMENTS** | **0 / 11,916 at +0.0, +0.5 and +1.0 tick** · net diff **$0.000000** |
 
-⚠️ **Stated plainly: the remaining 24 sessions were still running when this report was written.**
-The run is deterministic and cannot change the verdict — **X1 fails by −$18,113.79**, and P0-3's
-purpose is to stop a *positive* result being called a candidate. A closure does not depend on it.
-The completed 20 sessions show parity at float noise with exact timestamp agreement.
+> ### ⚠️ **ORDER-OF-OPERATIONS BREACH.** Full P0-3 completed **after** the economic computation,
+> although the job was launched before it and both implementations were already frozen. Zero action
+> disagreement was found, so **the breach affects process ordering, not the measured object.**
+> **The earlier claim that "all structural gates passed before economics" is RETRACTED** — at the
+> economic read P0-3 was 20/44 and X9 was never run.
 
 ## E. Development economics — ONE evaluation, frozen object
 
