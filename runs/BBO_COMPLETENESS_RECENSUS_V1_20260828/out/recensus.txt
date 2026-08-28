@@ -1,0 +1,58 @@
+====================================================================================================================
+=== BBO_COMPLETENESS_RECENSUS_V1 -- 99 vs 123.  DATA-ONLY: no price, no outcome, no model.
+====================================================================================================================
+    OLD substrate  \research/scalping_lab/substrate/raw/NQ   48 sessions
+    v2  substrate  \research/data_microstructure_v2/raw/NQ   58 sessions
+
+====================================================================================================================
+=== STEP 1  REPRODUCE THE OLD CLASSIFIER  (source-provenance gate: reproduce before compare)
+====================================================================================================================
+    stored bbo_hourly_truth.csv rows 310   recomputed pre-seal rows 310
+    class agreement on common dates: 310 / 310
+      FULL     stored   99   recomputed   99
+      PARTIAL  stored   47   recomputed   47
+      NONE     stored  164   recomputed  164
+    >>> REPRODUCED EXACTLY
+
+====================================================================================================================
+=== STEP 2  THE CROSSWALK  (pre-seal universe only)
+====================================================================================================================
+    pre-seal dates with any NQ tick file             310
+    OLD quote-FULL (23 session-hour labels)           99
+    NEW RTH-complete, labels 9-16 (as run)           116
+    NEW RTH-complete, labels 10-16 (corrected)       116
+    materialized in v2                                58
+    materialized in OLD substrate                     48
+    materialized in EITHER  = OUTCOME-CONSUMED       104
+
+    OLD class  x  NEW RTH-complete(10-16)
+      new_rth_complete_10_16  False  True 
+      old_quote_class                     
+      FULL                        2     97
+      NONE                      164      0
+      PARTIAL                    28     19
+
+=== STEP 3  THE SIX STATES, KEPT SEPARATE
+    file exists                              310
+    RTH-complete (new, 10-16)                116
+    quote-FULL (old, 23h)                     99
+    materialized                             104
+    RTH-complete AND materialized             97
+    RTH-complete AND NOT materialized         19
+    quote-FULL AND NOT materialized            1
+
+====================================================================================================================
+=== STEP 4  VERDICT
+====================================================================================================================
+    genuinely unread AND quote-FULL under the OLD rule       1
+    genuinely unread AND RTH-complete under the NEW rule    19
+    span 2025-08-13 -> 2026-05-05
+    contracts ['NQ 03-26', 'NQ 06-26', 'NQ 09-25', 'NQ 12-25']
+
+    >>> VERDICT B: a genuine pre-seal blind BBO pool exists -- 19 sessions.
+    >>> FREEZING AND HASHING NOW. Its returns are NOT inspected and it is NOT spent.
+    >>> manifest sha256 84a8575a29a63ffc22d43bc37326e566b505446ff00a1fbdabc82f84dd500931
+    >>> frozen at commit 022c543
+
+    sealed (>= 2026-08-01) dates inventoried by metadata only: 9  -- no price or outcome read; all blind-eligibility flags False by construction
+    sealed dates that would be RTH-complete: 7  (counted, NOT read)
