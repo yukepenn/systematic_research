@@ -17,8 +17,8 @@ EVI ~ mechanism_prior x info_novelty x causal_quality x evidence_upgrade x portf
 | # | family | novelty | causal | evid ↑ | coverage | $ cost | semantic risk | irrev | **EVI** |
 |---|---|---|---|---|---|---|---|---|---|
 | **1** | **CME NQ depth + order-level history** (`GLBX.MDP3`, MBP-10 → MBO) | **HIGH** | **HIGH** | **HIGH** | **HIGH** (23 h) | **UNKNOWN, bounded LOW** — exact price obtainable for **$0** | MED | **LOW** | **HIGH — rank 1** |
-| **2** | **free deep backfill of connection-served internals** (`$TICK` 2013+, `$TRIN`, `$VIX`) | MED | LOW | **HIGH** | MED — ⚠️ permanent **35.7 % RTH ceiling** on P1 | **ZERO** | MED | LOW-MED | **HIGH** |
-| **3** | **VIX / VX term structure as a whole-session conditioner** (NT8 VX + free Cboe) | MED | LOW-MED | HIGH | **HIGH** — daily state covers all 23 h | **ZERO** | LOW-MED | MED | **HIGH** |
+| **2** | **free deep backfill of connection-served internals** (`$TICK`, `$TRIN`, `$VIX`) — ⚠️ **GENESIS: continuity unestablished** (two point probes); blocked behind CrossTrade ban until seal guard exists | MED | LOW | **HIGH** | MED — ⚠️ permanent **35.7 % RTH ceiling** on P1 | **ZERO** | MED | LOW-MED | **HIGH (execution-gated)** |
+| **3** | **VIX / VXN term structure as a whole-session conditioner** — ⚠️ **GENESIS-corrected source: free Cboe CDN only** (~~NT8 VX~~ = probe residue, VXM = no data); **`VXN` (NQ-native) added — Program C missed it** | MED | LOW-MED | HIGH | **HIGH** — daily state covers all 23 h | **ZERO** | LOW-MED | MED | **HIGH** |
 | 4 | NQ options-on-futures **OI + settlement** | HIGH | HIGH | MED | MED-HIGH | UNKNOWN, likely LOW | **HIGH** | LOW | MED-HIGH |
 | 5 | **MNQ tick order flow** (on disk, never read) | HIGH | MED | MED | MED | **ZERO** | MED | **LOW** | MED |
 | 6 | CFTC **COT** positioning — crowding | HIGH | LOW | MED | **HIGH** | **ZERO** (unprobed) | MED | LOW | MED |

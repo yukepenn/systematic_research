@@ -13,10 +13,10 @@
 | | action | what it buys |
 |---|---|---|
 | **A1** | **start the prospective shadow** on 2026-09-01 18:00 ET | the **one evidence class the project owns none of**. Preflighted **READY** |
-| **A2** | **acquire the VIX/VX term structure already sitting in NT8** (VX/VXM daily + 1-min, multiple contract months) + free Cboe files (`VIX_History` 1990→, `VIX3M` 2009→, CFE volume + **OI** 2004→) | the canonical **liquidity-stress / vol-regime conditioner**, covering **all 23 hours**, **never named in any repo data document** |
-| **A3** | **backfill `$TICK` to ~2013** on the existing connection | **~9–13 extra years** — converts internals from `REGIME-LOCAL` to multi-era. ⚠️ carries a permanent **35.7 % RTH coverage ceiling** on P1 |
-| **A4** | **register MNQ tick** (187 dates, **128 pre-burn, never read**) | a **separate order book**, retail-weighted. Invisible only because `build_registry.py:197-206` hard-codes `symbol="NQ"` — **a bug, not an absence** |
-| **A5** | audit the **nine** unextracted 1-min futures stores (CL/ZB/6J/ZN/MGC are new sectors) | the largest untested intraday surface named anywhere |
+| **A2** | ⚠️ **GENESIS-CORRECTED (2026-08-28 evening):** acquire the VIX complex from the **free Cboe CDN** — ~~"already sitting in NT8"~~ was **overstated** (VX files on disk are probe residue; VXM has zero data; see `runs/GENESIS_W1_FORENSICS_20260828`). Files: `VIX_History` 1990→, `VIX3M` 2009→, VX settlements, CFE volume + **OI** 2004→, **plus `VXN` — the NQ-native vol index Program C missed entirely** (and VVIX/VIX9D/SKEW/OVX/GVZ) | the canonical **vol-regime conditioner**, now with the NQ-native index |
+| **A3** | **probe, then backfill, deep `$TICK`** — ⚠️ GENESIS-downgraded: continuity **unestablished** (two point probes); and blocked behind the CrossTrade ban until a structural seal guard exists | potentially multi-era internals; ⚠️ permanent **35.7 % RTH coverage ceiling** on P1 |
+| **A4** | **register MNQ tick** (187 dates, **128 pre-burn, never read** — GENESIS-verified exactly; hard-code at `build_registry.py:198`, and the registry never scans `db/tick` at all — ES tick 126 dates full BBO equally invisible) | a **separate order book**, retail-weighted |
+| **A5** | audit the **six-plus-one** genuinely unextracted 1-min stores — **CL/ZB/6J/ZN/MGC/MNQ (+MES)**; ⚠️ GENESIS correction: ES/RTY/YM of the claimed "nine" were already extracted and consumed | new-sector intraday surface |
 | ⛔ | ~~extract the 141 remaining NQ Last-usable tick sessions~~ | **REMOVED. Those 141 ARE the protected Last-only blind pool** (`fd7b05f`). Extraction **materializes a protected asset** — the exact act behind the `ESNQ` blind-export incident. **Free in dollars, not in governance** |
 
 ⚠️ **Every one of A2–A5 still requires the full ladder before any alpha**: semantics certified →

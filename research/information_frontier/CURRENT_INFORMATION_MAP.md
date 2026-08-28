@@ -2,6 +2,13 @@
 
 **Information, not strategies.** 2026-08-28. `RO` = raw observable · `TX` = transformation.
 
+> ⚠️ **GENESIS WAVE-1 CORRECTIONS APPLIED (2026-08-28 evening,
+> `runs/GENESIS_W1_FORENSICS_20260828`):** F3 (VX/VXM "already in NT8") was **overstated** — the
+> on-disk VX files are probe residue, VXM has zero data; F2's ~2013 depth rests on two point
+> probes (continuity unestablished); 3 of R5's "nine unextracted" stores were already extracted
+> and consumed. Corrected rows below. **`research/genesis/GENESIS_DATA_ATLAS.md` is now the
+> authoritative data map**; this document is kept for the information-family framing.
+
 > ## ⚠️ **THE HEADLINE: THE FREE TIER IS NOT EXHAUSTED.**
 > The frontier currently says *"the free surfaces are exhausted."* **That is false**, and the items
 > below were found by **probing the connection and the disk**, not by reading a marketing page —
@@ -26,10 +33,11 @@
 
 | # | item | why it matters | status |
 |---|---|---|---|
-| **F3** | **VX / VXM futures — daily AND 1-minute OHLCV, multiple contract months, already in NT8** | **the VIX futures term structure.** ⚠️ **Never named in ANY repo data document.** The canonical liquidity-stress / vol-regime conditioner | **UNACQUIRED, $0** |
-| **F2** | **`$TICK` 1-minute back to ~2013** on the existing connection | the repo believes internals are `REGIME-LOCAL (2022+)`. Probe returns bars at **2013-01-02 and 2015-01-02**. **~9–13 extra years** — converts internals from regime-local to multi-era | **UNACQUIRED, $0** |
-| **R10** | **MNQ tick — 187 dates, 128 pre-burn, never read** | a **separate order book** with a retail-weighted participant mix. ⚠️ **Absent from the registry** because `build_registry.py:197-206` hard-codes `symbol="NQ"` — an invisibility bug, not an absence | **ENTIRELY UNSPENT, $0** |
-| **R5** | **nine unextracted 1-min futures stores** — ES, CL, MNQ, RTY, YM, ZB, 6J, ZN, MGC | `evidence_class` = **`unclassified`** for all nine. CL/ZB/6J/ZN/MGC are genuinely **new sectors**. The largest untested intraday surface named anywhere | **$0**, completeness **UNAUDITED** |
+| **F3** | ~~VX/VXM already in NT8~~ → **VIX-complex via free Cboe CDN files** (`VIX_History` 1990→, VIX3M, VX settlements + CFE volume/OI 2004→) — ⚠️ **GENESIS CORRECTION: NT8 holds NO usable VX history** (5 probe-residue minute files, 2 tiny day files, all mid-2026; VXM = definition only, zero data; a failed `VX 03-06` deep probe was omitted from the original report) | the VIX futures term structure — still the canonical vol-regime conditioner, **source = Cboe, not NT8** | **UNACQUIRED, $0** |
+| **F3b** | ⭐ **`VXN` — the Nasdaq-100-native vol index — free on the same Cboe CDN, zero repo mentions** (also free: VVIX, VIX9D, SKEW, OVX, GVZ) | the entire prior vol framing was SPX-based; VXN is the NQ-native observable | **UNACQUIRED, $0** (GENESIS W1) |
+| **F2** | **`$TICK` deep backfill** on the existing connection | ⚠️ **GENESIS DOWNGRADE:** evidence = **two single-day point probes** (2013-01-02, 2015-01-02), continuous store starts 2022. Connection likely serves deep internals; **continuity unestablished** — "~9–13 years" was extrapolation | **UNACQUIRED, $0**, blocked behind CrossTrade ban until seal guard exists |
+| **R10** | **MNQ tick — 187 dates, 128 pre-burn, never read** (GENESIS-verified exactly) | a **separate order book**, retail-weighted mix. Hard-code confirmed at `build_registry.py:198`; deeper: **the registry never scans `db/tick` at all** — ES tick (126 dates, full BBO) equally invisible | **ENTIRELY UNSPENT, $0** |
+| **R5** | ~~nine~~ → **six-plus-one unextracted 1-min stores** — **CL, ZB, 6J, ZN, MGC, MNQ (+ MES, 29 sessions, hidden by a `>100` filter)** — ⚠️ GENESIS CORRECTION: ES/RTY/YM of the "nine" were **already extracted AND alpha-consumed** (`runs/SM1M_*_SUBSTRATE/out/`, contradicting `DATA_ASSET_REGISTRY.csv:14-18`) | CL/ZB/6J/ZN/MGC are genuinely new sectors | **$0**, completeness **UNAUDITED** |
 | ~~**R9b**~~ | ~~141 NQ Last-usable tick sessions "extractable at $0"~~ | ⚠️ **GOVERNANCE CORRECTION — THESE ARE THE PROTECTED BLIND POOL.** The 141 unextracted Last-usable sessions **are** the frozen 141-session Last-only pool (`fd7b05f`). **Extraction MATERIALIZES a protected asset** — exactly the act that caused the `ESNQ` blind-export incident. **Free in dollars, NOT free in governance.** Requires blind-spend authorization behind a frozen mechanism | ⛔ **NOT a free item** |
 | — | Cboe free CDN/CFE files | `VIX_History` (1990→), `VIX3M` (2009→), VX/VXM/**IBHY/IBIG** settlements, CFE volume + **open interest** (2004→) | **public, $0** |
 | — | FRED / ALFRED **vintages**, BLS/BEA/Census schedules | point-in-time vintages are the **correct revision handle**; BLS/BEA are the **authoritative** release times every vendor copies | **public domain** |

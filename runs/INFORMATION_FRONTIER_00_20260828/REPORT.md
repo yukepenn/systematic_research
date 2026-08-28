@@ -1,3 +1,16 @@
+> # ⚠️ CORRECTION — 2026-08-28 evening (`runs/GENESIS_W1_FORENSICS_20260828`, prepended; original preserved below)
+> GENESIS Wave-1 adversarial verification corrected three findings of this report:
+> **F3 is OVERSTATED** — NT8 holds no usable VX history (the on-disk VX minute/day files are
+> residue of this report's own probes, all mid-2026; **VXM has zero data directories**; an
+> **empty `minute/VX 03-06` dir from a failed deep-history probe was omitted from this report**
+> — an unrecorded negative). The VIX complex is free via the **Cboe CDN**, which also carries
+> **`VXN`, the NQ-native vol index this census missed entirely**.
+> **F2 is DOWNGRADED** — two single-day point probes do not establish 2013–2021 continuity;
+> "~9–13 free years" was extrapolation.
+> **The "nine unextracted stores" were six-plus-one** — ES/RTY/YM were already extracted and
+> alpha-consumed (`runs/SM1M_*_SUBSTRATE/out/`). F1 (order-flow arithmetic withdrawal), F4
+> (N-bound macro gate), and F5 stand. MNQ tick (part of F1's procedural finding) verified exactly.
+
 # `INFORMATION_FRONTIER_00` — RESULT
 
 Executes `SPEC.md`, committed at `b195874` **before this census existed**.
