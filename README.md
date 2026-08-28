@@ -61,12 +61,13 @@ Exactly what is installed, compiled and reproducible:
   pending. ⚠️ *(Superseded 2026-08-28: "new alpha discovery is PAUSED / next wave is EVENT
   RESPONSE" was the 2026-08-27 state. **`EVENT RESPONSE` is `CLOSED-BY-DATA`**, not deferred —
   `runs/DATAGATE_EVENTRESPONSE_20260827/`.)*
-- **Blind populations, stated precisely.** ESNQ original blind manifest **15**, `OUTCOME_CONSUMED
+- **Blind populations, stated precisely.** ESNQ blind **unspent and unread**; original manifest **15**, `OUTCOME_CONSUMED
   0`, `PRICE_DERIVED_INFORMATION_READ 0`, but **one session (`2025-08-13`) was transiently
   materialized and metadata-exposed** during a recorded exporter incident, so the **EFFECTIVE ESNQ
   blind population is 14** after an operational quarantine. The NQ BBO 19-session asset is **19
   outcome-unconsumed · 18 pristine-never-materialized · 1 metadata-exposed**.
-- **`MS-BBO` VOID · `CARRY_V1` CLOSED · `TSMOM` CLOSED.** The campaign has **no candidate**.
+- **`MS-BBO` VOID · `CARRY_V1` CLOSED · `TSMOM` CLOSED · `ESNQ_V1` CLOSED** (net −$18,113.79, OOF corr +0.0034). The campaign has **no candidate**.
+- ⚠️ **"No candidate" is NOT "no untested surface."** **Multi-market VOLUME / LIQUIDITY** is present in the existing substrate, has only ever been the roll criterion, and has **never been alpha-tested** — it is the current **rank-1** lane, designed but not run · `runs/VOLUME_LIQUIDITY_DESIGN_20260828/`.
 - **DOM / Level-II / Market Replay capture is PAUSED** (owner risk-control, 2026-08-12) and must
   not be resumed autonomously.
 - **LIVE ENABLED: NO.**
