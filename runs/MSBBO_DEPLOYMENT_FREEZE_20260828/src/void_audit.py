@@ -10,7 +10,7 @@ exactly one explanation.
 
 On Windows with NumPy 1.26, np.arange(-30, 0) has dtype INT32. NS = 1_000_000_000 fits in int32,
 so NumPy's value-based casting keeps the product in int32 - and -30 * 1e9 = -3e10 OVERFLOWS.
-The offsets are not -30s..-1s. They are a scrambled set, FOURTEEN OF WHICH ARE POSITIVE, reaching
+The offsets are not -30s..-1s. They are a scrambled set, FIFTEEN OF WHICH ARE POSITIVE, reaching
 +2.065 SECONDS PAST THE DECISION INSTANT. Silently. No warning is raised for integer overflow.
 
 CONTAMINATED:  rvol_30s  range_30s  dist_hi_30s  dist_lo_30s
@@ -47,15 +47,20 @@ sys.path.insert(0, os.path.join(os.path.dirname(RUN), "MSBBO_V1_20260828", "src"
 import bbo_v1 as B                                                      # noqa: E402
 
 OUT = os.path.join(RUN, "out")
-_fh = open(os.path.join(OUT, "void_audit.txt"), "w", encoding="utf-8")
 NS = B.NS
 CONTAM = ["rvol_30s", "range_30s", "dist_hi_30s", "dist_lo_30s",
           "spread_chg_30s", "spread_minfrac", "spread_pctile"]
 
+# The log handle is opened LAZILY, inside main(). A module-level open(..., "w") truncates the log
+# whenever another script merely IMPORTS this module - which is exactly the defect recorded in
+# MSBBO_V1/CORRECTION_20260828.md s1D-b, and it silently destroyed this file's own output once.
+_fh = None
+
 
 def P(*a):
     print(*a, flush=True)
-    print(*a, file=_fh)
+    if _fh is not None:
+        print(*a, file=_fh)
 
 
 def corrected_features(path, fix):
@@ -146,6 +151,8 @@ def corrected_features(path, fix):
 
 
 def main():
+    global _fh
+    _fh = open(os.path.join(OUT, "void_audit.txt"), "w", encoding="utf-8")
     P("=" * 104)
     P("=== VOID AUDIT - MS-BBO-CANDIDATE-1 READS THE FUTURE")
     P("=" * 104)
@@ -179,8 +186,11 @@ def main():
     d2.loc[m, "price"] = d2.loc[m, "price"].values + 50.0
     tmp = os.path.join(OUT, os.path.basename(fp).replace(".parquet", "_perturb.parquet"))
     d2.to_parquet(tmp, index=False)
-    pert = corrected_features(tmp, fix=False)
-    os.remove(tmp)
+    try:
+        pert = corrected_features(tmp, fix=False)
+    finally:
+        if os.path.exists(tmp):
+            os.remove(tmp)
     P(f"    session {os.path.basename(fp)}   decision t = {pd.Timestamp(tpick)}")
     P(f"    perturbed {int(m.sum()):,} events strictly AFTER t by +50.0 points")
     P("")

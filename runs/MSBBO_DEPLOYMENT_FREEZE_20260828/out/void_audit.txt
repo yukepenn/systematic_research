@@ -1,0 +1,53 @@
+========================================================================================================
+=== VOID AUDIT - MS-BBO-CANDIDATE-1 READS THE FUTURE
+========================================================================================================
+
+=== V1  DIRECT TIMESTAMP ASSERTION on the ACTUAL offsets  (the probe L1 should have made)
+    np.arange(-30,0).dtype = int32   numpy 1.26.4
+    offsets that should ALL be negative:  15 of 30 are POSITIVE
+    most future-reaching offset:  +2.064771 s AFTER the decision instant
+    intended range  [-30s, -1s]
+    actual   range  [-2.115098s, +2.064771s]
+    >>> VIOLATION: a feature at t reads quote state up to 2.065 s AFTER t.
+
+=== V2  PERTURBATION - corrupt ONLY events strictly AFTER t; clean features must not move
+    session s20260622.parquet   decision t = 2026-06-22 12:45:00
+    perturbed 3,098,663 events strictly AFTER t by +50.0 points
+
+    feature                   unperturbed   future corrupted          delta
+    spread_tk                    4.000000           4.000000       0.000000
+    midret_1s                  -20.000000         -20.000000       0.000000
+    midret_5s                   -6.250000          -6.250000       0.000000
+    midret_15s                 -60.000000         -60.000000       0.000000
+    midret_30s                  97.500000          97.500000       0.000000
+    rvol_30s                    20.538232         664.065599     643.527367   <<< READS THE FUTURE
+    range_30s                   48.750000        1039.375000     990.625000   <<< READS THE FUTURE
+    dist_hi_30s                 41.250000        1033.750000     992.500000   <<< READS THE FUTURE
+    dist_lo_30s                  7.500000           5.625000      -1.875000   <<< READS THE FUTURE
+    spread_chg_30s               1.000000           1.000000       0.000000
+    spread_minfrac               0.166667           0.166667       0.000000
+    spread_pctile                0.866667           0.866667       0.000000
+    bid_upd_30s               1164.000000        1164.000000       0.000000
+    bid_up_30s                 529.000000         529.000000       0.000000
+    ask_upd_30s               1125.000000        1125.000000       0.000000
+    ask_up_30s                 503.000000         503.000000       0.000000
+    trade_buckets_30s           97.000000          97.000000       0.000000
+    trade_vol_30s              196.000000         196.000000       0.000000
+    signed_flow_30s            -12.000000         -12.000000       0.000000
+    tod                          2.750000           2.750000       0.000000
+
+    >>> 4 features changed when ONLY post-t data was corrupted.
+    >>> A causal feature CANNOT move when future data changes. This is decisive.
+
+========================================================================================================
+=== V3  HOW BIG WAS THE LEAK - the frozen pipeline with offsets corrected to int64
+=== characterisation for the record and for EVI. NOT a rescue: a corrected object is a
+=== NEW discovery object carrying every unit of selection debt already spent here.
+========================================================================================================
+
+    arm                       $/session          net   sess   trade%   OOF corr        t    pos%
+    AS-FROZEN (leaky)          5,124.76      245,989     48     61.4     0.1702     6.76    87.5
+    FIXED                     -1,785.88      -85,722     48     24.8     0.0072    -3.57    25.0
+
+    the look-ahead was worth  $6,910.64/session  =  134.8 % of the
+    reported result.  What survives causally: $-1,785.88/session.
