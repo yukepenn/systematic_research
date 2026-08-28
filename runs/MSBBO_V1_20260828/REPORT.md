@@ -1,4 +1,21 @@
-# MS-BBO-V1 — all 7 gates pass, 4 leak probes pass. **MS-BBO-CANDIDATE-1, discovery-grade only.**
+> # ⛔ **VOID — 2026-08-28. THIS ENTIRE RESULT IS AN ARTIFACT OF A LOOK-AHEAD.**
+>
+> `bbo_v1.py:119` · `step = np.arange(-30, 0) * NS` **silently overflows int32** on Windows/NumPy
+> 1.26. The 30 path sample points are not `[−30 s, −1 s]` — they are `[−2.115 s, +2.065 s]`, and
+> **15 of 30 lie AFTER the decision instant.** Seven features read the future.
+>
+> **The leak was worth $6,910.64/session = 134.8 % of the result below. The causal object earns
+> −$1,785.88/session at OOF corr 0.0072.** Every figure in §1 and §3 below is void; they are
+> retained unedited as the refuted record. **`MS-BBO-CANDIDATE-1` is VOID and is NOT repaired in
+> place** (directive §12).
+>
+> ⚠️ **`L2` in §2 below was the bug announcing itself.** Its −$1,490/session is the same object as
+> the corrected −$1,786/session; lagging the features by 60 s removed the look-ahead. The anomaly
+> was flagged, one hypothesis for it was refuted, and it was then written up as explained. It was not.
+>
+> **Proof, blast-radius check and the full lesson: `runs/MSBBO_DEPLOYMENT_FREEZE_20260828/REPORT.md`.**
+
+# ~~MS-BBO-V1 — all 7 gates pass, 4 leak probes pass. **MS-BBO-CANDIDATE-1, discovery-grade only.**~~
 
 | | |
 |---|---|
