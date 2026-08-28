@@ -20,6 +20,19 @@ DECLARED NOW, before any ESNQ number exists:
     MIN POWER        0.80 to reject a collapse to zero, at one-sided alpha = 0.05.
     If power < 0.80 the verdict is DEVELOPMENT-SUPPORTED / BLIND-UNDERPOWERED / BLIND UNSPENT.
 
+AMENDMENT A3 -- EFFECTIVE n = 14 and a FROZEN dependence-aware lower bound.
+
+    s2  2025-08-13 is operationally quarantined (transient materialization / metadata exposure,
+        a fact known BEFORE any blind outcome was read). EFFECTIVE blind n = 14.
+            SE_blind  = 5250.81 / sqrt(14) = $1,403.34/session
+            MDE(80%)  = $3,489.36/session
+    s4  mu_claim is NOT an analytic sigma/sqrt(44). It is the 10th percentile of a CIRCULAR BLOCK
+        BOOTSTRAP over the 44 chronological OOF SESSION NETS:
+            n = 44, block length L = 4 sessions, B = 20,000, seed = 20260828
+        Frozen here BEFORE any development result. After the result it may NOT be replaced by an
+        IID/row-level/HAC/analytic SE because that one happens to be friendlier. Those may be
+        REPORTED as diagnostics; only this bound controls blind spending.
+
 AMENDMENT A2 s6 -- WINNER'S CURSE. Added BEFORE any ESNQ development number exists.
 
     Authorization may NOT use the raw development point estimate mu_hat_dev. A development mean is
@@ -42,7 +55,7 @@ import math
 import sys
 
 SIGMA_PROXY = 5250.81          # frozen consumed-session sd, declared in Amendment A1
-N_BLIND = 15
+N_BLIND = 14          # A3 s2: EFFECTIVE after the operational quarantine of 2025-08-13
 ALPHA_1SIDED = 0.05
 MIN_POWER_VS_ZERO = 0.80
 Z_90_ONE_SIDED = 1.2815515655          # A2 s6: one-sided 90 % lower bound
@@ -79,6 +92,35 @@ def power_vs_collapse(mu_dev: float, mu_true: float = 0.0, sigma: float = SIGMA_
     if mu_dev <= mu_true:
         return 0.0
     return _phi((mu_dev - mu_true) / se_blind(sigma, n) - Z_ALPHA)
+
+
+BOOT_L, BOOT_B, BOOT_SEED, BOOT_PCTL = 4, 20000, 20260828, 10
+
+
+def mu_claim_block_bootstrap(session_nets, *, L: int = BOOT_L, B: int = BOOT_B,
+                             seed: int = BOOT_SEED, pctl: int = BOOT_PCTL) -> dict:
+    """A3 s4. THE frozen development lower bound. Circular block bootstrap over SESSION NETS.
+
+    Sessions are the dependence unit. Circular blocks preserve short-run session-to-session
+    dependence that an IID resample would destroy (and that destruction would shrink the interval,
+    i.e. flatter the claim).
+    """
+    import numpy as np
+    x = np.asarray(session_nets, dtype=float)
+    n = len(x)
+    rng = np.random.default_rng(seed)
+    nb = int(np.ceil(n / L))
+    starts = rng.integers(0, n, size=(B, nb))
+    idx = (starts[:, :, None] + np.arange(L)[None, None, :]) % n
+    means = x[idx.reshape(B, -1)[:, :n]].mean(axis=1)
+    assert len(np.unique(means)) > 1, "degenerate bootstrap distribution"
+    lo = float(np.percentile(means, pctl))
+    return {"n_sessions": int(n), "block_length": L, "B": B, "seed": seed,
+            "percentile": pctl, "mu_hat_dev": float(x.mean()),
+            "bootstrap_mean_of_means": float(means.mean()),
+            "bootstrap_sd": float(means.std(ddof=1)),
+            "lower_bound_raw": lo, "mu_claim": max(0.0, lo),
+            "distinct_replicate_values": int(len(np.unique(means)))}
 
 
 def mu_claim(mu_hat_dev: float, se_dev: float) -> float:

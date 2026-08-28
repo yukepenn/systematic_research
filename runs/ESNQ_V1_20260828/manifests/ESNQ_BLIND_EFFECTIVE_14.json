@@ -1,0 +1,17 @@
+{
+  "derived_manifest": "ESNQ_BLIND_EFFECTIVE_14",
+  "parent": "ESNQ_BLIND_15.csv",
+  "parent_sha256_normalized": "f4a8090e16f09f67e25be91f728e2eb27c5b980e27c39e9197cd6134154e3c8a",
+  "parent_preserved_byte_for_byte": true,
+  "original_n": 15,
+  "excluded_session": "2025-08-13",
+  "effective_n": 14,
+  "exclusion_reason": "PRE-OUTCOME OPERATIONAL QUARANTINE: TRANSIENT MATERIALIZATION / METADATA EXPOSURE",
+  "why_this_is_not_outcome_selection": "The session was selected using an OPERATIONAL DATA-INTEGRITY fact known BEFORE any blind price or outcome was read: during the exporter incident its NQ tick CSV was transiently written and its market-activity metadata (row/trade/bid/ask counts, span) was exposed. No price, return, feature, direction, label or P&L was ever read from it.",
+  "instrument_resolution": {
+    "NQ_2025-08-13": "TRANSIENTLY MATERIALIZED then deleted unread; metadata exposed",
+    "ES_2025-08-13": "NEVER MATERIALIZED - refused by the allow-list guard (present in ES _skipped_sessions.txt)"
+  },
+  "sha256_normalized": "00654d4f6f7ec4e61c049c7217f3bc1887a3faefac1002aca9a832988b5a4743",
+  "binding": "Every future ESNQ blind runner must require EFFECTIVE_14, never ORIGINAL_15."
+}
