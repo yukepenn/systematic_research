@@ -85,7 +85,7 @@ The first execution reported **zero paired days for all 25 roots** and would hav
 `numpy.datetime64` while `panel.groupby("date")` yields `pandas.Timestamp` keys, and **the two do
 not compare equal as dictionary keys**, so every live-contract lookup silently returned an empty set.
 
-It was caught because **ES — 71 contracts, 4,417 active days — cannot truly have zero overlapping
+It was caught because **ES — 71 contracts, 4,433 active days — cannot truly have zero overlapping
 days**, and a result that uniform across 25 heterogeneous roots is a signature of a code path that
 never ran rather than a measurement.
 
