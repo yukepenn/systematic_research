@@ -38,8 +38,7 @@ substrates **begin 2022-01-02**, so no earlier test exists *or can be built*.
 
 ### EXPERIMENTAL — research-supported, not admissible
 
-Microstructure standalone (`MS01` feasibility only — **no model exists**) · Multi-market TSMOM
-(universe inventoried; **no substrate, roll, signal or result**) · Internals → direct RTH return
+**MS-BBO** (discovery-grade only; no clean historical holdout exists) · multi-market **carry / term structure** (substrate built, family not opened) · **ES/NQ sub-minute interaction** (capability unmeasured)
 (untested).
 
 ### SHADOW ONLY — **empty**. No component has execution evidence short of parity, and the shadow
@@ -126,9 +125,7 @@ available while these objects were being built and cannot be upgraded into confi
 > these two** (§23–24) and must not be generalised to a third, high-frequency NQ sleeve.
 
 ✅ **No defect.** A claimed cost-model defect was **retracted the same day** — the canonical pair is
-internally consistent. ⚠️ **Portfolio B's $2,012 carries a different caution:** its inverse-vol
-weights are a **single full-sample std applied in-sample**, and `P1+XM` was a **best-of-six**
-selection whose preregistered primary came second.
+internally consistent. ⚠️ **Portfolio B's $2,012 is now QUANTIFIED, not merely cautioned** (`runs/PORTFOLIO_B_RECONCILIATION_20260827/`): it reproduces to **0.000000**, its causal-weighting optimism is only **$28.30/wk (1.4 %)**, but its **observable best-of-six selection optimism is $245.71/wk (13.9 %)**. **The historical $2,012 object stands as what it is — a selected, in-sample-weighted research figure. The honest forward-economic expectation is nearer $1,750–1,800/wk**, and it still inherits XM's REGIME-LOCAL evidence class.
 
 ## 5. Owner decisions outstanding
 

@@ -111,7 +111,7 @@ implementation the NinjaScript uses. `runs/WE_W101_DIRECTION/`, `WE_W102_XMENGIN
 
 | | P1/PCT alone | **+ XM_CONFLICT** |
 |---|---|---|
-| weekly $ at fixed DD | $1,230 | **$2,012 (+63.5 %)** |
+| weekly $ at fixed DD | $1,230 | **$2,012 (+63.5 %)** ⚠️ **SELECTION-CONTAMINATED — see below** |
 | max drawdown | $22,931 | **$11,489** |
 | top-5 drawdown | $17,835 | **$8,735** |
 | t | 4.16 | **4.90** |
@@ -169,6 +169,30 @@ shifts:
 **The two engines are mildly coupled when they WIN and anti-coupled when P1 LOSES.** Still watch the
 trailing 26-week ρ; P(XM<0 ∣ P1<0) rose 0.200 → 0.500 between the first and last 26 weeks on ~11
 P1-losing weeks.
+
+> ### ⚠️ **THE TABLE ABOVE IS THE FULL-SAMPLE FACT. IT IS NO LONGER THE CURRENT RATIONALE.**
+> `runs/PORTFOLIO_B_RECONCILIATION_20260827/` measured the same quantities on fixed windows under
+> **causal** weighting. Both halves must travel together:
+>
+> | window | marginal value of XM (fixed-DD $/wk) | ρ(P1,XM) | **XM when P1 loses** |
+> |---|---:|---:|---:|
+> | FULL | **+763** | +0.086 | **+598** |
+> | 104w | +813 | +0.193 | −34 |
+> | 52w | +225 | +0.258 | −321 |
+> | 26w | +1,219 | 0.464 | −1,231 |
+> | **13w** | **+768** | 0.369 | **−1,243** |
+>
+> **XM is positively marginal in EVERY window — including the last 13 weeks. But the MECHANISM has
+> inverted.** ρ rose **0.086 → 0.369** and the conditional payoff in P1's losing weeks flipped
+> **+$598 → −$1,243**.
+>
+> ### **CURRENT RATIONALE: independent profitability / marginal RETURN contribution.**
+> ### **NOT: a reliable current hedge.** It was admitted as the second; it is earning as the first.
+>
+> ### ⚠️ **And the `+63.5 %` headline is SELECTION-CONTAMINATED.** `P1+XM` was a best-of-six
+> pick; the preregistered primary `P1+PAIR+XM` scored $1,765.99. Observable selection optimism is
+> **$245.71/wk (13.9 %)**, against causal-weighting optimism of only **$28.30/wk (1.4 %)**. A
+> selection-adjusted, causally-weighted B sits nearer **$1,750–1,800/wk**.
 
 ✅ **Not an event trade** (`WE_W105B`): the 304 non-announcement trades earn **$408/trade at 54.9 %**.
 ✅ **Genuinely two-sided** (longs 60.5 % / $701, shorts 48.0 % / $415) and **not an early-sample

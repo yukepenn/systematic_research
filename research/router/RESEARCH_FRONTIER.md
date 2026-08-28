@@ -17,7 +17,12 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 
 ---
 
-## The ranking — as of 2026-08-27, after RR_W001 and the event-response data gate
+## ⚠️ HISTORICAL — the RR_W001-era ranking, kept as the per-family closure record
+
+> **This table is NOT the current ranking.** Rows 16, 17, 18a and 18b below were superseded on
+> 2026-08-27 by the EVI block further down: TSMOM V1 failed development, TSMOM V2 failed
+> validation, INT02 produced no candidate, and MS-LAST-V1 is closed at its own scope. The table
+> is retained because it is the authoritative closure record for the families it lists.
 
 | # | question | EVI | status |
 |---|---|:--:|---|
@@ -87,12 +92,9 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | — | ~~**Internals → direct RTH NQ return**~~ | ❌ **NO CANDIDATE** — all 4 gates fail; ridge −$66.73/session, dir acc **49.5 %**, 66.7th pctile of a real refitted null (120 distinct values). ⚠️ **NOT equivalence-closed**: the upper 95 % bound **+$68.16** exceeds the $49/session weak materiality, so a small effect is not excluded · `runs/INT02_DIRECT_RTH_20260827/` |
 | **1** | **BBO microstructure — DISCOVERY-GRADE** | the highest-ceiling surface still untested. No clean historical holdout exists, so its output is a **prospective** candidate, not a historical alpha |
 | **2** | **Rebuild `P1/ABS` weekly, then adjudicate PCT vs ABS** | the one incumbent question the reconciliation could **not** answer — no ABS weekly stream exists. Cheap, bounded, and it decides whether the incumbent's sizing layer is earning its regime-local risk |
-| **3** | **Prospective shadow ledger** | earns nothing alone, but it is the only route to evidence that is neither burned nor historical |
-| **2** | **Internals → direct RTH NQ return** | cheap, data already built, and `INT01` closed only the *routing* mapping. **Now the cheapest untested target left** |
-
-| **3** | **BBO microstructure — DISCOVERY ONLY** | richer information, but its ceiling is now a *prospective* shadow candidate, not a historical claim |
-| **4** | **ES tick/BBO cross-market** (§32) | 103 sessions on disk; W122's NULL was a **1-minute** family and does not close tick-level ES/NQ interaction. After NQ |
-| **5** | Prospective shadow / execution ledger | earns nothing on its own, but no new sleeve can be trusted without it |
+| **3** | **ES tick/BBO cross-market** | W122's NULL was a **1-minute** family and does not close sub-minute ES/NQ interaction. Capability must be re-measured before it is called runnable |
+| **4** | **Prospective shadow ledger** | earns nothing alone, but it is the only route to evidence that is neither burned nor historical — and the project has **none** |
+| **—** | Multi-market **carry / term structure** | genuinely new information relative to trend, and the expensive substrate already exists. A **NEW family**, not a TSMOM rescue: new spec, new attempt budget, new evidence class |
 | **—** | Portfolio-B weighting/selection optimism · incumbent adjudication v2 | **BOUNDED DIAGNOSTICS.** Real questions, capped effort. They must not become the product |
 
 > ### ⚠️ **`MS01A` COMPLETED — it is no longer a blocker, and it CONSTRAINED the lane.**
