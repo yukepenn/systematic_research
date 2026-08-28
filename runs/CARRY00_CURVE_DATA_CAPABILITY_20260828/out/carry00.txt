@@ -1,0 +1,87 @@
+======================================================================================================================
+=== CARRY00 - CURVE DATA CAPABILITY.  NO ALPHA P&L, NO SIGNAL, NO BACKTEST.
+======================================================================================================================
+    store: C:\Users\Yuke Zhang\Documents\NinjaTrader 8\db\day
+    seal cap 2026-08-01 (>= is never read)   years 2009-2027
+    expiry metadata: NOT CERTIFIED by the platform -> maturity is a DECLARED CONTRACT-MONTH GAP
+
+======================================================================================================================
+=== PER-ROOT CURVE OBSERVABILITY
+======================================================================================================================
+    root  sec            contr first       last         trendD   pairD   frac    >=3  gapMed  ovl p10    p50    p90   neg
+    ES    equity_index      71 2009-03-30  2026-07-31     4433    3007  0.678  0.086     3.0        9     64     69     0
+    NQ    equity_index      71 2009-03-30  2026-07-31     4466    1708  0.382  0.048     3.0       31     63     65     0
+    YM    equity_index      71 2009-03-30  2026-07-31     4383    3121  0.712  0.068     3.0       53     63     65     0
+    ZT    rates             71 2009-03-30  2026-07-31     4455    1863  0.418  0.019     3.0       22     33     44     0
+    ZF    rates             71 2009-03-30  2026-07-31     4460    1890  0.424  0.015     3.0       26     34     40     0
+    ZN    rates             71 2009-03-30  2026-07-31     4420    2720  0.615  0.046     3.0       40     50     58     0
+    ZB    rates             71 2009-03-30  2026-07-31     4445    2954  0.665  0.072     3.0       41     52     62     0
+    6E    fx                71 2009-03-30  2026-07-31     4378    1606  0.367  0.019     3.0        5     56     65     0
+    6J    fx                71 2009-03-30  2026-07-31     4378    1562  0.357  0.018     3.0        2     56     65     0
+    6B    fx                71 2009-03-30  2026-07-31     4378    1614  0.369  0.017     3.0        2     55     65     0
+    6A    fx                71 2009-03-30  2026-07-31     4321    1606  0.372  0.018     3.0        2     60     65     0
+    6C    fx                71 2009-03-30  2026-07-31     4381    1701  0.388  0.025     3.0        6     57     65     0
+    6S    fx                71 2009-03-30  2026-07-31     4376    1427  0.326  0.014     3.0        2     47     62     0
+    CL    energy           213 2009-03-30  2026-07-31     4467    1791  0.401  0.392     1.0       20     21     23     0
+    NG    energy           213 2009-03-30  2026-07-31     4465    3987  0.893  0.862     1.0       19     21     24     0
+    GC    metals            91 2009-03-30  2026-07-31     4425    3249  0.734  0.513     2.0       33     42     76     0
+    SI    metals            89 2009-03-30  2026-07-31     4425    3458  0.781  0.553     2.0       21     44     63     0
+    ZC    ags               89 2009-03-30  2026-07-31     4266    2584  0.606  0.458     2.0        1     41     61     0
+    ZW    ags               89 2009-03-30  2026-07-31     4264    3160  0.741  0.450     2.0       14     42     61     0
+    ZM    ags              134 2009-03-30  2026-07-31     4313    3721  0.863  0.796     1.0        1     24     58     0
+    ZL    ags              134 2009-03-30  2026-07-31     4313    3718  0.862  0.793     1.0        1     24     59     0
+    RTY   equity_index      12 2019-01-02  2026-07-31      707       0  0.000  0.000     nan        0      0      0     0
+    RB    energy            32 2016-01-04  2025-08-29      678       0  0.000  0.000     nan        0      0      0     0
+    HO    energy            32 2016-01-04  2025-08-29      677       0  0.000  0.000     nan        0      0      0     0
+    HG    metals            16 2016-01-04  2025-09-26      744       0  0.000  0.000     nan        0      0      0     0
+
+======================================================================================================================
+=== ELIGIBILITY - E1..E4, DATA ONLY.  Declared in SPEC before these numbers existed.
+======================================================================================================================
+    E1  paired root-days      >= 1,500
+    E2  paired / trend days   >= 0.60
+    E3  years with a pair     >= 0.60 of the years the root spans
+    E4  no non-positive closes on paired days (else FLAGGED, formula must survive them)
+
+    root  sector                E1         E2         E3         E4   verdict
+    ES    equity_index   PASS 3,007   PASS 0.68   PASS 1.00      PASS 0   CARRY-CAPABLE
+    NQ    equity_index   PASS 1,708   fail 0.38   fail 0.56      PASS 0   DATA-BLOCKED
+    YM    equity_index   PASS 3,121   PASS 0.71   PASS 1.00      PASS 0   CARRY-CAPABLE
+    ZT    rates          PASS 1,863   fail 0.42   PASS 1.00      PASS 0   DATA-BLOCKED
+    ZF    rates          PASS 1,890   fail 0.42   PASS 1.00      PASS 0   DATA-BLOCKED
+    ZN    rates          PASS 2,720   PASS 0.62   PASS 1.00      PASS 0   CARRY-CAPABLE
+    ZB    rates          PASS 2,954   PASS 0.66   PASS 1.00      PASS 0   CARRY-CAPABLE
+    6E    fx             PASS 1,606   fail 0.37   PASS 0.94      PASS 0   DATA-BLOCKED
+    6J    fx             PASS 1,562   fail 0.36   PASS 0.94      PASS 0   DATA-BLOCKED
+    6B    fx             PASS 1,614   fail 0.37   PASS 0.94      PASS 0   DATA-BLOCKED
+    6A    fx             PASS 1,606   fail 0.37   PASS 0.89      PASS 0   DATA-BLOCKED
+    6C    fx             PASS 1,701   fail 0.39   PASS 0.94      PASS 0   DATA-BLOCKED
+    6S    fx             fail 1,427   fail 0.33   PASS 0.94      PASS 0   DATA-BLOCKED
+    CL    energy         PASS 1,791   fail 0.40   fail 0.44      PASS 0   DATA-BLOCKED
+    NG    energy         PASS 3,987   PASS 0.89   PASS 1.00      PASS 0   CARRY-CAPABLE
+    GC    metals         PASS 3,249   PASS 0.73   PASS 1.00      PASS 0   CARRY-CAPABLE
+    SI    metals         PASS 3,458   PASS 0.78   PASS 1.00      PASS 0   CARRY-CAPABLE
+    ZC    ags            PASS 2,584   PASS 0.61   PASS 1.00      PASS 0   CARRY-CAPABLE
+    ZW    ags            PASS 3,160   PASS 0.74   PASS 1.00      PASS 0   CARRY-CAPABLE
+    ZM    ags            PASS 3,721   PASS 0.86   PASS 1.00      PASS 0   CARRY-CAPABLE
+    ZL    ags            PASS 3,718   PASS 0.86   PASS 1.00      PASS 0   CARRY-CAPABLE
+    RTY   equity_index       fail 0   fail 0.00   fail 0.00      PASS 0   DATA-BLOCKED
+    RB    energy             fail 0   fail 0.00   fail 0.00      PASS 0   DATA-BLOCKED
+    HO    energy             fail 0   fail 0.00   fail 0.00      PASS 0   DATA-BLOCKED
+    HG    metals             fail 0   fail 0.00   fail 0.00      PASS 0   DATA-BLOCKED
+
+======================================================================================================================
+=== SECTOR BREADTH - a sector needs >= 2 carry-capable roots (s40), else CASH
+======================================================================================================================
+    ags            4 capable  ZC, ZW, ZM, ZL                           PARTICIPATES
+    energy         1 capable  NG                                       CASH (fewer than 2)
+    equity_index   2 capable  ES, YM                                   PARTICIPATES
+    fx             0 capable  -                                        CASH (fewer than 2)
+    metals         2 capable  GC, SI                                   PARTICIPATES
+    rates          2 capable  ZN, ZB                                   PARTICIPATES
+
+    carry-capable roots 11 of 25   participating sectors 4 of 6
+
+======================================================================================================================
+=== VERDICT: CARRY-CAPABLE
+======================================================================================================================
