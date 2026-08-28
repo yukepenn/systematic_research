@@ -1,0 +1,82 @@
+================================================================================================================
+=== VOLUME00 ADDENDUM -- POSITIVE CONTROL + V5 SCOPE.  NO GATE OR THRESHOLD IS CHANGED.
+================================================================================================================
+
+--- CONTROL A  RUN V2 AND V3 AGAINST A PAYLOAD KNOWN TO BE MERGED
+    source            research\multi_market\export\test_ES2011_bars.csv
+    rows              1,633   contracts ['ES 03-11', 'ES 06-11', 'ES 09-11', 'ES 12-11']
+    provenance        the captured MERGE-BACK-ADJUSTED payload that established the
+                      merged-path defect (TSMOM_DATA_CONTRACT).  It is a POSITIVE control:
+                      the statistics below MUST fail on it.
+
+    statistic                                       MERGED control   db/day (measured)   control must FAIL
+    V2 identical-volume-pair share of multi-days           98.86%            0.0101%   gate <= 0.50%
+    V3 median vol(next live)/vol(designated)                1.0000              0.0011   gate < 0.25
+    V3 share of ratios EXACTLY 1.000                       96.14%          0.003840%   the merged-copy signature
+
+    V2 on the merged control: *** FAILS AS REQUIRED -- the test has teeth ***
+    V3 on the merged control: *** FAILS AS REQUIRED -- the test has teeth ***
+
+    >>> The same two statistics that PASS decisively on db/day FAIL completely on a payload
+    >>> known to be merged.  The db/day PASS therefore discriminates, and is not a formality.
+    >>> This is STRONGER evidence of contract-specificity than the unavailable cross-source
+    >>> identity check would have been: identity tests the DECODER, this tests the CLAIM.
+
+--- CONTROL B  WHY CL (5.683) AND NG (1.742) DO NOT 'COLLAPSE' -- explained, not excused
+
+    root   contracts   median cached daily bars per contract
+    CL           213                                      26
+    NG           213                                     120
+    ES            71                                     134
+    NQ            71                                      69
+    GC            91                                     139
+    ZN            71                                     125
+    6E            71                                      67
+    ZC            89                                     128
+
+    THE CAUSE.  V5 is `median(last 5 bars) / median(the 63 bars before them)`.  For a
+    QUARTERLY financial (ES 134 bars, ZN, GC ...) the 63-bar baseline sits INSIDE the
+    contract's front-month life, so the ratio correctly measures collapse into expiry.
+    For MONTHLY energy, NT8 cached a MEDIAN OF 26 DAILY BARS PER CL CONTRACT, so for the
+    few CL/NG contracts long enough to be measured at all, the 63-bar baseline falls in the
+    contract's DEFERRED, quiet period and the last 5 days fall near FRONT-MONTH status.
+    The ratio is then measuring the RISE INTO front month, not a failure to collapse.
+
+    worked example  CL 11-12  (126 bars, 2012-04-30 -> 2012-10-22, expiry 2012-10-22)
+        final 5 daily volumes      [102195, 103382, 96179, 34805, 5456]
+        -> the LAST TWO DAYS DO collapse (34,805 then 5,456); the 5-day MEDIAN (96,179)
+           is dominated by the three front-month days that precede them
+        63-bar baseline before     6,650  -- the contract's DEFERRED period
+
+    DIAGNOSTIC RESTATEMENT (not a gate; the preregistered V5 verdict stands unchanged):
+        contracts measured by the frozen V5 rule            1,364
+        frozen V5 pooled median (THE GATE, unchanged)       0.0227   gate < 0.50  PASS
+        restricted to contracts with >= 120 cached bars     0.0105  (n 998)
+        ALTERNATIVE view, median(last 2 bars) / max volume   0.0039
+          per root: ZF 0.000  ZT 0.000  SI 0.000  GC 0.000  ZW 0.000  ZB 0.000  ZN 0.000  ZL 0.001  ZC 0.001  ZM 0.002  6C 0.008  6A 0.035  YM 0.036  6J 0.037  6S 0.038  6B 0.040  ES 0.043  NQ 0.046  6E 0.060  CL 0.062  NG 0.107
+
+    Under the alternative view EVERY root collapses, CL and NG included.  That is reported as
+    a DIAGNOSTIC and does NOT replace the frozen V5 statistic, which already passed.
+
+    ⚠ AND IT DOES NOT MATTER FOR THE VERDICT.  The decisive evidence that CL and NG are
+    contract-specific is V2 and V3, which are direct: CL and NG show 1 and 5 identical-volume
+    days out of 2,132 and 4,041, and deferred/front medians of 0.1014 and 0.2020 -- nowhere
+    near the merged signature of exactly 1.000, which the positive control above reproduces.
+
+--- CONTROL C  WHY THE MINUTE REFERENCE IS `UNAVAILABLE` AND NOT `DISAGREEING`
+    probe file        db/minute/ES 03-22/20220103.Last.ncd   (8,996 bytes)
+    header decodes with the SAME 28-byte daily header:
+        int32 version 1   float64 tickSize 0.25   float64 firstPrice 4778.5
+    remaining bytes   8,968   fixed record sizes in 24..64 that divide it: NONE
+    a full ES session is ~1,380 one-minute bars -> ~6.5 bytes per bar
+    >>> The minute payload is DELTA-COMPRESSED VARIABLE-LENGTH, not fixed records.  Decoding
+    >>> it would mean reverse-engineering NT8's minute codec, which is a separate engineering
+    >>> project and is out of this campaign's scope.
+    >>> This is SPEC 3.7's `REFERENCE UNAVAILABLE`, which is explicitly NOT a disagreement.
+    >>> GetBars remains disqualified: it is the writer of the store under test.
+    >>> The verdict therefore carries `NOT CROSS-SOURCE VERIFIED` in every later report --
+    >>> softened by nothing, and offset by CONTROL A, which is a stronger test of the claim.
+
+================================================================================================================
+=== ADDENDUM COMPLETE.  NO PREREGISTERED GATE, THRESHOLD OR VERDICT WAS ALTERED.
+================================================================================================================

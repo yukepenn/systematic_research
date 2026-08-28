@@ -1,0 +1,179 @@
+================================================================================================================
+=== VOLUME00 -- DATA SEMANTICS + CAPABILITY.  NO RETURN, NO P&L, NO SIGNAL, NO MODEL.
+================================================================================================================
+    HEAD                9678168b7414c0dc808c09d9f139bdd66e7a1989
+    universe            21 CORE roots, 6 sectors
+    hard seal cap       every row date < 2026-08-01
+
+--- STAGE 0  PROVENANCE OF THE VOLUME FIELD (producing artifact -> producing code)
+    store                C:\Users\Yuke Zhang\Documents\NinjaTrader 8\db\day
+    file_pattern         <FULL CONTRACT ID>/<YYYY>.Last.ncd
+    header_bytes         28
+    record_dtype         [('ts', '<i8'), ('o', '<f8'), ('h', '<f8'), ('l', '<f8'), ('c', '<f8'), ('v', '<i8')]
+    volume_field         int64 at byte offset 40 of each 48-byte record
+    reader               research/multi_market/src/ncd_day.py::read_ncd_day
+    reader_git_blob      0db6e0221b6cd45dce4aa8066d5c7422908360f6
+    reader_sha256        17603bdc722d30f386b013d35a33f8b2cb510d8b7ea6fdbc07f0274bf01baec9
+
+--- STAGE 1  CONTRACT PANELS  (true unmerged db/day store; AddDataSeries is barred)
+    ES   contracts   71  rows   7,928
+    NQ   contracts   71  rows   6,553
+    YM   contracts   71  rows   7,891
+    ZT   contracts   71  rows   7,477
+    ZF   contracts   71  rows   7,538
+    ZN   contracts   71  rows   7,997
+    ZB   contracts   71  rows   8,292
+    6E   contracts   71  rows   6,193
+    6J   contracts   71  rows   6,149
+    6B   contracts   71  rows   6,207
+    6A   contracts   71  rows   6,138
+    6C   contracts   71  rows   6,309
+    6S   contracts   71  rows   6,014
+    CL   contracts  213  rows  12,920
+    NG   contracts  213  rows  21,944
+    GC   contracts   91  rows  10,639
+    SI   contracts   89  rows  10,712
+    ZC   contracts   89  rows   9,802
+    ZW   contracts   89  rows   9,761
+    ZM   contracts  134  rows  14,854
+    ZL   contracts  134  rows  14,795
+    panel after seal cap 195,962 contract-days  1,975 contracts  2009-03-30 -> 2026-07-31
+
+--- STAGE 2  V4  FIELD SEMANTICS
+    dtype                int64
+    negative             0
+    zero                 168
+    nan                  0
+    integral             True
+    total_rows           195962
+    max                  5455578
+    median               18804.5
+    PASS                 True
+    zero-volume share    0.0857%  (counted MISSING for volume purposes, per SPEC 6)
+
+--- STAGE 3  V2 DUPLICATION  /  V3 FRONT-vs-DEFERRED   (direct tests of the merged copy)
+    V2  root-days with >=2 live contracts        59,251
+    V2  days with an identical-volume pair >=1000  6   share 0.0101%   gate <= 0.50%   PASS
+        examples:
+          CL 2012-08-29  {'CL 11-12': 4415, 'CL 12-12': 4415}
+          NG 2010-09-20  {'NG 12-10': 2103, 'NG 01-11': 2103}
+          NG 2012-09-28  {'NG 02-13': 2001, 'NG 03-13': 2001}
+          NG 2013-10-18  {'NG 03-14': 1711, 'NG 04-14': 1711}
+          NG 2013-11-04  {'NG 03-14': 2577, 'NG 04-14': 2577}
+          NG 2016-05-26  {'NG 06-16': 6407, 'NG 10-16': 6407}
+    V3  median  vol(next live) / vol(designated), pooled over roots   0.0011
+    V3  share of those ratios EXACTLY 1.000 (the merged-copy signature) 0.003837%
+        gate median < 0.25   PASS
+
+    per root:
+      root sector         multi-days    dup  dup share  V3 median   V3 p90   =1.000
+      ES   equity_index        3,092      0    0.0000%     0.0009    0.008  0.0000%
+      NQ   equity_index        1,853      0    0.0000%     0.0004    0.005  0.0000%
+      YM   equity_index        3,204      0    0.0000%     0.0005    0.004  0.0000%
+      ZT   rates               2,933      0    0.0000%     0.0011    0.303  0.0000%
+      ZF   rates               3,009      0    0.0000%     0.0005    0.221  0.0000%
+      ZN   rates               3,370      0    0.0000%     0.0002    0.072  0.0000%
+      ZB   rates               3,524      0    0.0000%     0.0003    0.063  0.0000%
+      6E   fx                  1,728      0    0.0000%     0.0026    0.016  0.0000%
+      6J   fx                  1,687      0    0.0000%     0.0009    0.014  0.0000%
+      6B   fx                  1,747      0    0.0000%     0.0010    0.013  0.0000%
+      6A   fx                  1,733      0    0.0000%     0.0009    0.010  0.0000%
+      6C   fx                  1,811      0    0.0000%     0.0022    0.016  0.0000%
+      6S   fx                  1,572      0    0.0000%     0.0009    0.017  0.0000%
+      CL   energy              2,132      1    0.0469%     0.1014    0.215  0.0000%
+      NG   energy              4,041      5    0.1237%     0.2020    0.452  0.0000%
+      GC   metals              3,537      0    0.0000%     0.0112    0.087  0.0000%
+      SI   metals              3,637      0    0.0000%     0.0172    0.151  0.0000%
+      ZC   ags                 3,495      0    0.0000%     0.1998    0.545  0.0389%
+      ZW   ags                 3,488      0    0.0000%     0.2102    0.546  0.0000%
+      ZM   ags                 3,833      0    0.0000%     0.2327    0.668  0.0270%
+      ZL   ags                 3,825      0    0.0000%     0.2229    0.650  0.0000%
+
+--- STAGE 4  V5  DOES VOLUME COLLAPSE INTO EXPIRY?  (a merged copy would not)
+    contracts measured                        1,364
+    median  last-5-day vol / own 63d median   0.0227   gate < 0.5   PASS
+    share of contracts with ratio > 0.90 (no collapse at all)  23.68%
+    per-root median collapse ratio: ZF 0.000  ZT 0.000  GC 0.000  SI 0.000  ZW 0.001  ZB 0.001  ZN 0.001  ZL 0.002  ZC 0.007  ZM 0.010  YM 0.157  NQ 0.166  ES 0.170  6C 0.170  6J 0.801  6S 0.853  6E 0.901  6A 0.905  6B 0.928  NG 1.742  CL 5.683
+
+--- STAGE 5  V1  CROSS-SOURCE  db/day daily volume  vs  SUM of db/minute session volume
+    GetBars is DISQUALIFIED as reference: it is the writer that produced the store under
+    test, and calling it would mutate the evidence while certifying it.
+    minute-store CORE contracts present in BOTH stores  187   roots ['6J', 'CL', 'ES', 'NQ', 'YM', 'ZB', 'ZN']
+    deterministic sample (first/middle/last per root)    21 contracts
+    candidate minute session files                      1,214
+    *** MINUTE LAYOUT NOT RESOLVED -- reference UNAVAILABLE (SPEC 3.7) ***
+
+--- STAGE 6  CAUSAL ACTIVE-CONTRACT CONTRACT  (recovered, not reinvented)
+    The roll for day t compares CURRENT vs NEXT eligible contract using volume at t-1 ONLY.
+    Stated plainly because it is true: ACTIVE_CONTRACT(t) is decided from t-1 volume.
+    The pre-expiry override uses contract mechanics only -- no price, no volume.
+    roll.py unit tests: no-roll telescoping PASS | basis invariance PASS | causality (teeth + no leak) PASS
+    real ledger: 1,975 rows  (872 volume, 1082 pre-expiry, 21 init)
+    ASSERTION every info_cutoff STRICTLY < its decision_date on all 1,954 volume rolls: PASS
+
+--- STAGE 7  ROLL-ENTANGLEMENT AUDIT   (no return, no P&L anywhere in this stage)
+    causal rolls with BOTH contracts quoted on the switch date  1,358
+    same-day contract-switch log-volume jump  LV(new,d) - LV(old,d):
+        median +0.628   mean +0.800   p05 -1.726   p95 +4.252
+    in units of the root's own trailing 1.4826*MAD63 of LV:
+        |jump| > 1.0  on  1,184 of 1,358   J = 0.8719   threshold 0.1
+        PRE_EXPIRY_OVERRIDE    n   495  median jump  -0.764  |jump|>1 unit 81.82%
+        VOLUME_CROSSOVER       n   863  median jump  +1.456  |jump|>1 unit 90.27%
+
+    >>> REPRESENTATION DECISION RULE (frozen in SPEC 3.6, resolved on roll mechanics only)
+    >>> J = 0.8719  > 0.1  ->  ADOPTED REPRESENTATION = ROOT_TOTAL
+    >>> root-total volume is the SUM over all live contracts of the root on date d.
+    >>> It is INVARIANT to which contract is designated, so it cannot jump at a roll.
+    >>> It is only meaningful BECAUSE V2/V3 certify the per-contract fields are not
+    >>> duplicated copies -- under a merged copy the sum would be n x the front.
+
+--- STAGE 7b  ZVOL under ROOT_TOTAL, and the ROLL EMBARGO ladder
+    observations with a defined ZVOL          90,343
+    unconditional |ZVOL| > 2.0 rate            11.0446%
+    radius +-1: near-roll rate 15.8801%  (n 5,636)   far rate 10.7228%   ratio 1.481   gate <= 1.5
+    radius +-3: near-roll rate 14.7673%  (n 13,022)   far rate 10.4176%   ratio 1.418   gate <= 1.5
+    radius +-5: near-roll rate 13.4914%  (n 20,376)   far rate 10.3320%   ratio 1.306   gate <= 1.5
+    >>> ROLL EMBARGO ladder -> E = 0 sessions each side (feature hygiene only; positions still roll and still pay real turnover)
+
+--- STAGE 8  CAPABILITY GATES
+      root sector         price days  vol days  coverage  zero-vol  first      last        admit
+      6A   fx                  3,713     3,712    99.97%         8  2010-04-19 2026-07-31  YES
+      6B   fx                  3,978     3,978   100.00%         7  2010-04-19 2026-07-31  YES
+      6C   fx                  3,981     3,981   100.00%         4  2010-04-19 2026-07-31  YES
+      6E   fx                  3,963     3,963   100.00%         4  2010-04-19 2026-07-31  YES
+      6J   fx                  3,963     3,963   100.00%         6  2010-04-19 2026-07-31  YES
+      6S   fx                  3,973     3,973   100.00%         7  2010-04-19 2026-07-31  YES
+      CL   energy              3,845     3,845   100.00%         0  2010-03-23 2026-07-31  YES
+      ES   equity_index        3,973     3,973   100.00%         0  2010-04-16 2026-07-31  YES
+      GC   metals              4,095     4,095   100.00%         0  2010-05-06 2026-07-31  YES
+      NG   energy              4,090     4,090   100.00%         0  2010-03-23 2026-07-31  YES
+      NQ   equity_index        4,099     4,099   100.00%         0  2010-03-23 2026-07-31  YES
+      SI   metals              4,109     4,109   100.00%         6  2010-04-30 2026-07-31  YES
+      YM   equity_index        3,855     3,855   100.00%         0  2010-03-23 2026-07-31  YES
+      ZB   rates               4,141     4,141   100.00%         0  2010-03-23 2026-07-31  YES
+      ZC   ags                 3,847     3,847   100.00%         0  2010-06-14 2026-07-31  YES
+      ZF   rates               4,157     4,157   100.00%         0  2010-03-23 2026-07-31  YES
+      ZL   ags                 4,004     4,004   100.00%         0  2010-06-14 2026-07-31  YES
+      ZM   ags                 4,004     4,004   100.00%         0  2010-06-14 2026-07-31  YES
+      ZN   rates               4,100     4,100   100.00%         0  2010-03-23 2026-07-31  YES
+      ZT   rates               4,155     4,155   100.00%         0  2010-03-23 2026-07-31  YES
+      ZW   ags                 3,952     3,952   100.00%         0  2010-06-14 2026-07-31  YES
+
+    GATE                                                              OBSERVED   VERDICT
+    G1 eligible non-micro roots >= 12                                       21   PASS
+    G2 distinct sectors >= 4                                                 6   PASS
+    G3 usable calendar years >= 8                                           17   PASS
+    G4 >= 1500 eligible root-days per admitted root                       3712   PASS
+    G5 >= 80% coverage vs price days                                    99.97%   PASS
+    G6 no unresolved volume-semantics defect            V1 REFERENCE UNAVAILABLE, V2/V3/V4/V5 all PASS   PASS
+    G7 no causal-roll defect                                          asserted   PASS
+
+================================================================================================================
+=== VOLUME00 VERDICT: DATA-CAPABLE / CONTRACT-SPECIFIC BY STRUCTURE, NOT CROSS-SOURCE VERIFIED
+================================================================================================================
+    adopted representation   ROOT_TOTAL
+    roll embargo E           0
+    admitted roots           21  ['6A', '6B', '6C', '6E', '6J', '6S', 'CL', 'ES', 'GC', 'NG', 'NQ', 'SI', 'YM', 'ZB', 'ZC', 'ZF', 'ZL', 'ZM', 'ZN', 'ZT', 'ZW']
+    admitted sectors         6  ['ags', 'energy', 'equity_index', 'fx', 'metals', 'rates']
+    usable calendar years    17  2010-2026
+    NO RETURN, NO P&L, NO SIGNAL, NO MODEL WAS COMPUTED IN THIS RUN.
