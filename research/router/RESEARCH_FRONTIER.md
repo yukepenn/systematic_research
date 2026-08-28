@@ -80,9 +80,10 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 
 | # | runnable row | why it ranks here |
 |---|---|---|
-| **1** | **LAST-ONLY microstructure → consumed discovery → candidate freeze → ONE-SHOT 141-session blind confirmation** | The **only** lane in this repo that can still produce a genuinely confirmed historical result. The blind pool is the most valuable confirmable microstructure asset here and it is spendable exactly once |
-| **1=** | **Multi-market TSMOM V1** | 24 roots · 6 sectors at **$0**, and the only lane offering **economically independent** exposure. Runs in parallel — it does not wait on microstructure |
-| **2** | **Internals → direct RTH NQ return** | cheap, data already built, and `INT01` closed only the *routing* mapping, not this target |
+| — | ~~LAST-ONLY microstructure at 60 s~~ | ❌ **CLOSED — WELL-POWERED NULL** · out-of-fold `r = −0.0016`, session-clustered CI **[−0.0115, +0.0089]**, `R² = −0.002`; ridge −$987/session at the **22.4th** pctile of an activity-matched placebo; directional accuracy **49.4 %** · **the 60 s NQ move is a martingale** (lag-1 −0.0065, t −1.03; mean move −$0.015, t +0.04) · `runs/MSLAST_CONTRACT_20260827/` |
+| **1** | **Multi-market TSMOM V1** | ✅ **RUNNABLE, and deeper than believed — 21 CORE roots from 2009, ~17.6 years, $0.** Chronology **FROZEN** before any P&L exists · `runs/TSMOM_DEPTH_CHRONOLOGY_20260827/` |
+| **2** | **Internals → direct RTH NQ return** | cheap, data already built, and `INT01` closed only the *routing* mapping. **Now the cheapest untested target left** |
+
 | **3** | **BBO microstructure — DISCOVERY ONLY** | richer information, but its ceiling is now a *prospective* shadow candidate, not a historical claim |
 | **4** | **ES tick/BBO cross-market** (§32) | 103 sessions on disk; W122's NULL was a **1-minute** family and does not close tick-level ES/NQ interaction. After NQ |
 | **5** | Prospective shadow / execution ledger | earns nothing on its own, but no new sleeve can be trusted without it |
@@ -370,6 +371,7 @@ decision; slot D is an `EXECUTABLE_COMPONENT_SET` and `EXECUTABLE_PORTFOLIO` rem
 
 | date | change |
 |---|---|
+| 2026-08-27 | **MS-LAST CLOSED — well-powered NULL at 60 s**, and the **141-session blind pool was NOT spent** (intersection asserted = 0). Two data-contract corrections fell out: the textbook **tick rule moves 274 %** under within-millisecond permutation and is blocked, and **MS01A's 69.6 % "inside" was same-millisecond contamination** — corrected to 8.9 %, with its cost conclusion surviving. **TSMOM depth is 2009, not 2016** (~17.6 years), and its chronology is frozen. |
 | 2026-08-27 | **Split the microstructure program into MS-BBO and MS-LAST**, which carry different evidence ceilings. `MS01A` completed and is no longer a blocker — it PASSED freshness, FAILED ordering, and left quote size NOT CERTIFIED, which blocks a named list of features. **No blind BBO pool exists**; a genuine **141-session Last-only** pool does and is frozen. EVI re-ranked around the two lanes that can actually produce alpha. |
 | 2026-08-27 | Created at Phase 0, pre-result. |
 | 2026-08-27 | **RR_W005 closed SELECTIVE BOX UN-LATCHING** — every uniform relaxation is 16–41 % worse at fixed drawdown and 11–26 % higher exposure. The box is worth keeping. |

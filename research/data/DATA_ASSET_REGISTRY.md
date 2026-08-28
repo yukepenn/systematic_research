@@ -23,6 +23,19 @@ Three counts for NQ tick were circulating, all *correct about different populati
 
 - **Truncated old-substrate files: 15, not 17.** The 17 came from the old MANIFEST's `capped` column, which was computed over 61 rows including `_rth` supplements. Measuring the 48 session parquets directly gives **15**. Earlier statements of 17 are wrong.
 
+## ⚠️ CORRECTION 2026-08-27 — multi-market depth is 2009, not 2016
+
+The `Multi-market DAILY via connection` row below says **"2016 probe"**. That was the INVENTORY's
+own probe grid (2016/2019/2022/2025), **not a measured floor** — nothing beneath 2016 was ever asked.
+Measured directly (`runs/TSMOM_DEPTH_CHRONOLOGY_20260827/`): **21 of 25 roots serve December 2009**,
+and ES returns nothing at 2007 or 2008. **Usable history is ~17.6 years, not 10.**
+
+Two mechanics that must travel with that row:
+- **continuous contracts do not exist here** — `ES ##-##` and bare `ES` both return 0 bars, so every
+  market is assembled contract by contract and a causal roll is mandatory;
+- **the returned `instrument` field is decade-ambiguous** — `ES 12-06` and `ES 12-16` both display
+  as `ESZ6`. Depth must be read from returned **bar dates**, never from the symbol.
+
 ## Materialization status
 
 - **NQ quote-FULL materialized: 98 of a 99 ceiling** — this lane is essentially exhausted on this disk.
