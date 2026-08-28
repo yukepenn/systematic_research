@@ -3,11 +3,12 @@
 _Owner directive §44. **Rewritten after every wave, not appended to.** The next wave is always the
 highest-EVI **runnable** row — not the most interesting one, and not the one a previous plan named._
 
-**CURRENT AS OF 2026-08-28, after `MS01` · `MS01A` · `INT01` · `INT02` · `FWD_BOOTSTRAP_V2` ·
+**CURRENT AS OF 2026-08-28 (second revision, after the volume campaign), after `MS01` · `MS01A` · `INT01` · `INT02` · `FWD_BOOTSTRAP_V2` ·
 `DATA_ASSET_REGISTRY` · `RECENT_REGIME_PANEL` · `MICRO_DISCOVERY_CONFIRMATION_SPLIT` ·
 `MSLAST_CONTRACT` · `TSMOM_V1/V2` · `ABS_PCT_ADJUDICATION` · `PORTFOLIO_B_RECONCILIATION` ·
 `TSMOM_TAIL_H1` · `MSBBO_V1` (**VOID**) · `MSBBO_DEPLOYMENT_FREEZE` · `CARRY00` · `CARRY_V1` ·
-`ESNQ00` · `ENGINE_HARDENING` · `BBO_COMPLETENESS_RECENSUS_V1` · `ASSET_CENSUS`.** Any earlier "as of" wording
+`ESNQ00` · `ENGINE_HARDENING` · `BBO_COMPLETENESS_RECENSUS_V1` · `ASSET_CENSUS` ·
+`VOLUME00` · `VOLUME_LIQUIDITY_V1`.** Any earlier "as of" wording
 below this line is historical narrative, not a timestamp.
 
 > **There is exactly ONE current ranking — §"EVI RE-RANK" below.** Every other table in this file is
@@ -76,7 +77,7 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 
 ---
 
-## EVI RE-RANK — 2026-08-27, after `MS01A` and the blind-pool audit
+## EVI RE-RANK — 2026-08-28, after `VOLUME00` and `VOLUME_LIQUIDITY_V1`
 
 > ### ⚠️ **THE MICROSTRUCTURE PROGRAM IS NOW TWO SCIENTIFICALLY DIFFERENT LANES.**
 > They must never share an evidence class.
@@ -96,19 +97,23 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | — | ~~**`CARRY_V1`**~~ | ❌ **FAILED C6/C7 → CLOSED.** Sharpe 0.719 but **SI alone 84.1 %** of positive root contribution. Validation and final holdout **NOT READ** · `runs/CARRY_V1_20260828/` |
 | — | ~~**`ESNQ_V1`**~~ | ❌ **DEVELOPMENT FAILED X1/X7 → CLOSED.** Net **−$18,113.79**, **−$503.16/session**, **OOF corr +0.0034**, 0 of 4 quartiles positive; NQ-only control also negative. P0-3 completed **44/44 with ZERO action disagreement**. **Blind `EFFECTIVE_14` UNSPENT** · `runs/ESNQ_V1_20260828/` |
 | — | ~~more carry roots~~ | ❌ **CLOSED-BY-DATA** — 10 of 13 extra `db/day` roots are **micros of existing roots**; none of the rest has ≥10 contracts |
-| **1** | **MULTI-MARKET VOLUME / LIQUIDITY** | ✅ **the highest-EVI runnable lane.** Volume is in **every** `.ncd` record and has only ever been the **roll criterion** — genuinely different information from trend (price) and curve (price). **Zero data cost**, reuses the causal roll + basis-safe engine, and **spends no protected pool**. ⚠️ **Ceiling declared in advance: DISCOVERY-GRADE ONLY** — every date is outcome-consumed, so no historical slice can validate it; its only next stage is freeze → prospective shadow · `runs/VOLUME_LIQUIDITY_DESIGN_20260828/` |
-| **2** | **Remaining unread ES BBO** | **20 sessions genuinely unread and outside any blind manifest** (re-censused: the asset is **79**, not 64 — the earlier count used a stricter window; 44 consumed + 15 blind + 20 other = 79, exact). ⚠️ **High evidence option value, LOW prior**: NQ price-side at 60 s returned corr 0.0072 and ESNQ cross-market at 60 s returned corr 0.0034. **Do not spend a pristine asset to re-learn a null** |
-| **3** | **NQ Last-only 141-session blind pool** | **an ASSET, not a question.** No quotes, so no bid/ask crossing can be priced. Spend only behind a **genuinely new frozen Last-only mechanism** — none is on the table |
-| **4** | **NQ BBO 19-session blind asset** | **19 outcome-unconsumed · 18 pristine · 1 metadata-exposed.** Falsifier-grade (MDE $2,996/session at n=19). Also an asset, not a question — no BBO-class candidate exists |
-| **5** | **Owner-gated acquisition** — options / dealer gamma, more event types | highest remaining *ceilings*, but **owner spend**; §89 binds — exhaust free surfaces first, and rank 1 is free |
-| **6** | **PROSPECTIVE SHADOW** | ⬇️ roster is `P1/PCT`, `P1/ABS`, `XM` at ~1.6 decisions/week. Protocol and `SHADOW_START` kept; **no infrastructure built for objects that no longer exist** |
+| — | ~~**`VOLUME_LIQUIDITY_V1`**~~ | ❌ **DEVELOPMENT FAILED 10 of 12 GATES → CLOSED.** Gross **−$17,033.50 before any cost**; net **−$54,330.30**, Sharpe **−0.486**, drawdown lasting **438 of 458 weeks**, **all 21** leave-one-root-out negative, and the object sits at the **56.5th / 39.8th** percentile of its own two nulls. **The mirror also loses (−$20,263.30)** — same |positions|, same $37,296.80 of turnover — so there is nothing to invert. `VOLUME00` was **`DATA-CAPABLE`** and the field is genuinely contract-specific; **the data was fine and the hypothesis was wrong** · `runs/VOLUME_LIQUIDITY_V1_20260828/` |
+| **1** | **PROSPECTIVE SHADOW ACCUMULATION** (incumbent roster) | ⬆️ **PROMOTED FROM 6 TO 1 — and not because anything got better.** It is now the **only lane that manufactures an evidence class this project owns none of.** Every other row either is closed, costs owner money, or spends an irreversible asset. It spends **nothing but calendar time**, and the architecture now **exists and is tested** — `research_sdk/shadow_ledger.py`, decision/outcome separated, hash-chained, backfill-refusing, **9/9 self-test including a deliberate tamper**. Roster `P1/PCT` · `XM_CONFLICT_v2` · `P1/ABS`, all parity-certified and hashed. `SHADOW_START = 2026-09-01 18:00 ET`, **not moved backward** · `research/operational/PROSPECTIVE_SHADOW.md`. ⚠️ **Remaining owner action: starting it.** It must run on the owner's machine at a wall-clock time; nothing in this repo can schedule that |
+| **2** | **Owner-gated acquisition** — options / dealer gamma, more event types | the **highest remaining ceilings**, and now the highest-ceiling lane that is not closed. Still **owner spend**; §89's "exhaust free surfaces first" no longer blocks it, because **the free surfaces are exhausted** — but that raises its rank, it does not authorise the spend |
+| **3** | **Remaining unread ES BBO** | **20 sessions genuinely unread and outside any blind manifest** (asset = **79**: 44 consumed by ESNQ + 15 blind + 20 unread, exact). ⚠️ **An ASSET, not a question — and the prior is LOW**: NQ price-side at 60 s returned corr 0.0072, ESNQ cross-market 0.0034. **Do not spend a pristine asset to re-learn a null**, and do not spend one because the shelf is empty |
+| **4** | **NQ BBO 19-session blind asset** | **19 outcome-unconsumed · 18 pristine · 1 metadata-exposed.** Falsifier-grade (MDE $2,996/session at n = 19), **not** a validator. An asset, not a question — **no BBO-class candidate exists** |
+| **5** | **NQ Last-only 141-session blind pool** | **an ASSET, not a question.** No quotes, so the execution contract every microstructure object here uses cannot be priced on it. Spend only behind a genuinely new frozen Last-only mechanism — **none is on the table** |
 
 > ### ⚠️ **"NO CURRENT CANDIDATE" IS NOT "NO UNTESTED INFORMATION SURFACE".**
 > An earlier report said *"every reachable materialized surface is closed."* **That was too strong
-> and is retracted.** What is true: **every tested formulation is closed, and the campaign has no
-> candidate.** What is false: that nothing untested remains. **Multi-market volume / liquidity is
-> present in the existing substrate and has never been alpha-tested** — it is rank 1 precisely
-> because it is *not* closed.
+> and was retracted, and the retraction is NOT being quietly reversed now that volume has closed
+> too.** What is true: **every tested formulation is closed, the last identified free untested
+> surface has been measured, and the campaign has no candidate.** What remains false: that nothing
+> untested exists. ⚠️ **The sentence that used to sit here — "multi-market volume / liquidity is
+> present in the existing substrate and has never been alpha-tested" — was true on 2026-08-27 and
+> is FALSE as of 2026-08-28.** `VOLUME_LIQUIDITY_V1` tested it and closed it, and the honest
+> replacement is the bounded statement above: **no effect detectable at `|r| ≈ 0.02` per week
+> exists in that specification**, which is not the same as none existing.
 
 > ### ⚠️ **Why rank 1 is not "another BBO model".**
 > `MS-BBO-V1`'s corrected feature set has **paid its discovery budget**. Re-running it — repaired,
@@ -135,7 +140,24 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 > An `np.isclose` default `rtol` once made "at bid" / "at ask" / "inside" sum to **158 %** in this very
 > audit — caught only because disjoint categories cannot exceed 100 %. That assertion is now permanent.
 
-**Deliberately NOT ranked:** anything requiring owner spend, live enablement, or calendar time.
+**Deliberately NOT ranked:** live enablement. ⚠️ **"Requires calendar time" is no longer a reason
+to exclude a row** — that exclusion is exactly what kept the project with zero prospective evidence
+for seven campaigns, and rank 1 now *is* a calendar-time lane. **Owner spend is still ranked but
+still not authorised.**
+
+> ### ⚠️ **WHAT THE VOLUME CLOSURE DOES AND DOES NOT ENTITLE THIS FILE TO SAY.**
+> **Multi-market volume / liquidity was the last IDENTIFIED free untested surface in the
+> materialized substrate, and it is now measured.** That is a statement about *identified* surfaces.
+> **The 2026-08-27 retraction still stands and is not being quietly reversed:** *"no current
+> candidate"* is not *"no untested information surface"*, and this campaign has no privileged view
+> of what it has not thought of.
+>
+> **And the volume negative is BOUNDED, not absolute.** The week-clustered SE on the signal-return
+> correlation is **0.0101**, so any weekly cross-sectional effect below **|r| ≈ 0.02** is invisible
+> at n = 444 weeks. **What is closed is the frozen specification, not participation as a concept.**
+>
+> **Multiplicity debt incurred:** 2010–2018 now carries the volume family's first computation, on
+> top of TSMOM development and CARRY development. Any future volume hypothesis must state that debt.
 
 > ### ⚠️ **`54.16 %` IS RETIRED AS AN ADMISSION GATE.**
 > `MS01`'s `p* = 0.5 + friction / (2·E|move|)` is interpretable **only under a symmetry
@@ -404,6 +426,8 @@ decision; slot D is an `EXECUTABLE_COMPONENT_SET` and `EXECUTABLE_PORTFOLIO` rem
 
 | date | change |
 |---|---|
+| 2026-08-28 | ❌ **`VOLUME_LIQUIDITY_V1` FAILED 10 of 12 DEVELOPMENT GATES → CLOSED**, and the failure is unambiguous: **gross is −$17,033.50 BEFORE any cost**, net −$54,330.30, Sharpe −0.486, drawdown lasting **438 of 458 weeks**, **all 21** leave-one-root-out negative, and the object sits at the **56.5th / 39.8th** percentile of its own two nulls — *it is its own null*. **The mirror also loses**, so there is nothing to invert. Three gates recorded **NON-ADJUDICATIVE on a negative-total object** (the `ESNQ` lesson applied, not re-learned). `VOLUME00`'s declared ±1 roll near-miss (**1.481** vs a 1.5 gate) **materialised** — 5 % of rows carry 42.7 % of the loss — **and an embargo was NOT retro-fitted**. **Frontier rank 1 becomes PROSPECTIVE SHADOW**, promoted not because anything improved but because it is the only lane that manufactures an evidence class this project owns none of |
+| 2026-08-28 | ✅ **`VOLUME00` → `DATA-CAPABLE`, and it answered a question that had only ever been answered for PRICE.** A **known-merged positive control** settles it: the same V2/V3 statistics that pass on `db/day` (**0.0101 %** duplicate share, deferred/front median **0.0011**) **fail completely** on the captured merge-back-adjusted payload (**98.86 %**, median **1.0000**, **96.14 %** of ratios exactly 1.000). **21 roots · 6 sectors · 17 years, nothing excluded.** ⚠️ **The roll entanglement BOUND**: the same-day contract-switch log-volume jump exceeds 1 MAD-unit on **87.2 %** of rolls, so the preregistered rule selected **`ROOT_TOTAL`** volume — a forced pre-expiry roll's downward jump would otherwise have manufactured a long signal out of the calendar |
 | 2026-08-28 | **PHASE 0 engine hardening**: the int32-overflow class exists in **exactly one production site** (`bbo_v1.py:119`, already void); every other occurrence is a deliberate reproduction. `research_sdk/timegrid.py` + `causality.py` + `keysafe.py` + a pinned regression test make it unreachable prospectively. **0C: 30 sites, 2 flagged, 0 confirmed. 0D: 374 module-level writes → 10 imported → 3 confirmed.** |
 | 2026-08-28 | **BBO RECENSUS — VERDICT B: a genuine blind BBO pool exists, 19 sessions**, frozen and hashed `84a8575a…0931`, **returns NOT read**. The 99-vs-123 gap is **entirely a definition difference** (97 both · 19 RTH-only · 2 full-session-only), and the old "no pool exists" verdict was **correct under its own 23-hour criterion** — what was wrong was applying a full-session criterion to an **RTH-only** strategy. The pool is a **FALSIFIER** (rejects a false +$5,125 claim at 5.7 σ) and **not** a validator (MDE $2,996/session at n=19). |
 | 2026-08-28 | **ASSET CENSUS: ES BBO is 64 pre-seal sessions with ZERO outcome-consumed** — the largest fully-unread quote-bearing asset the project owns. **15 sessions have BOTH ES and NQ sides unread.** "Add more carry roots" is **CLOSED-BY-DATA** (10 of 13 extras are micros; none of the rest has ≥10 contracts). Frontier re-ranked around it. |

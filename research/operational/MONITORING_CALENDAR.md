@@ -1,4 +1,4 @@
-# MONITORING_CALENDAR — every scheduled or gated future read, all programs (2026-08-18)
+# MONITORING_CALENDAR — every scheduled or gated future read, all programs (2026-08-28)
 
 Single consolidated schedule. Each row cites its governing protocol; this file adds no new
 authority — regenerate/extend it whenever a protocol changes. Dates are "due on/after".
@@ -7,6 +7,7 @@ authority — regenerate/extend it whenever a protocol changes. Dates are "due o
 
 | Due | Read | Object | Protocol / rule | Notes |
 |---|---|---|---|---|
+| **2026-09-01 18:00 ET** | **`SHADOW_START` — begin PROSPECTIVE SHADOW accumulation** (logging only; **no orders, no Sim101, no live account**) | incumbent roster: `P1/PCT` (`ee4c765b…`), `XM_CONFLICT_v2` (`2ec00dd4…`), `P1/ABS` (`e8bb9caf…`) | `PROSPECTIVE_SHADOW.md`; ledger `research_sdk/shadow_ledger.py` | ⚠️ **This is a WRITE, not a READ — it adjudicates nothing.** NO BACKFILL is enforced mechanically: the ledger refuses any row at or before `SHADOW_START`. The date is **not** moved backward because ≥2026-08-01 data now exists. **Reading the accumulated rows for a verdict requires its own preregistration**; incumbent first-reads stay governed by `LOCKED_FORWARD.md` and the rows below. Frontier **rank 1** as of 2026-08-28. ⚠️ **Starting it is an OWNER action** — it must run at a wall-clock time on the owner's machine. |
 | **2026-11-01** | MONITOR-01 reading #2 (quarterly) | Frozen campaign-1 champion (R5-E10, 13 members; live-ops default = 16:44-flatten v2) | `MONITOR01_PROTOCOL.md`; alarm: σ-banded r < 1.05 two consecutive quarters, or banded drift beyond protocol bounds | Requires one fresh engine-exact 1-min NQ bar export (consumes nothing). Same reading also owes: SM13 B-MOM decay statistic (`../system_master/SM13_BMOM_DECAY_RULE.md`, floor $60/day rolling 504-session mean); CURRENT_EDGE_HEALTH refresh both products; re-check Product-A 10-13-contract band POSSIBLE_DECAY flag (escalate to STRUCTURAL_BREAK_EVIDENCE if still present at ~1,000 bars, else downgrade); Product-B rolling-120 Sharpe WATCH flag (should mean-revert as Jan-May 2026 rolls out). |
 | quarterly thereafter | MONITOR-01 #3, #4, … | same | same | Standing cadence. |
 | **2027-08-01** | Annual frozen-champion locked-forward evaluation | R5-E10 (FROZEN definition only) | `LOCKED_FORWARD.md`; must be preregistered before the read; challenger comparisons need their own written protocol first | First full-year virgin-data evaluation. |
