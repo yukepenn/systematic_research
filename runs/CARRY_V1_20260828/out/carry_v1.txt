@@ -1,0 +1,72 @@
+================================================================================================================
+=== CARRY_V1 DEVELOPMENT - within-sector relative curve carry.  2009-2018 ONLY.
+================================================================================================================
+    ES   equity_index  paired days   1600  2009-06-29 -> 2018-09-14  median gap 3mo  median |carry| 0.155
+    YM   equity_index  paired days   1657  2009-06-29 -> 2018-09-14  median gap 3mo  median |carry| 0.211
+    ZN   rates         paired days   1483  2009-06-29 -> 2018-08-31  median gap 3mo  median |carry| 0.655
+    ZB   rates         paired days   1631  2009-06-29 -> 2018-08-31  median gap 3mo  median |carry| 0.510
+    GC   metals        paired days   1733  2009-06-29 -> 2018-07-30  median gap 2mo  median |carry| 0.059
+    SI   metals        paired days   1827  2009-06-29 -> 2018-08-30  median gap 2mo  median |carry| 0.060
+    ZC   ags           paired days   1454  2009-06-30 -> 2018-06-27  median gap 2mo  median |carry| 0.718
+    ZW   ags           paired days   1736  2009-06-30 -> 2018-08-14  median gap 2mo  median |carry| 0.598
+    ZM   ags           paired days   1933  2009-06-30 -> 2018-11-23  median gap 1mo  median |carry| 0.441
+    ZL   ags           paired days   1933  2009-06-30 -> 2018-11-23  median gap 1mo  median |carry| 0.349
+
+=== CAUSALITY PROBE - both clauses must hold, and the second is what gives it teeth
+    week 2013-W30, effective 2013-07-22
+    corrupt FUTURE (>= t) carry:  max |dw| = 0.000e+00   PASS - weights unchanged
+    corrupt PAST  (<  t) carry:  max |dw| = 2.500e-01   PASS - weights DO respond
+
+    rebalances 421   root-weeks 3,421   mean live sectors 3.30
+
+================================================================================================================
+=== RESULT
+================================================================================================================
+    PRIMARY (1 tick)     gross $      77,578   cost $      6,165   net $      71,413   Sharpe  0.719
+    STRESS (2 ticks)     gross $      77,578   cost $     11,219   net $      66,359   Sharpe  0.668
+    cost / gross  7.9 %      turnover (mean daily |dUnits|) 0.1198
+
+    net by development year
+        2010  $      29,021
+        2011  $       1,034
+        2012  $      11,052
+        2013  $       4,988
+        2014  $       9,303
+        2015  $         622
+        2016  $      -3,152
+        2017  $      12,991
+        2018  $      -5,267
+
+    contribution by root / sector (net)
+        SI   metals        $      73,058
+        ZN   rates         $      12,210
+        ZL   ags           $       1,378
+        ZW   ags           $          92
+        YM   equity_index  $          88
+        ZC   ags           $        -243
+        ZM   ags           $        -374
+        ES   equity_index  $        -912
+        GC   metals        $      -1,884
+        ZB   rates         $     -11,998
+        [metals      ] $      71,174
+        [ags         ] $         852
+        [rates       ] $         212
+        [equity_index] $        -824
+
+================================================================================================================
+=== GATES - frozen in SPEC before this ran
+================================================================================================================
+    GATE                                                   OBSERVED   VERDICT
+    C1  PRIMARY net > 0                                     $71,413   PASS
+    C2  Sharpe >= 0.30                                        0.719   PASS
+    C3  >= 6 of 9 positive years                             7 of 9   PASS
+    C4  STRESS net > 0                                      $66,359   PASS
+    C5  cost drag <= 50%                                       7.9%   PASS
+    C6  top root <= 40%                                       84.1%   *** FAIL ***
+    C7  top sector <= 50%                                     98.5%   *** FAIL ***
+    C8  not a disguised long           mean signed equity exposure -0.006   PASS
+    causality probe (both clauses)                                    PASS
+
+================================================================================================================
+=== CARRY_V1 DEVELOPMENT: FAILED -> CARRY_V1 CLOSED
+================================================================================================================
