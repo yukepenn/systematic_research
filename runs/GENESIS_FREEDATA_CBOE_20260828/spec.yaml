@@ -1,0 +1,29 @@
+run_id: GENESIS_FREEDATA_CBOE_20260828
+campaign: GENESIS
+type: FREE_DATA_ACQUISITION_AND_CONTRACT   # charter Phase 6; owner directive sections 48/35
+question: >
+  Acquire and CERTIFY (no alpha) the free Cboe volatility complex + CFTC COT: coverage,
+  timestamp semantics, revision policy, missingness — producing a certified pre-seal layer.
+sources_bounded:
+  - Cboe CDN index histories: VIX (VIX_History), VIX3M, VXN, VVIX, VIX9D, SKEW, OVX, GVZ
+  - Cboe CFE: VX daily settlements (per-contract), CFE volume + open interest (cfevoloi)
+  - CFTC COT: TFF futures-only, VIX futures + equity index rows, full available history
+download_protocol:
+  - total size cap 100 MB; per-file cap 30 MB; abort over cap
+  - record for every file: exact URL, sha256, bytes, retrieval timestamp (UTC)
+  - raw files quarantined under raw/ (may contain post-seal rows; NEVER inspected)
+  - certified layer under certified/ contains ONLY rows dated < 2026-08-01, produced by a
+    mechanical truncation step; the program asserts max(date) < 2026-08-01 via
+    research_sdk/seal_guard (built in the same wave) and PRINTS the assertion
+contract_checks_per_source:
+  - what the timestamp means (close-of-day? ET? print time?) with the vendor doc cited
+  - revision policy (are historical rows restated?) — evidence, not assumption
+  - missingness map (holidays, gaps), units, contract identity for VX settlements
+  - cross-source sanity: VXN vs VIX level correlation pre-seal (sanity only, NOT alpha)
+prohibitions: no return predictability computed; no join to NQ returns; no strategy object;
+  no paid endpoint; no credential; no post-seal value inspected or reported
+outputs: raw/ + certified/ + DATA_CONTRACT.md + gate_table.txt (printed)
+evidence_ceiling: DATA-CAPABLE certification only
+ledger: one genesis_ledger trial (family=DATA_CONTRACT) registered before download
+live_enabled: NO
+spend: $0

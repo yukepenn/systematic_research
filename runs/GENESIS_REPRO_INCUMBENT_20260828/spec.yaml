@@ -1,0 +1,28 @@
+run_id: GENESIS_REPRO_INCUMBENT_20260828
+campaign: GENESIS
+type: REPRODUCTION   # charter Phase 3 / dossier §4 R-1..R-3
+question: >
+  Does the recorded incumbent pipeline re-run from its raw inputs and reproduce the recorded
+  economics artifact-exactly? (Upgrades the headline from RECORDED CLAIM to REPRODUCED FACT,
+  or produces a STOP discrepancy.)
+method: >
+  Execute the recorded generating chain (run_we_w17.load_deep -> w97 votes -> w26 fills ->
+  w37 causal_score -> w98 gfills -> w103 economics) in a fresh process from
+  nq1m parquets + ES/RTY/YM parquets + the W82 spread profile. Existing repo caches
+  (e.g. mem_ext.npz) may be USED (concordance of code+cache -> artifact) but their use must be
+  recorded; if feasible without modifying any repo file, additionally rebuild the member cache
+  to a scratch path and compare. Nothing under runs/WE_* may be modified; all outputs go to
+  out/ in THIS run dir.
+gates:
+  G1: components.csv P1_PCT row reproduces: raw $/wk, fixed-DD $/wk, maxDD, t — each to $0.01.
+  G2: the four circulating trade populations (2401/2139/2137/2131) are reconciled
+      programmatically to named definitions (warm-up, matched, NT8, in-window), printed from code.
+  G3: XM_CONFLICT row reproduces (348 vectorised / 346 sequential reconciliation printed).
+  on_fail: STOP interpreting economics; document the discrepancy; do NOT choose the better P&L.
+population: modern window 2022-01 -> 2026-07-31 as recorded; session_id unit; no sealed reads
+cost_model: unchanged from recorded ($4.36/ctrRT commission + $14.44 P1 / $12.50 XM spread)
+outputs: out/repro_components.csv, out/population_reconciliation.txt, out/gate_table.txt (printed by program)
+evidence_ceiling: REPRODUCED FACT about a backtest; no forward claim; DISCOVERY_CONSUMED unchanged
+ledger: one genesis_ledger trial registered before execution (family=REPRODUCTION)
+live_enabled: NO
+spend: $0

@@ -1,0 +1,34 @@
+run_id: GENESIS_BASELINES_20260828
+campaign: GENESIS
+type: BASELINE_CONTROLS   # charter Phase 3 / directive section 8: benchmarks, not candidates
+question: >
+  What do trivial rules earn on the incumbent's own population and cost model? (The incumbent has
+  never had a benchmark other than cash. Baselines are CONTROLS; they cannot be promoted.)
+population: NQ modern substrate sessions 2022-01 -> 2026-07-31 (the incumbent population),
+  session_id unit, END-stamped bars, 18:00->17:00 ET sessions, size 1 contract
+cost_model: $4.36/ctrRT commission + $14.44/ctrRT modelled spread on every round trip
+  (identical to P1's model; report gross and net)
+baselines_frozen_no_search:
+  B0: cash — $0/wk by definition (anchor row)
+  B1a: always-long 1 NQ, entered once, held across the window (roll-free continuous substrate);
+       weekly marked P&L
+  B1b: always-long RTH only — buy 09:31 open, exit 15:59 close, every session
+  B2:  daily TSMOM — sign of trailing 63-session close-to-close return, applied to the NEXT
+       session close-to-close, one decision/session (63 fixed a priori; NO grid)
+  B3:  opening-range breakout — 09:30-10:00 ET high/low; first break long/short; exit 15:59
+       close; one entry/session max; no stop (canonical simple form, NO parameter search)
+  B4:  daily mean reversion — fade the sign of the PRIOR session's close-to-close return over
+       the next session, one decision/session (mirror of B2's shape at lag 1)
+  B5:  incumbent P1/PCT weekly series read from runs/WE_W103_CONSOLIDATE artifacts (no recompute)
+  B6:  equal-risk combination of B1a and B2 (weights by inverse trailing 63-session weekly vol,
+       defined a priori)
+metrics_per_baseline: net $/wk, weekly Sharpe, weekly t, maxDD, net at fixed $20,245 DD
+  (P1's normalization), % positive weeks, worst week; session-clustered where applicable
+multiplicity: 8 objects, ALL preregistered here, ZERO search; every one logged as a
+  genesis_ledger trial BEFORE its computation and result recorded after
+prohibitions: no parameter variation beyond the frozen values; no post-hoc baseline additions;
+  no sealed reads; baselines can never be promoted to candidates from this run
+outputs: out/baseline_table.csv + out/gate_table.txt printed by program
+evidence_ceiling: DISCOVERY-layer controls on consumed data
+live_enabled: NO
+spend: $0
