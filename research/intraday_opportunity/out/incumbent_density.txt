@@ -1,0 +1,100 @@
+============================================================================================================
+=== INCUMBENT OPPORTUNITY DENSITY -- descriptive. No fitting, no new object, no promotion.
+============================================================================================================
+    P1/PCT ledger rows 2,401   cost model COMMISSION_PLUS_MODELLED_SPREAD
+    XM     ledger rows 346
+    P1 in_window_session=True: 2,131   span 2022-01-02 -> 2026-07-29
+
+------------------------------------------------------------------------------------------------------------
+--- FULL LEDGER (2,401 - the canonical headline stream)   n = 2,401 trades
+------------------------------------------------------------------------------------------------------------
+    sessions WITH >=1 P1 trade      792
+    trades per ACTIVE session       mean 3.032  median 2  p10 1  p90 6  max 19
+    active-session trade-count mix  1:258 (32.6%)  2:166 (21.0%)  3-5:262 (33.1%)  6-10:95 (12.0%)  >10:11 (1.4%)
+    net total                       $292,556.14
+    net per trade                   $121.85
+    median hold (min)               23   mean 85.6   p90 250
+    long / short                    2,401 / 0
+
+    *** MARGINAL ECONOMICS BY ENTRY ORDINAL WITHIN SESSION ***
+      ordinal        n     total net   mean/trade    median    win%   hold m  mean MAE  mean MFE
+      1st          714        81,193       113.72   -166.54   34.9%       38      -674     1,272
+      2nd          516        59,869       116.03   -126.86   33.3%       21      -524     1,026
+      3rd          375        21,634        57.69    -94.36   35.5%       25      -507       872
+      4th-5th      420        66,169       157.54    -91.86   35.0%       21      -483       985
+      6th+         376        63,691       169.39    -76.86   38.8%       11      -472       947
+
+    session-clustered bootstrap on the SAME buckets (5,000 resamples of SESSIONS, seed 7)
+      ordinal     mean/trade      session-clustered 95% CI   P(mean>0)
+      1st             113.72                     [-6, 240]       0.969
+      2nd             116.03                    [-37, 313]       0.921
+      3rd              57.69                    [-67, 197]       0.794
+      4th-5th         157.54                     [26, 305]       0.994
+      6th+            169.39                     [21, 347]       0.988
+
+    per-ordinal (not bucketed), first 8:
+      #1: n714 $114  #2: n516 $116  #3: n375 $58  #4: n257 $245  #5: n163 $20  #6: n126 $450  #7: n85 $146  #8: n53 $135
+
+    OPPORTUNITY SATURATION (DIAGNOSTIC ONLY -- no cap is selected from this)
+        cap K   trades kept           net   net/trade   vs uncapped
+            1           714        81,193      113.72      -211,363
+            2         1,230       141,063      114.69      -151,493
+            3         1,605       162,697      101.37      -129,859
+            4         1,862       225,556      121.14       -67,000
+            5         2,025       228,865      113.02       -63,691
+            6         2,151       285,611      132.78        -6,945
+            8         2,289       305,135      133.30        12,579
+           10         2,344       294,753      125.75         2,197
+         none         2,401       292,556      121.85             0
+
+------------------------------------------------------------------------------------------------------------
+--- in_window_session subset   n = 2,131 trades
+------------------------------------------------------------------------------------------------------------
+    sessions WITH >=1 P1 trade      712
+    trades per ACTIVE session       mean 2.993  median 2  p10 1  p90 6  max 19
+    active-session trade-count mix  1:233 (32.7%)  2:152 (21.3%)  3-5:234 (32.9%)  6-10:83 (11.7%)  >10:10 (1.4%)
+    net total                       $296,910.84
+    net per trade                   $139.33
+    median hold (min)               24   mean 86.9   p90 251
+    long / short                    2,131 / 0
+
+    *** MARGINAL ECONOMICS BY ENTRY ORDINAL WITHIN SESSION ***
+      ordinal        n     total net   mean/trade    median    win%   hold m  mean MAE  mean MFE
+      1st          638        93,632       146.76   -150.61   35.9%       37      -672     1,306
+      2nd          460        67,723       147.22   -109.36   34.1%       21      -521     1,054
+      3rd          335        22,244        66.40    -89.36   35.2%       26      -518       902
+      4th-5th      371        54,017       145.60    -99.36   34.0%       21      -498       992
+      6th+         327        59,294       181.33    -64.36   39.8%       10      -460       940
+
+    session-clustered bootstrap on the SAME buckets (5,000 resamples of SESSIONS, seed 7)
+      ordinal     mean/trade      session-clustered 95% CI   P(mean>0)
+      1st             146.76                     [21, 280]       0.989
+      2nd             147.22                    [-22, 379]       0.950
+      3rd              66.40                    [-70, 216]       0.807
+      4th-5th         145.60                      [7, 303]       0.980
+      6th+            181.33                     [22, 371]       0.989
+
+    per-ordinal (not bucketed), first 8:
+      #1: n638 $147  #2: n460 $147  #3: n335 $66  #4: n230 $254  #5: n141 $-30  #6: n108 $451  #7: n74 $167  #8: n44 $217
+
+    OPPORTUNITY SATURATION (DIAGNOSTIC ONLY -- no cap is selected from this)
+        cap K   trades kept           net   net/trade   vs uncapped
+            1           638        93,632      146.76      -203,279
+            2         1,098       161,356      146.95      -135,555
+            3         1,433       183,599      128.12      -113,312
+            4         1,663       241,911      145.47       -55,000
+            5         1,804       237,616      131.72       -59,294
+            6         1,912       286,348      149.76       -10,563
+            8         2,030       308,294      151.87        11,383
+           10         2,078       299,998      144.37         3,087
+         none         2,131       296,911      139.33             0
+
+------------------------------------------------------------------------------------------------------------
+--- XM_CONFLICT
+------------------------------------------------------------------------------------------------------------
+    columns present: ['session_date', 'desired_direction', 'nq_drive', 'broad_composite', 'pnl_research', 'net_research', 'delta_action_value']
+    trades 346   sessions with a trade 346   trades/active session 1.000
+
+============================================================================================================
+=== Descriptive only. Nothing was fitted, selected, capped or promoted.
+============================================================================================================
