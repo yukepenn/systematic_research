@@ -1,0 +1,67 @@
+========================================================================================================
+=== TSMOM-TAIL-H1  -  portfolio tail role of the FROZEN 252d object
+=== ONE-SIDED BLIND holdout 2023-01-01 -> 2026-05-30
+========================================================================================================
+    PROVENANCE: hypothesis MOTIVATED BY the failed 2019-2022 validation. 2019-2022 is
+    DISCOVERY for this claim. The TSMOM leg is blind here; the INCUMBENT leg is not.
+    THIS FILE sha256 5421118fba84b556ff3ef0177d5c6e7310e3d472dbdbb020ef82902b4e1620e3
+
+    incumbent weeks 213   TSMOM weeks 853   common 213
+    holdout weeks 178   2023-W01 -> 2026-W22
+    evaluated holdout weeks (allocator warm) 178
+
+========================================================================================================
+=== STANDALONE AND PORTFOLIO ECONOMICS ON THE HOLDOUT
+========================================================================================================
+    object                          $/wk   fixDD $/wk      maxDD      ES5%   pos wk      t
+    --------------------------------------------------------------------------------------
+    TSMOM standalone                  -4           -8     10,466    -2,154    53.9%  -0.07
+    INCUMBENT P1+XM                1,222        3,000      8,249    -4,466    61.8%   4.83
+    INCUMBENT + TSMOM                373        1,397      5,407    -1,932    65.2%   4.28
+    P1 + TSMOM (secondary)           271          740      7,432    -2,326    64.0%   3.27
+
+    PRIMARY  delta fixed-DD $/week = -1,602.43
+    STRESS   delta fixed-DD $/week = -1,656.85
+
+=== H1-G2 dependence-aware paired weekly inference (frozen form)
+    paired weekly (combined - incumbent) at each object's OWN fixed-DD normalisation
+    mean $-1,602.43/wk   circular block bootstrap L=6, B=20,000
+    one-sided lower 95 % bound  $-2,115.80
+
+========================================================================================================
+=== TAIL BEHAVIOUR - the actual H1 claim
+========================================================================================================
+    incumbent worst-decile weeks: 18 of 178  (threshold $-2,171)
+    mean TSMOM in those weeks              $   -169.70   <- H1-G4 PRIMARY
+    mean TSMOM when incumbent < 0          $     -6.30
+    rho(incumbent, TSMOM) all weeks             0.013
+    rho | incumbent < 0                         0.048
+    incumbent ES5%                         $-10,959.73  (fixed-DD normalised)
+    combined  ES5%                         $ -7,233.63  (fixed-DD normalised)
+    ES improvement                         $ +3,726.11   <- diagnostic
+    worst-decile overlap (TSMOM also <0)         33.3 %
+    combined maxDD (fixed-DD normalised)   $    20,245  vs incumbent $20,245
+
+=== yearly (holdout)
+    TSMOM standalone by year
+                  sum  size
+    2023 -4192.804641    52
+    2024  2485.187437    53
+    2025  1264.150331    52
+    2026  -316.869056    21
+
+========================================================================================================
+=== PREREGISTERED H1 GATES (SPEC.md, frozen before this ran)
+========================================================================================================
+    gate                                            observed   verdict
+    ----------------------------------------------------------------------
+    H1-G1 delta fixed-DD $/wk > 0                  -1,602.43   *** FAIL ***
+    H1-G2 paired boot lower 95 % > 0               -2,115.80   *** FAIL ***
+    H1-G3 delta fixed-DD > 0 at STRESS             -1,656.85   *** FAIL ***
+    H1-G4 mean TSMOM in worst decile > 0             -169.70   *** FAIL ***
+    H1-G5 combined ES5% not worse                  +3,726.11   PASS
+
+    *** H1 FAILS ***
+    TSMOM is CLOSED for this campaign: the steady-premium role failed (V2-G3) and the
+    tail-diversifier role failed here. Do not invent H2. Do not spend more history on
+    another TSMOM formulation. Move on.
