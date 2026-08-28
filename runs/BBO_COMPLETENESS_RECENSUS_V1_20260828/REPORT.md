@@ -4,8 +4,29 @@
 | | |
 |---|---|
 | **verdict** | ✅ **B — 19 genuinely unread, RTH-complete, pre-seal NQ BBO sessions** |
-| spec committed | `022c543`, **before** the crosswalk |
-| manifest | `BBO_BLIND_POOL_MANIFEST.csv` · sha256 `84a8575a…0931` · **frozen at `022c543`** |
+| **ELIGIBILITY RULE FROZEN AT** | **`022c543`** — `SPEC.md` only; verified by `git ls-tree`, the tree at that commit contains **no** manifest and **no** runner |
+| **REALIZED MANIFEST FIRST MATERIALIZED AND HASH-FROZEN AT** | **`17bbb2d`** — the first commit containing the manifest bytes (`git log --diff-filter=A`) |
+| manifest identity | git blob `e89cc0fd…` · **normalized-content sha256 `92010fc6…2b8e`** · as-recorded working-tree sha256 `84a8575a…0931` (CRLF) |
+
+> ### ⚠️ **PROVENANCE CORRECTION — 2026-08-28, clerical only. No pool membership changes.**
+>
+> **The header of this report previously read "manifest … frozen at `022c543`". That is wrong.**
+> A realized manifest cannot be hash-frozen in a commit that predates its computation, and the tree
+> at `022c543` contains only `SPEC.md`. The string came from `recensus.py` printing
+> `git rev-parse --short HEAD` **at run time** — which was the rule-freeze commit, because the
+> script ran *between* the two commits. Accurate as *"HEAD when the script executed"*; **mislabelled
+> as "frozen at"**, and the two are exactly the distinction this project is supposed to keep.
+>
+> **Both facts are real and both matter, so both are now stated separately:** the *rule* that selects
+> the pool was frozen before the pool was computed (`022c543`), and the *realized 19 rows* first
+> exist at `17bbb2d`. `out/recensus.txt` is an immutable run artifact and is **not** edited.
+>
+> ### ⚠️ **SECOND FINDING: the recorded sha256 was line-ending dependent.**
+> `84a8575a…` hashes the **CRLF working-tree** bytes; the committed blob is LF and hashes to
+> `92010fc6…`. **The content is identical** — normalising both to LF gives `92010fc6…2b8e` either
+> way and the 19 session rows compare equal. But a tamper-evidence hash that changes with a
+> checkout setting is a weak one, so the **normalized-content sha256** and the **git blob id** are
+> now the authoritative identifiers and the CRLF value is retained only as the as-recorded figure.
 | **not done** | ⛔ **its returns were NOT read. It was NOT spent. No model was designed against it.** |
 | **99 vs 123** | **fully explained by definitions.** Not a discovery of hidden data |
 | power | **well powered to FALSIFY a large claim · weak to CONFIRM a modest one** |
