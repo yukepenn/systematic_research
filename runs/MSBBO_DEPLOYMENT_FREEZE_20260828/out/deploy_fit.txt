@@ -1,0 +1,69 @@
+========================================================================================================
+=== MS-BBO-CANDIDATE-1-DEPLOY  -  DEPLOYMENT DEFINITION, NOT EVIDENCE
+========================================================================================================
+    D5  frozen bbo_v1.py sha256 36dee22cdb001f0a36f6f7de112e97d3590f0be8eb9b6338d8d33383bb65dc6d
+    D5  PASS - the alpha definition this run imports is byte-identical to the frozen one
+
+    building the frozen discovery population from 58 session files ...
+
+    D3  max training source timestamp 2026-07-31 15:30:00
+    D3  PASS - strictly before the 2026-08-01 seal
+    sessions 58   decisions 19,194   features 20
+    features (exact order): spread_tk, midret_1s, midret_5s, midret_15s, midret_30s, rvol_30s, range_30s, dist_hi_30s, dist_lo_30s, spread_chg_30s, spread_minfrac, spread_pctile, bid_upd_30s, bid_up_30s, ask_upd_30s, ask_up_30s, trade_buckets_30s, trade_vol_30s, signed_flow_30s, tod
+
+========================================================================================================
+=== FIDELITY CHECK - reproduce the reported DISCOVERY figure from the unmodified module
+=== (this closes the 0-byte log gap; it is NOT a new measurement)
+========================================================================================================
+    OOF Ridge  $  5,124.76/session   net $     245,989   sessions 48   trade 61.4%
+    reported in MSBBO_V1/REPORT.md: $5,124.76/session, net $245,989, 48 sessions
+    |difference| $0.0033   ->  REPRODUCED
+
+========================================================================================================
+=== THE DEPLOYMENT FIT - the frozen primary estimator, fit ONCE on the whole population
+========================================================================================================
+    Ridge(alpha=10.0)  fit on 19,194 decisions x 20 features
+    intercept -3.014540616186e-01
+
+      #  feature                          mean               sd    coef (z-units, $)
+      1  spread_tk                  3.51581728       1.75620569        11.8450157466
+      2  midret_1s                 -0.18564605      33.81842982        16.5103758782
+      3  midret_5s                  0.51187480      81.25411086        -5.3143911563
+      4  midret_15s                 1.30314025     147.11986418        14.9426239413
+      5  midret_30s                -0.39895848     215.31118453         8.1884478628
+      6  rvol_30s                  40.55552327      32.83714737       -43.9893646926
+      7  range_30s                 98.05865950      72.49054643        26.9802240210
+      8  dist_hi_30s               49.60396099      52.12559091        63.8712699897
+      9  dist_lo_30s               48.45469852      48.41088284       -28.3720607313
+     10  spread_chg_30s            -0.00807691       0.90544442        -4.7630404048
+     11  spread_minfrac             0.06674482       0.07657549         1.9488979619
+     12  spread_pctile              0.57340488       0.29647996        -3.0133779085
+     13  bid_upd_30s             1489.52250703     685.75401894        40.3364579221
+     14  bid_up_30s               651.55288111     353.26639320       -74.5418683574
+     15  ask_upd_30s             1493.32145462     684.30265193       -10.3877725075
+     16  ask_up_30s               610.77227259     317.26581219        38.6685466434
+     17  trade_buckets_30s        208.66630197     130.39460666       -27.6388161003
+     18  trade_vol_30s            438.74398249     320.81103978        20.9742976282
+     19  signed_flow_30s           -2.12733146      95.00946926        -4.3283458456
+     20  tod                        2.75001389       1.59265865        -2.4250120718
+
+========================================================================================================
+=== D1 / D2  SELF-PARITY - sklearn.predict() vs the authoritative model.json formula
+========================================================================================================
+    D1  max |sklearn.predict - model.json formula|  0.000e+00   tolerance 1e-09
+    D1  PASS
+    D2  action parity  19,194 / 19,194  = 100.000000 %
+    D2  PASS - exact
+        LONG   json   5,539   sklearn   5,539
+        SHORT  json   6,169   sklearn   6,169
+        FLAT   json   7,486   sklearn   7,486
+
+    D4  model.json sha256 b7e0ea67f6e91ec913fe49ac70f46ab2f84dc4f459e4be1164205f64b4a823ff
+    D4  re-hash of the written file  b7e0ea67f6e91ec913fe49ac70f46ab2f84dc4f459e4be1164205f64b4a823ff
+    D4  PASS
+
+========================================================================================================
+=== DEPLOYMENT FREEZE COMPLETE - MS-BBO-CANDIDATE-1-DEPLOY EXISTS
+=== The object is now uniquely determined for any future decision instant.
+=== EVIDENCE CLASS UNCHANGED: DISCOVERY-GRADE ONLY.  LIVE ENABLED: NO.
+========================================================================================================
