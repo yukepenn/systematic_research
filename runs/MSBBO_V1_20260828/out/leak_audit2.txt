@@ -1,0 +1,27 @@
+========================================================================================================
+=== LEAK AUDIT 2 - is the edge a STALE-QUOTE RECONSTRUCTION ARTIFACT?
+========================================================================================================
+
+=== QUOTE AGE AT THE DECISION INSTANT
+    age_bid:  median     24.0 ms   p75      52.0   p95      140.0   p99       288.0   max       1536.0
+    age_ask:  median     24.0 ms   p75      52.0   p95      136.0   p99       268.0   max        952.0
+    max-of-two-sides:  median 28.0 ms   p95 164.0   p99 332.0
+    |bid age - ask age|: median 0.0 ms   p95 80.0
+
+=== THE DECISIVE TEST - restrict to decisions where BOTH sides are genuinely fresh
+    ALL decisions (baseline)                   $ 5,124.76/session   n 19,194   trade  61.4%
+    both quotes fresher than 1,000 ms          $ 5,164.77/session   n 19,191   trade  61.4%
+    both quotes fresher than 250 ms            $ 5,175.60/session   n 18,822   trade  61.8%
+    both quotes fresher than 100 ms            $ 4,836.23/session   n 17,123   trade  61.9%
+    both quotes fresher than 25 ms             $ 1,526.80/session   n  9,236   trade  66.0%
+
+=== AND THE MIRROR - decisions where ONE side is badly stale
+    at least one side staler than 250 ms       $  -159.15/session   n    372   trade  79.4%
+    at least one side staler than 1,000 ms     too few sessions
+
+=== EDGE vs STALENESS, by quintile of max quote age
+      quintile 1  age 4-8 ms                   $   506.75/session   n  4,578   trade  70.7%
+      quintile 2  age 12-20 ms                 $   496.51/session   n  3,730   trade  63.8%
+      quintile 3  age 24-36 ms                 $   537.48/session   n  3,215   trade  70.2%
+      quintile 4  age 40-76 ms                 $ 1,232.00/session   n  4,036   trade  70.8%
+      quintile 5  age 80-1536 ms               $   198.73/session   n  3,635   trade  67.0%

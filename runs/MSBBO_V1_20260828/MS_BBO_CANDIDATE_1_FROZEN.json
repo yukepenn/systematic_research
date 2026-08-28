@@ -1,0 +1,91 @@
+{
+  "candidate": "MS-BBO-CANDIDATE-1",
+  "frozen_at": "2026-08-28",
+  "evidence_class": "DISCOVERY-GRADE ONLY - no clean BBO historical holdout exists",
+  "model": {
+    "family": "Ridge",
+    "alpha": 10.0,
+    "target": "future 60s mid move in USD",
+    "challenger_rejected": "HistGradientBoosting depth3 iter150 lr0.05 (lower OOF net)"
+  },
+  "schedule": {
+    "session": "NQ RTH",
+    "grid_s": 60,
+    "horizon_s": 60,
+    "decisions": "10:00:00-15:30:00 ET inclusive",
+    "non_overlapping": true
+  },
+  "execution": {
+    "entry_long": "first ASK at a DISTINCT timestamp > t",
+    "entry_short": "first BID at a DISTINCT timestamp > t",
+    "exit_long": "first BID at a DISTINCT timestamp > t+h",
+    "exit_short": "first ASK at a DISTINCT timestamp > t+h",
+    "max_fill_wait_ms": 1000.0,
+    "commission_rt_usd": 4.36,
+    "extra_spread_subtraction": "NONE - real bid/ask sides already used"
+  },
+  "policy": {
+    "rule": "LONG if pred > thr, SHORT if pred < -thr, else FLAT",
+    "threshold": "spread observable STRICTLY BEFORE t (in ticks) x $5 + $4.36 commission",
+    "causal": true
+  },
+  "features": [
+    "spread_tk",
+    "midret_1s",
+    "midret_5s",
+    "midret_15s",
+    "midret_30s",
+    "rvol_30s",
+    "range_30s",
+    "dist_hi_30s",
+    "dist_lo_30s",
+    "spread_chg_30s",
+    "spread_minfrac",
+    "spread_pctile",
+    "bid_upd_30s",
+    "bid_up_30s",
+    "ask_upd_30s",
+    "ask_up_30s",
+    "trade_buckets_30s",
+    "trade_vol_30s",
+    "signed_flow_30s",
+    "tod"
+  ],
+  "blocked": [
+    "quote SIZE / bid-ask size imbalance",
+    "true aggressor side",
+    "queue position",
+    "quote-then-trade causality within a millisecond",
+    "displayed-depth absorption",
+    "true microprice",
+    "depth sweep",
+    "rowwise tick rule"
+  ],
+  "information_rule": "features read events with timestamp STRICTLY < t; execution reads the first DISTINCT timestamp > t",
+  "stress_ladder_ticks_per_side": [
+    0.0,
+    0.5,
+    1.0
+  ],
+  "discovery_result": {
+    "net_usd": 245989,
+    "per_session_usd": 5124.76,
+    "t": 6.76,
+    "sessions_evaluated": 48,
+    "decisions": 19194,
+    "trade_rate": 0.614,
+    "directional_accuracy": 0.566,
+    "oof_corr": 0.1702,
+    "stress_05tk_net": 203888,
+    "stress_10tk_net": 175296
+  },
+  "hashes": {
+    "bbo_v1.py": "36dee22cdb001f0a36f6f7de112e97d3590f0be8eb9b6338d8d33383bb65dc6d",
+    "fill_contract.py": "5025e9c4602e6f1b7e13cbaca36ac28b428413554946ce167aa165bbb8c4ebdc",
+    "leak_audit.py": "6366f7f493ecc4b784181f4a9ed7cf9532119332963306d35c3ce3e58260b9c9",
+    "leak_audit2.py": "42bcea8c1d418644892dae423a51c057c1d23e6e8ae2575773beaa7639450f1f",
+    "SPEC.md": "3034c61a7dcb645316d406558829165884486c3655f77103316bedffc9e83438"
+  },
+  "next_stage": "PROSPECTIVE SHADOW - no historical retuning after this freeze",
+  "live_enabled": false
+}
