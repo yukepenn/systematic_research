@@ -62,9 +62,17 @@ for label, d in POPS.items():
     P("-" * 108)
     P(f"--- {label}   n = {len(d):,} trades")
     P("-" * 108)
-    ns = d["session_date"].nunique()
-    tps = d.groupby("session_date").size()
-    P(f"    sessions WITH >=1 P1 trade      {ns:,}")
+    # SESSION_ID, not session_date. NQ sessions run 18:00 -> 17:00 ET, so one TRADING SESSION
+    # spans two CALENDAR dates. Grouping by date splits overnight sessions in two and understates
+    # density: session_date gives 712 "sessions" where session_id gives 638. The book ledger is
+    # keyed by session (1,058 unique) against only 1,056 unique dates, confirming the unit.
+    skey = "session_id" if "session_id" in d.columns else "session_date"
+    ns = d[skey].nunique()
+    tps = d.groupby(skey).size()
+    P(f"    session key used                {skey}")
+    P(f"    sessions WITH >=1 P1 trade      {ns:,}   (of 1,058 in-window trading sessions)")
+    P(f"    sessions COMPLETELY FLAT        {1058-ns:,} = {(1058-ns)/1058:.1%}")
+    P(f"    trades per CALENDAR session     {len(d)/1058:.3f}")
     P(f"    trades per ACTIVE session       mean {tps.mean():.3f}  median {tps.median():.0f}  "
       f"p10 {tps.quantile(.10):.0f}  p90 {tps.quantile(.90):.0f}  max {tps.max()}")
     dist = tps.value_counts().sort_index()
@@ -107,7 +115,7 @@ for label, d in POPS.items():
     P("")
     P("    session-clustered bootstrap on the SAME buckets (5,000 resamples of SESSIONS, seed 7)")
     rng = np.random.default_rng(7)
-    sess = d["session_date"].values
+    sess = d[skey].values
     usess = np.unique(sess)
     idx_by_sess = {s: np.where(sess == s)[0] for s in usess}
     P(f"      {'ordinal':<9}{'mean/trade':>13}{'session-clustered 95% CI':>30}{'  P(mean>0)':>12}")

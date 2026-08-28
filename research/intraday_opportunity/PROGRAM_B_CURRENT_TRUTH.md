@@ -63,29 +63,46 @@ integer-contract mapping is an unmade owner decision.
 
 **Evidence class of A and B: `DISCOVERY_CONSUMED`** (2022-07 → 2026-08, 123 waves).
 
-## 3. ⭐ The incumbent's opportunity density — the number this campaign exists to move
+## 3. The incumbent's opportunity density — CORRECTED 2026-08-28
 
-Populations reconciled in-repo (`src/run_rr_w001.py:236`): **2,401 total / 2,131 session-filter /
-2,139 ts-filter**. They are three filters of one stream, not a contradiction.
+> ### **THIS SECTION'S FIRST VERSION CARRIED TWO POPULATION ERRORS AND IS CORRECTED HERE.**
+> They were caught by the reference-trader forensic pass, on the campaign's own headline quantity.
+>
+> | published (wrong) | correct | the defect |
+> |---|---|---|
+> | 2,401 trades / 1,058 = **2.27**/session | **2,131 / 1,058 = 2.014** | **2,401 is the WHOLE-SUBSTRATE count including the 2022-01 to 06 warm-up.** Dividing a warm-up-inclusive numerator by an in-window denominator inflated density by ~13 % |
+> | flat on **282 sessions (26.7 %)** | **420 = 39.7 %** | **282 is the BOOK-flat count** (neither `P1` *nor* `XM` held). `P1` alone touches **638** sessions; the other 138 are XM-only |
+> | **3.09** per active session | **3.340** | consequence of both |
+>
+> **A third unit error, found in my own code:** active sessions were counted by `session_date`
+> (**712**) rather than `session_id` (**638**). NQ sessions run **18:00 to 17:00 ET**, so one
+> *trading session* spans two *calendar dates*. Confirmed against `WE_W119`'s book ledger:
+> **1,058 unique sessions against only 1,056 unique dates.** `session_id` is the correct unit.
+>
+> **The corrected headline is BLUNTER, not softer.**
 
 | | value | basis |
 |---|---:|---|
-| window | **1,058 sessions · 213 weeks** | 2022-07-01 → 2026-08-01, frozen |
-| `P1/PCT` trades | **2,401** | the stream behind the canonical headline |
-| **trades per CALENDAR session** | **≈ 2.27** | 2,401 / 1,058 |
-| sessions `P1` is **completely flat** | **282 (26.7 %)** | `WE_W119` / `RR_W000` |
-| **trades per ACTIVE session** | **≈ 3.09** | 2,401 / 776 |
-| on **losing** sessions | **3.04** entries | `RR_W000` corrected comparator |
-| on **winning** sessions | **2.42** entries | ⚠️ the corrected figure — W119's quoted 1.377 was *winning + flat* and is wrong |
-| `XM_CONFLICT` trades | **348** (346 sequential) | ≈ **0.33/session**, active ~33 % of sessions |
+| window | **1,058 trading sessions / 213 weeks** | 2022-07-01 to 2026-08-01, frozen |
+| `P1/PCT` in-window trades | **2,131** | `run_rr_w001.py:236` certifies 2,401 total / **2,131 session-filter** / 2,139 ts-filter |
+| **entries per CALENDAR session** | **2.014** | |
+| sessions with at least 1 `P1` trade | **638** | by `session_id` |
+| **sessions `P1` is COMPLETELY FLAT** | **420 = 39.7 %** | **four sessions in ten** |
+| **entries per ACTIVE session** | **3.340** | median **3**, p90 **7**, **max 19** |
+| active-session mix | 1 trade 27.9 % / 2 19.6 % / 3-5 **35.6 %** / 6-10 15.0 % / >10 1.9 % | |
+| on LOSING / WINNING sessions | **3.042 / 2.423** | `RR_W000` corrected comparator |
+| mean / median hold | **86.92 / 24 min** | |
+| direction | **2,131 long / 0 short** | long-only by design |
+| `XM_CONFLICT` | **348** trades = **0.329**/session, ~33 % of sessions | hold 09:46 to 15:45 = 359 min |
+| **book combined** | **(2,131 + 348) / 1,058 = 2.34** entries/session | |
 
-> ### **The incumbent takes roughly 2–3 trades per session and is entirely absent from more than a
-> ### quarter of them.** That is the sparsity the owner is pointing at, stated in measured numbers
-> ### rather than impression.
+> ### **`P1/PCT` takes ~2.0 entries per calendar session and is entirely absent from FOUR IN TEN
+> ### sessions.** That, not a missing re-entry mechanism, is the sparsity.
+> **Measured separately and decisively: its later same-day trades do NOT decay.** See
+> [`OPPORTUNITY_DENSITY_GAP.md`](OPPORTUNITY_DENSITY_GAP.md).
 
-⚠️ **The reference figure quoted in the directive (~8.26 trades/day) is NOT yet verified from any
-artifact.** It is being recovered forensically (§5) and is treated as **UNVERIFIED** until an
-artifact supports it.
+**The ~8.26 trades/day reference figure is now VERIFIED** - as a cell in ONE single-strategy
+BACKTEST grid, and as nothing more. See [`REFERENCE_TRADER_FINGERPRINT.md`](REFERENCE_TRADER_FINGERPRINT.md).
 
 ## 4. Other current-truth items the directive asked to verify
 

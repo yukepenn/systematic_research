@@ -1,0 +1,80 @@
+================================================================================================================
+=== OPPORTUNITY-DENSITY GAP -- reference trader vs P1/PCT.  Decomposition, not a strategy.
+================================================================================================================
+    reference source : OTRIMG-0002 Strategy Analyzer summary, window 2023-01-01 -> 2025-02-02
+    reference class  : BACKTEST, slippage 0, ONE sleeve of several run concurrently,
+                       pixel-read from a screenshot. NOT an account statement.
+    incumbent source : runs/RR_W001_ACTION_VALUE_LEDGER (certified), in-window, 1,058 sessions
+
+--- 1. RAW THROUGHPUT, as each object reports itself
+    quantity                              REFERENCE (backtest)                     P1/PCT (research)
+    trades                                               4,351                                 2,131
+    sessions / days                        526.8 (NT8 implied)              1,058 total / 638 active
+    trades per day/session                                8.26              2.014 cal / 3.340 active
+    net                                            $292,172.82                           $296,910.84
+    NET PER TRADE                                       $67.15                               $139.33
+    net per day/session                                $554.62          $465.38 active / $280.63 cal
+    win rate                                            40.29%          35.0 % (approx, from ledger)
+    mean hold (min)                                      94.15                     86.92 (median 24)
+    direction                     2,166 L / 2,185 S  TWO-SIDED              2,131 L / 0 S  LONG-ONLY
+    max drawdown                                    $32,677.42                            $22,930.67
+    slippage charged                           $0.00  <-- NONE          $14.44/ctrRT modelled spread
+
+    >>> The reference makes $67.15 per trade. P1/PCT makes $139.33.
+    >>> P1/PCT's EDGE PER TRADE IS 2.07x THE REFERENCE'S,
+    >>> and P1/PCT pays a spread the reference's backtest never charged.
+
+--- 2. THE SESSION-LENGTH ARTIFACT  (this is the single biggest term)
+    reference in-market minutes/day = 8.26 trades x 94.15 min = 777.7 min = 13.0 HOURS
+    RTH is only 390 min (6.5 h)  ->  RTH-ONLY IS ARITHMETICALLY IMPOSSIBLE.
+    His panel carried TradingHours = 'Use instrument settings' = the FULL 1380-min 18:00->17:00 ET session, and a measured overnight hold exists
+    (a long 21:39 -> 06:44, +$2,270.82). P1/PCT is FLAT AT EVERY SESSION CLOSE.
+
+    per AVAILABLE market hour                REFERENCE          P1/PCT       ratio
+    trades per hour                              0.359           0.514       1.43x
+    net dollars per hour                         24.11           71.60       2.97x
+
+    >>> PER HOUR OF AVAILABLE MARKET, P1/PCT TRADES MORE OFTEN AND EARNS ~3x MORE.
+    >>> The reference's throughput advantage is very largely A LONGER TRADING DAY.
+
+--- 3. EQUALIZE THE COST MODEL  (charge the reference what P1 pays)
+    reference net as posted                      $    292,172.82
+    less P1's modelled spread 14.44/ctrRT x 4,351   $    -62,828.44
+    less commission top-up (4.36-4.18)/RT      $       -783.18
+    = reference net ON P1'S COST MODEL           $    228,561.20   (-21.8%)
+    reference net per trade, re-costed           $         52.53   vs P1's $139.33
+
+    >>> A HIGH-TURNOVER OBJECT IS FAR MORE EXPOSED TO FRICTION. Charging the reference the
+    >>> same spread P1 pays removes 21.5% of its entire net.
+
+--- 4. PUT BOTH ON WEEKLY DOLLARS AT A COMMON FIXED DRAWDOWN
+                                                      weekly $         maxDD         k    @ fixed DD
+    REFERENCE as posted (backtest, 0 slippage)        2,773.09     32,677.42    0.6195      1,718.04
+    REFERENCE re-costed on P1 cost model              2,169.34     32,677.42    0.6195      1,343.99
+    P1/PCT (research, spread included)                1,393.57     22,930.67    0.8829      1,230.36
+
+    reference / P1 at fixed DD, as posted   1.40x
+    reference / P1 at fixed DD, re-costed   1.09x   <<< THE HONEST NUMBER
+
+    ⚠ THREE REASONS THIS STILL FLATTERS THE REFERENCE:
+      (a) his maxDD is measured over ~2.1 years, P1's over ~4.1 years. Drawdown grows with observation length, so the SHORTER window
+          gets a SMALLER denominator and a LARGER fixed-DD figure. Not corrected here.
+      (b) re-costing keeps his maxDD at the posted value, but paying the spread would have
+          DEEPENED the drawdown, lowering k further.
+      (c) his parameters were re-tuned every 1-3 weeks and the run was made the night before
+          deployment: the grid is IN-SAMPLE TO HIMSELF. P1's window is discovery-consumed too,
+          but P1's figure is at least a walk-forward-refit object.
+
+--- 5. WHERE THE POSTED DOLLAR GAP ACTUALLY COMES FROM
+    posted weekly gap (raw, unnormalized)        $1,379.52/wk
+
+    decomposition, each term evaluated by holding the others fixed:
+      COST MODEL          his backtest charges no spread            $      603.75/wk
+      SESSION LENGTH      23h available vs P1's 6.5h RTH          $    1,989.39/wk
+      EDGE PER TRADE      P1 earns $139.33 vs his $67.15          IN P1 FAVOUR
+      RISK                his maxDD $32,677 vs P1's $22,931     IN P1 FAVOUR
+
+    >>> The two terms that CREATE his advantage are a longer trading day and an uncharged
+    >>> spread. The two terms where P1 is ahead are edge per trade and drawdown.
+
+================================================================================================================

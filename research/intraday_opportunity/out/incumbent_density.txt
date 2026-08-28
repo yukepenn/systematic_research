@@ -8,9 +8,12 @@
 ------------------------------------------------------------------------------------------------------------
 --- FULL LEDGER (2,401 - the canonical headline stream)   n = 2,401 trades
 ------------------------------------------------------------------------------------------------------------
-    sessions WITH >=1 P1 trade      792
-    trades per ACTIVE session       mean 3.032  median 2  p10 1  p90 6  max 19
-    active-session trade-count mix  1:258 (32.6%)  2:166 (21.0%)  3-5:262 (33.1%)  6-10:95 (12.0%)  >10:11 (1.4%)
+    session key used                session_id
+    sessions WITH >=1 P1 trade      714   (of 1,058 in-window trading sessions)
+    sessions COMPLETELY FLAT        344 = 32.5%
+    trades per CALENDAR session     2.269
+    trades per ACTIVE session       mean 3.363  median 3  p10 1  p90 7  max 19
+    active-session trade-count mix  1:198 (27.7%)  2:141 (19.7%)  3-5:249 (34.9%)  6-10:113 (15.8%)  >10:13 (1.8%)
     net total                       $292,556.14
     net per trade                   $121.85
     median hold (min)               23   mean 85.6   p90 250
@@ -26,11 +29,11 @@
 
     session-clustered bootstrap on the SAME buckets (5,000 resamples of SESSIONS, seed 7)
       ordinal     mean/trade      session-clustered 95% CI   P(mean>0)
-      1st             113.72                     [-6, 240]       0.969
-      2nd             116.03                    [-37, 313]       0.921
-      3rd              57.69                    [-67, 197]       0.794
-      4th-5th         157.54                     [26, 305]       0.994
-      6th+            169.39                     [21, 347]       0.988
+      1st             113.72                      [1, 238]       0.977
+      2nd             116.03                    [-32, 315]       0.924
+      3rd              57.69                    [-66, 198]       0.800
+      4th-5th         157.54                     [28, 298]       0.990
+      6th+            169.39                     [21, 345]       0.986
 
     per-ordinal (not bucketed), first 8:
       #1: n714 $114  #2: n516 $116  #3: n375 $58  #4: n257 $245  #5: n163 $20  #6: n126 $450  #7: n85 $146  #8: n53 $135
@@ -50,9 +53,12 @@
 ------------------------------------------------------------------------------------------------------------
 --- in_window_session subset   n = 2,131 trades
 ------------------------------------------------------------------------------------------------------------
-    sessions WITH >=1 P1 trade      712
-    trades per ACTIVE session       mean 2.993  median 2  p10 1  p90 6  max 19
-    active-session trade-count mix  1:233 (32.7%)  2:152 (21.3%)  3-5:234 (32.9%)  6-10:83 (11.7%)  >10:10 (1.4%)
+    session key used                session_id
+    sessions WITH >=1 P1 trade      638   (of 1,058 in-window trading sessions)
+    sessions COMPLETELY FLAT        420 = 39.7%
+    trades per CALENDAR session     2.014
+    trades per ACTIVE session       mean 3.340  median 3  p10 1  p90 7  max 19
+    active-session trade-count mix  1:178 (27.9%)  2:125 (19.6%)  3-5:227 (35.6%)  6-10:96 (15.0%)  >10:12 (1.9%)
     net total                       $296,910.84
     net per trade                   $139.33
     median hold (min)               24   mean 86.9   p90 251
@@ -68,11 +74,11 @@
 
     session-clustered bootstrap on the SAME buckets (5,000 resamples of SESSIONS, seed 7)
       ordinal     mean/trade      session-clustered 95% CI   P(mean>0)
-      1st             146.76                     [21, 280]       0.989
-      2nd             147.22                    [-22, 379]       0.950
-      3rd              66.40                    [-70, 216]       0.807
-      4th-5th         145.60                      [7, 303]       0.980
-      6th+            181.33                     [22, 371]       0.989
+      1st             146.76                     [17, 285]       0.989
+      2nd             147.22                    [-19, 363]       0.953
+      3rd              66.40                    [-73, 218]       0.811
+      4th-5th         145.60                      [9, 300]       0.982
+      6th+            181.33                     [24, 375]       0.989
 
     per-ordinal (not bucketed), first 8:
       #1: n638 $147  #2: n460 $147  #3: n335 $66  #4: n230 $254  #5: n141 $-30  #6: n108 $451  #7: n74 $167  #8: n44 $217
