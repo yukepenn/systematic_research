@@ -1,0 +1,75 @@
+========================================================================================================
+=== TSMOM V2 - SLOW TREND (252d only).  ONE-SHOT VALIDATION.
+=== window 2019-01-01 -> 2022-12-31   holdout >= 2023-01-01 BLOCKED by assertion
+========================================================================================================
+    ⚠️ PROVENANCE, attached to every number below:
+       DEVELOPMENT-DERIVED / SELECTED AFTER INSPECTING FOUR PREDECLARED V1 COMPONENTS /
+       ONE-OF-FOUR DISCOVERY / NOT CLEAN DEVELOPMENT EVIDENCE.
+       This untouched window IS the payment for that selection.
+    ncd_day.py             sha256 17603bdc722d30f386b013d35a33f8b2cb510d8b7ea6fdbc07f0274bf01baec9
+    roll.py                sha256 b88a5176f8ed1dbc3903e300f6238993099046437c4b921293c9ba1d2eda837f
+    build_substrate.py     sha256 be756af2dec76ef80792cd84a6f26602e05043297ceb2a26820c02f68eeb4047
+    economic_returns.parquet sha256 9339386887bb15dbfb3a7cacb203c2db2860c73e91bd326cb95145a45edf1e21
+    THIS FILE              sha256 9da123e6fae7dd367cdbd320ccd0a4b571991a1016de9e9863b7f7099a9db6b8
+
+========================================================================================================
+=== VALIDATION RESULT  2019-01-01 -> 2022-12-31
+========================================================================================================
+    PRIMARY  days 1,033  net $      15,080  Sharpe  0.577  maxDD $     7,726  ES5% $  -1,002  pos days  54.8%  underwater  93.5%
+             gross $      17,829  cost $     2,749  cost drag   15.4% of |gross|
+    STRESS   days 1,033  net $      12,859  Sharpe  0.492  maxDD $     8,094  ES5% $  -1,005  pos days  54.6%  underwater  93.7%
+             gross $      17,829  cost $     4,970  cost drag   27.9% of |gross|
+
+  YEARLY (primary)
+                   sum  size    sharpe
+    y                                 
+    2019  -1264.595968   258 -0.250365
+    2020  12068.489798   259  1.915963
+    2021  -1834.958386   259 -0.242181
+    2022   6111.365492   257  0.880243
+
+  ROOT CONTRIBUTION (top 5 / bottom 5)
+      ZF    $       3,059
+      NG    $       3,047
+      ZT    $       2,893
+      ZL    $       2,091
+      ZN    $       2,000
+      ...
+      6S    $         -93
+      SI    $        -327
+      6C    $        -957
+      ZM    $      -1,925
+      GC    $      -4,009
+
+  SECTOR CONTRIBUTION
+      rates          $       9,148
+      energy         $       4,105
+      equity_index   $       2,768
+      fx             $       2,091
+      ags            $       1,304
+      metals         $      -4,336
+
+  LONG vs SHORT
+      short  $       1,563
+      flat   $         -57
+      long   $      13,574
+
+  CONCENTRATION  top-1 day     8.9%   top-5 days    38.8%   of net
+
+========================================================================================================
+=== PREREGISTERED VALIDATION GATES (fixed in SPEC.md before this ran)
+========================================================================================================
+    gate                                                        observed   verdict
+    --------------------------------------------------------------------------------
+    V2-G1 PRIMARY net > 0                                        $15,080   PASS
+    V2-G2 annualised Sharpe >= 0.30                                0.577   PASS
+    V2-G3 positive in >= 3 of 4 years                             2 of 4   *** FAIL ***
+    V2-G4 STRESS net > 0                                         $12,859   PASS
+    V2-G5 top root <= 50 % of positive net                   13.7 % (ZF)   PASS
+    V2-G6 top sector <= 60 % of positive net              47.1 % (rates)   PASS
+
+    *** BLOCKING GATE FAILED -> STOP TSMOM V2. ***
+    Per the continuation rule: FINAL HOLDOUT REMAINS UNSPENT. Do NOT try 126d, blend,
+    189d, 300d, change rebalance, drop ags, equal-weight sectors, go long-only, add
+    trend strength, carry or breakout. That would convert VALIDATION into DEVELOPMENT.
+    Slow TSMOM is CLOSED / DE-PRIORITISED at this specification family.
