@@ -52,12 +52,12 @@ Last-only dates" in B1 is a dates-vs-sessions unit difference, unresolved, not a
 CARRY & VOLUME validation windows (2019+) never read. **No access-log mechanism exists — "intact"
 means "no violation recorded", not "no read occurred" (J1-P2).**
 
-## 4. Free, reachable, never certified (the acquisition frontier at $0)
+## 4. Free, reachable — certification status ($0)
 
 | source | what | status |
 |---|---|---|
-| Cboe CDN | **VXN (Nasdaq-100-native vol index — zero repo mentions)**, VIX_History 1990→, VIX3M, VVIX, VIX9D, SKEW, OVX, GVZ; CFE VX settlements + volume/OI 2004→ | HTTP-verified metadata; **not downloaded** |
-| CFTC COT | weekly positioning incl. TFF (VIX, indices), history 1986/2006→ | unprobed beyond metadata |
+| Cboe CDN | VXN, VIX 1990→, VIX3M, VVIX, VIX9D, SKEW, OVX, GVZ; **VX per-contract settlements 2004→ (272 contracts)**; CFE volume/OI 2004→ | ✅ **CERTIFIED pre-seal** (`runs/GENESIS_FREEDATA_CBOE_20260828/certified/`, DATA_CONTRACT.md; traps: pre-2007 10× scale flag, no-revision-policy hash baselines, VXN starts 2009-09) |
+| CFTC COT | TFF futures-only, 80 markets; **VIX futures 982 weekly reports 2006→** | ✅ **CERTIFIED pre-seal** (same run; ⚠️ Tuesday as-of knowable only **Friday 15:30 ET** — the causal availability rule for any use) |
 | NT8 connection | deep ^TICK/^TRIN backfill (continuity unproven), `$ADD` (price question) | blocked behind CrossTrade ban until seal guard exists |
 | local unread | MNQ tick 187; ES tick BBO 126; CL/ZB/6J/ZN/MGC/MNQ/MES minute; MBT/MET daily | $0, uncertified |
 

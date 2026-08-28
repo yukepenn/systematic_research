@@ -1,0 +1,31 @@
+====================================================================================================
+POPULATION RECONCILIATION — the four circulating P1/PCT trade counts, each computed
+from code in this process against its NAMED definition (GENESIS G2).
+====================================================================================================
+substrate: 1,620,044 bars, 1,187 sessions loaded 2022-01-01 -> 2026-07-31 17:00;
+in-window [2022-07-01, 2026-08-01) by SESSION-START filter: 1,058 sessions, 213 ISO weeks (session-date convention)
+
+  count  named definition                                                            observed  verdict
+  2,401  ALL gfills trades over the full 2022-01 load INCLUDING Jan-Jun 2022 warm-up (components.csv 'trades')     2,401  MATCH
+  2,139  ENTRY-TIMESTAMP filter: trades with 2022-07-01 <= entry_ts < 2026-08-01 (RR_W001 ts-filter)     2,139  MATCH
+  2,131  SESSION-START filter: trades whose session's first bar is in-window (parity run / CURRENT_BASELINE)     2,131  MATCH
+  2,137  NT8 Strategy Analyzer trades under the ENTRY-TIMESTAMP filter (recorded parity artifact; run_p1pct_parity.py:107)     2,137  MATCH
+
+cross-checks: NT8 raw serialized list (2022-01-03 load, incl. warm-up) = 2,399 rows; recorded Python parity artifact py_trades_p1pct.csv = 2,131 rows (expected 2,131)
+gap arithmetic: 2401-2139 = 262 warm-up-by-timestamp trades; 2139-2131 = 8 trades with entry_ts >= 2022-07-01 inside a session that STARTED before 2022-07-01 (session-start filter excludes them).
+
+FILTER-ASYMMETRY FINDING (programmatic): the recorded parity headline compared the
+Python list under the SESSION-START filter (2,131) against the NT8 list under the
+ENTRY-TIMESTAMP filter (2,137). The NT8 list under the SAME session-start filter is 2,129,
+so 8 of the +6 headline gap is window-filter asymmetry (boundary-session trades, e.g. the 2022-07-01
+day session that started 2022-06-30 18:00), not engine disagreement. Apples-to-apples counts:
+  session-start filter: Python 2,131 vs NT8 2,129 (0.09 %)
+  entry-ts filter:      Python 2,139 vs NT8 2,137 (0.09 %)
+
+XM_CONFLICT population reconciliation (GENESIS G3):
+  vectorised (pandas rolling(60,20).shift(1) sigma; W102c/W103 headline) :  348 trades
+  sequential (causal loop, appended-after-use; reference + certified C#) :  346 trades (176L/170S)
+  sessions where the two disagree: vec-only ['2023-04-10', '2023-05-03'], seq-only []
+  mechanism: pandas rolling std tolerates an interior NaN in the 60-window; the
+  sequential loop disqualifies that session's sigma history entry instead.
+  sessions disqualified by a missing/stale secondary bar: 6

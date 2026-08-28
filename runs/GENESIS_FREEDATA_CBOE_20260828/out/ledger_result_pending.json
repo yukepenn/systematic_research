@@ -1,0 +1,27 @@
+{
+  "trial_id": "G00009",
+  "metrics": {
+    "files_downloaded": 300,
+    "files_unreachable": 0,
+    "total_bytes": 16298607,
+    "certified_frames_seal_asserted": 12,
+    "seal_errors": 0,
+    "postseal_rows_dropped_blind": 463,
+    "vix_span": "1990-01-02..2026-07-31",
+    "vxn_span": "2009-09-14..2026-07-31",
+    "vx_contracts_certified": 272,
+    "vx_rows": 46412,
+    "vx_span": "2004-03-26..2026-07-31",
+    "vx_identity_mismatches": 0,
+    "cfe_voloi_rows": 5624,
+    "cfe_voloi_span": "2004-03-26..2026-07-31",
+    "cot_tff_rows": 19047,
+    "cot_vix_reports": 982,
+    "cot_span": "2006-06-13..2026-07-28",
+    "sanity_corr_vix_vxn_levels": 0.946,
+    "program_gates_passed": 8,
+    "program_gates_total": 9
+  },
+  "result": "PASS",
+  "note": "Certification COMPLETE for the full core set (VIX/VXN + 6 more indices, VX per-contract settlements 2004-2026, CFE vol+OI, COT TFF futures-only) at $0; every certified frame seal-asserted < 2026-08-01, post-seal rows dropped blind. PASS is per the preregistered trial criterion (certification completed for core set). DISCLOSED: the certify.py falsifier table records G6 FAIL, not adjusted — its '>=99% Tuesday as-of' clause observed 98.81%; diagnostic (printed) shows all 14 non-Tuesday as-of dates in 20.1y are CFTC holiday-week shifts (13 Mon, 1 Wed), a vendor convention now in DATA_CONTRACT.md, not a data defect. Key traps documented: archive VX pre-2007-03-26 is 10x scale (measured 10.30->1.01, rows flagged); COT knowable only Friday 15:30 ET (3-day lag); VIX futures absent from COT 59 weeks mostly 2009-2010; free VXN starts 2009-09-14, not 2001."
+}

@@ -1,0 +1,66 @@
+====================================================================================================
+GENESIS_FREEDATA_CBOE_20260828 — certification program output (printed, not hand-assembled)
+====================================================================================================
+[seal_guard selftest] seal_guard selftest: 20/20 PASS (12 guards shown to fire)
+
+-- indices --
+seal_guard.assert_presealed PASS [index VIX] rows=9241 dropped_postseal=19
+  VIX    rows=  9241 span=1990-01-02..2026-07-31 dup=0 wkday_gaps=303 cols=['date', 'open', 'high', 'low', 'close']
+seal_guard.assert_presealed PASS [index VIX3M] rows=4242 dropped_postseal=20
+  VIX3M  rows=  4242 span=2009-09-18..2026-07-31 dup=0 wkday_gaps=159 cols=['date', 'open', 'high', 'low', 'close']
+seal_guard.assert_presealed PASS [index VIX9D] rows=3916 dropped_postseal=20
+  VIX9D  rows=  3916 span=2011-01-04..2026-07-31 dup=0 wkday_gaps=148 cols=['date', 'open', 'high', 'low', 'close']
+seal_guard.assert_presealed PASS [index VXN] rows=4248 dropped_postseal=20
+  VXN    rows=  4248 span=2009-09-14..2026-07-31 dup=0 wkday_gaps=157 cols=['date', 'open', 'high', 'low', 'close']
+seal_guard.assert_presealed PASS [index VVIX] rows=5073 dropped_postseal=20
+  VVIX   rows=  5073 span=2006-03-06..2026-07-31 dup=0 wkday_gaps=252 cols=['date', 'vvix']
+seal_guard.assert_presealed PASS [index SKEW] rows=9196 dropped_postseal=19
+  SKEW   rows=  9196 span=1990-01-02..2026-07-31 dup=0 wkday_gaps=348 cols=['date', 'skew']
+seal_guard.assert_presealed PASS [index OVX] rows=4240 dropped_postseal=20
+  OVX    rows=  4240 span=2009-09-18..2026-07-31 dup=0 wkday_gaps=161 cols=['date', 'ovx']
+seal_guard.assert_presealed PASS [index GVZ] rows=4240 dropped_postseal=20
+  GVZ    rows=  4240 span=2009-09-18..2026-07-31 dup=0 wkday_gaps=161 cols=['date', 'gvz']
+seal_guard.assert_presealed PASS [indices combined long] rows=44396
+
+-- VX per-contract settlements --
+seal_guard.assert_presealed PASS [VX settlements combined] rows=46412
+  contracts certified=272 empty/all-postseal=1 identity_mismatch=0 rows=46412 span=2004-03-26..2026-07-31
+  10x-rescale evidence: median(front settle / VIX close) pre-2007-03-26 = 10.30, post = 1.01
+
+-- CFE volume + open interest (cfevoloi) --
+seal_guard.assert_presealed PASS [cfevoloi] rows=5624 dropped_postseal=19
+  rows=5624 cols=89 span=2004-03-26..2026-07-31 dup=0 wkday_gaps=207
+
+-- CFTC COT TFF futures-only --
+seal_guard.assert_presealed PASS [COT TFF futures-only (VIX + equity index rows)] rows=19047 dropped_postseal=117
+  rows=19047 markets=80 span=2006-06-13..2026-07-28 %Tue=98.81
+  VIX rows=982 span=2006-08-29..2026-07-28 missing_tuesdays=68
+  VIX market name(s): ['VIX FUTURES - CBOE FUTURES EXCHANGE', 'VIX FUTURES - CBOE FUTURES EXCHANGE ']
+
+-- sanity: corr(VIX, VXN) levels = 0.9460 on 4246 overlapping certified days (2009-09-14..2026-07-31) — sanity only, NOT alpha --
+
+====================================================================================================
+GATE / SPEC / OBSERVED / PASS-FAIL   (printed by certify.py)
+====================================================================================================
+| GATE                               | SPEC                                                       | OBSERVED                                             | VERDICT |
+| G0 core downloads                  | 8/8 indices; cfevoloi; >=150 VX files; 18/18 COT zips      | 8/8; voloi=True; VX files=273; COT=18/18             | PASS |
+| G1 seal assertions                 | assert_presealed passes on EVERY certified frame; selftest PASS | 12 frames asserted, 0 SealError, selftest=PASS, 463 post-seal rows dropped | PASS |
+| G2 VIX coverage                    | first <= 1990-01-31 AND last == 2026-07-31                 | first=1990-01-02 last=2026-07-31                     | PASS |
+| G3 VXN coverage                    | first <= 2010-01-01 AND last == 2026-07-31                 | first=2009-09-14 last=2026-07-31                     | PASS |
+| G4 VX settlements                  | >=150 contracts; 0 identity mismatch; max trade=2026-07-31; min<=2005-06-30 | contracts=272; mismatch=0; span=2004-03-26..2026-07-31; dup=0 | PASS |
+| G5 CFE vol+OI                      | min <= 2004-12-31 AND max in [2026-07-29..2026-07-31]      | span=2004-03-26..2026-07-31                          | PASS |
+| G6 COT TFF                         | >=500 VIX reports; max report == 2026-07-28; >=99% Tuesdays | VIX reports=982; max=2026-07-28; %Tue=98.81          | FAIL |
+| G7 sanity corr(VIX,VXN)            | >= 0.80 (levels, overlapping certified days; sanity only)  | corr=0.9460 on 4246 days                             | PASS |
+| G8 caps                            | total <= 100MB; max file <= 30MB                           | total=16.3MB; max file=3.17MB                        | PASS |
+====================================================================================================
+OVERALL: FAIL (8/9 gates)
+====================================================================================================
+
+====================================================================================================
+POST-GATE DIAGNOSTIC (printed by diagnose_g6.py; does NOT alter any verdict above — G6 remains FAIL as coded)
+====================================================================================================
+distinct certified report dates: 1023; weekday counts: {'Tuesday': 1009, 'Monday': 13, 'Wednesday': 1}
+non-Tuesday as-of dates (ALL, certified pre-seal): ['2006-07-03 (Mon)', '2007-01-03 (Wed)', '2007-12-24 (Mon)', '2007-12-31 (Mon)', '2008-12-22 (Mon)', '2009-11-09 (Mon)', '2012-12-24 (Mon)', '2012-12-31 (Mon)', '2017-07-03 (Mon)', '2018-12-24 (Mon)', '2018-12-31 (Mon)', '2020-12-21 (Mon)', '2023-07-03 (Mon)', '2025-11-10 (Mon)']
+row-level weekday shares: {'Tuesday': 98.81, 'Monday': 1.12, 'Wednesday': 0.07}
+VIX-report missing Tuesdays by year (n=68): {2006: 1, 2007: 2, 2008: 6, 2009: 23, 2010: 28, 2012: 1, 2013: 1, 2017: 1, 2018: 1, 2019: 1, 2020: 1, 2023: 1, 2025: 1}
+of those, 9 have a Monday as-of report in the same week (holiday-shift), 59 truly absent weeks

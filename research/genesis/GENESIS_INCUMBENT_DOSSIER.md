@@ -49,10 +49,17 @@ Uniform fill contract otherwise: decision at bar-close i → fill at bar i+1 ope
 commission $4.36/ctrRT everywhere current; NT8 parity is decisions + commission-only (−1.05% net,
 8 unresolved early-exit residuals, 2022-12→2023-01).
 
-## 4. What reproduction must show (Wave 2 gate)
+## 4. Reproduction result (Wave 2 — `runs/GENESIS_REPRO_INCUMBENT_20260828`, PASS)
 
-R-1: the recorded pipeline re-runs from raw parquets to `components.csv` **byte-concordant** (else
-STOP — no economics interpreted until the discrepancy is understood; do not pick the better P&L).
-R-2: the four population counts reconciled to one definition. R-3: the honest band re-derived from
-artifacts. R-4: trivial baselines (BASELINE 0–6) computed on the same population and cost model so
-the incumbent has, for the first time, a benchmark other than cash.
+**R-1 ✅** pipeline reproduces `components.csv` to machine precision (raw $1,393.573663/wk Δ 0.0;
+fixed-DD $1,230.356720 Δ 0.0; maxDD Δ 3.6e-12; t Δ 8.9e-16) — **headline upgraded RECORDED CLAIM →
+REPRODUCED FACT** (about a backtest; DISCOVERY_CONSUMED unchanged). Caveat: cache-concordance mode
+(`mem_ext.npz` used as recorded, not rebuilt from scratch).
+**R-2 ✅** four populations reconciled programmatically: 2,401 warm-up-inclusive · 2,139 entry-ts ·
+2,131 session-start · 2,137 NT8-parity-under-entry-ts. ⭐ New: the recorded parity "+6" gap was
+**window-filter asymmetry**; true engine disagreement **0.09%** either way.
+**R-3** honest band unchanged: **$900–1,230/wk in-sample post-selection** — reproduction removes
+arithmetic doubt, not selection debt.
+**R-4 ✅** baselines B0–B6 exist (`runs/GENESIS_BASELINES_20260828`): the incumbent dominates every
+trivial rule (t 4.16 vs best 2.19; 3.5× at common DD). Best control is momentum-side ORB (t 2.19) —
+see scoreboard.

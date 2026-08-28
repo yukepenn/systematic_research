@@ -1,0 +1,30 @@
+GENESIS_BASELINES_20260828 — GATE / SPEC / OBSERVED / VERDICT (printed by src/run_baselines.py)
+======================================================================================================================
+GATE                         SPEC                                         OBSERVED                         VERDICT
+----------------------------------------------------------------------------------------------------------------------
+SEAL                         max bar ts < 2026-08-01                      2026-07-31 16:59:00              PASS
+POPULATION                   sessions 2022-01 .. 2026-07-31               2022-01-03..2026-07-31 n=1184    PASS
+COST_MODEL                   $4.36 + $14.44 = $18.80/ctrRT                18.80 $/ctrRT                    PASS
+MULTIPLICITY                 exactly 8 preregistered rows, zero search    8 rows, 0 searched params        PASS
+WEEK_GRID                    ISO week of session date, common grid        239 weeks                        INFO
+----------------------------------------------------------------------------------------------------------------------
+BASELINE OUTCOMES (controls: no promotion gate exists; factual record only; ledger token NULL, B5 DEFECT)
+----------------------------------------------------------------------------------------------------------------------
+baseline                  gross$/wk    net$/wk  wkSharpe       t      maxDD  net@$20,245DD   %pos   worst wk  outcome
+B0_cash                        0.00       0.00        NA      NA       0.00             NA    0.0       0.00  NULL (loses/flat net)
+B1a_always_long_held         718.43     718.35     0.066    1.02  99,555.00         146.08   54.4 -37,555.00  NULL (control; positive net, not promotable)
+B1b_always_long_RTH          175.48      85.96     0.010    0.15  92,540.80          18.81   51.5 -23,279.00  NULL (control; positive net, not promotable)
+B2_tsmom_63                  140.08     136.31     0.013    0.19 125,418.60          22.00   53.6 -43,022.60  NULL (control; positive net, not promotable)
+B3_orb_0930_1000           1,131.84   1,042.72     0.142    2.19  60,782.20         347.30   60.3 -36,829.00  NULL (control; positive net, not promotable)
+B4_meanrev_lag1            1,025.52     978.33     0.081    1.26  78,523.00         252.23   51.9 -35,443.80  NULL (control; positive net, not promotable)
+B5_incumbent_P1_PCT              NA   1,393.57        NA    4.16  22,930.67       1,230.36   56.3  -9,221.12  DEFECT (no weekly series in artifacts)
+B6_invvol_B1a_B2             544.82     542.89     0.066    1.02  68,828.50         159.68   53.1 -31,205.00  NULL (control; positive net, not promotable)
+----------------------------------------------------------------------------------------------------------------------
+Conventions: B1a one RT total split across window edges ($9.40 first wk / $9.40 last wk), weekly mark-to-market;
+  B2/B4 one RT only when the daily position changes sign (reversal charged as ONE RT per stated convention);
+  B1b/B3 one RT per session traded; 09:31-stamped bar's OPEN is the 09:30:00 TRUE RTH open (END-stamped bars);
+  B3 stop-entry fill at max/min(OR level, bar open), both-side breakout bar = no trade; untraded weeks = $0 on the
+  common ISO-week grid; Sharpe/t on weekly nets (weekly aggregation absorbs within-week session clustering).
+B1b sessions traded=1138, skipped=46; B2 RTs=48; B4 RTs=600; B3 long=591, short=542, ambiguous=0, skipped=46
+B5 read-only from WE_W103_CONSOLIDATE/out/components.csv (P1_PCT row); no weekly-series artifact exists there ->
+  gross$/wk and weekly Sharpe NA, ledger DEFECT; its t/maxDD/fixDD/%pos/worst are the artifact's own numbers.
