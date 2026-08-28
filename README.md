@@ -3,7 +3,7 @@
 Autonomous systematic research on NQ / MNQ futures. Backtest and research only.
 **Nothing here is authorized for live trading, and no live order has ever been placed by this repo.**
 
-_Landing page. Current as of **2026-08-27**. It links; it does not duplicate._
+_Landing page. Current as of **2026-08-28**. It links; it does not duplicate._
 
 ---
 
@@ -55,11 +55,21 @@ Exactly what is installed, compiled and reproducible:
 
 ## What is running / blocked right now
 
-- **New alpha discovery is PAUSED** by owner directive (2026-08-27) pending this operational reset.
-- **Next research wave when it resumes: EVENT RESPONSE** — the last cheap untested information
-  surface. Deferred, not cancelled.
+- **`ESNQ_V1` is the ACTIVE research object — PRE-DEVELOPMENT-RESULT.** Cross-market ES↔NQ
+  sub-minute information for 60 s NQ executable return. **No ESNQ alpha evidence exists yet**:
+  the `DEV_44` substrate is built (44 NQ + 44 ES sessions) and the feature runner and result are
+  pending. ⚠️ *(Superseded 2026-08-28: "new alpha discovery is PAUSED / next wave is EVENT
+  RESPONSE" was the 2026-08-27 state. **`EVENT RESPONSE` is `CLOSED-BY-DATA`**, not deferred —
+  `runs/DATAGATE_EVENTRESPONSE_20260827/`.)*
+- **Blind populations, stated precisely.** ESNQ original blind manifest **15**, `OUTCOME_CONSUMED
+  0`, `PRICE_DERIVED_INFORMATION_READ 0`, but **one session (`2025-08-13`) was transiently
+  materialized and metadata-exposed** during a recorded exporter incident, so the **EFFECTIVE ESNQ
+  blind population is 14** after an operational quarantine. The NQ BBO 19-session asset is **19
+  outcome-unconsumed · 18 pristine-never-materialized · 1 metadata-exposed**.
+- **`MS-BBO` VOID · `CARRY_V1` CLOSED · `TSMOM` CLOSED.** The campaign has **no candidate**.
 - **DOM / Level-II / Market Replay capture is PAUSED** (owner risk-control, 2026-08-12) and must
   not be resumed autonomously.
+- **LIVE ENABLED: NO.**
 - Open owner decisions: **[`OWNER_QUEUE.md`](research/operational/OWNER_QUEUE.md)**.
 
 ## Tier 1 — read only if the task needs it
