@@ -16,7 +16,8 @@
 | **A2** | **acquire the VIX/VX term structure already sitting in NT8** (VX/VXM daily + 1-min, multiple contract months) + free Cboe files (`VIX_History` 1990→, `VIX3M` 2009→, CFE volume + **OI** 2004→) | the canonical **liquidity-stress / vol-regime conditioner**, covering **all 23 hours**, **never named in any repo data document** |
 | **A3** | **backfill `$TICK` to ~2013** on the existing connection | **~9–13 extra years** — converts internals from `REGIME-LOCAL` to multi-era. ⚠️ carries a permanent **35.7 % RTH coverage ceiling** on P1 |
 | **A4** | **register MNQ tick** (187 dates, **128 pre-burn, never read**) | a **separate order book**, retail-weighted. Invisible only because `build_registry.py:197-206` hard-codes `symbol="NQ"` — **a bug, not an absence** |
-| **A5** | extract the **141** remaining NQ Last-usable tick sessions; audit the **nine** unextracted 1-min futures stores (CL/ZB/6J/ZN/MGC are new sectors) | the largest untested intraday surface named anywhere |
+| **A5** | audit the **nine** unextracted 1-min futures stores (CL/ZB/6J/ZN/MGC are new sectors) | the largest untested intraday surface named anywhere |
+| ⛔ | ~~extract the 141 remaining NQ Last-usable tick sessions~~ | **REMOVED. Those 141 ARE the protected Last-only blind pool** (`fd7b05f`). Extraction **materializes a protected asset** — the exact act behind the `ESNQ` blind-export incident. **Free in dollars, not in governance** |
 
 ⚠️ **Every one of A2–A5 still requires the full ladder before any alpha**: semantics certified →
 causality with teeth → mechanism stated without outcome → one frozen primary → independent
