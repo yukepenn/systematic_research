@@ -1,0 +1,68 @@
+[
+  {
+    "asset": "NQ BBO price-side",
+    "pre_seal_usable": 116,
+    "outcome_consumed": 97,
+    "genuinely_unread": 19,
+    "blind_pool_possible": "YES - 19 frozen",
+    "family_consumed": "MS-BBO-V1 (void), MS01, MS01A, AUCTION01-04, FLOW01, U9/U9B",
+    "export_cost": "already exported for 97; 19 need extraction (~40 MB/session)",
+    "decisions_per_session": 331,
+    "exec_realism": "direct bid/ask crossing, measured"
+  },
+  {
+    "asset": "ES BBO price-side",
+    "pre_seal_usable": 64,
+    "outcome_consumed": 0,
+    "genuinely_unread": 64,
+    "blind_pool_possible": "YES - the whole asset is unread",
+    "family_consumed": "NONE",
+    "export_cost": "~64 sessions x ~40 MB = ~2.5 GB",
+    "decisions_per_session": 331,
+    "exec_realism": "same contract as NQ; ES tick 0.25, $50/pt, tighter spread in ticks"
+  },
+  {
+    "asset": "ES+NQ overlap",
+    "pre_seal_usable": 59,
+    "outcome_consumed": 44,
+    "genuinely_unread": 15,
+    "blind_pool_possible": "PARTIAL - 15 sessions have BOTH sides unread",
+    "family_consumed": "NQ side only, via the NQ lane",
+    "export_cost": "both instruments; ~2x the per-session cost",
+    "decisions_per_session": 331,
+    "exec_realism": "NQ execution; ES informational"
+  },
+  {
+    "asset": "NQ Last-only blind pool",
+    "pre_seal_usable": 141,
+    "outcome_consumed": 0,
+    "genuinely_unread": 141,
+    "blind_pool_possible": "IS one",
+    "family_consumed": "MS-LAST-V1 scope only",
+    "export_cost": "extraction needed",
+    "decisions_per_session": 331,
+    "exec_realism": "NO QUOTES - cannot price a bid/ask crossing"
+  },
+  {
+    "asset": "Multi-market daily",
+    "pre_seal_usable": 2315,
+    "outcome_consumed": 2315,
+    "genuinely_unread": 0,
+    "blind_pool_possible": "NO - every window has been read by trend or curve",
+    "family_consumed": "TSMOM V1/V2/TAIL-H1, CARRY_V1",
+    "export_cost": "zero - already local",
+    "decisions_per_session": 1,
+    "exec_realism": "daily close/open, costed"
+  },
+  {
+    "asset": "NT8 minute store",
+    "pre_seal_usable": 261,
+    "outcome_consumed": 261,
+    "genuinely_unread": 0,
+    "blind_pool_possible": "NO",
+    "family_consumed": "weekly_edge (123 waves), XM_CONFLICT, W122",
+    "export_cost": "zero",
+    "decisions_per_session": 1,
+    "exec_realism": "1-min bars; already parity-certified for P1/XM"
+  }
+]

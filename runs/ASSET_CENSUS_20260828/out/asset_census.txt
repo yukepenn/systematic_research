@@ -1,0 +1,65 @@
+====================================================================================================================
+=== UNCONSUMED INFORMATION ASSET CENSUS -- option value, not feature discovery
+=== No price read. No hypothesis proposed. No model fitted.
+====================================================================================================================
+
+=== ASSET 1  NQ BBO (price-side quotes)
+    RTH-complete pre-seal              116
+    outcome-consumed                    97   (materialized into a substrate a forward-return run globs)
+    GENUINELY UNREAD (frozen pool)      19   sha256 84a8575a...0931
+    post-seal, metadata only             7   COUNTED, NOT READ
+
+=== ASSET 2  ES BBO (price-side quotes)   <-- the finding of this census
+    RTH-complete pre-seal               64
+    span                             2025-08-13 -> 2026-07-15
+    contracts                        ['ES 03-26', 'ES 06-26', 'ES 09-25', 'ES 09-26', 'ES 12-25']
+    OUTCOME-CONSUMED                     0   *** ZERO ***
+    only code that has ever touched it: esnq00_census.py (metadata only: file names and hour labels; NO prices)
+    post-seal, metadata only             0   COUNTED, NOT READ
+
+=== ASSET 3  ES-NQ OVERLAP (both RTH-complete, same session)
+    overlapping sessions                59   2025-08-13 -> 2026-07-15
+    of which NQ side outcome-consumed   44
+    of which NQ side in the blind 19    15
+    of which NQ side NEITHER             0
+
+=== ASSET 4  NQ Last-only BLIND HISTORICAL CONFIRMATION POOL
+    sessions                           141   2025-08-12 -> 2026-05-08
+    status                           UNSPENT, frozen at fd7b05f
+    quote classes                    {'NONE': 101, 'PARTIAL': 40}
+    governance: only a GENUINELY DIFFERENT mechanism, frozen WITHOUT reading the pool.
+    MS-LAST-V1 closed ONE feature family / 60 s / Ridge-GBM budget / policy / cost model.
+
+=== ASSET 5  MULTI-MARKET DAILY (true unmerged contracts)
+    instrument dirs                   2315   roots 38
+    in the declared universe            25
+    extra roots on disk                 13   {'MGC': 52, 'MNQ': 30, '10YR': 8, '2YR': 7, 'ZS': 5, 'MBT': 2, 'MCL': 2, 'MET': 2, 'MHG': 2, 'M6B': 1, 'MES': 1, 'MYM': 1, 'QM': 1}
+    extra roots that are MICROS of an existing root (zero new information): ['M6B', 'MBT', 'MCL', 'MES', 'MET', 'MGC', 'MHG', 'MNQ', 'MYM', 'QM']
+    extra NON-micro roots            {'10YR': 8, '2YR': 7, 'ZS': 5}
+    of those with >= 10 contracts    []
+    >>> NO genuinely new root with usable depth. The 'add more roots' option for curve
+    >>> work is CLOSED-BY-DATA, not merely unattempted.
+
+    OUTCOME-CONSUMED: daily returns 2009-2018 (TSMOM dev, CARRY dev), 2019-2022 (TSMOM V2
+    validation), 2023-2026 (TSMOM TAIL-H1). FAMILY-CONSUMED: trend, curve slope.
+    NOT computed as a signal on this substrate: contract VOLUME (present in every .ncd
+    record, used only as the roll criterion), and open-interest proxies. That is a
+    DIFFERENT information surface on OUTCOME-CONSUMED dates -- usable, but it inherits
+    family-selection debt and CANNOT claim an unread window.
+
+=== ASSET 6  NT8 MINUTE STORE
+    instrument dirs 261   roots {'NQ': 87, 'CL': 56, 'ES': 20, 'MNQ': 19, 'RTY': 19, 'YM': 19, 'ZB': 15, '10YR': 8, '2YR': 7, 'MGC': 4, '6J': 3, 'ZN': 3, 'MES': 1}
+    total size 0.111 GB
+    NQ 1-minute is the weekly_edge substrate and is DEEPLY outcome-consumed (123 waves).
+    ES/RTY/YM 1-minute underpins XM_CONFLICT. W122 closed 1-minute ES->NQ as a family.
+
+====================================================================================================================
+=== SUMMARY -- assets ranked by GENUINELY UNREAD outcome rows
+====================================================================================================================
+    asset                          usable  consumed   UNREAD   blind pool possible?
+    NQ Last-only blind pool           141         0      141   IS one
+    ES BBO price-side                  64         0       64   YES - the whole asset is unread
+    NQ BBO price-side                 116        97       19   YES - 19 frozen
+    ES+NQ overlap                      59        44       15   PARTIAL - 15 sessions have BOTH sides unread
+    Multi-market daily               2315      2315        0   NO - every window has been read by trend or curve
+    NT8 minute store                  261       261        0   NO
