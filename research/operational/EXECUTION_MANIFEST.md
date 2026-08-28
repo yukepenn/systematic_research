@@ -109,7 +109,7 @@ Baseline B is the **inverse-volatility** research weighting. The certified execu
 
 > ### **Running both legs at their default quantity 1 is NOT an implementation of B and does NOT
 > ### reproduce B's economics.**
-> B's **$2,012/wk at fixed $20,245 DD** — ⚠️ **$2,012 is arithmetically CONSISTENT but IN-SAMPLE** — its inverse-vol weights are a **single full-sample standard deviation** applied to the very weeks that produced it (`run_we_w103.py:235`), and `P1+XM` was a **best-of-six** pick whose preregistered primary (`P1+PAIR+XM`) came second. **Not a cost defect; a selection and in-sample-weighting caution.** `runs/PORTFOLIO_B_RECONCILIATION_20260827/` pending — is a *research* figure computed under **inverse-vol weights**
+> B's **$2,012/wk at fixed $20,245 DD** — ✅ **RECONCILED 2026-08-27** — legacy B reproduces to **0.000000** on all five published figures. The two cautions are now SIZED: **in-sample weighting costs $28.30/wk (1.4 %)**, but **best-of-six selection costs $245.71/wk (13.9 %)** — P1+XM $2,011.70 vs the preregistered primary P1+PAIR+XM $1,765.99, and that is the OBSERVABLE part only. ⚠️ **A selection-adjusted, causally-weighted B sits nearer $1,750–1,800/wk than $2,012** · `runs/PORTFOLIO_B_RECONCILIATION_20260827/` — is a *research* figure computed under **inverse-vol weights**
 > and the **research cost model** (commission **plus** modelled spread). A 1 + 1 contract book is a
 > different allocation under a different cost model, and quoting B's number for it would be wrong in
 > both directions at once.
