@@ -1,0 +1,42 @@
+run_id: GENESIS_H2_CALENDAR_20260828
+campaign: GENESIS
+type: SIGNAL_DIAGNOSTIC   # atlas H2; one wave, ALL day-types preregistered together
+question: >
+  Which preregistered calendar/flow day-types carry conditional NQ session-return differences,
+  under family-wise multiplicity control? (Day-of-week included to test its untested "closure".)
+day_types_frozen_family:
+  TOM: last trading day of month + first 3 of next (McConnell-Xu window) — expected +
+  FOMC_CYCLE: weeks 0/2/4/6 in Cieslak cycle time from each FOMC meeting start — expected +
+  FOMC_DAY: scheduled FOMC decision day — expected + (Savor-Wilson class)
+  CPI_DAY / NFP_DAY: scheduled release days — expected +
+  OPEX_WEEK: the Mon-Fri week containing the third Friday — expected +
+  DOW: Mon/Tue/Wed/Thu/Fri dummies — two-sided, expected NULL (external evidence: dead)
+data:
+  - NQ session close-to-close returns 2006 -> 2026-07-31 (same substrate/splice rules as H1 spec)
+  - CPI/NFP days: repo announcement calendar (2022+) + committed BLS 2005-2021 calendar (locate
+    via git history commit 3de524d evidence); union, dedup
+  - FOMC meeting dates 2006-2026: fetch from federalreserve.gov public pages (bounded, < 5 MB
+    total); record URL + sha256; dates-only artifact committed in out/
+  - all loads through seal_guard
+method: >
+  One session-level regression frame: return_s on the dummy family (single frame, no per-dummy
+  refitting). Statistic per day-type: mean(in) - mean(out) with session-clustered t.
+gates_all_coded_and_printed:
+  G1_family_null: shared circular-shift null (>= 500 whole-session shifts of the RETURN series
+    against the FIXED calendar; ONE shared draw per shift across all day-types — dependence
+    preserved). A day-type PASSES only if its |t| exceeds the FAMILY-WISE 95th percentile
+    (max-|t|-across-family distribution of the null — White reality-check logic).
+  G2_era_stability: any G1 survivor must keep its sign in both 2006-2015 and 2016-2026-07.
+  G3_dow_verdict: DOW rows are reported against the same family bar; the preregistered
+    expectation is NULL — a DOW pass would be surprising and gets flagged for skeptical review,
+    not celebrated.
+  verdict_rule: survivors -> candidate CONDITIONERS (not strategies); zero survivors -> family
+    closed at this formulation with the MDE stated.
+prohibitions: no policy, no P&L, no subsetting after results, no interaction terms (this wave),
+  no surprise magnitudes (owner closure respected - day TYPE only), no sealed reads.
+outputs: out/gate_table.txt (printed), out/calendar_artifacts/ (date lists + hashes),
+  out/family_null_distribution.csv, out/ledger_result_pending.json
+power_note: ~5,100 sessions; TOM ~ 940 in-window sessions, FOMC_DAY ~ 160, CPI/NFP ~ 240 each;
+  per-type MDE printed by the program before the verdict.
+live_enabled: NO
+spend: $0
