@@ -1,0 +1,75 @@
+================================================================================================================
+=== ESNQ_V1 PRE-RESULT AUDIT.  NO FEATURE, LABEL, FIT, OOF OR P&L EXISTS YET.
+================================================================================================================
+
+=== s3 LEVEL A -- MANIFEST DISJOINTNESS (manifests re-loaded from disk)
+    DEV_44 n=44   BLIND_15 n=15   intersection=0
+    DEV_44   sha256(normalized) cb6d2ecaa13cf447a61d5750f0a177418bd015c6a8bee097a8c50acaa63a59cd
+    BLIND_15 sha256(normalized) f4a8090e16f09f67e25be91f728e2eb27c5b980e27c39e9197cd6134154e3c8a
+    >>> LEVEL A PASS
+
+=== s3 LEVEL B -- EXPORT SOURCE: only allow-listed dates could be written
+    allow-list n=44   equals DEV_44? True
+    allow-list n blind entries: 0
+    sessions the exporter REFUSED to write: 28
+    of which BLIND: 15 of 15
+    >>> LEVEL B PASS - every blind session NT8 delivered was refused
+
+=== s3 LEVEL C -- SUBSTRATE: what actually exists on disk
+    NQ: 44 parquet sessions   in DEV_44 44   in BLIND_15 0
+    ES: 44 parquet sessions   in DEV_44 44   in BLIND_15 0
+    residual raw CSV: NQ 0  ES 0  (deleted after verified conversion, per the resource-safety rule)
+    >>> LEVEL C PASS
+
+=== s1 BLIND MATERIALIZATION INCIDENT -- price-derived leakage scan
+    artifacts scanned: 118
+
+    STRUCTURED DATA FIELDS (a leak would live here) -- these FAIL the audit:
+      count: 0
+
+    PROSE MENTIONS (.md/.cs/.py/.txt) -- reported for MANUAL ADJUDICATION, each one below:
+      review: research\data_esnq\ninjascript\SWScalpTickExportAllow_v1.cs:15
+              matched token(s): ['the open of session 2025-08-14)']
+      review: runs\ESNQ_V1_20260828\INCIDENT_BLIND_EXPORT_20260828.md:20
+              matched token(s): ['from = 2025-08-13T22:00:00Z  =  2025-08-13 18:00 ET   (the OPEN of session 2025-08-14)']
+      review: runs\ESNQ_V1_20260828\exporter\SWScalpTickExportAllow_v1.cs:15
+              matched token(s): ['the open of session 2025-08-14)']
+      review: runs\ESNQ_V1_20260828\src\preresult_audit.py:222
+              matched token(s): ['P("      names 2025-08-13. VERDICT: NOT a price-derived blind statistic.")']
+      count: 4
+
+    ADJUDICATION of the prose mentions (hand-checked, recorded, not silently dropped):
+      Both are the sentence "the OPEN of session 2025-08-14" - the exporter comment and
+      the incident report, describing WHEN the requested range started. 'open' is an OHLC
+      column name, which is why the pattern fired. It is a session-open TIME, carries no
+      price, and 2025-08-14 is a DEVELOPMENT session; the line matches only because it also
+      names 2025-08-13. VERDICT: NOT a price-derived blind statistic.
+    >>> PASS - no blind price, return, extremum, vol, label, P&L or feature exists in any structured field
+
+    PERMITTED metadata that DOES reference blind dates (by design):
+      - _skipped_sessions.txt  : allow/deny logging, session identity only
+      - BBO_BLIND_POOL_MANIFEST.csv : the frozen pool identity + hour-label coverage
+      - ESNQ_BLIND_15.csv      : session identity + contract identity
+    CLASSIFICATION: BLIND MATERIALIZATION INCIDENT -- NO RESEARCH OUTCOME CONSUMPTION.
+    A blind-data security boundary FAILED. The pool is NOT outcome-consumed.
+
+=== s2 EXPORTER FROZEN AS RESEARCH EVIDENCE
+    NT8 source   C:\Users\Yuke Zhang\Documents\NinjaTrader 8\bin\Custom\Strategies\SWScalpTickExportAllow_v1.cs
+      sha256     683945fce6317718a9d5171ff751871804c448cae99672286661eb02b42890c9
+    repo snapshot D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\ESNQ_V1_20260828\exporter\SWScalpTickExportAllow_v1.cs
+      sha256     683945fce6317718a9d5171ff751871804c448cae99672286661eb02b42890c9
+    >>> byte-identical: True  PASS
+    evidence written: exporter/EXPORTER_EVIDENCE.json
+
+=== s5 CONTRACT ALIGNMENT -- reproduced FROM THE EXPORTED SUBSTRATE
+    sessions                     44
+    both instruments present     44 / 44
+    same expiry cycle            44 / 44
+    intraday contract change     0
+    distinct cycles used         ['03-26', '06-26', '09-25', '09-26', '12-25']
+    >>> PASS - all 44 rows aligned, reproduced from the substrate
+
+================================================================================================================
+=== PRE-RESULT AUDIT: ALL CHECKS PASS
+=== NO ALPHA RESULT EXISTS. Features, labels, Ridge and OOF remain UNBUILT.
+================================================================================================================

@@ -19,6 +19,22 @@ DECLARED NOW, before any ESNQ number exists:
                      after seeing ESNQ results, and not replaced by an ESNQ-derived sd.
     MIN POWER        0.80 to reject a collapse to zero, at one-sided alpha = 0.05.
     If power < 0.80 the verdict is DEVELOPMENT-SUPPORTED / BLIND-UNDERPOWERED / BLIND UNSPENT.
+
+AMENDMENT A2 s6 -- WINNER'S CURSE. Added BEFORE any ESNQ development number exists.
+
+    Authorization may NOT use the raw development point estimate mu_hat_dev. A development mean is
+    itself noisy, and a noisy estimate that happened to land high would manufacture its own
+    authorization -- the pool would be spent precisely when the estimate was luckiest. Use instead
+    the CONSERVATIVE CLAIM, a one-sided 90 % lower confidence bound on the development mean:
+
+        mu_claim = max(0, mu_hat_dev - 1.2815515655 * SE_dev)          SE_dev SESSION-CLUSTERED
+
+    Blind spend requires ALL SEVEN of:
+        1 every development gate passes          5 PRIMARY economics survive stress
+        2 the ES-pairing mechanism null passes   6 mu_claim > 0
+        3 causality gates pass                   7 power at true mean = mu_claim  >=  0.80
+        4 independent streaming parity passes
+    This lower-bound rule may NOT be weakened after seeing development results.
 """
 from __future__ import annotations
 
@@ -29,6 +45,7 @@ SIGMA_PROXY = 5250.81          # frozen consumed-session sd, declared in Amendme
 N_BLIND = 15
 ALPHA_1SIDED = 0.05
 MIN_POWER_VS_ZERO = 0.80
+Z_90_ONE_SIDED = 1.2815515655          # A2 s6: one-sided 90 % lower bound
 INCUMBENT_PER_SESSION = 246.0  # weak materiality yardstick: P1/PCT ~$1,230/wk over 5 sessions
 Z_ALPHA = 1.6448536269514722   # Phi^-1(0.95)
 
@@ -62,6 +79,36 @@ def power_vs_collapse(mu_dev: float, mu_true: float = 0.0, sigma: float = SIGMA_
     if mu_dev <= mu_true:
         return 0.0
     return _phi((mu_dev - mu_true) / se_blind(sigma, n) - Z_ALPHA)
+
+
+def mu_claim(mu_hat_dev: float, se_dev: float) -> float:
+    """A2 s6. The CONSERVATIVE claim the blind pool must be powered against.
+
+    se_dev MUST be the session-clustered standard error of the development mean -- never a
+    decision-level SE over ~331 x 44 rows, which would understate it by an order of magnitude and
+    make every claim look authorizable.
+    """
+    return max(0.0, mu_hat_dev - Z_90_ONE_SIDED * se_dev)
+
+
+def authorize(mu_hat_dev: float, se_dev: float, *, gates_pass: bool, mechanism_null_pass: bool,
+              causality_pass: bool, parity_pass: bool, stress_pass: bool) -> dict:
+    """The full seven-condition gate. Returns the decision and every input to it."""
+    mc = mu_claim(mu_hat_dev, se_dev)
+    pw = power_vs_zero(mc)
+    conds = {"1_development_gates": bool(gates_pass),
+             "2_es_pairing_mechanism_null": bool(mechanism_null_pass),
+             "3_causality": bool(causality_pass),
+             "4_independent_parity": bool(parity_pass),
+             "5_stress_economics": bool(stress_pass),
+             "6_mu_claim_positive": bool(mc > 0),
+             "7_blind_power_ge_80pct": bool(pw >= MIN_POWER_VS_ZERO)}
+    ok = all(conds.values())
+    return {"mu_hat_dev": mu_hat_dev, "se_dev_session_clustered": se_dev,
+            "mu_claim_90pct_lcb": mc, "power_at_mu_claim": pw,
+            "conditions": conds, "decision": "AUTHORIZED" if ok else "WITHHELD",
+            "status": ("BLIND SPEND AUTHORIZED" if ok else
+                       "DEVELOPMENT-SUPPORTED / BLIND-UNDERPOWERED / BLIND UNSPENT")}
 
 
 def expected_information_gain(mu_dev: float) -> dict:
@@ -105,6 +152,27 @@ def table():
     print(f"    >>> That is {thr / INCUMBENT_PER_SESSION:.1f}x the incumbent per-session yardstick.")
     print("    >>> A development effect below it leaves the pool UNSPENT and routes the object to")
     print("    >>> prospective accumulation instead. This is declared BEFORE mu_dev is measured.")
+    print("")
+    print("=" * 96)
+    print("=== A2 s6 WINNER'S-CURSE HARDENING -- authorization uses mu_claim, NOT mu_hat_dev")
+    print("=" * 96)
+    print("    mu_claim = max(0, mu_hat_dev - 1.2815515655 * SE_dev)   SE_dev SESSION-CLUSTERED")
+    print(f"    development n = 44, so SE_dev = sigma/sqrt(44) = ${SIGMA_PROXY/44**0.5:,.2f} if the")
+    print("    development sd matches the proxy (the actual SE will come from the 44 sessions).")
+    print("")
+    print(f"    {'mu_hat_dev':>12} {'SE_dev':>10} {'mu_claim':>12} {'power@claim':>12}  {'AUTHORIZE?':>12}")
+    se_d = SIGMA_PROXY / 44 ** 0.5
+    for mh in (1000, 2000, 3371, 4000, 5000, 6000, 8000, 10000):
+        mc = mu_claim(float(mh), se_d)
+        print(f"    {mh:>12,} {se_d:>10,.0f} {mc:>12,.0f} {power_vs_zero(mc):>12.3f}  "
+              f"{'YES' if power_vs_zero(mc) >= MIN_POWER_VS_ZERO else 'NO - UNSPENT':>12}")
+    lo = 3371 + Z_90_ONE_SIDED * se_d
+    print("")
+    print(f"    >>> WITH THE CONSERVATIVE CLAIM, mu_hat_dev must reach ~${lo:,.0f}/session")
+    print(f"    >>> (vs ${3371:,.0f} using the raw point estimate) - about "
+          f"{lo/246:.0f}x the incumbent yardstick.")
+    print("    >>> Stated plainly: BLIND UNSPENT is now the overwhelmingly likely outcome, and")
+    print("    >>> that is the intended behaviour. The pool is protected from a lucky estimate.")
 
 
 if __name__ == "__main__":

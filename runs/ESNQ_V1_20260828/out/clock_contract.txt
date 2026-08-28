@@ -1,0 +1,69 @@
+====================================================================================================================
+=== ESNQ_CLOCK_CONTRACT_V1 -- BLOCKING.  TIMING ONLY: no price, no return, no direction.
+====================================================================================================================
+    development sessions 44   blind contamination check PASS
+
+=== A. WHAT THE TIMESTAMP REPRESENTS
+    Both streams come from ONE path: NT8 local db/tick -> SWScalpTickExportAllow_v1 via
+    RunStrategyBacktest, writing Times[b][0] for the Last/Bid/Ask 1-tick series.
+    NT8 exposes these as EXCHANGE-SESSION (ET) timestamps of the historical store record.
+    Whether the stored value is exchange event time or provider receipt time is NOT
+    certified by the platform and this run does NOT invent an answer.
+    >>> A. SEMANTICS: UNKNOWN (declared, not assumed)
+
+=== B. ARE ES AND NQ GENERATED IDENTICALLY?
+    provider / historical API path     IDENTICAL - NT8 db/tick, same install
+    storage format                     IDENTICAL - .ncd, same reader
+    export code path                   IDENTICAL - one class, one invocation contract
+    timezone conversion                IDENTICAL - same NT8 session template application
+    timestamp precision                measured below, per instrument
+    session-label rule                 IDENTICAL - sess = (t + 6h).Date, one code path
+    download mechanism                 IDENTICAL - GetBars/backtest cache
+    >>> B. The two streams share every stage EXCEPT the instrument itself. That removes
+    >>> the most common source of a systematic offset, and does NOT prove there is none.
+
+=== C/D. PER-SESSION CLOCK TABLE (44 sessions x 2 instruments)
+    ... 10/44 sessions
+    ... 20/44 sessions
+    ... 30/44 sessions
+    ... 40/44 sessions
+
+=== C. TIMEZONE / SESSION ALIGNMENT
+    sessions in EDT 28   in EST 16
+    NQ covers the full 10:00-15:30 window: 44/44
+    ES covers the full 10:00-15:30 window: 44/44
+    first RTH event == 10:00:00 boundary respected on both: True
+
+=== D. PATHOLOGY (no alpha question asked)
+    NQ: monotonicity violations total 0   granularity min 0.026 ms   dup-ts frac median 0.8203
+        bid   RTH events median  2,995,520   max intra-RTH gap    2.58 s
+        ask   RTH events median  3,029,634   max intra-RTH gap    2.51 s
+        last  RTH events median    275,101   max intra-RTH gap    8.19 s
+    ES: monotonicity violations total 0   granularity min 0.016 ms   dup-ts frac median 0.8526
+        bid   RTH events median  2,369,817   max intra-RTH gap    5.03 s
+        ask   RTH events median  2,383,624   max intra-RTH gap    4.53 s
+        last  RTH events median    609,000   max intra-RTH gap   10.83 s
+
+    ES vs NQ RTH event ratio: median 0.881  min 0.659  max 1.241
+    >>> Event-count differences are NOT the question. A systematic TIMESTAMP OFFSET is.
+
+=== E. TIMING-ONLY POSITIVE CONTROL  (injected shift = +250 ms, declared in advance)
+    UNTOUCHED streams  : detected NQ->ES lag  median +0 ms   mean +0.0   p10 +0   p90 +0
+    ES SHIFTED +250 ms : detected lag        median +200 ms
+    DETECTED CHANGE    : median +200 ms   (expected +250 ms; bin size 100 ms)
+    >>> POSITIVE CONTROL PASS - the diagnostic detects a known offset
+    peak correlation median 0.826 (intensity co-movement, not price correlation)
+
+====================================================================================================================
+=== VERDICT
+====================================================================================================================
+    sessions whose detected offset is within +/- 50 ms of zero: 100.0 %
+    |median offset| 0 ms  vs  bin resolution 100 ms
+
+    >>> CLOCK-COMPATIBLE-BUT-SEMANTICS-UNKNOWN
+    No systematic whole-stream ES/NQ offset is detectable above the 100 ms resolution of
+    a probe PROVEN to detect a 250 ms one. Underlying timestamp SEMANTICS remain
+    UNCERTIFIED by the platform, so:
+      - the independent implementation MUST use the same information contract;
+      - NO lead-lag claim stronger than 100 ms resolution may be made;
+      - a sub-100 ms mechanism claim is OUT OF SCOPE for this object.

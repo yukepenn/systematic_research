@@ -245,3 +245,63 @@ which is **not** this horizon.
 > ### **The 15 blind sessions are NOT read in this wave, whatever the development result.**
 > A reviewer checkpoint sits between `DEVELOPMENT RESULT` and `IRREVERSIBLE BLIND SPEND`. This is
 > information-budget discipline, not hesitation.
+
+---
+
+# AMENDMENT **A2** — pre-P&L final hardening. Committed **before any feature, label, fit or P&L**.
+
+Extends A1. Nothing in A1 is weakened. **No ESNQ alpha result exists**, so these are pre-result
+safeguards, not post-hoc tuning.
+
+| § | addition | status |
+|---|---|---|
+| **A2-1** | blind incident classified; **price-derived leakage scan across every artifact** | **0 structured leaks** |
+| **A2-2** | exporter frozen as research evidence, hashed like strategy source | byte-identical |
+| **A2-3** | blind guard proven at **three independent levels**, manifests re-loaded per level | **A/B/C all PASS** |
+| **A2-4** | `ESNQ_CLOCK_CONTRACT_V1` executed with a **timing-only positive control** | **CLOCK-COMPATIBLE-BUT-SEMANTICS-UNKNOWN** |
+| **A2-5** | contract alignment reproduced **from the exported substrate** | 44/44 |
+| **A2-6** | blind spend hardened against **winner's curse** — `mu_claim`, not `mu_hat_dev` | threshold rises to **~$4,385/session** |
+| **A2-7** | inference is **session-clustered**; 331×44 rows may never be an inferential N | binding |
+| **A2-8** | `PIPELINE_FREEZE.json` — every hash that exists, runner hash **PENDING** | frozen |
+| **A2-9** | **blind is NOT run in this wave**, whatever development shows | binding |
+
+## A2-6 — the winner's-curse rule, stated so it cannot be softened later
+
+```
+mu_claim = max(0, mu_hat_dev - 1.2815515655 * SE_dev)      SE_dev SESSION-CLUSTERED
+```
+
+A development mean is itself noisy. Authorizing on the raw point estimate would spend the pool
+**precisely when the estimate was luckiest**. Blind spend now requires **all seven**: development
+gates · ES-pairing mechanism null · causality · independent parity · stress economics ·
+`mu_claim > 0` · **power at `mu_claim` ≥ 0.80**.
+
+| `mu_hat_dev` | `SE_dev` | `mu_claim` | power | authorize? |
+|---:|---:|---:|---:|---|
+| 3,371 | 792 | 2,357 | 0.537 | **NO — UNSPENT** |
+| 4,000 | 792 | 2,986 | 0.711 | **NO — UNSPENT** |
+| 5,000 | 792 | 3,986 | 0.902 | YES |
+
+> **`mu_hat_dev` must now reach ≈ $4,385/session — about 18× the incumbent yardstick.** Stated
+> plainly: **`BLIND UNSPENT` is the overwhelmingly likely outcome, and that is the intended
+> behaviour.** The rule may not be weakened after seeing development results.
+
+## A2-4 — clock contract verdict, and what it licenses
+
+**`CLOCK-COMPATIBLE-BUT-SEMANTICS-UNKNOWN`.** Therefore, binding on everything downstream:
+
+- the independent implementation **must** use the same information contract;
+- **no lead-lag claim finer than 100 ms** may be made — that is the probe's resolution;
+- a **sub-100 ms mechanism claim is OUT OF SCOPE** for this object;
+- timestamp semantics are recorded as **UNKNOWN**, not invented.
+
+## A2-8 — what is frozen, and the one thing that is not
+
+`PIPELINE_FREEZE.json`, sha256 **`ec7d5682…66c7`**: both specs · all four manifests · the exporter ·
+**88 per-file substrate hashes** · the clock verdict · alignment · audit · the blind-spend module ·
+the declared feature names, target, model, folds, execution, costs, threshold, nulls, seed and
+software versions.
+
+> ⚠️ **`feature_source_sha256` is `PENDING`. The runner does not exist and was deliberately not
+> written in this wave.** It must be committed, with its hash added to the freeze, **before any
+> development result is generated.**
