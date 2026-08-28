@@ -1,0 +1,14 @@
+test_timegrid -- pinning the int32 time-overflow class
+  numpy 1.26.4   platform default int dtype: int32
+        native           dtype int32    range [-2.115098s, +2.064771s]  positive: 15/30
+        emulated int32   dtype int64    range [-2.115098s, +2.064771s]  positive: 15/30
+        safe             dtype int64    exactly 30 offsets, [-30.000000s, -1.000000s], 0 positive
+  PASS  THE REGRESSION: bbo_v1.py:119 int32 overflow
+  PASS  safe_scale upcasts and detects real overflow
+  PASS  lookback rejects reversed/zero/negative intent
+  PASS  horizon offsets are strictly future
+  PASS  session grid is int64, uniform, 331 decisions
+  PASS  row-by-row causality assertion has teeth
+  PASS  the guard rejects the REAL historical offsets
+
+  ALL PASS

@@ -1,0 +1,122 @@
+============================================================================================================
+=== DEFECT-CLASS AUDIT over 802 python files   (numpy 1.26.4, default int dtype int32)
+============================================================================================================
+
+=== 0A  INTEGER OVERFLOW IN TIME ARITHMETIC
+    numpy array constructor multiplied by a >=1e3 time scale
+    *** OVERFLOWS ***  research_sdk/test_timegrid.py:37
+        np.arange(-30, 0) * NS_PER_S
+        scale=1,000,000,000  explicit dtype=False  dtype=int32 OVERFLOWS HERE
+    *** OVERFLOWS ***  runs/MSBBO_DEPLOYMENT_FREEZE_20260828/src/void_audit.py:163
+        np.arange(-30, 0) * NS
+        scale=1,000,000,000  explicit dtype=False  dtype=int32 OVERFLOWS HERE
+    *** OVERFLOWS ***  runs/MSBBO_DEPLOYMENT_FREEZE_20260828/src/void_audit.py:112
+        np.arange(-30, 0) * NS
+        scale=1,000,000,000  explicit dtype=False  dtype=int32 OVERFLOWS HERE
+    *** OVERFLOWS ***  runs/MSBBO_V1_20260828/src/bbo_v1.py:119
+        np.arange(-30, 0) * NS
+        scale=1,000,000,000  explicit dtype=False  dtype=int32 OVERFLOWS HERE
+    ok                 research_sdk/test_timegrid.py:54
+        np.arange(-30, 0, dtype=np.int64) * NS_PER_S
+        scale=1,000,000,000  explicit dtype=True  dtype=int64 ok here
+    ok                 research_sdk/test_timegrid.py:107
+        np.arange(10, dtype=np.int64) * NS_PER_S
+        scale=1,000,000,000  explicit dtype=True  dtype=int64 ok here
+    ok                 runs/MSBBO_DEPLOYMENT_FREEZE_20260828/src/void_audit.py:164
+        np.arange(-30, 0, dtype=np.int64) * NS
+        scale=1,000,000,000  explicit dtype=True  dtype=int64 ok here
+    ok                 runs/MSBBO_DEPLOYMENT_FREEZE_20260828/src/void_audit.py:112
+        np.arange(-30, 0, dtype=np.int64) * NS
+        scale=1,000,000,000  explicit dtype=True  dtype=int64 ok here
+
+    >>> SITES 8   ACTUALLY OVERFLOWING ON THIS INTERPRETER: 4
+
+=== 0C  datetime64 vs Timestamp KEY MISMATCH RISK
+    files that both .unique() and .groupby() the same column
+    *** AT RISK ***    research/scalping_lab/src/python/w8_bmom.py
+        columns: date   DATE-LIKE: date
+    *** AT RISK ***    runs/SMV2AK_VOLUME_BARS/src/step1_volume_bars.py
+        columns: sess_date   DATE-LIKE: sess_date
+    not date-like      research/multi_market/src/roll.py
+        columns: contract_id
+    not date-like      research/multi_market/src/tsmom_v1.py
+        columns: root
+    not date-like      research/scalping_lab/src/python/w6_t2_ceiling_es.py
+        columns: session
+    not date-like      research/scalping_lab/src/python/w7_c5b_ceiling.py
+        columns: session
+    not date-like      research/scalping_lab/src/python/w8_roleb.py
+        columns: sess
+    guarded            research_sdk/keysafe.py
+        columns: date   DATE-LIKE: date
+    not date-like      runs/AUCTION01_VALUE_STATE/src/03_diagnostics.py
+        columns: sess_tag
+    not date-like      runs/AUCTION02_ACTION_RELEVANCE/src/01_build_action_substrate.py
+        columns: sess_tag
+    not date-like      runs/AUCTION02_ACTION_RELEVANCE/src/03_step2_redundancy_check.py
+        columns: sess_tag
+    not date-like      runs/AUCTION03_MECHANISM_DECOMPOSITION/src/05_stress_M2M3__far_tercile_reversion_toward_runni.py
+        columns: contract_bucket,sess_tag
+    not date-like      runs/AUCTION03_MECHANISM_DECOMPOSITION/src/05_stress_M5___value_dist_ticks__conditioned_deter.py
+        columns: sess_tag
+    not date-like      runs/AUCTION04_CLEAN_CAUSAL_SUBSTRATE/src/04_m2m3_clean.py
+        columns: sess_tag
+    not date-like      runs/AUCTION04_CLEAN_CAUSAL_SUBSTRATE/src/05_m5_clean.py
+        columns: sess_tag
+    guarded            runs/CARRY00_CURVE_DATA_CAPABILITY_20260828/src/carry00.py
+        columns: date   DATE-LIKE: date
+    guarded            runs/CARRY_V1_20260828/src/carry_v1.py
+        columns: date,week   DATE-LIKE: date,week
+    not date-like      runs/ENGINE3_SLATE5_CROSSMARKET/src/run.py
+        columns: sess_id
+    not date-like      runs/R2B_PULLBACK_RECLAIM/src/03_validation_battery.py
+        columns: year
+    not date-like      runs/R2_ENTRY_TIMING/src/r2v1_chronology_bootstrap.py
+        columns: year
+    not date-like      runs/SKEW01_RETURN_SKEWNESS/src/04_outcome_a_entry_value.py
+        columns: block_id_B
+    not date-like      runs/SMV2AB_ENGINE3_S4/smv2ab.py
+        columns: sess_id
+    not date-like      runs/SMV2P_ENGINE3_S2/verify_invariants.py
+        columns: sd
+    not date-like      runs/TSMOM_TAIL_H1_20260828/src/tail_h1.py
+        columns: root
+    not date-like      runs/TSMOM_V2_SLOWTREND_20260827/src/tsmom_v2.py
+        columns: root
+    not date-like      runs/U8B_ORGANIZATION_TRANSITION/src/02_build_productB_block_table.py
+        columns: block_id_B
+    not date-like      runs/U8_PATH_ORGANIZATION/src/04_outcome_a_entry_value.py
+        columns: block_id_B
+    not date-like      runs/W5_PROTECTED_CONFIRMATION/results/src/02_diagnostics_confirmation.py
+        columns: sess_tag
+    not date-like      runs/W5_PROTECTED_CONFIRMATION/results/src/03_build_action_substrate_confirmation.py
+        columns: sess_tag
+    not date-like      runs/W5_PROTECTED_CONFIRMATION/results/src/05_step2_redundancy_confirmation.py
+        columns: sess_tag
+
+    >>> SITES 30   AT RISK (date-like column AND unguarded): 2
+    Non-date-like columns are NOT this class: numpy.int64 and str hash equal to their
+    Python counterparts, so a groupby key matches. Only np.datetime64 vs pd.Timestamp
+    fails to hash equal, which is what silently emptied CARRY00's first run.
+
+=== 0D  IMPORT-TIME DESTRUCTIVE FILE HANDLES
+    module-level open(..., 'w'/'a') -- truncates evidence on mere import
+    *** IMPORTED ELSEWHERE  research/original_trader_reconstruction/vwap_flux_family/src/run_vf1.py:213  mode='w'
+    *** IMPORTED ELSEWHERE  research/original_trader_reconstruction/vwap_flux_family/src/run_vf1.py:214  mode='w'
+    *** IMPORTED ELSEWHERE  research/original_trader_reconstruction/vwap_flux_family/src/run_vf4.py:185  mode='w'
+    *** IMPORTED ELSEWHERE  research/original_trader_reconstruction/vwap_flux_family/src/run_vf4.py:186  mode='w'
+    *** IMPORTED ELSEWHERE  runs/MSBBO_V1_20260828/src/bbo_v1.py:45  mode='w'
+    *** IMPORTED ELSEWHERE  runs/R1_ADAPTIVE_EXIT/src/construct.py:257  mode='w'
+    *** IMPORTED ELSEWHERE  runs/W18R2_M5_XINST/src/run_m5.py:137  mode='w'
+    *** IMPORTED ELSEWHERE  runs/W18R2_M5_XINST/src/run_m5.py:198  mode='w'
+    *** IMPORTED ELSEWHERE  runs/W18R2_M5_XINST/src/run_m5.py:233  mode='w'
+    *** IMPORTED ELSEWHERE  runs/W18R2_M5_XINST/src/run_m5.py:253  mode='w'
+
+    >>> module-level write sites 374   OF WHICH IMPORTED ELSEWHERE: 10
+    A flat script whose module-level write IS its purpose is not a hazard. The hazard
+    is a module another module imports, which truncates evidence on import -- which is
+    exactly how void_audit.txt was zeroed after a successful run.
+
+============================================================================================================
+=== BLAST RADIUS: 0A actually-overflowing 4 · 0C at-risk 2 · 0D imported-and-destructive 10
+============================================================================================================
