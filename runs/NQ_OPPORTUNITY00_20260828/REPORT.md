@@ -1,5 +1,24 @@
 # `NQ_OPPORTUNITY00` — RESULT
 
+> ## ⚠️ **SCOPE CORRECTION, added 2026-08-28 (Program C §3). THE TEXT BELOW IS UNCHANGED.**
+> §4 of this report says **"`OPPORTUNITY00` found no third family."** That wording is **too
+> strong** and is corrected here rather than edited away.
+>
+> ### **What was established:** *no third **admissible** state family was identified **within the
+> ### currently owned and examined information surface**, under this run's **preregistered** rules.*
+>
+> **What was NOT established, and must never be quoted from this report:**
+> ⛔ that no other transformation of market history can ever work · ⛔ that no unknown causal state
+> exists · ⛔ that flat sessions are unpredictable · ⛔ that price-derived information is universally
+> exhausted · ⛔ that opportunity-density research is permanently closed.
+>
+> **The defensible consequence is narrower and is the one that binds:** *continuing to modify the
+> same incumbent state machine is no longer a high-EVI research direction.* The two disqualified
+> families were disqualified **by governance** (forbidden threshold mining; a 5×-falsified object),
+> **not by a proof of non-existence** — and the search space examined was **the incumbent's own
+> arming structure**, not the space of all observables.
+>
+
 Executes `SPEC.md`, committed at `f62575f` **before this measurement existed**.
 **No candidate P&L, no model, no rule ranked by subsequent return was computed.**
 
