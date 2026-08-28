@@ -1,4 +1,70 @@
-# MS-LAST — the certified trade-flow family carries no 60-second information, and the blind pool is unspent
+# MS-LAST-V1 — no candidate; closed at its own scope, and the blind pool is unspent
+
+> ## ⚠️ ADJUDICATION CORRECTION — 2026-08-27, same day, owner-identified
+>
+> **Four claims in the first version of this report were wrong or overstated.** The measurements
+> stand; the adjudication around them did not. Repaired in `src/adjudicate.py`
+> (`out/adjudicate.txt`). The original text is preserved below.
+>
+> **1A — "the 60-second NQ move is a MARTINGALE" is RETRACTED.** Establishing `E[r|F_t] = 0`
+> is a statement over **all measurable functions** of the filtration. Zero unconditional drift plus
+> near-zero **lag-1 linear** autocorrelation plus the failure of **one finite feature/model family**
+> cannot deliver it. The supported statement is narrower: *the frozen order-invariant Last-only V1
+> feature/model family found no usable out-of-sample predictive signal at 60 seconds.*
+> Also not claimed: that 60 s returns are unpredictable, that every Last-only feature is null, or
+> that microstructure is null.
+>
+> **1B — the "dependence-preserving null" was not a null.** `discover.py` used
+> `np.roll(v, s).mean()`. **The mean of a vector is invariant to circular permutation**, so all 85
+> "replicates" equal the observed statistic (verified: 1 distinct value, spread `6.8e-13`). The code
+> comment even said `# mean is shift-invariant`. It never reached the printed verdict — only the
+> placebo did — but this report claimed a circular-shift null existed. **Claim withdrawn.**
+> Replaced by a **refitted session-block null**: all 103 non-trivial circular shifts of whole-session
+> outcome blocks against feature sessions, every row preserved, folds rebuilt, **Ridge refit from
+> scratch inside each replicate**. That is a real distribution (103 distinct values, mean
+> −$409.10, sd $251.00) and **the observed −$986.91 sits at its 1.0th percentile.**
+>
+> *Why below the null, stated as mechanism rather than insinuation:* the real features trade
+> **2.37 %** of decisions against the null's **1.26 %** — **1.88× as often**, ≈ +14.8
+> trades/session × $25.07 ≈ **+$372/session of extra friction** against an observed-minus-null
+> gap of $578. **The features carry enough variance to trigger trading and no usable direction.**
+> That is churn, **not an invertible anti-signal** — flipping the sign pays the same friction.
+>
+> **1C — "CI contains zero ⇒ NO INFORMATION" is invalid.** It means *fail to establish
+> information*. An equivalence claim needs a materiality region declared in advance. Declared before
+> recomputation, from the only portfolio yardstick this repo owns (P1/PCT's $1,230/week at fixed
+> $20,245 DD ≈ $246/session): **STRONG $246/session, WEAK $49/session.** The one-sided upper
+> 95 % bound on per-session P&L is **−$568.57**, below both — **so the tested OBJECT is ruled
+> out.** No correlation→dollars mapping is defensible, so **none was invented**, and the
+> information question stays open.
+>
+> **1D — the power denominator was wrong.** MDE $704/session was compared against **always-on
+> friction $39,506/session**, but Ridge trades **2.4 %** of decisions. Correct denominators:
+>
+> | denominator | value | MDE / it |
+> |---|---:|---:|
+> | ~~always-on friction~~ (withdrawn) | $39,506 | 0.02× |
+> | the policy's **own** activity-matched cost | $795 | 0.89× |
+> | predeclared materiality — STRONG | $246 | **2.86×** |
+> | predeclared materiality — WEAK | $49 | **14.37×** |
+>
+> **The MDE is LARGER than the strong materiality threshold**, so this test could not have detected
+> an exactly-material effect *as a difference from zero*. Equivalence holds anyway — but because
+> the point estimate sits far in the wrong direction, not because the test is precise. Both facts
+> belong together, and the old comparison made the test look far better powered than it is.
+>
+> ### Corrected status
+> **`MS-LAST-V1` : FALSIFIED-NULL-CLOSED**, scoped **exactly** to the certified order-invariant
+> feature set + 60-second horizon + frozen Ridge/shallow-GBM attempt budget + this decision policy
+> and this frozen cost schedule. **NOT** closed: Last-only alpha in general, other horizons, other
+> feature classes, non-flow constructions, or the predictability of 60 s NQ returns as such.
+>
+> **The 141-session blind pool remains UNSPENT**, preserved for a genuinely different future
+> mechanism rather than incremental feature mining on this one.
+
+---
+
+# ~~MS-LAST — the certified trade-flow family carries no 60-second information~~ (see correction above)
 
 | | |
 |---|---|

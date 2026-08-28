@@ -1,0 +1,116 @@
+========================================================================================================
+=== MS-LAST BOUNDED ADJUDICATION REPAIR - claim correctness, not rescue
+========================================================================================================
+    decisions 139,371   sessions 104   features 23
+    PREDECLARED materiality:  STRONG $246/session   WEAK $49/session
+
+========================================================================================================
+=== 1B  THE OLD 'NULL' WAS MATHEMATICALLY INCAPABLE OF REJECTING ANYTHING
+========================================================================================================
+    old construction: np.roll(v, s).mean() over 85 shifts
+      distinct values 1   spread $6.821e-13
+      every element = $-986.9139 = the observed statistic itself
+      >>> WITHDRAWN. It is not a null; it is the observation restated.
+
+========================================================================================================
+=== 1B  REPAIR - REFITTED SESSION-BLOCK NULL (exhaustive, deterministic)
+=== Session i's FEATURES are paired with session (i+k)'s OUTCOMES; every row inside a
+=== session is preserved; the expanding-origin mapping is rebuilt; Ridge is REFITTED FROM
+=== SCRATCH inside every replicate; the primary statistic is recomputed end to end.
+=== Costs stay with the DECISION (its hour), not with the donor outcome.
+========================================================================================================
+    observed primary  $-986.91 / session   (86 evaluated sessions)
+    running all 103 non-trivial circular shifts - exhaustive, so no sampling error
+      ... 25/103 refitted nulls
+      ... 50/103 refitted nulls
+      ... 75/103 refitted nulls
+      ... 100/103 refitted nulls
+
+    refitted null:  mean $-409.10   sd $251.00   range [$-1,404, $-3]
+    distinct values 103 of 103  <- a REAL distribution, unlike the withdrawn one
+    observed $-986.91 sits at the 1.0th percentile of it
+    >>> DOES NOT beat the refitted null
+
+    WHY BELOW THE NULL - 'worse than random' needs a mechanism, not an insinuation:
+      trade rate   observed  2.37 %   null mean  1.26 %   null range [0.32 %, 3.65 %]
+      the real features cross the cost threshold 1.88x as often as scrambled ones,
+      i.e. ~+14.8 extra trades/session at ~$25.07 each = ~$+372/session of extra friction,
+      against an observed-minus-null gap of $-578/session.
+      >>> The features carry enough VARIANCE to trigger trading and no usable DIRECTION.
+      >>> That is churn, NOT an invertible anti-signal - flipping the sign would pay the
+      >>> same friction. Do not read the 1st percentile as a hidden edge.
+
+========================================================================================================
+=== 1D  POWER, AGAINST THE DENOMINATORS THAT ACTUALLY APPLY
+========================================================================================================
+    evaluated sessions              86
+    per-session P&L sd              $  2,332.87    SE $251.56
+    MDE (~80 % power, 5 % 2-sided)  $    704.37 / session
+
+    denominator                                                  value    MDE / it
+    ------------------------------------------------------------------------------
+    (WRONG, withdrawn) ALWAYS-ON friction, 100 % activity$    39,506.39        0.02x
+    (A) the POLICY'S OWN activity-matched cost burden   $       795.22        0.89x
+    (B) predeclared materiality - STRONG                $       246.00        2.86x
+    (B) predeclared materiality - WEAK                  $        49.00       14.37x
+
+    the policy trades 31.7 times/session at $25.07 mean cost/trade
+    MDE re-expressed PER TRADE      $     22.21
+
+    >>> HONEST READING: the MDE is LARGER than the strong materiality threshold
+    >>> ($704 vs $246), so this test could NOT have detected an
+    >>> exactly-material effect as a DIFFERENCE FROM ZERO. The old comparison against
+    >>> $39,506 of always-on friction made the test look far better powered than it is.
+
+========================================================================================================
+=== 1C  EQUIVALENCE - declared BEFORE computation, tested on DOLLARS not correlation
+========================================================================================================
+    observed per-session P&L        $   -986.91
+    one-sided upper 95 % bound      $   -568.57
+
+    STRONG   materiality $    246/session   UB $-568.57 < threshold   RULED OUT
+    WEAK     materiality $     49/session   UB $-568.57 < threshold   RULED OUT
+
+    Equivalence holds here NOT because the test is precise - it is not - but because the
+    point estimate sits far in the WRONG direction. Both facts are stated together.
+
+========================================================================================================
+=== 1A  WHAT IS AND IS NOT SUPPORTED
+========================================================================================================
+    SUPPORTED:
+      * the frozen order-invariant Last-only V1 feature/model family found no usable
+        out-of-sample predictive signal at the 60-second horizon;
+      * no unconditional 60 s drift detected  (mean $-0.015, session-clustered t +0.04);
+      * no lag-1 linear serial dependence detected  (mean -0.0065, t -1.03);
+      * Ridge and the single shallow GBM both failed;
+      * the tested trade-flow family produced NO CANDIDATE.
+
+    NOT SUPPORTED - and previously claimed:
+      * 'the 60-second NQ move is a MARTINGALE'   <- RETRACTED. Establishing
+        E[r|F_t] = 0 requires a statement over ALL measurable functions of the filtration.
+        A finite failed family cannot deliver it, and neither can zero drift plus
+        near-zero lag-1 linear autocorrelation.
+      * '60 s returns are unpredictable'          <- not tested
+      * 'every Last-only feature is null'         <- not tested
+      * 'all microstructure is null'              <- not tested
+
+========================================================================================================
+=== FINAL STATUS (1E)
+========================================================================================================
+    MS-LAST-V1 : FALSIFIED-NULL-CLOSED, scoped EXACTLY to
+        certified order-invariant feature set
+      + 60-second horizon
+      + frozen Ridge / shallow-GBM attempt budget
+      + this decision policy and this frozen cost schedule
+
+    Justification: the refitted session-block null is not beaten, AND the one-sided
+    upper 95 % bound ($-568.57/session) rules out even the WEAK materiality
+    threshold ($49/session).
+
+    NOT CLOSED, and must never be written as closed:
+      * Last-only alpha in general
+      * other horizons, other feature classes, non-flow constructions
+      * the predictability of 60 s NQ returns as such
+
+    THE 141-SESSION BLIND POOL REMAINS UNSPENT. It is preserved for a genuinely different
+    future mechanism, not for incremental feature mining on this one.

@@ -80,7 +80,8 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 
 | # | runnable row | why it ranks here |
 |---|---|---|
-| — | ~~LAST-ONLY microstructure at 60 s~~ | ❌ **CLOSED — WELL-POWERED NULL** · out-of-fold `r = −0.0016`, session-clustered CI **[−0.0115, +0.0089]**, `R² = −0.002`; ridge −$987/session at the **22.4th** pctile of an activity-matched placebo; directional accuracy **49.4 %** · **the 60 s NQ move is a martingale** (lag-1 −0.0065, t −1.03; mean move −$0.015, t +0.04) · `runs/MSLAST_CONTRACT_20260827/` |
+| — | ~~**MS-LAST-V1**~~ | ❌ **FALSIFIED-NULL-CLOSED — scoped EXACTLY to the certified order-invariant feature set + 60 s horizon + frozen Ridge/GBM attempt budget + this policy and cost schedule.** Refitted session-block null (103 exhaustive shifts, Ridge refit inside each) not beaten — observed at the **1.0th** pctile; one-sided upper 95 % bound **−$569/session** rules out even the WEAK $49/session materiality threshold, both declared in advance · `runs/MSLAST_CONTRACT_20260827/` |
+| — | **NOT closed by the above** | ⚠️ **Last-only alpha in general; other horizons; other feature classes; non-flow constructions; and the predictability of 60 s NQ returns as such.** The out-of-fold correlation CI **[−0.0115, +0.0089]** is a **FAILURE TO ESTABLISH INFORMATION**, not a demonstration of its absence — no defensible correlation→dollars mapping exists, so no equivalence test on information was invented |
 | **1** | **Multi-market TSMOM V1** | ✅ **RUNNABLE, and deeper than believed — 21 CORE roots from 2009, ~17.6 years, $0.** Chronology **FROZEN** before any P&L exists · `runs/TSMOM_DEPTH_CHRONOLOGY_20260827/` |
 | **2** | **Internals → direct RTH NQ return** | cheap, data already built, and `INT01` closed only the *routing* mapping. **Now the cheapest untested target left** |
 
