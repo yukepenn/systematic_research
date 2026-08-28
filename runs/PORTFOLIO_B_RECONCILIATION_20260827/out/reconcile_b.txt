@@ -1,0 +1,90 @@
+========================================================================================================
+=== PORTFOLIO B - arithmetic truth vs causal portfolio truth
+========================================================================================================
+    canonical ISO-week series, 213 weeks, 2022-W27 -> 2026-W31
+
+=== STEP 1  REPRODUCE LEGACY B (full-sample inverse-vol, applied in-sample)
+    weights  P1 0.473097   XM 0.526903      (published 0.473097 / 0.526903)
+                                reproduced       published        diff
+    weekly mean               1,141.678278    1,141.678278   -0.000000
+    maxDD                    11,489.404203   11,489.404203    0.000000
+    fixed-DD weekly           2,011.703681    2,011.703681    0.000000
+    t                             4.903442        4.903442    0.000000
+    positive weeks %             59.154930       59.154930   -0.000000
+    >>> EXACT REPRODUCTION
+
+=== STEP 2  CAUSAL COUNTERPART - expanding inverse-vol, prior weeks only, 1-week lag
+    warmup 26 weeks, declared before results. NO weight-rule search.
+    causal weeks used 187 of 213   P1 weight: mean 0.4839  range [0.4271, 0.5389]
+
+                                LEGACY (in-sample)     CAUSAL (lagged)    difference
+    --------------------------------------------------------------------------------
+    weekly mean $                         1,174.72            1,170.44         -4.28
+    maxDD $                              11,489.40           11,606.27        116.87
+    FIXED-DD $/week                       2,069.93            2,041.62        -28.30
+    t                                         4.60                4.55         -0.05
+    positive weeks %                         59.89               60.43          0.53
+    CVaR5 $                              -4,906.14           -4,992.86        -86.72
+
+    >>> WEIGHTING OPTIMISM = $28.30/week (1.4 % of the legacy figure)
+    >>> on the SAME weeks, so this isolates the weighting rule and nothing else.
+
+=== STEP 3  SELECTION OPTIMISM - best-of-six, from W103's own table
+    combination                              fixed-DD $/wk
+    --------------------------------------------------------
+    INV-VOL: P1 + XM                              2,011.70  <- SELECTED
+    INV-VOL: P1 + PAIR + XM                       1,765.99  <- PREREGISTERED PRIMARY
+    INV-VOL: all five                             1,640.82
+    INV-VOL: P1 + PAIR                            1,553.91
+    INV-VOL: BMOM + X9a + XM                      1,279.08
+    INV-VOL: PAIR + XM                            1,251.85
+
+    selected (P1+XM)                $2,011.70
+    preregistered primary           $1,765.99
+    >>> SELECTION OPTIMISM (visible) = $245.71/week (13.9 % above the object the spec named)
+    >>> spread across the six inverse-vol combinations: $1,251.85 .. $2,011.70
+    >>> This is the OBSERVABLE part only. The true selection premium is at least this,
+    >>> because the six were themselves chosen from a larger space of possible baskets.
+
+========================================================================================================
+=== STEP 4  INCUMBENT ADJUDICATION - fixed windows, declared in spec_v2.yaml
+=== BURNED evidence. Real, but not confirmation. A 13-week result may not decide anything.
+========================================================================================================
+    object             window    n   $/wk raw  fixDD $/wk    maxDD $   pos %      t
+    -------------------------------------------------------------------------------
+    PCT (P1)         last 13w   13       -333        -523     12,875   30.8%  -0.24
+    PCT (P1)         last 26w   26        561         882     12,875   53.8%   0.59
+    PCT (P1)         last 52w   52      1,264       1,988     12,875   55.8%   1.90
+    PCT (P1)        last 104w  104      1,940       1,713     22,931   56.7%   3.29
+    PCT (P1)             FULL  213      1,394       1,230     22,931   56.3%   4.16
+    -------------------------------------------------------------------------------
+    XM               last 13w   13        574         648     17,936   53.8%   0.31
+    XM               last 26w   26      1,763       1,935     18,445   53.8%   1.42
+    XM               last 52w   52      1,288       1,414     18,445   55.8%   1.58
+    XM              last 104w  104      1,018       1,118     18,445   52.9%   2.10
+    XM                   FULL  213        916         918     20,201   48.8%   3.05
+    -------------------------------------------------------------------------------
+    PCT+XM legacy    last 13w   13        145         256     11,489   30.8%   0.11
+    PCT+XM legacy    last 26w   26      1,194       2,104     11,489   46.2%   1.25
+    PCT+XM legacy    last 52w   52      1,277       2,250     11,489   57.7%   2.15
+    PCT+XM legacy   last 104w  104      1,454       2,563     11,489   59.6%   3.52
+    PCT+XM legacy        FULL  213      1,142       2,012     11,489   59.2%   4.90
+    -------------------------------------------------------------------------------
+    PCT+XM causal    last 13w   13        141         245     11,606   30.8%   0.10
+    PCT+XM causal    last 26w   26      1,204       2,101     11,606   46.2%   1.26
+    PCT+XM causal    last 52w   52      1,269       2,213     11,606   57.7%   2.12
+    PCT+XM causal   last 104w  104      1,448       2,526     11,606   59.6%   3.47
+    PCT+XM causal        FULL  187      1,170       2,042     11,606   60.4%   4.55
+    -------------------------------------------------------------------------------
+
+=== MARGINAL VALUE OF XM  (causal weighting, fixed-DD, same weeks)
+       window    P1 alone   P1+XM causal    marginal     rho   XM | P1<0
+    --------------------------------------------------------------------
+     last 13w        -523            245         768   0.369      -1,243
+     last 26w         882          2,101       1,219   0.464      -1,231
+     last 52w       1,988          2,213         225   0.258        -321
+    last 104w       1,713          2,526         813   0.193         -34
+         FULL       1,279          2,042         763   0.086         598
+
+    NOTE: 'XM | P1<0' is XM's mean in P1's losing weeks, scaled by P1's own k so the
+    figures are comparable across rows. It is a CONDITIONAL MEAN, not a portfolio result.
