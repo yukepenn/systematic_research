@@ -18,22 +18,22 @@
 
 | root | sector | contracts | trend days | **paired days** | **frac** | ≥3 live | gap (mo) | overlap p10/p50/p90 |
 |---|---|---:|---:|---:|---:|---:|---:|---|
-| **ES** | equity_index | 71 | 4,417 | **3,007** | **0.68** | 0.07 | 3 | 47 / 63 / 65 |
-| NQ | equity_index | 71 | 4,466 | 1,708 | 0.38 | 0.05 | 3 | 31 / 63 / 65 |
-| **YM** | equity_index | 71 | 4,383 | **3,121** | **0.71** | 0.07 | 3 | 53 / 63 / 65 |
-| ZT | rates | 71 | 4,455 | 1,863 | 0.42 | 0.02 | 3 | 22 / 33 / 44 |
-| ZF | rates | 71 | 4,460 | 1,890 | 0.42 | 0.02 | 3 | 26 / 34 / 40 |
-| **ZN** | rates | 71 | 4,420 | **2,720** | **0.62** | 0.05 | 3 | 40 / 50 / 58 |
-| **ZB** | rates | 71 | 4,445 | **2,954** | **0.66** | 0.07 | 3 | 41 / 52 / 62 |
-| 6E · 6J · 6B · 6A · 6C · 6S | fx | 71 each | ~4,380 | 1,427–1,701 | **0.33–0.39** | 0.01–0.03 | 3 | 2 / 47–60 / 62–65 |
-| CL | energy | 213 | 4,467 | 1,791 | 0.40 | 0.39 | 1 | 20 / 21 / 23 |
-| **NG** | energy | 213 | 4,465 | **3,987** | **0.89** | 0.86 | 1 | 19 / 21 / 24 |
-| **GC** | metals | 91 | 4,425 | **3,249** | **0.73** | 0.51 | 2 | 33 / 42 / 76 |
-| **SI** | metals | 89 | 4,425 | **3,458** | **0.78** | 0.55 | 2 | 21 / 44 / 63 |
-| **ZC** | ags | 89 | 4,266 | **2,584** | **0.61** | 0.46 | 2 | 1 / 41 / 61 |
-| **ZW** | ags | 89 | 4,264 | **3,160** | **0.74** | 0.45 | 2 | 14 / 42 / 61 |
-| **ZM** | ags | 134 | 4,313 | **3,721** | **0.86** | 0.80 | 1 | 1 / 24 / 58 |
-| **ZL** | ags | 134 | 4,313 | **3,718** | **0.86** | 0.79 | 1 | 1 / 24 / 59 |
+| **ES** | equity_index | 71 | 4,433 | **3,007** | **0.678** | 0.086 | 3 | 9 / 64 / 69 |
+| NQ | equity_index | 71 | 4,466 | 1,708 | 0.382 | 0.048 | 3 | 31 / 63 / 65 |
+| **YM** | equity_index | 71 | 4,383 | **3,121** | **0.712** | 0.068 | 3 | 53 / 63 / 65 |
+| ZT | rates | 71 | 4,455 | 1,863 | 0.418 | 0.019 | 3 | 22 / 33 / 44 |
+| ZF | rates | 71 | 4,460 | 1,890 | 0.424 | 0.015 | 3 | 26 / 34 / 40 |
+| **ZN** | rates | 71 | 4,420 | **2,720** | **0.615** | 0.046 | 3 | 40 / 50 / 58 |
+| **ZB** | rates | 71 | 4,445 | **2,954** | **0.665** | 0.072 | 3 | 41 / 52 / 62 |
+| 6E · 6J · 6B · 6A · 6C · 6S | fx | 71 each | 4,321–4,381 | 1,427–1,701 | **0.326–0.388** | 0.014–0.025 | 3 | 2–6 / 47–60 / 62–65 |
+| CL | energy | 213 | 4,467 | 1,791 | 0.401 | 0.392 | 1 | 20 / 21 / 23 |
+| **NG** | energy | 213 | 4,465 | **3,987** | **0.893** | 0.862 | 1 | 19 / 21 / 24 |
+| **GC** | metals | 91 | 4,425 | **3,249** | **0.734** | 0.513 | 2 | 33 / 42 / 76 |
+| **SI** | metals | 89 | 4,425 | **3,458** | **0.781** | 0.553 | 2 | 21 / 44 / 63 |
+| **ZC** | ags | 89 | 4,266 | **2,584** | **0.606** | 0.458 | 2 | 1 / 41 / 61 |
+| **ZW** | ags | 89 | 4,264 | **3,160** | **0.741** | 0.450 | 2 | 14 / 43 / 61 |
+| **ZM** | ags | 134 | 4,313 | **3,721** | **0.863** | 0.796 | 1 | 1 / 24 / 58 |
+| **ZL** | ags | 134 | 4,313 | **3,718** | **0.862** | 0.793 | 1 | 1 / 24 / 59 |
 | RTY · RB · HO · HG | — | 12–32 | 677–744 | **0** | 0.00 | 0.00 | — | — |
 
 **Zero non-positive closes on any paired day, on any root** — including CL across April 2020, because
@@ -72,9 +72,9 @@ argue into the universe afterwards.
   the quarterly ags, 1 for NG/ZM/ZL. **A raw near-minus-deferred difference is therefore not
   comparable across roots**, which is precisely why the SPEC divides by `month_gap` and then by a
   lagged risk scale.
-- **`≥3 simultaneously live` is rare in financials (1–7 %) and common in commodities (39–86 %).** A
+- **`≥3 simultaneously live` is rare in financials (1.4–8.6 %) and common in commodities (39–86 %).** A
   design needing three points on the curve would be a commodity-only strategy. **CARRY_V1 uses two.**
-- **Overlap p10 is 1–2 days for ZC, ZM, ZL and the FX roots.** Some pairs coexist for barely a day,
+- **Overlap p10 is 1–9 days for ZC, ZM, ZL, ES and most FX roots.** Some pairs coexist for barely a day,
   so a rebalance rule must tolerate a deferred leg appearing and vanishing — another reason for a
   low-turnover weekly schedule rather than daily churn.
 
