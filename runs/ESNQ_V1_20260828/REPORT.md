@@ -5,7 +5,7 @@
 | **verdict** | ⛔ **NO CANDIDATE.** `ESNQ_V1` is **CLOSED** at its exact tested scope |
 | blocking failures | **X1 · X5 · X6 · X7** |
 | headline | net **−$18,113.79** · **−$503.16/session** · 30.6 % positive sessions · OOF corr **+0.0034** |
-| structural gates | **P0-1 PASS · P0-2 PASS** (0 violations) · P0-3 reported below |
+| structural gates | **P0-1 PASS · P0-2 PASS** (0 violations) · **P0-3 PASS on 20/44 sessions, run continuing** |
 | **blind pool** | **UNSPENT.** `mu_claim = $0.00` → power **0.000** → **WITHHELD** |
 | **LIVE ENABLED** | **NO** |
 
@@ -102,6 +102,20 @@ exact. Localized before explaining: the streaming loop **decided before flushing
 same-millisecond bucket**. Fixed to flush-then-decide. On the smoke session: **9 of 11 features
 exactly `0.000e+00`**, rvol at `1.7e−16`/`7.1e−15`, labels and source timestamps exact, `wait_ok`
 331/331. **No statistical test could have found that defect.**
+
+**Full 44-session parity — status at the time of writing: 20 of 44 complete, and continuing.**
+
+| | |
+|---|---:|
+| sessions parity-checked | **20 / 44** |
+| worst **relative** feature difference | **4.29e−15** — float summation order |
+| worst source-timestamp difference | **0 ns — EXACT on every session** |
+| sessions with any timestamp difference | **0** |
+
+⚠️ **Stated plainly: the remaining 24 sessions were still running when this report was written.**
+The run is deterministic and cannot change the verdict — **X1 fails by −$18,113.79**, and P0-3's
+purpose is to stop a *positive* result being called a candidate. A closure does not depend on it.
+The completed 20 sessions show parity at float noise with exact timestamp agreement.
 
 ## E. Development economics — ONE evaluation, frozen object
 
