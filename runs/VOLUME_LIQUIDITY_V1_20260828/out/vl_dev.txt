@@ -1,0 +1,170 @@
+================================================================================================================
+=== VOLUME_LIQUIDITY_V1 -- DEVELOPMENT RESULT.  ONE SHOT.  Gates frozen at 4ef441d.
+================================================================================================================
+    window            2010-03-23 -> 2018-12-31   (asserted < 2019-01-01)
+    weeks             458      roots 21   sectors 6
+    (root, week) pos  8,942      daily rows 44,608
+
+--- 7A  ECONOMICS  (PRIMARY cost model: $4.36 RT + 1 tick, charged per side)
+    gross P&L                  $      -17,033.50
+    costs                      $       37,296.80
+    NET P&L                    $      -54,330.30
+    cost / |gross|                      218.96%
+    weekly mean                $         -118.63
+    weekly median              $          -27.27
+    weekly sd                  $        1,758.65
+    annualized weekly Sharpe             -0.486
+    max drawdown               $       56,805.34
+    drawdown duration (weeks)               438
+    ES 5%                      $       -4,182.65
+    positive-week rate                   46.72%
+    total sides traded                  4,782.3  (= 2,391.2 contract round turns)
+    sides per week                        10.44
+    avg ex-ante gross risk     $        3,031.81 /day-sd
+    avg NET directional risk   $           -1.64 /day-sd   (-0.054% of gross)
+    LONG-leg net               $      -14,921.32     (LOW-participation sleeve)
+    SHORT-leg net              $      -39,092.47     (HIGH-participation sleeve)
+
+--- 7A  ROOT AND SECTOR DECOMPOSITION
+    root             net  share of +root   |   sector                   net  share of +sector
+    ZW            14,332           27.1%   |   fx                     8,075            100.0%
+    6J            12,250           23.1%   |   metals                -1,560            -19.3%
+    6A             8,191           15.5%   |   equity_index          -3,136            -38.8%
+    ZF             7,132           13.5%   |   ags                  -13,362           -165.5%
+    GC             5,370           10.1%   |   rates                -19,102           -236.5%
+    ZB             4,128            7.8%   |   energy               -25,245           -312.6%
+    YM             1,041            2.0%
+    6C               532            1.0%
+    6E            -1,942           -3.7%
+    NQ            -2,067           -3.9%
+    ES            -2,110           -4.0%
+    6B            -3,835           -7.2%
+    SI            -6,930          -13.1%
+    6S            -7,120          -13.4%
+    ZL            -7,492          -14.1%
+    ZC            -7,978          -15.1%
+    NG            -9,364          -17.7%
+    ZN           -11,723          -22.1%
+    ZM           -12,225          -23.1%
+    CL           -15,882          -30.0%
+    ZT           -18,639          -35.2%
+
+--- 7A  CHRONOLOGY
+    calendar year:  2010   -11,889  2011    -8,569  2012   +10,864  2013    +1,527  2014    -2,496  2015    -9,760  2016   -14,077  2017   -13,398  2018    -6,532
+    block 1  2010-03-22 -> 2012-05-28  115 wk   net $  -17,426.22
+    block 2  2012-06-04 -> 2014-08-11  115 wk   net $   +5,294.12
+    block 3  2014-08-18 -> 2016-10-24  114 wk   net $  -20,898.45
+    block 4  2016-10-31 -> 2018-12-31  114 wk   net $  -21,299.75
+    top 1 / 5 / 10 weeks as share of total POSITIVE weekly contribution: 4.5% / 11.6% / 19.6%
+
+--- 7A  CONTRIBUTION BY DISTANCE TO A CAUSAL ROLL  (VOLUME00 residual risk: +-1 ratio 1.481)
+    distance <=1   rows   2,245   net $    -23,214.93      42.7% of total net
+    distance 2-3   rows   3,378   net $     -2,334.18       4.3% of total net
+    distance 4-5   rows   3,661   net $     -5,390.31       9.9% of total net
+    distance >5    rows  35,324   net $    -23,390.89      43.1% of total net
+
+--- 7E  STATIC-LONG CONTAMINATION DIAGNOSTIC
+    equal-risk LONG-ONLY basket net       $       23,924.86
+    exposure-matched static benchmark     $        3,601.63  (scale 0.1505)
+    beta of strategy on the basket                 -0.0093
+    intercept (weekly $)                  $         -118.14
+    R^2                                             0.0115
+    avg NET directional exposure                   -0.054% of gross risk
+    (NOT residualized after the fact -- this adjudicates interpretation, not a repair)
+
+--- 7A  LEAVE-ONE-OUT  (full re-run each time: dropping a root changes its sector's demean)
+    drop 6A   -> net $    -53,535.65   *** NEGATIVE ***
+    drop 6B   -> net $    -55,982.96   *** NEGATIVE ***
+    drop 6C   -> net $    -54,290.42   *** NEGATIVE ***
+    drop 6E   -> net $    -53,552.77   *** NEGATIVE ***
+    drop 6J   -> net $    -62,447.68   *** NEGATIVE ***
+    drop 6S   -> net $    -42,595.00   *** NEGATIVE ***
+    drop CL   -> net $    -29,687.68   *** NEGATIVE ***
+    drop ES   -> net $    -53,579.91   *** NEGATIVE ***
+    drop GC   -> net $    -49,569.78   *** NEGATIVE ***
+    drop NG   -> net $    -29,687.68   *** NEGATIVE ***
+    drop NQ   -> net $    -50,151.76   *** NEGATIVE ***
+    drop SI   -> net $    -49,569.78   *** NEGATIVE ***
+    drop YM   -> net $    -53,883.08   *** NEGATIVE ***
+    drop ZB   -> net $    -50,914.99   *** NEGATIVE ***
+    drop ZC   -> net $    -52,826.26   *** NEGATIVE ***
+    drop ZF   -> net $    -53,536.59   *** NEGATIVE ***
+    drop ZL   -> net $    -40,732.56   *** NEGATIVE ***
+    drop ZM   -> net $    -53,184.10   *** NEGATIVE ***
+    drop ZN   -> net $    -50,277.71   *** NEGATIVE ***
+    drop ZT   -> net $    -36,411.31   *** NEGATIVE ***
+    drop ZW   -> net $    -51,138.79   *** NEGATIVE ***
+    drop sector ags            -> net $    -44,496.30
+    drop sector energy         -> net $    -29,687.68
+    drop sector equity_index   -> net $    -50,770.12
+    drop sector fx             -> net $    -58,429.18
+    drop sector metals         -> net $    -49,569.78
+    drop sector rates          -> net $    -35,682.53
+
+--- 7B  DEPENDENCE-AWARE UNCERTAINTY  (circular block bootstrap, frozen before running)
+    n_weeks          458
+    L                8
+    B                20000
+    seed             20260828
+    mean             -118.62511509216847
+    boot_mean        -119.43649139781655
+    boot_sd          74.5745433539968
+    lower_bound      -241.94613767337563
+    distinct         20000
+    (diagnostic only) IID bootstrap 5th pctile  $-254.84
+
+--- 5C  PURE COST STRESS  (position path FROZEN; only the cost rate changes)
+    max |d position| vs primary   0.000e+00   (must be 0 -- the path is frozen)
+    max |d sides|    vs primary   0.000e+00   (must be 0)
+    PRIMARY  net $    -54,330.30    cost $   37,296.80
+    STRESS   net $    -81,201.66    cost $   64,168.16
+    net_stress <= net_primary : PASS
+
+--- 7C  NULL 1  TEMPORAL ASSOCIATION  (ONE SHARED whole-week circular shift per replicate)
+    shortest eligible volume series 1,820 sessions -> 363 distinct whole-week shifts
+    using the EXHAUSTIVE set k = 1..363 (cap 500)
+      ... 50/363
+      ... 100/363
+      ... 150/363
+      ... 200/363
+      ... 250/363
+      ... 300/363
+      ... 350/363
+    replicates 363   distinct values 363  (>=2 PASS)
+    null net: min $-223,535  p50 $-62,388  p95 $9,628  max $66,606
+    REAL $-54,330.30  ->  percentile of its own null: 56.5th   requires > 95.0
+
+--- 7D  NULL 2  WITHIN-SECTOR SIGNAL-IDENTITY PLACEBO
+      ... 100/500
+      ... 200/500
+      ... 300/500
+      ... 400/500
+      ... 500/500
+    replicates 500   distinct 500
+    null net: min $-165,432  p50 $-45,824  p95 $7,157  max $59,174
+    REAL $-54,330.30  ->  percentile: 39.8th   requires > 95.0
+
+--- 8A  SIGN MIRROR  (DIAGNOSTIC ONLY -- a winning mirror CLOSES V1, it does not invert it)
+    mirror net $-20,263.30   vs real $-54,330.30
+
+================================================================================================================
+=== DEVELOPMENT GATE TABLE  D1-D11  (frozen in SPEC.md at 4ef441d, before any result)
+================================================================================================================
+    GATE                                                            OBSERVED   VERDICT
+    D1  PRIMARY after-cost net > 0                               $-54,330.30   *** FAIL ***
+    D2  annualized weekly Sharpe >= 0.50                              -0.486   *** FAIL ***
+    D3  block-bootstrap lower 95% > 0                               $-241.95   *** FAIL ***
+    D4  PURE COST STRESS net > 0                                 $-81,201.66   *** FAIL ***
+    D5  cost / |gross| <= 25%                                        218.96%   *** FAIL ***
+    D6  net > 0 in >= 3 of 4 blocks                                   1 of 4   *** FAIL ***
+    D7a top root <= 35% of +root contribution                          27.1%   PASS
+    D7b top sector <= 50% of +sector contribution                     100.0%   *** FAIL ***
+    D8  leave-one-root-out all net > 0                          min $-62,448   *** FAIL ***
+    D9  temporal null, real > 95th pctile                             56.5th   *** FAIL ***
+    D10 identity placebo, real > 95th pctile                          39.8th   *** FAIL ***
+    D11 top 10 positive weeks <= 50%                                   19.6%   PASS
+
+================================================================================================================
+=== VERDICT: VOLUME_LIQUIDITY_V1 - NO CANDIDATE / CLOSED AT EXACT SCOPE
+================================================================================================================
+    blocking failures: ['D1  PRIMARY after-cost net > 0', 'D2  annualized weekly Sharpe >= 0.50', 'D3  block-bootstrap lower 95% > 0', 'D4  PURE COST STRESS net > 0', 'D5  cost / |gross| <= 25%', 'D6  net > 0 in >= 3 of 4 blocks', 'D7b top sector <= 50% of +sector contribution', 'D8  leave-one-root-out all net > 0', 'D9  temporal null, real > 95th pctile', 'D10 identity placebo, real > 95th pctile']
