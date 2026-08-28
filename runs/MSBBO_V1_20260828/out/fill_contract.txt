@@ -1,0 +1,33 @@
+====================================================================================================
+=== MS-BBO-V1 - FILL CONTRACT CERTIFICATION.  TIMESTAMPS ONLY: no price, no P&L.
+====================================================================================================
+    candidate sessions 58   (v2 substrate: no truncation, quote-complete)
+    decision grid  10:00:00 -> 15:30:00 ET, every 60s, horizon 60s
+    features < t   |   entry at first DISTINCT quote > t   |   exit > t+h
+    ... 15 sessions
+    ... 30 sessions
+    ... 45 sessions
+
+====================================================================================================
+=== FILL AVAILABILITY  (delay from the instant to the first DISTINCT quote strictly after)
+====================================================================================================
+    sessions certified 58   decisions/session 331   total decisions 19,198
+
+    leg            missing   median ms     p99 ms    worst ms
+    ---------------------------------------------------------
+    entry_bid       0.000%         8.0       94.8       964.0
+    entry_ask       0.000%         8.0      100.8      1352.0
+    exit_bid        0.000%         8.0       94.8       964.0
+    exit_ask        0.000%         8.0       98.0      1352.0
+
+====================================================================================================
+=== FROZEN MAX-FILL-WAIT RULE
+====================================================================================================
+    worst median-p99 across the four legs   100.8 ms
+    >>> MAX FILL WAIT = 1,000 ms, rounded up from that p99 and floored at 1,000 ms.
+    >>> A decision whose entry OR exit quote does not arrive inside the cap is DROPPED,
+    >>> not filled at a stale price. Chosen from the TIMESTAMP distribution only - this
+    >>> script never read a price, so the cap cannot have been tuned on P&L.
+
+    usable decisions after the rule (upper bound) 100.000 %
+    >>> FILL AVAILABILITY IS ADEQUATE
