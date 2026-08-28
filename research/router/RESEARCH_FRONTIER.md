@@ -8,7 +8,8 @@ highest-EVI **runnable** row — not the most interesting one, and not the one a
 `MSLAST_CONTRACT` · `TSMOM_V1/V2` · `ABS_PCT_ADJUDICATION` · `PORTFOLIO_B_RECONCILIATION` ·
 `TSMOM_TAIL_H1` · `MSBBO_V1` (**VOID**) · `MSBBO_DEPLOYMENT_FREEZE` · `CARRY00` · `CARRY_V1` ·
 `ESNQ00` · `ENGINE_HARDENING` · `BBO_COMPLETENESS_RECENSUS_V1` · `ASSET_CENSUS` ·
-`VOLUME00` · `VOLUME_LIQUIDITY_V1`.** Any earlier "as of" wording
+`VOLUME00` · `VOLUME_LIQUIDITY_V1` · **PROGRAM B** (`REFERENCE_TRADER_FINGERPRINT` ·
+`OPPORTUNITY_DENSITY_GAP` · `NQ_OPPORTUNITY00`).** Any earlier "as of" wording
 below this line is historical narrative, not a timestamp.
 
 > **There is exactly ONE current ranking — §"EVI RE-RANK" below.** Every other table in this file is
@@ -103,6 +104,15 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 | **3** | **Remaining unread ES BBO** | **20 sessions genuinely unread and outside any blind manifest** (asset = **79**: 44 consumed by ESNQ + 15 blind + 20 unread, exact). ⚠️ **An ASSET, not a question — and the prior is LOW**: NQ price-side at 60 s returned corr 0.0072, ESNQ cross-market 0.0034. **Do not spend a pristine asset to re-learn a null**, and do not spend one because the shelf is empty |
 | **4** | **NQ BBO 19-session blind asset** | **19 outcome-unconsumed · 18 pristine · 1 metadata-exposed.** Falsifier-grade (MDE $2,996/session at n = 19), **not** a validator. An asset, not a question — **no BBO-class candidate exists** |
 | **5** | **NQ Last-only 141-session blind pool** | **an ASSET, not a question.** No quotes, so the execution contract every microstructure object here uses cannot be priced on it. Spend only behind a genuinely new frozen Last-only mechanism — **none is on the table** |
+
+> ### ⭐ **PROGRAM B'S CLOSURE SHARPENS THE FRONTIER RATHER THAN EXTENDING IT.**
+> `RR_W002A` established that **no tested current information surface separates P1 action quality**.
+> `NQ_OPPORTUNITY00` now says the matching thing about **coverage**: the incumbent is blind on 39.7 %
+> of sessions, those sessions are **full of movement**, and **both ways to un-blind it are already
+> closed**. ⇒ **The bottleneck is INFORMATION — not policy, not clock, not turnover.** The next real
+> gain needs an input this repo does not yet have, not a rearrangement of the ones it does. That is
+> an argument **for** rank 1 (accumulate a new evidence class) and **for** rank 2 (owner-gated
+> acquisition), and **against** re-parameterising anything already owned.
 
 > ### ⚠️ **"NO CURRENT CANDIDATE" IS NOT "NO UNTESTED INFORMATION SURFACE".**
 > An earlier report said *"every reachable materialized surface is closed."* **That was too strong
@@ -426,6 +436,8 @@ decision; slot D is an `EXECUTABLE_COMPONENT_SET` and `EXECUTABLE_PORTFOLIO` rem
 
 | date | change |
 |---|---|
+| 2026-08-28 | ⭐ **PROGRAM B CLOSED ITS FIRST QUESTION, AND THE PREMISE WAS FALSE.** The incumbent does **not** under-re-enter (**3.340 trades/active session**, median 3, p90 7, max 19; its **5th–8th entries are its BEST bucket** at $180.88/trade, session-clustered CI excluding zero; capping at any K<8 loses money) and it does **not** ignore the overnight session (**23 of 24 hours**, **63.3 % of entries outside RTH**). ⚠️ **Two of my own claims were retracted in the process**: "P1 is RTH-only, 6.5 of 23 hours" (false — it propagated into an owner directive before being caught) and three population/unit errors on the campaign's own headline density. `research_sdk/test_session_unit.py` (6/6) now makes the `session_id`-vs-`session_date` class of error mechanical |
+| 2026-08-28 | ❌ **`NQ_OPPORTUNITY00` — LANE A CLOSES AT `A-C2`; LANE B CLOSED BEFORE IT OPENED.** The 39.7 % flat-session hole is **REAL and NOT QUIET**: flat sessions carry **84 %** of active-session range, **92 %** of path length, **90 %** of 40-tick directional changes, and **100 % contain ≥3 ten-point reversals**. `A-C1` passed at **77.9 %** against a 40 % bar. But only **two** state families exist on that population and **both were disqualified in advance**: the **entry threshold** (3.0→1.0 takes flats 420→145 — forbidden threshold mining) and the **mirrored short leg** (armed on **343 of 420**, but falsified five times and listed **DEAD/FALSIFIED**). **No third family exists.** Arming identity `K·g·(1+dL) ≥ 16` re-derived against the frozen `votes()` with **0 disagreements on 1,620,044 bars**; **60.0 %** of flat sessions never see any member set go long. ⚠️ **The reference trader is retired as a benchmark**: per **in-market hour** he earns **$42.79** ($33.47 re-costed) against P1's **$96.18** · `runs/NQ_OPPORTUNITY00_20260828/` |
 | 2026-08-28 | ❌ **`VOLUME_LIQUIDITY_V1` FAILED 10 of 12 DEVELOPMENT GATES → CLOSED**, and the failure is unambiguous: **gross is −$17,033.50 BEFORE any cost**, net −$54,330.30, Sharpe −0.486, drawdown lasting **438 of 458 weeks**, **all 21** leave-one-root-out negative, and the object sits at the **56.5th / 39.8th** percentile of its own two nulls — *it is its own null*. **The mirror also loses**, so there is nothing to invert. Three gates recorded **NON-ADJUDICATIVE on a negative-total object** (the `ESNQ` lesson applied, not re-learned). `VOLUME00`'s declared ±1 roll near-miss (**1.481** vs a 1.5 gate) **materialised** — 5 % of rows carry 42.7 % of the loss — **and an embargo was NOT retro-fitted**. **Frontier rank 1 becomes PROSPECTIVE SHADOW**, promoted not because anything improved but because it is the only lane that manufactures an evidence class this project owns none of |
 | 2026-08-28 | ✅ **`VOLUME00` → `DATA-CAPABLE`, and it answered a question that had only ever been answered for PRICE.** A **known-merged positive control** settles it: the same V2/V3 statistics that pass on `db/day` (**0.0101 %** duplicate share, deferred/front median **0.0011**) **fail completely** on the captured merge-back-adjusted payload (**98.86 %**, median **1.0000**, **96.14 %** of ratios exactly 1.000). **21 roots · 6 sectors · 17 years, nothing excluded.** ⚠️ **The roll entanglement BOUND**: the same-day contract-switch log-volume jump exceeds 1 MAD-unit on **87.2 %** of rolls, so the preregistered rule selected **`ROOT_TOTAL`** volume — a forced pre-expiry roll's downward jump would otherwise have manufactured a long signal out of the calendar |
 | 2026-08-28 | **PHASE 0 engine hardening**: the int32-overflow class exists in **exactly one production site** (`bbo_v1.py:119`, already void); every other occurrence is a deliberate reproduction. `research_sdk/timegrid.py` + `causality.py` + `keysafe.py` + a pinned regression test make it unreachable prospectively. **0C: 30 sites, 2 flagged, 0 confirmed. 0D: 374 module-level writes → 10 imported → 3 confirmed.** |
