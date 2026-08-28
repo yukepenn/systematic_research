@@ -2,9 +2,19 @@
 
 | | |
 |---|---|
-| **status** | **ARCHITECTURE READY. ACCUMULATION STARTS AT A FUTURE TIMESTAMP.** |
-| created | 2026-08-28 |
+| **status** | ⚠️ **DEMOTED 2026-08-28 — the object this was built for is VOID.** See §7 |
+| created | 2026-08-28 · demoted the same day |
 | **LIVE ENABLED** | **NO.** Shadow is evidence accumulation, never authorization to trade |
+
+> ## ⚠️ **`MS-BBO-CANDIDATE-1` IS VOID AND HAS LEFT THE ROSTER.**
+> It read quote state up to **+2.065 s after the decision instant** (`int32` overflow in the feature
+> offsets). The causal object earns **−$1,785.88/session**. It was the *reason* this shadow was
+> ranked the single highest-EVI action — it accrued ~200 decisions/session and had **no other test
+> available to it, ever**. Proof: `runs/MSBBO_DEPLOYMENT_FREEZE_20260828/REPORT.md`.
+>
+> **What remains on the roster accrues at ~1.6 decisions/week.** That is a real but slow question,
+> and it does not justify building streaming shadow infrastructure. **This document is retained as
+> the frozen protocol for the remaining roster, not as an active engineering programme.**
 
 > ### **Every result this campaign owns is discovery-consumed, validation-consumed, one-sided
 > ### blind, or parity-only. The project has ZERO prospective evidence.** That is now its single
@@ -48,7 +58,7 @@ continuously; **reading them for a verdict requires its own preregistration.**
 | **`P1/PCT`** | incumbent, parity-certified | the benchmark. Parity proves implementation fidelity, **not** forward alpha validity |
 | **`XM_CONFLICT_v2`** | incumbent sleeve, parity-certified | its **hedge mechanism has inverted** (ρ 0.086 → 0.369, payoff when P1 loses +$598 → −$1,243). Forward data is the only way to learn whether it still earns its place |
 | **`P1/ABS`** | **challenger/control** | PCT beats ABS on direction overwhelmingly (176/213 weeks, sign test p 7.1e-23) but **not** on paired magnitude (p 0.058). Burned data cannot settle it; running both from a common future timestamp can |
-| **`MS-BBO-CANDIDATE-1`** | **discovery-grade, frozen** | **no clean BBO historical holdout exists or can be built.** Prospective evidence is not the next-best test for this object — it is the **only** test it will ever have |
+| ~~`MS-BBO-CANDIDATE-1`~~ | ⛔ **VOID 2026-08-28** | **REMOVED.** Look-ahead: features read up to +2.065 s past the decision instant. The causal object earns −$1,785.88/session. There is no object left to shadow |
 | ~~TSMOM V2 / TAIL-H1~~ | **CLOSED** | both roles failed on two protected windows. Does **not** join the shadow |
 
 **A new candidate joins only after its definition is frozen**, never before.
@@ -88,8 +98,37 @@ verified, no order is sent.** There is no fallback path to a real account, and n
 
 Declared now so it cannot be invented later:
 
-- **`MS-BBO-CANDIDATE-1`** trades ~200×/session, so it accrues sample fastest. Its first read should
-  be preregistered on a **session count**, not a date, and not before **60 shadow sessions**.
+- ~~**`MS-BBO-CANDIDATE-1`** trades ~200×/session…~~ **VOID. There is no such object.**
 - **`P1/PCT` vs `P1/ABS`** accrues at ~1.6 decisions/week; a paired forward read needs **far** more
-  calendar than the BBO candidate. Do not read it early because it is available.
+  calendar than the BBO candidate would have. Do not read it early because it is available.
 - **No object's shadow may be read to decide whether to keep accumulating.** That is peeking.
+
+## 7. ⚠️ Why this is demoted, and what the honest EVI now is
+
+This document was written when **rank 1** was *"start the prospective shadow"*, and the argument for
+that rank rested entirely on `MS-BBO-CANDIDATE-1`: ~200 decisions/session, and **no other test
+available to it, ever.** Both halves of that argument are gone. The object is void, and the roster
+that remains — `P1/PCT`, `P1/ABS`, `XM_CONFLICT_v2` — consists of **parity-certified NT8 strategies
+generating ~1.6 decisions/week**, for which a paired forward read needs years.
+
+> ### **Infrastructure is not alpha, and infrastructure for a void object is not even
+> ### infrastructure.** The streaming engine, hash-chained ledgers, health monitor and S60/S126/S252
+> ### protocol were all scoped to a candidate that no longer exists. Building them now would be
+> ### engineering theatre.
+
+**What is kept, because it costs nothing and is genuinely correct:**
+
+| kept | why |
+|---|---|
+| **NO BACKFILL. EVER.** and `SHADOW_START = 2026-09-01 18:00 ET` | the rule and the timestamp are not weakened by the roster shrinking, and the start date is **not** moved because an earlier one is now convenient |
+| the **ledger schema** and mandatory `data_quality` | correct whenever a shadow is eventually run |
+| **§5 account-safety preconditions** | binding regardless of roster |
+| the **session-not-trade dependence rule** | binding |
+| the **streaming engine** in `MSBBO_DEPLOYMENT_FREEZE` | **certified correct** against the corrected batch (19/20 features at exactly `0.000e+00`). It is reusable the day a real sub-minute candidate exists |
+
+**What is not built, and the reason is recorded so it is not mistaken for an oversight:** the
+hash-chained decision/outcome ledgers, `shadow_health.py`, the C#/NinjaScript cross-language parity
+harness, and `MSBBO_PROSPECTIVE_PROTOCOL_V1` with its S60/S126/S252 gates. **Each was specified for
+an object that turned out to read the future.** They are re-openable in full the moment a candidate
+earns them.
+

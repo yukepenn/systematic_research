@@ -42,7 +42,10 @@ PORTFOLIO-ADDITIVE → EXECUTABLE → PARITY-CERTIFIED → SHADOW-VALIDATED → 
 | `Portfolio B` (P1+XM inverse-vol) | **RESEARCH ONLY** | **REGIME-LOCAL** *(inherited)* | contains XM and is measured only on the modern common window — **rule 2**. Also: **no integer-contract mapping exists** (`OQ-6`) |
 | `PAIR23` | research challenger | STRUCTURAL *(economics)*, but see reason | economics stand over 16 unseen years; **`RR_W003` showed its `X9a` leg *contains* P1**, making it the most double-counted component, not the least |
 | **`MS-LAST-V1`** | **CLOSED at its own scope** | **FALSIFIED-NULL-CLOSED** *(narrow)* | certified order-invariant Last-only family + 60 s + frozen Ridge/GBM budget + frozen policy/cost. Refitted session-block null not beaten (1.0th pctile); upper 95 % bound −$569/session rules out a $49/session materiality declared in advance. ⚠️ **Does NOT close Last-only alpha generally, other horizons, other feature classes, or 60 s predictability as such** · `runs/MSLAST_CONTRACT_20260827/` |
-| **`MS-BBO-CANDIDATE-1`** | **CANDIDATE — FROZEN** | **DISCOVERY-GRADE ONLY** | 7/7 preregistered gates + 4/4 leak probes (timestamps, mismatched execution, ablation, staleness). $5,125/session, t 6.76, OOF corr **0.170**, stress-positive to +1.0 tk/side. ⚠️ **48 consumed sessions; no clean BBO holdout exists or can be built, so prospective shadow is its ONLY remaining test** · `runs/MSBBO_V1_20260828/` |
+| **`MS-BBO-CANDIDATE-1`** | ⛔ **VOID** | **FALSIFIED — LOOK-AHEAD** | ⚠️ **CORRECTED 2026-08-28. This row previously read "CANDIDATE — FROZEN / DISCOVERY-GRADE ONLY, 7/7 gates + 4/4 leak probes, $5,125/session, t 6.76". All of it is void.** `np.arange(-30,0) * NS` overflows **int32**, so 15 of 30 feature offsets were **positive** — features read up to **+2.065 s after the decision instant**. The leak was **134.8 %** of the result; the causal object earns **−$1,785.88/session, OOF corr 0.0072**. **Not repaired in place** (§12): a corrected definition is a new object on consumed data · `runs/MSBBO_DEPLOYMENT_FREEZE_20260828/` |
+| **`CARRY_V1`** (curve/term structure) | **CLOSED — GATES FAILED** | **DEVELOPMENT-ONLY, DISCOVERY-CONSUMED** | 6 of 8 gates passed (net $71,413, Sharpe 0.719, 7/9 positive years, cost drag 7.9 %, two-sided causality clean) but **C6 84.1 %** and **C7 98.5 %** fail: the result is **SI alone**. ⚠️ **Does NOT close curve information generally** — one frozen object, one universe, and `n_sector = 2` degenerates the rank to ±1 in three of four sectors. **2019–2022 and 2023–2026-05-30 NEVER READ** · `runs/CARRY_V1_20260828/` |
+| Curve **data capability** | **DATA-CAPABLE** | **measured, no alpha** | `CARRY00`: 11 roots, 4 of 6 sectors. **FX closed-by-data** (deferred listed for only 33–39 % of the near's life); RTY/RB/HO/HG **closed-by-cache**, recoverable free · `runs/CARRY00_CURVE_DATA_CAPABILITY_20260828/` |
+| **ES ↔ NQ sub-minute** | **DATA-CAPABLE, QUESTION-VOID** | **POWER-OPEN** | 59 overlapping RTH-complete sessions (52 unexported), all pre-seal. §52's *incremental* question lost its baseline when BBO was voided; re-posing it is a new prereg. **Power deliberately NOT established** — a level-variance MDE would be the wrong denominator for a paired test · `runs/ESNQ00_CAPABILITY_20260828/` |
 | **`P1/ABS`** | **PROSPECTIVE CHALLENGER** | **BURNED / DISCOVERY-CONSUMED** | PCT ahead in every fixed window and the mechanism is isolated (`ABS_LOOSE` control, p 0.940), but the paired **magnitude** test is p 0.058. Direction overwhelming, dollars not established. Forward data decides · `runs/ABS_PCT_ADJUDICATION_20260827/` |
 | **TSMOM (all roles)** | **CLOSED** | **VALIDATION- AND HOLDOUT-CONSUMED** | steady-premium failed (V2-G3); tail-diversifier failed (H1, 4 of 5). ρ = 0.013 but no return — **ballast, not a hedge**. Carry/term structure remains a **separate untested family** |
 | **Multi-market TSMOM V1** | **CLOSED — GATES FAILED** | **DEVELOPMENT-ONLY, DISCOVERY-CONSUMED** | substrate, causal roll and basis-safe P&L now EXIST and passed their unit tests; V1 then **failed 3 of 6 preregistered DEVELOPMENT gates** (Sharpe 0.226, 5/9 positive years, 72.3 % equity concentration). Cost drag **47.2 % of gross**, scale-invariant. VALIDATION and FINAL HOLDOUT **unread** · `research/multi_market/TSMOM_V1_DEVELOPMENT.md` |
@@ -95,18 +98,31 @@ capable of succeeding** (§34).
 
 **The current list, replacing it:**
 
-1. **Does `MS-BBO-CANDIDATE-1` survive a clean prospective shadow?** Its S60/S126/S252 gates are
-   frozen in `MSBBO_PROSPECTIVE_PROTOCOL_V1` before a single row exists. This is the only test the
-   object will ever have;
-2. **Does genuinely new multi-market CARRY / TERM STRUCTURE contain after-cost alpha?** A new family
-   on the existing unmerged-contract substrate — gated first on `CARRY00` data capability, because
-   curve carry needs **simultaneous** near/deferred contracts and trend did not;
-3. **Does sub-minute ES information add value to 60 s NQ return BEYOND the frozen NQ-only BBO set?**
-   The incremental form of the question, not "can ES predict NQ";
-4. the sealed pool putting P1 below its **empirical** CPB/CPC `INVALIDATION` band.
+> ⚠️ **CORRECTED AGAIN, same day.** The list written this morning has been overtaken by the same
+> day's results: (1) `MS-BBO-CANDIDATE-1` is **VOID**, so "does it survive a shadow" has no object;
+> (2) carry was asked and **CARRY_V1 failed C6/C7**; (3) the ES question **lost its baseline** when
+> BBO was voided. **A standing-questions list that survives its own wave unchanged is not being
+> maintained.**
 
-**1 is calendar-gated on accumulation (the infrastructure is not). 2–3 runnable now. 4
-calendar-gated. None assumed.**
+**The current list:**
+
+1. **Is there any information surface this repo can still reach that it has not closed?** Action
+   value, HTF, internals ×2, Last-only, BBO, TSMOM ×3 and carry are all closed. **This is now an
+   acquisition / re-census question, not a modelling one**;
+2. **Is the BBO quote-complete ceiling materially larger than 99?** A file-level census finds 123 NQ
+   RTH-complete days (116 pre-seal) against the split's 99-all-consumed. Different criteria, so
+   **nothing is claimed** — but it decides whether a future BBO-class object could ever be
+   blind-confirmed;
+3. **Do ES and NQ sub-minute quote states JOINTLY predict 60 s NQ return?** Deliberately *not* the
+   incremental form any more, because the baseline is void. Data-capable at 59 sessions,
+   export-gated, power open;
+4. **Does curve information survive a universe with ≥3 roots per sector?** `CARRY_V1` failed on
+   concentration, and `n_sector = 2` forces a ±1 binary weight in three of four sectors — a
+   structural defect of *this* universe, not a verdict on curve information;
+5. the sealed pool putting P1 below its **empirical** CPB/CPC `INVALIDATION` band.
+
+**2 is runnable now and cheap. 3–4 need new preregistration and 3 needs a multi-GB export. 1 is a
+standing question. 5 is calendar-gated. None assumed.**
 
 ## Binding admission rules
 
