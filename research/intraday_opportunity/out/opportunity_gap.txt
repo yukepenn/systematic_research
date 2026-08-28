@@ -24,18 +24,24 @@
     >>> P1/PCT's EDGE PER TRADE IS 2.07x THE REFERENCE'S,
     >>> and P1/PCT pays a spread the reference's backtest never charged.
 
---- 2. THE SESSION-LENGTH ARTIFACT  (this is the single biggest term)
-    reference in-market minutes/day = 8.26 trades x 94.15 min = 777.7 min = 13.0 HOURS
-    RTH is only 390 min (6.5 h)  ->  RTH-ONLY IS ARITHMETICALLY IMPOSSIBLE.
-    His panel carried TradingHours = 'Use instrument settings' = the FULL 1380-min 18:00->17:00 ET session, and a measured overnight hold exists
-    (a long 21:39 -> 06:44, +$2,270.82). P1/PCT is FLAT AT EVERY SESSION CLOSE.
+--- 2. SESSION LENGTH -- and the FIRST VERSION OF THIS SECTION WAS WRONG
+    P1/PCT places entries in 23 of 24 hours. Missing: [17] (the 17:00 CME maintenance break).
+    entries OUTSIDE 09:00-15:59 ET : 1,315 of 2,131 = 61.7%
+    net    OUTSIDE 09:00-15:59 ET : $135,705 = 45.7% of net
 
-    per AVAILABLE market hour                REFERENCE          P1/PCT       ratio
-    trades per hour                              0.359           0.514       1.43x
-    net dollars per hour                         24.11           71.60       2.97x
+    >>> THERE IS NO OFF-HOURS COVERAGE GAP. P1/PCT ALREADY TRADES THE WHOLE SESSION.
+    >>> The claim 'P1 uses only 6.5 of 23 hours' is RETRACTED. It came from reading
+    >>> 'flat at every session close' as the 16:00 RTH close; it is the 17:00 SESSION close.
 
-    >>> PER HOUR OF AVAILABLE MARKET, P1/PCT TRADES MORE OFTEN AND EARNS ~3x MORE.
-    >>> The reference's throughput advantage is very largely A LONGER TRADING DAY.
+    The real difference is EXPOSURE TIME, not operating window:
+                                             REFERENCE        P1/PCT       ratio
+    IN-MARKET hours per session                  12.96          4.84       0.37x
+    trades per AVAILABLE hour (23h)              0.359         0.145       0.40x
+    net $ per AVAILABLE hour                     24.11         20.23       0.84x
+    net $ per IN-MARKET hour                     42.79         96.18       2.25x
+      same, reference RE-COSTED                  33.47         96.18       2.87x
+
+    >>> The reference is EXPOSED 2.7x LONGER but earns LESS PER HOUR OF EXPOSURE.
 
 --- 3. EQUALIZE THE COST MODEL  (charge the reference what P1 pays)
     reference net as posted                      $    292,172.82
@@ -70,11 +76,16 @@
 
     decomposition, each term evaluated by holding the others fixed:
       COST MODEL          his backtest charges no spread            $      603.75/wk
-      SESSION LENGTH      23h available vs P1's 6.5h RTH          $    1,989.39/wk
-      EDGE PER TRADE      P1 earns $139.33 vs his $67.15          IN P1 FAVOUR
-      RISK                his maxDD $32,677 vs P1's $22,931     IN P1 FAVOUR
+      EXPOSURE TIME       13.0 in-market h/day vs P1's 4.8      $    1,737.81/wk
+      ~~SESSION LENGTH~~  RETRACTED: P1 already trades 23 of 24 hours. What remains is an
+                          EXPOSURE-TIME difference - a hold-time and trade-count property, not
+                          a window property - and it is NOT free: it carries overnight gap risk
+                          and off-hours spread that his zero-slippage backtest never paid.
+      EDGE PER TRADE      P1 earns $139.33 vs his $67.15              IN P1 FAVOUR
+      EDGE PER IN-MKT HR  P1 $96.18 vs his $42.79 ($33.47 re-costed) IN P1 FAVOUR
+      RISK                his maxDD $32,677 vs P1's $22,931      IN P1 FAVOUR
 
-    >>> The two terms that CREATE his advantage are a longer trading day and an uncharged
-    >>> spread. The two terms where P1 is ahead are edge per trade and drawdown.
+    >>> His advantage is EXPOSURE TIME plus an UNCHARGED SPREAD.
+    >>> P1 is ahead on edge per trade, edge per hour of exposure, and drawdown.
 
 ================================================================================================================

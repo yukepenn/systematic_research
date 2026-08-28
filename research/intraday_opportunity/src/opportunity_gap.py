@@ -95,26 +95,57 @@ P(f"    >>> P1/PCT's EDGE PER TRADE IS {P1['avg_trade']/REF['avg_trade']:.2f}x T
 P(f"    >>> and P1/PCT pays a spread the reference's backtest never charged.")
 
 # ---------------------------------------------------------------- 2. session length
+# ⚠ CORRECTED 2026-08-28. The FIRST version of this section asserted that P1/PCT is "RTH only,
+# flat at every session close" and divided its dollars by 6.5 hours. THAT WAS FALSE and it
+# propagated into the owner's directive. Measured from the ledger's own decision timestamps:
+# P1/PCT places entries in 23 of 24 hours -- every hour except 17:00, the CME maintenance break.
+# 61.7 % of its entries and 45.7 % of its net are OUTSIDE 09:00-15:59 ET.
+# "Flat at every session close" means the 17:00 SESSION close, not the 16:00 RTH close.
 P("")
-P("--- 2. THE SESSION-LENGTH ARTIFACT  (this is the single biggest term)")
-ref_in_market = REF["nt8_trades_per_day"] * REF["avg_minutes_in_market"]
-P(f"    reference in-market minutes/day = {REF['nt8_trades_per_day']:.2f} trades x "
-  f"{REF['avg_minutes_in_market']:.2f} min = {ref_in_market:,.1f} min = {ref_in_market/60:.1f} HOURS")
-P(f"    RTH is only {RTH_MIN:.0f} min ({RTH_MIN/60:.1f} h)  ->  RTH-ONLY IS ARITHMETICALLY IMPOSSIBLE.")
-P(f"    His panel carried TradingHours = 'Use instrument settings' = the FULL "
-  f"{FULL_SESSION_MIN:.0f}-min 18:00->17:00 ET session, and a measured overnight hold exists")
-P(f"    (a long 21:39 -> 06:44, +$2,270.82). P1/PCT is FLAT AT EVERY SESSION CLOSE.")
+P("--- 2. SESSION LENGTH -- and the FIRST VERSION OF THIS SECTION WAS WRONG")
+led2 = led[led["in_window_session"]].copy()
+led2["h"] = pd.to_datetime(led2["decision_ts"]).dt.hour
+hrs = sorted(led2["h"].unique())
+n_act = int(led2["session_id"].nunique())
+tr = len(led2)
+net_ = float(led2["baseline_trade_net"].sum())
+inmkt_min = float(led2["baseline_hold_minutes"].sum()) / n_act
+rth = led2[(led2["h"] >= 9) & (led2["h"] < 16)]
+P(f"    P1/PCT places entries in {len(hrs)} of 24 hours. Missing: "
+  f"{[h for h in range(24) if h not in set(hrs)]} (the 17:00 CME maintenance break).")
+P(f"    entries OUTSIDE 09:00-15:59 ET : {tr-len(rth):,} of {tr:,} = {(tr-len(rth))/tr:.1%}")
+P(f"    net    OUTSIDE 09:00-15:59 ET : ${net_-float(rth['baseline_trade_net'].sum()):,.0f} "
+  f"= {(net_-float(rth['baseline_trade_net'].sum()))/net_:.1%} of net")
 P("")
-ref_tph = REF["nt8_trades_per_day"] / (FULL_SESSION_MIN / 60)
-p1_tph = (P1["trades"] / P1["sessions_active"]) / (RTH_MIN / 60)
-ref_dph = ref_per_day / (FULL_SESSION_MIN / 60)
-p1_dph = p1_per_active / (RTH_MIN / 60)
-P(f"    {'per AVAILABLE market hour':<34}{'REFERENCE':>16}{'P1/PCT':>16}{'ratio':>12}")
-P(f"    {'trades per hour':<34}{ref_tph:>16.3f}{p1_tph:>16.3f}{p1_tph/ref_tph:>11.2f}x")
-P(f"    {'net dollars per hour':<34}{ref_dph:>16.2f}{p1_dph:>16.2f}{p1_dph/ref_dph:>11.2f}x")
+P("    >>> THERE IS NO OFF-HOURS COVERAGE GAP. P1/PCT ALREADY TRADES THE WHOLE SESSION.")
+P("    >>> The claim 'P1 uses only 6.5 of 23 hours' is RETRACTED. It came from reading")
+P("    >>> 'flat at every session close' as the 16:00 RTH close; it is the 17:00 SESSION close.")
+
+ref_inmkt_h = REF["nt8_trades_per_day"] * REF["avg_minutes_in_market"] / 60.0
+p1_inmkt_h = inmkt_min / 60.0
 P("")
-P("    >>> PER HOUR OF AVAILABLE MARKET, P1/PCT TRADES MORE OFTEN AND EARNS ~3x MORE.")
-P("    >>> The reference's throughput advantage is very largely A LONGER TRADING DAY.")
+P(f"    The real difference is EXPOSURE TIME, not operating window:")
+P(f"    {'':<36}{'REFERENCE':>14}{'P1/PCT':>14}{'ratio':>12}")
+P(f"    {'IN-MARKET hours per session':<36}{ref_inmkt_h:>14.2f}{p1_inmkt_h:>14.2f}"
+  f"{p1_inmkt_h/ref_inmkt_h:>11.2f}x")
+avail = FULL_SESSION_MIN / 60.0
+ref_tph = REF["nt8_trades_per_day"] / avail
+p1_tph = (tr / n_act) / avail
+ref_dph = ref_per_day / avail
+p1_dph = (net_ / n_act) / avail
+P(f"    {'trades per AVAILABLE hour (23h)':<36}{ref_tph:>14.3f}{p1_tph:>14.3f}"
+  f"{p1_tph/ref_tph:>11.2f}x")
+P(f"    {'net $ per AVAILABLE hour':<36}{ref_dph:>14.2f}{p1_dph:>14.2f}{p1_dph/ref_dph:>11.2f}x")
+ref_dpih = ref_per_day / ref_inmkt_h
+p1_dpih = (net_ / n_act) / p1_inmkt_h
+P(f"    {'net $ per IN-MARKET hour':<36}{ref_dpih:>14.2f}{p1_dpih:>14.2f}"
+  f"{p1_dpih/ref_dpih:>11.2f}x")
+ref_dpih_recost = (REF["net"] - REF["trades"] * P1_SPREAD_PER_RT
+                   - REF["trades"] * (P1_COMM_PER_RT - REF["commission_per_rt"]))     / REF["implied_days"] / ref_inmkt_h
+P(f"    {'  same, reference RE-COSTED':<36}{ref_dpih_recost:>14.2f}{p1_dpih:>14.2f}"
+  f"{p1_dpih/ref_dpih_recost:>11.2f}x")
+P("")
+P("    >>> The reference is EXPOSED 2.7x LONGER but earns LESS PER HOUR OF EXPOSURE.")
 
 # ---------------------------------------------------------------- 3. cost equalization
 P("")
@@ -172,27 +203,35 @@ gap = ref_wk_posted - P1["raw_weekly"]
 P(f"    posted weekly gap (raw, unnormalized)        ${gap:,.2f}/wk")
 P("")
 P("    decomposition, each term evaluated by holding the others fixed:")
-t_cost = (ref_wk_posted - ref_wk_equal)
-n_ref_hours = FULL_SESSION_MIN / 60
-n_p1_hours = RTH_MIN / 60
-ref_wk_if_rth = ref_dph * n_p1_hours * 5.0
-t_session = ref_wk_posted - ref_wk_if_rth
+t_cost = ref_wk_posted - ref_wk_equal
+# EXPOSURE term: what the reference would earn per week if exposed only as long as P1 is, at his
+# own dollars-per-in-market-hour. This replaces the RETRACTED "session length" term.
+ref_wk_if_p1_exposure = ref_dpih * p1_inmkt_h * 5.0
+t_exposure = ref_wk_posted - ref_wk_if_p1_exposure
 P(f"      COST MODEL          his backtest charges no spread            ${t_cost:>12,.2f}/wk")
-P(f"      SESSION LENGTH      {n_ref_hours:.0f}h available vs P1's {n_p1_hours:.1f}h RTH          "
-  f"${t_session:>12,.2f}/wk")
-P(f"      EDGE PER TRADE      P1 earns ${P1['avg_trade']:.2f} vs his ${REF['avg_trade']:.2f}          "
-  f"{'IN P1 FAVOUR':>12}")
-P(f"      RISK                his maxDD ${REF['maxdd']:,.0f} vs P1's ${P1['maxdd']:,.0f}     "
-  f"{'IN P1 FAVOUR':>12}")
+P(f"      EXPOSURE TIME       {ref_inmkt_h:.1f} in-market h/day vs P1's {p1_inmkt_h:.1f}      "
+  f"${t_exposure:>12,.2f}/wk")
+P("      ~~SESSION LENGTH~~  RETRACTED: P1 already trades 23 of 24 hours. What remains is an")
+P("                          EXPOSURE-TIME difference - a hold-time and trade-count property, not")
+P("                          a window property - and it is NOT free: it carries overnight gap risk")
+P("                          and off-hours spread that his zero-slippage backtest never paid.")
+P(f"      EDGE PER TRADE      P1 earns ${P1['avg_trade']:.2f} vs his ${REF['avg_trade']:.2f}"
+  f"{'IN P1 FAVOUR':>26}")
+P(f"      EDGE PER IN-MKT HR  P1 ${p1_dpih:,.2f} vs his ${ref_dpih:,.2f} "
+  f"(${ref_dpih_recost:,.2f} re-costed){'IN P1 FAVOUR':>13}")
+P(f"      RISK                his maxDD ${REF['maxdd']:,.0f} vs P1's ${P1['maxdd']:,.0f}"
+  f"{'IN P1 FAVOUR':>18}")
 P("")
-P("    >>> The two terms that CREATE his advantage are a longer trading day and an uncharged")
-P("    >>> spread. The two terms where P1 is ahead are edge per trade and drawdown.")
+P("    >>> His advantage is EXPOSURE TIME plus an UNCHARGED SPREAD.")
+P("    >>> P1 is ahead on edge per trade, edge per hour of exposure, and drawdown.")
 
 json.dump(dict(reference=REF, incumbent=P1,
                ref_per_day=ref_per_day, p1_per_active=p1_per_active,
-               ref_in_market_min_per_day=ref_in_market,
+               ref_in_market_hours_per_day=ref_inmkt_h,
+               p1_in_market_hours_per_session=p1_inmkt_h,
                trades_per_hour=dict(reference=ref_tph, p1=p1_tph),
-               dollars_per_hour=dict(reference=ref_dph, p1=p1_dph),
+               dollars_per_available_hour=dict(reference=ref_dph, p1=p1_dph),
+               dollars_per_inmarket_hour=dict(reference=ref_dpih, reference_recosted=ref_dpih_recost, p1=p1_dpih),
                ref_net_on_p1_costs=ref_net_equal,
                weekly=dict(ref_posted=ref_wk_posted, ref_recosted=ref_wk_equal,
                            p1_raw=P1["raw_weekly"]),

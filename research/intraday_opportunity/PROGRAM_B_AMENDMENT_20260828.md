@@ -35,12 +35,12 @@ entries are its best bucket** ($180.88/trade), hold time **shrinks** with ordina
 
 > ### **It already re-enters, and the re-entries pay. The original premise is retired.**
 
-⚠️ **The comparison that motivated it also collapsed.** Per hour of available market the incumbent
-already **trades 1.43× more often and earns 2.97× more** than the reference trader's own posted
-backtest, at **2.07× the edge per trade** and **0.70× the drawdown**. Re-costing his backtest on the
-incumbent's cost model cuts his advantage from **1.40× to 1.09×**. His visible advantage is
-**session length (≈$1,989/wk) and an uncharged spread (≈$604/wk)** — together more than the whole
-posted gap.
+⚠️ **The comparison that motivated it also collapsed — on the CORRECTED arithmetic of §4a.**
+The incumbent earns **$96.18 per IN-MARKET hour** against the reference's **$42.79 as posted** and
+**$33.47 re-costed on our cost model** — **2.25× to 2.87× in P1's favour** — at **2.07× the edge per
+trade** and **0.70× the drawdown**. At a common fixed drawdown the reference's advantage falls from
+**1.40× to 1.09×**. What remains of his advantage is **exposure time (≈$1,738/wk)** and an
+**uncharged spread (≈$604/wk)** — together more than the whole posted gap.
 
 ## 3. REVISED PREMISE — the binding sparsity
 
@@ -51,7 +51,7 @@ posted gap.
 | ⛔ **not** coverage of big moves | correctly scoped, **0.38 %** (`RR_W006`) |
 | ⛔ **not** turnover policy | caps are **worse than random** (`WE_W121`) |
 | ✅ **GAP A — inactive-session coverage** | **`P1/PCT` is COMPLETELY FLAT on 420 of 1,058 sessions = 39.7 %** |
-| ✅ **GAP B — time-window coverage** | it uses **≈6.5 h of the instrument's 23 h** |
+| ⛔ ~~**GAP B — time-window coverage**~~ | **RETRACTED 2026-08-28, see §4a. `P1/PCT` already trades 23 of 24 hours.** What survives is an **exposure-time** difference (4.84 vs 12.96 in-market h), which is a hold-time and trade-count property, not a window property |
 
 ## 4. CONSEQUENCE FOR THE ARCHETYPE PLAN
 
@@ -63,18 +63,46 @@ run merely because it appeared in an earlier planning document.** That set was e
 Those four remain **possible future hypotheses**, and only if capability work identifies a concrete
 reason to study them. **They are not closed; they are not queued either.**
 
+## 4a. ⚠️ GAP B IS RETRACTED — closed by measurement, and the error was mine
+
+This amendment's first version, and the owner directive built on it, both stated that
+**"P1 uses only roughly 6.5 hours of a 23-hour NQ trading session."** **That is false.**
+
+Measured from the ledger's own decision timestamps:
+
+| | |
+|---|---|
+| hours in which `P1/PCT` places entries | **23 of 24** — every hour except **17:00**, the CME maintenance break |
+| entries outside 09:00–15:59 ET | **1,315 of 2,131 = 61.7 %** |
+| net outside 09:00–15:59 ET | **$135,705 = 45.7 % of net** |
+
+**Root cause:** `CURRENT_BASELINE` says `P1/PCT` is *"flat at every session close"*. That is the
+**17:00 session close**, not the 16:00 RTH close. I read it as RTH and did not check. The 6.5-hour
+figure then propagated into a per-hour comparison and into the directive.
+
+> ### **THERE IS NO OFF-HOURS COVERAGE GAP. `LANE B` IS CLOSED BEFORE IT IS OPENED — on an
+> ### activity fact, not on returns.**
+
+**What survives is a different and harder question:** the reference is **in-market 12.96 h/day**
+against P1's **4.84 h/active session** — 2.68× longer. That is **exposure time**, a function of hold
+length and trade count, **not** of operating window. It is also **not free**: it carries overnight
+gap risk and off-hours spread that his zero-slippage backtest never paid. And the direction of the
+per-hour comparison reverses once exposure is the denominator: **P1 earns $96.18 per in-market hour
+against his $42.79 as posted, $33.47 re-costed.** ⛔ **No lane is opened on this. It is recorded as a
+future hypothesis requiring its own preregistration.**
+
 ## 5. THE REVISED PROGRAM-B QUESTION
 
 > ### **Can we expand the number of SESSIONS and HOURS in which a one-contract NQ book finds
 > ### genuinely positive-EV opportunities, WITHOUT diluting the edge that already exists when
 > ### `P1/PCT` is active?**
 
-Two lanes, **independently preregistered**, answering different questions:
+**ONE live lane**, after §4a closed the other:
 
 | lane | question | ⛔ NOT the question |
 |---|---|---|
 | **A · FLAT-SESSION COVERAGE** | Is there a causally observable, economically **distinct** state on some P1-flat sessions supporting a **new** engine? | *Can we weaken P1 until it trades?* |
-| **B · SESSION-LENGTH COVERAGE** | Are there independently profitable opportunities **outside** P1's window after realistic off-hours spread, friction and tail risk? | *Does trading more hours mechanically create more dollars?* |
+| ⛔ ~~**B · SESSION-LENGTH COVERAGE**~~ | **CLOSED BY MEASUREMENT before any economics — the premise was false.** See §4a | — |
 
 ## 6. Binding prohibitions carried into every stage
 
@@ -102,6 +130,8 @@ Two lanes, **independently preregistered**, answering different questions:
 | P1-flat sessions | 282 (26.7 %) | **420 (39.7 %)** | 282 was **BOOK**-flat (neither P1 *nor* XM); P1 alone touches **638** sessions |
 | trades/active session | 3.09 | **3.340** | consequence of both |
 | active-session count | 712 | **638** | sessions were counted by **`session_date`**, not **`session_id`** |
+| **P1's operating window** | **"RTH only, 6.5 h"** | **23 of 24 hours** | I read *"flat at every session close"* as the **16:00 RTH** close; it is the **17:00 SESSION** close. **61.7 % of entries and 45.7 % of net are outside RTH.** This one propagated into the owner's directive and **closed a whole lane when corrected** |
+| per-available-hour dollars | "P1 2.97×" | **reference 1.19× on AVAILABLE hours; P1 2.25–2.87× on IN-MARKET hours** | consequence of the 6.5 h error |
 
 > ### **THE SCIENTIFIC UNIT OF THIS PROGRAMME IS THE 23-HOUR NQ TRADING SESSION (`session_id`),
 > ### NOT THE CIVIL CALENDAR DATE.**
