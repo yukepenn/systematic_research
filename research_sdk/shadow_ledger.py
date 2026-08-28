@@ -22,6 +22,7 @@ import csv
 import hashlib
 import json
 import os
+from datetime import datetime
 from typing import Any
 
 GENESIS = "0" * 64
@@ -43,6 +44,33 @@ ACTIONS = ("LONG", "SHORT", "FLAT", "NO_DECISION")
 
 class LedgerError(RuntimeError):
     pass
+
+
+def instant(ts: str) -> datetime:
+    """Parse an ISO-8601 stamp to an ABSOLUTE INSTANT, and FAIL CLOSED if that is not possible.
+
+    ⚠ WHY THIS EXISTS -- a real defect caught by the shadow preflight BEFORE the first row was
+    ever written.  The first version of this module compared timestamps as STRINGS.  That is
+    correct only while every row carries the same UTC offset, and the shadow starts in EDT
+    (-04:00) and runs into EST (-05:00).  Concretely:
+
+        '2026-11-02T08:30:00-05:00'  vs  '2026-11-02T09:00:00-04:00'
+        string compare  : a < b      (because "08" < "09")
+        instant compare : a > b      (13:30Z vs 13:00Z)
+
+    The two DISAGREE, so a legitimately later decision would have been REFUSED as backfill on the
+    day the clocks change.  Comparison is now on the parsed instant, and a naive or unparseable
+    stamp is REFUSED rather than silently coerced.
+    """
+    try:
+        d = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+    except (TypeError, ValueError) as e:
+        raise LedgerError(f"timestamp {ts!r} is not ISO-8601: {e}") from e
+    if d.tzinfo is None or d.utcoffset() is None:
+        raise LedgerError(
+            f"timestamp {ts!r} carries NO UTC OFFSET. A shadow ledger spans a DST change, so a "
+            f"naive stamp is ambiguous and is refused. Emit UTC ('...Z') or an explicit offset.")
+    return d
 
 
 def _canon(row: dict, fields: list[str]) -> str:
@@ -91,13 +119,15 @@ def append_decision(path: str, *, shadow_start: str, ts_decision: str, strategy_
         raise LedgerError(f"quality_status {quality_status!r} not in {QUALITY}")
     if quality_status == "BLOCKED" and not blocked_reason:
         raise LedgerError("a BLOCKED decision must record blocked_reason")
-    if ts_decision <= shadow_start:
+    # INSTANT comparison, never string comparison -- see instant() for the DST defect this fixes.
+    t_new, t_start = instant(ts_decision), instant(shadow_start)
+    if t_new <= t_start:
         raise LedgerError(
             f"NO BACKFILL: ts_decision {ts_decision} is not strictly after "
             f"SHADOW_START {shadow_start}. One backfilled row destroys the evidence class "
             f"for the whole file and cannot be repaired by labelling.")
     rows = _read(path, DECISION_FIELDS)
-    if rows and ts_decision <= rows[-1]["ts_decision"]:
+    if rows and t_new <= instant(rows[-1]["ts_decision"]):
         raise LedgerError(f"NO BACKFILL: ts_decision {ts_decision} does not strictly advance "
                           f"the previous decision at {rows[-1]['ts_decision']}")
     row = dict(seq=len(rows) + 1, ts_decision=ts_decision, strategy_id=strategy_id,
@@ -162,7 +192,7 @@ def assert_decisions_precede_outcomes(decision_path: str, outcome_path: str) -> 
     bad = []
     for o in _read(outcome_path, OUTCOME_FIELDS):
         d = dec[int(o["decision_seq"])]
-        if o["ts_outcome"] <= d["ts_decision"]:
+        if instant(o["ts_outcome"]) <= instant(d["ts_decision"]):
             bad.append((o["seq"], o["ts_outcome"], d["ts_decision"]))
     if bad:
         raise LedgerError(f"outcomes not strictly after their decisions: {bad}")
@@ -218,6 +248,23 @@ def selftest(tmpdir: str) -> bool:
                  lambda: append_outcome(op, decision_path=dp, decision_seq=1,
                                         ts_outcome="2026-09-02T15:46:00-04:00", gross_pnl=999,
                                         costs=0, net_pnl=999, data_quality="OK"))
+    # ---- DST: a legitimately LATER instant whose STRING sorts earlier must be ACCEPTED
+    dst_dp = os.path.join(tmpdir, "_selftest_dst.csv")
+    if os.path.exists(dst_dp):
+        os.remove(dst_dp)
+    append_decision(dst_dp, ts_decision="2026-11-02T09:00:00-04:00", action="LONG", **common)
+    try:
+        append_decision(dst_dp, ts_decision="2026-11-02T08:30:00-05:00", action="LONG", **common)
+        checks.append(("DST: later instant with an earlier-sorting string is ACCEPTED", True,
+                       "08:30-05:00 = 13:30Z follows 09:00-04:00 = 13:00Z"))
+    except LedgerError as ex:
+        checks.append(("DST: later instant with an earlier-sorting string is ACCEPTED", False,
+                       f"REFUSED -- string comparison regression: {ex}"))
+    expect_raise("refuse a timestamp with no UTC offset",
+                 lambda: append_decision(dst_dp, ts_decision="2026-11-03T09:00:00",
+                                         action="LONG", **common))
+    os.remove(dst_dp)
+
     v = verify(dp, "decision")
     checks.append(("clean decision chain verifies", v["ok"] and v["rows"] == 3, f"{v['rows']} rows"))
     checks.append(("clean outcome chain verifies", verify(op, "outcome")["ok"], "1 row"))

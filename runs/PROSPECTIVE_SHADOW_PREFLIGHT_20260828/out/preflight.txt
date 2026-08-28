@@ -1,0 +1,68 @@
+============================================================================================================
+=== PROSPECTIVE SHADOW PREFLIGHT -- ENGINEERING ONLY.  NO REAL PROSPECTIVE OUTCOME RECORDED.
+============================================================================================================
+    SHADOW_START            2026-09-01T18:00:00-04:00
+    today                   2026-08-28  ->  start has NOT arrived; all artifacts are TESTS
+
+--- ROSTER  (recovered from research/operational/PROSPECTIVE_SHADOW.md, not from the directive)
+    P1/PCT           WeeklyEdgeP1PCT_v1.cs        ee4c765bc5cab230…  28,809 B   incumbent, PARITY-CERTIFIED
+    XM_CONFLICT_v2   WeeklyEdgeXMConflict_v2.cs   2ec00dd4d0a11b99…  20,994 B   incumbent sleeve, PARITY-CERTIFIED
+    P1/ABS           WeeklyEdgeP1_v3.cs           e8bb9caface37462…  26,544 B   challenger / control
+    [PASS] roster: every source resolves and hashes             3 objects
+
+--- S0-1  START GUARD  (before / exactly at / after SHADOW_START)
+    [PASS] S0-1a  BEFORE SHADOW_START is REJECTED               NO BACKFILL: ts_decision 2026-08-28T09:46:00-04:00 is not strict
+    [PASS] S0-1b  EXACTLY AT SHADOW_START is REJECTED           NO BACKFILL: ts_decision 2026-09-01T18:00:00-04:00 is not strict
+    [PASS] S0-1c  AFTER SHADOW_START is ACCEPTED                seq 1
+        ^ the contract is STRICTLY AFTER: a row stamped exactly at the start instant is refused.
+
+--- S0-2  DECISION FIRST  (outcome references an immutable decision id; never an edit)
+    [PASS] S0-2a  outcome for a NONEXISTENT decision is REJECTED outcome references decision seq 99, which does not exist
+    [PASS] S0-2b  a SECOND outcome for the same decision is REJECTED decision seq 1 already has an outcome -- an outcome is appended 
+    [PASS] S0-2c  outcomes strictly post-date their decisions   
+    [PASS] S0-2d  decision schema carries NO result field       a decision row structurally cannot hold its own outcome
+    [PASS] S0-2e  a NON-ADVANCING decision timestamp is REJECTED NO BACKFILL: ts_decision 2026-09-03T09:46:00-04:00 does not stri
+
+--- S0-3  HASH CHAIN  (tamper must be DETECTED)
+    [PASS] S0-3a  clean chain verifies                          2 rows, head a30c165b1b30ae57…
+    [PASS] S0-3b  EDITED decision row is DETECTED               D:\OneDrive - Washington University in St. Louis\TradingResearch
+    [PASS] S0-3c  chain verifies again after restore            
+
+--- S0-4  CLOCK  (ET/DST, session semantics, monotonicity)
+    [PASS] S0-4a  SHADOW_START parses as EDT (UTC-4)            2026-09-01T18:00:00-04:00
+    [PASS] S0-4b  DST offsets differ (EDT -04:00 vs EST -05:00) -1 day, 20:00:00 vs -1 day, 19:00:00  -> a fixed offset is NOT safe year-round
+        ^ A REAL DEFECT WAS FOUND HERE, BEFORE THE FIRST ROW WAS EVER WRITTEN.
+          a = 2026-11-02T08:30:00-05:00  = 13:30Z
+          b = 2026-11-02T09:00:00-04:00  = 13:00Z
+          STRING  compare a > b : False
+          INSTANT compare a > b : True
+    [PASS] S0-4c  string and instant ordering DISAGREE across the DST change a legitimately LATER decision would have been refused as backfill
+        >>> FIXED IN research_sdk/shadow_ledger.py: comparison is now on the PARSED INSTANT,
+            and a naive stamp with no UTC offset is REFUSED rather than silently coerced.
+    [PASS] S0-4d  the FIXED ledger ACCEPTS the later instant that sorts earlier 13:00Z then 13:30Z, written in two different offsets
+    [PASS] S0-4e  a timestamp with NO UTC offset is REFUSED     timestamp '2026-11-03T09:00:00' carries NO UTC OFFSET. A shadow 
+    [PASS] S0-4f  session unit: 1,058 sessions vs 1,056 dates   {'sessions': 1058, 'dates': 1056, 'note': 'sessions > dates proves the session is not a calendar date'}
+    [PASS] S0-4g  session-unit guard REJECTS a date masquerading as a session 
+
+--- S0-5  QUALITY FAIL-CLOSED  (a silent omission would create a selected sample)
+    [PASS] S0-5a  a BLOCKED decision is RECORDED, not dropped   seq 3, reason recorded
+    [PASS] S0-5b  a BLOCKED row with NO reason is REJECTED      a BLOCKED decision must record blocked_reason
+    [PASS] S0-5c  an invalid quality_status is REJECTED         quality_status 'PROBABLY_FINE' not in ('OK', 'GAP', 'STALE_QUOTE
+
+--- S0-6  ZERO ORDER PATH  (AST import+call analysis, not grep)
+    research_sdk\shadow_ledger.py                        imports  8  banned-mod none  banned-call none
+    runs\PROSPECTIVE_SHADOW_PREFLIGHT_20260828\src\preflight.py imports 10  banned-mod none  banned-call none
+    [PASS] S0-6a  no network/broker module imported anywhere in the shadow path 
+    [PASS] S0-6b  no order-emitting call name appears in the shadow path 
+        modules actually imported by shadow_ledger.py: csv, hashlib, json, os, typing
+        >>> The shadow apparatus has NO ORDER PATH. It cannot place, modify or cancel anything.
+
+--- WRITE vs READ  (the restriction is CODE, not a promise)
+    health() -> {'alive': True, 'decisions': 3, 'outcomes': 1, 'blocked': 1, 'quality_mix': ['BLOCKED', 'OK'], 'chain_ok': True, 'head': '8858f8bf445f653f', 'first_ts': '2026-09-02T09:46:00-04:00', 'last_ts': '2026-09-04T09:46:00-04:00', 'strategies': ['P1_PCT']}
+    [PASS] health() returns NO performance field                leaked: none
+
+============================================================================================================
+=== PREFLIGHT: READY
+============================================================================================================
+    Artifacts written by this run are TEST ARTIFACTS (_preflight_*). The real shadow ledger
+    does not exist and was not created. No prospective outcome was recorded.
