@@ -1,0 +1,73 @@
+========================================================================================================
+=== TSMOM V1 - DEVELOPMENT ONLY.  Frozen before this ran. No parameter searched.
+=== window 2009-03-30 -> 2018-12-31   horizons (21, 63, 126, 252)   vol 63d lagged 1d
+========================================================================================================
+
+  PRIMARY (1 tick)
+    days 2,265   net $        10,167   $/day         4   ann Sharpe  0.226
+    maxDD $      17,129   ES5% $      -772   positive days  52.9 %   underwater  96.9 %
+    gross $        19,270   cost $       9,102   cost drag   47.2 % of |gross|
+
+  STRESS (2 ticks)
+    days 2,265   net $         2,736   $/day         1   ann Sharpe  0.061
+    maxDD $      19,548   ES5% $      -775   positive days  52.5 %   underwater  97.4 %
+    gross $        19,270   cost $      16,533   cost drag   85.8 % of |gross|
+
+  YEARLY (primary)
+                  net  days    sharpe
+    y                                
+    2010  5728.070326   203  1.108329
+    2011  3450.464155   259  0.579457
+    2012 -1251.603338   259 -0.339677
+    2013  7862.186586   258  1.710578
+    2014  4381.818300   258  0.922228
+    2015 -4164.411602   255 -0.878887
+    2016 -6581.315692   258 -1.449972
+    2017  -358.670896   257 -0.080865
+    2018  1100.888822   258  0.170859
+
+  ROOT CONTRIBUTION (primary, top and bottom 5)
+      NQ    $       3,297      32.4 % of net
+      YM    $       2,248      22.1 % of net
+      GC    $       2,207      21.7 % of net
+      6J    $       1,920      18.9 % of net
+      ZN    $       1,864      18.3 % of net
+      ...
+      6C    $      -1,059     -10.4 % of net
+      6A    $      -1,072     -10.5 % of net
+      ZT    $      -1,645     -16.2 % of net
+      ZC    $      -2,261     -22.2 % of net
+      ZW    $      -3,451     -33.9 % of net
+
+  SECTOR CONTRIBUTION (primary)
+      equity_index   $       7,356      72.3 % of net
+      metals         $       3,961      39.0 % of net
+      rates          $       2,709      26.6 % of net
+      energy         $       2,602      25.6 % of net
+      fx             $          24       0.2 % of net
+      ags            $      -6,484     -63.8 % of net
+
+  LONG vs SHORT (primary)
+      short  $         923
+      flat   $      -1,577
+      long   $      10,821
+
+  HORIZON COMPONENTS - DIAGNOSTIC ONLY, the equal-weight blend remains primary (s10)
+        21d   net $      -20,538   Sharpe -0.354
+        63d   net $        5,332   Sharpe  0.091
+       126d   net $       23,298   Sharpe  0.411
+       252d   net $       25,757   Sharpe  0.479
+
+========================================================================================================
+=== PREREGISTERED CONTINUATION GATES (declared in the module docstring before this ran)
+========================================================================================================
+    gate                                                  observed   verdict
+    --------------------------------------------------------------------------
+    G1 net > 0 at PRIMARY cost                             $10,167   PASS
+    G2 annualised Sharpe >= 0.30                             0.226   *** FAIL ***
+    G3 positive in >= 6 of the years                        5 of 9   *** FAIL ***
+    G4 net > 0 at STRESS cost                               $2,736   PASS
+    G5 top root <= 50 % of net                         32.4 % (NQ)   PASS
+    G6 top sector <= 60 % of net             72.3 % (equity_index)   *** FAIL ***
+
+    ALL GATES: FAIL -> RECORD IT. Do NOT tune.
