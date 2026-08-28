@@ -198,7 +198,17 @@ def weekly_net(daily):
 
 def run(sign=+1.0, slip_ticks=SLIP_TICKS_PRIMARY, vol_mod=None, ret_mod=None,
         date_max=None, roots=None, permute_signal_seed=None, shift_weeks=None):
+    """STRUCTURAL WINDOW PROTECTION.  `date_max` is applied to BOTH inputs at load time, before
+    features exist.  Nothing at or after the boundary is ever loaded into the code path -- there is
+    no "load the full frame and filter later".
+
+    This placement is also REQUIRED FOR THE NULL to be legal.  NULL 1 circularly shifts the volume
+    series; if the frame still spanned 2009-2026, a shift would rotate HELD-BACK-window volume into
+    the development window.  Restricting first confines every replicate to development.  Corrected
+    BEFORE any development result was read."""
     v, e = load_inputs()
+    if date_max is not None:
+        v, e = v[v["date"] < date_max], e[e["date"] < date_max]
     if roots is not None:
         v, e = v[v["root"].isin(roots)], e[e["root"].isin(roots)]
     if vol_mod is not None:
@@ -212,10 +222,9 @@ def run(sign=+1.0, slip_ticks=SLIP_TICKS_PRIMARY, vol_mod=None, ret_mod=None,
     pos = build_weekly_positions(feat, sig, e, sign=sign)
     if permute_signal_seed is not None:
         pos = _permute_within_sector(pos, permute_signal_seed)
-    if date_max is not None:
-        pos = pos[pos["monday"] < date_max]
-        e = e[e["date"] < date_max]
     daily, sides = simulate(pos, e, slip_ticks=slip_ticks)
+    if date_max is not None and len(daily):
+        assert daily["date"].max() < date_max, "WINDOW VIOLATION in the primary path"
     return dict(pos=pos, daily=daily, sides=sides, weekly=weekly_net(daily), feat=feat, sig=sig)
 
 

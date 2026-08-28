@@ -1,8 +1,8 @@
 ================================================================================================================
 === VOLUME_LIQUIDITY_V1 -- PRE-RESULT ENGINE CERTIFICATION.  NO ECONOMIC INTERPRETATION.
 ================================================================================================================
-    vl_primary.py          sha256 c9de4b940d4aa6b122c1d8580ec7d38550ab1e1fbf4fc56b6321026c932cb714
-    vl_independent.py      sha256 bf6208c9ee16da3b22d5e57d28d8d5f206ca211945d30ec56d9ec6dbc789d72c
+    vl_primary.py          sha256 fc31029b657837706c185d67cb120ab83206c1d94bb95146c1cf97a2b0a746cc
+    vl_independent.py      sha256 5650aa9fecc0fa4688c7dc762df5956ac66cac00b618eb8cf28322b45e56ef52
     development window     every evaluated date < 2019-01-01
 
 --- 6E-a  THE INDEPENDENT IMPLEMENTATION MUST NOT IMPORT THE PRIMARY  (AST, not grep)
@@ -11,7 +11,7 @@
 
 --- BASELINE  (development window only)
     weeks with positions   444   2010-06-21 -> 2018-12-31
-    (root, week) positions 8,943   roots 21
+    (root, week) positions 8,942   roots 21
     daily rows             44,608
     ASSERTION max evaluated date 2018-12-31 < 2019-01-01  PASS
 
@@ -43,7 +43,7 @@
     ES volume lookup entries                     4,433
     every traded ES date resolves in the lookup  PASS (min_frac 1.0)
     known-match control 2013-04-11               PASS
-    (monday, root) unique in positions           PASS  8,943 rows
+    (monday, root) unique in positions           PASS  8,942 rows
     (date, root) unique in daily                 PASS  44,608 rows
     safe_merge daily x volume, unmatched = 0     PASS  44,608 rows
     non-empty inputs -> non-empty output          PASS  (44,608 in, 44,608 out)
@@ -62,7 +62,7 @@
     >>> 6D  PASS
 
 --- 6E  INDEPENDENT PARITY   vectorized merge_asof path  vs  explicit chronological loop
-    positions  primary 8,943   independent 8,943   common 8,943
+    positions  primary 8,942   independent 8,942   common 8,942
     positions only in primary 0   only in independent 0
     max |dn| 9.166e-13   max relative 1.913e-13   direction disagreements 0
     daily rows primary 44,608   independent 44,608   common 44,608   only-primary 0  only-independent 0

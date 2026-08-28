@@ -66,6 +66,8 @@ def run(slip=SLIP1, sign=+1.0, date_max=None, roots=None):
                                       "economic_returns.parquet"),
                          columns=["date", "root", "sector", "ret_usd", "eligible", "rolled"])
     er = er[er["date"] < SEAL]
+    if date_max is not None:                 # structural window protection, applied AT LOAD
+        pan, er = pan[pan["date"] < date_max], er[er["date"] < date_max]
     if roots is not None:
         pan, er = pan[pan["root"].isin(roots)], er[er["root"].isin(roots)]
     # ROOT_TOTAL, computed here rather than taken from VOLUME00's pivot
