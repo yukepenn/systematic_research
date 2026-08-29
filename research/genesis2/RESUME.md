@@ -1,4 +1,14 @@
-# GENESIS II — RESUME STATE (session paused by execution limit, 2026-08-28 late evening)
+# GENESIS II — RESUME STATE
+
+> ## ⚠️ UPDATE 2026-08-28 ~23:00+: **SESSION RESUMED after the limit reset — the pause below is
+> ## HISTORICAL.** Current state: all 16 scout reports committed
+> (`runs/G2_WORLDSCAN_W1_20260828/partial_snapshot/`, 16/16 at `f25fbde`); **EXEC01 completed**
+> (spread model OPTIMISTIC, $20.65/ctrRT measured — `runs/G2_EXEC01_P1_EXECUTION_20260828`,
+> trial G00015, scoreboard stress row applied at `431d749`); **B1 dedup re-running as a
+> file-based agent** (writes `runs/G2_WORLDSCAN_W1_20260828/out/mechanism_cards.md`), B2 skeptic
+> follows, then atlas/queue + Formal Wave 1 selection. Ledger 16/16 closed.
+
+*(original pause record, kept for history)*
 
 **PAUSED BY EXECUTION LIMIT — NOT RESEARCH-COMPLETE.** Directive: "PROJECT GENESIS II —
 CONTINUOUS NQ ALPHA HUNT" (owner, 2026-08-28). Next session resumes here.
