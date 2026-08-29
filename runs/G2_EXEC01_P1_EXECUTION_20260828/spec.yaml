@@ -1,0 +1,42 @@
+run_id: G2_EXEC01_P1_EXECUTION_20260828
+campaign: GENESIS_II
+type: EXECUTION_MEASUREMENT   # directive sections 24/60 - execution alpha is separate from predictive alpha
+question: >
+  How much of P1/PCT's modeled friction is real, and does execution state vary enough across
+  time-of-day/vol to matter? Foundation: the only direct fill-vs-quote check bounded cost at
+  $24.00/RT on 35 verifiable fills vs the $14.44/ctrRT model (W82-class evidence, 2.5% overlap).
+  This run maximizes the overlap using ALL owned quote data.
+data:
+  - P1/PCT trade list from runs/GENESIS_REPRO_INCUMBENT_20260828 (REPRODUCED FACT stream)
+  - quote stores (consumed-for-development, allowlist-gated; NO blind session touched):
+    research/data_esnq (44 paired sessions, 2025-08..2026-05, ALLOWLIST_DEV_44 ONLY),
+    research/data_microstructure_v2 (58 NQ sessions, 2026-05..07),
+    scalping v1 NQ quote sessions where BBO present (dedup overlaps by session; document store
+    version per session; NEVER merge v1 truncated files with v2 - 12M-row cap class)
+  - research/weekly_edge W82 spread_by_minute.csv (comparison only)
+analyses_frozen:
+  E1_direct_cost: for EVERY P1 fill inside an owned quote session, compute the actual half-spread
+    cost of a marketable order at the fill minute (ask for buys, bid for sells, quote asof <= fill
+    time, staleness cap 5s documented); report per-RT cost distribution, N, and the
+    contract-month identity check (raw front-month quotes vs back-adjusted substrate: apply the
+    recorded +offset reconciliation, assert fill price inside [bid-1t, ask+1t] else exclude and
+    count - the W-era 29.7%-inside finding must be reconciled, not ignored)
+  E2_state_map: spread (ticks) by time-of-day bucket x trailing-vol tercile across all quote
+    sessions; locate P1's fill-time distribution on that map (does it fill in expensive minutes?)
+  E3_delay_stress: +1 minute delayed fill on the FROZEN action set (pure execution perturbation,
+    zero policy change): delta net/week
+  E4_limit_feasibility: fraction of P1 entries where quoted spread <= 1 tick at fill minute
+    (passive-entry plausibility bound only - no fill-probability model invented)
+decision_rules_preregistered:
+  - measured mean cost >= $20/RT on the maximized overlap => flag SPREAD MODEL OPTIMISTIC,
+    add a stress row to MASTER_SCOREBOARD (P1 net at measured cost)
+  - measured mean cost <= $16/RT => SPREAD MODEL CONFIRMED-AT-OVERLAP
+  - between: UNRESOLVED, both rows shown
+  - E1 exclusion rate > 30% of candidate fills => the verdict is DEFECT-LIMITED, say so
+prohibitions: no blind pool session opened (allowlist enforcement printed); no sealed reads;
+  no policy proposals from E2/E3 (measurement only); no new spread model fitted
+outputs: out/gate_table.txt (printed), out/fill_cost_distribution.csv, out/state_map.csv,
+  out/ledger_result_pending.json
+ledger: one trial (family=EXECUTION_MEASUREMENT) registered pre-run
+live_enabled: NO
+spend: $0
