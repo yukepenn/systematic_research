@@ -150,10 +150,12 @@ designed after observing three near-misses is post-hoc by construction — pooli
 preregistered bars; its next legitimate evidence is **forward** (sealed window or shadow), where a
 single preregistered joint read is honest. Nothing scheduled on historical data.
 
-## H7 — COT positioning crowding — rank 7 (low prior, free, long history)
+## H7 — COT positioning crowding — ❌ **NULL, CLOSED AT FORMULATION** (`runs/GENESIS_H7_COT_20260828`, G00014)
 
-Weekly TFF net positioning extremes as a crowding state for NQ weekly returns. **Ballast warning
-applies** (uncorrelated+unprofitable=ballast); one frozen test, no iteration. Power: ~1,000 weeks.
+**Tested 2026-08-28: T3−T1 +0.049%/wk (t +0.35, anti-contrarian point estimate), 30th pctile of an
+856-shift null, halves opposite-signed — under a strict Friday-15:30-ET availability rule and with
+MDE 0.277%/wk printed (a real effect was detectable). Dealer/Asset-Manager diagnostics also flat.**
+The low prior was stated in advance and confirmed. Original prior kept below for the record.
 
 ## H8 — Liquidity-state session conditioning from ES/MNQ books — rank 8 (park)
 

@@ -32,10 +32,12 @@ fixed-DD column is the comparable one; cross-block deltas are indicative.
 3. Under a hostile reading the incumbent's deserved quote stays **$900–1,230/wk, in-sample,
    post-selection** (dossier) — reproduction removes arithmetic doubt, not selection debt.
 
-## Block 2 — candidates (empty)
+## Block 2 — candidates: **NONE (STATE B, 2026-08-28)**
 
-No GENESIS candidate exists yet. H1 (VX/VXN conditioning) and H2 (calendar/flow) enter discovery
-next; rows appear here only with a ledger trial ID and a run artifact.
+Five new families tested at preregistered gates, five NULL: H1 vol-state (G00010) · H2 calendar
+0/11 (G00011) · H3 XSMOM (G00012, P&L = structure) · H4b Gao geometry (G00013, dead ~2014) ·
+H7 COT crowding (G00014). No candidate was manufactured. Full case:
+`GENESIS_STATE_B_REPORT.md`. A row appears here only with a ledger ID and a run artifact.
 
 ## Forward block (the only evidence class that can move beyond DISCOVERY)
 

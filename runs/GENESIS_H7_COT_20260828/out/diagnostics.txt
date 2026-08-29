@@ -1,0 +1,24 @@
+GENESIS_H7_COT_20260828 diagnostics (trial G00014) - printed by program
+====================================================================================================
+
+--- causal_availability_binding verification: example alignment rows ---
+(report as-of -> publication Friday 15:30 ET -> conditioned NQ week; entry = publication-week last session close; NO earlier alignment exists in this run)
+    report(as-of) 2009-07-21 (Tue) -> published 2009-07-24 (Fri) 15:30 ET -> conditions ISO week 200931: start session 2009-07-27 (Mon; opens 2009-07-26 18:00 ET) .. end session 2009-07-31; entry close = 2009-07-24 close; ret +0.0452%  tercile T1
+    report(as-of) 2009-11-09 (Mon) -> published 2009-11-13 (Fri) 15:30 ET -> conditions ISO week 200947: start session 2009-11-16 (Mon; opens 2009-11-15 18:00 ET) .. end session 2009-11-20; entry close = 2009-11-13 close; ret -0.4494%  tercile T1
+    report(as-of) 2026-07-21 (Tue) -> published 2026-07-24 (Fri) 15:30 ET -> conditions ISO week 202631: start session 2026-07-27 (Mon; opens 2026-07-26 18:00 ET) .. end session 2026-07-31; entry close = 2026-07-24 close; ret -0.0026%  tercile T1
+
+    holiday-shifted as-of reports in window: 13 (publication rule identical per R7)
+
+--- NON-GATE diagnostic contrasts (R14): same pipeline, other TFF categories ---
+    Dealer net/OI          T3-T1 +0.1403%/wk  Welch t +1.023  (T1=336, T2=190, T3=331)
+    Asset Manager net/OI   T3-T1 -0.0422%/wk  Welch t -0.297  (T1=281, T2=208, T3=368)
+    (Leveraged Funds gate contrast, for scale: T3-T1 +0.0490%/wk  t +0.354)
+
+--- NON-GATE robustness: publication-delay caveat (R7) ---
+    Tuesday-as-of only (848 weeks): T3-T1 +0.0641%/wk  t +0.462  (excludes 9 holiday-shifted weeks)
+
+--- accounting ---
+    reports in window: 1016; warmup 155; cond beyond grid 2; splice/nan 1; pub missing 1; not consecutive 0; usable 857
+    crowd_raw (usable): min -0.3039 med -0.0215 max +0.3745
+    weekly ret (usable): mean +0.2250% sd 1.8860%
+    POWER: MDE for |t|=2 at observed SE = 0.2765%/wk on the T3-T1 contrast

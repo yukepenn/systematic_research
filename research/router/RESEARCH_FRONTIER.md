@@ -115,6 +115,16 @@ Inputs are **qualitative and labelled qualitative.** No fake precision.
 > filter. **§89's "exhaust the free surfaces first" now bites harder, not less.**
 > ⛔ **No money should be spent yet, and none has been.**
 
+> ### 🚨 **GENESIS UPDATE (2026-08-28 evening): THE FREE SURFACES HAVE NOW BEEN SWEPT — AND THEY ARE EMPTY.**
+> PROJECT GENESIS certified the free tier (VIX/VXN/VX settlements/CFE OI/COT, all pre-seal, $0)
+> and then TESTED it, plus two never-tested price families, at preregistered gates: **H1
+> vol-state NULL · H2 calendar 0/11 NULL · H3 XSMOM NULL (structure, not information) · H4b Gao
+> geometry NULL (dead ~2014) · H7 COT NULL.** The incumbent reproduced to machine precision and
+> dominates all trivial baselines (t 4.16 vs 2.19). **Row 1 (prospective shadow) is no longer
+> merely rank-1 by elimination — it is rank-1 by measurement: the binding deficit is FORWARD
+> evidence.** Full case: `research/genesis/GENESIS_STATE_B_REPORT.md`; scoreboard, atlases and
+> the 15-trial hash-chained search ledger live in `research/genesis/`.
+
 > ### ⭐ **PROGRAM B'S CLOSURE SHARPENS THE FRONTIER RATHER THAN EXTENDING IT.**
 > `RR_W002A` established that **no tested current information surface separates P1 action quality**.
 > `NQ_OPPORTUNITY00` now says the matching thing about **coverage**: the incumbent is blind on 39.7 %

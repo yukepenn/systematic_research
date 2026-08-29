@@ -1,0 +1,129 @@
+GENESIS_H7_COT_20260828 - spec ambiguity resolutions (trial G00014)
+====================================================================
+RECORDED BEFORE ANY STATE-RETURN STATISTIC WAS COMPUTED (2026-08-28).
+Evidence used below is row-coverage metadata only (report counts, date spans, OI
+validity/continuity per candidate market row set) - explicitly required by the spec's
+market_row_resolution clause to be resolved BEFORE numbers exist. No COT state was
+joined to any NQ return before this file was written. The spec is frozen; nothing
+below adds a parameter or a search - each item fixes ONE reading of an ambiguous
+clause, conservatively, and is never revisited.
+
+R1  MARKET ROW SET (spec market_row_resolution).
+    Chosen: the E-MINI NASDAQ-100 row set = CFTC_Contract_Market_Code "209742",
+    Market_and_Exchange_Names stripped of trailing space, union of the two vendor
+    names for the SAME market ("NASDAQ-100 STOCK INDEX (MINI) - CHICAGO MERCANTILE
+    EXCHANGE" through 2022-02-01; renamed "NASDAQ MINI - CHICAGO MERCANTILE
+    EXCHANGE" from 2022-02-08). Evidence (computed from certified rows, coverage
+    metadata only):
+      - E-MINI 209742: 1,023 reports 2006-06-13..2026-07-28, 0 duplicate report
+        dates after name-strip, OI>0 and Leveraged-Funds long/short finite on all
+        1,023 rows; exactly ONE reporting gap (2009-12-29 -> 2010-07-20, 203 d);
+        longest continuous valid stretch 837 reports 2010-07-20..2026-07-28
+        (16.02 yr) PLUS a second continuous 186-report block 2006-06-13..2009-12-29.
+      - CONSOLIDATED "20974+": 837 reports 2010-07-20..2026-07-28, gap-free, all
+        valid; longest continuous stretch 837 reports over the IDENTICAL dates.
+      - FULL 209741 (ends 2015-06, 21 gaps) and MICRO 209747 (starts 2020-08)
+        are dominated and excluded.
+    The longest-single-continuous-stretch criterion TIES (837 = 837, same dates);
+    the e-mini set strictly dominates on total continuous OI coverage (1,023 vs 837
+    valid reports) and is the only candidate that can populate the spec's frozen
+    window start (2006-08). Chosen: E-MINI 209742. Never revisited after this line.
+
+R2  WINDOW. Reports with report_date (as-of Tuesday) in [2006-08-01, 2026-07-31].
+    Observed for the chosen row set: 1,016 reports (first as-of 2006-08-01, last
+    2026-07-28). The spec's parenthetical "(982 reports)" equals the certified VIX
+    futures row count quoted in DATA_CONTRACT.md par.4 and does NOT match any NASDAQ
+    row set; the unambiguous frozen window DATES govern, the stale count is recorded
+    here as a spec-text discrepancy (not a data impossibility - the state/gate
+    definitions are unaffected).
+
+R3  NUMERIC PARSING. Every TFF value column is a whitespace-padded string in the
+    certified parquet; parsed with pd.to_numeric(str.strip(), errors="raise") so a
+    single unparseable value aborts rather than silently coercing.
+
+R4  CROWD RAW. (Lev_Money_Positions_Long_All - Lev_Money_Positions_Short_All) /
+    Open_Interest_All, per report. Spread positions are EXCLUDED (spec says
+    "long - short"). Futures-only file (FutOnly_or_Combined = FutOnly).
+
+R5  TRAILING 156-REPORT CAUSAL PERCENTILE. Window = the most recent 156 REPORTS
+    INCLUDING the current one (reports i-155..i of the chosen series inside the R2
+    window); pct(i) = #{window values <= value(i)} / 156, in (0, 1]; ties counted
+    by <=. The first 155 reports are warmup and emit no state. (The alternative
+    reading - 156 PRIOR reports excluding current - differs by one report of warmup
+    and was NOT chosen; fixed here before computation.) "Report" is the literal
+    window unit, so windows spanning the 203-day 2009-2010 reporting gap use the
+    last 156 AVAILABLE reports; no calendar interpolation is invented (R15 merged).
+
+R6  TERCILES. Fixed cuts on the percentile: T1 pct <= 1/3; T2 1/3 < pct <= 2/3;
+    T3 pct > 2/3. NOT empirical terciles of the realized percentile distribution.
+
+R7  PUBLICATION DATE. The Friday of the as-of date's ISO week
+    (report_date + (4 - weekday) days), publication instant 15:30 ET, per the
+    frozen causal_availability_binding and the vendor cadence quoted in
+    DATA_CONTRACT.md par.4 ("published each Friday at 3:30 pm ET, using the data
+    from the immediately preceding Tuesday of that week"). The holiday-shifted
+    as-of dates (Mon/Wed; 14 in the full 209742 set) use the SAME Friday-of-week
+    rule - the binding carves out no exception. Residual caveat: in rare holiday
+    weeks actual publication can slip past Friday; a NON-GATE diagnostic excluding
+    the shifted-as-of weeks is printed in diagnostics.txt to bound the exposure.
+
+R8  CONDITIONED WEEK / TARGET. Conditioned week = the ISO week (isocalendar on
+    session label) immediately FOLLOWING the publication ISO week. Target return =
+    100 * (last-session close of conditioned week / last-session close of
+    publication week - 1). "Friday close" = the last session close of the ISO week
+    (Thursday on Good-Friday weeks; ~13:00 ET early close on post-Thanksgiving
+    Fridays). In both irregular cases publication (Friday 15:30 ET) still precedes
+    ALL post-entry price formation, because the market is closed from that week's
+    last close until the next Sunday 18:00 ET open - so no look-ahead is possible
+    at the entry close. The spec's "week starting the NEXT Monday 18:00 ET session"
+    is read as WEEK IDENTIFICATION (the conditioned week's first session is
+    Monday-labeled; per research_sdk/session_boundary.py that session OPENS Sunday
+    18:00 ET), not as an intra-week entry time - the frozen target clause ("Friday
+    close to Friday close") governs the measured quantity. Any earlier alignment
+    (conditioning the publication week itself) is the look-ahead the spec forbids.
+
+R9  WEEKLY GRID / SPLICE. Session closes built exactly as the certified H2 sibling
+    (GENESIS_H2_CALENDAR src/h2_driver.py): deep substrate nq1m_2005_202605.parquet
+    provides session labels 2006-01-01..2021-12-31 ("time" parsed as string);
+    modern nq_1m_2022_2026.parquet provides 2022-01-01..2026-07-31; last END-stamped
+    bar per session (hour >= 18 rolls the label forward); Saturday/Sunday-labeled
+    artifact sessions dropped; every chunk passes seal_guard.truncate_presealed and
+    the final frame passes assert_presealed. Weekly close = last session close per
+    ISO week (isocalendar year+week of the session label). Weekly returns are
+    computed WITHIN each substrate only, so the return spanning the 2022 substrate
+    boundary (2021-W52 -> 2022-W01) is NaN and DROPPED (the back-adjustment regimes
+    differ), as is the first deep week's undefined return.
+
+R10 EXCLUSIONS (each counted and printed by the program): (a) warmup reports
+    (no full 156-report window); (b) the final report(s) whose conditioned week
+    ends beyond the last certified weekly close (post-seal week - never read);
+    (c) conditioned weeks whose return is NaN (the splice week 2022-W01);
+    (d) any report whose conditioned week is not ISO-consecutive with its
+    publication week in the weekly grid (asserted; expected 0).
+
+R11 C1 STATISTIC. "Weekly clustered t" = two-sample Welch t between conditioned
+    weekly returns of T3 vs T1 weeks (each non-overlapping week is one cluster;
+    same reading the certified H2 sibling used for session-clustered). PASS iff
+    (mean T3 - mean T1) < 0 AND t <= -2.0.
+
+R12 C2 NULL. research_sdk.null_guard with unit = one week-row: decision_fn reads
+    the tercile of the (circularly shifted) state frame - the tercile is a function
+    of COT data only, never of returns, so shifting the finished label is free of
+    the recompute-leak class; statistic = |mean(T3) - mean(T1)| scored against the
+    ORIGINAL return alignment. verify_null_sensitivity with probe shifts [1, 7,
+    101] runs FIRST (spec: "sensitivity first"). Full null uses ALL m-1 distinct
+    shifts (m = usable weeks, m-1 >= 300 asserted). q95 via np.quantile(...,
+    method="higher") - conservative, H2 precedent. PASS iff real |T3-T1| > q95.
+
+R13 C3 HALVES. Split on the conditioned week's end (last-session label):
+    half 1 <= 2016-12-31 < half 2 (spec "2006-2016 / 2017-2026-07"). PASS iff
+    (T3-T1) < 0 in BOTH halves - i.e. sign consistency WITH the preregistered
+    contrarian sign; two consistently POSITIVE halves would contradict the
+    preregistered direction and FAIL (conservative reading).
+
+R14 DEALER / ASSET-MANAGER DIAGNOSTICS. Identical pipeline (net long-short / OI ->
+    trailing 156-report percentile -> fixed terciles -> T3-T1 with Welch t),
+    printed in diagnostics.txt as NON-GATE contrasts only, per the prohibitions
+    clause. No other category is computed.
+
+R15 (merged into R5.)
