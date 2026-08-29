@@ -1,0 +1,32 @@
+run_id: GENESIS_H4B_LASTHALFHOUR_20260828
+campaign: GENESIS
+type: SIGNAL_DIAGNOSTIC   # atlas H4's single permitted addition; signal-first, no policy, no P&L
+question: >
+  Does the opening half-hour return (from prior RTH close) predict the closing half-hour return on
+  modern NQ (Gao/Han/Li/Zhou geometry - hedging-demand mechanism)? This is a DIFFERENT window than
+  FOLLOW_MORNING (11:29/11:48) and has never been tested in this repo.
+definitions_frozen:
+  r_open30: close(10:00-stamped bar) / close(prior session's 16:00-stamped bar) - 1
+    (END-stamped bars; the 10:00 bar covers 09:59-10:00)
+  r_last30: close(16:00-stamped bar) / close(15:30-stamped bar) - 1
+  sessions lacking any of the three bars (early closes, holidays) are dropped and counted
+windows:
+  primary_gate: modern 2022-01 -> 2026-07-31 (the mechanism is modern per three independent repo
+    sightings; deep-era result is reported as diagnostic, NOT a gate)
+  diagnostic_non_gate: 2006 -> 2021 on the deep parquet
+gates_all_coded_and_printed:
+  L1: OLS slope of r_last30 on r_open30, session-clustered t >= 2.0, positive sign, modern window
+  L2: sign-agreement rate P(sign(r_last30) = sign(r_open30)) > 50% with clustered t >= 2.0, modern
+  L3: dependence-preserving null - real slope above the 95th percentile of >= 300 whole-session
+      circular shifts of r_open30 against r_last30 (null_guard; sensitivity first)
+  verdict: ALL pass -> PASS (policy construction + the portfolio-marginal gate that FOLLOW_MORNING
+      failed become a FUTURE preregistered run); any fail -> NULL at this geometry
+diagnostics_non_gate: conditioning splits reported only - top-tercile |r_open30|, top-tercile
+  trailing-21-session RV, announcement days (H2's certified calendars); era comparison; NO gate
+  reads these, NO iteration on them
+prohibitions: no thresholds/policy/stops/sizing, no P&L claim, no window changes, no parameter
+  search, no sealed reads
+outputs: out/gate_table.txt, out/pairs_series.csv, out/diagnostics.txt, out/ledger_result_pending.json
+power_note: ~1,050 modern sessions; MDE printed by program
+live_enabled: NO
+spend: $0

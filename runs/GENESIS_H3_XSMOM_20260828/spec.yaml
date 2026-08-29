@@ -1,0 +1,42 @@
+run_id: GENESIS_H3_XSMOM_20260828
+campaign: GENESIS
+type: DISCOVERY_STRATEGY   # atlas H3 - futures cross-sectional momentum, NEVER tested in-repo
+question: >
+  Does cross-sectional momentum across the multi-market futures universe earn after modeled costs
+  in discovery (2009-2018)? Cross-SECTIONAL rank is the untested formulation; time-series TSMOM is
+  closed at scope and is NOT being revisited.
+signal_frozen:
+  formation: trailing 252-session return skipping the most recent 21 sessions (12-1 convention)
+  rank: across ALL roots jointly (never within-sector - the CARRY n_sector=2 lesson)
+  portfolio: long top 6 / short bottom 6 of the ranked universe (of ~24 roots; if fewer than 18
+    roots have valid formation on a rebalance date, that date is skipped and counted)
+  weights: per-root vol-scaled - equal risk, trailing 63-session daily vol, each leg scaled to a
+    10% annualized vol target; weights capped at 3x equal-weight
+  rebalance: each Friday close (last session of ISO week); positions held the following week;
+    fills at the next session's open
+data: research/multi_market/economic_returns.parquet (24 roots, daily, certified by VOLUME00);
+  loads through seal_guard
+windows:
+  discovery_this_run: 2009-01-01 -> 2018-12-31 ONLY
+  held_back_NOT_READ: 2019-01-01 -> 2026-07-31 - never loaded in this run (date_max at LOAD,
+    the VOLUME_LIQUIDITY lesson); its one-shot read requires a separate preregistered run AND a
+    prior independent implementation with parity
+cost_model: $4.36/ctrRT commission + 1-tick spread per side per root (the multi-market convention)
+  as PRIMARY; 3-tick stress is ALSO a gate (D1 found the 1-tick assumption unevidenced)
+gates_all_coded_and_printed:
+  X1: discovery net > 0 at the primary cost model AND at the 3-tick stress, weekly clustered
+      t >= 2.0 at primary
+  X2: concentration - max single-root share of positive gross contribution <= 40%, and
+      leave-one-sector-out net > 0 for at least 5 of 6 sectors
+  X3: dependence-preserving null - real weekly mean above the 95th percentile of >= 300 circular
+      shifts of the rank series against returns (null_guard; sensitivity check first)
+  X4: sign consistency - net > 0 in both halves (2009-2013, 2014-2018)
+  verdict: ALL of X1-X4 -> PASS (candidate proceeds to independent implementation, then the
+      one-shot held-back read in a FUTURE run); any fail -> NULL, family closed at formulation
+prohibitions: no k/formation/skip/vol-window grid (252/21/6/63/10% frozen), no within-sector
+  variant, no 2019+ loads, no NQ-only readout, no sealed reads
+outputs: out/gate_table.txt, out/weekly_series.csv (discovery only), out/contribution_by_root.csv,
+  out/ledger_result_pending.json
+power_note: ~520 discovery weeks; MDE for t=2 at portfolio weekly sd -> printed by program
+live_enabled: NO
+spend: $0
