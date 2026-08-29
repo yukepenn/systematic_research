@@ -124,3 +124,68 @@ this wave — flagged as a gap, not covered by a lead.
 - Independence caution: ATAS/Bookmap/Axia/Optimus all restate one common footprint folklore
   (MarketDelta-era, ~2005-2010). Treat as ONE correlated family for null design, not 6
   independent confirmations.
+
+---
+
+# SESSION 2 ADDENDUM (2026-08-28, second pass — verification + new fetches)
+
+WebSearch again exhausted (200/200) at start; all work via WebFetch. Verified-with-my-own-fetch
+this session (all confirmed live and as-described):
+- arxiv.org/abs/1011.6402 (Cont/Kukanov/Stoikov, OFI, 2010; publ. J. Fin. Econometrics)
+- arxiv.org/abs/2508.06788 (Takahashi, ES E-mini 1-sec SVAR: around macro news "price impact
+  rises, flow impact declines"; impacts significant at 1-sec, shocks die ~1 sec)
+- arxiv.org/abs/2112.13213 (Cont/Cucuringu/Zhang: multi-level OFI improves impact fit; lagged
+  cross-asset OFI predicts short-horizon returns)
+- arxiv.org/abs/2505.17388 (Hu/Zhang, CSI 300 futures: OFI price response horizon- and
+  regime-dependent, OU jump-diffusion)
+- arxiv.org/abs/1909.09495 (Zotikov/Antonov, CME iceberg detection+prediction from full depth)
+- sierrachart.com Numbers Bars doc (diagonal dominant side; stacked imbalance; no depth needed;
+  1-tick data with bid/ask classification)
+- ninjatrader-live.ninjatrader.com/.../order_flow_volumetric_bars.htm (delta per price; diagonal
+  ratio default 1.5; min delta default 10; BidAsk mode needs bid/ask tick history; UpDownTick
+  mode = last-only fallback — vendor-sanctioned tick-rule proxy)
+- atas.net/volume-analysis/footprint-charts/ (named setups: Stacked Imbalance, Absorption,
+  Exhaustion, Initial Balance)
+- atas.net/blog/imbalance-why-the-size-matters/ (Rinas 2018-02-22; stacked = "several big
+  imbalances ... in a row"; S/R levels; contra-price imbalance = trapped traders)
+- atas.net/blog/cumulative-delta-indicator/ (ATAS Team 2021-05-06; CVD direction change at big
+  clusters -> possible trend change; trap recognition; 4 chart examples, no stats)
+- atas.net/blog/fixed-range-volume-profile-definition-and-trading-strategies/ (2025-05-07;
+  HVN/POC = S/R, LVN = fast traverse, pullbacks end at HVN; tick-data built)
+- jigsawtrading.com/free-order-flow-analysis-lessons/ (Peter Davies, course from 2011; "A change
+  in order flow comes BEFORE a change in price")
+- jigsawtrading.com/blog/how-to-learn-order-flow-the-right-way/ (2025-07-07; L3 pullback rule:
+  countertrend swings show "way lower" volume; entry when absorption ends pullback)
+- jigsawtrading.com/blog/how-to-learn-order-flow-trading-the-right-way-6-stage-beginner-guide-part-2/
+  (2025-08-07; L4 tape-speed pickup on trend resumption; L6 news crowd-fatigue)
+- jigsawtrading.com/blog/john-grady-reveals-institutional-order-flow-secrets/ (2024-04-18; DOM
+  passive depth "around 20% at most" of the story; momentum reading primary; no stats)
+- bookmap.com/blog/detecting-stop-runs-using-cvd-and-iceberg-absorption-for-strategic-trading
+  (2024-09-13; absorption -> CVD divergence -> absorption completes -> stop cascade; hypothetical
+  examples only)
+- bookmap.com/blog/stop-hunt-or-just-noise-how-to-read-the-real-intent-behind-a-move/
+  (2025-07-08; stop hunt = spike then stall/reverse, no stacking liquidity; stops cluster at
+  prior highs/lows, round numbers, premarket extremes)
+- bookmap.com/blog/scott-pulcini-stopiceberg-setups (2024-10-01; named setups Broken Ice,
+  Titanic, Dumb and Dumber, Stop and Hold, Double Whammy; markets incl. NQ; NO performance stats;
+  requires Bookmap MBO stop/iceberg detection)
+- bookmap.com/blog/profiting-from-cumulative-volume-delta-techniques-for-traders (2024-08-26;
+  CVD divergence/confirmation/multi-timeframe; hypothetical case studies, no thresholds)
+- bookmap.com/blog/key-order-flow-strategies-breakouts-trends-trapped-traders-and-stop-runs
+  (2025-02-05; trapped traders, stop runs, exhaustion; zero quantitative evidence)
+- GitHub API: "order flow imbalance futures" -> only 0-1 star repos; "cumulative delta backtest"
+  -> 0 results. No audited-code lead.
+
+NOT re-verifiable this session (dropped from leads, kept as gap notes): both axiafutures.com
+articles (HTTP 500 on all attempts today — site server errors), optimusfutures.com articles,
+topstep payout stats page, atas cluster-search + delta-patterns articles (unverified this pass;
+consistent with family claims already covered). Blocked again: futures.io (403), reddit (tool
+refusal), DuckDuckGo (CAPTCHA), Mojeek (403), quantifiedstrategies (bot wall).
+
+FINAL LEAD MAP (16 emitted): A8-01 Cont OFI · A8-02 Takahashi macro-state OFI · A8-03 multi-level
+/lagged OFI · A8-04 regime/horizon OFI · A8-05 iceberg detection (MBO-gated) · A8-06 Sierra
+stacked-imbalance definition · A8-07 NT8 volumetric defaults + UpDownTick proxy · A8-08 ATAS
+stacked-imbalance S/R+traps · A8-09 ATAS CVD traps · A8-10 ATAS FRVP HVN/LVN · A8-11 Jigsaw 2011
+tape-first principle · A8-12 Jigsaw pullback countertrend-volume rule · A8-13 Grady DOM=20%
+negative-space · A8-14 Bookmap sweep-and-reclaim criteria · A8-15 Pulcini named setups (MBO-gated)
+· A8-16 Bookmap CVD divergence.

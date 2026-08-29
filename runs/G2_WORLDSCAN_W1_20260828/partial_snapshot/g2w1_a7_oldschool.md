@@ -49,3 +49,32 @@
 
 ## NQ translation thinking (common observables)
 We own: NQ 1-min 2006-2026 (RTH+ETH), multi-market daily, VIX/VXN certified daily, limited 2025-26 tick/BBO. All falsifiers below are runnable on that. Session boundary/END-stamp conventions per CLAUDE.md apply to any implementation.
+
+## SECOND-PASS VERIFICATION LOG (same day, fresh session — WebSearch again 200/200 exhausted)
+Every source cited in the final leads was re-fetched and confirmed this session before use:
+- oxfordstrat.com/trading-strategies/opening-range-breakout/ — CONFIRMED: Noise=min(H−O,O−L), Stretch=SMA10(Noise)×2, buy stop O+Stretch / sell stop O−Stretch; 42 futures, 32 yrs since 1980; site rating D; $50 RT sensitivity charts.
+- taylortradingtechnique.net/Techniqueexplained.html — CONFIRMED: BUY/SELL/SELL-SHORT 3-day cycle, rally (buy-day low→sell-day high) and decline (SS-high→buy-day low) measurements; vendor claims "over 90% of the cycles are positive" across markets (positive = SS-day high > prior buy-day low).
+- quantifiableedges.com/what-happens-when-range-rapidly-contracts/ — CONFIRMED: Rob Hanna 2008-04-15, NDX since 1986, WR7 down-close then NR7; next-day avg gain >10× a normal day (normal ≈0.06%), 3-day >5× normal.
+- github.com/giovannibrusco/zarattini-2023-orb-qqq — CONFIRMED: replication 1,775 vs paper 1,795 trades, Sharpe 1.06 vs 1.12 at zero slippage, collapses to 0.23 with slippage; break-even ≈2.2¢/share; NQ-09:25 confirm filter $0.125/share t=2.05 vs QQQ-only placebo $0.079 t=1.27; 76% of filtered PnL from 2022; loses in 2017/2020/early-2023.
+- chartschool.stockcharts.com .../rsi-2.md — CONFIRMED: Connors RSI(2): 200d SMA filter, buy RSI2<10 (<5 aggressive) above SMA, short >90 (>95) below, exit 5-day SMA cross, no stops (testing said stops hurt), stocks + stock indices.
+- slideshare.net/slideshow/linda-bradford-raschke-the-taylor-trading-techniqueppt/262013129 — CONFIRMED: LBR deck; Pinball = 3-period RSI of 1-day ROC, >67 / <33 thresholds; buy day = test of prior low then rally; ideal SS day opens up, high first / low last, closes lower range.
+- oxfordstrat.com/trading-strategies/greatest-swing-value/ — CONFIRMED: Williams GSV: Noise=O−L if up close, H−O if down close; GSV=SMA10×2; stops at O±GSV; 42 futures 32 yrs; rating D.
+- oxfordstrat.com/trading-strategies/smash-day-pattern-c/ — CONFIRMED: long setup Close[i−1] < Low[i−2]; buy stop 1 tick above High[i−1]; 42 futures 1980–2011; rating D.
+- mypivots.com/dictionary/definition/206/stretch — CONFIRMED: Stretch = 10-period SMA of smaller of (O−H),(O−L) absolute diffs; used for ORB/ORBP entry+stop.
+- en.wikipedia.org/wiki/Toby_Crabel — CONFIRMED: 1990 book; no losing year 1991–2002; $3.2B by 2005; FT "counter-trend" quote.
+- quantifiableedges.com/wr7-nr7-is-back/ — CONFIRMED: Hanna 2008-05-22 follow-up post.
+- tradingsetupsreview.com/nr7-trading-strategy/ — CONFIRMED: NR7 def + 20EMA-side filter + break-of-extreme entry; Crabel attribution.
+- tradingsetupsreview.com/the-holy-grail-trading-setup/ — CONFIRMED: ADX(14)>30 rising + pullback to 20 SMA + entry at touch-bar extreme; Raschke/Connors attribution.
+- tradingsetupsreview.com/15-minute-opening-range-scalp-trade/ — CONFIRMED: Kevin Ho (Chartpoint, 2003 examples): 2 ticks beyond first-15-min range, 1-pt target/stop, 1-min time stop, ES.
+- newtraderu.com/2020/08/15/turtle-soup-trading-strategy/ — CONFIRMED: full Turtle Soup rules (20d low, prior low ≥4d earlier, entry above prior low, stop below entry-day low, 1-day validity, one re-entry).
+- alvarezquanttrading.com RSI2 posts (both) — CONFIRMED: distribution study 2007–17 + strategy CAR/DD/Sharpe with ex-index universe change 2007–2018.5.
+- quantpedia.com/strategies/turn-of-the-month-in-equity-indexes/ — CONFIRMED: McConnell & Xu; 1926–2005; 7.2% pa, vol 6.9%, Sharpe 1.04, MDD −20.79%; ~30 markets.
+- libertystreeteconomics 2021-05 + 2026-07 posts — CONFIRMED: drift 1998–2019 overnight ≈2.6% ann, 2–3am ET ≈3.6%; 2026 post: ≈zero since 2021, closing-imbalance dispersion 6.5%→2.9%.
+- quantifiableedges.com/reversal-tendencies-for-2-gaps-lower/ — CONFIRMED: SPY ≥2% gap down since 1960 closed above open ~69% of time (as of 2008-10-23).
+- bettersystemtrader.com/124-managing-trades-with-linda-raschke/ — CONFIRMED: 2017-10-01; three exit families; first-30-min NYSE volume tone; breadth confirmation.
+- github.com/sharebook-kr/larry_simple + raw master/main.py — CONFIRMED: target = open + 0.5×(prior range), buy on cross, scheduled time exit, BTC/Korbit.
+- github.com/nerdyckc/turtle_soup_bitmex — CONFIRMED: Street Smarts turtle soup implementation, 14 stars, updated 2026-05.
+- lindaraschke.net /articles/ + /linda-videos/ — CONFIRMED: free PDFs; video "Day Type, Taylor Trading, Trade Location, More".
+- concretumgroup.com can-day-trading + profitable-day-trading pages — CONFIRMED: QQQ/TQQQ 2016–23 +1,484% vs +169%, 33% ann alpha; stocks-in-play top-20 +1,600% net, Sharpe 2.81, 36% alpha.
+NOT re-verified this session (present in first-pass notes only; excluded from lead SOURCE lines): stonex Taylor blog, luxalgo turtle-soup, tradersmastermind, netpicks, cxoadvisory, quantifiedstrategies substack posts, oxfordstrat narrow-range-1, quantifiableedges massive-gap-down, completetradersedge.
+Still unsourceable: Sheldon Knight / K-Data (all fetchable engines blocked; Futures Magazine archive offline); Crabel doji/hook exact tables; Street Smarts 80-20 exact-rule page.

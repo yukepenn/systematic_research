@@ -76,4 +76,11 @@ Census §5 already lists breadth_lab parquets (2026-08-19), tick/NQ 09-26 (2026-
 - INTERNALS_ACQUIRE_20260827: acquired the internals bars; information test unrun — A16-06/07/08 are the candidate mechanism classes for that prereg.
 - INFORMATION_FRONTIER_00_20260828: names MNQ tick / $TICK depth / VX-in-NT8 as retractions; my leads give the per-asset mechanism-class detail.
 
+## Addendum (second pass, 2026-08-28, re-verified from filenames)
+- Unique-date recount (dates, not files): ES tick 126 (121 pre-burn <2026-05-31); MNQ tick 187 (128 pre-burn); NQ tick 319 (256 pre-burn).
+- New overlap measurements (filename joins, pre-burn): ES∩NQ tick = 121 dates; ES∩NQ-with-BBO = 117; MNQ∩NQ = 128; MNQ∩NQ-with-BBO = 77.
+- Unique minute dates: CL 1,485 (2022-01-02→2026-08-05); ZB ~1,161; ZN/6J 185; MGC 184; MNQ ~1,479; MES 29 files (1 month).
+- `research/data/DATA_ASSET_REGISTRY.md` (d013f62, 2026-08-27) re-read in full: internals/VIX materialized 1,147 sessions RTH-only (covers 764/2,139 = 35.7% of P1 decisions; overnight = permanent ceiling); NQ materialization 98/99 quote-FULL, 102/243 Last-usable, 141-session remainder = frozen blind pool; multi-market daily measured to Dec-2009, 21/25 roots, ~17.6y, contract-by-contract only, decade-ambiguous instrument field.
+- `research/data_internals/MANIFEST.csv`: TICK/TRIN/VIX 1m each ~445K bars, 2022-01-03→2026-07-31, "hard-dropped at build" seal handling; note "volume is 0 and must never be treated as flow".
+
 ## Leads emitted: 12 (A16-01 … A16-12) — see final message.

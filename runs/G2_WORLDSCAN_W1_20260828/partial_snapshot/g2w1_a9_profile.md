@@ -145,6 +145,89 @@ Date: 2026-08-28. Agent: A9-PROFILE, GENESIS II WORLD DISCOVERY WAVE 1.
 - The mypivots 80%-rule entry is the only place found that both states the rule mechanically AND
   reports a test (~60% on ES, no code shown).
 
+## SESSION 2 HARVEST (same agent, restarted run; all fetched 2026-08-28)
+Access differences vs session 1: shadowtrader.com WORKED this time (glossary + WP search);
+brave search HTML worked for ~3 queries then hard-429; marketcalls.in 403; cmegroup.com education
+timeout; jimdaltontrading.com reachable but no 80%-rule/glossary content served.
+
+### shadowtrader.com glossary (Peter Reznicek lineage; Dalton-derived; canonical modern statements)
+- /glossary/eighty-percent-rule/ — full mechanical statement: open outside VA (70% prior volume),
+  trade into value two consecutive 30-min periods (trading in suffices, close-in not required;
+  first-period close inside auto-satisfies) → "80% chance" of full rotation to other side of value;
+  bidirectional; mechanical application discouraged.
+- /glossary/overnight-inventory/ — ON inventory = share of ON activity above/below prior settlement;
+  "matters most... when it is skewed 100% in either direction" → odds of early correction
+  "increase greatly".
+- /glossary/poor-high/ — poor high = no excess, flat TPO lineup at extreme; if revisited later,
+  "the odds are strong that it will break and move higher". No numbers.
+- /glossary/look-above-and-fail/ — balance-area-only pattern; failure → "strong odds" of rotation
+  to the LOW of the balance area. Explicitly excludes non-balance reference levels.
+- /glossary/open-drive/ → 404 (open-type entries live at mypivots instead).
+
+### tradingstats.net (major stat family, 1-min-derived, 2014–2026, NQ/ES/YM/RTY; sitemap-crawled)
+- /initial-balance-breakout-statistics/ — ES N=2,686, NQ N=2,833 (2015-01-05→2025-12-29), IB 09:30–10:30.
+  ≥1 breakout: ES 97.8% / NQ 96.2%. ES split: single-up 38.3%, single-down 30.9%, double 28.7%, none 2.2%
+  (NQ 40.6/33.0/22.6/3.8). Close-reaches-extension: ES up 25%=52.0%, 50%=38.2%, 100%=18.8%, 200%=4.4%
+  (NQ 47.1/32.4/12.8/2.1 up). IB<0.5×ATR: 98.7% breakout, median ext 74.8%; IB>1.5×ATR: 66.7%, 22.3%.
+- /initial-balance-retest-statistics/ — NQ/ES ~3,000 break-days 2014–2026. Retest prob by extension:
+  1.1→87%, 1.2→75%, 1.3→63%, 1.4→53%, 1.5→45%. At 1.2: ran-away 26% / retest-continued 52% /
+  retest-reversed 22%. Continue-vs-reverse crossover ≈1.40 NQ / 1.50 ES. Runaway days median 2.02R
+  vs 1.56R for retest days. Median retest delay 5→55 min (1.1→1.5).
+- /ib-vpoc-research/ — 12,400+ sessions NQ/ES/YM/RTY 2014-02→2026-04. IB-VPOC in top-25% of IB →
+  break IB-high 60.8–63.3%; bottom-25% → 35.5–42.6%. BUT IB direction alone = 74–81% accuracy and
+  VPOC adds delta −0.3%..+0.4% ("zero" incremental). Inter-session: bottom-25% VPOC → next-session
+  upward VPOC migration 65–69% (NQ/ES/YM); top-25% → down only 51–59% (near random).
+- /single-prints-market-profile-research/ — 3,847 zones, NQ/ES/YM/RTY, 2014-02→2026-03, 1-min.
+  SP = exactly one TPO letter, ≥2 ticks, interior only, 2–25% of day range. Formation 37–53% of days
+  (NQ 53%); freq rising 39–47% (2014-19) → 58–65% (2022-26). Same-day full reversal through zone
+  6–10%. D+5 fill 63–67%. Survive 7 days unfilled → ever-fill <50%; D+10 → 37–41%.
+- /session-open-analysis-futures/ — 12,390 days, 4 instruments, 2014-02→2026-03. Opens: in-range ~60%,
+  gap-up ~25%, gap-down ~15%. Gap-down→touch prior low 65–69%; gap-up→prior high 59–65%; in-range→
+  prior close 71–73%. STRONGEST: VAH touched → VPOC touched 81.8–84.2%; VAL touched → VPOC 81.7–83.8%
+  (all four instruments 81–84%).
+- /overnight-high-low-breakout-strategy/ — NQ N=2,827, 2015→2025. RTH breaks ≥1 ON level 94.2%;
+  only-high 38.7%, only-low 32.6%, both 22.9%, none 5.8%. Open above ON midpoint → high breaks first
+  76.2% (n=1,605); below → low first 75.6% (n=1,211). Median first break 11 min after open; 68.7%
+  within 30 min. Median ON range 90.5 NQ pts. Both-swept risk 24.3%.
+- /when-do-gaps-fill/ — ES 803 / NQ 839 filled-gap days 2020-01→2025-04, 5-min. Fill by ATR tier:
+  <0.3×≈78%, 0.3–0.7×≈42%, 0.7–1.2×≈25%, >1.2×≈8%. In-range gaps fill ~70% vs 43–47% outside-range.
+  Fills by first 30 min: ES 51.4% / NQ 60.9%; by noon 86.7%/91.1%. Median fill ~8:57/8:47 CT.
+- /opening-range-close-probability/ — NQ 3,147 / ES 3,064 sessions 2014→2026. Close outside 30-min OR:
+  NQ 70.6% / ES 72.8%. First-break-side close agreement 65.7–80.1%. Whipsaw (both sides) NQ 36.8% /
+  ES 43.0%; of whipsaws, close on side opposite first break 78.4%/73.4%. Narrow OR → 75.2% outside
+  vs wide 65.3–66.8%.
+- /pdh-pdl-sweep-probability/ — NQ 3,121 days 2014–2025. PDH swept 56.8%, PDL 43.4%; PDH>PDL in
+  11/12 years (+13.4pp avg). 47.5% of PDH sweeps in Asia session; after noon ET residual 7–18%.
+
+### Other session-2 verifications
+- mypivots.com/dictionary/definition/25/80-rule — re-verified: "only works 60% of the time" (ES test).
+- vtrender.com/glossary/value-area-rule — "80% probability that the market would go to the Value Area
+  Low if it enters the value zone from outside"; odds claimed best when prior value zone is
+  well-balanced/gaussian; velocity scales with volume.
+- quantopian-archive.netlify.app thread (Erick Gomez) — rule restated (80%/70% defs); Harlin manual
+  5-day S&P check "28 signals profitable, 5 false positives" (N=33, ~85%); community consensus: rule
+  alone insufficient; code implementations attempted, no clean backtest published.
+- howtotrade.com/trading-strategies/value-area/ — 2024-01-09 (upd 2025-05-20), Oyekanmi Jose:
+  restates 80% claim; attribution to Steidlmayer 1980s; explicit "not a guarantee".
+- traderfeed 2009/01 framing-trades post — SPY since 2000: ~75% of days touch prior-day pivot
+  (average price); R1/S1 touched ~75%; R2/S2 ~55%.
+- traderfeed 2007/10 gaps post re-verified: N=962 since 2004, 70% same-day fill; <0.35% → ~80%;
+  ≤0.10% → >90%; >0.35% → <50%.
+- nqstats.com/ib_breaks.html + /rth_breaks.html re-verified this session — numbers match session-1
+  notes exactly (N=2,571 / N=2,488, 2016–2025).
+- mypivots /dictionary/definition/171/rotation-factor — computation only (±2 per 30-min bar,
+  "split counts"); NO predictive claim → rotation-count lead left out (would need CBOT handbook,
+  unreachable).
+- Brave-search snippet only (NOT visited): reddit r/Daytrading claim "initial balance... broken over
+  90% of the time" — corroborates IB base rates; chartspots.com premium ES stats report (paywalled).
+
+### Independence additions
+- tradingstats.net and nqstats.com are DISTINCT sites/datasets (different N, periods, definitions:
+  wick-breach vs close-basis; 2016–2025 vs 2014–2026) but both anonymous stat sites in the same
+  niche — treat as separate-but-unaudited; replicate before believing either.
+- ShadowTrader / Vtrender / MyPivots / howtotrade all restate the same Dalton "Profile Reports"
+  lineage rule — claims correlated; only their (rare) test numbers are independent.
+
 ## Gaps / what I could not get
 - futures.io thread stats (FT71 value-area studies, IB threads) — 403.
 - No peer-reviewed test of any MP construct located via reachable routes (Semantic Scholar 429,

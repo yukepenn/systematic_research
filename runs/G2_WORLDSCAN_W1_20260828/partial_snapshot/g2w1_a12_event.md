@@ -111,3 +111,64 @@ NQ 1-min 2006–2026 (END-stamped, ET, 18:00 session opens), multi-market daily,
 certified, limited 2025–26 tick/BBO. Event calendars (FOMC dates/times, CPI/NFP schedule,
 Treasury auction dates, triple-witching dates, Nasdaq-100 reconstitution dates, earnings dates)
 are public/free but must be built — flagged per-lead in OBSERVABLES.
+
+---
+
+## Continuation session log (2026-08-28, second pass — the pass that shipped the final leads)
+WebSearch again refused at 200/200 before first query; entire pass ran on WebFetch fallback.
+Re-verified THIS pass (fresh fetches, all 2026-08-28):
+- Liberty Street 2012 pre-FOMC drift post (49bp, 2pm→2pm, ">80% of equity premium" quote) ✔
+- NBER w24748 Monetary Momentum page (25-day pre-drift, >4.5% by t+15 signed by surprise) ✔
+- Liberty Street 2021 Overnight Drift post (2–3am ET, 3.6% ann., dealer-inventory mechanism, 1998–2019) ✔
+- Liberty Street 2026 Disappearing Overnight Drift ("averaged close to zero since 2021";
+  smaller close limit orders / finer slicing quote) ✔
+- IDEAS page for ECB WP1901 Kurov et al. (7 of 21 releases; "correct direction about 30 minutes
+  before"; ~half of total adjustment) ✔
+- Crossref: Gao/Han/Li/Zhou JFE 2018 abstract (first half-hour predicts last half-hour; stronger
+  on high-vol/announcement days; SPY 1993–2013) ✔
+- Crossref: Baltussen/Da/Lammers/Martens JFE 2021 abstract (60+ futures 1974–2020; last 30 min
+  predicted by rest-of-day; reverts over subsequent days; gamma-hedging link quote) ✔
+- Crossref: Lou/Yan/Zhang RFS 2013 abstract (prices fall days before auctions, recover after;
+  9–18bp of auction size; dealer risk-bearing mechanism) ✔ (+ personal.lse.ac.uk/loud listing ✔)
+- Crossref: Bondarenko/Muravyev JFQA 2022 abstract ("4 hours around European open account for the
+  entire average market return", SR 1.6, "noisy zero" other 20h, VIX-uncertainty mechanism) ✔
+- Crossref: Kroencke/Schmeling/Schrimpf JME 2021 abstract (risk shifts "lion's share", price
+  pressure/rebalancing) ✔
+- Crossref: Jiang/Likitapiwat/McInish JFQA 2012 abstract (AHT price discovery "immediately after") ✔
+- NYSE closing auction insider's guide (3:50pm MOC/LOC cutoff; imbalance published from 3:50pm
+  every 1 second) ✔ [used instead of nyse.com/auctions]
+- LSEG Russell reconstitution page ($114.7B NYSE + $102.5B Nasdaq at June 2025 recon close;
+  2026 recon effective after close 2026-06-26) ✔
+- Quantifiable Edges: opex-friday-has-finished-weak-in-recent-years (last 30 min weak since 2018,
+  "not a huge edge") ✔; the-employment-report-intraday-hot-streak (2013–14 open→close streak) ✔;
+  an-updated-look-at-thanksgiving-week-stats (Wed 76.9%/+0.3%; Friday half-day decayed last 15y;
+  Monday-after give-back) ✔
+- arXiv abstracts: 2605.04004v2 Mesfin MNQ falsification (14 families, 947 days 5-min, 2-pt
+  friction, "None of the tested strategies satisfied all of these requirements") ✔;
+  2012.06573 Marchal presser computer vision ("complex discussions ... higher equity returns and
+  a drop in realized volatility") ✔; 0903.0010 Petersen et al. (power-law pre/aftershocks) ✔
+- Elm Wealth night-moves ✔ (38%/yr gross L/S overnight-pattern portfolio 1995–2022; retail
+  open-order mechanism; "grandmother of all market anomalies")
+- OpenAlex: 10.1111/jofi.12818 Cieslak et al. ("equity premium is earned entirely in weeks 0, 2,
+  4, and 6" of FOMC cycle) ✔; 10.1111/j.1540-6261.2010.01573.x Heston et al. ("return
+  continuation at half-hour intervals that are exact multiples of trading day", 40 days) ✔;
+  10.1111/j.1540-6261.1993.tb04750.x Ederington-Lee (bulk of adjustment "within the first
+  minute"; vol elevated ~15 min; subsequent moves independent of initial reaction) ✔;
+  10.2469/faj.v47.n1.58 Stoll-Whaley 1991 (metadata; abstract minimal) ✔;
+  10.2139/ssrn.3459744 Franz NDX/MSCI rebalance intraday (METADATA ONLY — no abstract; shipped
+  as title-level lead with EVIDENCE: none) ✔
+NOT shipped (couldn't verify claim content through non-blocked endpoints): Bogousslavsky-Muravyev
+JFM 2023 abstract (DOI cited as secondary in MOC lead), "stocks fall during Powell Q&A" press
+statistic, post-10:00 fade lore, Nasdaq-100 July-2023 special rebalance press release (timeout),
+Build Alpha news-event page (registry only), Fed-day upside bias posts (day-mean, excluded).
+
+## FINAL SHIPPED LEAD NUMBERING (25 leads)
+01 Pre-FOMC drift · 02 Monetary momentum · 03 FOMC-cycle even weeks · 04 FOMC risk shift ·
+05 Presser computer vision · 06 Rate-change Omori vol decay · 07 Ederington-Lee 1-min/15-min
+response shape · 08 30-min pre-release drift · 09 NFP open→close streak · 10 Treasury auction
+cycle · 11 Overnight drift 2–3am · 12 Disappearing overnight drift · 13 Night Moves L/S
+overnight · 14 Around-the-clock European-open window · 15 First→last half-hour · 16 Gamma-hedging
+late-day momentum · 17 Half-hour-of-day periodicity · 18 NYSE 3:50 close mechanics ·
+19 Expiration-day effects · 20 Opex-Friday last 30 min · 21 Franz NDX rebalance intraday ·
+22 Russell recon close volume · 23 Thanksgiving half-day shape · 24 After-hours earnings price
+discovery · 25 MNQ OHLCV falsification (negative control)

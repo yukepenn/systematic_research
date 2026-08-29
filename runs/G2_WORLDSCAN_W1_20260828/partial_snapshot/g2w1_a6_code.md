@@ -96,3 +96,77 @@ search (returned 0; legacy code-search limitation on large repos). No logins, no
 - Other repos logged, below bar: nessos666/nq-strategy-builder (6★), s583381747/nq-quant (ICT chain,
   5★), Aksee123/nq1_Scalping_Strategy (4★ Pine VP scalper), seady22/GambiTick-AI (DQL ES/NQ, 1★),
   kadennaj/nq-futures-strategy, johnsonyang567 NinjaScript top-down, quantrocket NSE/crypto items.
+
+## Second-pass captures (verified by re-fetch 2026-08-28, same session)
+- giovannibrusco/zarattini-2023-orb-qqq RE-VERIFIED: replicates Zarattini & Aziz 2023 SSRN 4416622,
+  QQQ 5m ORB (trade first-bar direction, skip doji; stop = 09:30 bar extreme = 1R; target 10R;
+  ~75% stopped, ~22% EOD flat; sizing min(1% eq/$R, 4x eq/entry)). No-slip $138,639 / Sharpe 1.06 /
+  1,775 tr; $0.02/sh slip → $4,860 / 0.23; +NQ-09:25-agreement filter $44,332 / 0.77 / 844 tr;
+  QQQ-premarket placebo $25,191 / 0.57. Break-even ~2.2c/sh slippage. 76% of filtered PnL = 2022;
+  loses 2017, 2020, early 2023.
+- prashanthaitha24/nq-strategy-b-bot RE-VERIFIED: 5m bull FVG unfilled, nested inside active 15m
+  bull FVG (5-pt buffer); bar low dips into 5m FVG and closes back above FVG top → long; window
+  09:30-12:00 ET; stop FVG bottom −2pts; target 2R; flat 15:45. Databento NQ 5m Jan2023-May2026,
+  CSV INCLUDED in repo. 1 MNQ long-only: +$17,187, 432 tr, 53.5% WR, PF ~2.3, maxDD $786, 4/4 yrs
+  positive, 13/14 qtrs. WR drifts UP by year: 46.5→52.5→57.3→68.1% (2023→2026) — regime dependence
+  or leak-with-recency? Shorts 42.5% WR dropped. Author: real DD "2-3x worse", expect 50-55% WR.
+- Ascensao/Intraday-momentum-strategy RE-VERIFIED: implements SSRN 4824172 (Zarattini/Barbon/Aziz
+  'Beat the Market', SPY); VWAP + dynamic σ_open time-of-day noise bands, UB/LB signals; Polygon
+  minute data 2019+; Pine port included (concretum_bands_pine_code.txt); "replication aligns
+  closely with the original paper's yearly returns" 2016-2024.
+- honoreaa/Futures-MeanReversion RE-VERIFIED: ES−0.2241·NQ spread (OLS β on FULL sample =
+  structural lookahead), rolling z entries/exits, daily 2021-01→2025-07; claims $391,568 on $100k,
+  ~86%/yr, Sharpe 1.67, NO costs; author: "I also assume that I have some slight look-ahead bias
+  in my code."
+- jalv92/DriftVwapPullback RE-VERIFIED: Conti (ex-Nordea MM) interview transcription; session VWAP
+  09:30; drift long = 15m close > VWAP AND VWAP rising AND +0.10% past hour (mirror short); entry =
+  first counter-direction 5m candle, market at next bar open; 50pt stop / 75pt long / 85pt short
+  targets (recommended cfg); window 10:30-15:30, flatten 15:55. MNQ Market Replay Jul 7-Aug 6 2026:
+  67 tr, +$6,852, ~47% WR, PF ~1.38. Mirror gate NOT passed; source PF 1.18 < 1.30 acceptance bar.
+- QC Dual Thrust article RE-VERIFIED: range = max(HH−LC, HC−LL) N=4 days, K1=K2=0.5; SPY hourly
+  2004-2017: Sharpe −0.17, MDD 41.1%; code clonable (partial in page).
+- NEW this pass: nightshiftquant/-NSQ-Trading-Bots-NinjaTrader-8 — NSQ_OvernightBreakout.cs (NQ,
+  range 00:00-02:30 ET, trade 02:30-04:00, 1 trade/session, hard exit 04:00; claims 2022-24
+  +$22,840, 54.1% WR, PF 1.91, Sharpe 1.58, maxDD −$2,480, 312 tr) + NSQ_ATRChannelScalper.cs (ES
+  04:00-09:15 EMA+ATR band premarket fade; +$18,620, PF 1.74). No commission/slippage disclosed;
+  PnL/maxDD ~9:1 implausibly smooth; 1★; AI-slop suspicion — but code is NT8-native and rules exact.
+- NEW: noahgniffke-sys/mes-smc-backtest — MES SMC suite (sweeps/BOS/IFVG/session flow, 13+ script
+  versions); yfinance or local CSV 5m/1h/1d ~3y; claim "Asia-low sweep → BOS → FVG entry on the
+  5-minute chart produced a 77-79% win rate at 2R" ⇒ ~+1.3R/tr expectancy = implausible; suspect
+  sweep/BOS detection lookahead + touch fills + yfinance data quality.
+- NEW: e49nana/lokus-research — MES/MNQ/MYM Databento; Phase 1a SMC "Perfect Confluence" M15 CLOSED
+  no edge after fees (gross +$1.69/tr, t≈0.28); Phase 2a TORB (time-of-day reversal breakout,
+  "replicating Wang et al. 2019", M1) pending; frozen params, Bonferroni α=0.0167, 10k bootstrap,
+  sealed holdout 2024-07→2025-07, 428 tests. Governance-grade; mirrors our doctrine.
+- NEW: alienblack/Intraday-Momentum-Strategy-SPY-ETF-Python- — second independent Zarattini-style
+  SPY impl (time-of-day sigma gap-adjusted bands, semi-hourly decisions, session-VWAP trail,
+  vol-target 4x cap, $0.0035+$0.001/sh costs); "Recent runs on 2024 data show weak Sharpe" —
+  contrasts with Ascensao's alignment claim.
+- NEW: robbyrobaz/nq-l2-scalping — "Strategy 020": NQ ORB 09:30-09:40 (10x1m bars), stop 16 ticks
+  (4pt), target 128 ticks (32pt); claim "Validated Edge: PF 4.5, 50 trades, 36% WR (21-day
+  backtest)"; IBKR 1m bars; PF math internally consistent but n=21 days; 1m bars cannot sequence
+  4pt stop vs target intra-bar. Paper-trading phase.
+- NEW: greybeard-code/gbBacktester — C# tick-level L1 backtester over NT Market Replay Parquet;
+  "no look-ahead — fills happen before the strategy sees the bar"; limit fills on penetration not
+  touch; stops trigger on last trade, fill at quote; Apex trailing-threshold prop sim; Monte Carlo
+  tools; no perf claims. TOOLING lead only (our DOM/Market-Replay collection is PAUSED — do not
+  read this as a data-collection prompt).
+- NEW: Pikachunou/nq-quant-research — empty scaffold (EMA baseline, no results). Skipped.
+- NEW: ninjatraderecosystem.com/?s=opening+range+breakout — TurnKeyORB + ORBie (paid, no rules
+  disclosed → not leads), Opening Range Indicator + Accumulation Distribution Range Breakout
+  (free UAS). Search works; user-app-share-download root 404s.
+- NEW: tag page also fetched fresh: LuxAlgo Ultimate ORB 9.2K boosts / 1,919 comments / 109,324
+  views; ATR trail "background optimization testing five multipliers simultaneously" = live
+  in-sample selection displayed as feature; Hit Rate Dashboard = % sessions reaching each target
+  (measurable distributional claim). Indicator, not strategy; no perf.
+
+## Final lead selection (15)
+A6-01 giovannibrusco ORB repl · A6-02 dws-data NQ ORB retrace · A6-03 nq-strategy-b-bot nested FVG
+· A6-04 ict-cameron falsified · A6-05 lokus-research · A6-06 mes-smc 77-79% claim · A6-07 Ascensao
+Zarattini-momentum repl (+alienblack cross-ref) · A6-08 QC Gao intraday momentum · A6-09 je-suis-tm
+Dual Thrust/London Breakout (+QC Dual Thrust cross-ref) · A6-10 nightshiftquant NT8 overnight ·
+A6-11 DriftVwapPullback · A6-12 honoreaa ES-NQ spread · A6-13 Big Daddy Max ORB reversal branch ·
+A6-14 LuxAlgo hit-rate dashboard · A6-15 gbBacktester fill-mechanics tooling.
+Dropped: Dryeye2006 15-min ORB NQ (first script, no perf — Big Daddy covers the mechanism),
+Mrshahidali420 (indicator, models pre-culled), quantrocket first-last/trend-day (no perf published),
+Pikachunou (scaffold).

@@ -63,3 +63,59 @@ NinjaTrader Ecosystem public strategy listings inspected carry NO published perf
 No vendor visited today publishes an audited or even screenshot backtest on its public pages;
 SharkIndicators explicitly disclaims testimonials. Evidence grade across the domain: none →
 anecdote → examples. Nothing above 'examples' anywhere.
+
+---
+
+# SESSION 2 — independent re-verification pass (same date, 2026-08-28)
+
+A second pass re-visited the domain independently and RE-VERIFIED the load-bearing sources
+before emitting leads. WebSearch budget confirmed exhausted (200/200) at first attempt;
+all work done via WebFetch on vendor pages + Bing/DDG endpoints (DDG returned CAPTCHA;
+Bing site:ninza.co returned nothing usable — ninZa stays NO-LEAD, Cloudflare 403).
+
+Verified firsthand this session (fetch OK):
+- sharkindicators.com + /products/bloodhound/ (BloodHound nodes, "days → minutes" claim;
+  BlackBird HWM protection, scaling, unlimited trailing rules; Playbook pack named, undocumented)
+- lizardindicators.com home, /indicator-library-2/ (16 categories incl. Session Tools
+  "periodically reset at anchor points", Gapless "eliminate the effect overnight gaps have"),
+  /blog/, /revisited-trading-the-opening-range/ (noise bands = prior-4-week avg volatility;
+  "Larger moves are defined as expansion whereas the smaller ones are noise moves"),
+  /camarilla-pivots/ (R3 = Close + Range*1.1/4; "A market that opens within the S3/R3 area is
+  considered 'range bound'..."; examples on NQ + 6E 5-min)
+- jigsawtrading.com home (Auction Vista: "volume bubbles print only at key moments in the
+  auction, and those moments are often the turns"; Market Intelligence: "Pre-session
+  intelligence on up to 21 futures markets, before the open"; Journalytix 40M trades),
+  /daytradr-professional-order-flow-platform/, /blog/master-trade-management-using-order-flow/
+  (5 exit rules; 1427 sell vs 850 buy strength-meter example; "That's reducing your loss by 50%")
+- indicatorwarehouse.com/products — FULL catalog WITH prices this time (Day Ranger $395,
+  Time & Sales Block Transaction Alert $247, Geiger Counter $395, Eagle/Falcon/Hawk $795-1595,
+  Raptor $1895, Moon Phase $77). Zero performance claims; CFTC disclaimer only.
+- docs.motivewave.com/studies/a-b (Big Trades "significant buy or sell orders"; Better Volume
+  "bid/ask volume and range"; AGGZ dual-timeframe z-score composite)
+- sierrachart.com StudiesReference.php, doc/NumbersBars.php (bid/ask vol per price, delta,
+  "Diagonal Dominant Side" — partially documented), StudiesReference.php&ID=390 = Large Volume
+  Trade Indicator (single-trade volume >= threshold, bid/ask dominance coloring, requires
+  tick-by-tick data)
+- orderflows.com + /turns.html (Imbalance S/R "low risk trade entries when retested"; Single
+  Prints "Markets turn when the last buyer has bought at a high..."; Turns = POC + bid/ask
+  distribution + delta + swing; NO quantified performance, hindsight disclaimer)
+- atas.net (400+ cluster variations; Smart Tape "aggressive trade sizes, major player actions")
+- bookmap.com home ("visualize market liquidity"; heatmap = historical LOB levels "trusted by
+  the market"; MBO Bundle named; /addons 403, marketplace = JS shell)
+- tradingview.com/scripts/ and /scripts/editors-picks/ (DGT Initial Balance Auction
+  Intelligence script/ks2QGulb — acceptance/failed auction/retest/rejection states, <=30-min
+  TFs; QuantAlgo Time-of-Day/Session Performance Stats script/Yr3kT0uI — ranks hours/sessions
+  by "average range, volume, bullish bias, and drift"; Zeiierman LTF Volume Microburst Bubbles
+  script/Hdskv6Q5 — LTF volume spikes inside each candle, EMA baseline + directional
+  efficiency; plus open-source BigBeluga Keltner+SMC sweep, RWBTradeLab 4-condition order
+  blocks on /scripts/)
+- ninjatraderecosystem.com home + ?fwp_category=automated-strategies (Zion Trading Algos
+  TradeOrFade: "momentum-based intraday strategy on the 5-minute chart" focusing on NQ gaps —
+  the ONLY explicit-NQ strategy found; Zion's own site is a JS shell, performance NOT
+  verifiable) + ?fwp_category=indicators (Wizdough Second Entry pullback alerts; homepage:
+  Angelo Muru Two-Legged Pullback semi-automated)
+
+Final lead set: 19 leads emitted (see final message). ATAS folded into the footprint-family
+independence notes rather than a separate lead. ninZa: zero leads — access blocked, refusing
+to invent. Moon Phase ($77) noted as a candidate deliberate-null for harness calibration,
+not emitted as a lead.

@@ -74,3 +74,50 @@
   multi-market daily store; else it is a $0 acquisition (note: governance — do not touch >=2026-08-01 virgin window).
 - USMPD/COR3M/VXN CSVs are $0 acquisitions; check LOCKED_FORWARD seals before any conditional test crosses
   the burn boundary.
+
+## ADDENDUM — second pass, 2026-08-28 (session restarted; re-verified prior log + new sources)
+Re-verified this run: TradingView RTY ideas listing (evolutionqc "Russell 2000: The Market's Risk
+Thermometer" chart/RTY1!/FDeA0Sfw; EdgeClear chart/RTY1!/L4q6JoHx quotes "nearly 40% of debt held by
+Russell 2000 constituents is floating-rate, compared to less than 10% for S&P 500 companies";
+mintdotfinance chart/M2K1!/P0nhjabx RTY/ES rotation + June-26 reconstitution); FRBSF USMPD page (free,
+LSEG Tick History, 30-min statement / 70-min presser windows, money-mkt futures + OIS + Tsy/TIPS +
+stock indexes + USD FX, "data starting from 2020" per this fetch, updated 2026-08-03); NBER w20071
+(1 SD ETF ownership -> ~16% higher daily vol, arbitrage channel); ijcb.org/journal/ijcb05q2a2.htm
+(GSS 2005 target+path factors, statements hit long yields); cdn.cboe.com COR3M_History.csv
+(DATE/OPEN/HIGH/LOW/CLOSE from 2006-01-03, fetch view truncates 2013 — file continues).
+
+New sources verified this run (not in first-pass log):
+- HAL hal-05415054v1 (API hit): Mourey/Shahrour/Șoiman abstract — 20 largest cryptos ~85% cap;
+  "negative weekend returns significantly predict Monday equity declines, while positive returns
+  have no effect"; relationship shifted after May-2022 LUNA collapse; contagion-channel framing.
+- Liberty Street Economics 2026-07-01, DOI 10.59576/lse.20260701 -> "The Disappearing Overnight
+  Drift" (Boyarchenko/Larsen/Whelan): 2-3am ET window ~3.7%/yr 1998-2020, ~zero 2021-2025;
+  E[RON] = imbalance x variance / risk-bearing capacity; EOD imbalance dispersion 6.5% -> 2.9%;
+  algo order-slicing blamed. Base paper RFS 36(9) 2023, DOI 10.1093/rfs/hhad020 (Crossref).
+- arXiv 2608.22768 Woo "Loop-Gain Matrix" (2026-08-24): LETF coupled rebalancing feedback; spectral
+  radius of loop-gain matrix; Korean 2026 episode — Samsung imported ~41% of closing variance from
+  SK Hynix complex, "invisible to its own 'moderate' gain of 0.24"; estimator from prices + public
+  fund AUM.
+- Crossref: Kroencke/Schmeling/Schrimpf "The FOMC Risk Shift" JME 120 (2021) 21-39,
+  10.1016/j.jmoneco.2021.02.003 (risk shifts orthogonal to rate surprises; rebalancing pressure).
+- Crossref: Cieslak/Pang "Common shocks in stocks and bonds" JFE 142(2) 2021 880-904,
+  10.1016/j.jfineco.2021.06.008.
+- Crossref: ABDV "Real-Time Price Discovery..." IFDP 871 10.17016/ifdp.2006.871 / NBER w11312
+  ("news produces conditional mean jumps").
+- bis.org/publ/work695.htm Avdjiev/Bruno/Casanova/Shin 2018 — dollar as "barometer for risk
+  appetite" (investment channel; complements work592's leverage framing).
+- arXiv 1111.7103 abs page: Huth-Abergel — "60% of accuracy" forecasting lagger midquote; market
+  orders can't profit "because of the bid/ask spread"; lead-lag intensifies at macro news/US open.
+- quantifiableedges.com/vix-spike-often-followed-by-quick-market-bounce/ full fetch: rule = VIX
+  close ~30% above 10-day MA; results table in subscriber letter (public post gives direction only).
+- chartschool.stockcharts.com intermarket-analysis page: Murphy correlation templates (kept in
+  notes, dropped from leads — weakest evidence grade).
+- tradingview.com/chart/NQ1!/76ZVKa1c ES-vs-NQ divergence (NinjaTrader official, ~2026-08-24):
+  risk-appetite/market-health framing; drivers = sector rotation, rate sensitivity, mega-cap
+  concentration; explicitly NO concrete rules; paid-partnership educational content.
+Additional dead ends this run: Mojeek 403, Investopedia fetch refused, Semantic Scholar 429 (twice),
+school.stockcharts.com SSL failure (chartschool.* worked), Bing site:/quoted queries fell back to
+junk, cmegroup/mrci/tastylive/usethinkscript content not surfaced.
+
+FINAL LEAD SET: A13-01..A13-17 as emitted in the final report (17 leads; ChartSchool + Budish
+QJE 2015 + Ben-David w20071 kept as supporting citations inside leads rather than standalone).

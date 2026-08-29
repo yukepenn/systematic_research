@@ -113,4 +113,64 @@ Date: 2026-08-28. Agent: A3 X/Twitter/Social scout.
 - Reddit (www + old): WebFetch hard-blocked; all reddit claims carried via Brave SERP snippets (URLs real,
   crawled; marked "via Brave snippet" in leads).
 
-## Final lead set: a3-01..a3-15 (see final report text delivered to orchestrator; same blocks).
+## Round 3 confirmed fetches (2026-08-28, later pass)
+26. nqstats.com — anonymous free "solo research project", NQ-only, 2016-2025, ~2,470-2,570 sessions/module.
+    Seven modules fetched individually:
+    - ib_breaks.html: IB = 09:30-10:30 ET; breach = wick >= 1 tick. By 12:00: IBH 47.0%, IBL 39.8%,
+      either 82.5%. By 16:00: IBH 62.9%, IBL 54.9%, either 96.1% (n=2,571). Conditional: IB closes
+      above mid AND low set first -> high break 74.0% by noon / 84.0% by close (n=1,114); mirror
+      67.9%/78.0% (n=974).
+    - noon_curve.html: TBR 08:00-16:00; AM(8-12)/PM(12-16). Opposite-side sessions (one extreme AM,
+      other PM) 72.81% (1,805/2,479); both-AM 21.82%; both-PM 5.37%. Q2(10-12) breaks Q1(8-10) high ->
+      "AM low / PM high" in 82.12% of opposite-side sessions (794); Q1 low break -> mirror 72.42% (631).
+    - aln_sessions.html: Asia 20:00-02:00, London 02:00-08:00, NY 08:00-16:00. Four engulf patterns;
+      NY breaks London high 68.6-81.1% / low 65.5-75.0% depending on pattern (n=2,542).
+    - am_tbr.html: 08:00 open + / - 0.25 SDEV bands (rolling 20-day sample stdev of the AM TBR); touch ->
+      reversion to 08:00 open: +band 74.0%, -band 74.6%; touches inside 8am hour: 78.4%/79.6%.
+      MAE ~0.55 sigma mean; MFE ~0.8-0.9 sigma continuation past open (n=2,572, 27 no-touch).
+    - hour_stats.html: prior-hour range breach (>=1 tick) during NY hours -> reversion 61.5% overall,
+      17,701 breach events; per-hour tables JS-only (not extracted).
+    - rth_breaks.html: at 09:30 open vs prior-day RTH range: gap up 26.3%, gap down 14.6%, inside 59.1%
+      (n=2,488). Gap-up days: close above pRTH high 69.9%, opposite side untouched 88.1%. Gap-down:
+      close below pRTH low 59.5%, opposite untouched 90.4%. Inside opens: exactly one side broken 74.0%,
+      neither 17.7%, both 8.3%.
+    - 1h_continuation.html: table PLACEHOLDER (dashes) — unusable, excluded from leads.
+27. threadreaderapp.com/user/AdamMancini4 — two unrolled threads with real status URLs:
+    2021-01-18 twitter.com/AdamMancini4/status/1350512433614495744 ("Above 3770 needed to trigger
+    upside to 3800, breakout lvl 3900" level-to-level method); 2022-01-18 .../status/1483429081744277504.
+28. threadreaderapp.com/user/jam_croissant — threads 2021-08-23 (windows of weakness, Jackson Hole),
+    2021-09-27 (JHEQX EOQ flows; "100k+ es 10/20 margin puts sold"), 2021-12-29 (quarterly delta-neutral
+    ITM-call collar mechanics), 2022-03-09 (fixed-strike vol pain trade). Threadreader's per-thread URL
+    extraction unreliable (same status id shown for 3 threads) -> cite user page + dates.
+29. threadreaderapp.com/user/FuturesTrader71 — philosophy/auction threads only; no concrete VWAP
+    first-touch rules -> FT71 dropped as a lead (no citable rule).
+30. github.com/yuvrajsingh1097/ICT-Silver-Bullet-Strategy-Backtester (created 2026-03-26) — sweep->FVG->
+    entry 3-state machine, one 60-min window, 5-min bars, 2:1 RR, ~2h timeout. api.github.com search:
+    ICT ecosystem repos STAR-EA-v11.20 (29 stars, Judas Swing/Silver Bullet/AMD/CRT), sb-watchbot (NQ),
+    10AM-Silver-Bullet, BAKOME MQL5 EAs — all 2026-era derivatives of one guru source.
+31. quantifiableedges.com/blog/ (Rob Hanna) — 2026-06-07 "A TICK TomOscillator Study Suggesting a Monday
+    Bounce": TomOscillator %Rank < 1% -> "23 of 25 instances closing up the next day". Uses NYSE $TICK
+    (repo owns $TICK back to ~2013).
+32. traderfeed.blogspot.com/search?q=VWAP (Steenbarger, 2008-2018 posts): prior-day pivot touched "about
+    75% of the time"; R1/S1 ~70%, R2/S2 ~50%, R3/S3 ~33%; "85% of all trading days are not inside days";
+    adjusted TICK +/-500 trending vs +/-200 range thresholds.
+33. spotgamma.com/how-to-trade-gex-levels/ — call wall/put wall/zero gamma; positive gamma "moves get
+    dampened, ranges compress"; negative gamma "moves extend and accelerate"; explicit: NO quantified
+    stats in article. Blog index also fetched (Aug 2026 posts, incl. GEX Levels for SPY QQQ ES NQ Aug 17).
+34. lindaraschke.net/wp-content/uploads/2026/01/august1997.pdf (AIQ Opening Bell, Aug 1997, PDF read in
+    full): Holy Grail rules (ADX14 > 30 rising; pullback to 20-EMA; buy stop above prior bar high; stop at
+    new swing low; claimed top-in-place odds "only 5% to 10%"). Three-Day Unfilled Gap Reversal rules
+    (unfilled gap down; buy stop 1 tick above gap-day high for 3 sessions; stop at gap-day low).
+35. Nitter status re-checked this round: nitter.net dead — X Corp cease-and-desist 2026-08-24; xcancel.com
+    dead same C&D. No live tweet mirrors exist as of 2026-08-28. Threadreader user pages are the only
+    working X archive surface found.
+
+## Round 3 independence additions
+- nqstats: ONE anonymous author for all six stat modules — six leads, one source; concepts descend from
+  Market Profile (Steidlmayer IB) but numbers independently computed.
+- Raschke/Connors 1995-97 is the pre-social root of the stop-run-reversal family later rebranded by ICT
+  (turtle soup) and Mancini (failed breakdown).
+- Karsan and SpotGamma: same dealer-hedging school, not independent of each other; both amplified on X.
+- NY Fed, Hanna, Steenbarger, nqstats, reddit ORB posters: mutually independent lineages.
+
+## Final lead set: a3-01..a3-17 delivered to orchestrator (blocks in final message).

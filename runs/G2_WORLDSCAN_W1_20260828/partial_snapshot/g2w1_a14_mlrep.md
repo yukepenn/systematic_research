@@ -45,3 +45,70 @@ fetched this session.
 - Efficiency-ratio (Kaufman) as a state variable: zero academic tests surfaced via arXiv search.
 - Imbalance/run bars: zero standalone arXiv papers (search hit only physics); the only quantitative comparison found is the crypto 2608.26158 paper.
 - Hurst intraday on index futures: measured H≈0.5 (Schoeffel) — the representation itself argues against an exploitable fractal edge at these frequencies.
+
+## SECOND PASS (same agent, continued 2026-08-28) — additional verified fetches
+- arXiv API "momentum transformer + futures" -> 2601.05975 DeePM (Wood/Roberts/Zohren, submitted
+  2026-01-09): 50 diversified futures, OOS 2010-2025, "net risk-adjusted returns roughly twice"
+  classical trend following, ~50% over Momentum Transformer; directed-delay causal sieve, macro
+  graph prior, EVaR-proxy distributionally-robust objective, strictly lagged cross-sectional
+  attention; daily closes only. Also 2412.12516 (Mason et al 2024, equities extension).
+- arXiv id_list 2112.08534 + 2105.13727: Momentum Transformer (Wood/Giegerich/Roberts/Zohren,
+  2021-12-16) "outperforms benchmark time-series momentum and mean-reversion trading strategies"
+  incl. costs, interpretable attention regimes; Slow Momentum with Fast Reversion (2021-05-28):
+  backtest 1995-2020, CPD module improved Sharpe by ~1/3 overall and ~2/3 during 2015-2020.
+- github.com/kieranjwood/trading-momentum-transformer: official code both papers; Quandl continuous
+  futures, 100 tickers thru Dec 2021; full replication scripts; "Sample results will be made
+  available soon" (results not bundled with repo).
+- arXiv API "hidden Markov + intraday + trading" -> 2006.08307 Christensen/Godsill/Turner (2020)
+  "Hidden Markov Models Applied To Intraday Momentum Trading With Side Information": IOHMM, 2-3
+  latent momentum states, vol-ratio + seasonality side info; abs page confirms NO instruments and
+  NO OOS trading results in abstract — methodology only.
+- arXiv API "triple barrier" q-fin.TR -> 2404.01866 Bieganowski/Slepaczuk (2024) supervised
+  autoencoder MLP + triple-barrier, S&P 500 / EURUSD / BTCUSD, 2010-2022, Sharpe/IR framing;
+  admin-note overlap with 2411.12753 (crypto-only twin).
+- Wikipedia 2010_flash_crash (fetched): VPIN original claim (JPM 37(2) Winter 2011, pp 118-128)
+  "highest reading of 'toxic order imbalance' in previous history" one hour pre-crash; Andersen &
+  Bondarenko rebuttal (J. Financial Markets, 2013/2014): pre-crash TR-VPIN surpassed on 71 prior
+  days (11.7% of sample); BVC-VPIN exceeded on 189 days (31.2%). SSRN pages 403'd; used Wikipedia
+  as citation carrier.
+- IDEAS/RePEc fip/fedlwp/2001-021: Dueker & Neely -> J. Banking & Finance 31(2) 2007 279-296;
+  Markov-switching + technical rules, OOS "excess returns modestly exceed those of standard
+  technical rules", FX; forecast-accuracy stats mixed. (Not used as a lead — FX, superseded by
+  better HMM-on-futures sources — kept as background.)
+- NBER w7613 re-verified: Lo/Mamaysky/Wang 2000, kernel-smoothed patterns, stocks 1962-1996,
+  informativeness only.
+- arXiv id 0809.1040 re-verified: Glattfelder/Dupuis/Olsen 12 scaling laws, 13 FX pairs, ~3 orders
+  of magnitude, Quantitative Finance 2011; descriptive only.
+- arXiv API "E-mini + regime": 2605.11423 VVG/MNQ re-confirmed (947 days 5-min MNQ 2021-2025,
+  expanding-window walk-forward with costs; regimes real; "None of the evaluated strategies satisfy
+  the same validation criteria"). Hawkes pair 1302.1405 vs 1308.6756 noted, ceded to
+  microstructure domain.
+- arXiv API "mixture of experts + trading": 2501.09636 LLMoE (stocks+news, LLM router),
+  2508.02686 Vallarino (30 US stocks, MSE only), 2409.15161 KAMoE (crypto/real estate) — none on
+  futures; DeepUnifiedMom (2406.08742) remains the only MoE-on-futures paper found.
+- arXiv id_list 2309.00875,2406.08742,1110.1727,2503.06251 — all four re-verified directly:
+  * 2309.00875 Fanelli/Fontana/Rotondi HMM stat-arb: Brent/WTI/Shanghai crude futures, profitable
+    "under conservative levels of transaction costs", multiple periods.
+  * 2406.08742 DeepUnifiedMom (Ong/Herremans 2024): MMoE multi-task TSMOM; equity indexes, FI, FX,
+    commodities; "consistently outperforms benchmark models" net of costs.
+  * 1110.1727 Schoeffel (2011): DAX futures H=0.54±0.04, Euro futures H=0.51±0.03; universal
+    statistical features; no trading.
+  * 2503.06251 Gupta et al (2025): entropy-assisted pattern ID; claims "substantial predictive
+    power" but no instrument, period, or OOS in abstract — methodology marketing; kept as dry-hole
+    evidence, not a lead.
+- Crossref re-verified both JFDS DOIs independently: 10.3905/jfds.2022.1.098 (Joubert 2022),
+  10.3905/jfds.2023.1.119 (Meyer/Barziy/Joubert 2023).
+- Hudson & Thames: my fetch of https://hudsonthames.org/does-meta-labeling-add-to-signal-efficacy/
+  returned the full article (ES E-mini tick/dollar bars; SMA 20/50 + Bollinger 1.5sd primaries; RF
+  meta-model; MR accuracy 17%->63%, precision 0.17->0.20; TF accuracy 48%->55%, precision
+  0.48->0.54; "Meta-labeling improves the performance of the strategies"). Prior pass logged a
+  longer URL variant; both resolve to the same article content.
+
+## FINAL LEAD SET (18): 01 VPIN volume-clock, 02 Andersen-Bondarenko critique, 03 MNQ VVG negative,
+04 SlowMom+CPD, 05 Momentum Transformer, 06 DeePM, 07 DeepUnifiedMom MMoE, 08 H&T meta-label ES,
+09 JFDS calibration trilogy, 10 SAE+triple-barrier, 11 freq-controlled bars, 12 Wu/Han DC+HMM,
+13 Glattfelder scaling laws, 14 HMM crude stat-arb, 15 Schoeffel Hurst futures, 16 Lo/Mamaysky/Wang,
+17 Christensen IOHMM methodology-only, 18 Signature Trading theory-only.
+Campaign cautions: calibration/sizing leads must hold gross exposure fixed (LEVERAGE masquerade
+rule); any VPIN test must carry the Andersen-Bondarenko realized-vol control as its matched
+unconditional control.

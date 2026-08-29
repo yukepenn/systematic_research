@@ -153,3 +153,97 @@ WebFetch on site-native search/browse URLs and API endpoints:
   equity index that trends intraday per Zarattini) should be LOWER than for ZN.
 - Zarattini cluster (leads 01–04) is one author family — treat as correlated evidence, one
   effective source for null purposes.
+
+---
+
+# SECOND PASS (same day, continuation after interruption) — additional verified sources
+
+WebSearch still 200/200 exhausted; all below via WebFetch fallback. Newly blocked this pass:
+tandfonline (403), warriortrading (403), old.reddit (tool-blocked), YouTube results (empty
+shell), Bing (degraded junk), Mojeek/Ecosia/DDG html+lite (403/captcha), Semantic Scholar API
+(intermittent 429 — two queries succeeded).
+
+## Supersedes prior "coverage gap #3": 80% RULE SOURCE FOUND
+- https://www.mypivots.com/dictionary/definition/25/80-rule (found via /dictionary →
+  /dictionary/browse/0-9). Exact definition: "If the market opens (or moves outside of the
+  value area) and then moves back into the value area for two consecutive 30-min-bars, then
+  the 80% rule states that there is a high probability of completely filling the value area."
+  SAME PAGE self-reports an E-mini S&P test succeeding only ~60% of the time ("should be
+  renamed the 60% Rule"). Now submitted as a lead.
+
+## New verified sources
+1. TraderFeed search + https://traderfeed.blogspot.com/2010/03/relevance-of-vwap-in-range-market.html
+   (Steenbarger, 2010-03-29, ES): "moves away from value will tend to return back to (and
+   usually through) VWAP"; range days = flat VWAP slope; failed VWAP pierce → rotation signal.
+   Related slope/day-structure posts 2008-11-16, 2009-02-03, 2009-10-27, 2009-12-30.
+2. Crossref API: Gao/Han/Li/Zhou "Market intraday momentum" JFE 129(2) 2018 394-414,
+   DOI 10.1016/j.jfineco.2018.05.009 (SSRN preprint 2440866, 2014): "first half-hour return
+   ... predicts the last half-hour return".
+3. Semantic Scholar API: Grant/Wolf/Yu "Intraday price reversals in the US stock index futures
+   market: A 15-year study", JBF 29(5) 2005 1311-1327, DOI 10.1016/J.JBANKFIN.2004.04.006
+   (abstract NOT retrievable — claim kept title-level). Also Fung/Mok/Lam 2000 (US + HK index
+   futures reversals) DOI 10.1016/S0378-4266(99)00072-2.
+4. Crossref API: Caporale & Plastun "Price gaps: Another market anomaly?", Investment Analysts
+   Journal 46(4) 2017 279-293, DOI 10.1080/10293523.2017.1333563 (abstract not retrievable;
+   tandfonline 403 — claim kept title-level).
+5. Crossref API: Madhavan "Volume-Weighted Average Price (VWAP)", Encyclopedia of Quantitative
+   Finance 2010, DOI 10.1002/9780470061602.eqf07036 ("a common benchmark used to evaluate
+   performance"); Bialkowski/Darolles/Le Fol "Improving VWAP Strategies: A Dynamical Volume
+   Approach", DOI 10.2139/ssrn.932699 (2006).
+6. https://arxiv.org/abs/1803.08336 fetched directly (Choi/Larsen/Seppi): "intraday
+   trajectories of TWAP trading targets cause predictable intraday patterns of price
+   pressure"; TWAP+VWAP benchmark trading "reduce market liquidity and increase price
+   volatility relative to just terminal trading targets alone."
+7. Alphatrends https://alphatrends.net/when-where-why-to-set-anchored-vwap/ re-fetched:
+   anchors = first trade of year, weekly Sunday-evening futures open, major swing highs/lows,
+   YTD lows; "it lets you see where buyers or sellers have an average cost basis after big
+   events". Podcast pages active May-Jun 2026.
+8. GitHub API + README: https://github.com/WhiteRabbit-TB/vwap-mean-reversion (upd 2026-05-18)
+   — ES tick→1-sec bars, RTH, VWAP ±2σ touch reversion; bootstrap + Bonferroni across
+   6 conditions; spread + 1-bar latency modeled; VIX/day-type regime conditioning; sensitivity
+   σ 1.5–2.5, windows 5–30 min; SINGLE SESSION (2026-05-12, 80 touches) prototype; claims
+   strong reversion at lower band in opening segment.
+9. einc58-netizen/vwap-mean-reversion-futures README re-fetched — confirms prior-pass numbers
+   plus: "Intraday AR(1) half-life ≈ 19 minutes" (ZN), walk-forward 13 interleaved holdout
+   months, ~56% Monte Carlo pass under prop drawdown, 6E uneconomic after costs (tick value
+   $6.25 vs $15.625 cited), live Rithmic deployment claimed.
+10. TradingSim https://www.tradingsim.com/blog/vwap-indicator (Al Hill, 2021-06-23, upd
+    2026-03-29): "more often than not, the price finds support and resistance around this
+    level"; ES case study — separations ≥0.4% from VWAP later see "a sharp correction back to
+    the indicator"; institutions use VWAP to "reduce market impact while dividing up large
+    orders". No win rates.
+11. TradingView https://www.tradingview.com/scripts/vwap/ — ecosystem/crowding evidence:
+    Smart Swing VWAP (Zeiierman, 1.9K boosts), Modern VWAP (GBB, "regime-gated mean reversion
+    and trend continuation signals", 574 boosts), Range Breakout Pro (VWAP + sd bands),
+    Multi-Anchor VWAP & Deviation Bands, VWAP Regime AI (k-means vol regimes adapt bands).
+12. Quantifiable Edges WP search (?s=gap, ?s="gap fill") — 69+ tagged posts; specifics in
+    first-pass notes; "Intraday Performance After A Massive Gap Down" (2016-06-24) noted.
+13. masterthegap.com → 301 → investiquant.com (fetched): Scott Andrews + David Skowron,
+    pivoted to autotrading; NO public gap-stat pages ⇒ prior coverage-gap #2 stands.
+14. TRADEPRO https://tradeproacademy.com/vwap/ re-fetched (Faisal, 2018-11-15): trend filter /
+    MR to equilibrium / "breakouts above VWAP after failed attempts" (≈ reclaim). No stats.
+15. thevwap.com/vwap-strategy/ re-fetched: "four primary trade types — two for trend
+    continuation and two for countertrend reversion"; "areas of otherwise hidden support and
+    resistance"; hypothetical-trades disclaimer, no stats. (Magnet-myth phrasing was on /vwap/
+    per first pass; not re-verified — quote only "hidden support and resistance".)
+16. Concretum VWAP paper article page re-fetched: rules confirmed — LONG above session VWAP /
+    SHORT below (trend-following, NOT fade); QQQ 2018-01-02→2023-09-28, $25k→$192,656 (671%),
+    Sharpe 2.1, MaxDD 9.4%; TQQQ $25k→$2,085,417 (8,242%).
+17. Alvarez https://alvarezquanttrading.com/blog/rsi2-strategy-double-returns-with-a-simple-rule-change/
+    re-fetched (2018-08-01): RSI2 MR on EX-INDEX Russell 3000 stocks; "I doubled the
+    compounded annual growth rate and cut the maximum drawdown in half"; exit RSI2>50 or
+    10 days. (Stock universe, not futures — weak transfer, included as family exemplar.)
+18. SMB blog search re-run: 25 pages VWAP content; "Using VWAP to gain a trading edge"
+    (Bella, 2016-05-12) re-fetched — explicitly NO win-rate claims; "holding considerably
+    above VWAP, and for time" = swing-long evidence.
+19. MenthorQ ?s=vwap: only generic guides (/guide/what-is-vwap-in-trading/), no stats — not a lead.
+
+## Final lead selection (16): see final report. Independence clusters:
+- Concretum/Zarattini family: A10-01, A10-14 (+ ORB context) — one effective source.
+- Market-Profile/value-auction folklore family: Steenbarger, 80% rule, TradingSim, TRADEPRO,
+  thevwap, SMB, TradingView scripts — shared ancestry (Steidlmayer/Dalton + floor folklore);
+  independent only in their (rare) numbers.
+- Academic exec-benchmark family: Choi et al., Guéant-Royer, Madhavan, Bialkowski — one
+  mechanism cluster, distinct models.
+- Independent computations: Gao et al., Grant et al., Caporale-Plastun, einc58, WhiteRabbit,
+  ojeology, Alvarez.

@@ -48,6 +48,9 @@
 - FX Replay channel = systematic serial backtester of named NQ traders' models — good future mining target (their /strategies PDF library).
 - nqstats.com (NQ Stats) = free stats library: IB breaks, gap fill, etc. — mining target beyond this one video.
 
+## FINAL LEADS (delivered 2026-08-28, second pass after interruption)
+A2-01 Zx5C49zOlt4 Old Bainbridge ORB 6y coded · A2-02 zaUKZF3eaDw DionTrades FTS · A2-03 SNO1wqJTq5A FX Replay/JJ Simon fair-value · A2-04 3rdUZEbKSRA FX Replay/Trader Kane Lab · A2-05 hAKQ0YMPQGU Trader Zan FVG 10y NEGATIVE · A2-06 MOG-DbgmzzI TOS Indicators 1.17M ORB · A2-07 Obxs-rCZsuI Unger/Crabel ORB+Friday-short · A2-08 1Lq9OUAdGKs Trading Steady ORB ATR filter · A2-09 jq-fpkPv3-A Scarface 9:30 candle · A2-10 SrV2ALXeglM Percoco NY-open FVG · A2-11 x-R4VxV-7K4 edgeful morning IB stats · A2-12 6HYJD3SEcLk edgeful 2-3pm IB · A2-13 SjGOXiAFKgc NQ Stats IB breaks 10y · A2-14 VTtnJ7Ahd8I Dan Cooke IB25+anchored VWAP · A2-15 iLmF1DSP2Ls Bull Barbie ORB+VWAP-slope (+ORBie bot 3YvSIFtuWl8) · A2-16 Gi4qyX5Aszo Futures Flow footprint delta-trap · A2-17 LM31c_rM0j8 Sosikian NT8 Renko backtest caution · A2-18 7mpbvMAIscU BionicNQ iFVG/SMT. Full blocks in the wave deliverable (final agent message).
+
 ## Independence graph (for the wave)
 - ICT lineage: DionTrades A2-02, Trader Kane A2-04, BionicNQ A2-18, Trader Zan A2-05 (tests it), partially JJ Simon A2-03 (displacement/BOS language). All trace to Inner Circle Trader (Michael Huddleston) concepts.
 - ORB lineage: Crabel 1990 book → A2-01, A2-06, A2-07, A2-08, A2-15, Dan Cooke's algo leg of A2-14.

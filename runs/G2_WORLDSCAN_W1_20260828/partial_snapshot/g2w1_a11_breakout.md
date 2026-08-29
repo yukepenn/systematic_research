@@ -141,3 +141,81 @@
   A11-05; A11-08/09/10 all Steenbarger; A11-12/13 both neurotrader888; A11-14 vendor independent;
   A11-06/07 same blog (Hanna); A11-11 independent; A11-15 (Crabel) is the common ancestor of the
   whole ORB/NR7 genre (Hanna, Concretum, Build Alpha all cite him).
+
+---------------------------------------------------------------------------------------------------
+# SECOND PASS (same day, 2026-08-28) — additional verified sources
+The gaps flagged above (London-open breakout, IB/session stats, momentum ignition, NQ-specific
+cost-aware falsification, breakout-pullback on NQ) were CLOSED this pass via different fetch routes.
+
+### arXiv 2605.04004v2 — Mesfin, "Structural Limits of OHLCV-Based Intraday Signals in MNQ Futures:
+### A Systematic Falsification Study" (v1 2026-05-05, v2 2026-07-13). PDF extracted locally.
+- MNQ 5-min RTH (aggregated from NinjaTrader 1-min), Dec 2021–Aug 2025, 947 days; fixed 2.0-pt RT
+  friction; gates: walk-forward OOS t>=2.0, N>=30, positive net, consistency across years.
+- 14 signal families, "Nothing passed." Gross edge ceiling 0.07–1.50 pts/trade vs 2.0-pt friction.
+- ORB table (09:30–09:55 OR): Long bar+1 −0.82 net t=1.17 | Long bar+15 +2.82 t=1.50 | Short bar+1
+  −3.45 t=−1.33 | Short bar+15 −2.16 | ORB PULLBACK ENTRY N=83 −4.44 net WR 19.3%. ALL FAIL.
+- Asia Session Opening Range Expansion (20:00–02:00 ET, bar range >1.5/2/2.5x rolling 20-bar mean,
+  continuation hypothesis): 1.5x b+1 t=−10.96, WR 35.5% — significant REVERSAL ("actively wrong");
+  burst consumed within the expansion bar.
+- Gap fill fade FAILS at 09:30/09:45/10:00 (t −0.44..−0.59) — MNQ gaps don't reliably fill.
+  Gap Continuation Short w/ Kalman velocity>2.5 at 09:30: N=22, +14.52 pts net, t=3.23, WR 68.2% —
+  FAIL on N<30; frequency decayed 12→6→4/yr.
+- Positive controls (independent research program, pass all gates): RTH Confluence Signal (GMM
+  regime "Active Flow" + Markov transition prob>0.15 + 50-bar volume z>0.5; 25-pt ATR-scaled pullback
+  entry; exit bar 13; t=5.83 N=538, OOS t=3.11) and London Session Signal B (GMM on 15-min London
+  bars 03:00–08:30 ET, transition Regime0 Bearish Chop→Regime2 Bullish Drift, long next open, exit
+  60 min or 08:30; N=289 +5.77 net t=5.15 WR 64.7% PF 2.42; 1-bar delay reverses edge to t=−3.56).
+- Families: 4.1 ORB, 4.2 Asia ORE, 4.3 Asia liquidity-grab reversal, 4.4 gap fade/continuation,
+  4.5 volume signature, 4.6 volatility regime classifier, 4.7 event-day trend, 4.8 MGC MR cross-test.
+
+### Beat the Market — Table 5 conditioning numbers (extracted this pass from PDF)
+- Intraday momentum avg PnL by prior-day daily pattern (bps, t, Sharpe):
+  Unconditional N=2620: 12bps t=5.34 SR 1.7 | NR4 N=660: 22bps t=5.14 SR 3.2 | NR7 N=367: 16bps
+  t=3.07 SR 2.5 | Inside Day N=260: 5bps n.s. | Outside Day N=260: 7bps n.s. | Triangle N=664: 14bps
+  t=3.19 SR 2.0 | Trend day N=215: −2bps | Big Tail N=85: 19bps n.s. | Strong/Weak close N=422: 14bps t=2.04.
+  Pattern defs: Triangle = high < prior-2 highs AND low > prior-2 lows; Trend day = open<15th pctile
+  of range & close>85th & range>14-day avg. Day-of-week: Wed/Thu/Fri significant; Monday n.s. here,
+  vs "higher Monday profitability in the 5-minute Opening Range Breakout" in their earlier papers.
+
+### github.com/dws-data/nas-orb-backtester (fetched repo page) — NQ ORB RETRACEMENT
+- OR = 09:30–09:45 ET; volume profile (VAH/POC/VAL) computed from OR bars; require 1-min bar CLOSE
+  beyond OR extreme + threshold ("no wick entries"); wait for retrace to a VP level inside the range;
+  enter on touch; stop at OR extreme; target beyond OR extreme; EoD force-close + entry cutoff.
+- NQ.v.0 continuous, 1m OHLCV (Databento), 2021–2026: Long 198 trades WR 42.9% +0.417R; Short 80
+  trades WR 42.5% +0.558R; combined ≈ +21.2R/yr at 1% risk/trade.
+
+### traderfeed.blogspot.com/2010/03/defining-effective-price-targets-with.html (2010-03-31)
+- "Well over 90% of days take out either their overnight high or low" (futures); only ~12% of days
+  are inside days; trade at yesterday's average price (H+L)/2 about 60% of the time; weekly analogues.
+
+### thepatternsite.com/nr7.html (Bulkowski; 1,201 stocks 1990–2013)
+- NR7 ranks 11/23 among small patterns; failure rates 46% (bull/up) 47% (bull/down); bear-market
+  down breakout best (27% fail, −12% avg move); 43% hit measure-rule target; overall it
+  "underperformed benchmarks in most scenarios". Daily-horizon compression-breakout prior: weak.
+
+### TradingView (fetched script/tag pages)
+- London BreakOut Classic (xsixs, 909 likes) tradingview.com/script/Fh42LHOM-London-BreakOut-Classic/:
+  Tokyo-session (00:00–07:00 UTC) high/low range; trade breakout during London; mid-range stop, 1:1 RR;
+  author self-reports "poor results" over 3–6 months of testing and warns against blind use.
+- Session Breakout/Sweep with alerts (a_guy_from_wall_street, 1.2K likes)
+  tradingview.com/script/SxnXL2QI-Session-Breakout-Sweep-with-alerts/: same session-extreme levels
+  traded EITHER as breakout OR as liquidity-sweep reversal — an explicit policy fork.
+- FVG tag page tradingview.com/scripts/fairvaluegap/: FVG Detector (UDT) (CantoLab, 683 likes) —
+  3-candle displacement imbalance, bullish = current low > high two bars back, with mitigation
+  tracking; ICT Entry Model (LunqFX, 844 likes) sequences liquidity sweep → MSS → FVG entry.
+
+### github.com/Mrshahidali420/ORB-Multi-Model-Indicator (fetched)
+- 7 active ORB models NY session: M1 classic Crabel; M3 5-min scalper; M4 15-min; M6 FVG-inside-OR;
+  M7 gold; M9 Failed-ORB Reversal; M10 "Phase ORB" state machine breakout→retest→bounce.
+  3 models removed for 0–26% win rates. "Best results observed on AUDUSD, XAU/USD, US100 on 1-min."
+
+### GitHub API repo census (api.github.com/search/repositories?q=opening+range+breakout)
+- 15 top repos listed incl. jefrnc/strategy-orb15-momentum (16★, 2026), vedntp/pj_orb_backtester,
+  sam-bateman/trading-orb, dws-data/nas-orb-backtester (above).
+
+### Still unverifiable online (kept as book-citation lead only)
+- Dalton/Jones/Dalton "Mind Over Markets": open-type taxonomy (Open-Drive etc.) → conviction ranking
+  for range extension/trend days. CME education page timed out; no fetchable stats page found.
+- Crabel "stretch" formula: no fetchable definition located (Wikipedia page has none; engines blocked).
+  Crabel's model characterized via Concretum stocks-ORB paper: range calibrated from prior days'
+  volatility + current open, no intraday data.
