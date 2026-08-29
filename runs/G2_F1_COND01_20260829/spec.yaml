@@ -1,0 +1,34 @@
+run_id: G2_F1_COND01_20260829
+campaign: GENESIS_II_FORMAL_WAVE_1
+type: CONDITIONER_DIAGNOSTIC   # cards MC-20 + MC-22(RV-restructured); runs on ORB01's FROZEN action set
+question: >
+  Do (A) prior-session range compression and (B) trailing realized-vol state condition ORB
+  economics? Conditioners add ZERO trades - immune to the measured cost bar. Runs REGARDLESS of
+  ORB01's verdict (the cards' claim is precisely that the unconditional object may be mediocre
+  while the conditional one is not).
+governance_ruling_recorded: >
+  B2's MC-22 primary wanted VIX daily levels 2022+ - that is H1's PRISTINE VX-family confirmation
+  window. RESTRUCTURED by the orchestrator BEFORE any outcome: primary gate = trailing NQ
+  REALIZED vol (owned, non-pristine). The VIX-level increment is deferred to a separate one-shot
+  confirmation spec IF gate B passes here. The pristine window is not read by this run.
+conditioners_frozen:
+  A_NR7: prior session's (RTH 09:30-16:00) high-low range is the narrowest of the trailing 7
+    sessions (Crabel NR7, computed causally from completed sessions)
+  B_RV3: trailing 21-session realized vol (close-to-close, causal) tercile; contrast TOP vs
+    BOTTOM tercile. Expected sign: HIGH vol better (mechanism: only high-vol states clear the
+    ~5-tick all-in bar)
+method: on ORB01's frozen out/trades.csv - per-conditioner contrast of mean net/trade (in-state
+  minus out-of-state), session-clustered t; matched control = the unconditional set itself
+gates_all_coded_and_printed:
+  CA: NR7-state contrast > 0 with t >= 2.0 AND in-state mean net/trade > 0 at $25.01
+  CB: RV-top-vs-bottom contrast > 0 with t >= 2.0 AND top-tercile mean net/trade > 0 at $25.01
+  CF: family-wise - both contrasts tested against a SHARED count-matched random-state null
+      (>= 300 reps, one shared draw per rep across both conditioners); a contrast passes only
+      above the family max-|t| p95
+  verdict_per_conditioner: pass CA/CB AND CF -> SURVIVED-DISCOVERY; else NULL at formulation
+prohibitions: no threshold search (NR7 and terciles frozen), no third conditioner, no interaction
+  terms, no VIX reads, no sealed reads
+outputs: out/gate_table.txt (printed), out/contrast_tables.csv, out/ledger_result_pending.json
+  (LIST of 2: trials for A and B)
+live_enabled: NO
+spend: $0

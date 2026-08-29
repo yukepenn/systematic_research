@@ -1,0 +1,30 @@
+run_id: G2_F1_MAE01_20260829
+campaign: GENESIS_II_FORMAL_WAVE_1
+type: RISK_MEASUREMENT_PLUS_ONE_VARIANT   # card MC-36; classification RISK SPECIFICATION, never alpha
+question: >
+  Stage 1 (measurement): what are P1/PCT's per-trade MAE/MFE distributions - the intrabar risk
+  that no certified object currently bounds? Stage 2 (one variant): does the recorded 300-point
+  disaster stop improve the risk profile at acceptable cost? (W-era risk menu: 300pt = 13
+  historical triggers, ~0.7% of gross - testimony to be re-measured here, not assumed.)
+stage1_measurement:
+  population: the 2,131 in-window P1/PCT trades (frozen REPRODUCED stream)
+  MAE/MFE at 1-min bar resolution (bar lows/highs during trade life; per-contract points and
+  dollars; by outcome class and size class). Bar-vs-tick bias CALIBRATED on the overlap sessions
+  where dev tick data exists (allowlist only, blind pools untouched): report the calibration
+  factor, apply nothing silently.
+stage2_one_variant_frozen:
+  variant: disaster stop at 300 points adverse excursion per contract, evaluated on the FROZEN
+    trade set; conservative intrabar ordering (stop checked before favorable exit within a bar;
+    fill at worse-of(level, bar open)); no other change; no second level tested
+  decision_rule_preregistered: recommend ADOPT-FOR-CERTIFICATION only if (delta net >= -1% of
+    total net) AND (trade-level maxDD improves >= 10%); otherwise RECORD AND STOP. Any adoption
+    invalidates Standard-fill parity and requires re-certification (LIVE_READINESS.md:163) -
+    printed in the verdict.
+gates_printed: M1 measurement completeness (>= 95% of trades measured); M2 calibration overlap
+  N reported; M3 the decision rule applied verbatim
+prohibitions: no stop-level grid (300 frozen from the recorded menu), no target variants, no
+  trailing logic, no alpha language, no sealed reads, blind pools untouched
+outputs: out/gate_table.txt, out/mae_mfe_distributions.csv, out/stop300_impact.txt,
+  out/ledger_result_pending.json
+live_enabled: NO
+spend: $0

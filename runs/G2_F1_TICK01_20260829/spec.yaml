@@ -1,0 +1,31 @@
+run_id: G2_F1_TICK01_20260829
+campaign: GENESIS_II_FORMAL_WAVE_1
+type: SIGNAL_DIAGNOSTIC   # card MC-23 - internals event study; signal-first, no policy, no P&L claim
+question: >
+  Do NYSE TICK capitulation extremes carry short-horizon conditional information for NQ?
+  The internals minute store (2022 -> 2026-07) is owned and has NEVER been opened for an alpha
+  question (only regime labels). Three independent practitioner lineages (Steenbarger, Hanna,
+  Raschke) claim extreme-negative-TICK fade value.
+event_frozen:
+  definition: first minute where ^TICK <= -1000 within an arming cycle; re-arm only after
+    ^TICK >= -400; RTH minutes only (09:30-16:00 ET)
+  target: NQ forward 15-minute return from the close of the event minute (END-stamped bars)
+  expected sign: POSITIVE (capitulation -> bounce)
+secondary_non_gate: symmetric +1000 event, two-sided, reported only.
+data: runs/INTERNALS_ACQUIRE parquet layer (rows certified against manifest) + modern NQ 1-min;
+  all loads seal-guarded; no sealed reads
+gates_all_coded_and_printed:
+  T1: mean forward 15-min return after events > 0 with session-clustered t >= 2.0
+  T2: beats the matched unconditional control - count-matched random RTH minutes from the SAME
+      sessions (the W111b binding rule); event mean > control p95 under >= 300 draws
+  T3: null with teeth - session-block circular shift of the TICK series against NQ (preserves
+      both autocorrelation structures; null_guard sensitivity first); real above p95
+  verdict: ALL pass -> INFORMATION-SUPPORTED (a policy/economics run may then be preregistered);
+      any fail -> NULL at formulation
+diagnostics_non_gate: event count/year, MDE printed, horizon profile at 5/30/60 min REPORTED ONLY
+  (no gate reads them - no horizon selection), overlap of events with P1 activity (descriptive)
+prohibitions: no threshold search (-1000/-400 frozen from practitioner convention), no policy,
+  no P&L, no trading-cost claims, no sealed reads
+outputs: out/gate_table.txt (printed), out/events.csv, out/ledger_result_pending.json
+live_enabled: NO
+spend: $0

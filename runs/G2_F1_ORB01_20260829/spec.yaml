@@ -1,0 +1,38 @@
+run_id: G2_F1_ORB01_20260829
+campaign: GENESIS_II_FORMAL_WAVE_1
+type: DISCOVERY_STRATEGY   # card MC-01; fresh preregistered formulation, NOT the B3 baseline rerun
+question: >
+  Does 15-minute opening-range breakout continuation earn after MEASURED costs on modern NQ?
+  Motivation: multi-era mechanism support (Crabel 1990; Zarattini 2023 peer-reviewed line) and the
+  NOT-closed guard. The GENESIS B3 control (30-min OR) may be cited as MOTIVATION ONLY — it is a
+  non-promotable control and constitutes ZERO evidence for this run.
+primary_frozen:
+  opening_range: high/low of 09:30:00-09:45:00 ET (bars stamped 09:31..09:45, END-stamped)
+  entry: first breach only - stop-entry at OR_high + 1 tick (long) or OR_low - 1 tick (short);
+    fill at max/min(level, bar open) of the breaching bar; one entry per session, no re-entry;
+    a bar breaching BOTH sides = no trade (counted)
+  exit: close of the 15:59-stamped bar; no stop, no target (policy-minimal primary)
+  size: 1 contract, $20/pt
+windows:
+  gate: modern 2022-01 -> 2026-07-31 (intraday continuation is modern-era by three in-repo sightings)
+  diagnostic_non_gate: 2006 -> 2021 era cut reported (sign flip recorded if present)
+cost_model: $25.01/ctrRT all-in PRIMARY ($4.36 commission + $20.65 measured spread, EXEC01);
+  $33/ctrRT (2026 Jun-Jul regime) reported as stress - non-gate, but a death at $33 is flagged
+  REGIME-FRAGILE in the verdict
+gates_all_coded_and_printed:
+  O1: modern net > 0 at $25.01/RT with weekly session-clustered t >= 2.0
+  O2: null with teeth - >= 300 whole-session circular shifts of the decision series vs outcomes
+      (null_guard, sensitivity first); real above p95
+  O3: beats the matched unconditional control - always-long entered at 09:46 open, exit 15:59
+      close, same sessions, same costs charged (1 RT/session); ORB net > control net; long and
+      short legs reported separately (a dead short leg is recorded, not hidden)
+  verdict: ALL pass -> SURVIVED-DISCOVERY (routes to robustness + independent implementation,
+      NOT to promotion); any fail -> NULL, closed at formulation
+diagnostics_non_gate: leave-one-year-out; top-decile session concentration; per-year table;
+  both-side-break frequency; MDE printed
+prohibitions: no OR-length grid (15 min frozen), no stop/target variants, no re-entry variants,
+  no conditioning (that is COND01's job), no sealed reads
+outputs: out/gate_table.txt (printed), out/trades.csv (the FROZEN action set COND01 will consume),
+  out/weekly_series.csv, out/ledger_result_pending.json
+live_enabled: NO
+spend: $0
