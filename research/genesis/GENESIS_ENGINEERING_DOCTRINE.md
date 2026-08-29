@@ -40,6 +40,17 @@ nulls and placebos passed while the feature read the future (MS-BBO leak = 134.8
 5. Census-blindness class still open: `build_registry.py:198` NQ hard-code unfixed; registry never
    scans `db/tick`. Fix belongs to the registry, not to GENESIS docs.
 
+## ⚠️ SUBSTRATE TRAP (discovered 2026-08-29, `G2_F3_DELEV01`, binding)
+
+**The NQ continuous 1-min/daily substrate is ADDITIVELY back-adjusted: point moves are exact,
+PERCENT returns are era-distorted** (2008 shows zero |r|≥3.5% days; adjusted "price" ~3.5× real
+level there). Binding rules: (1) any absolute percent threshold spanning eras on this substrate
+is INVALID by construction; (2) $/pt objects, within-session normalized objects, and tick-domain
+work are unaffected; (3) mixed-era percent diagnostics are attenuation-biased — NULLs stand
+a fortiori, positives would need the ratio-adjusted series; (4) the free unlock (ratio-adjusted
+daily from the per-contract `db/day` store + certified panel) is a queued data card gating any
+MC-40-class retest.
+
 ## Standing traps (from 700+ experiments)
 
 END-stamped bars (the −1-min "defensive fix" WAS the W52 error) · 18:00→17:00 ET sessions, `to` =

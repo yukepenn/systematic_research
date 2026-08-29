@@ -45,6 +45,21 @@ graveyard) · **rare-event classes collapse across regimes** (TICK; macro events
 (z+3.5) and IB extension 96.8% vs 91.6% (z+4.4) — real ~5pp level-relevance effects, usable only
 as conditioning context for a mechanism that independently earns its way.
 
+## Closed at exact scope (GENESIS II Formal Wave 3, 2026-08-29)
+
+| scope | verdict | run |
+|---|---|---|
+| Second-of-minute execution timing on NQ (boundary-second penalty) | NULL — surface flat (0.003 vs 0.25 tk bar, powered); cost model validated in scope | G2_F3_EXECSTATE01 |
+| Extremes-only vol-managed NQ sizing at matched exposure | FAIL — no growth timing (below own null); **tail-only benefit** (maxDD 18.7% vs 24.8%); throttle folklore −0.24 logW | G2_F3_VOLSIZE01 |
+| HAR RS−/ON refinement over HAR-RV | FAIL (p 0.858; HAR-vs-plain is decisive context, not the gate) | G2_F3_VOLSIZE01 |
+| MC-40 deleveraging band | **DEFECT — NOT TESTED** (substrate percent distortion); retest gated on ratio-adjusted series | G2_F3_DELEV01 |
+
+**Doctrine banked (ERABREAK01, p=0.0011): 0DTE-era BREAK is real — pre-2022 intraday-vol
+statistics are INADMISSIBLE modern priors; and the break FRONT-LOADS variance (last-30-min share
+FELL — "0DTE pumps EOD vol" is measured folklore).**
+**Substrate law (DELEV01): additively back-adjusted series ⇒ cross-era percent thresholds
+invalid; see GENESIS_ENGINEERING_DOCTRINE substrate trap.**
+
 ## Blocked-as-rescue (recorded rulings)
 
 MC-35 meta-labeling/sizing **on P1 with existing surfaces** = rescue of RR_W002A's closure ("no

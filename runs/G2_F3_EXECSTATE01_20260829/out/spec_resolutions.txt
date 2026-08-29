@@ -1,0 +1,119 @@
+G2_F3_EXECSTATE01_20260829 — spec ambiguity resolutions (trial G00023)
+FROZEN BEFORE ANY COMPUTATION (written 2026-08-29, before src/execstate01_driver.py first ran).
+Every choice is the conservative reading; none was informed by any measured result. Data
+inspected before this freeze: file schemas only (column names/types of one parquet per store)
+and prior-run ARTIFACTS already published by EXEC01/REPRO — no new market values were computed.
+
+R1  DATA SCOPE. Launch grant = "research\data_esnq per ALLOWLIST_DEV_44 + data_microstructure_v2
+    pre-burn sessions"; spec says "pre-burn allowlisted slices only". Conservative intersection:
+      * data_microstructure_v2/raw/NQ sessions with session date <= 2026-05-30 (BURN window
+        2026-05-31..2026-07-31 excluded entirely; >= 2026-08-01 sealed/virgin, never touched);
+      * data_esnq/parquet/NQ ONLY for dates in ALLOWLIST_DEV_44.txt AND <= 2026-05-30
+        (allowlist entries 20260714/20260715 are inside the burn window -> NOT used);
+      * the scalping v1 raw store is NOT in the launch grant -> NOT opened at all.
+    Dedup priority v2 > esnq (EXEC01 R7). Allowlist/blind enforcement printed BEFORE any esnq
+    open. Every quote load passes research_sdk.seal_guard.assert_presealed.
+
+R2  EFFECTIVE SPREAD (definition given in launch instruction): effective spread at second s of
+    minute m = quoted spread at that instant. Instant grid = every exact wall-clock second
+    (.000) from session open 18:00:00 ET (previous calendar day) through 16:59:59 ET of the
+    session date — 82,800 instants/session, naive ET wall-clock (repo convention; no session
+    spans a DST changeover because changeovers fall 02:00 Sunday inside the nonexistent
+    Saturday-evening session). Prevailing quote = last bid event and last ask event with
+    event_time <= instant; staleness cap 5.000 s PER SIDE (EXEC01 R4); crossed books (ask<bid)
+    invalid; locked (ask==bid) kept. Instants after store end (min of last bid/ask event time)
+    are invalid (after_store_end). Spread in ticks = (ask-bid)/0.25.
+
+R3  SECOND-OF-MINUTE BIN = instant.second (0..59). The hh:mm:00.000 instant is exactly where a
+    1-min-bar-close marketable order transacts (END-stamped bars; bar stamped mm+1 opens at
+    hh:mm:00), matching P1 mechanics.
+
+R4  PRIMARY GATE STATISTIC. S(s) = pooled sample-weighted MEAN spread (ticks) over all valid
+    grid samples in bin s (mean is the money-relevant statistic; medians printed as
+    secondaries). Baseline B = pooled mean over ALL bins s NOT IN {0,30} ("mid-minute
+    seconds" read conservatively as the full 58-second complement: near-boundary seconds that
+    may share the elevation RAISE the baseline and make the gate HARDER to pass).
+    Penalty P0 = S(0)-B, P30 = S(30)-B. PASS requires BOTH P0 >= 0.25 tick AND P30 >= 0.25
+    tick (spec "sec-0 and sec-30" read as a conjunction — conservative). Session-clustered
+    SEs: per-session penalties P0_j, P30_j (same formula within session j, sessions with all
+    62 quantities defined), SE = sd/sqrt(n_sess); MDE(95%) = 1.96 x SE. Bin event-counts and
+    MDEs are printed BEFORE the verdict, per launch rule 7.
+
+R5  MARKOUT (definition given in launch instruction): markout(t) = mid(t+30s) - mid(t), signed
+    by a hypothetical marketable order side. With no realized side, the buy-signed value is
+    reported (sell-signed = its negative): per bin, mean drift in ticks, session-clustered SE,
+    mean |markout|, n. Valid iff both instants have fresh uncrossed two-sided books. Markout is
+    PROFILE ONLY — the preregistered gate is on the spread penalty alone.
+
+R6  RE-TIMING SIMULATION — RUN ONLY IF THE PRIMARY GATE PASSES (spec: "PASS = ... -> then
+    re-time"). Cheapest in-minute offset s* = argmin over the frozen 60-bin pooled profile S(s)
+    (the 60-second profile IS the grid; no other search). ENTRY legs only (spec: "P1's frozen
+    bar-close entries"); exits untouched; zero policy change. P1 frozen action set = EXEC01's
+    out/p1_trades.csv, itself the repro-certified regeneration (identity-gated 2401/2131
+    against runs/GENESIS_REPRO_INCUMBENT_20260828; its provenance file lists the substrate
+    hashes). Identity re-check here: 2401 total rows / 2131 in-window, else DEFECT.
+    Entry instant t0 = et - 60 s (END-stamped bar opens at stamp-60s); re-timed instant
+    t0 + s* seconds. Per measured entry leg the saving of a hypothetical marketable order,
+    per contract: buy: ask(t0) - ask(t0+s*); sell: bid(t0+s*) - bid(t0); dollars = pts x $20.
+    This prices spread change AND mid drift (the honest harvestable quantity). Leg measured
+    iff both instants valid (R2 rules) AND the original fill passes EXEC01's band check
+    |fill - offset - [bid,ask]| <= 1 tick using the per-session offsets REUSED read-only from
+    EXEC01 out/session_offsets.csv (offset-reconciliation method: EXEC01 R5; sessions with
+    status != ok excluded, counted). $/wk = contract-weighted mean saving per entry contract
+    x (total in-window entry contracts) / 213 in-window ISO weeks (213 = EXEC01's
+    program-printed count on the identical A/B window, reused). Profile-implied cross-check
+    (S(0)-S(s*))/2 tick x $5 printed beside it. Per status_rule the $/wk figure is a MODEL
+    row until validated against the 2026-09-01 shadow — printed in the verdict. If the gate
+    FAILS, out/retiming_saving.txt is still written, stating the gate failed and that no
+    re-timing was priced (a FAIL is a FAIL).
+
+R7  OFI SECONDARY. OFI per Cont-Kukanov-Stoikov over best-quote events: for bid updates
+    e = q_n*1{p_n>=p_(n-1)} - q_(n-1)*1{p_n<=p_(n-1)}; for ask updates
+    e = -q_n*1{p_n<=p_(n-1)} + q_(n-1)*1{p_n>=p_(n-1)}; first event of each stream skipped.
+    Intervals: non-overlapping 10 s, aligned to the session second grid. Mid-move = mid(t+10)
+    - mid(t) in ticks, both ends valid per R2. "EXEC01 spread/depth state" — EXEC01's map has
+    no depth axis; conservative resolution: states built by EXEC01's own tercile methodology:
+    spread state = tercile of interval-start quoted spread, depth state = tercile of
+    interval-start best-quote depth (bid size + ask size, asof, fresh both sides), edges =
+    33.3/66.7 percentiles of the pooled valid interval-start values (computed in this run,
+    printed). Per 3x3 cell: OLS slope of mid-move on OFI (intercept included), SE, t, n.
+    Descriptive — no gate.
+
+R8  MATCHED-VOL 10:00-vs-15:00 COST. Cost = quoted spread (ticks) at bar-open execution
+    instants. Source rows REUSED read-only from EXEC01 out/minute_samples.csv.gz (documented
+    R8 construction: spread at bar-open instants, 60-min trailing vol), FILTERED to this run's
+    session-date scope (R1) — burned/v1 session rows discarded to stay inside the grant.
+    Hours 10 and 15 (ET hour of the instant). Matching: deciles of the POOLED vol distribution
+    of the two hours' samples; per decile d with both hours present, diff_d = mean15_d -
+    mean10_d; matched difference = sum_d w_d*diff_d / sum_d w_d with w_d = min(n10_d, n15_d).
+    Naive (unmatched) difference printed beside it. Descriptive — no gate.
+
+R9  FITTED COST + DIVERGENCE CHECK. f(spread_state, depth_state, hour) = mean per-leg
+    half-spread cost in $ per contract (spread_pts/2 x $20) over the R7 interval-start samples
+    in each (3 spread-ter x 3 depth-ter x 23 hour) cell. Fitted P1 cost: for each in-window P1
+    trade in scope with BOTH legs' states measurable at their fill instants (R2 validity +
+    R6 band check on each leg), predicted RT cost = f(entry cell) + f(exit cell) + $4.36
+    commission (ALL-IN). Empty-cell fallback ladder frozen now: (s_ter x d_ter x hour) ->
+    (s_ter x hour) -> (hour) -> global mean; fallback counts printed. Headline = contract-
+    weighted mean over evaluated RTs. BAND: the spec's "measured $25-33/RT band" is read as
+    the ALL-IN band spanning EXEC01's pooled measurement ($20.65 spread + $4.36 = $25.01) to
+    its worst era cell (2026 Jun-Jul $28.69 + $4.36 = $33.05) — interpretation printed.
+    Divergence = 0 if fitted inside [25,33]; else |fitted - nearest edge| / nearest edge.
+    > 20% -> "COST-MODEL REVISION" flagged (printed); flag does not change the primary
+    verdict. NOTE the band edges come partly from burned-window sessions measured by EXEC01;
+    this run only REUSES that published number as a comparator, it does not re-read burned data.
+
+R10 DATA-SUFFICIENCY / DEFECT RULE. DEFECT-LIMITED iff usable quote sessions < 30 OR pooled
+    valid-sample share of the second grid < 50%. Ledger mapping (frozen): primary gate PASS ->
+    result "PASS"; primary gate FAIL with measurement complete -> result "NULL" (no
+    harvestable boundary penalty at the preregistered threshold); DEFECT-LIMITED or identity/
+    scope failure -> result "DEFECT". No parameter search anywhere; thresholds as specced.
+
+R11 PROHIBITION COMPLIANCE. No strategy signal is computed; no entry rule changes beyond the
+    priced re-timing simulation; no offsets outside the 60-bin profile grid are examined; no
+    sealed value read; blind pools untouched; SEARCH_LEDGER not appended (ledger_result_pending
+    .json only); no git; no CrossTrade; new files only under this run's out/ and src/.
+
+R12 REUSED ARTIFACTS (read-only, sha256 printed in gate table): EXEC01 out/p1_trades.csv,
+    out/session_offsets.csv, out/minute_samples.csv.gz. All timestamps in them are seal-checked
+    again on load in this run.

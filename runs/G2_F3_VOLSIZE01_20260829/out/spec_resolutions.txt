@@ -1,0 +1,154 @@
+G2_F3_VOLSIZE01_20260829 — spec ambiguity resolutions (RECORDED BEFORE ANY RESULT EXISTS)
+Spec: runs/G2_F3_VOLSIZE01_20260829/spec.yaml (FROZEN). Cards MC-51 (trial G00025) and
+MC-38 nested (trial G00026), per runs/G2_WORLDSCAN_W2_20260829 skeptic FROZEN PRIMARY text.
+Every choice below is frozen here, before the first number is computed. Conservative = the
+reading that makes a PASS harder or the comparison fairer to the control.
+
+R01 SUBSTRATES / WINDOWS. Deep parquet research/scalping_lab/substrate/minute/NQ/
+    nq1m_2005_202605.parquet supplies sessions THROUGH 2021-12-31; modern parquet
+    runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet supplies 2022-01-01 .. 2026-05-31
+    (same assignment as GENESIS_H1/H2/H7). Both loads stream row-group-by-row-group
+    (bounded memory) through research_sdk.seal_guard (truncate_presealed per chunk +
+    assert_presealed), columns time+close only. sha256 of both files recomputed and
+    compared against runs/GENESIS_REPRO_INCUMBENT_20260828/out/run_provenance.txt.
+
+R02 SESSION UNIT. END-stamped bars; session label = calendar day of stamp if
+    time-of-day <= 17:00, else next calendar day (identical to H1 R1 /
+    session_boundary conventions). Daily close(s) = close of the last 1-min bar of
+    session s (the 17:00 session close). Window cap: session label <= 2026-05-31
+    (pre-burn; BURNED 2026-05-31..07-31 not entered; seal 2026-08-01 enforced
+    mechanically). Evidence status of everything here: DISCOVERY_CONSUMED.
+
+R03 SPLICE. Returns are computed WITHIN each substrate only; the cross-substrate
+    return does not exist. Per the "splice week dropped" clause the drop is widened to
+    the whole ISO week 2022-W01: any session whose label falls in ISO (2022, week 1)
+    has its close-to-close return marked INVALID (not scored, no P&L, no HAR pair).
+    Per-session intraday quantities (RV, RS-, ON_RV) of those sessions remain valid
+    (computed entirely inside the modern substrate); trailing RV means may span the
+    boundary (each RV value is internally single-substrate).
+
+R04 RETURN DEFINITION. r(s->s+1) = close(s+1)/close(s) - 1 (simple), valid iff s and
+    s+1 are consecutive rows of the session table, same substrate, s+1 not in the R03
+    drop set. P&L compounds log1p(simple portfolio return).
+
+R05 RV OBJECTS (one definition serves both cards, keeping MC-51/MC-38 separable but
+    coherent). For session s from 1-min closes, within-session log-return diffs only:
+      RV(s)    = sum of squared 1-min log returns over the FULL session;
+      RS-(s)   = the same sum restricted to negative returns (Patton-Sheppard);
+      RS+(s)   = RV(s) - RS-(s);
+      ON_RV(s) = the sum restricted to bars stamped in the overnight segment
+                 (tod > 17:00 or tod <= 09:30 — the 18:00->09:30 portion, per card);
+      ON_ret(s)= log(close of last bar stamped <=09:30 of s / close(s-1)); valid only
+                 for consecutive same-substrate sessions with s, s-1 outside R03 drop
+                 set and a bar <=09:30 present. ON term entering HAR is ON_ret(s)^2.
+    "Plain 21d RV" (BOTH the MC-51 primary sizing input and the MC-38 baseline
+    forecast) = trailing mean of RV over the last 21 sessions including s
+    (rolling(21).mean, min 21 obs). MC-51 card names "21d realized variance ... from
+    owned 1-min"; this is that object, unmodified. Deciles are monotone-invariant to
+    the sqrt, so vol-vs-variance is immaterial for sizing; the variance form is used.
+
+R06 EXPANDING-WINDOW DECILE CALIBRATION (the Cederburg clause — the ONLY calibration).
+    At row i the decile thresholds q10/q90 are the 0.10/0.90 quantiles (linear
+    interpolation) of the sizing input over ALL rows STRICTLY BEFORE i (shift-1
+    expanding window), requiring >= 252 prior non-NaN observations. No full-sample
+    constant exists anywhere in the harness. Exposure e(i) = 1.5 if input <= q10
+    (bottom decile, low vol); 0.5 if input >= q90 (top decile); else 1.0. First usable
+    row = first row with valid thresholds AND session label >= 2006-01-01 AND a valid
+    next-session return; its DATE IS PRINTED in the gate table (spec critical clause).
+    The identical positional rule is applied inside every null draw (recomputed from
+    the shifted series — no leaked thresholds).
+
+R07 CAPITAL BASE / GEOMETRIC GROWTH. "1-contract base" is read as a one-contract-
+    notional capital base: capital at decision time s = $20 x close(s) (NQ $20/pt).
+    Strategy period return = e(s) * r(s->s+1) - cost(s), with cost(s) =
+    $33 * |e(s) - e_prev| / (20 * close(s)) — $33/RT charged on EVERY rebalance
+    contract, conservatively counting each contract of size change as a full RT, and
+    charging the initial entry (e_prev = 0 at the first scored row). Log-wealth =
+    cumulative sum of log1p(period return). No dollar capital constant is invented;
+    growth is scale-free. This is the no-leverage-masquerade formulation: exposure
+    multiplies the SAME base as the control's.
+
+R08 MATCHED-EXPOSURE CONTROL (V1, enforced IN the gate table). Control exposure
+    e_bar = mean of the strategy's realized |e(s)| over the scored set (e>0 always so
+    |e|=e); control return = e_bar * r(s->s+1); the control is charged its initial
+    entry ($33 * e_bar at the first scored row) and NO rebalance costs thereafter
+    (constant exposure) — an advantage given to the control, conservative for V1.
+    The gate table prints strategy mean |exposure| and control exposure side by side;
+    equality is the enforcement.
+
+R09 V2 MAX-DRAWDOWN. maxDD = max(1 - W/cummax(W)) on each wealth path over the scored
+    window. "not worse than control by more than 5%" is read RELATIVELY (stricter than
+    +5 points whenever control maxDD < 100%): PASS iff maxDD_strategy <= 1.05 *
+    maxDD_control.
+
+R10 V3 TIMING-COMPONENT NULL. Timing component = logW_strategy - logW_control(matched,
+    per R08), full scored window — identical code path for the real statistic and
+    every draw. Null: research_sdk.null_guard.run_circular_null, unit = session (one
+    row per session; whole-series circular rotation = "shift the sizing series"),
+    n_shifts = 300, seed = 0, preceded by verify_null_sensitivity(shifts=[1,7,61]).
+    decision_fn recomputes RV21 + expanding deciles FROM THE SHIFTED frame (leak-proof
+    recompute); statistic_fn scores those exposures against the ORIGINAL returns,
+    prices and costs on the fixed positional scored set. PASS iff real > p95(null).
+
+R11 V4 ERA SPLIT. Era of a scored return = label of the TARGET session s+1:
+    era1 <= 2015-12-31 < era2 <= 2026-05-31. Era improvement = sum over era of
+    [log1p(strategy ret) - log1p(control ret)] with the GLOBAL matched e_bar (R08).
+    "Sign consistency" is read conservatively: PASS iff the improvement is STRICTLY
+    POSITIVE in BOTH eras (sign-consistent-negative is a FAIL; it would fail V1
+    anyway).
+
+R12 MC-51 VERDICT. PASS iff V1 AND V2 AND V3 AND V4. A FAIL is a FAIL. Classification
+    locked: RISK SPECIFICATION — never information alpha. Deliverable language:
+    geometric growth + tail only; NO Sharpe is computed or printed anywhere in this
+    run.
+
+R13 EXPECTED-FAIL LEG (reported, NOT gated). Drawdown throttle on the constant-1.0
+    base: state 1.0 until the throttled path's own equity falls >10% below its running
+    high-water (checked at each scored close, decision applies to the NEXT return);
+    then 0.5 until a new high-water restores 1.0. Same cost model (R07). Reported vs
+    its own matched constant-mean-exposure control (R08 construction): growth
+    improvement + maxDD, plus whether the preregistered EXPECTED-FAIL materialized.
+    No gate; no verdict weight.
+
+R14 MC-38 RACE. Target y = RV(s+1) (R05). Pairs (features at s -> y at s+1) require
+    consecutive same-substrate sessions, both outside the R03 drop set, all regressors
+    finite, y > 0, and both sessions with >= 200 one-minute bars (degenerate holiday
+    sessions excluded; count printed). Train = target label 2006-01-01..2017-12-31;
+    test = 2018-01-01..2026-05-31 (frozen split). Models, all frozen:
+      M0 plain 21d RV : F = trailing-21 mean of RV at s (no estimation);
+      M1 HAR-RV       : OLS y ~ [1, RV_d, RV_w(5), RV_m(22)] (trailing means incl. s);
+      M2 HAR+RS-+ON   : OLS y ~ [1, RS-_d, RS+_d, RV_w, RV_m, ON_RV_d, ON_ret^2_d].
+    OLS in levels on train only, coefficients frozen, applied to test. Forecasts
+    floored at 1e-10 (count printed). VXN add-on DROPPED per spec (no VXN/VIX read).
+
+R15 QLIKE / DM. QLIKE(y,F) = y/F - ln(y/F) - 1. DM on test loss differentials,
+    Newey-West HAC variance with lag 5 (conservative for h=1), two-sided normal p.
+    PASS(MC-38) iff mean test QLIKE of M2 < M1 (the skeptic's frozen primary
+    comparison "HAR+RS-+ON vs HAR-RV") AND two-sided DM p < 0.05. DM of each HAR vs
+    the M0 baseline is printed in the same table (context, not the gate). The RACE
+    WINNER = lowest mean test QLIKE among {M0, M1, M2} — it feeds the SECONDARY
+    sizing column only.
+
+R16 SECONDARY SIZING COLUMN (reported; primary stays plain 21d RV so the two verdicts
+    stay separable). Sizing input = the R15 winner's one-step forecast of RV(s+1),
+    available on test pairs only; R06 expanding-decile rule with >= 252 prior obs
+    within that series (usable from ~2019); scored on its own subset with its own
+    matched control; the PRIMARY rule re-scored on the SAME subset is printed beside
+    it. Growth + maxDD reported; NOT a gate.
+
+R17 NULL/GATE ORDER OF PRINTS. Event counts (scored sessions, decile occupancy,
+    rebalance count, mean exposures), the null band (median/p95), and the DM test's
+    n/mean losses are printed BEFORE the verdict lines, per the wave instruction.
+
+R18 data_esnq is NOT read by this run (no ES leg in the spec); ALLOWLIST_DEV_44 is
+    therefore not exercised — stated explicitly in the program output. Blind pools
+    untouched. No CrossTrade/NT8 calls. No git. New files only under this run's
+    out/ and src/. $0 spent. LIVE = NO.
+
+R19 P1 APPLICATION PROHIBITED. Nothing here touches the P1 strategy stream; a positive
+    MC-51 verdict motivates a SEPARATE preregistered P1-sizing spec (spec prohibition
+    restated).
+
+R20 DEFECT CLAUSE. If any input proves structurally unusable (missing sessions making
+    the 2006 start infeasible, hash mismatch vs provenance), the run stops and reports
+    DEFECT rather than substituting data. (Checked in program; none anticipated.)

@@ -1,0 +1,92 @@
+G2_F3_DELEV01_20260829 — spec ambiguity resolutions (written BEFORE any affected number was computed)
+Trial G00027. Spec is FROZEN; each item resolves an underdetermined clause conservatively. No parameter
+search anywhere: every quantity below is computed exactly once, as written here.
+====================================================================================================
+
+R1. SESSION UNIVERSE (U) AND RTH ANCHORS
+    Bars are END-stamped; session label per session_boundary convention (bar stamped <=17:00 ->
+    same-calendar-day label; >17:00 -> next day). RTH close of session s = close of the bar stamped
+    exactly 16:00:00 on date s (covers 15:59-16:00). RTH open of session s = OPEN of the bar stamped
+    exactly 09:31:00 (= the 09:30:00 price). U = the set of sessions possessing a 16:00-stamped bar.
+    Half/short sessions (no 16:00 bar, e.g. 13:00 closes) are NOT in U: they host no events, do not
+    count in the 3-session horizon, and are never entry/exit sessions. Frozen simplification, stated
+    not searched. Uniqueness of the 09:31/16:00 bar per session is asserted.
+
+R2. WINDOW AND WARM-UP
+    Substrate: research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet ONLY (single
+    continuous source; sha256 verified against runs/GENESIS_REPRO_INCUMBENT_20260828/out/
+    run_provenance.txt and printed). Events restricted to U-sessions labeled in
+    [2006-01-01, 2026-05-31]. 2005 data is warm-up only (prev close, MA200, RV21). The substrate
+    ends before the burn window (2026-05-31 -> 2026-07-31); max session label is printed as proof.
+    An event must be POLICY-COMPLETABLE: next U-session exists with a 09:31 bar, and the t+3 U-close
+    is inside the window. Otherwise it is UNTRADEABLE — dropped with a printed count.
+
+R3. RETURN / MA / BAND / BEAR (all frozen, computed once)
+    r_t = close_t / close_{t-1} - 1 over CONSECUTIVE U-sessions. Event band: -0.05 <= r_t < -0.025.
+    MA200_t = simple mean of the 200 U-closes ending at and INCLUDING t (min_periods=200).
+    Bear filter: close_t < MA200_t, strict.
+
+R4. POLICY
+    SHORT 1 contract at open of the 09:31 bar of the next U-session (t+1); exit at close of the
+    16:00 bar of the 3rd U-session AFTER the event (t+3) — "3 sessions later" counts from the event
+    session; the hold spans U-sessions t+1..t+3. PV = $20/pt. net_usd = (entry - exit) * 20 - 33.
+    $33/RT is the whole friction (spec: stressed tape), applied identically to events, controls and
+    pseudo-events.
+
+R5. GAP-DOWN VETO (S1-10, frozen)
+    Veto iff open_{t+1}/close_t - 1 < -0.015 (strictly MORE than 1.5% below; exactly -1.5% is not
+    vetoed). D1 population = TRADED events (completable and not vetoed). Printed counts:
+    detected / untradeable / vetoed / traded.
+
+R6. D1 — "EVENT-CLUSTERED t"
+    Resolved conservatively (fewer, larger clusters -> wider SE -> harder to pass): clusters =
+    connected components of the graph joining two traded events if (a) their hold windows
+    [t+1, t+3] share any session (positions <= 2 apart in U), OR (b) their event labels fall in the
+    same calendar month. t = mean/SE from OLS-on-constant with CR1 cluster-robust covariance
+    (statsmodels), compared to 2.0 as specced. PASS iff mean net > 0 AND t >= 2.0.
+    MDE = 2.0 * clustered SE (the smallest mean detectable at the t-gate), printed together with
+    per-era event counts BEFORE any return table.
+
+R7. ERAS (reporting only, no gate): 2006-07, 2008-09, 2010-13, 2014-17, 2018-19, 2020-21, 2022,
+    2023-2026/05. The concentration of effective N in 2008/2020/2022 is stated in the output.
+
+R8. D2 — VOL-MATCHED CONTROL
+    RV_t = ddof-1 std of the 21 U-session returns ending at and INCLUDING t (includes the event
+    day's own return — the stricter control: control days sit in regimes reflecting the event's own
+    vol contribution; harder for D2 to pass, hence conservative). Decile edges = np.quantile deciles
+    of RV over ALL in-window U-sessions with valid RV. Control pool = in-window U-sessions with
+    r < 0, valid RV, NOT a detected event day, policy-completable AND veto-passing (the same policy
+    including the veto — gives an exact count match on TRADED events per decile). Per-decile
+    sampling without replacement, ascending decile order, from the SINGLE shared
+    numpy.random.default_rng(0) Generator — consumed BEFORE D3's draw. Pool shortfall in a decile:
+    take all, print the shortfall. D2 PASS iff event mean net > control mean net (strict). No
+    auxiliary re-draws are computed (single specced draw; nothing that could blur the gate).
+
+R9. D3 — CIRCULAR-SHIFT NULL
+    Universe = the in-window U-session position array (size N). The DETECTED-event indicator (band
+    AND bear, pre-veto — the same object the real pipeline starts from) is circularly shifted by k;
+    at shifted positions the full policy is applied (completability + veto), statistic = mean net
+    over traded pseudo-events. 500 distinct shifts (>= 300 specced) drawn from {1..N-1} without
+    replacement from the SHARED rng AFTER the D2 draw. Positions whose policy window would cross
+    the array edge are simply not completable (dropped; no price wrap). Shifts with zero traded
+    pseudo-events are excluded with a printed count. PASS iff observed D1 mean net > 95th
+    percentile (numpy linear interpolation) of the shift means.
+
+R10. MFE-PATH DIAGNOSTIC (non-gate)
+    For traded events: cumulative gross short P&L in points marked at the U-closes of t+1, t+2, t+3
+    (mean and median), the per-session increments (entry->c1, c1->c2, c2->c3), and the distribution
+    of which close-mark is the maximum. Positive-early / negative-late increments = the
+    spiral-then-reversal signature. Session-close marks only (bounded memory; no minute paths).
+
+R11. SEAL AND DATA ACCESS
+    Every row-group's time column passes research_sdk.seal_guard.assert_presealed before any use;
+    the assertion count is printed. data_esnq is NOT accessed by this run; ALLOWLIST_DEV_44
+    enforcement is therefore N/A — printed by the program. Blind pools untouched. No git, no
+    CrossTrade, no reads >= 2026-08-01.
+
+R12. LEDGER
+    No SEARCH_LEDGER append. out/ledger_result_pending.json carries trial G00027 metrics + result.
+
+R13. PROHIBITIONS HONORED
+    No band search, no horizon search, no MA search, no cascade/minutes leg. Hanna-era magnitudes
+    are not quoted anywhere. A FAIL is recorded as FAIL.

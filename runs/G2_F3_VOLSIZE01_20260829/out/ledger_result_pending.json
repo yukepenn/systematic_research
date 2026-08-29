@@ -1,0 +1,82 @@
+[
+  {
+    "trial_id": "G00025",
+    "metrics": {
+      "card": "MC-51 extremes-only vol-managed sizing",
+      "window": "2007-01-29..2026-05-31 scored sessions (app window 2006-01-01..2026-05-31)",
+      "n_scored": 4984,
+      "n_bottom_decile_15x": 165,
+      "n_top_decile_05x": 1261,
+      "n_mid_10x": 3558,
+      "n_rebalances": 92,
+      "mean_abs_exposure": 0.890048,
+      "logw_strategy": 1.610029,
+      "logw_control_matched": 1.618352,
+      "timing_component_logw": -0.008323,
+      "maxdd_strategy": 0.186869,
+      "maxdd_control": 0.248179,
+      "null_p95": 0.192073,
+      "null_median": -0.031476,
+      "null_percentile": 0.5633,
+      "null_p_ge": 0.4385,
+      "n_shifts": 300,
+      "era1_improvement_logw": 0.003316,
+      "era2_improvement_logw": -0.011639,
+      "gates": {
+        "V1": false,
+        "V2": true,
+        "V3": false,
+        "V4": false
+      },
+      "expected_fail_throttle": {
+        "timing_logw": -0.238281,
+        "maxdd": 0.188122,
+        "maxdd_control": 0.201294,
+        "materialized": true,
+        "gated": false
+      },
+      "secondary_column": {
+        "winner_input": "M2_HAR_RSneg_ON",
+        "n": 1914,
+        "timing_logw": -0.021341,
+        "primary_on_same_subset_timing_logw": 0.018841
+      },
+      "classification": "RISK SPECIFICATION",
+      "evidence_status": "DISCOVERY_CONSUMED"
+    },
+    "result": "FAIL",
+    "note": "Extremes-only (bottom/top expanding-decile of plain 21d RV -> 1.5x/0.5x) vs constant control at matched mean exposure (enforced in gate table), $33/RT per rebalance contract, one-contract-notional base, first usable 2007-01-29. Gates V1-V4; drawdown-throttle EXPECTED-FAIL leg reported not gated. Resolutions R01-R20 in out/spec_resolutions.txt. No Sharpe quoted. No P1 application (spec prohibition)."
+  },
+  {
+    "trial_id": "G00026",
+    "metrics": {
+      "card": "MC-38 HAR race (nested vol-input arm)",
+      "split": "train 2006-2017 / test 2018-2026-05-31 (frozen)",
+      "n_train": 3043,
+      "n_test": 2166,
+      "mean_qlike_M0_plain21dRV": 0.286573,
+      "mean_qlike_M1_HAR_RV": 0.164508,
+      "mean_qlike_M2_HAR_RSneg_ON": 0.163671,
+      "dm_M2_vs_M1": {
+        "diff": -0.000836,
+        "stat": -0.1785,
+        "p": 0.858299
+      },
+      "dm_M1_vs_M0": {
+        "diff": -0.122065,
+        "stat": -7.1618,
+        "p": 7.9603e-13
+      },
+      "dm_M2_vs_M0": {
+        "diff": -0.122902,
+        "stat": -6.6521,
+        "p": 2.89004e-11
+      },
+      "winner": "M2_HAR_RSneg_ON",
+      "vxn_addon": "DROPPED per spec",
+      "evidence_status": "DISCOVERY_CONSUMED"
+    },
+    "result": "FAIL",
+    "note": "QLIKE/DM race {plain 21d RV, HAR-RV, HAR+RS-+ON} for next-session NQ RV; frozen primary comparison M2 vs M1 (skeptic text); winner feeds ONLY the secondary sizing column so MC-51/MC-38 verdicts stay separable."
+  }
+]

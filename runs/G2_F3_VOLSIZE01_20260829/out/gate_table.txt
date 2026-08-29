@@ -1,0 +1,27 @@
+G2_F3_VOLSIZE01_20260829 — GATE TABLE (printed by program; trials G00025 MC-51, G00026 MC-38)
+type RISK_SPECIFICATION — sizing study; NEVER an information-alpha claim. No Sharpe printed (spec honesty clause).
+window: sessions 2006-01-01 .. 2026-05-31 (pre-burn; deep substrate <=2021-12-31, modern 2022+; splice ISO-week 2022-W01 dropped: 5 sessions)
+evidence status: DISCOVERY_CONSUMED. seal_guard: 10 asserts, 0 post-seal rows mechanically dropped. data_esnq NOT read (ALLOWLIST_DEV_44 not exercised). provenance sha256 both substrates MATCH.
+first usable date (expanding-decile calibration, R06 — PRINTED PER SPEC CLAUSE): 2007-01-29
+
+event counts / matched-exposure enforcement / null band — PRINTED BEFORE VERDICTS (R17):
+  scored sessions 4984 | decile occupancy: bottom(1.5x) 165, mid(1.0x) 3558, top(0.5x) 1261 | rebalances 92
+  MATCHED MEAN EXPOSURE (V1 clause, IN-TABLE): strategy mean|e| = 0.890048  vs  control constant e = 0.890048  -> MATCHED (control scaled to strategy's realized mean |exposure|)
+  V3 null band (300 circular shifts of the sizing series, seed 0): median -0.031476, p95 +0.192073 log-wealth — p95 is the minimum detectable timing component (MDE proxy)
+  MC-38 test pairs n=2166 | mean QLIKE M0 0.2866 M1 0.1645 M2 0.1637 | DM MDE (|mean QLIKE diff| for p=0.05 at observed HAC se) = 0.00918
+
+GATE  SPEC                                                                      OBSERVED                                                                              PASS-FAIL
+V1    net geometric growth > constant-exposure control AT MATCHED MEAN EXPOSURE logW strat +1.610029 vs control +1.618352 (diff -0.008323) at matched e=0.8900        FAIL
+V2    maxDD not worse than control by more than 5% (rel., R09)                  maxDD strat 18.6869% vs control 24.8179% (bar 26.0588%)                               PASS
+V3    timing component above p95 of >=300 circular-shift nulls                  real -0.008323 vs null p95 +0.192073 (pct 56.3%, p_ge 0.4385, 300 shifts)             FAIL
+V4    era split 2006-2015 / 2016-2026-05: growth improvement > 0 in BOTH (R11)  era1 +0.003316 (2301 sess), era2 -0.011639 (2683 sess)                                FAIL
+MC38  HAR+RS-+ON beats HAR-RV on test QLIKE, DM p<0.05 (frozen primary)         mean QLIKE diff -0.00084 (M2-M1), DM -0.179, p 0.8583                                 FAIL
+
+EXPECTED-FAIL leg (R13, reported NOT gated): drawdown-throttle (cut 50% after 10% DD, restore at HW):
+  mean|e| 0.7139; logW +1.083378 vs its matched control +1.321659 (diff -0.238281); maxDD 18.8122% vs control 20.1294%; rebalances 14 -> preregistered EXPECTED-FAIL MATERIALIZED (growth worse than matched control)
+
+SECONDARY sizing column (R16, reported only; DM winner = M2_HAR_RSneg_ON):
+  subset 2018-12-20 .. 2026-05-31 (1914 sessions, own 252-obs burn-in): winner-input timing -0.021341 (maxDD 24.9491% vs ctrl 27.3173%, mean|e| 0.9611) | primary-input on SAME subset: timing +0.018841 (maxDD 19.2286%, mean|e| 0.8111)
+
+VERDICT MC-51 (G00025): FAIL — closed at this formulation (a FAIL is a FAIL)  [V1 F V2 P V3 F V4 F]
+VERDICT MC-38 (G00026): FAIL — sharper vol input not significantly better at this formulation  [winner by mean test QLIKE: M2_HAR_RSneg_ON]

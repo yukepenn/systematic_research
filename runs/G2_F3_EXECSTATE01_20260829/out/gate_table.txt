@@ -1,0 +1,51 @@
+============================================================================================================
+G2_F3_EXECSTATE01_20260829 — GATE TABLE (printed by program; trial G00023)
+spec: runs/G2_F3_EXECSTATE01_20260829/spec.yaml (frozen); resolutions R1-R12
+reused artifacts sha256: p1_trades.csv=f84a96fc366b469b  session_offsets.csv=aabd40fd148ced69  minute_samples.csv.gz=db66f46b063c55ac
+============================================================================================================
+EVENT COUNTS AND MDEs (printed BEFORE verdicts, launch rule 7):
+  usable quote sessions 52 (v2 15 / esnq 37 / v1 0); grid instants 4,305,600; valid 4,271,407 (99.2%)
+  sec-0 samples 71,058 | sec-30 samples 71,120 | mid-minute samples 4,129,229; markout samples 4,238,907
+  session-clustered MDE(95%): sec-0 0.0069 tk | sec-30 0.0045 tk (threshold 0.25 tk; 52 cluster sessions)
+------------------------------------------------------------------------------------------------------------
+GATE  SPEC                                                          OBSERVED                      PASS/FAIL
+GA    P1 frozen stream identity: 2401 total / 2131 in-window        2401 / 2131                   PASS
+GB    esnq via ALLOWLIST_DEV_44 AND pre-burn only; 0 blind          37 opened / 0 blind untouched PASS
+GC    seal: every load assert_presealed, no value >= 2026-08-01     52 quote loads + 3 reused artifactsPASS
+GD    scope: all sessions pre-burn (< 2026-05-31); no v1 store      max session 20260529          PASS
+GE    sufficiency: >=30 usable sessions AND valid share >=50% (R10) 52 sess / 99.2%               PASS
+GF    PRIMARY: penalty(sec-0) AND penalty(sec-30) >= 0.25 tk (R4)   P0=+0.0034 P30=+0.0037 tk     FAIL
+------------------------------------------------------------------------------------------------------------
+
+SECOND-OF-MINUTE PROFILE (second_profile.csv; pooled means, ticks)
+  S(0)=3.3394  S(30)=3.3397  mid-minute baseline B=3.3360
+  penalties: P0=+0.0034 (SE 0.0035)  P30=+0.0037 (SE 0.0023)
+  5 most expensive seconds: s1=3.371  s2=3.362  s3=3.348  s5=3.345  s7=3.344
+  cheapest second: s52=3.3212  (profile grid only, no search)
+  markout(+30s, buy-signed) at sec-0: +0.0593 tk  sec-30: +0.1390 tk  grand mean: +0.0953 tk
+
+SECONDARY 1 — OFI -> mid-move slope by spread/depth tercile (ofi_state_slope.csv)
+  interval samples (10 s, valid both ends): 423,527; spread edges 3.00/4.00 tk; depth edges 3.0/4.0 ctr
+    T1xD1: slope +0.13253 tk/ctr (t=+460.2, n=134,606)
+    T1xD2: slope +0.11687 tk/ctr (t=+284.2, n=45,049)
+    T1xD3: slope +0.09935 tk/ctr (t=+447.6, n=94,276)
+    T2xD1: slope +0.18060 tk/ctr (t=+312.9, n=63,003)
+    T2xD2: slope +0.15942 tk/ctr (t=+146.3, n=13,840)
+    T2xD3: slope +0.13472 tk/ctr (t=+108.3, n=9,240)
+    T3xD1: slope +0.18027 tk/ctr (t=+233.8, n=42,613)
+    T3xD2: slope +0.16326 tk/ctr (t=+112.3, n=12,531)
+    T3xD3: slope +0.16752 tk/ctr (t=+91.9, n=8,369)
+
+SECONDARY 2 — matched-vol 10:00 vs 15:00 quoted-spread cost (matched_vol_10_15.csv)
+  n10=3,120 n15=3,120; naive diff (15h-10h) -0.421 tk; MATCHED diff +0.347 tk (+0.87 $/leg-ctr)
+
+SECONDARY 3 — fitted cost f(spread,depth,hour) vs $25-33/RT all-in band (R9)
+  P1 RTs evaluated (both legs state-measured): 71 trades / 82 ctrRT of 91 in-scope trades; leg exclusions {'ok': 162, 'outside_band': 20}
+  fallback usage: {'cell': 162, 's_hour': 0, 'hour': 0, 'global': 0}
+  fitted all-in cost (cw): $21.71/ctrRT   measured-in-scope all-in (same RTs): $21.83/ctrRT
+  band [$25,$33] (EXEC01 pooled $20.65+comm to worst-era $28.69+comm); divergence 13.2% -> within tolerance
+
+VERDICT (preregistered): NO HARVESTABLE BOUNDARY PENALTY
+
+prohibition compliance: no strategy signal; no entry-rule change beyond the priced re-timing simulation; offsets only from the frozen 60-bin profile; no sealed read; blind pools untouched; SEARCH_LEDGER not appended; no git; no CrossTrade; $0.
+wall time: 44 s

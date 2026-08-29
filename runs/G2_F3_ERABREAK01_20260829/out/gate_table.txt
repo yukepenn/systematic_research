@@ -1,0 +1,45 @@
+G2_F3_ERABREAK01_20260829 — GATE TABLE (printed by program)
+trial G00024 | card MC-54 leg 1 | python 3.11.4 numpy 1.26.4 pandas 2.2.2
+
+[provenance] input hashes vs runs\GENESIS_REPRO_INCUMBENT_20260828\out\run_provenance.txt
+  MATCH    dfd017eff0b031c2be89639fc4ad347d45053867edcdc2600002252b10b627cf  research\scalping_lab\substrate\minute\NQ\nq1m_2005_202605.parquet
+  MATCH    87aa53f007aa47b9ee10d0080317a3cde8d22b55aa368267fa9a4aed7435295d  runs\SM1M_SUBSTRATE\out\nq_1m_2022_2026.parquet
+[seal] every load below passes research_sdk.seal_guard (counts printed); window end <= LOCKED_FORWARD
+[data_esnq enforcement] 0 reads — data_esnq tick stores NOT touched (NQ 1-min only per spec);
+  ALLOWLIST_DEV_44 has no applicable access this run. Blind pools untouched. Spend $0.
+
+[load eraA_deep_2016_2019] sessions kept=997 (excluded incomplete/half-day=33), range 2016-01-04..2019-12-31, gap-dropped returns=28, no-prior-close 09:31 losses=0, median valid buckets=390/390
+[load eraB_modern_2023_202605] sessions kept=845 (excluded incomplete/half-day=33), range 2023-01-03..2026-05-29, gap-dropped returns=6, no-prior-close 09:31 losses=0, median valid buckets=390/390
+
+[MDE / event counts — printed BEFORE verdicts]
+  n_sessions era A (2016-2019)        : 997
+  n_sessions era B (2023-2026-05-31)  : 845
+  n buckets per session (RTH)         : 390
+  n circular whole-session shifts     : 1841 (spec >= 300; ALL non-zero rotations, no RNG)
+  null p95 S  (= minimal detectable S at this gate) : 0.127792
+  null p95 L1 (diagnostic)                          : 0.122277
+  null p95 |dShare| (diagnostic)                    : 0.008721
+  null S max / median : 0.136166 / 0.108892
+
+  era A last-30-min RV share : 0.075852
+  era B last-30-min RV share : 0.066927
+  share difference (B - A)   : -0.008925
+  profile L1 distance        : 0.126995
+  break statistic S = L1 + |dShare| : 0.135920
+
+GATE                 | SPEC                                                       | OBSERVED                                             | PASS-FAIL
+------------------------------------------------------------------------------------------------------------------------------------------------------
+G1 DATA/PROVENANCE   | both era loads seal-clean; SHA256 == provenance record     | hash_match=True, seal certified                      | PASS
+G2 NULL FAMILY       | >= 300 whole-session circular shifts, shared across family | n_shifts=1841, shared shift set                      | PASS
+G3 BREAK (p95)       | BREAK iff S_real > p95(null S)                             | S=0.135920 vs p95=0.127792 (p=0.0011)                | BREAK
+G3a L1 (diag)        | non-binding component vs shared null                       | L1=0.126995 vs p95=0.122277 (p=0.0054)               | above
+G3b |dShare| (diag)  | non-binding component vs shared null                       | |dSh|=0.008925 vs p95=0.008721 (p=0.0467)            | above
+
+CONTENT VERDICT: BREAK  (trial verdict: PASS — measurement completed; content is the deliverable)
+
+BINDING DOCTRINE LINE (per spec verdict_semantics):
+  BREAK at 2022-05 is REAL: pre-2022 intraday-vol statistics are INADMISSIBLE priors
+  for modern (2023+) work. Every MC-38/52/55/56-class vol card must train/anchor on
+  the modern era only. [evidence: DISCOVERY_CONSUMED (era B) / LEGACY_DIAGNOSTIC (era A)]
+
+legs 2-4: NOT run (contingent riders; leg 4 folklore permanently banned on MDE failure per card — recorded).

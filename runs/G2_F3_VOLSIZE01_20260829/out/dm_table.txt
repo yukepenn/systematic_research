@@ -1,0 +1,11 @@
+G2_F3_VOLSIZE01_20260829 — MC-38 HAR race (trial G00026), printed by program
+target: next-session full-session RV from 1-min log returns (R05); frozen split train 2006-01-01..2017-12-31 / test 2018-01-01..2026-05-31
+pairs: train n=3043, test n=2166 (common sample all models; sessions with <200 bars excluded: 10; forecasts floored: 0); VXN add-on DROPPED per spec
+M1 HAR-RV coefs [1,RV_d,RV_w,RV_m]: [3.222608e-06 4.569549e-01 2.620330e-01 1.598623e-01]
+M2 HAR+RS-+ON coefs [1,RS-,RS+,RV_w,RV_m,ONRV,ONret2]: [ 2.682748e-06  1.331851e+00 -2.802731e-01  2.984367e-01  1.623309e-01
+ -3.355480e-01  6.803691e-02]
+mean test QLIKE: M0 plain21dRV 0.286573 | M1 HAR-RV 0.164508 | M2 HAR+RS-+ON 0.163671   winner: M2_HAR_RSneg_ON
+DM (NW lag 5, two-sided): M2-M1 diff -0.000836 stat -0.1785 p 0.858299  <- FROZEN PRIMARY GATE
+                                 M1-M0 diff -0.122065 stat -7.1618 p 7.9603e-13
+                                 M2-M0 diff -0.122902 stat -6.6521 p 2.89004e-11
+PASS(MC-38) = M2 beats M1, DM p<0.05 -> FAIL

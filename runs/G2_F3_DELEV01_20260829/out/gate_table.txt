@@ -1,0 +1,62 @@
+G2_F3_DELEV01_20260829 — gate output (printed by program)  trial G00027
+====================================================================================================
+substrate: research\scalping_lab\substrate\minute\NQ\nq1m_2005_202605.parquet
+  sha256=dfd017eff0b031c2be89639fc4ad347d45053867edcdc2600002252b10b627cf  size=60,667,927B  match_recorded_provenance=True
+data_esnq: NOT ACCESSED by this run -> ALLOWLIST_DEV_44 enforcement N/A (no tick reads). Blind pools untouched.
+seal_guard.assert_presealed calls: 7 (every row-group time column) — all pre-seal (substrate ends before 2026-08-01)
+U (sessions with a 16:00 RTH close): 5,051  span 2006-01-05 -> 2026-05-29  (max label <= 2026-05-31: True)
+U-sessions missing a 09:31 bar: 9
+in-window U-sessions [2006-01-01..2026-05-31]: N=5,051 (2005 = warm-up only)
+
+PER-ERA EVENT COUNTS (printed BEFORE any return table)
+era        detected untradeable  vetoed  traded
+2006-07           0           0       0       0
+2008-09           2           0       0       2
+2010-13           0           0       0       0
+2014-17           0           0       0       0
+2018-19           2           0       0       2
+2020-21           4           0       1       3
+2022             16           0       1      15
+2023-26/05        7           0       0       7
+TOTAL            31           0       2      29
+STATED: effective N concentrates in the 2008/2020/2022 stress clusters — see table above.
+
+MDE (printed BEFORE the return table): 2.0 x clustered SE = $2,296.59 per event (SE=$1,148.30, n=29, clusters=19)
+
+D1 RETURN TABLE — traded events, SHORT 1 ct, net of $33/RT
+  mean net/event = $-872.83   median = $732.00   sd = $7,303.01
+  sum net = $-25,312.00   win rate (net>0) = 51.7%   clustered t = -0.760
+  per-era (traded): era, n, mean net, sum net
+    2008-09    n=  2  mean=$   -653.00  sum=$   -1,306.00
+    2018-19    n=  2  mean=$  1,289.50  sum=$    2,579.00
+    2020-21    n=  3  mean=$ -5,938.00  sum=$  -17,814.00
+    2022       n= 15  mean=$     20.33  sum=$      305.00
+    2023-26/05 n=  7  mean=$ -1,296.57  sum=$   -9,076.00
+
+D2 VOL-MATCHED CONTROL — down-days (r<0), no bear filter/band, matched on trailing-21 RV decile,
+  same policy incl. gap-down veto, count-matched per decile, ONE shared draw (seed 0, consumed before D3)
+  control n = 29 (events 29, decile shortfall = 0)
+  control mean net/event = $1,199.76   median = $1,082.00   sd = $7,217.29
+  event-minus-control mean = $-2,072.59
+
+D3 CIRCULAR-SHIFT NULL — 500 distinct whole-session shifts of the detected-event indicator
+  valid shifts = 500 (empty: 0)   pseudo-events/shift mean = 30.6 min = 26
+  null mean of means = $-242.82   p50 = $-211.95   p95 = $945.85
+  observed mean net = $-872.83   exceeds p95: False
+
+DIAGNOSTIC (non-gate) — MFE-path shape, traded events, gross short pts at U-closes t+1/t+2/t+3
+  cum@c1: mean=  -57.26 pts  median=  -47.00 pts
+  cum@c2: mean=  -35.95 pts  median=  -60.50 pts
+  cum@c3: mean=  -41.99 pts  median=  +38.25 pts
+  increments: entry->c1 mean=-57.26  c1->c2 mean=+21.31  c2->c3 mean=-6.04 pts
+  max close-mark at: c1 9, c2 7, c3 13 (positive-early/negative-late = spiral-then-reversal signature)
+
+GATE TABLE (printed by program)
+GATE     SPEC                                                    OBSERVED                                     PASS-FAIL
+-----------------------------------------------------------------------------------------------------------------------
+D1       net mean/event > 0 AND event-clustered t >= 2.0         mean=$-872.83, t=-0.760 (n=29, clusters=19)  FAIL
+D2       event mean net > vol-matched control mean net           $-872.83 vs $1,199.76                        FAIL
+D3       mean net > p95 of 500 circular-shift means              $-872.83 vs p95=$945.85                      FAIL
+VERDICT  all three PASS -> SURVIVED-DISCOVERY; any fail -> NULL  NULL at formulation                          FAIL
+
+wall_s 9
