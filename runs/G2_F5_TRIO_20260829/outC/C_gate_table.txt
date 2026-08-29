@@ -1,0 +1,41 @@
+C_MC42_eod_short_covering — gate table (PRINTED BY PROGRAM)  trial G00031
+run: G2_F5_TRIO_20260829 sub-run C   seed=20260829  block=20 sessions  reps=2000
+substrate law: all returns in POINTS on the back-adjusted substrate
+
+input research\scalping_lab\substrate\minute\NQ\nq1m_2005_202605.parquet
+  sha256 dfd017eff0b031c2be89639fc4ad347d45053867edcdc2600002252b10b627cf  MATCHES GENESIS_REPRO_INCUMBENT_20260828 provenance
+input runs\SM1M_SUBSTRATE\out\nq_1m_2022_2026.parquet
+  sha256 87aa53f007aa47b9ee10d0080317a3cde8d22b55aa368267fa9a4aed7435295d  MATCHES GENESIS_REPRO_INCUMBENT_20260828 provenance
+
+EVENT COUNTS (before any verdict)
+  2006-15 (deep)         anchor-complete sessions= 2444  excluded(missing anchors)= 116 of  2560  down-days=1119 (45.8%)
+  2023-26/05 (modern)    anchor-complete sessions=  845  excluded(missing anchors)=  33 of   878  down-days= 379 (44.9%)
+  down-day events/yr (2023-26/05): 111.1
+
+MDE (before any verdict)
+  bootstrap SE(beta_2023-26/05) = 0.02942   (reps kept 2000/2000, dropped 0)
+  MDE |beta_new - beta_old| @ two-sided alpha=0.05, power=0.80: 0.08238
+  observed |beta_new - beta_old| = 0.02818  (< MDE: contrast under-powered at this effect size)
+
+PRIMARY (frozen)
+  beta 2006-15    (OLS, down-days) = +0.05090   conventional SE 0.01475   N=1119
+  beta 2023-26/05 (OLS, down-days) = +0.02271   conventional SE 0.02019   N=379
+  2023-26/05 95% block-bootstrap CI (circular, 20-session blocks, 2000 reps): [-0.03836, +0.07827]
+
+ADOPT-EXIT-RULE CLAUSE (frozen text: 'ONLY if the 2023-26 CI excludes the 2006-15
+point estimate AND the sign flips (else banked, no rule)') — evaluation verbatim:
+  (A) CI excludes 2006-15 point:  +0.05090 in [-0.03836, +0.07827] ? YES -> A fails   A=FAIL
+  (B) sign flips:  sign(beta_new)=+1  sign(beta_old)=+1   B=FAIL
+  CLAUSE = A AND B = DOES NOT FIRE -> banked, no rule
+
+GATE                            | SPEC                                        | OBSERVED                          | VERDICT
+----------------------------------------------------------------------------------------------------------------------------
+substrate hashes                | match GENESIS_REPRO provenance              | both match                        | PASS
+seal (>=2026-08-01 virgin)      | assert_presealed on both raw loads          | no sealed rows                    | PASS
+units                           | POINTS only (substrate law)                 | points throughout                 | PASS
+bootstrap reps                  | >= 2000, 20-session blocks                  | 2000 kept / 0 dropped             | PASS
+clause A: CI excludes old beta  | +0.05090 outside CI                         | CI [-0.03836, +0.07827]           | FAIL
+clause B: sign flip             | sign(beta_new) != sign(beta_old)            | +1 vs +1                          | FAIL
+ADOPT-EXIT-RULE                 | fires ONLY if A AND B                       | A AND B = False                   | NO RULE (banked)
+
+VERDICT: BANKED_NO_RULE

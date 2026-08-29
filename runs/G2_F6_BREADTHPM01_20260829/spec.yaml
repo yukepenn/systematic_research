@@ -1,0 +1,29 @@
+run_id: G2_F6_BREADTHPM01_20260829
+campaign: GENESIS_II_FORMAL_WAVE_6
+type: DISCOVERY_STRATEGY   # MC-41 economics stage - licensed by G00030 (+9.62pp, p 0.0019)
+question: >
+  Does the breadth-conditioned afternoon-downside information survive costs as a short policy?
+  This run carries the dead-short-leg burden explicitly: the conditional short must BOTH be net
+  positive AND beat the unconditional same-window short control.
+policy_frozen:
+  state: bottom tercile of 11:00 cumulative adjusted TICK (identical causal construction to the
+    G00030 diagnostic - trailing 252-session terciles; no reuse of its outputs, recomputed)
+  entry: SHORT 1 contract at the 11:01-stamped bar open on state-true sessions
+  exit: 15:59-stamped bar close; no stop (policy-minimal primary)
+window: 2023-01 -> 2026-05-31 (the internals population; REGIME-LOCAL stated in the verdict)
+cost_model: $25.01/ctrRT primary; $33 stress reported non-gate
+gates_all_coded_and_printed:
+  B0: MDE + events/yr printed BEFORE any return table (~263 events expected)
+  B1: net/event > 0 with event-clustered t >= 2.0 at $25.01
+  B2: beats BOTH controls - (i) count-matched random-session same-window SHORT (>= 300 draws,
+      p95) and (ii) the all-sessions unconditional same-window short mean (printed row)
+  B3: circular-shift null - state series shifted whole-session against outcomes, p95
+  mirror_readout_non_gate: TOP-tercile same-window LONG reported (breadth-strength continuation)
+  verdict: B1+B2+B3 -> SURVIVED-DISCOVERY (routes to robustness + independent implementation);
+      any fail -> NULL at formulation (the INFORMATION finding G00030 stands either way -
+      information and monetization are separate ledgers)
+prohibitions: no tercile/entry/exit search, no stop additions, no sealed reads, POINTS-based
+  P&L, internals manifest-checked
+outputs: out/gate_table.txt, out/events.csv, out/ledger_result_pending.json
+live_enabled: NO
+spend: $0

@@ -1,0 +1,32 @@
+==============================================================================
+G2_F5_TRIO_20260829 / sub-run B / MC-41 breadth divergence / trial G00030
+printed by program: runs/G2_F5_TRIO_20260829/srcB/run_mc41.py
+==============================================================================
+TICK_1m.parquet sha256 72612a1e0f308b57862d6e0adfb5883ceee05dfc697c4cb980ea7b2c82b6d80f  manifest-match=True
+nq_1m_2022_2026.parquet sha256 87aa53f007aa47b9ee10d0080317a3cde8d22b55aa368267fa9a4aed7435295d  provenance-match=True
+seal_guard.assert_presealed PASS on both frames (TICK 445,625 rows, NQ 1,620,044 rows)
+
+---- POWER BLOCK (printed BEFORE verdicts, per spec) ----
+population: 1104 joined sessions; 10 dropped by R6 quality; 1094 valid; 252 warm-up; 842 classified (2023-01-05 .. 2026-05-29, 3.39 yr)
+events (bottom-tercile sessions): n1 = 263   EVENTS/YR = 77.5
+POWERED MDE (null-sd basis, alpha=.05 two-sided, power=.80): 7.07 pp   [sigma_null = 2.52 pp]
+analytic two-proportion MDE (reference only): 10.41 pp
+CLOSED-BY-POWER threshold: MDE > 15 pp
+
+---- OBSERVED (recorded after power block) ----
+P(takeout | bottom tercile) = 0.5856   (n=263)
+P(takeout) unconditional matched = 0.4893   (N=842)
+delta_obs = +9.62 pp
+circular-shift null: N_NULL=10000 seed=20260829  p_two=0.0019  p_one(delta>0)=0.0001
+
+GATE TABLE (printed by program)
+GATE                        | SPEC                                    | OBSERVED                          | PASS-FAIL
+----------------------------------------------------------------------------------------------------------------------
+G1 manifest/provenance      | sha256 match both substrates            | TICK=True NQ=True                 | PASS
+G2 seal compliance          | no bar > 2026-07-31 17:00 ET read       | assert_presealed passed, window<=2026-05-31| PASS
+G3 matched control          | unconditional P same wave/population    | same 842-session classified pop   | PASS
+G4 power                    | powered MDE <= 15 pp                    | MDE = 7.07 pp                     | PASS
+G5 primary (frozen)         | delta > 0 AND p_two < 0.05 (R10)        | delta=+9.62 pp, p_two=0.0019      | PASS
+----------------------------------------------------------------------------------------------------------------------
+VERDICT (trial G00030 / MC-41): PASS
+evidence-status: DISCOVERY_CONSUMED (2022 -> 2026-05-31 internals population)

@@ -1,0 +1,33 @@
+run_id: G2_F6_AUCTREV01_20260829
+campaign: GENESIS_II_FORMAL_WAVE_6
+type: DISCOVERY_STRATEGY   # MC-46 economics stage - licensed by G00029's 3/3 anchor-specific break
+question: >
+  Is the measured end-of-day dislocation reversion (slope ~ -0.2 pts/pt, both eras, asymmetric)
+  monetizable after hostile overnight costs at the extreme-decile geometry the diagnostic found?
+policy_frozen:
+  dislocation: D = close(16:00-stamped bar) - close(15:50-stamped bar), per session
+  state: trailing causal 252-session decile of D (no full-sample quantiles)
+  entry: D in BOTTOM decile -> LONG 1 contract; the reversion window = EXACTLY the window the
+    frozen diagnostic measured as its overnight H1 (documented in runs/G2_F5_TRIO_20260829/outA/;
+    entry at the first tradable bar open at that window's start, exit at the window-end bar
+    close; the operationalization is written to spec_resolutions BEFORE any economics compute)
+  symmetric_readout_non_gate: TOP-decile SHORT with the same window - reported, never gated
+    (the diagnostic measured asymmetry; the short side carries the dead-short-leg burden)
+cost_model: $35/ctrRT (thin post-close/overnight tape floor - skeptic convention); $40 stress
+  reported non-gate
+window: 2006 -> 2026-05-31 (both eras; per-era gates below)
+gates_all_coded_and_printed:
+  E0: MDE + per-era event counts printed BEFORE any return table
+  E1: net/event > 0 with event-clustered t >= 2.0 at $35/RT
+  E2: beats the count-matched control - random non-extreme sessions, same window, same LONG
+      policy, same costs (>= 300 draws, p95)
+  E3: circular-shift null - D-series shifted whole-session against outcomes (null_guard
+      sensitivity first), real above p95
+  E4: era consistency - net same sign in 2006-2015 and 2016-2026/05
+  verdict: ALL -> SURVIVED-DISCOVERY (routes to robustness + independent implementation, NOT
+      promotion); any fail -> NULL at formulation
+prohibitions: no decile threshold search, no window search, no stop/target additions, no sealed
+  reads, substrate law honored (POINTS throughout)
+outputs: out/gate_table.txt, out/events.csv, out/ledger_result_pending.json
+live_enabled: NO
+spend: $0

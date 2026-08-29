@@ -1,0 +1,62 @@
+C_MC42_eod_short_covering (trial G00031) — spec ambiguity resolutions
+Recorded BEFORE any computation. Spec frozen at runs/G2_F5_TRIO_20260829/spec.yaml (read twice).
+
+R1. "down-day (session c2c < 0)" — the frozen spec text says "c2c" but the launching
+    directive operationalizes it as: session (09:30 open -> 15:30 close) point return < 0.
+    Adopted as directed. This is internally consistent: the conditioning variable is the
+    sign of the regressor itself (the 09:30->15:30 point return), so "continuation among
+    down-days" is exactly "beta on the negative branch of the regressor". No alternative
+    definition will be computed (no search).
+
+R2. Bar-stamp mapping (END-stamped bars, CLAUDE.md §6; no ±1-min shift):
+      09:30:00 open  = open  of the bar stamped 09:31
+      15:30 close    = close of the bar stamped 15:30
+      16:00 close    = close of the bar stamped 16:00
+      r_day = close[15:30] - open[09:31]   (POINTS)
+      r_eod = close[16:00] - close[15:30]  (POINTS)
+    Substrate law: POINTS only, never percent, on the back-adjusted substrate.
+
+R3. Era windows and sources (per launching directive + provenance file):
+      2006-15    = session dates 2006-01-01 .. 2015-12-31 from the deep substrate
+                   research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet
+                   (sha256 dfd017ef..., per runs/GENESIS_REPRO_INCUMBENT_20260828/out/run_provenance.txt)
+      2023-26/05 = session dates 2023-01-01 .. 2026-05-31 from the modern substrate
+                   runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet (sha256 87aa53f0...)
+    Hashes re-verified at load time by the program.
+
+R4. session_id: only RTH bars stamped 09:31..16:00 are used; for those stamps the
+    calendar date of the (ET, END-stamped) timestamp IS the session date. Sessions
+    lacking any required anchor bar (exact stamps 09:31, 15:30, 16:00 — no nearest-
+    neighbor substitution) are EXCLUDED and counted (early closes drop out naturally).
+
+R5. Block bootstrap for the 2023-26 CI (the sub-run's single stochastic device — one
+    shared draw, seed=20260829, numpy default_rng): CIRCULAR block bootstrap over the
+    ordered sequence of anchor-complete 2023-26/05 sessions (ALL sessions, not just
+    down-days, so serial dependence is preserved); block length = 20 sessions;
+    ceil(N/20) blocks per rep, trimmed to N; 2000 reps; within each rep, beta is
+    re-estimated by OLS among that rep's down-days; 95% CI = percentile [2.5, 97.5].
+    Reps with < 10 down-days or degenerate regressor variance would be dropped and
+    counted (expected 0).
+
+R6. beta = OLS slope (with intercept) of r_eod on r_day among down-days, per era.
+    2006-15 point estimate is the fixed reference (its conventional OLS SE reported
+    for context only; the clause compares the 2023-26 bootstrap CI to the 2006-15
+    POINT estimate, exactly as frozen).
+
+R7. MDE, printed before verdicts: minimal detectable |beta_2023 - beta_2006| at
+    two-sided alpha=0.05, power=0.80, using the bootstrap SE of beta_2023:
+    MDE = 2.80 * SE_boot. Event counts (N sessions, N down-days, per era) also
+    printed before any verdict.
+
+R8. Adopt-exit-rule clause, evaluated and printed verbatim by the program:
+    fires ONLY if (A) the 2023-26/05 95% block-bootstrap CI excludes the 2006-15
+    point estimate AND (B) sign(beta_2023) != sign(beta_2006), both signs nonzero.
+    Else: banked, no rule. Either outcome banked. A FAIL is a FAIL.
+
+R9. Outputs (hard rule 5 overrides the spec's shared 3-entry list — assembly is the
+    parent's job): outC/C_gate_table.txt (printed by program) and single-entry
+    outC/ledger_result_pending.json.
+
+R10. Seal: both loads pass research_sdk.seal_guard.assert_presealed on the raw time
+     column before ANY filtering; nothing >= 2026-08-01 is touched (substrates end
+     2026-07-31 17:00 ET at the latest; era filters end 2026-05-31 anyway).

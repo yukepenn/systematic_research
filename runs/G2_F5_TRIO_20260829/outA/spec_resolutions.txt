@@ -1,0 +1,77 @@
+G2_F5_TRIO_20260829 sub-run A (MC-46, trial G00029) — ambiguity resolutions
+Recorded BEFORE any statistic was computed. Spec is frozen; these resolve only what the
+spec text leaves unspecified. No parameter search; each item has exactly one value.
+
+R1. Window mapping (END-stamped bars, CLAUDE.md §6). Anchor 15:50: pre-window = bars
+    stamped 15:31:00..15:40:00 inclusive (trading 15:30-15:40), post-window = bars
+    stamped 15:51:00..16:00:00 inclusive (trading 15:50-16:00) — per the frozen wording
+    "15:51-16:00 vs 15:31-15:40 across the 15:50 anchor". Identical relative offsets at
+    placebos: anchor T -> pre = stamps [T-19m, T-10m], post = [T+1m, T+10m].
+      15:40 placebo: pre 15:21-15:30, post 15:41-15:50.
+      15:45 placebo: pre 15:26-15:35, post 15:46-15:55.
+
+R2. Session grid. Per session_id (calendar date of the 16:00 close; RTH stamps all fall
+    on the session_id date), closes are reindexed onto the full RTH grid of stamps
+    09:30:00..16:00:00 (391 points; forward-fill from last raw close <= stamp, seeded by
+    the last pre-09:30 close of the same session). Returns = grid close diffs (390
+    values stamped 09:31..16:00, POINTS — substrate law). Volume = raw per-minute volume
+    aligned to grid stamps; minutes with no trades = 0 volume, 0 return (a no-trade
+    minute is genuinely zero activity, not missing data).
+
+R3. Session inclusion. A session qualifies iff (a) >= 300 raw bars stamped within
+    09:31-16:00, and (b) >= 1 raw bar stamped within 15:56-16:00 (excludes early-close
+    days), and (c) >= 1 raw close at/before 09:30 for the return seed. Range: session_id
+    2006-01-01 .. 2026-05-31. Load passes research_sdk.seal_guard.assert_presealed.
+
+R4. Statistics (per anchor, per window; per-session value then unweighted cross-session
+    mean over the full 2006..2026-05 sample — the frozen break test is full-sample; the
+    era split belongs only to the conditional reversion table):
+      S1 mean |1-min return| (points): session mean of |ret| over the 10 window bars.
+      S2 mean volume: session mean of the 10 window bars' volume.
+      S3 lag-1 return autocorr: within-session Pearson corr of (r_t, r_{t+1}) over the
+         window's 10 returns (9 pairs); sessions with zero variance in either vector are
+         skipped for S3 only (counts printed).
+    EFFECT at anchor T, statistic S = | mean_post(S) - mean_pre(S) | (absolute
+    difference of cross-session aggregates; magnitude, because the frozen clause is
+    "the 15:50 effect exceeds ..." — a magnitude comparison).
+
+R5. Shared circular-shift null. Unit = session RTH return/volume grid (390 positions).
+    Replication k (K = 1000, numpy default_rng seed 20260829): ONE offset per session
+    o_{k,i} ~ Uniform{1..389}, SHARED across all three statistics (family dependence
+    preserved, CLAUDE.md §4). Session series circularly shifted by o_{k,i}; the 15:50
+    pre/post window positions stay fixed; the three null effects are recomputed exactly
+    as R4. p95 = 95th percentile of the K null effect magnitudes, per statistic. The
+    null is computed for the 15:50 anchor construction (the gate compares the observed
+    15:50 effect to it); placebo-anchor clauses use OBSERVED placebo effects.
+
+R6. Gate (frozen): per statistic S, PASS_S iff effect_1550(S) > effect_1540(S) AND
+    effect_1550(S) > effect_1545(S) AND effect_1550(S) > null_p95(S). The
+    anchor-specific break EXISTS iff at least one of S1/S2/S3 passes all three clauses
+    (the spec enumerates three break dimensions without a combining rule; >=1-of-3 is
+    recorded here in advance). Family-size note printed in the gate table: 3 statistics
+    at per-statistic p95 => family-wise alpha <= ~0.14 under independence, smaller under
+    the shared draw; a single marginal pass will be flagged as such in the note field.
+
+R7. MDE line. The per-statistic null p95 IS the minimum detectable effect at the 5%
+    one-sided level; printed together with N sessions BEFORE any verdict (hard rule 7).
+
+R8. Reversion table (runs ONLY on an R6 break; diagnostic, no gate, no policy).
+    Dislocation D = grid close_16:00 - grid close_15:50 (points, the post-anchor move).
+    Deciles of D computed WITHIN era (2006-15 = session_id <= 2015-12-31; 2016-26 =
+    session_id >= 2016-01-01). Reversion horizons, both in points:
+      H1 overnight: next qualifying session's 09:30 grid close - this 16:00 grid close.
+      H2 next-morning: next session's 10:00 grid close - its 09:30 grid close.
+    Next session = immediately following qualifying session_id, gap <= 7 calendar days;
+    sessions without one are dropped from the table (count printed). Per era x decile:
+    N, mean D, mean H1, mean H2, plus per-era OLS slope of H1 on D. Evidence status of
+    every number in this run: DISCOVERY_CONSUMED (research-consumed data, in-sample
+    diagnostic; no forward claim).
+
+R9. Known caveat, recorded in advance (not a gate change): the volume/|ret| ramp into
+    the close is smooth and convex, so a later anchor mechanically tends to a larger
+    pre/post difference than an earlier one; the frozen placebo construction is executed
+    exactly as written and this caveat is repeated in the gate-table note.
+
+R10. Outputs: outA\A_gate_table.txt (printed by program), outA\reversion_table.txt (if
+     run), outA\ledger_result_pending.json (single RESULT-kind entry, hash/prev_hash/seq
+     left null for the orchestrator's chained append; no SEARCH_LEDGER write from here).

@@ -1,0 +1,50 @@
+G2_F5_TRIO_20260829 sub-run B (MC-41, trial G00030) — spec ambiguity resolutions
+Recorded BEFORE any computation, per trio rule 6. Frozen primary is unchanged; these
+resolve only points the spec leaves open. No parameter search: every choice below is
+single-valued and fixed here.
+
+R1. Window "2022 -> 2026-05-31": inclusive endpoint. 2026-05-31 is a Sunday (no RTH
+    session), so the last populated session is 2026-05-29. Filter: RTH-bar calendar
+    date <= 2026-05-31. BURNED window (2026-05-31 -> 2026-07-31) is therefore not used.
+R2. END-stamped bars (CLAUDE.md §6): "09:30 -> 11:00" morning = bars stamped
+    09:31:00 .. 11:00:00 inclusive (90 minutes); "afternoon 11:01 -> 16:00" = bars
+    stamped 11:01:00 .. 16:00:00 inclusive.
+R3. Cumulative adjusted TICK at 11:00 = sum of certified ^TICK 1-min CLOSES stamped
+    09:31 .. 11:00 (cumsum endpoint). Manifest sha256 check on TICK_1m.parquet is a
+    hard gate (abort on mismatch).
+R4. Causal terciles: for session t, the tercile boundary is the 33.3333rd percentile
+    (numpy linear interpolation) of the cum-11:00 values of the trailing 252 sessions
+    with valid cum values, strictly prior (t-252 .. t-1). FULL window required; the
+    first 252 valid sessions are warm-up and enter neither the conditional nor the
+    unconditional population. Bottom tercile: cum11 <= boundary.
+R5. Matched unconditional control: P(takeout) over ALL classified sessions (the same
+    post-warm-up population the conditional subset is drawn from), same wave.
+R6. Session-quality filters, fixed a priori: a session enters the population iff
+    (a) >= 80 of the 90 morning TICK minutes are present incl. the 11:00 bar;
+    (b) NQ has >= 80 morning bars and >= 200 afternoon bars with the last RTH bar
+        stamped >= 15:59 (drops early-close holiday sessions, which have no
+        comparable afternoon); (c) both symbols have the session.
+R7. Takeout outcome on NQ substrate LOWS (points level, substrate-law compliant — no
+    percent returns): 1 if min(low, 11:01..16:00) < min(low, 09:31..11:00) else 0.
+R8. Null: circular shift of the bottom-tercile indicator over the chronologically
+    ordered classified-session axis; offsets drawn uniformly from 1..N-1 without
+    replacement semantics (one offset per replication), N_NULL = 10000, single shared
+    draw sequence, fixed seed 20260829 (the sub-run's one family draw; only one
+    statistic exists in this sub-run, so the shared draw degenerates to this
+    sequence). delta_null(k) = mean(outcome | shifted indicator) - unconditional mean.
+    p_two = (1 + #{|delta_null| >= |delta_obs|}) / (N_NULL + 1); p_one (direction of
+    the question, delta > 0) reported alongside.
+R9. Powered MDE (the gate that can produce CLOSED-BY-POWER): MDE = (z_0.975 + z_0.80)
+    * sd(delta_null) = 2.8016 * sigma_null (alpha 0.05 two-sided, power 0.80), i.e.
+    the null distribution's own dispersion — it inherits the exact estimator and the
+    session dependence structure. Analytic two-proportion MDE printed for reference
+    only. If MDE > 15 pp -> verdict CLOSED-BY-POWER, printed as such, regardless of
+    the observed delta (printed after, for the record, per spec order MDE-first).
+R10. Primary PASS criterion (declared before computing): delta_obs > 0 AND p_two <
+    0.05. Otherwise FAIL (NULL). A FAIL is a FAIL.
+R11. Events/yr = bottom-tercile session count / (classified-population calendar span
+    in days / 365.25).
+R12. Substrates: NQ = runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet (per incumbent
+    provenance sha 87aa53f0...); TICK = research/data_internals/TICK_1m.parquet
+    (manifest sha 72612a1e...). Both loaded through research_sdk.seal_guard
+    (assert_presealed on the full frames before any windowing).

@@ -1,0 +1,83 @@
+====================================================================================================
+G2_F5_TRIO_20260829 / sub-run A — MC-46 CLOSING-AUCTION BREAK TEST (trial G00029)
+printed by srcA/mc46_closing_auction.py — GATE/SPEC/OBSERVED/PASS-FAIL assembled by program only
+substrate: D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\research\scalping_lab\substrate\minute\NQ\nq1m_2005_202605.parquet
+substrate sha256: dfd017eff0b031c2be89639fc4ad347d45053867edcdc2600002252b10b627cf
+python 3.11.4  numpy 1.26.4  pandas 2.2.2
+seed=20260829  K=1000  range 2006-01-01..2026-05-31  evidence status: DISCOVERY_CONSUMED
+====================================================================================================
+
+EVENT COUNTS AND MDE — PRINTED BEFORE ANY VERDICT
+  qualifying sessions (full sample) : 5052
+  qualifying sessions 2006-15        : 2459
+  qualifying sessions 2016-26        : 2593
+  autocorr valid sessions 15:50 pre/post : 5051/5051
+  MDE (= shared circular-shift null p95 of |post-pre|, one-sided 5%):
+    mean|1-min ret|  : 0.052145 pts
+    mean volume      : 14.784 contracts/min
+    lag-1 autocorr   : 0.010883
+
+OBSERVED WINDOW AGGREGATES (per-session value, cross-session mean; POINTS / contracts)
+  anchor  statistic                             pre           post   effect=|d|
+  15:50   S1 mean|1-min ret| (pts)         2.393087       3.077509     0.684422
+  15:50   S2 mean volume                 743.832660    1639.162767   895.330107
+  15:50   S3 lag-1 autocorr               -0.119002      -0.089569     0.029432
+  15:40   S1 mean|1-min ret| (pts)         2.227261       2.423293     0.196031
+  15:40   S2 mean volume                 649.417854     816.193587   166.775732
+  15:40   S3 lag-1 autocorr               -0.134711      -0.122405     0.012306
+  15:45   S1 mean|1-min ret| (pts)         2.321467       2.853677     0.532210
+  15:45   S2 mean volume                 700.381532    1009.243310   308.861778
+  15:45   S3 lag-1 autocorr               -0.127830      -0.122058     0.005773
+
+GATE TABLE — frozen clause: effect(15:50) > effect(15:40) AND > effect(15:45) AND > null p95
+  GATE                                                 SPEC (must exceed)  OBSERVED eff(15:50)   VERDICT
+  ------------------------------------------------------------------------------------------------------
+  S1 mean|1-min ret| (pts)      p40=0.196031 p45=0.532210 null95=0.052145             0.684422      PASS
+      clause > placebo 15:40 : PASS
+      clause > placebo 15:45 : PASS
+      clause > null p95      : PASS
+  S2 mean volume             p40=166.775732 p45=308.861778 null95=14.783739           895.330107      PASS
+      clause > placebo 15:40 : PASS
+      clause > placebo 15:45 : PASS
+      clause > null p95      : PASS
+  S3 lag-1 autocorr             p40=0.012306 p45=0.005773 null95=0.010883             0.029432      PASS
+      clause > placebo 15:40 : PASS
+      clause > placebo 15:45 : PASS
+      clause > null p95      : PASS
+  ------------------------------------------------------------------------------------------------------
+  ANCHOR-SPECIFIC BREAK AT 15:50 (>=1 of 3 per R6): EXISTS — PASS  (3/3 statistics pass)
+  NOTE (R6/R9): 3 statistics at per-stat p95 -> family alpha <=~0.14 under independence;
+  marginal passes (effect < 1.5x null p95): none
+  R9 caveat: the close ramp is convex, so later anchors mechanically favor larger pre/post
+  differences; placebo construction executed exactly as frozen.
+
+REVERSION TABLE (diagnostic; runs because the anchor-specific break exists; no gate, no policy)
+dislocation D = close16:00 - close15:50 (pts); H1 = overnight to next 09:30; H2 = next 09:30->10:00
+sessions dropped for missing next session (gap>7d/end of sample): 2
+  era 2006-15 (N=2458):  OLS slope H1~D = -0.1836 pts/pt
+    decile     N     mean D    mean H1    mean H2
+         1   244     -9.551      2.003      0.510
+         2   242     -3.852      0.724      0.450
+         3   214     -2.352      0.995     -0.494
+         4   258     -1.354      0.422     -0.584
+         5   236     -0.472      2.357     -0.141
+         6   275      0.393      1.793     -0.194
+         7   219      1.247      1.266      0.500
+         8   238      2.102      1.041      0.275
+         9   285      3.474      1.118     -0.554
+        10   247      8.010     -0.450      0.234
+  era 2016-26 (N=2592):  OLS slope H1~D = -0.2184 pts/pt
+    decile     N     mean D    mean H1    mean H2
+         1   259    -52.857     19.976     -1.647
+         2   260    -19.817      5.321      7.644
+         3   254    -10.162      6.969     -3.718
+         4   261     -4.549     -2.496     -1.717
+         5   236     -1.278      2.092      1.522
+         6   275      1.681      5.669      3.706
+         7   261      5.209      4.577      2.386
+         8   261     11.341      4.309      1.932
+         9   262     21.793     10.377      2.891
+        10   263     53.547     -4.029     -1.876
+evidence status: DISCOVERY_CONSUMED — in-sample diagnostic, no forward claim, no tradability claim.
+
+wall_s 11
