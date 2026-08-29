@@ -1,0 +1,32 @@
+run_id: G2_F4_NDX_DELEV02_20260829
+campaign: GENESIS_II_FORMAL_WAVE_4
+type: DATA_CONTRACT_PLUS_DISCOVERY   # MC-40 retest on a percent-clean basis; NOT a rescue -
+  # G00027 was DEFECT (the mechanism was never tested); justification recorded here
+substrate_fix: >
+  Event detection moves to the CASH NASDAQ-100 index (true percents, no roll adjustment):
+  FRED series NASDAQ100, daily close, public domain, fetched fresh (<= 5 MB), sha256 recorded,
+  certified (timestamp semantics = market close ET; revision policy = index history fixed;
+  missingness map printed), truncated < 2026-08-01 via seal_guard. P&L stays in FUTURES POINTS
+  on the owned substrate ($20/pt) - the domain the substrate is exact in.
+stage_A_contract:
+  - fetch + certify NASDAQ100 (1986 ->); print coverage/missingness
+  - overlap check: corr(index daily %return, futures daily point-return / index level) on
+    2009-2026-05 must be > 0.97, else DEFECT (the two must describe the same market)
+stage_B_retest_frozen (gates identical in structure to the G00027 spec, band now on INDEX %):
+  event: index close-to-close return in [-5.0%, -2.5%) on a bear-filtered day (index close <
+    200-day index MA)
+  position: SHORT 1 NQ contract at next futures session RTH open; exit at futures RTH close 3
+    sessions later; $33/RT; gap-down veto: next futures RTH open below event-day futures RTH
+    close by > 1.5% of the INDEX level => veto (frozen)
+  window: 2006-01 -> 2026-05-31 (index events; futures P&L on owned substrate)
+  gates: D1 net/event > 0, event-clustered t >= 2.0 (PER-ERA EVENT COUNTS + MDE printed BEFORE
+    any return table - 2008/2020/2022 concentration expected and now VISIBLE); D2 beats the
+    vol-matched control (drop-days matched on trailing-21d index RV decile, no bear filter/band,
+    count-matched); D3 circular-shift null >= 300, one shared draw with D2 (seed 0)
+  diagnostic_non_gate: MFE-path shape (spiral-then-reversal signature); per-era table
+verdict: D1+D2+D3 -> SURVIVED-DISCOVERY; any fail -> NULL at formulation (MC-40 finally TESTED)
+prohibitions: no band/horizon/MA search (frozen as in G00027's spec), no sealed reads, index
+  data quarantined raw + certified pre-seal only
+outputs: out/gate_table.txt, out/contract.txt, out/events.csv, out/ledger_result_pending.json
+live_enabled: NO
+spend: $0
