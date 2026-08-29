@@ -1,0 +1,56 @@
+====================================================================================================
+G2_F6_AUCTREV01_20260829 — MC-46 EOD DISLOCATION REVERSION ECONOMICS (trial G00032)
+printed by src/auctrev01_mc46_econ.py — GATE/SPEC/OBSERVED/PASS-FAIL assembled by program only
+substrate: D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\research\scalping_lab\substrate\minute\NQ\nq1m_2005_202605.parquet
+substrate sha256: dfd017eff0b031c2be89639fc4ad347d45053867edcdc2600002252b10b627cf (== GENESIS_REPRO_INCUMBENT_20260828 provenance)
+python 3.11.4  numpy 1.26.4  pandas 2.2.2
+seed=20260829  E2 draws=1000  E3 shifts=1000  trailing=252 sessions
+costs: gate $35/ctrRT = 1.75 pts; stress $40/ctrRT = 2.0 pts (NQ $20/pt)
+policy frozen: D = close16:00 - close15:50; BOTTOM trailing decile -> LONG 1; window per
+  R1/R2 = entry first-tradable-bar open at 16:00 (NOT in halt; case documented), exit next
+  qualifying session 09:30-seed bar close. evidence status: DISCOVERY_CONSUMED
+====================================================================================================
+
+E0 — EVENT COUNTS AND MDE (printed BEFORE any return table; hard rule 7)
+  qualifying sessions 2006..2026-05        : 5052
+  burn-in (first 252, no trailing state)   : 252
+  signal-valid sessions                    : 4800
+  BOTTOM-decile signals                    : 535
+  dropped: no next session <=7d            : 1
+  dropped: no tradable entry bar           : 0
+  entry via overnight fallback             : 0 (rest = 16:01-stamped late tape)
+  LONG events total                        : 534
+  LONG events era 2006-2015                : 241
+  LONG events era 2016-2026/05             : 293
+  E2 control pool (non-extreme, valid)     : 3696  (era1 1703, era2 1993)
+  MDE (t=2.0, pool sd 77.728 pts, N=534) : 6.727 pts/event = $134.54/event
+  E2 control p95 (count/era-matched, 1000 draws): +5.7829 pts net/event
+  E3 circular-shift null p95 (1000 shifts)     : +7.0982 pts net/event
+  E3 null sensitivity (null_guard): spread 8.0622 pts across shifts [1000, 2500, 4000] — HAS TEETH
+
+OBSERVED — LONG BOTTOM-DECILE (POINTS/event; $ = pts x 20)
+  full 2006-2026/05      N= 534  gross  +11.919  net$35  +10.169  sd  97.566  t(evt)  +2.41  net$40   +9.919 pts/event
+  era 2006-2015          N= 241  gross   +2.329  net$35   +0.579  sd  30.621  t(evt)  +0.29  net$40   +0.329 pts/event
+  era 2016-2026/05       N= 293  gross  +19.806  net$35  +18.056  sd 128.323  t(evt)  +2.41  net$40  +17.806 pts/event
+  R11 drift note: entry_open - close16:00 over events: mean +0.0159 sd 0.4040 pts (non-gate)
+
+GATE TABLE — all clauses coded; verdicts printed by program ($35/ctrRT, POINTS)
+  GATE   SPEC                                                                     OBSERVED  VERDICT
+  -------------------------------------------------------------------------------------------------
+  E1     net/event > 0 AND event-clustered t >= 2.0                  +10.1685 pts, t=+2.41     PASS
+      clause net>0            : PASS
+      clause t>=2.0           : PASS
+  E2     > control p95 = +5.7829 (count/era-matched, 1000 draws)                     +10.1685     PASS
+  E3     > circular-shift null p95 = +7.0982 (1000 shifts)                        +10.1685     PASS
+  E4     net same sign in 2006-15 and 2016-26/05                        +0.5788 / +18.0563     PASS
+  -------------------------------------------------------------------------------------------------
+  VERDICT: ALL PASS -> SURVIVED-DISCOVERY (routes to robustness + independent implementation, NOT promotion)
+
+NON-GATE READOUTS
+  $40 stress (LONG, full): net +9.919 pts/event, t(evt) +2.35 (net>0 & t>=2 would hold) — reported only
+  TOP-decile SHORT, same window/costs (spec: reported, never gated; dead-short-leg burden):
+    full               N= 568  net$35   -5.447  t(evt)  -1.27  net$40   -5.697 pts/event
+    era 2006-2015      N= 262  net$35   -0.688  t(evt)  -0.63  net$40   -0.938 pts/event
+    era 2016-2026/05   N= 306  net$35   -9.522  t(evt)  -1.21  net$40   -9.772 pts/event
+
+wall_s 22

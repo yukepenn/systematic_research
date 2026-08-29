@@ -1,0 +1,52 @@
+==========================================================================================
+G2_F6_BREADTHPM01_20260829 / MC-41 economics stage / trial G00033
+printed by program: runs/G2_F6_BREADTHPM01_20260829/src/run_breadthpm01.py
+==========================================================================================
+TICK_1m.parquet sha256 72612a1e0f308b57862d6e0adfb5883ceee05dfc697c4cb980ea7b2c82b6d80f  manifest-match=True
+nq_1m_2022_2026.parquet sha256 87aa53f007aa47b9ee10d0080317a3cde8d22b55aa368267fa9a4aed7435295d  provenance-match=True
+seal_guard.assert_presealed PASS on both frames (TICK 445,625 rows, NQ 1,620,044 rows)
+R4 availability: 0 classified session(s) removed for missing 11:01/15:59 bar (0 missing bar value(s))
+
+---- B0 POWER BLOCK (printed BEFORE any return table, per spec) ----
+population: 1104 joined sessions; 10 dropped by quality (R3); 1094 valid; 252 warm-up; 842 classified (2023-01-05 .. 2026-05-29, 3.39 yr)
+events (bottom-tercile sessions): n1 = 263   (spec expectation ~263)   EVENTS/YR = 77.5
+POWERED MDE on mean net/event (null-sd basis, alpha=.05 two-sided, power=.80): $421.22/event  [sigma_null = $150.35]
+analytic MDE (sd/sqrt(n) basis, reference only): $640.56/event
+(no CLOSED-BY-POWER ceiling in this spec — B0 is a print-order gate; MDE recorded)
+
+---- RETURN TABLE (net $/event; POINTS-based gross x $20/pt, costs per R5) ----
+LEG                                         |     n |    mean/ev |       t |      total $ |    median
+----------------------------------------------------------------------------------------------------
+CONDITIONAL SHORT bottom-tercile @ $25.01   |   263 |    -366.99 |   -1.61 |       -96518 |   -230.01
+  stress cost $33.0 (NON-gate)              |   263 |    -374.98 |   -1.64 |       -98619 |   -238.00
+UNCONDITIONAL SHORT all sessions @ $25.01   |   842 |    -224.14 |   -2.10 |      -188728 |   -352.51
+MIRROR LONG top-tercile @ $25.01 (NON-gate) |   268 |     +85.62 |   +0.52 |       +22947 |   +402.49
+----------------------------------------------------------------------------------------------------
+conditional gross: -17.10 pts/event ($-341.98); win rate 47.1%
+
+---- B2 DUAL-CONTROL TABLE (both short controls charge identical $25.01/ctrRT) ----
+CONTROL                                                   |  value $/ev | verdict
+------------------------------------------------------------------------------------------
+observed conditional short mean                           |     -366.99 |
+(i) count-matched random-session short, p95 of 10000 draws|      +38.57 | NOT BEATEN
+      draw distribution p50 / mean                        |     -224.68 | (p_one=0.8159)
+(ii) all-sessions unconditional short mean                |     -224.14 | NOT BEATEN
+------------------------------------------------------------------------------------------
+
+B3 circular-shift null (N_NULL=10000, seed=20260829, offsets shared with G00030 family draw): p95 = $+13.53, observed = $-366.99, p_one = 0.8225
+
+GATE TABLE (printed by program)
+GATE                      | SPEC                                          | OBSERVED                                  | PASS-FAIL
+--------------------------------------------------------------------------------------------------------------------------------
+G1 manifest/provenance    | sha256 match both substrates                  | TICK=True NQ=True                         | PASS
+G2 seal compliance        | no bar > 2026-07-31 17:00 ET read             | assert_presealed passed, window<=2026-05-31| PASS
+B0 power-first            | MDE + events/yr printed before returns (~263 ev)| printed first; n1=263, 77.5/yr, MDE $421.22| PASS
+B1 net + clustered t      | mean net/event > 0 AND t >= 2.0 @ $25.01      | mean=$-366.99, t=-1.61                    | FAIL
+B2(i) matched-count ctrl  | >10000 random-session short p95 (floor 300)   | obs $-366.99 vs p95 $+38.57               | FAIL
+B2(ii) uncond ctrl        | beats all-sessions short mean (printed row)   | obs $-366.99 vs $-224.14                  | FAIL
+B3 circular-shift null    | obs > p95 of whole-session-shift null         | obs $-366.99 vs p95 $+13.53, p_one=0.8225 | FAIL
+--------------------------------------------------------------------------------------------------------------------------------
+VERDICT (trial G00033 / MC-41 economics): NULL AT FORMULATION
+REGIME-LOCAL: 2023-01 -> 2026-05-31 internals population only; no claim outside it.
+The G00030 INFORMATION finding stands either way — information and monetization are separate ledgers.
+evidence-status: DISCOVERY_CONSUMED

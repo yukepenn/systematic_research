@@ -21,7 +21,12 @@ at fill instants; +1-min delay −$90/wk (n.s.); passive entry available 0.7% of
 
 ## Panel B — GENESIS II candidates
 
-*(empty — Formal Wave 1 selection pending the world-scan synthesis; rows require ledger ID + run)*
+| object | evidence | economics | status |
+|---|---|---|---|
+| **AUCTREV (MC-46)** — bottom-decile EOD dislocation → overnight-H1 long | DISCOVERY_CONSUMED, **SURVIVED-DISCOVERY** (G00032; 4/4 gates, $40 stress holds) — ⚠️ 1 survivor of 13 formal objects atop ~750 prior experiments; era-concentrated (economics live 2016+) | +10.17 pts/ev ($203) net @$35/RT, t 2.41, N 534; modern era ≈ **$195/wk** | → independent implementation → robustness → portfolio-marginal → forward. NOT promoted |
+
+Died at economics (information stood): BREADTHPM (G00033 — conditional short worse than random
+shorts; washout-then-rebound shape recorded). All other formal objects: see FAILURE_MEMORY.
 
 ## Panel C — forward queue (Engine B)
 

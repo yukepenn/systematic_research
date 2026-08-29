@@ -1,0 +1,77 @@
+G2_F6_BREADTHPM01_20260829 (MC-41 economics stage, trial G00033) — spec ambiguity resolutions
+Recorded BEFORE any computation. Frozen primary is unchanged; these resolve only points
+the spec leaves open. No parameter search: every choice below is single-valued and fixed
+here. A FAIL is a FAIL.
+
+R1. Window "2023-01 -> 2026-05-31 (the internals population)": the state construction is
+    IDENTICAL to the G00030 diagnostic (G2_F5_TRIO_20260829/outB/spec_resolutions.txt
+    R1-R6, adopted verbatim): TICK and NQ loaded from 2022 with calendar-date filter
+    <= 2026-05-31; 252-session full-window warm-up; the classified (post-warm-up)
+    population IS the run window — expected 842 sessions spanning 2023-01-05 ..
+    2026-05-29 with 263 bottom-tercile events. "2023-01" in the spec describes that
+    population's start; it is not an additional filter. Everything is RECOMPUTED from
+    the certified internals parquet; nothing is copied from outB.
+R2. State (adopted from G00030 R2/R3/R4, frozen): END-stamped bars; cum11 = sum of
+    certified ^TICK 1-min CLOSES stamped 09:31..11:00; causal tercile boundary for
+    session t = 33.3333rd percentile (numpy linear interpolation) of cum11 over the 252
+    strictly-prior valid sessions (t-252..t-1), FULL window required; bottom tercile:
+    cum11 <= boundary. Warm-up sessions enter no population.
+R3. Session-quality filters (adopted from G00030 R6, frozen): >= 80 of 90 morning TICK
+    minutes incl. the 11:00 bar; NQ >= 80 morning bars and >= 200 afternoon bars with
+    last RTH bar stamped >= 15:59; both symbols present.
+R4. Additional a-priori availability requirement (this run trades, the diagnostic did
+    not): a classified session must have BOTH the 11:01-stamped NQ bar (entry open) and
+    the 15:59-stamped NQ bar (exit close). Sessions lacking either are removed from the
+    ENTIRE population (conditional leg, both controls, mirror), and the removed count is
+    printed. Expected 0 given R3.
+R5. P&L (substrate law, POINTS-based — no percent returns): short gross points =
+    open(11:01-stamped bar) - close(15:59-stamped bar). Dollars at the NQ multiplier
+    $20/pt. Net/event primary = gross_pts*20 - $25.01; stress = gross_pts*20 - $33.00
+    (reported, NON-gate). One contract, one trade per state-true session, no stop.
+    IDENTICAL per-event costs are charged to the conditional leg, BOTH B2 controls, the
+    B3 null, and the mirror long (mirror gross = close(15:59) - open(11:01)).
+R6. B1 (gate): mean net/event > 0 AND event-clustered t >= 2.0 at $25.01. One trade per
+    session => sessions are the clusters and the event-clustered t degenerates to the
+    one-sample t over per-event nets: t = mean / (sd(ddof=1)/sqrt(n1)).
+R7. B2 control (i) (gate): count-matched random-session same-window SHORT — draws of
+    size n1 WITHOUT replacement from the N classified sessions, identical entry/exit/
+    costs; N_DRAWS = 10,000 (spec floor >= 300; fixed here, not searched); gate:
+    observed conditional mean net/event STRICTLY > 95th percentile (numpy linear) of
+    the 10,000 draw means.
+R8. B2 control (ii) (gate): all-sessions unconditional same-window SHORT mean net/event
+    at identical costs, printed as its own row; gate: conditional mean STRICTLY >
+    unconditional mean. B2 passes only if BOTH (i) and (ii) pass. The dual-control
+    table is printed explicitly by the program.
+R9. B3 (gate): circular-shift null — the bottom-tercile indicator over the
+    chronologically ordered classified-session axis is rolled by whole-session offsets
+    drawn uniformly from 1..N-1, N_NULL = 10,000; statistic = mean net/event (identical
+    costs) over the shifted-indicator sessions (roll preserves n1 exactly); gate:
+    observed conditional mean STRICTLY > 95th percentile of the null distribution.
+    p_one = (1 + #{null >= obs}) / (N_NULL + 1) reported alongside.
+R10. Seed discipline (one family draw): a single rng = default_rng(20260829). The B3
+    offsets are drawn FIRST with the identical call G00030 used
+    (rng.integers(1, N, size=10000)) so this run shares the licensing diagnostic's
+    family draw bit-for-bit; the B2(i) subset draws are consumed from the same stream
+    afterwards (10,000 permutation-based size-n1 choices without replacement).
+R11. B0 (print-order gate): events/yr and powered MDE printed BEFORE any return table.
+    Powered MDE on the primary quantity (mean net/event, $): null-sd basis =
+    2.8016 * sd(B3 null means) (alpha .05 two-sided, power .80 — same constant as
+    G00030 R9); analytic reference = 2.8016 * sd(net)/sqrt(n1). The spec sets NO
+    closed-by-power ceiling for this run; B0 is satisfied by print order, and the MDE
+    is recorded for the ledger. Events/yr = n1 / (classified span days / 365.25).
+    Event count printed against the spec expectation (~263) as information, not a gate.
+R12. Mirror readout (NON-gate): top tercile = cum11 >= 66.6667th percentile (200/3,
+    numpy linear) of the same trailing-252 window; same-window LONG at identical
+    costs; reported only.
+R13. Verdict: SURVIVED-DISCOVERY iff B1 AND B2(i) AND B2(ii) AND B3 all PASS; any fail
+    -> NULL AT FORMULATION. Verdict line states REGIME-LOCAL (2023-01 -> 2026-05-31
+    internals population). The G00030 INFORMATION finding stands either way.
+R14. Substrates + manifest gate: NQ = runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet,
+    sha256 must equal 87aa53f007aa47b9ee10d0080317a3cde8d22b55aa368267fa9a4aed7435295d
+    (GENESIS_REPRO_INCUMBENT_20260828 provenance); TICK =
+    research/data_internals/TICK_1m.parquet, sha256 must equal
+    72612a1e0f308b57862d6e0adfb5883ceee05dfc697c4cb980ea7b2c82b6d80f (manifest). Abort
+    before any read on mismatch. Both frames pass research_sdk.seal_guard.
+    assert_presealed on the FULL frame before any windowing.
+R15. events.csv: one row per bottom-tercile event — session date, cum11, tercile
+    boundary, entry open, exit close, gross points, gross $, net $ at 25.01, net $ at 33.

@@ -1,0 +1,103 @@
+G2_F6_AUCTREV01_20260829 (MC-46 economics, trial G00032) — ambiguity resolutions
+Recorded BEFORE any economics number was computed. Spec is frozen; these resolve only
+what the spec text leaves unspecified. One value per item; no parameter search.
+
+R1. Diagnostic window identification (required first step). Per the frozen diagnostic
+    runs/G2_F5_TRIO_20260829/outA/ (spec_resolutions R8 + reversion_table.txt header),
+    "overnight H1" = next qualifying session's 09:30 grid close MINUS this session's
+    16:00 grid close, where grid closes follow F5 R2 (forward-filled last raw close at
+    or before the stamp; the 09:30 grid close is the seed = last raw close at/before
+    09:30 of that session). Next session = immediately following qualifying session_id
+    with calendar gap <= 7 days; otherwise the event has no outcome (dropped, counted).
+    The reversion window is therefore [signal session 16:00 ET, next qualifying
+    session 09:30 ET].
+
+R2. Entry operationalization ("entry at the first tradable bar open at that window's
+    start"). NQ trades continuously 16:00->17:00 ET after the equity close; the
+    substrate contains ZERO bars stamped inside the 17:00-18:00 maintenance halt, and
+    5054 of 5067 dates with post-16:00 tape have their first post-16:00 bar stamped
+    16:01 (END-stamped; it OPENS at 16:00:00). CASE DETERMINATION: the window's first
+    tradable bar is NOT inside the 17:00-18:00 halt — the halt clause does not apply.
+    Entry = OPEN of the first raw bar stamped in (16:00, 17:00] on the signal
+    session_id (normally the 16:01-stamped bar). Fallback, recorded in advance: if a
+    signal session has no (16:00,17:00] bar, entry = OPEN of the first raw bar of the
+    overnight tape (stamped after 18:00, carrying the next session_id, e.g. the
+    18:01-stamped bar which opens at 18:00:00) at/before the next session's 09:30
+    window end; if none exists the event is dropped and counted. Exit = the window-end
+    bar CLOSE = the last raw bar stamped at/before 09:30 of the next qualifying
+    session (its close IS the diagnostic's 09:30 grid close / H1 endpoint).
+
+R3. Session universe. Identical to F5 R2/R3: session_id = calendar date of the 16:00
+    close (stamps <= 17:00 carry the session's own date; stamps > 17:00 the next);
+    qualification = (a) >= 300 raw bars stamped 09:31-16:00, (b) >= 1 raw bar stamped
+    15:56-16:00, (c) >= 1 raw close at/before 09:30 for the seed; session_id range
+    2006-01-01 .. 2026-05-31. Load passes research_sdk.seal_guard.assert_presealed.
+    Substrate: research\scalping_lab\substrate\minute\NQ\nq1m_2005_202605.parquet;
+    the program asserts its sha256 equals the value recorded in
+    runs\GENESIS_REPRO_INCUMBENT_20260828\out\run_provenance.txt
+    (dfd017eff0b031c2be89639fc4ad347d45053867edcdc2600002252b10b627cf).
+
+R4. Dislocation and trailing state (spec: "trailing causal 252-session decile of D").
+    D_i = grid close 16:00 - grid close 15:50 of session i (F5 R8 exactly, POINTS).
+    Decile edges for session i are computed from D over the 252 immediately preceding
+    qualifying sessions (i-252 .. i-1, strictly prior — causal; recomputed here, NOT
+    reused from the diagnostic's within-era full-sample deciles). Exactly 252 prior
+    values required: the first 252 qualifying sessions are burn-in with no signal
+    (count printed). BOTTOM decile: D_i < Q10 where Q10 = np.quantile(trailing D,
+    0.10), linear interpolation. TOP decile (readout only): D_i > Q90. Edge ties are
+    excluded (strict inequalities — conservative, fewer events). No threshold search.
+
+R5. P&L accounting (substrate law: POINTS). gross_pts = exit close - entry open
+    (LONG). NQ multiplier $20/pt; $35/ctrRT = 1.75 pts (gate cost), $40/ctrRT = 2.00
+    pts (stress, reported non-gate). net_pts = gross_pts - cost_pts. One event max per
+    session; overnight windows are temporally disjoint, so the clustering unit IS the
+    event: event-clustered t = mean(net)/ (sd(net, ddof=1)/sqrt(N)). Era of an event =
+    signal session's era (2006-15: session_id <= 2015-12-31; 2016-26: >= 2016-01-01).
+
+R6. E0 MDE line, printed BEFORE any return table: per-era and total event counts,
+    burn-in/drop counts, and MDE_t2 = 2.0 * sd(control-pool per-session LONG net) /
+    sqrt(N_events) in pts and $ (sd taken over the NON-EXTREME signal-valid pool, not
+    the events, so no event return is consumed by the MDE); plus the E2 control p95
+    and E3 null p95 (null statistics, not candidate returns). Program structure prints
+    the whole E0 block before any observed candidate return line.
+
+R7. E2 count-matched control. Pool = signal-valid sessions (full 252 trailing window
+    AND valid tradable outcome) that are neither BOTTOM nor TOP decile (non-extreme;
+    excluding the top decile too is the conservative reading of "non-extreme").
+    Count-matched AND era-stratified: each draw samples, without replacement, exactly
+    N_era1 sessions from the era-1 pool and N_era2 from the era-2 pool (the real
+    per-era event counts — stratification stops era composition from flattering the
+    candidate), applies the same LONG policy and $35 cost. 1000 draws (spec floor
+    300), numpy default_rng(20260829). Gate: real mean net/event > np.percentile(draw
+    means, 95).
+
+R8. E3 circular-shift null (research_sdk.null_guard, sensitivity first). Frame = one
+    row per qualifying session (unit column = session_id, 1-row blocks; block
+    rotation = whole-session circular shift of the D-series while outcomes stay
+    fixed — decisions align positionally with the ORIGINAL frame's outcomes).
+    decision_fn recomputes the trailing-252 Q10 rule of R4 on the SHIFTED D-series
+    (black box on shifted inputs — no leaky recompute); statistic_fn = mean over
+    decided positions with valid original outcome of (original gross - 1.75); nan if
+    a draw has zero such positions (excluded from the percentile, counted).
+    verify_null_sensitivity runs FIRST with shifts [1000, 2500, 4000]; then
+    run_circular_null with n_shifts=1000, seed 20260829. Gate: real mean net/event >
+    np.percentile(null draw means, 95).
+
+R9. E1 gate: mean net/event > 0 AND event-clustered t >= 2.0, at $35/RT, full sample.
+    E4 gate: sign(mean net, era 2006-15) == sign(mean net, era 2016-26), both
+    nonzero, at $35/RT. Coded literally as written.
+
+R10. TOP-decile SHORT readout (never gated): same window and bars; SHORT gross_pts =
+    entry open - exit close; net at $35 and $40; per-era and total counts/means/t
+    reported for the record only. It shares no gate clause.
+
+R11. Diagnostic-vs-tradable drift note (non-gate): mean and sd of (entry open - grid
+    close 16:00) over events, printed so the slippage between the diagnostic's H1
+    start and the tradable entry is on the record.
+
+R12. Outputs: out/gate_table.txt (every GATE/SPEC/OBSERVED/PASS-FAIL line printed by
+    the program), out/events.csv (one row per BOTTOM-decile LONG event: session_id,
+    era, D, trailing Q10, entry stamp/price, exit stamp/price, gross_pts, net35_pts,
+    net40_pts, entry_case), out/ledger_result_pending.json (single RESULT entry,
+    trial G00032, hash/prev_hash/seq null for the orchestrator; no SEARCH_LEDGER
+    append). Percentiles via np.percentile linear interpolation throughout.
