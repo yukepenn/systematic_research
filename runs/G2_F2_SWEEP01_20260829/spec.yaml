@@ -1,0 +1,36 @@
+run_id: G2_F2_SWEEP01_20260829
+campaign: GENESIS_II_FORMAL_WAVE_2
+type: SIGNAL_DIAGNOSTIC   # card MC-08 - sweep-and-reclaim vs its mirror; teaches either way; no P&L
+question: >
+  After price sweeps a prior reference extreme and RECLAIMS it, is there a conditional reversal
+  response (Turtle-Soup/liquidity-sweep claim, effective independence ~2 sources) - or does the
+  MIRROR (sweep-and-continue) carry the information, as this repo's momentum-side history
+  suggests? Both outcomes are informative; the design cannot be rescued either way.
+events_frozen:
+  reference_levels: prior session's RTH high and RTH low (one pair per session)
+  sweep: first breach of the level by >= 5.0 pts within RTH (09:30-15:30 ET; late events dropped
+    so the 60-min horizon fits inside RTH)
+  reclaim event (PRIMARY): price returns across the level within 30 minutes of the breach; event
+    time = the close of the reclaiming bar; response sign convention: sweep-below-low + reclaim
+    => expected POSITIVE forward return; sweep-above-high + reclaim => expected NEGATIVE
+    (signed response pooled accordingly)
+  continuation event (MIRROR, SECONDARY): breach with NO reclaim within 30 minutes; event time =
+    breach + 30 min; same sign convention REVERSED (continuation = momentum)
+  one event per level per session (the first); target: signed forward 60-minute NQ return
+window: modern 2022-01 -> 2026-07-31; deep 2006-2021 reported as diagnostic era cut (non-gate)
+gates_all_coded_and_printed:
+  S1: reclaim-event signed mean > 0 with session-clustered t >= 2.0
+  S2: reclaim mean > p95 of count-matched same-session random-minute control (>= 300 draws)
+  S3: null with teeth - whole-session circular shift of the LEVEL series against paths
+      (null_guard sensitivity first); real above p95
+  mirror_readout: continuation-event signed mean reported with the same three statistics -
+    NON-GATE, but if the mirror clears all three bars while the primary fails, that finding is
+    recorded as MOMENTUM-TELL (a genuine result, routed to the family tree, not promoted here)
+  verdict: S1+S2+S3 -> INFORMATION-SUPPORTED; else NULL at formulation (with the mirror finding
+    recorded either way)
+prohibitions: no breach-depth/reclaim-window/horizon search (5.0 pts / 30 min / 60 min frozen),
+  no policy, no P&L, no overnight levels (prior-RTH only this run), no sealed reads
+outputs: out/gate_table.txt, out/events.csv, out/ledger_result_pending.json
+power_note: expected O(500-900) events; MDE printed before verdicts
+live_enabled: NO
+spend: $0

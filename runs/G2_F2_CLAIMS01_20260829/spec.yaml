@@ -1,0 +1,36 @@
+run_id: G2_F2_CLAIMS01_20260829
+campaign: GENESIS_II_FORMAL_WAVE_2
+type: DESCRIPTIVE_CLAIM_REGISTER   # directive section 45 - test the CLAIM before any strategy; no P&L
+question: >
+  Which recurring auction/level practitioner claims are true BEYOND what session geometry alone
+  predicts? A raw rate (e.g. "80% of sessions touch the overnight high or low") is meaningless
+  without its geometric expectation - every claim is tested against a dependence-preserving
+  pairing null: circular-shift pairing of session s's LEVELS with session s+k's PATH (>= 300
+  shifts), which preserves both level geometry and path dynamics while destroying any true
+  level-path attraction.
+population: modern NQ 1-min 2022-01 -> 2026-07-31; RTH 09:30-16:00 ET for path claims; levels
+  from prior sessions as defined per claim; seal-guarded loads; volume from the certified field
+claims_frozen_family_of_6:
+  CL1_ON_touch: share of RTH sessions touching overnight (18:00->09:30) high OR low
+  CL2_VA80: prior-RTH value area = 70% volume around POC (1-min volume profile, 5-tick bins);
+    claim = open outside VA AND first trade into VA => traversal to the far VA edge same session
+    ("80% rule"); conditional traversal rate
+  CL3_IB: initial balance = first RTH hour high/low; (a) share of sessions extending beyond IB
+    either side; (b) share where the FIRST IB-break direction is the session-close direction
+  CL4_PDHL_touch: share of RTH sessions touching prior-RTH high OR low
+  CL5_trendday_vwap: P(zero session-VWAP crosses after 11:00 ET | trend day, W51 definition
+    |close-open| >= 0.60 x range) vs the unconditional P
+  CL6_vwap_first_touch: mean forward 15-min return after the FIRST post-10:00 touch of session
+    VWAP (from >= 20 pts away at 09:59), vs count-matched random-minute control (W111b rule)
+verdict_per_claim_printed:
+  observed stat with session-clustered CI · pairing-null expectation and p95 band ·
+  classification: SUPPORTED-BEYOND-GEOMETRY (outside null band, claim direction) /
+  GEOMETRY-EXPLAINED (inside band - the rate is real but is what random pairing gives) /
+  REFUTED (opposite). Family-wise: a claim is SUPPORTED only if its |deviation| exceeds the
+  family max-deviation p95 across the 6 claims (one shared draw per replication).
+prohibitions: no strategy construction, no P&L, no claim added or dropped after data contact,
+  no threshold search (all constants above frozen), no sealed reads
+outputs: out/gate_table.txt (printed; one row per claim), out/claim_details/, out/ledger_result_pending.json
+power_note: ~1,050-1,180 sessions; per-claim MDE printed before verdicts
+live_enabled: NO
+spend: $0
