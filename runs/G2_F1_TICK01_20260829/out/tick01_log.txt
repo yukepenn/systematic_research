@@ -1,0 +1,71 @@
+====================================================================================================
+=== DATA CERTIFICATION (manifest row counts + hashes, printed by program)
+====================================================================================================
+    $TICK  rows 445,625 vs manifest 445,625 [OK]   sha256 OK
+    $TRIN  rows 445,235 vs manifest 445,235 [OK]   sha256 OK
+    $VIX   rows 444,640 vs manifest 444,640 [OK]   sha256 OK
+    internals parquet layer CERTIFIED against MANIFEST.csv
+    NQ substrate sha256 OK (matches GENESIS_REPRO_INCUMBENT provenance)
+    seal_guard: TICK 445,625 rows and NQ 1,620,044 rows asserted pre-seal (nothing >= 2026-08-01)
+    data_esnq: NOT TOUCHED by this run (spec needs no tick-level data) - ALLOWLIST_DEV_44 enforcement vacuously satisfied
+
+====================================================================================================
+=== GRID
+====================================================================================================
+    TICK stamps outside the 09:31..15:59 grid: 1137 (reported, not used)
+    grid: 1,147 sessions x 389 slots = 446,183 rows; tick present on 444,488, NQ exact-stamp present on 444,495, fwd15 computable on 444,299
+
+====================================================================================================
+=== EVENTS (frozen -1000 trigger / -400 re-arm, close-based, per-session reset)
+====================================================================================================
+    events detected                 63
+    ... with exact NQ stamp + computable fwd15: 63 (excluded for missing stamps: 0)
+      2022:    44 events
+      2023:    13 events
+      2024:     4 events
+      2025:     2 events
+    events/year (n / (sessions/252)) = 13.8
+    sessions with >=1 event: 47 of 1,147
+
+====================================================================================================
+=== T2 CONTROL - count-matched random RTH minutes from the SAME sessions (1000 draws, seed 20260829)
+====================================================================================================
+    control universe: 444,231 eligible minutes across 1,147 sessions; per-draw n = 63
+    control draw means: mean -1.708 bps, p95 +4.366 bps
+
+====================================================================================================
+=== T3 NULL - session-block circular shift of TICK against NQ (null_guard)
+====================================================================================================
+    null_guard sensitivity: real +2.8405 bps, spread across probe shifts 9.4625 bps -> NULL HAS TEETH
+    complete enumeration: 1,146 rotations (0 zero-event draws), real +2.8405 bps, null mean +0.0432, p95 +3.8850, percentile of real 0.8839, p_ge 0.1168
+
+====================================================================================================
+=== SECONDARY (NON-GATE): symmetric +1000 event, two-sided report
+====================================================================================================
+    +1000 events 31 (31 scored, 29 sessions): mean fwd15 -11.000 bps, clustered t -1.48 (two-sided, reported only)
+
+====================================================================================================
+=== DIAGNOSTICS (NON-GATE; no gate reads these - no horizon selection)
+====================================================================================================
+    horizon   5 min: n     63  mean -0.042 bps  clustered t -0.02   [REPORTED ONLY]
+    horizon  30 min: n     63  mean -0.975 bps  clustered t -0.17   [REPORTED ONLY]
+    horizon  60 min: n     63  mean +2.288 bps  clustered t +0.27   [REPORTED ONLY]
+    P1 overlap (descriptive only): 42.9% of events fall in sessions with >=1 P1 scoring entry; 1 of 2,139 P1 scoring entries have decision_ts within [t, t+15] of an event; event sessions 47, P1 sessions 713
+
+====================================================================================================
+=== GATE TABLE - G2_F1_TICK01_20260829 (trial G00019) - printed by program
+====================================================================================================
+GATE  SPEC                                                      OBSERVED                                    PASS-FAIL
+T1    mean fwd15 > 0 AND session-clustered t >= 2.0             mean +2.841 bps, t +0.54 (n=63, G=47)       FAIL
+T2    event mean > p95 of count-matched same-session draws      event +2.841 vs control p95 +4.366 bps      FAIL
+T3    real above p95 of session-block circular-shift null       real +2.841 vs null p95 +3.885 bps          FAIL
+
+    MDE (2.80*sd/sqrt(n), ~80% power two-sided 5%): 15.112 bps = 5.32x the observed |mean| (sd 42.84 bps, n 63)
+    [printed BEFORE the verdict per spec]
+
+    VERDICT: NULL
+    secondary +1000 (non-gate): mean -11.000 bps, t -1.48
+    horizon profile 5/30/60 min: REPORTED ONLY above; no gate reads them
+    prohibitions honored: no threshold search, no policy, no P&L, no cost claim, no sealed reads
+
+    wrote out/ledger_result_pending.json (result: NULL)

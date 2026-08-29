@@ -1,0 +1,57 @@
+G2_F1_ORB01_20260829 — spec ambiguity resolutions (written BEFORE any affected number was computed)
+All resolutions chosen conservatively; the spec itself is frozen and none of these is a parameter search.
+
+R1  Breach scan window: bars STAMPED in (09:45:00, 15:59:00] ET (END-stamped; i.e. 09:46..15:59 stamps).
+    An entry on the 15:59-stamped bar itself is allowed (degenerate same-bar trade, exits at that bar's close).
+R2  Breach definition: tick = 0.25 (NQ). Long stop-entry triggers iff bar high >= OR_high + 0.25;
+    short iff bar low <= OR_low - 0.25. First bar (by time) triggering either side is THE breach bar.
+    If that bar triggers BOTH sides -> no trade, session counted as both-side-break (spec primary_frozen).
+R3  Fill: long fill = max(OR_high + 0.25, breach-bar open); short fill = min(OR_low - 0.25, breach-bar open)
+    (verbatim spec "max/min(level, bar open)").
+R4  Exit: close of the 15:59-stamped bar. If that bar is absent (early close / gap), the close of the LAST
+    bar stamped <= 15:59 and at/after the entry bar. Identical fallback for the O3 control exit.
+R5  Session unit: 18:00->17:00 ET (session_boundary conventions); for RTH stamps 09:31..15:59 the session_id
+    equals the bar's calendar date. Eligibility (IDENTICAL for ORB and O3 control): >= 1 bar stamped in
+    [09:31, 09:45] (forms the OR from available bars) AND >= 1 bar stamped in (09:45, 15:59].
+    O3 control entry = OPEN of the first bar stamped in (09:45, 15:59] (the 09:46-stamped bar when present,
+    = the price at ~09:45:00, matching "entered at 09:46 open" under END-stamping).
+R6  Gate window: session_id in [2022-01-01, 2026-07-31] from runs\SM1M_SUBSTRATE\out\nq_1m_2022_2026.parquet.
+    Diagnostic window: session_id in [2006-01-01, 2021-12-31] from
+    research\scalping_lab\substrate\minute\NQ\nq1m_2005_202605.parquet. Both loads pass
+    research_sdk.seal_guard (truncate_presealed count printed, then assert_presealed) and
+    assert_not_locked_forward(2026-07-31). data_esnq is NOT read by this run (no ES leg in the spec),
+    so ALLOWLIST_DEV_44 is not exercised; that fact is printed by the program.
+R7  O1 weekly clustering: ISO calendar week (isocalendar year, week) of session_id. Every ISO week containing
+    >= 1 in-window session with RTH bars enters the series; weekly net = sum of member-session trade nets at
+    $25.01/RT (0 for no-trade weeks — the strategy exists and earns 0 those weeks).
+    t = mean_w / (sd_w(ddof=1) / sqrt(N_w)). O1 PASS iff total net > 0 AND t >= 2.0.
+R8  O2 null (research_sdk.null_guard contract, sensitivity verified FIRST with probe shifts {1,7,61}, then
+    run_circular_null with n_shifts=300, seed=0, unit=session):
+    frame = modern-window RTH slice (stamps 09:31..15:59, contiguous session blocks).
+    decision_fn re-runs the frozen ORB policy black-box on the (shifted) frame and emits per-session
+    (traded, direction, entry_slot) on the canonical minute-of-day grid 09:31..15:59 (389 slots).
+    statistic_fn scores shifted-block j's decision against ORIGINAL block j's outcomes:
+    per-session grid of ffill/bfill closes; end-of-bar position dir from entry_slot..last telescopes to
+    dir * (grid_last_close - grid_close[entry_slot-1]); net = $20 * that - $25.01 per traded session;
+    statistic = TOTAL NET USD. The entry-bar increment is thus approximated at the prior-slot close inside
+    the null functional ONLY (stop-level fill prices are not transportable across sessions); the identical
+    functional is applied to the real alignment and to every shifted draw, so the comparison is unbiased.
+    PASS iff real_stat > np.percentile(null_stats, 95) (linear interpolation), i.e. "real above p95".
+R9  O3: control population = the same eligible-session set as ORB (R5); control charged $25.01 once per
+    session (it trades every eligible session); ORB charged $25.01 only on sessions where it trades.
+    PASS iff ORB total net > control total net (both at $25.01). Long and short ORB legs reported separately.
+R10 Both-side-break frequency = both-side no-trade sessions / eligible sessions (reported per window).
+R11 MDE (printed before the verdict): weekly mean net required for t = 2.0 at the OBSERVED weekly sd and N_w:
+    MDE_w = 2.0 * sd_w / sqrt(N_w); also expressed per eligible session and per year (x52).
+R12 Stress $33/RT: identical trade set, net recomputed at $33; NON-GATE; if net@33 <= 0 the verdict line is
+    flagged REGIME-FRAGILE (spec cost_model clause).
+R13 out\trades.csv = the MODERN GATE-WINDOW trade set only (the frozen action set COND01 consumes);
+    deep-era diagnostic trades go to out\trades_deep_diagnostic.csv (separate file, non-gate).
+R14 Top-decile concentration: traded sessions ranked by net desc; share = sum(top ceil(10%) session nets) /
+    total net; ratio flagged not-meaningful if total net <= 0. LOYO runs over gate-window calendar years.
+R15 prereg: spec.yaml existed committed before results (repo clean at spawn; recent-commit log shows Wave-1
+    preregistration). prereg_guard's git-based verification is NOT invoked because this run's HARD RULE 1
+    forbids any git command; noted here rather than silently skipped.
+R16 "2006 -> 2021 era cut reported (sign flip recorded if present)": the 2006-2021 aggregate net sign is
+    compared to the modern gate-window net sign; a differing sign is recorded as SIGN FLIP in the gate table
+    diagnostics block (non-gate).

@@ -1,0 +1,103 @@
+G2_F1_MAE01_20260829 — spec ambiguity resolutions (written BEFORE any affected number was computed)
+Trial G00020. Spec is FROZEN; each item below resolves an underdetermined clause conservatively.
+====================================================================================================
+
+R1. POPULATION "the 2,131 in-window P1/PCT trades (frozen REPRODUCED stream)"
+    The P1/PCT trade stream is regenerated in-process by the VERBATIM recorded chain exactly as
+    runs/GENESIS_REPRO_INCUMBENT_20260828/src/repro_driver.py does (load_deep 2022-01-01 ->
+    2026-07-31 17:00 extend=True; votes(bmom); fills_daily halt=1300 target=1000; causal_score
+    WIN; gfills(**arm_kw("PCT", 1.183)) from run_we_w98 — no transcription, direct import).
+    In-window = SESSION-START filter (session's first bar in [2022-07-01, 2026-08-01)), the
+    named definition that yields 2,131 (repro run G00000, PASS). The regenerated filtered list
+    is asserted == 2,131 rows and cross-checked row-by-row (et, xt, d, u; pnl to the artifact's
+    2-dp rounding) against the recorded frozen artifact
+    runs/WE_P1PCT_PARITY_20260827/out/py_trades_p1pct.csv (2,131 rows). Any mismatch counts
+    against gate M1 (unmeasured) and is reported.
+
+R2. TRADE LIFE FOR 1-MIN BAR EXTREMES (bars END-stamped; entry at open of entry bar)
+    gfills fills: entry at o[ei] of the entry bar (et = t[ei]); flip exits at o[xi] of the exit
+    bar (xt = t[xi]); session-end flatten exits at c[xi] of the lb bar. Exit type is recovered
+    per trade by exact inversion of the stored pnl: px = epx + (pnl + COMM_RT*u)/(d*u*PV),
+    matched against o[xi] / c[xi] (tolerance 1e-6). Life window for extremes:
+      OPEN-exit trades:  full ranges of bars ei..xi-1, PLUS the single exit price o[xi].
+      CLOSE-exit trades: full ranges of bars ei..xi (position held through the flatten bar).
+    The entry bar's FULL range counts (entry is at its open; intrabar ordering unknowable at
+    bar resolution — conservative for MAE). A trade that cannot be resolved (no timestamp
+    match, or pnl inversion matches neither o nor c) is UNMEASURED and counts against M1.
+
+R3. MAE / MFE DEFINITIONS
+    Long:  MAE = max(0, epx - min(lows in life)),  MFE = max(0, max(highs in life) - epx).
+    Short: MAE = max(0, max(highs in life) - epx), MFE = max(0, epx - min(lows in life)).
+    Reported PER CONTRACT in points and in dollars (points * PV, PV = $20.0/pt). Position-level
+    dollars (* u) are additionally reported for context; the spec's headline unit is
+    per-contract. Excursions are GROSS of commission and spread (price path only).
+
+R4. OUTCOME CLASS / SIZE CLASS
+    Outcome: WIN if stored trade pnl > 0 else LOSS (pnl as frozen: gross move * PV * u minus
+    commission COMM_RT*u; spread friction not in the stored pnl). Size: u == 1 vs u == 2.
+    Distributions reported for ALL, WIN, LOSS, U1, U2 and the four crosses.
+
+R5. TICK CALIBRATION (bar-vs-tick bias)
+    Eligible sessions = sessions of in-window P1/PCT trades whose session date (YYYYMMDD) is in
+    research/data_esnq/ALLOWLIST_DEV_44.txt AND research/data_esnq/parquet/NQ/s<date>.parquet
+    exists. Allowlist membership is asserted and PRINTED for every file opened; seal_guard
+    checks every time column. Trade events are the bip category whose per-session row count
+    matches the session manifest's 'trades' column (identified programmatically, printed).
+    Tick life window mirrors R2 in exchange time: entry instant = t[ei]-60s;
+      OPEN-exit: ticks in [t[ei]-60s, t[xi]-60s) plus the first trade tick at/after t[xi]-60s;
+      CLOSE-exit: ticks in [t[ei]-60s, t[xi]).
+    tick epx = first trade tick at/after the entry instant. Calibration factor reported BOTH as
+    ratio of means (mean tick_MAE / mean bar_MAE; same for MFE) and mean paired difference in
+    points, with per-session bar-vs-tick entry-price offset as an adjustment diagnostic.
+    THRESHOLD (fixed now, before overlap is computed): if overlapping measured trades N < 10,
+    calibration is SKIPPED honestly and only N is reported (gate M2 = N reported either way).
+    THE FACTOR IS APPLIED TO NOTHING — Stage 1 tables stay bar-based (spec: "apply nothing
+    silently" -> nothing is applied at all; the factor is reported alongside).
+
+R6. STAGE 2 STOP MECHANICS (300 pt disaster stop, per contract = price excursion of 300 pts)
+    For each frozen trade independently, scan life bars in chronological order (OPEN-exit:
+    ei..xi-1; CLOSE-exit: ei..xi). First bar j where the adverse extreme reaches the level
+    (long: l[j] <= epx-300; short: h[j] >= epx+300) fires the stop BEFORE any favorable exit
+    in that bar (conservative intrabar ordering, incl. beating the flatten on a CLOSE-exit
+    bar). Fill = worse-of(level, bar open): long min(epx-300, o[j]); short max(epx+300, o[j]).
+    New pnl = d*u*(fill-epx)*PV - COMM_RT*u; new exit time t[j]. "No other change": all other
+    trades, entries, and the session-box sequence stay FROZEN (no re-entry, no box knock-on) —
+    a stated overlay limitation, printed in the output. A gap-through open on the frozen
+    OPEN-exit bar itself equals the frozen exit price and is left as the frozen exit.
+
+R7. "TOTAL NET" / "DELTA NET" (decision clause 1)
+    net(trade) = stored pnl - rate*u, where rate is the candidate-specific spread $/ctrRT from
+    the recorded net_series formula (W82 per-minute profile weighted by this trade list's own
+    fill minutes, u-weighted, entry+exit). Baseline rate from frozen fills; variant rate
+    RECOMPUTED from post-stop fill minutes (both printed). total net = sum over the 2,131
+    trades of net(trade), baseline. delta net = variant total - baseline total. Clause 1 PASS
+    iff delta_net >= -0.01 * total_net_baseline (baseline asserted > 0).
+
+R8. "TRADE-LEVEL maxDD" (decision clause 2)
+    Max peak-to-trough drawdown of the cumulative NET per-trade equity curve (trades in
+    chronological entry order; net as in R7, each side using its own rate). Improvement =
+    (maxDD_base - maxDD_variant) / maxDD_base; clause 2 PASS iff >= 0.10.
+
+R9. MDE
+    The spec's gate list (M1/M2/M3) requests no MDE and both stages are deterministic
+    measurements on a frozen set (no sampling inference); this is stated before the verdict
+    in the gate table rather than inventing an MDE definition post hoc.
+
+R10. CITATION "(LIVE_READINESS.md:163)"
+    Printed verbatim in the verdict as the spec requires. The path does not resolve in the
+    current tree (nearest surviving file: research/system_master/LIVE_READINESS_CHECKLIST.md,
+    campaign #3 archive). The clause is a required print, not a computation — noted, not a
+    DEFECT.
+
+R11. SEAL ENFORCEMENT POINTS
+    research_sdk.seal_guard.assert_presealed is run on: (a) the substrate bar time array,
+    (b) et and xt of the frozen artifact CSV, (c) et/xt of the regenerated stream,
+    (d) every tick file's time column, (e) the manifest t_min/t_max rows used. The W82 spread
+    profile (minute-of-day, no dates) and mem_ext.npz (bar-aligned to the sealed-checked
+    substrate) carry no independent timestamps; noted here rather than silently skipped.
+
+R12. TESTIMONY RE-MEASUREMENT
+    The W-era "13 historical triggers, ~0.7% of gross" figure is re-measured as: observed
+    trigger count, and (baseline gross - variant gross) as % of baseline gross positive total
+    — reported next to the testimony, neither assumed nor tuned. No other stop level is
+    evaluated (prohibition honored).

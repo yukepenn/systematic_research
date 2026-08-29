@@ -1,0 +1,71 @@
+G2_F1_TICK01_20260829 - spec ambiguity resolutions
+Written BEFORE any affected number was computed (2026-08-29). The spec is frozen; each
+resolution below picks the conservative / convention-consistent reading and freezes it.
+
+R1  TICK minute value. Bars are END-stamped OHLC. Trigger (<= -1000) and re-arm (>= -400)
+    are evaluated on the bar CLOSE. Rationale: the target is measured "from the close of
+    the event minute", so the trigger must be a quantity known exactly at that close
+    (decision-bar causality). Using low/high would be intrabar information with no
+    causal anchor.
+
+R2  Arming-cycle scope. State resets to ARMED at the start of each RTH session. ^TICK is
+    RTH-only and NYSE breadth state does not persist overnight; the practitioner
+    convention (Steenbarger/Hanna/Raschke) is intraday. No cross-session state carry.
+
+R3  RTH minutes. END-stamps in [09:31, 16:00] ET. The certified store serves
+    09:31 -> 15:59; the analysis grid is the 389 slots 09:31..15:59 per session.
+    Stamps outside the grid (if any) are counted and reported, not silently used.
+
+R4  Return definition. Simple return close(t+h)/close(t) - 1, reported in bps.
+    h = 15 min is THE target; 5/30/60 are diagnostics only, no gate reads them.
+
+R5  NQ price lookup. Event-minute price = NQ close at the EXACT END-stamp t; forward
+    price = NQ close at the EXACT END-stamp t+h. No tolerance windows (a tolerance
+    would be a free parameter). Events with a missing exact stamp are excluded from
+    the affected statistic and the exclusion counts are printed. Forward windows never
+    cross the 17:00 session close (latest event 15:59 + 60 min = 16:59).
+
+R6  T1 clustered t. Liang-Zeger cluster-robust SE for the mean with clusters = session
+    (session_id = calendar date for RTH events under the 18:00->17:00 convention),
+    with the G/(G-1) small-sample factor. t = mean / SE_cluster.
+
+R7  T2 control. Spec says ">= 300 draws"; frozen here at 1000 draws, seed 20260829,
+    fixed before compute. Per draw: for each session s holding k_s scored events, draw
+    k_s minutes without replacement from that session's eligible universe (RTH grid
+    slots with a TICK bar present AND exact NQ stamp AND computable fwd15 - the same
+    availability universe events live in; unconditional on TICK value, so event
+    minutes are drawable). Gate: real event mean > 95th percentile of the 1000 draw
+    means.
+
+R8  T3 null. Equal-length per-session grid (389 slots, NaN-padded) so session-block
+    rotation aligns positionally: shifted TICK from a donor session is scored against
+    the ORIGINAL session's NQ outcomes at the same time-of-day. Machinery =
+    research_sdk.null_guard (verify_null_sensitivity FIRST, then run_circular_null).
+    Null size = complete enumeration of all m-1 distinct session rotations (no draw
+    count discretion). Gate: real stat above the null p95. Null draws with zero events
+    (if any) are counted and reported; p95 computed on finite draws.
+
+R9  Population. All sessions present in the certified TICK parquet after seal-guard
+    (2022-01-03 .. 2026-07-31). NQ = modern substrate runs/SM1M_SUBSTRATE/out/
+    nq_1m_2022_2026.parquet, sha256 verified against GENESIS_REPRO_INCUMBENT
+    provenance. Internals parquet row counts verified against
+    research/data_internals/MANIFEST.csv (check printed).
+
+R10 Secondary (+1000). Exact mirror: trigger close >= +1000, re-arm close <= +400,
+    same per-session automaton, same target. Two-sided report (mean, clustered t),
+    NON-GATE.
+
+R11 P1 overlap (descriptive only). RR_W001_ACTION_VALUE_LEDGER ledger_p1pct.csv
+    scoring population: (a) share of events falling in sessions with >= 1 P1 scoring
+    entry; (b) count of P1 scoring entries with decision_ts inside [t, t+15] of any
+    event. No claim attached.
+
+R12 MDE. Repo convention 2.80 * sd / sqrt(n) (~80% power, two-sided 5%), printed
+    before the verdict.
+
+R13 data_esnq is NOT touched by this run (no clause of the spec needs tick-level
+    data), so ALLOWLIST_DEV_44 enforcement is vacuously satisfied; the program prints
+    this fact.
+
+R14 Ledger result vocabulary. Spec: ALL pass -> "INFORMATION-SUPPORTED"; any fail ->
+    "NULL". out/ledger_result_pending.json uses exactly these strings.

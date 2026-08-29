@@ -1,0 +1,55 @@
+G2_F1_ORB01_20260829 — GATE TABLE (printed by program; ledger trial G00016)
+primary: 15-min ORB, +1-tick stop-entry, first breach only, exit 15:59 close, 1ct $20/pt
+gate window sessions 2022-01-01 .. 2026-07-31 | sessions with RTH bars 1181 | eligible 1181
+evidence status: DISCOVERY_CONSUMED (gate window includes the burned 2026-05-31..07-31 span; no sealed reads)
+
+GATE  SPEC                                                      OBSERVED                                                        PASS-FAIL
+O1a   modern net > 0 at $25.01/RT                               net $28,048.19 (1181 trades, +2879.25 pts gross)                PASS
+O1b   weekly session-clustered t >= 2.0                         t = 0.210 (Nw=239, mean $117.36/wk, sd $8,647.00)               FAIL
+O2    >=300 whole-session circular shifts; real above p95       real $327,048.19 vs null p95 $207,475.69 (300 shifts, pct 99.0%, p_ge 0.0133)PASS
+O3    ORB net > always-long 09:46->15:59 control net            ORB $28,048.19 vs control $61,013.19 (1181 ctrl RTs)            FAIL
+
+null sensitivity: VERIFIED FIRST (spread $441,760.00 over probe shifts [1,7,61]) — teeth confirmed
+legs: long 599 trades $58,729.01 | short 582 trades $-30,680.82  [dead short leg recorded, not hidden]
+stress (non-gate): net at $33/RT = $18,612.00
+both-side-break: modern 0/1181 eligible sessions (0.00%); deep 2/4098 (0.05%)
+deep diagnostic 2006-2021 (non-gate): net $-110,365.88 over 4088 trades — SIGN FLIP vs modern RECORDED
+top-decile traded-session concentration: top 119 sessions net $761,638.81 = 2715.5% of total
+
+per-year (modern gate window):
+ year  n_eligible  n_trades  n_long  n_short  n_bothside     net25    net33
+ 2022         258       258     124      134           0  14302.42  12241.0
+ 2023         257       257     144      113           0 -13287.57 -15341.0
+ 2024         259       259     123      136           0  -6652.59  -8722.0
+ 2025         257       257     126      131           0  52712.43  50659.0
+ 2026         150       150      82       68           0 -19026.50 -20225.0
+
+leave-one-year-out (modern):
+ excl_year     net25  t_weekly  n_weeks
+      2022  13745.77  0.120514      187
+      2023  41335.76  0.320131      187
+      2024  34700.78  0.282247      187
+      2025 -24664.24 -0.221180      188
+      2026  47074.69  0.393306      209
+
+per-year (deep 2006-2021 diagnostic, $25.01/RT):
+ year  n_trades     net25
+ 2006       245   1287.55
+ 2007       254 -13252.54
+ 2008       259   5882.41
+ 2009       254  -9967.54
+ 2010       257  -6102.57
+ 2011       258 -11457.58
+ 2012       253  -3802.53
+ 2013       254  -6382.54
+ 2014       253  -3137.53
+ 2015       258 -29232.58
+ 2016       257  -7497.57
+ 2017       257 -17562.57
+ 2018       257  29402.43
+ 2019       257  -1617.57
+ 2020       258 -56212.58
+ 2021       257  19287.43
+
+MDE (printed before verdict): weekly mean net required for t=2.0 at observed sd/Nw = $1,118.66/wk  (~$58,170/yr; ~$226.38/eligible session). Observed weekly mean $117.36/wk.
+VERDICT: NULL — closed at formulation

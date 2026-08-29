@@ -1,0 +1,22 @@
+G2_F1_COND01_20260829 — GATE TABLE (printed by program; ledger trials G00017 A_NR7, G00018 B_RV3)
+conditioner diagnostic on ORB01's FROZEN action set (runs regardless of ORB01's NULL verdict);
+conditioners add ZERO trades; matched control = the unconditional set itself; NO VIX read (realized vol only)
+window sessions 2022-01-01 .. 2026-07-31 | frozen trades 1181 (one per session) | conditioner-series sessions 1181
+evidence status: DISCOVERY_CONSUMED (window includes the burned 2026-05-31..07-31 span; no sealed reads)
+
+populations: A_NR7 defined 1174 trades (excluded 7 warm-up), in-state 179 / out 995;
+             B_RV3 defined 1159 trades (excluded 22 warm-up), top 387 / middle 385 / bottom 387; RV tercile breakpoints q33=0.009080 q66=0.012750 (21-ret c2c log sd, unannualized)
+
+GATE  SPEC                                                          OBSERVED                                                              PASS-FAIL
+CA    NR7 contrast > 0, t >= 2.0, in-state mean > 0 @ $25.01        contrast $-442.19/trade (t = -1.504), in-state mean $-338.11 (179 tr) FAIL
+CB    RV top-vs-bottom contrast > 0, t >= 2.0, top mean > 0         contrast $103.18/trade (t = 0.366), top mean $112.24 (387 tr)         FAIL
+CF-A  family max-|t| null p95 (300 shared count-matched reps)       |t_A| = 1.504 vs family p95 = 2.227                                   FAIL
+CF-B  family max-|t| null p95 (300 shared count-matched reps)       |t_B| = 0.366 vs family p95 = 2.227                                   FAIL
+
+CF null detail: 300 reps, seed 0, ONE shared U(0,1) draw per rep across both conditioners (dependence preserved); count-matched to observed state counts; nets never permuted; family max-|t| distribution: p50=1.015 p95=2.227 max=3.562
+group means: NR7 in $-338.11 (n=179) vs out $104.08 (n=995); RV top $112.24 (n=387) vs middle $79.12 (n=385) vs bottom $9.06 (n=387)
+expected-sign check (non-gate): spec expects HIGH vol better; observed top-bottom contrast matches the expected sign
+
+MDE (printed before verdicts, non-gate): contrast needed for t=2.0 — A_NR7 $588.05/trade (observed $-442.19); B_RV3 $563.76/trade (observed $103.18)
+VERDICT A_NR7 (G00017): NULL — closed at formulation
+VERDICT B_RV3 (G00018): NULL — closed at formulation

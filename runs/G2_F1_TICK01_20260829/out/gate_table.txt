@@ -1,0 +1,16 @@
+
+====================================================================================================
+=== GATE TABLE - G2_F1_TICK01_20260829 (trial G00019) - printed by program
+====================================================================================================
+GATE  SPEC                                                      OBSERVED                                    PASS-FAIL
+T1    mean fwd15 > 0 AND session-clustered t >= 2.0             mean +2.841 bps, t +0.54 (n=63, G=47)       FAIL
+T2    event mean > p95 of count-matched same-session draws      event +2.841 vs control p95 +4.366 bps      FAIL
+T3    real above p95 of session-block circular-shift null       real +2.841 vs null p95 +3.885 bps          FAIL
+
+    MDE (2.80*sd/sqrt(n), ~80% power two-sided 5%): 15.112 bps = 5.32x the observed |mean| (sd 42.84 bps, n 63)
+    [printed BEFORE the verdict per spec]
+
+    VERDICT: NULL
+    secondary +1000 (non-gate): mean -11.000 bps, t -1.48
+    horizon profile 5/30/60 min: REPORTED ONLY above; no gate reads them
+    prohibitions honored: no threshold search, no policy, no P&L, no cost claim, no sealed reads

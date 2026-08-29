@@ -1,0 +1,68 @@
+G2_F1_COND01_20260829 — spec ambiguity resolutions (written BEFORE any affected number was computed)
+All resolutions chosen conservatively; the spec itself is frozen and none of these is a parameter search.
+The conditioner definitions (NR7, 21-session RV terciles) are frozen by the spec; nothing below alters them —
+these resolutions only pin down computational details the spec text leaves open.
+
+R1  Action set: runs\G2_F1_ORB01_20260829\out\trades.csv consumed READ-ONLY (never recomputed, never
+    modified). net_usd is already at $25.01/RT — used as-is for every mean/contrast. The program asserts
+    EXACTLY ONE trade per session_id (ORB01 spec guarantees one entry per session); given one trade per
+    session, the spec's "session-clustered t" for a group contrast reduces exactly to the Welch two-sample
+    t on per-trade nets: t = (m_in - m_out) / sqrt(s_in^2/n_in + s_out^2/n_out), sd ddof=1.
+R2  Conditioner substrate: runs\SM1M_SUBSTRATE\out\nq_1m_2022_2026.parquet ONLY — the same substrate that
+    generated the frozen trades. NO cross-substrate splicing with the deep 2005+ parquet: the two stores
+    carry different back-adjustment offsets, and splicing closes across them would fabricate a phantom
+    close-to-close return at the seam. Consequence (population defined HERE, before results): warm-up is
+    consumed inside the window — a trade session lacking the required trailing history has UNDEFINED state
+    for that conditioner and its trade is EXCLUDED from that conditioner's analysis population (excluded
+    counts printed in the gate table). Expected exclusions: ~7 earliest sessions for A_NR7, ~22 for B_RV3,
+    out of 1181 — negligible, and identical under the null (the null draws only within each population).
+R3  RTH window for conditioners: spec says "RTH 09:30-16:00". Bars are END-stamped, so this is bars STAMPED
+    in [09:31:00, 16:00:00] ET (the 16:00-stamped bar covers 15:59-16:00 and is included; this window is
+    intentionally NOT ORB01's 09:31..15:59 decision grid — the spec names 16:00 for the conditioner).
+    Session range = max(high) - min(low) over those bars. Session close (for RV) = close of the LAST bar
+    stamped <= 16:00 in that window; early-close sessions (e.g. half days) use their last available RTH bar
+    and their (naturally narrow) ranges are KEPT — Crabel NR7 has no half-day exclusion and the spec froze
+    the definition. Conditioner-series session universe = every session in the loaded frame with >= 1 such
+    bar, sorted ascending; "trailing N sessions" always means the N most recent sessions OF THIS SERIES
+    strictly before the trade session (data-gap sessions simply do not exist in the series).
+R4  A_NR7 state for trade session t: let r1..r7 be the ranges of the 7 most recent completed sessions
+    strictly before t (r1 = prior session). State TRUE iff r1 < min(r2..r7) — STRICT narrowest; a tie is
+    NOT NR7 (conservative: stricter state). Requires 7 completed prior sessions in the series (else
+    UNDEFINED, R2). Out-of-state = all other defined-state trades (the unconditional set is the matched
+    control per the spec's method line).
+R5  B_RV3 state: "trailing 21-session realized vol (close-to-close, causal)" = stdev (ddof=1) of the 21
+    log close-to-close returns formed from the 22 most recent completed session closes strictly before t.
+    Unannualized (terciles are scale-invariant). Tercile breakpoints: empirical 1/3 and 2/3 quantiles
+    (np.quantile, linear) of RV over the B-population trades themselves; bottom = RV <= q33, top =
+    RV >= q66, middle otherwise. Gate contrast = TOP minus BOTTOM (spec gate CB names top-vs-bottom);
+    the middle tercile is excluded from the contrast but reported in contrast_tables.csv. No threshold
+    search: 21, terciles, and NR7's 7 are spec constants.
+R6  CF family null: 300 replications (spec >= 300), numpy default_rng(seed=0). Per replication ONE SHARED
+    DRAW: a single vector u ~ U(0,1), one value per trade session (drawn once over all 1181 trades), used
+    for BOTH pseudo-conditioners — this preserves the dependence between the two test statistics exactly
+    as CLAUDE.md's family-null doctrine requires. Count-matched: pseudo-A in-state = the n_A_in sessions
+    with smallest u WITHIN the A population; pseudo-B bottom / top = the n_bottom smallest / n_top largest
+    u WITHIN the B population (counts = the observed real counts). Trade nets are never permuted — only
+    state labels are randomized. Per rep the family statistic = max(|t_A*|, |t_B*|) with t* the identical
+    Welch formula of R1. Threshold = 95th percentile (linear) of the 300 family statistics. A conditioner
+    passes CF iff its REAL |t| > that threshold.
+R7  Gates as coded: CA = (contrast_A > 0) AND (t_A >= 2.0) AND (in-state mean net/trade > 0);
+    CB = (contrast_B > 0) AND (t_B >= 2.0) AND (top-tercile mean net/trade > 0);
+    CF-A / CF-B per R6. Verdict A_NR7 = SURVIVED-DISCOVERY iff CA AND CF-A else NULL at formulation;
+    verdict B_RV3 = SURVIVED-DISCOVERY iff CB AND CF-B else NULL at formulation. ORB01's own NULL verdict
+    does not enter any gate (the spec runs regardless of ORB01's verdict).
+R8  Seal / governance: the substrate load passes research_sdk.seal_guard (truncate_presealed count printed,
+    then assert_presealed) and assert_not_locked_forward(2026-07-31); session_id unit 18:00->17:00 ET per
+    session_boundary conventions (hour >= 18 rolls to next calendar day's label); window = session_id in
+    [2022-01-01, 2026-07-31]. NO VIX read of any kind (governance ruling: realized vol only; the deferred
+    VIX-level increment is NOT this run). data_esnq is NOT read (no ES leg), so ALLOWLIST_DEV_44 is not
+    exercised; that fact is printed by the program. Evidence status: DISCOVERY_CONSUMED (window includes
+    the burned 2026-05-31..07-31 span; no sealed reads; blind pools untouched).
+R9  MDE (non-gate diagnostic, printed BEFORE the verdicts): per conditioner, the contrast required for
+    t = 2.0 at the observed Welch SE = 2.0 * SE_obs, also expressed per in-state trade count.
+R10 prereg: spec.yaml existed committed before results (Wave-1 preregistration; repo clean at spawn).
+    prereg_guard's git-based verification is NOT invoked because this run's HARD RULE 1 forbids any git
+    command; noted here rather than silently skipped.
+R11 Outputs: out\gate_table.txt (printed by the program), out\contrast_tables.csv (per-group stats:
+    conditioner, group, n, n_long, n_short, mean_net, sd_net, total_net; plus contrast summary rows),
+    out\ledger_result_pending.json = LIST of 2 objects: A_NR7 -> trial G00017, B_RV3 -> trial G00018.

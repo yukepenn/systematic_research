@@ -16,14 +16,17 @@ duplicates card content.
 | METHODS | 2 | MC-34, MC-37 → engineering doctrine |
 | DATA-GATED | 1 | MC-26 dealer-positioning (needs strike-level OI + signed options volume = GAMMA00 gate) |
 
-## FORMAL WAVE 1 — selected 2026-08-29 BEFORE any outcome computation
+## FORMAL WAVE 1 — selected 2026-08-29 pre-outcome · **RESULTS IN (same day)**
 
-| run | card | frozen primary | note |
-|---|---|---|---|
-| `G2_F1_ORB01` | MC-01 | 15-min opening-range breakout, NQ 1-min 2006→2026-07, measured costs | the only multi-era, partly peer-reviewed mechanism; NOT-closed guard |
-| `G2_F1_COND01` | MC-20 + MC-22(RV) | NR7-compression and trailing-RV-tercile as CONDITIONERS on ORB01's frozen action set | conditioners add zero trades — cost-immune; each with matched unconditional control |
-| `G2_F1_TICK01` | MC-23 | NYSE TICK −1000 capitulation-fade event study, internals minute 2022→2026-07 | owned never-opened dataset; signal-first, no policy |
-| `G2_F1_MAE01` | MC-36 | MAE/MFE measurement on P1 trades (dev tick sessions) + ONE preregistered stop variant | measurement-first; W42 lineage; parity warning honored |
+| run | card | verdict |
+|---|---|---|
+| `G2_F1_ORB01` | MC-01 | ❌ **NULL** — +$28k but t 0.21 and loses to its own always-long control; deep era sign-flips; 2025 carries all |
+| `G2_F1_COND01` | MC-20 + MC-22(RV) | ❌ **NULL ×2** — NR7 wrong direction; RV ordering right, 5.5× under MDE. Pristine VX window never read (gate B failed → VIX one-shot not triggered) |
+| `G2_F1_TICK01` | MC-23 | ❌ **NULL** — 2.8 bps vs 15.1 MDE; events are a bear-market phenomenon (44→2/yr) |
+| `G2_F1_MAE01` | MC-36 | ✅ **measurement PASS** — P1 intrabar MAE bounded (max 196.25 pts; worst position $5,380); 300-pt stop never triggers; the "13 triggers" testimony is dead; RECORD AND STOP, nothing adopted |
+
+Cards MC-01/20/22(RV)/23 → CLOSED at formulation in the queue; MC-36 → measurement done, no
+policy adopted. **MC-35 ruled BLOCKED-AS-RESCUE** on P1 with existing surfaces (RR_W002A).
 
 ⚠️ **Governance ruling on MC-22 (orchestrator, recorded):** B2's primary wanted VIX daily levels
 2022+ — that is **H1's pristine VX-family confirmation window**. RESTRUCTURED: primary gate =

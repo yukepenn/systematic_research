@@ -40,9 +40,12 @@ evidence yet**; the shadow (start 2026-09-01) is the first non-consumed class it
    *(Supersedes: "bounded at $24.00/RT on 35 fills". XM's spread remains unmeasured — same audit owed.)*
 2. **Bar-open zero-impact fills** are shared by BOTH parity sides — parity cannot detect this
    error class by construction.
-3. **No intrabar risk control in any certified object** — no per-trade stop (P1), none at all
-   (XM); the session box only accumulates realized P&L; intrabar MAE unbounded. Any future stop
-   invalidates the Standard-fill parity basis (`LIVE_READINESS.md:163`).
+3. **No intrabar risk control — but the exposure is now MEASURED (G2_F1_MAE01, 2026-08-29):**
+   across all 2,131 trades, intrabar MAE max **196.25 pts/ct** ($3,925; worst position $5,380),
+   p99 101.7, losers' p50 19.5; substrate verified tick-exact on 70 overlap trades. A 300-pt
+   disaster stop **never triggers historically** (the W-era "13 triggers/0.7% of gross" testimony
+   does not reproduce and may not be quoted for P1/PCT). Nothing adopted (sample max ≠ bound);
+   any stop still invalidates Standard-fill parity (`LIVE_READINESS.md:163`).
 4. Session-split-by->60-min-gap heuristic silently splits halted days and grants flat exits at
    pre-gap closes.
 5. The new multi-market lane assumes 1-tick spread for all roots with zero quote evidence — the

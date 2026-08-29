@@ -1,0 +1,23 @@
+==============================================================================================================
+G2_F1_MAE01_20260829 — GATE TABLE (printed by program)
+==============================================================================================================
+GATE  SPEC                                                    OBSERVED                                                                  PASS/FAIL
+M1    measurement completeness >= 95% of 2,131 trades         2131/2131 = 100.00% measured; artifact mismatches 0 (effective 2131)      PASS
+M2    calibration overlap N reported (allowlist only)         overlap N: 70 trades / 28 sessions; calibration RUN (factors MAE 1.0000 / MFE 1.0000)PASS
+M3    decision rule applied verbatim                          clause1 PASS, clause2 FAIL -> RECORD AND STOP                             PASS
+--------------------------------------------------------------------------------------------------------------
+seal enforcement: seal_guard.assert_presealed PASS on substrate bar times, artifact
+et/xt, manifest t_max, and every tick file opened (28 sessions); no value >= 2026-08-01 read or persisted.
+allowlist enforcement: printed per file in out/calibration.txt; ALLOWLIST_DEV_44 only;
+blind pools untouched.
+prohibitions honored: single stop level 300 (frozen), no target/trailing variants, no
+grid, no alpha language — classification RISK SPECIFICATION.
+MDE: not requested by the spec's gate list; both stages are deterministic measurements
+on a frozen trade set (no sampling inference) — stated per R9 before the verdict.
+OVERALL: PASS   recommendation: RECORD AND STOP
+
+headline Stage 1 figures (bar-based, per contract, ALL class):
+  MAE pts: p50 14.00  p90 47.00  p95 63.88  p99 101.65  max 196.25 (= $ 3,925/ct)
+  MFE pts: p50 15.00  p90 114.50  p95 176.62  p99 310.27  max 1271.00
+peak working set: 2.31 GB
+wall time: 24 s
