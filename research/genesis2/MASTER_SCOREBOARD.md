@@ -23,10 +23,11 @@ at fill instants; +1-min delay −$90/wk (n.s.); passive entry available 0.7% of
 
 | object | evidence | economics | status |
 |---|---|---|---|
-| **AUCTREV (MC-46)** — bottom-decile EOD dislocation → overnight-H1 long | DISCOVERY_CONSUMED, **SURVIVED-DISCOVERY** (G00032; 4/4 gates, $40 stress holds) — ⚠️ 1 survivor of 13 formal objects atop ~750 prior experiments; era-concentrated (economics live 2016+) | +10.17 pts/ev ($203) net @$35/RT, t 2.41, N 534; modern era ≈ **$195/wk** | → independent implementation → robustness → portfolio-marginal → forward. NOT promoted |
+| ~~AUCTREV (MC-46)~~ | **CLOSED AT FORMULATION by certification** (G00034 parity PASS — the code is real; **G00035 robustness FAIL: top-10% of events carry 203% of net, the other 480 sum negative; one-session-late entry degrades only 15% — the fast-reversion mechanism is falsified**; S3 aborted) | the +$203/ev was a tail-carried payoff, not a broad edge | dead at rung 2; the 15:50-break FACT (G00029) stays banked |
 
 Died at economics (information stood): BREADTHPM (G00033 — conditional short worse than random
-shorts; washout-then-rebound shape recorded). All other formal objects: see FAILURE_MEMORY.
+shorts; washout-then-rebound shape recorded). **Panel B is again empty of live candidates — and
+Wave 7 demonstrated why the rungs exist: economics gates passed, certification killed it.**
 
 ## Panel C — forward queue (Engine B)
 

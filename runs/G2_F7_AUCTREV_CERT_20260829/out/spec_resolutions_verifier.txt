@@ -1,0 +1,115 @@
+G2_F7_AUCTREV_CERT_20260829 — VERIFIER spec resolutions (S1 G00034, S2 G00035, S3 G00036)
+Recorded BEFORE any comparison/robustness/portfolio number was computed. The F7 spec and the
+F6 frozen contract are unchanged; these resolve only what their text leaves unspecified.
+One value per item; no parameter search. Verifier code lives in srcV/; outputs in out/.
+
+V1. S1 audit of the clean-room work (done before any parity number): grep of
+    srcI/auctrev_indep.py for any reference to forbidden paths (F6 src/, F6 out/ files
+    events.csv / gate_table / REPORT, F5 outA) — the grep command and its result are
+    reproduced verbatim in out/S1_parity.txt; plus an enumeration of every file the
+    script opens/reads (must be: substrate parquet only, besides its own outputs).
+    The clean-room restriction binds the S1 IMPLEMENTER; the verifier MAY read the
+    primary's src/ for disagreement classification (W52: decisions before dollars) —
+    srcI/outI were complete on disk (mtime 2026-08-29 05:07) before this audit began,
+    so verifier reads cannot contaminate the implementation.
+
+V2. Event-set agreement (S1 gate 1): Jaccard |A∩B|/|A∪B| on the sets of signal
+    session_ids actually traded (rows of each events file). Gate >= 0.99.
+
+V3. Per-event net corr (S1 gate 2): Pearson corr over the intersection sessions of
+    net35 in POINTS (primary net35_pts vs indep gross_pts - 1.75; indep CSV is 2dp,
+    so comparisons carry a 0.005 pt rounding tolerance). Gate >= 0.99.
+
+V4. Total net within 1% (S1 gate 3): |sum_indep(net35) - sum_primary(net35)| /
+    |sum_primary(net35)| <= 0.01, each sum over that implementation's own full event
+    set, POINTS.
+
+V5. Disagreement classification: EVERY session in the symmetric difference, and every
+    intersection row where entry_ts or exit_ts differ or |net35 diff| > 0.005 pts, is
+    individually classified by cause (qualification rule, trailing state, entry rule,
+    price, arithmetic) BEFORE the pass/fail verdict is written. Qualifying-session
+    census difference (primary prints 5052, indep prints 5055) is classified as part
+    of this even where it produces no event difference.
+
+V6. Reconciled event set (the S2 object): the INTERSECTION of the two event sets,
+    carrying the primary's recorded per-event values (verified equal to indep within
+    the 2dp tolerance). Conservative: no event that either implementation rejects is
+    credited. Its N is printed; S2/S3 use it exclusively.
+
+V7. R_a (gate): k = ceil(0.10 * N_reconciled); concentration = sum of the k largest
+    net35 values / sum of all net35. Gate: concentration <= 0.40.
+
+V8. R_b LOYO-modern (gate): modern = era-2 events (signal session_id >= 2016-01-01).
+    For each y in {2016..2026}: total net35 over modern events with signal year != y
+    must be > 0. All 11 exclusions must pass.
+
+V9. R_c late-entry positive control (gate): re-simulated from the substrate under the
+    S1-frozen operationalization (indep I1-I8; any rule shown by S1 classification to
+    differ resolves to the PRIMARY's reading on the reconciled set). For a reconciled
+    event with signal at qualifying index i: late trade enters at qualifying session
+    i+1's first (16:00,17:00] bar OPEN (I6 fallback+drop rules applied at i+1), exits
+    at qualifying session i+2's 09:30 grid close (I7), requires
+    (sid[i+2]-sid[i+1]) <= 7 calendar days, cost 1.75 pts. Unavailable late windows
+    are dropped and counted. Gate: mean_net_late <= 0.50 * mean_net_ontime (both pts,
+    reconciled set); with mean_ontime > 0 this is "degrades by >= 50%".
+
+V10. R_d (reported): decile-2 = signal-valid sessions with trailing Q10 <= D < Q20
+    (Q20 = np.quantile(trailing 252 window, 0.20), same causality as Q10), same LONG
+    window/cost simulated from the substrate. Reported: mean net35 decile-2 vs
+    decile-1 (= reconciled events); "weaker" = mean_d2 < mean_d1.
+
+V11. R_e (reported): $45/ctrRT = 2.25 pts; mean net over the reconciled set.
+
+V12. S3 book stream. No direct weekly book CSV exists in the repo (checked:
+    WE_W103_CONSOLIDATE/out = aggregates only; GENESIS_BASELINES weekly_net_series.csv
+    columns B0-B6 exclude the incumbent; GENESIS_REPRO_INCUMBENT/out = aggregates).
+    The recorded artifact used: runs/WE_W119_BOOKLOSS/out/book_loss_ledger.csv —
+    per-session book_pnl at the RECORDED inverse-vol weights (book = 0.473*P1/PCT +
+    0.527*XM, printed in out/bookloss.txt, "as W110/W117"), 1058 sessions
+    2022-07-04..2026-07-31, ISO `week` column. Weekly book stream = book_pnl summed
+    by `week`. VALIDATION against the W103 aggregate constraints (combinations.csv
+    row "INV-VOL: P1 + XM") before any gate: n_weeks == 213; weekly mean 1141.678277;
+    maxDD 11489.404203 (max peak-to-trough of the cumulative weekly series from 0);
+    fixdd = mean * 20245 / maxDD == 2011.703681; each within +/-0.5%. If any
+    constraint misses, S3 is recorded DEFECT (missing artifact: a recorded weekly
+    book series consistent with W103) and no portfolio economics are quoted.
+    LIMITS (recorded): weights are whole-window inverse-vol (in-sample weighting
+    caution already priced in CURRENT_BASELINE section 0B); stream is 213 weeks
+    2022-W27..2026-W31, all pre-seal (< 2026-08-01).
+
+V13. Overlay stream: reconciled AUCTREV events at 1 contract, net35_pts * $20/event,
+    assigned to the ISO week (ISO year+week) of the EXIT session date — the cash is
+    realized at the exit 09:30; the book convention is ISO week on session date.
+    Week universe = the 213 book weeks; events realizing outside it are excluded and
+    counted; bookweeks without an event carry $0. (Signal-week alternative differs
+    only for Fri->Mon events; the choice is frozen here, not searched.)
+
+V14. P_a (gate): Pearson corr(book weekly $, overlay weekly $) over the 213 common
+    weeks. Gate <= 0.30.
+
+V15. P_b (gate): marginal fixed-DD $/wk = fixdd(book + overlay) - fixdd(book) where
+    fixdd(s) = mean(s) * 20245 / maxDD(s). Gate > 0. ($20,245 is the book's recorded
+    normalization; fixdd is scale-invariant so no leverage can masquerade as alpha.)
+
+V16. P_c (gate): worst decile of each weekly series = its floor(213/10) = 21 lowest
+    weeks (stable sort by value then week order; boundary ties noted). Overlap
+    fraction = |intersection of the two worst-decile week sets| / 213 (the W110/W116
+    instrument that failed FOLLOW_MORNING). Null: 1000 circular alignments — overlay
+    series rotated by k ~ Uniform{1..212}, numpy default_rng(20260829), overlap
+    recomputed per draw; p95 = np.percentile(draws, 95). Gate: real overlap <= p95.
+
+V17. P_d (reported): mean overlay $ on weeks with book weekly $ < 0 (count printed).
+
+V18. All tables in out/S1_parity.txt, out/S2_robustness.txt, out/S3_portfolio.txt and
+    the consolidated out/gate_table.txt are PRINTED BY PROGRAM (srcV/), never
+    hand-assembled. Every loaded frame passes seal_guard.assert_presealed on its
+    date/timestamp column (nothing >= 2026-08-01).
+
+V19. out/ledger_result_pending.json: JSON LIST, F6 entry schema (kind RESULT,
+    hash/prev_hash/seq null, pending note for the orchestrator, no SEARCH_LEDGER
+    append), one entry per stage: G00034/G00035/G00036; a stage not executed because
+    an earlier stage failed gets result "ABORTED", note "prior stage failed".
+
+V20. The multiplicity sentence — "AUCTREV is 1 of 13 formal GENESIS II objects
+    (~750 prior experiments); evidence status remains DISCOVERY_CONSUMED" — is
+    printed in every stage verdict and in the final verdict block.

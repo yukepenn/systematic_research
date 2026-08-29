@@ -1,0 +1,50 @@
+====================================================================================================
+G2_F7_AUCTREV_CERT_20260829 — S1 INDEPENDENT-IMPLEMENTATION PARITY (trial G00034)
+printed by srcV/s1_parity.py — clean-room outI/events_indep.csv vs primary F6 out/events.csv
+substrate sha256 dfd017eff0b031c2be89639fc4ad347d45053867edcdc2600002252b10b627cf == provenance dfd017eff0b031c2be89639fc4ad347d45053867edcdc2600002252b10b627cf: True
+====================================================================================================
+
+A. CLEAN-ROOM AUDIT of srcI/auctrev_indep.py (V1)
+   grep pattern: G2_F6[^\s\"']*(?:src|out|events|gate|REPORT)|events\.csv|gate_table|REPORT\.md|outA|G2_F5
+   matches in srcI: 0
+   file-open surface (3 call sites):
+     path, "rb"
+     SUBSTRATE, columns=["time", "open", "close"]
+     os.path.join(OUT_DIR, "summary_indep.txt"
+   AUDIT: PASS — no forbidden path referenced; reads = substrate + own outputs only
+
+B. EVENT SETS
+   primary events N = 534 (sessions 534); indep N = 535 (sessions 535)
+   intersection 534; primary-only 0; indep-only 1
+
+C. DUAL-RULE ENGINE (verifier re-implementation of BOTH recorded readings)
+   qualifying sessions: morning-rule 5052 (primary printed 5052); chrono-rule 5055 (indep printed 5055)
+   engine events: morning 534 (primary 534); chrono 535 (indep 535)
+   engine vs primary events.csv: same session set True; max|d entry_px| 0.000000; max|d exit_px| 0.000000; max|d net35| 0.000000  -> REPRODUCED
+   engine vs indep events_indep.csv: same session set True; max|d entry_px| 0.000000; max|d exit_px| 0.000000; max|d net35| 0.000000  -> REPRODUCED
+
+D. DISAGREEMENT CLASSIFICATION (every differing decision, before any dollar verdict)
+   qualification census difference: 3 session(s)
+     2006-02-08 [chrono-only]: own-date bars stamped <=09:30: 0; chronological bars <= 09:30: 117; first own-date bar 2006-02-08 09:49:00
+        CLASS: QUALIFICATION-RULE AMBIGUITY — F6 R3(c) 'raw close at/before 09:30' read as time-of-day-on-session-date (primary) vs chronological-within-session (indep).
+     2006-03-17 [chrono-only]: own-date bars stamped <=09:30: 0; chronological bars <= 09:30: 95; first own-date bar 2006-03-17 09:45:00
+        CLASS: QUALIFICATION-RULE AMBIGUITY — F6 R3(c) 'raw close at/before 09:30' read as time-of-day-on-session-date (primary) vs chronological-within-session (indep).
+     2012-03-21 [chrono-only]: own-date bars stamped <=09:30: 0; chronological bars <= 09:30: 153; first own-date bar 2012-03-21 09:48:00
+        CLASS: QUALIFICATION-RULE AMBIGUITY — F6 R3(c) 'raw close at/before 09:30' read as time-of-day-on-session-date (primary) vs chronological-within-session (indep).
+   event disagreement 2012-03-21 [indep-only]:
+        morning-rule: NOT QUALIFYING
+        chrono-rule: idx 1530, D -7.75, Q10 -5.2500, bottom True
+        CLASS: QUALIFICATION-RULE AMBIGUITY (direct) — session qualifies only under the chrono reading of R3(c).
+   intersection rows with entry_ts/exit_ts or |net35| > 0.006 pt mismatch: 0
+
+E. PARITY GATES ($ figures POINTS-based; F7 S1 bands)
+   GATE       SPEC                                    OBSERVED                       VERDICT
+   --------------------------------------------------------------------------------------------
+   S1-audit   no forbidden reference in srcI          0 matches                      PASS
+   S1-a       event-set agreement >= 99%              99.813%  (534/535)            PASS
+   S1-b       per-event net corr >= 0.99              1.000000 on 534 events          PASS
+   S1-c       total net within 1%                     +5430.00 vs +5411.50 pts (dev 0.341%)   PASS
+   engine reproduction (context, non-gate): primary REPRODUCED / indep REPRODUCED
+
+S1 VERDICT: PASS — parity certified; disagreements fully classified (single R3(c) seed-rule ambiguity)
+Multiplicity: AUCTREV is 1 of 13 formal GENESIS II objects (~750 prior experiments); evidence status remains DISCOVERY_CONSUMED.

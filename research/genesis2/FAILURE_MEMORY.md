@@ -62,6 +62,18 @@ FELL — "0DTE pumps EOD vol" is measured folklore).**
 
 **Asset banked (DELEV02): certified cash NDX daily 1986→2026-07 — the standing percent-clean
 event basis for any cross-era percent work.**
+
+## Closed at exact scope (GENESIS II Waves 6–7, 2026-08-29)
+
+| scope | verdict | run |
+|---|---|---|
+| Breadth-conditioned afternoon short (bottom-tercile 11:00 TICK → 11:01–15:59) | NULL — **worse than random shorts** (p_one 0.82); washout-then-rebound shape recorded (a rebound card must carry this + the fade graveyard) | G2_F6_BREADTHPM01 |
+| **AUCTREV — bottom-decile EOD dislocation → overnight long** | passed economics (t 2.41), passed clean-room parity (corr 1.000) — then **KILLED by certification: top-10% events = 203% of net (480 others sum negative) + late-entry degrades only 15% (fast-reversion mechanism falsified)**. Tail-carried payoff | G2_F6/F7 |
+
+**New standing lessons:** (1) *economics gates alone cannot catch tail-carried payoffs* — the
+concentration + timing-teeth rungs are now mandatory for any economics survivor; (2) a
+"crisis-rebound tail" card would be DELEV02-adjacent and must carry both closures; (3) spec text
+must pin time-of-day vs chronological semantics for session seeds (the one S1 ambiguity found).
 **Substrate law (DELEV01): additively back-adjusted series ⇒ cross-era percent thresholds
 invalid; see GENESIS_ENGINEERING_DOCTRINE substrate trap.**
 

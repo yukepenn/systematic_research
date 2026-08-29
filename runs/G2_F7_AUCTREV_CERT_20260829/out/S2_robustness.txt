@@ -1,0 +1,46 @@
+====================================================================================================
+G2_F7_AUCTREV_CERT_20260829 — S2 ROBUSTNESS on the reconciled event set (trial G00035)
+printed by srcV/s2_robustness.py — POINTS-based, $35/ctrRT = 1.75 pts unless stated
+reconciled events N = 534 (S1 intersection, primary recorded values)
+====================================================================================================
+
+R_a  top-decile concentration: k = ceil(0.10*534) = 54
+     sum of 54 largest net35 = +11035.25 pts; total net = +5430.00 pts
+     concentration = 203.2%  (gate <= 40%)
+
+R_b  LOYO-modern: era-2 (2016..2026/05) net with each single year excluded
+     modern events N = 293; total modern net = +5290.50 pts
+       excl 2016 (drops  18 events): net  +5345.00 pts  PASS
+       excl 2017 (drops  25 events): net  +5127.75 pts  PASS
+       excl 2018 (drops  41 events): net  +5401.75 pts  PASS
+       excl 2019 (drops  19 events): net  +5424.50 pts  PASS
+       excl 2020 (drops  54 events): net  +3026.25 pts  PASS
+       excl 2021 (drops  23 events): net  +4933.50 pts  PASS
+       excl 2022 (drops  29 events): net  +5644.25 pts  PASS
+       excl 2023 (drops  15 events): net  +4663.25 pts  PASS
+       excl 2024 (drops  41 events): net  +3839.50 pts  PASS
+       excl 2025 (drops  23 events): net  +3806.00 pts  PASS
+       excl 2026 (drops   5 events): net  +5693.25 pts  PASS
+
+R_c  late-entry positive control: enter at qualifying session i+1's (16:00,17:00] first-bar
+     OPEN, exit at session i+2's 09:30 seed close; same $35 cost; primary-rule session table
+     late trades on reconciled signals: N = 534 (signals 535, dropped no-next 1, no-entry 0)
+     on-time mean net/event = +10.1685 pts; one-session-late mean = +8.5988 pts
+     degradation = 15.4%  (gate: late <= 50% of on-time, i.e. degradation >= 50%)
+
+R_d  monotonicity (REPORTED, non-gate): decile-2 sessions (Q10 <= D < Q20), same policy
+     decile-1 (reconciled) mean +10.1685 pts (N=534); decile-2 mean +0.1483 pts (N=445)
+     decile-2 weaker than decile-1: True
+
+R_e  $45/ctrRT stress (REPORTED, non-gate): mean net/event +9.6685 pts = +193.37 USD (t=2.29)
+
+   GATE   SPEC                                              OBSERVED                VERDICT
+   --------------------------------------------------------------------------------------------
+   R_a    largest 10% of events carry <= 40% of total net    203.2%                 FAIL
+   R_b    modern net > 0 excluding any single year 16-26    min holds: True            PASS
+   R_c    late entry degrades mean net/event >= 50%           15.4%                 FAIL
+   R_d    (reported) decile-2 weaker than decile-1          d1 +10.17 d2 +0.15     REPORTED
+   R_e    (reported) $45/RT stress                          +9.6685 pts          REPORTED
+
+S2 VERDICT: FAIL — object stops at SURVIVED-DISCOVERY + S1 parity
+Multiplicity: AUCTREV is 1 of 13 formal GENESIS II objects (~750 prior experiments); evidence status remains DISCOVERY_CONSUMED.

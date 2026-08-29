@@ -1,0 +1,67 @@
+G2_F7_AUCTREV_CERT_20260829 — S1 CLEAN-ROOM implementer spec resolutions (trial G00034)
+Recorded BEFORE any economics number was computed. Inputs used, in full:
+  (1) runs/G2_F7_AUCTREV_CERT_20260829/spec.yaml (S1 stage)
+  (2) runs/G2_F6_AUCTREV01_20260829/spec.yaml (frozen contract)
+  (3) runs/G2_F6_AUCTREV01_20260829/out/spec_resolutions.txt (frozen operationalization)
+  (4) runs/GENESIS_REPRO_INCUMBENT_20260828/out/run_provenance.txt (substrate path + sha256)
+NOT read: primary src/, events.csv, gate_table.txt, REPORT.md, any other F6 output, F5 outA.
+The F5 definitions needed (grid closes, session universe, D) are quoted inside input (3)
+R1/R3/R4, so no forbidden file was required. One value per item; no parameter search.
+
+I1. Session_id: bar stamp time-of-day <= 17:00:00 -> own calendar date; > 17:00:00 ->
+    NEXT calendar date ("the next" in F6 R3 read as next calendar date; on real tape
+    this is always the next trading day because there is no Friday-evening/Saturday
+    tape, and any anomalous Saturday-labeled session fails qualification (a) anyway).
+
+I2. Qualification (F6 R3), operationalized: (a) >= 300 bars with stamp date ==
+    session_id and 09:31:00 <= time <= 16:00:00 (inclusive both ends); (b) >= 1 bar
+    with stamp date == session_id and 15:56:00 <= time <= 16:00:00; (c) >= 1 session
+    bar (chronological, so prior-evening overnight tape carrying this session_id
+    counts) stamped <= session_id 09:30:00. (c) is chronological because the seed is
+    defined by forward-fill ("last raw close at or before the stamp").
+    Session_id range 2006-01-01 .. 2026-05-31 inclusive.
+
+I3. Grid closes (chronological forward-fill within the session): c1550 = close of the
+    last session bar stamped <= session_id 15:50:00; c1600 = ... <= 16:00:00; c0930 =
+    ... <= 09:30:00. D_i = c1600 - c1550, POINTS. Duplicate stamps, if any: rows are
+    stable-sorted by stamp and the LAST row among ties is the "last at/before" bar.
+
+I4. Trailing deciles (F6 R4): qualifying sessions sorted by session_id; for 0-based
+    index i >= 252, Q10 = np.quantile(D[i-252:i], 0.10), Q90 = np.quantile(..., 0.90),
+    linear interpolation, exactly the 252 strictly-prior qualifying sessions. First
+    252 qualifying sessions are burn-in (counted, no signal). BOTTOM: D_i < Q10
+    strict; TOP (readout only): D_i > Q90 strict. Ties excluded.
+
+I5. Next qualifying session = immediate successor in the qualifying ordering;
+    require (session_id_next - session_id_signal) <= 7 calendar days, else the event
+    is dropped-no-outcome and counted. The last qualifying session has no successor
+    (dropped-no-outcome).
+
+I6. Entry (F6 R2): first session-bar of the signal session with 16:00:00 < stamp
+    time <= 17:00:00 and stamp date == signal session_id; entry price = that bar's
+    OPEN, entry_ts = its END-stamp. Fallback if no such bar: first bar in the whole
+    tape with stamp > signal session_id 18:00:00 and stamp <= next qualifying
+    session_id 09:30:00; its OPEN. If none, dropped-no-entry and counted. A bar
+    stamped exactly 18:00:00 is NOT overnight tape ("stamped after 18:00" read
+    strictly).
+
+I7. Exit: the last next-qualifying-session bar stamped <= its session_id 09:30:00;
+    exit price = that bar's CLOSE (this IS the diagnostic's 09:30 grid close by
+    construction); guaranteed to exist by qualification (c). Entry-equals-exit-bar
+    degenerate case (possible only under the I6 fallback) is allowed, not dropped.
+
+I8. P&L (F6 R5): LONG gross_pts = exit close - entry open; $35/ctrRT = 1.75 pts;
+    net_usd = (gross_pts - 1.75) * $20. Era of an event = signal session era
+    (2006-15: session_id <= 2015-12-31; 2016-26: >= 2016-01-01).
+
+I9. events_indep.csv contains the BOTTOM-decile LONG events ONLY (the strategy event
+    set — the S1 parity object); decile_flag = "BOTTOM" on every row. The TOP-decile
+    SHORT readout (F6 R10, never gated) is reported in summary_indep.txt only, same
+    window/bars, SHORT gross = entry open - exit close, same drop rules.
+
+I10. Loads: substrate = research/scalping_lab/substrate/minute/NQ/
+    nq1m_2005_202605.parquet; program asserts sha256 ==
+    dfd017eff0b031c2be89639fc4ad347d45053867edcdc2600002252b10b627cf (provenance
+    file (4)) BEFORE reading; full timestamp column passes
+    research_sdk.seal_guard.assert_presealed (nothing >= 2026-08-01 exists or is
+    read). All tables printed by the program. No git, no CrossTrade, no ledger append.

@@ -1,0 +1,36 @@
+====================================================================================================
+G2_F7_AUCTREV_CERT_20260829 — CONSOLIDATED GATE TABLE (certification of AUCTREV, G00032)
+printed by srcV/finalize.py from state_s1.json / state_s2.json — never hand-assembled
+stages sequential: S1 G00034 -> S2 G00035 -> S3 G00036; stop at first failure
+====================================================================================================
+
+STAGE  GATE      SPEC                                          OBSERVED                    VERDICT
+----------------------------------------------------------------------------------------------------
+S1     audit     srcI references no forbidden path             0 grep matches               PASS
+S1     S1-a      event-set agreement >= 99%                    99.813% (534/535)          PASS
+S1     S1-b      per-event net corr >= 0.99                    1.000000 on 534 events    PASS
+S1     S1-c      total net within 1%                           dev 0.341% (+5430 vs +5411.5 pts)  PASS
+S1     class     every disagreement classified                 3 census + 1 event, 1 root cause   DONE
+S2     R_a       largest 10% of events carry <= 40% of net     203.2%                     FAIL
+S2     R_b       LOYO-modern net > 0, all years 2016..2026     min exclusion +3026.25 pts   PASS
+S2     R_c       late entry degrades mean net >= 50%           15.4% (+10.17 -> +8.60 pts)   FAIL
+S2     R_d(rep)  decile-2 weaker than decile-1                 d1 +10.17 / d2 +0.15 pts (N=445)   REPORTED
+S2     R_e(rep)  $45/ctrRT stress                              +9.6685 pts/event        REPORTED
+S3     P_a-P_d   (not executed)                                ABORTED: prior stage failed  ABORTED
+----------------------------------------------------------------------------------------------------
+
+VERDICT: S1 PASS, S2 FAIL (R_a, R_c), S3 ABORTED.
+Per spec verdict_ladder: the object stops at its LAST PASSED RUNG — AUCTREV remains
+SURVIVED-DISCOVERY (G00032) and is now additionally INDEPENDENT-IMPLEMENTATION-VERIFIED
+(S1). It is NOT ROBUSTNESS-SUPPORTED and NOT PORTFOLIO-ADDITIVE. The S2 failure modes:
+  R_a: the P&L is tail-carried — the top 54 events hold 203% of total net (the remaining
+       480 events sum NEGATIVE, -5,605 pts). Not a broad edge; a rare-event payoff.
+  R_c: entering one full session late keeps 85% of the economics (+10.17 -> +8.60 pts).
+       The claimed fast overnight auction-reversion mechanism is NOT what pays; the
+       timing test had teeth and it bit — mechanism claim falsified at this geometry.
+Both failures are mechanism-classification findings, not arithmetic disputes: S1 showed
+the two implementations agree to 0.000 pts on every common event.
+
+Multiplicity: AUCTREV is 1 of 13 formal GENESIS II objects (~750 prior experiments); evidence status remains DISCOVERY_CONSUMED.
+live_enabled NO. spend $0. No sealed row (>= 2026-08-01) touched; seal_guard passed on
+every load. POINTS-based throughout; substrate sha256 verified == recorded provenance.
