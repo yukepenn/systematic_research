@@ -42,7 +42,27 @@ structure — archetypes orthogonal to everything measured so far).
 | measurements banked | 2 (EXEC01 cost truth; MAE01 intrabar bound) |
 | forward-queued | 1 (LIQREV01) + shadow roster |
 
-**Measured bottleneck after one formal wave: the SIGNAL stage** — discovery yields plenty
-(230 leads), data is capable, costs are known; what fails is information content at preregistered
-gates. Routing response (§65): next scan wave changes REPRESENTATION (event-time, path topology,
-short-side asymmetry) rather than re-sampling the same archetype pool.
+**Bottleneck statement, CORRECTED per META_ADVERSARY_01 (2026-08-29):** the earlier claim "what
+fails is information content" was an over-read. Honest version: **the intraday gate battery is
+blind below ≈ annualized Sharpe 1 at the tested Ns** (a true Sharpe-0.5 edge passes < 10% of the
+time); the programme has near-zero information about the modest-edge band, which is *unexplored,
+not empty*. The one band where t=2 is reachable at Sharpe ≈ 0.45 — **the 3-session-to-3-month
+swing band on the 1,043-week deep spine — is untested across all 56 cards** and is now a
+registered lane (mechanism-first; TSMOM/XSMOM exact scopes remain closed; new observables or
+representations required).
+
+## Standing corrections from META_ADVERSARY_01
+
+- **MC-49 kill rebased**: killed on its own evidence quality (one 59-day self-flagged ICT repo),
+  NOT on SWEEP01's closure — SWEEP01's report explicitly does not cover overnight sub-levels.
+  Scope language corrected here; the kill stands on the weaker, honest ground.
+- **Anti-tail pipeline fixed (charter §59 restored)**: a candidate PREREGISTERED as a TAIL-CLASS
+  object routes concentration as a CLASSIFICATION (crisis-concentration expected), and
+  portfolio-marginal runs BEFORE the concentration rung can kill it. AUCTREV's kill stands (it
+  was preregistered as a fast-reversion broad edge and its mechanism was falsified by R_c).
+- **Two reserves flagged to the OWNER as possibly negative-EVI** (owner decision, not mine):
+  (i) the 2022+ implied-vol pristine window guards a confirmation for a lane (H1) measured NULL,
+  while blocking the axis whose decisive era it is; (ii) the blind BBO pools guard a falsifier
+  lane closed twice by power, while the binding cost row rests on 5.1% overlap.
+- **Symmetric certification of the incumbent** preregistered as `G2_F9_P1_SYMCERT` — the
+  highest-EVI unplanned action; see spec.
