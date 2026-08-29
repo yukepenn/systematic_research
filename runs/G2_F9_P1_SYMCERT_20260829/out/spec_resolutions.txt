@@ -1,0 +1,128 @@
+G2_F9_P1_SYMCERT_20260829 — spec ambiguity resolutions (trial G00039)
+FROZEN BEFORE ANY COMPUTATION (written 2026-08-29, before src/symcert_driver.py first ran).
+Spec is FROZEN; every choice below resolves an underdetermined clause conservatively and none
+was informed by any measured result of this run. The valence_precommitment band [2%, 40%] is
+binding and is quoted in the gate table BEFORE the R_c observation appears.
+
+R1  POPULATION. "the frozen REPRODUCED 2,131-trade in-window stream (GENESIS_REPRO
+    provenance)". Regenerated in-process by the VERBATIM recorded chain exactly as
+    runs/GENESIS_REPRO_INCUMBENT_20260828/src/repro_driver.py executes it (direct imports, no
+    transcription): load_deep("2022-01-01","2026-07-31 17:00",extend=True); W1.DEV_END set;
+    votes(D,mem,bmom,tilt,X,bmom) from run_we_w97; fills_daily(halt=1300,target=1000);
+    causal_score(WIN); sizes = where(sc>=3,2,1); gfills(**arm_kw("PCT",1.183)) from run_we_w98;
+    mem_ext.npz used as the recorded cache (concordance mode). An instrumented copy of gfills
+    (verbatim logic + recorded eti/xti/epx/xpx/xkind, the EXEC01 R1 device) is asserted equal
+    to the original gfills on every (d,u,et,xt,pnl) tuple (pnl tol 1e-9). Hard gates: total
+    trades == 2401; session-start-filtered == 2131; row-by-row match of the filtered list
+    against runs/WE_P1PCT_PARITY_20260827/out/py_trades_p1pct.csv (et,xt,d,u exact; pnl to the
+    artifact's 2-dp rounding). Any mismatch aborts as DEFECT. In-window = SESSION-START filter
+    (session's first bar in [2022-07-01, 2026-08-01)), the named 2,131 definition. Weekly unit:
+    ISO week of the session date; asserted == 213 distinct weeks per the spec population line.
+
+R2  P&L CONVENTION ("POINTS/dollar P&L as recorded"). PRIMARY for R_a and R_b: the frozen
+    stream's own per-trade pnl field ($ = d*u*(exit-entry)*PV - COMM_RT*u; commission included,
+    modelled spread NOT included because the recorded economics charges spread as a session-
+    level rate, never per trade). This is symmetric with AUCTREV R_a/R_b, which used its
+    stream's own recorded per-event net. SECONDARY (printed, cannot move any verdict):
+    pnl - rate*u, where rate is the candidate-specific spread $/ctrRT recomputed in-process by
+    the verbatim net_series construction (W82 minute profile weighted by this trade list's own
+    fill minutes). Both are printed in every rung detail.
+
+R3  R_a DEFINITION. Top ceil(10% of 2131) = 214 trades ranked by pnl DESCENDING; share =
+    sum(top-214 pnl) / sum(all 2131 pnl); gate PASS iff share <= 40% (AUCTREV bar, same
+    arithmetic — share may exceed 100% if the tail carries the book). Non-gate prints:
+    (a) top-decile WEEKS share: ceil(10% of 213) = 22 largest ISO weeks' share of total, on
+    BOTH the primary weekly sums (recorded pnl by week) and the canonical reproduced net weekly
+    series (the SER["P1_PCT"] aggregation net of spread rate — the series behind t=4.163);
+    (b) component shares per R9 below.
+
+R4  R_b DEFINITION. Year = calendar year of the trade's SESSION date (session-date convention).
+    For each y in {2022,2023,2024,2025,2026}: total primary pnl of the 2131 trades excluding
+    year y must stay > 0 (gate; all five exclusions must pass). Secondary net-of-spread variant
+    printed. Noted in the table: 2022 is H2-only and 2026 ends 2026-07 (window edges, not
+    choices of this run).
+
+R5  ERA RUNG (pre-2022). The spec itself fixes the status: NOT-ATTEMPTABLE, printed with its
+    reason (the deep substrate member/tilt/bmom caches and pipeline constants are frozen on the
+    modern 2022-2026 load; running the member ensemble pre-2022 would be a NEW experiment, not
+    a certification rung of the frozen object). Honest-reporting addition (status text only, no
+    computation): the recorded LEGACY_DIAGNOSTIC that exists nearest to this rung is cited —
+    runs/WE_W97_AUDITFIX out/auditfix.txt M10 built a P1 VARIANT (pre-W98 exit engine, not the
+    frozen PCT box) on 2006-2021: net +$79,076, 44.5% positive weeks. Cited as a pointer to a
+    recorded artifact about a DIFFERENT variant; it neither passes nor fails this rung.
+
+R6  R_c CONVENTION. The spec's parenthetical ("exits unchanged rule: exit logic re-evaluated
+    from the delayed entry") is internally ambiguous; the operative anchor is explicit:
+    "matching EXEC01 E3's convention - consistency with EXEC01's -6.4% printed". Resolution:
+    implement runs/G2_EXEC01_P1_EXECUTION_20260828 R9 CODE-VERBATIM on the frozen action set —
+    entry fill shifts to o[eti+1] if bar eti+1 exists in the same session, else the entry price
+    is kept (session-end cap); open-kind exit fills shift to o[xti+1] if in-session, else
+    c[xti]; close-kind (forced flatten) exits unchanged; commission and modelled spread are
+    identical on both sides and cancel, so delta net = delta gross. Aggregation: session deltas
+    summed to ISO weeks over in-window sessions, ALL weeks counted; mean weekly delta and its
+    SE printed. Degradation % = -(mean weekly delta)/1393.573663 * 100 (the REPRODUCED G00000
+    baseline weekly). CONSISTENCY CHECK printed against EXEC01's recorded -$89.62/wk
+    (SE $99.11, -6.4%): |mean weekly delta - (-89.62)| <= $0.5 expected (same code, same
+    stream); any larger gap is reported as a discrepancy, not smoothed. Verdict against the
+    PRE-STATED band, endpoints inclusive: degradation in [2%, 40%] => CONSISTENT; < 2% =>
+    TIMING-IRRELEVANT flag (interpret jointly with R_d); > 40% => FASTER-THAN-CLAIMED flag.
+    No re-run of the ratchet/exit logic occurs (that would be a new simulation, and it would
+    NOT be the convention that produced the -6.4% the spec demands consistency with).
+
+R7  R_d MASK CONSTRUCTION. Minute-level signed in-market indicator from the frozen trade
+    intervals, MAE01 R2 life-window convention adapted to increments: define per-bar price
+    increment inc[i] = o[i+1]-o[i] for bars with a same-session successor, inc[i] = c[i]-o[i]
+    for each session's last bar. A trade occupies bars [eti, xti-1] (open-kind exit) or
+    [eti, xti] (close-kind exit) with weight d*u; mask[i] = sum of d*u over trades occupying
+    bar i. IDENTITY GATE (printed): PV * sum(mask*inc) over in-window sessions must equal
+    sum(pnl + COMM_RT*u) over the 2131 trades to 1e-6 — the mask reconstructs the recorded
+    gross exactly or the rung aborts as DEFECT.
+
+R8  R_d NULL. Whole-session circular shift (null_guard.circular_shift_units, unit = session):
+    the in-window sessions in chronological order form the unit blocks; for shift k the mask
+    pattern of block j is scored against the increments of the block that occupies position j
+    after rotation, aligned POSITIONALLY within session and truncated to the shorter block
+    (mask minutes beyond the target session's length are dropped = forced flat at session end;
+    target minutes beyond the mask session's length are flat). Statistic = gross $ capture =
+    PV * sum(shifted mask * original inc). research_sdk.null_guard.verify_null_sensitivity runs
+    FIRST (shifts [1,2,5], must not raise); then run_circular_null with n_shifts = S-1 (every
+    admissible whole-session shift exactly once, deterministic, S-1 >= 300 asserted).
+    Gate: actual gross capture > p95 of the null distribution. Costs (commission $4.36*u and
+    the spread rate*u) attach to the TRADES, whose count, contracts and fill minutes-of-day are
+    identical under every whole-session shift, so they are a constant subtracted from every
+    arm: the gross comparison IS the net comparison. Both framings printed (net = gross minus
+    the recorded commission total minus rate*ctrRT total). p95 = 95th percentile of the null
+    draws (numpy default linear interpolation); the add-one-corrected p_ge from null_guard is
+    printed alongside.
+
+R9  COMPONENT SHARES (non-gate print under R_a). Two labeled numbers, no counterfactual
+    re-simulation (prohibition: no parameter changes):
+    (a) B-MOM-ENABLED attribution re-derived ON THE FROZEN STREAM with the recorded W67b
+        tagging rule verbatim: at the trade's entry bar i=eti, s13 = mem[:, cols(L13)].sum;
+        agree13 = (sign(s13)==tilt)&(s13!=0)&(tilt!=0); need = 5 if agree13[i] else 6;
+        enabled = (s13[i] < need) and (bmom[i] > 0). Enabled share of primary net printed
+        pooled and by year, next to the recorded per-year values (9.9/82.4/17.3/45.9/-16.6,
+        LEGACY_DIAGNOSTIC — W67b measured them on the pre-W98 exit engine, so exact equality
+        is not expected and any gap is reported, not reconciled).
+    (b) The recorded ~51% flag re-derived FROM ARTIFACTS as its own definition requires:
+        runs/WE_W67_COMBINER/out/arms.csv, share = 1 - pts(w_bmom=0)/pts(w_bmom=2.83)
+        (the Solar-only counterfactual ladder; LEGACY_DIAGNOSTIC, pre-W98 engine).
+
+R10 SEAL. research_sdk.seal_guard.assert_presealed runs on: the substrate bar time array; the
+    et and xt columns of the regenerated stream; the et/xt of the recorded parity artifact used
+    for the cross-check. mem_ext.npz is bar-aligned to the seal-checked substrate and the W82
+    spread profile is minute-of-day only (no dates); both carry no independent timestamps —
+    stated here rather than silently skipped. arms.csv carries no timestamps. No file under
+    runs/WE_* or outside this run's directory is written.
+
+R11 LEDGER MAPPING. Symmetry with AUCTREV demands identical result semantics: result = "PASS"
+    iff every GATED rung (R_a, R_b-LOYO, R_d) passes AND R_c lands CONSISTENT; otherwise
+    "FAIL" with the failing rungs named. The note records the binding doctrine: no automatic
+    demotion, no automatic celebration — owner doctrine keeps P1 incumbent regardless; this is
+    evidence that reprices the shadow's interpretive frame. Written to
+    out/ledger_result_pending.json only (no SEARCH_LEDGER append by this team).
+
+R12 MULTIPLICITY SENTENCE (required print). "P1/PCT is the survivor of ~123 waves / 700+ prior
+    experiments with no program-level deflator (GENESIS_PRIOR_RESEARCH_ATLAS.md:8-10); its
+    t=4.16 is post-selection; evidence status of everything measured here remains
+    DISCOVERY_CONSUMED; nothing in this run is forward evidence."

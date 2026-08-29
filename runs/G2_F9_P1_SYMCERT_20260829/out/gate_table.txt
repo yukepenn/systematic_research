@@ -1,0 +1,51 @@
+============================================================================================================
+G2_F9_P1_SYMCERT_20260829 — GATE TABLE (printed by program; trial G00039)
+SYMMETRIC CERTIFICATION: the incumbent P1/PCT sits the AUCTREV rung battery.
+spec: runs/G2_F9_P1_SYMCERT_20260829/spec.yaml (frozen); resolutions R1-R12 frozen
+pre-computation in out/spec_resolutions.txt.
+THIS IS EVIDENCE, NOT A VETO — owner doctrine keeps P1 incumbent regardless.
+============================================================================================================
+VALENCE PRECOMMITMENT (spec.yaml, quoted verbatim BEFORE any R_c number appears):
+  "Mechanism-implied predictions are STATED HERE, before measurement, to prevent the
+   asymmetric-valence error the adversary caught:
+   P1's mechanism = slow trend-ratchet (holds tens of minutes, re-arms) => R_c
+   prediction: +1-bar-delayed entries should degrade net MODERATELY - preregistered
+   consistency band [2%, 40%] degradation = CONSISTENT; < 2% = TIMING-IRRELEVANT flag
+   (entry selection may be drift-riding; interpret jointly with R_d); > 40% =
+   FASTER-THAN-CLAIMED flag."
+============================================================================================================
+GATE   SPEC                                                          OBSERVED                    VERDICT
+GA     gfills_instr == gfills on every (d,u,et,xt,pnl)               True                        PASS
+GB     stream identity: 2401 total / 2131 session-filtered           2401 / 2131                 PASS
+GC     row-by-row == recorded py_trades_p1pct.csv (2131 rows)        True                        PASS
+GD     weekly series has 213 ISO weeks (spec population)             213                         PASS
+GE     canonical weekly net == $1,393.573663 (G00000)                $1,393.573663 (t 4.164)     PASS
+seal   assert_presealed on substrate + trade streams                 no value >= 2026-08-01 read PASS
+------------------------------------------------------------------------------------------------------------
+R_a    top ceil(10%)=214 trades carry <= 40% of total net            236.8% (secondary 264.7%)   FAIL
+R_a+   (non-gate) top-decile WEEKS share (22 of 213)                 78.9% pnl / 87.6% net       REPORTED
+R_a+   (non-gate) B-MOM-enabled share of net (frozen stream)         30.4%                       REPORTED
+R_a+   (non-gate) recorded ~51% flag from arms.csv                   51.1% (LEGACY_DIAGNOSTIC)   REPORTED
+R_b    LOYO 2022..2026: excluding any year, total net > 0            min excl ex-2025: $216,202  PASS
+R_b-erapre-2022 era rung                                             see reason below            NOT-ATTEMPTABLE
+  era reason: deep member/tilt/bmom caches + constants frozen on the modern load;
+  a pre-2022 run is a NEW experiment, not a rung. Nearest recorded artifact
+  (cited only, DIFFERENT variant, pre-W98 exit engine, LEGACY_DIAGNOSTIC):
+  WE_W97_AUDITFIX M10 deep 2006-2021 P1-variant net +$79,076, 44.5% positive wks.
+R_c    PRE-STATED band (quoted above): [2%, 40%] degradation         +6.43% (-89.62/wk, SE 99.11)CONSISTENT
+R_c+   consistency vs EXEC01 E3 recorded -$89.62/wk (-6.4%)          gap $0.00                   CONSISTENT
+R_d    mask identity: reconstructed gross == trade gross             $344,875.00                 PASS
+R_d    null sensitivity (null_guard) verified before use             spread $581,880             PASS
+R_d    actual gross > shifted-mask p95 (1057 shifts)                 $344,875 vs $170,264 (pct 100.0)PASS
+------------------------------------------------------------------------------------------------------------
+RUNG SUMMARY: R_a FAIL | R_b PASS (era NOT-ATTEMPTABLE) | R_c CONSISTENT | R_d PASS
+BATTERY VERDICT: NOT ALL RUNGS PASS — no automatic demotion, no automatic celebration (spec verdict_semantics);
+summary updates GENESIS_INCUMBENT_DOSSIER and the shadow's interpretive frame
+(orchestrator action — this team writes nothing outside its run directory).
+
+Multiplicity: P1/PCT is the survivor of ~123 waves / 700+ prior experiments with no program-level deflator (GENESIS_PRIOR_RESEARCH_ATLAS.md:8-10); its t=4.16 is post-selection; evidence status of everything measured here remains DISCOVERY_CONSUMED; nothing in this run is forward evidence.
+
+prohibition compliance: no parameter changed; no rescue analysis; no sealed read;
+no new economics beyond the rungs; no git; no CrossTrade; no SEARCH_LEDGER append;
+all writes under runs/G2_F9_P1_SYMCERT_20260829/ only. LIVE ENABLED = NO. $0.
+wall time: 58 s

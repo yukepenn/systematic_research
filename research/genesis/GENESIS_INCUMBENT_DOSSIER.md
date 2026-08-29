@@ -3,6 +3,20 @@
 **State document.** From `runs/GENESIS_W1_FORENSICS_20260828` (C1/D1/J1). The incumbent must win
 against the reboot, not inherit the throne; this dossier is the case file.
 
+> ## ⭐ SYMMETRIC CERTIFICATION (2026-08-29, `G2_F9_P1_SYMCERT`, G00039) — the champion sat the
+> ## challengers' exam
+> **Information rungs: PASSED.** The in-market-mask shift null — the sharpest information test
+> P1 has ever faced — passed at the **100.0th percentile of 1,057 shifts** (WHEN it trades
+> carries information beyond drift+duration); timing sensitivity (+6.43% per 1-bar delay) sits
+> inside its mechanism's pre-stated band; LOYO all-positive.
+> **Shape rung: FAILED at 236.8%** — top 10% of trades carry 236.8% of net (the other 1,917 sum
+> −$456k); top 22 weeks = 78.9% of pnl. **P1 is an extremely tail-carried payoff with real
+> timing information** — both facts now measured, neither erasable by the other.
+> **Forward-reading frame (binding for the shadow):** quiet quarters are expected behavior, not
+> decay evidence; a handful of large weeks will dominate any early forward verdict — preregister
+> shadow reads accordingly. Doctrine consequence recorded in the run report: the concentration
+> bar is a CLASSIFICATION, not a kill-gate, for every object.
+
 ## 1. What P1/PCT actually is (C1, all file:line-verified)
 
 32-voter ensemble (4 member-sets × throttles {none,.7,.8,.9} × delta-gate on/off) with closed-form

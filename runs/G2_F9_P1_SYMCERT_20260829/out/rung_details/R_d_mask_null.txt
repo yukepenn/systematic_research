@@ -1,0 +1,14 @@
+R_d — IN-MARKET MASK CIRCULAR-SHIFT NULL (R7/R8)
+in-window sessions S = 1058; minute rows 1,443,261; shifts used = ALL S-1 = 1057 (>= 300 required: YES)
+mask identity gate: mask-reconstructed gross $344,875.00 == sum(trade gross) $344,875.00 (PASS)
+null_guard sensitivity: PASS (spread $581,880 across shifts [1,2,5])
+real statistic through the null machinery == direct dot product: PASS
+
+actual gross capture             : $344,875.00
+null distribution (1057 draws): mean $39,208  sd $77,074  p50 $40,275  p95 $170,264  p99 $213,091  max $296,540
+gate: actual > null p95          : $344,875 vs $170,264 -> PASS
+percentile of actual in null     : 100.0th; add-one p_ge = 0.0009
+
+net framing (costs are constants under whole-session shifts — same trades, same contracts, same fill minutes):
+  commission total $11,144 + modelled spread total $36,900
+  actual net $296,831 vs null p95 net $122,220 — same verdict by construction

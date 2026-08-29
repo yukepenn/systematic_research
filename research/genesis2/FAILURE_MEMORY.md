@@ -74,6 +74,15 @@ event basis for any cross-era percent work.**
 concentration + timing-teeth rungs are now mandatory for any economics survivor; (2) a
 "crisis-rebound tail" card would be DELEV02-adjacent and must carry both closures; (3) spec text
 must pin time-of-day vs chronological semantics for session seeds (the one S1 ambiguity found).
+
+⚠️ **AMENDED by G2_F9_P1_SYMCERT (2026-08-29): the incumbent itself fails the 40% concentration
+bar at 236.8% — worse than AUCTREV's 203.2% — while passing the mask-shift information null at
+the 100th percentile.** Binding rewrite of lesson (1): the concentration rung is a
+**CLASSIFICATION of payoff shape** (charter §59), never a kill-gate by itself, for champion and
+challenger alike; the **timing-teeth rung with a mechanism-implied valence band pre-stated in
+the spec** is the kill-power test. AUCTREV's closure re-adjudicated: **stands on R_c alone**
+(fast-reversion mechanism falsified). Any future citation of a concentration number must carry:
+*"the incumbent fails this bar at 236.8%."*
 **Substrate law (DELEV01): additively back-adjusted series ⇒ cross-era percent thresholds
 invalid; see GENESIS_ENGINEERING_DOCTRINE substrate trap.**
 
