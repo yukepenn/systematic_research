@@ -1,0 +1,52 @@
+============================================================================================================
+G2_EXEC01_P1_EXECUTION_20260828 — GATE TABLE (printed by program; trial G00015)
+spec: runs/G2_EXEC01_P1_EXECUTION_20260828/spec.yaml (frozen); resolutions R1-R13
+============================================================================================================
+GATE  SPEC                                                          OBSERVED                      PASS/FAIL
+GA    gfills_instr == gfills byte-for-byte (R1)                     True                          PASS
+GB    stream identity: 2401 total / 2131 session-filtered           2401 / 2131                   PASS
+GC    esnq allowlist: opened subset of ALLOWLIST_DEV_44, 0 blind    37 opened / 0 blind untouched PASS
+GD    seal: every load assert_presealed, no value >= 2026-08-01     101 quote sessions + substrate + tradesPASS
+GE    E1 exclusion rate <= 30% of candidate legs (R6)               17.4% (58/334)                PASS
+GF    preregistered verdict: mean>=20 OPT | <=16 CONF | else UNRES  $20.65/ctrRT (contract-weighted)SPREAD MODEL OPTIMISTIC
+------------------------------------------------------------------------------------------------------------
+
+E1 — DIRECT FILL-vs-QUOTE COST (maximized overlap)
+  quote sessions in inventory                    : 101 (v2 58 / esnq 37 / v1 6); no-substrate skips: 0 []
+  candidate legs (entry+exit, in-window trades)  : 334
+  measured legs (fresh 2-sided book, in band)    : 276
+  exclusions by reason                           : {'outside_band': 56, 'stale_after_store_end': 2}
+  inside [bid,ask] strict (W-era comparator 29.7%): 68.1%   inside [bid-1t, ask+1t]: 83.1%
+  round turns with BOTH legs measured            : 113 trades / 131 ctrRT  (old evidence: 35 fills)
+  overlap of P1 in-window contract RTs           : 5.1% (old: 2.5%)
+  cost per ctrRT, spread only (R3):
+    PRIMARY contract-weighted mean               : $20.65
+    trade-weighted mean                          : $21.28
+    median / p25 / p75 / p90                     : $20.00 / $15.00 / $27.50 / $35.00
+    2 x per-leg mean (all measured legs)         : $22.14
+    modeled (W82 profile, same RTs, same weights): $15.00   [campaign model $14.44]
+    omitted-vs-assumed-open cost (W82-comparable): $21.76/RT
+
+E2 — STATE MAP (state_map.csv; hour x trailing-vol tercile, R8)
+  minute samples (fresh both sides)              : 132,945 across 101 sessions
+  vol tercile edges (60-min trailing sd of 1m logret): 0.000196 / 0.000320
+  unconditional expected spread (sample-weighted): 3.82 tk
+  P1 projection on map (all in-window fills)     : 3.50 tk
+  P1 measured at its own fills (quote sessions)  : 4.30 tk
+  P1 fill share by vol tercile (ctr-weighted)    : T1_low 41.1%  T2_mid 27.4%  T3_high 31.5%
+  map sample share by vol tercile                : T1_low 33.3%  T2_mid 33.3%  T3_high 33.3%
+
+E3 — +1 MINUTE DELAYED FILL, FROZEN ACTION SET (R9)
+  legs shifted: entries 2131, open-exits 2131; session-end-capped 0; close-exits unchanged 0
+  delta net/week = $-89.62  (SE $99.11, 213 wks; total $-19,090)
+  vs P1 baseline weekly $1,393.57 (REPRODUCED)   : -6.4%
+
+E4 — LIMIT-ENTRY PLAUSIBILITY BOUND (R10; no fill-probability model)
+  measured P1 entries with spread <= 1 tick      : 0.7%  (n=141)
+  unconditional minute samples <= 1 tick         : 1.1%
+
+VERDICT (preregistered decision rule): SPREAD MODEL OPTIMISTIC
+  -> decision rule requires a MASTER_SCOREBOARD stress row (P1 net at measured $20.65/ctrRT). NOT applied by this team (R11) — orchestrator action.
+
+prohibition compliance: no blind session opened; no sealed value read; no policy proposal from E2/E3; no spread model fitted; no git; no CrossTrade.
+wall time: 61 s

@@ -1,0 +1,97 @@
+G2_EXEC01_P1_EXECUTION_20260828 — spec ambiguity resolutions
+FROZEN BEFORE ANY COMPUTATION (written 2026-08-28, before src/exec01_driver.py first ran).
+Every choice below is the conservative reading; none was informed by any measured result.
+
+R1  P1 trade-list source. spec `data` names runs/GENESIS_REPRO_INCUMBENT_20260828 as the
+    REPRODUCED FACT stream, but that run persisted only component aggregates, not the trade
+    list. Resolution: regenerate the P1_PCT stream in-process with a VERBATIM transcription
+    of that run's obj() chain (same modules, same recorded mem_ext.npz cache, same
+    constants), using an instrumented copy of gfills that additionally records fill
+    prices/bar indices and is asserted equal to the original gfills output on every
+    (d,u,et,xt,pnl) tuple (pnl tol 1e-9). Hard gates: total trades == 2401 and
+    session-start-filtered trades == 2131, the counts the repro run certified. Any
+    mismatch aborts the run (DEFECT).
+
+R2  Fill instants. Bars are END-stamped (CLAUDE.md §6). Entry fills and flip/box exits
+    occur at the bar OPEN => fill instant = stamp - 60 s. Forced session-last-bar exits
+    fill at the bar CLOSE => fill instant = the stamp itself. Both recorded per leg. This
+    removes the W-era T-60s error class by construction.
+
+R3  "measured mean cost >= $20/RT" — cost definition. The comparator $14.44/ctrRT is
+    SPREAD-ONLY (commission $4.36 is charged separately everywhere in the repo), so the
+    measured cost is spread-only. Per-leg cost = actual half-spread of a marketable order
+    at the fill instant = (ask - bid)/2 (ask side for buys, bid side for sells; identical
+    numerically), in $ via $20/point. Per-ctrRT cost = entry-leg half-spread + exit-leg
+    half-spread. PRIMARY headline for the decision rule: CONTRACT-weighted mean over RTs
+    with BOTH legs validly measured (contract-weighting matches the W103 $14.44
+    construction). Trade-weighted mean, median, percentiles, and 2x(per-leg mean over all
+    measured legs) are printed as secondaries and cannot move the verdict.
+
+R4  Quote validity. Prevailing quote = last bid event and last ask event with
+    time <= fill instant; staleness cap 5.000 s PER SIDE (instant - quote_time <= 5 s),
+    else the leg is excluded (reason no_quote/stale). Crossed books (ask < bid) exclude
+    the leg (reason crossed). Locked books (ask == bid) are kept — spread 0 is a real
+    state (0.014 % per MS01A audit).
+
+R5  Offset reconciliation (back-adjusted substrate vs raw front-month quotes). Per
+    session: offset_raw = median over the session's substrate bars of
+    (1-min close - quote mid asof the bar stamp, both sides fresh <= 5 s), rounded to the
+    0.25 tick grid; per-session offset and its MAD printed. Identity check per leg AFTER
+    correction: bid - 0.25 <= (fill_px - offset) <= ask + 0.25, else excluded (reason
+    outside_band). The strict inside-[bid,ask] rate is ALSO printed for direct
+    comparability with the W-era 29.7 % finding.
+
+R6  Exclusion rate for the DEFECT rule. Candidates = every P1 fill LEG (entry and exit
+    counted separately) of an in-window trade whose session date is in the quote-session
+    inventory. Excluded = candidate legs without a valid measured cost, for any reason
+    (no_quote / stale — including legs falling after a v1 12M-row-cap truncation point,
+    sub-counted as after_store_end / crossed / outside_band). Rate = excluded/candidates;
+    > 30 % => verdict DEFECT-LIMITED. Conservative: store-truncation gaps COUNT as
+    exclusions.
+
+R7  Store dedup priority when a session exists in several stores:
+    data_microstructure_v2 (MANIFEST + hashes + QA) > data_esnq (ALLOWLIST_DEV_44 only)
+    > scalping v1 raw. v1 "_rth" variants are never used (subset duplicates). v1 sessions
+    with zero bid/ask events (20250811, 20250924, 20260430 — Last-only) are not quote
+    sessions and are not in the inventory. No cross-store merging inside one session
+    (12M-row-cap class prohibition); one file serves one session, and its store version is
+    recorded per session in out/session_inventory.csv.
+
+R8  E2 buckets, frozen now. Time-of-day bucket = ET hour of the instant, 23 hourly
+    buckets (18..23, 0..16; hour 17 is the CME break). Trailing vol = rolling std of
+    substrate 1-min log returns over the previous 60 bars (min 30 valid), overnight-gap
+    return (first bar of a session) set to NaN, window shifted one bar so it ends strictly
+    before the instant. Tercile edges = 33.3/66.7 percentiles of the pooled vol values of
+    the quote-session minute samples (spread-valid samples only). Spread samples = quote
+    spread at each bar-OPEN instant (stamp - 60 s; the instants where P1 can fill), fresh
+    <= 5 s both sides. P1 location is reported two ways: (a) exact — measured spreads at
+    the fills inside quote sessions (E1 legs); (b) projection — ALL in-window fills mapped
+    to (hour, tercile) cells via substrate vol and the map's tercile edges, expected
+    spread = sum(share x cell median). (b) is a projection across eras and is labeled so.
+
+R9  E3 delay stress. FROZEN action set = the regenerated trade list; the session box is
+    NOT re-run (zero policy change by definition). Each in-window trade's entry and exit
+    fills shift +1 bar (next minute-bar open). If the shifted bar crosses the session
+    boundary, the leg fills at the session's last bar CLOSE. Forced last-bar-close exits
+    are already terminal and stay unchanged. Commission and the modeled spread are
+    identical on both sides and cancel; delta net = delta gross. Reported as
+    (total delta)/(number of in-window ISO weeks), all weeks counted (weeks without
+    trades contribute 0), with the SE of weekly deltas.
+
+R10 E4. Fraction of validly measured P1 ENTRY legs with quoted spread <= 1 tick
+    (0.25 pt + 1e-9) at the fill instant. Context row: unconditional fraction of minute
+    samples with spread <= 1 tick. No fill-probability model is invented.
+
+R11 The decision rule applies to the PRIMARY mean (R3). If OPTIMISTIC, the
+    MASTER_SCOREBOARD stress row is NOT written by this team (no file outside this run's
+    directory is modified); the requirement is recorded in gate_table.txt and the ledger
+    note for the orchestrator to apply.
+
+R12 W82 spread_by_minute.csv is used for COMPARISON ONLY: the modeled per-leg cost is
+    TICKV x prof[minute-of-day of the bar STAMP]/2 (the model's own indexing convention,
+    we_lab/W102), reported next to the measured cost on the same legs. No refit, no new
+    spread model.
+
+R13 Ledger mapping (per launch instruction): verdict OPTIMISTIC / CONFIRMED-AT-OVERLAP /
+    UNRESOLVED => result PASS (measurement completed); DEFECT-LIMITED (exclusion rule) or
+    data-impossible => result DEFECT.

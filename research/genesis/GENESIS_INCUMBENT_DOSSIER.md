@@ -31,10 +31,13 @@ evidence yet**; the shadow (start 2026-09-01) is the first non-consumed class it
 
 ## 3. Execution reality (D1) — ranked weakest assumptions
 
-1. **Spread external validity**: $14.44/ctrRT rests on 45 quote sessions overlapping **2.5%** of
-   P1's fills, one price era; the only direct fill-vs-quote check gives **$24.00/RT on the 35
-   verifiable fills** (≈ −$110/wk ≈ 9% of net if the bound is real). Three spread numerals
-   circulate ($14.65/$14.52/$14.44 — different populations, same method).
+1. **Spread external validity — now MEASURED (G2_EXEC01, 2026-08-28 late): the model is
+   OPTIMISTIC.** Contract-weighted mean **$20.65/ctrRT** on 131 ctrRT with both legs inside real
+   quotes (5.1% overlap, double the prior 35-fill evidence); W82 model on the same RTs = $15.00.
+   Impact ≈ **−$70/wk raw** (fixed-DD ≈ $1,168 vs $1,230). Era cut: 2025H2/2026H1 ≈ $17.12,
+   **2026 Jun–Jul $28.69** (WATCH in shadow). P1 fills in cheap minutes; the overrun is at fill
+   instants. +1-min delay −$90/wk (n.s.); passive entry available 0.7% of the time.
+   *(Supersedes: "bounded at $24.00/RT on 35 fills". XM's spread remains unmeasured — same audit owed.)*
 2. **Bar-open zero-impact fills** are shared by BOTH parity sides — parity cannot detect this
    error class by construction.
 3. **No intrabar risk control in any certified object** — no per-trade stop (P1), none at all
