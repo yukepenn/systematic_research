@@ -1,0 +1,37 @@
+run_id: G2_F7_AUCTREV_CERT_20260829
+campaign: GENESIS_II_FORMAL_WAVE_7
+type: CERTIFICATION   # charter section 8 - required before any stronger claim for AUCTREV (G00032)
+stages_sequential:
+  S1_independent_implementation (trial G00034):
+    clean_room: a fresh implementation built ONLY from runs/G2_F6_AUCTREV01_20260829/spec.yaml
+      + its out/spec_resolutions.txt (the frozen contract) + substrate provenance. The
+      implementer MUST NOT read the primary's src/, events.csv, gate_table, or REPORT (AST/audit
+      check: no import, no file read of those paths - asserted by the comparer).
+    parity_gates: event-set agreement >= 99% (same signal sessions); per-event net corr >= 0.99;
+      total net within 1%; any miss -> classify EVERY disagreement before proceeding (the W52
+      rule: decisions before dollars).
+  S2_robustness (trial G00035, runs only if S1 passes, on the reconciled event set):
+    R_a: top-decile event concentration - largest 10% of events carry <= 40% of total net (gate)
+    R_b: LOYO-modern - excluding any single year 2016..2026, modern-era net stays > 0 (gate)
+    R_c: timing positive control - entering one session LATE must degrade mean net/event by
+      >= 50% (the reversion is fast or it is not this mechanism; a timing test that cannot move
+      has no teeth) (gate)
+    R_d: monotonicity diagnostic - decile-2 events weaker than decile-1 (reported, non-gate)
+    R_e: $45/RT stress (reported, non-gate)
+  S3_portfolio_marginal (trial G00036, runs only if S2 passes):
+    overlay AUCTREV event P&L ($, 1 contract) onto the incumbent book weekly series
+    ({P1/PCT + XM} recorded weekly stream from its artifacts):
+    P_a: weekly corr with the book <= 0.30 (gate)
+    P_b: marginal fixed-DD $/wk > 0 at the book's $20,245 normalization (gate)
+    P_c: worst-decile-week overlap <= its circular-alignment null p95 (gate - the bar
+      FOLLOW_MORNING failed)
+    P_d: conditional mean when the book loses (reported)
+verdict_ladder: S1+S2+S3 all pass -> ROBUSTNESS-SUPPORTED + PORTFOLIO-ADDITIVE (evidence still
+  DISCOVERY_CONSUMED; forward routing decision goes to the owner report); any stage fails ->
+  recorded, object stops at its last passed rung.
+prohibitions: no parameter changes anywhere, no new variants, no sealed reads, POINTS-based,
+  multiplicity sentence (1 of 13 formal objects, ~750 prior experiments) printed in every verdict
+outputs: out/S1_parity.txt, out/S2_robustness.txt, out/S3_portfolio.txt, out/gate_table.txt,
+  out/ledger_result_pending.json (LIST up to 3)
+live_enabled: NO
+spend: $0
