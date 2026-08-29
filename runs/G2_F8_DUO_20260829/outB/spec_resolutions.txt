@@ -1,0 +1,206 @@
+G2_F8_DUO_20260829 sub-run B — MC-53 restricted cross-asset regime (trial G00038)
+SPEC RESOLUTIONS — WRITTEN BEFORE ANY COMPUTATION. This transcription IS the executable
+spec (spec.yaml preregistration_source); deviations = DEFECT. No parameter search.
+
+=====================================================================================
+PART 1 — VERBATIM TRANSCRIPTION OF THE FROZEN LEGS
+=====================================================================================
+
+--- runs/G2_WORLDSCAN_W2_20260829/out/mechanism_cards_w2.md, lines 229-241, VERBATIM ---
+
+[CARD id=MC-53]
+NAME: Cross-asset regime states for sizing (turbulence, HMM, stock-bond correlation, risk appetite, macro-gated trend)
+FAMILY: CROSSMKT
+MECHANISM: Risk regimes persist for weeks and carry lower risk-adjusted returns, so a regime state machine can throttle exposure: Mahalanobis turbulence (extreme moves + correlation breakdown) persists and precedes poor risky-asset returns; 2-state HMMs on turbulence/RV convert that persistence into exposure states; the stock-bond correlation regime (2022 poster child) flags when bonds stop hedging equities; composite risk-appetite indices (Bekaert-Engstrom-Xu) separate risk aversion from uncertainty; and macro-growth gates on trend rules remove non-recession whipsaws (Philosophical Economics GTT). EVERY leg must beat the univariate-RV throttle control — the whole card dies to plain vol sizing if the cross-asset terms add nothing.
+MERGED-LEADS: S5-07 (Kritzman-Li turbulence, FAJ 2010); S5-09 (Molenaar et al stock-bond correlation, FAJ 2024); S5-10 (Bekaert-Engstrom-Xu risk aversion, Mgmt Sci 2022 — downloadable index is an OWNER-GATED $0 acquisition; owned-data analog runs first); S5-12 (Kritzman-Page-Turkington regime shifts, FAJ 2012); S5-14 (GTT trend+macro gate — macro leg needs free FRED, OWNER_QUEUE; trend leg testable now).
+INDEPENDENT-SOURCES: 3 effective — Kritzman/State Street shop (S5-07 + S5-12 = one shop), Molenaar/Robeco, Bekaert-Engstrom-Xu; GTT is an independent unreviewed blog lineage.
+EVIDENCE-BEST: PEER-REVIEWED (FAJ x3, Mgmt Sci).
+OBSERVABLES: Mahalanobis distance on owned multi-market daily (60d rolling cov); 2-state Gaussian HMM on NQ daily RV (frozen: 2 states, monthly refit); 60d NQ-vs-bond-futures correlation sign/level; z-composite {VXN, 21d RV, 60d stock-bond corr}; 10-month MA state.  DATA-CAPABLE-NOW: YES for all owned-data analogs; official BEX index and FRED macro series are owner-gated $0 acquisitions (free in dollars ≠ free in governance).
+NOVELTY-VS-REPO: REPRESENTATION for sizing — vol-state-as-sizing NOT closed; RV-tercile SIGNAL closure means the RV-only throttle is the mandatory nested control everywhere. Old-regime concentration check (positive stock-bond corr ≈ 2022+ only) = N-bound gate BEFORE running.
+HORIZON: weekly-monthly regime scale.  COST-SENSITIVITY: LOW (infrequent size changes).
+CHEAPEST-FALSIFIER: one sizing wave on NQ daily 2006-2026, matched design, both eras: each state (turbulence >90th pct; P(HMM event)>0.7; corr-sign; composite tercile; 10m-MA) throttles 0.5x, all vs (a) constant exposure and (b) the RV-only throttle in the same wave; geometric growth + maxDD gates; PASS only where the cross-asset term adds beyond univariate RV.
+PRIOR: MED — regime persistence is among the most robust facts in finance; the honest risk is total collapse into the RV control, which the design pre-prices.
+[/CARD]
+
+--- runs/G2_WORLDSCAN_W2_20260829/out/skeptic_verdicts_w2.md, lines 210-222, VERBATIM ---
+
+### MC-53 — Cross-asset regime states for sizing · VERDICT: **TRIAGE-MED** + PRISTINE FLAG (P-2)
+Attack: (a) Mahalanobis/stock-bond legs on multi-market daily touch the **2019+ pristine
+multi-market panel** — and the stock-bond-corr regime's entire modern evidence IS 2022+
+(N-bound: one episode). Discovery restricted to 2006–2018 covariance data; 2019+ reserved for one
+preregistered confirmation. That guts the corr-sign leg (its episode is inside the reserve) —
+demote it to the confirmation-only shelf. (b) The honest expected outcome is total collapse into
+the RV-only throttle; the design pre-prices this — good — but then MC-53 must run AFTER MC-51 so
+the RV throttle control is already frozen. (c) HMM monthly refit is a look-ahead vector — freeze
+2 states and the refit calendar in the spec. (d) BEX index / FRED legs are owner-gated
+acquisitions → OWNER_QUEUE, not this wave.
+**FROZEN PRIMARY:** turbulence >90th-pctile → 0.5x throttle vs the MC-51-frozen RV-only throttle
+at matched mean exposure, geometric growth + maxDD gates, discovery covariance from 2006–2018
+multi-market + full-history NQ; PASS only where the cross-asset term adds beyond univariate RV.
+
+--- skeptic_verdicts_w2.md P-2 register, lines 26-27, VERBATIM ---
+- **P-2: 2019+ multi-market daily** — H3 (XSMOM) consumed 2009–2018; the 2019+ multi-market
+  panel is reserve. Affected: **MC-53** (Mahalanobis covariance, stock-bond corr legs).
+
+--- runs/G2_F8_DUO_20260829/spec.yaml, sub_runs B, VERBATIM ---
+  B_MC53_regime_restricted (trial G00038):
+    role: cross-asset regime states for SIZING
+    frozen: the card's legs with the skeptic's restriction - DISCOVERY ON 2006-2018 ONLY
+      (date_max at load on the multi-market panel; the 2019+ pristine window is NEVER loaded;
+      the stock-bond-correlation modern-evidence caveat is printed with any result)
+    verdict_semantics: any survivor is DISCOVERY-grade with its 2019+ confirmation explicitly
+      RESERVED (a future one-shot, not this run)
+
+=====================================================================================
+PART 2 — AMBIGUITY RESOLUTIONS (frozen here, before the first number; conservative =
+the reading that makes a PASS harder or the comparison fairer to the control)
+=====================================================================================
+
+R01 WINDOW / SEALS. Discovery window: scored TARGET-session labels 2006-01-01..2018-12-31
+    for ALL legs (spec.yaml "DISCOVERY ON 2006-2018 ONLY" binds the whole sub-run, not only
+    panel-fed legs — one matched wave, one window). Loads:
+      (a) multi-market panel research/multi_market/out/economic_returns.parquet read with a
+          date <= 2018-12-31 pushdown filter INSIDE the read; the program PRINTS the max
+          loaded date; 2019+ rows are never materialized (P-2).
+      (b) NQ 1-min: DEEP parquet only (research/scalping_lab/substrate/minute/NQ/
+          nq1m_2005_202605.parquet, covers through 2021-12-31; modern substrate NOT read),
+          streamed row-group-by-row-group through research_sdk.seal_guard
+          (truncate_presealed + assert_presealed per chunk), rows kept only with
+          time <= 2018-12-31 17:00:00 (the close of the last in-window session).
+      (c) VXN certified daily runs/GENESIS_FREEDATA_CBOE_20260828/certified/idx_VXN_daily
+          .parquet: assert_presealed at load, then hard-capped to date <= 2018-12-31.
+    Warmup inputs before 2006-01-01 (2005 NQ sessions) may feed rolling windows/expanding
+    thresholds, mirroring VOLSIZE01. Evidence status of every number here:
+    DISCOVERY_CONSUMED (pre-2019 panel already consumed by H3; VXN/NQ pre-2019 consumed).
+
+R02 SESSION UNIT / RETURNS / COSTS / WEALTH — inherited verbatim from the MC-51-frozen
+    harness (runs/G2_F3_VOLSIZE01_20260829/out/spec_resolutions.txt R02/R04/R05/R07):
+    END-stamped bars; label = calendar day of stamp if tod <= 17:00 else next day; daily
+    close(s) = last 1-min bar of s; r(s->s+1) = close(s+1)/close(s) - 1 on consecutive
+    session rows (single substrate, no splice); RV(s) = sum of squared within-session
+    1-min log returns; "plain 21d RV" = trailing 21-session mean of RV incl. s;
+    period return = e(s)*r(s->s+1) - cost(s), cost(s) = $33*|e(s)-e_prev|/(20*close(s)),
+    initial entry charged; log-wealth = cumsum log1p. No Sharpe computed or printed.
+
+R03 THE CONTROL ("the MC-51-frozen RV-only throttle"). MC-51's frozen expanding-decile
+    rule (VOLSIZE01 R06) restricted to its THROTTLE side — MC-53's legs are throttle-only
+    and the 1.5x low-vol boost is not a throttle: e_rv(s) = 0.5 iff RV21(s) >= expanding
+    0.90-quantile of RV21 over rows STRICTLY BEFORE s (shift-1 expanding, >= 252 prior
+    non-NaN obs, linear interpolation), else 1.0. Identical calibration machinery; no
+    full-sample constant anywhere.
+
+R04 MATCHED MEAN EXPOSURE. Implemented as timing components (VOLSIZE01 R08/R10
+    machinery): timing(X) = logW(X) - logW(constant e_bar(X)) on the same scored subset,
+    the constant control charged its initial entry only. Leg-vs-control statistic
+    DELTA = timing(leg) - timing(rv_ctrl); mean-exposure differences cancel inside each
+    timing component. Mean exposures printed side by side. timing(leg) alone IS the
+    card's comparison (a) vs constant exposure; DELTA is comparison (b).
+
+R05 LEGS RUN (card observables + skeptic tightenings). All states are known at the close
+    of s from data settled by 17:00 ET of s and apply to r(s->s+1); on-state exposure
+    0.5, off-state 1.0.
+    L1 TURBULENCE (FROZEN PRIMARY): wide matrix of panel ret_usd by date x root (all
+       roots in the filtered panel; ret_usd scaling is immaterial — Mahalanobis is
+       scale-invariant). Valid panel day = >= 18 roots non-NaN. At day d: asset set =
+       roots non-NaN at d with >= 55 non-NaN among the 60 previous valid panel days;
+       window rows = those 60 days restricted to rows complete on the asset set
+       (>= 40 required, else state undefined); mu = window mean, S = window covariance
+       + ridge 1e-8*mean(diag(S))*I; turb(d) = (r_d-mu)' S^-1 (r_d-mu) / n_assets
+       (Kritzman-Li normalization). State on iff turb(d) > expanding 0.90-quantile of
+       turb strictly before d (>= 252 prior obs).
+    L2 HMM: 2-state Gaussian HMM on x = log(RV(s)) (log transform: a Gaussian family on
+       a positive, heavily right-skewed variable; monotone, frozen pre-result, does not
+       favor PASS). Sessions with >= 200 bars and RV > 0 form the input series. Refit
+       calendar FROZEN (skeptic (c)): refit at the first session of each calendar month
+       using ONLY observations strictly before it, min 504 prior obs; EM frozen: init
+       means/vars from the below/above-median halves, A = [[0.97,0.03],[0.03,0.97]],
+       pi = [0.5,0.5], 200 iterations, tol 1e-8; event state = larger mean. Filtered
+       (causal, forward-only) P(event at s) under the params frozen at s's month refit.
+       State on iff P(event) > 0.7 (card threshold).
+    L3 COMPOSITE: z-composite {VXN close, RV21, corr60} where corr60(d) = Pearson corr
+       of panel NQ ret_usd vs panel ZN ret_usd over the 60 most recent valid common
+       panel days ending at d (>= 50 valid pairs; ZN frozen as the bond-futures leg —
+       the canonical 10y note). Each ingredient z-scored by its expanding mean/std
+       strictly before s (>= 252 prior obs); composite = equal-weight mean of the three
+       z. State on iff composite > expanding 2/3-quantile strictly before s (>= 252
+       prior obs) — top tercile throttled. This leg CARRIES the stock-bond-correlation
+       modern-evidence caveat (printed beside its result).
+    L4 10M-MA: monthly close = close of the last session of each completed calendar
+       month; MA = mean of the last 10 completed monthly closes (>= 10 required). State
+       on iff close(s) < MA.
+    NOT RUN — CORR-SIGN LEG: demoted by the skeptic to the confirmation-only shelf (its
+       episode is inside the 2019+ reserve); the demotion + caveat are printed.
+    NOT RUN — BEX INDEX / FRED MACRO GATE: owner-gated acquisitions (skeptic (d));
+       OWNER_QUEUE, not this wave.
+
+R06 STATE JOIN / FILL. Panel/VXN-derived inputs (L1, L3) are joined to NQ session rows
+    by label = panel date and FORWARD-FILLED onto sessions with no same-day panel value
+    for at most 5 calendar days (a regime state persists at the card's weekly-monthly
+    horizon; fill counts printed). L2/L4 are NQ-native, no fill.
+
+R07 PER-LEG SCORED SUBSETS. Each leg is scored on its maximal valid subset of sessions
+    (leg state defined AND e_rv defined AND valid next-session return AND target label
+    in window). rv_ctrl, both constant controls and all wealth paths are recomputed ON
+    THAT SUBSET (the matched control lives in the same wave, same rows). N, date range,
+    state-day and rebalance counts printed per leg BEFORE any verdict.
+
+R08 GATES per leg (from "geometric growth + maxDD gates; PASS only where the cross-asset
+    term adds beyond univariate RV"):
+      V1 DELTA > 0                                        (adds beyond univariate RV);
+      V2 maxDD(leg) <= 1.05 * maxDD(rv_ctrl)              (VOLSIZE01 R09 relative form);
+      V3 DELTA > p95 of the leg's circular-shift null      (nulls with teeth).
+    LEG PASS = V1 AND V2 AND V3. A FAIL is a FAIL. Any surviving leg is DISCOVERY-grade
+    with its 2019+ confirmation explicitly RESERVED (spec verdict_semantics) — the
+    verdict line says so. Classification locked: RISK SPECIFICATION / REGIME ROUTING
+    for sizing — never information alpha.
+
+R09 NULL. research_sdk.null_guard.run_circular_null, unit = session row, n_shifts = 300,
+    seed = 0 (one shared seed across the four-leg family), preceded by
+    verify_null_sensitivity(shifts=[1,7,61]). Frame per leg = all sessions with a
+    defined raw decision input (warmup rows included, scored flag marks the scored
+    subset). decision_fn recomputes the state FROM THE SHIFTED INPUT SERIES — L1/L3
+    expanding thresholds are recomputed from the shifted series (leak-proof recompute);
+    L2 applies the fixed 0.7 threshold to the shifted filtered-P series (the HMM is not
+    refit per draw: no estimated quantity sits downstream of the input, so there is no
+    leaky-recompute channel; the shift preserves the P-series' own dependence while
+    breaking alignment); L4 shifts the binary state directly. statistic_fn scores the
+    decisions positionally against the ORIGINAL frame's returns/closes and the FIXED
+    rv_ctrl timing on scored rows; each draw's constant control uses that draw's own
+    e_bar. Statistic = DELTA.
+
+R10 MULTIPLICITY. The four legs are ONE family: effective K = K/(1+(K-1)*rho_bar),
+    rho_bar = mean pairwise Pearson correlation of the four exposure series on their
+    common subset, printed BEFORE verdicts. The frozen per-leg gate stays p95 (card
+    text); the family-adjusted bar (null quantile 1 - 0.05/K_eff) is printed beside it
+    and any leg passing p95 but failing the family bar is flagged FAMILY-MARGINAL.
+
+R11 MDE BEFORE VERDICTS. Per leg, printed before any verdict: MDE = p95(null DELTA) in
+    log-wealth over the scored window and per-year; null median and spread; state-day,
+    rebalance and fill counts (counts before tables — the TICK lesson).
+
+R12 REPORTED-ONLY DIAGNOSTICS (no gate weight): era split of DELTA at 2012-12-31
+    (era1 <= 2012-12-31 < era2 <= 2018-12-31, target-session label); a per-leg
+    state-frequency-matched RV throttle (e = 0.5 iff RV21 >= expanding (1-f)-quantile,
+    f = the leg's realized state frequency) printed beside the frozen control for
+    context on frequency mismatch (L3's tercile vs the control's decile).
+
+R13 CAVEATS PRINTED BY PROGRAM: (a) panel max loaded date (must be <= 2018-12-31);
+    (b) beside L3 and the corr-sign demotion: "the stock-bond-correlation regime's
+    entire modern evidence is 2022+ (N-bound: one episode) and sits inside the 2019+
+    reserve"; (c) every survivor: "DISCOVERY-grade; 2019+ one-shot confirmation
+    RESERVED (not this run)"; (d) LIVE = NO, $0 spent, no Sharpe.
+
+R14 PROVENANCE. sha256 of the deep NQ parquet recomputed and compared against
+    runs/GENESIS_REPRO_INCUMBENT_20260828/out/run_provenance.txt (mismatch = DEFECT).
+    sha256 of the panel and VXN files printed and recorded as this run's baseline
+    (no prior baseline exists for them in that provenance file).
+
+R15 DEFECT CLAUSE. Structural failure (hash mismatch, panel missing NQ or ZN roots,
+    VXN empty pre-2019, HMM EM failing to converge in > 10% of refits, an empty scored
+    subset for the FROZEN PRIMARY leg) stops the run and reports DEFECT — no data
+    substitution, no respecification.
+
+R16 OUTPUTS. outB/gate_table.txt (program-printed GATE/SPEC/OBSERVED/PASS-FAIL),
+    outB/ledger_result_pending.json (no SEARCH_LEDGER append from this sub-run),
+    outB/wealth_paths.csv. New files only under runs/G2_F8_DUO_20260829/{outB,srcB}
+    and the session scratchpad. No git. No CrossTrade/NT8 calls. LIVE = NO.

@@ -1,0 +1,57 @@
+G2_F8_DUO_20260829 sub-run B — GATE TABLE (printed by program; trial G00038, card MC-53)
+type RISK_SPECIFICATION / REGIME ROUTING — sizing study; NEVER an information-alpha claim. No Sharpe printed.
+DISCOVERY ON 2006-2018 ONLY (skeptic restriction; spec.yaml sub_runs.B). Evidence status: DISCOVERY_CONSUMED.
+provenance: deep NQ sha256 MATCHES run_provenance.txt; panel sha256 30dfa053595dc38b..., VXN sha256 c67cdd87cc46aab7... (recorded as this run's baseline)
+PANEL LOAD: date_max filter <= 2018-12-31 applied INSIDE the read; max loaded date = 2018-12-31 ; rows 50371 ; roots 21 ; min date 2009-03-31  [P-2: 2019+ multi-market NEVER materialized]
+panel duplicate (date,root) rows: 0 (first kept)
+VXN capped: 2009-09-14 .. 2018-12-31 (2341 rows)
+NQ sessions (deep substrate only, capped 2018-12-31 17:00:00): 3347 sessions 2006-01-05 .. 2018-12-31; seal_guard: 9 asserts, 0 post-seal rows dropped
+L1 turbulence: 2188 panel days with a defined distance (2009-07-01 .. 2018-12-11); valid panel days 2248, roots 21
+L2 HMM: 131 monthly refits (frozen calendar, expanding, min 504 obs), 131 converged; P(event) defined on 2813 sessions
+R06 joins to sessions (exact / forward-filled<=5d): turb 2187/178, corr60 2354/52, VXN 2335/61
+
+event counts / null bands / MDEs — PRINTED BEFORE VERDICTS (R11/R12):
+  L1_TURB: scored 2113 sessions 2010-09-01..2018-12-17 | state-on 233 (11.0%) | rebalances 351 | mean e leg 0.9449 vs rv-ctrl 0.9323
+    null (300 circular shifts, seed 0, shared family seed): median +0.014920, p95 +0.075950 log-wealth -> MDE = +0.075950 over window (+0.009158/yr)
+  L2_HMM: scored 2812 sessions 2008-02-04..2018-12-31 | state-on 1243 (44.2%) | rebalances 127 | mean e leg 0.7790 vs rv-ctrl 0.9225
+    null (300 circular shifts, seed 0, shared family seed): median -0.025768, p95 +0.127604 log-wealth -> MDE = +0.127604 over window (+0.011702/yr)
+  L3_COMPOSITE: scored 1833 sessions 2011-08-26..2018-12-13 | state-on 827 (45.1%) | rebalances 103 | mean e leg 0.7744 vs rv-ctrl 0.9261
+    null (300 circular shifts, seed 0, shared family seed): median +0.039919, p95 +0.125495 log-wealth -> MDE = +0.125495 over window (+0.017193/yr)
+  L4_MA10M: scored 3074 sessions 2007-01-30..2018-12-31 | state-on 628 (20.4%) | rebalances 84 | mean e leg 0.8979 vs rv-ctrl 0.9118
+    null (300 circular shifts, seed 0, shared family seed): median -0.041559, p95 +0.067486 log-wealth -> MDE = +0.067486 over window (+0.005663/yr)
+  family multiplicity (R10): K=4, rho_bar=0.183 (mean |pairwise corr| of exposures, common N=1823), K_eff=2.58 -> family-adjusted null quantile 0.9806
+
+CAVEATS (printed with results, per spec):
+  * CORR-SIGN LEG NOT RUN: demoted by the skeptic to the confirmation-only shelf — the stock-bond-
+    correlation regime's ENTIRE modern evidence is 2022+ (N-bound: one episode) and sits inside the
+    2019+ multi-market reserve (P-2).
+  * L3_COMPOSITE carries the same caveat: its 60d stock-bond-corr ingredient's modern evidence is
+    2022+-only; its discovery reading here is 2006-2018 covariance data only.
+  * BEX index / FRED macro-gate legs NOT RUN (owner-gated acquisitions, OWNER_QUEUE).
+  * Any survivor is DISCOVERY-grade with its 2019+ confirmation explicitly RESERVED (one future
+    preregistered one-shot, NOT this run).
+
+GATE  SPEC                                                              OBSERVED                                                                    PASS-FAIL
+L1_TURB.V1  DELTA(timing leg - timing rv-ctrl) > 0                         -0.002759  (timing leg -0.054950 vs rv -0.052191)                     FAIL
+L1_TURB.V2  maxDD(leg) <= 1.05*maxDD(rv-ctrl)                              12.0829% vs bar 10.2675% (ctrl 9.7786%)                        FAIL
+L1_TURB.V3  DELTA > p95 of 300 circular-shift null                       -0.002759 vs p95 +0.075950 (pct 26.7%, p_ge 0.7342)          FAIL
+L1_TURB.R12  reported: freq-matched RV ctrl timing -0.046341 (DELTA_fm -0.008609); era DELTA <=2012 -0.022335 / >2012 +0.019576; family bar +0.094826 -> below
+L2_HMM.V1  DELTA(timing leg - timing rv-ctrl) > 0                         +0.035201  (timing leg +0.037073 vs rv +0.001872)                     PASS
+L2_HMM.V2  maxDD(leg) <= 1.05*maxDD(rv-ctrl)                              10.2932% vs bar 16.1534% (ctrl 15.3842%)                        PASS
+L2_HMM.V3  DELTA > p95 of 300 circular-shift null                       +0.035201 vs p95 +0.127604 (pct 74.0%, p_ge 0.2625)          FAIL
+L2_HMM.R12  reported: freq-matched RV ctrl timing -0.048230 (DELTA_fm +0.085303); era DELTA <=2012 +0.003672 / >2012 +0.031530; family bar +0.147281 -> below
+L3_COMPOSITE.V1  DELTA(timing leg - timing rv-ctrl) > 0                         -0.007099  (timing leg -0.061515 vs rv -0.054416)                     FAIL
+L3_COMPOSITE.V2  maxDD(leg) <= 1.05*maxDD(rv-ctrl)                              6.9258% vs bar 10.0601% (ctrl 9.5811%)                        PASS
+L3_COMPOSITE.V3  DELTA > p95 of 300 circular-shift null                       -0.007099 vs p95 +0.125495 (pct 13.7%, p_ge 0.8638)          FAIL
+L3_COMPOSITE.R12  reported: freq-matched RV ctrl timing -0.010948 (DELTA_fm -0.050567); era DELTA <=2012 +0.024997 / >2012 -0.032096; family bar +0.150938 -> below
+L4_MA10M.V1  DELTA(timing leg - timing rv-ctrl) > 0                         -0.039344  (timing leg -0.013897 vs rv +0.025447)                     FAIL
+L4_MA10M.V2  maxDD(leg) <= 1.05*maxDD(rv-ctrl)                              15.2698% vs bar 17.6884% (ctrl 16.8461%)                        PASS
+L4_MA10M.V3  DELTA > p95 of 300 circular-shift null                       -0.039344 vs p95 +0.067486 (pct 51.7%, p_ge 0.4850)          FAIL
+L4_MA10M.R12  reported: freq-matched RV ctrl timing +0.014852 (DELTA_fm -0.028749); era DELTA <=2012 -0.054051 / >2012 +0.014707; family bar +0.139441 -> below
+
+VERDICT L1_TURB (G00038): FAIL — a FAIL is a FAIL  [V1 F V2 F V3 F]
+VERDICT L2_HMM (G00038): FAIL — a FAIL is a FAIL  [V1 P V2 P V3 F]
+VERDICT L3_COMPOSITE (G00038): FAIL — a FAIL is a FAIL  [V1 F V2 P V3 F]
+VERDICT L4_MA10M (G00038): FAIL — a FAIL is a FAIL  [V1 F V2 P V3 F]
+VERDICT MC-53 CARD: 0/4 legs survive vs the MC-51-frozen RV-only throttle. Total collapse into the RV control — the skeptic's honest expected outcome materialized.
+LIVE = NO · $0 spent · POINTS/normalized units · no Sharpe printed.

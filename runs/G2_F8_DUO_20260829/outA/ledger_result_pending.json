@@ -1,0 +1,40 @@
+{
+  "trial_id": "G00037",
+  "run": "G2_F8_DUO_20260829 / sub-run A (MC-43 DC intrinsic-time audit)",
+  "card": "MC-43 (EVENTTIME family)",
+  "preregistration": "outA/spec_resolutions.txt (verbatim card + skeptic transcription, frozen before computation; prereg source committed pre-result at 9e80f15)",
+  "verdict": "EVENTTIME-CLOSED (no conditional lift; laws deviate but deviation is marginal-distribution, not path structure)",
+  "family_action": "EVENTTIME family CLOSED cheaply per verdict_semantics; MC-44 stays TRIAGE-LOW-gated-shut, MC-45 unaffected by this gate (separate lineage)",
+  "gates": {
+    "A_overshoot_law": {"spec": "mean(w)/d in [0.8,1.2] all 15 era-cells", "observed": "13/15 in-band; misses are delta=0.1% 2016-22 (1.315) and 2023-26 (1.282)", "result": "FAIL"},
+    "B_variability": {"spec": "characterization only, no family gate", "observed": "ELEVATED vs Brownian sim at 4/5 deltas; circular-shift null reproduces observed var almost exactly at ALL deltas (e.g. 0.1%: obs 2.4735 vs shift 2.4816 vs sim 2.0342)", "result": "n/a"},
+    "C_632_law": {"spec": "share 95%CI contains vol-matched sim share, all 5 deltas", "observed": "1/5 (only 1.6%); share sits 0.02-0.10 BELOW 0.6321 and below the discretization-matched sim at 4/5 deltas", "result": "FAIL"},
+    "C_conditional_L1": {"spec": "beta_dev outside label-shift-null central 95%", "observed": "beta_dev=-0.02736 inside [-0.03397,-0.01285]", "result": "FAIL"},
+    "C_conditional_L2": {"spec": "Delta=|b_dev|-|b_ctl|>0 with pair-boot 95%CI excluding 0", "observed": "Delta=-0.00271, CI=[-0.01275,+0.00817]", "result": "FAIL"},
+    "LIFT": "NO-LIFT (family opens only on L1 AND L2)"
+  },
+  "mde_before_verdicts": {"beta_MDE": 0.01064, "Delta_MDE": 0.01373, "legA_CI_halfwidths": "0.015-0.079", "legC_share_CI_halfwidths": "0.0035-0.0120"},
+  "banked_diagnostics": [
+    "Overshoot mean law approximately holds on NQ (13/15 cells in [0.8,1.2]); the 2 misses at delta=0.1% are reproduced by BOTH the discretized Brownian sim (1.21-1.23) and the circular-shift null (1.29-1.32): coarse-grid discretization + fat tails, not event-time structure.",
+    "DC-share runs persistently BELOW the 0.632 memoryless boundary (overshoots longer than exponential; unconditional hazard h(0..4) declines 0.588->0.513, beta_unc=-0.0257): a real, N-robust deviation from memorylessness at the UNCONDITIONAL level.",
+    "That deviation carries NO conditional timing information: top-decile |d(t)| sessions are indistinguishable from era+vol matched controls and from the label-shift null. Duration-timing on NQ closed.",
+    "Circular-shift null reproduces observed mean(w)/d and Var(w)/d^2 at every delta almost exactly => NQ's departure from GBM in event time is carried by the within-session return DISTRIBUTION (fat tails), not by path ordering. Event-time representations add ~nothing over the marginal on this substrate/timeframe.",
+    "logN(delta) scaling slope -1.697 vs sim -1.771+-0.008 (observable, no gate)."
+  ],
+  "evidence_status": "DISCOVERY_CONSUMED (NQ 1-min 2006-01-05..2026-05-29 pre-burn; no pristine exposure; no sealed reads; seal_guard on load)",
+  "improvement_class": "n/a - measurement run, no candidate; structural-null result banked",
+  "nulls": "Brownian null BY SIMULATION (zero-drift Gaussian, per-session vol matched, real gaps kept, K=20, stated pre-compute in spec_resolutions R5); circular-shift within-session null K=20 (one shared offset/session across delta family); conditional label-shift null K=500; block bootstraps B=1000 (L=100 events mean-leg, L=250 share-leg); seed 20260829",
+  "spec_deviations": "NONE (all resolutions frozen in spec_resolutions.txt before computation; L_eff=min(L,n) mechanical clause used only where era event counts < L)",
+  "files": {
+    "spec_resolutions": "runs/G2_F8_DUO_20260829/outA/spec_resolutions.txt",
+    "gate_table": "runs/G2_F8_DUO_20260829/outA/gate_table.txt",
+    "results_json": "runs/G2_F8_DUO_20260829/outA/dc_audit_results.json",
+    "provenance": "runs/G2_F8_DUO_20260829/outA/run_provenance.txt",
+    "code": "runs/G2_F8_DUO_20260829/srcA/dc_audit.py"
+  },
+  "engine_selftest": "synthetic GBM: mean(w)/d 1.05-1.08, share 0.59-0.61, flat hazard ~0.61-0.63 at matched sigma/delta ratios - validates kernel AND the discretization argument for using the sim (not continuous-limit) null",
+  "spend_usd": 0,
+  "live_enabled": "NO",
+  "wall_s": 14,
+  "date": "2026-08-29"
+}

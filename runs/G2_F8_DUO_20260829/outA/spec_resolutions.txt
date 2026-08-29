@@ -1,0 +1,146 @@
+G2_F8_DUO_20260829 / sub-run A — MC-43 DC intrinsic-time audit (trial G00037)
+spec_resolutions.txt — WRITTEN BEFORE ANY COMPUTATION. This transcription IS the executable
+spec (spec.yaml preregistration_source). Deviations = DEFECT. No parameter search. A FAIL is a FAIL.
+Written 2026-08-29.
+
+================================================================================
+SECTION 1 — VERBATIM FROZEN CARD (runs/G2_WORLDSCAN_W2_20260829/out/mechanism_cards_w2.md,
+committed pre-result at 9e80f15, lines 89-101)
+================================================================================
+[CARD id=MC-43]
+NAME: Directional-change intrinsic-time structure on NQ (overshoot law, variability law, 0.632 memoryless null)
+FAMILY: EVENTTIME
+MECHANISM: In event time (price reversals of threshold δ define the clock), FX shows stable scaling laws: average overshoot after a DC confirmation ≈ δ, overshoot VARIABILITY scales lawfully (with closed-form Brownian benchmarks), and — per the 2025 renewal-process result — the DC-share of intrinsic events stabilizes at 1−1/e = 0.632, making duration-since-last-event uninformative EXCEPT where the share deviates. Whether this structure exists on a single trending index future has never been audited anywhere; our banked ON-touch (95.3% vs 90.0%) and IB-extension (96.8% vs 91.6%) anomalies are exactly what an overshoot law would predict.
+MERGED-LEADS: S2-01 (Glattfelder-Dupuis-Olsen 12 scaling laws, QF 2011); S2-03 (Glattfelder-Golub overshoot-variability law with analytic Brownian null); S2-04 (Houweling 2025: DC intrinsic time as memoryless exponential hazard, 0.632 boundary — the structural null for ALL event-timing ideas); S2-13 (adaptive threshold δ(t) ∝ regime vol — kept only as the no-optimizer variant).
+INDEPENDENT-SOURCES: 2 — Olsen lineage (S2-01/03 same school) and Houweling (independent author inside the same framework). The Brownian analytic null makes the family partially self-controlling.
+EVIDENCE-BEST: PEER-REVIEWED (QF 2011, replicated on FX/crypto) for the laws; working-paper for the 0.632 null.
+OBSERVABLES: DC event series at δ ∈ {0.1,0.2,0.4,0.8,1.6}% from NQ 1-min closes; per-event overshoot ω, mean(ω)/δ, var(ω); log N(δ) vs log δ slope; rolling 250-event DC-share and deviation d(t) = share − 0.632; δ(t) = c·20d-ATR% variant.  DATA-CAPABLE-NOW: YES (δ ≥ ~0.1% from 1-min; finer needs 2025-26 tick).
+NOVELTY-VS-REPO: REPRESENTATION — path/event-time representations explicitly NOT closed (never tested here). This is measurement, not trading: it decides whether the whole EVENTTIME family has anything to stand on for NQ.
+HORIZON: threshold-dependent, intraday to multi-day.  COST-SENSITIVITY: n/a (no trades).
+CHEAPEST-FALSIFIER: frozen spec on NQ 1-min 2006→2026-05-31: (a) mean(ω)/δ with bootstrap CI per era — PASS = in [0.8,1.2] stable; (b) var(ω) vs volatility-matched Brownian analytic values (circular-shift preserved); (c) DC-share vs 0.632 with block-bootstrap CI + ONE preregistered conditional (top/bottom-decile |d(t)| sessions vs matched control). Likeliest outcome — law holds, 0.632 confirmed, no conditional lift — is itself a bankable structural null that closes duration-timing cheaply.
+PRIOR: MED — replicated laws elsewhere + our two banked anomalies pointing the same direction; zero prior NQ audit anywhere is the opportunity and the risk.
+[/CARD]
+
+================================================================================
+SECTION 2 — VERBATIM SKEPTIC SECTION (runs/G2_WORLDSCAN_W2_20260829/out/skeptic_verdicts_w2.md,
+lines 99-107)
+================================================================================
+### MC-43 — DC intrinsic-time structure · VERDICT: **METHODS**
+Measurement, not trading — grade it as such. Attack: Olsen-school scaling laws are replicated on
+FX/crypto by the school itself; the only fully independent line is the analytic Brownian null,
+which is also the card's saving grace (partially self-controlling). The banked ON-touch/IB
+anomalies "pointing the same direction" is soft — they are 5pp level-relevance facts, not
+overshoot measurements; do not let them inflate the prior. Run as specced (the three-leg frozen
+audit with the 0.632 conditional's matched control); the likeliest outcome (laws hold, no
+conditional lift) closes duration-timing cheaply and is the honest EVI. No pristine exposure
+(NQ 1-min only). Gate MC-44/MC-45 sequencing on this result.
+
+================================================================================
+SECTION 3 — VERBATIM SUB-RUN A BLOCK (runs/G2_F8_DUO_20260829/spec.yaml)
+================================================================================
+  A_MC43_dc_audit (trial G00037):
+    role: METHODS - opens or closes the EVENTTIME family (gates MC-44/45 sequencing)
+    frozen: the card's three-leg DC intrinsic-time audit on NQ 1-min with the skeptic's
+      tightenings (the conditional leg runs against its MATCHED control; the analytic Brownian
+      null is the partial self-control; no pristine exposure - NQ 1-min only)
+    verdict_semantics: laws-hold-no-lift => EVENTTIME family closed cheaply (the likeliest and
+      perfectly acceptable outcome); conditional lift above control+null => family opens
+
+================================================================================
+SECTION 4 — FROZEN RESOLUTIONS of parameters the card leaves unstated
+(all fixed HERE, before any data is loaded; none may be revisited after results exist)
+================================================================================
+R1. DATA: research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet (sha256
+    dfd017ef..., the GENESIS incumbent substrate per runs/GENESIS_REPRO_INCUMBENT_20260828/
+    out/run_provenance.txt). END-stamped 1-min bars, ET wall-clock. Loaded through
+    research_sdk.seal_guard.assert_presealed (nothing >= 2026-08-01; substrate ends
+    2026-05-29, inside the card's 2006→2026-05-31 window; first bar 2006-01-05).
+    Cleaning: parse time, sort, drop duplicate timestamps (keep first), drop rows with
+    non-finite/<=0 close. Caveat printed with results: substrate is a back-adjusted
+    continuous series; %-δ on adjusted prices differs from %-of-spot in early eras; the
+    audited laws are ratio laws (ω/δ, share), which are invariant to a static price offset
+    within each local window, so the comparison remains meaningful per era.
+R2. DC ALGORITHM (Glattfelder-Dupuis-Olsen dissection, log prices of 1-min closes):
+    alternating up/down mode; from the running extremum, an opposite move of size δ (in log
+    terms; 0.1% ≡ 0.001) confirms a DC event at the FIRST bar whose close crosses the
+    reversal level; the previous segment's overshoot ω = |log(extremum_new_trend_end) −
+    log(p_confirm)| measured from that confirmation close to the next opposite extremum.
+    OS (overshoot) events: one intrinsic OS event each time price first extends a further
+    whole multiple of δ beyond the confirmation close (k = 1..floor(ω/δ)), stamped at the
+    bar of first crossing. Intrinsic events = DC confirmations + OS events. Segment N =
+    floor(ω/δ). The final incomplete segment is discarded. Seed mode: up.
+R3. δ GRID: {0.1, 0.2, 0.4, 0.8, 1.6}% exactly as carded. Conditional leg (c) runs at
+    δ_cond = 0.2% ONLY (mid-grid; enough events for the rolling-250 window; fixed here,
+    not searched). The δ(t)=c·20d-ATR% adaptive variant in OBSERVABLES is NOT part of the
+    frozen three-leg falsifier and is NOT run (no-optimizer rule; out of scope).
+R4. ERAS: ERA1 = sessions 2006-01-01..2015-12-31; ERA2 = 2016-01-01..2022-12-31;
+    ERA3 = 2023-01-01..2026-05-31 (the wave's 2006-15/16-22/23-26 convention). Events
+    belong to the era of their confirmation bar's session. Session label: END-stamped bar
+    with time-of-day > 17:00 ET belongs to the next calendar day's session (seal_guard
+    convention).
+R5. NULLS (analytic-null discipline — stated BEFORE computing):
+    (i) BROWNIAN NULL BY SIMULATION with matched per-session vol (stated: SIMULATION, not
+        closed-form, because 1-min discretization biases overshoot laws when σ_bar is not
+        << δ; the closed-form continuous-limit values E[ω]/δ=1, Var(ω)/δ²=1 (exponential
+        overshoot) and DC-share = 1−1/e = 0.6321 are printed alongside as the analytic
+        reference). Simulation: zero-drift Gaussian log-returns, per-session σ set to that
+        session's realized 1-min return std and same bar count; REAL inter-session gap
+        returns retained (gaps are not intra-session path structure; this matches the
+        coarse profile). K_sim = 20 replications, RNG seed 20260829. Because the real
+        σ-sequence is used as-is, inter-session vol dependence is preserved exactly.
+    (ii) CIRCULAR-SHIFT EMPIRICAL NULL (dependence-preserving, per the card's
+        "circular-shift preserved" clause and CLAUDE.md nulls doctrine): K_shift = 20
+        draws; each draw circularly shifts every session's within-session 1-min log-return
+        vector by ONE shared random offset per session across the whole δ family; gaps
+        retained; path rebuilt; full pipeline rerun. Same seed stream.
+    (iii) CONDITIONAL-LEG LABEL NULL: circular shift of the session class labels across
+        the ordered session calendar, K_label = 500 offsets (uniform, excluding 0),
+        matched control re-drawn per shift; preserves label clustering and all
+        session-series dependence.
+R6. LEG (a) GATE: mean(ω)/δ with circular block bootstrap CI (block L = 100 events,
+    B = 1000, percentile 95%) per era per δ. PASS-A = point estimate in [0.8, 1.2] for ALL
+    3 eras at ALL 5 δ ("stable" = every era in-band). Printed per cell.
+R7. LEG (b): Var(ω)/δ² observed vs the simulated Brownian band (mean ± 1.96·SD across the
+    20 reps) and vs analytic 1.0, per δ, full sample + per era. Classification per δ:
+    CONSISTENT (inside band) / ELEVATED / SUPPRESSED. Leg (b) characterizes; it does not
+    alone open the family (verdict semantics fix that only conditional lift can).
+R8. LEG (c) LAW: DC-share (N_DC / N_intrinsic) with circular block bootstrap CI
+    (L = 250 events, B = 1000) vs analytic 0.6321 AND vs the discretization-matched
+    simulated share, per δ, full sample + per era. LAW-HOLDS(c) per δ = 95% CI contains
+    the simulated Brownian share (the vol- and discretization-matched version of 0.632);
+    distance from analytic 0.6321 printed always.
+R9. LEG (c) CONDITIONAL (the ONE preregistered conditional, exactly as carded):
+    d(t) = (rolling 250-intrinsic-event DC-share at δ_cond=0.2%) − 0.6321, causal.
+    Session classification uses d at the LAST intrinsic event STRICTLY BEFORE the
+    session's open (known at open; sessions before the first 250 events are excluded).
+    DEVIANT class = top decile of |d|; CONFORMING class = bottom decile of |d|
+    (the card's "top/bottom-decile |d(t)| sessions"). MATCHED CONTROL (skeptic
+    tightening): for each class session, nearest-neighbor session (without replacement)
+    from the non-class pool, matched WITHIN THE SAME ERA on log trailing-20-session
+    realized vol (sqrt of sum of squared 1-min log returns per session, causal trailing
+    mean excluding current session). The matched-unconditional-control table prints in
+    the same wave (CLAUDE.md).
+    CONDITIONAL STATISTIC (memorylessness test — duration-since-last-event in intrinsic
+    time): per class pool, empirical DC hazard h(k) = P(segment ends at k OS events |
+    survives to k) for k = 0..4 (segments keyed to their confirmation session; per-session
+    segment-N histograms capped at N=10 precomputed). β = weighted-LS slope of h(k) on k,
+    weights = risk-set counts R_k. Memoryless geometric null: h(k) constant, β = 0.
+    LIFT (family opens) requires BOTH, at δ_cond, for the DEVIANT class:
+      (L1) β_dev outside the central 95% of the K_label=500 label-shift null AND
+      (L2) Δ = |β_dev| − |β_ctl| > 0 with the session-bootstrap (B=1000, resample sessions
+           within class) 95% CI for Δ excluding 0.
+    Anything less = NO LIFT. The CONFORMING-class table prints symmetrically (diagnostic,
+    not a gate). No other conditional is run.
+R10. MDEs are computed and PRINTED BEFORE verdicts: leg (a) bootstrap CI half-widths;
+    leg (b) 1.96·SD(sim) band half-width in Var/δ² units; leg (c) law CI half-width in
+    share units; conditional MDE = 1.96·SD of the label-shift null for β and for Δ.
+R11. Gate table is PRINTED BY THE PROGRAM (GATE / SPEC / OBSERVED / PASS-FAIL), never
+    hand-assembled. Units: POINTS/normalized (ω/δ, Var/δ², share — all normalized;
+    no dollar quantities exist in this run; no trades; no policies).
+R12. Also printed as carded observables (no gates attached): log N(δ) vs log δ slope
+    (scaling-law exponent) with the Brownian-sim comparison.
+R13. Outputs: outA/gate_table.txt (program-printed), outA/dc_audit_results.json,
+    outA/ledger_result_pending.json. No SEARCH_LEDGER append. Code in srcA/. Caches in
+    the session scratchpad only. $0 spend. LIVE = NO. No git. No CrossTrade.
+================================================================================
+END OF PREREGISTRATION — computation may begin only after this file exists.

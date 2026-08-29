@@ -1,0 +1,94 @@
+====================================================================================================
+G2_F8_DUO_20260829 / SUB-RUN A — MC-43 DC INTRINSIC-TIME AUDIT (trial G00037)
+NQ 1-min closes, sessions 2006-01-05..2026-05-29, 6466783 bars, 5262 sessions. POINTS/normalized units. No trades.
+Back-adjusted-substrate caveat: %%-delta on adjusted prices differs from %%-of-spot in early eras;
+audited quantities are ratio laws (omega/delta, share) — locally offset-invariant; era cells stand on their own.
+Brownian null: BY SIMULATION, zero-drift Gaussian, per-session vol matched, real gaps kept, K=20.
+Analytic continuous-limit references: E[w]/d=1.0, Var(w)/d^2=1.0, share=0.6321.
+Circular-shift empirical null: within-session rotation, one shared offset/session, K=20.
+
+---- MDE TABLE (printed BEFORE verdicts) -------------------------------------------------------
+leg (a) mean(w)/d bootstrap-CI half-widths (per era, per delta):
+  delta=0.1%  CI half-widths: 0.0155 0.0181 0.0224
+  delta=0.2%  CI half-widths: 0.0201 0.0207 0.0239
+  delta=0.4%  CI half-widths: 0.0356 0.0221 0.0314
+  delta=0.8%  CI half-widths: 0.0704 0.0421 0.0551
+  delta=1.6%  CI half-widths: 0.0793 0.0476 0.0579
+leg (b) Var(w)/d^2 sim-band half-width (1.96*SD over 20 reps), full sample:
+  delta=0.1%  band half-width: 0.0322  (sim mean 2.0342)
+  delta=0.2%  band half-width: 0.0434  (sim mean 1.5329)
+  delta=0.4%  band half-width: 0.0454  (sim mean 1.2807)
+  delta=0.8%  band half-width: 0.0847  (sim mean 1.1650)
+  delta=1.6%  band half-width: 0.2217  (sim mean 1.1090)
+leg (c) share CI half-widths (full): 0.00352 0.00451 0.00602 0.01136 0.01201
+conditional MDE: beta label-null SD=0.00543 -> MDE(|beta|)=0.01064 ; Delta null SD=0.00700 -> MDE(Delta)=0.01373
+
+---- LEG (a): mean(omega)/delta per era  [SPEC PASS = in [0.8,1.2] ALL cells] --------------------
+delta      era        n_seg     mean(w)/d   boot95CI            simGBM(mean+-sd)  shiftnull   in-band
+  0.1%   2006-15     36098     1.1203   [1.1047,1.1358]   1.118+-0.007      1.127      YES
+  0.1%   2016-22     66900     1.3154   [1.2973,1.3335]   1.231+-0.004      1.315      NO
+  0.1%   2023-26     38654     1.2823   [1.2620,1.3068]   1.214+-0.005      1.286      NO
+  0.2%   2006-15     10985     1.1062   [1.0864,1.1266]   1.063+-0.009      1.115      YES
+  0.2%   2016-22     24829     1.1810   [1.1609,1.2024]   1.128+-0.005      1.183      YES
+  0.2%   2023-26     13767     1.1925   [1.1695,1.2172]   1.121+-0.011      1.195      YES
+  0.4%   2006-15      3195     1.0771   [1.0413,1.1125]   1.026+-0.018      1.096      YES
+  0.4%   2016-22      7961     1.1282   [1.1066,1.1509]   1.071+-0.013      1.127      YES
+  0.4%   2023-26      4521     1.1078   [1.0778,1.1406]   1.072+-0.018      1.105      YES
+  0.8%   2006-15       887     1.0426   [0.9703,1.1111]   1.030+-0.031      1.059      YES
+  0.8%   2016-22      2335     1.1188   [1.0777,1.1619]   1.039+-0.017      1.119      YES
+  0.8%   2023-26      1335     1.0824   [1.0266,1.1368]   1.052+-0.028      1.077      YES
+  1.6%   2006-15       236     1.0278   [0.9421,1.1008]   1.038+-0.053      0.987      YES
+  1.6%   2016-22       686     1.0521   [1.0046,1.0997]   1.016+-0.052      1.086      YES
+  1.6%   2023-26       381     1.0520   [0.9943,1.1101]   1.032+-0.052      1.054      YES
+
+---- LEG (b): Var(omega)/delta^2 vs vol-matched Brownian sim (characterization) ----------------
+delta      obs_var    sim(mean+-sd)     analytic   shiftnull   class
+  0.1%     2.4735   2.0342+-0.0164     1.0000     2.4816     ELEVATED
+  0.2%     1.7829   1.5329+-0.0221     1.0000     1.8097     ELEVATED
+  0.4%     1.4882   1.2807+-0.0231     1.0000     1.4919     ELEVATED
+  0.8%     1.3232   1.1650+-0.0432     1.0000     1.3123     ELEVATED
+  1.6%     1.0578   1.1090+-0.1131     1.0000     1.0982     CONSISTENT
+  per-era obs Var(w)/d^2:
+    0.1%  2006-15=1.696  2016-22=2.726  2023-26=2.739
+    0.2%  2006-15=1.428  2016-22=1.876  2023-26=1.894
+    0.4%  2006-15=1.262  2016-22=1.530  2023-26=1.573
+    0.8%  2006-15=1.222  2016-22=1.351  2023-26=1.340
+    1.6%  2006-15=1.012  2016-22=1.003  2023-26=1.184
+
+---- LEG (c) LAW: DC-share vs 0.632 ------------------------------------------------------------
+delta      obs_share   boot95CI              sim_share(mean+-sd)   contains_sim  dist_from_0.6321
+  0.1%   0.53073    [0.52715,0.53419]   0.54960+-0.00098      NO        -0.10139
+  0.2%   0.56206    [0.55731,0.56633]   0.58232+-0.00165      NO        -0.07006
+  0.4%   0.58439    [0.57859,0.59063]   0.60327+-0.00357      NO        -0.04773
+  0.8%   0.59403    [0.58310,0.60581]   0.61380+-0.00484      NO        -0.03809
+  1.6%   0.61135    [0.59956,0.62357]   0.62087+-0.01129      YES        -0.02078
+  per-era obs share:
+    0.1%  2006-15=0.5751  2016-22=0.5139  2023-26=0.5226
+    0.2%  2006-15=0.5863  2016-22=0.5567  2023-26=0.5535
+    0.4%  2006-15=0.6014  2016-22=0.5771  2023-26=0.5857
+    0.8%  2006-15=0.6126  2016-22=0.5858  2023-26=0.5967
+    1.6%  2006-15=0.6211  2016-22=0.6092  2023-26=0.6093
+
+---- scaling law (observable, no gate): logN(delta) slope real=-1.697  sim=-1.771+-0.008
+
+---- LEG (c) CONDITIONAL at delta=0.2%% (THE preregistered conditional) -------------------------
+eligible sessions=5169  DEVIANT(top-decile |d|)=535 matched=535  CONFORMING(bottom-decile)=527 matched=527
+|d| decile cuts: hi=0.09212 lo=0.01188 ; class beta = WLS hazard slope h(k) on k=0..4 (memoryless: 0)
+  UNCONDITIONAL (all eligible): beta=-0.02567  hazard h(0..4)=[0.5883 0.5362 0.5204 0.5265 0.5133]
+  DEVIANT:    beta=-0.02736   matched-control beta=-0.03007   Delta=|b_dev|-|b_ctl|=-0.00271
+  CONFORMING: beta=-0.01455   matched-control beta=-0.02114   Delta=-0.00659
+  label-shift null (K=500): beta central95=[-0.03397,-0.01285]; Delta 95th pct=+0.01161
+  pair-bootstrap Delta 95%CI: DEVIANT=[-0.01275,+0.00817]  CONFORMING=[-0.02786,+0.01646]
+
+====================================================================================================
+GATE TABLE (printed by program)
+GATE | SPEC | OBSERVED | PASS-FAIL
+A_overshoot_law | mean(w)/d in [0.8,1.2] all 15 era-cells | 13/15 in-band | FAIL
+B_variability   | characterization vs sim band (no family gate) | 0.1%:ELEVATED,0.2%:ELEVATED,0.4%:ELEVATED,0.8%:ELEVATED,1.6%:CONSISTENT | n/a
+C_632_law       | share 95%CI contains vol-matched sim share, all deltas | 1/5 | FAIL
+C_conditional_L1| beta_dev outside label-null central95 | beta=-0.02736 vs [-0.03397,-0.01285] | FAIL
+C_conditional_L2| Delta>0 with pair-boot 95%CI excluding 0 | Delta=-0.00271 CI=[-0.01275,+0.00817] | FAIL
+LIFT (L1 AND L2)| family opens iff lift above control+null | - | NO-LIFT
+====================================================================================================
+VERDICT: EVENTTIME-CLOSED (laws-deviate, no conditional lift)
+wall_s 14

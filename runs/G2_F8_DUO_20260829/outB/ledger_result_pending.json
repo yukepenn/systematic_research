@@ -1,0 +1,126 @@
+[
+  {
+    "trial_id": "G00038",
+    "metrics": {
+      "card": "MC-53 cross-asset regime states for sizing (restricted discovery)",
+      "window": "target sessions 2006-01-01..2018-12-31 (skeptic restriction; panel date_max 2018-12-31 in-read)",
+      "panel_max_loaded_date": "2018-12-31",
+      "legs": {
+        "L1_TURB": {
+          "n_scored": 2113,
+          "n_state_on": 233,
+          "n_rebalances": 351,
+          "mean_e_leg": 0.944865,
+          "mean_e_rv_ctrl": 0.932324,
+          "timing_leg_logw": -0.05495,
+          "timing_rv_ctrl_logw": -0.052191,
+          "delta_logw": -0.002759,
+          "maxdd_leg": 0.120829,
+          "maxdd_rv_ctrl": 0.097786,
+          "null_median": 0.01492,
+          "null_p95_MDE": 0.07595,
+          "null_percentile": 0.2667,
+          "null_p_ge": 0.7342,
+          "era_delta_le2012": -0.022335,
+          "era_delta_gt2012": 0.019576,
+          "freq_matched_rv_timing": -0.046341,
+          "gates": {
+            "v1": false,
+            "v2": false,
+            "v3": false
+          },
+          "result": "FAIL"
+        },
+        "L2_HMM": {
+          "n_scored": 2812,
+          "n_state_on": 1243,
+          "n_rebalances": 127,
+          "mean_e_leg": 0.778983,
+          "mean_e_rv_ctrl": 0.922475,
+          "timing_leg_logw": 0.037073,
+          "timing_rv_ctrl_logw": 0.001872,
+          "delta_logw": 0.035201,
+          "maxdd_leg": 0.102932,
+          "maxdd_rv_ctrl": 0.153842,
+          "null_median": -0.025768,
+          "null_p95_MDE": 0.127604,
+          "null_percentile": 0.74,
+          "null_p_ge": 0.2625,
+          "era_delta_le2012": 0.003672,
+          "era_delta_gt2012": 0.03153,
+          "freq_matched_rv_timing": -0.04823,
+          "gates": {
+            "v1": true,
+            "v2": true,
+            "v3": false
+          },
+          "result": "FAIL"
+        },
+        "L3_COMPOSITE": {
+          "n_scored": 1833,
+          "n_state_on": 827,
+          "n_rebalances": 103,
+          "mean_e_leg": 0.774414,
+          "mean_e_rv_ctrl": 0.926077,
+          "timing_leg_logw": -0.061515,
+          "timing_rv_ctrl_logw": -0.054416,
+          "delta_logw": -0.007099,
+          "maxdd_leg": 0.069258,
+          "maxdd_rv_ctrl": 0.095811,
+          "null_median": 0.039919,
+          "null_p95_MDE": 0.125495,
+          "null_percentile": 0.1367,
+          "null_p_ge": 0.8638,
+          "era_delta_le2012": 0.024997,
+          "era_delta_gt2012": -0.032096,
+          "freq_matched_rv_timing": -0.010948,
+          "gates": {
+            "v1": false,
+            "v2": true,
+            "v3": false
+          },
+          "result": "FAIL"
+        },
+        "L4_MA10M": {
+          "n_scored": 3074,
+          "n_state_on": 628,
+          "n_rebalances": 84,
+          "mean_e_leg": 0.897853,
+          "mean_e_rv_ctrl": 0.911841,
+          "timing_leg_logw": -0.013897,
+          "timing_rv_ctrl_logw": 0.025447,
+          "delta_logw": -0.039344,
+          "maxdd_leg": 0.152698,
+          "maxdd_rv_ctrl": 0.168461,
+          "null_median": -0.041559,
+          "null_p95_MDE": 0.067486,
+          "null_percentile": 0.5167,
+          "null_p_ge": 0.485,
+          "era_delta_le2012": -0.054051,
+          "era_delta_gt2012": 0.014707,
+          "freq_matched_rv_timing": 0.014852,
+          "gates": {
+            "v1": false,
+            "v2": true,
+            "v3": false
+          },
+          "result": "FAIL"
+        }
+      },
+      "family": {
+        "K": 4,
+        "rho_bar": 0.183,
+        "K_eff": 2.582
+      },
+      "legs_not_run": {
+        "corr_sign": "demoted to confirmation-only shelf (episode inside 2019+ reserve)",
+        "bex_fred": "owner-gated (OWNER_QUEUE)"
+      },
+      "classification": "RISK SPECIFICATION / REGIME ROUTING (sizing)",
+      "evidence_status": "DISCOVERY_CONSUMED",
+      "pristine": "P-2 protected: 2019+ multi-market never loaded; survivors' 2019+ confirmation RESERVED"
+    },
+    "result": "FAIL",
+    "note": "Card MC-53 restricted per skeptic: discovery 2006-2018 only; four legs (turbulence 90th pct, HMM P>0.7, composite tercile, 10m MA) each 0.5x-throttled vs the MC-51-frozen RV-only throttle at matched mean exposure (timing components), $33/RT, 300 circular-shift shared-seed null. Corr-sign leg demoted (not run); BEX/FRED owner-gated. Resolutions in outB/spec_resolutions.txt."
+  }
+]
