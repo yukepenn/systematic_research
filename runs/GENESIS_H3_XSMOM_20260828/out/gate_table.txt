@@ -1,0 +1,69 @@
+==============================================================================================================
+=== GENESIS_H3_XSMOM_20260828 - cross-sectional momentum, discovery 2009-2018 ONLY (trial G00012)
+=== spec frozen; resolutions R1-R18 recorded in out/spec_resolutions.txt BEFORE any number below
+==============================================================================================================
+    loaded rows 50,371   roots 21   dates 2009-03-31 -> 2018-12-31   (2019+ NEVER loaded: filter inside read_parquet; seal_guard PASS)
+    ISO-week rebalances in window: 508   first tradable: 2010-07-16 (warmup skips before it: 67)   mid-sample skipped-and-counted: 4
+    weekly grid: 441 rebalance weeks   universe 21 roots, 6 sectors
+
+    PRIMARY (1 tick/side): gross $     405,865   cost $     56,525   net $     349,340   weekly t +1.428
+    STRESS  (3 ticks/side): net $     254,555
+    DIAGNOSTIC only - net without roll close/reopen costs: $     368,342
+    POWER (spec power_note): N_w=441 weeks, weekly sd $11,653 -> MDE for t=2.0 is $1,110/week ($57,709/yr) on C=$1,000,000
+
+    per-root net (primary) and gross:
+        YM   equity_index  gross $    119,990   net $    118,852
+        NQ   equity_index  gross $    102,018   net $    101,097
+        6J   fx            gross $    101,303   net $    100,446
+        SI   metals        gross $     98,119   net $     95,541
+        ES   equity_index  gross $     89,196   net $     86,936
+        NG   energy        gross $     44,877   net $     41,626
+        GC   metals        gross $     42,592   net $     41,007
+        ZL   ags           gross $     24,562   net $     22,077
+        CL   energy        gross $     18,681   net $     16,756
+        ZN   rates         gross $     18,214   net $     13,461
+        6E   fx            gross $     13,847   net $     12,918
+        ZF   rates         gross $      9,889   net $      6,863
+        6S   fx            gross $     -8,862   net $    -10,736
+        6A   fx            gross $    -10,606   net $    -12,045
+        6C   fx            gross $    -11,830   net $    -12,741
+        ZT   rates         gross $     -9,812   net $    -16,965
+        ZM   ags           gross $    -35,125   net $    -39,058
+        6B   fx            gross $    -46,081   net $    -47,452
+        ZB   rates         gross $    -44,448   net $    -49,943
+        ZW   ags           gross $    -54,969   net $    -58,873
+        ZC   ags           gross $    -55,689   net $    -60,425
+    leave-one-sector-out net (primary, contribution-exclusion per R13):
+        without ags           $     485,620   >0
+        without energy        $     290,958   >0
+        without equity_index  $      42,456   >0
+        without fx            $     318,950   >0
+        without metals        $     212,793   >0
+        without rates         $     395,925   >0
+
+    halves: 2009-2013 net $180,432 (181 wks)   2014-2018 net $168,908 (260 wks)
+
+    X3 null construction (research_sdk.null_guard, unit = week blocks):
+        sensitivity: real +792.15  spread 2979.02  across shifts [1, 7, 101] -> null HAS teeth
+        440 circular shifts (all distinct; >= 300 required)   real weekly mean $792.15   null q95 $3,526.47   null mean $921.78   percentile 60.7%   p_ge 0.3946
+
+==============================================================================================================
+=== PREREGISTERED GATES (spec.yaml, frozen before results existed)
+==============================================================================================================
+    GATE                                   SPEC                   OBSERVED   PASS-FAIL
+    ------------------------------------------------------------------------------------
+    X1a net@PRIMARY > 0                    > $0                   $349,340   PASS
+    X1b net@3-TICK STRESS > 0              > $0                   $254,555   PASS
+    X1c weekly clustered t               >= 2.0                     +1.428   *** FAIL ***
+    X2a top-root +gross share            <= 40%                 17.6% (YM)   PASS
+    X2b LOSO net > 0 sectors          >= 5 of 6                     6 of 6   PASS
+    X3  real vs null q95            > $3,526.47                    $792.15   *** FAIL ***
+    X4a net 2009-2013 > 0                  > $0                   $180,432   PASS
+    X4b net 2014-2018 > 0                  > $0                   $168,908   PASS
+
+    X1 FAIL   X2 PASS   X3 FAIL   X4 PASS
+==============================================================================================================
+=== VERDICT: GATE FAILURE -> NULL, family closed at this formulation
+==============================================================================================================
+
+    outputs written: gate_table.txt, weekly_series.csv, contribution_by_root.csv, ledger_result_pending.json  (result: NULL)

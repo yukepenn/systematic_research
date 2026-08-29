@@ -72,7 +72,14 @@ below, kept for the record.
 - **Prior families:** day-of-week "closure" has **no in-repo test** (E1 over-generalization #4);
   event-day *flag* was tested only as an XM covariate. New at exact scope.
 
-## H3 — Futures cross-sectional momentum (XSMOM) — rank 3
+## H3 — Futures cross-sectional momentum (XSMOM) — ❌ **NULL, CLOSED AT FORMULATION** (`runs/GENESIS_H3_XSMOM_20260828`, G00012)
+
+**Tested 2026-08-28: positive net (+$349k, survives 3-tick stress and 6/6 LOSO) but t 1.43 and —
+decisively — its own dependence-preserving null earns the same money (real 60.7th pctile). The P&L
+is vol-scaled long/short structure, not rank information. The 2019+ held-back window was NEVER
+loaded and remains pristine.** Original prior below, kept for the record.
+
+### (original rank-3 prior, superseded by the test)
 
 - **Mechanism:** relative-strength across asset classes (information diffusion + flow persistence);
   literature support is cross-asset, not single-index (where TSMOM is contested).
@@ -93,7 +100,15 @@ below, kept for the record.
   (cross-sectional rank) **never tested** (E1). NQ relevance: portfolio diversifier + NQ leg
   conditioning, not an NQ-only strategy.
 
-## H4 — Intraday momentum family consolidation (FOLLOW_MORNING + last-half-hour) — rank 4
+## H4 — Intraday momentum family (FOLLOW_MORNING + last-half-hour) — the permitted addition is ❌ **NULL** (`runs/GENESIS_H4B_LASTHALFHOUR_20260828`, G00013)
+
+**Tested 2026-08-28: the Gao open→last-half-hour geometry is DEAD on modern NQ (slope −0.007,
+t −0.61, 49.2% sign-agreement) — and the diagnostic dated its death: real 2006–2009 (t +3.02),
+decayed through 2010–2013, gone by 2014. The family's LIVE member remains FOLLOW_MORNING (11:48
+geometry, modern-era), whose virgin ≥2026-08-01 read is the scheduled decider — untouched.**
+Original prior below, kept for the record.
+
+### (original rank-4 prior, superseded by the test)
 
 - **Mechanism:** hedging-demand flows (gamma + leveraged-ETF rebalancing) make late-session
   returns continue the day's direction; the repo independently found the class alive (W114,

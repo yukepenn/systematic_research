@@ -1,0 +1,164 @@
+GENESIS_H3_XSMOM_20260828 - spec ambiguity resolutions
+Recorded BEFORE any P&L, gate statistic, or ranked series was computed.
+Trial G00012. The spec (runs/GENESIS_H3_XSMOM_20260828/spec.yaml) is FROZEN; every
+resolution below picks the most literal / most conservative reading and cites repo
+precedent. No alternative was evaluated by outcome (none had been computed when this
+file was written).
+
+R1  DATA PATH. Spec says "research/multi_market/economic_returns.parquet"; the file
+    actually lives at research/multi_market/out/economic_returns.parquet (written by
+    research/multi_market/src/build_substrate.py; certified by VOLUME00). Same object,
+    path resolved to the out/ location. Schema (metadata-only inspection): date,
+    old_contract, target_contract, overnight, intraday, ret_points, rolled, root,
+    sector, point_value, ret_usd, eligible, obs_idx. ret_usd = ret_points x PV for ONE
+    contract (self-financing, basis-safe; roll.py s7). overnight = old_open_t -
+    old_close_{t-1}; intraday = tgt_close_t - tgt_open_t; ret_points = overnight +
+    intraday (both in points; multiply by point_value for USD).
+
+R2  WINDOW ISOLATION AT LOAD. pd.read_parquet(..., filters=[("date", ">=", 2009-01-01),
+    ("date", "<=", 2018-12-31)]) - the 2019+ held-back window is excluded INSIDE the
+    read call, never by post-filtering. The loaded frame then passes
+    research_sdk.seal_guard.assert_presealed and an explicit max-date assertion
+    (<= 2018-12-31). No value >= 2019-01-01 (a fortiori >= 2026-08-01) is read.
+
+R3  UNIVERSE. Spec says "~24 roots". The certified substrate carries exactly the 21
+    CORE roots (6 sectors: equity_index, rates, fx, energy, metals, ags) - VOLUME00
+    REPORT: "21 roots, 6 sectors, nothing excluded". 21 is the universe; the frozen
+    ">= 18 roots with valid formation else skip-and-count" clause is applied as
+    written against the actual 21.
+
+R4  SESSION/WEEK GRID. date is the exchange-session label (18:00->17:00 ET,
+    END-stamped daily bars). Rebalance date for ISO week W = the LAST session date in W
+    on the union calendar of all roots' loaded sessions ("Friday close"). Fill day =
+    the union calendar's FIRST session strictly after the rebalance date; per root, the
+    fill lands on that root's own first session strictly after the rebalance date.
+
+R5  FORMATION (12-1). Per root, on the root's own session sequence. Let j index the
+    root's most recent session at or before the rebalance date. F = cum[j-21] -
+    cum[j-273], where cum = cumulative sum of ret_usd. Included: 252 sessions
+    j-272..j-21; skipped: the 21 most recent sessions j-20..j (the rebalance session is
+    one of the skipped 21). Valid iff the root has >= 274 sessions through j
+    (j >= 273, 0-based).
+    "Return" = the substrate's own economic return in USD (cumsum of ret_usd), the
+    exact quantity TSMOM_V1 (research/multi_market/src/tsmom_v1.py, build()) uses for
+    its horizon returns - the cited multi-market convention. No vol- or scale-
+    normalization of the formation value: the spec names none, and inventing one would
+    be an unfrozen transformation. Caveat recorded honestly: ranking raw USD returns
+    across roots mixes contract dollar-vol scale into the rank; this is the literal
+    frozen formulation and is carried as-is.
+
+R6  PARTICIPATION ("valid formation") at a rebalance date t, per root:
+      (a) the root's most recent session d_r <= t is within 7 calendar days of t
+          (staleness rule; CARRY_V1 / VL_V1 precedent "traded in the last week"),
+      (b) eligible == True on that session (the substrate's own tradability contract:
+          252-day warmup + coverage; positions only - statistics may use the root's
+          full history, per build_substrate.py's stated intent),
+      (c) formation valid per R5,
+      (d) sigma valid per R7 (63 obs, > 0).
+    If fewer than 18 roots qualify, the rebalance is SKIPPED AND COUNTED (spec):
+    no fills occur and existing positions are CARRIED unchanged (a skipped rebalance
+    is the absence of an action, not a liquidation).
+
+R7  SIGMA. Trailing 63-session std (ddof=1) of ret_usd on the root's own sessions
+    ENDING AT AND INCLUDING the rebalance-decision session j. Decision is at the
+    close, fills at the next session's open, so close-of-j information is causal.
+
+R8  SELECTION. Rank all qualifying roots by F jointly (no sector conditioning);
+    ties broken by root symbol (deterministic; measure-zero for floats). Long the top
+    6, short the bottom 6.
+
+R9  WEIGHTS. Per leg (6 roots): u_i = 1/sigma_i; share s_i = u_i / sum(u); cap
+    s_i <- min(s_i, 3 * 1/6 = 0.5) in ONE deterministic pass, cap DOWN only, no
+    redistribution (VL_V1 sector-cap precedent). Leg scale lambda solves the leg's
+    daily USD vol under the LINEAR (perfect-correlation) risk-summation convention -
+    the same budget-division convention TSMOM_V1/CARRY_V1 use:
+    lambda * sum(s_i * sigma_i) = V_leg, with V_leg = 0.10 * C / sqrt(252) and
+    NOTIONAL CAPITAL C = $1,000,000. Contracts n_i = +/- lambda * s_i (continuous,
+    fractional - research convention, labelled as such). C and the linear-vs-sqrt
+    summation choice are pure scale factors: every gate (sign of net, t, shares,
+    percentile, halves) is invariant to them; C only sets reporting units.
+
+R10 P&L ACCOUNTING ("fills at the next session's open"). Position n_k from rebalance k
+    is in force from its per-root fill session f_k(r) open to the next fill session
+    f_{k+1}(r) open. Holding-window USD return per root:
+      H_k(r) = intraday_usd(f_k(r)) + sum ret_usd over sessions strictly between
+               f_k(r) and f_{k+1}(r) + overnight_usd(f_{k+1}(r)),
+    using the substrate's own overnight/intraday split (roll.py): the outgoing
+    position earns the overnight into the fill open, the incoming position earns the
+    intraday from the fill open. When no trade occurs at a boundary the split
+    telescopes exactly to n * ret_usd. Weekly gross_k = sum_r n_k(r) * H_k(r),
+    attributed to rebalance week k. The final holding window is truncated at the last
+    loaded session (2018-12-31 boundary): its entry cost is charged, its post-boundary
+    P&L and exit do not exist in this run (window isolation; no 2019 row is loaded).
+
+R11 COSTS (turnover-based, documented before computation).
+    Cost RATE per root: one-way (per side, per contract) = COMMISSION_RT/2 + ticks *
+    tick_usd, with COMMISSION_RT = $4.36/ctrRT, ticks = 1 (PRIMARY) / 3 (STRESS),
+    tick_usd = TICK[root] * point_value. So a full round trip costs 4.36 + 2*ticks*
+    tick_usd - exactly TSMOM_V1's side_cost = spread_ticks*tick_usd + COMMISSION_RT/2
+    ("the multi-market convention" the spec cites), and the spec's own words
+    "1-tick spread PER SIDE".
+    TURNOVER: at fill k, |n_k(r) - n_{k-1}(r)| contracts change = that many one-way
+    fills (|weight change| -> 0.5 RT per contract-unit changed). First position is a
+    pure entry (|n_0 - 0|).
+    ROLLS: holding a contract across a roll IS a close+reopen (the substrate's
+    economic return is defined by that self-financing switch), so each rolled session
+    in a holding window charges 2 sides on the position carried into that session:
+    rolls at sessions s with f_k(r) < s <= f_{k+1}(r)... assignment: a roll AT the
+    fill session f_k(r) charges on |n_{k-1}| (the position entering that open); rolls
+    strictly after f_k(r) and before f_{k+1}(r) charge on |n_k|; the roll at
+    f_{k+1}(r) belongs to window k+1's fill-session rule. TSMOM_V1 precedent (roll
+    cost on q_prev). A no-roll-cost figure is printed as a DIAGNOSTIC line only;
+    the GATES use the roll-inclusive model (conservative, physically real).
+    TICK TABLE: reused verbatim from runs/VOLUME_LIQUIDITY_V1_20260828/src/
+    vl_primary.py (TICK dict, lines 56-59), which covers exactly the 21 CORE roots;
+    point values from the parquet's own point_value column (= ncd_day.PV).
+
+R12 X1 t-STAT. "Weekly clustered t" = the t-statistic of the WEEKLY net P&L series
+    (daily P&L aggregated to rebalance weeks, so all within-week dependence is inside
+    the cluster): t = mean_w / (sd_w(ddof=1)/sqrt(N_w)), over all weeks from the first
+    non-skipped rebalance onward (positions exist continuously from then).
+
+R13 X2. (a) Max single-root share of positive GROSS contribution: per-root total
+    gross over discovery; among roots with positive totals, max share of the positive
+    sum <= 40%. (b) "Leave-one-sector-out net" = total net minus the NET contribution
+    (gross minus that root's costs) of the excluded sector's roots, from the realized
+    run. A full universe-rerun reading is STRUCTURALLY IMPOSSIBLE under the frozen
+    ">= 18 of 21" clause (excluding any 4- or 6-root sector leaves 17 or 15 < 18,
+    auto-skipping every date), so the contribution-exclusion reading is the only
+    executable one; adopted, not substituted - the infeasible reading is noted here
+    per the DEFECT rule and the feasible literal reading is used.
+
+R14 X3 NULL. research_sdk.null_guard on the weekly frame: one row per (week, root),
+    rectangular (21 roots x W weeks; invalid entries NaN), unit = week (contiguous
+    blocks). Frame columns carry ONLY decision inputs (F, sigma, qualification flag);
+    H_k(r), roll counts and cost rates live in the BASE frame columns used solely by
+    statistic_fn. decision_fn re-runs the frozen selection+weights+carry rule as a
+    black box on the (shifted) inputs; statistic_fn scores those positions against
+    the ORIGINAL alignment's H and cost model; statistic = mean weekly NET (primary
+    costs). verify_null_sensitivity FIRST (shifts [1, 7, 101]); then
+    run_circular_null with n_shifts = m-1 (all distinct shifts, >= 300 required by
+    the spec; m ~ 450 weeks), seed 20260828. Gate: real weekly mean STRICTLY ABOVE
+    np.percentile(null_stats, 95). Engine/null parity is asserted: the null
+    machinery's real_stat must equal the real engine's weekly mean net to 1e-6 rel.
+
+R15 X4 HALVES. A week belongs to a half by its REBALANCE date: 2009-2013 = rebalance
+    <= 2013-12-31, 2014-2018 = rebalance >= 2014-01-01. Net > 0 in both. (First
+    tradable week lands ~mid-2010 because the store floor is 2009-03-30 and formation
+    needs 274 sessions; the "2009-2013" half therefore actually begins then - data
+    availability, not a window change.)
+
+R16 MDE (power note). Printed by the program: MDE for t = 2.0 at the observed weekly
+    sd = 2 * sd_w / sqrt(N_w) in $/week, with N_w and sd_w printed beside it.
+
+R17 LEDGER. out/ledger_result_pending.json only; SEARCH_LEDGER.jsonl untouched.
+    result = PASS iff X1-X4 all pass; else NULL (DEFECT only for impossible clauses,
+    none found - R13's infeasible sub-reading has a feasible literal alternative).
+
+R18 TERMINAL PARTIAL ISO WEEK. A rebalance exists only for ISO weeks that END
+    (Sunday) on or before 2018-12-31. The loaded window's final session 2018-12-31 is
+    a Monday of ISO week 2019-W01, whose true last session (the spec's "Friday close")
+    is 2019-01-04 - outside discovery - so no 2019-W01 rebalance exists in this run;
+    the 2018-12-31 session's P&L accrues to the 2018-W52 (2018-12-28) rebalance's
+    holding window per R10. Symmetric start-of-window partial weeks are moot (no
+    positions exist there). Recorded before any P&L was computed.

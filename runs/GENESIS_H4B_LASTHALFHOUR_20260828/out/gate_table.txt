@@ -1,0 +1,12 @@
+GENESIS_H4B_LASTHALFHOUR_20260828 — GATE TABLE (printed by program src/run_h4b.py; nothing hand-assembled)
+trial G00013 | modern gate window sessions 2022-01-03..2026-07-31 | valid pairs N=1097 (drops: 4/46/46 missing 10:00/15:30/16:00 bar, 40 no prior 16:00 close, of 1184 sessions)
+evidence status: DISCOVERY (modern window is research-consumed pre-seal data; no sealed rows read)
+----------------------------------------------------------------------------------------------------------------------
+GATE  | SPEC                                                | OBSERVED                                  | PASS-FAIL
+----------------------------------------------------------------------------------------------------------------------
+L1    | OLS slope r_last30~r_open30 > 0, clustered t>=2.0   | slope=-0.00735, HC1 t=-0.61               | FAIL
+L2    | sign-agreement > 50%, clustered t>=2.0              | rate=49.23%, t=-0.51                      | FAIL
+L3    | real slope > p95 of >=300 whole-session circ shifts | real=-0.00735 vs p95=+0.01639 (300 shifts)| FAIL
+----------------------------------------------------------------------------------------------------------------------
+VERDICT: NULL  (spec: ALL of L1-L3 pass -> PASS; any fail -> NULL at this geometry)
+power: N=1097; MDE@t=2.0: slope 0.02405, sign-rate 53.02% (R5)

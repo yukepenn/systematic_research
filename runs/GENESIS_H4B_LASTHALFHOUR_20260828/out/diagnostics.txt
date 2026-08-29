@@ -1,0 +1,37 @@
+====================================================================================================
+GENESIS_H4B_LASTHALFHOUR_20260828 — r_open30 -> r_last30 (Gao/Han/Li/Zhou geometry), trial G00013
+====================================================================================================
+modern load: 1,620,044 bars, window-isolated at parquet scan (> 2021-12-31 18:00:00, <= 2026-07-31 17:00:00); seal ASSERTED clean
+[modern 2022-01..2026-07-31] sessions in window: 1184; dropped missing 10:00 bar: 4, missing 15:30 bar: 46, missing 16:00 bar: 46, no usable prior-session 16:00 close: 40; valid pairs: 1097
+deep load: 4,908,286 bars, window-isolated at parquet scan (ISO-string filter 2006->2021); seal ASSERTED clean
+[deep 2006..2021] sessions in window: 4123; dropped missing 10:00 bar: 36, missing 15:30 bar: 163, missing 16:00 bar: 167, no usable prior-session 16:00 close: 131; valid pairs: 3813
+[modern] exact-zero returns among pairs (R3): 3 (r_open30: 1, r_last30: 2)
+[modern] power (R5): N=1097; slope MDE @ t=2.0 = 0.02405; sign-rate MDE @ t=2.0 = 53.02%
+[L3] sensitivity verified: real=-0.007353, spread across probe shifts=0.029016 (null CAN move)
+[L3] 300 whole-session circular shifts (seed 0, 1097 units); null slope p95(method=higher)=+0.016387; real=-0.007353; real percentile-in-null=20.7%; p_ge(add-one)=0.7940
+
+DIAGNOSTICS — reported only; NO gate reads these; no iteration performed on them
+----------------------------------------------------------------------------------------------------
+[modern conditioning splits]
+  ALL modern (unconditional control)     N= 1097  slope=-0.00735 (HC1 t=-0.61)  sign-agree=49.23% (t=-0.51)
+  top-tercile |r_open30| (cut=0.00705)   N=  366  slope=-0.00664 (HC1 t=-0.50)  sign-agree=48.09% (t=-0.73)
+  bottom two terciles |r_open30|         N=  731  slope=-0.01280 (HC1 t=-0.47)  sign-agree=49.79% (t=-0.11)
+[modern] trailing-21-RV split: 18 pairs excluded (insufficient trailing history), 1079 usable
+  ALL with trailing-RV defined (control) N= 1079  slope=-0.00289 (HC1 t=-0.25)  sign-agree=49.30% (t=-0.46)
+  top-tercile trailing-21s RV (cut=0.0093) N=  360  slope=-0.01227 (HC1 t=-0.69)  sign-agree=46.67% (t=-1.27)
+  bottom two terciles trailing-21s RV    N=  719  slope=+0.01026 (HC1 t=+0.77)  sign-agree=50.63% (t=+0.34)
+  (calendar FOMC_DAY: 163 sessions kept, 0 post-seal dropped)
+  (calendar CPI_DAY: 244 sessions kept, 0 post-seal dropped)
+  (calendar NFP_DAY: 246 sessions kept, 0 post-seal dropped)
+[modern] announcement sessions (FOMC_DAY ∪ CPI_DAY ∪ NFP_DAY) among pairs: 139
+  ALL modern (control, repeated)         N= 1097  slope=-0.00735 (HC1 t=-0.61)  sign-agree=49.23% (t=-0.51)
+  announcement days                      N=  139  slope=+0.03251 (HC1 t=+1.01)  sign-agree=51.08% (t=+0.25)
+  non-announcement days                  N=  958  slope=-0.01579 (HC1 t=-1.25)  sign-agree=48.96% (t=-0.65)
+
+[era comparison — deep parquet, diagnostic only, NOT a gate]
+  deep 2006-2021 (all)                   N= 3813  slope=+0.04838 (HC1 t=+1.61)  sign-agree=51.35% (t=+1.67)
+  deep 2006-2009                         N=  916  slope=+0.10029 (HC1 t=+3.02)  sign-agree=53.93% (t=+2.39)
+  deep 2010-2013                         N=  963  slope=+0.03530 (HC1 t=+1.83)  sign-agree=50.99% (t=+0.61)
+  deep 2014-2017                         N=  966  slope=-0.01506 (HC1 t=-0.66)  sign-agree=49.79% (t=-0.13)
+  deep 2018-2021                         N=  968  slope=+0.05927 (HC1 t=+1.29)  sign-agree=50.83% (t=+0.51)
+  modern 2022-2026H1 (gate window)       N= 1097  slope=-0.00735 (HC1 t=-0.61)  sign-agree=49.23% (t=-0.51)

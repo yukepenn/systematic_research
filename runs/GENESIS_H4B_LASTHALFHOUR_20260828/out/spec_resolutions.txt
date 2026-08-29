@@ -1,0 +1,47 @@
+GENESIS_H4B_LASTHALFHOUR_20260828 — spec_resolutions.txt
+Written by the program BEFORE any affected number is computed. The spec is frozen;
+each item below resolves an ambiguity CONSERVATIVELY without altering any frozen clause.
+
+R1  "prior session's 16:00-stamped bar": the immediately preceding session PRESENT in the
+    loaded window's data. If that session lacks a 16:00 bar (early close) or does not exist
+    (first session of the window), the current session is DROPPED and counted. No skipping
+    back to earlier sessions; no reaching before the loaded window.
+R2  "session-clustered t": with exactly one observation pair per session, session-clustered
+    SEs degenerate to heteroskedasticity-robust SEs. L1 uses HC1 (identical to CR1 with
+    singleton clusters); L2 uses the plain sample-SE t of the per-session agreement
+    indicator vs 0.5 (identical to singleton-cluster CR1).
+R3  sign(): np.sign verbatim. Agreement iff sign(r_open30) == sign(r_last30) exactly; an
+    exact-zero return agrees only with an exact-zero return. Zero counts reported.
+R4  L3 "above the 95th percentile": STRICT > of np.percentile(null, 95, method='higher')
+    (conservative on both choices). n_shifts = 300 distinct nonzero whole-session shifts,
+    seed 0, via null_guard.run_circular_null; verify_null_sensitivity runs FIRST with
+    shifts [1, 2, 5, 17, 101].
+R5  MDE (power_note) = effect size giving t = 2.0 at the observed robust SE:
+    slope MDE = 2.0 * SE_HC1(slope); sign-rate MDE = 0.5 + 2.0 * SE(mean indicator).
+R6  trailing-21-session RV = mean over the 21 immediately preceding data sessions of the
+    per-session realized vol RV_s = sqrt(sum of squared 1-min log close returns over bars
+    stamped 09:31:00..16:00:00 within session s). Sessions with < 21 qualifying prior
+    sessions (a session qualifies with >= 2 such RTH bars) are excluded from this split
+    only, with the exclusion count printed. No lookahead: session s's own RV is excluded.
+R7  "announcement days" = sessions in the UNION of H2 certified FOMC_DAY, CPI_DAY, NFP_DAY
+    calendars (read-only). Calendar loads pass seal_guard via truncate_presealed (future
+    scheduled dates >= 2026-08-01 are dropped with a printed count, never read into use).
+R8  Conditioning splits are computed on the MODERN window only (the gate window); era
+    comparison = deep 2006-2021 overall plus 4-year blocks. Every conditional row is
+    printed next to its same-wave unconditional (ALL) control. All diagnostics REPORTED
+    only — no gate reads them.
+R9  Terciles: top tercile = conditioning value >= np.percentile(values, 200/3) (linear),
+    computed across valid modern pairs.
+R10 pairs_series.csv holds BOTH windows with a 'window' column (modern|deep); one row per
+    valid pair; sessions as ISO dates.
+R11 Window isolation AT LOAD: modern parquet scanned with filter
+    2021-12-31 18:00:00 < time <= 2026-07-31 17:00:00 (session labels 2022-01-01..
+    2026-07-31; END-stamped close of session 2026-07-31 is 17:00:00); deep parquet scanned
+    with lexicographic ISO-string filter '2005-12-31 18:00:00' < time <= '2021-12-31
+    17:00:00'. seal_guard.assert_presealed is applied to every loaded market frame after
+    the read; calendar CSVs use truncate_presealed with printed counts.
+R12 Duplicate bar timestamps inside a loaded window are a DEFECT (assertion fires; nothing
+    substituted). Non-positive close prices at any used bar are likewise a DEFECT.
+R13 Session label for a bar: END-stamped, exchange-session ET; hour >= 18 rolls to the
+    next calendar day's session (runlib/session_boundary convention). Only RTH-stamped
+    bars (hour < 18) enter any computed quantity here.
