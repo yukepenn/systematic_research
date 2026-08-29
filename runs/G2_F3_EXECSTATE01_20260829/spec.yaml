@@ -1,0 +1,24 @@
+run_id: G2_F3_EXECSTATE01_20260829
+campaign: GENESIS_II_FORMAL_WAVE_3
+type: EXECUTION_POLICY_MEASUREMENT   # card MC-47 - execution alpha; no predictive claim
+question: >
+  Does within-minute execution timing carry harvestable cost savings on NQ? (Second-of-minute
+  effective-spread/markout structure; boundary seconds are where 1-min-bar strategies mechanically
+  execute.) External: peer-reviewed + live-verified; in-house: EXEC01 state map corroborates.
+primary_frozen: >
+  Second-of-minute effective-spread and short-horizon markout profile on owned 2025-26 NQ
+  tick+BBO (pre-burn allowlisted slices only; blind pools untouched).
+  PASS = boundary-second penalty (sec-0 and sec-30) >= 0.25 tick vs mid-minute seconds ->
+  then re-time P1's frozen bar-close entries by the measured cheapest in-minute offset and PRICE
+  THE SAVING in $/wk on the frozen action set (pure execution perturbation, zero policy change).
+secondary_same_run: OFI->mid-move slope by EXEC01 spread/depth state; matched-vol 10:00-vs-15:00
+  cost comparison; fitted cost = f(spread_state, depth_state, hour) with divergence check -
+  > 20% divergence from the measured $25-33/RT band flags COST-MODEL REVISION (printed).
+status_rule: any fitted saving is a MODEL row until validated against the 2026-09-01 shadow -
+  printed in the verdict; never enters the scoreboard as measurement before that.
+prohibitions: no strategy signals, no entry-rule changes beyond the priced re-timing simulation,
+  no sealed reads, blind pools untouched (allowlist printed), no search over offsets beyond the
+  frozen profile grid (60 seconds of a minute = the profile, not a search)
+outputs: out/gate_table.txt, out/second_profile.csv, out/retiming_saving.txt, out/ledger_result_pending.json
+live_enabled: NO
+spend: $0

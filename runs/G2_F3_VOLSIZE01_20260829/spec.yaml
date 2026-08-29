@@ -1,0 +1,35 @@
+run_id: G2_F3_VOLSIZE01_20260829
+campaign: GENESIS_II_FORMAL_WAVE_3
+type: RISK_SPECIFICATION   # cards MC-51 + MC-38 nested - sizing study; NEVER an information-alpha claim
+question: >
+  Does extremes-only vol-managed sizing of NQ exposure improve net geometric growth and drawdown
+  at MATCHED MEAN EXPOSURE? (Moreira-Muir line with its critics - Cederburg real-time clause,
+  cost clause, extremes-only - built into the falsifier.)
+primary_frozen_MC51: >
+  Extremes-only rule: bottom trailing-RV-decile -> 1.5x exposure; top decile -> 0.5x; else 1.0x.
+  Deciles from EXPANDING-WINDOW calibration ONLY (any full-sample constant anywhere voids the
+  run). Applied to NQ daily close-to-close (from 1-min closes), 2006 -> 2026-05-31, 1-contract
+  base, $33/RT charged on every rebalance contract.
+gates_printed:
+  V1: net geometric growth (log-wealth) > constant-exposure control AT MATCHED MEAN EXPOSURE
+      (the matched-exposure clause enforced IN the printed gate table, not prose)
+  V2: maxDD not worse than control by more than 5%
+  V3: timing component above p95 of >= 300 circular-shift nulls (shift the sizing series)
+  V4: era split (2006-2015 / 2016-2026-05) - sign consistency of the growth improvement
+  deliverable_language: geometric growth + tail ONLY - no Sharpe headline (single-instrument
+      Sharpe gains are known-small; the card is held to its own honesty clause)
+nested_MC38_vol_input: >
+  Diebold-Mariano on QLIKE: HAR+RS(-)+overnight-terms vs HAR-RV vs plain 21d RV for next-day NQ
+  RV; frozen split train 2006-2017 / test 2018-2026-05-31; VXN add-on DROPPED (pristine-window
+  protection). The DM winner becomes the sizing input in a SECONDARY sizing column (primary stays
+  plain 21d RV so MC-51 and MC-38 verdicts stay separable). PASS(MC-38) = QLIKE improves with
+  DM p < 0.05.
+expected_fail_leg: drawdown-throttle rule (cut exposure 50% after a 10% equity DD, restore at
+  high-water) - preregistered EXPECTED-FAIL to close folklore cheaply; reported, not gated.
+prohibitions: no leverage masquerade (matched mean exposure structural), no full-sample
+  calibration, no VXN/VIX reads, no sealed reads, no P1 application in this run (a positive
+  motivates a SEPARATE preregistered P1-sizing spec)
+outputs: out/gate_table.txt, out/wealth_paths.csv, out/dm_table.txt, out/ledger_result_pending.json
+  (LIST of 2: MC-51 trial, MC-38 trial)
+live_enabled: NO
+spend: $0

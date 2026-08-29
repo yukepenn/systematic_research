@@ -1,0 +1,22 @@
+run_id: G2_F3_ERABREAK01_20260829
+campaign: GENESIS_II_FORMAL_WAVE_3
+type: ERA_ADMISSIBILITY_MEASUREMENT   # card MC-54 leg 1 - decides the vol family's admissible priors
+question: >
+  Did the 0DTE era (2022-05+) structurally break NQ's intraday volatility profile? Someone is
+  wrong in print (Brogaard-line vs Cboe-line). Either answer re-prices every vol card and fixes
+  the admissible training era for MC-38/52/55/56-class work.
+primary_frozen: >
+  Break test at 2022-05: (a) minute-of-session RV profile (RTH, normalized to session total) and
+  (b) last-30-minute RV share - 2016-2019 vs 2023-2026-05-31 (buffer years 2020-2022-04 excluded
+  as transition; 2026-06+ excluded as burned). Program-printed break statistic (profile L1
+  distance + share difference) against a shared circular-shift null (>= 300 whole-session shifts
+  of era labels), p95 gate.
+verdict_semantics: BREAK (real > p95) => pre-2022 intraday-vol statistics are INADMISSIBLE priors
+  for modern work (printed as a binding doctrine line); NO-BREAK => deep history is admissible.
+  Either outcome is a PASS for the trial (measurement completed); the CONTENT is the deliverable.
+legs_2_to_4: NOT in this run (contingent riders; leg 4 folklore permanently banned on MDE failure
+  per the card - recorded).
+prohibitions: no NQ return joins, no strategy, no sealed reads, NQ 1-min only
+outputs: out/gate_table.txt, out/profiles.csv, out/ledger_result_pending.json
+live_enabled: NO
+spend: $0
