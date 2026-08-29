@@ -12,16 +12,22 @@ P1 (needs a new surface). **Replenishment check: 13 MED ≥ 3 → no trigger; bu
 now EMPTY — the next world-scan wave should target archetypes orthogonal to the wave-1 kills
 (short-side mechanisms, event-time/path representations, execution-state) per directive §65.**
 
-## In formal testing (Wave 2 — specs `runs/G2_F2_*`)
+## Formal Wave 2 — CLOSED (2026-08-29)
 
-CLAIMS01 (auction/level descriptive-claim register — §45 lane: test the CLAIM before any
-strategy) · SWEEP01 (MC-08 sweep-and-reclaim with its mirror control — teaches either way).
+CLAIMS01: 2 claims SUPPORTED-BEYOND-GEOMETRY (ON-touch, IB-extension — banked as facts, no
+strategy licensed) · 4 GEOMETRY-EXPLAINED (incl. the 80% rule at 42.6%) · 1 REFUTED. SWEEP01:
+NULL both directions (no reversal edge in the level, no momentum-tell). **MC-07 CLOSED** (its
+core claim is geometry). **MC-08 CLOSED at formulation. MC-04 weakened** (extension is real but
+the direction claim is definitional — a policy corollary would need a new mechanism).
 
-## Bench after Wave-2 selection (MED, EVI order)
+## Bench (MED, post-Wave-2)
 
-MC-14 pullback policy (needs a living base engine — parked until one exists) · MC-04 IB / MC-07
-magnetism (feed CLAIMS01 first; strategy forms only if claims verify) · MC-13 late-day hedging
-(capped by H4B's in-house death — needs a decay story) · remaining MED per verdicts file.
+MC-14 pullback policy (parked — needs a living base engine) · MC-04 residue (needs a direction
+mechanism, not a rate) · MC-13 late-day hedging (needs a decay story vs H4B's death) · remaining
+MED rows per verdicts file — **none currently clears the "materially different from a measured
+failure" bar without new representation input. → §65 trigger: REPRESENTATION-SHIFTED SCAN WAVE 2
+launches now** (short-side asymmetry, event-time/path topology, execution-state, overnight
+structure — archetypes orthogonal to everything measured so far).
 
 ## Conversion funnel (§70 — cumulative)
 

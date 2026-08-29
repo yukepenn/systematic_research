@@ -1,0 +1,136 @@
+G2_F2_CLAIMS01_20260829 — spec ambiguity resolutions (written BEFORE any affected number was computed)
+The spec is FROZEN. Every resolution below is conservative, chosen blind to outcomes, and none is a
+parameter search: all constants named in the spec (0.60, 0.25*5=1.25pt bins, 70% VA, 20 pts, 15 min,
+10:00, 11:00, 09:59, first RTH hour, >=300 shifts) are used verbatim.
+
+R1  Substrate & seal. Single input: runs\SM1M_SUBSTRATE\out\nq_1m_2022_2026.parquet, sha256 verified
+    against runs\GENESIS_REPRO_INCUMBENT_20260828\out\run_provenance.txt (87aa53f0...) before use;
+    mismatch => DEFECT stop. Load passes research_sdk.seal_guard (truncate_presealed count printed,
+    then assert_presealed) and assert_not_locked_forward(2026-07-31). No other data object is read
+    (no VIX, no $TICK, no ES, no BBO store). "Volume from the certified field" = the `volume` column
+    of this same substrate — the only volume field in the population's substrate (NT8 SWMinuteExport,
+    same certified export as price; MS01A's uncertified Bid/Ask-series volume is NOT touched).
+R2  Session & windows. session_id = 18:00->17:00 ET unit (END-stamped bars; hour>=18 rolls to next
+    calendar day's label; session_boundary conventions). Universe = sessions with >=1 RTH bar and
+    session_id in [2022-01-01, 2026-07-31], chronological order. RTH = bars STAMPED [09:31, 16:00]
+    (bar stamped 16:00 covers 15:59-16:00; COND01 R3 precedent). Overnight (CL1) = bars of the same
+    session with stamp time-of-day >= 18:01 or <= 09:30 (i.e. 18:00 prev -> 09:30, END-stamped).
+    Bars stamped (16:00,17:00] belong to neither window. RTH open of a session = open of its first
+    RTH bar (the 09:31-stamped bar opens 09:30:00); RTH close = close of its last RTH bar.
+    "Prior RTH session" = the immediately preceding session IN THIS UNIVERSE (prior trading session;
+    calendar gaps do not create phantom sessions). Fixed RTH slot grid: 09:31=slot 0 .. 16:00=slot
+    389 (390 slots); missing minutes are NaN cells; sessions are never resampled or gap-filled.
+R3  The pairing null (shared machinery for all claims). Per-session LEVEL OBJECT = every level the
+    claim consumes, expressed as OFFSETS from that session's own RTH open:
+      CL1  dONH(s)=ON_high(s)-open(s), dONL(s)=ON_low(s)-open(s)            [own overnight]
+      CL2  dVAH(s)=VAH(prior(s))-open(s), dVAL likewise                      [prior-RTH profile]
+      CL3  dIBH(s)=IB_high(s)-open(s), dIBL likewise                         [own first RTH hour]
+      CL4  dPDH(s)=RTH_high(prior(s))-open(s), dPDL likewise                 [prior RTH extremes]
+      CL5/CL6  dVWAP(s,t)=VWAP(s,t)-open(s) per RTH slot t                   [own session VWAP]
+    Replication k pairs the UNSHIFTED path of session i (row i's bars, untouched) with the level
+    object of session j=(i+k) mod N, re-anchored: LEVEL*(i)=open(i)+d*(j). This is a circular shift
+    of the level set across sessions, whole-session unit (each session's level object travels
+    intact), leaves every path bar unshifted, preserves level geometry (each offset object is a real
+    one, incl. the real prior-session pairing inside dVAH/dPDH) and path dynamics, and destroys
+    level-path attraction — exactly the spec's construction. k=0 is the real alignment.
+    >=300 shifts: 300 distinct k drawn without replacement from 1..N-1, numpy default_rng(seed=0)
+    (null_guard convention). ONE shared k per replication feeds ALL claims (family doctrine).
+    Null-sensitivity is verified FIRST (null_guard doctrine): probe shifts [1,7,61]; any claim whose
+    statistic has zero spread across probes => DEFECT stop, no percentile quoted.
+    The one wrap-seam pair per replication (last session's levels internally referencing the list
+    edge) is inherent to any circular construction and affects <=1 of ~1,15x sessions.
+R4  Per-claim statistics (all session-level; cluster unit = session, so the clustered CI is the
+    plain across-session normal CI, +-1.96*SE; proportions use SE=sqrt(p(1-p)/n)).
+    CL1  denominator: sessions with >=1 ON bar and >=1 RTH bar (level session j must have a valid
+         ON; path session i must have RTH). touched = max_high_RTH(i)-open(i) >= dONH(j)  OR
+         min_low_RTH(i)-open(i) <= dONL(j). Stat = share touched. Claim direction: ABOVE null.
+    CL2  Profile of the prior RTH session: bins of 1.25 pts anchored at absolute multiples of 1.25
+         (floor(price/1.25)); each 1-min bar's volume spread across bins proportionally to the
+         price-overlap of [low,high] with each bin (low==high => all volume to that bin).
+         POC = max-volume bin (tie -> bin closer to the profile's volume-weighted mean price; then
+         lower). VA = greedy one-bin expansion from POC: repeatedly add the adjacent bin (above vs
+         below the current span, within the profile's occupied range) with more volume (tie ->
+         lower) until cumulative >= 70% of total RTH volume. VAL = lower edge of bottom VA bin,
+         VAH = upper edge of top VA bin. Event: open(i) strictly outside [VAL*,VAH*] AND first
+         trade into the VA (for open above: min_low(i) <= VAH*; symmetric below). Success =
+         traversal to the far edge (open above: min_low(i) <= VAL*; symmetric). Because reaching
+         the far edge implies having entered at or before that bar, traversal-after-entry ==
+         session-extreme reaching the far edge. Stat = conditional traversal share. Direction: ABOVE.
+    CL3  IB = bars stamped [09:31,10:30]; post-IB = bars stamped [10:31,16:00]; denominator:
+         sessions with >=1 IB bar (level session) and >=1 post-IB bar (path session).
+         (a) extended = any post-IB bar with high > IBH* or low < IBL* (strict). Stat3a = share.
+         (b) among extended sessions: first-break direction = whichever level is strictly breached
+         at the earlier post-IB slot (same-slot double-breach = ambiguous, excluded, counted);
+         close direction = sign(RTH close(i) - RTH open(i)) (zero excluded, counted).
+         Stat3b = share of first-break direction == close direction. Both directions: ABOVE.
+         CL3 contributes TWO rows; the family bar runs over all 7 rows (max over 7 >= max over 6 —
+         a strictly HIGHER, i.e. conservative, family bar).
+    CL4  denominator: path session has RTH, level session has a prior with RTH. touched =
+         max_high(i)-open(i) >= dPDH(j) OR min_low(i)-open(i) <= dPDL(j). Direction: ABOVE.
+    CL5  "session-VWAP" = VWAP of the SESSION (18:00->17:00 unit — the unambiguous meaning of
+         "session" in this repo, CLAUDE.md §6): cumulative sum(typical*volume)/sum(volume) from the
+         session's first bar, typical=(H+L+C)/3, evaluated at RTH slots (NaN slots forward-filled
+         within session; undefined until first volume>0 bar). Trend day = W51 classify() verbatim
+         (run_we_w51.py:69-88): WHOLE-session body |close-open| >= 0.60 * whole-session range
+         (range<=1e-9 => not trend). Crosses after 11:00: signs of close(i,t)-VWAP*(i,t) over slots
+         11:00..16:00 (baseline = 11:00 slot); zeros/NaNs carry the last nonzero sign; a cross = an
+         adjacent sign product of -1; stat = P(cross count == 0 | trend day). The spec's "vs the
+         unconditional P" = the SAME statistic over all eligible sessions, printed in the same wave
+         with its own null band (CLAUDE.md matched-unconditional rule); it is a control row, not an
+         8th family member. Claim direction: conditional stat ABOVE null.
+    CL6  Condition at 09:59: the 09:59-stamped bar exists and |close(i,0959)-VWAP*(i,0959)| >= 20.0
+         pts (sessions missing the 09:59 bar excluded, counted). side = sign of that difference.
+         First post-10:00 touch: first slot t in [10:01,16:00] with low(i,t) <= L*(t) <= high(i,t),
+         where L*(t) = open(i)+dVWAP(j,t-1) — the causal level, VWAP through the PRIOR bar. The
+         event is the FIRST touch only; if it lands after 15:45 (fwd15 target slot would pass
+         16:00) or either close is missing, the session is excluded from scoring (counted), never
+         replaced by a later touch. Forward return = (close(i,t+15)/close(i,t)-1)*1e4 bps.
+         The claim ("first touch of VWAP from an extended open gets rejected") has no direction as
+         an unsigned pooled mean — up- and down-approaches cancel by construction — so the claim
+         statistic is the SIGNED mean: side * fwd15 (positive = rejection back toward the 09:59
+         side). Frozen from the claim's own logic before any number was computed; the raw unsigned
+         mean is printed as a diagnostic. Direction: ABOVE (positive).
+         Control (W111b count-matched same-session rule): eligible minutes = slots [10:01,15:45] of
+         the SAME event sessions with bar + fwd15 computable, signed by the SAME session's side;
+         count-matched (k=1 per event session). OBSERVED control: 1000 draws, default_rng(seed=1),
+         p50/p95 of draw means printed, plus the analytic expectation (mean over event sessions of
+         the session-mean). Claim statistic for classification = event mean - analytic control
+         expectation (the same quantity is recomputed per null replication analytically — MC noise
+         in 300 nested draws would only blur the band).
+R5  Family & classification. Per claim row r: null median m_r, sd s_r (ddof=1) over the <=300
+    replications (a replication with an undefined stat — e.g. empty conditional set — is dropped
+    from that row's null and from the family for that replication, counts printed; s_r==0 => DEFECT).
+    z_r = (observed_r - m_r)/s_r. Family stat per replication = max_r |(null_r(k)-m_r)/s_r|; family
+    bar = p95 of the 300 family stats (ONE shared k across all rows per replication, as specified).
+    Per-claim null band = [p2.5, p97.5] of the row's null (the "p95 band" read as the 95% central
+    band — wider than p5..p95, hence conservative for BOTH strong verdicts).
+    SUPPORTED-BEYOND-GEOMETRY: observed outside the band on the claim side AND |z_r| > family bar.
+    REFUTED: observed outside the band on the OPPOSITE side AND |z_r| > family bar (the family
+    clause is applied symmetrically to both strong verdicts — conservative: fewer strong claims; a
+    band-outside deviation inside the family bar is recorded GEOMETRY-EXPLAINED with an explicit
+    direction note). Everything else: GEOMETRY-EXPLAINED.
+R6  MDE (printed BEFORE verdicts, per row): 2.80*SE_observed (~80% power, two-sided 5%; TICK01
+    convention) in the row's own units.
+R7  Governance. No strategy, no P&L, no threshold search; no claim added or dropped (CL1..CL6
+    verbatim; CL3 prints its two spec-defined sub-shares). Evidence status: DISCOVERY_CONSUMED
+    (window includes the burned 2026-05-31..07-31 span; no sealed reads; >=2026-08-01 untouched).
+    No git command is run (HARD RULE 1); prereg_guard's git verification is therefore not invoked —
+    noted here rather than silently skipped. SEARCH_LEDGER.jsonl is NOT appended; the result goes to
+    out\ledger_result_pending.json (trial G00021). data_esnq is NOT read.
+R8  Outputs. out\gate_table.txt printed by the program (one row per claim: OBSERVED with clustered
+    CI | NULL-EXPECTED p50 and [p2.5,p97.5] band | z | CLASSIFICATION; MDEs before verdicts; family
+    bar printed); out\claim_details\ per-claim per-session/per-event CSVs + null distributions;
+    out\ledger_result_pending.json. Wall time and peak memory printed (bounded-memory grids:
+    ~N_sessions x 390 slots).
+
+--- R9 AUDIT ADDENDUM (appended after the run; no gate, band, or classification was altered) ------
+    The k=1 sensitivity probe exposed a structural degeneracy the R3 construction inherits for the
+    two PRIOR-referencing level objects: at shift k=1, CL4 pairs path i with the prior-extreme
+    offsets of session i+1, which are session i's OWN RTH extremes (probe printed CL4 = 1.00000
+    exactly; CL2's k=1 draw is likewise self-coupled). By null_guard doctrine such a draw is a
+    real-alignment-in-disguise, not a null draw. VERIFIED AFTER THE RUN: the 300 seeded shifts
+    (default_rng(0), drawn from 1..N-1) are {3..1172} and DO NOT include k=1, so no quoted
+    percentile, band, sd, z, or the family bar contains the degenerate draw; probe shifts feed only
+    the moves/does-not-move check, never a percentile. All reported numbers stand as printed. Had
+    k=1 been drawn, the correct action would have been to refuse it (draw from 2..N-1) before
+    quoting — recorded here so a future rerun with a different seed applies that refusal.

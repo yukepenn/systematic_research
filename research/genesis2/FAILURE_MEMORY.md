@@ -30,6 +30,21 @@ Cross-wave patterns now measured twice+: **modern long drift masquerades as stra
 control gate; XSMOM's structural null) · **dead short legs recur** (ORB −$30.7k; the whole fade
 graveyard) · **rare-event classes collapse across regimes** (TICK; macro events).
 
+## Closed at exact scope (GENESIS II Formal Wave 2, 2026-08-29)
+
+| scope | verdict | run |
+|---|---|---|
+| Sweep-and-reclaim of prior-RTH extremes (≥5pts/30min/60min), modern — AND its continuation mirror | NULL both ways — response is generic post-cross MR, not level information; no momentum-tell | G2_F2_SWEEP01 |
+| "80% value-area rule" | measured **42.6%** and geometry-explained — folklore | G2_F2_CLAIMS01 |
+| PDH/PDL magnetism (MC-07 core) | geometry-explained → **MC-07 CLOSED** | G2_F2_CLAIMS01 |
+| IB-break-direction = close-direction | definitional (77.5% vs 77.1% null) — may never be quoted as edge | G2_F2_CLAIMS01 |
+| trend-day "rarely crosses VWAP" | REFUTED beyond geometry (opposite sign) | G2_F2_CLAIMS01 |
+| VWAP first-touch bounce | geometry-explained (+1.0 bps vs 2.4 MDE) | G2_F2_CLAIMS01 |
+
+**Banked positive facts (not strategies):** overnight-extreme touch 95.3% vs 90.0% geometric
+(z+3.5) and IB extension 96.8% vs 91.6% (z+4.4) — real ~5pp level-relevance effects, usable only
+as conditioning context for a mechanism that independently earns its way.
+
 ## Blocked-as-rescue (recorded rulings)
 
 MC-35 meta-labeling/sizing **on P1 with existing surfaces** = rescue of RR_W002A's closure ("no
