@@ -1,0 +1,11 @@
+GENESIS_H1_VOLSTATE_20260828 — gate table (printed by program, stage: discovery)
+seal_guard.assert_presealed calls so far: 10
+
+GATE                     SPEC                                                                           OBSERVED                                                           PASS-FAIL
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+R4b_EXPIRY_RULE          derived expiry: >=95% exact vs in-span modern expiry_date_file, max miss <=1d  100.00% exact, max miss 0d (n=163)                                 PASS
+F1_discovery_separation  t_clustered(T3-T1)>=2.0, T3-T1>0, same sign both halves 07-13/14-21            diff=-0.0372%, t=-1.42, halves +0.0143/-0.0706                     FAIL
+F2_rv_control            RV-tercile-matched T3-T1 keeps sign (>0) and clustered t>=1.5                  contrast=-0.0369%, t=-1.40                                         FAIL
+F3_null                  real T3-T1 strictly above 95th pct of >=300 circular-shift nulls               real=-0.0372 vs null p95=0.0429 (rank 11.3%)                       FAIL
+PARITY                   independent impl tercile agreement >=99.5%                                     not run — F1-F3 precondition failed                                NOT-RUN
+F4_confirmation          2022-01..2026-07 T3-T1 same sign, t>=1.0, ONE SHOT                             NOT READ — F1-F3 failed; 2022+ window stays unread by this family  NOT-READ

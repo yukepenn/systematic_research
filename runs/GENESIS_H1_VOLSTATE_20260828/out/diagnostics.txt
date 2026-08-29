@@ -1,0 +1,60 @@
+run_discovery.py  python=3.11.4 numpy=1.26.4 pandas=2.2.2
+frozen: tercile_window=252 rv_window=21 exclusion<2007-03-26 discovery=2007-04-01..2021-12-31
+
+vx rows total=46412  excluded pre-2007-03-26=3942  LEGACY_10X_SUSPECT total=3942 (kept after date-rule exclusion: 0)
+expiry validation (R4b scope: modern contracts w/ file expiry <= universe max; 9 post-span contracts excluded — they never use the derived value): n=163 exact=163 (100.00%) off_by_1=0 off_gt_1=0 max_abs_diff=0d
+  diff distribution (derived-file, days): {0: 163}
+basis dates: 4767 of 4865 VX trade dates (no-front-settle-row=1, nonpositive-settle=95, no-VIX=2)  span 2007-03-26..2026-07-31
+first classifiable basis date (252 strictly-prior obs): 2008-03-26
+state_series.csv written: 4767 rows (pre-seal asserted)
+
+deep NQ sessions (label<= 2021-12-31): 4123  returns: 4122
+  session bar counts: min=80 med=1254 max=1380  halt-hour bars total=0
+  return calendar-gap distribution (days:count): {1: 3275, 2: 14, 3: 802, 4: 30, 10: 1}
+discovery: state dates in window=3613 (no NQ next-return match: 7)  classified+return N=3359
+
+per-tercile next-session %% return (discovery) + unconditional control:
+         size      mean       std
+tercile                          
+T1       1089  0.057184  1.024421
+T2       1035  0.045156  0.598206
+T3       1235  0.020013  0.529020
+  points means by tercile: {'T1': 6.82, 'T2': 3.59, 'T3': 2.38}
+  UNCONDITIONAL control: N=3359 mean=0.0398% sd=0.7438%
+F1: T3-T1=-0.0372%/session  se=0.0262  t=-1.417  (N=2324, month clusters=162)
+F1 halves: 2007-2013 diff=0.0143% (N=1350)  2014-2021 diff=-0.0706% (N=2009)
+
+RV-matched table (rows=RV tercile, cells: N / mean pct_next by BASIS tercile):
+  N:
+tercile      T1   T2   T3
+rv_tercile               
+T1          233  327  540
+T2          289  376  440
+T3          567  332  255
+  mean %:
+tercile         T1      T2      T3
+rv_tercile                        
+T1          0.0539  0.0073  0.0095
+T2          0.1211  0.0454  0.0335
+T3          0.0259  0.0822  0.0190
+  per-stratum T3-T1: {'T1': -0.0444, 'T2': -0.0876, 'T3': -0.0069}
+F2: RV-FE contrast T3-T1=-0.0369%  t=-1.404  (N=3359, clusters=162)
+
+F3 sensitivity: real=-0.0372 probe stats=[0.296, 0.0229, 0.0259] spread=0.3332 — null CAN move
+F3 null (300 whole-session circular shifts, seed=0, units=3618): mean=-0.0035 sd=0.0272 p5=-0.0468 p50=-0.0043 p95=0.0429 max=0.0821
+F3: real=-0.0372  percentile_rank=11.3%  p_ge=0.8870
+
+SECONDARY VXN/VIX (non-gate, discovery): N=2839 span 2010-09-14..2021-12-30
+         size      mean       std
+tercile                          
+T1        898  0.086608  0.979324
+T2        869  0.028435  0.662673
+T3       1072  0.031158  0.614287
+  T3-T1 spread=-0.0554%  clustered t=-1.869
+SECONDARY VIX3M/VIX (non-gate, discovery): N=2835 span 2010-09-20..2021-12-30
+         size      mean       std
+tercile                          
+T1        934  0.055253  1.033598
+T2        850  0.056191  0.661880
+T3       1051  0.033652  0.514702
+  T3-T1 spread=-0.0216%  clustered t=-0.740

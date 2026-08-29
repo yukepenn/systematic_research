@@ -11,7 +11,14 @@ execution contract · evidence plan · power · relation to prior families.
 
 ---
 
-## H1 — VX/VXN term-structure state as a session-exposure conditioner ⭐ rank 1
+## H1 — VX/VXN term-structure state as a session-exposure conditioner — ❌ **NULL, CLOSED AT FORMULATION** (`runs/GENESIS_H1_VOLSTATE_20260828`, G00010)
+
+**Tested 2026-08-28: F1/F2/F3 all FAIL — wrong sign (T3−T1 = −0.037%/session, t −1.42), collapses
+under RV match, 11th percentile of its own null. The 2022+ confirmation window was never opened.**
+Exact closure scope in the run report. Remains open: vol-state as RISK SPECIFICATION (sizing), and
+intraday horizons — neither is scheduled. Original prior below, kept for the record.
+
+### (original rank-1 prior, superseded by the test)
 
 - **Mechanism:** the vol futures curve prices risk transfer; backwardation = stress demand for
   near-dated protection. Conditional NQ return/vol distributions differ across curve states
@@ -35,7 +42,15 @@ execution contract · evidence plan · power · relation to prior families.
   different observable and N. W109/W113 "regime info real, policy dead" closed **detector-veto
   policies on P1**, not exposure conditioning by an external state. Genuinely distinct.
 
-## H2 — Calendar/flow-day conditioning (ToM, FOMC-cycle, OPEX, announcement-day) — rank 2
+## H2 — Calendar/flow-day conditioning — ❌ **NULL, CLOSED AT FORMULATION** (`runs/GENESIS_H2_CALENDAR_20260828`, G00011)
+
+**Tested 2026-08-28: 0 of 11 day-types survive the family-wise bar (max-|t| q95 = 2.849; best real
+2.296). FOMC_DAY +0.137%/session (t 1.73) under bar; NFP contra-sign; ToM/FOMC-cycle flat. ⭐ The
+day-of-week closure is now a TESTED fact.** Exact scope + MDEs in the run report. Interactions and
+variance effects were out of scope and stay unscheduled without a new mechanism. Original prior
+below, kept for the record.
+
+### (original rank-2 prior, superseded by the test)
 
 - **Mechanism:** institutional flow cycles (month-end rebalancing, Fed information cycle, option
   expiry hedge unwinds) and scheduled-risk premia (Savor-Wilson: announcement days carry 10× the
@@ -94,7 +109,12 @@ execution contract · evidence plan · power · relation to prior families.
 - **Prior families:** FOLLOW_MORNING is this family's live member; seven fade kills are its
   mirror-side evidence.
 
-## H5 — Overnight/RTH structure re-adjudication (W96 NIGHT + session-phase map) — rank 5
+## H5 — Overnight/RTH structure re-adjudication — ⏸ **DEFERRED TO FORWARD DATA (correction 2026-08-28)**
+
+⚠️ **Sequencing correction:** the parked objects' revival conditions ("longer sample", "trailing-24m
+t reverting") require data **after** the point at which they were parked — i.e. the sealed ≥2026-08-01
+window or shadow accrual. Re-reading the same pre-seal data now would be multiplicity without
+information. **No historical re-adjudication is scheduled; these wait for the seal/shadow.**
 
 - **Mechanism:** distinct liquidity/participant regimes per session phase; overnight-vs-intraday
   split persists as structure even though the naive drift is dead.
@@ -107,11 +127,13 @@ execution contract · evidence plan · power · relation to prior families.
 - **Prior families:** exactly the parked rows of PARKED_NOT_DEAD (54/38/56) — this is their owed
   re-read, with pre-W82 economics re-costed at $14.65.
 
-## H6 — ATR/vol-normalized-offset final adjudication — rank 6 (cheap loop closure)
+## H6 — ATR/vol-normalized-offset — ⏸ **RECLASSIFIED: FORWARD-ONLY (correction 2026-08-28)**
 
-Killed 3× by threshold, never by sign (H-006, Wave-14, ATRPOOL01 0.8910 vs 0.90). One properly
-powered, properly nulled adjudication with the corrected effective-K machinery; PASS or a clean
-sign-level kill. Zero new data; small engineering.
+⚠️ **The "one proper adjudication" idea is withdrawn as historically untestable.** A meta-test
+designed after observing three near-misses is post-hoc by construction — pooling them now is
+"lower the bar until it passes" wearing a statistics costume. The family died 3× at its own
+preregistered bars; its next legitimate evidence is **forward** (sealed window or shadow), where a
+single preregistered joint read is honest. Nothing scheduled on historical data.
 
 ## H7 — COT positioning crowding — rank 7 (low prior, free, long history)
 

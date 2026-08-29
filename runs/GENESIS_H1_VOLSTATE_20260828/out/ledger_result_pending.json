@@ -1,0 +1,26 @@
+{
+ "trial_id": "G00010",
+ "metrics": {
+  "n_discovery": 3359,
+  "n_T1": 1089,
+  "n_T3": 1235,
+  "uncond_mean_pct": 0.039811,
+  "uncond_sd_pct": 0.743845,
+  "f1_T3_minus_T1_pct": -0.037171,
+  "f1_t_clustered_monthly": -1.4173,
+  "f1_half1_diff_pct_2007_2013": 0.014323,
+  "f1_half2_diff_pct_2014_2021": -0.070627,
+  "f2_rv_matched_contrast_pct": -0.036913,
+  "f2_t_clustered_monthly": -1.4043,
+  "f3_real_stat_pct": -0.037171,
+  "f3_null_p95_pct": 0.042884,
+  "f3_percentile_rank": 11.33,
+  "f3_p_ge": 0.887,
+  "expiry_rule_validation_pct_exact": 100.0,
+  "f4_read": false,
+  "parity_run": false,
+  "seal_asserts": 10
+ },
+ "result": "NULL",
+ "note": "H1 VOLSTATE clean NULL at the preregistered formulation. F1 FAIL: T3-T1 = -0.0372%/session with t = -1.42 (monthly-clustered) \u2014 the preregistered sign (steep contango T3 -> higher next-session NQ return) is REVERSED in the pooled discovery sample and the halves disagree in sign (+0.0143 / -0.0706). F2 FAIL (RV-matched contrast keeps the wrong sign). F3 FAIL (real stat at the 11.3th percentile of 300 whole-session circular-shift nulls). F4 NOT READ; the 2022+ NQ outcome window remains unread by this family; independent implementation not written (precondition failed); modern NQ parquet never opened. Secondary non-gate states point the same wrong way (VXN/VIX spread -0.055%, t -1.87; VIX3M/VIX -0.022%, t -0.74). Diagnostic note: a k=1 circular probe shows a large CONTEMPORANEOUS basis-return association (+0.30%), i.e. the curve state co-moves with the session just ended, not the session ahead."
+}

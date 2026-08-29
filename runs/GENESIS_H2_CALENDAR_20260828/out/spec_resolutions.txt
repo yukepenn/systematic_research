@@ -1,0 +1,137 @@
+GENESIS_H2_CALENDAR_20260828 — spec ambiguity resolutions
+Written BEFORE any statistic was computed (hard rule 6). Frozen at write time.
+Author: TEAM H2 subagent, 2026-08-28. Trial G00011.
+
+R01  NQ substrate paths ("same substrate/splice rules as H1 spec"):
+     deep   = research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet
+              (1-min, END-stamped ET, time as string) -> sessions with label <= 2021-12-31
+     modern = runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet
+              (1-min, END-stamped ET, timestamp[ns]) -> sessions with label >= 2022-01-01
+     Paths evidenced by runs/GENESIS_REPRO_INCUMBENT_20260828/src/repro_driver.py.
+     Returns computed WITHIN each substrate only; the splice return (first 2022 session,
+     whose prior close lives in the other substrate) is DROPPED, per H1 spec language.
+
+R02  Return definition: return_s = 100 * (close_s / close_prev - 1), simple percent,
+     close = last 1-min bar close of the session (bars END-stamped; session = 18:00 ET
+     prev day -> 17:00 ET, label per runlib/session_boundary convention: hour >= 18
+     rolls to next calendar day; 17:00 < t < 18:00 bars, if any, belong to the closing
+     session... conservative: t <= 17:59 maps by the hour>=18 rule only). Returns between
+     consecutive AVAILABLE sessions within a substrate. The first 2006 return may use the
+     last 2005 session close (within deep substrate; the return itself is dated 2006,
+     satisfying "returns 2006 ->"). Percent units used throughout (spec's power note is
+     quoted in %/session).
+
+R03  "session-clustered t": the session IS the clustering unit and the frame has exactly
+     one return per session, so the cluster-robust t for mean(in)-mean(out) reduces to
+     the two-sample Welch t: t = (mean_in - mean_out) / sqrt(s_in^2/n_in + s_out^2/n_out).
+     This is what is computed and printed.
+
+R04  Family for the max-|t| null = ALL ELEVEN preregistered statistics: TOM, FOMC_CYCLE,
+     FOMC_DAY, CPI_DAY, NFP_DAY, OPEX_WEEK, DOW_Mon, DOW_Tue, DOW_Wed, DOW_Thu, DOW_Fri.
+     (G3 says DOW rows face "the same family bar"; including them raises the bar for
+     everyone — the conservative reading.) Per replication ONE shared circular shift of
+     the return series is drawn; all 11 |t|'s are recomputed on the shifted returns
+     against the FIXED calendar; max-|t| across the 11 forms the null draw. G1 pass:
+     real |t| > 95th percentile of the max-|t| distribution (strict >).
+
+R05  Null mechanics: session-level frame (one row per session), so a whole-session
+     circular shift = rotation of the return vector along the session sequence by k,
+     dummies fixed. 500 replications (spec floor), shifts drawn WITHOUT replacement,
+     distinct, from {1..N-1}, numpy default_rng(seed=0). A sensitivity check (max-|t|
+     statistic must move across probe shifts) runs before any percentile is quoted
+     (null_guard doctrine).
+
+R06  FOMC meeting list: scheduled meetings ONLY, 2006 -> 2026 (through the last meeting
+     whose dates are <= 2026-07-31 in effect on the frame; later 2026 meetings are kept
+     in the artifact but cannot label any in-frame session beyond cycle arithmetic).
+     Unscheduled meetings / conference calls / notation votes are EXCLUDED (spec:
+     "scheduled"). Meeting start = first calendar day listed; decision day = LAST
+     calendar day listed (statement ~14:00 ET). Source: federalreserve.gov public
+     calendar + historical-materials pages; raw HTML bytes saved + sha256 recorded in
+     out/calendar_artifacts/. The 37 FOMC rows in c01_announcement_calendar.csv (2022+)
+     serve as an independent cross-check of the fetched decision days; any discrepancy
+     is documented, and the FETCHED list governs (spec names federalreserve.gov as the
+     source). "dates-only artifact committed in out/" is satisfied by WRITING the CSV
+     artifact into out/calendar_artifacts/; the git commit itself is the orchestrator's
+     (this agent is forbidden to run git).
+
+R07  FOMC_CYCLE ("weeks 0/2/4/6 in Cieslak cycle time from each FOMC meeting start"):
+     day counter runs in TRADING-SESSION units on the NQ session calendar (hard rule:
+     session_id is the unit; Cieslak et al.'s business-day phase is approximated by the
+     session sequence). Day 0 = the session whose label date equals the meeting start
+     date (or the next available session if that date has no session). Day t>0 = t
+     sessions after day 0 of the most recent meeting. Day -1 = the session immediately
+     preceding the upcoming meeting's day 0 (upcoming-meeting assignment takes
+     precedence over the trailing count). Even week w in {0,2,4,6} = cycle days
+     {5w-1 .. 5w+3}. Dummy=1 on those days, 0 on other DEFINED cycle days. Sessions
+     with UNDEFINED cycle position (before day -1 of the first 2006 meeting; the spec
+     freezes the fetch at 2006, so the tail of the Dec-2005 cycle cannot be labeled)
+     are EXCLUDED from the FOMC_CYCLE statistic entirely (neither in nor out) — they
+     are not silently mislabeled as controls.
+
+R08  TOM (McConnell-Xu): in-window = the LAST session of each calendar month (by session
+     label) + the FIRST THREE sessions of the following month. Computed from the session
+     calendar itself. Frame edges: the first three sessions of Jan-2006 qualify; the
+     last session of 2026-07 qualifies (its following-month sessions are past the seal
+     and simply absent).
+
+R09  OPEX_WEEK: for every calendar month, third Friday F; in-window sessions = those
+     whose session label date lies in [Monday of F's ISO week .. F] (Mon-Fri week
+     containing the third Friday; the label date, not the open date, decides).
+
+R10  CPI_DAY / NFP_DAY: union of research/04_complementary_family/
+     c01_announcement_calendar.csv (2022+) and research/scalping_lab/data/
+     hist_calendar_2005_2021.csv (2005-2021; this IS the committed BLS 2005-2021
+     calendar referenced by the spec — located in the working tree, no git command
+     used), filtered to event in {CPI, NFP}, dedup by (date,event). All releases are
+     08:30 ET -> they fall inside the session labeled with the same date. A release
+     date with NO session in the frame is DROPPED from that day-type (count printed),
+     never remapped to a neighboring session (conservative: attenuates power, cannot
+     manufacture a pass). Same drop rule for FOMC_DAY decision days.
+
+R11  DOW: weekday of the session LABEL date (Sun-18:00-open session is labeled Monday).
+     Five dummies, each tested as in(that weekday)-vs-out(all other sessions).
+
+R12  Eras for G2: 2006-01-01..2015-12-31 vs 2016-01-01..2026-07-31 by session label.
+     Survivor keeps its sign iff mean(in)-mean(out) has the same strict sign in both.
+
+R13  MDE per day-type, printed BEFORE the verdict: MDE_type = t_bar * SE_type, where
+     t_bar = the family-wise 95th-percentile max-|t| bar and SE_type =
+     sqrt(s_in^2/n_in + s_out^2/n_out) on the real frame, in %/session units.
+
+R14  Sign expectations: the six event types are preregistered "+", DOW "NULL". G1/G2 are
+     |t|- and sign-stability-based per the spec letter; a survivor whose in-minus-out
+     sign CONTRADICTS its preregistered "+" is reported with flag SIGN_CONTRA in the
+     gate table and note. A DOW G1+G2 survivor still counts toward the orchestrator's
+     verdict rule (>=1 survivor -> PASS) but carries G3 flag SURPRISE_REVIEW; this rule
+     is frozen here, before any number exists.
+
+R15  Seal: every parquet/CSV load passes seal_guard (assert_presealed, or
+     truncate_presealed with the dropped count printed). The session frame is
+     assert_presealed on its label column before any statistic. No value >= 2026-08-01
+     is read into results or persisted. Fetched FOMC dates in 2026 after 2026-07-31 are
+     calendar metadata (public schedule, not market data); to stay strictly inside the
+     letter of "no value >= 2026-08-01 persisted", the dates-only ARTIFACT keeps the
+     full fetched list (it is a public schedule, not market data — resolution:
+     calendar dates are not 'data values' under the seal, which protects market
+     observations), but the ANALYSIS frame uses only sessions <= 2026-07-31, enforced
+     by seal_guard on the session labels.
+
+R16  Null replication count: exactly 500 (spec floor ">= 500").
+
+R17  (appended before any statistic was computed) Sessions labeled Saturday or Sunday
+     cannot exist under the CME 18:00->17:00 convention (Sunday 18:00 bars label
+     Monday); any such labels in the substrate are data artifacts and are dropped with
+     their count PRINTED. Observed data fact recorded pre-stats: the deep parquet's
+     first bar is 2006-01-05 08:59 ET (no 2005 rows despite the filename), so the first
+     usable return is the 2006-01-06 session; this is data coverage, not a window
+     choice.
+
+R18  (appended before any statistic was computed) Family-wise bar: q95 of the max-|t|
+     null distribution computed with quantile method='higher' (conservative — the bar
+     is at least the empirical 95th percentile); G1 pass requires strict >.
+
+R19  (appended before any statistic was computed) FOMC meetings with decision day
+     after 2026-07-31 are dropped from the ANALYSIS meeting list via truncate_presealed
+     (count printed). They cannot label any in-frame session: the earliest cycle label
+     they could create is day -1 of a mid-September 2026 meeting, past the frame end.

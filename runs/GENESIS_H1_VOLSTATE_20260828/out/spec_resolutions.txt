@@ -1,0 +1,185 @@
+GENESIS_H1_VOLSTATE_20260828 — spec ambiguity resolutions
+Written BEFORE any gate statistic was computed (hard rule 6). Timestamp: 2026-08-28.
+Data-shape facts referenced below come only from schema inspection and the frozen
+DATA_CONTRACT.md of GENESIS_FREEDATA_CBOE_20260828 — no BASIS-vs-return statistic,
+no tercile spread, no return series existed when this file was written.
+
+R1. NQ session labeling (spec: session_id unit, END-stamped bars, 18:00->17:00 ET).
+    A 1-min bar stamped ts belongs to session label = calendar_date(ts) if
+    wallclock_time(ts) <= 17:00:00, else calendar_date(ts) + 1 day. This matches
+    research_sdk/seal_guard.py (17:00:00 bar is the session-close bar; anything after
+    17:00 belongs to the next session, halt hour included). Session close = close of the
+    LAST bar (max ts) within the session. No minimum-bar-count filter is applied
+    (introducing one would be an un-preregistered parameter); bar-count and calendar-gap
+    distributions are reported as diagnostics only.
+
+R2. Next-session return. For consecutive sessions (s_i, s_{i+1}) AS PRESENT in one
+    substrate (sorted by session label), ret(s_{i+1}) = close(s_{i+1})/close(s_i) - 1
+    (percent form = x100) and points = close(s_{i+1}) - close(s_i). "Next session" =
+    next session present in the same substrate, regardless of calendar gap (weekends are
+    normal; adding a max-gap filter would be an invented parameter). Calendar-gap
+    distribution printed as a diagnostic. Gates are evaluated on PERCENT returns; points
+    are reported in diagnostics only (spec target names both; the power note is stated
+    in %/session, pinning % as the gate scale).
+
+R3. Substrate split (spec data clause). Deep parquet
+    (research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet) supplies
+    sessions with label <= 2021-12-31 ONLY; rows with later session labels are not used
+    and no session close is computed from them. Modern parquet
+    (runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet) supplies sessions labeled
+    2022-01-01 .. 2026-07-31. Returns are computed within each substrate separately;
+    the boundary return (last-2021 close -> first-2022 close) therefore never exists in
+    either return set (the splice drop is structural). Consequence: the state session
+    2021-12-31 has no target return and drops out of discovery; the state session on the
+    last modern session (2026-07-31) has no target and drops out of confirmation.
+    The modern parquet is NOT OPENED at all unless F1-F3 all pass and parity passes.
+
+R4. VX front-month expiry. expiry(contract) = expiry_date_file where present (modern
+    era). Archive-era contracts (expiry <= 2012, expiry_date_file = NaT in the certified
+    file): expiry is COMPUTED from the documented final-settlement rule (DATA_CONTRACT
+    §2): expiry = (3rd Friday of the calendar month after the contract month) - 30
+    calendar days; if that date is not in the observed VX trade-date universe (holiday),
+    step back one calendar day at a time (max 3 steps) until it is. VALIDATION
+    (mechanical, before any gate): the same rule applied to all modern contracts must
+    reproduce expiry_date_file exactly for >= 95% of contracts and never miss by more
+    than 1 day; the match distribution is printed. If validation fails those bounds the
+    archive expiry is declared DEFECT (front month not computable pre-2013) rather than
+    substituted. This is a computation of the spec's own defined quantity from the
+    vendor's documented rule, not a substitution of different data.
+
+R5. Front-month selection on session date s: the contract with the SMALLEST expiry
+    strictly after calendar date s (spec text; strict inequality already implements
+    "roll to next on expiry day"). The selected contract must have a settlement row with
+    a finite, positive settle on s; if it does not, BASIS(s) is MISSING for that date
+    (no fallback to the next contract — that would substitute a different state).
+    Missing-front counts printed. Rows with trade_date < 2007-03-26 are excluded before
+    anything else (spec: excluded, not rescaled); the exclusion count and its overlap
+    with legacy_scale_flag are printed.
+
+R6. BASIS series axis. BASIS(d) = front_settle(d)/VIX_close(d) - 1 on every calendar
+    date d that is a VX trade date with a valid front settle AND has a VIX close.
+    Dates failing either leg carry no BASIS (counts printed). The trailing-252 window
+    counts 252 BASIS OBSERVATIONS (the last 252 available BASIS values), not 252
+    calendar sessions.
+
+R7. Trailing terciles (causal). For BASIS date d, breakpoints q33 and q66 are the 1/3
+    and 2/3 linear-interpolation quantiles of the 252 BASIS values STRICTLY BEFORE d
+    (d's own value excluded from its window — the stricter causal reading;
+    min_periods = 252, no partial windows). Label: T1 if BASIS <= q33; T3 if
+    BASIS > q66; else T2. Dates with fewer than 252 prior observations are UNCLASSIFIED
+    and excluded (first classifiable date is therefore ~ mid-2008-03; discovery
+    effectively starts there — accepted consequence of the frozen 252, not a window
+    change). Identical rule for the RV terciles and the secondary states.
+
+R8. State->return join. State at BASIS date d conditions the return of the NQ session
+    AFTER session d: the pair (s_i = d, s_{i+1}) from R2. If NQ has no session labeled
+    d, or the pair's return does not exist, that state date contributes nothing
+    (counts printed). Discovery sample = state dates d in [2007-04-01, 2021-12-31]
+    (window membership by the STATE session's label) with a valid tercile and a valid
+    within-deep next-session return.
+
+R9. "t_clustered" definition (frozen for F1, F2, F4 identically): OLS with
+    cluster-robust (CR1) covariance, clusters = calendar year-month OF THE TARGET
+    SESSION s_{i+1} (the return observation's own month; monthly clustering absorbs the
+    serial dependence created by persistent states and is the conservative choice — the
+    charter's session-clustered default would make every observation its own cluster
+    and yield a mechanically easier plain-White t). Implementation:
+    statsmodels OLS.fit(cov_type='cluster'). F1/F4: on the T1-union-T3 subsample,
+    regress pct_next on constant + 1[T3]; t = t-stat of the 1[T3] coefficient.
+    Gate direction: coefficient (= T3 - T1 difference) must be POSITIVE (spec pins
+    T3 - T1 > 0), so the gate is t >= +2.0 (F1) / t >= +1.0 with discovery's sign (F4).
+    F1 halves clause: mean(T3) - mean(T1) computed separately in halves
+    [2007-04-01..2013-12-31] and [2014-01-01..2021-12-31] (assignment by the state
+    session's label); both raw differences must be > 0. Halves need sign only (per spec
+    text), not their own t.
+
+R10. F2 implementation. RV(s) = ddof-1 standard deviation of the 21 most recent
+    within-deep percent returns ending WITH session s's own return (min_periods = 21).
+    RV terciles: same causal trailing-252 rule as R7 applied to the RV series. Pooled
+    matched difference: OLS of pct_next on constant + 1[T3] + 1[T1] + 2 RV-tercile
+    dummies (RV-T1 omitted), discovery rows having BOTH terciles; tested quantity =
+    beta(T3) - beta(T1) (linear contrast, CR1 monthly clusters as R9). Gate: contrast
+    > 0 (keeps F1's required sign) AND t >= 1.5. The per-stratum (RV tercile x BASIS
+    tercile) cell table and per-stratum T3-T1 differences are printed as the spec's
+    RV-matched table, alongside the matched unconditional control (CLAUDE.md §4:
+    unconditional mean/sd/N in the same discovery sample).
+
+R11. F3 implementation. Frame = one row per BASIS date d in [2007-03-26, 2021-12-31]
+    with a valid BASIS value; columns: session (label), basis, next_ret (NaN when R8
+    gives no return), in_disc (label in [2007-04-01, 2021-12-31]). Unit = 'session'
+    (each row its own block — whole-session shifts by construction). decision_fn
+    recomputes R7 terciles from the (shifted) basis column — the frozen rule as a black
+    box on shifted inputs; statistic_fn scores against the ORIGINAL frame:
+    stat = mean(next_ret | label T3) - mean(next_ret | label T1) over rows with
+    in_disc, finite next_ret (masks and returns taken positionally from the base
+    frame). verify_null_sensitivity runs first (3 probe shifts, all nonzero mod m);
+    then run_circular_null with n_shifts = 300, seed = 0 (one shared draw for this
+    family). Gate: real statistic STRICTLY ABOVE the 95th percentile
+    (numpy linear-interpolation percentile) of the 300 null statistics. The real
+    statistic from this construction is by construction identical to F1's observed
+    pooled difference.
+
+R12. F4 (read ONLY if F1, F2, F3 all pass AND parity passes). The tercile rule runs on
+    the FULL basis series (2007-03-26 .. 2026-07-31) — the trailing window for early-
+    2022 dates legitimately reaches back into 2021 state history (state data are not
+    the one-shot object; the 2022+ NQ returns are). Confirmation sample = state dates
+    labeled [2022-01-01 .. 2026-07-31] with valid tercile and a valid within-modern
+    next-session return. Same estimator as R9. Gate: T3 - T1 difference has the same
+    sign as discovery (positive) AND clustered t >= 1.0. One shot: computed once,
+    recorded as computed.
+
+R13. Parity check (before F4). src/state_independent.py is written only after F1-F3
+    pass; it recomputes date -> tercile label from the certified parquets with its own
+    logic (no import of the primary module; verified by AST walk over its Import/
+    ImportFrom nodes, result printed). Parity metric: agreement on tercile label over
+    the UNION of dates classified by either implementation (a date classified by one
+    but not the other counts as a disagreement — strictest denominator). Gate:
+    >= 99.5%. Below: STOP, F4 not read.
+
+R14. Secondary states (diagnostics, never gates): VXN/VIX close ratio (available
+    2009-09-14+) and VIX3M/VIX close ratio (2009-09-18+), same R7 tercile rule, same
+    R8 join, DISCOVERY window only (they must not trigger any additional read of 2022+
+    outcomes). Reported: per-tercile N/mean/sd, T3-T1 spread, R9 clustered t.
+
+R15. Ledger result mapping (out/ledger_result_pending.json): PASS iff F1 AND F2 AND F3
+    AND parity AND F4 all pass. NULL if any gate fails cleanly (including a parity
+    STOP, which leaves F4 unread — noted as such). DEFECT only on data impossibility
+    (e.g. R4 validation failure). All gate rows GATE/SPEC/OBSERVED/PASS-FAIL are
+    printed by the program into out/gate_table.txt; a FAIL is recorded as FAIL.
+
+R16. Seal discipline. Every frame loaded from disk passes
+    research_sdk.seal_guard.assert_presealed on its timestamp column at load (certified
+    Cboe layer is already truncated < 2026-08-01; the assertions are still executed and
+    counted). Nothing on/after 2026-08-01 is read, printed, or persisted; the deep NQ
+    parquet stream is cut at session label 2021-12-31 during the discovery stage.
+
+--- ADDENDUM (written 2026-08-28, AFTER the R4 v1 validation printed FAIL and BEFORE
+    any gate statistic F1/F2/F3/F4 or any BASIS-vs-return quantity was computed; the
+    v1 FAIL is preserved verbatim in out/gate_table_r4v1_fail.txt) ---
+
+R4b. The v1 validation FAIL was diagnosed at the DATA-IDENTITY level only (contract
+    expiry dates — no NQ return was loaded or joined). Two structural artifacts, both
+    of the v1 harness, neither a property of the archive-era derivation the rule
+    exists for:
+      (a) 9 of 14 misses (all -3 days) are contracts with POST-SEAL expiries
+          (2026-08 .. 2027-04): their expiry Wednesdays lie beyond the last certified
+          trade date (2026-07-31), so the universe-membership holiday probe walked
+          back 3 days. These contracts carry expiry_date_file and NEVER use the
+          derived value; a validation clause that includes them tests the rule outside
+          its domain of use.
+      (b) 5 of 14 misses (all +1 day) are exactly the contracts whose anchor (the
+          following month's 3rd Friday) is an exchange holiday: Good Friday
+          2014-04-18 / 2019-04-19 / 2022-04-15 / 2025-04-18 and Juneteenth
+          2026-06-19. The CFE final-settlement rule moves the SPX-expiry anchor to
+          the preceding Thursday in that case, making final settlement Tuesday;
+          the v1 rule missed the anchor-level shift.
+    AMENDED RULE (frozen before any recomputation): anchor = 3rd Friday of the month
+    after the contract month; if anchor <= last certified trade date AND anchor is not
+    an observed VX trade date (exchange holiday), anchor -= 1 day (Thursday).
+    expiry_raw = anchor - 30 calendar days; then while expiry_raw <= last certified
+    trade date AND not an observed trade date (max 2 steps), expiry_raw -= 1 day.
+    AMENDED VALIDATION SCOPE: modern contracts with expiry_date_file <= 2026-07-31
+    (the population the trade-date universe can adjudicate, and the exact analogue of
+    archive-era usage, where every relevant date is in-span). Bounds unchanged:
+    >= 95% exact, max miss <= 1 day, else DEFECT. No gate statistic existed when this
+    amendment was written; the amendment cannot have been selected on any outcome.

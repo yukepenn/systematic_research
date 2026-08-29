@@ -1,0 +1,52 @@
+==============================================================================
+GENESIS_H2_CALENDAR_20260828 driver — trial G00011 — run 2026-08-28 20:10:02.573278
+==============================================================================
+deep: 6466783 bars -> 4123 sessions [2006-01-05 .. 2021-12-31]
+modern: 1620044 bars -> 1184 sessions [2022-01-03 .. 2026-07-31]
+session calendar: 5307 sessions; returns available: 5305 (dropped: first deep session + splice return at 2022 boundary)
+CPI: 258 calendar dates total, 246 in frame window, 244 matched sessions, 2 dropped (no session)
+NFP: 258 calendar dates total, 246 in frame window, 246 matched sessions, 0 dropped (no session)
+FOMC meetings in analysis: 164 (post-seal meetings dropped: 3)
+FOMC_DAY: 164 decision days, 163 matched sessions, 1 dropped (no session)
+FOMC_CYCLE anchors: 164 (start date not itself a session: 1)
+FOMC_CYCLE: defined for 5290 sessions (undefined head before first 2006 meeting: 17); in-window 2797
+stat frame: N = 5305 session returns; era1(2006-2015) = 2573, era2(2016-2026/07) = 2732
+null sensitivity: real max|t| = 2.296, probe stats = [2.059, 2.029, 2.15], spread = 0.2670
+family null: 500 shared-shift replications; max-|t| q95 = 2.849 (min 0.635, med 1.811, max 3.965)
+
+--- per-type MDE at the family-wise bar (printed BEFORE verdict; %/session) ---
+type          n_in  n_out       SE  MDE=q95*SE
+TOM            986   4319   0.0294      0.0839
+FOMC_CYCLE    2796   2493   0.0238      0.0677
+FOMC_DAY       163   5142   0.0790      0.2251
+CPI_DAY        244   5061   0.0607      0.1728
+NFP_DAY        246   5059   0.0642      0.1828
+OPEX_WEEK     1230   4075   0.0273      0.0778
+DOW_Mon       1057   4248   0.0289      0.0823
+DOW_Tue       1066   4239   0.0280      0.0799
+DOW_Wed       1066   4239   0.0310      0.0882
+DOW_Thu       1066   4239   0.0302      0.0860
+DOW_Fri       1050   4255   0.0295      0.0841
+
+==================================================================================================
+GATE TABLE (printed by program)
+==================================================================================================
+GATE                  SPEC                              OBSERVED                        PASS-FAIL 
+--------------------------------------------------------------------------------------------------
+G1_TOM                |t| > family q95 = 2.849          diff=-0.0081% t=-0.275 (exp +)  FAIL      
+G1_FOMC_CYCLE         |t| > family q95 = 2.849          diff=-0.0040% t=-0.168 (exp +)  FAIL      
+G1_FOMC_DAY           |t| > family q95 = 2.849          diff=+0.1369% t=+1.733 (exp +)  FAIL      
+G1_CPI_DAY            |t| > family q95 = 2.849          diff=+0.0624% t=+1.028 (exp +)  FAIL      
+G1_NFP_DAY            |t| > family q95 = 2.849          diff=-0.1072% t=-1.670 (exp +)  FAIL      
+G1_OPEX_WEEK          |t| > family q95 = 2.849          diff=-0.0220% t=-0.805 (exp +)  FAIL      
+G1_DOW_Mon            |t| > family q95 = 2.849          diff=+0.0405% t=+1.401 (exp NULL)FAIL      
+G1_DOW_Tue            |t| > family q95 = 2.849          diff=+0.0197% t=+0.702 (exp NULL)FAIL      
+G1_DOW_Wed            |t| > family q95 = 2.849          diff=+0.0389% t=+1.257 (exp NULL)FAIL      
+G1_DOW_Thu            |t| > family q95 = 2.849          diff=-0.0319% t=-1.054 (exp NULL)FAIL      
+G1_DOW_Fri            |t| > family q95 = 2.849          diff=-0.0678% t=-2.296 (exp NULL)FAIL      
+G2_era_stability      same sign in both eras            no G1 survivor to test          N/A       
+G3_dow_verdict        preregistered expectation NULL    0 DOW type(s) passed G1         PASS(expected NULL)
+--------------------------------------------------------------------------------------------------
+SURVIVORS (G1+G2): NONE
+VERDICT: NULL — family closed at this formulation; per-type MDEs above state what was detectable.
+artifacts written: gate_table.txt, family_null_distribution.csv, ledger_result_pending.json, calendar_artifacts/

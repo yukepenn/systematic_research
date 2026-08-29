@@ -1,0 +1,75 @@
+{
+ "rows": [
+  {
+   "GATE": "R4b_EXPIRY_RULE",
+   "SPEC": "derived expiry: >=95% exact vs in-span modern expiry_date_file, max miss <=1d",
+   "OBSERVED": "100.00% exact, max miss 0d (n=163)",
+   "VERDICT": "PASS"
+  },
+  {
+   "GATE": "F1_discovery_separation",
+   "SPEC": "t_clustered(T3-T1)>=2.0, T3-T1>0, same sign both halves 07-13/14-21",
+   "OBSERVED": "diff=-0.0372%, t=-1.42, halves +0.0143/-0.0706",
+   "VERDICT": "FAIL"
+  },
+  {
+   "GATE": "F2_rv_control",
+   "SPEC": "RV-tercile-matched T3-T1 keeps sign (>0) and clustered t>=1.5",
+   "OBSERVED": "contrast=-0.0369%, t=-1.40",
+   "VERDICT": "FAIL"
+  },
+  {
+   "GATE": "F3_null",
+   "SPEC": "real T3-T1 strictly above 95th pct of >=300 circular-shift nulls",
+   "OBSERVED": "real=-0.0372 vs null p95=0.0429 (rank 11.3%)",
+   "VERDICT": "FAIL"
+  },
+  {
+   "GATE": "PARITY",
+   "SPEC": "independent impl tercile agreement >=99.5%",
+   "OBSERVED": "not run \u2014 F1-F3 precondition failed",
+   "VERDICT": "NOT-RUN"
+  },
+  {
+   "GATE": "F4_confirmation",
+   "SPEC": "2022-01..2026-07 T3-T1 same sign, t>=1.0, ONE SHOT",
+   "OBSERVED": "NOT READ \u2014 F1-F3 failed; 2022+ window stays unread by this family",
+   "VERDICT": "NOT-READ"
+  }
+ ],
+ "state": {
+  "f1": {
+   "effect": -0.03717089747086,
+   "se": 0.02622627639327765,
+   "t": -1.4173150970218438,
+   "n": 2324,
+   "n_clusters": 162
+  },
+  "f1_pass": false,
+  "half1_diff": 0.014322877749535255,
+  "half2_diff": -0.07062731706788365,
+  "n_half1": 1350,
+  "n_half2": 2009,
+  "f2": {
+   "effect": -0.03691301262447888,
+   "se": 0.02628558081707351,
+   "t": -1.4043065238452879,
+   "n": 3359,
+   "n_clusters": 162
+  },
+  "f2_pass": false,
+  "f3_real": -0.03717089747086001,
+  "f3_null_p95": 0.04288422617776675,
+  "f3_rank_pct": 11.333333333333332,
+  "f3_p_ge": 0.8870431893687708,
+  "f3_pass": false,
+  "n_disc": 3359,
+  "n_t1": 1089,
+  "n_t3": 1235,
+  "uncond_mean": 0.039811254898301174,
+  "uncond_sd": 0.7438448975868048,
+  "all3_pass": false,
+  "seal_asserts": 10
+ },
+ "defect": false
+}

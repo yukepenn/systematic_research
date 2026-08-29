@@ -31,7 +31,7 @@ response (71 sessions, MDE 9.8×) · BREADTH03 VRP · MS-LAST as equivalence · 
 | "order flow unreachable at ANY coverage (998 vs 713)" | 713 = local store; withdrawn by Program C | Databento depth (mechanism-only, DISCOVERY-GRADE ceiling) |
 | "1-min participation anti-predictive" | only W111's afternoon-fade geometry | other geometries/horizons |
 | "NQ-specific alpha confirmed" | 0-for-4 parameter TRANSFER | per-instrument signal re-derivation (W43) |
-| "day-of-week closed permanently" | **no in-repo test exists** (rests on withdrawn DR-E priors) | a real, multiplicity-controlled calendar test |
+| "day-of-week closed permanently" | ✅ **RESOLVED BY TEST 2026-08-28** — `GENESIS_H2_CALENDAR`: 0 DOW survivors at the family-wise bar (worst |t| 2.30 vs bar 2.85). The closure is now measured, not inherited | — |
 | "TSMOM all roles" | two tested roles | (low prior; lit contests single-index TSMOM) |
 | B01's F04/05/07/08 | inherited, not direct, evidence | direct tests if mechanism-motivated |
 | Never tested at all | — | **futures XSMOM · carry with ≥3 roots/sector · VX term-structure conditioning · ES+NQ joint sub-minute state (non-incremental framing)** |
