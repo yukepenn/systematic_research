@@ -1,0 +1,36 @@
+run_id: GENESIS_H7_COT_20260828
+campaign: GENESIS
+type: SIGNAL_DIAGNOSTIC   # atlas H7 - positioning crowding; LOW prior stated in advance; one shot
+question: >
+  Does speculative positioning crowding in Nasdaq-100 futures (CFTC COT TFF) condition next-week
+  NQ returns? Ballast warning pre-applied: uncorrelated + unprofitable = ballast; a null here
+  closes the family cleanly.
+state_primary_frozen: >
+  CROWD(w) = Leveraged Funds net position (long - short) in the Nasdaq-100 futures market rows of
+  the certified COT TFF file, divided by market open interest, transformed to its trailing
+  156-report causal percentile. Terciles on that percentile.
+causal_availability_binding: >
+  Tuesday as-of is knowable FRIDAY 15:30 ET (certified DATA_CONTRACT). The state for report week w
+  conditions the NQ week starting the NEXT Monday 18:00 ET session. Any earlier alignment is a
+  look-ahead and a spec violation.
+target: next-week NQ return (Friday close to Friday close of session closes; ISO weeks on
+  session date), from the deep+modern substrates with the H1/H2 splice rule.
+window: 2006-08 -> 2026-07-31 single discovery window (982 reports; ~820 usable weeks after the
+  156-report warmup). Ceiling DISCOVERY-GRADE; no confirmation split (power); forward = shadow era.
+gates_all_coded_and_printed:
+  C1: tercile contrast T3 - T1 (crowded-long minus crowded-short) with preregistered CONTRARIAN
+      sign: T3 - T1 < 0, weekly clustered t <= -2.0
+  C2: dependence-preserving null - real |T3 - T1| beyond the 95th percentile of >= 300 circular
+      shifts of the state series against weekly returns (null_guard, sensitivity first)
+  C3: sign consistency of T3 - T1 in both halves (2006-2016 / 2017-2026-07)
+  verdict: ALL pass -> PASS; any fail -> NULL, family closed at formulation
+market_row_resolution: >
+  The TFF market selection (NASDAQ-100 consolidated vs e-mini row; the trailing-space duplicate)
+  is resolved BEFORE any state-return statistic: pick the row set with the longest continuous
+  OI coverage, document in spec_resolutions, and never revisit after numbers exist.
+prohibitions: no other trader categories as primaries (Dealer/Asset-Manager reported as non-gate
+  diagnostics only), no P&L/policy, no parameter search (156/terciles frozen), no sealed reads,
+  no magnitude-of-surprise anything.
+outputs: out/gate_table.txt, out/state_series.csv, out/diagnostics.txt, out/ledger_result_pending.json
+live_enabled: NO
+spend: $0
