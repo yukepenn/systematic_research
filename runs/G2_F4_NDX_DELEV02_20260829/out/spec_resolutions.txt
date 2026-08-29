@@ -1,0 +1,187 @@
+G2_F4_NDX_DELEV02_20260829 — spec ambiguity resolutions (written BEFORE any affected number was computed)
+Trial G00028. Spec is FROZEN (MC-40 retest on a percent-clean basis; G00027 was DEFECT — the additively
+back-adjusted futures substrate cannot express percent returns across eras). Each item below resolves an
+underdetermined clause conservatively, exactly once, as written here. No parameter search anywhere.
+Gate structure is IDENTICAL to the G00027 spec (runs/G2_F3_DELEV01_20260829), band now on INDEX %.
+====================================================================================================
+
+R1. FRED FETCH (Stage A) — BOUNDED, NO VIRGIN BYTES DOWNLOADED
+    URL: https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQ100&cosd=1985-01-01&coed=2026-07-31
+    coed is PINNED to 2026-07-31 so that no observation on/after the 2026-08-01 seal is ever downloaded
+    (stronger than post-hoc truncation; seal_guard is STILL applied to the parsed frame — expected
+    0 rows dropped, count printed). Download is streamed with a HARD 5 MB cap (abort => DEFECT).
+    Recorded in out/contract.txt and raw/fetch_manifest.json: exact URL, HTTP status, byte count,
+    sha256 of the raw bytes, UTC fetch time. Raw bytes are QUARANTINED at raw/fredgraph_NASDAQ100.csv
+    and never inspected beyond the programmatic parse in R2. Exactly ONE fetch (no retry-shopping;
+    a transient network failure may be retried identically, count recorded).
+
+R2. PARSE + CERTIFICATION
+    CSV header (observation_date|DATE, NASDAQ100). Value "." = missing (index holiday or vendor gap)
+    -> dropped from the certified series, counted in the missingness map. Certified layer =
+    certified/nasdaq100_daily.csv (columns date, close), all dates < 2026-08-01, passed through
+    research_sdk.seal_guard (truncate_presealed then assert_presealed; counts printed). Asserted:
+    unique strictly-increasing dates, all closes finite and > 0. Certification statements recorded in
+    out/contract.txt: timestamp semantics = official NDX value at the 16:00 ET market close of the
+    stamped calendar day; revision policy = closed index history is fixed (not revised).
+
+R3. COVERAGE / MISSINGNESS MAP (printed in out/contract.txt)
+    First/last certified date, total parsed rows, n missing ("."), n certified, per-year observation
+    counts, and the count of Mon-Fri weekdays in the span with no row (holidays + vendor gaps,
+    indistinguishable by design — counts only, no values).
+
+R4. HISTORY-SUFFICIENCY RULE + FALLBACK LADDER (decision rule fixed BEFORE the fetch)
+    The contract expects FRED NASDAQ100 to start 1986 (spec: "1986 ->"). HARD requirement for Stage B:
+    >= 221 certified index observations strictly before 2006-01-01 (200-day MA + 21-day RV + prev
+    close warm-up). If FRED NASDAQ100 fails this, what FRED provides is documented in contract.txt
+    and the fetch falls back to the pre-named PUBLIC source Stooq daily ^NDX
+    (https://stooq.com/q/d/l/?s=^ndx&i=d), same bounded-download/quarantine/certification treatment,
+    source recorded. Never a scraped paywall. No blending of sources: exactly one certified source.
+
+R5. STAGE-A OVERLAP-CORRELATION GATE (frozen: > 0.97 else DEFECT)
+    COMMON calendar = calendar dates that are BOTH a certified index date <= 2026-05-31 AND a futures
+    U-session label (R6). Over consecutive COMMON-calendar pairs (D_prev, D) with BOTH dates in
+    [2009-01-01, 2026-05-31]:
+      y = idx_close(D)/idx_close(D_prev) - 1
+      x = (fut_close(D) - fut_close(D_prev)) / idx_close(D_prev)
+    Denominator = PRIOR common-day index close (converts the futures point change into percent-like
+    units; the natural return convention). Gate: Pearson corr(y, x) > 0.97 strict, n printed.
+    corr <= 0.97 => DEFECT: recorded in contract.txt + gate_table.txt + ledger_result_pending.json
+    (result DEFECT) and Stage B is NOT computed (the two series would not describe the same market).
+
+R6. FUTURES UNIVERSE U AND RTH ANCHORS (identical to G00027 R1; substrate split per THIS spec)
+    Bars END-stamped; session label = calendar day for time-of-day <= 17:00, else next calendar day.
+    RTH close of session s = close of the bar stamped exactly 16:00:00; RTH open = OPEN of the bar
+    stamped exactly 09:31:00 (= the 09:30:00 price). U = sessions possessing a 16:00 bar; half/short
+    sessions (13:00 closes) are NOT in U. Uniqueness of the 09:31/16:00 bar per session asserted.
+    SUBSTRATE SPLIT (spec: "deep parquet pre-2022 / modern 2022+, each within its own window"):
+      labels <= 2021-12-31  -> research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet
+      labels >= 2022-01-01  -> runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet
+    Both sha256-verified against runs/GENESIS_REPRO_INCUMBENT_20260828/out/run_provenance.txt (abort
+    on mismatch). Modern store: seal_guard.truncate_presealed FIRST, then label-cut to <= 2026-05-31,
+    before any use. Every row-group's time column passes assert_presealed (deep) with counts printed.
+    SPLICE CONTINUITY CHECK (data contract, no P&L use): over all session labels in
+    [2022-01-01, 2026-05-31] present in BOTH stores, 16:00 closes must be IDENTICAL (max |diff| = 0,
+    re-affirming G2_F3 defect_evidence E1 locally); n and max|diff| printed, mismatch => DEFECT.
+    Deep-store rows with labels >= 2022 are read ONLY for this check, never for P&L.
+
+R7. SESSION ALIGNMENT (index calendar day -> futures session) + HOLIDAY MISMATCHES
+    Index date D maps to the futures session LABELED D — by the END-stamp convention that is exactly
+    the session whose RTH (09:30-16:00 ET) falls on calendar date D. Mismatch cases:
+    (a) index date with NO futures U-session labeled D (futures holiday or 13:00 half-day while the
+        index printed a close): an EVENT on such a date is UNTRADEABLE under the frozen policy (the
+        event-day futures RTH close is required for the gap veto; no alternative session is guessed).
+        Counted separately in the printed table (untradeable_align) and in events.csv.
+    (b) futures U-session with no index date (index holiday, futures open): the session still counts
+        as a U-session for entry / exit / the 3-session hold (the horizon is defined in FUTURES
+        sessions, per spec: "exit at futures RTH close 3 sessions later"). It can host no event and
+        no control (those are index-day objects).
+    Counts of both mismatch types over the window are printed in contract.txt.
+
+R8. EVENT DEFINITION (frozen, all on the INDEX)
+    r_t = idx_close_t / idx_close_{t-1} - 1 over CONSECUTIVE certified index dates (missing dropped).
+    Band: -0.05 <= r_t < -0.025. MA200_t = simple mean of the 200 index closes ending at and
+    INCLUDING t (min_periods=200). Bear filter: idx_close_t < MA200_t, strict. Events restricted to
+    index dates in [2006-01-01, 2026-05-31]; earlier certified history is warm-up only.
+
+R9. POLICY (frozen; futures P&L in POINTS on the owned substrate)
+    For an event on index date D mapped to futures U-session s at U-position fu:
+    SHORT 1 NQ at the 09:31 OPEN of U-session fu+1; exit at the 16:00 close of U-session fu+3
+    ("3 sessions later" counts from the event session; hold spans fu+1..fu+3 — identical to G00027
+    R4). PV = $20/pt; net_usd = (entry - exit) * 20 - 33; $33/RT is the whole friction, applied
+    identically to events, controls and pseudo-events. POLICY-COMPLETABLE iff: s in U, AND U-session
+    fu+3 exists with label <= 2026-05-31, AND the fu+1 09:31 open exists (finite). Otherwise
+    UNTRADEABLE (dropped with printed count).
+    GAP-DOWN VETO (frozen; denominator = INDEX level per spec): g = (fut_open_{fu+1} -
+    fut_close_{fu}) / idx_close_D; veto iff g < -0.015 STRICTLY (exactly -1.5% is not vetoed).
+    D1 population = TRADED events (completable and not vetoed).
+
+R10. D1 — "EVENT-CLUSTERED t" (conservative: fewer, larger clusters -> wider SE)
+    Clusters = connected components of the graph joining two traded events if (a) their futures
+    U-positions differ by <= 2 (hold windows [fu+1, fu+3] share a session), OR (b) their index event
+    dates fall in the same calendar month. t = mean/SE from OLS-on-constant with CR1 cluster-robust
+    covariance (statsmodels), threshold 2.0. PASS iff mean net > 0 AND t >= 2.0.
+    MDE = 2.0 x clustered SE, printed together with PER-ERA EVENT COUNTS BEFORE any return table.
+
+R11. D2 — VOL-MATCHED CONTROL (frozen: trailing-21d INDEX RV decile, count-matched)
+    RV_t = ddof-1 std of the 21 index returns ending at and INCLUDING t (includes the event day's
+    own return — the stricter, conservative control). Decile edges = np.quantile deciles of RV over
+    ALL in-window index days with valid RV. Control pool = in-window index days with r < 0, valid
+    RV, NOT a detected event day, policy-completable AND veto-passing (same policy incl. veto —
+    exact count match on TRADED events per decile). Per-decile sampling without replacement,
+    ascending decile order, from the SINGLE shared numpy.random.default_rng(0) Generator — consumed
+    BEFORE D3's draw. Decile shortfall: take all, print the shortfall. PASS iff event mean net >
+    control mean net (strict). No auxiliary re-draws.
+
+R12. D3 — CIRCULAR-SHIFT NULL (>= 300 specced; 500 used, matching G00027 structure)
+    Universe = the in-window INDEX-day position array (size N). The DETECTED-event indicator (band
+    AND bear, pre-veto) is circularly shifted by k; at shifted positions the FULL policy is applied
+    (session mapping + completability + veto); statistic = mean net over traded pseudo-events.
+    500 distinct shifts drawn from {1..N-1} without replacement from the SHARED rng AFTER the D2
+    draw. Not-completable shifted positions are dropped (no wrap of prices); shifts with zero traded
+    pseudo-events are excluded with a printed count. PASS iff observed D1 mean net > 95th percentile
+    (numpy linear interpolation) of the shift means.
+
+R13. MFE-PATH DIAGNOSTIC (non-gate; identical to G00027 R10)
+    For traded events: cumulative gross short P&L in POINTS marked at the U-closes of fu+1, fu+2,
+    fu+3 (mean, median), per-session increments, and the distribution of which close-mark is the
+    maximum. Session-close marks only.
+
+R14. ERAS (reporting only, no gate): 2006-07, 2008-09, 2010-13, 2014-17, 2018-19, 2020-21, 2022,
+    2023-2026/05. The expected 2008/2020/2022 concentration is stated in the output and now VISIBLE
+    (the cash index, unlike the additively-adjusted futures substrate, can express 2008 percents).
+
+R15. SEAL AND DATA ACCESS
+    Every frame passes research_sdk.seal_guard (futures row-groups: assert_presealed; modern store:
+    truncate_presealed then label-cut per R6; certified index frame: truncate_presealed +
+    assert_presealed on the date column). BURNED window discipline: the certified index file spans
+    through 2026-07-31 (the spec's literal "truncated < 2026-08-01" clause), but every computed
+    quantity (events, controls, shifts, overlap correlation) uses ONLY dates <= 2026-05-31; burned
+    2026-06/07 values are never used in any statistic and never printed. data_esnq NOT accessed.
+    No git. No CrossTrade. No reads >= 2026-08-01. Blind pools untouched.
+
+R16. LEDGER: no SEARCH_LEDGER append. out/ledger_result_pending.json carries trial G00028 metrics +
+    result (SURVIVED-DISCOVERY / NULL / DEFECT).
+
+R17. PROHIBITIONS HONORED
+    No band / horizon / MA / veto search (frozen as in G00027's spec). One fetch, one overlap
+    computation, one event scan, one D2 draw, one D3 draw. Stage-A corr <= 0.97 => DEFECT and STOP
+    (Stage B not computed). A FAIL is a FAIL. Hanna-era magnitudes are not quoted anywhere.
+
+A1. AMENDMENT (recorded BEFORE the successful fetch and BEFORE any index number was parsed or
+    computed; supersedes the fetch mechanics of R1 ONLY — nothing downstream changes)
+    OBSERVED: the live FRED web host is unreachable from this environment. Probes (all recorded):
+      - fredgraph.csv via Python urllib: 2x read timeout + 1x remote-disconnect (0 bytes);
+      - fredgraph.csv and fred.stlouisfed.org root via curl with browser UA: TCP connects, ZERO
+        response bytes until timeout (example.com returns 200 in 0.2 s — general egress is fine);
+      - PowerShell Invoke-WebRequest (SChannel TLS): send failure;
+      - api.stlouisfed.org IS reachable (HTTP 400 = key required) but no FRED API key exists in
+        this repo/environment and creating an account is PROHIBITED;
+      - no user browser is connected (extension not connected).
+    FALLBACK LADDER EXECUTED: Stooq (R4's pre-named fallback) answers every request — including its
+    own main page — with a JavaScript proof-of-work bot-verification challenge (796 B stub).
+    Bypassing bot detection is PROHIBITED; Stooq abandoned WITHOUT circumvention.
+    AMENDED SOURCE: the Internet Archive Wayback Machine's public snapshot of the EXACT FRED
+    endpoint, raw-bytes mode:
+      https://web.archive.org/web/20260828145044id_/https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQ100
+    (snapshot 2026-08-28 14:50:44 UTC, availability-API status 200). This IS FRED's own published
+    CSV for series NASDAQ100 — "what FRED provides", retrieved through a public archive because the
+    live host is network-blocked here. Full default-URL history expected (no cosd/coed on the
+    archived URL, so R1's coed-pinning is INAPPLICABLE); the snapshot post-dates the 2026-08-01
+    seal, so the quarantined raw bytes MAY contain sealed observations. HANDLING (the spec's own
+    clause, verbatim "truncated < 2026-08-01 via seal_guard"): at parse, seal_guard.truncate_presealed
+    is applied on the date column IMMEDIATELY, before any other operation; dropped counts printed;
+    sealed values never inspected, printed or persisted outside the quarantined raw file. The 5 MB
+    hard cap, sha256, UTC fetch time, HTTP status and single-fetch discipline of R1 are unchanged.
+    BURNED-window discipline of R15 unchanged (no statistic uses dates > 2026-05-31). If the
+    archived CSV proves unusable (wrong content / parse failure / fails R4's 221-obs warm-up rule),
+    the next documented candidates, in order, are Nasdaq's own free historical API
+    (api.nasdaq.com, probed OK, serves 2005+) and Yahoo's public chart endpoint
+    (query1.finance.yahoo.com, probed OK, ^NDX from 1985-10) — each with the same bounded/quarantine
+    /certification treatment and the source recorded. No blending: exactly one certified source.
+
+R18. OUTPUTS: out/contract.txt (Stage A: fetch record, certification, coverage/missingness, mismatch
+    counts, overlap gate row), out/gate_table.txt (per-era counts + MDE BEFORE the return table;
+    D1/D2/D3/VERDICT rows printed by the program; Stage-A gate row repeated as row A1),
+    out/events.csv, out/controls.csv (auditability), out/ledger_result_pending.json,
+    raw/fetch_manifest.json, certified/nasdaq100_daily.csv. All new files confined to the run
+    directory and the session scratchpad.

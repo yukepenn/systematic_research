@@ -1,0 +1,62 @@
+G2_F4_NDX_DELEV02_20260829 — gate output (printed by program)  trial G00028
+====================================================================================================
+Stage A: CONTRACT SATISFIED (out/contract.txt). Events on CASH NDX %, P&L in FUTURES POINTS.
+  certified index: 10,225 obs 1986-01-02 -> 2026-07-31;  futures U: 5,051 sessions 2006-01-05 -> 2026-05-29 (spliced, <= 2026-05-31)
+  overlap gate A1: corr=0.998822 > 0.97 (n=4,328) PASS
+in-window index days [2006-01-01..2026-05-31]: N=5,134 (earlier history = warm-up only)
+
+PER-ERA EVENT COUNTS (printed BEFORE any return table)
+era        detected untr_align untradeable  vetoed  traded
+2006-07           0          0           0       0       0
+2008-09          38          0           0       3      35
+2010-13          11          0           0       2       9
+2014-17           9          0           0       2       7
+2018-19           8          0           0       2       6
+2020-21           5          0           0       1       4
+2022             24          0           0       5      19
+2023-26/05        5          0           0       1       4
+TOTAL           100          0           0      16      84
+STATED: effective N concentrates in the 2008/2020/2022 stress clusters — now VISIBLE on the cash index.
+
+MDE (printed BEFORE the return table): 2.0 x clustered SE = $763.61 per event (SE=$381.81, n=84, clusters=41)
+
+D1 RETURN TABLE — traded events, SHORT 1 NQ ct, net of $33/RT, P&L in futures POINTS x $20
+  mean net/event = $-401.51   median = $-13.00   sd = $4,586.19
+  sum net = $-33,727.00   win rate (net>0) = 50.0%   clustered t = -1.052
+  per-era (traded): era, n, mean net, sum net
+    2008-09    n= 35  mean=$    -89.57  sum=$   -3,135.00
+    2010-13    n=  9  mean=$   -834.11  sum=$   -7,507.00
+    2014-17    n=  7  mean=$   -597.29  sum=$   -4,181.00
+    2018-19    n=  6  mean=$ -1,414.67  sum=$   -8,488.00
+    2020-21    n=  4  mean=$ -3,559.25  sum=$  -14,237.00
+    2022       n= 19  mean=$   -198.26  sum=$   -3,767.00
+    2023-26/05 n=  4  mean=$  1,897.00  sum=$    7,588.00
+
+D2 VOL-MATCHED CONTROL — index down-days (r<0), no bear filter/band, matched on trailing-21d INDEX RV decile,
+  same futures policy incl. gap-down veto, count-matched per decile, ONE shared draw (seed 0, consumed before D3)
+  control n = 84 (events 84, decile shortfall = 0)
+  control mean net/event = $-814.19   median = $-370.50   sd = $6,381.38
+  event-minus-control mean = $412.68
+
+D3 CIRCULAR-SHIFT NULL — 500 distinct whole-index-day shifts of the detected-event indicator
+  valid shifts = 500 (empty: 0)   pseudo-events/shift mean = 95.0 min = 82
+  null mean of means = $-256.65   p50 = $-264.70   p95 = $467.75
+  observed mean net = $-401.51   exceeds p95: False
+
+DIAGNOSTIC (non-gate) — MFE-path shape, traded events, gross short pts at futures U-closes fu+1/fu+2/fu+3
+  cum@c1: mean=  -12.99 pts  median=   +1.12 pts
+  cum@c2: mean=  -15.50 pts  median=   -4.88 pts
+  cum@c3: mean=  -18.43 pts  median=   +1.00 pts
+  increments: entry->c1 mean=-12.99  c1->c2 mean=-2.51  c2->c3 mean=-2.92 pts
+  max close-mark at: c1 37, c2 18, c3 29 (positive-early/negative-late = spiral-then-reversal signature)
+
+GATE TABLE (printed by program)
+GATE     SPEC                                                   OBSERVED                                     PASS-FAIL
+----------------------------------------------------------------------------------------------------------------------
+A1       Stage-A overlap corr > 0.97 (contract)                 corr=0.998822 (n=4,328)                      PASS
+D1       net mean/event > 0 AND event-clustered t >= 2.0        mean=$-401.51, t=-1.052 (n=84, clusters=41)  FAIL
+D2       event mean net > vol-matched control mean net          $-401.51 vs $-814.19                         PASS
+D3       mean net > p95 of 500 circular-shift means             $-401.51 vs p95=$467.75                      FAIL
+VERDICT  D1+D2+D3 PASS -> SURVIVED-DISCOVERY; any fail -> NULL  NULL at formulation (MC-40 finally TESTED)   FAIL
+
+wall_s 4

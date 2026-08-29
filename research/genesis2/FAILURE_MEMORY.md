@@ -57,6 +57,11 @@ as conditioning context for a mechanism that independently earns its way.
 **Doctrine banked (ERABREAK01, p=0.0011): 0DTE-era BREAK is real — pre-2022 intraday-vol
 statistics are INADMISSIBLE modern priors; and the break FRONT-LOADS variance (last-30-min share
 FELL — "0DTE pumps EOD vol" is measured folklore).**
+
+| MC-40 deleveraging short (RETEST, percent-clean: NDX events, futures-point P&L, 2008 visible with 38 events) | **NULL** — −$402/event, adverse drift, no spiral; D2 "pass" = both arms negative | G2_F4_NDX_DELEV02 |
+
+**Asset banked (DELEV02): certified cash NDX daily 1986→2026-07 — the standing percent-clean
+event basis for any cross-era percent work.**
 **Substrate law (DELEV01): additively back-adjusted series ⇒ cross-era percent thresholds
 invalid; see GENESIS_ENGINEERING_DOCTRINE substrate trap.**
 

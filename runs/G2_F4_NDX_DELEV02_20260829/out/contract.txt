@@ -1,0 +1,52 @@
+G2_F4_NDX_DELEV02_20260829 — STAGE A DATA CONTRACT (printed by program)  trial G00028
+====================================================================================================
+FETCH RECORD (raw quarantined; never inspected beyond this parse):
+  source : FRED (Federal Reserve Bank of St. Louis), series NASDAQ100 (NASDAQ 100 Index), public — retrieved via Internet Archive Wayback Machine snapshot 2026-08-28 14:50:44 UTC (raw id_ mode) per spec_resolutions A1 (live FRED host network-blocked in this environment)
+  url    : https://web.archive.org/web/20260828145044id_/https://fred.stlouisfed.org/graph/fredgraph.csv?id=NASDAQ100
+  status : 200   bytes: 207,768 (cap 5,242,880)   attempts: 1
+  sha256 : b4fecc456461d8340ad46ebe53becae5ae7ea6dc64b48f62f6fc5e5bc0415b0c
+  fetched: 2026-08-29T08:38:25+00:00 UTC   snapshot: 2026-08-28T14:50:44Z
+  live-FRED unreachability + fallback ladder: recorded in out/spec_resolutions.txt A1
+
+CERTIFICATION (certified/nasdaq100_daily.csv):
+  timestamp semantics: official NDX value at the 16:00 ET market close of the stamped calendar day
+  revision policy    : closed index history is fixed (not revised)
+  parsed rows=10,606  sealed rows dropped by seal_guard.truncate_presealed=19  ('.'/non-numeric missing=362, of which '.'=0)
+  certified rows=10,225  span 1986-01-02 -> 2026-07-31  (all < 2026-08-01: True)
+
+COVERAGE / MISSINGNESS MAP (counts only):
+  Mon-Fri weekdays in span with no certified value (holidays + vendor gaps): 362
+  per-year obs  1986:253  1987:253  1988:253  1989:252  1990:253  1991:253  1992:254  1993:253
+  per-year obs  1994:252  1995:252  1996:254  1997:253  1998:253  1999:252  2000:252  2001:249
+  per-year obs  2002:251  2003:252  2004:252  2005:252  2006:251  2007:251  2008:253  2009:252
+  per-year obs  2010:252  2011:252  2012:250  2013:252  2014:252  2015:252  2016:252  2017:251
+  per-year obs  2018:251  2019:253  2020:253  2021:252  2022:251  2023:250  2024:252  2025:250
+  per-year obs  2026:145
+  certified obs strictly before 2006-01-01 (warm-up): 5,048  (R4 hard requirement >= 221)
+  'what FRED provides': full series from 1986-01-02 (spec expectation '1986 ->': True)
+
+substrate deep  : research\scalping_lab\substrate\minute\NQ\nq1m_2005_202605.parquet
+  sha256=dfd017eff0b031c2be89639fc4ad347d45053867edcdc2600002252b10b627cf  size=60,667,927B  match_recorded_provenance=True
+substrate modern: runs\SM1M_SUBSTRATE\out\nq_1m_2022_2026.parquet
+  sha256=87aa53f007aa47b9ee10d0080317a3cde8d22b55aa368267fa9a4aed7435295d  size=26,146,451B  match_recorded_provenance=True
+data_esnq: NOT ACCESSED by this run -> ALLOWLIST_DEV_44 enforcement N/A (no tick reads). Blind pools untouched.
+seal_guard calls: deep assert_presealed x7 row-groups; modern truncate_presealed+assert x2 row-groups
+SPLICE CONTINUITY CHECK (no P&L use of deep >= 2022): common U-labels 2022-01..2026-05 n=1095  max|close diff|=0.0000 pts
+U (futures sessions with a 16:00 RTH close, spliced deep<2022|modern>=2022): 5,051  span 2006-01-05 -> 2026-05-29  (max label <= 2026-05-31: True)
+U-sessions missing a 09:31 bar: 9
+
+SESSION ALIGNMENT (index calendar day D -> futures session labeled D; RTH falls on D):
+  in-window index days: 5,134   in-window futures U-sessions: 5,051
+  index days with NO futures U-session (events there = UNTRADEABLE_ALIGN): 83
+  futures U-sessions with NO index day (count in hold horizon; host no events): 0
+
+OVERLAP-CORRELATION GATE (the two series must describe the same market):
+  consecutive common-calendar pairs in [2009-01-01, 2026-05-31]: n=4,328
+  corr(index daily %return, futures daily point-return / prior index close) = 0.998822
+
+STAGE-A GATE (printed by program)
+GATE  SPEC                                                      OBSERVED                 PASS-FAIL
+----------------------------------------------------------------------------------------------------
+A1    corr(idx %ret, fut pt-ret / idx level) > 0.97 on 2009-2026/05  corr=0.998822 (n=4,328)  PASS
+
+STAGE-A VERDICT: CONTRACT SATISFIED — Stage B proceeds

@@ -1,0 +1,36 @@
+run_id: G2_F5_TRIO_20260829
+campaign: GENESIS_II_FORMAL_WAVE_5
+type: SIGNAL_DIAGNOSTIC_TRIO   # three cheap MED-tier diagnostics, skeptic-frozen primaries; no P&L policies
+trio:
+  A_MC46_closing_auction:
+    question: does a structural break exist at exactly 15:50 ET (MOC imbalance publication) in
+      NQ 1-min behavior - and if so, does end-of-day dislocation revert tradably?
+    primary_frozen: break test at 15:50 in {|1-min return|, volume, lag-1 autocorrelation} vs
+      15:40 and 15:45 PLACEBO anchors (the break must be anchor-specific), NQ 1-min
+      2006 -> 2026-05-31, shared circular-shift draw across the three statistics;
+      the dislocation-decile reversion table (era split 2006-15/2016-26) runs ONLY if the
+      anchor-specific break exists. No imbalance-feed purchase question before that.
+    trial: G00029
+  B_MC41_breadth_divergence:
+    question: does weak adjusted-TICK breadth by 11:00 condition afternoon downside on modern NQ?
+    primary_frozen: delta = P(afternoon takes out the morning low | bottom-tercile 11:00
+      cumulative adjusted TICK) - matched unconditional P; internals minute 2022 -> 2026-05-31;
+      circular-shift null (session unit) sharing the family draw; MDE + events/yr printed FIRST
+      (the TICK regime-collapse lesson binds - if the modern internals population cannot power
+      the contrast, the verdict is CLOSED-BY-POWER, printed as such, not NULL).
+    trial: G00030
+  C_MC42_eod_short_covering:
+    question: did down-day 15:30->16:00 continuation flip sign in the 0DTE era (index-level
+      short-covering headwind)?
+    primary_frozen: down-day (session c2c < 0 in POINTS - substrate-law compliant) continuation
+      coefficient beta(15:30->16:00 return on 09:30->15:30 return) for 2023-26/05 with
+      block-bootstrap 95% CI vs the 2006-15 coefficient; adopt-exit-rule clause: ONLY if the
+      2023-26 CI excludes the 2006-15 point estimate AND the sign flips (else banked, no rule).
+    trial: G00031
+shared_rules: NQ 1-min substrates per provenance; internals per certified manifest; seal-guarded;
+  era work in POINTS or normalized shares only (substrate law); one shared null draw per
+  replication within each sub-run; MDEs before verdicts; no parameter search; no policies except
+  C's tightly-gated clause; no sealed reads.
+outputs: per sub-run out/<X>_gate_table.txt + shared out/ledger_result_pending.json (LIST of 3)
+live_enabled: NO
+spend: $0
