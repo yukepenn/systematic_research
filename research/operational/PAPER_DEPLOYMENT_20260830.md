@@ -288,3 +288,49 @@ class, differing ONLY in start date (2022-01-03 vs 2025-08-30), compared trade-b
 cannot equalise *fills*. Once a live fill differs from the modelled fill, the ratchet has **no
 resynchronisation point**, so live-vs-backtest tracking error can only grow. That doctrine is
 unchanged: **judge forward performance on economics, never on path-matching.**
+---
+
+## ⭐ WHY WARM-UP MATTERS, QUANTIFIED: quality sizing carries **87 %** of P1's edge
+
+The cold-start defect was described earlier as "trades size-1-only for ~3 months." That understated
+it. Splitting all 2,439 certified trades by contract size:
+
+| size | trades | share of trades | **net** | share of net |
+|---|---:|---:|---:|---:|
+| **qty 1** | 1,939 | 79.5 % | **$46,005.96** | 13.0 % |
+| **qty 2** | 500 | **20.5 %** | **$308,570.00** | **87.0 %** |
+
+**A fifth of the trades carry seven-eighths of the money.** Quantity 2 is reached only through causal
+quality sizing, which requires `qCount >= QualMinHist (100)` and a filled `QualWindow` of **250 prior
+entries** — precisely the state a cold start does not have.
+
+⇒ **A default-warm-up deployment does not "differ slightly" from the certified object; it discards
+87 % of the edge for roughly its first three months.** `DaysToLoad = 365` is not hygiene, it is the
+strategy.
+
+August 2026 shows the same split in miniature: **qty 1 lost −$14,463.36 (26 trades) while qty 2 made
++$26,116.64 (13 trades).**
+
+## Evidence status of the August 2026 window — ⚠️ it is NOT out-of-sample validation
+
+August was sealed (`≥2026-08-01 VIRGIN`) until the owner granted a read this session; it has now been
+consumed for `P1/PCT` and `XM_CONFLICT_v2`. Headline vs the discovery window (NT8 cost basis):
+
+| leg | discovery 2022 → 2026-07-31 | **August 2026** |
+|---|---:|---:|
+| P1/PCT | $1,436.54/wk (2,400 trades) | **$3,546.65/wk** (39 trades) |
+| XM_CONFLICT | $742.83/wk (373 trades) | **$2,735.31/wk** (5 trades) |
+
+**Do not read this as confirmation.** The apparent outperformance is **one trade per leg**:
+
+- **P1: the single best trade is +$26,951.28 = 231 % of the month's net. Ex-top-1 August is −$15,298.00**;
+  ex-top-3 is −$20,440.56. **August win rate 25.6 %, BELOW its own history.**
+- **XM: top trade $10,755.64 = 115 % of net. Ex-top-1 is −$1,377.44** (on 5 trades total).
+
+The big trade was checked for a data artifact and is **genuine**: 2026-08-04, long 2 @ 29,146.50 at
+07:17, out 14:02 @ 29,820.50 — a 674-point (2.3 %) NQ trend day, MAE only $280. Real trade, real
+regime, but N=1. This is the known tail-carried structure (top 10 % of trades = 236.8 % of net), not
+new evidence.
+
+⇒ **~3 weeks and 39/5 trades cannot validate anything.** The forward paper stream starting tonight is
+the only clean prospective evidence, which is exactly why the shadow ledger exists.
