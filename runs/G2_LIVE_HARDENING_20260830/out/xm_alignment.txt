@@ -1,0 +1,46 @@
+R3 XM CROSS-MARKET ALIGNMENT DIVERGENCE
+========================================================================
+sessions in reference        : 1058
+window                       : 2022-07-04 -> 2026-07-31
+
+-- reproduction check (variant A vs the committed reference) --
+desired_direction agreement  : 99.6219%  (4 disagreements)
+trades A / reference         : 342 / 346
+
+-- A (same-bar, research) vs B (one-bar-lagged secondaries) --
+trades A                     : 342
+trades B                     : 340
+sessions where desired differs: 146  (13.80% of sessions)
+  both trade, SAME direction  : 268
+  both trade, OPPOSITE dir    : 0
+  A trades, B flat            : 74
+  B trades, A flat            : 72
+disqualified A / B            : 10 / 11
+
+net $ variant A               : 203,249
+net $ variant B               : 214,258
+delta (B - A)                 : 11,009  (+5.4% of A)
+$ at risk on divergent sessions (|A|+|B|): 417,211
+
+-- R: realtime RACE (each secondary independently same-bar/lagged, p=0.5) --
+draws                         : 200
+sessions differing from A     : mean 7.79%  [p5 7.08%, p95 8.60%]
+  -> per 250-session year     : 19.5 sessions
+trades                        : mean 338.1 [323, 354]   (A = 342)
+net $                         : mean 207,248 [p5 172,236, p95 242,158]   (A = 203,249)
+spread p95-p5 as % of A net   : 34.4%
+
+-- empty-minute frequency at the two decision minutes (per market) --
+  ES   09:45: missing on    4 / 1058 sessions (0.38%)
+  ES   09:44: missing on    4 / 1058 sessions (0.38%)
+  ES   09:31: missing on    4 / 1058 sessions (0.38%)
+  ES   09:30: missing on    3 / 1058 sessions (0.28%)
+  RTY  09:45: missing on   10 / 1058 sessions (0.95%)
+  RTY  09:44: missing on   10 / 1058 sessions (0.95%)
+  RTY  09:31: missing on   10 / 1058 sessions (0.95%)
+  RTY  09:30: missing on   10 / 1058 sessions (0.95%)
+  YM   09:45: missing on   10 / 1058 sessions (0.95%)
+  YM   09:44: missing on   10 / 1058 sessions (0.95%)
+  YM   09:31: missing on   10 / 1058 sessions (0.95%)
+  YM   09:30: missing on    9 / 1058 sessions (0.85%)
+

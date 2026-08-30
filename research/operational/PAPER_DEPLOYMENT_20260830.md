@@ -85,3 +85,17 @@ the two sessions it would buy.
 3. ⛔ **XM v1 must never be deployed** (holiday defect, −$225/trade on 15 early closes). Only v2.
 4. Sim economics ≠ research economics (NT8 template commission, zero modeled spread). The sim
    stream is **execution evidence**, and it does not restate the research headline.
+
+## REDEPLOY 2026-08-30 ~09:46 ET — after an NT8 restart wiped both strategies
+
+Owner restarted NT8. **Both strategies were gone** (NT8 list AND CrossTrade registry both empty) —
+see the runbook's persistence section; this is now a recorded platform fact, not a hypothesis.
+Redeployed identically:
+
+| leg | deployment_id | strategy_id | warm-up | state |
+|---|---|---|---|---|
+| P1 | **`dep_68588bacd445`** | 399562865 | 365 days / 352,670 bars | Realtime, flat |
+| XM | **`dep_7f22307847c2`** | 399562866 | 365 days / 352,670 bars | Realtime, flat |
+
+Warm-up P&L reproduced exactly ($70,585 / $43,705), confirming the restored instances are in the
+same state as before the restart. Superseded: `dep_306e11dfc8eb`, `dep_5a914d070687` (never traded).

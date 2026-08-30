@@ -11,10 +11,17 @@ STRATEGY_AUDIT.md — parameter/hazard audit). Written 2026-08-30, the day the b
 > ## *"NinjaScript strategies are not rolled forward and must be manually rolled over."*
 > ([help guide: rolling over a futures contract](https://ninjatrader.com/support/helpGuides/nt8/rolling_over_a_futures_contrac.htm))
 
-Nothing auto-rolls: not a strategy pinned to `NQ 09-26`, not one configured on the generic `NQ`
-(the master resolves to an expiry **once**, at config time), not a chart-attached one. NT8's
-"Rollover" feature (Tools → Database Management) rolls **chart/instrument labels and data
-stitching only** — not strategies, not positions.
+Nothing auto-rolls: not a strategy pinned to `NQ 09-26`, not one configured on the generic `NQ`,
+not a chart-attached one. NT8's "Rollover" feature (Tools → Database Management) rolls
+**chart/instrument labels and data stitching only** — not strategies, not positions.
+
+> ### ⭐ **"Would a restart re-resolve the front month?" — NO. Settled structurally, 2026-08-30.**
+> The Help Guide is silent on this, so it was settled against this install's own database:
+> **`Strategy2Instrument.Instrument` is an integer FOREIGN KEY into `Instruments`** — NT8 stores
+> the *resolved contract*, not the selector text. The expiry is bound once at
+> configuration-commit time and frozen. **A disable/re-enable does not re-resolve. An NT8 restart
+> does not re-resolve.**
+> ⇒ **The roll is a RECONFIGURE, not a restart.** (`runs/G2_LIVE_HARDENING_20260830/R1_ROLLOVER.md`)
 
 - **NQ 09-26 expires Friday 2026-09-18**; volume rolls to 12-26 around **Thursday 2026-09-10**.
 - **The danger window is 09-10 → 09-18**: U6 still prints, so **no guard fires**, while liquidity
@@ -77,6 +84,23 @@ unrelated feeds. **H5 — MEDIUM: connection-loss behaviour is inherited and unt
 
 ---
 
+# BACKTEST ≠ LIVE — five divergences measured 2026-08-30 (none previously recorded anywhere)
+
+Source: `runs/G2_LIVE_HARDENING_20260830/R3_DIVERGENCE.md`. These are **properties of the objects**,
+not defects to fix, and they bound how much the paper/shadow stream can be expected to match the
+backtest.
+
+| # | finding | why it matters |
+|---|---|---|
+| **N1** | **XM's cross-market composite is deterministic in backtest and a millisecond RACE in realtime.** Full-lag case moves **13.80% of sessions**; a 50/50 race moves 7.79% and opens a **34.4%-of-net** p5–p95 band | XM's live results can differ from its backtest by a third of net **without anything being broken**. Do not read a forward XM divergence as decay until this band is accounted for |
+| **N2** | `OrderFillResolution.High` on multi-instrument XM returns **zero trades with no error** — a silent null backtest | never use High fill on XM; a "no trades" result there means nothing |
+| **N3** | P1's decision is **delta-gate-pivotal on 9.4% of bars**, and that gate is a pure function of `Volume[0]` — the one input NT8 documents as differing between the realtime stream and the historical store | a structural source of live/backtest drift on ~1 bar in 10 |
+| **N4** | **P1's ratchet state has no resynchronisation point — ever.** Not at session end, not at day end. Once live and backtest separate by a single bar close, they never re-converge | forward tracking error is expected to grow, not revert. Judge P1 forward on economics, never on "does it match the backtest path" |
+| **N5** | Every documented NT8 remedy is unavailable here: High fill silently broken (N2), Tick Replay not settable via our tool surface and documented as not-for-strategy-backtests, Playback requires closing other connections (would stop the paper book) on Market-Replay data whose collection is owner-PAUSED | there is no way to make the backtest tick-accurate for these objects. Accept the band; do not chase it |
+
+**One clean negative result:** the most likely silent certification error — whether the Analyzer
+feeds the primary handler a *lagged* secondary bar — was tested and is **clean**.
+
 # RESOLVED EMPIRICALLY (open questions closed 2026-08-30)
 
 | question | answer |
@@ -104,8 +128,37 @@ unrelated feeds. **H5 — MEDIUM: connection-loss behaviour is inherited and unt
    Its leg-isolation was verified row-identical to both certified files. **Only TOTALS are
    comparable** — netting re-cuts every per-trade statistic.
 
-# STILL UNTESTED — do before leaving it unattended overnight
+# 🔴 ANSWERED THE HARD WAY 2026-08-30: **STRATEGIES DO NOT SURVIVE AN NT8 RESTART**
 
-- **Does an account-hosted strategy survive an NT8 restart?** Undocumented. Test deliberately
-  while flat, then write the answer here.
-- Behaviour across a real connection drop (H5).
+The owner restarted NT8 at ~09:4x ET. Immediately afterwards:
+
+```
+ListDeployedStrategies(DEMO8383477) -> total: 0
+ListStrategies(DEMO8383477, includeTerminal=true) -> count: 0
+```
+
+**Both NT8's own strategy list AND the CrossTrade deployment registry were empty.** Neither NT8
+restored the account-hosted strategies nor did the add-on replay them. This matches the disk probe
+(`runs/G2_LIVE_HARDENING_20260830/R5_PERSISTENCE_PROBE.md`): the strategy names appear in **no**
+workspace/config file, and the add-on registry is in-memory.
+
+## What this means operationally — it is the single biggest availability risk
+
+**Any NT8 restart — crash, Windows update, power event, or a deliberate one — silently stops the
+book. Nothing announces it. Any open position is left with no manager** (and neither strategy has
+a stop). The strategies were redeployed manually (`dep_68588bacd445` P1, `dep_7f22307847c2` XM,
+both verified Realtime/flat, warm-up identical: 352,670 bars, $70,585 / $43,705).
+
+## Standing rules that follow
+
+1. **After ANY NT8 restart, redeploy both legs with `DaysToLoad = 365` and verify** — the shadow
+   runner does not do this and cannot detect it.
+2. **Be flat before any deliberate restart.**
+3. A **daily availability check** belongs in the routine: `ListDeployedStrategies` must show two
+   Realtime deployments. A silent zero is the failure mode to watch for.
+4. This is an argument for eventually attaching the strategies via the NT8 UI (which persists in
+   a saved workspace) rather than programmatically — **untested**, and a separate decision.
+
+# STILL UNTESTED
+
+- Behaviour across a real connection drop (H5) — inherited platform default, unverified.

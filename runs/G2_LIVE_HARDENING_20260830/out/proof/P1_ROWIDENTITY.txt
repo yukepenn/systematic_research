@@ -1,0 +1,23 @@
+================================================================================================
+ROW-IDENTITY PROOF  P1PCT: WeeklyEdgeP1PCT_v1 (certified) vs WeeklyEdgeP1PCT_v2 (hardened)
+  certified : NinjaTrader.NinjaScript.Strategies.WeeklyEdgeP1PCT_v1   (raw_P1_v1.json)
+  hardened  : NinjaTrader.NinjaScript.Strategies.WeeklyEdgeP1PCT_v2   (raw_P1_v2.json)
+  instrument=NQ 09-26  from=2022-01-03T00:00:00.0000000Z  to=2026-08-30T21:59:59.0000000Z
+================================================================================================
+
+GATE                       SPEC                                                       OBSERVED                   VERDICT
+------------------------------------------------------------------------------------------------------------------------
+G1 trade count             hardened == certified                                      2439 vs 2439               PASS
+G2 core row identity       0 mismatched rows on (entry_t,exit_t,qty,entry_px,exit_px,pnl) 0 mismatched of 2439       PASS
+G3 extended row identity   0 mismatched rows incl. signal names, commission, MAE, MFE 0 mismatched of 2439       PASS
+G4 closed-trade net        identical to the cent                                      354575.96 vs 354575.96     PASS
+G5 total commission        identical                                                  12814.04 vs 12814.04       PASS
+G6 total quantity          identical                                                  2939 vs 2939               PASS
+G7 engine NetProfit        identical (incl. open trade)                               356317.24 vs 356317.24     PASS
+G8 engine TradesCount      identical                                                  2440 vs 2440               PASS
+G9 bars loaded             identical bar set                                          loaded 1647698 bars vs loaded 1647698 bars PASS
+G10 equity curve           identical point-for-point                                  0/2439 points differ       PASS
+------------------------------------------------------------------------------------------------------------------------
+OVERALL: PASS   (100% row identity required)
+
+OFFENDING ROWS: none. All 2439 rows byte-identical across all 14 compared fields.

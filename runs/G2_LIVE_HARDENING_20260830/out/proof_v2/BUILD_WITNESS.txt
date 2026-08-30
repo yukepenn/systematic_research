@@ -1,0 +1,26 @@
+================================================================================================================
+RE-PROVER BUILD WITNESS - is the compiled assembly the post-fix (reverted) build?
+================================================================================================================
+
+assembly : C:\Users\Yuke Zhang\Documents\NinjaTrader 8\bin\Custom\NinjaTrader.Custom.dll
+bytes    : 1421824   mtime(utc): 2026-08-30T13:41:49.229098Z
+
+GATE                             SPEC                                                 OBSERVED               VERDICT
+----------------------------------------------------------------------------------------------------------------
+S1 WeeklyEdgeP1PCT_v2.cs         0 non-comment sites for ConnectionLossHandling/NumberRestartAttempts 0 code site(s); 2 comment mention(s) at [519, 793] PASS
+S1 WeeklyEdgeXMConflict_v3.cs    0 non-comment sites for ConnectionLossHandling/NumberRestartAttempts 0 code site(s); 1 comment mention(s) at [486] PASS
+S2 WeeklyEdgeP1PCT_v2.cs         sha256 == fixer's post-revert digest                 a815da3b..afb9         PASS
+S2 WeeklyEdgeXMConflict_v3.cs    sha256 == fixer's post-revert digest                 3b8da2e6..19f0         PASS
+S3 WeeklyEdgeP1PCT_v1.cs         certified sha256 UNCHANGED                           ee4c765b..87b2         PASS
+S3 WeeklyEdgeXMConflict_v2.cs    certified sha256 UNCHANGED                           2ec00dd4..0dde         PASS
+A1 control set_RealtimeErrorHandling PRESENT (still declared -> search is sensitive)      PRESENT                PASS
+A1 control set_DisconnectDelaySeconds PRESENT (still declared -> search is sensitive)      PRESENT                PASS
+A1 control set_StartBehavior     PRESENT (still declared -> search is sensitive)      PRESENT                PASS
+A2 removed set_ConnectionLossHandling ABSENT (no assignment site anywhere in the assembly) ABSENT                 PASS
+A2 removed set_NumberRestartAttempts ABSENT (no assignment site anywhere in the assembly) ABSENT                 PASS
+A3 type WeeklyEdgeP1PCT_v2       PRESENT in NinjaTrader.Custom.dll                    PRESENT                PASS
+A3 type WeeklyEdgeXMConflict_v   PRESENT in NinjaTrader.Custom.dll                    PRESENT                PASS
+A3 type WeeklyEdgeP1PCT_v1       PRESENT in NinjaTrader.Custom.dll                    PRESENT                PASS
+A3 type WeeklyEdgeXMConflict_v   PRESENT in NinjaTrader.Custom.dll                    PRESENT                PASS
+----------------------------------------------------------------------------------------------------------------
+BUILD WITNESS: PASS - the on-disk compiled assembly is the POST-FIX build
