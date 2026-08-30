@@ -29,3 +29,17 @@ Execution notes binding on the deployment:
 - Sim economics ≠ research economics (NT8 template commission, zero modeled spread) — sim fills
   are an execution-evidence stream, not the research headline.
 - NT8 + data connection must be running for both sim and shadow to operate (owner's machine).
+
+## Execution log (2026-08-30, after owner granted CrossTrade permissions)
+
+- NT8 restarted by owner; "Simulation" connection **Connected**; handshake add-on v1.13.9.
+- `WeeklyEdgeP1PCT_v1` → `dep_46b904d97604` (id 399550057) and `WeeklyEdgeXMConflict_v2` →
+  `dep_01b21182696c` (id 399550058), both on **DEMO8383477 / NQ 09-26 / 1-min**, both verified
+  **Realtime, is_trading=true**, flat, 0 orders. XM's ES/RTY/YM series loaded and verified.
+- `GENESIS_ShadowRunner` daily 17:10 ET scheduled task registered (next run 2026-08-30 17:10).
+- Post-deploy runner check: **0 rows ingested** — historical-bar simulation does not touch the
+  account. Watermarks unchanged (584/852).
+- Owner follow-up 「他可以直接从下个交易日开始而不是9/1吗」: **trading already starts with the
+  next session open (Sun 2026-08-30 18:00 ET)** — nothing was waiting on 9/1. The 9/1 boundary
+  governs only the research evidence ledger and was **deliberately left unmoved**; the two
+  intervening sessions serve as a plumbing shakedown (details in `PAPER_DEPLOYMENT_20260830.md`).
