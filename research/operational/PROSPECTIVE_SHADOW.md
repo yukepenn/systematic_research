@@ -61,6 +61,20 @@
 at or before `SHADOW_START`, and refuses any decision whose timestamp does not strictly advance the
 previous one.
 
+> ### ⚠️ ROSTER STATUS CHANGE 2026-08-30 — `P1/ABS` is NOT running
+> Owner asked for the NT8 strategy folder to contain only the strict final objects.
+> **`WeeklyEdgeP1_v3.cs` (P1/ABS) was moved to `bin/Custom/_quarantined_strategies/`** — reversible,
+> repo copy intact at `research/weekly_edge/ninjascript/WeeklyEdgeP1_v3.cs`.
+> **Consequence, stated plainly:** the roster's third member now accumulates NOTHING. The question
+> it was rostered to settle — *is PCT actually better than ABS in DOLLARS?* (direction: yes,
+> 176/213 weeks, p 7.1e-23; magnitude: **NOT established, paired p 0.058**) — is P1's single
+> largest unverified step (**the +39% ABS→PCT improvement**, worth roughly the difference between
+> a $885/wk and a $1,230/wk honest floor). Burned data cannot settle it; only a common forward
+> window can.
+> **Clean way to restore it if wanted (owner decision, NOT taken):** deploy `WeeklyEdgeP1_v3` on
+> **Sim101** — a *separate* paper account — so its positions never net against the M_11 book on
+> DEMO8383477. Cost: one more strategy to monitor. Benefit: the +39% step stops being unverified.
+
 ## 2. Roster — the objects that actually exist
 
 | object | source sha256 | status |
