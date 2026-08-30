@@ -334,3 +334,42 @@ new evidence.
 
 ⇒ **~3 weeks and 39/5 trades cannot validate anything.** The forward paper stream starting tonight is
 the only clean prospective evidence, which is exactly why the shadow ledger exists.
+---
+
+## 🟢 SESSION 1 IS LIVE — first realtime bars 2026-08-30 18:00:00 ET
+
+Verified at **18:28 ET**, 28 minutes into the first session. Paper account. **LIVE real money = NO.**
+
+| check | observed |
+|---|---|
+| Market | **open** (`isMarketOpen: true`), NQU6 bid 29,475.00 / ask 29,476.50, last 29,475.50, volume 5,532 @ 18:28:13 ET |
+| P1 bars | 352,670 → **352,699 (+29)** — advancing with the clock |
+| XM bars | `currentBars [352699, 352638, 346466, 347699]` — **series 0 (NQ) is in lockstep with P1**. ⚠️ The registry's scalar `current_bar` shows **346,466**, which looks like a 6,204-bar REGRESSION but is just the RTY series index on a 4-series strategy. Read `currentBars[0]`, never the scalar, on XM |
+| Positions / orders | both **Flat**, 0 trades, `activeOrderCount 0` |
+| H1 invariant at the transition | `WARMUP-CARRY-FLAT ledger=0 strategyPosition=0` on **both** legs — reconciled, nothing carried, entries not blocked |
+
+**Full warm-up gate table (logged 09:51, all PASS):** P1 — sigma_diffs 460/460, tilt 257/51,
+bmom 256/14, rng 200/60, atr 14/14, volnorm 240/240, **qual_entries 437 (spec 250, min 100)**.
+XM — xm_hist_ES/RTY/YM **257 sessions each** (spec 60, min 20). ⇒ **quality sizing is armed from
+bar one**, so the 87 %-of-edge qty-2 trades are reachable tonight.
+
+### ⭐ ROLL DEADLINE RESOLVED — the estimate was wrong, the machine is authoritative
+
+```
+P1  ROLL-PLAN blockNewEntriesFrom=2026-09-08 leadDays=8 earliestStoredRollover=2026-09-16 [s0=NQU6:2026-09-16]
+XM  ROLL-PLAN blockNewEntriesFrom=2026-09-06 leadDays=8 earliestStoredRollover=2026-09-14
+                                     [s0=NQU6:09-16 s1=ESU6:09-14 s2=RTYU6:09-15 s3=YMU6:09-18]
+```
+
+**XM binds first, 2026-09-06**, because it takes the MIN across four series and **ES rolls earliest
+(09-14)** — a coupling that only exists on the multi-series leg. P1 binds 09-08.
+⇒ **Roll both legs by Friday 2026-09-04.** My earlier ~09-02 figure was a guess built on a guessed
+09-10 rollover; it is superseded. Exits are never gated, so a missed roll stops new risk rather
+than stranding a position.
+
+### What to expect tonight
+
+**P1 can trade at any hour** (61.7 % of its entries are outside RTH). **XM cannot act until Monday
+morning** — it anchors 09:31, decides 09:45 and exits 15:45 ET, so a Sunday-evening session is a
+no-op for it by construction. XM showing 0 trades tomorrow before 09:45 ET is correct behaviour,
+not a fault.
