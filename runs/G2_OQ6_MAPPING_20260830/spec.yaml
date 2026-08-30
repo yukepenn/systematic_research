@@ -1,0 +1,30 @@
+run_id: G2_OQ6_MAPPING_20260830
+campaign: GENESIS_II
+type: RISK_SPECIFICATION_DECISION   # OQ-6 - integer-contract mapping for {P1/PCT + XM_v2}
+question: >
+  Which integer-contract mapping best reproduces the research inverse-vol portfolio's risk
+  allocation? Decision made on consumed dev data (legitimate for a RISK SPEC), FROZEN BEFORE the
+  2026-09-01 shadow start so the mapped portfolio is a preregistered forward object from day one.
+  The final ratification is the OWNER's (OQ-6); this run produces the decision packet.
+candidates_frozen (NQ integers only - MNQ variants are FLAGGED-ONLY because MNQ friction is
+  unmeasured in this repo):
+  M_11: P1 x1 NQ + XM x1 NQ
+  M_21: P1 x2 NQ + XM x1 NQ
+  M_12: P1 x1 NQ + XM x2 NQ
+selection_criterion_frozen: >
+  (1) compute each leg's weekly P&L series on the common dev window (identical construction for
+  both legs, ISO week on entry date; convention noted, not identical to W103's bucketing);
+  (2) inverse-vol reference shares w_i proportional to 1/sd_i of the weekly series;
+  (3) each candidate's risk share = a*sd1/(a*sd1 + b*sd2);
+  (4) WINNER = candidate minimizing |risk share - inverse-vol share|;
+      tie-break: higher net at fixed $20,245 maxDD. All three candidates' full economics printed.
+outputs_reported_per_candidate: net/wk, weekly sd, maxDD, net @ fixed $20,245 DD, % positive
+  weeks, worst week, risk-share deviation
+prohibitions: no weight search beyond the 3 frozen candidates, no forward data, no sealed reads,
+  no live action; the packet states margin/capital implications qualitatively only (broker
+  margins vary - no invented numbers)
+outputs: out/gate_table.txt (printed), out/mapping_table.csv, packet at
+  research/operational/OQ6_MAPPING_PACKET.md (owner-facing)
+ledger: one trial (family=RISK_SPECIFICATION)
+live_enabled: NO
+spend: $0
