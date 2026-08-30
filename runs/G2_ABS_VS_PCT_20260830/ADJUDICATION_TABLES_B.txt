@@ -1,0 +1,65 @@
+==============================================================================
+ADJUDICATION -- PANEL B (mechanism, exposure, fragility)
+==============================================================================
+
+B1. SIZING / EXPOSURE CONFOUND CHECK  (CLAUDE.md: leverage must not masquerade as alpha)
+  ABS: trades=2011  qty mix={1: 1602, 2: 409}  contract-sides=2420  all-long=True
+  PCT: trades=2137  qty mix={1: 1694, 2: 443}  contract-sides=2580  all-long=True
+  contract-sides PCT/ABS ratio = 1.0661  (exposure difference, not a sizing multiplier)
+  commission paid : ABS $10,551.20   PCT $11,248.80
+
+B2. DECOMPOSITION OF THE $45,009.80 DIFFERENCE BY ENTRY KEY (time|dir|qty)
+  shared entries        : 1970
+  ABS-only entries      : 41   net $  -13,321.68
+  PCT-only entries      : 167   net $   31,688.12
+  of the 1970 deduped shared entries: identical exit_time 1970 (100.0%), different exit 0
+    net on IDENTICAL-exit shared trades : ABS $287,284.28  PCT $287,284.28  (diff $0.00)
+    net on DIFFERENT-exit shared trades : ABS $0.00  PCT $0.00  (diff $0.00)
+  -> ATTRIBUTION: the difference is (i) EXIT PLACEMENT on shared entries and
+     (ii) EXTRA ENTRIES PCT takes that ABS does not. Both are MECHANISM-POLICY,
+     not NEW INFORMATION: identical bars, identical entry signal, different stop metric.
+
+B3. SIGNED CONCENTRATION (the honest version)
+  PCT-better weeks :  42  total +$89,159.60
+  ABS-better weeks :  40  total  $-44,149.80
+  tied weeks       : 132
+  NET             = $45,009.80  = 50.5% of the gross PCT-better total
+  the 5 best PCT weeks alone: +$46,686.76 = 104% of the NET difference
+  the 11 best (top 5% of N) : +$67,011.20 = 149% of the NET difference
+  -> the net advantage is the RESIDUAL of two large offsetting piles; removing the
+     5 largest |diff| weeks moves the mean from +$210.33/wk to -$8.02/wk (t=-0.13).
+  weeks needed to account for the entire net difference: 5 of 214 (2.3%) -- the other 209 weeks net $-1,676.96
+
+B4. IS THERE A MECHANISM? (a % stop widens with price; a point stop does not)
+  corr(weekly NQ level, weekly PCT-ABS diff): pearson r=+0.077 p=0.2626 | spearman rho=-0.067 p=0.3310  (n=212)
+            wks  mean_diff  tot_diff    px_mid
+px                                            
+Q1 low px    53     125.59  6,656.08 15,469.21
+Q2           53     186.80  9,900.60 19,364.00
+Q3           53     -18.88 -1,000.64 22,250.50
+Q4 high px   53     555.73 29,453.76 26,002.62
+  reading: the ABS point-stop becomes a TIGHTER PERCENTAGE as NQ rises; the PCT stop does not.
+  So a PCT>ABS gap that GROWS with price level is mechanically expected, not necessarily luck.
+  But note this cuts both ways: it makes the gap a function of the 2022-26 PRICE PATH,
+  and the 2026 sub-window (30 wks, +$28,662 = 64% of the total) is where it lands.
+
+B5. ROLLING 52-WEEK MEAN DIFF (sign stability)
+  fraction of 52wk windows with PCT ahead : 83.4%  (n=163)
+  min $-135.24/wk on 2026-01-12   max $620.74/wk on 2026-06-29
+   2023: mean $   242.61/wk  range [$   128.00, $   329.08]  frac>0 100.0%
+   2024: mean $   142.81/wk  range [$   -43.13, $   227.22]  frac>0  92.5%
+   2025: mean $    33.60/wk  range [$   -96.41, $   160.48]  frac>0  65.4%
+   2026: mean $   251.81/wk  range [$  -135.24, $   620.74]  frac>0  83.3%
+
+B6. CUMULATIVE-EQUITY LEAD
+  weeks PCT cumulative >= ABS : 189/214 (88.3%)
+  max ABS lead $2,064.64 (wk 2022-11-28); final PCT lead $45,009.80
+
+B7. THE +39% CLAIM vs WHAT THIS WINDOW CAN RESOLVE
+  recorded research claim  : ABS->PCT = +39.0% weekly dollars at fixed DD ($885 -> $1,231)
+  this window, fixed $20,245 DD (trade-seq DD): ABS $855.89/wk -> PCT $1,071.02/wk = +25.1%
+  this window, raw net/week: ABS $1,280.20 -> PCT $1,490.53 = +16.4%
+  MDE at |t|=2             : $244.49/wk = +19.1% of ABS net/week
+  => a +39% effect WOULD have been detectable ($499.28/wk vs MDE $244.49/wk,
+     2.04x the MDE). It was not observed at that size here.
+  => the +16.4% actually observed is 0.86x the MDE: UNDERPOWERED by construction.
