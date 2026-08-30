@@ -67,13 +67,33 @@ previous one.
 > repo copy intact at `research/weekly_edge/ninjascript/WeeklyEdgeP1_v3.cs`.
 > **Consequence, stated plainly:** the roster's third member now accumulates NOTHING. The question
 > it was rostered to settle — *is PCT actually better than ABS in DOLLARS?* (direction: yes,
-> 176/213 weeks, p 7.1e-23; magnitude: **NOT established, paired p 0.058**) — is P1's single
+> ⚠️ **176/213 WITHDRAWN — see the correction block below**; magnitude: **NOT established**) — is P1's single
 > largest unverified step (**the +39% ABS→PCT improvement**, worth roughly the difference between
 > a $885/wk and a $1,230/wk honest floor). Burned data cannot settle it; only a common forward
 > window can.
-> **Clean way to restore it if wanted (owner decision, NOT taken):** deploy `WeeklyEdgeP1_v3` on
-> **Sim101** — a *separate* paper account — so its positions never net against the M_11 book on
-> DEMO8383477. Cost: one more strategy to monitor. Benefit: the +39% step stops being unverified.
+> ⛔ **RESOLVED SAME DAY — do NOT restore it.** The Sim101 idea above is withdrawn: the correction
+> block below shows the direction claim was an artifact and the shadow is ~5× under-powered to
+> settle magnitude. Running ABS forward would cost attention for a test that cannot conclude.
+
+> ## 🔴 CORRECTION 2026-08-30 — the ABS-vs-PCT "direction" result is WITHDRAWN
+> `runs/G2_ABS_VS_PCT_20260830` re-ran both objects on ONE cost template and reproduced every W98
+> figure exactly — then found the defect: **W98 charged each arm its own spread rate** (ABS
+> $14.517525 vs PCT $14.405321/ctrRT), a deterministic **$0.112205/contract discount to PCT**.
+> **149 of 213 weeks have |diff| < $5 and 147 of them are counted "PCT wins"** (median win $1.23,
+> 0.33% of the dollars). On the **64 genuinely divergent weeks PCT wins 29 — 45.3%, p 0.532** —
+> ABS wins most of them. **The 176/213 / p 7.1e-23 result may not be quoted again.**
+>
+> **What survives, same-cost:** PCT **weakly dominates** — more money ($1,490.53 vs $1,280.20/wk)
+> AND less drawdown ($21,610 vs $26,038), i.e. **+25.1% at fixed DD, not the recorded +39%**. But
+> it is **not statistically established** (paired p 0.051–0.087), **the top 5 of 214 weeks carry
+> 103.7% of the difference** (drop them → −$8/wk, sign flips), and it is era-unstable (2026 alone
+> carries 64%). Mechanism, cleanly: the 1,970 shared entries have **identical exits and $0.00
+> difference** — the entire gap is 167 PCT-only and 41 ABS-only entries, i.e. **session-halt
+> EXPOSURE, not exit management**.
+>
+> **Standing quotation from now on:** *"PCT dominates ABS in-sample on both return and drawdown;
+> neither leg's superiority is statistically established; the 176/213 direction result is
+> withdrawn as a cost artifact."*
 
 ## 2. Roster — the objects that actually exist
 
@@ -81,7 +101,7 @@ previous one.
 |---|---|---|
 | **`P1/PCT`** — `WeeklyEdgeP1PCT_v1.cs` | `ee4c765bc5cab230…76e87b2` | incumbent, **parity-certified**. The benchmark. Parity proves implementation fidelity, **not** forward alpha validity |
 | **`XM_CONFLICT_v2`** — `WeeklyEdgeXMConflict_v2.cs` | `2ec00dd4d0a11b99…4c910dde` | incumbent sleeve, **parity-certified**. Its **hedge mechanism has inverted** (ρ 0.086 → 0.369; payoff when P1 loses **+$598 → −$1,243**). Forward data is the only way to learn whether it still earns its place |
-| **`P1/ABS`** — `WeeklyEdgeP1_v3.cs` | `e8bb9caface37462…e0a3d630` | **challenger / control**. PCT beats ABS on direction overwhelmingly (176/213 weeks, sign test p 7.1e-23) but **not** on paired magnitude (p 0.058). Burned data cannot settle it; running both from a common future timestamp can |
+| ~~**`P1/ABS`** — `WeeklyEdgeP1_v3.cs`~~ | `e8bb9caface37462…e0a3d630` | ⛔ **REMOVED FROM THE ROSTER 2026-08-30.** The direction claim that justified it (176/213, p 7.1e-23) is **FALSIFIED as a cost artifact**, and the shadow is **~5× under-powered** to settle magnitude (power 13.3% at 52 wk, 22.3% at 104). Running it would consume attention for a test that cannot conclude. See `runs/G2_ABS_VS_PCT_20260830/REPORT.md` |
 
 **Excluded, each for a recorded reason:**
 

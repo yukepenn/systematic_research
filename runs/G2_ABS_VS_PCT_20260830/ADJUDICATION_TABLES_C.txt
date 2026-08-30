@@ -1,0 +1,67 @@
+==============================================================================
+PANEL C -- AUDIT OF THE RECORDED '176/213 WEEKS, SIGN TEST p=7.1e-23' CLAIM
+(read-only re-analysis of runs/WE_W98_BOXDENOM/out/weekly_arms_P1.csv -- nothing modified)
+==============================================================================
+
+C0. THE COST CONVENTION IN THE SOURCE RUN
+  ABS spread rate : $14.517525/ctrRT
+  PCT spread rate : $14.405321/ctrRT
+  PCT is charged  : $0.112205/ctrRT LESS than ABS -- a DETERMINISTIC handicap
+  ABS contract-sides (dashboard FULL) 2368 ; PCT 2556
+  On any week whose TRADES are identical, PCT's net is therefore HIGHER BY CONSTRUCTION.
+
+C1. REPRODUCE THE RECORDED STATISTICS
+  n weeks                    : 213
+  mean PCT-ABS               : $240.1776/wk   (recorded 240.17756)
+  se / t / p                 : $126.1252 / 1.9043 / 0.058228   (recorded 126.125 / 1.9043 / 0.05687)
+  PCT-win weeks (d>0)        : 176   (recorded 176)
+  ABS-win weeks (d<0)        : 35   (recorded 35)
+  exactly tied               : 2
+  sign test p                : 8.254e-24   (recorded 7.09e-23)
+  --> REPRODUCED. The recorded statistics are arithmetically correct on this file.
+
+C2. HOW BIG ARE THE 'WINS'?  (distribution of |PCT-ABS| on PCT-win weeks)
+  PCT-win weeks with |diff| < $    0.01 :   0 / 176  (  0.0%)
+  PCT-win weeks with |diff| < $    0.10 :   0 / 176  (  0.0%)
+  PCT-win weeks with |diff| < $    1.00 :  72 / 176  ( 40.9%)
+  PCT-win weeks with |diff| < $    5.00 : 147 / 176  ( 83.5%)
+  PCT-win weeks with |diff| < $   25.00 : 147 / 176  ( 83.5%)
+  PCT-win weeks with |diff| < $  100.00 : 148 / 176  ( 84.1%)
+  PCT-win weeks with |diff| < $  500.00 : 152 / 176  ( 86.4%)
+  median PCT 'win'  = $1.2342
+  mean   PCT 'win'  = $528.52  (recorded +$528.52)
+  median ABS 'win'  = $-1,113.60   mean = $-1,196.03  (recorded -$1,196.03)
+  --> The MEDIAN PCT 'win' is a sub-dollar number. The mean is carried by a few real weeks.
+
+C3. THE DECISIVE TEST -- IS THE SIGN CARRIED BY THE COST HANDICAP?
+  A week where both arms took the SAME trades still differs, by (rate_ABS-rate_PCT)*ctrRT.
+  Typical week ~ 2368/213 = 11.1 ABS contract-sides -> expected artifact
+  = 11.12 x $0.112205 = $1.2474/wk of PURE cost artifact.
+
+  weeks with |PCT-ABS| < $5 (i.e. materially the same trades): 149 / 213 (70.0%)
+    of those, PCT 'wins'  : 147 / 149 = 98.7%
+    of those, ABS 'wins'  : 0
+    total dollars in them : $167.63  (0.33% of the $ difference)
+
+  MATERIALLY-DIFFERING weeks (|PCT-ABS| >= $5): 64 / 213 (30.0%)
+    PCT wins 29 / 64 = 45.3%   sign-test p = 0.5323
+    they carry $50,990.19 = 99.7% of the total difference
+
+  --> THE SIGN TEST IS AN ARTIFACT OF THE PER-ARM COST RATE.
+      Restricted to weeks where the two policies actually did something different,
+      the direction claim collapses from p=7.1e-23 to the value printed above.
+
+C4. CROSS-ENGINE CORROBORATION (this run's NT8 batch, SAME cost rate both arms)
+  NT8, identical Lifetime template both arms: exactly-tied weeks = 132/214 (61.7%)
+  NT8 PCT-win 42 / ABS-win 40 -> sign p = 0.9122
+  If ties are (wrongly) counted as PCT wins: 174/214 = 81.3%  <-- recorded claim was 176/213 = 82.6%
+  --> Remove the per-arm cost difference and the SAME structure appears: a large block of
+      genuinely IDENTICAL weeks, and a coin-flip among the weeks that differ.
+      W98 did not count ties as wins; the per-arm rate turned its ties into wins for it.
+
+C5. WHAT SURVIVES
+  SURVIVES: the paired MAGNITUDE result (mean, se, t, p) is unaffected -- the cost artifact
+            contributes $167.63 of $51,157.82, i.e. 0.33%.
+            The ABS_LOOSE control (p 0.940) is also unaffected -- it is a magnitude test.
+  FALSIFIED: 'PCT beats ABS on DIRECTION overwhelmingly (176/213, p 7.1e-23)'.
+            The direction claim was never established. It measured a cost convention.
