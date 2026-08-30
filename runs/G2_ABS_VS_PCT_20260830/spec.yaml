@@ -1,0 +1,115 @@
+run_id: G2_ABS_VS_PCT_20260830
+campaign: "#7 WEEKLY_EDGE"
+date: 2026-08-30
+status: PREREGISTERED
+role: RUNNER (measurement only - adjudication is explicitly OUT OF SCOPE for this run)
+
+title: >
+  ABS vs PCT showdown: matched NT8 Strategy Analyzer backtests of WeeklyEdgeP1PCT_v1 (incumbent,
+  PCT) and WeeklyEdgeP1_v3 (challenger/control, ABS) over one common window, producing two weekly
+  P&L series on a shared ISO-week grid. This run MEASURES. It does not adjudicate, promote or
+  retire anything.
+
+question_being_served: >
+  Does P1/ABS actually make more money than P1/PCT? The recorded ABS->PCT change claimed +39.0 %
+  weekly dollars at fixed DD ($885 -> $1,231) but its paired dollar significance was only
+  p = 0.057-0.058 - "direction established, magnitude NOT established". This is P1's single
+  largest unverified step.
+
+# ---------------------------------------------------------------- window / seal governance
+window:
+  from: "2022-01-03T00:00:00Z"
+  to:   "2026-07-31T21:59:59Z"
+  to_rationale: >
+    Session-boundary convention (CLAUDE.md section 6): `to` is one second before the NEXT 18:00 ET
+    open, so the last included session is the one ending 2026-07-31 17:00 ET.
+  lead_in: "2022-01-03 -> 2022-06-30 is warm-up. Retained in the raw run for engine fidelity with
+    WE_P1PCT_PARITY_20260827; the analysis grid is reported both full and post-warmup."
+
+seal_decision_and_why_the_requested_window_was_NOT_used:
+  requested_by_orchestrator: "to = 2026-08-30T21:59:59Z"
+  used_instead: "to = 2026-07-31T21:59:59Z"
+  reason: >
+    The orchestrator's window would have consumed 2026-08 for P1/ABS. The SEAL AMENDMENT
+    2026-08-30 in research/operational/LOCKED_FORWARD.md authorizes a SCOPED burn of August for
+    EXACTLY TWO named objects - `P1/PCT` and `XM_CONFLICT_v2` - and then states verbatim:
+    "The seal is UNCHANGED and intact for every other object" and "Effective boundary for all
+    other objects: >=2026-09-01, which is also SHADOW_START."
+    `P1/ABS` is a THIRD, separately-rostered object (PROSPECTIVE_SHADOW.md section 2, own source
+    hash e8bb9caf...e0a3d630). It is not named in the scoped burn, so its seal is intact.
+  aggravating_clause: >
+    LOCKED_FORWARD.md further states: "A challenger may consume virgin data only through a
+    preregistered champion-vs-challenger protocol written BEFORE the read." This run IS a
+    champion-vs-challenger comparison, so the sealed-data path would have required a
+    preregistered protocol AND owner authorization naming P1/ABS. Neither exists.
+  cost_benefit_of_the_omission: >
+    August contributes ~4 weeks to a ~213-week paired series. It cannot move a paired p = 0.058
+    to significance - the marginal N is ~2 %. Meanwhile P1/ABS was placed on the shadow roster
+    SPECIFICALLY to settle this question from a common FORWARD timestamp (SHADOW_START =
+    2026-09-01 18:00 ET). Burning its only clean pre-shadow month would damage the designated
+    instrument of resolution while purchasing essentially no statistical power. The asymmetry is
+    decisive, so the clean matched window was used.
+  what_the_parent_agent_may_do: >
+    Extending ABS through August is an OWNER decision, not a runner decision. If the owner records
+    an authorization naming P1/ABS, the identical batch re-runs with to = 2026-08-30T21:59:59Z.
+    Nothing in this run forecloses that.
+
+# ---------------------------------------------------------------- objects
+objects:
+  incumbent:
+    class: WeeklyEdgeP1PCT_v1
+    sha256_16: ee4c765bc5cab230
+    label: PCT
+    note: "parity-certified 2026-08-27, runs/WE_P1PCT_PARITY_20260827/. NOT MODIFIED by this run."
+  challenger:
+    class: WeeklyEdgeP1_v3
+    sha256_16: e8bb9caface37462
+    label: ABS
+    note: >
+      Restored from bin/Custom/_quarantined_strategies/ to bin/Custom/Strategies/ for this run.
+      Verified byte-identical to research/weekly_edge/ninjascript/WeeklyEdgeP1_v3.cs AND to the
+      hash recorded in WE_P1PCT_PARITY_20260827/spec.yaml. Restoration is a file copy only; the
+      class was ALREADY resolvable in NinjaTrader.Custom.dll (deleting a .cs never removes the
+      type), confirmed by an in_memory typeof() probe with zero errors and no DLL written.
+
+analyzer_settings_identical_for_both:
+  instrument: "NQ 09-26"
+  bars_period: {period_type: Minute, value: 1}
+  trading_hours: "CME US Index Futures ETH"
+  fill: {type: Standard, slippage_ticks: 0, commission_template: "NinjaTrader Brokerage Lifetime"}
+  account: "Backtest (NT8 isolated Strategy Analyzer scratch account) - never Sim101, never DEMO8383477, never a real account"
+
+cost_convention:
+  statement: >
+    NT8 charges the Lifetime template ($4.36/ctrRT) and ZERO slippage. Research additionally
+    charges a modelled $14.44/ctrRT spread for P1. The NT8 nets produced here are therefore
+    COMMISSION-ONLY and are NOT comparable to the $885 / $1,231 per-week research headlines,
+    which are fixed-DD figures under a different cost model. Both arms share the SAME convention,
+    so the ABS-vs-PCT CONTRAST is internally valid even though neither level is a research figure.
+
+outputs:
+  - out/weekly_pnl_PCT.csv
+  - out/weekly_pnl_ABS.csv
+  - out/weekly_pnl_joined.csv
+  - out/trades_PCT.csv
+  - out/trades_ABS.csv
+
+weekly_grid:
+  convention: "ISO week (isocalendar year-week) keyed on the SESSION date of trade EXIT."
+  gap_filling: "Union of both arms' ISO weeks over the window; a week with no trades = 0.0."
+  note: >
+    CURRENT_BASELINE.md warns maxDD is week-boundary sensitive (a Sunday-ending label moved it
+    +5.6 %). ISO-week-on-session-date is the repo convention and is what is used here.
+
+explicitly_out_of_scope:
+  - "Any verdict on whether ABS or PCT is better. The next agent adjudicates."
+  - "Any significance test, fixed-DD rescaling, or promotion/retirement recommendation."
+  - "Any modification of WeeklyEdgeP1PCT_v1.cs or WeeklyEdgeXMConflict_v2.cs."
+  - "Any change to the two running paper deployments on DEMO8383477."
+
+safety_assertions:
+  - "No order placed, modified or cancelled on any account."
+  - "No strategy enabled, disabled, deployed or redeployed."
+  - "Backtests run on the isolated Backtest account via RunStrategyBacktest only."
+  - "Compilation used in_memory:true - no DLL rebuild, so the running paper strategies are undisturbed."
+  - "Paper deployments dep_68588bacd445 (P1/PCT) and dep_7f22307847c2 (XM_v2) verified Realtime+Flat BEFORE and AFTER the run."

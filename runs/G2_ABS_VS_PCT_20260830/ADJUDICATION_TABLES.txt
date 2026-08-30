@@ -1,0 +1,131 @@
+==============================================================================
+G2 ABS-vs-PCT ADJUDICATION  (paired: same weeks, same engine, same bars, same costs)
+==============================================================================
+window            : 2022-06-27 .. 2026-07-27 (ISO week Mondays)
+paired weeks N    : 214
+cost convention   : NT8 Lifetime $4.36/ctrRT, 0 slippage. NOT the research cost model.
+identity check    : sum(net_PCT-net_ABS) - sum(diff) = -0.000000
+
+------------------------------------------------------------------------------
+1. TOTALS
+------------------------------------------------------------------------------
+                     arm      net_$  trades  net/week_$  net/trade_$
+   ABS (WeeklyEdgeP1_v3) 273,962.60    2011    1,280.20       136.23
+PCT (WeeklyEdgeP1PCT_v1) 318,972.40    2137    1,490.53       149.26
+
+PCT - ABS  net difference : $45,009.80
+PCT - ABS  as % of ABS    : +16.43%
+PCT - ABS  per week       : $210.33/wk
+trade-count difference    : PCT 2137 vs ABS 2011  (+126, +6.3%)
+
+weeks with IDENTICAL P&L  : 132/214 (61.7%)  <- the two objects agree here
+weeks that actually differ: 82/214 (38.3%)
+
+------------------------------------------------------------------------------
+2. PAIRED WEEKLY TEST  (H0: mean weekly PCT-ABS = 0)
+------------------------------------------------------------------------------
+mean weekly diff (PCT-ABS) : $210.33/wk
+sd of weekly diff          : $1,788.31
+iid  SE / t / p            : $122.25  t=+1.721  p=0.0868
+Newey-West(L=4) SE/t/p  : $112.96  t=+1.862  p=0.0626
+95% CI (iid) on mean diff  : [$-29.28, $449.93]/wk
+95% CI (NW)  on mean diff  : [$-11.08, $431.73]/wk
+block bootstrap (bl=4, B=20000) two-sided p = 0.0514   CI [$-0.76, $450.59]
+Wilcoxon signed-rank (non-tied n=82) : W=1648  p=0.8029
+
+SIGN TEST on weekly wins
+  PCT-better weeks : 42
+  ABS-better weeks : 40
+  tied  weeks      : 132
+  excl. ties       : 42/82 = 51.2%   sign-test p = 0.9122
+  incl. ties as N  : 42/214 = 19.6%   p = 0.0000
+  NOTE: the repo's recorded '176/213 weeks' cannot be a weekly-P&L sign count on a series
+        that is exactly tied in a large share of weeks; it is a different statistic.
+
+------------------------------------------------------------------------------
+3. RISK-NORMALISED  (fixed drawdown $20,245)
+------------------------------------------------------------------------------
+arm      net_$  net/wk_$  maxDD_weekly_$  maxDD_trade_$  MAR(net/DD)  net/wk @$20,245DD (trade-DD)  net/wk @$20,245DD (weekly-DD)
+ABS 273,962.60  1,280.20       26,038.00      30,281.60         9.05                        855.89                         995.38
+PCT 318,972.40  1,490.53       21,609.68      28,174.68        11.32                      1,071.02                       1,396.40
+
+scale to $20,245 DD (trade-sequence DD): ABS x0.669   PCT x0.719
+fixed-DD net/week gap PCT-ABS : $+215.13/wk  (+25.1% vs ABS)
+raw    net/week gap PCT-ABS   : $+210.33/wk (+16.4%)
+deeper drawdown belongs to    : ABS (trade-DD ABS $30,282 vs PCT $28,175; ratio PCT/ABS = 0.930)
+
+------------------------------------------------------------------------------
+4. CONCENTRATION OF THE DIFFERENCE
+------------------------------------------------------------------------------
+total net difference to explain: $45,009.80
+  top   1.0% of weeks by |diff| =   2 wk : $   26,186.40  =    58.2% of the net difference
+  top   2.0% of weeks by |diff| =   4 wk : $   42,096.64  =    93.5% of the net difference
+  top   5.0% of weeks by |diff| =  11 wk : $   61,605.04  =   136.9% of the net difference
+  top  10.0% of weeks by |diff| =  21 wk : $   57,430.88  =   127.6% of the net difference
+  top  25.0% of weeks by |diff| =  54 wk : $   43,984.88  =    97.7% of the net difference
+  top   1 weeks                       : $   15,523.84  =    34.5%
+  top   3 weeks                       : $   36,718.96  =    81.6%
+  top   5 weeks                       : $   46,686.76  =   103.7%
+  top  10 weeks                       : $   58,893.52  =   130.8%
+  top  20 weeks                       : $   59,365.76  =   131.9%
+
+  GROSS (sum |diff|) = $133,309.40; top 5% of weeks hold 50.4% of GROSS  (repo analogue of the 90.8%/53-of-1058 claim)
+  net difference / gross difference = 33.8%  (signal-to-churn of the contrast)
+
+  largest 10 weekly differences:
+week_monday   net_PCT   net_ABS  diff_PCT_minus_ABS  n_PCT  n_ABS
+ 2026-06-29 12,937.80 -2,586.04           15,523.84      8      6
+ 2026-02-23  4,705.48 -5,957.08           10,662.56     12     11
+ 2025-01-13 15,784.08  5,251.52           10,532.56      7      6
+ 2026-04-20  1,595.48 -3,782.20            5,377.68     10      7
+ 2023-01-02  3,140.24 -1,449.88            4,590.12      6      3
+ 2026-01-19  6,799.20  2,306.64            4,492.56     12     10
+ 2024-06-24  5,255.72    860.60            4,395.12     18     16
+ 2025-08-04 18,816.52 15,555.12            3,261.40      6      2
+ 2023-11-20  5,324.44  2,471.88            2,852.56     17     16
+ 2025-03-10 -1,353.36  1,441.52           -2,794.88      9      7
+
+  leave-one-week-out mean diff range: $138.43 .. $224.44 (full $210.33)
+  drop the single largest week -> mean $138.43/wk, t=+1.394, p=0.1649
+  drop the 5 largest weeks     -> mean $-8.02/wk, t=-0.126, p=0.8995
+
+------------------------------------------------------------------------------
+5. ERA SPLIT
+------------------------------------------------------------------------------
+era                   span  wks    ABS_net    PCT_net      diff  mean_diff/wk    t    p  PCTwin  ABSwin
+ H1 2022-06-27..2024-07-08  107 104,704.88 124,629.48 19,924.60        186.21 2.03 0.04      26      18
+ H2 2024-07-15..2026-07-27  107 169,257.72 194,342.92 25,085.20        234.44 1.03 0.30      16      22
+
+ year  wks    ABS_net    PCT_net      diff  mean/wk  PCTwin  ABSwin  tie
+ 2022   27  32,485.36  32,358.40   -126.96    -4.70       5       6   16
+ 2023   52  22,118.64  37,335.88 15,217.24   292.64      15       8   29
+ 2024   53 105,389.16 103,146.64 -2,242.52   -42.31      11      11   31
+ 2025   52 107,896.64 111,396.56  3,499.92    67.31       6      11   35
+ 2026   30   6,072.80  34,734.92 28,662.12   955.40       5       4   21
+
+------------------------------------------------------------------------------
+6. MINIMUM DETECTABLE EFFECT
+------------------------------------------------------------------------------
+at |t| = 2, N = 214 weeks, sd = $1,788.31:
+  MDE (iid SE) = $244.49/wk  = $52,321 over the window
+  MDE (NW  SE) = $225.92/wk  = $48,348 over the window
+  observed     = $210.33/wk  -> observed / MDE(iid) = 0.86x
+  as % of ABS net/week ($1,280.20): MDE = 19.1%
+  weeks needed for |t|=2 at the OBSERVED effect size: 289 (5.6 years) -> 75 MORE weeks (1.4 yr)
+
+  forward shadow power: at the observed $210.33/wk and sd $1,788.31,
+     13 shadow weeks (0.25 yr): power =  6.2%
+     26 shadow weeks (0.50 yr): power =  8.7%
+     52 shadow weeks (1.00 yr): power = 13.3%
+    104 shadow weeks (2.00 yr): power = 22.3%
+
+------------------------------------------------------------------------------
+7. MECHANISM CHECK -- is the difference information or exposure?
+------------------------------------------------------------------------------
+  shared entry(time,dir) keys : 2006
+  ABS-only                    : 5
+  PCT-only                    : 131
+  net on shared trades        : ABS $275,496.20  PCT $280,700.60 (diff $5,204.40)
+  net on ABS-only trades      : $-1,533.60 (5 trades)
+  net on PCT-only trades      : $38,271.80 (131 trades)
+  decision-series agreement   : 93.65% of the union of entries
