@@ -1,5 +1,24 @@
 # PROSPECTIVE SHADOW — the only evidence class this project does not yet own
 
+> ## AMENDMENT 2026-08-30 — emitter v1 architecture (owner-authorized, pre-start)
+> Owner instruction (recorded, `OWNER_DECISION_20260830.md`): start the shadow AND run the M_11
+> portfolio on the **DEMO8383477** paper account (owner chose DEMO over Sim101 mid-decision;
+> account verified paper: connection "Simulation", flat, $0 balances — §5 assertion satisfied).
+> **Emitter v1 = `research_sdk/shadow_runner.py`**: a daily 17:10 ET job that ingests the NT8
+> sim ORDER/EXECUTION stream (paper accounts only, resolved by name) into this ledger.
+> The decision-first property is carried by **NT8's own platform timestamps** (an order exists
+> before its fill); the runner seals them append-only at EOD. It **emits no orders** — the
+> execution leg is NT8's native strategy engine on the paper account, a separate stream this
+> logger records. Disclosed v1 limits: same-second collisions/partial fills beyond the first go
+> to `spillover.jsonl` (recorded, never lost); NT8 tick times assumed machine-local ET (machine
+> IS on ET; verified at weekly maintenance); `P1/ABS` stays ledger-only at weekly maintenance.
+> Watermarks initialized 2026-08-30 — pre-existing/manual rows can never be ingested, and the
+> ledger's own `SHADOW_START = 2026-09-01 18:00 ET` guard refuses any earlier row regardless.
+> **Evidence-class label for sim-stream rows: PROSPECTIVE (platform-timestamped, EOD-sealed).**
+> The header's "No Sim101 / no simulated order" clause is superseded FOR PAPER ACCOUNTS ONLY by
+> the recorded owner decision; real accounts remain absolutely out of scope. LIVE (real money)
+> ENABLED = NO, unchanged.
+
 | | |
 |---|---|
 | **status** | ✅ **RE-PROMOTED 2026-08-28 for the INCUMBENT, by owner directive.** Superseding the same-day demotion, which was scoped to a void object |

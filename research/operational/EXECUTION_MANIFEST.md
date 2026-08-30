@@ -26,7 +26,7 @@ _**This file answers "what exactly is installed and reproducible?"** They are di
 | **A** | RESEARCH_SINGLE | `P1/PCT` | research object — see `CURRENT_BASELINE.md` §0 |
 | **B** | RESEARCH_PORTFOLIO_FRONTIER | `{P1/PCT + XM_CONFLICT}` inverse-vol | research object — see `CURRENT_BASELINE.md` §0 |
 | **C** | **EXECUTABLE_SINGLE** | **`WeeklyEdgeP1PCT_v1`** | **EXECUTABLE · PARITY-CERTIFIED · NOT ENABLED** |
-| **D** | **EXECUTABLE_COMPONENT_SET** | **`WeeklyEdgeP1PCT_v1` + `WeeklyEdgeXMConflict_v2`** | **both legs individually PARITY-CERTIFIED · NOT ENABLED** — a component set, **not** an executable implementation of B |
+| **D** | **EXECUTABLE_PORTFOLIO (mapping M_11)** — ⭐ upgraded 2026-08-30, owner-ratified 「确认 M_11」 | **`WeeklyEdgeP1PCT_v1` ×1 NQ + `WeeklyEdgeXMConflict_v2` ×1 NQ** | mapping selected per `runs/G2_OQ6_MAPPING_20260830` (risk-share dev 0.054 vs inverse-vol; wins all three axes) and **frozen BEFORE the 2026-09-01 shadow start**. Both legs PARITY-CERTIFIED. **Paper deployment to DEMO8383477 owner-authorized** (`OWNER_DECISION_20260830.md`) — pending the owner's permission click. **LIVE (real money) ENABLED = NO** |
 
 ## Certified objects
 

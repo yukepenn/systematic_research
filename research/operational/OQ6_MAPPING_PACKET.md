@@ -1,5 +1,8 @@
 # OQ-6 DECISION PACKET — integer-contract mapping for {P1/PCT + XM_v2}
 
+> ✅ **RATIFIED 2026-08-30 by owner: 「确认 M_11」** — recorded in `OWNER_DECISION_20260830.md`;
+> slot D updated in `EXECUTION_MANIFEST.md`.
+
 **For owner ratification.** Analysis: `runs/G2_OQ6_MAPPING_20260830` (spec committed pre-result,
 trial G00040). Decision frozen BEFORE the 2026-09-01 shadow start so the mapped portfolio is a
 preregistered forward object from day one. **Ratifying a mapping does NOT enable anything live.**
