@@ -239,3 +239,52 @@ different quantities — never quote one for the other.
 2. **Connection-drop behaviour (H5) is still untested** in production.
 3. **After ANY NT8 restart: both strategies are gone.** Redeploy with `DaysToLoad = 365` and
    re-verify. A restart is also the only way to flush the stale types in §B.
+---
+
+## ⭐ WARM-UP CONVERGENCE — MEASURED, and it CORRECTS an overstatement made earlier today
+
+**The claim recorded this morning was too strong.** This file said every state is a rolling window,
+"so a warm-up longer than the longest window reproduces steady state **exactly**." That is true of
+the rolling-window states but **not of all of P1's state**:
+
+- **Rolling-window states — exact once filled:** sigma 460 bars, tilt SMA 50, B-MOM band 14 days,
+  range 60 sessions, ATR 14; XM's sigma 60 sessions.
+- **NOT a rolling window:** P1's **13 shared ratchet members** (`mUp`/`mAnchor`/`mS`, `:131-134`).
+  A ratchet's anchor is **path-dependent with no fixed lookback** — it persists until price moves
+  far enough to flip it. There is no window whose expiry guarantees agreement.
+- **Also not a time window:** the quality-sizing window is the last **250 ENTRIES** — an
+  event count, so the calendar time needed to fill it varies with trade frequency.
+
+So convergence had to be **measured, not derived**. Two Strategy Analyzer runs of the identical
+class, differing ONLY in start date (2022-01-03 vs 2025-08-30), compared trade-by-trade on
+`entry time | entry price | qty | P&L` over their common tail:
+
+| warm-up elapsed at the cut | trades (short vs full) | **differing rows** | net difference |
+|---|---:|---:|---:|
+| 0.6 mo | 436 vs 419 | **101** | −$49.36 |
+| 4.1 mo | 285 vs 285 | **10** | −$858.08 |
+| 7 mo | 168 vs 168 | **2** | +$499.36 |
+| **9 mo** | **107 vs 107** | **0** | **$0.00** |
+| 11 mo | 39 vs 39 | **0** | $0.00 |
+
+### What this establishes
+
+1. ✅ **`DaysToLoad = 365` is now empirically justified, not assumed.** Full convergence lands at
+   **~9 months**; 12 months clears it with ~3 months of margin. This is the first direct evidence
+   for the number — it had been chosen on a rolling-window argument that is now known to be
+   incomplete.
+2. ⛔ **A cold start is not a cosmetic defect.** In its first month the under-warmed instance took
+   **17 extra trades** and differed on 101 rows. It is a different object, exactly as feared.
+3. **Convergence is complete, not merely asymptotic** — 0 differing rows, $0.00, sustained over the
+   last two windows. The ratchet does re-synchronise; it just does so by re-flipping against price
+   rather than by a window expiring.
+4. **Aggregate P&L is far more robust than composition.** Even at 0.6 months, where 101 rows differ,
+   the net differs by only −$49.36. Path differences largely wash; do not read a small net agreement
+   as evidence that two instances are in the same state.
+
+### What it does NOT establish
+
+**This does not mean the live instance will track a backtest.** Warm-up equalises the *state*; it
+cannot equalise *fills*. Once a live fill differs from the modelled fill, the ratchet has **no
+resynchronisation point**, so live-vs-backtest tracking error can only grow. That doctrine is
+unchanged: **judge forward performance on economics, never on path-matching.**
