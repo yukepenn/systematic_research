@@ -1,0 +1,77 @@
+RE-PROVER ENVIRONMENT WITNESS - G2_LIVE_HARDENING_20260830
+Source: mcp__crosstrade__GetActivityLog(lookback_hours=2), read-only, 2026-08-30 13:44Z.
+Verbatim add-on log lines, newest last. Nothing here was written by this role.
+
+--- A. NT8's own read-back of the DEPLOYED CERTIFIED strategies (closes the previous
+--- proof's residual R1 "UNVERIFIED-BY-PROVER" and residual R4) ------------------------
+
+2026-08-30T10:48:02.4923352Z  [NinjaTrader] Enabling NinjaScript strategy
+  'WeeklyEdgeP1PCT_v1/399550060' : On starting a real-time strategy -
+  StartBehavior=WaitUntilFlat EntryHandling=All entries EntriesPerDirection=1
+  StopTargetHandling=Per entry execution
+  ErrorHandling=Stop strategy, cancel orders, close positions
+  ExitOnSessionClose=False SetOrderQuantityBy=Strategy
+  ConnectionLossHandling=Recalculate DisconnectDelaySeconds=10
+  CancelEntriesOnStrategyDisable=False CancelExitsOnStrategyDisable=False
+  Calculate=On bar close IsUnmanaged=False MaxRestarts=4 in 5 minutes
+
+2026-08-30T10:48:52.9486426Z  [NinjaTrader] Enabling NinjaScript strategy
+  'WeeklyEdgeXMConflict_v2/399550061' : (identical property set)
+
+=> The certified effective defaults on THIS install are
+     ConnectionLossHandling = Recalculate
+     MaxRestarts            = 4 in 5 minutes
+     SetOrderQuantityBy     = Strategy
+   The builder's "CHANGE from Recalculate" / "CHANGE from 4" claims are therefore
+   CONFIRMED, and the fixer's revert (removing both declarations) lands the hardened
+   classes on exactly the certified values.  R1 and R4 are closed.
+
+--- B. The environment event that voided TEST 3 ---------------------------------------
+
+2026-08-30T13:40:38.9Z   (RE-PROVER) RunStrategyBacktest WeeklyEdgeP1PCT_v1 submitted
+2026-08-30T13:40:43.6099691Z  [Connection] Status changed for provider 'Simulation' to Disconnecting
+2026-08-30T13:40:43.6Z   job 867cc0705bf24397 -> bars_request_failed
+                         "NT8 BarsRequest reported error: Aborted due to disconnect"
+2026-08-30T13:40:45.1555204Z  [Connection] Status changed for provider 'Simulation' to Disconnected
+2026-08-30T13:40:45.1575186Z  [Connection] Connection 'Simulation' lost.                    (Warning)
+2026-08-30T13:40:45.1575186Z  [Auto-Reconnect] Involuntary disconnect detected for 'Simulation'
+                              (Unexpected disconnect (no API intent)). Triggering recovery.
+2026-08-30T13:40:45.1585194Z  [Reconnect Policy] Using previously captured snapshot of
+                              2 strategies for connection 'Simulation'.
+2026-08-30T13:41:05.6439745Z  Starting CrossTrade...            <- add-on (and process) restart;
+2026-08-30T13:41:06.1369707Z  [Auto-Reconnect] Monitoring service started.    same signature as
+2026-08-30T13:41:06.2259834Z  Secure connection established                  10:07:37Z start
+2026-08-30T13:41:07.4454735Z  Waiting for signals...
+2026-08-30T13:41:17.1886401Z  [Connection] Status changed for provider 'Simulation' to Connecting
+2026-08-30T13:41:18.7219107Z  [Connection] Status changed for provider 'Simulation' to Connected
+2026-08-30T13:41:49.229Z      NinjaTrader.Custom.dll REBUILT (file mtime; 1,421,824 bytes)
+2026-08-30T13:42:07Z .. 13:44:19Z  the four RE-PROVER identity backtests, all completed
+
+Key negative evidence: the add-on logs every deliberate stop as
+"[NinjaTrader] Disabling NinjaScript strategy '<name>/<id>'".  The last two such lines
+are 10:47:30Z and 10:47:35Z (the orchestrator's own earlier redeploy).  There is NO
+"Disabling" line after 10:47:35Z.  Neither deployment was stopped or disabled by anyone;
+they were lost with the process.
+
+Attribution, stated honestly: the abort arrived 5 s after this role submitted a
+1,647,698-bar request, so a causal contribution cannot be excluded from timing alone.
+Against that: (i) the add-on classifies the drop as involuntary with "no API intent";
+(ii) the previous PROVER ran six byte-identical requests 13:15Z-13:23Z with no drop;
+(iii) four byte-identical requests after the reconnect (13:42Z-13:44Z) all completed;
+(iv) the same feed already logged "Symbol is inaccessible" for NQ at 12:17:49Z.
+Weight of evidence: a provider-side drop of the 'Simulation' feed, not a tool-induced one.
+
+--- C. Post-event state, re-read at 13:45:46Z / 13:45:52Z (read-only) ------------------
+
+ListDeployedStrategies()                 -> total 0, deployments []
+GetDeployedStrategyState(dep_306e11dfc8eb) -> not_found: "not in registry"
+GetDeployedStrategyState(dep_5a914d070687) -> not_found: "not in registry"
+ListAllStrategies(includeTerminal=true)  -> count 0; DEMO8383477 connection 'Simulation',
+                                            strategyCount 0; Sim101 strategyCount 0
+GetAllPositions(includeFlat=false)        -> [] (0)
+GetAllOrders(activeOnly=true)             -> [] (0)
+ListAccounts()                            -> Backtest, Playback101, Sim101, 2047681,
+                                             DEMO8383477 all Enabled
+
+Both strategies were Flat/0 with 0 active orders at 13:26Z (previous PROOF section 7),
+and there is no open position or working order now, so nothing was orphaned by the loss.

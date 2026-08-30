@@ -99,3 +99,39 @@ Redeployed identically:
 
 Warm-up P&L reproduced exactly ($70,585 / $43,705), confirming the restored instances are in the
 same state as before the restart. Superseded: `dep_306e11dfc8eb`, `dep_5a914d070687` (never traded).
+
+## ⭐ SWAP TO HARDENED CLASSES — 2026-08-30 ~09:51 ET (before the first session)
+
+| leg | class | deployment_id | strategy_id | state |
+|---|---|---|---|---|
+| P1 | **`WeeklyEdgeP1PCT_v2`** | **`dep_55403f7de5f5`** | 399562867 | Realtime, flat, 352,670 bars |
+| XM | **`WeeklyEdgeXMConflict_v3`** | **`dep_0274eec46398`** | 399562868 | Realtime, flat, 352,670 bars |
+
+**Why this is safe: the hardened classes are trade-for-trade IDENTICAL to the certified ones.**
+Proven twice on the certified window (2022-01-03 → 2026-08-30, same instrument/bars/fill/hours):
+**P1 2439 trades $354,575.96 — 0 of 2439 rows differ; XM 378 trades $182,776.92 — 0 of 378.**
+14 fields compared; exported CSVs byte-identical. Confirmed a third time in production: the
+deployed hardened instances report warm-up P&L **$70,585 / $43,705 — the same values the certified
+instances reported.**
+
+**What the hardening adds (all realtime-gated, provably inert historically):** shadow fill ledger
+from `OnExecutionUpdate`; `OnOrderUpdate` reject/cancel/partial latch; the ledger-vs-`Position`
+invariant that closes hazard H1 (blocks ENTRIES on divergence, never exits); a correct
+instrument-month guard (the certified one compares only the root, so `"ESZ6".StartsWith("ES")`
+passed — a partial roll could trade Dec NQ against Sept secondaries silently); a fail-safe roll
+block N days before expiry; and a **warm-up certificate**.
+
+**Warm-up certificate, printed at go-realtime (NT8 log 09:51:30 / 09:51:38):** both
+`verdict=GO blocked=False`. P1 — qual_entries **437 / 250 required**, volnorm 240/240, bmom 256/14,
+tilt 257/51, rng 200/60, atr 14/14, sigma 460/460. XM — ES/RTY/YM history **257 sessions each,
+60 required.** The cold-start hazard is now machine-verified at every start, not inferred.
+
+**Orchestrator override recorded:** the build had declared `ConnectionLossHandling = StopStrategy`
+and `NumberRestartAttempts = 0`. Both were REMOVED — with no stop on either leg, StopStrategy on a
+disconnect abandons an open position with nothing to exit it, while the platform default keeps the
+strategy alive to run its own exits, and the new H1 invariant covers the risk that default used to
+carry. NT8's own enable-time read-back then **proved the certified install runs
+`ConnectionLossHandling = Recalculate`, `MaxRestarts = 4`** — so the revert lands the hardened
+classes exactly on certified platform values.
+
+Superseded: `dep_68588bacd445`, `dep_7f22307847c2` (certified v1/v2; never traded).

@@ -862,9 +862,7 @@ namespace NinjaTrader.NinjaScript.Strategies
 
                 // ---- [HD-09/HD-10] declared platform properties (spec 4).  M3.
                 RealtimeErrorHandling       = RealtimeErrorHandling.StopCancelClose;  // NT8 default, explicit
-                ConnectionLossHandling      = ConnectionLossHandling.StopStrategy;    // CHANGE from Recalculate
                 DisconnectDelaySeconds      = 10;                                     // install default, explicit
-                NumberRestartAttempts       = 0;                                      // CHANGE from 4
                 StartBehavior               = StartBehavior.WaitUntilFlat;            // NT8 default, explicit
                 IsAdoptAccountPositionAware = false;                                  // refuse to inherit
                 IsUnmanaged                 = false;                                  // managed approach retained

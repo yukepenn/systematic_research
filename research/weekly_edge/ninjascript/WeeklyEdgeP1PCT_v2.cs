@@ -785,9 +785,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                 //      is defined in terms of broker rejections, connection loss or strategy start
                 //      on an ACCOUNT, so declaring them changes nothing historically.
                 RealtimeErrorHandling       = RealtimeErrorHandling.StopCancelClose;  // NT8 default, explicit
-                ConnectionLossHandling      = ConnectionLossHandling.StopStrategy;    // CHANGE from Recalculate
                 DisconnectDelaySeconds      = 10;                                     // install default, explicit
-                NumberRestartAttempts       = 0;                                      // CHANGE from 4
                 StartBehavior               = StartBehavior.WaitUntilFlat;            // NT8 default, explicit
                 IsAdoptAccountPositionAware = false;                                  // refuse to inherit
                 IsUnmanaged                 = false;                                  // managed approach retained
