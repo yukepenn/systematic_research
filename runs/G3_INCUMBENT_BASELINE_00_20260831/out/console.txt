@@ -1,0 +1,96 @@
+================================================================================================================
+G3_INCUMBENT_BASELINE_00 - the champion's own numbers on the GENESIS III risk vector.
+VERIFICATION ONLY. Nothing is selected, tuned or ranked.
+================================================================================================================
+
+P1: 2439 trades, net $354,575.96, ctrRT 2939, 2022-01-02 .. 2026-08-25
+
+XM: 378 trades, net $182,776.92, ctrRT 378, 2022-02-08 .. 2026-08-25
+
+recorded baseline reproduces to the cent: True   (recorded SUM $537,352.88, recomputed $537,352.88)
+shared week index: 243 ISO weeks (2021-W52 .. 2026-W35)
+
+================================================================================================================
+THE RISK VECTOR.  Fixed-DD is ONE COLUMN, never the yardstick (directive section 25).
+================================================================================================================
+object                             net/wk     med/wk       %pos      wk SD       dnSD       ES95   worst wk      maxDD      DDwks   fixDD/wk     top10%     trades
+object                             net/wk     med/wk       %pos      wk SD       dnSD       ES95   worst wk      maxDD      DDwks   fixDD/wk     top10%     trades
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+P1[A_NT8_HEADLINE]                  1,459        651      0.597      5,039      3,352     -6,650     -9,077     23,099         22      1,279       2.56      2,439
+XM[A_NT8_HEADLINE]                    752          0      0.465      4,398      4,144     -7,872    -14,502     32,383         50        470       1.44        378
+M_11_COMPONENT_SET[A_NT8_HEADLINE]      2,211      1,318      0.621      7,195      5,318    -10,905    -14,539     45,138         35        992       2.38      2,817
+P1[B_RECOSTED]                      1,285        405      0.568      5,044      3,386     -6,886     -9,251     24,973         26      1,041       2.89      2,439
+XM[B_RECOSTED]                        733          0      0.465      4,397      4,163     -7,899    -14,552     32,708         50        454       1.48        378
+M_11_COMPONENT_SET[B_RECOSTED]      2,017      1,116      0.601      7,193      5,328    -11,113    -14,665     47,298         35        863        2.6      2,817
+
+================================================================================================================
+THE DIVERSIFICATION QUESTION, ON BOTH COST BASES
+================================================================================================================
+
+[A_NT8_HEADLINE]  corr(P1, XM) = +0.1587
+  P1     1,459/wk   XM       752/wk   combined     2,211/wk
+  weekly SD: P1     5,039  combined     7,195   maxDD: P1    23,099  combined    45,138
+  increment over a risk-matched P1 [vol]:       +128/wk   (scale P1 by k=1.4279)
+  increment over a risk-matched P1 [ es]:       -182/wk   (scale P1 by k=1.6399)
+  increment over a risk-matched P1 [ dd]:       -640/wk   (scale P1 by k=1.9541)
+  XM during P1's worst decile of weeks:      +281/wk   (P1 there -5,598/wk)
+
+[B_RECOSTED]  corr(P1, XM) = +0.1570
+  P1     1,285/wk   XM       733/wk   combined     2,017/wk
+  weekly SD: P1     5,044  combined     7,193   maxDD: P1    24,973  combined    47,298
+  increment over a risk-matched P1 [vol]:       +186/wk   (scale P1 by k=1.4260)
+  increment over a risk-matched P1 [ es]:        -56/wk   (scale P1 by k=1.6138)
+  increment over a risk-matched P1 [ dd]:       -416/wk   (scale P1 by k=1.8940)
+  XM during P1's worst decile of weeks:      +261/wk   (P1 there -5,812/wk)
+
+================================================================================================================
+THE MIXTURE, REPRODUCED: XM's correlation with P1 is not one number
+================================================================================================================
+  The ledger runs/G2_AUG_INCUMBENT_READ_20260830/out/xm_trades_full.csv carries columns
+  ['et', 'xt', 'qty', 'pnl', 'comm', 'm', 'wk'] - it has NO SIGNED DIRECTION column, so the
+  long/short conditional correlation (rho +0.408 when XM is long, -0.204 when short)
+  CANNOT be reproduced from this artifact. It is NOT recomputed here and is NOT quoted.
+  To reproduce it, the XM reference decision ledger with desired_direction is required:
+    research/weekly_edge/ninjascript/reference/xm_reference_decisions.csv
+
+================================================================================================================
+CONCENTRATION - the capital plan has to admit this
+================================================================================================================
+
+P1: net $354,576 from 2439 trades, median $-99.36, win rate 37.1%
+   top    1% =   24 trades = $     284,353 =   80.2% of net   |   the other 2415 sum $      70,223
+   top    5% =  122 trades = $     679,430 =  191.6% of net   |   the other 2317 sum $    -324,854
+   top   10% =  244 trades = $     906,886 =  255.8% of net   |   the other 2195 sum $    -552,310
+
+XM: net $182,777 from 378 trades, median $300.64, win rate 54.2%
+   top    1% =    4 trades = $      49,453 =   27.1% of net   |   the other  374 sum $     133,324
+   top    5% =   19 trades = $     165,552 =   90.6% of net   |   the other  359 sum $      17,225
+   top   10% =   38 trades = $     263,984 =  144.4% of net   |   the other  340 sum $     -81,207
+
+wrote D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\G3_INCUMBENT_BASELINE_00_20260831\src\..\out\baseline_risk_vectors.json
+
+================================================================================================================
+LABELS THAT TRAVEL WITH THESE NUMBERS
+================================================================================================================
+  A_NT8_HEADLINE is Strategy Analyzer with ZERO slippage and the template commission.
+    It is NOT a forward expectation and must never be quoted as one.
+  B_RECOSTED adds the modelled spread the research charges. It is still IN-SAMPLE and
+    still POST-SELECTION.
+  M_11_COMPONENT_SET is two individually certified legs at quantity 1. It is NOT the
+    research portfolio, which is inverse-vol weighted. No research-portfolio figure may
+    be quoted for it (CLAUDE.md section 3).
+  Evidence status of every number above: DISCOVERY_CONSUMED / IN-SAMPLE.
+
+================================================================================================================
+APPENDIX: WHY THE RISK MEASURES DISAGREE ABOUT XM
+================================================================================================================
+  XM weeks with ZERO trades : 44 of 243 (18.1%)   P1: 3 (1.2%)
+  XM among weeks it traded  : 199 weeks, 56.8% positive, mean $918
+
+  TAIL RELATIVE TO VOLATILITY - this is the whole disagreement:
+    worst week / weekly SD :  XM  -3.30 SD    P1  -1.80 SD
+    ES95      / weekly SD :  XM  -1.82 SD    P1  -1.35 SD
+
+  XM's left tail is far fatter RELATIVE TO ITS VOLATILITY than P1's. Volatility therefore
+  UNDERSTATES XM's risk - and volatility is the only matching basis under which XM looks
+  additive. That is not a coincidence; it is the mechanism of the disagreement.
