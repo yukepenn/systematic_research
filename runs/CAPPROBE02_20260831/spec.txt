@@ -1,0 +1,70 @@
+CAPPROBE02 — PREREGISTERED SPEC (frozen 2026-08-31, BEFORE this lane issued any provider call)
+
+Successor to CAPPROBE01 (runs/CAPPROBE01_20260831, commit 71c8b91). CAPPROBE01 answered the
+CAPABILITY question (PASS: the 2022 start is a FETCH boundary). CAPPROBE02 does not re-ask it.
+
+PURPOSE (acquisition + measurement only): finish the free ^TICK backfill, run the same procedure for
+^TRIN, and FREEZE A DATASET MANIFEST. NO ECONOMIC STATISTIC IS COMPUTED. No P&L, no threshold
+search, no outcome data joined, no strategy touched.
+
+=== SCOPE ===
+IN : ^TICK years 2014, 2016, 2018, 2019, 2020, 2021 (year-by-year GetBars)
+     ^TRIN capability probe then backfill, same method
+     ^VIX / ^ADD pre-2022 capability probe (same free procedure, opportunistic)
+OUT: Databento (out of scope by directive). DOM/L2 (PAUSED). Any order/strategy action (read-only).
+
+=== KNOWN TRAP (inherited, VERIFIED by orchestrator) ===
+A multi-year GetBars range hits a bar cap and returns a CACHED TAIL without fetching. Requests are
+therefore issued ONE YEAR AT A TIME. A year that lands with <=2 files is presumed cached-tail, not
+served, and is retried.
+
+=== SCORING RULE — CORRECTED BEFORE USE, NOT INHERITED ===
+The orchestrator supplied "<=32 B residue == empty". THIS LANE MEASURED THAT RULE AND FOUND IT
+INSUFFICIENT, and freezes the corrected rule below BEFORE scoring any acquired year.
+
+Measured size bands over the pre-existing stores (metadata only, no .ncd parsed):
+  ^TICK  <=32 B: n=231 (all exactly 32 B)   33-200 B: n=62   201-2000 B: n=1    >2000 B: n=2154
+  ^TRIN  <=32 B: n=219 (all exactly 32 B)   33-200 B: n=32   201-2000 B: n=11   >2000 B: n=1136
+  ^VIX   <=32 B: n=166 (all exactly 32 B)   33-200 B: n=21   201-2000 B: n=1    >2000 B: n=1154
+
+The 33-200 B band (sizes 36,37,40,41,43,48,49,53) is 113/115 SATURDAY-OR-SUNDAY across the three
+symbols. It is non-session residue, NOT payload. The <=32 rule misclassifies it as payload and
+inflates every coverage figure. The distribution is cleanly trimodal with a wide empty gulf between
+200 B and ~800 B.
+
+FROZEN CLASSIFICATION (this lane, applied uniformly to every symbol/year):
+  EMPTY   : size <= 200 B          (non-session / probe residue)
+  PAYLOAD : size >  200 B          (a served session)
+Half-sessions (US 13:00 closes) land at 1,767-1,964 B and are correctly PAYLOAD; they are reported
+as a named subclass, not discarded.
+
+=== COVERAGE DENOMINATOR (frozen) ===
+Coverage is reported as payload_count vs the NYSE/NASDAQ trading-day count for that calendar year
+(2013:252 2014:252 2015:252 2016:252 2017:251 2018:251 2019:252 2020:253 2021:252). Coverage is a
+DESCRIPTIVE statistic. There is no pass/fail promotion gate in this run — CAPPROBE02 acquires and
+describes; it does not decide.
+
+=== SEAL DISCIPLINE ===
+>= 2026-08-01 is VIRGIN. Files in that window are COUNTED (filesystem metadata only) and reported
+as SEALED. Their contents are not parsed and no statistic is computed over them. Nothing in this run
+requests any date >= 2026-08-01.
+2026-05-31 -> 2026-07-31 is BURNED and is reported as such.
+
+=== EVIDENCE STATUS OF THE ACQUIRED WINDOW (frozen, binding on downstream use) ===
+2013-2021 ^TICK/^TRIN is tagged **PRE-FROZEN / UNSPENT**. It is NOT automatically admissible:
+  - ERABREAK01 (p=0.0011) forbids pooling pre-2022 with modern intraday-vol behaviour. Admissible
+    only ERA-STRATIFIED, or as the discovery half of a preregistered discovery/confirmation split.
+  - 2013-2021 carries family-selection debt from prior campaigns.
+  - PERMANENT CEILING: ^TICK/^TRIN are RTH-ONLY while P1 makes ~62% of decisions outside RTH.
+    Acquisition raises n on the RTH minority; it does not touch that ceiling.
+ACQUISITION IS FREE. SPENDING IT IS A SEPARATE OWNER DECISION.
+
+=== CONCURRENCY NOTE (recorded before acting) ===
+At 12:38 local an EXTERNAL process (not this lane, no peer agent in ListAgents) was actively writing
+^TICK: 522 files in 15 minutes, completing 2018 and 2020. This lane will WAIT for quiescence, then
+fetch only the years still short, to avoid double-issuing requests against the trading workstation.
+
+=== DELIVERABLE ===
+runs/CAPPROBE02_20260831/MANIFEST.md + manifest.json: per symbol - date min/max, payload count,
+empty count, median payload size, per-year coverage, timestamp semantics, session coverage,
+evidence status.
