@@ -120,7 +120,20 @@ level; what changes is **excursion size** (MFE 1.30–1.51 ATR at score 0–1 vs
 It doubles the bet on **magnitude**, not on being right — which is why *filtering* on it destroys the
 strategy while *sizing* on it works.
 
-## 🔴 6. LIVE DEFECT FOUND — spec says DECILE, the running code uses TERCILE
+## 6. ⚠️ RECLASSIFIED 2026-08-31 — this is a DOCUMENTATION error, **NOT a live defect**
+
+> **CORRECTION.** This section originally reported a "live defect." A later audit checked the thing
+> this one did not: the **Python research substrate**. `research/weekly_edge/src/we_quality.py:102`
+> uses `2/3` for `delta_mag` — **identical to the C#**. So NT8 and the substrate **agree with each
+> other**; the mismatch is the **spec TEXT versus BOTH implementations**.
+>
+> Consequences: the **tercile object is the only object that has ever been measured** — W34's own
+> result, W35/36/37/39, the parity certification and the entire backtest headline are all tercile.
+> There is **no divergence between the deployed code and the tested code**, which is what "live
+> defect" would have meant. ⛔ **Do not change the code.** Fix the spec text to record what was
+> actually built and tested.
+
+### The original finding, retained for the record — spec says DECILE, both implementations use TERCILE
 
 **Confirmed by the orchestrator, not just reported.** `runs/WE_W34_QUALITY/spec.yaml:22-23`
 preregisters five features; four match the code exactly:
