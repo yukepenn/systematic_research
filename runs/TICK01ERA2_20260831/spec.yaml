@@ -1,0 +1,72 @@
+run_id: TICK01ERA2_20260831
+run_class: PROTECTED_CONFIRMATION
+campaign: NQ_LIVE_ALPHA_ACCELERATION_TIER1
+type: OUT-OF-SAMPLE ERA RE-TEST, continuation of TICK01ERA. No tuning. No new mechanism.
+live_enabled: NO
+spend: $0
+
+why_this_is_a_separate_run_and_not_an_extension:
+  TICK01ERA (spec 673c7c3, result a856b79) declared its population - 2013, 2015, 2017 - BEFORE it
+  ran, and got 7 events. Widening that population now, after seeing that result, would be exactly
+  the "never redefine the population after seeing the result" violation. So TICK01ERA's verdict
+  stands as recorded and THIS is a new preregistration over a DISJOINT set of years.
+  Those years only became reachable while TICK01ERA was executing: sibling run CAPPROBE02
+  (commit ddbbbc7) completed the free backfill, taking db\minute\^TICK from 4 pre-2022 payload
+  sessions to 2,261 across 2013-2021.
+
+question: >
+  TICK01ERA established that 2013/2015/2017 cannot decide anything, because those three years are
+  the calmest in the store and the event is a volatility-regime phenomenon. The six remaining
+  pre-2022 years contain the regimes that actually produce the event - Feb-2018, Oct/Dec-2018,
+  Feb/Mar-2020. ONE QUESTION, unchanged: does the FROZEN G2_F1_TICK01 mechanism survive there?
+
+population_declared_in_advance:
+  years: [2014, 2016, 2018, 2019, 2020, 2021]
+  disjoint_from: "TICK01ERA's {2013, 2015, 2017}. No session is scored twice."
+  strata: "one per year, plus ERA2_POOLED = the union of exactly those six years."
+  never_pooled_with: "2022-2026 (ERABREAK01, p=0.0011) and NOT pooled with TICK01ERA's three years."
+  eligibility: "every session with BOTH a >32-byte ^TICK 1-min payload yielding >= 300 RTH bars AND
+    a front-month NQ 1-min payload. Identical rule to TICK01ERA, declared before any count."
+
+mechanism_frozen_verbatim:
+  source: runs/G2_F1_TICK01_20260829/src/tick01.py via runs/TICK01ERA_20260831/src/tick01era.py
+  trigger: "first RTH minute whose ^TICK CLOSE <= -1000 within an arming cycle"
+  rearm: ">= -400; ARMED at each session start; RTH slots 09:31..15:59 ET, END-stamped"
+  target: "NQ forward 15-minute simple return from the close of the event minute, in bps"
+  expected_sign: POSITIVE
+  nq_source: "true front-month, selected per session by MAX SESSION VOLUME, ties -> EARLIEST EXPIRY
+    (the rule TICK01ERA declared and verified; NT8's merge-back-adjusted NQ 09-26 is unusable
+    pre-2022 - it prints 6,242 for 2013-03-12 against a true 2,790)."
+  code_reuse: "src/tick01era2.py imports the FROZEN detect_events / cluster_t / build_grid from
+    TICK01ERA rather than restating them, so the mechanism cannot drift between the two runs."
+
+prohibitions:
+  - NO threshold search, NO horizon selection, NO policy, NO P&L, NO cost claim, NO sizing.
+  - NO pooling with 2022-2026 and NO pooling with TICK01ERA's three years.
+  - NO re-run of the modern window. It is quoted from its closed run or not at all.
+  - NO selection of a single year as "the answer".
+  - NO sealed read (>= 2026-08-01 is never touched).
+
+gates_all_coded_and_printed:
+  T1: "mean forward-15-min return > 0 AND session-clustered t >= 2.0"
+  T2: "event mean > p95 of count-matched random RTH minutes from the SAME sessions, 1000 draws"
+  T3: "event mean > p95 of a complete-enumeration session-block circular-shift null (null_guard,
+       verify_null_sensitivity first)"
+  seed: 20260831
+
+verdict_rule_frozen:
+  SURVIVES: "all of T1,T2,T3 pass in ERA2_POOLED -> the 2026 closure was a DATA-POWER closure and
+    the mechanism must be re-preregistered as a candidate on a protected sample."
+  FAILS: "any gate fails in ERA2_POOLED -> the closure is a MECHANISM closure, now confirmed on an
+    independent, event-bearing, out-of-sample era."
+  UNDERPOWERED_STILL: "reported ADDITIONALLY and never instead: if MDE > 2.0x |observed mean| in
+    ERA2_POOLED the re-test is itself underpowered and closes nothing. Declared NOW."
+  combined_pre2022_reported_but_not_a_gate: "TICK01ERA's 7 events plus this run's events are printed
+    as a descriptive nine-year pre-2022 line. It carries NO verdict: its two halves were
+    preregistered separately and combining them post hoc would be a selection artefact."
+
+outputs:
+  - out/gate_table.txt
+  - out/era2_events.csv
+  - out/manifest.csv
+  - out/results.json
