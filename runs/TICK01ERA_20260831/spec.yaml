@@ -1,0 +1,97 @@
+run_id: TICK01ERA_20260831
+run_class: PROTECTED_CONFIRMATION
+campaign: NQ_LIVE_ALPHA_ACCELERATION_TIER1
+type: OUT-OF-SAMPLE ERA RE-TEST of a CLOSED mechanism. No tuning. No new mechanism.
+live_enabled: NO
+spend: $0
+
+question: >
+  G2_F1_TICK01 (spec c256e21, result NULL) closed the NYSE-TICK capitulation event class on
+  2022-01-03..2026-07-31 with n=63 scored events and an MDE 5.32x the observed mean. CAPPROBE01
+  (2026-08-31) then made 2013 / 2015 / 2017 $TICK 1-minute history local at $0.
+  ONE QUESTION: does the UNCHANGED, FROZEN TICK01 mechanism survive on those three
+  newly reachable years - i.e. was the closure a DATA-POWER closure or a MECHANISM closure?
+
+mechanism_frozen_verbatim_from_G2_F1_TICK01:
+  # copied from runs/G2_F1_TICK01_20260829/spec.yaml + src/tick01.py. NOT ONE PARAMETER MOVES.
+  trigger: "first RTH minute whose ^TICK CLOSE <= -1000 within an arming cycle"
+  rearm: "cycle re-arms only after a bar with ^TICK close >= -400"
+  arming_reset: "ARMED at each session start (per-session reset, R2)"
+  session_window: "RTH minute slots 09:31..15:59 ET inclusive, END-stamped bars"
+  target: "NQ forward 15-minute simple return from the CLOSE of the event minute, in bps"
+  expected_sign: POSITIVE (capitulation -> bounce)
+  secondary_non_gate: "symmetric +1000 trigger / +400 re-arm, two-sided, REPORTED ONLY"
+  diagnostics_non_gate: "5 / 30 / 60 minute horizons REPORTED ONLY - no gate reads them"
+
+prohibitions:
+  - NO threshold search. -1000/-400 and 15 minutes are inherited, not chosen here.
+  - NO horizon selection. 15 min is THE target; 5/30/60 are printed but ungated.
+  - NO policy, NO P&L, NO trading-cost claim, NO sizing, NO leverage.
+  - NO pooling of pre-2022 with 2022-2026. ERABREAK01 (p=0.0011) forbids it.
+  - NO redefinition of the population after seeing any result.
+  - NO re-run of the modern window; its frozen numbers are quoted from the closed run.
+
+population_declared_in_advance:
+  strata: [ERA_2013, ERA_2015, ERA_2017, ERA_PRE2022_POOLED]
+  ERA_PRE2022_POOLED: "the union of exactly those three years, reported as a fourth stratum.
+    It is NOT pooled with 2022-2026 under any circumstance."
+  modern_reference: "runs/G2_F1_TICK01_20260829 quoted verbatim, never recomputed, never merged."
+  eligibility: "every session for which BOTH a >32-byte ^TICK 1-min payload AND a front-month
+    NQ 1-min payload exist. Declared before the counts are known."
+
+data_contract:
+  tick: "^TICK 1-min via SWBarExport_v2 through RunStrategyBacktest (already compiled; NO NinjaScript
+    compile is performed, so the live paper book is never touched). Payload gate: a session counts
+    only if it yields >= 300 ^TICK RTH bars - the same >=300 rule CAPPROBE01 froze."
+  nq: "front-month NQ 1-min. Front contract is selected PER SESSION by MAX SESSION VOLUME, ties
+    broken by EARLIEST EXPIRY. Rule declared before any outcome is computed.
+    RATIONALE (verified on probe2, 2013-03: NQH3 vs NQM3): NT8's merge-back-adjusted path serves a
+    deferred contract as a COPY of the then-front contract's prices+volume until it becomes front,
+    so max-volume + earliest-expiry recovers exactly the true front contract, whose own segment is
+    unadjusted."
+  measured_defect_to_report: >
+    The modern TICK01 substrate is NQ 09-26 MERGE-BACK-ADJUSTED (runs/SM1M_SUBSTRATE/build_meta.json).
+    Its 2022-01-26 level is 17,706.25 against a true NQ level near 14,400 - a back-adjustment offset
+    of roughly +3,300 points. Back-adjustment rescales every bps return by P_true/P_adjusted.
+    All three gates are EXACTLY INVARIANT to a positive rescaling (T1 compares a sign and a
+    t-statistic; T2 and T3 compare the event mean against control/null means computed from the SAME
+    rescaled series), so the PASS/FAIL verdict is unaffected - but the reported bps MAGNITUDES are
+    not comparable across substrates and both raw and level-normalised magnitudes are printed.
+  seal: "nothing at or after 2026-08-01 is read. The era windows are 2013/2015/2017 only."
+
+gates_all_coded_and_printed_by_the_program:
+  # identical wording and identical thresholds to G2_F1_TICK01; applied WITHIN each stratum
+  T1: "mean forward-15-min return > 0 AND session-clustered t >= 2.0"
+  T2: "event mean > p95 of count-matched random RTH minutes drawn from the SAME sessions
+       (1000 draws, seed 20260831)"
+  T3: "event mean > p95 of a complete-enumeration session-block circular-shift null of the
+       ^TICK series against NQ (research_sdk.null_guard; verify_null_sensitivity FIRST)"
+
+verdict_rule_frozen:
+  SURVIVES: "ALL of T1,T2,T3 pass in ERA_PRE2022_POOLED. Then the 2026 closure was a DATA-POWER
+    closure and the mechanism must be re-preregistered as a candidate."
+  FAILS_AGAIN: "any gate fails in ERA_PRE2022_POOLED. Then the closure is a MECHANISM closure,
+    confirmed out of sample on regimes the original window did not contain."
+  UNDERPOWERED_STILL: "reported additionally, never instead: if MDE > 2.0x |observed mean| in the
+    pooled stratum the re-test is itself underpowered and cannot close anything either.
+    This clause is declared NOW so it cannot be invented after the fact."
+  per_year_strata: "reported for regime description ONLY. No verdict is taken from a single year
+    and no single year may be selected as the answer."
+
+power_arithmetic_to_verify_and_print:
+  claim_under_audit: "CAPPROBE01 RESULT.md: joinable internals+NQ sessions ~1,147 -> ~3,380 (2.95x)
+    => every MDE in the family multiplies by 1/sqrt(2.95) = 0.58, and INTERNALS_ACQUIRE's lane,
+    which failed by 7% at 1.07x, 'crosses comfortably'."
+  the_program_must_print: >
+    (a) what is ACTUALLY local now versus the hypothetical full 2013-2021 backfill;
+    (b) the n that the 1.07x figure was actually computed on, read from
+        runs/INTERNALS_ACQUIRE_20260827/out/gate.txt and runs/RR_W001_ACTION_VALUE_LEDGER;
+    (c) whether pre-2022 internals can add a single row to that n;
+    (d) the correct MDE multiplier for THIS run's population.
+
+outputs:
+  - out/gate_table.txt   (GATE / SPEC / OBSERVED / PASS-FAIL, printed by the program, never by hand)
+  - out/era_events.csv
+  - out/power_audit.txt
+  - out/manifest.csv     (per-symbol rows + sha256 of every frozen era parquet)
+  - REPORT.md
