@@ -1,0 +1,98 @@
+====================================================================================================
+=== STAGE 0  CAPABILITY EXPERIMENT -- correlations only, NO P&L
+====================================================================================================
+    substrate  research/data_microstructure_v2/raw/NQ   58 consumed sessions
+    sampled    16 evenly across the span (seed 20260831)
+    GUARD: 16 sessions, none in the frozen blind pool, none sealed.  OK
+
+    s20251015  events 10,760,440  trades  578,680  tie 0.0592  same-ms 0.513  tickrule_order_flip 0.1496  trade_sign_agree 0.8597
+    s20260514  events 12,543,510  trades  547,340  tie 0.0555  same-ms 0.534  tickrule_order_flip 0.1658  trade_sign_agree 0.8409
+    s20260520  events 12,364,207  trades  542,125  tie 0.0319  same-ms 0.497  tickrule_order_flip 0.1663  trade_sign_agree 0.8599
+    s20260526  events 11,004,387  trades  493,058  tie 0.0674  same-ms 0.513  tickrule_order_flip 0.1454  trade_sign_agree 0.8611
+    s20260601  events 10,514,789  trades  514,682  tie 0.0527  same-ms 0.520  tickrule_order_flip 0.1648  trade_sign_agree 0.8537
+    s20260605  events 18,985,972  trades  913,751  tie 0.0374  same-ms 0.509  tickrule_order_flip 0.1683  trade_sign_agree 0.8594
+    s20260611  events 17,021,578  trades  628,276  tie 0.0239  same-ms 0.500  tickrule_order_flip 0.1852  trade_sign_agree 0.8551
+    s20260617  events 12,989,439  trades  488,223  tie 0.0206  same-ms 0.470  tickrule_order_flip 0.1703  trade_sign_agree 0.8539
+    s20260623  events 17,634,774  trades  653,866  tie 0.0247  same-ms 0.486  tickrule_order_flip 0.1696  trade_sign_agree 0.8610
+    s20260629  events 12,437,748  trades  473,139  tie 0.0263  same-ms 0.474  tickrule_order_flip 0.1640  trade_sign_agree 0.8634
+    s20260706  events 10,585,134  trades  415,566  tie 0.0317  same-ms 0.464  tickrule_order_flip 0.1528  trade_sign_agree 0.8594
+    s20260710  events 9,182,921  trades  384,341  tie 0.0363  same-ms 0.466  tickrule_order_flip 0.1531  trade_sign_agree 0.8590
+    s20260716  events 10,923,418  trades  444,343  tie 0.0284  same-ms 0.470  tickrule_order_flip 0.1609  trade_sign_agree 0.8490
+    s20260721  events 8,807,361  trades  407,521  tie 0.0396  same-ms 0.481  tickrule_order_flip 0.1514  trade_sign_agree 0.8650
+    s20260727  events 14,653,275  trades  538,336  tie 0.0269  same-ms 0.473  tickrule_order_flip 0.1609  trade_sign_agree 0.8626
+    s20260731  events 16,007,628  trades  612,955  tie 0.0287  same-ms 0.482  tickrule_order_flip 0.1649  trade_sign_agree 0.8598
+
+====================================================================================================
+=== (b) LEE-READY / TICK-RULE EXTENSION INTO Last-only  (trade level)
+====================================================================================================
+    trade_sign_agree       mean 0.8577  median 0.8596  min 0.8409  max 0.8650
+    vw_sign_agree          mean 0.8594  median 0.8615  min 0.8444  max 0.8668
+    tie_frac               mean 0.0370  median 0.0318  min 0.0206  max 0.0674
+    tickrule_order_flip    mean 0.1621  median 0.1644  min 0.1454  max 0.1852
+    same_ms_frac           mean 0.4908  median 0.4842  min 0.4640  max 0.5341
+    crossed_or_unset       mean 0.0032  median 0.0027  min 0.0022  max 0.0091
+
+    markout of a signed trade against the mid, mean NQ points per trade:
+      h= 1s   quote-rule sign +0.00211    tick-rule sign +0.00701    ratio 3.325
+      h= 5s   quote-rule sign -0.00906    tick-rule sign -0.00892    ratio 0.985
+      h=30s   quote-rule sign -0.02332    tick-rule sign -0.03722    ratio 1.596
+
+====================================================================================================
+=== (a)+(c) BAR LEVEL: CLV AND TICK-RULE VS THE BBO TRUTH
+====================================================================================================
+
+    --- POOLED all-hours   bars 22,080
+        pearson_clv_trueimb                +0.4499
+        spearman_clv_trueimb               +0.4679
+        sign_agree_clv_trueimb             +0.6751
+        pearson_tickimb_trueimb            +0.8219
+        spearman_tickimb_trueimb           +0.8203
+        sign_agree_tickimb_trueimb         +0.8223
+        pearson_ret_trueimb                +0.4010
+        pearson_clv_ret                    +0.6381
+        partial_clv_trueimb_given_ret      +0.2751
+        R2_trueimb_from_ret                +0.1608
+        R2_trueimb_from_ret+clv            +0.2243
+        R2_trueimb_from_ret+clv+tickimb    +0.6765
+
+    --- POOLED RTH 09-16 ET   bars 6,720
+        pearson_clv_trueimb                +0.5224
+        spearman_clv_trueimb               +0.5332
+        sign_agree_clv_trueimb             +0.7013
+        pearson_tickimb_trueimb            +0.8386
+        spearman_tickimb_trueimb           +0.8373
+        sign_agree_tickimb_trueimb         +0.8366
+        pearson_ret_trueimb                +0.5136
+        pearson_clv_ret                    +0.6841
+        partial_clv_trueimb_given_ret      +0.2733
+        R2_trueimb_from_ret                +0.2638
+        R2_trueimb_from_ret+clv            +0.3188
+        R2_trueimb_from_ret+clv+tickimb    +0.7068
+
+    --- POOLED ETH outside RTH   bars 15,360
+        pearson_clv_trueimb                +0.4544
+        spearman_clv_trueimb               +0.4603
+        sign_agree_clv_trueimb             +0.6637
+        pearson_tickimb_trueimb            +0.8204
+        spearman_tickimb_trueimb           +0.8214
+        sign_agree_tickimb_trueimb         +0.8161
+        pearson_ret_trueimb                +0.4875
+        pearson_clv_ret                    +0.6834
+        partial_clv_trueimb_given_ret      +0.1902
+        R2_trueimb_from_ret                +0.2377
+        R2_trueimb_from_ret+clv            +0.2653
+        R2_trueimb_from_ret+clv+tickimb    +0.6738
+
+    PER-SESSION SPREAD (n=16 sessions, so no pooling illusion):
+        pearson_clv_trueimb                mean +0.4517  sd 0.0451  min +0.3883  max +0.5271  all-same-sign True
+        spearman_clv_trueimb               mean +0.4682  sd 0.0485  min +0.3918  max +0.5468  all-same-sign True
+        pearson_tickimb_trueimb            mean +0.8230  sd 0.0233  min +0.7725  max +0.8625  all-same-sign True
+        sign_agree_tickimb_trueimb         mean +0.8223  sd 0.0143  min +0.7986  max +0.8507  all-same-sign True
+        partial_clv_trueimb_given_ret      mean +0.2399  sd 0.0590  min +0.1181  max +0.3313  all-same-sign True
+        R2_trueimb_from_ret+clv            mean +0.2386  sd 0.0408  min +0.1779  max +0.3050  all-same-sign True
+        R2_trueimb_from_ret+clv+tickimb    mean +0.6791  sd 0.0381  min +0.6001  max +0.7450  all-same-sign True
+
+    LEAD/LAG -- correlation with FORWARD bar return (information, not P&L):
+      POOLED all-hours          fwd1: true +0.0010 clv -0.0008 tick -0.0011  fwd2: true -0.0024 clv +0.0043 tick -0.0024  fwd3: true -0.0019 clv +0.0060 tick -0.0012
+      POOLED RTH 09-16 ET       fwd1: true +0.0117 clv +0.0086 tick +0.0126  fwd2: true -0.0057 clv +0.0107 tick +0.0000  fwd3: true +0.0086 clv +0.0153 tick +0.0095
+      POOLED ETH outside RTH    fwd1: true -0.0026 clv -0.0077 tick -0.0078  fwd2: true -0.0020 clv +0.0007 tick -0.0036  fwd3: true -0.0080 clv -0.0005 tick -0.0080

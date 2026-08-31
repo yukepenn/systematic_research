@@ -93,7 +93,7 @@ to adjudicate — **on forward data only, earliest read ~2027-03-01.**
 - **Volatility does not make the book lose — it doubles the swing both ways.** P&L per session by vol
   quintile is flat ($562/$878/$481/$621/$492) while the worst session goes −$4,993 → −$11,252.
   This is why "stand aside when it gets wild" is the wrong lesson (see §5, W77).
-- **The only risk denominator has silently tightened 1.8×.** P1's fixed $1,300 box was **43.4 bp** of
+- **The only risk denominator has silently tightened ~1.8× (⚠️ CORRECTED: the 43.4/24.6 bp figures were computed on a BACK-ADJUSTED price series, so they are NOT index basis points. The direction is right and on true index levels the drift is LARGER, not smaller.)** P1's fixed $1,300 box was **43.4 bp** of
   index in 2022 and is **24.6 bp** now; it binds on **80.7 %** of traded sessions vs 50.0 % in 2023 —
   and not from churn (trades/session fell 3.68 → 2.50). Nobody chose that.
 - **The book has not decayed**: adverse excursions widened in points (p90 181 → 380) but are flat in
@@ -145,7 +145,7 @@ to adjudicate — **on forward data only, earliest read ~2027-03-01.**
    and gross-matched the drawdowns are indistinguishable ($22,979 vs $22,246). Exactly the "reduced
    risk denominator masquerading as information alpha" the method forbids. *(The scale-invariant
    fixed-DD claim $1,230 → $2,012/wk is unaffected and stays quotable.)*
-5. Budget drawdown near the **sum of the legs (~$39,500)**, size capital at **$45,000** — not the
+5. Budget drawdown near the **sum of the legs (~$39,500)**, size capital at **$75,000-90,000** ⚠️ (CORRECTED 2026-08-31: the $45,000 line is RETIRED - 2yr p90 DD is $43,747 = 97% of it, and one measured margin-cliff event alone needs $43,434) — not the
    mapping table's $21,740, whose window structurally **excludes** the book's worst drawdown.
 
 **The roll (6 days away, highest-risk item on the calendar):**

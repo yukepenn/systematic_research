@@ -1,0 +1,198 @@
+run_id: T2_P1SIZE01_20260831
+title: "P1 SIZING, NOT FILTERING - can the excursion-magnitude/size relationship be made more
+        robust without deleting the right tail?"
+date: 2026-08-31
+campaign: NQ_LIVE_ALPHA_ACCELERATION / TIER 2 direct incumbent challenger
+lane: P1 SIZING (assigned)
+status: PREREGISTERED - written and saved BEFORE any arm P&L was computed
+live_enabled: NO
+spend: 0
+
+# ----------------------------------------------------------------------------------------------
+# 0. THE OBJECT AND THE MECHANICAL FACT THAT MAKES THIS EXACTLY COMPUTABLE
+# ----------------------------------------------------------------------------------------------
+object_under_test: >
+  The EXECUTABLE object `WeeklyEdgeP1PCT_v1` - the P1 leg of M_11 - as certified:
+  NQ 09-26, 1-min, 2022-01-03 -> 2026-08-30, CME US Index Futures ETH, Standard fill, 0 slippage,
+  NinjaTrader Brokerage Lifetime ($4.36/ctrRT). 2,439 closed trades, sum(ProfitCurrency) =
+  $354,575.96. Trade list: runs/G2_AUG_INCUMBENT_READ_20260830/out/p1_trades_full.csv (2,439 rows).
+
+the_size_invariance_theorem: >
+  READ FROM THE CERTIFIED SOURCE, NOT ASSUMED. In WeeklyEdgeP1PCT_v1.cs the session box
+  accumulates PER CONTRACT at both accumulation sites:
+      sessPnl += (Open[0] - myEntryPx) * PointValue - CommissionRT      (line ~262)
+      sessPnl += (Close[0] - myEntryPx) * PointValue - CommissionRT     (line ~486)
+  Neither term involves myQty. The vote (nMemLong * nThr * (1+dL) >= 16), the range throttle, the
+  delta gate and the re-entry lockout (sessStopped) are all size-free. The quality-score history
+  (qDistOpen ... qDeltaMag) is appended once per genuine ENTRY EVALUATION, also size-free.
+  THEREFORE: the entry/exit schedule, the per-contract P&L of every trade, and the causal score
+  series are ALL INVARIANT to the size map. Any sizing counterfactual is exactly
+      pnl_arm(i) = s_i * pnl_per_contract(i),   pnl_per_contract(i) = pnl_nt8(i) / qty_nt8(i)
+  with commission already per contract. No engine re-run is needed and none is performed.
+  THIS IDENTITY IS ITSELF A PREREGISTERED GATE (G0c below): if it does not hold, the arms are void.
+
+# ----------------------------------------------------------------------------------------------
+# 1. MECHANISM, SIGN, HORIZON - stated before results
+# ----------------------------------------------------------------------------------------------
+mechanism_being_challenged: >
+  W42/W83 established that P1's five-feature causal quality score does NOT predict win
+  probability (flat 35-40% at every score level); it predicts EXCURSION MAGNITUDE (median MFE
+  1.3 -> 5.5 ATR across score buckets). The adopted layer therefore is NOT a filter - it is
+  "size bigger opportunities". This run does not question the mechanism. It questions the MAP.
+  The incumbent map has two specific fragilities, both admitted in the repo's own record:
+    (a) the five features, their signs and runlen's 0.9 quantile were selected by a FULL-SAMPLE
+        scan in W33 (stated as a trap in WE_W83_SKEWLEVER/spec.yaml), and
+    (b) the map is a 5-bit quantisation followed by a single CLIFF at score >= 3, so the entire
+        layer's value rests on one threshold applied to one lossy statistic.
+  Neither fragility is about which trades are taken. Both are about how contracts are distributed
+  across a FIXED, UNCHANGED trade schedule.
+
+what_is_explicitly_NOT_attempted: >
+  - No filtering. No arm removes, halts, or skips a single entry. Trade count is identical in
+    every arm by construction. P1 is right-tail carried; exposure-reducing rules in this repo are
+    nine for nine in the wrong direction; this lane does not touch that lever.
+  - No arm is motivated by the Jun-Jul 2026 drawdown (W77 lesson). No recent-conditions filter.
+  - No parameter grid. Three arms total, including the control, frozen here.
+  - The session box is NOT modified (W98/RR_W005 already priced it; it is not a free lever).
+
+arms_frozen_exactly_three:
+  A0_INCUMBENT:
+    rule: "s = 1 + 1{score >= 3}"
+    role: CONTROL. Must reproduce the certified object to the cent (G0).
+  A1_SMOOTH:
+    name: P1SZ_SMOOTH
+    rule: >
+      Replace the 5-bit sum by a CONTINUOUS causal composite of the SAME five features:
+      z_i = mean over the five features of the empirical percentile rank of that feature's
+      (directionally signed, exactly as in we_quality.quality_score) value among the PREVIOUS
+      250 entry evaluations. Size 2 when z_i >= tau_i, else 1, where tau_i is the causal
+      (1 - r_i) quantile of z over those same previous 250 entries and r_i is the incumbent's
+      OWN realised size-2 rate over those same previous 250 entries.
+    free_parameters: NONE beyond the incumbent's own (window 250, min-history 100, five features,
+      five signs). The size-2 RATE is inherited causally from A0, so the contract budget is
+      matched by construction rather than by fitting.
+    mechanism_claim: >
+      Same information, same budget, same trade schedule, no cliff and no per-feature threshold.
+      If the layer's value is the ORDERING (excursion magnitude) rather than the specific
+      quantisation, a rank composite must be at least as good and materially more robust.
+    predicted_sign: A1 >= A0 on money-at-common-risk; strictly lower sensitivity to any single
+      feature threshold.
+  A2_VOLN:
+    name: P1SZ_VOLN
+    rule: >
+      Rank key k_i = score_i / relvol_i, where relvol_i = ATR14_lagged_at_the_decision_bar (in
+      dollars, PointValue 20) divided by the MEDIAN of that same quantity over the PREVIOUS 250
+      entry evaluations. Size 2 when k_i >= kappa_i, else 1, where kappa_i is the causal
+      (1 - r_i) quantile of k over the previous 250 entries and r_i is the incumbent's own
+      trailing size-2 rate (identical calibrator to A1).
+    free_parameters: NONE beyond the incumbent's own.
+    mechanism_claim: >
+      The score forecasts excursion in ATR UNITS. The incumbent converts that to CONTRACTS with
+      no reference to what an ATR is worth in dollars, so an identical score buys an identical
+      contract count whether a $1,300 box is 43.4 bp of index (2022) or 24.6 bp (2026). A2
+      allocates the SAME number of second contracts to the occasions with the largest forecast
+      excursion PER UNIT OF DOLLAR RISK. Normalising by a trailing 250-entry median makes the
+      rule era-neutral by construction, so it is a WITHIN-era risk-adjustment, not an era bet.
+    predicted_sign: A2 >= A0 on money-at-common-risk AND strictly lower weekly dispersion
+      (standard deviation) at equal contract-round-turns.
+    named_diagnostic_not_an_arm: >
+      A2raw = the same rule with raw ATR$ instead of relvol. Reported ONLY to quantify how much
+      of any A2 result is an era tilt toward 2022's lower index level. It is a CONTROL, it is
+      never promoted, and it does not count as a fourth arm.
+
+# ----------------------------------------------------------------------------------------------
+# 2. WINDOWS AND SEALS
+# ----------------------------------------------------------------------------------------------
+windows:
+  concentration_and_tail_surface: "2022-01-03 -> 2026-08-30, all 2,439 NT8 trades. 2026-08 is
+    already DIRECTLY_BURNED for P1/PCT by the owner-authorised read G00041, so this loses no seal."
+  sizing_arms: "2022-01-02 -> 2026-07-31 ONLY. The 1-min substrate
+    runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet physically ends 2026-07-31 16:59, so the arms
+    CANNOT see August. The 39 August trades are reported separately and are not used to select,
+    calibrate or rank anything."
+  evidence_status: DISCOVERY_CONSUMED throughout. 2026-05-31 -> 07-31 is DIRECTLY_BURNED.
+  no_sealed_read: ">= 2026-09-01 is untouched. No CrossTrade call, no NT8 backtest, no order."
+
+# ----------------------------------------------------------------------------------------------
+# 3. GATES - every clause coded, table printed BY THE PROGRAM
+# ----------------------------------------------------------------------------------------------
+G0_verification:
+  G0a: "Recomputed causal score agrees with runs/RR_W001.../ledger_p1pct.csv
+        causal_quality_score on >= 99% of joined entries."
+  G0b: "Recomputed size vector agrees with NT8 qty on >= 99% of joined entries; A0 net on the
+        NT8 window equals 354575.96 to the cent."
+  G0c: "SIZE-INVARIANCE identity: for every NT8 trade, pnl == qty * (pnl/qty) to 1e-9, and the
+        commission column equals 4.36*qty exactly. (Necessary condition; the sufficient argument
+        is the source read quoted above.)"
+  if_G0_fails: "The arms are VOID and the run reports the verification failure only."
+
+G1_budget_matched: "|mean(size_arm)/mean(size_A0) - 1| <= 0.02 AND
+                    |sum(size_arm)/sum(size_A0) - 1| <= 0.02.  Both must hold."
+G2_money_at_common_risk: "weekly $ at a COMMON fixed max drawdown (each arm's weekly series
+                    linearly rescaled so its own maxDD = $20,245; this is scale-invariant algebra
+                    and cannot be inflated by leverage) must be >= 1.05 x A0's. A gain smaller
+                    than 5% does not justify a new object."
+G3_tail_preserved: "arm's top-decile share of its own net >= 0.80 x A0's top-decile share, AND
+                    trade count identical to A0. An arm that wins by flattening the right tail or
+                    by cutting exposure FAILS even if it makes more money."
+G4_size_label_null: "arm's fixed-DD weekly $ must exceed the 95th percentile of 1,000 random
+                    permutations of ITS OWN size vector across the same entries (preserving the
+                    exact size multiset). This is the W98 null and it is the correct control here:
+                    W83 measured that size DISPERSION alone adds skew irrespective of direction,
+                    so an arm must beat its own shuffled self, not just flat sizing."
+G5_stability: "arm beats A0 on fixed-DD weekly $ in >= 60% of 25 rolling 24-month windows AND in
+                    >= 4 of 5 leave-one-calendar-year-out recomputations."
+G6_block_bootstrap: "stationary bootstrap (mean block 4 weeks, 10,000 draws) of the weekly
+                    DIFFERENCE series (arm minus A0, both at their own fixed-DD scale): the 90%
+                    CI must exclude 0. A plain t-stat is printed as ONE DIAGNOSTIC, never the test."
+decision_rule: "ALL of G1..G6 -> CANDIDATE (queued for champion-vs-challenger; NOT promoted, NOT
+                    deployed). ANY fail -> recorded FAIL, population never redefined."
+cost_lines_all_printed: "$4.36/ctrRT (NT8 basis, the incumbent's quoted basis) - primary;
+                    plus $14.44 and $20.65 per ctrRT modelled spread on top, because the arms
+                    could differ in contract count and friction is not neutral between them
+                    (W83's own trap). G1 forces the budgets equal, so the three lines must agree."
+
+# ----------------------------------------------------------------------------------------------
+# 4. THE TWO ASSIGNED DELIVERABLES THAT ARE NOT ARMS
+# ----------------------------------------------------------------------------------------------
+D1_concentration_reproduction: >
+  Independently reproduce, on the EXECUTABLE object (2,439 NT8 trades, not the Python stream):
+  top-1% / top-5% / top-10% share of net, the sum of the complement, the median trade,
+  ex-top-1 and ex-top-5 nets, and leave-one-year-out. Compare to the orchestrator's figures
+  (top 10% = 244 trades = 255.8% of net; other 2,195 lose $552,310; median -$99.36) and to
+  G2_F9_P1_SYMCERT's 236.8% (measured on the 2,131-trade Python population - a DIFFERENT
+  population, so the two are expected to differ and both are printed).
+D2_tail_decay_stress_surface: >
+  TAIL := the top decile of trades by realised trade P&L on the executable object (244 trades).
+  FREQUENCY decay f in {25,50,75}%: each tail trade independently fails to be a tail event with
+  probability f; on failure its P&L is replaced by a draw without replacement from the
+  non-tail P&L distribution. 2,000 Monte Carlo paths; report mean and [p5,p95] of weekly EV and
+  of maxDD. SIZE decay f in {25,50,75}%: every tail trade's P&L multiplied by (1-f);
+  deterministic. Report weekly EV, total net, maxDD, and the breakeven f at which weekly EV = 0
+  for both axes. Weeks are ISO weeks on the session date (the repo's stated convention).
+
+# ----------------------------------------------------------------------------------------------
+# 5. TRAPS NAMED BEFORE RUNNING
+# ----------------------------------------------------------------------------------------------
+traps:
+  - "The W33 full-sample look-ahead lives INSIDE the score and therefore inside A0, A1 and A2
+     alike. It cannot bias the COMPARISON between arms, but no arm's absolute number is clean and
+     that caveat travels with every figure here."
+  - "Three arms x several metrics is still a small scan. G4/G5/G6 are the controls; no arm is
+     quoted on a full-sample number alone."
+  - "Budget matching is causal and therefore approximate in-sample. G1 checks the realised budget;
+     if an arm drifts outside +/-2% it FAILS rather than being renormalised after the fact."
+  - "Weekly P&L is extremely concentrated (top-decile of trades exceeds 100% of net). Any
+     bootstrap that resamples weeks independently is wrong; the block bootstrap is the test and
+     the tail audit is mandatory for every impressive number."
+  - "A2's relvol could smuggle in an era bet. A2raw is computed specifically to expose that, and
+     the size-2 rate BY YEAR is printed for every arm."
+  - "Type A vs Type B: a sizing rule that redistributes a fixed contract budget over an UNCHANGED
+     trade schedule is Type B (uses the existing edge better). It is not new alpha and will not be
+     described as such under any result."
+prohibitions:
+  - no order, deploy, enable, disable, stop or modify on any account
+  - no DOM / Level-II / Market Replay
+  - no Databento
+  - no read of any session >= 2026-09-01
+  - no edit to any production object; every alternative is a NEW NAMED CHALLENGER

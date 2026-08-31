@@ -1,0 +1,94 @@
+run_id: XM_EXEC_COST_AUDIT_V1_20260831
+campaign: GENESIS_II / NQ LIVE ALPHA ACCELERATION — TIER 1
+lane: XM_EXECUTION_COST_AUDIT_V1
+type: EXECUTION_MEASUREMENT        # no alpha search, no policy proposal, no parameter fitted
+written_before_any_result: true
+question: >
+  XM_CONFLICT is booked on a $12.50/ctrRT MODELLED spread and carries ~40% of the two-leg book's
+  raw weekly dollars, yet its spread has never been measured. G2_EXEC01 measured P1/PCT at
+  $20.65/ctrRT against a $14.44 model (OPTIMISTIC). Re-run that method on XM and answer:
+  does XM still add economic value under a cost model we would actually fund?
+
+structural_fact_that_makes_this_different_from_P1: >
+  P1's fill instants are scattered across 1,440 minutes, so its overlap with the owned quote
+  stores is only 5.1% of contract RTs. XM's fill instants are DETERMINISTIC: entry at the OPEN of
+  the bar stamped 09:46 ET (instant 09:45:00) and exit at the OPEN of the bar stamped 15:46 ET
+  (instant 15:45:00), on every session it trades. The cost-relevant quantity is therefore the
+  spread at TWO fixed clock instants, which can be measured on EVERY owned quote session whether
+  or not XM traded that day. Two estimands are reported, never merged.
+
+population:
+  object: XM_CONFLICT research object, NT8 exit convention (open of 15:46), 1 contract per trade
+  window: 2022-07-01 .. 2026-08-01 (DISCOVERY_CONSUMED; diagnostic use only, no mining)
+  N: 346 trades (176 long / 170 short), net $199,436.44 at modelled cost
+  note: >
+    the NT8 backtest quotes 378 trades / $182,776.92 over its own longer window
+    (2022-01-03..2026-08-30, commission-only cost basis). The 346-trade research object is the
+    population the $916/wk MASTER_SCOREBOARD row is computed from and is the only one fully inside
+    the seal, so it is the audit population. The mapping is stated, not blurred.
+
+data:
+  - substrate: research/weekly_edge load_deep 1-min NQ bars (END-stamped), 2022-01-01..2026-07-31 17:00
+  - XM reference: research/weekly_edge/ninjascript/reference/xm_reference_decisions.csv (committed)
+  - quote stores, identical inventory rule to G2_EXEC01 (seal-guarded, allowlist-gated):
+      research/data_microstructure_v2/raw/NQ   (58 sessions, 2025-10..2026-07)
+      research/data_esnq/parquet/NQ            (ALLOWLIST_DEV_44 ONLY — never a blind session)
+      research/scalping_lab/substrate/raw/NQ   (v1, minus the 3 Last-only sessions, minus overlaps)
+  - comparable instrument: research/data_esnq/parquet/ES (same 44 dates) — cross-check only
+  - CrossTrade read-only execution query for any XM paper fill (FORWARD tag, never pooled)
+
+analyses_frozen:
+  X0_identity: regenerate the XM decision object from the committed reference and the substrate;
+    gate on 346 trades / 176L / 170S / net $199,436.44 and on entry_px == o[bar 09:46],
+    exit_px == o[bar 15:46] for every trade. Abort as DEFECT if any clause fails.
+  X1_matched_rt: for every XM trade whose session is in the quote inventory, measure the actual
+    half-spread cost of a marketable order at both fill instants (asof quote, 5s staleness cap,
+    per-session offset = round(median(substrate close - quote mid at bar stamps)/tick)*tick,
+    band check [bid-1t, ask+1t] else EXCLUDE and count). Report per-RT distribution.
+  X2_clock_anchored: spread in ticks at 09:45:00 and 15:45:00 on EVERY quote session in the
+    inventory (not only XM trade days). This is the larger-N estimate of the same two numbers the
+    W82 profile models as 3.0 and 2.0 ticks.
+  X3_two_sided_sign: XM is TWO-SIDED. The research object fills at the printed bar OPEN. A
+    marketable buy pays the ask; a marketable sell receives the bid, so the omitted-vs-open cost
+    INVERTS SIGN between longs and shorts. Report the four cells
+    (long-entry BUY, long-exit SELL, short-entry SELL, short-exit BUY) separately, plus the
+    long-vs-short RT cost difference and a sign test. Never report a side-pooled omitted cost
+    without the per-side table beside it.
+  X4_conditioning: does XM trade on days whose 09:45/15:45 spread is worse than a random day's?
+    Compare the clock-anchored spread on XM trade days vs non-trade days within the inventory.
+  X5_era: 2025H2 / 2026 Jan-May / 2026 Jun-Jul cells, matching G2_EXEC01's cut.
+  X6_economics: XM net $/wk and net $/trade under MODELLED / MEASURED / PESSIMISTIC, plus the
+    BREAKEVEN cost per RT at which XM's net reaches zero, and the cost elasticity
+    (d net$/wk per $1/ctrRT) compared with P1's.
+
+cost_models_preregistered:
+  MODELLED:    $12.50/ctrRT spread (W82 profile at minutes 586/946: 3.0 + 2.0 ticks) + $4.36 comm
+  MEASURED:    trade-weighted mean measured half-spread RT from X1 if N_rt >= 25, else the
+               clock-anchored X2 estimate (stated which was used) + $4.36 comm
+  PESSIMISTIC: MEASURED + $5.00/leg ($10.00/ctrRT) adverse-tick allowance, i.e. a marketable
+               order that does not always get the touch + $4.36 comm. Reported alongside p75/p90
+               and the worst era cell as sensitivity, not as alternative headlines.
+
+decision_rules_preregistered:
+  - MEASURED spread >= $16.25/ctrRT (= 1.3x the $12.50 model) => XM SPREAD MODEL OPTIMISTIC,
+    MASTER_SCOREBOARD stress row owed (orchestrator action, not applied by this lane).
+  - MEASURED spread <= $12.50 => XM SPREAD MODEL CONFIRMED-AT-OVERLAP.
+  - between => UNRESOLVED, both rows shown.
+  - X1 exclusion rate > 30% of candidate legs => the matched verdict is DEFECT-LIMITED and the
+    clock-anchored X2 estimate carries the verdict instead, said explicitly.
+  - ECONOMIC VALUE verdict: XM RETAINS VALUE if net $/wk under PESSIMISTIC stays positive AND
+    >= 50% of its MODELLED $/wk; DEGRADED if positive but < 50%; DESTROYED if <= 0.
+
+prohibitions:
+  - no blind data_esnq session opened (allowlist enforcement printed before any open)
+  - no value >= 2026-08-01 read from any research store (seal_guard on every load)
+  - no P&L computed during the acquisition/measurement phase; economics only in X6, from the
+    already-existing frozen trade list
+  - no order, no deploy, no enable/disable/stop, no strategy modification; CrossTrade READ-ONLY
+  - no new spread model fitted; no parameter searched; no policy proposed
+  - no DOM/L2 collection; no new data collection of any kind
+outputs:
+  out/gate_table.txt (printed by the program, never hand-assembled)
+  out/xm_trades.csv, out/leg_costs.csv, out/clock_spread.csv, out/economics.csv
+live_enabled: NO
+spend: $0

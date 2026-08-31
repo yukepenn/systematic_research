@@ -1,0 +1,50 @@
+====================================================================================================
+=== RECONCILIATION  [NAMES ONLY ]   NQ tick store, 319 calendar dates with any file
+====================================================================================================
+  B1 OBJECT (calendar dates)     Last 319   BBO 196   Last-only 123        [claim 319 / 196 / 123]
+  SESSION OBJECT (s(D)=D-1 18:00->D 17:00)   trade-bearing sessions 282
+  dates that are EVENING-ONLY (their data belongs to the NEXT session) 37
+     day-of-week of those dates: {'Sunday': 33, 'Saturday': 2, 'Thursday': 2}
+     => 319 calendar dates  -  37 evening-only  =  282 sessions
+
+  --- pre-seal date rows (BBO_RECENSUS object) n=310   [claim 310]
+      old 23-hour class   FULL 121  PARTIAL 37  NONE 152        [claim 99 / 47 / 164]
+      NEW rth_complete (Last&Bid&Ask, labels 10-16) 130        [claim 116]
+      materialized OLD 48  v2 58  EITHER 104        [claim 48 / 58 / 104]
+      rth_complete AND NOT materialized 33        [claim 19]
+      old FULL AND NOT materialized 23        [claim 1]
+
+  --- Last-usable ceiling (DATA_ASSET_REGISTRY object)
+      pre-seal date rows with Last_frac>=0.90 243        [claim 243]
+      of those, materialized 102        [claim 102]
+      of those, NOT materialized 141        [claim 141]
+
+====================================================================================================
+=== RECONCILIATION  [PAYLOAD>32B]   NQ tick store, 319 calendar dates with any file
+====================================================================================================
+  B1 OBJECT (calendar dates)     Last 319   BBO 196   Last-only 123        [claim 319 / 196 / 123]
+  SESSION OBJECT (s(D)=D-1 18:00->D 17:00)   trade-bearing sessions 269
+  dates that are EVENING-ONLY (their data belongs to the NEXT session) 50
+     day-of-week of those dates: {'Sunday': 46, 'Saturday': 2, 'Thursday': 2}
+     => 319 calendar dates  -  50 evening-only  =  269 sessions
+
+  --- pre-seal date rows (BBO_RECENSUS object) n=310   [claim 310]
+      old 23-hour class   FULL 121  PARTIAL 37  NONE 152        [claim 99 / 47 / 164]
+      NEW rth_complete (Last&Bid&Ask, labels 10-16) 130        [claim 116]
+      materialized OLD 48  v2 58  EITHER 104        [claim 48 / 58 / 104]
+      rth_complete AND NOT materialized 33        [claim 19]
+      old FULL AND NOT materialized 23        [claim 1]
+
+  --- Last-usable ceiling (DATA_ASSET_REGISTRY object)
+      pre-seal date rows with Last_frac>=0.90 243        [claim 243]
+      of those, materialized 102        [claim 102]
+      of those, NOT materialized 141        [claim 141]
+
+====================================================================================================
+=== HEADROOM, SESSION OBJECT, PAYLOAD FILTERED, ERA-SPLIT
+====================================================================================================
+  era        sessions  consumed   free  free&BBO_RTH   free&Lastonly>=0.90
+  PRE_BURN        217        61    156            33                    89
+  BURNED           45        43      2             0                     0
+  SEALED            7         0      7             7                     0
+

@@ -1,0 +1,70 @@
+================================================================================================================
+XM_EXEC_COST_AUDIT_V1_20260831 — ADDENDUM Y1..Y7 (robustness; changes no gate)
+================================================================================================================
+
+Y1 — TWO-SIDED QUESTION AT FULL POWER (every quote session, not only XM trade days)
+    XM's direction IS the sign of the NQ 09:31->09:45 drive, which exists on every
+    session. Entry side = BUY when drive>0, SELL when drive<0.
+  entry 09:45:00:  drive>0 (XM would BUY)  n=50  mean 5.60 tk med 3.00   |   drive<0 (XM would SELL) n=47  mean 4.87 tk med 4.00   diff t=+0.68
+  exit  15:45:00:  drive>0 (XM would BUY)  n=48  mean 2.67 tk med 2.00   |   drive<0 (XM would SELL) n=47  mean 2.89 tk med 3.00   diff t=-0.83
+  READ: the sign-inversion the convention forces on shorts is handled explicitly in X3;
+        this is the question of whether the BUY side is systematically more expensive.
+
+Y2 — FRESHNESS AND TAIL FORENSICS (is the mean an artifact?)
+  entry: quote age at the instant  median 8 ms  p90 64 ms  max 932 ms  (5,000 ms staleness cap already applied)
+  exit: quote age at the instant  median 10 ms  p90 110 ms  max 580 ms  (5,000 ms staleness cap already applied)
+  paired clock RT (n=95): mean $20.08 [95% bootstrap CI $17.34..$23.29]  median $15.00  10%-trimmed $18.10  5/95-winsorized $18.93
+  widest 8 sessions (named, not hidden):
+    20260623  entry 38.0 tk  exit 4.0 tk  RT $105.00   [2026_Jun_Jul]
+    20260521  entry 28.0 tk  exit 3.0 tk  RT $77.50   [2026_Jan_May]
+    20260612  entry 13.0 tk  exit 11.0 tk  RT $60.00   [2026_Jun_Jul]
+    20260706  entry 18.0 tk  exit 3.0 tk  RT $52.50   [2026_Jun_Jul]
+    20260123  entry 19.0 tk  exit 2.0 tk  RT $52.50   [2026_Jan_May]
+    20260724  entry 14.0 tk  exit 4.0 tk  RT $45.00   [2026_Jun_Jul]
+    20260220  entry 14.0 tk  exit 2.0 tk  RT $40.00   [2026_Jan_May]
+    20260603  entry 14.0 tk  exit 1.0 tk  RT $37.50   [2026_Jun_Jul]
+
+Y3 — ERA-COVERAGE HONESTY (the measured rate is an UPPER bound for the full window)
+  quote evidence spans 20250814 .. 20260731 — 95 sessions
+  XM trades inside that span: 95 of 346 (27.5%). The other 251 trades (72.5%) have NO quote evidence at all.
+    2025H2         n=19   mean $11.45 median $10.00
+    2026_Jan_May   n=34   mean $18.01 median $12.50
+    2026_Jun_Jul   n=42   mean $25.65 median $20.00
+  The measured pooled mean is dominated by the WIDEST era. Applying it to all 346
+  trades therefore OVER-charges 2022-2025H1, where no quote exists. Stated, not fixed:
+  inventing a pre-2025 spread would be modelling, which this run is forbidden to do.
+
+Y4 — COMPARABLE INSTRUMENT: ES at the identical instants (store-quality cross-check)
+  entry  ES n=44  mean 1.05 tk med 1.00  |  NQ same dates n=44  mean 3.84 tk med 3.00
+  exit   ES n=44  mean 1.00 tk med 1.00  |  NQ same dates n=44  mean 2.18 tk med 2.00
+  ES is a DIFFERENT contract (tick 0.25 index pts, ~1/5 the notional per tick). This
+  is a store-quality and clock-shape check only — never an XM cost input.
+
+Y5 — +1 MINUTE DELAYED FILL ON THE FROZEN XM ACTION SET (execution perturbation)
+  trades shifted on both legs 346, session-end-capped 0
+  delta net/week $-85.61  (SE $31.49, 213 wks; total $-18,235)
+  vs XM baseline $936.32/wk : -9.1%   [P1 comparator: -$89.62/wk = -6.4%]
+
+Y6 — WHY THE MODEL MISSES: MEDIAN vs MEAN, not level
+  entry  model 3.00 tk (a W82 per-minute MEDIAN)  vs  measured median 3.00 tk  vs  measured MEAN 5.25 tk  (skew 3.81)
+  exit   model 2.00 tk (a W82 per-minute MEDIAN)  vs  measured median 2.50 tk  vs  measured MEAN 2.78 tk  (skew 2.85)
+  RT on medians $13.75   RT on means $20.07   model $12.50
+  -> of the $7.57 miss, $1.25 is level and $6.32 is the right tail the median throws away.
+
+Y7 — FUNDED-COST SCENARIOS (all applied to the frozen 346-trade action set)
+scenario                    spread  all-in    net total     $/wk % of booked     maxDD      t
+MODELLED (booked)            12.50   16.86      199,436   936.32      100.0%    18,415   3.13
+clock medians                13.75   18.11      199,004   934.29       99.8%    18,429   3.12
+MEASURED matched (X1)        18.42   22.78      197,388   926.70       99.0%    18,481   3.09
+MEASURED clock mean (X2)     20.08   24.44      196,814   924.01       98.7%    18,499   3.09
+PESSIMISTIC (+1 tk/leg)      28.42   32.78      193,928   910.46       97.2%    18,591   3.04
+recent era only              25.65   30.01      194,885   914.95       97.7%    18,560   3.06
+recent era + 1 tk/leg        35.65   40.01      191,425   898.71       96.0%    18,670   3.00
+clock p90 every trade        32.50   36.86      192,516   903.83       96.5%    18,635   3.02
+absurd stress $50            50.00   54.36      186,461   875.41       93.5%    18,828   2.93
+absurd stress $100          100.00  104.36      169,161   794.19       84.8%    19,378   2.66
+  gross-of-all-cost $205,270.00 over 346 RTs => BREAKEVEN spread $588.91/ctrRT (all-in $593.27)
+
+compliance: read-only on all stores; no blind session; no sealed value; no order/deploy;
+no policy proposed; no model fitted; $0 spent.
+wall 18s

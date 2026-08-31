@@ -1,0 +1,48 @@
+================================================================================================================
+XM_EXEC_COST_AUDIT_V1_20260831 — ADDENDUM 2 (Y8..Y11). Robustness only.
+================================================================================================================
+
+Y8 — INSTANTANEOUS-QUOTE FRAGILITY: what a market order would actually meet
+    (a) median quoted spread over [t, t+10s]   (b) actual trade prints in [t, t+5s]
+  entry  n=100  instant mean 5.20 tk  |  [t,t+10s] median-of-median 4.00, mean-of-median 4.51 tk
+         actual prints in [t,t+5s]: median count 386, median print-range 56.5 tk, mean print-range 61.0 tk
+  exit   n=99   instant mean 2.81 tk  |  [t,t+10s] median-of-median 3.00, mean-of-median 2.85 tk
+         actual prints in [t,t+5s]: median count 127, median print-range 21.0 tk, mean print-range 25.1 tk
+  RT spread cost: instantaneous $20.02  vs  10-second-median $18.40
+  -> the frozen headline uses the INSTANTANEOUS measure (G2_EXEC01's method, kept for
+     comparability with P1). The 10 s figure is the honest lower rail of the band.
+  the widest instantaneous entries, re-read over 10 s:
+    20260623  instant 38 tk -> 10s median 14.0 tk  (prints in 5 s: 389, range 115 tk)
+    20260521  instant 28 tk -> 10s median 10.0 tk  (prints in 5 s: 253, range 81 tk)
+    20260123  instant 19 tk -> 10s median 15.0 tk  (prints in 5 s: 261, range 146 tk)
+    20260706  instant 18 tk -> 10s median 12.0 tk  (prints in 5 s: 366, range 90 tk)
+    20260220  instant 14 tk -> 10s median 9.0 tk  (prints in 5 s: 206, range 51 tk)
+    20260603  instant 14 tk -> 10s median 7.0 tk  (prints in 5 s: 488, range 63 tk)
+
+Y9 — WHERE THE MINUTE MATTERS: entry-only vs exit-only delay (frozen action set)
+  entry +1 min only    delta $  -74.18/wk (SE $28.24, t -2.63)  total $-15,800  = -7.9% of XM's weekly
+  exit +1 min only     delta $  -11.43/wk (SE $13.54, t -0.84)  total $-2,435  = -1.2% of XM's weekly
+  both +1 min          delta $  -85.61/wk (SE $31.49, t -2.72)  total $-18,235  = -9.1% of XM's weekly
+  gross earned in the SINGLE minute 09:45->09:46 : $15,800 = 7.7% of XM's $205,270 gross, on 0.28% of its holding time
+
+Y10 — ENTRY-DELAY LADDER (exit unchanged)
+  entry + 1 min : $  -74.18/wk (t -2.63)  cumulative -7.9% of weekly
+  entry + 2 min : $  -62.42/wk (t -1.68)  cumulative -6.7% of weekly
+  entry + 3 min : $  -37.63/wk (t -0.84)  cumulative -4.0% of weekly
+  entry + 5 min : $  -68.17/wk (t -1.28)  cumulative -7.3% of weekly
+  entry +10 min : $  -98.59/wk (t -1.22)  cumulative -10.5% of weekly
+
+Y11 — THE COST MODEL WE WOULD ACTUALLY FUND
+  1-minute entry slip is worth $45.66/trade ($74.18/wk) — for scale, the ENTIRE booked round-turn cost is $16.86/trade
+scenario                         all-in $/RT    net total     $/wk  % booked     maxDD      t
+A booked model                         16.86      199,436   936.32    100.0%    18,415   3.13
+B measured spread (X1)                 22.78      197,388   926.70     99.0%    18,481   3.09
+C measured spread (X2 clock)           24.44      196,814   924.01     98.7%    18,499   3.09
+D measured + 1 tk/leg                  32.78      193,928   910.46     97.2%    18,591   3.04
+E measured + 15 s slip proxy           34.20      193,438   908.16     97.0%    18,606   3.03
+F measured + FULL 1-min slip           68.44      181,588   852.53     91.1%    18,983   2.85
+G pessimistic + FULL 1-min slip        78.44      178,128   836.28     89.3%    19,093   2.80
+
+compliance: read-only; no blind session; no sealed value; no order/deploy; no policy;
+no model fitted; $0.
+wall 49s

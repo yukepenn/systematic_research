@@ -1,0 +1,77 @@
+================================================================================================================
+XM_EXEC_COST_AUDIT_V1_20260831 — GATE TABLE (printed by program)
+spec: runs/XM_EXEC_COST_AUDIT_V1_20260831/spec.yaml (written before this file ran)
+================================================================================================================
+GATE  SPEC                                                            OBSERVED                        PASS/FAIL
+GA    regenerated XM == committed xm_reference_decisions.csv          True                            PASS
+GB    346 trades / 176L / 170S / net $199,436.44                      346 / 176L / 170S / $199,436.44 PASS
+GC    vectorised variant reproduces scoreboard 348 / $915.51 / t3.046 348 / $915.51 / t3.046          PASS
+GD    blind pool: 0 non-allowlist data_esnq sessions opened           37 opened / 0 blind untouched   PASS
+GE    seal: assert_presealed on every load, nothing >= 2026-08-01     101 quote sessions + 4 substratesPASS
+GF    X1 exclusion rate <= 30% of matched candidate legs              6.1% (4/66)                     PASS
+GG    verdict: >=1.3x model OPTIMISTIC | <=model CONFIRMED | else UNRES$18.42/ctrRT vs $12.50          XM SPREAD MODEL OPTIMISTIC
+----------------------------------------------------------------------------------------------------------------
+
+X0 — THE OBJECT UNDER AUDIT
+  XM_CONFLICT sequential (deployed rule, NT8 exit convention): 346 trades, 176L/170S, 1 contract each
+  entry instant 09:45:00 ET (open of the bar stamped 09:46) — every trade
+  exit  instant 15:45:00 ET (open of the bar stamped 15:46) — every trade
+  window 2022-07-01..2026-08-01, 213 ISO weeks; gross-of-all-cost $205,270.00
+  MODELLED cost: commission $4.36 + spread $12.50 = $16.86/ctrRT   [W82 profile: 3.0 tk at 586, 2.0 tk at 946 -> half-spread each leg]
+  net at MODELLED cost $199,436.44 = $936.32/wk (maxDD $18,415, t 3.13)
+  MASTER_SCOREBOARD's XM row is the VECTORISED 348-trade variant ($915.51/wk, maxDD $20,201, t 3.046) — a DIFFERENT object from the deployed one; both printed above.
+
+X1 — MATCHED ROUND-TURN COST (XM trade days that also have a quote session)
+  quote sessions in inventory                    : 101
+  ... of which XM traded                          : 33
+  candidate legs                                  : 66
+  measured legs (fresh 2-sided book, in band)     : 62
+  exclusions by reason                            : {'stale_after_store_end': 2, 'outside_band': 2}
+  inside [bid,ask] strict / [bid-1t,ask+1t]       : 84.4% / 96.9%
+  round turns with BOTH legs measured             : 30  (8.7% of XM's 346 RTs)
+  measured spread cost per ctrRT  mean            : $18.42  [95% bootstrap CI $15.08 .. $22.67]
+    median / p75 / p90                            : $15.00 / $19.38 / $28.00
+    W82 model on the SAME RTs                     : $12.50   [campaign model $12.50]
+    omitted-vs-assumed-open cost (signed, 2-sided): $17.33/RT
+
+X2 — CLOCK-ANCHORED SPREAD (every quote session, XM trade day or not)
+  entry  09:45:00/15:45:00  n=97   mean 5.25 tk  med 3.00  p75 5.00  p90 9.80   MODEL 3.0 tk
+  exit   09:45:00/15:45:00  n=96   mean 2.78 tk  med 2.50  p75 3.00  p90 4.00   MODEL 2.0 tk
+  round-turn spread cost, mean-based              : $20.07/ctrRT (median-based $13.75)   MODEL $12.50
+  session-paired RT (both instants ok): n=95 mean $20.08 median $15.00 p90 $32.50
+
+X3 — TWO-SIDED SIGN HANDLING (the convention inverts on shorts)
+  leg-level cells (d=+1 long / d=-1 short):
+    d=-1  entry side=sell n=16    mean spread 3.38 tk  half-spread $8.44  omitted-vs-open $+7.19
+    d=-1  exit  side=buy  n=14    mean spread 2.50 tk  half-spread $6.25  omitted-vs-open $+5.71
+    d=+1  entry side=buy  n=16    mean spread 6.06 tk  half-spread $15.16  omitted-vs-open $+15.31
+    d=+1  exit  side=sell n=16    mean spread 2.75 tk  half-spread $6.88  omitted-vs-open $+5.62
+  RT cost  LONG $22.03 vs SHORT $14.29
+  RT omitted-vs-open  LONG $+20.94 vs SHORT $+13.21  (diff $+7.72, t +1.12)
+
+X4 — CONDITIONING: does XM trade on expensive days?
+  XM trade days   n=32   mean RT spread $18.75
+  non-trade days  n=63   mean RT spread $20.75
+  difference $-2.00  t -0.73  -> no adverse selection detected
+
+X5 — ERA CELLS (clock-anchored RT spread cost)
+  2025H2         n=19   mean $11.45  median $10.00
+  2026_Jan_May   n=34   mean $18.01  median $12.50
+  2026_Jun_Jul   n=42   mean $25.65  median $20.00
+
+X6 — ECONOMICS AND THE FUNDABLE-COST QUESTION
+model           $/ctrRT   spread     net total   $/trade      $/wk     maxDD  fixDD $/wk      t
+MODELLED          16.86    12.50       199,436       576    936.32    18,415     1029.34   3.13
+MEASURED          22.78    18.42       197,389       570    926.71    18,481     1015.19   3.09
+PESSIMISTIC       32.78    28.42       193,929       560    910.47    18,591      991.49   3.04
+SENS_p75          23.73    19.38       197,058       570    925.15    18,491     1012.91   3.09
+SENS_p90          32.36    28.00       194,073       561    911.14    18,586      992.47   3.04
+  BREAKEVEN cost per ctrRT (net = 0)             : $593.27
+  cost elasticity                               : $1.62/wk lost per +$1.00/ctrRT (346 RTs over 213 weeks)
+  P1 comparator (2556 ctrRT in the same window, G2_EXEC01 artifact): $12.00/wk per +$1.00/ctrRT — 7.4x XM's cost exposure
+
+SPREAD VERDICT (preregistered) : XM SPREAD MODEL OPTIMISTIC   [headline source: X1_matched]
+ECONOMIC VERDICT (preregistered): XM RETAINS ECONOMIC VALUE   (PESSIMISTIC $910.47/wk = 97.2% of MODELLED $936.32/wk)
+
+compliance: no blind session opened; no sealed value read; no order/deploy/enable; no policy proposed; no spread model fitted; $0 spent.
+wall time 49s

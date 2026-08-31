@@ -1,0 +1,70 @@
+====================================================================================================
+=== STEP 0  VERIFY THE HOUR-LABEL -> ET MAP FROM FILE HEADERS (timestamp field only)
+====================================================================================================
+    probed 24 pre-burn headers   agree with 'ET hour = label - 1'  24   disagree 0
+      2025-08-10 L19 Last firstTs 2025-08-10 18:00:00.064000 expected-hour 2025-08-10 18:00:00  OK
+      2025-08-10 L20 Last firstTs 2025-08-10 19:00:00.032000 expected-hour 2025-08-10 19:00:00  OK
+      2025-08-10 L21 Last firstTs 2025-08-10 20:00:00.112000 expected-hour 2025-08-10 20:00:00  OK
+      2025-08-10 L22 Last firstTs 2025-08-10 21:00:00.016000 expected-hour 2025-08-10 21:00:00  OK
+      2025-08-10 L23 Last firstTs 2025-08-10 22:00:03.672000 expected-hour 2025-08-10 22:00:00  OK
+      2025-08-11 L00 Last firstTs 2025-08-10 23:00:01.092000 expected-hour 2025-08-10 23:00:00  OK
+    >>> LABEL MAP VERIFIED
+
+====================================================================================================
+=== STEP 1  FILE HEALTH AND THE EMPTY-RESIDUE THRESHOLD
+====================================================================================================
+    tick files found                  22,917
+    total bytes                     11,190,940,570
+    byte quantiles  min 31  p1 53  p5 11,746  p25 53,994  med 189,794  p75 491,462  max 7,093,680
+    files <= 200 B                       666   (sizes: {31: 85, 32: 6, 33: 12, 34: 37, 38: 10, 40: 3, 41: 1, 42: 9, 43: 16, 44: 2, 45: 2, 46: 13})
+    files <= 32 B  = EMPTY RESIDUE         91
+    empty-residue by hour label     {2: 1, 7: 2, 10: 7, 11: 3, 12: 8, 13: 8, 14: 20, 15: 2, 16: 5, 17: 2, 18: 30, 21: 1, 23: 2}
+    zero-byte files                        0
+
+====================================================================================================
+=== STEP 2  REPRODUCE B1's CALENDAR-DATE COUNT, THEN APPLY THE PAYLOAD FILTER
+====================================================================================================
+    root  filter         Last dates  BBO dates  Last-only
+    NQ    names only            319        196        123
+    NQ    payload > 32B         319        196        123
+    MNQ   names only            187          0        187
+    MNQ   payload > 32B         186          0        186
+    ES    names only            126        126          0
+    ES    payload > 32B         126        126          0
+
+    B1 RECORDED CLAIM for NQ:  319 Last / 196 BBO / 123 Last-only
+    reproduced (names only) :  319 / 196 / 123
+    with payload filter     :  319 / 196 / 123
+
+====================================================================================================
+=== STEP 3  THE OBJECT THAT MATTERS: SESSIONS, NOT CALENDAR DATES
+====================================================================================================
+  --- NQ ---   trade-bearing sessions 269   span 2025-08-11 .. 2026-08-11
+      PRE_BURN  n= 217   last_usable(>=0.90)  200   bbo_any  113   bbo_RTH_complete   88   bbo_full(>=0.90)   78   Last-only  104
+      BURNED    n=  45   last_usable(>=0.90)   43   bbo_any   45   bbo_RTH_complete   43   bbo_full(>=0.90)   43   Last-only    0
+      SEALED    n=   7   last_usable(>=0.90)    7   bbo_any    7   bbo_RTH_complete    7   bbo_full(>=0.90)    7   Last-only    0
+
+  --- MNQ ---   trade-bearing sessions 156   span 2026-01-02 .. 2026-08-05
+      PRE_BURN  n= 108   last_usable(>=0.90)  102   bbo_any    0   bbo_RTH_complete    0   bbo_full(>=0.90)    0   Last-only  108
+      BURNED    n=  45   last_usable(>=0.90)   43   bbo_any    0   bbo_RTH_complete    0   bbo_full(>=0.90)    0   Last-only   45
+      SEALED    n=   3   last_usable(>=0.90)    2   bbo_any    0   bbo_RTH_complete    0   bbo_full(>=0.90)    0   Last-only    3
+
+  --- ES ---   trade-bearing sessions 109   span 2025-08-13 .. 2026-07-16
+      PRE_BURN  n= 105   last_usable(>=0.90)   64   bbo_any  103   bbo_RTH_complete   76   bbo_full(>=0.90)   65   Last-only    2
+      BURNED    n=   4   last_usable(>=0.90)    3   bbo_any    4   bbo_RTH_complete    3   bbo_full(>=0.90)    3   Last-only    0
+
+====================================================================================================
+=== STEP 4  WHAT IS ALREADY MATERIALIZED AS PARQUET (the DATA_CENSUS '48')
+====================================================================================================
+    scalping_lab raw/NQ          48 sessions     1610.1 MB
+    scalping_lab grid1s/NQ       48 sessions       60.2 MB
+    v2 raw/NQ                    58 sessions     2464.2 MB
+    scalping_lab raw/ES           0 sessions      544.4 MB
+    NQ materialized in EITHER substrate            104
+    NQ trade-bearing sessions reachable from db/tick   269
+    materialized but NOT reachable (orphan)            0  []
+    reachable but NOT materialized                     165
+      of which PRE_BURN                                156
+      of which PRE_BURN and bbo_RTH_complete           34
+      of which PRE_BURN and Last-only, last>=0.90      89
+
