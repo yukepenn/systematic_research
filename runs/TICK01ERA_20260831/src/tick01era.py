@@ -40,18 +40,37 @@ MDE_K = 2.80
 MIN_TICK_BARS = 300          # CAPPROBE01's frozen payload rule
 YEARS = [2013, 2015, 2017]
 
-_log = open(os.path.join(OUT, "tick01era_log.txt"), "w", encoding="utf-8")
-_gate = open(os.path.join(OUT, "gate_table.txt"), "w", encoding="utf-8")
+# DEFECT FIXED 2026-08-31, and it is the CLAUDE.md sec7 truncate-then-write class.
+# These two writers were originally opened in "w" mode AT MODULE LEVEL. TICK01ERA2 imports this
+# module to reuse the frozen automaton, and that import alone TRUNCATED this run's already
+# committed gate_table.txt and tick01era_log.txt to zero bytes before the importer could
+# re-point them. Nothing was lost - both files were restored from commit a856b79 - but the
+# failure mode is exactly the one that once zeroed CURRENT_BASELINE.md. Opening is now LAZY:
+# importing this module can no longer touch a single byte on disk.
+_log = None
+_gate = None
+
+
+def open_writers(out_dir: str | None = None):
+    """Called by main(), never by import. An importer sets its OWN writers instead."""
+    global _log, _gate, OUT
+    if out_dir is not None:
+        OUT = out_dir
+    os.makedirs(OUT, exist_ok=True)
+    _log = open(os.path.join(OUT, "tick01era_log.txt"), "w", encoding="utf-8")
+    _gate = open(os.path.join(OUT, "gate_table.txt"), "w", encoding="utf-8")
 
 
 def P(*a):
     print(*a, flush=True)
-    print(*a, file=_log)
+    if _log is not None:
+        print(*a, file=_log)
 
 
 def G(*a):
     P(*a)
-    print(*a, file=_gate)
+    if _gate is not None:
+        print(*a, file=_gate)
 
 
 def sha256(p):
@@ -317,8 +336,20 @@ def power_audit():
     act = modern + local_pre
     A(f"        ACTUAL today: {modern:,} + {local_pre:,} = {act:,}  ({act / modern:.3f}x)  "
       f"=> MDE x {1 / np.sqrt(act / modern):.3f}")
-    A(f"        >>> 2014, 2016 and 2018-2021 are NOT local. The 2.95x / 0.58 pair describes an "
-      f"acquisition that has NOT happened.")
+    # DERIVED, never asserted: which of 2013-2021 are complete is READ OFF the store above.
+    # An earlier draft of this line hard-coded "2014, 2016 and 2018-2021 are NOT local", which was
+    # true of the orchestrator's snapshot and became FALSE mid-run when sibling run CAPPROBE02
+    # finished the backfill. A program must not print a claim it did not compute.
+    thin = [y for y in range(2013, 2022) if by_year.get(y, [0, 0])[1] < 200]
+    A(f"        DERIVED from the listing above: years 2013-2021 with < 200 payload sessions = "
+      f"{thin if thin else 'NONE - the backfill is COMPLETE'}")
+    if thin:
+        A(f"        >>> the 2.95x / 0.58 pair still describes an acquisition that has not happened.")
+    else:
+        A(f"        >>> the SESSION half of CAPPROBE01's arithmetic is now CORRECT: sibling run "
+          f"CAPPROBE02 completed the backfill while this run was executing. It was a forecast "
+          f"when written and is a fact now. (b) and (c) below are unaffected: they are about "
+          f"WHICH POPULATION the 1.07x was measured on, not about how many sessions exist.")
     A("")
     A("    (b) WHAT n THE 1.07x FIGURE WAS ACTUALLY COMPUTED ON:")
     gt = open(os.path.join(ROOT, "runs", "INTERNALS_ACQUIRE_20260827", "out", "gate.txt"),
@@ -393,6 +424,7 @@ def threshold_comparability(frames):
 
 
 def main():
+    open_writers()
     P("=" * 100)
     P("=== TICK01ERA - frozen G2_F1_TICK01 mechanism, unchanged, on 2013 / 2015 / 2017")
     P(f"=== TRIG {TRIG} REARM {REARM} H_TARGET {H_TARGET} MDE_K {MDE_K} "
