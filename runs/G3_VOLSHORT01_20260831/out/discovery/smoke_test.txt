@@ -1,0 +1,48 @@
+============================================================================================
+G3_VOLSHORT01 smoke test -- panel + common, end to end
+============================================================================================
+
+[A] wall re-verified on the written artefact
+  rows=4,106  span 2006-01-05 .. 2021-12-31  max < 2022-01-01 = True  -> PASS
+  every *_asof and prev_session_date column also < wall  -> PASS
+  FULL sessions usable for return work: 3,947
+
+[B] episode structure of a causal rolling-252 tercile high state
+  THE BRIEF SAID: '~600 raw high-VIX sessions cluster into perhaps 8-14 independent
+  episodes.' On this panel, at gap_days=10, that is NOT what happens. Plan for this.
+
+  index  high_sess  K@10  K@21  K@42  K@63  rho_bar  K_eff@10  top5share singletons
+  vix        1,199    59    43    30    17   0.0342     19.78      51.3%         18
+  vxn          858    53    33    18    17   0.0259     22.59      50.5%         16
+
+  VIX high-state episode SIZE distribution (K=59): min=1 p25=2 median=7 p75=14 max=207
+  -> the count is dominated by a few huge blocks. K is NOT the effective sample size;
+     report K, rho_bar and K_eff together, and never quote K alone.
+
+  five largest VIX high-state episodes (short-leg pts, DISCOVERY_CONTAMINATED):
+    2007-04-26 .. 2008-04-01   207 sessions  short-leg sum      197.8 pts
+    2008-09-10 .. 2009-03-10   122 sessions  short-leg sum      342.8 pts
+    2020-02-21 .. 2020-07-17   101 sessions  short-leg sum   -1,166.2 pts
+    2011-07-19 .. 2011-12-09    95 sessions  short-leg sum      -30.0 pts
+    2018-01-17 .. 2018-06-04    90 sessions  short-leg sum      278.8 pts
+
+  an ABSOLUTE threshold clusters more, but still not into 8-14:
+    VIX>20: 1,361 sessions -> K@10= 46  K@21= 37
+    VIX>25:   699 sessions -> K@10= 36  K@21= 27
+    VIX>30:   379 sessions -> K@10= 21  K@21= 17
+
+[C] three_arms runs on the real panel (structure check only -- NOT a result)
+  arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+  BASE_always_long  -           3,695  3,695      0     4,463.0      1.208       73,150       12,958       -3,152   59  0.034  19.78
+  R_router          low_only    2,674  1,475  1,199       731.0      0.273        2,961      -40,598      -52,257   59  0.034  19.78
+  F_filter          low_only    1,475  1,475      0     2,636.8      1.788       46,304       22,276       15,845   59  0.034  19.78
+  R_router          non_high    3,695  2,496  1,199       651.5      0.176       -3,080      -63,272      -79,382   59  0.034  19.78
+  F_filter          non_high    2,496  2,496      0     2,557.2      1.025       40,262         -397      -11,280   59  0.034  19.78
+  S_short_only      -           1,199      0  1,199    -1,905.8     -1.589      -43,343      -62,874      -68,102   59  0.034  19.78
+    identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+    identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+    DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+  Reported here ONLY to prove the plumbing. Adjudicating these numbers is the next
+  agent's job, and requires the rate-matched random-short placebo and the episode
+  bootstrap, neither of which is run here.

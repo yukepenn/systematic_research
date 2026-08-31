@@ -96,3 +96,30 @@ $20.65 **primary**; $25.01 standing all-in).
 - It covers the **VX-family confirmation window only**, not any other preserved pool.
 
 `LIVE = NO · $0 · NO ORDER PLACED`
+
+---
+
+# OUTCOME — 2026-08-31: THE WINDOW WAS **NOT** SPENT
+
+`runs/G3_VOLSHORT01_20260831` ran the pre-2022 discovery behind the wall and the freeze agent
+returned **`recommend_confirmation = false`**. The authorisation was used to decide **not** to spend.
+**`confirmation_one_shot` remains UNSPENT and SEALED, still available exactly once.**
+
+**Orchestrator-verified wall:** panel 4,106 rows, max `session_date` 2021-12-31, **0 rows on or after
+2022-01-01**, all six `*_asof` columns max 2021-12-30. 5,919 post-wall Cboe rows dropped unread.
+Substrate self-test 47/47 including a future-shuffle leak test.
+
+**Why:** the mechanism's sign is backwards on NQ. Nine measured high-implied-variance states, **nine
+positive** intraday drifts (+1.35 to +6.39 pts) against a theory demanding negative — across 4 axes,
+2 underlyings and 14 variants without exception. Every short arm loses **even at the $4.36
+commission-only floor**, so no execution assumption rescues it. Best circular-shift placebo
+percentile 72.7 against a 95 bar; 0 of 53 leave-one-episode-out folds positive. The exposure-gate
+reading fails in the opposite direction too: removing high-VXN sessions **costs $12,772**.
+
+**The asymmetry that settles it:** spending would return an uninformative rejection with 85–90%
+probability, and with 10–15% probability a **spurious pass driven entirely by 2022 being a high-VXN
+drawdown year** — burning the window *and* manufacturing a promotion claim with no mechanism.
+
+**Cost of re-opening: zero window.** The decision's own falsifier (F1 sign · F2 cost · F3 placebo ·
+F4 episode inference) is computable entirely on pre-2022 data. F1 is load-bearing: until some causal
+state definition produces a *negative* pre-2022 high-state drift, there is nothing to confirm.

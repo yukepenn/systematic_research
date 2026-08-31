@@ -1,0 +1,392 @@
+
+====================================================================================================
+G3_VOLSHORT01  --  SPEC: VXN LEVEL TERCILES   (REFERENCE SPECIFICATION)
+====================================================================================================
+EVIDENCE STATUS : DISCOVERY_CONTAMINATED.  Not a result -- a RULE PROPOSAL.
+MECHANISM       : the price of variance flips sign with the trading window. The equity
+                  premium is compensated OVERNIGHT; the INTRADAY window is where levered
+                  and short-horizon holders de-risk. High EX-ANTE implied variance should
+                  therefore carry NEGATIVE expected INTRADAY drift, so implied vol is a
+                  SIGNED SHORT TRIGGER, not an exposure gate.
+SIGNAL          : prior-day VXN close (Nasdaq-100 vol index -- the NQ-appropriate one),
+                  classified into terciles by the CAUSAL trailing-252-session cutoffs
+                  (common.causal_tercile: cutoffs use strictly-prior observations only;
+                  the value being classified never enters its own cutoff).
+TRADE           : enter 09:30:00 (open of the END-STAMPED 09:31 bar), exit 15:59:59
+                  (close of the END-STAMPED 16:00 bar). Flat overnight. 1 ctr, 1 RT/session.
+INFERENCE       : whole-episode / whole-block bootstrap, seed=20260831, n_draws=10000. Session-level t is
+                  printed ONLY where labelled DIAGNOSTIC ONLY, and is never inference.
+COSTS           : NQ $20/pt. Net printed at $4.36 (commission FLOOR, never a headline),
+                  $20.65 (PRIMARY, G2_EXEC01 113 real RTs) and $25.01. A full-session
+                  round turn must clear 1.0325 NQ points at the primary line.
+
+====================================================================================================
+0.  THE WALL  --  2022-01-01
+====================================================================================================
+panel rows loaded                       : 4,106
+max(session_date)                       : 2021-12-31
+rows with session_date >= 2022-01-01    : 0
+max(prev_session_date )                : 2021-12-30   rows >= wall: 0
+max(vxn_asof          )                : 2021-12-30   rows >= wall: 0
+max(vix_asof          )                : 2021-12-30   rows >= wall: 0
+ASSERTION  max(session_date) < 2022-01-01 AND every dated column < 2022-01-01 : PASS
+No 1-minute bar, no Cboe row and no derived statistic in this file touches 2022 or later.
+
+====================================================================================================
+1.  POPULATION
+====================================================================================================
+Population rule, fixed BEFORE looking at any return:
+  session_quality == 'FULL'   (both anchor bars present; excludes exchange half-days,
+                               on which the strict rth_ret_pts is NaN by construction and
+                               the implied-vol reading is stale by 3-5 days)
+  AND rth_ret_pts notna  AND  vxn notna  (VXN inception 2009-09-14)
+  AND the causal tercile is defined (>= 252 strictly-prior VXN observations)
+
+FULL & ret & vxn                        : 3,059 sessions, 2009-09-15 .. 2021-12-31
+duplicate vxn_asof inside this population: 0   (0 => no stale VXN value is double-counted in a trailing window)
+state defined (>= 252 prior VXN obs)    : 2,807 sessions, 2010-09-17 .. 2021-12-31
+burn-in consumed by the trailing window  : 252 sessions
+
+state counts (causal, so these are NOT 1/3 each -- a trending vol level spends long
+stretches above its own trailing cutoffs):
+  state 0 LOW  : 1,119  ( 39.9%)
+  state 1 MID  :   830  ( 29.6%)
+  state 2 HIGH :   858  ( 30.6%)
+
+====================================================================================================
+2.  THE MECHANISM, BEFORE ANY TRADING RULE  --  intraday drift by state
+====================================================================================================
+This is the raw claim: does the HIGH implied-vol state carry NEGATIVE intraday drift?
+
+state         n   mean_pts    median    sd_pts      gross_$   t_DIAG   hit>0
+0 LOW     1,119     2.5080    3.2500    50.796       56,130     1.65   55.1%
+1 MID       830     0.4816    1.7500    61.779        7,995     0.22   51.9%
+2 HIGH      858     1.7768    8.6250    92.198       30,490     0.56   55.9%
+ALL       2,807     1.6853    3.7500    68.938       94,615     1.30   54.4%
+  t_DIAG is a session-level t-statistic: DIAGNOSTIC ONLY. It is not inference in this
+  wave and must not be quoted -- high-vol sessions are episodic, not independent.
+
+BREAKEVEN REFERENCE: a short needs mean rth_ret_pts <= -1.0325 pts
+  to clear the $20.65 primary round turn. Compare the HIGH row's mean_pts to that number
+  before reading anything else on this page.
+
+====================================================================================================
+3.  EPISODES  --  the actual sample size
+====================================================================================================
+high-state sessions                     : 858
+episodes  K @ gap_days=10 (PRIMARY)     : 53
+episodes  K @ gap_days=21               : 33
+episodes  K @ gap_days=42               : 18
+rho_bar (ICC of the short P&L within episode, gap=10) : 0.0259   [PRINTED, as required]
+K_eff = K / (1 + (K-1)*rho_bar)        : 22.59
+episode sizes                           : min 1, median 5, max 116
+share of high sessions in the 5 largest : 50.5%   -> K badly OVERSTATES independence; never quote K alone
+
+Every high-vol episode (short-arm P&L in NQ points, GROSS -- costs applied later):
+ ep       start         end  days    n    sum_pts  mean_pts   net$20.65
+  0  2010-12-01  2010-12-01     1    1      -12.5   -12.500        -271
+  1  2011-02-24  2011-02-24     1    1       -5.5    -5.500        -131
+  2  2011-03-11  2011-03-21    11    5       45.0     9.000         797
+  3  2011-06-17  2011-06-20     4    2       10.0     5.000         159
+  4  2011-07-19  2011-12-09   144   95      -30.0    -0.316      -2,562
+  5  2012-05-21  2012-05-21     1    1      -63.8   -63.750      -1,296
+  6  2012-06-04  2012-06-05     2    2      -30.0   -15.000        -641
+  7  2012-10-25  2012-10-25     1    1       18.8    18.750         354
+  8  2012-12-27  2013-01-02     7    4      -69.2   -17.312      -1,468
+  9  2013-06-13  2013-06-26    14    5      -14.2    -2.850        -388
+ 10  2013-08-28  2013-09-04     8    5      -28.0    -5.600        -663
+ 11  2013-10-01  2013-10-16    16   10     -103.8   -10.375      -2,282
+ 12  2013-12-06  2013-12-18    13    6        3.0     0.500         -64
+ 13  2014-01-03  2014-01-07     5    3       23.0     7.667         398
+ 14  2014-01-24  2014-01-24     1    1       54.8    54.750       1,074
+ 15  2014-02-03  2014-05-12    99   56      132.2     2.362       1,489
+ 16  2014-08-01  2014-08-11    11    7      -19.2    -2.750        -530
+ 17  2014-09-16  2014-11-06    52   31     -200.0    -6.452      -4,640
+ 18  2014-12-02  2015-02-12    73   40       98.5     2.462       1,144
+ 19  2015-03-11  2015-03-16     6    3      -41.5   -13.833        -892
+ 20  2015-03-26  2015-04-02     8    4      -16.2    -4.062        -408
+ 21  2015-05-07  2015-05-08     2    2      -34.5   -17.250        -731
+ 22  2015-06-09  2015-06-09     1    1       -4.0    -4.000        -101
+ 23  2015-06-30  2015-07-13    14    9       71.8     7.972       1,249
+ 24  2015-07-28  2015-07-28     1    1      -19.2   -19.250        -406
+ 25  2015-08-12  2015-10-28    78   47      -82.8    -1.761      -2,626
+ 26  2015-11-10  2015-11-20    11    7      -57.0    -8.143      -1,285
+ 27  2015-12-01  2016-03-11   102   63      182.0     2.889       2,339
+ 28  2016-06-23  2016-06-28     6    3      -21.8    -7.250        -497
+ 29  2016-11-01  2016-11-15    15    9      -85.2    -9.472      -1,891
+ 30  2017-05-18  2017-05-19     2    2      -53.8   -26.875      -1,116
+ 31  2017-06-12  2017-07-12    31   16     -157.5    -9.844      -3,480
+ 32  2017-07-28  2017-09-11    46   17      -53.2    -3.132      -1,416
+ 33  2017-09-26  2017-09-28     3    3      -21.0    -7.000        -482
+ 34  2017-10-24  2017-11-16    24   10     -113.5   -11.350      -2,476
+ 35  2017-11-30  2017-12-08     9    7       10.5     1.500          65
+ 36  2018-01-02  2018-05-16   135   86      171.0     1.988       1,644
+ 37  2018-05-30  2018-05-30     1    1      -22.8   -22.750        -476
+ 38  2018-06-22  2018-07-12    21   12     -136.5   -11.375      -2,978
+ 39  2018-07-30  2018-08-02     4    4      -80.2   -20.062      -1,688
+ 40  2018-09-06  2018-09-18    13    5      -86.8   -17.350      -1,838
+ 41  2018-10-05  2019-01-30   118   73      526.5     7.212       9,023
+ 42  2019-05-08  2019-06-04    28   10     -261.5   -26.150      -5,436
+ 43  2019-08-06  2019-08-16    11    6     -483.5   -80.583      -9,794
+ 44  2019-08-26  2019-09-04    10    5      -75.2   -15.050      -1,608
+ 45  2019-10-03  2019-10-09     7    2     -101.5   -50.750      -2,071
+ 46  2020-01-28  2020-07-29   184  116    -1063.8    -9.170     -23,670
+ 47  2020-08-12  2020-08-12     1    1     -188.0  -188.000      -3,781
+ 48  2020-08-27  2020-11-04    70   45     1002.8    22.283      19,126
+ 49  2021-01-28  2021-02-01     5    3        4.5     1.500          28
+ 50  2021-02-26  2021-02-26     1    1       51.0    51.000         999
+ 51  2021-11-29  2021-12-07     9    6      165.8    27.625       3,191
+ 52  2021-12-20  2021-12-21     2    2     -258.2  -129.125      -5,206
+
+episodes with a POSITIVE mean short P&L : 17 / 53  (32%)
+episodes NET-POSITIVE at $20.65         : 16 / 53  (30%)
+
+====================================================================================================
+4.  THE THREE ARMS  --  R / F / S, all three or the result is INADMISSIBLE
+====================================================================================================
+  BASE  always-long every valid session      (context, not one of the three)
+  R     ROUTER : long the long leg, SHORT the high state
+  F     FILTER : long the long leg, FLAT on the high state (removed, no short taken)
+  S     SHORT  : short the high state ALONE, nothing else
+
+Two long legs are reported because they answer different questions and picking one
+silently is how this gets fudged:
+  non_high = long every non-high session  <- the task's literal FILTER, and the PRIMARY
+  low_only = long only in the low state   <- the literal ROUTER of the mechanism statement
+R = F + S in gross points for both, by construction; the identity is asserted below.
+
+arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+BASE_always_long  -           2,807  2,807      0     4,730.8      1.685       82,376       36,650       24,412   53  0.026  22.59
+R_router          low_only    1,977  1,119    858     1,282.0      0.648       17,020      -15,185      -23,805   53  0.026  22.59
+F_filter          low_only    1,119  1,119      0     2,806.5      2.508       51,251       33,023       28,144   53  0.026  22.59
+R_router          non_high    2,807  1,949    858     1,681.8      0.599       21,396      -24,330      -36,568   53  0.026  22.59
+F_filter          non_high    1,949  1,949      0     3,206.2      1.645       55,627       23,878       15,381   53  0.026  22.59
+S_short_only      -             858      0    858    -1,524.5     -1.777      -34,231      -48,208      -51,949   53  0.026  22.59
+  identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+  identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+  DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+Per-session dollars. TWO denominators, both printed, because they answer different
+questions and mixing them is the classic dressing-up:
+  /valid   = total net / 2,807 valid sessions  -- the COMMON denominator. Only on this
+             denominator does net(R)/valid - net(F)/valid == net(S)/valid hold, so this
+             is the one the router-vs-filter question must be answered on.
+  /traded  = total net / that arm's own trade count -- 'did each trade clear its cost'.
+
+arm               long_leg   trades  $4.36/vld  $20.65/vld  $25.01/vld  $4.36/trd  $20.65/trd  $25.01/trd
+BASE_always_long  -           2,807     29.347     13.057      8.697     29.347     13.057      8.697
+R_router          low_only    1,977      6.064     -5.410     -8.481      8.609     -7.681    -12.041
+F_filter          low_only    1,119     18.258     11.764     10.026     45.801     29.511     25.151
+R_router          non_high    2,807      7.623     -8.667    -13.027      7.623     -8.667    -13.027
+F_filter          non_high    1,949     19.817      8.507      5.479     28.541     12.251      7.891
+S_short_only      -             858    -12.195    -17.174    -18.507    -39.896    -56.186    -60.546
+
+====================================================================================================
+5.  INFERENCE  --  whole-block bootstrap CIs beside every number
+====================================================================================================
+Arms that trade calm sessions (BASE / R / F) need a partition covering the WHOLE
+timeline, so blocks alternate: each high-vol EPISODE's full date span is one block, each
+calm stretch between episodes is one block. Blocks are contiguous, so within-episode
+dependence is preserved. n_blocks = 106 (K=53 episode blocks + calm blocks).
+Arm S is bootstrapped on the HIGH-STATE EPISODES themselves (K=53), which is the
+resampling unit the wave mandates for a high-state statistic.
+seed=20260831, n_draws=10000. Percentile CI at 95%.
+
+arm               long_leg  blocks    mean net $/valid sess       95% block-bootstrap CI       p   0?
+BASE_always_long  -         timeline                 13.057     [$   -26.57, $    49.35]  0.5232 incl
+R_router          non_high  timeline                 -8.667     [$   -49.90, $    28.67]  0.6526 incl
+F_filter          non_high  timeline                  8.507     [$   -20.25, $    36.41]  0.6086 incl
+R_router          low_only  timeline                 -5.410     [$   -43.01, $    30.02]  0.7512 incl
+F_filter          low_only  timeline                 11.764     [$    -9.92, $    37.85]  0.4104 incl
+S_short_only      -         episodes                -17.174     [$  -145.32, $    24.38]  0.1686 incl
+  NOTE for arm S: the mean is over ALL valid sessions (untraded sessions contribute $0),
+  so it is on the common denominator and is directly comparable to R and F above.
+  Arm S on its OWN denominator (per SHORT TRADE) is reported in section 6.
+
+====================================================================================================
+6.  THE DEATH TEST  --  is the ROUTER distinguishable from the FILTER?
+====================================================================================================
+net(R) - net(F) == net(S) EXACTLY, in net dollars, costs included. It is an algebraic
+identity, not a discovery -- so 'the router is just the filter' and 'the short leg is
+worthless' are THE SAME TEST. If net(S) ~ 0, the router is exposure reduction wearing a
+costume, and this candidate joins the ten dead anti-filters.
+
+  [non_high]  net(R)=$     -24,330   net(F)=$      23,878   R-F=$     -48,208   net(S)=$     -48,208   |R-F-S|=0.000000  -> PASS
+  [low_only]  net(R)=$     -15,185   net(F)=$      33,023   R-F=$     -48,208   net(S)=$     -48,208   |R-F-S|=0.000000  -> PASS
+
+ARM S ON ITS OWN DENOMINATOR (per SHORT TRADE) -- 'does the short leg clear its costs?'
+  short trades                          : 858   over K=53 episodes, K_eff=22.59, rho_bar=0.0259
+  mean short P&L                        : -1.7768 NQ points per trade
+  breakeven at $20.65                   : +1.0325 NQ points
+  EDGE MINUS BREAKEVEN                  : -2.8093 points
+
+cost line                 total net $   $/short trade     95% episode-block CI ($/trade)       p
+net_$4.36_FLOOR               -34,231         -39.896           [$  -129.03, $    40.67]  0.3166
+net_$20.65_PRIMARY            -48,208         -56.186           [$  -145.32, $    24.38]  0.1686
+net_$25.01_STRESS             -51,949         -60.546           [$  -149.68, $    20.02]  0.1360
+  ($4.36 is a commission-only FLOOR and is never a headline. $20.65 is the headline.)
+
+====================================================================================================
+7.  RATE-MATCHED PLACEBO  --  circular shift of the high-state mask
+====================================================================================================
+The null must PRESERVE DEPENDENCE. Independent random draws of ~858 sessions would give a
+bar that is far too low, because they would destroy the episode clustering that makes the
+real short leg's P&L so lumpy. So the null is a CIRCULAR SHIFT of the high-state mask
+along the session timeline: the mask keeps its exact episode structure and its exact rate,
+the return series is untouched, and only the ALIGNMENT between them is randomised.
+
+exhaustive circular shifts evaluated    : 2,766  (all s in [21, N-21], N=2,807)
+every shift trades exactly              : 858 sessions -> rate-matched by construction
+OBSERVED   net $/short trade @ $20.65   : -56.186
+PLACEBO    mean                         : -54.960
+PLACEBO    sd                           : 29.576
+PLACEBO    5th / 50th / 95th pct        : -103.167 / -55.650 / -5.651
+PLACEBO    max                          : +49.391
+one-sided p (placebo >= observed)       : 0.5069
+observed percentile in the placebo dist : 49.3
+
+Interpretation rule stated in advance: arm S must BEAT this placebo (p small AND the
+observed value materially above the placebo mass). Beating the placebo is NECESSARY, not
+sufficient -- it must also clear $20.65 in absolute terms.
+
+====================================================================================================
+8.  IS IT ONE EPISODE?  --  concentration and leave-one-episode-out
+====================================================================================================
+A short-vol-state edge that lives entirely in 2020-03 (or 2018-02) is a single draw, not
+a mechanism. Leave-one-episode-out on the $20.65 short-arm net:
+
+ ep     n     its net$  net$ WITHOUT it                       span
+ 46   116      -23,670          -24,537   2020-01-28 .. 2020-07-29   <- worst
+ 43     6       -9,794          -38,414   2019-08-06 .. 2019-08-16   <- worst
+ 42    10       -5,437          -42,771   2019-05-08 .. 2019-06-04   <- worst
+ 52     2       -5,206          -43,001   2021-12-20 .. 2021-12-21   <- worst
+ 17    31       -4,640          -43,568   2014-09-16 .. 2014-11-06   <- worst
+  ...
+ 36    86        1,644          -49,852   2018-01-02 .. 2018-05-16   <- best
+ 27    63        2,339          -50,547   2015-12-01 .. 2016-03-11   <- best
+ 51     6        3,191          -51,399   2021-11-29 .. 2021-12-07   <- best
+ 41    73        9,023          -57,230   2018-10-05 .. 2019-01-30   <- best
+ 48    45       19,126          -67,333   2020-08-27 .. 2020-11-04   <- best
+
+LOO net range                           : $-67,333 .. $-24,537
+LOO folds that stay POSITIVE            : 0 / 53
+
+Year by year, arm S at $20.65:
+  year  shorts         net$   $/trade
+  2010       1         -271   -270.65
+  2011     103       -1,737    -16.86
+  2012       7       -2,600   -371.36
+  2013      27       -3,848   -142.50
+  2014     110         -946     -8.60
+  2015     117       -4,651    -39.75
+  2016      60         -714    -11.90
+  2017      55       -8,906   -161.92
+  2018     165       17,633    106.87
+  2019      39      -32,855   -842.44
+  2020     162       -8,325    -51.39
+  2021      12         -988    -82.32
+years net-positive                      : 1 / 12
+
+====================================================================================================
+9.  ROBUSTNESS  --  choices that were NOT tuned, varied one at a time
+====================================================================================================
+Each row re-runs the identical pipeline with ONE convention changed. These are
+sensitivities on a DISCOVERY panel, not a search: none of them is promoted, and the
+frozen rule is the PRIMARY row.
+
+variant                                        n_hi    K  pts/short  net$20.65 total   $/trade
+PRIMARY  VXN tercile, 252, FULL, gap10          858   53    -1.7768          -48,208    -56.19
+trailing window = 126 sessions                  923   68     0.1292          -16,675    -18.07
+trailing window = 378 sessions                  907   41    -2.4961          -64,010    -70.57
+trailing window = 504 sessions                  899   41    -2.2205          -58,489    -65.06
+expanding window (all prior history)            815   32    -1.0549          -34,025    -41.75
+tercile history = ALL panel rows                868   56    -1.9747          -52,204    -60.14
+half-days INCLUDED (rth_ret_pts_any)            889   56    -1.4575          -44,273    -49.80
+top 20% (causal quintile)                       514   42    -0.9319          -20,194    -39.29
+top 10% (causal decile)                         315   25    -3.3968          -27,905    -88.59
+
+episode count under other gaps (PRIMARY rule): gap10 K=53, gap21 K=33, gap42 K=18
+
+SENSITIVITY -- the SAME rule on VIX (S&P 500) instead of VXN. Reported because VIX buys
+~3.5 more years of history, NOT as a second candidate. VXN is the NQ-appropriate index
+and is the frozen choice.
+variant                                        n_hi    K  pts/short  net$20.65 total   $/trade
+VIX tercile, 252, FULL, gap10 (2007-2021)     1,199   59    -1.5894          -62,874    -52.44
+
+====================================================================================================
+10.  VERDICT
+====================================================================================================
+GATE                                                       SPEC                   OBSERVED                     
+G1  HIGH-state mean intraday drift is NEGATIVE             mean_pts < 0           +1.7768 pts              FAIL
+G2  short edge clears the PRIMARY cost, per trade          > +1.0325 pts          -1.7768 pts              FAIL
+G3  arm S net at $20.65 is positive in total               > $0                   $-48,208                 FAIL
+G4  arm S 95% episode-block CI excludes zero               CI excludes 0          [$  -145.32, $    24.38]   FAIL
+G5  arm S beats the rate-matched circular-shift placebo    p < 0.05               p = 0.5069               FAIL
+G6  ROUTER distinguishable from FILTER (== G3 and G4)      net(S) != 0, CI excl   R-F = $-48,208           FAIL
+G7  not one episode: majority of episodes net-positive     > 26 of 53             16 of 53                 FAIL
+G8  LOO: every leave-one-episode-out fold stays positive   53 of 53               0 of 53                  FAIL
+
+GATES PASSED: 0 / 8
+
+STANDING RULE FOR THIS WAVE: verdict is DEAD unless the SHORT arm (S) ALONE clears costs
+AND the router is distinguishable from the filter.
+
+VERDICT: DEAD
+
+Reason, stated plainly and without dressing:
+
+  1. THE SIGN IS BACKWARDS. The mechanism predicts NEGATIVE intraday drift in the
+     high implied-vol state. Measured, it is +1.7768 NQ points per session --
+     POSITIVE, and HIGHER than the mid state's +0.4816. The short leg
+     therefore earns -1.7768 points per session BEFORE costs. It is not a small
+     edge swamped by costs; it is the wrong side of the trade.
+  2. It loses by a wide margin at every cost line, including the $4.36 commission-only
+     FLOOR ($-34,231), so no execution improvement rescues it.
+  3. The episode-block CI CONTAINS zero (p=0.1686) and the rate-matched
+     circular-shift placebo puts the observed value at the 49th percentile
+     (p=0.5069) -- i.e. INDISTINGUISHABLE from shorting an arbitrarily aligned mask
+     of the same rate and the same episode structure. There is no signal here at all,
+     in either direction; there is a cost drag on top of a slightly adverse sign.
+  4. net(R) - net(F) = $-48,208 on 2,807 sessions. The router IS distinguishable
+     from the filter -- but in the wrong direction: the short leg destroys $48,208
+     relative to simply removing the sessions. 'Distinguishable' was never the goal;
+     PROFITABLY distinguishable was, and G3/G4/G5 all fail.
+
+  AND the exposure-gate reading fails too, so this is not a case of 'wrong arm chosen':
+     BASE always-long   net@$20.65 = $    36,650  ($13.057/valid session)
+     F filter non_high  net@$20.65 = $    23,878  ($8.507/valid session)
+     Removing the high-VXN sessions LOSES $12,772 versus doing nothing. High
+     implied vol is not an intraday short trigger and it is not an exposure gate either.
+
+  NOT PROMOTED, and stated so explicitly: the fact that the high state's drift is
+  positive is NOT a long candidate. Its low state is higher still, its CI is wide, and
+  flipping a sign after seeing the sign is exactly the post-hoc move this repo bans.
+  Nothing in this file may be reframed as a LONG proposal without its own preregistration.
+
+EVERYTHING ABOVE IS DISCOVERY_CONTAMINATED. The confirmation window 2022-01-01 ..
+2026-07-31 was NOT read, NOT counted and NOT aggregated anywhere in this program.
+
+----------------------------------------------------------------------------------------------------
+11.  MACHINE-READABLE SUMMARY
+----------------------------------------------------------------------------------------------------
+spec_id                     = VXN_TERCILE_252_RTH
+population_n                = 2807
+span                        = 2010-09-17 .. 2021-12-31
+episodes_K_gap10            = 53
+rho_bar                     = 0.025895
+K_eff                       = 22.5863
+high_sessions               = 858
+mean_short_pts              = -1.776807
+breakeven_pts_primary       = 1.032500
+R_router_non_high_net20.65_per_valid = -8.667456
+F_filter_non_high_net20.65_per_valid = 8.506644
+R_router_low_only_net20.65_per_valid = -5.409708
+F_filter_low_only_net20.65_per_valid = 11.764393
+S_short_only_net20.65_per_valid  = -17.174100
+S_short_only_net20.65_per_trade  = -56.186131
+S_ci_lo_per_valid           = -145.318712
+S_ci_hi_per_valid           = 24.380803
+S_p_two_sided               = 0.168600
+placebo_p_one_sided         = 0.506869
+gates_passed                = 0/8
+verdict                     = DEAD

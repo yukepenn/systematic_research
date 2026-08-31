@@ -1,0 +1,607 @@
+
+====================================================================================================
+G3_VOLSHORT01 -- SPEC: VIX TERM STRUCTURE AND VOL-OF-VOL
+====================================================================================================
+EVIDENCE STATUS: DISCOVERY_CONTAMINATED.  This is a RULE PROPOSAL, not a result.
+The one-shot confirmation window 2022-01-01 -> 2026-07-31 is UNSPENT and UNREAD.
+
+====================================================================================================
+[0] THE WALL -- 2022-01-01
+====================================================================================================
+  [panel_pre2022] 8 date column(s) checked, 0 values >= 2022-01-01  -> PASS
+      session_date           max = 2021-12-31
+      prev_session_date      max = 2021-12-30
+      vix_asof               max = 2021-12-30
+      vxn_asof               max = 2021-12-30
+      vix9d_asof             max = 2021-12-30
+      vix3m_asof             max = 2021-12-30
+      vvix_asof              max = 2021-12-30
+      skew_asof              max = 2021-12-30
+  hard assert: max(session_date) = 2021-12-31 < 2022-01-01  -> PASS
+  rows = 4,106   span 2006-01-05 .. 2021-12-31
+  NO session on or after 2022-01-01 is read, loaded, aggregated or counted anywhere
+  in this script.  No CrossTrade / NinjaTrader call is made.
+
+====================================================================================================
+[1] RATIOS -- scale-free by construction
+====================================================================================================
+  ts9 = VIX9D / VIX    very-short vs short end
+  ts3 = VIX   / VIX3M  backwardation (>1) vs contango (<1)
+  vov = VVIX  / VIX    vol-of-vol relative to vol
+
+  NOTE ON WHICH INDEX.  VXN is the Nasdaq-100 vol index and is the right EX-ANTE
+  implied variance for NQ.  But the certified free Cboe complex has NO 9-day and NO
+  3-month NASDAQ analogue -- VIX9D and VIX3M are S&P-500 tenors.  A term-structure
+  ratio must therefore be built inside ONE family, so all three ratios here are
+  S&P-family.  corr(VIX, VXN) = 0.960 on the joint sample, so the S&P surface is a
+  close proxy for the NASDAQ level -- but this is a REAL substitution and the frozen
+  rule must name it.
+
+    ratio       n first            mean       sd      min      max  corr_VIX
+    ts9     2,824 2011-01-05     0.9460   0.1005   0.6593   1.5900     0.442
+    ts3     3,157 2009-09-21     0.8918   0.0776   0.7104   1.3437     0.665
+    vov     4,066 2006-03-07     5.3040   1.6331   1.3190  10.3169    -0.776
+
+  corr(vov, VIX) = -0.776.  This is computed from EX-ANTE PREDICTOR
+  COLUMNS ONLY -- no return was consulted -- and it says the HIGH tercile of vov is a
+  CALM state, not a stress state.  The mechanism under test is about high implied
+  variance, so vov is run at BOTH ends and counts as TWO tests in the family.
+
+====================================================================================================
+[2] STATES -- causal rolling-252 tercile, strictly prior observations only
+====================================================================================================
+  causal_tercile(window=252): the cutoffs at position i are the 1/3 and 2/3 quantiles
+  of positions [i-252, i).  The value at i is classified but never enters its own
+  cutoff.  common.py's future-shuffle leak test covers this (47/47 PASS).
+  Terciles are computed on the FULL chronological panel (all 4,106 rows) so the
+  trailing window sees every prior trading day; the EVALUATION population is then
+  restricted to FULL sessions.  Both steps use only pre-09:30 information.
+
+    state       defined     low     mid    high first_defined 
+    st_ts9        2,572     976     807     789 2011-12-27    
+    st_ts3        2,905   1,075     880     950 2010-09-13    
+    st_vov        3,814   1,229     960   1,625 2007-03-01    
+
+====================================================================================================
+[3] POPULATION
+====================================================================================================
+  [FULL-population] 2 date column(s) checked, 0 values >= 2022-01-01  -> PASS
+      session_date           max = 2021-12-31
+      prev_session_date      max = 2021-12-30
+  session_quality == FULL and rth_ret_pts not NaN : 3,947 sessions
+  span 2006-01-05 .. 2021-12-31
+  mean rth_ret_pts (always-long, gross) = +1.1361 pts/session
+  Excluded: 134 SHORT_SESSION (exchange half days -- no 16:00 bar, and a stale
+  implied-vol reading) and 25 GAPPY (substrate holes).  Stated, not discovered.
+
+====================================================================================================
+[4] MULTIPLE COMPARISONS -- declared before the tables
+====================================================================================================
+  Family evaluated in this specification:
+    1. ts9 high tercile   (short the high state)
+    2. ts3 high tercile   (short the high state)   <-- PRE-DESIGNATED HEADLINE
+    3. vov high tercile   (short the high state)
+    4. vov low  tercile   (short the low state -- the stress end of vov)
+  x 2 long-leg conventions (low_only, non_high) reported for each.
+  FAMILY SIZE = 4 states.  A per-state 5% test therefore has a family-wise error rate
+  near 19% if any-of-four is treated as a hit.  Bonferroni within this specification
+  alone is alpha = 0.0125.  The wave as a whole runs several specifications, so the
+  true family is larger still and the frozen rule must be ONE state, named in advance.
+
+====================================================================================================
+STATE: (a) ts9 = VIX9D/VIX, HIGH tercile shorted
+====================================================================================================
+  ratio column        ts9
+  high (short) state  causal_tercile(window=252) == 2
+  low  (long)  state  causal_tercile(window=252) == 0
+  evaluable sessions  2,487   span 2011-12-27 .. 2021-12-31
+  high sessions       781  (31.4%)
+  low  sessions       920
+
+  WHAT THE STATE IS (ex-ante columns only -- no return consulted):
+    state         n  ratio_mean  VIX_mean  VXN_mean  rvol21_mean
+    high        781      1.0502     19.62     22.10      0.00597
+    mid         786      0.9406     16.72     19.58      0.00520
+    low         920      0.8536     15.30     18.09      0.00462
+
+  EPISODES (maximal runs of the high state separated by >= 10 calendar days)
+    K = 82   rho_bar = 0.0535   K_eff = K/(1+(K-1)*rho_bar) = 15.38
+    episode size: min=1 p25=3 median=7 p75=11 max=73   singletons=10
+    top-5 episodes carry 28.8% of all high sessions:
+      2018-01-17 .. 2018-05-16    73 sess   short-leg sum      523.0 pts   mean   7.164 pts
+      2018-09-18 .. 2019-01-04    54 sess   short-leg sum     -123.0 pts   mean  -2.278 pts
+      2012-10-22 .. 2013-01-02    36 sess   short-leg sum       49.2 pts   mean   1.368 pts
+      2020-02-25 .. 2020-04-16    34 sess   short-leg sum     -330.0 pts   mean  -9.706 pts
+      2014-09-10 .. 2014-11-05    28 sess   short-leg sum     -149.0 pts   mean  -5.321 pts
+    K alone is NOT the sample size.  K, rho_bar and K_eff are quoted together.
+
+  MAGNITUDE -- the thing that actually decides this
+    mean SHORT-leg gross drift in the high state : -2.6895 pts/session
+    (equivalently mean intraday drift            : +2.6895 pts/session)
+    cost floor a full-session round turn must clear at $20.65 : 1.0325 pts
+    margin over the primary cost                  : -3.7220 pts
+    session-level t = -0.83   <-- DIAGNOSTIC ONLY, BANNED AS INFERENCE (sessions inside an episode are not independent)
+
+  IS THE SIGN ONE EPISODE?  (the obvious skeptic question -- 2020 is huge)
+    episodes whose SHORT leg made money (mean > 0): 32/82 = 39.0%   <- if the short edge were real this would be well over half
+    per-episode short-leg mean (pts): median -3.334  p25 -14.602  p75 +3.000
+    LEAVE-ONE-EPISODE-OUT jackknife on the pooled short-leg mean (pts/session):
+      full-sample -2.6895   jackknife range [-3.9404, -2.0329]   episodes that flip the sign to >= +1.0325: 0
+      dropping the single most favourable-to-drop episode (2021-05-11..2021-05-20, 7 sess) still leaves -2.0329 pts
+    -> NO single episode can be removed to make the short leg clear its cost.
+       The verdict below does not rest on one episode (e.g. March 2020).
+
+  THREE ARMS -- TOTAL dollars, 1 contract, one round turn per traded session
+  arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+  BASE_always_long  -           2,487  2,487      0     4,639.2      1.865       81,942       41,428       30,585   82  0.053  15.38
+  R_router          low_only    1,701    920    781       -77.8     -0.046       -8,971      -36,681      -44,097   82  0.053  15.38
+  F_filter          low_only      920    920      0     2,022.8      2.199       36,444       21,457       17,446   82  0.053  15.38
+  R_router          non_high    2,487  1,706    781       438.2      0.176       -2,078      -42,592      -53,435   82  0.053  15.38
+  F_filter          non_high    1,706  1,706      0     2,538.8      1.488       43,337       15,546        8,108   82  0.053  15.38
+  S_short_only      -             781      0    781    -2,100.5     -2.690      -45,415      -58,138      -61,543   82  0.053  15.38
+    identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+    identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+    DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+  PER-SESSION dollars (total net / 2,487 common-population sessions) and
+  PER-TRADE dollars (total net / that arm's own traded sessions), at each cost line
+    arm               long_leg   trades    $4.36/sess    $4.36/trade   $20.65/sess   $20.65/trade   $25.01/sess   $25.01/trade
+    BASE_always_long  -           2,487        32.948         32.948        16.658         16.658        12.298         12.298
+    R_router          low_only    1,701        -3.607         -5.274       -14.749        -21.564       -17.731        -25.924
+    F_filter          low_only      920        14.654         39.613         8.628         23.323         7.015         18.963
+    R_router          non_high    2,487        -0.836         -0.836       -17.126        -17.126       -21.486        -21.486
+    F_filter          non_high    1,706        17.425         25.403         6.251          9.113         3.260          4.753
+    S_short_only      -             781       -18.261        -58.150       -23.377        -74.440       -24.746        -78.800
+
+  EPISODE-BLOCK BOOTSTRAP -- 95% CI of MEAN NET DOLLARS PER SESSION
+    (S) resamples WHOLE HIGH-STATE EPISODES, the unit the brief mandates.
+    (R)/(F)/(BASE) trade outside the high state, so they resample the FULL-TIMELINE
+    ALTERNATING BLOCKS: every high episode is one block, every non-high stretch
+    between two episodes is one block.  Same clustering, complete coverage.
+    n_draws = 10,000, seed = 20260831
+
+    arm               long_leg  unit        blocks cost                  mean$/sess     CI_lo     CI_hi       p  excl0
+    BASE_always_long  -         alt-block      418 net_$4.36_FLOOR           32.948   -12.650    73.130   0.139  False
+    BASE_always_long  -         alt-block      418 net_$20.65_PRIMARY        16.658   -28.940    56.840   0.449  False
+    BASE_always_long  -         alt-block      418 net_$25.01_STRESS         12.298   -33.300    52.480   0.569  False
+    R_router          low_only  alt-block      418 net_$4.36_FLOOR           -3.607   -38.957    31.273   0.819  False
+    R_router          low_only  alt-block      418 net_$20.65_PRIMARY       -14.749   -49.956    20.104   0.388  False
+    R_router          low_only  alt-block      418 net_$25.01_STRESS        -17.731   -52.904    17.134   0.306  False
+    F_filter          low_only  alt-block      418 net_$4.36_FLOOR           14.654    -4.440    32.334   0.131  False
+    F_filter          low_only  alt-block      418 net_$20.65_PRIMARY         8.628   -10.161    26.170   0.362  False
+    F_filter          low_only  alt-block      418 net_$25.01_STRESS          7.015   -11.710    24.513   0.460  False
+    R_router          non_high  alt-block      418 net_$4.36_FLOOR           -0.836   -46.587    41.907   0.967  False
+    R_router          non_high  alt-block      418 net_$20.65_PRIMARY       -17.126   -62.877    25.617   0.423  False
+    R_router          non_high  alt-block      418 net_$25.01_STRESS        -21.486   -67.237    21.257   0.315  False
+    F_filter          non_high  alt-block      418 net_$4.36_FLOOR           17.425   -15.886    47.450   0.294  False
+    F_filter          non_high  alt-block      418 net_$20.65_PRIMARY         6.251   -26.628    36.016   0.699  False
+    F_filter          non_high  alt-block      418 net_$25.01_STRESS          3.260   -29.437    32.907   0.841  False
+    S_short_only      -         episode         82 net_$4.36_FLOOR          -58.150  -146.277    24.665   0.168  False
+    S_short_only      -         episode         82 net_$20.65_PRIMARY       -74.440  -162.567     8.375   0.080  False
+    S_short_only      -         episode         82 net_$25.01_STRESS        -78.800  -166.927     4.015   0.064  False
+
+  ROUTER vs FILTER -- the costume test, at the PRIMARY cost line
+    long_leg=low_only   net(R)=$     -36,681   net(F)=$      21,457   net(R)-net(F)=$     -58,138   net(S)=$     -58,138   identity |diff|=0.000000
+    long_leg=non_high   net(R)=$     -42,592   net(F)=$      15,546   net(R)-net(F)=$     -58,138   net(S)=$     -58,138   identity |diff|=0.000000
+    R - F == S exactly (algebra, asserted above).  So 'is the router distinguishable
+    from the filter' and 'is net(S) distinguishable from zero' are ONE test.  The CI
+    on the S row above IS the router-vs-filter test.
+
+  RATE-MATCHED PLACEBO for arm (S), at $20.65 -- total net dollars
+    PRIMARY, dependence-preserving: EXHAUSTIVE CIRCULAR SHIFT, 3,822 shifts
+      identical short count and identical episode block structure on every shift
+      observed net(S)        $     -58,138
+      placebo median         $     -30,910
+      placebo 95th pct       $       2,102
+      placebo 99th pct       $      19,436
+      observed percentile            17.5%      one-sided p = 0.8247
+    SECONDARY (weaker bar, clustering destroyed -- do NOT adjudicate on this):
+      i.i.d. random-short placebo median $     -45,588   95th pct $      11,819   sd $    34,100
+
+  GATE TABLE (printed by the program)
+    gate  description                                                    spec                                         observed                                       verdict
+    G1    mean gross short-leg drift clears the primary cost             mean short-leg pts <= -1.0325  (i.e. short-leg gross >= +1.0325) -2.6895 pts                                    FAIL   
+    G2    net(S) at $20.65 is positive                                   total net(S) > $0                            $-58,138                                       FAIL   
+    G3    episode-block 95% CI of mean net(S)/session excludes zero, positive side ci_lo > 0                                    mean -74.440  CI [-162.567, 8.375]  K=82       FAIL   
+    G4    net(S) beats the rate-matched circular-shift placebo           observed > placebo 95th percentile           obs $-58,138 vs p95 $2,102  (pctile 17.5%)     FAIL   
+    G5    router distinguishable from filter (identity-equivalent to G3) R - F == S asserted, and G3 PASS             |R-F-S| = 0.000000; G3 = FAIL                  FAIL   
+    -> 0/5 PASS
+
+====================================================================================================
+STATE: (b) ts3 = VIX/VIX3M, HIGH tercile shorted [PRE-DESIGNATED HEADLINE]
+====================================================================================================
+  ratio column        ts3
+  high (short) state  causal_tercile(window=252) == 2
+  low  (long)  state  causal_tercile(window=252) == 0
+  evaluable sessions  2,811   span 2010-09-13 .. 2021-12-31
+  high sessions       930  (33.1%)
+  low  sessions       1,031
+
+  WHAT THE STATE IS (ex-ante columns only -- no return consulted):
+    state         n  ratio_mean  VIX_mean  VXN_mean  rvol21_mean
+    high        930      0.9690     21.52     23.62      0.00605
+    mid         850      0.8825     16.96     19.64      0.00487
+    low       1,031      0.8265     15.14     17.88      0.00430
+
+  EPISODES (maximal runs of the high state separated by >= 10 calendar days)
+    K = 68   rho_bar = 0.0333   K_eff = K/(1+(K-1)*rho_bar) = 21.05
+    episode size: min=1 p25=3 median=8 p75=16 max=113   singletons=8
+    top-5 episodes carry 39.1% of all high sessions:
+      2011-05-06 .. 2011-11-18   113 sess   short-leg sum      -29.2 pts   mean  -0.259 pts
+      2018-01-16 .. 2018-06-01    90 sess   short-leg sum      378.5 pts   mean   4.206 pts
+      2020-01-28 .. 2020-05-14    64 sess   short-leg sum     -724.8 pts   mean -11.324 pts
+      2018-10-05 .. 2019-01-30    63 sess   short-leg sum      541.8 pts   mean   8.599 pts
+      2016-01-04 .. 2016-02-25    34 sess   short-leg sum      184.8 pts   mean   5.434 pts
+    K alone is NOT the sample size.  K, rho_bar and K_eff are quoted together.
+
+  MAGNITUDE -- the thing that actually decides this
+    mean SHORT-leg gross drift in the high state : -2.1492 pts/session
+    (equivalently mean intraday drift            : +2.1492 pts/session)
+    cost floor a full-session round turn must clear at $20.65 : 1.0325 pts
+    margin over the primary cost                  : -3.1817 pts
+    session-level t = -0.81   <-- DIAGNOSTIC ONLY, BANNED AS INFERENCE (sessions inside an episode are not independent)
+
+  IS THE SIGN ONE EPISODE?  (the obvious skeptic question -- 2020 is huge)
+    episodes whose SHORT leg made money (mean > 0): 23/68 = 33.8%   <- if the short edge were real this would be well over half
+    per-episode short-leg mean (pts): median -4.305  p25 -15.578  p75 +2.875
+    LEAVE-ONE-EPISODE-OUT jackknife on the pooled short-leg mean (pts/session):
+      full-sample -2.1492   jackknife range [-2.9302, -1.4711]   episodes that flip the sign to >= +1.0325: 0
+      dropping the single most favourable-to-drop episode (2020-01-28..2020-05-14, 64 sess) still leaves -1.4711 pts
+    -> NO single episode can be removed to make the short leg clear its cost.
+       The verdict below does not rest on one episode (e.g. March 2020).
+
+  THREE ARMS -- TOTAL dollars, 1 contract, one round turn per traded session
+  arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+  BASE_always_long  -           2,811  2,811      0     4,782.0      1.701       83,384       37,593       25,337   68  0.033  21.05
+  R_router          low_only    1,961  1,031    930      -533.5     -0.272      -19,220      -51,165      -59,715   68  0.033  21.05
+  F_filter          low_only    1,031  1,031      0     1,465.2      1.421       24,810        8,015        3,520   68  0.033  21.05
+  R_router          non_high    2,811  1,881    930       784.5      0.279        3,434      -42,357      -54,613   68  0.033  21.05
+  F_filter          non_high    1,881  1,881      0     2,783.2      1.480       47,464       16,822        8,621   68  0.033  21.05
+  S_short_only      -             930      0    930    -1,998.8     -2.149      -44,030      -59,180      -63,234   68  0.033  21.05
+    identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+    identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+    DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+  PER-SESSION dollars (total net / 2,811 common-population sessions) and
+  PER-TRADE dollars (total net / that arm's own traded sessions), at each cost line
+    arm               long_leg   trades    $4.36/sess    $4.36/trade   $20.65/sess   $20.65/trade   $25.01/sess   $25.01/trade
+    BASE_always_long  -           2,811        29.663         29.663        13.373         13.373         9.013          9.013
+    R_router          low_only    1,961        -6.837         -9.801       -18.202        -26.091       -21.243        -30.451
+    F_filter          low_only    1,031         8.826         24.064         2.851          7.774         1.252          3.414
+    R_router          non_high    2,811         1.222          1.222       -15.068        -15.068       -19.428        -19.428
+    F_filter          non_high    1,881        16.885         25.233         5.984          8.943         3.067          4.583
+    S_short_only      -             930       -15.663        -47.344       -21.053        -63.634       -22.495        -67.994
+
+  EPISODE-BLOCK BOOTSTRAP -- 95% CI of MEAN NET DOLLARS PER SESSION
+    (S) resamples WHOLE HIGH-STATE EPISODES, the unit the brief mandates.
+    (R)/(F)/(BASE) trade outside the high state, so they resample the FULL-TIMELINE
+    ALTERNATING BLOCKS: every high episode is one block, every non-high stretch
+    between two episodes is one block.  Same clustering, complete coverage.
+    n_draws = 10,000, seed = 20260831
+
+    arm               long_leg  unit        blocks cost                  mean$/sess     CI_lo     CI_hi       p  excl0
+    BASE_always_long  -         alt-block      320 net_$4.36_FLOOR           29.663    -5.934    63.242   0.096  False
+    BASE_always_long  -         alt-block      320 net_$20.65_PRIMARY        13.373   -22.224    46.952   0.446  False
+    BASE_always_long  -         alt-block      320 net_$25.01_STRESS          9.013   -26.584    42.592   0.603  False
+    R_router          low_only  alt-block      320 net_$4.36_FLOOR           -6.837   -35.730    22.338   0.611  False
+    R_router          low_only  alt-block      320 net_$20.65_PRIMARY       -18.202   -47.093    10.856   0.211  False
+    R_router          low_only  alt-block      320 net_$25.01_STRESS        -21.243   -50.135     7.799   0.149  False
+    F_filter          low_only  alt-block      320 net_$4.36_FLOOR            8.826   -10.342    31.610   0.422  False
+    F_filter          low_only  alt-block      320 net_$20.65_PRIMARY         2.851   -16.101    25.588   0.849  False
+    F_filter          low_only  alt-block      320 net_$25.01_STRESS          1.252   -17.740    23.994   0.970  False
+    R_router          non_high  alt-block      320 net_$4.36_FLOOR            1.222   -36.730    35.119   0.936  False
+    R_router          non_high  alt-block      320 net_$20.65_PRIMARY       -15.068   -53.020    18.829   0.391  False
+    R_router          non_high  alt-block      320 net_$25.01_STRESS        -19.428   -57.380    14.469   0.271  False
+    F_filter          non_high  alt-block      320 net_$4.36_FLOOR           16.885   -13.260    45.250   0.260  False
+    F_filter          non_high  alt-block      320 net_$20.65_PRIMARY         5.984   -23.799    33.984   0.681  False
+    F_filter          non_high  alt-block      320 net_$25.01_STRESS          3.067   -26.528    30.890   0.829  False
+    S_short_only      -         episode         68 net_$4.36_FLOOR          -47.344  -119.425    10.401   0.111  False
+    S_short_only      -         episode         68 net_$20.65_PRIMARY       -63.634  -135.715    -5.889   0.029   True
+    S_short_only      -         episode         68 net_$25.01_STRESS        -67.994  -140.075   -10.249   0.021   True
+
+  ROUTER vs FILTER -- the costume test, at the PRIMARY cost line
+    long_leg=low_only   net(R)=$     -51,165   net(F)=$       8,015   net(R)-net(F)=$     -59,179   net(S)=$     -59,180   identity |diff|=0.000000
+    long_leg=non_high   net(R)=$     -42,357   net(F)=$      16,822   net(R)-net(F)=$     -59,179   net(S)=$     -59,180   identity |diff|=0.000000
+    R - F == S exactly (algebra, asserted above).  So 'is the router distinguishable
+    from the filter' and 'is net(S) distinguishable from zero' are ONE test.  The CI
+    on the S row above IS the router-vs-filter test.
+
+  RATE-MATCHED PLACEBO for arm (S), at $20.65 -- total net dollars
+    PRIMARY, dependence-preserving: EXHAUSTIVE CIRCULAR SHIFT, 3,822 shifts
+      identical short count and identical episode block structure on every shift
+      observed net(S)        $     -59,180
+      placebo median         $     -39,730
+      placebo 95th pct       $      -4,543
+      placebo 99th pct       $      12,013
+      observed percentile            24.9%      one-sided p = 0.7514
+    SECONDARY (weaker bar, clustering destroyed -- do NOT adjudicate on this):
+      i.i.d. random-short placebo median $     -51,200   95th pct $       5,487   sd $    34,053
+
+  GATE TABLE (printed by the program)
+    gate  description                                                    spec                                         observed                                       verdict
+    G1    mean gross short-leg drift clears the primary cost             mean short-leg pts <= -1.0325  (i.e. short-leg gross >= +1.0325) -2.1492 pts                                    FAIL   
+    G2    net(S) at $20.65 is positive                                   total net(S) > $0                            $-59,180                                       FAIL   
+    G3    episode-block 95% CI of mean net(S)/session excludes zero, positive side ci_lo > 0                                    mean -63.634  CI [-135.715, -5.889]  K=68      FAIL   
+    G4    net(S) beats the rate-matched circular-shift placebo           observed > placebo 95th percentile           obs $-59,180 vs p95 $-4,543  (pctile 24.9%)    FAIL   
+    G5    router distinguishable from filter (identity-equivalent to G3) R - F == S asserted, and G3 PASS             |R-F-S| = 0.000000; G3 = FAIL                  FAIL   
+    -> 0/5 PASS
+
+====================================================================================================
+STATE: (c) vov = VVIX/VIX, HIGH tercile shorted (this is the CALM end -- see corr)
+====================================================================================================
+  ratio column        vov
+  high (short) state  causal_tercile(window=252) == 2
+  low  (long)  state  causal_tercile(window=252) == 0
+  evaluable sessions  3,688   span 2007-03-01 .. 2021-12-31
+  high sessions       1,567  (42.5%)
+  low  sessions       1,184
+
+  WHAT THE STATE IS (ex-ante columns only -- no return consulted):
+    state         n  ratio_mean  VIX_mean  VXN_mean  rvol21_mean
+    high      1,567      5.9751     16.43     18.23      0.00382
+    mid         937      5.4344     18.00     19.98      0.00451
+    low       1,184      4.1453     26.49     26.05      0.00665
+
+  EPISODES (maximal runs of the high state separated by >= 10 calendar days)
+    K = 43   rho_bar = 0.0270   K_eff = K/(1+(K-1)*rho_bar) = 20.16
+    episode size: min=1 p25=3 median=12 p75=56 max=244   singletons=8
+    top-5 episodes carry 51.2% of all high sessions:
+      2009-05-20 .. 2010-05-19   244 sess   short-leg sum     -120.5 pts   mean  -0.494 pts
+      2020-11-11 .. 2021-09-16   197 sess   short-leg sum   -1,779.2 pts   mean  -9.032 pts
+      2017-04-13 .. 2018-01-29   182 sess   short-leg sum     -468.2 pts   mean  -2.573 pts
+      2014-05-15 .. 2014-10-09    93 sess   short-leg sum     -143.5 pts   mean  -1.543 pts
+      2010-10-11 .. 2011-02-23    86 sess   short-leg sum     -167.5 pts   mean  -1.948 pts
+    K alone is NOT the sample size.  K, rho_bar and K_eff are quoted together.
+
+  MAGNITUDE -- the thing that actually decides this
+    mean SHORT-leg gross drift in the high state : -3.1812 pts/session
+    (equivalently mean intraday drift            : +3.1812 pts/session)
+    cost floor a full-session round turn must clear at $20.65 : 1.0325 pts
+    margin over the primary cost                  : -4.2137 pts
+    session-level t = -2.56   <-- DIAGNOSTIC ONLY, BANNED AS INFERENCE (sessions inside an episode are not independent)
+
+  IS THE SIGN ONE EPISODE?  (the obvious skeptic question -- 2020 is huge)
+    episodes whose SHORT leg made money (mean > 0): 16/43 = 37.2%   <- if the short edge were real this would be well over half
+    per-episode short-leg mean (pts): median -1.889  p25 -5.292  p75 +4.226
+    LEAVE-ONE-EPISODE-OUT jackknife on the pooled short-leg mean (pts/session):
+      full-sample -3.1812   jackknife range [-3.6769, -2.3400]   episodes that flip the sign to >= +1.0325: 0
+      dropping the single most favourable-to-drop episode (2020-11-11..2021-09-16, 197 sess) still leaves -2.3400 pts
+    -> NO single episode can be removed to make the short leg clear its cost.
+       The verdict below does not rest on one episode (e.g. March 2020).
+
+  THREE ARMS -- TOTAL dollars, 1 contract, one round turn per traded session
+  arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+  BASE_always_long  -           3,688  3,688      0     4,499.2      1.220       73,905       13,828       -2,252   43  0.027  20.16
+  R_router          low_only    2,751  1,184  1,567    -3,388.2     -1.232      -79,759     -124,573     -136,568   43  0.027  20.16
+  F_filter          low_only    1,184  1,184      0     1,596.8      1.349       26,773        7,485        2,323   43  0.027  20.16
+  R_router          non_high    3,688  2,121  1,567    -5,470.8     -1.483     -125,495     -185,572     -201,652   43  0.027  20.16
+  F_filter          non_high    2,121  2,121      0      -485.8     -0.229      -18,963      -53,514      -62,761   43  0.027  20.16
+  S_short_only      -           1,567      0  1,567    -4,985.0     -3.181     -106,532     -132,059     -138,891   43  0.027  20.16
+    identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+    identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+    DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+  PER-SESSION dollars (total net / 3,688 common-population sessions) and
+  PER-TRADE dollars (total net / that arm's own traded sessions), at each cost line
+    arm               long_leg   trades    $4.36/sess    $4.36/trade   $20.65/sess   $20.65/trade   $25.01/sess   $25.01/trade
+    BASE_always_long  -           3,688        20.039         20.039         3.749          3.749        -0.611         -0.611
+    R_router          low_only    2,751       -21.627        -28.993       -33.778        -45.283       -37.030        -49.643
+    F_filter          low_only    1,184         7.259         22.612         2.030          6.322         0.630          1.962
+    R_router          non_high    3,688       -34.028        -34.028       -50.318        -50.318       -54.678        -54.678
+    F_filter          non_high    2,121        -5.142         -8.940       -14.510        -25.230       -17.018        -29.590
+    S_short_only      -           1,567       -28.886        -67.985       -35.808        -84.275       -37.660        -88.635
+
+  EPISODE-BLOCK BOOTSTRAP -- 95% CI of MEAN NET DOLLARS PER SESSION
+    (S) resamples WHOLE HIGH-STATE EPISODES, the unit the brief mandates.
+    (R)/(F)/(BASE) trade outside the high state, so they resample the FULL-TIMELINE
+    ALTERNATING BLOCKS: every high episode is one block, every non-high stretch
+    between two episodes is one block.  Same clustering, complete coverage.
+    n_draws = 10,000, seed = 20260831
+
+    arm               long_leg  unit        blocks cost                  mean$/sess     CI_lo     CI_hi       p  excl0
+    BASE_always_long  -         alt-block      245 net_$4.36_FLOOR           20.039    -9.598    57.449   0.217  False
+    BASE_always_long  -         alt-block      245 net_$20.65_PRIMARY         3.749   -25.888    41.159   0.887  False
+    BASE_always_long  -         alt-block      245 net_$25.01_STRESS         -0.611   -30.248    36.799   0.908  False
+    R_router          low_only  alt-block      245 net_$4.36_FLOOR          -21.627   -59.024    11.288   0.212  False
+    R_router          low_only  alt-block      245 net_$20.65_PRIMARY       -33.778   -71.533    -0.431   0.047   True
+    R_router          low_only  alt-block      245 net_$25.01_STRESS        -37.030   -74.951    -3.531   0.031   True
+    F_filter          low_only  alt-block      245 net_$4.36_FLOOR            7.259    -6.116    25.785   0.372  False
+    F_filter          low_only  alt-block      245 net_$20.65_PRIMARY         2.030   -11.876    20.648   0.827  False
+    F_filter          low_only  alt-block      245 net_$25.01_STRESS          0.630   -13.534    19.254   0.957  False
+    R_router          non_high  alt-block      245 net_$4.36_FLOOR          -34.028   -69.743    -4.720   0.017   True
+    R_router          non_high  alt-block      245 net_$20.65_PRIMARY       -50.318   -86.033   -21.010   0.000   True
+    R_router          non_high  alt-block      245 net_$25.01_STRESS        -54.678   -90.393   -25.370   0.000   True
+    F_filter          non_high  alt-block      245 net_$4.36_FLOOR           -5.142   -17.075     6.728   0.395  False
+    F_filter          non_high  alt-block      245 net_$20.65_PRIMARY       -14.510   -26.743    -2.151   0.023   True
+    F_filter          non_high  alt-block      245 net_$25.01_STRESS        -17.018   -29.362    -4.308   0.009   True
+    S_short_only      -         episode         43 net_$4.36_FLOOR          -67.985  -120.821   -22.121   0.002   True
+    S_short_only      -         episode         43 net_$20.65_PRIMARY       -84.275  -137.111   -38.411   0.000   True
+    S_short_only      -         episode         43 net_$25.01_STRESS        -88.635  -141.471   -42.771   0.000   True
+
+  ROUTER vs FILTER -- the costume test, at the PRIMARY cost line
+    long_leg=low_only   net(R)=$    -124,573   net(F)=$       7,485   net(R)-net(F)=$    -132,059   net(S)=$    -132,059   identity |diff|=0.000000
+    long_leg=non_high   net(R)=$    -185,572   net(F)=$     -53,514   net(R)-net(F)=$    -132,059   net(S)=$    -132,059   identity |diff|=0.000000
+    R - F == S exactly (algebra, asserted above).  So 'is the router distinguishable
+    from the filter' and 'is net(S) distinguishable from zero' are ONE test.  The CI
+    on the S row above IS the router-vs-filter test.
+
+  RATE-MATCHED PLACEBO for arm (S), at $20.65 -- total net dollars
+    PRIMARY, dependence-preserving: EXHAUSTIVE CIRCULAR SHIFT, 3,822 shifts
+      identical short count and identical episode block structure on every shift
+      observed net(S)        $    -132,059
+      placebo median         $     -66,656
+      placebo 95th pct       $     -26,700
+      placebo 99th pct       $     -10,492
+      observed percentile             0.9%      one-sided p = 0.9906
+    SECONDARY (weaker bar, clustering destroyed -- do NOT adjudicate on this):
+      i.i.d. random-short placebo median $     -70,799   95th pct $     -13,047   sd $    36,095
+
+  GATE TABLE (printed by the program)
+    gate  description                                                    spec                                         observed                                       verdict
+    G1    mean gross short-leg drift clears the primary cost             mean short-leg pts <= -1.0325  (i.e. short-leg gross >= +1.0325) -3.1812 pts                                    FAIL   
+    G2    net(S) at $20.65 is positive                                   total net(S) > $0                            $-132,059                                      FAIL   
+    G3    episode-block 95% CI of mean net(S)/session excludes zero, positive side ci_lo > 0                                    mean -84.275  CI [-137.111, -38.411]  K=43     FAIL   
+    G4    net(S) beats the rate-matched circular-shift placebo           observed > placebo 95th percentile           obs $-132,059 vs p95 $-26,700  (pctile 0.9%)   FAIL   
+    G5    router distinguishable from filter (identity-equivalent to G3) R - F == S asserted, and G3 PASS             |R-F-S| = 0.000000; G3 = FAIL                  FAIL   
+    -> 0/5 PASS
+
+====================================================================================================
+STATE: (d) vov = VVIX/VIX, LOW tercile shorted (the STRESS end of vov)
+====================================================================================================
+  ratio column        vov
+  high (short) state  causal_tercile(window=252) == 0
+  low  (long)  state  causal_tercile(window=252) == 2
+  evaluable sessions  3,688   span 2007-03-01 .. 2021-12-31
+  high sessions       1,184  (32.1%)
+  low  sessions       1,567
+
+  WHAT THE STATE IS (ex-ante columns only -- no return consulted):
+    state         n  ratio_mean  VIX_mean  VXN_mean  rvol21_mean
+    high      1,184      4.1453     26.49     26.05      0.00665
+    mid         937      5.4344     18.00     19.98      0.00451
+    low       1,567      5.9751     16.43     18.23      0.00382
+
+  EPISODES (maximal runs of the high state separated by >= 10 calendar days)
+    K = 45   rho_bar = 0.0178   K_eff = K/(1+(K-1)*rho_bar) = 25.21
+    episode size: min=1 p25=2 median=7 p75=21 max=248   singletons=4
+    top-5 episodes carry 57.6% of all high sessions:
+      2007-04-24 .. 2008-05-02   248 sess   short-leg sum       48.8 pts   mean   0.197 pts
+      2008-09-03 .. 2009-04-28   152 sess   short-leg sum      192.8 pts   mean   1.268 pts
+      2020-02-25 .. 2020-07-17   101 sess   short-leg sum   -1,020.2 pts   mean -10.101 pts
+      2011-08-01 .. 2011-12-12    93 sess   short-leg sum       18.8 pts   mean   0.202 pts
+      2018-01-30 .. 2018-06-05    88 sess   short-leg sum      333.0 pts   mean   3.784 pts
+    K alone is NOT the sample size.  K, rho_bar and K_eff are quoted together.
+
+  MAGNITUDE -- the thing that actually decides this
+    mean SHORT-leg gross drift in the high state : -1.3486 pts/session
+    (equivalently mean intraday drift            : +1.3486 pts/session)
+    cost floor a full-session round turn must clear at $20.65 : 1.0325 pts
+    margin over the primary cost                  : -2.3811 pts
+    session-level t = -0.63   <-- DIAGNOSTIC ONLY, BANNED AS INFERENCE (sessions inside an episode are not independent)
+
+  IS THE SIGN ONE EPISODE?  (the obvious skeptic question -- 2020 is huge)
+    episodes whose SHORT leg made money (mean > 0): 17/45 = 37.8%   <- if the short edge were real this would be well over half
+    per-episode short-leg mean (pts): median -3.143  p25 -11.544  p75 +3.250
+    LEAVE-ONE-EPISODE-OUT jackknife on the pooled short-leg mean (pts/session):
+      full-sample -1.3486   jackknife range [-1.7607, -0.5323]   episodes that flip the sign to >= +1.0325: 0
+      dropping the single most favourable-to-drop episode (2020-02-25..2020-07-17, 101 sess) still leaves -0.5323 pts
+    -> NO single episode can be removed to make the short leg clear its cost.
+       The verdict below does not rest on one episode (e.g. March 2020).
+
+  THREE ARMS -- TOTAL dollars, 1 contract, one round turn per traded session
+  arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+  BASE_always_long  -           3,688  3,688      0     4,499.2      1.220       73,905       13,828       -2,252   45  0.018  25.21
+  R_router          low_only    2,751  1,567  1,184     3,388.2      1.232       55,771       10,957       -1,038   45  0.018  25.21
+  F_filter          low_only    1,567  1,567      0     4,985.0      3.181       92,868       67,341       60,509   45  0.018  25.21
+  R_router          non_high    3,688  2,504  1,184     1,305.8      0.354       10,035      -50,042      -66,122   45  0.018  25.21
+  F_filter          non_high    2,504  2,504      0     2,902.5      1.159       47,133        6,342       -4,575   45  0.018  25.21
+  S_short_only      -           1,184      0  1,184    -1,596.8     -1.349      -37,097      -56,385      -61,547   45  0.018  25.21
+    identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+    identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+    DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+  PER-SESSION dollars (total net / 3,688 common-population sessions) and
+  PER-TRADE dollars (total net / that arm's own traded sessions), at each cost line
+    arm               long_leg   trades    $4.36/sess    $4.36/trade   $20.65/sess   $20.65/trade   $25.01/sess   $25.01/trade
+    BASE_always_long  -           3,688        20.039         20.039         3.749          3.749        -0.611         -0.611
+    R_router          low_only    2,751        15.122         20.273         2.971          3.983        -0.281         -0.377
+    F_filter          low_only    1,567        25.181         59.265        18.260         42.975        16.407         38.615
+    R_router          non_high    3,688         2.721          2.721       -13.569        -13.569       -17.929        -17.929
+    F_filter          non_high    2,504        12.780         18.823         1.720          2.533        -1.241         -1.827
+    S_short_only      -           1,184       -10.059        -31.332       -15.289        -47.622       -16.688        -51.982
+
+  EPISODE-BLOCK BOOTSTRAP -- 95% CI of MEAN NET DOLLARS PER SESSION
+    (S) resamples WHOLE HIGH-STATE EPISODES, the unit the brief mandates.
+    (R)/(F)/(BASE) trade outside the high state, so they resample the FULL-TIMELINE
+    ALTERNATING BLOCKS: every high episode is one block, every non-high stretch
+    between two episodes is one block.  Same clustering, complete coverage.
+    n_draws = 10,000, seed = 20260831
+
+    arm               long_leg  unit        blocks cost                  mean$/sess     CI_lo     CI_hi       p  excl0
+    BASE_always_long  -         alt-block      199 net_$4.36_FLOOR           20.039    -5.965    46.720   0.128  False
+    BASE_always_long  -         alt-block      199 net_$20.65_PRIMARY         3.749   -22.255    30.430   0.792  False
+    BASE_always_long  -         alt-block      199 net_$25.01_STRESS         -0.611   -26.615    26.070   0.949  False
+    R_router          low_only  alt-block      199 net_$4.36_FLOOR           15.122   -13.337    42.954   0.303  False
+    R_router          low_only  alt-block      199 net_$20.65_PRIMARY         2.971   -25.176    30.668   0.859  False
+    R_router          low_only  alt-block      199 net_$25.01_STRESS         -0.281   -28.442    27.392   0.959  False
+    F_filter          low_only  alt-block      199 net_$4.36_FLOOR           25.181     5.097    48.650   0.008   True
+    F_filter          low_only  alt-block      199 net_$20.65_PRIMARY        18.260    -0.834    41.410   0.067  False
+    F_filter          low_only  alt-block      199 net_$25.01_STRESS         16.407    -2.545    39.548   0.107  False
+    R_router          non_high  alt-block      199 net_$4.36_FLOOR            2.721   -26.749    27.146   0.843  False
+    R_router          non_high  alt-block      199 net_$20.65_PRIMARY       -13.569   -43.039    10.856   0.284  False
+    R_router          non_high  alt-block      199 net_$25.01_STRESS        -17.929   -47.399     6.496   0.150  False
+    F_filter          non_high  alt-block      199 net_$4.36_FLOOR           12.780    -8.238    32.422   0.230  False
+    F_filter          non_high  alt-block      199 net_$20.65_PRIMARY         1.720   -18.667    20.926   0.891  False
+    F_filter          non_high  alt-block      199 net_$25.01_STRESS         -1.241   -21.369    17.906   0.868  False
+    S_short_only      -         episode         45 net_$4.36_FLOOR          -31.332   -94.530     7.837   0.140  False
+    S_short_only      -         episode         45 net_$20.65_PRIMARY       -47.622  -110.820    -8.453   0.012   True
+    S_short_only      -         episode         45 net_$25.01_STRESS        -51.982  -115.180   -12.813   0.006   True
+
+  ROUTER vs FILTER -- the costume test, at the PRIMARY cost line
+    long_leg=low_only   net(R)=$      10,957   net(F)=$      67,341   net(R)-net(F)=$     -56,385   net(S)=$     -56,385   identity |diff|=0.000000
+    long_leg=non_high   net(R)=$     -50,042   net(F)=$       6,342   net(R)-net(F)=$     -56,385   net(S)=$     -56,385   identity |diff|=0.000000
+    R - F == S exactly (algebra, asserted above).  So 'is the router distinguishable
+    from the filter' and 'is net(S) distinguishable from zero' are ONE test.  The CI
+    on the S row above IS the router-vs-filter test.
+
+  RATE-MATCHED PLACEBO for arm (S), at $20.65 -- total net dollars
+    PRIMARY, dependence-preserving: EXHAUSTIVE CIRCULAR SHIFT, 3,822 shifts
+      identical short count and identical episode block structure on every shift
+      observed net(S)        $     -56,385
+      placebo median         $     -52,902
+      placebo 95th pct       $     -10,435
+      placebo 99th pct       $       8,055
+      observed percentile            44.2%      one-sided p = 0.5578
+    SECONDARY (weaker bar, clustering destroyed -- do NOT adjudicate on this):
+      i.i.d. random-short placebo median $     -54,325   95th pct $       6,044   sd $    35,204
+
+  GATE TABLE (printed by the program)
+    gate  description                                                    spec                                         observed                                       verdict
+    G1    mean gross short-leg drift clears the primary cost             mean short-leg pts <= -1.0325  (i.e. short-leg gross >= +1.0325) -1.3486 pts                                    FAIL   
+    G2    net(S) at $20.65 is positive                                   total net(S) > $0                            $-56,385                                       FAIL   
+    G3    episode-block 95% CI of mean net(S)/session excludes zero, positive side ci_lo > 0                                    mean -47.622  CI [-110.820, -8.453]  K=45      FAIL   
+    G4    net(S) beats the rate-matched circular-shift placebo           observed > placebo 95th percentile           obs $-56,385 vs p95 $-10,435  (pctile 44.2%)   FAIL   
+    G5    router distinguishable from filter (identity-equivalent to G3) R - F == S asserted, and G3 PASS             |R-F-S| = 0.000000; G3 = FAIL                  FAIL   
+    -> 0/5 PASS
+
+====================================================================================================
+[5] CROSS-STATE SUMMARY -- all four, at the PRIMARY cost line $20.65/ctrRT
+====================================================================================================
+  state                                    n_hi    K    rho  K_eff  shortpts     net(S)$   S$/sess   S CI_lo   S CI_hi  plc_pct  gates
+  (a) ts9 = VIX9D/VIX, HIGH tercile shor    781   82  0.053  15.38    -2.690     -58,138   -74.440  -162.567     8.375   17.5%    0/5
+  (b) ts3 = VIX/VIX3M, HIGH tercile shor    930   68  0.033  21.05    -2.149     -59,180   -63.634  -135.715    -5.889   24.9%    0/5
+  (c) vov = VVIX/VIX, HIGH tercile short  1,567   43  0.027  20.16    -3.181    -132,059   -84.275  -137.111   -38.411    0.9%    0/5
+  (d) vov = VVIX/VIX, LOW tercile shorte  1,184   45  0.018  25.21    -1.349     -56,385   -47.622  -110.820    -8.453   44.2%    0/5
+
+  ROUTER vs FILTER across all four states (net dollars per COMMON-POPULATION session)
+  state                                  leg         R$/sess   F$/sess       R-F  BASE$/sess
+  (a) ts9 = VIX9D/VIX, HIGH tercile shor low_only    -14.749     8.628   -23.377      16.658
+  (a) ts9 = VIX9D/VIX, HIGH tercile shor non_high    -17.126     6.251   -23.377      16.658
+  (b) ts3 = VIX/VIX3M, HIGH tercile shor low_only    -18.202     2.851   -21.053      13.373
+  (b) ts3 = VIX/VIX3M, HIGH tercile shor non_high    -15.068     5.984   -21.053      13.373
+  (c) vov = VVIX/VIX, HIGH tercile short low_only    -33.778     2.030   -35.808       3.749
+  (c) vov = VVIX/VIX, HIGH tercile short non_high    -50.318   -14.510   -35.808       3.749
+  (d) vov = VVIX/VIX, LOW tercile shorte low_only      2.971    18.260   -15.289       3.749
+  (d) vov = VVIX/VIX, LOW tercile shorte non_high    -13.569     1.720   -15.289       3.749
+
+====================================================================================================
+[6] VERDICT
+====================================================================================================
+  PRE-DESIGNATED HEADLINE STATE: (b) ts3 = VIX/VIX3M, high tercile shorted.
+
+    gate  description                                                    verdict
+    G1    mean gross short-leg drift clears the primary cost             FAIL   
+    G2    net(S) at $20.65 is positive                                   FAIL   
+    G3    episode-block 95% CI of mean net(S)/session excludes zero, positive side FAIL   
+    G4    net(S) beats the rate-matched circular-shift placebo           FAIL   
+    G5    router distinguishable from filter (identity-equivalent to G3) FAIL   
+
+  HEADLINE GATES G1-G4: NOT ALL PASS
+  any state in the family with G1 AND G2 PASS: False
+  VERDICT (computed, not asserted): DEAD
+
+  MAGNITUDE, stated plainly:
+    (a) ts9 = VIX9D/VIX, HIGH tercile shorted            short-leg drift -2.690 pts vs a 1.032 pt cost floor -> DOES NOT CLEAR
+    (b) ts3 = VIX/VIX3M, HIGH tercile shorted [PRE-DESIG short-leg drift -2.149 pts vs a 1.032 pt cost floor -> DOES NOT CLEAR
+    (c) vov = VVIX/VIX, HIGH tercile shorted (this is th short-leg drift -3.181 pts vs a 1.032 pt cost floor -> DOES NOT CLEAR
+    (d) vov = VVIX/VIX, LOW tercile shorted (the STRESS  short-leg drift -1.349 pts vs a 1.032 pt cost floor -> DOES NOT CLEAR

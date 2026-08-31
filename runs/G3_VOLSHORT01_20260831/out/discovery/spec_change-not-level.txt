@@ -1,0 +1,606 @@
+====================================================================================================
+G3_VOLSHORT01 -- SPEC: *CHANGE* IN IMPLIED VOL, NOT LEVEL
+EVIDENCE STATUS: DISCOVERY_CONTAMINATED. Not a result. Input to a rule proposal that
+must be frozen and committed BEFORE the one-shot 2022-01-01 -> 2026-07-31 read.
+NO CrossTrade / NinjaTrader call was made. No file outside this run dir was written.
+====================================================================================================
+
+====================================================================================================
+[0] THE WALL -- 2022-01-01 -- asserted before any computation
+====================================================================================================
+  panel: D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\G3_VOLSHORT01_20260831\out\discovery\panel_pre2022.parquet
+  rows loaded: 4,106   date columns found: 8
+    prev_session_date      max=2021-12-30   rows >= 2022-01-01: 0
+    session_date           max=2021-12-31   rows >= 2022-01-01: 0
+    skew_asof              max=2021-12-30   rows >= 2022-01-01: 0
+    vix3m_asof             max=2021-12-30   rows >= 2022-01-01: 0
+    vix9d_asof             max=2021-12-30   rows >= 2022-01-01: 0
+    vix_asof               max=2021-12-30   rows >= 2022-01-01: 0
+    vvix_asof              max=2021-12-30   rows >= 2022-01-01: 0
+    vxn_asof               max=2021-12-30   rows >= 2022-01-01: 0
+  TOTAL rows on/after 2022-01-01, across ALL date columns: 0
+  assert max(session_date) < 2022-01-01 -> 2021-12-31  PASS
+  This script opens no other data file. It cannot see a post-wall session.
+
+  redundant hard filter applied: 4,106 -> 4,106 rows (0 dropped, as expected)
+====================================================================================================
+[1] POPULATION AND SIGNAL CONSTRUCTION
+====================================================================================================
+  session_quality == FULL: 4,106 -> 3,947 rows (half days and substrate holes dropped; on a half day the implied-vol reading is stale by 3-5 days and there is no 16:00 bar)
+
+  VXN signal audit (built on 3,059 rows, 3,059 unique Cboe dates)
+    signal             n       mean         sd       p01       p50       p99
+    vxn__d1        3,058    -0.0001     0.0679    -0.156    -0.006     0.214
+    vxn__d5        3,054    -0.0002     0.1366    -0.293    -0.008     0.382
+    vxn__z21       3,038     0.0015     1.4666    -2.417    -0.278     4.780
+    vxn__lvl       3,059    20.6409     7.0305    12.180    18.740    43.026
+    panel rows sharing an asof with an earlier row: 887 (built on the unique series, so these do NOT become spurious zero changes)
+
+  VIX signal audit (built on 3,947 rows, 3,947 unique Cboe dates)
+    signal             n       mean         sd       p01       p50       p99
+    vix__d1        3,946     0.0001     0.0779    -0.183    -0.006     0.244
+    vix__d5        3,942     0.0006     0.1524    -0.342    -0.011     0.459
+    vix__z21       3,926    -0.0075     1.5110    -2.267    -0.352     4.818
+    vix__lvl       3,947    19.5663     9.3688     9.834    16.910    59.912
+    panel rows sharing an asof with an earlier row: 0 (built on the unique series, so these do NOT become spurious zero changes)
+
+  TIMING. panel['vxn'] on session t is the Cboe VXN close of the latest trade date
+  STRICTLY BEFORE t (asserted at panel build, viol=0). Every signal is a function of
+  closes at or before that date, so every signal is known before 09:30:00. Entry is
+  rth_open (the 09:30:00 print, END-stamped bar 09:31); exit is rth_close (the last
+  RTH print, END-stamped bar 16:00). One round turn per traded session.
+
+====================================================================================================
+[SELFCHECK] machinery written in THIS file, verified against common.py
+====================================================================================================
+  fast_boot == common.block_bootstrap_by_episode, draw for draw: max|diff| = 5.551e-17  -> PASS
+  segment_blocks partitions ALL rows, episodes intact: [0, 0, 1, 1, 2] (expect [0,0,1,1,2])  -> PASS
+  LEAK TEST on the real vxn__d1 series: shuffling everything after row 2000 leaves all 2001 earlier states bit-identical -> PASS
+  (and the shuffle did change the future, so the test is not vacuous -> PASS)
+
+====================================================================================================
+[2] THE THREE CHANGE SPECIFICATIONS -- VXN
+====================================================================================================
+----------------------------------------------------------------------------------------------------
+SPEC (a) VXN 1-day log change   signal = vxn__d1
+  high tercile = the biggest 1-day upward repricing of NDX variance
+  population: 2,806 FULL sessions, 2010-09-20 .. 2021-12-31   (causal 252-obs tercile; the first 252 classifiable rows are NaN by construction and are dropped)
+  high-state sessions (top tercile of the CHANGE, we SHORT these): 954   low: 949   mid: 903
+  EPISODES (high state, gap>=10d): K=83   rho_bar=0.0776   K_eff=11.28
+    episode sizes: min=1 p25=4 median=9 p75=15 max=45   top-5 share of high sessions 21.4%
+    SEGMENT partition covering ALL sessions (one block per episode + one per gap): 1269 blocks -- used to bootstrap R and F under the same scheme as S
+
+arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+BASE_always_long  -           2,806  2,806      0     4,737.0      1.688       82,506       36,796       24,562   83  0.078  11.28
+R_router          low_only    1,903    949    954    -6,376.8     -3.351     -135,832     -166,832     -175,129   83  0.078  11.28
+F_filter          low_only      949    949      0      -284.8     -0.300       -9,833      -25,292      -29,429   83  0.078  11.28
+R_router          non_high    2,806  1,852    954    -7,447.0     -2.654     -161,174     -206,884     -219,118   83  0.078  11.28
+F_filter          non_high    1,852  1,852      0    -1,355.0     -0.732      -35,175      -65,344      -73,419   83  0.078  11.28
+S_short_only      -             954      0    954    -6,092.0     -6.386     -125,999     -141,540     -145,700   83  0.078  11.28
+  identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+  identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+  DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+  NET $ PER SESSION with 95% SEGMENT-BLOCK bootstrap CI (4,000 draws, 1269 blocks resampled whole).
+  'per session' = averaged over ALL 2,806 sessions in the population, flat sessions included at $0, so total = per-session x 2,806.
+  arm                   trades                        $4.36 FLOOR                     $20.65 PRIMARY                      $25.01 STRESS
+  BASE_always_long       2,806        29.40 [   -19.45,    77.26]        13.11 [   -35.74,    60.97]         8.75 [   -40.10,    56.61]
+  R_router[low_only]     1,903       -48.41 [   -93.53,    -5.15]       -59.46 [  -104.70,   -16.30]       -62.41 [  -107.64,   -19.27]
+  F_filter[low_only]       949        -3.50 [   -35.19,    27.37]        -9.01 [   -40.49,    21.79]       -10.49 [   -41.94,    20.27]
+  R_router[non_high]     2,806       -57.44 [  -107.38,    -8.36]       -73.73 [  -123.67,   -24.65]       -78.09 [  -128.03,   -29.01]
+  F_filter[non_high]     1,852       -12.54 [   -51.81,    25.88]       -23.29 [   -62.78,    15.01]       -26.16 [   -65.65,    12.12]
+  S_short_only             954       -44.90 [   -75.34,   -15.53]       -50.44 [   -80.92,   -21.08]       -51.92 [   -82.39,   -22.55]
+
+  THE SHORT ARM ALONE, resampled by WHOLE HIGH-STATE EPISODE (common.block_bootstrap_by_episode, K=83, 4,000 draws):
+    net_$4.36_FLOOR      mean $/SHORT session =   -132.07   95% CI [  -255.11,    -34.47]   p=0.002   total $    -125,999
+    net_$20.65_PRIMARY   mean $/SHORT session =   -148.36   95% CI [  -271.40,    -50.76]   p=0.001   total $    -141,540
+    net_$25.01_STRESS    mean $/SHORT session =   -152.72   95% CI [  -275.76,    -55.12]   p=0.000   total $    -145,700
+    gross mean points per short session = -6.3857 pts    breakeven at the PRIMARY cost = 1.0325 pts    -> DOES NOT CLEAR
+    session-level t on the short leg = -2.72  <-- DIAGNOSTIC ONLY, NOT inference (sessions inside an episode are not independent)
+
+  PLACEBO 1 -- CIRCULAR-SHIFT null (2,000 rotations of the high mask; count of shorts and episode block structure held EXACTLY fixed):
+    observed net(S) @ $20.65 = $    -141,540     null mean $     -52,289  sd $    33,924
+    null 5th/50th/95th pct = $-108,316 / $-52,245 / $5,465
+    one-sided p (fraction of rotations at least as good) = 0.9960
+  PLACEBO 2 -- i.i.d. rate-matched random short (954 random sessions, 1,000 draws). WEAKER control -- it destroys the episode clustering, so it understates the null spread. Reported for completeness only.
+    null mean $     -51,946  sd $    34,892   one-sided p = 0.9960
+----------------------------------------------------------------------------------------------------
+SPEC (b) VXN 5-day log change   signal = vxn__d5
+  high tercile = the biggest 5-day upward repricing of NDX variance
+  population: 2,802 FULL sessions, 2010-09-24 .. 2021-12-31   (causal 252-obs tercile; the first 252 classifiable rows are NaN by construction and are dropped)
+  high-state sessions (top tercile of the CHANGE, we SHORT these): 951   low: 922   mid: 929
+  EPISODES (high state, gap>=10d): K=137   rho_bar=0.0776   K_eff=11.86
+    episode sizes: min=1 p25=3 median=6 p75=10 max=30   top-5 share of high sessions 13.1%
+    SEGMENT partition covering ALL sessions (one block per episode + one per gap): 549 blocks -- used to bootstrap R and F under the same scheme as S
+
+arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+BASE_always_long  -           2,802  2,802      0     4,698.0      1.677       81,743       36,099       23,882  137  0.078  11.86
+R_router          low_only    1,873    922    951    -1,684.2     -0.899      -41,851      -72,362      -80,529  137  0.078  11.86
+F_filter          low_only      922    922      0       678.0      0.735        9,540       -5,479       -9,499  137  0.078  11.86
+R_router          non_high    2,802  1,851    951       -26.5     -0.009      -12,747      -58,391      -70,608  137  0.078  11.86
+F_filter          non_high    1,851  1,851      0     2,335.8      1.262       38,645        8,492          421  137  0.078  11.86
+S_short_only      -             951      0    951    -2,362.2     -2.484      -51,391      -66,883      -71,030  137  0.078  11.86
+  identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+  identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+  DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+  NET $ PER SESSION with 95% SEGMENT-BLOCK bootstrap CI (4,000 draws, 549 blocks resampled whole).
+  'per session' = averaged over ALL 2,802 sessions in the population, flat sessions included at $0, so total = per-session x 2,802.
+  arm                   trades                        $4.36 FLOOR                     $20.65 PRIMARY                      $25.01 STRESS
+  BASE_always_long       2,802        29.17 [   -14.33,    70.75]        12.88 [   -30.62,    54.46]         8.52 [   -34.98,    50.10]
+  R_router[low_only]     1,873       -14.94 [   -50.49,    20.47]       -25.83 [   -61.32,     9.48]       -28.74 [   -64.24,     6.53]
+  F_filter[low_only]       922         3.40 [   -22.37,    28.60]        -1.96 [   -27.64,    23.20]        -3.39 [   -28.99,    21.74]
+  R_router[non_high]     2,802        -4.55 [   -47.21,    36.98]       -20.84 [   -63.50,    20.69]       -25.20 [   -67.86,    16.33]
+  F_filter[non_high]     1,851        13.79 [   -20.29,    47.45]         3.03 [   -30.83,    36.50]         0.15 [   -33.70,    33.59]
+  S_short_only             951       -18.34 [   -42.46,     7.29]       -23.87 [   -48.12,     1.64]       -25.35 [   -49.59,     0.07]
+
+  THE SHORT ARM ALONE, resampled by WHOLE HIGH-STATE EPISODE (common.block_bootstrap_by_episode, K=137, 4,000 draws):
+    net_$4.36_FLOOR      mean $/SHORT session =    -54.04   95% CI [  -123.58,     12.97]   p=0.123   total $     -51,391
+    net_$20.65_PRIMARY   mean $/SHORT session =    -70.33   95% CI [  -139.87,     -3.32]   p=0.043   total $     -66,883
+    net_$25.01_STRESS    mean $/SHORT session =    -74.69   95% CI [  -144.23,     -7.68]   p=0.032   total $     -71,030
+    gross mean points per short session = -2.4840 pts    breakeven at the PRIMARY cost = 1.0325 pts    -> DOES NOT CLEAR
+    session-level t on the short leg = -0.96  <-- DIAGNOSTIC ONLY, NOT inference (sessions inside an episode are not independent)
+
+  PLACEBO 1 -- CIRCULAR-SHIFT null (2,000 rotations of the high mask; count of shorts and episode block structure held EXACTLY fixed):
+    observed net(S) @ $20.65 = $     -66,883     null mean $     -51,870  sd $    31,781
+    null 5th/50th/95th pct = $-104,722 / $-51,491 / $-292
+    one-sided p (fraction of rotations at least as good) = 0.6830
+  PLACEBO 2 -- i.i.d. rate-matched random short (951 random sessions, 1,000 draws). WEAKER control -- it destroys the episode clustering, so it understates the null spread. Reported for completeness only.
+    null mean $     -51,020  sd $    33,772   one-sided p = 0.6850
+----------------------------------------------------------------------------------------------------
+SPEC (c) VXN z-score vs trailing 21-session mean   signal = vxn__z21
+  high tercile = VXN furthest above its own recent mean, scale-free
+  population: 2,786 FULL sessions, 2010-10-18 .. 2021-12-31   (causal 252-obs tercile; the first 252 classifiable rows are NaN by construction and are dropped)
+  high-state sessions (top tercile of the CHANGE, we SHORT these): 952   low: 920   mid: 914
+  EPISODES (high state, gap>=10d): K=86   rho_bar=0.0494   K_eff=16.55
+    episode sizes: min=1 p25=5 median=9 p75=15 max=50   top-5 share of high sessions 16.8%
+    SEGMENT partition covering ALL sessions (one block per episode + one per gap): 384 blocks -- used to bootstrap R and F under the same scheme as S
+
+arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+BASE_always_long  -           2,786  2,786      0     4,694.8      1.685       81,748       36,364       24,217   86  0.049  16.55
+R_router          low_only    1,872    920    952     1,693.8      0.905       25,713       -4,782      -12,944   86  0.049  16.55
+F_filter          low_only      920    920      0     2,520.2      2.739       46,394       31,407       27,396   86  0.049  16.55
+R_router          non_high    2,786  1,834    952     3,041.8      1.092       48,688        3,304       -8,843   86  0.049  16.55
+F_filter          non_high    1,834  1,834      0     3,868.2      2.109       69,369       39,493       31,497   86  0.049  16.55
+S_short_only      -             952      0    952      -826.5     -0.868      -20,681      -36,189      -40,340   86  0.049  16.55
+  identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+  identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+  DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+  NET $ PER SESSION with 95% SEGMENT-BLOCK bootstrap CI (4,000 draws, 384 blocks resampled whole).
+  'per session' = averaged over ALL 2,786 sessions in the population, flat sessions included at $0, so total = per-session x 2,786.
+  arm                   trades                        $4.36 FLOOR                     $20.65 PRIMARY                      $25.01 STRESS
+  BASE_always_long       2,786        29.34 [   -13.92,    70.62]        13.05 [   -30.21,    54.33]         8.69 [   -34.57,    49.97]
+  R_router[low_only]     1,872         9.23 [   -25.92,    41.36]        -1.72 [   -36.61,    30.27]        -4.65 [   -39.46,    27.40]
+  F_filter[low_only]       920        16.65 [    -1.95,    34.83]        11.27 [    -7.08,    29.18]         9.83 [    -8.59,    27.68]
+  R_router[non_high]     2,786        17.48 [   -27.28,    57.82]         1.19 [   -43.57,    41.53]        -3.17 [   -47.93,    37.17]
+  F_filter[non_high]     1,834        24.90 [    -7.07,    55.77]        14.18 [   -17.82,    44.64]        11.31 [   -20.69,    41.72]
+  S_short_only             952        -7.42 [   -35.29,    20.84]       -12.99 [   -40.86,    14.88]       -14.48 [   -42.46,    13.31]
+
+  THE SHORT ARM ALONE, resampled by WHOLE HIGH-STATE EPISODE (common.block_bootstrap_by_episode, K=86, 4,000 draws):
+    net_$4.36_FLOOR      mean $/SHORT session =    -21.72   95% CI [   -95.52,     56.26]   p=0.541   total $     -20,681
+    net_$20.65_PRIMARY   mean $/SHORT session =    -38.01   95% CI [  -111.81,     39.97]   p=0.308   total $     -36,189
+    net_$25.01_STRESS    mean $/SHORT session =    -42.37   95% CI [  -116.17,     35.61]   p=0.261   total $     -40,340
+    gross mean points per short session = -0.8682 pts    breakeven at the PRIMARY cost = 1.0325 pts    -> DOES NOT CLEAR
+    session-level t on the short leg = -0.32  <-- DIAGNOSTIC ONLY, NOT inference (sessions inside an episode are not independent)
+
+  PLACEBO 1 -- CIRCULAR-SHIFT null (2,000 rotations of the high mask; count of shorts and episode block structure held EXACTLY fixed):
+    observed net(S) @ $20.65 = $     -36,189     null mean $     -52,338  sd $    30,890
+    null 5th/50th/95th pct = $-101,395 / $-52,651 / $379
+    one-sided p (fraction of rotations at least as good) = 0.2910
+  PLACEBO 2 -- i.i.d. rate-matched random short (952 random sessions, 1,000 draws). WEAKER control -- it destroys the episode clustering, so it understates the null spread. Reported for completeness only.
+    null mean $     -53,221  sd $    34,080   one-sided p = 0.3100
+
+====================================================================================================
+[3] THE MATCHED LEVEL CONTROL -- required, same wave, same population
+    Without this the change table is inadmissible: 'change works where level does
+    not' is a COMPARISON and needs both halves measured the same way.
+====================================================================================================
+----------------------------------------------------------------------------------------------------
+SPEC (L) VXN LEVEL (the confounded control)   signal = vxn__lvl
+  high tercile = highest LEVEL of VXN -- near-proxy for trailing realised vol
+  population: 2,807 FULL sessions, 2010-09-17 .. 2021-12-31   (causal 252-obs tercile; the first 252 classifiable rows are NaN by construction and are dropped)
+  high-state sessions (top tercile of the CHANGE, we SHORT these): 858   low: 1,119   mid: 830
+  EPISODES (high state, gap>=10d): K=53   rho_bar=0.0259   K_eff=22.59
+    episode sizes: min=1 p25=2 median=5 p75=10 max=116   top-5 share of high sessions 50.5%
+    SEGMENT partition covering ALL sessions (one block per episode + one per gap): 230 blocks -- used to bootstrap R and F under the same scheme as S
+
+arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+BASE_always_long  -           2,807  2,807      0     4,730.8      1.685       82,376       36,650       24,412   53  0.026  22.59
+R_router          low_only    1,977  1,119    858     1,282.0      0.648       17,020      -15,185      -23,805   53  0.026  22.59
+F_filter          low_only    1,119  1,119      0     2,806.5      2.508       51,251       33,023       28,144   53  0.026  22.59
+R_router          non_high    2,807  1,949    858     1,681.8      0.599       21,396      -24,330      -36,568   53  0.026  22.59
+F_filter          non_high    1,949  1,949      0     3,206.2      1.645       55,627       23,878       15,381   53  0.026  22.59
+S_short_only      -             858      0    858    -1,524.5     -1.777      -34,231      -48,208      -51,949   53  0.026  22.59
+  identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+  identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+  DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+  NET $ PER SESSION with 95% SEGMENT-BLOCK bootstrap CI (4,000 draws, 230 blocks resampled whole).
+  'per session' = averaged over ALL 2,807 sessions in the population, flat sessions included at $0, so total = per-session x 2,807.
+  arm                   trades                        $4.36 FLOOR                     $20.65 PRIMARY                      $25.01 STRESS
+  BASE_always_long       2,807        29.35 [    -8.32,    63.92]        13.06 [   -24.61,    47.63]         8.70 [   -28.97,    43.27]
+  R_router[low_only]     1,977         6.06 [   -30.81,    41.35]        -5.41 [   -42.00,    29.72]        -8.48 [   -45.07,    26.61]
+  F_filter[low_only]     1,119        18.26 [    -4.46,    45.69]        11.76 [   -10.17,    38.31]        10.03 [   -11.57,    36.39]
+  R_router[non_high]     2,807         7.62 [   -33.34,    43.34]        -8.67 [   -49.63,    27.05]       -13.03 [   -53.99,    22.69]
+  F_filter[non_high]     1,949        19.82 [   -10.06,    47.93]         8.51 [   -20.55,    35.71]         5.48 [   -23.30,    32.46]
+  S_short_only             858       -12.19 [   -37.38,     9.90]       -17.17 [   -42.81,     4.44]       -18.51 [   -44.10,     3.00]
+
+  THE SHORT ARM ALONE, resampled by WHOLE HIGH-STATE EPISODE (common.block_bootstrap_by_episode, K=53, 4,000 draws):
+    net_$4.36_FLOOR      mean $/SHORT session =    -39.90   95% CI [  -129.92,     39.81]   p=0.311   total $     -34,231
+    net_$20.65_PRIMARY   mean $/SHORT session =    -56.19   95% CI [  -146.21,     23.52]   p=0.179   total $     -48,208
+    net_$25.01_STRESS    mean $/SHORT session =    -60.55   95% CI [  -150.57,     19.16]   p=0.141   total $     -51,949
+    gross mean points per short session = -1.7768 pts    breakeven at the PRIMARY cost = 1.0325 pts    -> DOES NOT CLEAR
+    session-level t on the short leg = -0.56  <-- DIAGNOSTIC ONLY, NOT inference (sessions inside an episode are not independent)
+
+  PLACEBO 1 -- CIRCULAR-SHIFT null (2,000 rotations of the high mask; count of shorts and episode block structure held EXACTLY fixed):
+    observed net(S) @ $20.65 = $     -48,208     null mean $     -47,509  sd $    25,394
+    null 5th/50th/95th pct = $-89,057 / $-48,150 / $-4,868
+    one-sided p (fraction of rotations at least as good) = 0.5010
+  PLACEBO 2 -- i.i.d. rate-matched random short (858 random sessions, 1,000 draws). WEAKER control -- it destroys the episode clustering, so it understates the null spread. Reported for completeness only.
+    null mean $     -46,641  sd $    32,756   one-sided p = 0.5250
+
+====================================================================================================
+[4] IS THE CHANGE SPEC ACTUALLY A DIFFERENT OBJECT FROM THE LEVEL SPEC?
+====================================================================================================
+  matched population for all five states: 2,786 sessions 2010-10-18 .. 2021-12-31
+
+  agreement of the HIGH state (fraction of sessions both call high, as a share of the union):
+                d1      d5     z21     lvl      rv
+    d1       1.000   0.351   0.343   0.250   0.197
+    d5       0.351   1.000   0.570   0.310   0.192
+    z21      0.343   0.570   1.000   0.339   0.212
+    lvl      0.250   0.310   0.339   1.000   0.553
+    rv       0.197   0.192   0.212   0.553   1.000
+
+  Pearson correlation of the raw signals (not the states):
+                        d1     d5    z21    lvl  realised_vol_21
+    d1               1.000  0.406  0.464  0.116           -0.038
+    d5               0.406  1.000  0.734  0.224           -0.049
+    z21              0.464  0.734  1.000  0.277           -0.000
+    lvl              0.116  0.224  0.277  1.000            0.769
+    realised_vol_21 -0.038 -0.049 -0.000  0.769            1.000
+
+  READ THIS: the LEVEL of VXN is correlated 0.769 with trailing 21-session realised vol -- it is
+  very nearly the same variable. The 1-day CHANGE is correlated -0.038 with it.
+  So the change specs ARE a different object. That is the premise of this spec and
+  it holds. The question is only whether the different object pays.
+
+====================================================================================================
+[5] MULTIPLICITY -- family-wise circular-shift null over the 3 change variants
+    3 variants x 2 long-leg conventions were examined. Reporting the best of 3
+    against a per-variant null would overstate it. Here each rotation is applied to
+    ALL THREE masks and the BEST of the three is recorded, so the null is the
+    distribution of the maximum.
+====================================================================================================
+  common population across the 3 variants: 2,786 sessions
+    observed net(S) @ $20.65 on the common population, variant a: $    -140,524
+    observed net(S) @ $20.65 on the common population, variant b: $     -66,695
+    observed net(S) @ $20.65 on the common population, variant c: $     -36,189
+  observed BEST of the 3 = $-36,189 (variant c)
+  family-wise null (max of 3 per rotation, 1,500 rotations): mean $-29,602  95th pct $15,034
+  FAMILY-WISE one-sided p = 0.5840
+
+====================================================================================================
+[6] ROBUSTNESS SIDEBAR -- the same three changes on VIX (deeper history, WRONG
+    underlying). Labelled secondary. VXN is the specified index for NQ.
+====================================================================================================
+----------------------------------------------------------------------------------------------------
+SPEC (a-VIX) VIX 1-day log change   signal = vix__d1
+  SECONDARY -- S&P 500 vol index applied to an NDX future
+  population: 3,694 FULL sessions, 2007-02-21 .. 2021-12-31   (causal 252-obs tercile; the first 252 classifiable rows are NaN by construction and are dropped)
+  high-state sessions (top tercile of the CHANGE, we SHORT these): 1,252   low: 1,233   mid: 1,209
+  EPISODES (high state, gap>=10d): K=115   rho_bar=0.0740   K_eff=12.19
+    episode sizes: min=1 p25=4 median=8 p75=15 max=38   top-5 share of high sessions 14.1%
+    SEGMENT partition covering ALL sessions (one block per episode + one per gap): 1717 blocks -- used to bootstrap R and F under the same scheme as S
+
+arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+BASE_always_long  -           3,694  3,694      0     4,446.5      1.204       72,824       12,649       -3,457  115  0.074  12.19
+R_router          low_only    2,485  1,233  1,252    -6,263.2     -2.520     -136,100     -176,580     -187,415  115  0.074  12.19
+F_filter          low_only    1,233  1,233      0      -923.0     -0.749      -23,836      -43,921      -49,297  115  0.074  12.19
+R_router          non_high    3,694  2,442  1,252    -6,234.0     -1.688     -140,786     -200,961     -217,067  115  0.074  12.19
+F_filter          non_high    2,442  2,442      0      -893.8     -0.366      -28,522      -68,302      -78,949  115  0.074  12.19
+S_short_only      -           1,252      0  1,252    -5,340.2     -4.265     -112,264     -132,659     -138,118  115  0.074  12.19
+  identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+  identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+  DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+  NET $ PER SESSION with 95% SEGMENT-BLOCK bootstrap CI (4,000 draws, 1717 blocks resampled whole).
+  'per session' = averaged over ALL 3,694 sessions in the population, flat sessions included at $0, so total = per-session x 3,694.
+  arm                   trades                        $4.36 FLOOR                     $20.65 PRIMARY                      $25.01 STRESS
+  BASE_always_long       3,694        19.71 [   -18.65,    55.75]         3.42 [   -34.94,    39.46]        -0.94 [   -39.30,    35.10]
+  R_router[low_only]     2,485       -36.84 [   -71.23,    -4.69]       -47.80 [   -82.06,   -15.64]       -50.73 [   -84.96,   -18.59]
+  F_filter[low_only]     1,233        -6.45 [   -30.37,    15.17]       -11.89 [   -35.80,     9.80]       -13.35 [   -37.22,     8.32]
+  R_router[non_high]     3,694       -38.11 [   -77.55,    -0.85]       -54.40 [   -93.84,   -17.14]       -58.76 [   -98.20,   -21.50]
+  F_filter[non_high]     2,442        -7.72 [   -37.39,    20.34]       -18.49 [   -48.15,     9.69]       -21.37 [   -51.05,     6.79]
+  S_short_only           1,252       -30.39 [   -54.50,    -6.68]       -35.91 [   -60.03,   -12.24]       -37.39 [   -61.51,   -13.74]
+
+  THE SHORT ARM ALONE, resampled by WHOLE HIGH-STATE EPISODE (common.block_bootstrap_by_episode, K=115, 4,000 draws):
+    net_$4.36_FLOOR      mean $/SHORT session =    -89.67   95% CI [  -185.07,     -8.94]   p=0.025   total $    -112,264
+    net_$20.65_PRIMARY   mean $/SHORT session =   -105.96   95% CI [  -201.36,    -25.23]   p=0.005   total $    -132,659
+    net_$25.01_STRESS    mean $/SHORT session =   -110.32   95% CI [  -205.72,    -29.59]   p=0.004   total $    -138,118
+    gross mean points per short session = -4.2654 pts    breakeven at the PRIMARY cost = 1.0325 pts    -> DOES NOT CLEAR
+    session-level t on the short leg = -2.30  <-- DIAGNOSTIC ONLY, NOT inference (sessions inside an episode are not independent)
+
+  PLACEBO 1 -- CIRCULAR-SHIFT null (2,000 rotations of the high mask; count of shorts and episode block structure held EXACTLY fixed):
+    observed net(S) @ $20.65 = $    -132,659     null mean $     -56,378  sd $    35,579
+    null 5th/50th/95th pct = $-115,440 / $-56,929 / $2,387
+    one-sided p (fraction of rotations at least as good) = 0.9835
+  PLACEBO 2 -- i.i.d. rate-matched random short (1,252 random sessions, 1,000 draws). WEAKER control -- it destroys the episode clustering, so it understates the null spread. Reported for completeness only.
+    null mean $     -55,746  sd $    34,830   one-sided p = 0.9870
+----------------------------------------------------------------------------------------------------
+SPEC (b-VIX) VIX 5-day log change   signal = vix__d5
+  SECONDARY -- S&P 500 vol index applied to an NDX future
+  population: 3,690 FULL sessions, 2007-02-27 .. 2021-12-31   (causal 252-obs tercile; the first 252 classifiable rows are NaN by construction and are dropped)
+  high-state sessions (top tercile of the CHANGE, we SHORT these): 1,258   low: 1,213   mid: 1,219
+  EPISODES (high state, gap>=10d): K=173   rho_bar=0.0704   K_eff=13.20
+    episode sizes: min=1 p25=3 median=6 p75=10 max=34   top-5 share of high sessions 10.5%
+    SEGMENT partition covering ALL sessions (one block per episode + one per gap): 763 blocks -- used to bootstrap R and F under the same scheme as S
+
+arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+BASE_always_long  -           3,690  3,690      0     4,458.0      1.208       73,072       12,962       -3,127  173  0.070  13.20
+R_router          low_only    2,471  1,213  1,258       973.0      0.394        8,686      -31,566      -42,340  173  0.070  13.20
+F_filter          low_only    1,213  1,213      0     1,162.5      0.958       17,961       -1,798       -7,087  173  0.070  13.20
+R_router          non_high    3,690  2,432  1,258     4,079.0      1.105       65,492        5,382      -10,707  173  0.070  13.20
+F_filter          non_high    2,432  2,432      0     4,268.5      1.755       74,766       35,149       24,546  173  0.070  13.20
+S_short_only      -           1,258      0  1,258      -189.5     -0.151       -9,275      -29,768      -35,253  173  0.070  13.20
+  identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+  identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+  DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+  NET $ PER SESSION with 95% SEGMENT-BLOCK bootstrap CI (4,000 draws, 763 blocks resampled whole).
+  'per session' = averaged over ALL 3,690 sessions in the population, flat sessions included at $0, so total = per-session x 3,690.
+  arm                   trades                        $4.36 FLOOR                     $20.65 PRIMARY                      $25.01 STRESS
+  BASE_always_long       3,690        19.80 [   -14.42,    53.69]         3.51 [   -30.71,    37.40]        -0.85 [   -35.07,    33.04]
+  R_router[low_only]     2,471         2.35 [   -27.02,    32.58]        -8.55 [   -37.84,    21.64]       -11.47 [   -40.79,    18.60]
+  F_filter[low_only]     1,213         4.87 [   -14.78,    24.32]        -0.49 [   -20.03,    18.79]        -1.92 [   -21.45,    17.28]
+  R_router[non_high]     3,690        17.75 [   -15.95,    51.00]         1.46 [   -32.24,    34.71]        -2.90 [   -36.60,    30.35]
+  F_filter[non_high]     2,432        20.26 [    -5.06,    45.09]         9.53 [   -15.76,    34.22]         6.65 [   -18.55,    31.31]
+  S_short_only           1,258        -2.51 [   -24.23,    20.12]        -8.07 [   -29.72,    14.42]        -9.55 [   -31.17,    13.01]
+
+  THE SHORT ARM ALONE, resampled by WHOLE HIGH-STATE EPISODE (common.block_bootstrap_by_episode, K=173, 4,000 draws):
+    net_$4.36_FLOOR      mean $/SHORT session =     -7.37   95% CI [   -63.12,     48.15]   p=0.802   total $      -9,275
+    net_$20.65_PRIMARY   mean $/SHORT session =    -23.66   95% CI [   -79.41,     31.86]   p=0.403   total $     -29,768
+    net_$25.01_STRESS    mean $/SHORT session =    -28.02   95% CI [   -83.77,     27.50]   p=0.325   total $     -35,253
+    gross mean points per short session = -0.1506 pts    breakeven at the PRIMARY cost = 1.0325 pts    -> DOES NOT CLEAR
+    session-level t on the short leg = -0.07  <-- DIAGNOSTIC ONLY, NOT inference (sessions inside an episode are not independent)
+
+  PLACEBO 1 -- CIRCULAR-SHIFT null (2,000 rotations of the high mask; count of shorts and episode block structure held EXACTLY fixed):
+    observed net(S) @ $20.65 = $     -29,768     null mean $     -55,524  sd $    32,561
+    null 5th/50th/95th pct = $-108,313 / $-55,933 / $-1,456
+    one-sided p (fraction of rotations at least as good) = 0.2140
+  PLACEBO 2 -- i.i.d. rate-matched random short (1,258 random sessions, 1,000 draws). WEAKER control -- it destroys the episode clustering, so it understates the null spread. Reported for completeness only.
+    null mean $     -56,977  sd $    35,971   one-sided p = 0.2220
+----------------------------------------------------------------------------------------------------
+SPEC (c-VIX) VIX z vs trailing 21   signal = vix__z21
+  SECONDARY -- S&P 500 vol index applied to an NDX future
+  population: 3,674 FULL sessions, 2007-03-22 .. 2021-12-31   (causal 252-obs tercile; the first 252 classifiable rows are NaN by construction and are dropped)
+  high-state sessions (top tercile of the CHANGE, we SHORT these): 1,254   low: 1,225   mid: 1,195
+  EPISODES (high state, gap>=10d): K=116   rho_bar=0.0444   K_eff=18.98
+    episode sizes: min=1 p25=4 median=9 p75=14 max=61   top-5 share of high sessions 16.2%
+    SEGMENT partition covering ALL sessions (one block per episode + one per gap): 564 blocks -- used to bootstrap R and F under the same scheme as S
+
+arm               long_leg   trades   long  short   gross_pts  pts/trade     net$4.36    net$20.65    net$25.01    K    rho  K_eff
+BASE_always_long  -           3,674  3,674      0     4,451.5      1.212       73,011       13,162       -2,857  116  0.044  18.98
+R_router          low_only    2,479  1,225  1,254     1,132.2      0.457       11,837      -28,546      -39,355  116  0.044  18.98
+F_filter          low_only    1,225  1,225      0     1,597.5      1.304       26,609        6,654        1,313  116  0.044  18.98
+R_router          non_high    3,674  2,420  1,254     3,521.0      0.958       54,401       -5,448      -21,467  116  0.044  18.98
+F_filter          non_high    2,420  2,420      0     3,986.2      1.647       69,174       29,752       19,201  116  0.044  18.98
+S_short_only      -           1,254      0  1,254      -465.2     -0.371      -14,772      -35,200      -40,668  116  0.044  18.98
+  identity check  R = F + S  (low_only): |diff| = 0.000000000  -> PASS
+  identity check  R = F + S  (non_high): |diff| = 0.000000000  -> PASS
+  DIAGNOSTIC: if net(R) ~ net(F) the router is exposure reduction in a costume.
+
+  NET $ PER SESSION with 95% SEGMENT-BLOCK bootstrap CI (4,000 draws, 564 blocks resampled whole).
+  'per session' = averaged over ALL 3,674 sessions in the population, flat sessions included at $0, so total = per-session x 3,674.
+  arm                   trades                        $4.36 FLOOR                     $20.65 PRIMARY                      $25.01 STRESS
+  BASE_always_long       3,674        19.87 [   -14.29,    53.75]         3.58 [   -30.58,    37.46]        -0.78 [   -34.94,    33.10]
+  R_router[low_only]     2,479         3.22 [   -22.38,    29.65]        -7.77 [   -33.54,    18.58]       -10.71 [   -36.44,    15.63]
+  F_filter[low_only]     1,225         7.24 [    -7.28,    22.72]         1.81 [   -12.44,    17.09]         0.36 [   -13.87,    15.54]
+  R_router[non_high]     3,674        14.81 [   -18.54,    48.66]        -1.48 [   -34.83,    32.37]        -5.84 [   -39.19,    28.01]
+  F_filter[non_high]     2,420        18.83 [    -7.00,    45.92]         8.10 [   -17.49,    35.28]         5.23 [   -20.31,    32.41]
+  S_short_only           1,254        -4.02 [   -24.84,    17.90]        -9.58 [   -30.30,    11.87]       -11.07 [   -31.79,    10.21]
+
+  THE SHORT ARM ALONE, resampled by WHOLE HIGH-STATE EPISODE (common.block_bootstrap_by_episode, K=116, 4,000 draws):
+    net_$4.36_FLOOR      mean $/SHORT session =    -11.78   95% CI [   -70.67,     41.95]   p=0.671   total $     -14,772
+    net_$20.65_PRIMARY   mean $/SHORT session =    -28.07   95% CI [   -86.96,     25.66]   p=0.301   total $     -35,200
+    net_$25.01_STRESS    mean $/SHORT session =    -32.43   95% CI [   -91.32,     21.30]   p=0.235   total $     -40,668
+    gross mean points per short session = -0.3710 pts    breakeven at the PRIMARY cost = 1.0325 pts    -> DOES NOT CLEAR
+    session-level t on the short leg = -0.18  <-- DIAGNOSTIC ONLY, NOT inference (sessions inside an episode are not independent)
+
+  PLACEBO 1 -- CIRCULAR-SHIFT null (2,000 rotations of the high mask; count of shorts and episode block structure held EXACTLY fixed):
+    observed net(S) @ $20.65 = $     -35,200     null mean $     -57,341  sd $    31,535
+    null 5th/50th/95th pct = $-109,139 / $-57,210 / $-4,472
+    one-sided p (fraction of rotations at least as good) = 0.2415
+  PLACEBO 2 -- i.i.d. rate-matched random short (1,254 random sessions, 1,000 draws). WEAKER control -- it destroys the episode clustering, so it understates the null spread. Reported for completeness only.
+    null mean $     -55,071  sd $    35,207   one-sided p = 0.2910
+
+====================================================================================================
+[7] ADJUDICATION
+====================================================================================================
+  Decision rule, fixed before the numbers were read and printed verbatim from the
+  brief: DEAD unless (i) the SHORT arm (S) ALONE clears costs at the PRIMARY
+  $20.65 line, AND (ii) the router is distinguishable from the filter. Because
+  net(R)-net(F) == net(S) identically, (ii) reduces to net(S) being distinguishable
+  from zero under the episode block bootstrap.
+
+  spec                                            K  K_eff  gross pts/short   net$/short @20.65                     95% CI  p_shift
+  (a) VXN 1-day log change                       83  11.28          -6.3857             -148.36 [    -271.40,     -50.76]   0.9960
+  (b) VXN 5-day log change                      137  11.86          -2.4840              -70.33 [    -139.87,      -3.32]   0.6830
+  (c) VXN z-score vs trailing 21-session mean    86  16.55          -0.8682              -38.01 [    -111.81,      39.97]   0.2910
+  (L) VXN LEVEL (the confounded control)         53  22.59          -1.7768              -56.19 [    -146.21,      23.52]   0.5010
+  (a-VIX) VIX 1-day log change                  115  12.19          -4.2654             -105.96 [    -201.36,     -25.23]   0.9835
+  (b-VIX) VIX 5-day log change                  173  13.20          -0.1506              -23.66 [     -79.41,      31.86]   0.2140
+  (c-VIX) VIX z vs trailing 21                  116  18.98          -0.3710              -28.07 [     -86.96,      25.66]   0.2415
+
+  breakeven on a full-session round turn at $20.65 = 1.0325 NQ points. Compare the 'gross pts/short' column to it.
+
+  PRIMARY (VXN change) arms passing BOTH clauses: NONE
+  family-wise circular-shift p over the 3 change variants = 0.5840
+  matched LEVEL control: net $/short = -56.19 [-146.21,23.52]  -> also fails
+
+  VERDICT: DEAD. No VXN-change variant produces a short leg that both clears the
+  $20.65 primary cost and is distinguishable from zero under the whole-episode
+  block bootstrap. Since net(R)-net(F) == net(S), the router is NOT
+  distinguishable from the filter: any apparent router benefit is exposure
+  reduction wearing a costume, which is the closed anti-filter family.
+
+  MAGNITUDE, stated plainly rather than dressed up:
+    variant a: gross -6.3857 pts per short session vs a 1.0325 pt cost floor -> -6.18x the round turn; net $-148.36/short session over 954 shorts = $-141,540 across 11 years.
+    variant b: gross -2.4840 pts per short session vs a 1.0325 pt cost floor -> -2.41x the round turn; net $-70.33/short session over 951 shorts = $-66,883 across 11 years.
+    variant c: gross -0.8682 pts per short session vs a 1.0325 pt cost floor -> -0.84x the round turn; net $-38.01/short session over 952 shorts = $-36,189 across 11 years.
+
+  EVIDENCE STATUS of every number above: DISCOVERY_CONTAMINATED.
+
+====================================================================================================
+[8] THE SIGN FLIP -- the data says the OPPOSITE of the mechanism, and it is large
+====================================================================================================
+  The assigned mechanism predicts NEGATIVE intraday drift after a high ex-ante
+  implied-variance reading. On the CHANGE specification the measured drift is
+  strongly POSITIVE, so the short arm loses in a way that is itself distinguishable
+  from zero. Reporting only 'the short lost' would hide a real signed regularity, so
+  the flipped arm is measured here with the SAME machinery, and then attacked.
+
+  This section is EXPLORATORY AND SELECTED AFTER SEEING THE SIGN. It is not a
+  candidate; it is a lead, and section [8d] is the reason it probably is not even
+  that. Everything below is DISCOVERY_CONTAMINATED twice over.
+
+  [8a] LONG-on-high-change, one round turn per session, all three cost lines,
+       95% whole-episode block-bootstrap CI:
+       variant                          n_hi    K  K_eff  gross pts  $/sess @20.65                     95% CI
+       a VXN d1                          954   83  11.28     +6.386         107.06 [       9.46,     230.10]
+       b VXN d5                          951  137  11.86     +2.484          29.03 [     -37.98,      98.57]
+       c VXN z21                         952   86  16.55     +0.868          -3.29 [     -81.27,      70.51]
+       L VXN level                       858   53  22.59     +1.777          14.89 [     -64.82,     104.91]
+       a VIX d1                        1,252  115  12.19     +4.265          64.66 [     -16.07,     160.06]
+       (BASE always-long on the (a) population earns +1.688 gross pts/session, so
+        the (a) high state is roughly FOUR TIMES the unconditional drift.)
+
+  [8b] FAMILY-WISE, SIGN-AGNOSTIC circular-shift null. The family actually searched
+       is 3 variants x 2 signs = 6. Each rotation is applied to all three masks and
+       the MAXIMUM over all six arms is recorded, so the null is the null of the
+       maximum -- which is what a post-hoc sign choice must be judged against.
+       observed  variant a  sign LONG   net @$20.65 = $     101,496
+       observed  variant b  sign LONG   net @$20.65 = $      27,625
+       observed  variant c  sign LONG   net @$20.65 = $      -3,129
+       observed  variant c  sign SHORT  net @$20.65 = $     -36,189
+       observed  variant b  sign SHORT  net @$20.65 = $     -66,695
+       observed  variant a  sign SHORT  net @$20.65 = $    -140,524
+       best observed arm = variant a LONG  $101,496
+       null of the MAXIMUM over 6 arms (2,000 rotations): mean $37,297  95th $80,150  max $124,236
+       FAMILY-WISE, SIGN-AGNOSTIC one-sided p = 0.0075
+
+  [8c] CONCENTRATION of the (a) flipped arm -- does it live in a few blocks?
+       total net(LONG on high-d1) @ $20.65 = $102,140 over 83 episodes
+       episode                       n        net $  share of total
+       2019-12-02 .. 2020-05-22     45       48,881          47.9%
+       2021-11-23 .. 2021-12-21     11       16,923          16.6%
+       2020-06-22 .. 2020-07-14      7       12,175          11.9%
+       2018-05-30 .. 2018-07-31     16        9,295           9.1%
+       2020-12-22 .. 2021-04-23     32        8,829           8.6%
+       top-1 episode share 47.9%   top-3 76.3%   top-5 94.1%   episodes with net > 0: 47/83
+       by calendar year:
+              2010     2011     2012     2013     2014     2015     2016     2017     2018     2019     2020     2021
+             2,132     -877   -8,330     -525   -3,208   -7,173    3,775    4,016    6,237    6,080   76,356   23,656
+       years positive: 7/12
+       DIAGNOSTIC (not a redefinition of the population -- the full-sample number
+       above stands): excluding calendar 2020 leaves $25,784 over 879 shorts = $29.33/session, 25% of the total.
+
+  [8d] THE ATTACK THAT MATTERS -- is this variance REPRICING, or is it just
+       short-term price reversal wearing a VXN badge?
+       A one-day jump in VXN is very nearly the same event as a one-day fall in NQ.
+       If the pure PRICE signal reproduces the effect, then nothing about the price
+       of variance is being used and the 'repricing' claim is empty.
+       matched population: 2,805 sessions 2010-09-21 .. 2021-12-31
+
+       high state defined by                   n    K  gross pts  $/sess @20.65                     95% CI
+       VXN 1-day log change (the spec)       953   83     +6.365         106.64 [       8.49,     229.25]
+       prior-day NQ RTH return, negated      942   84     +7.863         136.61 [       7.71,     297.22]
+       tonight's overnight gap, negated      940   71     +1.059           0.54 [     -87.54,     100.16]
+
+       OVERLAP: VXN-d1-high and prior-day-down-high agree on 590 of 1,305 union sessions = 45.2% (Jaccard).
+       corr(vxn__d1, prior-day NQ return) = -0.597
+
+       DOUBLE SORT -- gross RTH points, and net $/session at $20.65, by the two
+       states jointly. If VXN change carries information the price signal does not,
+       the VXN-high column must beat the VXN-low column WITHIN a price row.
+                                       VXN d1 LOW            VXN d1 MID           VXN d1 HIGH
+       prior-day UP           -2.96pt $    -80 n579    -5.37pt $   -128 n265    -1.95pt $    -60 n106 
+       prior-day flat         +4.95pt $     78 n270    -3.46pt $    -90 n386    +2.51pt $     30 n257 
+       prior-day DOWN         +0.94pt $     -2 n100    +6.69pt $    113 n252    +9.54pt $    170 n590 
+
+       WITHIN the prior-day-DOWN row, VXN-HIGH minus VXN-LOW, episode-bootstrapped:
+         VXN HIGH  n= 590  K=131  gross  +9.536 pts  net $  170.07/sess  95% CI [   59.11,  306.09]
+         VXN LOW   n= 100  K= 77  gross  +0.935 pts  net $   -1.95/sess  95% CI [ -292.34,  285.45]
+
+  [8e] READ-OFF
+       The flipped arm is NOT the mechanism under test -- it is its refutation plus
+       a well-known short-horizon reversal. Whether it is even a lead depends on
+       [8b] (does it survive the sign-agnostic family-wise rotation null),
+       [8c] (does it survive removing one calendar year) and [8d] (does VXN add
+       anything to the prior-day price move). Those three answers are printed above
+       and the summary states them without decoration.
+
+====================================================================================================
+[9] GATE TABLE -- clauses fixed in the brief before any number was read,
+    evaluated by the program. Nothing in this table is assembled by hand.
+====================================================================================================
+  GATE                                               PASS
+  G1 premise: CHANGE is not a realised-vol proxy     PASS
+      SPEC     |corr(signal, realised_vol_21)| < 0.30
+      OBSERVED corr(vxn__d1, rv21) = -0.038   (LEVEL is +0.769)
+  G2 MECHANISM: high implied variance -> NEGATIVE intraday drift   FAIL
+      SPEC     gross pts on the short leg > 0
+      OBSERVED -6.3857 pts  (drift is POSITIVE, opposite sign)
+  G3 SHORT arm (S) alone clears the PRIMARY cost     FAIL
+      SPEC     net $/short session > 0 at $20.65 (1.0325 pts)
+      OBSERVED $-148.36/short session
+  G4 router distinguishable from filter              FAIL
+      SPEC     episode-bootstrap 95% CI on net(S) excludes 0
+      OBSERVED CI [-271.40, -50.76] -> excludes 0, but on the WRONG SIDE
+  G5 S beats the rate-matched circular-shift placebo   FAIL
+      SPEC     one-sided p < 0.05
+      OBSERVED p = 0.9960
+  G6 family-wise over the 3 change variants (short direction)   FAIL
+      SPEC     one-sided p < 0.05
+      OBSERVED p = 0.5840
+  TALLY: 1/6 PASS
+
+  VERDICT ON THE ASSIGNED MECHANISM: DEAD.
+  G2 fails by SIGN, not by magnitude, and G3/G5/G6 fail with it. The claim that
+  implied vol is a signed SHORT trigger is refuted on the change specification in
+  the strongest available way: the drift conditional on a large upward repricing of
+  NDX variance is POSITIVE and roughly four times the unconditional drift.
+
+  SECONDARY GATE TABLE on the FLIPPED arm (LONG on high VXN 1-day change). This arm
+  was selected AFTER seeing the sign; it is a lead, not a candidate, and it is
+  gated harder for exactly that reason.
+  H1 clears the primary cost                         PASS
+      SPEC     net $/session > 0 at $20.65
+      OBSERVED $107.06/session  (gross +6.386 pts vs a 1.0325 pt floor)
+  H2 episode-block CI excludes zero                  PASS
+      SPEC     95% CI on net $/session excludes 0
+      OBSERVED CI [9.46, 230.10]  (K=83, rho_bar=0.0776, K_eff=11.28)
+  H3 survives the SIGN-AGNOSTIC family-wise rotation null   PASS
+      SPEC     one-sided p < 0.05 against the max over 3 variants x 2 signs
+      OBSERVED p = 0.0075
+  H4 NOT carried by one episode                      FAIL
+      SPEC     largest single episode < 40% of total net
+      OBSERVED top-1 episode = 47.9% of total (2019-12-02 .. 2020-05-22); top-3 = 76.3%
+  H5 survives removing one calendar year             FAIL
+      SPEC     ex-2020 net >= 50% of full-sample net
+      OBSERVED ex-2020 = 25% of total = $29.33/session = $25,784 over 11 years
+  H6 VXN adds information beyond the PRICE reversal signal   FAIL
+      SPEC     VXN-change arm >= the prior-day-NQ-return arm
+      OBSERVED VXN +6.365 pts vs prior-day-price +7.863 pts -- the pure price signal is BETTER
+  TALLY: 3/6 PASS
+
+  VERDICT ON THE FLIPPED LEAD: not worth the one-shot window. It is statistically
+  alive (H1-H3 pass) and economically hollow (H4-H6 fail): half the money is one
+  COVID episode, three quarters is three episodes, removing 2020 leaves $29/session
+  and ~$2.3k/yr at one contract, and a signal with no implied vol in it at all --
+  yesterday's NQ return -- reproduces it and beats it. That is short-horizon price
+  reversal, an already-crowded axis, not the price of variance risk.
+
+  RULE PROPOSAL: NONE. Do not spend confirmation_one_shot on this specification.
+====================================================================================================
