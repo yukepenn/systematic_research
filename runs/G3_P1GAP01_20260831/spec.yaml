@@ -1,0 +1,173 @@
+run_id: G3_P1GAP01_20260831
+title: "LOCKED (Mode B) challenge: does OPENING STRENGTH - information P1's decision stack does not
+        observe at all - mark P1's right tail well enough to justify a SIZING layer after costs?"
+date: 2026-08-31
+campaign: GENESIS III - NQ CHAMPION CHALLENGE / WAVE F
+status: PREREGISTERED - written and committed BEFORE any arm P&L was computed
+live_enabled: NO
+spend: 0
+orders_placed: NO
+
+# ==================================================================================================
+# 0. PROVENANCE - stated so the selection debt is visible, not hidden
+# ==================================================================================================
+origin: runs/G3_TAILPROBE_00_20260831 (DISCOVERY MODE A, DISCOVERY_CONTAMINATED)
+what_the_discovery_run_established: >
+  On P1 trades entered at/after 09:30, a scale-free "opening strength" factor marks the right tail
+  of per-contract P&L. It survived a max-statistic circular-shift null that PRICES THE SEARCH over
+  11 features (p = 0.0000 raw) and then survived volatility normalisation with its own separate
+  null (p = 0.0020, best statistic 0.0954 against a null p95 of 0.0701).
+what_the_discovery_run_KILLED, and it matters: >
+  The raw Stage-1 winner `open_vs_on_low` (0.1170) COLLAPSED to 0.0368 under volatility
+  normalisation - it was scaling, not information. So did `on_range`, `on_vol` and
+  `prior_rth_range`. Any version of this challenge built on those is dead before it starts.
+selection_debt_admitted: >
+  11 features were examined. Four survived and they are FOUR MEASUREMENTS OF ONE FACTOR. Testing
+  all four here would be a hidden scan, so ONE is frozen below and the other three are never run.
+  The discovery statistic is a TAIL-RATE GAP, not money. Nothing about it implies dollars.
+
+# ==================================================================================================
+# 1. THE FROZEN OBJECT - one measurement, chosen for reasons stated BEFORE any economics
+# ==================================================================================================
+frozen_feature: open_loc_in_on_range
+definition: >
+  (rth_open - on_low) / (on_high - on_low), computed from
+  runs/G3_SESSTRUCT_00_20260831/out/session_structure.parquet, where on_high/on_low are the Globex
+  overnight extremes through the bar stamped 09:30 and rth_open is the OPEN of the bar stamped
+  09:31 (the 09:30:00 print). Known in full at 09:30:00.
+why_this_one_and_not_the_other_three: >
+  Chosen on THREE STATED PROPERTIES, none of which is its discovery statistic:
+   (a) BOUNDED to [0,1] by construction, so it cannot drift with index level or volatility regime
+       across 2022-2026. `gap` is in raw points and is era-dependent; that is a real defect for a
+       rule meant to survive a regime change, and ERABREAK01 (p=0.0011) says one occurred in
+       2022-05 inside the test window.
+   (b) It was the ONLY survivor whose statistic was UNCHANGED by volatility normalisation
+       (0.0912 -> 0.0912). gap moved 0.1102 -> 0.0954 and open_vs_on_high moved 0.0123 -> 0.0742.
+       An unchanged statistic is the strongest available evidence that it was never a scale artifact.
+   (c) It requires no reference to the prior session, so it has one fewer failure mode
+       (`gap_frac_of_prior_range` inherits any defect in prior_rth_range).
+  `gap` had the LARGER discovery statistic and is deliberately NOT chosen. Choosing the larger
+  statistic would be selecting on the outcome.
+
+# ==================================================================================================
+# 2. MECHANISM, SIGN AND SCOPE - all frozen before results
+# ==================================================================================================
+mechanism: >
+  P1 is LONG-ONLY. A session whose RTH open sits high in the overnight range has already resolved
+  its overnight auction upward before P1 takes its first RTH-hours position. The claim is that such
+  sessions carry a larger probability of a LARGE FAVOURABLE EXCURSION for a long, not a higher win
+  rate - which is the same mechanism class W42/W83 established for the incumbent quality score
+  (score predicts EXCURSION MAGNITUDE, median MFE 1.3 -> 5.5 ATR, and does NOT predict win
+  probability, which is flat at 35-40% across score levels).
+predicted_sign: POSITIVE. Higher open_loc -> larger right tail -> larger size. Stated in advance.
+scope_restriction_and_why_it_is_not_a_free_parameter: >
+  The rule applies ONLY to entries at/after 09:30. This is NOT tuning: the overnight range does not
+  EXIST before 09:30, so applying it earlier would be a look-ahead of hours. P1 takes ~59% of its
+  net overnight (W79), so this layer can touch at most the other ~43% of trades by construction,
+  and that ceiling is a property of the mechanism rather than a choice. Pre-09:30 trades keep the
+  incumbent size EXACTLY.
+type_classification: >
+  MECHANISM-POLICY / RISK SPECIFICATION, Type B: it redistributes a FIXED contract budget across an
+  UNCHANGED trade schedule. It is NOT new alpha and will not be described as such under any result.
+
+# ==================================================================================================
+# 3. ARMS - exactly two, frozen. No grid, no variants.
+# ==================================================================================================
+A0_INCUMBENT:
+  rule: "s = 1 + 1{causal quality score >= 3}, exactly as certified"
+  role: CONTROL. Must reproduce the executable object to the cent (G0).
+A1_OPENSTRENGTH:
+  name: P1SZ_OPENLOC
+  rule: >
+    For entries at/after 09:30 ONLY: s = 2 when open_loc_in_on_range >= tau_i, else the incumbent
+    size. tau_i is the CAUSAL (1 - r_i) quantile of open_loc over the PREVIOUS 250 post-09:30
+    entries, where r_i is the incumbent's OWN realised size-2 rate over those same previous 250
+    entries. Pre-09:30 entries take the incumbent size unchanged.
+  free_parameters: >
+    NONE beyond the incumbent's own (window 250, min-history 100). The size-2 RATE is inherited
+    causally from A0, so the contract budget is matched BY CONSTRUCTION rather than by fitting.
+    This is the same calibrator T2_P1SIZE01 used for A1/A2, deliberately, so the two runs are
+    comparable and this one cannot be accused of a friendlier budget rule.
+  what_it_does_NOT_do: >
+    It never reduces a size below the incumbent's and it never removes a trade. Trade count is
+    identical to A0 by construction. This is a SIZING layer, not a filter - section 40 is explicit,
+    and exposure-reducing rules are 10 for 10 in the wrong direction in this repository.
+
+# ==================================================================================================
+# 4. WINDOWS AND SEALS
+# ==================================================================================================
+window: "2022-01-02 -> 2026-07-31"
+population: >
+  The EXECUTABLE object's 2,439 NT8 closed trades
+  (runs/G2_AUG_INCUMBENT_READ_20260830/out/p1_trades_full.csv), joined to
+  runs/G3_SESSTRUCT_00_20260831/out/session_structure.parquet by 18:00->17:00 session date.
+  The Python chain is NOT used to generate trades - G3_EXECTRUTH_01 established that it is
+  object-divergent (double-lagged ATR), and this run must not inherit that defect.
+seal_compliance: "NO read of any session >= 2026-08-01. Rows dropped are printed."
+evidence_status: DISCOVERY_CONSUMED. 2026-05-31 -> 2026-07-31 is already DIRECTLY_BURNED.
+
+# ==================================================================================================
+# 5. GATES - every clause coded, table printed BY THE PROGRAM
+# ==================================================================================================
+G0_verification:
+  G0a: "A0 reproduces the executable object: 2,439 trades, and net to the cent on the NT8 window."
+  G0b: "SIZE-INVARIANCE identity holds: max|pnl - qty*(pnl/qty)| < 1e-9 and commission == 4.36*qty."
+  G0c: "Join rate to the session table >= 95%, and the unmatched trades are listed by reason."
+  if_G0_fails: "The arms are VOID and the run reports the verification failure only."
+
+G1_budget_matched: "|mean(size_A1)/mean(size_A0) - 1| <= 0.02 AND
+                    |sum(size_A1)/sum(size_A0) - 1| <= 0.02.  Both must hold."
+G2_risk_vector_not_one_number: >
+  A1 must beat A0 on the FULL risk vector via research_sdk/champion_eval.risk_vector, not on
+  fixed-DD alone (directive section 25 - random thinning alone moves fixed-DD by +$129-139/wk).
+  BINDING: A1's net/week must be >= A0's AND A1 must not worsen ES95 or maxDD by more than 5%.
+  A gain in fixed-DD income accompanied by a worse ES95 is recorded as a FAIL, not a trade-off.
+G3_tail_preserved: "A1's top-decile share of its own net >= 0.80 x A0's, AND trade count identical.
+                    An arm that wins by flattening the right tail FAILS even if it makes more money."
+G4_size_label_null: >
+  A1's fixed-DD weekly $ must exceed the 95th percentile of 1,000 random permutations of ITS OWN
+  size vector across the same entries, preserving the exact size multiset. W83 measured that size
+  DISPERSION alone adds skew irrespective of direction, so the arm must beat its own shuffled self.
+G4b_feature_null_that_prices_the_discovery: >
+  ADDITIONAL and specific to this run's provenance. The feature was found by a scan, so a
+  size-label shuffle is not enough. A1 must ALSO exceed the 95th percentile of 1,000 CIRCULAR
+  SHIFTS of the open_loc series across SESSIONS (preserving serial dependence and the exact feature
+  distribution). This asks the only question that matters: is it THIS feature on THESE sessions, or
+  would any similarly-distributed session-level series have done as well?
+G5_stability: "A1 beats A0 on the risk vector in >= 60% of 25 rolling 24-month windows AND in
+                    >= 4 of 5 leave-one-calendar-year-out recomputations."
+G6_block_bootstrap: "stationary bootstrap (mean block 4 weeks, 10,000 draws) of the weekly
+                    DIFFERENCE series (A1 minus A0): the 90% CI must exclude 0. A t-statistic is
+                    printed beside it as a DIAGNOSTIC and is never the test."
+decision_rule: "ALL of G1..G6 -> CANDIDATE, queued for the champion board. NOT promoted, NOT
+                    deployed, NOT built. ANY fail -> recorded FAIL, population never redefined."
+cost_lines_all_printed: "$4.36/ctrRT (NT8 basis) primary; plus $14.44 and $20.65 modelled spread.
+                    G1 forces the contract budgets equal, so all three lines must agree in sign."
+
+# ==================================================================================================
+# 6. TRAPS NAMED BEFORE RUNNING
+# ==================================================================================================
+traps:
+  - "PROVENANCE: this feature was selected by a scan over 11 candidates. G4b exists precisely
+     because G4 does not price that. If G4b fails, the discovery was the scan, not the feature."
+  - "The four surviving discovery features are ONE factor. Only open_loc_in_on_range is tested.
+     If it fails, the family is closed AT THIS FORMULATION and `gap` is NOT then tried - that
+     would be exactly the parameter rescue section 37 rejects."
+  - "T2_P1SIZE01 failed TWO size maps on gates G2 and G5 using the same calibrator. The base rate
+     for this class of arm in this repository is 0 for 2. A positive result here should be
+     disbelieved until G4b and G5 are checked, and the report must lead with those two."
+  - "Only ~43% of P1's trades are even eligible (post-09:30). A layer that touches half the book
+     cannot produce a large book-level effect, and any large effect is therefore evidence of a bug
+     rather than of alpha. The report must state the eligible-trade count next to every figure."
+  - "P1 is long-only and open_loc is a directional/momentum quantity. If A1 wins, part of the win
+     may be a market-direction tilt rather than an excursion forecast. The report must show A1-A0
+     split by calendar year, since 2022 was a bear year and 2023-2025 were not."
+  - "Sessions where the overnight range is degenerate (on_high == on_low) give an undefined
+     open_loc. They must be assigned the INCUMBENT size, counted, and never dropped."
+
+prohibitions:
+  - no order, deploy, enable, disable, stop or modify on any account
+  - no edit to any production .cs file or to research/weekly_edge/src/
+  - no read of any session >= 2026-08-01
+  - no second feature from the surviving family may be tested in this run or in a successor
+  - no promotion, no build, and no deployment may originate from this run
