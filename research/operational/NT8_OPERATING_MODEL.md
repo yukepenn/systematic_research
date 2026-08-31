@@ -192,3 +192,70 @@ strategy↔account position reconciliation · crash-safe strategy state · proce
 The architectural exit, if these ever become unacceptable, is to demote NT8 to an **execution
 endpoint** (ATI is already enabled here, port 36973) with signals from the Python substrate. Cost:
 we would own position state, bracket management and broker reconciliation ourselves.
+
+---
+
+## 8. EXECUTION PLAN — the one deliberate restart
+
+**Owner authorized (2026-08-30 night): restart permitted, full permissions, a brief trading pause is
+acceptable.** The plan below needs **no pause at all**, which is strictly better.
+
+### Timing: **Monday 2026-08-31, 17:00–18:00 ET** — the daily session break
+
+Not tonight. The restart buys two things — flushing the retired types from NT8's in-memory image, and
+running the persistence experiment — and **neither is urgent**, because the code currently executing
+is already the correct code. Doing it in the daily 17:00–18:00 break costs **zero** trading time,
+whereas restarting mid-session costs real P1 overnight exposure. Both legs are also **structurally
+flat** at session end (P1 `ForcedFlatMin=21` + last-bar exit; XM `ExitHm` 15:45), which satisfies the
+load-bearing rule *never restart while positioned*. ~18 hours of runway before the 09-06 block.
+
+*(Minor accepted cost: `CachedTokenExpiration` is 2026-08-30 23:46, so Monday's restart will likely
+prompt an interactive login. The owner is at the machine; this is an annoyance, not a risk, and it is
+not worth losing a session to avoid.)*
+
+### December data pre-flight — DONE 2026-08-30 23:04 ET, and it confirms "do not roll early"
+
+`GetBars(NQ 12-26)` **succeeded** — NQZ6 minute data downloads fine, so the roll will not be blocked
+by a missing-history surprise. ✅ Item 2 of §5 is cleared for NQ.
+
+But the liquidity comparison is stark and independently confirms §0:
+
+| | NQU6 (Sept) | NQZ6 (Dec) |
+|---|---|---|
+| session volume | **5,532** | **262** (~5 %) |
+| bid/ask | 29475.00 / 29476.50 (**6 ticks**) | 29650.50 / 29654.00 (**14 ticks**) |
+| per-minute volume | — | 1, 2, 4 |
+
+**Rolling early would put the paper book on a contract with ~5 % of the liquidity and a >2× spread**,
+contaminating exactly the execution evidence the shadow ledger exists to collect.
+
+### Sequence
+
+| step | who | action |
+|---|---|---|
+| 0 | me | Confirm both legs **Flat**, `activeOrderCount 0`, session closed. Fresh `db\NinjaTrader.sqlite` backup. Snapshot the grid for comparison. |
+| 1 | **owner** | Control Center → **Workspaces → Save Workspace**. *This is the experiment.* |
+| 2 | **owner** | **File → Exit.** If prompted *"Do you want to save workspace 'Default Yuke'?"* → **YES**. Relaunch NT8, log in if asked, wait for **Simulation** connected. |
+| 3 | me | **Read the experiment result.** `ListAllStrategies`: rows present ⇒ persistence confirmed, future restarts are a 2-click re-arm. Rows absent ⇒ hypothesis dead, the model becomes *full redeploy, always*. **Either result is a win — it ends the guessing.** |
+| 4 | me | Verify the cleanup landed: read the DLL TypeDef table and `SearchNinjaScriptSymbols` — expect **only 2** WeeklyEdge types in **ONE** assembly (today there are 6 across 3). |
+| 5 | me | Re-arm both on **NQ 09-26** (⛔ *not* December), `DaysToLoad=365`, **plus one improvement: set P1 `ExpectInstrument="NQ 09-26"`** — this arms HD-05, which is currently disabled and is P1's only guard besides the latching roll block. Safe: `Instrument.Expiry` is the month marker 2026-09-01, so it matches. |
+| 6 | me | Full §6 acceptance set. **The check that matters: `ROLL-PLAN blockNewEntriesFrom` must read 2026-09-08 (P1) / 2026-09-06 (XM) — i.e. in the FUTURE.** If either reads a past date, the book is latched-dead: stop and do not trade. |
+
+### Then the calendar
+
+- **2026-09-06 (XM) / 09-08 (P1)** — the book stops taking **new entries**. **Expected, not a fault.**
+  Record it in the shadow ledger as a *structural gap* so it is never read as a signal drought.
+- **2026-09-17 (P1) / 09-19 (XM)** — roll: re-point all four series to **12-26**, set P1
+  `ExpectInstrument="NQ 12-26"`, re-enable, and **assert the new `ROLL-PLAN` points at the December
+  roll (~2026-11-30)**. Re-run the December pre-flight for **ES/RTY/YM 12-26** first — only NQ has
+  been cleared.
+- ⛔ **No restarts between 09-06 and 09-17.** Pointless (the book is already blocked) and it invites
+  a re-enable inside the latch window.
+
+### Standing rules this establishes
+
+1. **Never restart while positioned.** Every stop in this book is synthetic and dies with the
+   strategy — a dead strategy holding a position leaves it **naked**.
+2. **UNSAVED = UNDEPLOYED.**
+3. **After every enable, run the acceptance set — including the ROLL-PLAN assertion.**
+4. Restarts are **scheduled, flat, and in the 17:00–18:00 break.** Never ad-hoc mid-session.
