@@ -1,0 +1,27 @@
+run_id: G3_ROLLCOST_00_20260831
+title: "What does the roll blackout actually cost? DIAGNOSTIC ONLY - no rule, no candidate, no P&L
+        strategy. Measures net historically earned inside the guard's no-new-entry window."
+date: 2026-08-31
+campaign: GENESIS III / WAVE H - execution verdict (directive section H)
+status: DIAGNOSTIC - this run has no gates because it tests no hypothesis
+live_enabled: NO
+spend: 0
+question: >
+  The roll guard blocks NEW ENTRIES from ~8 days before the stored rollover, and the observed safe
+  re-enable is ~1 day after it. That is a ~9-day window, four times a year, in which the live book
+  takes no new position. Nobody has ever priced it.
+method: >
+  Classify every P1 and XM trade by whether its ENTRY falls inside such a window, using third-Friday
+  quarterly rollovers for 2022-2026, and report the net earned inside versus outside. Three
+  procedures are reported (lead 8 / re-enable +1, lead 8 / re-enable same-day, lead 4 / re-enable +1)
+  so the sensitivity to the assumed window is visible rather than hidden.
+what_this_is_NOT: >
+  NOT a signal, NOT a candidate, and NOT a reason to weaken the guard - the guard exists so the book
+  never holds an expiring contract and that is correct. It is an UPPER BOUND on the cost of the
+  current roll PROCEDURE (stop -> wait out the window -> redeploy after), because some of the
+  foregone net would be recovered by trades just outside the window.
+prohibitions:
+  - no order, deploy, enable, disable, stop or modify on any account
+  - no change to the roll guard or to any .cs file
+  - no read of any session >= 2026-08-01 is required; the trade ledger ends 2026-08-25 and the
+    2026-08 rows are DIRECTLY_BURNED for these legs by the owner-authorised read G00041

@@ -1,0 +1,43 @@
+================================================================================================
+G3_ROLLCOST_00 - what does the roll blackout actually cost?  DIAGNOSTIC, no P&L rule.
+================================================================================================
+The guard blocks NEW ENTRIES from `blockNewEntriesFrom` (8 days before the stored rollover)
+and the observed safe re-enable is ~1 day after it. That is a ~9-day no-new-entry window,
+4x per year. This measures what the book HISTORICALLY EARNED inside those windows.
+
+[AS OBSERVED (block 8d before, safe re-enable 1d after)]
+   trades inside  291 / 2817  (10.3%)   net inside $   106,106 / $537,353  (19.7%)   = $   437/wk
+
+[if re-enable were same-day as the roll]
+   trades inside  269 / 2817  ( 9.5%)   net inside $    81,566 / $537,353  (15.2%)   = $   336/wk
+
+[if the guard's leadDays were 4 instead of 8]
+   trades inside  192 / 2817  ( 6.8%)   net inside $    81,595 / $537,353  (15.2%)   = $   336/wk
+
+BY YEAR (as observed):
+   2022  net $    41,732   in-blackout $   -13,521  (-32.4%)
+   2023  net $    82,615   in-blackout $    13,796  ( 16.7%)
+   2024  net $   180,102   in-blackout $    48,197  ( 26.8%)
+   2025  net $   136,676   in-blackout $    29,774  ( 21.8%)
+   2026  net $    96,228   in-blackout $    27,860  ( 29.0%)
+
+BY LEG (as observed):
+   P1   250/2439 trades   $    47,685 / $354,576  ( 13.4%)
+   XM    41/378 trades   $    58,421 / $182,777  ( 32.0%)
+
+================================================================================================
+WHAT THIS IS AND IS NOT
+================================================================================================
+  IS: the FOREGONE amount under the current roll PROCEDURE (stop -> wait out the window ->
+      redeploy after the rollover). It is an UPPER BOUND on the cost: some of it would be
+      recovered by trades just outside the window, and 2022 is negative (-32.4%), so the
+      blackout HELPED in the old regime.
+  IS NOT: an unavoidable cost, and NOT a signal. The guard exists to stop the book holding
+      an expiring contract - that is correct and must not be weakened. What is avoidable is
+      SITTING OUT. Redeploying onto the NEXT contract at or just before blockNewEntriesFrom
+      resolves a NEW rollover date (December, for NQ 12-26) and no block applies.
+  COST OF THE FIX: trading the back month for ~2 days before the natural volume crossover,
+      i.e. a wider spread on a handful of sessions. That is a small, measurable price for
+      ~9 days x 4 per year of restored trading.
+  NOT A RECOMMENDATION TO ACT TODAY: changing the roll procedure is an OWNER decision and
+      the 2026-09 roll is the first opportunity. No live action is taken by this run.
