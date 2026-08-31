@@ -83,7 +83,45 @@ recomputed here and **not quoted**. Reproducing it requires
 `research/weekly_edge/ninjascript/reference/xm_reference_decisions.csv`, which has
 `desired_direction`. Unconditionally, `corr(P1, XM) = +0.159` (recosted +0.157).
 
-## 5. STATUS OF THESE NUMBERS
+## 5. 🔴 A 2× DISAGREEMENT INSIDE THE REPOSITORY, RESOLVED
+
+`G2_OQ6_MAPPING_20260830` reports **M_11 maxDD = $21,740.44**. This run reports **$45,138**. Both are
+in the repo, and the smaller one was the campaign's capital figure for a while.
+
+| window | weeks | net/wk | **maxDD** | fixDD/wk | worst wk |
+|---|---:|---:|---:|---:|---:|
+| **FULL** 2021-W52 → 2026-W35 | 243 | 2,211 | **45,138** | 992 | −14,539 |
+| OQ6's 2022-W27 → 2026-W31 | 212 | 2,509 | **28,596** | 1,776 | −14,539 |
+| from 2022-W27 to end | 216 | 2,562 | 28,596 | 1,814 | −14,539 |
+| 2022 only | 52 | 813 | 45,138 | 365 | −14,508 |
+| **H1 2022 only** | 26 | **−592** | **45,138** | −266 | −14,508 |
+| 2023 onward | 190 | 2,609 | 28,596 | 1,847 | −14,539 |
+
+```
+maximum drawdown  peak 2022-W05 -> trough 2022-W17   depth $45,138   duration 12 weeks
+second worst      peak 2026-W27 -> trough 2026-W31   depth $28,596   duration  4 weeks
+M_11 net over H1 2022 (26 weeks): -$15,404
+```
+
+> **M_11's entire $45,138 drawdown is ONE 12-week episode, 2022-W05 → 2022-W17. OQ6's window began
+> at 2022-W27 — after it.**
+
+That is the whole disagreement. It was **not** a manipulation: OQ6's window served a different
+purpose (matching an inverse-vol risk share), and its spec openly states its bucketing convention
+differs. But the *effect* was that the campaign's capital figure was set by a window that starts
+after the worst drawdown in the record. The residual $28,596 vs $21,740 on the *same* window is the
+week-attribution convention (OQ6 buckets by ISO week of the entry date; this run uses the ledger's
+own `wk`), and the structural point does not depend on which is preferred.
+
+**ERABREAK01** (p = 0.0011) puts the 0DTE structural break at 2022-05, so H1 2022 is **old-regime**.
+Under standing owner doctrine (post-W115), **old-regime failure is a RISK CLASSIFICATION, not a
+reason to exclude.** So $45,138 is carried, not deleted.
+
+⚠️ **Language, deliberately:** $45,138 is a **drawdown**, not a capital requirement. The retired
+figures $21,740 and $45,000 were quoted as *capital* and they stay retired. A **$75–90k** capital
+plan against a $45,138 realised drawdown is ~2× coverage and is coherent with this measurement.
+
+## 6. STATUS OF THESE NUMBERS
 
 | label | meaning |
 |---|---|
