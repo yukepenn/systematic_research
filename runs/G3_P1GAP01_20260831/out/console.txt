@@ -1,0 +1,183 @@
+================================================================================================================
+G3_P1GAP01 - LOCKED (Mode B) CHALLENGE.  spec.yaml committed BEFORE any arm P&L existed.
+Frozen feature: open_loc_in_on_range.  Two arms only.  No grid, no variants.
+LIVE ENABLED = NO.  $0 spent.  No order / deploy / backtest / CrossTrade call.
+================================================================================================================
+
+BASE RATE, STATED BEFORE THE RESULT (spec section 6, trap 3):
+  T2_P1SIZE01 ran TWO size maps through THIS SAME causal budget calibrator and both FAILED
+  on G2 and G5.  This class of arm is 0 for 2 in this repository.  If A1 passes, the
+  correct response is disbelief until G4b (the feature null that prices the 11-candidate
+  scan) and G5 (stability) are read - and this report leads with those two.
+
+CEILING, STATED BEFORE THE RESULT (spec section 6, trap 4):
+  Only the post-09:30 entries are eligible.  A layer that cannot touch the majority of the
+  book CANNOT produce a large book-level effect.  A LARGE effect is evidence of a BUG.
+================================================================================================================
+G0  VERIFICATION - if any clause fails the arms are VOID
+================================================================================================================
+G0a  ledger rows 2439 (spec 2439) ; net $354,575.96 vs recorded $354,575.96 ; |d| = $0.000000  -> PASS
+G0b  size-invariance  max|pnl - qty*(pnl/qty)| = 0.000e+00 (spec <1e-9) ; max|comm - 4.36*qty| = 0.000e+00  -> PASS
+     qty multiset: 1x1939, 2x500 ; total ctrRT 2939
+
+SEAL   arm window = sessions 2022-01-02 .. 2026-07-31
+       rows DROPPED as sealed (session >= 2026-08-01): 39   (net $11,653.28, never used in any arm)
+       rows dropped as pre-window: 0
+       arm-window trades: 2400  net $342,922.68  ctrRT 2887
+       session table rows in window: 1187  (2022-01-03 .. 2026-07-31), 0 sealed
+
+G0c  join rate to the session table: 2400/2400 = 100.00%  (spec >=95%)  -> PASS
+     joined but feature UNDEFINED (degenerate/unusable session): 4
+       session 2026-07-17  n=4  reason=NO_OVERNIGHT
+     -> these keep the INCUMBENT size, are COUNTED, and are never dropped (spec trap 6).
+
+G0 OVERALL: PASS
+================================================================================================================
+ELIGIBILITY  (spec section 2: the overnight range does not EXIST before 09:30, so applying
+             the rule earlier would be a look-ahead of hours - not a tuned scope)
+================================================================================================================
+  arm-window trades      2400
+  ELIGIBLE (>= 09:30)    875   = 36.5% of the book
+  pre-09:30 (untouched)  1525
+  of the eligible, entries inside the 09:30 minute itself: 3
+  eligible with an UNDEFINED feature (keep incumbent size): 4
+  ==> EVERY FIGURE BELOW IS CARRIED BY AT MOST 875 TRADES.
+================================================================================================================
+THE TWO ARMS
+================================================================================================================
+arm                 trades   ctrRT   mean sz  size-2 n  size-2 %          net $   net/week $
+A0_INCUMBENT          2400    2887    1.2029       487     20.3%     342,922.68     1,453.06
+A1_OPENSTRENGTH       2400    2982    1.2425       582     24.2%     353,673.48     1,498.62
+
+entries whose size CHANGED: 95  (all 1->2, all eligible; eligible n = 875)
+  eligible size-2 sets:  incumbent 196  |  feature-added 95  |  union 291  of 875 eligible
+  Jaccard(incumbent size-2, A1 size-2) on eligible = 0.674
+  calibrator short-history skips: 0
+  mean r_i (incumbent trailing size-2 rate) = 0.2175 ; mean tau_i = 0.7895
+================================================================================================================
+THE FULL RISK VECTOR  (research_sdk/champion_eval.risk_vector, fixed-DD budget $20,245)   [eligible n = 875]
+================================================================================================================
+field                         A0_INCUMBENT   A1_OPENSTRENGTH         A1 - A0     A1/A0
+n_weeks                           236.0000          236.0000          0.0000    1.0000
+n_trades                        2,400.0000        2,400.0000          0.0000    1.0000
+contract_round_turns            2,887.0000        2,982.0000         95.0000    1.0329
+net_total                     342,922.6800      353,673.4800     10,750.8000    1.0314
+net_per_week                    1,453.0622        1,498.6164         45.5542    1.0314
+median_per_week                   783.2600          824.2800         41.0200    1.0524
+pct_positive_weeks                  0.5763            0.5763          0.0000    1.0000
+weekly_sd                       4,887.3646        4,943.0433         55.6787    1.0114
+downside_sd                     3,004.8985        3,060.4537         55.5552    1.0185
+es95                           -5,869.2033       -6,025.3267       -156.1233    1.0266
+worst_week                     -8,460.9200       -8,460.9200          0.0000    1.0000
+worst_5_sessions              -20,614.5200      -23,730.9600     -3,116.4400    1.1512
+max_dd                         23,127.9600       23,127.9600          0.0000    1.0000
+dd_duration_weeks                  22.0000           20.0000         -2.0000    0.9091
+peak_contracts                      2.0000            2.0000          0.0000    1.0000
+capital_proxy                  73,127.9600       73,127.9600          0.0000    1.0000
+fixed_dd_income                 1,271.9342        1,311.8100         39.8758    1.0314
+top_1pct_share                      0.7718            0.7494         -0.0224    0.9710
+top_10pct_share                     2.5475            2.5653          0.0177    1.0070
+================================================================================================================
+PREREGISTERED GATE TABLE - PRINTED BY THE PROGRAM
+population: 2400 arm-window trades, of which 875 ELIGIBLE (post-09:30)
+================================================================================================================
+
+G5 detail - 25 rolling 24-month windows.  'beats' = the G2 risk-vector criterion
+            (net/week strictly greater AND ES95 not worse >5% AND maxDD not worse >5%).
+window start       n  elig     A0 wk$     A1 wk$    A0 ES95    A1 ES95      A0 DD      A1 DD   beats  fixDD+
+2022-01-01      1069   441        835        801     -5,270     -5,349     23,128     23,128      no      no
+2022-02-09      1071   453        922        874     -5,270     -5,349     19,077     19,077      no      no
+2022-03-20      1106   457      1,139      1,091     -4,703     -4,782     15,645     16,132      no      no
+2022-04-28      1145   466      1,230      1,178     -4,887     -4,966     15,645     16,132      no      no
+2022-06-07      1162   499      1,069      1,008     -4,887     -4,966     15,645     16,132      no      no
+2022-07-16      1175   485      1,223      1,194     -4,744     -4,846     15,645     16,132      no      no
+2022-08-24      1190   479      1,231      1,235     -5,400     -5,479     15,645     16,132     YES      no
+2022-10-03      1200   475      1,301      1,301     -5,400     -5,479     15,645     16,132     YES      no
+2022-11-11      1211   477      1,241      1,272     -5,400     -5,479     15,645     16,132     YES      no
+2022-12-20      1210   472      1,403      1,423     -5,433     -5,728     14,030     16,132      no      no
+2023-01-28      1205   447      1,597      1,643     -5,433     -5,728     14,030     16,132      no      no
+2023-03-09      1186   432      1,606      1,627     -5,281     -5,594     14,030     16,132      no      no
+2023-04-17      1195   427      1,694      1,725     -5,983     -6,266     21,200     22,489      no      no
+2023-05-26      1184   422      1,733      1,766     -5,983     -6,266     21,200     22,489      no      no
+2023-07-05      1146   403      1,819      1,873     -5,983     -6,266     21,200     22,489      no      no
+2023-08-13      1099   381      2,059      2,145     -5,983     -6,266     21,200     22,489      no      no
+2023-09-21      1095   377      2,063      2,173     -5,983     -6,266     21,200     22,489      no      no
+2023-10-30      1072   362      2,279      2,391     -5,672     -6,043     21,200     22,489      no      no
+2023-12-09      1071   355      2,045      2,145     -5,672     -6,043     21,200     22,489      no      no
+2024-01-17      1062   334      2,174      2,293     -5,672     -6,043     21,200     22,489      no      no
+2024-02-25      1060   327      2,420      2,550     -5,672     -6,043     21,200     22,489      no      no
+2024-04-05      1004   314      2,321      2,438     -6,266     -6,563     21,200     22,489      no      no
+2024-05-14       971   312      2,221      2,345     -6,251     -6,547     21,200     22,489      no      no
+2024-06-22       937   281      2,040      2,168     -6,251     -6,547     21,200     22,489      no     YES
+2024-08-01       916   280      1,957      2,101     -5,793     -6,082     21,200     22,489      no     YES
+
+G5 detail - leave-one-calendar-year-out (drop the year, recompute on the rest):
+drop year         n   elig     A0 wk$     A1 wk$    A0 ES95    A1 ES95      A0 DD      A1 DD   beats
+ex-2022        1913    690      1,612      1,672     -5,852     -6,069     21,200     22,489      no
+ex-2023        1818    619      1,635      1,710     -5,958     -6,098     23,128     23,128     YES
+ex-2024        1772    665      1,287      1,317     -5,754     -5,841     23,128     23,128     YES
+ex-2025        1943    732      1,252      1,277     -5,752     -5,902     23,128     23,128     YES
+ex-2026        2154    794      1,463      1,501     -5,614     -5,818     23,128     23,128     YES
+================================================================================================================
+GATE / SPEC / OBSERVED / PASS-FAIL
+================================================================================================================
+GATE                 SPEC                                                       PASS-FAIL
+G1 budget matched    |mean ratio-1|<=0.02 AND |sum ratio-1|<=0.02                    FAIL
+                     OBSERVED: mean 1.2425/1.2029 d=3.29% ; ctrRT 2982/2887 d=3.29%
+G2 risk vector       net/wk>=A0 AND ES95 not worse >5% AND maxDD not worse >5%       PASS
+                     OBSERVED: net/wk 1,498.62 vs 1,453.06 [ok] ; ES95 -6,025 vs floor -6,163 [ok] ; maxDD 23,128 vs ceil 24,284 [ok]
+G3 tail preserved    top-decile share >= 0.80 x A0 AND trade count identical         PASS
+                     OBSERVED: top10% 256.5% vs A0 254.8% (ratio 1.007) ; trades 2400 vs 2400
+G4 size-label null   A1 fixDD wk$ > p95 of 1000 permutations of A1's own size vector      PASS
+                     OBSERVED: A1 $1,311.81 vs null p95 $1,003.12 (mean $754.16, pctile 100.0)
+G4b feature null     A1 fixDD wk$ > p95 of 1000 CIRCULAR SHIFTS of open_loc across sessions      FAIL
+                     OBSERVED: A1 $1,311.81 vs shift p95 $1,347.59 (mean $1,225.34, pctile 85.4)
+G5 stability         >=60% of 25 rolling 24m windows AND >=4/5 LOYO                  FAIL
+                     OBSERVED: rolling 3/25 = 12% ; LOYO 4/5
+G6 block bootstrap   stationary bootstrap (block 4wk, 10000 draws) of weekly (A1-A0): 90% CI excludes 0      FAIL
+                     OBSERVED: mean diff $45.55/wk ; CI90 [$-21.30, $115.40] ; t = 1.07 DIAGNOSTIC ONLY
+
+VERDICT A1_OPENSTRENGTH (P1SZ_OPENLOC): FAIL   failed: G1, G4b, G5, G6
+  G0 PASS | G1 FAIL | G2 PASS | G3 PASS | G4 PASS | G4b FAIL | G5 FAIL | G6 FAIL
+================================================================================================================
+MANDATORY REPORTING (spec section 6)   [eligible n = 875 of 2400 arm trades]
+================================================================================================================
+
+1. A1 - A0 BY CALENDAR YEAR
+   P1 is long-only and open_loc is directional, so part of any win could be a market-
+   direction tilt rather than an excursion forecast.  2022 was a bear year; 2023-2025
+   were not.  This split is mandatory, not optional.
+year         n   elig      A0 net $      A1 net $      A1-A0 $  A1-A0 $/wk   A0 ctr   A1 ctr  sz chg  $/extra ctr
+2022       487    185        44,755        44,390         -366          -7      586      593       7          -52
+2023       582    256        40,370        37,332       -3,039         -60      696      729      33          -92
+2024       628    210       104,889       110,098        5,208         100      757      793      36          145
+2025       457    143       111,331       117,352        6,021         114      557      566       9          669
+2026       246     81        41,576        44,503        2,926          94      291      301      10          293
+ALL       2400    875       342,923       353,673       10,751          46     2887     2982      95          113
+
+2. COST LINES.  $4.36/ctrRT is already inside the NT8 ledger P&L; the other two are an
+   ADDITIONAL modelled spread charged per contract round turn.  G1 is supposed to force
+   equal contract budgets, so all three lines must agree in SIGN.
+extra $/ctrRT       A0 net/wk    A1 net/wk   A1-A0 /wk   A0 fixDD wk   A1 fixDD wk   A1-A0 fixDD   sign
++$0.00               1,453.06     1,498.62       45.55      1,271.93      1,311.81         39.88      +
++$14.44              1,276.42     1,316.16       39.74      1,029.86      1,061.93         32.06      +
++$20.65              1,200.45     1,237.69       37.24        937.03        966.10         29.07      +
+   all three cost lines agree in sign: YES
+
+3. DIAGNOSTICS (labelled; NONE of these is a gate and none can change the verdict)
+   G6 on the FIXED-DD-RESCALED weekly difference: mean $39.88/wk, CI90 [-20.20, 99.96] -> includes 0
+   A0 fixed-DD weekly $ = $1,271.93 ; A1 = $1,311.81 ; ratio 1.0314 (+3.1%)
+   G5 under a fixed-DD-ONLY comparator (the T2_P1SIZE01 convention): 2/25 rolling windows
+   week index: this run uses the SESSION date -> ISO week (champion_eval's documented
+   convention, and the join key the spec mandates).  The ledger's own `wk` column keys on
+   the ENTRY calendar date and differs on 178 trades (Sunday-evening entries).  Both arms share one index, so no gate can turn on it.
+
+4. THE CEILING ARGUMENT, RESTATED AGAINST THE NUMBERS
+   eligible trades 875 / 2400 = 36.5% of the book.
+   eligible net $166,360 of $342,923 = 48.5% of A0's net.
+   sizes changed on 95 trades = 4.0% of the book, 10.9% of the eligible set.
+   book-level A1-A0 = $10,751 over 236 weeks = $45.55/week, on 95 extra contract round turns.
+================================================================================================================
+artifacts: out/console.txt  out/gates.json  out/arm_ledger.csv
+NO ORDER PLACED · LIVE = NO · $0 · NOTHING PROMOTED, BUILT OR DEPLOYED
+================================================================================================================
