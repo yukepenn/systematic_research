@@ -1,0 +1,386 @@
+
+====================================================================================================
+G3_CLOCKLAG01_20260831  -  cross-day clock-bucket periodicity in NQ  (GENESIS III WAVE C)
+====================================================================================================
+spec:  runs/G3_CLOCKLAG01_20260831/spec.yaml   PREREGISTERED, committed before any statistic existed
+STAGE 1 IS STRUCTURAL ONLY. No P&L is computed and no position is formed unless and until Stage 1 passes.
+live_enabled: NO   orders_placed: NO   spend: $0   no CrossTrade / NinjaTrader call is made by this program.
+
+HKS (Heston/Korajczyk/Sadka 2010) was measured on US EQUITIES, not on an index future.
+A null here does NOT falsify HKS. It falsifies its TRANSFER to NQ.
+
+====================================================================================================
+0.  SELF-TESTS  (every downstream number is worthless if these do not pass)
+====================================================================================================
+panel.py - the frozen bucket and return definitions
+  [PASS] 09:31 -> bucket 0                                                             
+  [PASS] 10:00 -> bucket 0                                                             
+  [PASS] 10:01 -> bucket 1                                                             
+  [PASS] 10:30 -> bucket 1                                                             
+  [PASS] 15:31 -> bucket 12                                                            
+  [PASS] 16:00 -> bucket 12                                                            
+  [PASS] 13 buckets exactly cover 09:30-16:00                                          
+  [PASS] every RTH stamp lands in 0..12 and each bucket has 30 stamps                  
+  [PASS] returns telescope to the full-RTH log return                                  -0.00206018114927609 vs -0.0020601811492757765
+  [PASS] r(0) uses the RTH OPEN as base                                                
+  [PASS] 2022-04-29 is PRE                                                             
+  [PASS] 2022-05-02 is MODERN                                                          
+  [PASS] PRE and MODERN partition FULL                                                 
+  [PASS] np.maximum.at picks the largest position (= last bar, series is time-sorted)  [ 9 -1  1]
+  panel selftest 14/14
+
+estim.py - estimators, session-clustered SEs, and the circular-shift MAX null
+           NOTE two adversarial cases: a PLANTED cross-day effect must PASS the gate
+           statistic and a PLANTED WITHIN-DAY MOMENTUM panel must FAIL it. If the
+           falsifier cannot fire on synthetic data it cannot fire on real data.
+  [PASS] beta matches polyfit                                                        0.32530222 vs 0.32530222
+  [PASS] influence sums to zero                                                      
+  [PASS] clustered SE (1 obs/cluster) == HC0 x fs correction                         
+  [PASS] planted beta_same ~ 0.25                                                    0.2337
+  [PASS] planted design leaves beta_nonmult ~ 0                                      0.0010
+  [PASS] planted design leaves beta_adj ~ 0                                          0.0131
+  [PASS] gate margin is positive on the planted cross-day design                     0.2201
+  [PASS] within-day momentum shows up in beta_adj                                    0.2496
+  [PASS] within-day momentum does NOT create beta_same                               0.0061
+  [PASS] gate margin is NEGATIVE when the mechanism is absent - the falsifier fires  -0.2423
+  [PASS] noise panel: margin percentile is not extreme                               43.0%
+  [PASS] null preserves the sample size                                              
+  [PASS] max statistic dominates the mean statistic in every draw                    
+  [PASS] no null shift re-aligns the predictor                                       
+  [PASS] planted design beats its own max null                                       
+  [PASS] within-day-momentum design fails its own max null                           
+  [PASS] rho_bar of independent buckets ~ 0                                          -0.0049
+  [PASS] K_eff obeys its definition exactly                                          13.814
+  [PASS] K_eff ~ K when rho_bar ~ 0                                                  13.814
+  [PASS] perfectly correlated buckets give rho_bar = 1 and K_eff = 1                 rho 1.0000 keff 1.0000
+  [PASS] beta_adj(0) is undefined and reported NaN                                   
+  [PASS] gate set is the matched set b=1..12                                         
+  estim selftest 22/22
+
+research_sdk/champion_eval.py - the risk vector Stage 2 G3 is reported on
+  [PASS] maxDD hand-check                                    got 10.0
+  [PASS] DD duration hand-check                              got 2
+  [PASS] maxDD of a monotone series is 0                     
+  [PASS] ES95 = mean of worst 5                              
+  [PASS] downside SD ignores gains                           
+  [PASS] fixed-DD is scale invariant                         
+  [PASS] top-10% share                                       
+  [PASS] top-k share may exceed 1 or go negative             
+  [PASS] iso_week str                                        2022-W01
+  [PASS] iso_week datetime                                   2021-W52
+  [PASS] reindex fills gaps with 0                           [10.  0. 20.]
+  [PASS] bootstrap centres on the sample mean                4.878 vs 4.874
+  [PASS] bootstrap has spread                                
+  [PASS] clone correlation is 1                              
+  [PASS] clone k_vol == 2                                    2.0
+  [PASS] clone increment vs risk-matched base == 0           0.0
+  [PASS] week-index mismatch raises                          
+  [PASS] exposure-reducing candidate without placebo RAISES  
+  [PASS] with placebo it reports                             
+  [PASS] placebo p95 >= p50                                  
+  [PASS] random thinning does not beat its own control       cand 4059.9 vs p99 12979.4
+  [PASS] non-reducing candidate needs no placebo             
+  [PASS] risk vector carries es95                            
+  [PASS] risk vector carries worst_week                      
+  [PASS] risk vector carries max_dd                          
+  [PASS] risk vector carries weekly_sd                       
+  [PASS] risk vector carries top_10pct_share                 
+  [PASS] risk vector carries capital_proxy                   
+  [PASS] risk vector carries by_year                         
+  [PASS] risk vector carries loyo                            
+
+selftest 30/30
+
+====================================================================================================
+1.  PANEL  (definitions frozen by spec section 2; no bucket width other than 30 min)
+====================================================================================================
+  bars END-STAMPED: bucket 0 = bars stamped 09:31..10:00, bucket 12 = 15:31..16:00
+  r(0,d) is based on the RTH OPEN = the OPEN of the bar stamped 09:31
+  load_deep(extend=True): 6,528,330 bars, 5,466 sessions, 2006-01-05T08:59:00 -> 2026-07-31T16:59:00
+  SEAL OK: max session date 2026-07-31 < 2026-08-01 (sessions >= seal read: 0)
+  RTH dates split across sessions by a >60-min intraday data hole: 2  ['2006-11-21', '2026-07-17']  -> force-dropped
+  RTH calendar dates seen              5,287
+  dropped: no bar stamped 09:31        17
+  dropped: >=1 empty 30-min bucket     179
+  dropped: intraday session split      2
+  KEPT complete sessions               5,091
+  (a session is kept only if the 09:31 bar exists AND all 13 buckets are non-empty;
+   half-days and holiday sessions therefore drop out. No return is interpolated.)
+  day-over-day link gaps: 1d 3,980  2-4d 1,073  >4d 37  max 10d   (lag-1 = previous KEPT session; no gap filter is applied)
+
+  PRE     sessions  4,036   2006-01-05 -> 2022-04-29
+  MODERN  sessions  1,055   2022-05-02 -> 2026-07-31
+  FULL    sessions  5,091   2006-01-05 -> 2026-07-31
+  ERABREAK01 (p=0.0011) forbids pooling across 2022-05. FULL IS A DIAGNOSTIC ONLY;
+  a result that exists only in PRE is an old-regime finding, not a candidate.
+
+====================================================================================================
+2.  rho_bar AND K_eff  (spec: effective_K, printed)
+====================================================================================================
+  era          rho_bar     K_eff = 13/(1+12*rho_bar)   Bonferroni z at K_eff
+  PRE          0.00544                        12.204                   2.871
+  MODERN       0.00960                        11.657                   2.856
+  FULL         0.00809                        11.850                   2.861
+  rho_bar is the mean PAIRWISE correlation of the 13 bucket return series. Independent
+  draws across a correlated family would set the bar far too high; K_eff is what a
+  bucket count is worth here, and the max-statistic null below is the primary control.
+
+====================================================================================================
+3.  STAGE 1 TABLE  -  13 buckets x 3 estimators x 3 eras, session-clustered t
+====================================================================================================
+  beta_same(b)     r(b,d) on r(b,d-1)      same clock bucket, one day back   TREATMENT
+  beta_adj(b)      r(b,d) on r(b-1,d)      adjacent bucket, same day         CONTROL A
+  beta_nonmult(b)  r(b,d) on r(b',d-1) averaged over b' != b                 CONTROL B
+  beta_adj(0) is UNDEFINED - bucket -1 does not exist. Nothing is selected from this table.
+
+  ---- PRE  (n = 4,035 day-over-day observations per bucket) ----  '*' = |t| > 2.87, the K_eff-adjusted two-sided 5% threshold
+    b window           beta_same       t     beta_adj       t   beta_nonmult       t
+    0 09:30-10:00       -0.07693  -2.20           n/a               -0.02481  -1.46 
+    1 10:00-10:30        0.01229   0.47       0.00262   0.10         0.00030   0.02 
+    2 10:30-11:00        0.01276   0.42       0.00383   0.15        -0.01636  -1.34 
+    3 11:00-11:30       -0.00636  -0.14       0.02767   0.81        -0.00013  -0.01 
+    4 11:30-12:00       -0.00053  -0.02      -0.02120  -0.58        -0.00912  -0.95 
+    5 12:00-12:30        0.00946   0.30       0.02468   0.88        -0.01520  -1.76 
+    6 12:30-13:00        0.02018   0.44       0.02195   0.58        -0.01261  -1.11 
+    7 13:00-13:30        0.02649   0.96      -0.03144  -0.88         0.00426   0.54 
+    8 13:30-14:00        0.02331   0.70       0.03669   1.02        -0.00914  -1.00 
+    9 14:00-14:30       -0.03136  -0.98      -0.06392  -1.70        -0.00311  -0.39 
+   10 14:30-15:00       -0.01269  -0.40      -0.01590  -0.40        -0.00738  -0.79 
+   11 15:00-15:30       -0.01017  -0.31       0.04024   0.92        -0.02407  -2.70 
+   12 15:30-16:00       -0.17088  -2.44       0.12605   1.71        -0.02727  -1.83 
+
+  ---- MODERN  (n = 1,054 day-over-day observations per bucket) ----  '*' = |t| > 2.86, the K_eff-adjusted two-sided 5% threshold
+    b window           beta_same       t     beta_adj       t   beta_nonmult       t
+    0 09:30-10:00       -0.01322  -0.39           n/a               -0.00918  -0.42 
+    1 10:00-10:30       -0.02520  -0.74      -0.00836  -0.27        -0.01375  -0.83 
+    2 10:30-11:00        0.04173   1.09       0.01299   0.42        -0.00065  -0.04 
+    3 11:00-11:30        0.01332   0.31      -0.01441  -0.25        -0.02177  -1.28 
+    4 11:30-12:00       -0.05178  -1.28      -0.00836  -0.16        -0.01753  -1.05 
+    5 12:00-12:30       -0.02093  -0.51      -0.01826  -0.42        -0.01973  -1.17 
+    6 12:30-13:00        0.09910   1.86      -0.08131  -1.32         0.01151   0.56 
+    7 13:00-13:30       -0.08353  -1.36      -0.00508  -0.06        -0.03010  -0.95 
+    8 13:30-14:00        0.10063   1.52       0.17041   1.57        -0.03299  -1.32 
+    9 14:00-14:30        0.04851   1.14      -0.00603  -0.09        -0.01418  -0.94 
+   10 14:30-15:00        0.04918   1.32      -0.05786  -0.81         0.01021   0.76 
+   11 15:00-15:30       -0.11283  -2.19      -0.01764  -0.20        -0.01228  -0.77 
+   12 15:30-16:00        0.01728   0.44       0.06069   0.92         0.02223   1.68 
+
+  ---- FULL  (n = 5,090 day-over-day observations per bucket) ----  '*' = |t| > 2.86, the K_eff-adjusted two-sided 5% threshold
+    b window           beta_same       t     beta_adj       t   beta_nonmult       t
+    0 09:30-10:00       -0.04693  -1.90           n/a               -0.01827  -1.35 
+    1 10:00-10:30       -0.00662  -0.31      -0.00188  -0.09        -0.00610  -0.59 
+    2 10:30-11:00        0.02603   1.09       0.00760   0.38        -0.00928  -0.95 
+    3 11:00-11:30        0.00272   0.09       0.00972   0.31        -0.00876  -0.92 
+    4 11:30-12:00       -0.02207  -0.92      -0.01542  -0.51        -0.01359  -1.43 
+    5 12:00-12:30       -0.00318  -0.13       0.00608   0.25        -0.01866  -1.92 
+    6 12:30-13:00        0.05568   1.59      -0.02082  -0.61        -0.00047  -0.04 
+    7 13:00-13:30       -0.03578  -0.98      -0.01965  -0.50        -0.00863  -0.63 
+    8 13:30-14:00        0.06028   1.67       0.11344   1.55        -0.01835  -1.50 
+    9 14:00-14:30        0.00251   0.10      -0.03766  -1.03        -0.00855  -1.07 
+   10 14:30-15:00        0.01208   0.50      -0.03365  -0.89         0.00049   0.06 
+   11 15:00-15:30       -0.05341  -1.82       0.01827   0.42        -0.02061  -2.34 
+   12 15:30-16:00       -0.11679  -2.18       0.10506   2.06        -0.00600  -0.57 
+
+====================================================================================================
+4.  MEANS OVER BUCKETS  -  WITH and WITHOUT buckets 0 and 12  (spec trap 4, mandatory)
+====================================================================================================
+  The open and close auctions are structurally different. They are NOT excluded -
+  excluding them after seeing the table would be a selection - but a reader must be able
+  to see whether the whole effect is two buckets. All three sets were frozen in code
+  before any number existed.
+
+    ALL_13        b = 0..12   (beta_adj averaged over 1..12, it is undefined at b=0)
+    MATCHED_1_12  b = 1..12   the only set where BOTH estimators exist -> THE GATE SET
+    INTERIOR_1_11 b = 1..11   open and close auction buckets removed, for reading only
+
+  ---- PRE ----
+  set               mean_same      t    mean_adj      t      margin      t  mean_nonmult      t
+  ALL_13             -0.01573  -1.67     0.01261   1.20    -0.02323  -1.40      -0.01113  -4.05
+  MATCHED_1_12       -0.01063  -0.98     0.01261   1.20    -0.02323  -1.40      -0.00999  -3.40  <- GATE SET
+  INTERIOR_1_11       0.00394   0.43     0.00229   0.26     0.00165   0.13      -0.00841  -3.04
+
+  ---- MODERN ----
+  set               mean_same      t    mean_adj      t      margin      t  mean_nonmult      t
+  ALL_13              0.00479   0.39     0.00223   0.12     0.00406   0.17      -0.00986  -1.51
+  MATCHED_1_12        0.00629   0.48     0.00223   0.12     0.00406   0.17      -0.00992  -1.67  <- GATE SET
+  INTERIOR_1_11       0.00529   0.38    -0.00308  -0.16     0.00837   0.33      -0.01284  -2.06
+
+  ---- FULL ----
+  set               mean_same      t    mean_adj      t      margin      t  mean_nonmult      t
+  ALL_13             -0.00965  -1.21     0.01092   1.00    -0.01747  -1.10      -0.01052  -3.35
+  MATCHED_1_12       -0.00654  -0.74     0.01092   1.00    -0.01747  -1.10      -0.00988  -3.27  <- GATE SET
+  INTERIOR_1_11       0.00348   0.44     0.00237   0.22     0.00111   0.08      -0.01023  -3.30
+
+  margin = mean_b beta_same - mean_b beta_adj on an IDENTICAL bucket set. It is the
+  identifying restriction as a single number: positive means the same clock bucket one
+  day back beats the adjacent bucket minutes ago; NEGATIVE MEANS THE MECHANISM IS DEAD.
+
+====================================================================================================
+5.  THE CIRCULAR-SHIFT MAX NULL  (spec S1_GATE_NULL - this is where MC-11 died)
+====================================================================================================
+  2,000 draws, seed 20260831, buffer 5 days.
+  One shift k of the DAY INDEX per draw, applied to the PREDICTOR matrix only. A whole
+  day-row moves together, so each bucket's marginal distribution AND the within-day
+  cross-bucket dependence are preserved exactly.
+  On EVERY draw the entire analysis is redone - all 13 buckets, all three estimators,
+  every mean AND every max-over-buckets step - and the maxima are recorded. Reporting a
+  best bucket without this would be MC-11 exactly.
+
+  NULL_A (THE GATE NULL): the shifted matrix supplies both the lag-1 and the same-day
+          predictors, so no estimator keeps its true day alignment.
+  NULL_B (stricter diagnostic): only the CROSS-DAY predictor is shifted; beta_adj keeps
+          its true same-day alignment, so the margin is measured against the REAL
+          adjacent-bucket benchmark. Printed, not the gate.
+  PRE     2,000 draws in 3.5s  (shift range 5..4024 days)
+  MODERN  2,000 draws in 1.0s  (shift range 5..1049 days)
+  FULL    2,000 draws in 3.6s  (shift range 5..5077 days)
+
+  ---- PRE, gate set MATCHED_1_12 ----
+  statistic                             observed    null p50    null p95   pctile        p
+  mean_b beta_same                      -0.01063    -0.00008     0.00704     1.8%   0.9825
+  MAX_b beta_same                        0.02649     0.02409     0.04409    57.6%   0.4248
+  margin (same - adj)                   -0.02323    -0.00005     0.01026     0.1%   0.9990
+  MAX_b (same - adj)   [gate]           -0.02323     0.03474     0.06377     0.0%   1.0000
+  margin vs REAL adj                    -0.02323    -0.01268    -0.00557     1.8%   0.9825
+  MAX_b (same - REAL adj)               -0.02323     0.06448     0.09093     0.0%   1.0000
+  MAX_b beta_same, TWO-SIDED             0.17088     0.02949     0.04727   100.0%   0.0005
+  MAX_b |beta_nonmult|                   0.02727     0.00899     0.01573   100.0%   0.0010
+  (the two MAX-margin rows compare the OBSERVED MEAN margin against the null's
+   BEST-OF-12 margin; that is the multiplicity price and it is deliberately the
+   hardest bar in the run.)
+  best bucket by margin      b=7   same +0.02649  adj -0.03144  margin +0.05793   quotable ONLY against the MAX rows above
+  best bucket by beta_same   b=7   same +0.02649  adj -0.03144   -> at its OWN strongest bucket the clock-aligned term BEATS the adjacent control
+  head-to-head: beta_same > beta_adj in  6/12 buckets (50%)   null median 50%  p95 75%   percentile 38.8%
+  CAUTION: the max is elevated in the CONTROL-B family too (MAX|beta_nonmult| p=0.0010 alongside MAX|beta_same| p=0.0005).
+  Control B is a NON-DAILY-MULTIPLE lag and the mechanism requires it to be ~0 everywhere.
+  An extreme max shared by treatment and control is a panel-wide feature - a few influential
+  sessions, day-to-day variance clustering the shift null deliberately destroys - and is NOT
+  evidence for clock alignment. No bucket from this era is quotable as a finding.
+
+  ---- MODERN, gate set MATCHED_1_12 ----
+  statistic                             observed    null p50    null p95   pctile        p
+  mean_b beta_same                       0.00629    -0.00030     0.01308    81.3%   0.1869
+  MAX_b beta_same                        0.10063     0.04754     0.07933    99.7%   0.0040
+  margin (same - adj)                    0.00406    -0.00093     0.01786    65.6%   0.3438
+  MAX_b (same - adj)   [gate]            0.00406     0.06754     0.11513     0.1%   0.9985
+  margin vs REAL adj                     0.00406    -0.00253     0.01085    81.3%   0.1869
+  MAX_b (same - REAL adj)                0.00406     0.08775     0.13461     0.0%   1.0000
+  MAX_b beta_same, TWO-SIDED             0.11283     0.05870     0.09045    99.5%   0.0060
+  MAX_b |beta_nonmult|                   0.03299     0.01794     0.03001    97.8%   0.0230
+  (the two MAX-margin rows compare the OBSERVED MEAN margin against the null's
+   BEST-OF-12 margin; that is the multiplicity price and it is deliberately the
+   hardest bar in the run.)
+  best bucket by margin      b=6   same +0.09910  adj -0.08131  margin +0.18041   quotable ONLY against the MAX rows above
+  best bucket by beta_same   b=8   same +0.10063  adj +0.17041   -> at its OWN strongest bucket the clock-aligned term LOSES TO the adjacent control
+  head-to-head: beta_same > beta_adj in  5/12 buckets (42%)   null median 50%  p95 75%   percentile 19.6%
+  CAUTION: the max is elevated in the CONTROL-B family too (MAX|beta_nonmult| p=0.0230 alongside MAX|beta_same| p=0.0060).
+  Control B is a NON-DAILY-MULTIPLE lag and the mechanism requires it to be ~0 everywhere.
+  An extreme max shared by treatment and control is a panel-wide feature - a few influential
+  sessions, day-to-day variance clustering the shift null deliberately destroys - and is NOT
+  evidence for clock alignment. No bucket from this era is quotable as a finding.
+
+  ---- FULL, gate set MATCHED_1_12 ----
+  statistic                             observed    null p50    null p95   pctile        p
+  mean_b beta_same                      -0.00654    -0.00013     0.00644     6.2%   0.9385
+  MAX_b beta_same                        0.06028     0.02108     0.03827    99.9%   0.0015
+  margin (same - adj)                   -0.01747    -0.00022     0.00941     0.4%   0.9960
+  MAX_b (same - adj)   [gate]           -0.01747     0.03017     0.05577     0.0%   1.0000
+  margin vs REAL adj                    -0.01747    -0.01106    -0.00448     6.2%   0.9385
+  MAX_b (same - REAL adj)               -0.01747     0.04363     0.06539     0.0%   1.0000
+  MAX_b beta_same, TWO-SIDED             0.11679     0.02577     0.04313   100.0%   0.0005
+  MAX_b |beta_nonmult|                   0.02061     0.00795     0.01407    99.9%   0.0020
+  (the two MAX-margin rows compare the OBSERVED MEAN margin against the null's
+   BEST-OF-12 margin; that is the multiplicity price and it is deliberately the
+   hardest bar in the run.)
+  best bucket by margin      b=6   same +0.05568  adj -0.02082  margin +0.07650   quotable ONLY against the MAX rows above
+  best bucket by beta_same   b=8   same +0.06028  adj +0.11344   -> at its OWN strongest bucket the clock-aligned term LOSES TO the adjacent control
+  head-to-head: beta_same > beta_adj in  4/12 buckets (33%)   null median 50%  p95 75%   percentile 8.3%
+  CAUTION: the max is elevated in the CONTROL-B family too (MAX|beta_nonmult| p=0.0020 alongside MAX|beta_same| p=0.0005).
+  Control B is a NON-DAILY-MULTIPLE lag and the mechanism requires it to be ~0 everywhere.
+  An extreme max shared by treatment and control is a panel-wide feature - a few influential
+  sessions, day-to-day variance clustering the shift null deliberately destroys - and is NOT
+  evidence for clock alignment. No bucket from this era is quotable as a finding.
+
+====================================================================================================
+6.  STAGE 1 GATE  (MODERN stratum; PRE and FULL are reported, never decisive)
+====================================================================================================
+  GATE                            SPEC                                                  OBSERVED                                                                  PASS/FAIL
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  S1-A  mean beta_same > 0        mean_b beta_same > 0, MODERN, b=1..12                 +0.00629 (t=+0.48 clustered)                                              PASS
+  S1-B  same beats adjacent       mean beta_same - mean beta_adj > 0                    margin +0.00406 = +0.00629 - +0.00223 (t=+0.17)                           PASS
+  S1-C  margin survives MAX null  margin > p95 of max-over-buckets null, 2000 draws     +0.00406 vs p95(max) +0.11513 [p95(mean) +0.01786] p=0.9985               FAIL
+  S1-D  beta_nonmult ~ 0          mean beta_nonmult indistinguishable from 0, |t|<1.96  -0.00992 (t=-1.67 SE 0.00595)                                             PASS
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  STAGE 1 VERDICT                 ALL of S1-A .. S1-D                                   at least one clause FAILS                                                 FAIL
+
+  THE IDENTIFYING RESTRICTION, STATED AS THE SPEC STATES IT (MODERN, b=1..12):
+    beta_same (same clock bucket, 1 day back)  = +0.00629  t = +0.48
+    beta_adj  (adjacent bucket, minutes ago)   = +0.00223  t = +0.12
+    margin                                     = +0.00406  t = +0.17
+    beta_same > beta_adj by sign only.
+    beta_nonmult (CONTROL B, non-daily lag)    = -0.00992  t = -1.67   <- LARGER IN MAGNITUDE THAN THE TREATMENT
+
+    BUT THERE IS NOTHING FOR EITHER TERM TO WIN. Neither the treatment nor the
+    adjacent-bucket control is distinguishable from zero at all: both t-statistics
+    are inside +/-1.96 (+0.48 and +0.12), and the margin between two
+    numbers that are both zero is itself zero. The sign of that margin is not a
+    finding and is not quotable. What the run measures is the ABSENCE of the raw
+    predictability the mechanism needs before its identifying restriction can even
+    be tested - a stronger and cheaper closure than a lost head-to-head.
+
+    Multiplicity price: the margin had to clear +0.11513 (p95 of the max-over-buckets null) and delivered +0.00406.
+    That is 28x short. Against the null's MEAN margin the observed value sits at the 66th percentile - an ordinary draw.
+
+  WITH AND WITHOUT BUCKETS 0 AND 12 (spec trap 4 - is the whole effect two buckets?):
+    PRE     mean_same  ALL_13 -0.01573   INTERIOR_1_11 +0.00394   margin ALL -0.02323 -> INTERIOR +0.00165
+    MODERN  mean_same  ALL_13 +0.00479   INTERIOR_1_11 +0.00529   margin ALL +0.00406 -> INTERIOR +0.00837
+    FULL    mean_same  ALL_13 -0.00965   INTERIOR_1_11 +0.00348   margin ALL -0.01747 -> INTERIOR +0.00111
+    In PRE the open (b=0) and close (b=12) buckets carry essentially the entire mean:
+    dropping them moves mean_b beta_same from -0.01573 to +0.00394. Those two buckets are auction
+    microstructure, not a scheduling trace, and they are the only large |beta| in the
+    whole PRE column. They are NOT excluded from any gate - excluding them after seeing
+    the table would be a selection - and the gate set was frozen before the run.
+
+====================================================================================================
+7.  STAGE 2  -  ECONOMICS
+====================================================================================================
+  STAGE 2 DOES NOT RUN.
+  spec S2_precondition: Stage 1 must PASS in MODERN, otherwise Stage 2 does not run
+  and NO DOLLAR FIGURE IS PRODUCED. No position is formed, no P&L is computed, no
+  candidate is created, and the population is NOT redefined.
+
+  For the record, the cost arithmetic that was FROZEN IN THE SPEC (spec text, not a
+  result of this run): 13 round turns/session x ~250 sessions = ~3,250 RT/yr; at the
+  EXEC01 primary line of $20.65/ctrRT (= 1.032 NQ points) the annual cost is
+  ~$67,112. This is why Stage 1 exists: killing the family here costs nothing.
+
+  The bucket-subset prohibition is enforced in code, not by convention. Exercising
+  it here so that the guard is on the record even though Stage 2 never runs:
+    REFUSED: Stage 2 was asked to trade buckets [6, 8, 10]. The frozen rule trades ALL 13 BUCKETS EVERY DAY; selecting a subset after seeing the Stage 1 table is prohibited by spec.yaml prohibition 4 and this program will not do it.
+    (all 13 buckets is the only accepted argument)
+
+====================================================================================================
+8.  WHAT THIS RUN DOES AND DOES NOT CLOSE
+====================================================================================================
+  CLOSED: the transfer to NQ of the HKS-style cross-day clock-bucket periodicity
+  mechanism, at the 30-minute bucket width, on NQ 1-minute data, in MODERN and in
+  PRE and FULL alike. That also removes the shared premise from every other WAVE B
+  candidate that leans on 'scheduled institutional flow leaves a periodic price
+  trace' on this instrument.
+
+  NOT CLOSED: HKS itself. HKS was measured on US EQUITY CROSS-SECTIONS, where the
+  periodicity is a cross-sectional return-sorting effect across thousands of names. NQ is
+  ONE index future. A null here falsifies the TRANSFER, not the original finding. The
+  spec named this before the run and it is repeated here so no reader over-reads it.
+
+  Also not closed by this run, and deliberately out of scope: any other bucket width
+  (spec prohibition 5 bans a width search in this run AND in any successor), any
+  cross-sectional version, and any conditional/state-dependent version.
+
+  wrote out/stage1_table.csv (39 rows) and out/gates.json (18,404 bytes)
+
+====================================================================================================
+DONE
+====================================================================================================
+  Stage 1: FAIL   Stage 2: NOT RUN
+  no order placed, no strategy deployed or enabled, no backtest engine called, $0 spent
