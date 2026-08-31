@@ -406,3 +406,25 @@ anything, every time.
 `WeeklyEdgeBookM11_v1.cs` was restored to `bin/Custom/Strategies/` at 01:06 on owner request
 (recompiled 01:06:34); the live book was verified unaffected. See `OQ6_MAPPING_PACKET.md` for why
 the **two-leg sum, not that class**, is the authoritative M_11.
+---
+
+## 🟢 FIRST LIVE ROUND TRIP CLOSED — 2026-08-31 03:51 ET, **+$3,210 gross**
+
+| | |
+|---|---|
+| entry | `581992641240` — 08-31 **00:58:00 ET**, Buy **2** NQU6 @ **29,421.00**, signal `L` |
+| exit | `581992641251` — 08-31 **03:51:00 ET**, Sell 2 @ **29,501.25**, signal `XL`, `fromEntrySignal=L` |
+| P&L | **+80.25 pts × 2 × $20 = +$3,210.00 gross**; ~$8.72 commission ⇒ **≈ +$3,201 net** |
+| hold | 2 h 53 m | 
+| flags | both orders `isBacktestOrder: false`; strategy `net_profit_currency` 70,585 → **73,795** |
+
+Exit signal is `XL`, i.e. **the vote fell below the exit threshold** — the engine's own alpha exit,
+not the `XLsess` session-box lockout and not a forced flat. The full intended lifecycle ran.
+
+**Two operational arguments were confirmed by the very first trade:**
+1. **It sized 2 contracts** — reachable only because the 250-entry quality window was warm. A
+   default-warm-up deployment takes 1. This is the `DaysToLoad = 365` fight, paid off immediately.
+2. **Entry 00:58 and exit 03:51 — entirely outside RTH.** An RTH session template would have deleted
+   this trade completely. This is the `CME US Index Futures ETH` 23-hour template, paid off immediately.
+
+⚠️ **One trade is not evidence about the edge.** It is evidence that the plumbing is correct.
