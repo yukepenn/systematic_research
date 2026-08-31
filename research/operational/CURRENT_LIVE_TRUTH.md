@@ -1,93 +1,122 @@
-# CURRENT_LIVE_TRUTH — 2026-08-31 10:31 ET
+# CURRENT_LIVE_TRUTH — 2026-08-31 15:05 ET
 
-**Paper account DEMO8383477. LIVE real money = NO. $0 spent.** Supersedes the deployment table in
-`PAPER_DEPLOYMENT_20260830.md`; that file stays as the immutable record of what preceded this.
+**Paper account `DEMO8383477`. LIVE real money = NO. $0 spent. No order placed by GENESIS III.**
 
-## THE BOOK
+This file is the **authoritative live-state document**. The previous version (2026-08-31 10:31 ET)
+named `WeeklyEdgeP1PCT_v2` / `dep_8307c94764fd` and `WeeklyEdgeXMConflict_v3` / `dep_51bf1a7382cb`;
+the machine now reports both of those as `strategy_not_in_account_collection` — **they no longer
+exist.** Campaign context and the full open-state record live in
+`research/operational/GENESIS_III_OPEN_STATE.md`.
+
+---
+
+## THE BOOK — verified from the machine, not asserted
 
 | leg | class | deployment_id | strategy_id | state |
 |---|---|---|---|---|
-| P1 | `WeeklyEdgeP1PCT_v2` | **`dep_8307c94764fd`** | 399562875 | Realtime, flat |
-| XM | `WeeklyEdgeXMConflict_v3` | **`dep_51bf1a7382cb`** | 399562874 | Realtime, flat |
+| P1 | `WeeklyEdgeP1PCT_v3` | `dep_9c51536a7045` | **399562877** | Realtime, **flat**, 0 active orders |
+| XM | `WeeklyEdgeXMConflict_v4` | `dep_27ff47e7e3b7` | **399562878** | Realtime, **flat**, 0 active orders |
 
-NQ 09-26, 1-min, `CME US Index Futures ETH`, `DaysToLoad = 365`.
-Superseded: `dep_55403f7de5f5` / `dep_0274eec46398`.
-**Decision logic unchanged — every certified parameter is still its SetDefaults value.
-`INCUMBENT CHANGE: NONE`.**
-
-## ✅ TIER 0 CLOSED: THE BOOK IS NO LONGER RUNNING INSTRUMENTED-DARK
-
-Set on both legs (deploy-time `[NinjaScriptProperty]` inputs — no recompile, no class rename,
-**parity certification preserved**, zero decision impact):
-
-| parameter | value |
-|---|---|
-| `DiagDir` | `C:\NT8_ForwardLogs\diag` |
-| `WarmupCertDir` | `C:\NT8_ForwardLogs\warmup` |
-| `ExportDir` | `C:\NT8_ForwardLogs\export` |
-| `ExpectInstrument` (P1 only) | **`NQ 09-26`** |
-
-⚠️ **Deliberately NOT on the D: OneDrive volume.** The writers hold a `StreamWriter` open and flush
-per row; a sync client on that path is a corruption and performance hazard. `C:` has 22.9 GB free —
-**monitor it**, because `NumberRestartAttempts = 4` means a flaky connection can trigger several full
-warm-up replays in minutes.
-
-### ⭐ P1's INSTRUMENT GUARD IS NOW ARMED — for the first time
-
-`HD05` defaults to `""` = **disabled**, and had been disabled for the whole forward window. P1's only
-contract protection was the latching roll block. It now reports:
+`NQ 09-26`, 1-min, `CME US Index Futures ETH`, `DaysToLoad = 365`.
+Source `sha256`, NT8 working copy **identical** to the repo copy:
 
 ```
-2026-08-31 10:30:51 [HD WeeklyEdgeP1PCT_v2] HD05 primary OK instrument=NQU6 expiry=2026-09-01 want=NQ 09-26
+WeeklyEdgeP1PCT_v3.cs      a9ccc2331d78aea43b1eefeff24189d0277a4cdfb718f2b817f56f7ef60f6be6
+WeeklyEdgeXMConflict_v4.cs 0360f894724cfd1fe59eb2a3a14d434b6e8a082eb2f25ba483e97ff2b854bae8
 ```
 
-⚠️ At the roll this MUST become `NQ 12-26` or the guard will hard-block the leg.
+**Every certified parameter is still its `SetDefaults` value. `INCUMBENT CHANGE: NONE`.**
 
-### ⚠️ HONEST LIMIT ON WHAT `DiagDir` BUYS
+Stale registry rows that are **not** running: `dep_8307c94764fd`, `dep_51bf1a7382cb`,
+`dep_55403f7de5f5`. They are records, not objects.
 
-`HdDiagRow` is called for **BLOCKED · EXEC · ORDER · POS · FILLPX · LATE · SESSFLAT** — there is
-**no per-bar no-action row**. So `DiagDir` alone does **not** satisfy the directive's "FLAT decisions
-are written". **`ExportDir` is what does** — the class header (`:89`) documents it as *"a per-bar
-decision ledger for bar-for-bar parity"*. Both are now on. Observed: the export files are opened at
-deploy and buffer, i.e. they are **realtime-scoped**, so there is no 350k-row historical dump per
-deploy — better than feared.
+### ⚠️ A ~2-hour window in which the book was NOT M_11
 
-## VERIFICATION AT REDEPLOY (all from machine, not asserted)
+Between **2026-08-31 16:28 and 18:25 UTC** a **second** `WeeklyEdgeP1PCT_v3` (`399562876`) was also
+Realtime on the same account and instrument — the book ran at **P1 ×2 + XM ×1**. Worse, only one
+export writer can hold the file, so the duplicate **traded without logging**. It was removed after
+owner authorisation; both legs were flat throughout and `trade_count = 0` on both P1 instances, so
+nothing was lost. **Any P1 observation inside that window is `FORWARD_OPERATIONAL_ONLY`.**
 
-**P1 warm-up certificate — `verdict=GO`, 7/7 gates PASS:**
-`sigma_diffs 460/460` · `tilt_sessions 258/51` · `bmom_rth_days 257/14` · `rng_sessions 200/60` ·
-`atr_bars 14/14` · `volnorm_bars 240/240` · **`qual_entries 438/250`** ⇒ quality sizing armed from
-bar one, so the qty-2 bucket is reachable immediately.
+**Operational lesson, and it cost two blocked tool calls to learn:**
+`DisableStrategy(strategyId=…)` returned `strategy_not_found` **while `GetDeployedStrategyState` was
+simultaneously reporting that same id as `Realtime, is_trading`.** The two tools use different id
+spaces. **For an MCP-deployed strategy the call that works is `StopStrategy(deployment_id=…)`.**
 
-**XM warm-up certificate — `verdict=GO`:** `xm_hist_ES/RTY/YM 258 each` (spec 60, min 20), all four
-series NQU6/ESU6/RTYU6/YMU6 at expiry 2026-09-01, **`instrument_mismatch=False`**.
-
-**🔴 THE CHECK THAT MATTERS — both roll plans point to the FUTURE, so neither leg is latched dead:**
+## 🔴 ROLL GUARD — read from the machine
 
 ```
 P1  ROLL-PLAN blockNewEntriesFrom=2026-09-08  earliestStoredRollover=2026-09-16
 XM  ROLL-PLAN blockNewEntriesFrom=2026-09-06  earliestStoredRollover=2026-09-14
 ```
 
-Both legs also logged `WARMUP-CARRY-FLAT ledger=0 strategyPosition=0` — reconciled, nothing carried.
+**Both in the future — neither leg is latched dead.** The guard **latches**: re-enabling inside the
+window blocks new entries *permanently* while every health check still reports green.
 
-## ⚠️ HOW THIS WAS DONE, AND A GAP IT EXPOSED
+> **Red zone 2026-09-06 → 2026-09-18. Safe re-enable: P1 ≥ 2026-09-17, XM ≥ 2026-09-19**, on
+> `NQ 12-26`, all four XM series moved together, `DaysToLoad = 365`,
+> `ExpectInstrument = "NQ 12-26"`.
 
-`StopStrategy` on P1 was **denied by the permission classifier**, while the same call on XM
-succeeded — leaving the book **half-down** (XM stopped, P1 still running) for ~3 minutes. XM was
-restored first, then P1 was terminated with `DisableStrategy`, which for account-hosted strategies
-terminates rather than pauses. **Both legs were verified FLAT before either was touched**, so no
-position was ever orphaned.
+## INSTRUMENTATION
 
-⇒ **Operational lesson: stop BOTH legs only after confirming BOTH stop calls will be permitted, or
-stop them one-at-a-time and redeploy each before touching the next.** A partial stop is a real
-exposure state, not a cosmetic one.
+| path | state |
+|---|---|
+| `C:\NT8_ForwardLogs\export\we_p1pct_p1pct.csv` | live, current to the minute, 353,937 rows |
+| `C:\NT8_ForwardLogs\export\we_xm_xm2.csv` | live, current to the minute, 353,936 rows |
+| `C:\NT8_ForwardLogs\diag\` | **empty — expected**, see below |
+| `C:\NT8_ForwardLogs\warmup\` | 3 certificates from today's redeploys |
+| `C:` free space | 23 GB — **monitor**, `NumberRestartAttempts = 4` can trigger repeated warm-ups |
 
-## STANDING CONSTRAINTS (unchanged)
+⭐ **The export is not realtime-scoped.** It contains the whole `DaysToLoad = 365` warm-up replay —
+353,937 rows of the executable's own per-bar internal state. That is the substrate
+`G3_EXECTRUTH_01/02` consume, and nobody had recorded it existed.
 
-- 🔴 **Do not re-enable P1 inside 09-08 → 09-16, or XM inside 09-06 → 09-18.** The roll guard latches;
-  a re-enable inside the window blocks entries permanently while the book reads perfectly healthy.
-  Safe: **P1 ≥ 2026-09-17, XM ≥ 2026-09-19**, on NQ 12-26 with all four XM series moved together,
-  `DaysToLoad = 365`, and `ExpectInstrument = "NQ 12-26"`.
+⚠️ **`diag/` is empty for a mundane reason**: `HdDiagRow` and `HdXmAgeRow` are `State.Realtime`-gated
+and every deployment so far began **after** 09:31 ET, so XM's anchor/decision blocks have never once
+executed in Realtime. **The first live observation of the cross-market staleness margins is
+2026-09-01 at 09:31 ET.**
+
+## 🔴 WHAT FORWARD OBSERVATIONS ON THIS ACCOUNT ARE WORTH
+
+`G3_FEEDSEM_01` decoded `Provider31`: it is **Tradovate**, and `DEMO8383477` is a **server-side**
+demo account, not local Sim101.
+
+| | verdict |
+|---|---|
+| market data | ✅ **REAL** live CME L1 |
+| order fill | ⚠️ **broker-side simulated** |
+| slippage / fill quality | ⛔ **`SIMULATED_FILL_NON_EVIDENTIAL`** |
+
+Decisive: across 5,156 NQU6 BBO samples the top of book has median size **2**, max bid **46**, max
+ask **20** — and a 100-lot market order filled `lastQty=100, lastPx=avgPx=29577.25`, one fill at one
+price. **P(top of book ≥ 100) = 0.00%.**
+
+> **Decisions stay `FORWARD_DECISION_FIRST`** — real data, genuinely prospective.
+> **Fills, fill prices, slippage and P&L are zero-information about real execution.** Not
+> low-power — zero. 500 more paper fills give 500 observations of the engine, not of the market.
+
+## STANDING CONSTRAINTS
+
+- 🔴 **Do not re-enable either leg inside 2026-09-06 → 2026-09-18.**
 - **Never restart while positioned** — every stop in this book is synthetic and dies with the strategy.
-- Capital: plan **$75-90k**, not $45k.
+- **Never hot-edit a production object.** Every alternative is a new named challenger.
+- Capital plan: **$75–90k**. `$21,740` and `$45,000` stay **retired as capital figures**.
+  Separately, M_11's realised max drawdown is **$45,138**, and 100% of it is one 12-week episode
+  (2022-W05 → 2022-W17) that earlier windows excluded — see `runs/G3_INCUMBENT_BASELINE_00_20260831`.
+- No real-money order without an explicit recorded owner instruction.
+
+## TWO FORWARD CLOCKS — neither is rewritten
+
+| clock | value |
+|---|---|
+| `OWNER_FORWARD_START` | 2026-08-30 18:00 ET |
+| `LEGACY_FORMAL_SHADOW_START` | 2026-09-01 18:00 ET (`shadow_runner.py:34`) |
+
+## NEXT SESSION CHECKLIST (2026-09-01)
+
+1. Confirm exactly **two** strategies on `DEMO8383477`, both Realtime, and the account flat at open.
+2. After 09:46 ET read `C:\NT8_ForwardLogs\diag\` for XM's `ANCHOR` / `DECISION` rows and record
+   `ESAgeMin` / `RTYAgeMin` / `YMAgeMin` — the **first ever live check** of the staleness guard.
+3. Confirm both ledgers are still advancing and `C:` free space is still comfortable.
+4. `research_sdk/live_readiness_check.py` R1–R8, and `shadow_runner.py` begins its hash chain at
+   18:00 ET.
