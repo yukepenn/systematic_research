@@ -50,6 +50,96 @@ recorded FAILED or CLOSED against a falsifier written before its results existed
 
 ---
 
+# A2. THE OWNER ASKED THE HARDER QUESTION: IS THIS GOOD ENOUGH FOR REAL MONEY?
+
+"Have you found a better strategy, or is it still P1+XM in its current form?" — **still P1+XM, and
+no candidate reached BUILD_READY.** But that answer is incomplete without two numbers nobody in this
+repo had computed, both of which are more decision-relevant than any challenger result.
+
+## A2.1 🔴 LIVE TRADING CANNOT TELL US IF THIS WORKS, FOR YEARS
+
+One-sided 5% test against the null "this book earns zero", weekly SD held at its in-sample $7,195:
+
+| if the true mean is | 1 yr power | 2 yr power | 3 yr power | **years to 80% power** |
+|---|---:|---:|---:|---:|
+| $900/wk | 23% | 36% | 47% | **7.8** |
+| **$1,300/wk** | **37%** | **58%** | **73%** | **3.8** |
+| **$1,600/wk** | **48%** | **73%** | **87%** | **2.5** |
+| $1,900/wk | 60% | 85% | 95% | 1.8 |
+| $2,211/wk (in-sample headline) | 72% | 93% | 99% | 1.5 |
+
+**At the honest forward central expectation, one year of live trading is a coin flip and two years
+still leaves a ~30–40% chance of failing to distinguish the book from zero.** Going live is
+therefore a **2.5–4 year commitment before the evidence can answer the question you are asking of
+it.** The forward paper stream cannot shorten this: fills are `SIMULATED_FILL_NON_EVIDENTIAL`, and
+the *decision* stream accumulates at exactly the same 1.5 trades/week that produced this table.
+
+## A2.2 🔴 THE $75–90k CAPITAL PLAN IS A BET, NOT A CAPITAL PLAN
+
+🔴 **CORRECTED 2026-08-31, after an owner challenge — and the correction goes the wrong way.**
+`$45,138` is the **WEEKLY-bucketed** drawdown, and **weekly aggregation smooths the within-week
+path.** A trader experiences the trade-level drawdown. Full reconciliation:
+`runs/G3_INCUMBENT_BASELINE_00_20260831/out/drawdown_reconciliation.txt`.
+
+| window | object | **trade-level** | daily | weekly |
+|---|---|---:|---:|---:|
+| FULL 2022-01-02 → 2026-08-25 | P1 | 27,765 | 26,318 | 23,099 |
+| | XM | **34,193** | 34,193 | 32,383 |
+| | **M_11** | 🔴 **51,891** | 51,891 | 45,138 |
+| OQ6 2022-W27 → 2026-W31 | M_11 | 37,461 | 35,417 | 28,596 |
+| MODERN 2022-05 → | M_11 | 37,461 | 35,417 | 28,596 |
+
+**Provenance of every drawdown figure this campaign has quoted — two sources of difference, only two:**
+
+| figure | what it actually is |
+|---|---|
+| `$21,740` | `G2_OQ6_MAPPING` — M_11 **weekly**, window from **2022-W27**, entry-date week bucketing |
+| `$28,596` | same window and object, bucketed by the ledger's own `wk` column |
+| `$29,454` | GENESIS I — **P1 trade-level** (this run's comparable figure: $27,765) |
+| `$45,138` | M_11 **weekly**, FULL window — the only one that **includes H1 2022** |
+| **`$51,891`** | **M_11 trade-level, FULL window — the figure capital planning must use** |
+
+1. **WINDOW.** M_11's *entire* drawdown is 2022-W05 → 2022-W17. OQ6's window starts **after** it.
+2. **BUCKETING.** Trade-level is **15% deeper than weekly**.
+
+Note also: **XM alone ($34,193) draws down more than P1 alone ($27,765)** — the same fact as "XM buys
+half the return with more than all of the risk", seen from the drawdown side.
+
+| capital | **trade-level** maxDD as % of it | annualised @ $1,300/wk | @ $1,600/wk |
+|---|---:|---:|---:|
+| **$10,207** (account `2047681`) | 🔴 **508%** | — | — |
+| **$75,000** | **69%** | 90% | 111% |
+| **$90,000** | **58%** | 75% | 92% |
+| $157,245 | 33% | 43% | 53% |
+| **$207,564** | **25%** | 33% | 40% |
+
+A 90–111% annual return and a 58–69% drawdown are **the same fact stated twice.** For the trade-level
+drawdown to be 33% of capital requires **$157,245**; for 25%, **$207,564**.
+
+And $51,891 is **one realised path**, not a distribution — H1 2022 demonstrates the book can produce
+it, and the modern-era figure is the *lower* of the two observations, not the truth.
+
+## A2.3 WHAT I WOULD ACTUALLY SAY TO THE OWNER
+
+**The evidence supports P1+XM as the best book we can construct today. It does not support the
+$75–90k sizing, and it does not support expecting live trading to validate the decision quickly.**
+
+Three things that are true at once, and all three have to be held:
+
+1. **The book is real work.** Parity-certified, an executable object now reproduced at
+   100.000%/100.000%, a corrected −2.0% research offset, and five challengers killed by falsifiers
+   written in advance. This is not a curve fit that nobody checked.
+2. **Every historical number is in-sample and post-selection.** There is no out-of-sample regime.
+   The modern window is 221 weeks of a 221-week regime.
+3. **The risk is at the top of what a $75–90k account can absorb, and the feedback loop is years
+   long.** Those two together are the real constraint — not the absence of a better strategy.
+
+**If real money is the goal, the highest-value next actions are not alpha.** They are: fix the roll
+procedure (~$437/wk, §H), size to the drawdown rather than to the return, and accept a multi-year
+evaluation horizon before the live record can overrule the backtest.
+
+---
+
 # B. CHAMPION BOARD
 
 | # | candidate | mechanism | result | why | status |
