@@ -1,0 +1,81 @@
+run_id: G3_SESSTRUCT_00_20260831
+title: "Session-structure substrate for NQ, plus verification of ONE inherited factual claim.
+        DATA-ONLY. No alpha is run, no candidate is produced, no gate exists."
+date: 2026-08-31
+campaign: GENESIS III - NQ CHAMPION CHALLENGE / WAVE D preparation
+status: PREREGISTERED - committed before the substrate was built
+live_enabled: NO
+spend: 0
+
+# ==================================================================================================
+# WHAT THIS IS, AND WHAT IT DELIBERATELY IS NOT
+# ==================================================================================================
+purpose: >
+  WAVE C (independent short engines) and WAVE D (session/ORB/overnight structures) both need the
+  same causal per-session feature table, and neither should build its own - two builds drift, and a
+  feature table built AFTER a mechanism is chosen is a place for a mechanism to hide.
+  This run builds that table ONCE, mechanism-neutrally, BEFORE any short or ORB candidate exists.
+
+it_is_not: >
+  It is not a strategy, not a screen, not a ranking, and not a search. No feature here is selected,
+  weighted, thresholded or evaluated against P&L. NO P&L IS COMPUTED ANYWHERE IN THIS RUN. The
+  substrate contains descriptive session geometry and nothing else, so that a later preregistered
+  candidate can be written against named columns rather than against a scan.
+
+# ==================================================================================================
+# THE ONE CLAIM BEING VERIFIED
+# ==================================================================================================
+inherited_claim: >
+  The repository/owner record asserts that RTH breaks at least one full Globex overnight extreme on
+  a very high fraction of days. Directive section 17D orders this VERIFIED and simultaneously
+  forbids treating the event probability as edge.
+what_verification_means_here: >
+  Compute the unconditional frequency, per calendar year, with the denominator stated (sessions
+  having a usable RTH segment), and publish the number whatever it is.
+what_is_explicitly_FORBIDDEN_in_this_run: >
+  - Conditioning that frequency on anything.
+  - Any statement of the form "therefore trade the break" or "therefore fade the break".
+  - Any search over which side, which time, or which follow-through is profitable.
+  A near-certain event has near-zero information content BY CONSTRUCTION: if RTH breaks an overnight
+  extreme on ~95% of days, knowing that it will is worth nothing. The forecastable quantity, if any,
+  is WHICH SIDE / WHEN / WHETHER IT HOLDS - and that is a WAVE D question requiring its own
+  preregistration, its own null, and its own falsifier. It is not opened here.
+
+# ==================================================================================================
+# DEFINITIONS - fixed now so a later candidate cannot quietly redefine them
+# ==================================================================================================
+clock: >
+  Bars are END-STAMPED. The bar stamped 09:31 covers 09:30:00-09:30:59 and its OPEN is the
+  09:30:00 print. Sessions run 18:00 -> 17:00 ET (research_sdk/session_boundary.py convention);
+  load_deep splits on gaps > 60 minutes.
+segments:
+  OVERNIGHT: "bars stamped from session start through 09:30 inclusive (the Globex segment)"
+  RTH:       "bars stamped 09:31 through 16:00 inclusive"
+  POST:      "bars stamped after 16:00 through session end"
+first_break_rule: >
+  Scan RTH bars in time order. The first bar whose HIGH exceeds on_high is an UP break; the first
+  whose LOW is below on_low is a DOWN break; whichever occurs at the earlier bar is THE first break.
+ambiguity_is_reported_not_resolved: >
+  If a single 1-minute bar both exceeds on_high AND undercuts on_low, the order of the two events
+  inside that bar is UNKNOWABLE from 1-minute data. Such sessions are labelled side="BOTH_SAME_BAR"
+  and COUNTED SEPARATELY. They are never silently assigned a side. Resolving them requires the tick
+  store, and how many there are determines whether that is worth doing.
+degenerate_sessions: >
+  Sessions with no RTH bars (holidays), fewer than 30 RTH bars (early closes), or no overnight
+  segment are flagged and EXCLUDED FROM THE FREQUENCY DENOMINATOR, with their count printed.
+
+causality: >
+  Every column is either (a) fully determined before 09:30:00, or (b) explicitly stamped with the
+  time at which it becomes known. Column names carry the suffix _rth or _post when they contain
+  information not available at the open. A later candidate that uses a _rth column as if it were an
+  open-time input is committing a look-ahead, and the naming exists to make that visible.
+
+window: "2005-01-03 -> 2026-07-31"
+seal_compliance: "NO read of any session >= 2026-08-01. The count excluded is printed."
+evidence_status: DESCRIPTIVE. Consumes no discovery budget: there is no outcome variable in this run.
+
+prohibitions:
+  - no order, deploy, enable, disable, stop or modify on any account
+  - no read of any session >= 2026-08-01
+  - no P&L, no returns-conditional statistic, no ranking, no threshold selection
+  - no candidate may be born in this run; candidates require their own preregistration
