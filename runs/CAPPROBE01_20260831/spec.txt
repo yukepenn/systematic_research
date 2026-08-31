@@ -1,0 +1,29 @@
+CAPPROBE01 — PREREGISTERED GATE (frozen 2026-08-31, BEFORE any provider call)
+
+QUESTION (capability, not economics): does the data provider serve ^TICK / ^TRIN 1-minute history
+before 2022-01-03, i.e. is the local 2022 start a FETCH boundary rather than a DATA boundary?
+
+MOTIVATION (verified by orchestrator, not inherited): db\minute\^TICK holds 1,419 files. 206 are
+empty at <=32 B, establishing a discriminating empty-residue signature. The four pre-2022 files
+present (20130102=3,398 B, 20150102=3,537 B, 20180709=3,148 B, 20180710=3,194 B) are all genuine
+payloads against a payload median of 3,298 B. So at least four pre-2022 dates were served.
+
+PROBE: 18 preregistered dates, two per year 2013..2021, mid-month, chosen BEFORE any call and listed
+below. One GetBars(periodType=Minute, period=1) per symbol per date.
+
+SCORING (frozen): a date is a HIT iff the call returns >= 300 bars for that RTH-only symbol.
+HTTP success with < 300 bars is a MISS. Scored SEPARATELY per symbol.
+
+GATE (frozen): PASS iff >= 90% of probed dates are HITs for that symbol.
+  PASS  -> the 2022 start is a FETCH boundary; a full backfill is warranted (separate decision).
+  FAIL  -> the provider genuinely does not serve it; the claim is closed permanently.
+
+NO ECONOMIC STATISTIC IS COMPUTED. No P&L, no threshold search, no outcome data touched.
+Acquiring this window is free. SPENDING it in a statistic is a SEPARATE owner decision: 2013-2021
+carries family-selection debt, and ERABREAK01 (p=0.0011) makes pre-2022 intraday-vol statistics
+inadmissible as pooled modern priors - admissible only era-stratified, or as the discovery half of a
+preregistered discovery/confirmation split.
+
+DATES: 2013-03-13 2013-09-11 2014-03-12 2014-09-10 2015-03-11 2015-09-09 2016-03-09 2016-09-14
+       2017-03-08 2017-09-13 2018-03-14 2018-09-12 2019-03-13 2019-09-11 2020-03-11 2020-09-09
+       2021-03-10 2021-09-08
