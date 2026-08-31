@@ -27,8 +27,12 @@ sessions the book nets **$43,738 MORE** and max DD falls to $36,943.
 
 ⇒ **The true worst drawdown is July 2026.** And this is the second independent confirmation that a
 cold start is worth ~$45k of drawdown — it is the deepest hole in the record.
-⚠️ Nevertheless **size capital at $45,000**, because that is exactly what a redeploy without
-`DaysToLoad = 365` reproduces.
+⚠️ 🔴 **CORRECTED 2026-08-31 — the "$45,000" capital line written here is RETIRED. Plan $75,000–90,000.**
+The Tier-2 wave measured **2-year p90 DD = $43,747 — 97 % of $45k** — and a single observed
+margin-cliff event alone needs **$43,434**. $45k was the in-sample *sample maximum* on the most
+optimistic cost basis; planning at a sample max is planning to be exhausted. *(What remains true is
+the original point: a redeploy without `DaysToLoad = 365` reproduces roughly that drawdown — that is
+an argument about the un-warmed hazard, not a capital plan.)*
 
 ## 2. JULY 2026 IS **FOUR DAYS**, AND THEY ARE FOUR JOINT-LOSS DAYS
 
