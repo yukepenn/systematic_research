@@ -1,0 +1,159 @@
+run_id: G3_CLOCKLAG01_20260831
+title: "Does NQ carry cross-day periodicity at a MATCHED CLOCK BUCKET - the scheduled-flow trace -
+        and is it distinguishable from generic within-day momentum? STAGE 1 IS STRUCTURAL ONLY."
+date: 2026-08-31
+campaign: GENESIS III - NQ CHAMPION CHALLENGE / WAVE C
+status: PREREGISTERED - written and committed BEFORE any statistic was computed
+live_enabled: NO
+spend: 0
+orders_placed: NO
+
+# ==================================================================================================
+# 0. WHY THIS ONE AND NOT THE OTHER ELEVEN
+# ==================================================================================================
+provenance: runs/G3_WAVEB (8 independent mining surfaces, 58 candidates, 34 killed as rehashes)
+why_selected: >
+  Of 24 survivors this is the ONLY family the failure-memory pass returned as GENUINELY_NEW_ALLOW,
+  and it arrived independently from two mining surfaces with the same causal story AND the same
+  identifying restriction. It is a dependency P1's within-session vote stack and XM's
+  contemporaneous cross-market z-score are STRUCTURALLY INCAPABLE of representing: both read only
+  the current session, and this signal is formed entirely from strictly-prior sessions.
+  It is direction-neutral by construction, so unlike every other short-bearing candidate on the
+  slate it cannot inherit P1's long bias - roughly half its signals are shorts.
+  It is decidable rather than underpowered: 13 buckets x ~5,000 sessions is a regression table,
+  not a rare-event count. It costs $0 (NQ 1-minute only, already on disk).
+
+what_a_null_buys: >
+  A null does not merely close one rule. It closes the whole "scheduled institutional flow leaves a
+  periodic price trace" story that several other WAVE B candidates lean on, and it closes a
+  peer-reviewed channel (Heston/Korajczyk/Sadka 2010, and the intraday-periodicity literature that
+  followed). That is why it ranks first on EVI rather than on expected profit.
+
+# ==================================================================================================
+# 1. MECHANISM, STATED SO IT CAN BE WRONG
+# ==================================================================================================
+mechanism: >
+  Institutional execution schedules - VWAP/TWAP slice boundaries, model-portfolio and target-vol
+  resets, index-fund cash flows - repeat at the SAME CLOCK WINDOW on consecutive days. THE
+  SCHEDULING REPEATS, NOT THE INFORMATION. Price pressure should therefore recur at lags that are
+  exact multiples of one trading day and be ABSENT at non-daily lags.
+identifying_restriction_this_is_the_whole_test: >
+  Generic momentum predicts that a recent return predicts the next return REGARDLESS of clock
+  alignment. The scheduling mechanism predicts something strictly stronger and falsifiable: that
+  the SAME clock bucket one day ago beats the ADJACENT bucket a few minutes ago. If the adjacent
+  bucket is as strong, the mechanism is FALSIFIED even if the raw predictability is real.
+
+# ==================================================================================================
+# 2. DEFINITIONS - frozen now so nothing can be re-chosen after seeing a result
+# ==================================================================================================
+buckets: >
+  RTH 09:30 -> 16:00 ET split into 13 consecutive 30-minute buckets, b = 0..12. Bucket b covers
+  [09:30 + 30b, 09:30 + 30(b+1)). Bars are END-STAMPED, so bucket 0 is the bars stamped
+  09:31..10:00 inclusive. No other bucket width is tried; 30 minutes is the HKS convention and is
+  frozen here to prevent a width search.
+return_definition: "r(b, d) = log( close of the last bar in bucket b on day d / close of the last
+                    bar in bucket b-1 on day d ), with r(0, d) using the RTH open (the 09:30:00
+                    print, i.e. the OPEN of the bar stamped 09:31) as its base."
+data: "NQ 1-minute, load_deep(extend=True). No other instrument is used in Stage 1."
+window: "2006-01-05 -> 2026-07-31"
+era_stratification_is_mandatory: >
+  ERABREAK01 (p=0.0011) places a structural break at 2022-05 and FORBIDS pooling pre-2022 with
+  modern. Every statistic is therefore reported in THREE strata - PRE (2006 -> 2022-04),
+  MODERN (2022-05 -> 2026-07-31), and FULL - and the FULL number is a diagnostic only. A result
+  that exists only in PRE is recorded as an old-regime finding, not as a candidate.
+seal_compliance: "NO read of any session >= 2026-08-01. Rows dropped are printed."
+
+# ==================================================================================================
+# 3. STAGE 1 - STRUCTURAL. NO P&L IS COMPUTED. NO POSITION IS FORMED.
+# ==================================================================================================
+S1_the_table:
+  treatment: "beta_same(b) from regressing r(b, d) on r(b, d-1)   [same clock bucket, one day back]"
+  control_A:  "beta_adj(b)  from regressing r(b, d) on r(b-1, d)  [ADJACENT bucket, same day]"
+  control_B: >
+    beta_nonmult(b) from regressing r(b, d) on r(b', d-1) for b' != b, averaged over b' - the
+    NON-DAILY-MULTIPLE lag. The scheduling mechanism requires this to be ~0 while beta_same is not.
+  reported: "all 13 buckets x 3 estimators x 3 eras, t-statistics from SESSION-CLUSTERED standard
+             errors, printed as one table by the program. Nothing is selected from it yet."
+
+S1_GATE_the_identifying_restriction:
+  PASS: >
+    In the MODERN stratum: mean over buckets of beta_same must be positive AND must exceed mean
+    beta_adj by a margin that survives the null in S1_GATE_NULL, AND mean beta_nonmult must be
+    statistically indistinguishable from zero.
+  FAIL_and_the_family_dies_here: >
+    If beta_adj >= beta_same, the effect is generic within-day momentum, the scheduling mechanism
+    is FALSIFIED, and the run STOPS. No economics, no Stage 2, no candidate. This is the cheapest
+    possible death and it is the reason Stage 1 exists.
+
+S1_GATE_NULL_multiplicity_is_priced:
+  why: >
+    MC-11 died on exactly this: 13 buckets x 40 configurations examined, best-of reported. Any
+    argmax over buckets must be replicated INSIDE the null or the null is meaningless.
+  null: >
+    CIRCULAR SHIFT of the day index applied to the PREDICTOR series only, preserving each bucket's
+    own distribution and the within-day cross-bucket dependence. 2,000 draws. On each draw the
+    ENTIRE analysis is redone including any max-over-buckets step, and the max statistic is
+    recorded. The observed statistic is compared to that max distribution.
+  effective_K: >
+    Buckets within a day are correlated. Wherever a bucket count enters an inference,
+    K_eff = K / (1 + (K-1) * rho_bar) is used with rho_bar the measured mean pairwise correlation
+    of the 13 bucket return series, and rho_bar is PRINTED.
+
+# ==================================================================================================
+# 4. STAGE 2 - ECONOMICS. RUNS ONLY IF STAGE 1 PASSES.
+# ==================================================================================================
+S2_precondition: "S1_GATE and S1_GATE_NULL both PASS in the MODERN stratum. Otherwise Stage 2 does
+                  not run and NO DOLLAR FIGURE IS PRODUCED."
+S2_rule_frozen_now: >
+  At the OPEN of bucket b on day d, take a position of sign( r(b, d-1) ) held to the CLOSE of
+  bucket b. Size 1 contract. No sizing layer, no filter, no threshold, no bucket selection - all 13
+  buckets trade every day. Selecting a subset of buckets after seeing Stage 1 is prohibited and the
+  program must refuse to do it.
+S2_cost_floor_CORRECTED_and_this_matters: >
+  The WAVE B candidate assumed ~0.9 NQ points per round turn. THAT IS STALE AND IT IS THE SINGLE
+  MOST LIKELY WAY THIS CANDIDATE DIES.
+  G2_EXEC01_P1_EXECUTION_20260828 measured $20.65/ctrRT (median $20.00, p90 $35.00) on 113 real
+  round turns; the standing all-in figure is $25.01/RT and Jun-Jul 2026 ran ~$33.
+  Stage 2 is therefore charged at THREE lines, all printed:
+      $4.36/ctrRT   commission only - a floor, never a headline
+      $20.65/ctrRT  EXEC01 measured  = 1.03 NQ points  <- THE PRIMARY LINE
+      $25.01/ctrRT  standing all-in  = 1.25 NQ points
+  A 30-minute bucket trade must clear ~1.03 points to break even on the primary line. With 13
+  buckets x ~250 sessions = ~3,250 round turns per year, the annual cost at the primary line is
+  ~$67,000. STATE THAT NUMBER IN THE REPORT NEXT TO ANY GROSS FIGURE.
+S2_gates:
+  G1_net_positive: "net > 0 on the PRIMARY cost line in the MODERN stratum. Not on commission-only."
+  G2_beats_its_own_null: "net must exceed the 95th percentile of the same circular-shift null,
+                          re-run with costs applied identically."
+  G3_not_a_leverage_artifact: "reported on the champion_eval risk vector, never on net alone."
+  G4_stability: "positive in >= 4 of 5 leave-one-calendar-year-out recomputations within MODERN."
+decision_rule: "ALL of G1..G4 -> CANDIDATE, queued for the champion board. NOT promoted, NOT built,
+                NOT deployed. ANY fail -> recorded FAIL, population never redefined."
+
+# ==================================================================================================
+# 5. TRAPS NAMED BEFORE RUNNING
+# ==================================================================================================
+traps:
+  - "MULTIPLICITY. 13 buckets x 3 estimators x 3 eras = 117 numbers. The max-statistic null is the
+     only defence and it must replicate the argmax step. Reporting the best bucket without it would
+     be MC-11 exactly."
+  - "COST. At 13 round turns per session this is a HIGH-TURNOVER rule and cost dominates. The
+     corrected floor (1.03 pts) is ~4x a typical 30-minute bucket's mean |return| in quiet hours.
+     A positive GROSS result is the expected outcome and means nothing on its own."
+  - "OVERLAP WITH THE INCUMBENT. P1 trades all day. If Stage 2 passes, the champion board must
+     measure the trade-level overlap with P1's schedule before any additivity claim - a bucket rule
+     that fires while P1 is already long is not diversification."
+  - "The 09:30 and 15:30 buckets are structurally different (open auction, close auction). They are
+     NOT excluded - excluding them after seeing the table would be a selection - but the report must
+     show the table WITH and WITHOUT them so a reader can see whether the whole effect is two
+     buckets."
+  - "HKS was measured on US EQUITIES, not on an index future. A null here does not falsify HKS; it
+     falsifies its transfer to NQ. The report must say that."
+
+prohibitions:
+  - no order, deploy, enable, disable, stop or modify on any account
+  - no edit to any production .cs file or to research/weekly_edge/src/
+  - no read of any session >= 2026-08-01
+  - no bucket subset may be selected after Stage 1 is seen
+  - no bucket width other than 30 minutes may be tried in this run or a successor
+  - no promotion, no build, no deployment may originate from this run

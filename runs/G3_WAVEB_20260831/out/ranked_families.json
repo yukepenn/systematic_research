@@ -1,0 +1,186 @@
+{
+ "families": [
+  {
+   "family": "CLOCK-LAG PERIODICITY — cross-day return dependence at a matched clock bucket",
+   "mechanism": "Institutional execution schedules (VWAP/TWAP slice boundaries, model-portfolio and target-vol resets, index-fund cash flows) repeat at the SAME clock window on consecutive days. The scheduling repeats, not the information, so price pressure recurs at lags that are exact multiples of one trading day and is absent at non-daily lags. The signal is formed entirely from strictly-prior sessions, so it exists before the session opens.",
+   "direction": "both",
+   "members": [
+    "CLOCKLAG_PERIODICITY — day-lagged same-clock-bucket flow persistence",
+    "Same-clock-time periodicity at exact daily lags (index-level Heston-Korajczyk-Sadka)"
+   ],
+   "evi_rank": 1,
+   "evi_rationale": "The ONLY candidate in the slate that returned GENUINELY_NEW_ALLOW, and it arrived independently from two mining surfaces with the same causal story and the same identifying restriction. It is a dependency P1's within-session vote stack and XM's contemporaneous cross-market z-score are structurally incapable of representing. It is decidable rather than underpowered: 13 buckets x ~5,000 sessions is a regression table, not a rare-event count. It costs $0 (NQ 1-min only), it is direction-neutral by construction so it cannot inherit P1's long bias (roughly half the signals are shorts), and it is already registered in-house as an unrun hypothesis (DR_A H7). A null closes a peer-reviewed channel and, more usefully, closes the whole 'scheduled institutional flow leaves a periodic price trace' story that several other candidates lean on. Carry two cautions into the spec: the 13x40 multiplicity that killed MC-11 must be family-corrected, and the 0.9-point cost floor the candidate assumes is STALE (EXEC01 measured $20.65/ctrRT on P1; standing figure $25.01/RT = ~1.25 pts), which eats most of the claimed 1.5-4.6 pt band.",
+   "data_available": "YES",
+   "testable_now": true,
+   "kill_criterion": "The non-daily-multiple lag control, printed in the same table as the treatment: predict bucket b on day d from the SAME bucket at lag 1 day versus from the ADJACENT bucket on the SAME day, over all 13 buckets and the full sample, with the argmax-over-buckets selection replicated identically inside a circular-shift null. If the adjacent-bucket (non-daily-multiple) predictor is as strong, the effect is generic momentum, the scheduling mechanism is falsified, and the family dies with no P&L run at all.",
+   "best_source": "https://doi.org/10.1111/j.1540-6261.2010.01573.x"
+  },
+  {
+   "family": "IMPLIED VOLATILITY AS A SIGNED SHORT DIRECTION (not as a filter)",
+   "mechanism": "The price of variance risk flips sign with the trading window: the equity premium is compensated overnight, while the intraday window is where levered/short-horizon holders de-risk and liquidity providers extract compensation. High ex-ante implied variance should therefore carry NEGATIVE expected intraday drift — a signed short trigger, not an exposure gate. The vendor measurement of the same object is that NQ's close-relative-position inverts from 65-67% under VIX<15 to 43-45% under VIX>25.",
+   "direction": "short",
+   "members": [
+    "Negative INTRADAY mean-variance relation as a signed short engine, with the overnight leg as a built-in sign-flip placebo",
+    "VIXREG-ROUTER — prior-day VIX close as a DIRECTION router, with a preregistered router-vs-filter separator"
+   ],
+   "evi_rank": 2,
+   "evi_rationale": "Two independent surfaces converged on the same claim with the same sign, and it is the cheapest decisive SHORT-SIDE test on the slate: daily VIX (certified 1990-2026, 9,241 rows) plus two NQ prints per session. No intraday computation, no new data, one table. It is the direct sign-inverse of the ten dead anti-filters, and the ten failures are themselves evidence FOR running it — if high-vol days genuinely carried negative intraday drift, at least one of the ten exposure-suppression rules should have worked, so this table either explains ten failures or closes the axis. Both members carry the same mandatory separator (router vs filter) that prevents it becoming the eleventh anti-filter. Two honest headwinds: GENESIS_H1 measured neighbouring point estimates running the WRONG way for this thesis (stress sessions had HIGHER next-session means; VXN/VIX secondary -0.0554%, t -1.87), and the effective-N problem is structural — ~600 raw V>25 sessions cluster into perhaps 8-14 independent episodes, so a session-level t is fiction. Expect a mostly-negative or 'cannot distinguish' answer; it is still worth one afternoon.",
+   "data_available": "YES",
+   "testable_now": true,
+   "kill_criterion": "The unconditional index-level table with the router-vs-filter separator in the same print: NQ 09:30->16:00 mean return by prior-day VIX/ex-ante-variance tercile, 2006->2026-07-31, significance from a whole-EPISODE block bootstrap with effective K = K/(1+(K-1)rho_bar), never a session-level t. Print (R) the router, (F) the long leg with high-vol sessions merely REMOVED, and (S) always-short on the high-vol sessions alone. If net(R) is approximately net(F), or if (S) fails to beat the p95 of a rate-matched random-short placebo, it is exposure reduction wearing a router's costume and is recorded FAILED under the closed anti-filter family.",
+   "best_source": "https://doi.org/10.1016/j.intfin.2023.101796"
+  },
+  {
+   "family": "MARKET-INTERNALS BREADTH IN A NON-THRESHOLD DECISION ROLE",
+   "mechanism": "NYSE $TICK is a cross-sectional participation census. Both members abandon the absolute-level trigger that this repo already closed: one reads the SAME-INSTANT disagreement between price's running session extreme and cumulative-breadth's running extreme (a new index high carried by two or three mega-caps has no basket flow behind it and unwinds); the other reads the closing-auction print as a multi-day accumulation/distribution state. Neither incumbent uses breadth in any form.",
+   "direction": "both",
+   "members": [
+    "BREADTH_NONCONF — cumulative-$TICK vs price running-extreme non-confirmation",
+    "CLOSETICK_STATE — closing-auction breadth census as a next-session directional state"
+   ],
+   "evi_rank": 3,
+   "evi_rationale": "Two surfaces converged on the same surviving observation: $TICK's INFORMATION content is real here but its monetization has failed twice, and both prior failures used an absolute threshold or a time-window conditioner. Crucially, BREADTHPM01's information leg SURVIVED (bottom-tercile-breadth sessions take out the morning low +9.62pp more often, p 0.0019) while only the trade died (worse than random shorts, p_one 0.82). That is exactly the shape where a different decision role is a legitimate question rather than a rescue. Costs $0 ($TICK on disk 2013-2026 after CAPPROBE made it local), uses a surface neither incumbent touches, and BREADTH_NONCONF's short leg fires precisely where P1 is long — negative rather than redundant exposure. A null here retires the internals surface for direction, which is a real closure. Honest split: BREADTH_NONCONF (60-min horizon, ~260 events/yr) is powered; CLOSETICK_STATE is probably dead on arithmetic before it starts (its own MDE is ~14 pts/trade at n~1,300 whole-session holds against a ~1.25 pt cost bar) and should be run only as the cheap second arm.",
+   "data_available": "PARTIAL",
+   "testable_now": true,
+   "kill_criterion": "The matched unconditional control in the same wave, with the MDE printed BEFORE the read: take EVERY new-running-session-extreme bar in the 10:30-15:30 window regardless of breadth state and measure the same 60-minute forward return, then compare the non-confirmation cell against it. If the breadth-conditioned cell does not beat the unconditional new-extreme control by more than the pre-printed MDE, all the information is in the extreme event and none is in the breadth channel. The same print kills CLOSETICK_STATE on MDE arithmetic without a signal being computed.",
+   "best_source": "runs/G2_F6_BREADTHPM01_20260829 (in-repo: breadth information leg survived, G00030 +9.62pp, p=0.0019); external sources are vendor-claim only — optimalninja.com/optimal-breadth and quantifiableedges.com closing-TICK"
+  },
+  {
+   "family": "RATES SURFACE — flight-to-quality as a de-risking identifier",
+   "mechanism": "The stock-bond relation is regime-switching and one-sided: it flips negative specifically in equity downturns, and there is no symmetric 'flight to risk'. A simultaneous long-bond bid AND an NQ decline therefore identifies portfolio DE-RISKING (large, multi-session, price-inelastic) rather than sector rotation or an idiosyncratic Nasdaq move. XM_CONFLICT is equity-only and by construction cannot make that distinction.",
+   "direction": "short",
+   "members": [
+    "RISKOFF-ZB-CONFIRM — Treasury bid confirming an NQ decline"
+   ],
+   "evi_rank": 4,
+   "evi_rationale": "This is the ONLY candidate in the entire 58-item slate that adds a new raw information SURFACE rather than a new representation of the NQ price path. Every cross-market object this program has ever built — XM_CONFLICT, the 0-for-15 standalone family, ESNQ_V1, W18R2, W122 — reads equity index futures only; the equity-vs-rates correlation sign has never been an input to any decision made here. INFORMATION_COVERAGE marks 'rates intraday' absent, but that was a statement about the parquet shelf: ZB 1-minute Last is physically on disk from 2023-01 and the repo has a proven .ncd extraction path. It is short-side. A null closes the rates axis, which is worth banking because it is the last free unread surface. Costs, stated plainly: manual extraction plus a contract-roll rule that must be built and validated before any return statistic exists; ~890 usable sessions is the shortest history in the slate; the ~45-event trade form is likely UNDERPOWERED, so the REGRESSION is the decidable object and the trade is not. Rank 4 rather than 1 only because of that prerequisite labour and the thin sample.",
+   "data_available": "PARTIAL",
+   "testable_now": false,
+   "kill_criterion": "After the mandatory zero-lag timestamp known-answer test on the NQ/ZB minute join (an unverified cross-market join manufactures beautiful artifacts), the single interaction coefficient z_NQ x z_ZB in a session-clustered regression of the 11:01->16:00 NQ return, CONTROLLED for NQ's own contemporaneous 09:31-11:00 move. If the interaction dies once NQ momentum is controlled, it is W122's exact failure mode repeated — cross-market features carrying NQ momentum wearing a rates label — and the family is closed on one regression.",
+   "best_source": "https://link.springer.com/article/10.1007/s11408-020-00361-5"
+  },
+  {
+   "family": "RETURN / FLOW DECOMPOSITION — split the move into two components before forming any signal",
+   "mechanism": "A price change is two economically different objects glued together, and summing them before forming a signal averages a continuation effect with a reversion effect and shrinks both toward zero. Member 1 splits the drive into jump (news, permanent, underreacted) and diffusive (flow, temporary, reverting) components via a bipower/threshold filter. Member 2 splits price from signed order flow (close-location-signed volume): agreement means the move was information-backed and continues, conflict means it was absorbed and reverts. Both claim the measured aggregate nulls are what a mixture looks like.",
+   "direction": "both",
+   "members": [
+    "JUMPFLOW_SPLIT — news vs flow decomposition of the drive before signal formation",
+    "FLOWCONF-EOD — signed-flow vs price-drive agreement decides continue-or-revert into the close"
+   ],
+   "evi_rank": 5,
+   "evi_rationale": "Both members EXPLAIN the prior nulls rather than ignoring them, which is the only legitimate reopening form, and both are computable at $0 on data already clean. Neither statistic has ever been computed here: grep returns zero bipower/jump/threshold-estimator work anywhere, and the program has never SIGNED volume (W111's five closed volume mechanisms are all unsigned magnitude constructs, so 'volume is null here' does not cover a direction variable). FAILURE_MEMORY's over-generalization guard explicitly lists path/event-time representations as NOT closed. The decisive attraction is that FLOWCONF has a pre-P&L known-answer test against ground truth we already own — the true sflow column on the archived 1-second L1 sessions — so the proxy can be killed before a single trade is simulated. Binding constraint from failure memory: BOTH members inherit the 15:30->16:00 geometry, which is null three independent ways (H4B, MOM01, HA1) with ERABREAK01 showing the last-30-min variance share FALLING; if the decomposition survives it must be re-hosted on a live geometry, and it must be gated against the single aggregate predictor D, never against LATE30 (which is rejected).",
+   "data_available": "YES",
+   "testable_now": true,
+   "kill_criterion": "Delta-R-squared of the two-component decomposition over the single aggregate predictor on the same forward window — (J, Cc) versus D alone, and (z_f, z_r) versus z_r alone — run at a LIVE geometry rather than the triple-null 15:30 clock, and preceded by the CLV-vs-true-sflow known-answer correlation on the 48 archived 1-second L1 sessions with the required correlation stated in advance. If the proxy fails the known-answer test, or the increment over the aggregate predictor is within noise, the representation carries nothing and both members die together.",
+   "best_source": "https://doi.org/10.1287/mnsc.2023.01657"
+  },
+  {
+   "family": "PRE-OPEN PATH VELOCITY — a gap that is still being driven versus a gap that has finished",
+   "mechanism": "An overnight dislocation has two generating processes. A liquidity air-pocket in thin Globex hours is a single jump that then stalls, carries no information, and mean-reverts. Genuine repositioning is a high-velocity path of many same-signed increments that has not finished executing, so the residual is worked into RTH and the session absorbs rather than reverts. The separating observable is the VELOCITY of the pre-open path (the OLS slope of the last 15-180 minutes before 09:30), not the gap's size — and urgency-driven flow is far more common on the sell side.",
+   "direction": "short",
+   "members": [
+    "Velocity-conditioned overnight-drift continuation SHORT (gap that is still moving, not a gap that jumped)",
+    "GAPVEL_S — pre-open-velocity-gated down-gap continuation short"
+   ],
+   "evi_rank": 6,
+   "evi_rationale": "Two independent surfaces produced essentially the same object from the same source, which is a genuine convergence. The observable is confirmed unread anywhere in this repo — 'pre-open' exists only as a session-phase LABEL — and everything closed on this axis is UNSIGNED or magnitude-only (ONRANGE01/02 mapped overnight RANGE quadrants; B01e/B02 closed gap MAGNITUDE fade; C01 tested the overnight RETURN level). Gap CONTINUATION is explicitly parked-not-closed. It is short-only, the book's structural gap. Two things cap the rank. First, N: ~6-7 trades/yr, ~115 lifetime events, against a random-short placebo whose p95 was measured at $775/trade in T2's S2 arm — the trigger form is likely to return UNDERPOWERED, so the honest primary must be the continuous regression over all down-gap sessions, not the tail trigger. Second, and more damaging, T2_ORBSHORT's S2 (a gap-down continuation short, run nine days ago) had its TIMING TEETH run backwards: delaying entry 30 minutes IMPROVED net by 49.7%, which is the opposite of what 'residual pre-open flow is worked into RTH early' requires.",
+   "data_available": "YES",
+   "testable_now": true,
+   "kill_criterion": "Timing teeth with the valence band pre-stated, run on the continuous form: regress the RTH open->close return on the standardized pre-open velocity z across ALL down-gap sessions, then re-run the identical measurement with entry delayed 30 minutes. The mechanism REQUIRES the delay to hurt materially. T2's S2 already measured the delay HELPING by 49.7% on the unconditioned population; if velocity conditioning does not reverse that sign, the 'still being driven' premise is falsified and no N-boost can save it.",
+   "best_source": "https://arxiv.org/abs/2605.04004"
+  },
+  {
+   "family": "IMPLIED VOLATILITY AS A NON-DIRECTIONAL SCALE — threshold width, payoff size, range budget",
+   "mechanism": "Options publish an EX-ANTE estimate of the day's move. Used as a scale rather than a direction it sets three different things: the width of an intraday decision boundary that updates instantly instead of lagging 14 sessions (VRP_BAND, with the variance risk premium routing break-versus-fade); the expected PAYOFF of supplying liquidity against a displacement, which rises with priced stress (LIQPROV-IV); and a same-session total-range budget whose unconsumed fraction at midday says the day's boundary search has not happened yet (RANGEBUDGET_VXN). VXN is the NQ-native series and no published version of any of these uses it.",
+   "direction": "both",
+   "members": [
+    "VRP_BAND — VXN-implied (ex-ante) threshold vs realised (backward) threshold, matched-width A/B, with a variance-risk-premium break-vs-fade router",
+    "LIQPROV-IV — fade paid by implied vol, not filtered by realized vol",
+    "RANGEBUDGET_VXN — implied daily range budget consumed by midday, expansion arm primary"
+   ],
+   "evi_rank": 7,
+   "evi_rationale": "Three-surface convergence on one narrow, genuinely reserved cell: FAILURE_MEMORY protects 'intraday VIX/VXN (only DAILY basis tested)' and 'vol-state as RISK SPECIFICATION', and GENESIS_H1 closed only the DIRECTIONAL daily-tercile role. Every volatility conditioning this campaign has ever run used REALISED vol. Costs $0 (certified VXN from 2009-09). Ranked below the signed-direction family for three concrete reasons. (1) Geometry contamination: VRP_BAND inherits NOISEBAND_SYM's geometry, which is rejected as a parameterisation sibling of the NULL G2_F1_ORB01 — an object that LOST to its own always-long control — so VRP_BAND is admissible only as the information A/B it advertises and must not smuggle the barred standalone band prereg back in. (2) LIQPROV-IV must lift a base object measured at -$206 to -$320/trade, and W109 showed state conditioners on fades have a selectivity ratio of ~1 at every rate — exposure reduction in a state variable's costume. (3) GOVERNANCE: reading VXN over 2022+ consumes GENESIS_H1's deliberately preserved pristine confirmation window; G2_F1_COND01 refused to trigger that read. Get an owner decision recorded before any spec is frozen, and run discovery pre-2022.",
+   "data_available": "YES",
+   "testable_now": true,
+   "kill_criterion": "The matched-width, matched-trade-count A/B at FIXED geometry: implied-scaled threshold versus realised-scaled threshold, with the always-long control printed in the same table. If the implied arm's net is indistinguishable from the realised arm's, the options surface adds nothing to threshold-setting and the family closes; if either arm fails to beat always-long, the host geometry was already dead and the information question was never reached. For LIQPROV-IV specifically: if a REALISED-vol quintile conditioner reproduces the implied-vol table, it is a repackaged vol filter and dies on the spot.",
+   "best_source": "https://www.nber.org/papers/w17653"
+  },
+  {
+   "family": "LEVEL AND PATH GEOMETRY RESIDUALS — is anything left after the matched geometric null?",
+   "mechanism": "Three different attempts to find the residue in a family this repo has geometry-explained four times. IBROT trades the TIME-ORDERING of the two initial-balance extremes (a path-order statistic) rather than their levels. VALBRK_DEPTH conditions a prior-session value-area break on the DEPTH of the first pullback as an absorption read. ROUNDCASCADE measures the penetration-DEPTH response function at ABSOLUTE round-number coordinates — the one level class that is path-independent and identical for every participant.",
+   "direction": "both",
+   "members": [
+    "IBROT — initial-balance first-formed extreme predicts the OPPOSITE side breaks first",
+    "VALBRK_DEPTH — prior-session value-area break gated on first-pullback depth, exited on time only",
+    "ROUNDCASCADE — penetration-DEPTH response function at absolute round-number levels (diagnostic first, rule second)"
+   ],
+   "evi_rank": 8,
+   "evi_rationale": "These three share ONE null battery — position-matched first-passage, pseudo/shifted-level, and ungated-break-at-matched-count — so a single wave answers three questions, which is the only reason they earn a slot together. Each contributes something never measured: event ORDERING (IBROT), post-event path SHAPE as absorption (VALBRK), and an absolute price coordinate (ROUNDCASCADE, whose non-measurement is a DATA DEFECT — the substrate is additively back-adjusted — not a null). The prior is frankly bad: the 80% value-area rule measured 42.6%, PDH/PDL magnetism and VWAP first-touch were geometry-explained, IB-break-direction was DEFINITIONAL at 77.5% vs a 77.1% null, and SWEEP01 found 'no information located in the level'. So the realistic payoff is CLOSURE, not discovery — the value is retiring the most-mined family in the repo for the fifth and final time with one shared control. Blocker to resolve first: ROUNDCASCADE requires TRUE front-month unadjusted prices; if only the adjusted parquet is reachable the outcome is DEFECT-NOT-TESTED, not a null.",
+   "data_available": "PARTIAL",
+   "testable_now": true,
+   "kill_criterion": "Lift over the matched geometric null, one battery for all three: the position-and-vol-matched first-passage null with the 10:30 price position fixed inside [L,H] (IBROT), the 50-point SHIFTED-GRID pseudo-level control (ROUNDCASCADE stage 1, which must run as a pure measurement before any rule is written), and the ungated-break control at matched trade count with DEPTH terciles required to be monotone (VALBRK). If lift is approximately zero on all three, the level/path-geometry axis is closed and no member may be re-parameterised.",
+   "best_source": "https://doi.org/10.1111/1540-6261.00588"
+  },
+  {
+   "family": "DISJOINT OVERNIGHT / EUROPEAN SESSION ENGINES",
+   "mechanism": "Between 03:00 and 09:14 ET the NQ book is thin and dominated by a different participant population: European institutions putting on US index hedges at the 03:00 cash open (a scheduled, recurring arrival of directional size into a book sized for the wrong regime), and non-informational overnight risk transfer whose excess price impact is reclaimed as RTH liquidity arrives. The book currently holds literally zero exposure and zero features between 00:00 and 09:29 ET.",
+   "direction": "both",
+   "members": [
+    "European session 03:00-08:30 ET as a structurally decorrelated engine window",
+    "PREMKT_LIQPREM — pre-RTH liquidity-provision reversion, one long and one short per session"
+   ],
+   "evi_rank": 9,
+   "evi_rationale": "Both members occupy a clock region where the incumbents have no exposure, and the repo's own parked rows name a genuinely different ENGINE on the overnight tape (not a re-weighting of one engine) as the stated revival condition. PREMKT is additionally symmetric by construction, which is a structural route to a short leg. But the central selling point of both is REFUTED in-repo and must be struck from any spec: W97 falsified 'different clock implies independent alpha' and W96 concluded temporal disjointness delivers low correlation on demand while delivering no specificity; W16's own matrix puts EUROPE at +0.54 with PREOPEN. The economics are also hostile — measured overnight friction is $19.77/ctrRT spread ($24.13 all-in) versus P1's $14.52, a standing $5.25/RT tax on the whole axis; S0_TOD_AUTOPSY records EUROPE_PREUS 02:00-08:00 as the incumbent's single worst block (-$28,914); the 2-3am drift is dead by its original authors; and pre-2015 the window is a different instrument (median volume 10-14 contracts/min in 2006-2008 versus 91-138 in 2018-2026), so the primary must be 2018-2026.",
+   "data_available": "YES",
+   "testable_now": true,
+   "kill_criterion": "W96's session-shift null at the >=95th percentile, charged at the MEASURED overnight cost basis ($19.77/ctrRT spread, ~$24.13 all-in) rather than the RTH model. This is a standing bar for any overnight mechanism and low correlation alone does not revive the axis. Anything that fails either clause dies immediately; the shift null specifically catches the failure mode that killed W38 (randomly shifted block schedules producing the same lift).",
+   "best_source": "https://arxiv.org/abs/2605.04004"
+  },
+  {
+   "family": "DETERMINISTIC PUBLIC CALENDARS AND LATTICES — measurement gates only",
+   "mechanism": "Two exogenous, deterministic, zero-cost structures. A pre-announced 08:30 release accumulates impact-uncertainty that is largely resolved BEFORE the print, so the compensation for carrying that non-directional risk is paid in the Globex session and can be harvested flat-before-the-event using nothing but 'a release is scheduled tomorrow'. Separately, the listed option STRIKE LATTICE is a fixed price coordinate that dealer delta-decay and exercise flow reference on expiration days — the only route to an options-flow mechanism with zero options data.",
+   "direction": "both",
+   "members": [
+    "PREANN-GLOBEX — pre-scheduled-release overnight premium, exit before the print",
+    "EXPIRY-STRIKE — displacement from the NQ futures-option strike lattice on serial expirations (measure before trading)"
+   ],
+   "evi_rank": 10,
+   "evi_rationale": "Both survive their adjacent closures on scope — GENESIS_H2 closed release-DAY session MEANS and its own text leaves intraday geometry on event days open; the OPEX closures are day-type means and a post-expiration breakout, not a strike-referenced geometry — and both need zero purchased data and zero surprise magnitudes, so both clear the standing ruling that macro surprise magnitude is not worth buying at any price. Neither can move the book. PREANN is power-bound by two orders of magnitude: the unconditional overnight hold measures +17.2 ticks/night against sigma 578 ticks, and honest arithmetic needs ~83,500 nights for t=2, against ~240 NFP nights in twenty years. EXPIRY runs at ~6 serial expirations/year and OUTSIDE_VIEW2 already returned KILL on OPEX gamma-pinning on power arithmetic. Their entire value is that the measurement is cheap and the fact is bankable either way — run them as $0 appendices attached to another wave, never as standalone economics runs, and never quote either as a strategy.",
+   "data_available": "PARTIAL",
+   "testable_now": true,
+   "kill_criterion": "Print the MDE against the available event count BEFORE any P&L, and for EXPIRY run its 3-point displacement gate first: |close(16:00) - nearest strike| on serial-expiration Fridays versus matched non-expiration Fridays, with the strike interval VERIFIED from the free CME contract spec rather than assumed. If the displacement differential is under 3 NQ points, or if the printed MDE exceeds the plausible effect, record UNDERPOWERED / NO-SEPARATION and stop before a trading arm is written.",
+   "best_source": "https://doi.org/10.1016/j.jfineco.2021.09.015"
+  },
+  {
+   "family": "CROSS-MARKET EQUITY ORDER-STATISTIC NON-CONFIRMATION",
+   "mechanism": "ES and NQ are tightly cointegrated, so an information shock moves the structure of both while a liquidity event (stop-running, one large hedger, a basket imbalance) moves the structure of only one. The traded observable is the SEQUENCE OF EXTREMES across a fixed 90-minute grid — did each book make a new block extreme? — rather than the size of a return.",
+   "direction": "both",
+   "members": [
+    "XSSMT_Q90 — one-sided quarter-extreme non-confirmation between NQ and ES"
+   ],
+   "evi_rank": 11,
+   "evi_rationale": "The only thing keeping this alive is MECHANISM_COVERAGE frontier row 3: the 0-for-15 record is on STANDALONE cross-market engines, and the CONDITIONAL form has never been run. The order-statistic observable and the 00:00-anchored grid (which never touches 09:45) are genuinely different from XM's z-scored magnitude comparison. Everything else points down, including one thing the candidate did not disclose: the closest prior is not a failure, it is the LIVE INCUMBENT running the OPPOSITE SIGN on the same channel — XM_CONFLICT monetizes NQ-versus-broad disagreement as CONTINUATION at $675/trade, and XSSMT fades it. That sign conflict must be preregistered as a first-class reconciliation, not discovered afterwards. Add ESNQ_V1 at -$503/session, W122's finding that cross-market features were NQ momentum wearing a cross-market label, W07's zero effect from ES/RTY/YM agreement, and an ES history capped at 2022+ minus the burned and virgin seals. Admissible primary is the conditional direction-FILTER form; the standalone engine belongs in the disclosure column.",
+   "data_available": "PARTIAL",
+   "testable_now": true,
+   "kill_criterion": "After the mandatory zero-lag timestamp known-answer test on the NQ/ES join, measure BOTH signs on the identical order-statistic events in the same wave: fade versus continue. If the continuation sign wins on the same events, XSSMT is the live incumbent run backwards and must be closed rather than promoted; if neither sign separates from the matched unconditional control at those bars, the order-statistic representation carries nothing that the magnitude representation did not.",
+   "best_source": "https://github.com/Sadwing/QuarterlyTheorySSMT/blob/main/Specs/SSMTDetectionAgent.spec.md"
+  },
+  {
+   "family": "HOST-DEPENDENT OVERLAYS — risk specification and routing with no engine to attach to",
+   "mechanism": "Two policy layers that create no entries. DOWNBREAK-TRAIL exploits the leverage effect — a down-break that survives runs into a WIDENING volatility envelope (NQ 90th-percentile downside extension 134% of the prior day's range versus 94% upside) — so a short leg's exit should not share the long leg's fixed clock. GAMMAPROXY_ROUTE uses a signed multi-day path state (RSI5) as a crude dealer-gamma proxy to route a continuation engine PRO-weakness, the opposite sign from every filter this repo has failed.",
+   "direction": "both",
+   "members": [
+    "DOWNBREAK-TRAIL — asymmetric exit overlay for the short leg (RISK SPECIFICATION, never alpha)",
+    "GAMMAPROXY_ROUTE — prior-day signed multi-day path as the router for intraday continuation, sign PRO-weakness"
+   ],
+   "evi_rank": 12,
+   "evi_rationale": "Ranked last for a decisive practical reason rather than a scientific one: NEITHER IS RUNNABLE TODAY. Both inherit 'whichever short/continuation candidate has already passed', and as of T2_VERDICT both preregistered shorts are dead (S1 at the 3.8th percentile of its placebo, S2 at n=53 and the 63.8th). Layering an overlay onto an entry that has not passed standalone is a fitted rescue and is barred by the campaign's own rule. They keep a slot only because FAILURE_MEMORY genuinely leaves exit/sizing POLICY novelty open, the exits of every short candidate in this slate are fixed-clock by default (provably wrong for an asymmetric extension distribution), and GAMMAPROXY's PRO-weakness sign is the untested direction on an axis where SM08 only ever tested trend AGREEMENT. Both are classified RISK SPECIFICATION / REGIME ROUTING in advance and a pass may never be quoted as short alpha or counted as filling the short-side gap. GAMMAPROXY additionally may NOT be run on P1 — meta-labeling P1 with existing surfaces is recorded BLOCKED-AS-RESCUE of RR_W002A's closure.",
+   "data_available": "YES",
+   "testable_now": false,
+   "kill_criterion": "The rate- and distance-matched random placebo at the same average holding time (trail) and the matched-unconditional arm at the same trade count (router), both run on the host's own frozen trade set — the exact null family that has now beaten every such rule ten consecutive times, and that beat W121's turnover caps at the 0.0th/4.0th/1.0th percentile. W42's standing rule must also be honoured: every stop arm is reported next to its RE-ENTRY-ALLOWED control, or the 'stop' is silently a one-bar skip.",
+   "best_source": "https://doi.org/10.1016/j.jfineco.2021.04.029"
+  }
+ ],
+ "dropped_count": 34,
+ "synthesis": "HONEST HEADLINE: the eight mining surfaces produced 58 candidates and failure-memory killed 34 of them (59%) as PARAMETER_RESCUE or SAME_MECHANISM rehashes of experiments this repo has already run and closed. Rules 2 and 3 removed nothing further — no candidate had data_available = NO, and the two whose plausible edge was clearly sub-1-point (HOURBOUND_SCHED at 0.25-0.45 pts, OPENFADE at 0.3-1.0 pts) had already been rejected as rehashes. So dropped_count is entirely rule 1. That 59% rehash rate is itself the most useful measurement in this wave: independent world-scanning re-derived our own graveyard more often than it found anything new, which is direct evidence that the free-price-series frontier on NQ is close to exhausted. Do not read 24 survivors as 24 opportunities.\n\nWHAT THE SURVIVORS ACTUALLY ARE. Of 24, exactly ONE returned GENUINELY_NEW (CLOCKLAG/HKS day-lagged clock-bucket structure) and exactly ONE adds a new raw information SURFACE (ZB rates, physically on disk since 2023-01 and never read). Everything else is REPRESENTATION or POLICY novelty on price series we already own. Four families show real multi-surface convergence — clock-lag periodicity (2 surfaces), implied-vol-as-signed-short-direction (2), pre-open path velocity (2), breadth-in-a-non-threshold-role (2), plus implied-vol-as-scale (3) — and convergence is the main reason those rank above the singletons.\n\nTHREE FINDINGS THAT SHOULD CHANGE HOW THE NEXT WAVE IS SPEC'D, independent of any candidate. (1) THE COST FLOOR IN EVERY CANDIDATE IS STALE. Nearly all of them assume ~0.9 NQ points; EXEC01 measured $20.65/ctrRT on P1's real fills and the standing all-in figure is $25.01/RT (p90 $35; Jun-Jul 2026 ~$33), i.e. ~1.25 points. That silently invalidates the magnitude arguments of CLOCKLAG, ROUNDCASCADE and several others, and the corrected floor must be written into every spec before results exist. The separate 'minute-of-session cost curve' candidate was dropped precisely because that artifact already exists (WE_W82's spread_by_minute.csv, applied in W89, superseded by EXEC01) and its two headline 'corrections' were both measured backwards. (2) GOVERNANCE GATE. Three families (implied-vol signed direction, implied-vol as scale, and part of the calendar family) read VXN/VIX against 2022+ NQ, which consumes GENESIS_H1's deliberately preserved pristine confirmation window; G2_F1_COND01 refused to trigger that read. Get an owner decision recorded BEFORE any spec is frozen, and run discovery pre-2022. (3) THE SHORT-SIDE GAP IS NOT GOING TO BE FILLED BY THIS SLATE. Six of twelve families carry a short leg, but the two preregistered shorts closed nine days ago (T2 S1 at the 3.8th percentile of its own placebo, S2 at n=53), the anti-filter/exposure-reduction record is now ten-for-ten against random controls, and every short candidate that survived is either N-thin (pre-open velocity: ~7 trades/yr), power-bound (rates: ~45 events), or fighting an in-repo point estimate that runs the wrong way (implied-vol short, versus H1's stress sessions showing HIGHER next-session means). Expect a mostly-null wave.\n\nWHAT I WOULD ACTUALLY RUN. Ranks 1-3 are cheap, decidable, use information the incumbent structurally cannot represent, and each has a kill criterion that fires BEFORE any P&L is computed: the non-daily-multiple lag control (CLOCKLAG), the unconditional VIX-tercile open-to-close table with the router-versus-filter separator (implied-vol short), and the matched unconditional new-extreme control with MDE printed first (breadth). All three cost $0 and all three teach something on a null — respectively, that scheduled institutional flow leaves no periodic trace on the index, that the ten dead anti-filters were not sign errors, and that the internals surface is exhausted for direction. Rank 4 (rates) is the only new surface and deserves funding for the extraction labour even though its trade form is likely underpowered — the regression, not the trade, is the decidable object. Ranks 8-12 are closure work, not discovery: run them as shared-null appendices or not at all, and note that ranks 11 and 12 are blocked today (XSSMT conflicts in sign with the LIVE incumbent and must reconcile first; the two overlays have no host that has passed standalone)."
+}
