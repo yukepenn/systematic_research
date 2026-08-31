@@ -1,0 +1,173 @@
+run_id: G3_EXECTRUTH_02_20260831
+title: "EXECUTABLE OBJECT TRUTH, second attempt. G3_EXECTRUTH_01's P3 gate FAILED; the mechanism
+        was then found IN THE SOURCE ON BOTH SIDES. This run tests the corrected semantics as a
+        fresh locked hypothesis, and only a PASS here unlocks the economics P4 withheld."
+date: 2026-08-31
+campaign: GENESIS III - NQ CHAMPION CHALLENGE / WAVE A
+status: PREREGISTERED - written and committed BEFORE any corrected-arm statistic was recomputed
+live_enabled: NO
+spend: 0
+orders_placed: NO
+
+# ==================================================================================================
+# 0. WHAT HAPPENED, STATED WITHOUT SOFTENING
+# ==================================================================================================
+predecessor: runs/G3_EXECTRUTH_01_20260831
+predecessor_outcome: >
+  P0 PASS. P1 FAIL (voteOK 99.173%, needed 99.5%). P2 FAIL (entry Jaccard 0.85176, needed 0.99 -
+  and BELOW the 0.90 line at which WE_W52 says it is not the same object). P3 FAIL: H_STALE won
+  both score and size outright and the control H_STALE2 lost, but H_STALE reached 96.977% against
+  a required 99.0% - 12 disagreements out of 397 where the bar allows three. P4 was NOT COMPUTED
+  because the spec forbids economics when P3 fails.
+
+  THAT FAILURE STANDS. It is not reinterpreted, the population is not redefined, and this run does
+  not "extend" it. G3_EXECTRUTH_01's verdict is FAILED and stays FAILED in the record.
+
+why_a_second_run_is_legitimate_and_not_a_parameter_rescue: >
+  Section 37 rejects a candidate that differs from a failed one "only by threshold/window/lookback
+  numbers". This is not that, and the distinction is the whole justification for this run:
+
+  G3_EXECTRUTH_01 tested a ONE-DIMENSIONAL family - which single index shift does the executable
+  apply to its quality features? All three arms (H_FRESH / H_STALE / H_STALE2) were the same
+  hypothesis at three values. The correct answer was NOT IN THAT FAMILY, which is exactly why the
+  best arm plateaued below the bar.
+
+  The mechanism was then read OUT OF THE SOURCE ON BOTH SIDES, not fitted to the data:
+
+    we_fastctx.py:46    atr = concatenate([[atr[0]], atr[:-1]])
+                        - the first lag, applied inside the feature builder whose own docstring
+                          (run_we_w09.py:26) already states "ATR14 at i-1"
+    we_fastctx.py:81    atr_l = concatenate([[atr14[0]], atr14[:-1]])
+                        - lags the ALREADY-LAGGED array a second time
+    we_quality.py:44    the identical double lag
+
+    => X['atr_l'][j] is ATR through bar j-2, while c_l[j] and vwap_l[j] are bar j-1. The Python
+       research object divides a bar-(j-1) numerator by a bar-(j-2) ATR denominator.
+
+    WeeklyEdgeP1PCT_v3.cs CacheLagged():
+      :1213-1216  enqueues THIS bar's true range, then
+      :1218       lagAtr = trSum / trQ.Count
+      :1237       lagClose = c
+      => lagAtr and lagClose are both frozen at bar b. SYMMETRIC. No such asymmetry exists.
+
+  So the executable is a MIXTURE of the arms tested, and no single index shift can express it.
+  This is a DIFFERENT HYPOTHESIS about the object's structure, derived from source, not a
+  different number in the same family.
+
+the_honesty_requirement_that_travels_with_it: >
+  The corrected arm was nonetheless FIRST OBSERVED on the same data, as a post-hoc arm reported at
+  100.000% score and 100.000% size (0 of 397) in the predecessor. It is therefore NOT confirmed by
+  that observation and this spec does not treat it as confirmed. What makes it testable rather than
+  fitted is that it has ZERO FREE PARAMETERS and is fully determined by two source files that can
+  be read without any data at all. This run states the prediction in advance and lets it fail.
+
+# ==================================================================================================
+# 1. THE HYPOTHESIS, STATED SO IT CAN LOSE
+# ==================================================================================================
+H_CORRECTED: >
+  The executable's quality features at decision bar b are computed from a SINGLE consistent lag:
+  close, vwap, ATR, runlen, cumDelta and volnorm are ALL taken through bar b-1. In the research
+  chain's indexing, that is X[k][i-1] for every feature EXCEPT atr, which must be un-double-lagged
+  so that its effective bar matches the numerators it divides.
+
+  Concretely: build the context exactly as we_fastctx.fast_build_context does, then REMOVE the
+  second ATR lag at we_fastctx.py:81 only. Change nothing else. No threshold, no window, no
+  feature, no sign moves.
+
+named_controls_that_must_lose: >
+  C1  the predecessor's best arm, H_STALE with the double-lagged ATR   (predecessor: 96.977%)
+  C2  H_CORRECTED but with the FRESH index shift instead of stale
+  C3  H_CORRECTED but with BOTH ATR lags removed (i.e. ATR through bar b, not b-1)
+  If any control matches or beats H_CORRECTED, the source read is wrong and this spec says so.
+
+# ==================================================================================================
+# 2. GATES
+# ==================================================================================================
+window: "2025-08-31 18:01 ET -> 2026-07-31 17:00 ET"
+seal_compliance: "NO read of any session >= 2026-08-01. Rows dropped are printed."
+data: >
+  runs/G3_EXECTRUTH_01_20260831/out/cs_export_snapshot.csv, sha256
+  403131d10ab7027d7bbb904204f3409ff6b993daa0a947e703e26ff34ce99999, 33,497,518 bytes.
+  THE SAME SNAPSHOT, so the two runs are exactly comparable. It is not re-snapshotted.
+
+Q0_predecessor_reproduction:
+  test: "Re-run the predecessor's H_STALE arm and reproduce 96.977% score / 98.992% size."
+  PASS: "within 0.05 percentage points of both."
+  if_fail: "The harness changed between runs and NOTHING here is comparable. Report Q0 only."
+
+Q1_size_semantics_corrected:
+  test: "score agreement and size agreement of H_CORRECTED against the export's own score and
+          size columns, on the executable's own evaluated-entry sequence (exec-native framing,
+          qCount from 0, MinHist 100, Window 250) - identical framing to the predecessor."
+  PASS: ">= 99.5% score AND >= 99.5% size AND H_CORRECTED strictly beats C1, C2 and C3."
+  note_on_the_bar: >
+    The bar is RAISED from the predecessor's 99.0% to 99.5%, deliberately. A hypothesis with zero
+    free parameters that is claimed to be structurally exact should not need slack, and raising the
+    bar removes any suspicion that the threshold was chosen to admit the answer.
+  if_fail: "Recorded FAIL. The executable is NOT REPRODUCED, P4 stays locked, and the campaign
+            continues to treat every Python P1 figure as object-divergent."
+
+Q2_state_and_action_reconfirmed:
+  test: >
+    Recompute P1 (state) and P2 (action) parity on the WARM sub-span the predecessor defined FROM
+    SOURCE before computing anything (session index >= 51, where the .cs tilt accumulator is no
+    longer identically zero).
+  PASS: "voteOK >= 99.5%, each of t0..t3 >= 99.5%, entry Jaccard >= 0.99, trade count within 2%."
+  predecessor_values_for_comparison: "voteOK 99.921%, t0..t3 >= 99.82%, Jaccard 0.99065, +0.313%"
+  binding_note: >
+    The FULL-SPAN Jaccard of 0.852 is NOT re-litigated and is not expected to pass. It is a
+    warm-up artifact of the executable itself and is recorded as such, not as parity.
+
+Q3_residuals_must_be_explained_not_tolerated:
+  test: >
+    Every remaining disagreement after Q1 is classified into a named cause with a count. The
+    predecessor identified three open ones and they are inherited as questions, not as excuses:
+      (a) `ratio` disagrees on ~5.7% of WARM bars - localised to the trailing time-of-day range
+          median `norm` (the .cs holds 239 sessions vs Python's 1,187) but NOT PROVEN to account
+          for all of it. It does not move nThr (99.759% WARM) so it moves no action.
+      (b) 262 `dL` mismatches imply the volume series differ somewhere; the export writes no
+          volume column so it could not be verified directly.
+      (c) 155 of 202 residual WARM voteOK mismatches (77%) fall on 2026-07-17 and the following
+          session, where the two files do not hold the same minutes - data coverage, not logic.
+  PASS: ">= 95% of residual disagreements assigned to a named, evidenced cause."
+  if_fail: "Report the unexplained fraction. An unexplained residual is not rounded away."
+
+Q4_economics_UNLOCKED_ONLY_BY_Q1:
+  precondition: "Q1 PASS. If Q1 fails this section does not run and no dollar figure is produced."
+  test: >
+    Using the T2_P1SIZE01 size-invariance identity (pnl_i = s_i * pnl_per_contract_i, verified
+    there at max error 0.00e+00), reprice the SAME trade schedule under the H_CORRECTED size
+    vector and under the size vector the RESEARCH CHAIN actually produced (double-lagged ATR).
+  reported:
+    - trades sized differently, and their share of total net
+    - net difference in dollars, total and per week
+    - the difference restricted to the top decile of trades by |P&L|
+    - the same three, restricted to the pre-burn sub-window, so a reader can see whether the
+      difference is concentrated in the burned period
+  explicitly_not_a_promotion: >
+    This measures how far the campaign's quoted P1 economics sit from the executable's. It is a
+    CORRECTION TO THE RECORD, not a candidate, not an improvement, and not a P1_vNext. Changing
+    what the deployed strategy does remains a separate locked challenge that this run may not open.
+
+# ==================================================================================================
+# 3. WHAT A PASS DOES AND DOES NOT MEAN
+# ==================================================================================================
+on_pass: >
+  ESTABLISHED: which object we trade, bar for bar, and how far the research representation sits
+  from it. The research chain's double-lagged ATR is then a CONFIRMED DEFECT and every P1 figure
+  produced by that chain carries the correction as a known offset.
+  NOT ESTABLISHED: that the executable is good, that the research object is worse, or that either
+  should change. Agreement is not correctness. A defect in the research chain is not evidence that
+  the deployed strategy should be modified - the deployed strategy was never using the defect.
+on_fail: >
+  Recorded FAIL. Two failed parity attempts would mean the executable object is not reproducible by
+  any hypothesis this campaign has formed, and that becomes the headline rather than a footnote.
+
+prohibitions:
+  - no order, deploy, enable, disable, stop or modify on any account
+  - no edit to any production .cs file and no edit to research/weekly_edge/src/
+    (the double lag is DIAGNOSED here, not patched - patching it changes 100+ historical runs and
+     is its own decision with its own record)
+  - no read of any session >= 2026-08-01
+  - no re-snapshot of the export; the sha256 above is binding
+  - no promotion, and no modification of the deployed strategy, may originate from this run

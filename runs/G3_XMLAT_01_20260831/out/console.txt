@@ -1,0 +1,505 @@
+==============================================================================================================
+G3_XMLAT_01_20260831 - XM_CONFLICT LATENCY FORENSICS
+run per runs/G3_XMLAT_01_20260831/spec.yaml, preregistered and committed before any result existed
+executed 2026-08-31 14:56:21   live_enabled: NO   spend: 0   orders_placed: NO
+==============================================================================================================
+SEAL: the substrate is loaded with b = '2026-07-31 17:00' and the load asserts no
+      bar at or after 2026-08-01 exists. The tick index refuses any session dated
+      2026-08-01 or later. NOTHING VIRGIN IS READ.
+EXCLUDED BY SEAL: the 9 NQ full-BBO tick sessions dated 2026-08-01..2026-08-11 in
+      NT8_CAPABILITY_CENSUS.csv (196 total - 187 pre-seal), and every 1-minute bar
+      after 2026-07-31 17:00 ET.
+NO CrossTrade / NinjaTrader tool call is made anywhere in this program.
+
+==============================================================================================================
+SUBSTRATE AND THE FROZEN DECISION LEDGER
+==============================================================================================================
+    substrate: 1,620,044 NQ bars, 1,187 sessions, 2022-01-02T18:01:00 -> 2026-07-31T16:59:00
+      ES   joined on 1,619,216 / 1,620,044 NQ bars
+      RTY  joined on 1,567,394 / 1,620,044 NQ bars
+      YM   joined on 1,594,897 / 1,620,044 NQ bars
+
+  The frozen decision set used wherever possible is
+    research/weekly_edge/ninjascript/reference/xm_reference_decisions.csv
+  It covers 2022-07-04..2026-07-31 only and carries no delayed-fill prices, so the
+  run REBUILDS the decision set from export_xm_reference.py semantics and asserts
+  the rebuild against the frozen ledger before any gate runs. Both are used: the
+  ledger as the authority, the rebuild as the instrument.
+
+    frozen ledger xm_reference_decisions.csv: 1,058 sessions, 346 trades
+      desired_direction agreement  100.0000 %
+      conflict_flag agreement      100.0000 %
+      nq_drive agreement           100.0000 %
+      broad_composite max |diff|   4.441e-16
+      entry_px max |diff|          0.000e+00
+      exit_px(1546) max |diff|     0.000e+00
+      session_date disagreements   0
+      trades  ledger 346   rebuild 346
+
+==============================================================================================================
+GATE X0 - REPRODUCE THE PREMISE  (if this fails, X1-X5 are VOID and are not printed)
+==============================================================================================================
+  The prior claim, verbatim from runs/XM_EXEC_COST_AUDIT_V1_20260831/out/addendum2.txt
+  section Y9:  entry +1 min  -$74.18/wk (SE $28.24, t -2.63, total -$15,800)
+               exit  +1 min  -$11.43/wk (SE $13.54, t -0.84, total  -$2,435)
+               both  +1 min  -$85.61/wk (SE $31.49, t -2.72)
+               per trade     -$45.66    on 346 trades / 213 ISO weeks
+
+  ⚠ POPULATION CORRECTION, stated BEFORE the reproduction: this run's own spec.yaml
+    section 0 attributes the figure to '378 trades x $45.66' and section 3 to
+    'n=378 trades over ~243 weeks'. That is wrong. 378 is the NT8 backtest's trade
+    count over ITS longer window (2022-01-03..2026-08-30, commission-only). The
+    measurement was made on 346 trades / 213 ISO weeks over 2022-07-01..2026-08-01.
+    $74.18 x 213 = $15,800 and $15,800 / 346 = $45.66 - the arithmetic closes only
+    on the 346/213 population. X0 is therefore GATED ON THAT POPULATION, and the
+    task's wider 2022-01-03 study window is printed beside it and used for X1-X5.
+
+  NOTE the delay delta is COST-INVARIANT: only the entry price moves, so the charged
+  round-turn cost cancels in the difference. No cost-model choice can move X0.
+
+  SOURCE  window 2022-07-01..2026-08-01   346 trades / 213 ISO weeks   (dropped for a missing +1-min bar: 0)
+          incumbent net  $  936.32/wk   $  576.41/trade   total $  199,436.44
+          entry +1 min  $  -74.18/wk  (SE $ 28.24, t  -2.63, boot p 0.0307, 95% CI [$-144.67, $  -8.99])  total $   -15,800  $ -45.66/trade
+          exit  +1 min  $  -11.43/wk  (SE $ 13.54, t  -0.84, boot p 0.3585, 95% CI [$ -35.85, $  12.89])  total $    -2,435  $  -7.04/trade
+          both  +1 min  $  -85.61/wk  (SE $ 31.49, t  -2.72, boot p 0.0216, 95% CI [$-163.05, $ -14.74])  total $   -18,235  $ -52.70/trade
+
+  SPEC    window 2022-01-03..2026-08-01   371 trades / 239 ISO weeks   (dropped for a missing +1-min bar: 0)
+          incumbent net  $  730.13/wk   $  470.35/trade   total $  174,499.94
+          entry +1 min  $  -50.38/wk  (SE $ 26.44, t  -1.91, boot p 0.1246, 95% CI [$-117.80, $  11.23])  total $   -12,040  $ -32.45/trade
+          exit  +1 min  $  -13.74/wk  (SE $ 12.75, t  -1.08, boot p 0.2407, 95% CI [$ -36.90, $   9.14])  total $    -3,285  $  -8.85/trade
+          both  +1 min  $  -64.12/wk  (SE $ 29.33, t  -2.19, boot p 0.0694, 95% CI [$-135.75, $   1.82])  total $   -15,325  $ -41.31/trade
+
+  entry-delay reproduction : observed $-74.18/wk vs claimed $-74.18/wk -> 0.00 % deviation (tolerance 15 %)
+  exit-side non-effect     : observed $-11.43/wk (t -0.84) vs claimed $-11.43/wk (t -0.84) -> sign MATCHES, magnitude ratio 1.00x, not significant
+
+  ==> X0 PASS
+
+==============================================================================================================
+GATE X1 - TWO-SIDED CAUSALITY
+==============================================================================================================
+  X1-NEGATIVE  every NQ/ES/RTY/YM price from the bar stamped 09:46 ONWARD is replaced
+               by volatility-matched white noise, on EVERY session. The decision
+               series must be BIT-IDENTICAL. Finiteness structure is preserved, so a
+               `take` mask cannot move for a reason other than a genuine leak.
+    NEGATIVE probe: 503,488 bars replaced with matched-vol white noise (31.1 % of the substrate), on 1,187 / 1,187 sessions
+      nq_drive             identical on 100.0000 % of 1,186 in-window sessions
+      conflict_flag        identical on 100.0000 % of 1,186 in-window sessions
+      desired_direction    identical on 100.0000 % of 1,186 in-window sessions
+      broad_composite      identical on 100.0000 % of 1,186 in-window sessions
+      broad_composite max |diff| over sessions where both are finite: 0.000e+00
+      SANITY: the post-cutoff ENTRY price open(09:46) changed on 100.00 % of sessions - the corruption is real, not a no-op
+
+  X1-POSITIVE  the ES/RTY/YM close at the 09:45 bar is perturbed by +/-0.5 sigma of
+               that market's own 60-session sigma, ONE MARKET AT A TIME, one session
+               at a time (the sigma HISTORY is left untouched, so the probe measures
+               the action's sensitivity and not a propagating cascade).
+      ES   alone flips desired_direction on  17.40 % of 1,155 sessions with a computable composite
+      RTY  alone flips desired_direction on  17.40 % of 1,155 sessions with a computable composite
+      YM   alone flips desired_direction on  17.40 % of 1,155 sessions with a computable composite
+      ANY single-market perturbation flips it on 17.40 % (201 / 1,155)
+        same count against ALL 1,186 in-window sessions: 16.95 %
+        restricted to the 371 ARMED sessions:      23.45 %
+
+  ==> X1-NEGATIVE PASS   X1-POSITIVE PASS
+
+==============================================================================================================
+GATE X2 - THE 1-MINUTE EXECUTION DECAY CURVE  (DIAGNOSTIC. No delay is adopted.)
+==============================================================================================================
+  ONE armed set, fixed at every delay (spec trap 4): 371 trades over 239 ISO weeks.
+  Dropped because at least one fill bar in the ladder does not exist: 0 session(s).
+  Charged cost is HELD CONSTANT at $16.86/ctrRT at every delay, so the curve is
+  the price effect alone. (The delta is cost-invariant in any case.)
+  The '+59 s' point is close(09:46) and the '+60 s' point is open(09:47). In this
+  substrate they are DISTINCT prices on 81.4 % of the armed sessions, so the two rows are
+  genuinely two measurements and not one printed twice.
+
+  fill              delay    net/wk   $/trade     wkSD    d$/wk  t(diff)   bootP         95% CI on d$/wk
+--------------------------------------------------------------------------------------------------------------
+  open_0946            0s    730.13    470.35  4351.83     0.00                                         
+  close_0946          59s    679.75    437.90  4310.30   -50.38    -1.89  0.1282     [ -118.04,   11.93]
+  open_0947           60s    679.75    437.90  4309.34   -50.38    -1.91  0.1246     [ -117.80,   11.23]
+  open_0948          120s    691.95    445.75  4264.72   -38.18    -1.10  0.2857     [ -112.55,   29.62]
+  open_0950          240s    678.01    436.78  4208.30   -52.11    -1.11  0.2328     [ -138.39,   31.42]
+  WORST_in_0946              328.66    211.72  4313.75  -401.46   -14.59  0.0000     [ -485.75, -325.59]
+  BEST_in_0946              1070.92    689.89  4383.99   340.79    14.68  0.0000     [  289.31,  394.96]
+
+  BY SIDE (net/week is on the SAME balanced weekly panel; the side's trades only)
+  fill              LONG n  LONG $/tr  LONG d$/wk  SHORT n  SHORT $/tr  SHORT d$/wk
+--------------------------------------------------------------------------------------------------------------
+  open_0946            194     545.72        0.00      177      387.74         0.00
+  close_0946           194     491.28      -44.18      177      379.38        -6.19
+  open_0947            194     491.80      -43.77      177      378.82        -6.61
+  open_0948            194     494.61      -41.49      177      392.21         3.31
+  open_0950            194     485.46      -48.91      177      383.42        -3.20
+  WORST_in_0946        194     278.81     -216.65      177      138.20      -184.81
+  BEST_in_0946         194     748.24      164.39      177      625.94       176.40
+
+  BY CALENDAR YEAR - d$/trade vs the incumbent fill (negative = the delay costs)
+  fill                    2022        2023        2024        2025        2026
+--------------------------------------------------------------------------------------------------------------
+  open_0946               0.00        0.00        0.00        0.00        0.00
+  close_0946             41.80      -14.94      -38.50      -19.03     -132.69
+  open_0947              38.60      -14.16      -37.48      -20.58     -130.74
+  open_0948              31.60       18.90      -26.15      -37.21     -117.41
+  open_0950             -56.90      -35.13      -30.27       49.74     -135.46
+  WORST_in_0946        -254.70     -181.69     -208.67     -275.97     -451.76
+  BEST_in_0946          313.30      185.13      162.57      232.92      281.94
+  n trades                  50          77         113          77          54
+
+  DECAY SLOPE (OLS on $/trade over the 0..240 s ladder)  -0.0928 $/trade/second   (intercept $454.63)
+  FIRST-MINUTE slope (0 -> 60 s only)                    -0.5409 $/trade/second
+  incumbent after-cost edge                              $470.35/trade
+  BREAK-EVEN LATENCY, linear fit over 0-240 s            5,069 s  (84.5 min)
+  BREAK-EVEN LATENCY, first-minute slope                 870 s  (14.5 min)
+  ⚠ Both extrapolate a slope fitted inside four minutes to a horizon of hours. The
+    ladder itself is NOT monotone (see the table), so the linear slope is a summary
+    of a noisy surface, not a law. The sub-second break-even in X3 is the one that
+    bears on deployment.
+
+  wrote out/decay_1min.csv, out/decay_1min_by_side.csv, out/decay_1min_by_year.csv
+
+  EXIT-SIDE LADDER (entry held at open(09:46)) - d$/wk vs the incumbent exit
+    common exit set 371 trades (dropped 0)
+    open_1546      delay     0s   net $  730.13/wk   d $    0.00/wk   t    nan   $  470.35/trade
+    close_1545     delay   -60s   net $  731.92/wk   d $    1.80/wk   t   2.66   $  471.51/trade
+    open_1547      delay    60s   net $  716.38/wk   d $  -13.74/wk   t  -1.08   $  461.50/trade
+    open_1548      delay   120s   net $  717.11/wk   d $  -13.01/wk   t  -0.73   $  461.97/trade
+    open_1550      delay   240s   net $  685.36/wk   d $  -44.77/wk   t  -1.81   $  441.51/trade
+
+==============================================================================================================
+GATE X3 - SUB-SECOND DECAY  (the only tick+BBO sessions this repository owns)
+==============================================================================================================
+    data_microstructure_v2: 58 parquet files, 58 MANIFEST rows, 59 qa rows
+      QUARANTINED in qa.csv: [('s20260525', 'QUARANTINE:short_span')]
+      excluded from DMV2: none
+    scalping_lab raw: 61 files, 48 base sessions
+      excluded: 13 TRUNCATED at exactly 12,000,000 rows, 0 duplicate dates already covered by DMV2
+      truncated tags: ['s20251117', 's20251124', 's20260206', 's20260220', 's20260223', 's20260303', 's20260312', 's20260320', 's20260423', 's20260428', 's20260506', 's20260519', 's20260520']
+    -> USABLE TICK SESSIONS: 93  (2025-08-11 .. 2026-07-31)
+
+  ---- OWNED vs EXTRACTED (research/data/NT8_CAPABILITY_CENSUS.csv) ----------------
+    NQ tick sessions with Last AND Bid AND Ask payload : 196 total, 187 PRE-SEAL
+    ALREADY EXTRACTED to parquet, deduplicated by date  : 93
+    extracted AND carrying an XM decision (X3-A n)      : 33
+    OWNED (pre-seal BBO) AND carrying an XM decision    : 59   <- the ceiling if the .ncd store were extracted
+    ADDITIONAL XM-decision sessions extraction would add: 28
+    extracted dates absent from the .ncd BBO census     : ['2025-08-11', '2025-09-24', '2026-04-30']
+    (extraction is a NinjaScript export job at $0. It is NOT attempted in this run:
+     CrossTrade calls are forbidden here. This is a scoping number, not a request.)
+
+    measured 93 sessions at 09:45:00.000 and 15:45:00.000 [8s]
+
+  X3-B  UNCONDITIONAL microstructure at the decision instant. Every owned session,
+        direction-free. THIS is the load-bearing quantity if A is thin.
+    sessions with a reconstructable BBO at 09:45:00.000 : 87 / 93
+      quoted spread at the instant   median 3.00 tk  mean 5.15 tk  p90 8.00 tk
+      1-second median spread         median 4.00 tk  mean 4.86 tk  p90 8.80 tk
+      crossed fraction of the 1 s reconstruction: median 0.002  - an artefact of forward-filling TWO
+        independent 4 ms event streams against each other, NOT a crossed market.
+      last bid update age at the instant: median 8 ms, max 932 ms
+    EXIT instant 15:45:00.000, 85 sessions: spread median 3.00 tk (1 s median 3.00 tk)
+      For comparison the COMMITTED W82 profile charges 3.0 tk at minute 586 (09:46) and 2.0 tk at 946 (15:46).
+
+    THE LAST-PRICE ladder and the MID ladder are BOTH printed. At 50-250 ms the
+    change in the LAST price is dominated by BID-ASK BOUNCE, not by drift: the
+    median |dP_last| at +50 ms below is almost exactly the median quoted spread. The
+    MID column strips the bounce out and is the honest measure of how far the market
+    actually moved. Confusing the two would triple the apparent latency cost.
+
+    delay       n  mean|dLAST| tk  med|dLAST| tk  mean|dMID| tk  med|dMID| tk  p(last moved)  p90|dLAST| tk
+--------------------------------------------------------------------------------------------------------------
+    +50ms      93            3.70           3.00           3.93          3.00          0.817           8.00
+    +100ms     93            5.02           4.00           5.59          4.00          0.882          12.00
+    +250ms     93            9.46           7.00           7.77          4.50          0.946          22.00
+    +500ms     93           10.88           9.00          10.30          8.50          0.978          22.80
+    +1s        93           13.49          11.00          12.87          9.50          0.946          25.00
+    +2s        93           20.78          14.00          20.49         14.00          0.978          46.20
+    +5s        93           32.72          25.00          31.66         23.00          1.000          69.60
+    +10s       93           38.45          26.00          38.46         28.00          0.978          85.20
+    +30s       93           64.62          56.00          67.42         56.00          0.989         129.00
+    +60s       93           84.11          68.00          85.74         74.50          1.000         165.80
+
+  X3-A  CONDITIONAL realised slippage, signed by the XM desired_direction.
+        slippage = -dir * (P(delay) - P(+0ms)) * $20 ; NEGATIVE means the delay COST
+        money. P(+0ms) is the incumbent's modelled fill: the first print at or after
+        09:45:00.000.
+        n = 33   ⚠ EVERY number below carries this n.
+
+    delay      n  mean slip $              95% CI $  median $  mean tk  p(adv)  nMID  MID slip $            MID 95% CI
+--------------------------------------------------------------------------------------------------------------
+    +50ms     33         2.73   [   -7.58,   11.82]      5.00     0.55   0.333    30        9.92   [   -0.08,   19.92]
+    +100ms    33         2.27   [   -8.48,   13.48]      5.00     0.45   0.364    30       -6.08   [  -32.33,   13.67]
+    +250ms    33       -11.06   [  -36.52,   10.00]    -10.00    -2.21   0.545    30      -13.92   [  -38.25,    7.92]
+    +500ms    33       -24.55   [  -53.18,    1.36]    -20.00    -4.91   0.606    30      -21.83   [  -55.17,    7.25]
+    +1s       33       -27.73   [  -63.03,    3.49]    -25.00    -5.55   0.606    30      -21.42   [  -55.25,   10.50]
+    +2s       33       -47.88   [ -102.42,    2.12]    -30.00    -9.58   0.697    30      -51.92   [ -108.92,    0.34]
+    +5s       33      -119.24   [ -203.64,  -34.55]    -95.00   -23.85   0.667    30     -117.58   [ -208.75,  -29.00]
+    +10s      33       -63.18   [ -161.06,   28.64]    -75.00   -12.64   0.576    30      -58.92   [ -166.17,   43.00]
+    +30s      33       -73.18   [ -212.73,   64.40]    -30.00   -14.64   0.576    30      -78.33   [ -228.83,   72.92]
+    +60s      33      -132.27   [ -324.55,   51.21]   -120.00   -26.45   0.606    30     -158.67   [ -365.67,   41.42]
+
+    The MID columns are the same measurement on the bid-ask midpoint. A marketable
+    order does pay the spread, but it pays it at +0 ms too - so the INCREMENTAL cost
+    of latency is the MID move, and the LAST-price column mixes that with bounce.
+
+  X3-C  REPRESENTATIVENESS. The tick sample is not a random draw from history, so
+        before anything measured on it is extrapolated to all trades, the SAME
+        quantity is computed two ways on the SAME 1-minute bars: the +60 s entry
+        delay, on the tick subsample and on the full trade population.
+    +60 s entry delay, 1-minute bars, FULL population   n= 371   $   -32.45/trade
+    +60 s entry delay, 1-minute bars, TICK subsample    n=  33   $  -132.27/trade
+    +60 s entry delay, TICK measurement, same sessions  n=  33   $  -132.27/trade
+    -> the tick subsample is 4.08x as latency-sensitive as the full
+       population on the IDENTICAL 1-minute measurement. Any sub-second number
+       extrapolated from these 33 sessions to all 371 trades
+       inherits that factor. X5 states it and widens its band accordingly.
+    -> CROSS-SOURCE CHECK: rows 2 and 3 are the same quantity computed from TWO
+       INDEPENDENTLY BUILT STORES - the 1-minute bar substrate and the tick parquet
+       - and they agree to 100.00 %. The tick pipeline in this run is
+       therefore reading the same market the rest of the campaign reads.
+    after-cost edge per trade: full population $470.35, tick subsample $435.72
+
+  wrote out/decay_subsecond.csv, out/decay_subsecond_unconditional.csv, out/tick_sessions_0945.csv, out/tick_sessions_1545.csv
+
+  n = 33 >= 20: the conditional curve is NOT underpowered by the
+     spec's own threshold. It is still THIN and the selection caveat below binds.
+     Extracting the rest of the .ncd store we already own would raise n from
+     33 to 59 at $0 - a 79 %
+     increase, i.e. a 1.34x narrowing of the CI.
+  ⚠ SELECTION: these 93 sessions are NOT a random sample of history. They
+    are what was exported, they all fall in 2025-08-11..2026-07-31,
+    and s20260525 is quarantined. Every sub-second number inherits that selection.
+  ⚠ A shallow price decay does NOT prove the fill is achievable. Queue position,
+    rejection and partial fills are separate risks measured by no price series here.
+
+==============================================================================================================
+GATE X4 - SIGNAL vs EXECUTION SEPARATION
+==============================================================================================================
+  COST STRESS - the ACTION PATH IS HELD FIXED. Identical entries, identical exits,
+  identical sizes. Only the charged round-turn cost varies.
+
+      cost/ctrRT   trades    L    S     net/wk   $/trade         total     action path
+--------------------------------------------------------------------------------------------------------------
+    $       4.36      371  194  177     749.53    482.85    179,137.44       IDENTICAL
+    $      16.86      371  194  177     730.13    470.35    174,499.94       IDENTICAL
+    $      24.00      371  194  177     719.04    463.21    171,851.00       IDENTICAL
+    $      30.00      371  194  177     709.73    457.21    169,625.00       IDENTICAL
+
+    No cost stress changes which trades occur. That is the required invariant:
+    XM has no cost-aware filter, no stop and no sizing rule, so cost enters as a
+    pure constant per round turn. Cost is a SUBTRACTION, never a SIGNAL.
+
+  POLICY VARIANTS - evaluated only because X1 passed. These are quote-driven and can
+  therefore only be measured on the owned tick sessions that also carry an XM
+  decision: n = 33. Any variant that changes WHICH trades occur is a
+  POLICY CHANGE and inherits the full challenger burden. It is NOT folded into a
+  cost table and NOTHING here is proposed for adoption.
+
+    of the 33 conditional sessions, 30 carry a reconstructable BBO at
+    09:45:00.000. The other 3 are a DATA GAP, not a policy refusal, and
+    are excluded from the fill-rate denominator.
+
+    variant                   filled   of   fill %   mean vs V0 $   median $      trades change?
+--------------------------------------------------------------------------------------------------------------
+    immediate marketable          30   30    100.0         -11.50      -5.00                  no
+    marketable limit +/-1tk       30   30    100.0         -11.50      -5.00                  no
+    limit at touch, 60s           30   30    100.0          12.67       7.50                  no
+
+    ⚠ THE ONE EXECUTION COST THE INCUMBENT REALLY DOES UNDER-BOOK, and it is not
+      latency. V0 is a PRINT; a real market order fills at the FAR SIDE of the
+      quote. V1 - V0 = $-11.50/contract (median $-5.00) on 30 sessions.
+      The research cost model already charges $7.50 for the entry
+      leg (half of the 3.0-tick modelled spread), so the UNBOOKED residue is
+      $+4.00/contract = $+6.21/week at 1.55 trades/wk.
+      That is a SPREAD/CROSSING error, belongs in X5 component C, and is an order of
+      magnitude smaller than the $74.18/wk the one-minute
+      headline suggests is at stake.
+
+    V0 is the incumbent's modelled fill (first print at or after 09:45:00.000).
+    V1 pays the far side of the quote at arrival - that is the honest price of the
+    incumbent's own market order, and it is a COST, not an improvement.
+    V3's fill rule is 'a print traded through the level' - NO QUEUE MODEL, so its
+    fill rate is an UPPER BOUND and its economics are optimistic by construction.
+    NOTHING here is proposed for adoption. A variant that declines trades changes the
+    OBJECT and would have to clear the full challenger burden on its own population.
+
+==============================================================================================================
+GATE X5 - THE FIVE-WAY DECOMPOSITION IN $/WEEK  (an ESTIMATE with bands, not a test)
+==============================================================================================================
+  Incumbent (zero-latency modelled fill): $730.13/wk over 239 ISO weeks, 371 trades = 1.55 trades/wk
+    block-bootstrap 95 % CI on the weekly mean: [$223.94, $1239.22]
+
+  METHOD. The sub-second slippage measured in X3-A on n = 33 sessions is
+  applied to ALL 371 trades at 1.55 trades/week. That is an EXTRAPOLATION
+  from a 2025-08-11..2026-07-31 tick sample to a
+  2022-2026 trade population, and it is the single largest source of uncertainty.
+  X3-C measured the size of that risk directly: on the IDENTICAL 1-minute +60 s
+  measurement the tick subsample is 4.08x as latency-sensitive as the full
+  population. The BANDS below are therefore the UNION of (i) the block/percentile
+  bootstrap CI of the slippage mean and (ii) that same CI divided by 4.08. The
+  POINT ESTIMATE is the UNADJUSTED (more pessimistic) value.
+
+  C uses the SAME charging convention as the research cost model, which charges
+  $5.00 x (spread_entry + spread_exit)/2 = one HALF spread per leg.
+    modelled: 3.00 tk at 09:46 and 2.00 tk at 15:46 -> $12.50/ctrRT
+    MEASURED: 3.00 tk at 09:45:00 and 3.00 tk at 15:45:00 -> $15.00/ctrRT   (1 s-median estimator: 4.00/3.00 tk -> $17.50)
+
+  component                                 $/wk               95 % band   method
+--------------------------------------------------------------------------------------------------------------
+  A  signal alpha                         687.08    [  632.28,   735.54]   X2 incumbent + X3-A slip at +1s (n=33)
+    edge surviving a fill delayed past any plausible retail latency (1 s)
+  B  impossible-backtest execution         43.04    [   -5.42,    97.84]   -(X3-A slip at +1s) x 1.55 trades/wk
+    value that exists ONLY at the zero-latency fill
+  C  spread and slippage                   -3.88    [   -7.76,    -3.88]   (12.50 - 15.00) x 1.55/wk, band = the two estimators
+    measured BBO at the decision instant vs the modelled $12.50/ctrRT
+  D  latency decay                         17.17    [  -15.52,    56.68]   -(X3-A slip at +250ms) x 1.55 trades/wk
+    the sub-second portion of B, at 250 ms
+  E  capturable tomorrow                  712.96    [  673.44,   745.65]   X2 incumbent + X3-A slip at +250ms
+    A + whatever of B survives a 250 ms fill
+
+  E with the measured-spread correction C also applied: $709.08/wk  (band $665.68 .. $741.77)
+
+  SENSITIVITY on the representativeness adjustment (X3-C) and on the bounce/drift
+  split (X3-A MID columns) - three readings of the SAME components:
+    reading                                            D $/wk     E $/wk
+--------------------------------------------------------------------------------------------------------------
+    raw LAST-price slippage (the point estimate)        17.17     712.96
+    LAST-price, representativeness-adjusted /4.08        4.21     725.91
+    MID-based (bounce removed) at 250 ms                21.60     708.52
+    -> across every reading E stays in $709 .. $726/wk
+    NOTE the 95 % bands above are NOT widened by the representativeness adjustment:
+    the adjustment SHRINKS the slippage toward zero, and every slippage CI already
+    straddles zero, so the union of the two intervals IS the raw interval.
+
+  POPULATION-MATCHED RESTATEMENT. E above is on this run's 2022-01-03 study window,
+  whose own incumbent is $730.13/wk. XM's QUOTED contribution ($936.32/wk) was
+  measured on the 2022-07-01 window. Comparing the two directly would mix
+  populations, so the same arithmetic is repeated on the quoted population:
+    SOURCE window: 346 trades / 213 weeks = 1.62 trades/wk, incumbent $936.32/wk
+      A (1 s fill)   $  891.28/wk      E (250 ms fill) $  918.35/wk
+    RETENTION of XM's modelled edge at a 250 ms fill: 97.6 % (spec window)  /  98.1 % (quoted window)
+
+  EVIDENCE CLASS of each component:
+    A, B, D, E  DIRECTLY_BURNED on the 1-min side (the XM object is in-sample over the
+                whole window) x FORWARD-ish on the tick side (the tick sample is a
+                2025-08-11..2026-07-31 slice that
+                was never used to fit XM). The PRODUCT is a mixture and is quoted as
+                an estimate, never as an out-of-sample result.
+    C           LEGACY_DIAGNOSTIC vs measurement: the modelled profile is W82's
+                committed per-minute spread; the measurement is this run's.
+
+==============================================================================================================
+BREAK-EVEN LATENCY, CONSOLIDATED  (spec X2 'derived'; needs both instruments)
+==============================================================================================================
+  Three functional forms, on both populations. They are printed together because no
+  one of them is right: the measured surface is noisy and non-monotone, and every
+  break-even extrapolates a slope fitted inside four minutes to a horizon of hours.
+
+  tick subsample (n=33)        after-cost edge $ 435.72/trade
+      LINEAR   cost = 2.2124$/s        -> break-even        197 s  (    3.3 min)
+      SQRT-LAW cost = 17.2708$/sqrt(s)  -> break-even        636 s  (   10.6 min)   <- the diffusive form, best motivated
+      LOCAL@1s cost = 27.7273$/s        -> break-even         16 s  (    0.3 min)   <- steepest, most pessimistic
+  all trades (n=371)           after-cost edge $ 470.35/trade
+      LINEAR   cost = 0.1715$/s        -> break-even      2,743 s  (   45.7 min)
+      SQRT-LAW cost = 2.4903$/sqrt(s)  -> break-even     35,672 s  (  594.5 min)   <- the diffusive form, best motivated
+      LOCAL@1s cost = 6.8028$/s        -> break-even         69 s  (    1.2 min)   <- steepest, most pessimistic
+
+  THE OPERATIONAL READING: across all six estimates the break-even latency spans
+  16 s to 35,672 s. The TIGHTEST (16 s) is the LOCAL@1s form on
+  the tick subsample - the most pessimistic construction available, because it takes
+  the steepest measured local slope, on the most latency-sensitive tick subsample (n=33)
+  we own, and extrapolates it LINEARLY when the measured surface is clearly
+  sub-linear (sqrt-like) in time. Even that number is 63x a 250 ms fill:
+  a 250 ms order path spends 1.6 % of the pessimistic budget and 0.0007 % of the
+  optimistic one. THE BUDGET IS NOT THE BINDING CONSTRAINT ON THIS STRATEGY.
+
+==============================================================================================================
+THE VERDICT RULE - written in spec.yaml section 2 BEFORE any number existed
+==============================================================================================================
+  downgrade_rule : E < 50 % of XM's currently quoted contribution -> DOWNGRADE
+  retain_rule    : decay shallow inside 1 s and steep only across minutes -> the
+                   -$74.18/wk figure is a RED HERRING for deployment
+  neither_rule   : X3 underpowered AND the unconditional bound inconclusive ->
+                   UNRESOLVED WITH A NAMED NEXT MEASUREMENT
+
+  The rule is applied POPULATION-MATCHED: E on the quoted population is $918.35/wk.
+  (E on this run's wider 2022-01-03 study window is $712.96/wk against that
+  window's own incumbent of $730.13/wk; both are printed
+  so the reader can see the rule does not turn on the choice.)
+
+    E $918.35/wk vs 50 % of $936.32 = $468.16  -> ABOVE (no downgrade)   [standalone, deployed 346-trade object]
+    E $918.35/wk vs 50 % of $915.51 = $457.75  -> ABOVE (no downgrade)   [standalone, vectorised 348-trade variant]
+    E $918.35/wk vs 50 % of $763.00 = $381.50  -> ABOVE (no downgrade)   [marginal contribution to the P1+XM book]
+
+  SHAPE OF THE CURVE - stated POPULATION-MATCHED, because the sub-second curve lives
+  on 33 tick sessions and the 1-minute curve on all 371, and those two sets are
+  not equally latency-sensitive (4.08x, X3-C).
+
+    ON THE 33 TICK SESSIONS (one population, one instrument):
+      +250 ms $  -11.06/trade   +1 s $  -27.73/trade   +60 s $ -132.27/trade
+      the first second costs 21 % of what the first MINUTE costs; the first 250 ms costs 8 %.
+      against that subsample's own $435.72/trade after-cost edge: 2.5 % at 250 ms, 6.4 % at 1 s, 30.4 % at 60 s
+    ON ALL 371 TRADES (1-minute instrument, plus the /4.08 adjusted sub-second):
+      +250 ms $   -2.71   +1 s $   -6.80   +60 s $  -32.45/trade (d $-50.38/wk, t -1.91, boot p 0.1246)
+      against the $470.35/trade after-cost edge: 0.6 % at 250 ms, 1.4 % at 1 s, 6.9 % at 60 s
+    MID-based (bounce removed), same n: $-13.92 at 250 ms, $-21.42 at 1 s
+
+  RULE EVALUATION, mechanical
+    E $918.35/wk >= 50 % of the quoted $936.32/wk    -> downgrade_rule DOES NOT FIRE
+    slippage inside 1 s is 6.4 % of the per-trade edge on the SAME sessions (< 15 %) -> 'shallow inside 1 s' TRUE
+    the 1-minute cost $132.27/trade is 4.8x the 1-second cost $27.73 on the SAME sessions -> 'steeper across minutes' TRUE
+    X3-A underpowered (n < 20)                                    -> FALSE
+
+  ==> VERDICT: retain_rule FIRES. XM's edge is ROBUST TO REALISTIC LATENCY. The
+      decay is shallow inside one second and only becomes material across
+      minutes, so the -$74.18/wk one-minute figure is A RED HERRING FOR
+      DEPLOYMENT PURPOSES. It is a true statement about a one-MINUTE delay and a
+      misleading one about a retail order, which is late by milliseconds.
+
+==============================================================================================================
+THE TRAP NAMED IN SPEC SECTION 3, RESTATED AFTER THE MEASUREMENT
+==============================================================================================================
+  '$15,800 earned in the minute 09:45 -> 09:46' and '-$74.18/wk per minute of
+  entry delay' ARE THE SAME MEASUREMENT SEEN TWICE. $74.18 x 213 weeks = $15,800
+  and $15,800 / 346 trades = $45.66/trade. They are one number expressed three
+  ways - per week, in total, and per trade - and this report never cites them as
+  two corroborating findings.
+
+==============================================================================================================
+GATE TABLE  (printed by the program - GATE / SPEC / OBSERVED / PASS-FAIL)
+==============================================================================================================
+  GATE      SPEC                                                          OBSERVED                                                                  VERDICT
+--------------------------------------------------------------------------------------------------------------
+  REBUILD   rebuild must reproduce the frozen decision ledger exactly be  desired_direction 100.0000 %, conflict 100.0000 %, drive 100.0000 %, com  PASS
+            fore any gate is evaluated                                    posite max |diff| 4.4e-16, fill prices exact, trades 346/346              
+--------------------------------------------------------------------------------------------------------------
+  X0        entry-delay within +/-15 % of $-74.18/wk AND exit non-effect  entry $-74.18/wk (0.0 % dev); exit $-11.43/wk (t -0.84)                   PASS
+             reproduces in sign and rough magnitude                                                                                                 
+--------------------------------------------------------------------------------------------------------------
+  X1-NEG    decision series BIT-IDENTICAL on 100 % of sessions under pos  nq_drive 100.0000 %; conflict_flag 100.0000 %; desired_direction 100.000  PASS
+            t-09:45:00 corruption                                         0 %; broad_composite 100.0000 %; entry price moved on 100.0 % (probe is   
+                                                                          live)                                                                     
+--------------------------------------------------------------------------------------------------------------
+  X1-POS    >= 5 % of sessions flip desired_direction under at least one  17.40 % of 1,155 computable sessions (ES 17.40 %, RTY 17.40 %, YM 17.40   PASS
+             single-market +/-0.5 sigma perturbation                      %)                                                                        
+--------------------------------------------------------------------------------------------------------------
+  X2        print the whole predefined fill surface on ONE fixed armed s  7 fills x 371 trades on one armed set; slope -0.0928 $/trade/s; break-ev  PASS
+            et; derive slope and break-even latency; adopt nothing        en 84.5 min (linear fit); NO delay adopted                                
+--------------------------------------------------------------------------------------------------------------
+  X3-A      conditional sub-second slippage curve with the exact n besid  n = 33 (not underpowered); mean slip at 250 ms $-11.06/contract           PASS
+            e every number; state UNDERPOWERED if n < 20                                                                                            
+--------------------------------------------------------------------------------------------------------------
+  X3-B      unconditional BBO + |price change| bound on EVERY owned tick  93 sessions, 87 with BBO; median quoted spread 3.00 tk; mean |dP| at 250  PASS
+             session                                                       ms 9.46 tk                                                               
+--------------------------------------------------------------------------------------------------------------
+  X4-COST   cost stress must not change which trades occur                4 stresses ($4.36..$30.00), action path IDENTICAL in all four             PASS
+--------------------------------------------------------------------------------------------------------------
+  X4-POLICY policy variants evaluated separately; any that changes WHICH  immediate marketable filled 30/33; marketable limit +/-1tk filled 30/33;  PASS
+             trades occur is labelled a POLICY CHANGE, not an execution    limit at touch, 60s filled 30/33                                         
+            improvement                                                                                                                             
+--------------------------------------------------------------------------------------------------------------
+  X5        five-way split in $/week, each component with a stated metho  A $687 B $43 C $-4 D $17 E $713 per week, all banded                      PASS
+            d and an uncertainty band                                                                                                               
+--------------------------------------------------------------------------------------------------------------
+
+wrote out/gates.json, out/console.txt   [16s total]
