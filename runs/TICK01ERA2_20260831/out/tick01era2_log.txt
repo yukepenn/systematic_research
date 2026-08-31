@@ -1,0 +1,178 @@
+====================================================================================================
+=== TICK01ERA2 - frozen G2_F1_TICK01 mechanism, unchanged, on 2014 / 2016 / 2018 / 2019 / 2020 / 2021
+=== TRIG -1000.0 REARM -400.0 H_TARGET 15 MDE_K 2.8 (inherited from G2_F1_TICK01 via TICK01ERA; none chosen here)
+=== population declared in spec BEFORE any count existed; disjoint from TICK01ERA's {2013, 2015, 2017}
+====================================================================================================
+    2014: ^TICK calendar dates present 243; pass the frozen >= 300-RTH-bar payload gate: 242 (rejected 1)
+    2014: front-month contract by session -> NQH4:46, NQH5:13, NQM4:64, NQU4:65, NQZ4:65
+      grid 242 sessions x 389 slots = 94,138 rows; tick 94,087, NQ exact-stamp 91,700, fwd15 91,654
+    2016: ^TICK calendar dates present 249; pass the frozen >= 300-RTH-bar payload gate: 248 (rejected 1)
+    2016: front-month contract by session -> NQH6:49, NQH7:15, NQM6:64, NQU6:64, NQZ6:66
+      grid 248 sessions x 389 slots = 96,472 rows; tick 96,457, NQ exact-stamp 96,463, fwd15 96,454
+    2018: ^TICK calendar dates present 251; pass the frozen >= 300-RTH-bar payload gate: 248 (rejected 3)
+    2018: front-month contract by session -> NQH8:48, NQH9:11, NQM8:64, NQU8:70, NQZ8:64
+      grid 248 sessions x 389 slots = 96,472 rows; tick 96,472, NQ exact-stamp 96,472, fwd15 96,472
+    2019: ^TICK calendar dates present 252; pass the frozen >= 300-RTH-bar payload gate: 249 (rejected 3)
+    2019: front-month contract by session -> NQH0:12, NQH9:47, NQM9:69, NQU9:65, NQZ9:65
+      grid 249 sessions x 389 slots = 96,861 rows; tick 96,861, NQ exact-stamp 96,861, fwd15 96,861
+    2020: ^TICK calendar dates present 248; pass the frozen >= 300-RTH-bar payload gate: 246 (rejected 2)
+    2020: front-month contract by session -> NQH0:52, NQH1:13, NQM0:64, NQU0:65, NQZ0:64
+      grid 246 sessions x 389 slots = 95,694 rows; tick 95,674, NQ exact-stamp 95,619, fwd15 95,563
+    2021: ^TICK calendar dates present 251; pass the frozen >= 300-RTH-bar payload gate: 250 (rejected 1)
+    2021: front-month contract by session -> NQH1:50, NQH2:15, NQM1:64, NQU1:64, NQZ1:65
+      grid 250 sessions x 389 slots = 97,250 rows; tick 97,236, NQ exact-stamp 97,236, fwd15 97,222
+
+    frozen manifest -> out/manifest.csv
+      2014  sha256 2971885b4771604c  rows 1,120,261  tick dates 242  NQ close 3,406.25..4,347.75  NQH4=46;NQH5=13;NQM4=64;NQU4=65;NQZ4=65
+      2016  sha256 8f8e32956b82edec  rows 1,206,580  tick dates 248  NQ close 3,868.25..4,992.75  NQH6=49;NQH7=15;NQM6=64;NQU6=64;NQZ6=66
+      2018  sha256 8d31bd4d60f1e743  rows 1,270,036  tick dates 248  NQ close 5,840.50..7,727.00  NQH8=48;NQH9=11;NQM8=64;NQU8=70;NQZ8=64
+      2019  sha256 c91bb2f716f518bb  rows 1,275,038  tick dates 249  NQ close 6,138.50..8,842.50  NQH0=12;NQH9=47;NQM9=69;NQU9=65;NQZ9=65
+      2020  sha256 cef30a45243f6b84  rows 1,267,345  tick dates 246  NQ close 6,674.25..12,915.25  NQH0=52;NQH1=13;NQM0=64;NQU0=65;NQZ0=64
+      2021  sha256 cd4b75fd8d9a3149  rows 1,276,812  tick dates 250  NQ close 12,209.75..16,756.00  NQH1=50;NQH2=15;NQM1=64;NQU1=64;NQZ1=65
+
+====================================================================================================
+=== NON-GATE DIAGNOSTIC: is -1000 the SAME PLACE in the $TICK distribution in each era?
+====================================================================================================
+    window        in-grid bars     p0.1      p1     p50     p99    p99.9      min  <= -1000 in grid
+    2014                94,087     -827    -616      18     605      819    -1141                 9
+    2016                96,457     -864    -641      11     627      860    -1166                11
+    2018                96,472     -840    -633      -7     605      834    -1056                 6
+    2019                96,861     -766    -551       6     526      759    -1036                 2
+    2020                95,674     -847    -627       9     579      817    -1146                13
+    2021                97,236     -747    -545       5     491      691     -954                 0
+    2022 (modern)        97,457     -956    -739      -5     661      888    -1214                51
+    2023 (modern)        96,892     -861    -615      -2     569      800    -1280                18
+    2024 (modern)        97,478     -780    -552      -7     502      717    -1079                 5
+    2025 (modern)        96,713     -762    -552       0     495      687    -1121                 3
+    2026 (modern)        55,948     -670    -467      -6     427      647     -967                 0
+    READ: the tail SCALE is stable across eras, so -1000 is not an era-inconsistent
+    threshold. What changes between eras is HOW OFTEN the tail is reached - i.e. the
+    event is a VOLATILITY-REGIME phenomenon, exactly as the 2026 closure recorded.
+
+====================================================================================================
+=== STRATUM ERA2_2014
+====================================================================================================
+    events detected 8; scored (exact NQ stamp + computable fwd15) 8
+      2014:     8 events
+    sessions 242; sessions with >=1 event 8; events per 252 sessions 8.3
+    T2 control: universe 91,604 minutes / 237 sessions, per-draw n 8; draw mean -4.398, p95 +7.501 bps
+    T3 null: sensitivity spread 9.2273 bps -> HAS TEETH; 241 rotations (0 zero-event), null mean +0.6597, p95 +7.0476, percentile of real 0.8257, p_ge 0.1777
+    NON-GATE secondary +1000: n 5, mean +12.225 bps, t +0.89
+    NON-GATE horizon   5 min: n     8 mean +5.462 bps t +1.62
+    NON-GATE horizon  30 min: n     8 mean +8.157 bps t +0.95
+    NON-GATE horizon  60 min: n     8 mean +16.045 bps t +1.18
+
+====================================================================================================
+=== STRATUM ERA2_2016
+====================================================================================================
+    events detected 11; scored (exact NQ stamp + computable fwd15) 11
+      2016:    11 events
+    sessions 248; sessions with >=1 event 7; events per 252 sessions 11.2
+    T2 control: universe 96,448 minutes / 248 sessions, per-draw n 11; draw mean -3.429, p95 +8.357 bps
+    T3 null: sensitivity spread 23.7115 bps -> HAS TEETH; 247 rotations (0 zero-event), null mean +0.1633, p95 +8.5164, percentile of real 0.0040, p_ge 0.9960
+    NON-GATE secondary +1000: n 18, mean -4.793 bps, t -0.86
+    NON-GATE horizon   5 min: n    11 mean -4.708 bps t -2.38
+    NON-GATE horizon  30 min: n    11 mean -6.969 bps t -0.73
+    NON-GATE horizon  60 min: n    11 mean -12.227 bps t -0.86
+
+====================================================================================================
+=== STRATUM ERA2_2018
+====================================================================================================
+    events detected 6; scored (exact NQ stamp + computable fwd15) 6
+      2018:     6 events
+    sessions 248; sessions with >=1 event 4; events per 252 sessions 6.1
+    T2 control: universe 96,472 minutes / 248 sessions, per-draw n 6; draw mean -10.525, p95 +18.294 bps
+    T3 null: sensitivity spread 34.1941 bps -> HAS TEETH; 247 rotations (0 zero-event), null mean +0.1998, p95 +16.0274, percentile of real 0.0162, p_ge 0.9839
+    NON-GATE secondary +1000: n 7, mean +19.105 bps, t +1.69
+    NON-GATE horizon   5 min: n     6 mean -29.805 bps t -1.79
+    NON-GATE horizon  30 min: n     6 mean -13.831 bps t -0.39
+    NON-GATE horizon  60 min: n     6 mean -43.822 bps t -0.73
+
+====================================================================================================
+=== STRATUM ERA2_2019
+====================================================================================================
+    events detected 2; scored (exact NQ stamp + computable fwd15) 2
+      2019:     2 events
+    sessions 249; sessions with >=1 event 2; events per 252 sessions 2.0
+    *** too few scored events for a gate in this stratum - this is a RESULT (the regime does not produce the event), not a failure to run ***
+
+====================================================================================================
+=== STRATUM ERA2_2020
+====================================================================================================
+    events detected 11; scored (exact NQ stamp + computable fwd15) 11
+      2020:    11 events
+    sessions 246; sessions with >=1 event 10; events per 252 sessions 11.3
+    T2 control: universe 95,563 minutes / 246 sessions, per-draw n 11; draw mean -6.359, p95 +13.368 bps
+    T3 null: sensitivity spread 16.8705 bps -> HAS TEETH; 245 rotations (0 zero-event), null mean -0.4659, p95 +13.3460, percentile of real 0.9469, p_ge 0.0569
+    NON-GATE secondary +1000: n 8, mean -67.605 bps, t -1.85
+    NON-GATE horizon   5 min: n    11 mean +12.592 bps t +1.43
+    NON-GATE horizon  30 min: n    11 mean +18.390 bps t +0.75
+    NON-GATE horizon  60 min: n    11 mean +27.533 bps t +0.70
+
+====================================================================================================
+=== STRATUM ERA2_2021
+====================================================================================================
+    events detected 0; scored (exact NQ stamp + computable fwd15) 0
+    sessions 250; sessions with >=1 event 0; events per 252 sessions 0.0
+    *** too few scored events for a gate in this stratum - this is a RESULT (the regime does not produce the event), not a failure to run ***
+
+====================================================================================================
+=== STRATUM ERA2_POOLED
+====================================================================================================
+    events detected 38; scored (exact NQ stamp + computable fwd15) 38
+      2014:     8 events
+      2016:    11 events
+      2018:     6 events
+      2019:     2 events
+      2020:    11 events
+    sessions 1,483; sessions with >=1 event 31; events per 252 sessions 6.5
+    T2 control: universe 574,170 minutes / 1,478 sessions, per-draw n 38; draw mean -5.046, p95 +4.000 bps
+    T3 null: sensitivity spread 7.2188 bps -> HAS TEETH; 1,482 rotations (0 zero-event), null mean +0.1681, p95 +5.2807, percentile of real 0.4352, p_ge 0.5651
+    NON-GATE secondary +1000: n 45, mean -10.788 bps, t -1.16
+    NON-GATE horizon   5 min: n    38 mean -0.041 bps t -0.01
+    NON-GATE horizon  30 min: n    38 mean +4.545 bps t +0.47
+    NON-GATE horizon  60 min: n    38 mean +4.394 bps t +0.28
+
+    out/era2_events.csv: 38 detected events preserved
+
+======================================================================================================================
+=== GATE TABLE - TICK01ERA2_20260831 - printed by the program, never assembled by hand
+=== mechanism FROZEN from G2_F1_TICK01 (trigger -1000 / re-arm -400 / NQ fwd 15 min)
+======================================================================================================================
+STRATUM               GATE SPEC                                                OBSERVED                        PASS-FAIL
+ERA2_2014             T1   mean fwd15 > 0 AND session-clustered t >= 2.0       mean +4.483 bps, t +0.84 (n=8, G=8)FAIL
+                      T2   event mean > p95 of count-matched same-session drawsevent +4.483 vs ctrl p95 +7.501 FAIL
+                      T3   real above p95 of session-block circular-shift null real +4.483 vs null p95 +7.048  FAIL
+                           MDE 2.80*sd/sqrt(n) [printed BEFORE the verdict]    14.935 bps = 3.33x |mean|       UNDERPOWERED
+
+ERA2_2016             T1   mean fwd15 > 0 AND session-clustered t >= 2.0       mean -12.769 bps, t -2.43 (n=11, G=7)FAIL
+                      T2   event mean > p95 of count-matched same-session drawsevent -12.769 vs ctrl p95 +8.357FAIL
+                      T3   real above p95 of session-block circular-shift null real -12.769 vs null p95 +8.516 FAIL
+                           MDE 2.80*sd/sqrt(n) [printed BEFORE the verdict]    16.796 bps = 1.32x |mean|       powered
+
+ERA2_2018             T1   mean fwd15 > 0 AND session-clustered t >= 2.0       mean -24.423 bps, t -0.83 (n=6, G=4)FAIL
+                      T2   event mean > p95 of count-matched same-session drawsevent -24.423 vs ctrl p95 +18.294FAIL
+                      T3   real above p95 of session-block circular-shift null real -24.423 vs null p95 +16.027FAIL
+                           MDE 2.80*sd/sqrt(n) [printed BEFORE the verdict]    73.498 bps = 3.01x |mean|       UNDERPOWERED
+
+ERA2_2019             --   gate not evaluable                                  only 2 scored events            N/A
+ERA2_2020             T1   mean fwd15 > 0 AND session-clustered t >= 2.0       mean +13.388 bps, t +0.69 (n=11, G=10)FAIL
+                      T2   event mean > p95 of count-matched same-session drawsevent +13.388 vs ctrl p95 +13.368PASS
+                      T3   real above p95 of session-block circular-shift null real +13.388 vs null p95 +13.346PASS
+                           MDE 2.80*sd/sqrt(n) [printed BEFORE the verdict]    56.902 bps = 4.25x |mean|       UNDERPOWERED
+
+ERA2_2021             --   gate not evaluable                                  only 0 scored events            N/A
+ERA2_POOLED           T1   mean fwd15 > 0 AND session-clustered t >= 2.0       mean -0.199 bps, t -0.02 (n=38, G=31)FAIL
+                      T2   event mean > p95 of count-matched same-session drawsevent -0.199 vs ctrl p95 +4.000 FAIL
+                      T3   real above p95 of session-block circular-shift null real -0.199 vs null p95 +5.281  FAIL
+                           MDE 2.80*sd/sqrt(n) [printed BEFORE the verdict]    21.693 bps = 108.82x |mean|     UNDERPOWERED
+
+    VERDICT (ERA2_POOLED only, per the frozen verdict rule): FAILS -> the closure is a MECHANISM closure, confirmed on an independent, event-bearing, out-of-sample era
+    UNDERPOWERED_STILL clause (declared in the spec, reported ADDITIONALLY): MDE 21.693 vs 2.0x|mean| 0.399 -> the re-test is ITSELF underpowered and closes nothing on its own
+
+    DESCRIPTIVE ONLY, NO VERDICT ATTACHES (spec: combined_pre2022_reported_but_not_a_gate):
+      TICK01ERA {2013,2015,2017}: 746 sessions, 7 scored events, mean +9.567 bps, t +0.85
+      TICK01ERA2 this run: 1,483 sessions, 38 scored events, mean -0.199 bps, t -0.02
+    MODERN REFERENCE, quoted verbatim from the closed run, NEVER merged with the above:
+      G2_F1_TICK01 2022-01-03..2026-07-31: n=63, mean +2.841 bps, t +0.54, ctrl p95 +4.366, null p95 +3.885, MDE 15.112 bps = 5.32x |mean| -> T1/T2/T3 all FAIL
+    prohibitions honoured: no threshold search, no horizon selection, no policy, no P&L, no cost claim, no sealed read, no cross-era pooling.

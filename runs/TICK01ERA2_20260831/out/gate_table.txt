@@ -1,0 +1,42 @@
+
+======================================================================================================================
+=== GATE TABLE - TICK01ERA2_20260831 - printed by the program, never assembled by hand
+=== mechanism FROZEN from G2_F1_TICK01 (trigger -1000 / re-arm -400 / NQ fwd 15 min)
+======================================================================================================================
+STRATUM               GATE SPEC                                                OBSERVED                        PASS-FAIL
+ERA2_2014             T1   mean fwd15 > 0 AND session-clustered t >= 2.0       mean +4.483 bps, t +0.84 (n=8, G=8)FAIL
+                      T2   event mean > p95 of count-matched same-session drawsevent +4.483 vs ctrl p95 +7.501 FAIL
+                      T3   real above p95 of session-block circular-shift null real +4.483 vs null p95 +7.048  FAIL
+                           MDE 2.80*sd/sqrt(n) [printed BEFORE the verdict]    14.935 bps = 3.33x |mean|       UNDERPOWERED
+
+ERA2_2016             T1   mean fwd15 > 0 AND session-clustered t >= 2.0       mean -12.769 bps, t -2.43 (n=11, G=7)FAIL
+                      T2   event mean > p95 of count-matched same-session drawsevent -12.769 vs ctrl p95 +8.357FAIL
+                      T3   real above p95 of session-block circular-shift null real -12.769 vs null p95 +8.516 FAIL
+                           MDE 2.80*sd/sqrt(n) [printed BEFORE the verdict]    16.796 bps = 1.32x |mean|       powered
+
+ERA2_2018             T1   mean fwd15 > 0 AND session-clustered t >= 2.0       mean -24.423 bps, t -0.83 (n=6, G=4)FAIL
+                      T2   event mean > p95 of count-matched same-session drawsevent -24.423 vs ctrl p95 +18.294FAIL
+                      T3   real above p95 of session-block circular-shift null real -24.423 vs null p95 +16.027FAIL
+                           MDE 2.80*sd/sqrt(n) [printed BEFORE the verdict]    73.498 bps = 3.01x |mean|       UNDERPOWERED
+
+ERA2_2019             --   gate not evaluable                                  only 2 scored events            N/A
+ERA2_2020             T1   mean fwd15 > 0 AND session-clustered t >= 2.0       mean +13.388 bps, t +0.69 (n=11, G=10)FAIL
+                      T2   event mean > p95 of count-matched same-session drawsevent +13.388 vs ctrl p95 +13.368PASS
+                      T3   real above p95 of session-block circular-shift null real +13.388 vs null p95 +13.346PASS
+                           MDE 2.80*sd/sqrt(n) [printed BEFORE the verdict]    56.902 bps = 4.25x |mean|       UNDERPOWERED
+
+ERA2_2021             --   gate not evaluable                                  only 0 scored events            N/A
+ERA2_POOLED           T1   mean fwd15 > 0 AND session-clustered t >= 2.0       mean -0.199 bps, t -0.02 (n=38, G=31)FAIL
+                      T2   event mean > p95 of count-matched same-session drawsevent -0.199 vs ctrl p95 +4.000 FAIL
+                      T3   real above p95 of session-block circular-shift null real -0.199 vs null p95 +5.281  FAIL
+                           MDE 2.80*sd/sqrt(n) [printed BEFORE the verdict]    21.693 bps = 108.82x |mean|     UNDERPOWERED
+
+    VERDICT (ERA2_POOLED only, per the frozen verdict rule): FAILS -> the closure is a MECHANISM closure, confirmed on an independent, event-bearing, out-of-sample era
+    UNDERPOWERED_STILL clause (declared in the spec, reported ADDITIONALLY): MDE 21.693 vs 2.0x|mean| 0.399 -> the re-test is ITSELF underpowered and closes nothing on its own
+
+    DESCRIPTIVE ONLY, NO VERDICT ATTACHES (spec: combined_pre2022_reported_but_not_a_gate):
+      TICK01ERA {2013,2015,2017}: 746 sessions, 7 scored events, mean +9.567 bps, t +0.85
+      TICK01ERA2 this run: 1,483 sessions, 38 scored events, mean -0.199 bps, t -0.02
+    MODERN REFERENCE, quoted verbatim from the closed run, NEVER merged with the above:
+      G2_F1_TICK01 2022-01-03..2026-07-31: n=63, mean +2.841 bps, t +0.54, ctrl p95 +4.366, null p95 +3.885, MDE 15.112 bps = 5.32x |mean| -> T1/T2/T3 all FAIL
+    prohibitions honoured: no threshold search, no horizon selection, no policy, no P&L, no cost claim, no sealed read, no cross-era pooling.
