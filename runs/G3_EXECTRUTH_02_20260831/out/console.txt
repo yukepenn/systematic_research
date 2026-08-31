@@ -1,0 +1,347 @@
+======================================================================================================================
+G3_EXECTRUTH_02_20260831 - EXECUTABLE OBJECT TRUTH, SECOND ATTEMPT
+The predecessor's P3 FAILED (96.977 % against 99.0 %). That failure STANDS and is not
+reinterpreted. This run tests a DIFFERENT hypothesis about the object's structure, read out
+of the source on both sides, with zero free parameters, against a RAISED 99.5 % bar.
+spec: runs/G3_EXECTRUTH_02_20260831/spec.yaml (committed before any corrected-arm statistic)
+LIVE ENABLED = NO.  $0 spent.  No order, no deploy, no backtest, no CrossTrade call.
+EVIDENCE STATUS: VERIFICATION - nothing is selected, tuned, or promoted by this run.
+NO P-VALUE APPEARS ANYWHERE IN THIS RUN. The gates are agreement thresholds.
+======================================================================================================================
+
+======================================================================================================================
+=== 0. PROVENANCE - the SAME snapshot as the predecessor, verified by hash, never re-taken
+======================================================================================================================
+    snapshot      D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\G3_EXECTRUTH_01_20260831\out\cs_export_snapshot.csv
+    sha256        403131d10ab7027d7bbb904204f3409ff6b993daa0a947e703e26ff34ce99999
+    spec requires 403131d10ab7027d7bbb904204f3409ff6b993daa0a947e703e26ff34ce99999
+    MATCH         YES
+    bytes         33,497,518
+    data rows     353,891   duplicates 0   non-monotonic 0
+    span          2025-08-31T18:01:00  ->  2026-08-31T14:19:00
+
+======================================================================================================================
+=== 1. DATA SEAL - executed BEFORE any statistic is computed (CLAUDE.md section 5)
+======================================================================================================================
+    rows with timestamp >= 2026-08-01 (VIRGIN)        DROPPED :   28,819
+    rows retained (in-window, < 2026-08-01)                   :  325,072
+    retained span                                             : 2025-08-31T18:01:00 -> 2026-07-31T17:00:00
+    rows at/after the current deployment start (12:28 ET 08-31): 112 - all sealed
+    REALTIME-tail rows surviving the seal                      : 0
+    Consequence, stated before any gate is read: every number in this run is computed on
+    bars NT8 produced by HISTORICAL processing. This run cannot split historical from
+    realtime behaviour, exactly as the predecessor could not.
+
+======================================================================================================================
+=== 2. DECLARATIONS MADE BEFORE ANY RESULT IS COMPUTED
+======================================================================================================================
+    (a) THE FOUR ARMS. All four share one code path; they differ ONLY in which ATR array
+        the context divides by, and in the index shift applied to the feature read.
+
+        arm           atr_l is ...                      features read at      role
+        H_CORRECTED   ATR through bar j-1 (1 lag)       fill bar - 1          THE HYPOTHESIS
+        C1            ATR through bar j-2 (2 lags)      fill bar - 1          predecessor H_STALE
+        C2            ATR through bar j-1 (1 lag)       fill bar - 0          fresh index shift
+        C3            ATR through bar j   (0 lags)      fill bar - 1          both ATR lags removed
+
+        H_CORRECTED removes we_fastctx.py:81 and NOTHING ELSE. No threshold, no window, no
+        feature, no sign moves. The .cs side is WeeklyEdgeP1PCT_v3.cs:1213-1218 (lagAtr is
+        the true range through THIS bar) with :1237 (lagClose = this bar's close) - both
+        frozen at the same instant, so the executable's numerator and denominator share one
+        bar. The research chain's do not.
+
+    (b) WIN IS DEFINED BEFORE IT IS MEASURED. H_CORRECTED 'strictly beats' a control when
+        its agreement is STRICTLY GREATER - a tie is a loss. Both metrics must beat all
+        three controls. Q1 PASS = score >= 99.5 % AND size >= 99.5 % AND strict win on
+        score against C1, C2, C3 AND strict win on size against C1, C2, C3.
+
+    (c) WARM-UP SUB-SPAN, taken unchanged from the predecessor, which derived it FROM SOURCE
+        before computing anything: WeeklyEdgeP1PCT_v3.cs:1067 leaves tilt identically 0
+        until sessCloses.Count > TiltSma = 50, so WARM = export session index
+        >= 51. Q2 is read on WARM, exactly as the spec instructs. The FULL-
+        SPAN entry Jaccard of 0.852 is NOT re-litigated here and is not expected to pass: it
+        is a warm-up artefact of the executable itself and is recorded as such.
+
+    (d) Q3's RESIDUAL POPULATION and its CAUSE TAXONOMY, both fixed here. The population is
+        every (bar, field) disagreement in the eleven exported state fields on the joined
+        bars, plus every entry-bar and exit-bar action mismatch, plus every score/size
+        mismatch under H_CORRECTED - the same population the predecessor tabulated. Each
+        residual gets EXACTLY ONE cause, by this priority order:
+          1  TILT_*        tilt: the .cs's own 50-session SMA over its own load span
+          2  BMOM_*        bmom: the .cs's own slotHist over its own load span
+          3  NORM_*        ratio/nThr: the .cs's own rngHist over its own load span
+          4  CUMDELTA_*    dL: the .cs's own session-local cumDelta recursion
+          5  CS_INPUT_*    downstream fields the HYBRID vote reproduces once the
+                           executable's OWN tilt/bmom/ratio/norm/dL are substituted in
+          6  DATA_COVERAGE bars in a session where the two files do not hold the same
+                           minutes, or in the session immediately after one (the .cs
+                           accumulators carry across the boundary)
+          7  SCORE_KNIFE_EDGE  a score residual whose smallest relative feature margin
+                           is below 1e-6
+          8  UNEXPLAINED   reported as a fraction, never rounded away
+        Each of causes 1-4 is decided by a FORWARD SIMULATION of the named .cs block over
+        the export's own bars. A cause is assigned only when the simulation REPRODUCES the
+        executable's value on that bar. PASS = >= 95 % assigned.
+
+======================================================================================================================
+=== 3. THE PYTHON RESEARCH OBJECT - the canonical chain, unmodified
+======================================================================================================================
+    load_deep('2022-01-01','2026-07-31 17:00'): 1,620,044 bars / 1,187 sessions, 2022-01-02T18:01:00 -> 2026-07-31T16:59:00  [4s]
+    mem_ext.npz cache covers the substrate exactly: mem (1620044, 13)  [used as is]
+    HARNESS G: re-applying the removed line to the no-lag ATR restores the canonical atr14 ... PASS
+    HARNESS F: build_context_atrlag(extra=True) == we_fastctx.fast_build_context, every key bit for bit ... PASS
+    HARNESS H: the three contexts differ ONLY in atr_l (and the two quotients it divides)
+               X vs XC differ on: ['atr_l', 'dist_open', 'dist_vwap']   PASS
+    VERIFIED: X['atr_l'] is the ATR through bar j-2, XC['atr_l'] through bar j-1, XN['atr_l'] through bar j
+               lag(XC.atr_l) == X.atr_l : True    lag(XN.atr_l) == XC.atr_l : True
+    contexts built  [11s]
+    HARNESS A: votes_instrumented == canonical run_we_w97.votes, bit for bit ....... PASS
+    HARNESS B: (nMem*nThr*(1+dL))>=16 == the canonical 32-voter mean>=0.5 ........... PASS
+    per-set targets t0..t3 ordered ['narrow5', 'narrow6', 'narrow7', 'all13'] == .cs SETLEN {5,6,7,13}
+    canonical entry schedule (fills_daily, 2022-07-01 -> 2026-08-01): 2,139 entries  [29s]
+    HARNESS C: causal_score_lag(lag=0) == canonical run_we_w37.causal_score ......... PASS
+    HARNESS D: gfills_path trade list == canonical run_we_w98.gfills, byte for byte .. PASS
+    HARNESS E: gfills called with per_ctr = True (the .cs session box accumulates PER CONTRACT, .cs:934-938/:1164-1167)  PASS
+    canonical P1/PCT object: 2,401 trades  [30s]
+
+======================================================================================================================
+=== 4. THE JOIN - the same inner join on timestamp the predecessor used (its P0 PASSED)
+======================================================================================================================
+    C# rows in-window 325,072   matched 325,006 (99.980 %)   C#-only 66
+    bars where close_cs != close_py: 2 of 325,006 (0.0006 %)   max |d| 8.5000 pt
+    PRECONDITION (predecessor P0, PASSED there, re-verified here): join >= 95 % and the
+    two price series are identical up to two bars. OK
+    export sessions 239;  declared WARM (session >= 51): 254,874 of 325,006 joined bars (78.4 %), from 2025-11-10T18:01:00
+
+======================================================================================================================
+=== 5. Q0 - PREDECESSOR REPRODUCTION. If this fails the harness changed and NOTHING is comparable.
+======================================================================================================================
+    exec-native framing, identical to the predecessor: qCount from 0, MinHist 100, Window 250
+    bars where the C# evaluated an entry: 397; dropped for an unavailable fill bar: 0; population 397
+    MASK SANITY off the mask: score != 0 on 0 bars, size != 1 on 0 bars
+
+    quantity                             predecessor      this run  |delta| pp  <= 0.05 pp
+    H_STALE score agreement                  96.977%       96.977%      0.0003         yes
+    H_STALE size agreement                   98.992%       98.992%      0.0004         yes
+    Q0 VERDICT: PASS
+
+======================================================================================================================
+=== 6. Q1 - SIZE SEMANTICS UNDER THE CORRECTED ATR. THE DECIDING GATE.
+======================================================================================================================
+    arm           construction                              score agree  size agree  score qC>=250  size qC>=250  n bad
+    H_CORRECTED   atr b-1, features b-1                        100.000%    100.000%       100.000%      100.000%      0
+    C1            atr b-2, features b-1  (predecessor)          96.977%     98.992%        96.599%       98.639%     12
+    C2            atr b-1, features b    (fresh)                87.909%     97.733%        83.673%       97.279%     48
+    C3            atr b,   features b-1                         96.725%     99.496%        96.599%      100.000%     13
+
+    population 397 evaluated entries (all 320 warm + 77 pre-warm, including the 100 the executable zeroes)
+    H_CORRECTED score 100.000 %   vs   C1 96.977 %   C2 87.909 %   C3 96.725 %
+    H_CORRECTED size  100.000 %   vs   C1 98.992 %   C2 97.733 %   C3 99.496 %
+    strict win on score against all three controls : yes
+    strict win on size  against all three controls : yes
+    score >= 99.5 % : yes     size >= 99.5 % : yes
+    Q1 VERDICT: PASS
+
+    residual of H_CORRECTED: 0 disagreeing entries of 397
+
+======================================================================================================================
+=== 7. Q2 - STATE AND ACTION PARITY ON THE WARM SUB-SPAN
+======================================================================================================================
+    field     kind               agree FULL   agree WARM  n disagree  disagree in WARM
+    nMem      diagnostic           96.4948%     99.7583%      11,392               616
+    nThr      diagnostic           95.1527%     99.7591%      15,754               614
+    dL        diagnostic           99.9194%     99.9502%         262               127
+    ratio     diagnostic           75.2192%     94.3348%      80,539            14,439
+    voteOK    ACTION-BEARING       99.1726%     99.9207%       2,689               202
+    tilt      diagnostic           77.9970%     99.4586%      71,511             1,380
+    bmom      diagnostic           98.4573%     99.9062%       5,014               239
+    t0        ACTION-BEARING       97.5247%     99.8187%       8,045               462
+    t1        ACTION-BEARING       99.0006%     99.8576%       3,248               363
+    t2        ACTION-BEARING       98.1207%     99.9027%       6,108               248
+    t3        ACTION-BEARING       98.0203%     99.8458%       6,434               393
+
+    WARM entries: C# 320  Python 319   count diff +0.313 %
+    WARM entry-bar Jaccard 0.99065   WARM exit-bar Jaccard 0.93636
+    FULL-SPAN entry Jaccard 0.85176, count diff +1.795 % - RECORDED,
+      NOT RE-LITIGATED. It is a warm-up artefact of the executable: 33 of 35 C#-only and 27 of 28 Python-only entries are pre-warm.
+
+    clause                                          spec      observed   verdict
+    voteOK agreement (WARM)                    >= 99.5 %      99.9207%      pass
+    t0 agreement (WARM)                        >= 99.5 %      99.8187%      pass
+    t1 agreement (WARM)                        >= 99.5 %      99.8576%      pass
+    t2 agreement (WARM)                        >= 99.5 %      99.9027%      pass
+    t3 agreement (WARM)                        >= 99.5 %      99.8458%      pass
+    entry Jaccard (WARM)                         >= 0.99       0.99065      pass
+    trade count difference (WARM)                 <= 2 %        0.313%      pass
+    Q2 VERDICT: PASS
+    predecessor for comparison: voteOK 99.921 %, t0..t3 >= 99.82 %, Jaccard 0.99065, +0.313 %
+
+======================================================================================================================
+=== 8. Q3 - EVERY RESIDUAL DISAGREEMENT ASSIGNED TO A NAMED, EVIDENCED CAUSE
+======================================================================================================================
+    Each cause below is a FORWARD SIMULATION of a named block of WeeklyEdgeP1PCT_v3.cs,
+    run over the EXPORT's own bars starting from the export's first bar - i.e. over the
+    deployed instance's own 365-day load span, which is not the campaign's history. A
+    residual is assigned only when the simulation REPRODUCES the executable's own value.
+
+    simulations built  [33s]
+    simulation                           reproduces the export column on
+    norm/ratio (.cs:963-970,1116-1119)                           98.713%
+    tilt (.cs:1064-1073)                                         99.569%
+    dL (.cs:975,1126,1220-1222)                                  99.968%
+    bmom (.cs:1023-1059)                                        100.000%
+    nThr from simulated norm                                     99.998%
+
+    THE HYBRID VOTE. The canonical Python chain is re-run with FIVE inputs replaced on the
+    joined window by the executable's own values - tilt, bmom, ratio (export column), norm
+    (simulated) and dL. Nothing else changes. Whatever then agrees was CAUSED by those
+    inputs; whatever still disagrees is not explained by them and is reported as such.
+    hybrid vote built  [41s]
+    field       python agrees with .cs    hybrid agrees with .cs
+    nMem                      96.4948%                  99.5649%
+    nThr                      95.1527%                  99.9982%
+    dL                        99.9194%                 100.0000%
+    voteOK                    99.1726%                  99.7674%
+    t0                        97.5247%                  99.5231%
+    t1                        99.0006%                  99.6314%
+    t2                        98.1207%                  99.5483%
+    t3                        98.0203%                  99.5699%
+
+    DATA-COVERAGE sessions: [202, 228, 238] (a session where the two files do not hold
+    the same minutes) plus the session immediately after each. 6,815 joined
+    bars (2.097 %). C#-only minutes 66, Python-only 12.
+      C#-only : ['2026-07-17T10:54:00', '2026-07-17T10:55:00', '2026-07-17T10:56:00', '2026-07-17T10:57:00', '2026-07-17T10:58:00', '2026-07-17T10:59:00'] ... ['2026-07-17T11:57:00', '2026-07-17T11:58:00', '2026-07-31T17:00:00']
+      PY-only : ['2026-06-11T10:33:00', '2026-06-11T10:34:00', '2026-06-11T10:35:00', '2026-06-11T10:36:00', '2026-06-11T10:37:00', '2026-06-11T10:38:00'] ... ['2026-06-11T10:42:00', '2026-06-11T10:43:00', '2026-06-11T10:44:00']
+
+    ASSIGNING. Priority order exactly as declared in section 2(d).
+
+    RESIDUAL POPULATION: 211,136 (bar, field) disagreements
+    cause                                      n     share   in WARM
+    TILT_WARMUP_LT_51_SESSIONS            70,131   33.216%         0
+    NORM_OWN_LOAD_SPAN_SIM                48,822   23.123%    10,257
+    CS_INPUT_TILT                         31,114   14.736%         0
+    NORM_NOT_YET_AVAILABLE                27,535   13.041%         0
+    NTHR_FOLLOWS_NORM_SIM                 15,754    7.462%       614
+    UNEXPLAINED                            9,889    4.684%     5,371
+    BMOM_WARMUP_LT_14_RTH_DAYS             4,775    2.262%         0
+    DATA_COVERAGE                          2,274    1.077%     2,274
+    BMOM_OWN_SLOTHIST_SIM                    239    0.113%       239
+    CS_INPUT_BMOM                            180    0.085%       180
+    CUMDELTA_OWN_SESSION_PATH_SIM            158    0.075%        23
+    ACTION_PRE_WARM                          116    0.055%         0
+    CUMDELTA_VOLUME_SERIES_DIFFER            104    0.049%       104
+    CS_INPUT_RATIO_NORM                       31    0.015%        31
+    ACTION_FOLLOWS_VOTEOK                     12    0.006%        12
+    CS_INPUT_DL                                2    0.001%         2
+    ------------------------------------------------------------
+    ASSIGNED                             201,247   95.316%
+    UNEXPLAINED                            9,889    4.684%
+
+    spec PASS = >= 95 % assigned.  Q3 VERDICT: PASS
+    THE UNEXPLAINED FRACTION IS 4.684 % AND IS NOT ROUNDED AWAY.
+    unexplained by field: {'ratio': 3184, 'tilt': 1380, 't3': 1081, 't0': 1065, 't2': 1045, 't1': 839, 'nMem': 760, 'voteOK': 526, 'EXIT_BAR': 9}
+    unexplained inside WARM: 5,371 of 9,889
+    the 8 heaviest unexplained dates: {'2025-09-01': 2565, '2025-08-31': 1819, '2025-12-22': 1024, '2025-11-28': 566, '2026-07-23': 373, '2026-07-21': 373, '2026-07-30': 372, '2026-07-24': 371}
+
+    THE THREE QUESTIONS INHERITED FROM THE PREDECESSOR, ANSWERED:
+      (a) ratio: 76,357 of 80,539 (94.81 %) are reproduced by
+          simulating the .cs's OWN rngHist over its OWN load span. The predecessor could
+          only localise this to `norm`; it is now assigned to a mechanism.
+      (b) dL: 262 mismatches. Re-running the .cs's own
+          cumDelta recursion on the PYTHON volume series reproduces the .cs on 158
+          of them and reproduces PYTHON on 104. The 104 are the bars on which
+          the two volume series genuinely differ - the export writes no volume column, so
+          this is the closest the snapshot permits and it BOUNDS the question rather than
+          leaving it open.
+      (c) coverage: 2,274 residuals fall in a mismatched-minute session or the one
+          after it. Of the 202 voteOK mismatches inside WARM, 17 are coverage and 38 are unexplained.
+
+======================================================================================================================
+=== 9. Q4 - ECONOMICS. RUNS ONLY IF Q1 PASSED.
+======================================================================================================================
+    THIS IS A CORRECTION TO THE RECORD, NOT A CANDIDATE, NOT AN IMPROVEMENT, AND NOT A
+    P1_vNext. It measures how far the campaign's quoted P1 economics sit from the
+    executable's. Changing what the deployed strategy does remains a separate locked
+    challenge that this run may not open. The deployed strategy was never using the
+    defect, so nothing here is a reason to modify it.
+
+    SIZE-INVARIANCE PRECONDITION (T2_P1SIZE01: pnl_i = s_i * pnl_per_contract_i, max
+    error 0.00e+00). Asserted here, not assumed - identical (et, xt, direction) for all
+    2,401 trades under both size vectors: PASS
+    the same identity asserted for the two decomposition size vectors: PASS
+    262 trades entered before the canonical scoring window opens (2022-07-01); both size vectors assign them 1 by construction and their
+    contribution to the difference is $0.00. They are EXCLUDED so the net
+    levels below are the levels the campaign quotes.
+
+    ---- CANONICAL WINDOW 2022-07-01 -> 2026-08-01 (the window the campaign quotes)
+    window 2022-07-01 08:49:00 -> 2026-07-29 18:10:00;  2,139 trades, 211 weeks
+    trades sized differently                      : 95 (4.44 % of trades)
+      their share of the RESEARCH-CHAIN net       :     3.07 %
+      their share of the H_CORRECTED net          :     1.11 %
+    size vector                                     ctrRT    sz2 %         net $    $ / week
+    RESEARCH CHAIN as quoted (ATR double-lagged)    2,564   19.87%       331,241       1,570
+    H_CORRECTED  (the executable's semantics)       2,561   19.73%       324,674       1,539
+      decomposition: C1 phase only, ATR uncorrected    2,563   19.82%       319,250       1,513
+      decomposition: C2 ATR only, fresh phase       2,552   19.31%       331,388       1,571
+    DIFFERENCE  H_CORRECTED - RESEARCH CHAIN                              -6,567         -31
+    top decile by |per-contract P&L| (214 trades): research $599,422  corrected $593,703  difference $-5,719 (87.1 % of the total)
+      the other 1,925 trades account for $-848
+
+    ---- PRE-BURN SUB-WINDOW, entries before 2026-05-31 (CLAUDE.md section 5)
+    window 2022-07-01 08:49:00 -> 2026-05-29 11:10:00;  2,072 trades, 202 weeks
+    trades sized differently                      : 93 (4.49 % of trades)
+      their share of the RESEARCH-CHAIN net       :     3.34 %
+      their share of the H_CORRECTED net          :     1.26 %
+    size vector                                     ctrRT    sz2 %         net $    $ / week
+    RESEARCH CHAIN as quoted (ATR double-lagged)    2,487   20.03%       337,952       1,673
+    H_CORRECTED  (the executable's semantics)       2,486   19.98%       330,826       1,638
+      decomposition: C1 phase only, ATR uncorrected    2,489   20.13%       332,318       1,645
+      decomposition: C2 ATR only, fresh phase       2,475   19.45%       338,099       1,674
+    DIFFERENCE  H_CORRECTED - RESEARCH CHAIN                              -7,126         -35
+    top decile by |per-contract P&L| (208 trades): research $591,678  corrected $584,604  difference $-7,074 (99.3 % of the total)
+      the other 1,864 trades account for $-51
+
+    ---- COMPANION: the export-overlap window only, 2025-08-31 -> 2026-07-31
+    window 2025-08-31 18:08:00 -> 2026-07-29 18:10:00;  390 trades, 49 weeks
+    trades sized differently                      : 11 (2.82 % of trades)
+      their share of the RESEARCH-CHAIN net       :    -3.63 %
+      their share of the H_CORRECTED net          :    -3.46 %
+    size vector                                     ctrRT    sz2 %         net $    $ / week
+    RESEARCH CHAIN as quoted (ATR double-lagged)      471   20.77%        56,191       1,147
+    H_CORRECTED  (the executable's semantics)         468   20.00%        56,285       1,149
+      decomposition: C1 phase only, ATR uncorrected      466   19.49%        48,868         997
+      decomposition: C2 ATR only, fresh phase         471   20.77%        56,191       1,147
+    DIFFERENCE  H_CORRECTED - RESEARCH CHAIN                                  93           2
+    top decile by |per-contract P&L| (39 trades): research $126,454  corrected $126,454  difference $0 (0.0 % of the total)
+      the other 351 trades account for $93
+
+    READING: the difference is a MEASUREMENT OF THE RESEARCH REPRESENTATION'S ERROR, not
+    a P&L opportunity. The executable has always used the corrected semantics; the
+    number below is how far the quoted figure sits from the traded one, and its sign
+    carries no recommendation.
+
+======================================================================================================================
+=== 10. GATE TABLE - printed by the program
+======================================================================================================================
+GATE  SPEC                                                                  OBSERVED                                                          VERDICT
+Q0    reproduce predecessor H_STALE 96.977 % / 98.992 % within 0.05 pp      96.977% / 98.992%  (d 0.0003 / 0.0004 pp)                            PASS
+Q1    score >=99.5% AND size >=99.5% AND H_CORRECTED strictly beats C1,C2,C score 100.000% size 100.000%; C1 96.98 C2 87.91 C3 96.73             PASS
+Q2    WARM: voteOK>=99.5%, t0..t3>=99.5%, entry Jaccard>=0.99, count within voteOK 99.921%; t0..t3 99.82/99.86/99.90/99.85; J 0.99065; +0.3      PASS
+Q3    >=95% of residual disagreements assigned to a named, evidenced cause  201,247/211,136 = 95.316% assigned; 4.684% unexplained               PASS
+Q4    runs only if Q1 passes                                                computed - see section 9                                             PASS
+
+    The REALTIME column is UNDECIDABLE with n = 0 after the seal, exactly as in the
+    predecessor. No gate is decided on it and none is reported as a rate.
+
+    WHAT A PASS DOES NOT MEAN (spec section 3): agreement is not correctness; this run says
+    nothing about whether the executable is good, nothing about the realtime object, and
+    nothing that authorises modifying the deployed strategy.
+
+======================================================================================================================
+=== 11. ARTIFACTS
+======================================================================================================================
+    out/gates.json
+    out/residual_classes.csv   211,136 rows
+    out/console.txt
+
+[done 44s]  LIVE ENABLED = NO.  $0 spent.  Nothing promoted.
