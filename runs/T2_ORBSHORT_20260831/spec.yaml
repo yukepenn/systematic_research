@@ -1,0 +1,177 @@
+run_id: T2_ORBSHORT_20260831
+campaign: NQ_LIVE_ALPHA_ACCELERATION (Tier 2, direct incumbent challengers)
+date: 2026-08-31
+status: PREREGISTERED — committed BEFORE any P&L in this run existed
+lane: "(a) ORB momentum-side CONTROL recovery + (b) independent SHORT alpha"
+
+# ---------------------------------------------------------------------------
+# HARD CONSTRAINTS INHERITED (restated so the program can assert them)
+# ---------------------------------------------------------------------------
+constraints:
+  - READ-ONLY on the live book. No deploy/enable/disable/stop/modify/order.
+  - No Databento. No DOM/L2 restart. No NT8 writes.
+  - Substrate is the PRE-SEAL modern window only: 2022-01-03 .. 2026-07-31.
+    2026-08 is DIRECTLY_BURNED for P1/XM only; this run does not read it at all.
+  - "OR-length mining to reconcile B3(30-min) with ORB01(15-min)" is BARRED by
+    research/genesis2/FAILURE_MEMORY.md. This run performs NO opening-range length
+    search of any kind. Exactly the two ALREADY-PUBLISHED lengths (15, 30) are
+    quoted, both as pre-existing burned numbers, and NEITHER is selected.
+  - No parameter grid anywhere. Every constant below is frozen here, before results.
+
+# ---------------------------------------------------------------------------
+# PART A — RECOVER THE GENESIS ORB MOMENTUM-SIDE CONTROL (B3)
+# ---------------------------------------------------------------------------
+part_a:
+  object: >
+    B3_orb_0930_1000 from runs/GENESIS_BASELINES_20260828 — the DISCOVERY control with
+    reported net $1,042.72/wk, weekly t 2.1944, maxDD $60,782.20, 60.25% positive weeks,
+    worst week -$36,829, 591 long / 542 short trades over 239 ISO weeks.
+  exact_rule_recovered_from_source: |
+    src = runs/GENESIS_BASELINES_20260828/src/run_baselines.py, block "B3".
+    R1 Opening range = high/low of bars STAMPED 09:31..10:00 inclusive (END-stamped;
+       the 09:31 bar opens at 09:30:00, so OR covers 09:30:00 -> 10:00:00 exactly).
+    R2 Scan window = bars STAMPED 10:01..15:59 inclusive.
+    R3 Trigger = FIRST scan bar with high > OR_high (long) or low < OR_low (short).
+       STRICT inequality, no tick buffer.
+    R4 A bar breaking BOTH sides in the same minute = NO TRADE (ambiguous).
+    R5 Fill = stop-entry, pessimistic: long max(OR_high, bar_open); short min(OR_low, bar_open).
+    R6 Exit = close of the 15:59-stamped bar. No stop. No target. One entry per session max.
+    R7 Sessions missing the 09:31..10:00 block, the scan block, or the 15:59 bar are skipped.
+    R8 Size 1 contract, $20/pt, cost $18.80/ctrRT ($4.36 commission + $14.44 modelled spread).
+    R9 Weekly bucket = ISO (year, week) of the session date; the common grid is every ISO
+       week containing >= 1 session in the population; untraded weeks contribute $0.
+  reproduction_gate:
+    G_A1: "net $/wk reproduces 1042.7180 to <= $0.01"
+    G_A2: "weekly t reproduces 2.1944 to <= 0.001"
+    G_A3: "trade counts reproduce exactly 591 long / 542 short"
+    verdict_rule: "any G_A* FAIL => Part A is a DEFECT and no decomposition number is quoted."
+  decompositions_preregistered (descriptive, no gates, no selection):
+    - long leg vs short leg: n, gross pts, net $, $/trade, weekly t of each leg alone
+    - per-calendar-year net, and leave-one-year-out weekly t
+    - tail audit: top1% / top5% / top10% of trades as % of net; net ex-top-1; net ex-top-5
+    - entry-time distribution (median, p25, p75) and net by entry-hour bucket
+    - stationary block bootstrap on the weekly net series, 10,000 reps, mean block 4 weeks,
+      two-sided percentile CI on weekly mean and on t
+    - the ALWAYS-LONG-AT-THE-SAME-BARS control: at every ORB entry bar, buy 1 and exit
+      15:59 (same cost). This is the drift control the GENESIS scoreboard never printed
+      for B3 and the one ORB01 FAILED. Reported as a CONTROL COMPARISON, not a gate.
+    - the SAME-BAR-SIGN control: at every ORB entry bar take the OPPOSITE side.
+  overlap_with_the_incumbent:
+    p1_source: runs/G2_AUG_INCUMBENT_READ_20260830/out/p1_trades_full.csv (2,439 NT8 trades)
+    xm_source: runs/G2_AUG_INCUMBENT_READ_20260830/out/xm_trades_full.csv (378 NT8 trades)
+    window_for_overlap: sessions 2022-01-03..2026-07-31 only (August dropped, seal discipline)
+    measured:
+      - session-level and ISO-week-level Pearson and Spearman correlation of ORB net with
+        P1 net and with XM net
+      - ORB net on P1-FLAT sessions vs P1-ACTIVE sessions (matched control: the
+        unconditional ORB session mean in the same wave)
+      - directional overlap: fraction of ORB-LONG entries on sessions where P1 also held long
+      - marginal contribution of ORB to M_11 at COMMON TOTAL BOOK RISK (weekly maxDD-matched
+        scaling), reported as Type A / Type B per the directive's classification rule
+
+# ---------------------------------------------------------------------------
+# PART B — INDEPENDENT SHORT ALPHA (the preregistration that matters)
+# ---------------------------------------------------------------------------
+part_b:
+  prior_closures_checked_before_choosing:
+    - "ORB short leg dead (ORB01 -$30,681); mechanical Solar mirror weak (W23/W24 X0)"
+    - "W24 X2 breakdown-of-prior-low -$67,759; W24 X5 downtrend-gated short WORST in wave"
+    - "W100 downside-persistence filters falsified vs rate-matched random filters"
+    - "G2_F6_BREADTHPM01 breadth-conditioned afternoon short: worse than random shorts"
+    - "W108 midday FADES: EXHAUST_VOL -$309/tr, FAILED_BREAK -$225/tr, EFFORT_NO_RES -$320/tr"
+    - "W118 CLASS closure: event-driven REVERSAL at endogenous triggers; CONTINUATION at the
+       same bars earns +$374/trade"
+    - "G2_F2_SWEEP01: sweep-and-reclaim of PRIOR-RTH extremes NULL both ways"
+    conclusion_driving_the_choice: >
+      Every dead short in this repo is a FADE, a MECHANICAL MIRROR, or a TRAILING-TREND-GATED
+      short. The one thrice-confirmed modern-regime positive is intraday CONTINUATION. The
+      untested cell is therefore short-side CONTINUATION conditioned on a SAME-SESSION state
+      (not a trailing trend filter, which W24 X5 already killed). FAILURE_MEMORY's own
+      over-generalization guard lists "short-side mechanisms (only mechanical mirrors tested)"
+      and "VWAP anything (never tested here)" as NOT CLOSED.
+
+  S1_PRIMARY:
+    name: SHORT_VWAP_RECLAIM_FAILURE
+    mechanism: >
+      On a session that has been trading BELOW its RTH VWAP, a rally that reaches VWAP and is
+      REJECTED is supply confirming itself: the marginal buyer who could not hold the volume-
+      weighted average price is exhausted, and the session continues to distribute. This is a
+      CONTINUATION event, not a reversal, so it is on the live side of the W118 class closure.
+      It is materially different from W108's VWAP_RECLAIM (fixed 11:48 clock, both-direction
+      FADE TOWARD vwap): here the trigger time is endogenous, the object is short-only, and the
+      trade is taken in the direction the price was already going.
+    sign: SHORT (preregistered; a positive result with the opposite sign is a FAILURE)
+    frozen_definitions:
+      vwap: "RTH VWAP from the 09:31-stamped bar, typical price (H+L+C)/3 weighted by volume,
+             running, causal, computed at each bar close"
+      below_state: "at bar close t, price has closed below VWAP on >= 20 of the last 30 RTH bars
+                    (a persistent distribution state, not one wiggle)"
+      touch: "bar t high >= VWAP_t"
+      rejection: "bar t close < VWAP_t"
+      trigger: "the FIRST bar t in 10:01..15:29 satisfying below_state AND touch AND rejection"
+      entry: "next bar's open (t+1), i.e. no look-ahead inside the trigger bar"
+      exit: "close of the 15:59-stamped bar; no stop; one trade per session max"
+    horizon: same session, entry endogenous, exit 15:59
+    size_cost: 1 contract, $20/pt, $18.80/ctrRT (identical to Part A so the two are comparable)
+  S2_SECONDARY:
+    name: SHORT_WEAK_OPEN_CONTINUATION
+    mechanism: >
+      A session that OPENS below the prior RTH close and below the overnight (18:00->09:30)
+      midpoint, and then makes a new session low in the first 30 minutes WITHOUT ever trading
+      back above the 09:30 open, is a session in which the overnight repricing was accepted at
+      the open. P1 is structurally long-only and cannot participate in it at all. The state is
+      defined ENTIRELY from same-session and prior-session observables available by 10:00 —
+      it is not a trailing trend filter (W24 X5's killed form).
+    sign: SHORT
+    frozen_definitions:
+      gap_down: "open of the 09:31-stamped bar < close of the prior session's 15:59-stamped bar"
+      below_ovn_mid: "that same open < (max(high) + min(low))/2 over bars stamped 18:01..09:30
+                      of the same session"
+      no_reclaim: "max(high) over bars stamped 09:31..10:00 <= open of the 09:31-stamped bar"
+      new_low: "min(low) over bars stamped 09:31..10:00 < min(low) over 18:01..09:30"
+      trigger: "all four true, evaluated once at 10:00"
+      entry: "open of the 10:01-stamped bar"
+      exit: "close of the 15:59-stamped bar; no stop; one trade per session max"
+    horizon: same session, fixed entry 10:01, exit 15:59
+    size_cost: identical to S1
+
+  gates_applied_identically_to_S1_and_S2:
+    B1_ACTIVATION: "fires on >= 40 and <= 500 sessions in 2022-01-03..2026-07-31 (a rule that
+                    fires on nearly every session is not a state; one that fires < 40 times
+                    cannot be powered). Checked BEFORE P&L is printed."
+    B2_ECONOMICS:  "net $ > 0 after $18.80/ctrRT"
+    B3_NULL:       "RATE-MATCHED RANDOM-SHORT placebo: 1,000 draws, each draw shorts the SAME
+                    NUMBER of sessions drawn uniformly from the eligible session set, entering
+                    at the same clock distribution of entry slots as the real rule and exiting
+                    15:59. Real $/trade must exceed the draw p95. This is the directive's
+                    mandatory placebo and it is what killed BREADTHPM01."
+    B4_STATE_VALIDITY: "the mechanism must be positive IN ITS OWN STATE and the state must be
+                    genuinely bearish: mean same-session close-to-close return on triggered
+                    sessions must be < the unconditional mean (matched unconditional control
+                    computed in the same wave, per CLAUDE.md)."
+    B5_TIMING_TEETH: "delaying entry by 30 minutes must degrade the result by >= 25% of net.
+                    A rule indifferent to a 30-minute delay is not the stated mechanism.
+                    (The rung that killed AUCTREV.)"
+    B6_CONCENTRATION_CLASSIFICATION: "top-10% of trades as % of net is REPORTED and CLASSIFIED,
+                    never used as a kill gate (binding amendment from G2_F9_P1_SYMCERT: the
+                    incumbent itself fails that bar at 236.8%)."
+    B7_TAIL_AUDIT: "top1/top5/top10 %, ex-top-1, ex-top-5, leave-one-year-out — mandatory for
+                    every impressive result, per the directive."
+  promotion_rule_fixed_now: >
+    S1 or S2 is a CHALLENGER worth a Tier-3 build ONLY if B1..B5 all PASS. B2+B3 alone is not
+    enough (BREADTHPM01 and W100 both looked economic and died at the placebo). A failure at
+    any clause is recorded FAILED and the population is NOT redefined.
+  what_a_pass_would_and_would_not_mean: >
+    A pass is Type A (new information) only if the state is bearish (B4) AND the placebo is
+    beaten (B3). If the sleeve merely earns because it is short during the two known 2022 and
+    2025 drawdowns it is REGIME ROUTING, and must be labelled so.
+
+evidence_status: DISCOVERY_CONSUMED (the modern window is burned for these observables)
+live_enabled: NO
+spend: $0
+outputs:
+  - out/gate_table.txt        (GATE / SPEC / OBSERVED / PASS-FAIL, printed by the program)
+  - out/orb_trades.csv        (Part A frozen action set)
+  - out/short_trades.csv      (Part B frozen action sets, both arms)
+  - out/weekly_series.csv     (ORB, S1, S2, P1, XM weekly nets on the common ISO grid)
+  - REPORT.md
