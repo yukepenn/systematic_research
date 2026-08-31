@@ -1,0 +1,32 @@
+EXECUTION RECORD on DEMO8383477 (from NT8 log + trace; ListExecutions returned empty because
+NT8 was restarted 2026-08-31 13:21:22 UTC and its in-memory execution list does not persist).
+
+=== THE ONE REAL ROUND TRIP (2026-08-31) ===
+ENTRY  order 581992641240  Buy  2 NQU6 @ 29421.00   Market/GTC  signal 'L'
+  local CreateOrder      00:58:00.179 ET   clOrdId 6a337c0de667450f9a36a26bcbae1a0f (local GUID)
+  Tradovate.Adapter.Submit1 00:58:00.243
+  server returns orderId 581992641240 at 00:58:00.408   (round trip ~165 ms)
+  server timestamps: order 04:58:00.390Z -> Working 04:58:00.392Z -> Trade 04:58:00.393Z
+  ==> server-side decision-to-fill = 3 ms
+  execType=Trade ordStatus=Filled cumQty=2 avgPx=29421.0 lastQty=2 lastPx=29421.0
+  ExecutionUpdateCallback: exchange=Globex  (NT8 log formatter prints Exchange=Default)
+  strategy diag: FILLPX assumed=29420 actual=29421   -> 1.00 pt adverse
+
+EXIT   order 581992641251  Sell 2 NQU6 @ 29501.25  Market/GTC  signal 'XL'
+  local CreateOrder      03:51:00.1xx ET   clOrdId 346b18b7522141459e4874b4103b7680
+  server timestamps -> Filled; lastQty=2 lastPx=29501.25
+  ExecutionUpdateCallback: exchange=Globex
+  strategy diag: FILLPX assumed=29502.5 actual=29501.25 -> 1.25 pt adverse
+  Cbi.Account.OnAddTrade: profitCurrencyBeforeCommissionAndFees=3210
+
+=== THE DECISIVE PRIOR FILL (2026-08-18) — manual/test order, 100 lots ===
+  order 581992641208  Sell 100 NQU6  Market/DAY
+  ProcessExecutionReportEntity: execType=Trade ordStatus=Filled
+     cumQty=100  avgPx=29577.25  lastQty=100  lastPx=29577.25
+  ProcessFillEntity: qty=100 price=29577.25 external=false
+  ==> ONE execution, ONE price, ZERO partial fills, for 100 contracts.
+  Measured NQU6 top-of-book (5,156 samples, same feed): median size 2, max 46 bid / 20 ask,
+  P(size>=100) = 0.00%.  A real CME match of 100 lots would sweep many levels.
+
+=== 2026-08-19 ===
+  order 581992641221  Buy 100 NQU6 Market/GTC filled 100 @ 29749.75 (single price, again)

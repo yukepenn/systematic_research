@@ -59,3 +59,11 @@ runs/GENESIS_FREEDATA_CBOE_20260828/raw/*
 # ABS-vs-PCT raw NT8 backtest payloads (multi-MB, regenerable from the run spec;
 # the derived trade lists and weekly series ARE committed).
 runs/G2_ABS_VS_PCT_20260830/out/nt8_raw_*.json
+
+# GENESIS III executable-object parity: the 32 MB snapshot of the live strategy's own per-bar
+# export and the 24 MB joined per-bar comparison. KEPT ON DISK, NEVER DELETED - the snapshot is
+# NOT regenerable (the live file is appended to continuously), so its sha256 is recorded in
+# out/gates.json and that hash is the citable object. out/disagreements.csv IS committed: it is
+# the audit trail for gates that FAILED, and failed-gate evidence stays in version control.
+runs/G3_EXECTRUTH_01_20260831/out/cs_export_snapshot.csv
+runs/G3_EXECTRUTH_01_20260831/out/parity_bars.csv

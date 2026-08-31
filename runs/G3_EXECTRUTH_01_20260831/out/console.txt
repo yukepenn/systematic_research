@@ -1,0 +1,379 @@
+======================================================================================================================
+G3_EXECTRUTH_01_20260831 - EXECUTABLE OBJECT TRUTH
+bar-level ACTION + STATE parity: the DEPLOYED C# object vs the Python research object.
+spec: runs/G3_EXECTRUTH_01_20260831/spec.yaml (committed before any comparison existed)
+LIVE ENABLED = NO.  $0 spent.  No order, no deploy, no backtest, no CrossTrade call.
+EVIDENCE STATUS: VERIFICATION - nothing is selected, tuned, or promoted by this run.
+NO P-VALUE APPEARS ANYWHERE IN THIS RUN (spec trap 2). The gates are agreement thresholds.
+======================================================================================================================
+
+======================================================================================================================
+=== 0. PROVENANCE - the C# side is a snapshot, taken read-only, of a file a LIVE strategy is appending to
+======================================================================================================================
+    source        C:\NT8_ForwardLogs\export\we_p1pct_p1pct.csv  (opened FileShare.ReadWrite, never written)
+    snapshot      D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\G3_EXECTRUTH_01_20260831\out\cs_export_snapshot.csv
+    sha256        403131d10ab7027d7bbb904204f3409ff6b993daa0a947e703e26ff34ce99999
+    bytes         33,497,518
+    data rows     353,891   (the spec quotes 353,878; the file is being appended to live, so a later snapshot is longer - the DELTA IS ALL IN THE SEALED REGION, see below)
+    duplicates    0      non-monotonic rows 0
+    span          2025-08-31T18:01:00  ->  2026-08-31T14:19:00
+
+======================================================================================================================
+=== 1. DATA SEAL - executed BEFORE any statistic is computed (CLAUDE.md section 5)
+======================================================================================================================
+    rows with timestamp >= 2026-08-01 (VIRGIN)        DROPPED :   28,819
+    rows retained (in-window, < 2026-08-01)                   :  325,072
+    retained span                                             : 2025-08-31T18:01:00 -> 2026-07-31T17:00:00
+
+    *** THE REALTIME TAIL IS ENTIRELY INSIDE THE SEAL. ***
+    The current deployment began 2026-08-31 16:28 UTC = 12:28 ET. Rows at or after that
+    instant: 112 - every one of them is >= 2026-08-01 and was just dropped.
+    Realtime-tail rows SURVIVING the seal: 0.
+    Consequence, stated before any gate is read: EVERY number in this run is computed on
+    bars NT8 produced by HISTORICAL processing during the 365-day warm-up load. This run
+    therefore CANNOT split historical from realtime behaviour (spec trap 1). Every gate is
+    reported twice as required, and the realtime column is UNDECIDABLE with n = 0 - it is
+    not reported as a rate, and no gate is called PASS on the strength of it.
+
+======================================================================================================================
+=== 2. DECLARATIONS MADE BEFORE ANY RESULT IS COMPUTED
+======================================================================================================================
+    (a) WARM-UP SUB-SPAN, derived from the .cs source constants alone, not from any result.
+        WeeklyEdgeP1PCT_v3.cs:1067 updates `tilt` only once sessCloses.Count > TiltSma
+        (= 50). sessCloses gains one entry per session close, so tilt is
+        identically 0 for the first 51 sessions of the export and the
+        deployed object cannot agree with a fully-warm Python tilt there. rngHist needs 20
+        sessions (:1118) and bmom needs BmomBandDays = 14 (:1034); both are subsumed.
+        DECLARED SPLIT: FULL = every retained row.  WARM = export session index >= 51.
+        The GATE VERDICT is taken on FULL, exactly as the spec states. WARM is printed
+        beside it as a named diagnostic so the warm-up is visible rather than hidden.
+
+    (b) P3 IS COMPUTED IN TWO FRAMINGS, both declared here, both printed for all three arms.
+        EXEC-NATIVE  (PRIMARY): the trailing-quantile history is the executable's OWN
+            evaluated-entry sequence, read from the export, starting at the export's first
+            bar with qCount = 0, QualMinHist = 100, QualWindow = 250 - i.e. a faithful
+            reconstruction of the deployed object, which was redeployed with DaysToLoad=365
+            and therefore holds NO quality history before 2025-08-31. Zero free parameters.
+        RESEARCH-CHAIN (COMPANION): the canonical chain's own entry schedule and its full
+            2022-07-01-onward history - the object the campaign has been quoting.
+        The three P3 arms differ ONLY by the index shift WITHIN each framing, so the
+        comparison between arms is exact in both. The gate is read on EXEC-NATIVE because
+        the mask, the entry sequence and the history are then all the executable's own.
+
+    (c) P4, if reached, is computed on the RESEARCH-CHAIN size vectors applied to the
+        Python trade schedule, because P4's question is what separates the object we trade
+        from THE OBJECT WE HAVE BEEN QUOTING, and the quoted object is the research chain.
+        The exec-native size vector is reported beside it.
+
+======================================================================================================================
+=== 3. THE PYTHON RESEARCH OBJECT - the canonical chain, unmodified
+======================================================================================================================
+    load_deep('2022-01-01','2026-07-31 17:00', extend=True): 1,620,044 bars / 1,187 sessions, 2022-01-02T18:01:00 -> 2026-07-31T16:59:00  [4s]
+    runs/WE_W76_FORWARD2026/out/mem_ext.npz: mem (1620044, 13) bmom (1620044,) tilt (1620044,)
+    CACHE SPAN CHECK: the cache has exactly one row per substrate bar, and the substrate
+    spans 2022-01-02T18:01:00 -> 2026-07-31T16:59:00, which strictly contains the needed
+    2025-08-31 -> 2026-07-31 comparison window. The cache is USED AS IS; no rebuild was
+    necessary and none was performed.
+    fast_build_context built  [6s]
+    votes_instrumented built  [15s]
+    HARNESS A: votes_instrumented == canonical run_we_w97.votes, bit for bit ....... PASS
+    HARNESS B: (nMem*nThr*(1+dL))>=16 == the canonical 32-voter mean>=0.5 ........... PASS
+    per-set targets t0..t3 ordered ['narrow5', 'narrow6', 'narrow7', 'all13'] == .cs SETLEN {5,6,7,13}
+    canonical entry schedule (fills_daily, 2022-07-01 -> 2026-08-01): 2,139 entries  [25s]
+    HARNESS C: causal_score_lag(lag=0) == canonical run_we_w37.causal_score ......... PASS
+    HARNESS D: gfills_path trade list == canonical run_we_w98.gfills, byte for byte .. PASS
+    HARNESS E: gfills called with per_ctr = True  (spec trap 3: the .cs session
+               box accumulates PER CONTRACT, WeeklyEdgeP1PCT_v3.cs:934-938 and :1164-1167)  PASS
+    canonical P1/PCT object: 2,401 trades  [26s]
+
+======================================================================================================================
+=== 4. TIMESTAMP ALIGNMENT - verified on real session boundaries BEFORE the join is trusted
+======================================================================================================================
+    The export writes LOCAL ET with no zone ('yyyy-MM-dd HH:mm:ss', .cs:1189). The Python
+    substrate `t` is also ET. Both are BAR-END stamped. The check below is not a claim; it
+    is a comparison of the two files' own session structure.
+
+    export sessions detected by a >60 min gap: 239
+    substrate sessions in the same span      : 240
+
+       #  C# first bar of session PY first bar of session C# last bar           PY last bar            sessPnl@first
+       0  2025-08-31T18:01:00     2025-08-31T18:01:00     2025-09-01T13:00:00   2025-09-01T13:00:00             0.00
+       1  2025-09-01T18:01:00     2025-09-01T18:01:00     2025-09-02T17:00:00   2025-09-02T17:00:00             0.00
+       2  2025-09-02T18:01:00     2025-09-02T18:01:00     2025-09-03T17:00:00   2025-09-03T17:00:00             0.00
+      60  2025-11-23T18:01:00     2025-11-23T18:01:00     2025-11-24T17:00:00   2025-11-24T17:00:00             0.00
+     120  2026-02-16T18:01:00     2026-02-16T18:01:00     2026-02-17T17:00:00   2026-02-17T17:00:00             0.00
+     237  2026-07-29T18:01:00     2026-07-29T18:01:00     2026-07-30T17:00:00   2026-07-30T17:00:00             0.00
+
+    VERIFIED on 6 sessions: the C# first bar of session and the Python first bar
+    of session are the SAME timestamp (18:01 ET after an 18:00 open, bar-END stamped), and
+    the C# sessPnl is exactly 0.00 on that bar - i.e. the two files agree on WHERE a
+    session starts, not merely on how minutes are labelled.  PASS
+    No +-1 minute shift is applied anywhere in this program (CLAUDE.md section 6; the
+    shift WAS the original W52 phase error and is not reintroduced).
+
+======================================================================================================================
+=== 5. GATE P0 - BAR IDENTITY. Are the two objects looking at the same bars?
+======================================================================================================================
+    C# rows in-window                :   325,072
+    matched (inner join on timestamp):   325,006  = 99.980 % of the C# rows
+    C#-only                          :        66
+    Python-only (inside the C# span) :        12
+    C#-only bars, first 10 : ['2026-07-17T10:54:00', '2026-07-17T10:55:00', '2026-07-17T10:56:00', '2026-07-17T10:57:00', '2026-07-17T10:58:00', '2026-07-17T10:59:00', '2026-07-17T11:00:00', '2026-07-17T11:01:00', '2026-07-17T11:02:00', '2026-07-17T11:03:00']
+    C#-only bars, last 10  : ['2026-07-17T11:50:00', '2026-07-17T11:51:00', '2026-07-17T11:52:00', '2026-07-17T11:53:00', '2026-07-17T11:54:00', '2026-07-17T11:55:00', '2026-07-17T11:56:00', '2026-07-17T11:57:00', '2026-07-17T11:58:00', '2026-07-31T17:00:00']
+    Python-only bars       : ['2026-06-11T10:33:00', '2026-06-11T10:34:00', '2026-06-11T10:35:00', '2026-06-11T10:36:00', '2026-06-11T10:37:00', '2026-06-11T10:38:00', '2026-06-11T10:39:00', '2026-06-11T10:40:00', '2026-06-11T10:41:00', '2026-06-11T10:42:00', '2026-06-11T10:43:00', '2026-06-11T10:44:00']
+
+    month             n      mean d    median d      sd d  max|d-med|  sd<=0.25
+    2025-08         359      0.0000      0.0000    0.0000      0.0000       yes
+    2025-09      30,113      0.0000      0.0000    0.0000      0.0000       yes
+    2025-10      31,380      0.0000      0.0000    0.0000      0.0000       yes
+    2025-11      26,847      0.0000      0.0000    0.0000      0.0000       yes
+    2025-12      29,762      0.0000      0.0000    0.0000      0.0000       yes
+    2026-01      28,665      0.0000      0.0000    0.0000      0.0000       yes
+    2026-02      27,358      0.0000      0.0000    0.0000      0.0000       yes
+    2026-03      30,719      0.0000      0.0000    0.0000      0.0000       yes
+    2026-04      29,888      0.0000      0.0000    0.0000      0.0000       yes
+    2026-05      28,740      0.0000      0.0000    0.0000      0.0000       yes
+    2026-06      30,101      0.0000      0.0000    0.0058      1.0000       yes
+    2026-07      31,074      0.0003      0.0000    0.0482      8.5000       yes
+
+    bars where close_cs != close_py at all: 2 of 325,006 (0.0006 %). The spec EXPECTED a constant per-contract-regime back-adjustment offset; the measured offset is EXACTLY ZERO in 10 of 12 months.
+    the non-zero bars by date: {'2026-06-11': 1, '2026-07-17': 1}
+    largest |d|: 8.5000 pt at 2026-07-17T12:21:00
+
+    join rate 99.980 % (spec >= 95 %)   every month sd(d) <= 0.25 : yes
+    P0 VERDICT: PASS
+    declared WARM sub-span: export session >= 51 -> 254,874 of 325,006 joined bars (78.4 %), from 2025-11-10T18:01:00
+
+======================================================================================================================
+=== 6. GATE P1 - STATE PARITY. Do the two objects compute the same decision state on the same bar?
+======================================================================================================================
+    field     kind                   n   agree FULL   agree WARM  n disagree    first disagreement
+    nMem      diagnostic       325,006     96.4948%     99.7583%      11,392   2025-08-31T18:05:00
+              first 20 disagreeing timestamps: 2025-08-31T18:05:00, 2025-08-31T18:06:00, 2025-08-31T18:07:00, 2025-08-31T18:08:00, 2025-08-31T18:09:00, 2025-08-31T18:10:00, 2025-08-31T18:11:00, 2025-08-31T18:12:00, 2025-08-31T18:13:00, 2025-08-31T18:14:00, 2025-08-31T18:15:00, 2025-08-31T18:16:00, 2025-08-31T18:17:00, 2025-08-31T18:18:00, 2025-08-31T18:19:00, 2025-08-31T18:20:00, 2025-08-31T18:21:00, 2025-08-31T18:22:00, 2025-08-31T18:23:00, 2025-08-31T18:24:00
+    nThr      diagnostic       325,006     95.1527%     99.7591%      15,754   2025-09-01T10:42:00
+              first 20 disagreeing timestamps: 2025-09-01T10:42:00, 2025-09-01T10:43:00, 2025-09-01T10:44:00, 2025-09-01T10:45:00, 2025-09-01T10:46:00, 2025-09-01T10:47:00, 2025-09-01T10:48:00, 2025-09-01T10:49:00, 2025-09-01T10:50:00, 2025-09-01T10:51:00, 2025-09-01T10:52:00, 2025-09-01T10:53:00, 2025-09-01T10:54:00, 2025-09-01T10:55:00, 2025-09-01T10:56:00, 2025-09-01T10:57:00, 2025-09-01T10:58:00, 2025-09-01T10:59:00, 2025-09-01T11:00:00, 2025-09-01T11:01:00
+    dL        diagnostic       325,006     99.9194%     99.9502%         262   2025-08-31T18:01:00
+              first 20 disagreeing timestamps: 2025-08-31T18:01:00, 2025-08-31T23:24:00, 2025-09-01T03:32:00, 2025-09-01T03:36:00, 2025-09-01T03:38:00, 2025-09-01T03:39:00, 2025-09-01T03:40:00, 2025-09-01T03:41:00, 2025-09-01T03:46:00, 2025-09-01T03:47:00, 2025-09-01T03:48:00, 2025-09-01T03:49:00, 2025-09-01T03:50:00, 2025-09-01T03:51:00, 2025-09-01T03:52:00, 2025-09-01T04:12:00, 2025-09-01T04:14:00, 2025-09-01T04:24:00, 2025-09-01T04:25:00, 2025-09-01T04:26:00
+    ratio     diagnostic       325,006     75.2192%     94.3348%      80,539   2025-08-31T18:02:00
+              first 20 disagreeing timestamps: 2025-08-31T18:02:00, 2025-08-31T18:03:00, 2025-08-31T18:04:00, 2025-08-31T18:05:00, 2025-08-31T18:06:00, 2025-08-31T18:07:00, 2025-08-31T18:08:00, 2025-08-31T18:09:00, 2025-08-31T18:10:00, 2025-08-31T18:11:00, 2025-08-31T18:12:00, 2025-08-31T18:13:00, 2025-08-31T18:14:00, 2025-08-31T18:15:00, 2025-08-31T18:16:00, 2025-08-31T18:17:00, 2025-08-31T18:18:00, 2025-08-31T18:19:00, 2025-08-31T18:20:00, 2025-08-31T18:21:00
+    voteOK    ACTION-BEARING   325,006     99.1726%     99.9207%       2,689   2025-08-31T18:07:00
+              first 20 disagreeing timestamps: 2025-08-31T18:07:00, 2025-08-31T18:08:00, 2025-08-31T18:09:00, 2025-08-31T18:10:00, 2025-08-31T18:11:00, 2025-08-31T18:12:00, 2025-08-31T18:13:00, 2025-08-31T18:14:00, 2025-08-31T18:15:00, 2025-08-31T18:16:00, 2025-08-31T18:17:00, 2025-08-31T18:18:00, 2025-08-31T18:19:00, 2025-08-31T18:20:00, 2025-08-31T18:21:00, 2025-08-31T18:22:00, 2025-08-31T18:23:00, 2025-08-31T18:24:00, 2025-08-31T18:25:00, 2025-08-31T18:26:00
+    tilt      diagnostic       325,006     77.9970%     99.4586%      71,511   2025-08-31T18:01:00
+              first 20 disagreeing timestamps: 2025-08-31T18:01:00, 2025-08-31T18:02:00, 2025-08-31T18:03:00, 2025-08-31T18:04:00, 2025-08-31T18:05:00, 2025-08-31T18:06:00, 2025-08-31T18:07:00, 2025-08-31T18:08:00, 2025-08-31T18:09:00, 2025-08-31T18:10:00, 2025-08-31T18:11:00, 2025-08-31T18:12:00, 2025-08-31T18:13:00, 2025-08-31T18:14:00, 2025-08-31T18:15:00, 2025-08-31T18:16:00, 2025-08-31T18:17:00, 2025-08-31T18:18:00, 2025-08-31T18:19:00, 2025-08-31T18:20:00
+    bmom      diagnostic       325,006     98.4573%     99.9062%       5,014   2025-09-01T09:32:00
+              first 20 disagreeing timestamps: 2025-09-01T09:32:00, 2025-09-01T09:33:00, 2025-09-01T09:34:00, 2025-09-01T09:35:00, 2025-09-01T09:36:00, 2025-09-01T09:37:00, 2025-09-01T09:38:00, 2025-09-01T09:39:00, 2025-09-01T09:40:00, 2025-09-01T09:41:00, 2025-09-01T09:42:00, 2025-09-01T09:43:00, 2025-09-01T09:44:00, 2025-09-01T09:45:00, 2025-09-01T09:46:00, 2025-09-01T09:47:00, 2025-09-01T09:48:00, 2025-09-01T09:49:00, 2025-09-01T09:50:00, 2025-09-01T09:51:00
+    t0        ACTION-BEARING   325,006     97.5247%     99.8187%       8,045   2025-08-31T18:05:00
+              first 20 disagreeing timestamps: 2025-08-31T18:05:00, 2025-08-31T18:06:00, 2025-08-31T18:07:00, 2025-08-31T18:08:00, 2025-08-31T18:09:00, 2025-08-31T18:10:00, 2025-08-31T18:11:00, 2025-08-31T18:12:00, 2025-08-31T18:13:00, 2025-08-31T18:14:00, 2025-08-31T18:15:00, 2025-08-31T18:16:00, 2025-08-31T18:17:00, 2025-08-31T18:18:00, 2025-08-31T18:19:00, 2025-08-31T18:20:00, 2025-08-31T18:21:00, 2025-08-31T18:22:00, 2025-08-31T18:23:00, 2025-08-31T18:24:00
+    t1        ACTION-BEARING   325,006     99.0006%     99.8576%       3,248   2025-08-31T18:07:00
+              first 20 disagreeing timestamps: 2025-08-31T18:07:00, 2025-08-31T18:08:00, 2025-08-31T18:09:00, 2025-08-31T18:10:00, 2025-08-31T18:11:00, 2025-08-31T18:12:00, 2025-08-31T18:13:00, 2025-08-31T18:14:00, 2025-08-31T18:15:00, 2025-08-31T18:16:00, 2025-08-31T18:17:00, 2025-08-31T18:18:00, 2025-08-31T18:19:00, 2025-08-31T18:20:00, 2025-08-31T18:21:00, 2025-08-31T18:22:00, 2025-08-31T18:23:00, 2025-08-31T18:24:00, 2025-08-31T18:25:00, 2025-08-31T18:26:00
+    t2        ACTION-BEARING   325,006     98.1207%     99.9027%       6,108   2025-08-31T18:07:00
+              first 20 disagreeing timestamps: 2025-08-31T18:07:00, 2025-08-31T18:08:00, 2025-08-31T18:09:00, 2025-08-31T18:10:00, 2025-08-31T18:11:00, 2025-08-31T18:12:00, 2025-08-31T18:13:00, 2025-08-31T18:14:00, 2025-08-31T18:15:00, 2025-08-31T18:16:00, 2025-08-31T18:17:00, 2025-08-31T18:18:00, 2025-08-31T18:19:00, 2025-08-31T18:20:00, 2025-08-31T18:21:00, 2025-08-31T18:22:00, 2025-08-31T18:23:00, 2025-08-31T18:24:00, 2025-08-31T18:25:00, 2025-08-31T18:26:00
+    t3        ACTION-BEARING   325,006     98.0203%     99.8458%       6,434   2025-08-31T18:07:00
+              first 20 disagreeing timestamps: 2025-08-31T18:07:00, 2025-08-31T18:08:00, 2025-08-31T18:09:00, 2025-08-31T18:10:00, 2025-08-31T18:11:00, 2025-08-31T18:12:00, 2025-08-31T18:13:00, 2025-08-31T18:14:00, 2025-08-31T18:15:00, 2025-08-31T18:16:00, 2025-08-31T18:17:00, 2025-08-31T18:18:00, 2025-08-31T18:19:00, 2025-08-31T18:20:00, 2025-08-31T18:21:00, 2025-08-31T18:22:00, 2025-08-31T18:23:00, 2025-08-31T18:24:00, 2025-08-31T18:25:00, 2025-08-31T18:26:00
+
+    spec PASS = voteOK >= 99.5 % AND each of t0..t3 >= 99.5 %
+    P1 VERDICT (FULL, the gate): FAIL   (WARM diagnostic: pass)
+    ratio / tilt / bmom / nMem / nThr / dL are DIAGNOSTIC: they may drift on a float path
+    or a warm-up path without changing an action. That distinction is reported, not hidden.
+
+    CLASSIFICATION OF EVERY ACTION-BEARING MISMATCH (the WE_W52 band requires it in the
+    90-99 % zone). Split at the DECLARED warm boundary, not at one chosen after the fact:
+    field       n disagree   before WARM   inside WARM  share pre-warm
+    voteOK           2,689         2,487           202           92.5%
+    t0               8,045         7,583           462           94.3%
+    t1               3,248         2,885           363           88.8%
+    t2               6,108         5,860           248           95.9%
+    t3               6,434         6,041           393           93.9%
+    the 202 voteOK mismatches INSIDE WARM fall on 43 distinct dates; the 10 heaviest: {'2026-07-17': 127, '2026-07-22': 28, '2026-07-20': 3, '2026-07-19': 3, '2026-06-24': 3, '2025-11-19': 1, '2026-06-17': 1, '2026-05-20': 1, '2026-05-25': 1, '2026-06-02': 1}
+    (2026-06-11 and 2026-07-17 are the two dates where the two files do not even hold
+     the same bars - 12 Python-only and 65 C#-only minutes - so state divergence there
+     is a DATA-COVERAGE difference, not a logic difference.)
+
+    LOCALISATION OF THE `ratio` DIAGNOSTIC DISAGREEMENT (it does not move nThr, which
+    agrees to 99.76 % inside WARM, but it is large enough to name). ratio = rngPrev/norm,
+    and rngPrev is a pure price quantity that must agree because P0 showed the prices are
+    identical - so any disagreement is in `norm`, the trailing time-of-day range median.
+      C# ratio == 1.0000 exactly (its norm not yet available) while Python's is not: 27,554  (0 inside WARM)
+      Python ratio == 1.0 while the C#'s is not: 67
+      both sides have a norm but disagree: 52,918; implied norm_cs/norm_py median 0.9975, p10 0.9309, p90 1.0329
+      -> the C# holds at most 239 sessions of time-of-day range
+         history (it was redeployed with DaysToLoad=365); Python holds 1,187. Both
+         take a 60-observation median, so they coincide only where the C# already has
+         60 prior observations of that minute-of-day.
+
+======================================================================================================================
+=== 7. GATE P2 - ACTION PARITY. Derived from the qty / position path ONLY, never from P&L.
+======================================================================================================================
+    common span for the action comparison: 2025-08-31T18:01:00 -> 2026-07-31T16:59:00
+    (the C# export runs to 2026-07-31T17:00:00; the Python substrate physically ends 2026-07-31T16:59:00)
+
+    C# entries 397   Python entries 390   trade-count difference +1.795 %
+    ENTRY-bar Jaccard : 0.85176
+    EXIT -bar Jaccard : 0.82176
+    C#-only entries 35   Python-only entries 28
+    C#-only exits   42   Python-only exits   35
+      C#-only entries, first 20 : ['2025-09-17T03:12:00', '2025-09-17T08:32:00', '2025-09-17T15:31:00', '2025-09-17T15:39:00', '2025-09-17T15:41:00', '2025-09-17T15:43:00', '2025-09-17T15:45:00', '2025-09-18T19:36:00', '2025-09-19T09:51:00', '2025-09-22T23:20:00', '2025-09-23T00:06:00', '2025-09-23T00:10:00', '2025-09-23T00:21:00', '2025-09-23T01:13:00', '2025-09-23T01:26:00', '2025-09-23T02:21:00', '2025-09-23T04:04:00', '2025-09-23T04:07:00', '2025-09-23T04:09:00', '2025-09-23T09:22:00']
+      PY-only entries, first 20 : ['2025-08-31T18:08:00', '2025-09-01T02:45:00', '2025-09-01T03:33:00', '2025-09-01T03:37:00', '2025-09-01T03:39:00', '2025-09-12T14:36:00', '2025-09-12T15:54:00', '2025-09-15T08:26:00', '2025-09-15T09:33:00', '2025-09-15T14:06:00', '2025-09-15T15:48:00', '2025-09-17T05:09:00', '2025-09-17T05:38:00', '2025-09-18T19:38:00', '2025-09-19T09:43:00', '2025-09-23T16:04:00', '2025-10-01T05:28:00', '2025-10-01T07:17:00', '2025-10-08T10:00:00', '2025-10-28T21:43:00']
+      C#-only exits,   first 20 : ['2025-09-17T04:07:00', '2025-09-17T09:35:00', '2025-09-17T15:32:00', '2025-09-17T15:40:00', '2025-09-17T15:42:00', '2025-09-17T15:44:00', '2025-09-17T15:47:00', '2025-09-18T20:28:00', '2025-09-19T16:40:00', '2025-09-23T00:04:00', '2025-09-23T00:08:00', '2025-09-23T00:16:00', '2025-09-23T00:23:00', '2025-09-23T01:20:00', '2025-09-23T02:00:00', '2025-09-23T03:07:00', '2025-09-23T04:06:00', '2025-09-23T04:08:00', '2025-09-23T04:59:00', '2025-09-23T09:23:00']
+      PY-only exits,   first 20 : ['2025-08-31T22:14:00', '2025-09-01T02:51:00', '2025-09-01T03:34:00', '2025-09-01T03:38:00', '2025-09-01T07:25:00', '2025-09-12T15:26:00', '2025-09-12T15:58:00', '2025-09-15T08:27:00', '2025-09-15T13:23:00', '2025-09-15T14:44:00', '2025-09-15T16:41:00', '2025-09-17T05:20:00', '2025-09-17T05:54:00', '2025-09-18T20:08:00', '2025-09-19T10:34:00', '2025-09-23T16:41:00', '2025-10-01T06:34:00', '2025-10-01T08:17:00', '2025-10-07T16:41:00', '2025-10-17T16:41:00']
+
+    CLASSIFICATION OF EVERY ACTION MISMATCH (WE_W52 band, 90-99 % zone), split at the
+    DECLARED warm boundary 2025-11-10T18:01:00:
+    set                      total   before WARM   inside WARM  share pre-warm
+    C#-only entries             35            33             2           94.3%
+    Python-only entries         28            27             1           96.4%
+    C#-only exits               42            31            11           73.8%
+    Python-only exits           35            25            10           71.4%
+    WARM diagnostic (session >= 51): entry Jaccard 0.99065, 320 vs 319 entries, count diff +0.313 %
+
+    CROSS-CHECK: C# bars that EVALUATED an entry 397 vs C# ENTER events 397  (difference 0, expected 0 or 1 for an order pending at the seal boundary)
+
+    Per the repo's binding parity band (WE_W52): >=99 % decision agreement AND counts
+    within 2 % = VALIDATED; 90-99 % requires EVERY mismatch classified; <90 % means it is
+    not the same object. That band is applied to ACTIONS here, never to dollars.
+    P2 VERDICT (FULL, the gate): FAIL   (WARM diagnostic: pass)
+
+======================================================================================================================
+=== 8. GATE P3 - SIZE SEMANTICS. THE DECIDING GATE.
+======================================================================================================================
+    Three mutually exclusive hypotheses about which bar the executable reads its quality
+    features from. Same code path in all three; ONLY the index shifts.
+      H_FRESH  score at fill bar i uses X[k][i]    (= bar i-1 close)  <- current Python
+      H_STALE  score at fill bar i uses X[k][i-1]  (= bar i-2 close)  <- the source read
+      H_STALE2 score at fill bar i uses X[k][i-2]  (= bar i-3 close)  <- control, must lose
+
+    THE MASK. WeeklyEdgeP1PCT_v3.cs:1131-1155 computes a score ONLY when
+    (myQty == 0 && wantLong && UseQualitySize), where wantLong = voteOK && !sessStopped
+    (:1132) and UseQualitySize is true (:774); otherwise it writes size = 1, score = 0.
+    That mask is derived from the export's own qty / voteOK / stopped columns.
+
+    joined bars                                :   325,006
+    bars where the C# EVALUATED an entry       :       397
+    of those, score > 0                        :       245
+    of those, score == 0 (warm-up, qCount<100) :       152
+    MASK SANITY off the mask: score != 0 on 0 bars, size != 1 on 0 bars   PASS
+    MASK SANITY on the mask: size == 1+(score>=3) on 100.000 % of bars
+    evaluated bars whose FILL bar i = j+1 is unavailable or crosses a session: 0  (dropped)
+    P3 comparison population                   :       397 evaluated entries
+
+    ---- FRAMING 1 of 2: EXEC-NATIVE (PRIMARY). History = the executable's own evaluated-
+         entry sequence, starting at the export's first bar with qCount = 0.
+    arm       features read at            score agree  size agree  score agree (qC>=250)  size agree (qC>=250)
+    H_FRESH   fill bar - 0                    87.909%     97.481%                85.034%               97.279%
+    H_STALE   fill bar - 1                    96.977%     98.992%                96.599%               98.639%
+    H_STALE2  fill bar - 2                    84.635%     97.229%                78.912%               96.599%
+
+    ---- FRAMING 2 of 2: RESEARCH-CHAIN (COMPANION). History = the canonical chain's own
+         entry schedule with its full 2022-07-01-onward history: the object we have quoted.
+         coverage: 362 of 397 C#-evaluated fill bars are
+         also entries in the canonical Python schedule (91.184 %).
+    arm       features read at            score agree  size agree  score agree (WARM)  size agree (WARM)
+    H_FRESH   fill bar - 0                    65.193%     91.160%             70.126%            92.767%
+    H_STALE   fill bar - 1                    68.508%     92.818%             74.528%            93.711%
+    H_STALE2  fill bar - 2                    62.155%     91.713%             66.981%            93.082%
+
+    EXEC-NATIVE  winner: score -> H_STALE, size -> H_STALE
+    RESEARCH-CHAIN winner: score -> H_STALE, size -> H_STALE
+    control H_STALE2 loses (required): yes
+    spec PASS = H_STALE wins BOTH outright AND score agreement >= 99.0 % AND H_STALE2 loses
+    P3 VERDICT (EXEC-NATIVE, the gate): FAIL
+
+    H_STALE wins but does not reach the 99.0 % bar in this framing. See the residual
+    characterisation below before quoting anything.
+
+    RESIDUAL of the EXEC-NATIVE winner (H_STALE): 12 disagreeing entries of 397
+      first 20 disagreeing timestamps: ['2025-12-07T21:11:00', '2025-12-07T21:13:00', '2026-01-13T08:32:00', '2026-01-15T18:55:00', '2026-02-24T19:53:00', '2026-03-04T19:17:00', '2026-03-17T08:34:00', '2026-03-17T12:07:00', '2026-05-26T20:01:00', '2026-05-26T21:12:00', '2026-06-16T18:57:00', '2026-06-29T10:54:00']
+      by C# score level : 0:0/152  1:4/113  2:7/74  3:1/40  4:0/16  5:0/2
+      inside the declared warm sub-span: 12; before it: 0
+      with qCount < 250 (partial window): 7; with qCount >= 250: 5
+      hour-of-day of the disagreements: {8: 2, 10: 1, 12: 1, 18: 2, 19: 2, 20: 1, 21: 3}
+
+======================================================================================================================
+=== 8b. RESIDUAL MECHANISM - POST-HOC DIAGNOSTIC. NOT PREREGISTERED. It does NOT change the P3 verdict above, and it does NOT unlock P4.
+======================================================================================================================
+    The spec's if_none_reaches_99 branch requires the disagreeing rows to be characterised
+    and the FEATURE THAT FLIPS to be named. Doing so found a source asymmetry that neither
+    of the three preregistered arms can express. It is reported here as a HYPOTHESIS for a
+    future preregistered run, not as a result of this one.
+
+    WHAT WAS FOUND, by reading source only:
+      we_fastctx.fast_intraday_features:45-46 (and run_we_w09.intraday_features) already
+      return atr14 LAGGED ONE BAR. we_quality.build_context:44 / we_fastctx:81 then lag it
+      A SECOND TIME:  atr_l = concat([[atr14[0]], atr14[:-1]]).
+      So X['atr_l'][j] is the ATR through bar j-2, while the NUMERATORS it divides,
+      c_l[j] and vwap_l[j], are bar j-1 quantities. dist_open and dist_vwap are therefore
+      built from a one-bar-STALER denominator than numerator.
+      WeeklyEdgeP1PCT_v3.cs:1136-1140 has no such asymmetry: lagClose, lagVwap and lagAtr
+      are all frozen at the same instant by CacheLagged (:1198), so at decision bar b the
+      .cs divides bar b-1's close by the ATR through bar b-1.
+      CONSEQUENCE: no single index shift can reproduce the .cs. H_STALE matches the .cs on
+      the numerators and misses the ATR by one bar; H_FRESH matches the ATR and misses the
+      numerators by one bar. The executable is a MIXTURE of the two arms.
+
+    VERIFIED NUMERICALLY: X['atr_l'] == the ATR through bar j-2, i.e. lagged twice ... CONFIRMED
+
+    ARM H_STALE_CSATR (post-hoc): identical to H_STALE except that dist_open and dist_vwap
+    are divided by the ATR the .cs actually holds. Same mask, same entry sequence, same
+    window, same history construction. One denominator, nothing else.
+    arm                 score agree  size agree   score (qC>=250)   size (qC>=250)
+    H_FRESH_CSATR           87.909%     97.733%           83.673%          97.279%
+    H_STALE_CSATR          100.000%    100.000%          100.000%         100.000%
+    H_STALE2_CSATR          86.146%     97.481%           81.633%          97.279%
+
+    best post-hoc arm: H_STALE_CSATR, score agreement 100.000 %, 0 disagreeing entries of 397
+    STATUS OF THIS FINDING: a POST-HOC EXPLANATION with zero free parameters, derived from
+    two lines of source. It is NOT a preregistered arm, it does NOT change the P3 verdict,
+    and per the spec's if_none_reaches_99 clause NO ECONOMICS ARE QUOTED on the strength of
+    it. Confirming it requires its own preregistered run.
+
+    SEPARATING THE TWO CAUSES. The same denominator correction applied inside the
+    RESEARCH-CHAIN framing (canonical entry schedule, full 2022-onward history):
+      H_STALE research-chain, original ATR : 68.508 %
+      H_STALE research-chain, .cs ATR      : 69.890 %
+      H_STALE exec-native,    .cs ATR      : 100.000 %
+    Of the 397 entries the executable evaluated, its FIRST 100 carry score = 0 by warm-up (qCount < QualMinHist) while the research
+    object assigns them a real score - 100 of 397 entries
+    (25.2 %) disagree for that reason alone. Excluding them:
+      H_STALE research-chain, .cs ATR, qCount>=100 : 81.017 %  (n = 295)
+    -> the denominator explains the exec-native residual completely; what still separates
+       the research chain from the executable after that is the QUALITY HISTORY itself:
+       the deployed object was redeployed with DaysToLoad=365 and holds no quality history
+       before 2025-08-31, so its trailing 250-entry quantiles are not the campaign's.
+
+    REMAINING DISAGREEMENTS under H_STALE_CSATR: 0
+
+======================================================================================================================
+=== 9. GATE P4 - ECONOMIC SIZE OF THE DIVERGENCE (computed only if P3 passes)
+======================================================================================================================
+    P3 did NOT pass. Per the spec, NO ECONOMICS ARE QUOTED. P4 is not computed.
+
+======================================================================================================================
+=== 10. GATE TABLE - printed by the program. Realtime column is UNDECIDABLE (n = 0 after the seal).
+======================================================================================================================
+GATE  SPEC                                                                      OBSERVED (full in-window)                         FULL    REALTIME
+P0    join >=95% AND monthly sd(close_cs-close_py) after removing that month's  join 99.980%; worst month sd 0.0482               PASS  n=0 SEALED
+P1    voteOK >=99.5% AND t0..t3 each >=99.5%                                    voteOK 99.173%; t0..t3 97.52/99.00/98.12/98.0     FAIL  n=0 SEALED
+P2    entry-bar Jaccard >=0.99 AND |trade-count diff| <=2%                      Jaccard 0.85176; count diff +1.795%               FAIL  n=0 SEALED
+P3    H_STALE wins score AND size outright, score >=99.0%, H_STALE2 loses       win=H_STALE/H_STALE; H_STALE score 96.977%        FAIL  n=0 SEALED
+
+    Every gate is required by the operator instruction to be evaluated twice: on the full
+    in-window span and on the realtime-only tail. The realtime tail has n = 0 rows after
+    the data seal, so NO gate can be decided on it and NONE is reported as a rate. No gate
+    above is SPLIT, because a SPLIT requires two decidable columns and there is only one.
+
+    DIAGNOSTIC SECOND COLUMN (declared in section 2a, NOT the gate): the WARM sub-span
+    (export session >= 51, after the .cs tilt warm-up completes).
+GATE  OBSERVED (WARM sub-span)                                                      WARM
+P1    voteOK 99.921%; t0..t3 99.82/99.86/99.90/99.85%                               pass
+P2    Jaccard 0.99065; count diff +0.313%                                           pass
+P3    H_STALE score (qCount>=250) 96.599%                                           fail
+
+======================================================================================================================
+=== 11. ARTIFACTS
+======================================================================================================================
+    out/parity_bars.csv        325,006 rows
+    out/disagreements.csv      211,148 rows
+    out/gates.json
+    out/console.txt
+
+[done 29s]  LIVE ENABLED = NO.  $0 spent.  Nothing promoted.
