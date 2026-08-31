@@ -373,3 +373,36 @@ than stranding a position.
 morning** — it anchors 09:31, decides 09:45 and exits 15:45 ET, so a Sunday-evening session is a
 no-op for it by construction. XM showing 0 trades tomorrow before 09:45 ET is correct behaviour,
 not a fault.
+---
+
+## 🟢 FIRST LIVE TRADE — 2026-08-31 00:58:00 ET
+
+`WeeklyEdgeP1PCT_v2` opened the book's first paper position.
+
+| field | value |
+|---|---|
+| order id | `581992641240` |
+| filled | **2026-08-31 00:58:00 ET** |
+| action | **Buy 2** NQU6 @ **29,421.00**, Market, signal `"L"` |
+| owner | strategy `399562867` `WeeklyEdgeP1PCT_v2` |
+| `isBacktestOrder` | **false** — a real paper order, not historical simulation |
+
+**Two things this confirms, both of which were arguments rather than observations until now:**
+
+1. ⭐ **It sized 2 contracts.** Quality sizing requires a warm 250-entry window; a default-warm-up
+   deployment would have taken **1**. The qty-2 bucket is **87 % of P1's historical edge**. So the
+   `DaysToLoad = 365` fight paid off on the very first trade.
+2. **It entered at 00:58 ET — outside RTH**, exactly as the 61.7 %-of-entries-outside-RTH profile
+   predicts, and it validates the `CME US Index Futures ETH` 23-hour session template. An RTH
+   template would have deleted this trade entirely.
+
+XM remains flat and correctly so — it cannot act before 09:45 ET by construction.
+
+⚠️ **The book is now POSITIONED.** *Never restart while positioned* is load-bearing here: every stop
+in this book is synthetic and dies with the strategy. Monday's planned 17:00–18:00 restart is still
+safe because both legs are structurally flat at session end — but verify flat before touching
+anything, every time.
+
+`WeeklyEdgeBookM11_v1.cs` was restored to `bin/Custom/Strategies/` at 01:06 on owner request
+(recompiled 01:06:34); the live book was verified unaffected. See `OQ6_MAPPING_PACKET.md` for why
+the **two-leg sum, not that class**, is the authoritative M_11.

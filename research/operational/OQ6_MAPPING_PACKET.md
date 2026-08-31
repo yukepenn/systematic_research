@@ -75,3 +75,78 @@ must not be read off backtest dollars.**
 ⚠️ See `XM_CORRELATION_RULE_20260830.md`: the diversification rationale behind this mapping has
 materially weakened (ρ −0.10 → +0.41; XM's P1-losing-week payoff +$1,488 → −$727). The mapping
 still measures better than P1 alone, but on a weaker premise, now under a preregistered watch.
+
+---
+
+## ⭐ WHAT "M_11" IS — and why `WeeklyEdgeBookM11_v1` is NOT the most correct version of it
+
+Added 2026-08-31 after the owner asked for "the most correct M_11" on finding the class had been
+moved out of the compile path. **The file is restored** (`bin/Custom/Strategies/`, sha `9499F19D0C39`,
+recompiled 01:06:34). But restoring it does not make it the authoritative object, and here is why.
+
+### M_11 is a MAPPING, not a class
+
+M_11 = **P1/PCT × 1 contract + XM_CONFLICT × 1 contract**. The **deployed book already IS M_11** —
+`WeeklyEdgeP1PCT_v2` and `WeeklyEdgeXMConflict_v3` running side by side, each holding its **own
+independent strategy position**.
+
+### A single-class M_11 is STRUCTURALLY IMPOSSIBLE in NT8
+
+An NT8 strategy holds **one position per instrument**. Two legs in one class therefore **must be
+netted** — when P1 is long and XM is short, the class holds the difference, while the real book holds
+two independent positions. This is not a defect in `BookM11_v1`; it is a platform constraint, and it
+means **no single class can ever exactly reproduce the deployed book.**
+
+### Measured, same engine / window / bars / cost template (NT8 basis, 2022-01-03 → 2026-08-30)
+
+| object | closed trades | closed-trade P&L | total contracts |
+|---|---:|---:|---:|
+| P1/PCT (`_v2`) | 2,439 | $354,575.96 | 2,939 |
+| XM_CONFLICT (`_v3`) | 378 | $182,776.92 | 378 |
+| **M_11 = the two legs summed (THE DEPLOYED BOOK)** | **2,817** | **$537,352.88** | **3,317** |
+| `WeeklyEdgeBookM11_v1` (netted single class) | 2,862 | $539,102.88 | 3,318 |
+| difference | **+45** | **+$1,750.00** | +1 |
+
+**The +$1,750.00 decomposes exactly**: **$1,741.28** is P1's position still open at the right edge of
+the window, which the netted class closes and the two-leg sum does not; the genuine netting benefit
+over 4.7 years is **$8.72**. Contract counts are identical to within 1, so netting saves essentially
+no commission — the legs oppose too rarely (0.3 % of minutes).
+
+### The rule
+
+- ✅ **Quote the two-leg sum ($537,352.88 / 2,817) as M_11.** It is the deployed economics.
+- ✅ `BookM11_v1` is a legitimate **measurement convenience** — one run, one equity curve, and it lands
+  within **$8.72** of the truth in aggregate.
+- ⛔ **Its TRADE LIST is not the book's** (2,862 vs 2,817, and the boundaries differ). Never quote one
+  object's trade-level statistics for the other.
+- ⛔ **Never deploy it.** It is not parity-certified and it drives the account with **unmanaged**
+  orders to a netted target. Only `WeeklyEdgeP1PCT_v2` + `WeeklyEdgeXMConflict_v3` are deployable.
+
+### M_11 combined performance (NT8 cost basis — commission only, ZERO modelled spread)
+
+243 ISO weeks on session date (18:00 ET boundary):
+
+| | |
+|---|---:|
+| mean / week | **$2,211.33** |
+| median / week | $1,290.36 |
+| positive weeks | **147 / 243 = 60.5 %** |
+| best / worst week | +$32,288.96 / −$13,779.76 |
+| **weekly max drawdown** | **$45,085.80** |
+
+| year | P1 | XM | **M_11** |
+|---|---:|---:|---:|
+| 2022 | 44,755 | −3,023 | **41,732** |
+| 2023 | 40,370 | 42,245 | **82,615** |
+| 2024 | 104,889 | 75,212 | **180,102** |
+| 2025 | 111,331 | 25,344 | **136,676** |
+| 2026 (35 wk) | 53,230 | 42,998 | **96,228** |
+
+2026 by month: Jan **+18,781** · Feb **+38,634** · Mar +17,087 · Apr +3,651 · May +2,164 ·
+Jun +25,019 · **Jul −30,139** · Aug +21,031.
+
+⚠️ **These are NT8 quantities, not research quantities.** NT8 charges the Lifetime template and
+**zero slippage**; the research headline additionally charges a modelled spread (P1 $14.44,
+XM $12.50 /ctrRT). ⚠️ And per `CURRENT_BASELINE.md`, research portfolio **B is inverse-vol weighted**
+— **B's $2,012/wk at fixed DD is NOT this number.** M_11 is the integer 1:1 mapping, a different
+object from B. Never substitute one for the other.
