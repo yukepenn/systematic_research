@@ -189,7 +189,10 @@ rule change was individually defensible; the pattern is not.
 
 P(true forward edge ≈ 0 after real friction): **10–30 %** (the reviewers split 10-15 % vs 30-35 %).
 
-**⚠️ SIZE THE DRAWDOWN AT $45,000, NOT $21,740.** $45,138 is the full NT8 record; $28,201 is the warm
+**⚠️ 🔴 SIZE THE DRAWDOWN AT $75,000–90,000. (CORRECTED 2026-08-31 — the "$45,000" written here is
+RETIRED: 2-year p90 DD is $43,747 = 97 % of it, and one observed margin-cliff event alone needs
+$43,434. $45k was the in-sample SAMPLE MAXIMUM on the most optimistic cost basis.)** The original
+comparison below is retained because it is still the right *ranking* — $21,740 was never defensible: $45,138 is the full NT8 record; $28,201 is the warm
 book; ~$21,700 is the research figure at a different cost basis. The gap between $45k and $28k is
 **entirely the un-warmed quarter** — i.e. it is what a restart without `DaysToLoad=365` actually
 produces. Every "dollars at fixed drawdown" headline divides by the smaller number.
