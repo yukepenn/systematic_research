@@ -1,0 +1,169 @@
+run_id: P1_BOX_INVARIANCE_00
+campaign: "#7 WEEKLY_EDGE / NQ LIVE ALPHA ACCELERATION - Tier 2 direct incumbent challengers"
+date: 2026-08-31
+status: PREREGISTERED
+run_class: DIAGNOSTIC
+authority: >
+  Tier-2 lane assignment "P1_BOX_INVARIANCE_00". Explicitly NOT an alpha test at stage 1.
+  Economics are FORBIDDEN until the structural gates below are evaluated and printed.
+
+title: >
+  IS A FIXED-DOLLAR SESSION RE-ENTRY LOCK STRUCTURALLY INVARIANT ACROSS PRICE AND VOLATILITY
+  REGIMES?  Three normalisations of the SAME rule are compared on PREDECLARED STRUCTURAL
+  CRITERIA ONLY.  No P&L is computed, printed or looked at at stage 1.
+
+# =============================================================================================
+# 0. WHAT IS AND IS NOT UNDER TEST
+# =============================================================================================
+object_under_test: >
+  The P1/PCT session box: a PER-CONTRACT accumulator of settled trade P&L within a session,
+  which latches the session shut (no further entries) when the accumulator reaches
+  -1300 or +1000 dollars per contract. It is evaluated ONLY when a trade settles
+  (run_we_w98.gfills, per_ctr=True) and therefore can never bind while a position is open.
+  It is a RE-ENTRY LOCKOUT, not a stop.
+
+not_under_test:
+  - "The halt:target RATIO 1.30:1.00. It is carried unchanged into every arm. Not a free parameter here."
+  - "The P1 signal, the vote stack, the quality sizing, the 21-minute flatten, the OR-gate."
+  - "Any economic question. Stage 2 only, and only if stage 1's gates pass."
+
+# =============================================================================================
+# 1. THE THREE ARMS - one normalisation each, no grid
+# =============================================================================================
+arms:
+  DOLLAR: >
+    INCUMBENT. halt_s = 1300.0, target_s = 1000.0 dollars per contract, constant for every
+    session s in all 21 years.
+  PRICEBOX: >
+    Box proportional to the INDEX LEVEL.  halt_s = c_p * P_s * PV, target_s = (1000/1300) * halt_s,
+    where P_s = the open of the session's FIRST bar (index points, known at the session open,
+    strictly causal) and PV = 20.0 $/pt.  c_p is dimensionless (a fraction of index).
+  SIGMABOX: >
+    Box proportional to REALIZED VOLATILITY.  halt_s = c_v * sigma_s * PV,
+    target_s = (1000/1300) * halt_s, where sigma_s = the unweighted mean of the prior 20
+    COMPLETED sessions' (session high - session low) in index points, known at the session open,
+    strictly causal.  N=20 is fixed in advance and is NOT swept.
+
+sigma_estimator_robustness: >
+  N=60 is additionally reported as a ROBUSTNESS, not a selection.  The verdict must hold at BOTH
+  N=20 and N=60.  If they disagree, the wave promotes nothing.  No other N is computed.
+
+# =============================================================================================
+# 2. CALIBRATION - deterministic, declared in advance, computed WITHOUT looking at P&L
+# =============================================================================================
+primary_calibration: >
+  CLOSED FORM, NO SEARCH.  c_p and c_v are each set so that the arm's MEAN box dollar value over
+  the modern window (2022-07-01 -> 2026-08-01, already DISCOVERY_CONSUMED) equals exactly
+  $1,300.00 per contract - i.e. the same average risk budget as the incumbent, the W98
+  ABS_LOOSE convention.  c_p = 1300 / (PV * mean(P_s)) ; c_v = 1300 / (PV * mean(sigma_s)),
+  means taken over modern-window sessions that carry at least one NOBOX trade.
+
+secondary_calibration: >
+  ROBUSTNESS.  c_p, c_v re-set by a declared bisection so that the arm's LATCH RATE over the
+  modern window equals the DOLLAR arm's latch rate to within 0.005.  This removes any level
+  confound in the stability comparison.  The verdict must hold under BOTH calibrations.
+  Bisection targets a TRIGGER RATE, never a P&L quantity.
+
+# =============================================================================================
+# 3. MEASUREMENT UNIVERSE - arm-invariant by construction
+# =============================================================================================
+universe: >
+  ACTIVE SESSIONS = sessions carrying at least one P1 trade under the NOBOX schedule
+  (halt=inf, target=None).  This set is IDENTICAL for all three arms and both calibrations, so
+  no arm can move the denominator.  Latch rate r = (# active sessions where the arm's box
+  latched) / (# active sessions).  Halt-side and target-side rates are reported separately.
+windows:
+  DEEP:   "2006-01-05 -> 2021-12-31 17:00  (the out-of-regime test bed; NQ index ~1,600 -> ~16,000)"
+  MODERN: "2022-07-01 -> 2026-08-01  (DISCOVERY_CONSUMED; the calibration window)"
+  UNION:  "both, pooled by calendar year, 2006..2026"
+seal: ">= 2026-08-01 VIRGIN and NEVER touched.  2026-05-31 -> 2026-07-31 is inside MODERN and is DIRECTLY_BURNED; labelled, not hidden."
+
+# =============================================================================================
+# 4. THE FIVE PREDECLARED STRUCTURAL CRITERIA, WITH THRESHOLDS FIXED BEFORE THE RUN
+# =============================================================================================
+criteria:
+  C1_TRIGGER_FREQUENCY_STABILITY:
+    metric: "range(r_y) = max_y r_y - min_y r_y over calendar years y with >= 40 active sessions, 2006..2026. SD(r_y) reported alongside."
+    non_invariance_threshold: "range(r_y) >= 0.20"
+    direction: "smaller is more invariant"
+  C2_STATE_CONDITIONALITY:
+    metric: >
+      Joint logistic regression of the per-session latch indicator on the two causal pre-session
+      state variables z = [log P_s, log sigma_s(N=20)], intercept included, fitted on the UNION
+      universe.  Report McFadden pseudo-R^2 and the joint likelihood-ratio chi^2 (2 df) p-value.
+    non_invariance_threshold: "LR p < 0.01 AND McFadden R^2 >= 0.02"
+    direction: "smaller pseudo-R^2 is more invariant"
+  C3_SCALE_INVARIANCE:
+    metric: >
+      C3a (primary, a pure change of monetary unit): multiply o/h/l/c AND the fixed-dollar
+      commission by lambda in {0.5, 2.0}, holding the direction and size arrays FIXED at their
+      unscaled values so that only the box is exercised.  The decision series - the per-session
+      latch indicator and the (entry bar, exit bar, direction, size) tuple of every trade - must
+      be IDENTICAL.  PASS/FAIL.
+      C3b (diagnostic): scale prices only, leave the $4.36 commission unscaled, exposing the
+      fixed-cost residual that no normalisation can remove.
+    non_invariance_threshold: "C3a FAIL at either lambda"
+    honesty_note: >
+      C3a is DEFINITIONAL for all three arms - a constant-dollar box provably cannot survive a
+      unit change and a price-proportional one provably must.  It is reported because the lane
+      names it, and it is labelled INFERRED/TAUTOLOGICAL, not evidence.  C3b is not definitional.
+  C4_PRICE_LEVEL_SENSITIVITY:
+    metric: >
+      Univariate logistic of latch on log P_s over the UNION universe.  Delta_P = predicted latch
+      rate at the 90th percentile of P_s minus predicted latch rate at the 10th percentile.
+    non_invariance_threshold: "|Delta_P| >= 0.15"
+  C5_REALIZED_VOL_SENSITIVITY:
+    metric: "Same as C4 with log sigma_s(N=20).  Delta_V = p90 - p10 predicted latch rate."
+    non_invariance_threshold: "|Delta_V| >= 0.15"
+
+diagnostics_not_gates:
+  D1_BOX_COVERAGE: >
+    coverage_s = halt_s / (PV * (session high - session low)_s), the box as a fraction of the
+    session's own realized range.  Report the per-year median and SD(log coverage) per arm.  This
+    is the generalisation of the baseline's "84 % of a typical session range then, 19 % now".
+  D2_ARM_COLLINEARITY: >
+    corr(log P_s, log sigma_s) and CV(sigma_s / P_s) over the union.  If PRICEBOX and SIGMABOX
+    are near-identical objects, "clearly superior" is NOT establishable and the wave says so.
+  D3_TRADES_PER_SESSION: "mean trades per active session per year per arm - the churn control W98 lacked."
+
+# =============================================================================================
+# 5. HARNESS CHECKS - printed BEFORE any criterion is read.  Any failure stops the wave.
+# =============================================================================================
+b1_checks:
+  - "H-A: gfills_box with constant halt=1300/target=1000 arrays reproduces run_we_w98.gfills(per_ctr=True) BYTE FOR BYTE on both windows."
+  - "H-B: at halt=+inf / target=None every arm collapses to the identical NOBOX trade list, byte for byte. The universe is therefore arm-invariant by construction, not by assertion."
+  - "H-C: the MODERN P1/PCT trade count reproduces the committed baseline (2,131 trades in 2022-07-01..2026-08-01, WE_W98_BOXDENOM). A mismatch stops the wave."
+  - "H-D: sigma_s and P_s are strictly causal - assert that every session's value is computed from bars with index < that session's first bar."
+  - "H-E: the deep substrate loads 4,908,286 bars / 4,279 sessions, matching WE_W98_BOXDENOM's committed line."
+
+# =============================================================================================
+# 6. DECISION RULE - fixed before the run; the script refuses to compute economics unless it passes
+# =============================================================================================
+gate_A_fixed_dollars_non_invariant:
+  rule: "DOLLAR breaches at least 3 of the 5 non-invariance thresholds in section 4."
+gate_B_one_normalisation_clearly_superior:
+  rule: >
+    EXACTLY ONE of {PRICEBOX, SIGMABOX} must satisfy ALL of:
+      (i)   it breaches NONE of the five non-invariance thresholds;
+      (ii)  it is strictly better than the OTHER alternative on at least 4 of the 5 criteria
+            (C3 scored as PASS > FAIL; ties count as not-better);
+      (iii) it is strictly better than DOLLAR on at least 4 of the 5 criteria;
+      (iv)  the secondary rate-matched calibration does not reverse (i), (ii) or (iii);
+      (v)   the N=60 sigma robustness does not reverse (i), (ii) or (iii);
+      (vi)  D2 does not show the two alternatives to be the same object
+            (defined in advance as: corr(log P, log sigma) >= 0.98 AND CV(sigma/P) <= 0.10).
+outcome_if_A_fails: "The incumbent fixed-dollar box is declared structurally invariant enough. Nothing is promoted. Stage 2 is never run."
+outcome_if_A_passes_B_fails: >
+  RECORDED as: the fixed-dollar box IS structurally non-invariant, but no economically natural
+  normalisation is clearly superior on structure.  NOTHING IS FROZEN AND NO ECONOMICS ARE RUN.
+  This is an admissible and expected outcome and is not a failure of the wave.
+outcome_if_A_and_B_pass: >
+  Freeze P1_SIGMABOX_V1 (or P1_PRICEBOX_V1) as a NEW NAMED CHALLENGER with its scale constant
+  fixed by the PRIMARY calibration, then and only then run economics as a SEPARATE stage with a
+  separately reported tail audit.  The production object is never hot-edited.
+
+forbidden:
+  - "Choosing an arm because it earns more. P&L is not computed at stage 1 at all."
+  - "Any parameter sweep. Three arms, one scale constant each, set by closed form."
+  - "Redefining the population, the thresholds or the criteria after seeing any number."
+  - "Quoting a stage-2 economic figure without the tail audit and the Type A / Type B label."
