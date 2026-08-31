@@ -1,0 +1,100 @@
+============================================================================================================
+G3_TAILPROBE_00 - DISCOVERY MODE A.  EVERYTHING BELOW IS DISCOVERY_CONTAMINATED.
+No promotion may originate here. No number here is quotable as a result.
+============================================================================================================
+
+P1 trades 2439, joined to a usable session: 2400 (98.4%); unmatched 39 (holidays / degenerate sessions)
+
+CAUSALITY SPLIT - the overnight range is not complete until 09:30:
+  entered BEFORE 09:30 :  1033 trades  net/ctr $      70,511   ONLY prior-session features admissible
+  entered AT/AFTER 09:30:  1367 trades  net/ctr $     131,185   overnight features become admissible
+  Pooling these would measure a look-ahead of HOURS, not of one bar. They are not pooled.
+
+============================================================================================================
+[PRE_0930]  n=1033  right tail = top decile of per-contract P&L (threshold $668/ctr)
+  the tail carries $222,912 of $70,511 total per-contract
+============================================================================================================
+feature                           n  spearman   tailQ1   tailQ5    Q5-Q1   |stat|
+prior_rth_range                1033   -0.0837    0.073    0.122   +0.049   0.0486
+prior_rth_close                1033   -0.0202    0.115    0.158   +0.043   0.0430
+prior_rth_high                 1033   -0.0220    0.111    0.157   +0.046   0.0463
+prior_rth_low                  1033   -0.0191    0.115    0.155   +0.040   0.0400
+
+  best feature: prior_rth_range  |Q5-Q1 tail-rate gap| = 0.0486
+  MAX-STATISTIC circular-shift null over 4 features, 2000 draws:
+    null p50 0.0504   p95 0.0821   p99 0.0931
+    p(best >= observed) = 0.5360   -> DOES NOT SURVIVE
+
+============================================================================================================
+[POST_0930]  n=1367  right tail = top decile of per-contract P&L (threshold $1,260/ctr)
+  the tail carries $419,668 of $131,185 total per-contract
+============================================================================================================
+feature                           n  spearman   tailQ1   tailQ5    Q5-Q1   |stat|
+prior_rth_range                1367   -0.0945    0.076    0.106   +0.030   0.0304
+prior_rth_close                1367   +0.0096    0.084    0.122   +0.038   0.0381
+prior_rth_high                 1367   +0.0073    0.083    0.122   +0.039   0.0387
+prior_rth_low                  1367   +0.0105    0.083    0.117   +0.033   0.0335
+on_range                       1367   -0.0636    0.079    0.179   +0.099   0.0994
+gap                            1367   +0.1030    0.080    0.190   +0.110   0.1102
+gap_frac_of_prior_range        1367   +0.0959    0.083    0.176   +0.092   0.0925
+open_loc_in_on_range           1367   +0.0559    0.073    0.164   +0.091   0.0912
+open_vs_on_high                1367   +0.0898    0.113    0.125   +0.012   0.0123
+open_vs_on_low                 1367   +0.0067    0.069    0.186   +0.117   0.1170
+on_vol                         1367   -0.0940    0.090    0.121   +0.031   0.0310
+
+  best feature: open_vs_on_low  |Q5-Q1 tail-rate gap| = 0.1170
+  MAX-STATISTIC circular-shift null over 11 features, 2000 draws:
+    null p50 0.0487   p95 0.0776   p99 0.0928
+    p(best >= observed) = 0.0000   -> SURVIVES the scan-priced null
+
+============================================================================================================
+STAGE 2 - VOLATILITY-NORMALISED TAIL. Is this information, or is it scaling?
+============================================================================================================
+  target = per-contract P&L / on_range  (n=1367, tail threshold 6.836)
+
+feature                           n  spearman   tailQ1   tailQ5    Q5-Q1
+prior_rth_range                1367   -0.0194    0.094    0.062   -0.032
+prior_rth_close                1367   +0.0647    0.091    0.089   -0.002
+prior_rth_high                 1367   +0.0639    0.090    0.089   -0.002
+prior_rth_low                  1367   +0.0651    0.091    0.088   -0.003
+on_range                       1367   +0.0777    0.144    0.091   -0.053
+gap                            1367   +0.0911    0.051    0.147   +0.095
+gap_frac_of_prior_range        1367   +0.0860    0.058    0.150   +0.092
+open_loc_in_on_range           1367   +0.0585    0.069    0.161   +0.091
+open_vs_on_high                1367   +0.0195    0.062    0.136   +0.074
+open_vs_on_low                 1367   +0.0860    0.084    0.120   +0.037
+on_vol                         1367   -0.0028    0.126    0.077   -0.049
+
+  best after volatility normalisation: gap = 0.0954
+  (best BEFORE normalisation was open_vs_on_low = 0.1170)
+  MAX-STATISTIC circular-shift null ON THE NORMALISED TARGET, 2000 draws:
+    null p50 0.0408   p95 0.0701   p99 0.0805
+    p(best >= observed) = 0.0020
+
+  WHAT NORMALISATION DID TO EACH FEATURE (survival bar = normalised null p95 = 0.0701):
+    gap                        raw 0.1102 -> normalised 0.0954   SURVIVES
+    gap_frac_of_prior_range    raw 0.0925 -> normalised 0.0922   SURVIVES
+    open_loc_in_on_range       raw 0.0912 -> normalised 0.0912   SURVIVES
+    open_vs_on_high            raw 0.0123 -> normalised 0.0742   SURVIVES
+    on_range                   raw 0.0994 -> normalised 0.0532   DEAD - was volatility scaling
+    open_vs_on_low             raw 0.1170 -> normalised 0.0368   DEAD - was volatility scaling
+    on_vol                     raw 0.0310 -> normalised 0.0490   DEAD - was volatility scaling
+    prior_rth_range            raw 0.0304 -> normalised 0.0316   DEAD - was volatility scaling
+
+  => A SCALE-FREE EFFECT SURVIVES. on_range and open_vs_on_low were volatility
+     SCALING and are dead. What remains is the GAP / OPEN-LOCATION family, which
+     is directional and scale-free by construction. That licenses a LOCKED Mode B
+     challenge - and nothing else.
+
+============================================================================================================
+VERDICT - what this DISCOVERY probe licenses
+============================================================================================================
+  [PRE_0930 ] best=prior_rth_range            stat=0.0486  scan-priced p=0.5360  over 4 features
+  [POST_0930] best=open_vs_on_low             stat=0.1170  scan-priced p=0.0000  over 11 features
+
+  At least one split survives its scan-priced null. That licenses EXACTLY ONE
+  thing: writing a LOCKED (Mode B) challenge with the mechanism, sign, horizon and
+  falsifier frozen BEFORE any economics. It does NOT license a size rule, a filter,
+  a P&L figure, or a candidate. The effect size here is a TAIL-RATE GAP, not money.
+
+  EVERY NUMBER IN THIS RUN IS DISCOVERY_CONTAMINATED. NO PROMOTION ORIGINATES HERE.
