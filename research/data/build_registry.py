@@ -207,6 +207,24 @@ add(asset="NQ tick store (UNEXTRACTED remainder)", symbol="NQ", resolution="tick
     evidence_class="MICROSTRUCTURE-CURRENT", seal=f"pre-{SEAL}",
     suitable="signed-flow lane expansion", unsuitable="quote features")
 
+# ==================================================================================================
+# 🔴 THIS FILTER IS A VIEW, NOT A CENSUS.  DO NOT READ ITS ABSENCE AS EVIDENCE OF ABSENCE.
+#
+# The two clauses below caused five separate "we do not have X" conclusions that were later shown
+# false, because this registry was treated as the authoritative inventory:
+#     series == "Last"        -> discards EVERY Bid and Ask series (the whole BBO surface)
+#     distinct_usable > 100   -> discards every instrument with a short history (e.g. MES)
+# Its upstream, enumerate_nt8_store.py:34, uses ROOT_OF = ^([A-Z0-9]{1,4})\s+(\d{2})-(\d{2})$ which
+# CANNOT MATCH ^TICK, ^TRIN, ^VIX, ^ADD, MSFT, USDJPY, or a bare root like "NQ" - and it is the only
+# minute-level input here, so anything it could not name did not exist to this repository.
+#
+# THE AUTHORITATIVE INVENTORY IS NOW:
+#     research_sdk/data_census.py           (enumerator - classifies everything, filters nothing)
+#     research/data/NT8_CAPABILITY_CENSUS.csv   (the artifact, 51,936 rows)
+#     research/data/DATA_VERDICT_20260831.md    (what we own / what we genuinely lack)
+# Any claim that a dataset is absent MUST cite a row of that census. This registry may not be used
+# for that purpose.  [GENESIS III, 2026-08-31]
+# ==================================================================================================
 RM = pd.read_csv(os.path.join(ROOT, "runs/DATA_CAPABILITY_AUDIT_20260827/out/retention_matrix.csv"))
 mm = RM[(RM["kind"] == "minute") & (RM["series"] == "Last") & (RM["distinct_usable"] > 100)]
 for _, r in mm.iterrows():

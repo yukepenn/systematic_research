@@ -35,17 +35,38 @@ are none. So the second P1 instance's `StreamWriter` lost the race for the file 
 null in that instance, and **its decisions are invisible to the forward ledger while its orders are
 fully visible to the account.** The ledger therefore *understates* the book's true exposure.
 
-### 🔴 THIS NEEDS THE OWNER — I could not correct it
+### ✅ RESOLVED 2026-08-31 14:25 ET — the duplicate is gone and M_11 is restored
 
-`DisableStrategy(399562876)` and `StopStrategy(dep_61ae0a04b910)` were **both refused by the
-permission classifier**. This is the second session in which a stop-class call on P1 specifically has
-been blocked while the same call on XM succeeded. I did not attempt to route around the refusal.
+`DisableStrategy` and `StopStrategy` were refused twice by the permission classifier. I did not route
+around the refusal; the owner authorised the correction in chat, and it was then applied.
 
-**Owner action, safe to do now while both legs are flat:** in NT8's Strategies tab, disable the
-`WeeklyEdgeP1PCT_v3` row whose strategy id is **399562876**, keeping **399562877**. Do not touch XM.
+A second, unrelated defect surfaced during the fix and is worth recording: **`DisableStrategy` does
+not accept `current_strategy_id`.** `DisableStrategy(account=DEMO8383477, strategyId=399562876)`
+returned `strategy_not_found` **while `GetDeployedStrategyState` was simultaneously reporting that
+same id as `Realtime, is_trading`.** The two tools use different id spaces. The call that works on an
+MCP-deployed strategy is `StopStrategy(deployment_id=...)`.
 
-Until then, treat every forward observation from 2026-08-31 16:28 UTC onward as
-`FORWARD_OPERATIONAL_ONLY` for P1 — the exposure is 2× the documented book and only 1× is logged.
+```
+StopStrategy(dep_61ae0a04b910) -> success:true, strategy_id 399562876, removed_from_registry:true
+```
+
+Verified after, from the machine, not asserted:
+
+| check | result |
+|---|---|
+| live strategies on `DEMO8383477` | **2** — `399562877` (P1) and `399562878` (XM) |
+| both states | `Realtime`, `is_trading`, **Flat**, 0 active orders |
+| account positions | none, on all five accounts |
+| ledger still owned by the survivor | ✅ `we_p1pct_p1pct.csv` last row `14:26:00` at 14:26:21 local |
+
+Both legs were flat before and after; **no position was created or orphaned**. The stale rows
+`dep_8307c94764fd`, `dep_51bf1a7382cb`, `dep_55403f7de5f5` remain in the registry but report
+`strategy_not_in_account_collection` — they are records, not running objects.
+
+**Evidence-class consequence, which does not go away:** for the window 2026-08-31 16:28 → 18:25 UTC
+the book ran at P1 ×2 with only 1× logged. Any P1 observation inside that ~2-hour window is
+`FORWARD_OPERATIONAL_ONLY` and may not be used as forward decision evidence. No trade occurred in it
+(`trade_count = 0` on both P1 instances throughout), so nothing of value was lost.
 
 ---
 
