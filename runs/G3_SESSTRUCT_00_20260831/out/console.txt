@@ -1,0 +1,108 @@
+==============================================================================================================
+G3_SESSTRUCT_00 - session-structure substrate.  DATA-ONLY.  NO P&L IS COMPUTED.
+==============================================================================================================
+
+loaded 6,527,311 bars, 5,466 sessions, 2006-01-05T08:59:00 .. 2026-07-31T00:00:00
+SEAL: 0 sessions on/after 2026-08-01 are EXCLUDED and never read.
+
+wrote 5,466 sessions x 54 columns -> D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\G3_SESSTRUCT_00_20260831\src\..\out\session_structure.parquet
+degenerate: NO_RTH_BARS 178, SHORT_RTH 1, NO_OVERNIGHT 11
+
+==============================================================================================================
+INHERITED CLAIM UNDER TEST: 'RTH breaks at least one Globex overnight extreme on a very
+high fraction of days.'   UNCONDITIONAL FREQUENCY ONLY.  This is NOT edge - see spec.
+==============================================================================================================
+denominator = sessions with >= 30 RTH bars AND a non-empty overnight segment
+            = 5,276 of 5,466 sessions (190 excluded as degenerate)
+
+  year      n  broke either   broke both  up first  down first  BOTH_SAME_BAR   none
+  2006    246        98.0%       51.6%    43.9%      54.1%              0      5
+  2007    254        98.0%       37.8%    52.0%      46.1%              0      5
+  2008    259        98.1%       33.6%    45.2%      52.9%              0      5
+  2009    255        96.9%       25.5%    54.1%      42.7%              0      8
+  2010    258        96.9%       31.4%    51.2%      45.7%              0      8
+  2011    258        95.7%       21.3%    50.0%      45.7%              0     11
+  2012    255        97.6%       32.5%    53.3%      44.3%              0      6
+  2013    254        97.2%       33.5%    55.9%      41.3%              0      7
+  2014    253        97.6%       36.8%    56.5%      41.1%              0      6
+  2015    258        94.6%       26.7%    45.7%      48.8%              0     14
+  2016    258        95.3%       23.3%    45.7%      49.6%              0     12
+  2017    257        96.1%       28.8%    54.5%      41.6%              0     10
+  2018    257        98.4%       26.8%    51.8%      46.7%              0      4
+  2019    258        90.7%       18.2%    52.7%      38.0%              0     24
+  2020    258        91.1%       20.5%    53.5%      37.6%              0     23
+  2021    258        94.6%       26.7%    53.9%      40.7%              0     14
+  2022    258        95.0%       27.1%    45.3%      49.6%              0     13
+  2023    257        96.1%       28.4%    56.0%      40.1%              0     10
+  2024    259        96.9%       26.6%    52.1%      44.8%              0      8
+  2025    257        94.2%       22.6%    52.9%      41.2%              0     15
+  2026    149        94.0%       16.1%    48.3%      45.6%              0      9
+--------------------------------------------------------------------------------------------
+   ALL   5276        95.9%       28.6%    51.2%      44.7%              0    217
+
+AMBIGUOUS sessions (one 1-min bar crossed BOTH extremes): 0 (0.00%).
+  The order of the two events inside that bar is UNKNOWABLE from 1-minute data and no
+  side was assigned. Resolving them needs the tick store; the count is what tells us
+  whether that is worth doing.
+
+minutes after 09:30 to the first break: median 10, p10 0, p90 93, share within 30 min 72.7%
+
+--------------------------------------------------------------------------------------------------------------
+DECOMPOSITION ADDED AFTER SEEING p10 = 0 MINUTES (descriptive geometry, no conditioning
+on any outcome, no P&L): a first break at minute 0 means the session OPENED outside the
+overnight range. For those sessions the 'break' is a gap, not an event.
+--------------------------------------------------------------------------------------------------------------
+  opened ABOVE the overnight high :     4  (0.1%)
+  opened BELOW the overnight low  :     7  (0.1%)
+  opened INSIDE the overnight range:  5265  (99.8%)
+
+  ON THE 5,265 SESSIONS THAT OPENED INSIDE THE RANGE - the only ones where a
+  break is genuinely an event:
+    broke either extreme : 95.9%   (headline including gap-outs was 95.9%)
+    broke BOTH extremes  : 28.5%
+    broke exactly ONE    : 67.3%   <- the side is decided and stays decided
+    minutes to first break: median 10, p10 0, p90 94, within 30 min 72.6%
+    first break UP 51.3% vs DOWN 44.6%
+
+==============================================================================================================
+NON-GATE APPENDIX (beyond preregistered scope - see the comment in source).
+FIRST-PASSAGE NULL for 'which overnight extreme breaks first'.
+==============================================================================================================
+ decile      n  mean p = NULL  observed P(UP)    excess
+      1    506          0.073           0.073    +0.000
+      2    506          0.187           0.209    +0.022
+      3    506          0.287           0.291    +0.004
+      4    506          0.396           0.379    -0.017
+      5    505          0.506           0.491    -0.015
+      6    506          0.612           0.623    +0.011
+      7    521          0.708           0.704    -0.004
+      8    491          0.791           0.754    -0.037
+      9    506          0.873           0.879    +0.007
+     10    505          0.954           0.943    -0.011
+------------------------------------------------------
+    ALL   5058          0.538           0.534    -0.004
+
+  aggregate excess -0.0039   SE(independent) 0.0057   z -0.68
+  The SE assumes independent sessions and does NOT model serial dependence, so the z is
+  an ORDER OF MAGNITUDE, not a test. It does not need to be a test: the excess is small
+  and its sign is not even stable across deciles.
+
+  R^2 of the pure-geometry null against the observed decile curve = 0.9965
+
+  VERDICT: the 14%-to-91% pattern is FIRST-PASSAGE GEOMETRY, not information. Knowing
+  where the open sits inside the overnight range tells you which extreme breaks first
+  EXACTLY as well as a coin-flipping random walk starting from that same point, and no
+  better. The 'overnight-extreme break direction' family is CLOSED at this formulation.
+  Still OPEN and untouched here: the TIMING of the break, whether it HOLDS or fails, and
+  the behaviour after it. Those need their own preregistration.
+
+==============================================================================================================
+WHAT THIS DOES AND DOES NOT LICENSE
+==============================================================================================================
+A near-certain event carries near-zero information BY CONSTRUCTION. If the frequency
+above is high, that is a fact about session geometry, NOT a tradeable edge, and this run
+makes no claim that it is. The forecastable quantity - if one exists - is WHICH SIDE,
+WHEN, and WHETHER IT HOLDS. That is a WAVE D question and requires its own
+preregistration, its own null and its own falsifier. It is not opened here.
+
+NO P&L WAS COMPUTED IN THIS RUN.
