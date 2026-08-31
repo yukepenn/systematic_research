@@ -1,0 +1,106 @@
+run_id: G3_SHORTALPHA_20260831 / sub-wave DECAY
+title: "WHY is the W61 mirrored short sleeve decaying? Opportunity drought or skill decay?"
+date: 2026-08-31
+campaign: GENESIS III (G3), short-alpha wave
+status: PREREGISTERED  (written and committed before any result existed)
+author_key: decay
+
+question: >
+  W61 measured that the mirrored short sleeve sits at the 0th percentile of its own
+  trailing-24-month t and that 2026 is -10.62 pts/session, its worst year ever. Nobody has asked
+  WHY. This sub-wave rebuilds the object and decomposes the decay into five candidate causes that
+  have completely different consequences.
+
+what_is_already_established_and_is_NOT_re_derived:
+  - "W61: short sleeve standalone 6.00 pts/session, 2,225 trades, daily rho with P1 = -0.003,
+     trades 81.5 % of the sessions P1 sits out. NOT ADOPTED."
+  - "W62: the sleeve's contribution is REGIME-SHAPED; the premium in the wrong regime is
+     unaffordable at the weight that makes it attractive."
+  - "W73: the sleeve's TIMING component is +$144,532 = 119 % of its net. Its drift component is
+     -$23,078 with SE $15,130, i.e. t = -1.53 - NOT ESTABLISHED. On the modern window the drift
+     is not measurable anywhere (ALL +0.008057 pts/min, t = +1.48)."
+  - "W73 H2: making the ratchet sigma SIGNED makes the short WORSE (6.00 -> 4.79). The obvious
+     short-tuned repair has been tried and is negative. It is not retried here."
+  - "Orchestrator, today: the RTH-vs-overnight drift-concentration hypothesis is DEAD (it
+     reverses on the modern window). Not revived here."
+
+candidate_causes_each_with_its_own_measurement:
+  a_TRADE_RATE:  "trades per session, per year. Is it taking fewer / more trades?"
+  b_HIT_vs_SIZE: "hit rate p, mean winning trade W, mean losing trade L, per year, in POINTS
+                  gross of commission. A Shapley decomposition of the change in per-trade
+                  expectancy E = p*W - (1-p)*L over the three factors, order-independent."
+  c_HOLDING:     "bars held per trade, per year, split winners / losers, and contract-minutes of
+                  short exposure per session."
+  d_COST:        "gross points per trade per year against the measured cost floor. The fork is
+                  whether the 2026 GROSS edge is still positive but below the floor (a cost
+                  problem, survivable, sizing-fixable) or has gone NEGATIVE (not a cost problem)."
+  e_REGIME:      "the number and size of qualifying DOWN moves per year, measured on price ONLY,
+                  with no reference to whether the sleeve traded them. THE DECISIVE FORK."
+
+opportunity_definitions_declared_before_looking:
+  O1_ratchet_native: >
+    Run the vendor ratchet's own leg instrumentation (W73's ratchet_legs, unmodified) at
+    VolMult 6, 16, 30. VolMult 16 is the PRIMARY (declared now): it is the centre of the
+    incumbent 6-30 ladder and produces ~4 legs/session, the scale the engine actually trades.
+    Per year: DOWN legs per session, and the DOWN-leg maximum favourable excursion (MFE) in
+    points per session - i.e. the points a short entered at each down-leg's start could have
+    made at that leg's best point. Same for UP legs. Report the down/up ratio.
+  O2_state_blind_zigzag: >
+    A per-session zigzag on 1-min closes with a fixed point threshold (20, 40, 80 pts) and a
+    volatility-scaled threshold. Counts non-overlapping down-swings and their total magnitude.
+    Uses no engine state at all - the cross-check on O1.
+  O3_raw_directional_share: >
+    Per year: sum of negative 1-minute close changes / sum of |close changes| (the DOWN SHARE of
+    all realised movement), session close-to-open return distribution, and the fraction of
+    sessions that close below their open. The purest possible statement of "was there anything
+    to be short of".
+  CAPTURE = (short sleeve GROSS points won per session) / (O1 down-leg MFE per session).
+
+decisive_fork_gate_G5 (thresholds fixed before any result is seen):
+  OPPORTUNITY_DROUGHT: "OPP_2026 / OPP_baseline <= 0.75  AND  CAP_2026 / CAP_baseline >= 0.75"
+  SKILL_DECAY:         "OPP_2026 / OPP_baseline >= 0.90  AND  CAP_2026 / CAP_baseline <= 0.75"
+  otherwise:           "MIXED - reported as MIXED, no story chosen after the fact."
+  baseline = "the same object's own MODERN pre-2026 years, pooled."
+
+gates:
+  G1_B1_SUBSTRATE:  "L_sym (P1) reproduces 14.72 +- 0.6 pts/session on W61's exact window and
+                     substrate. FAIL -> the wave is VOID and reports nothing."
+  G2_OBJECT:        "the rebuilt short sleeve reproduces 2,225 trades +- 2 % and 6.00 +- 0.30
+                     pts/session on W61's exact window and substrate."
+  G3_SEAL:          "max bar timestamp in every substrate loaded is strictly < 2026-08-01.
+                     Asserted in code and printed."
+  G4_DECAY_IS_REAL: "2026's realised mean session P&L must fall below the 5th percentile of the
+                     EXACT circular-window null: the distribution of the means of all contiguous
+                     windows of the same length in the sleeve's own daily series. This preserves
+                     serial dependence exactly. If it does NOT, the 'decay' is inside the series'
+                     own noise and the framing is over-read - that is a reportable finding."
+  G6_COST_FORK:     "sign of 2026 GROSS points per trade."
+
+era_stratification:
+  - "ERABREAK01 (p = 0.0011) forbids pooling pre-2022 with modern. Everything is reported
+     PRE (< 2022-05-01) / MODERN (>= 2022-05-01) / FULL, and FULL is labelled DIAGNOSTIC ONLY."
+
+costs:
+  - "$4.36/ctrRT is a FLOOR and is never a headline."
+  - "$20.65/ctrRT is PRIMARY (G2_EXEC01, 113 real round turns)."
+  - "$25.01/ctrRT is the all-in figure."
+  - "1.03 NQ points = $20.65 at $20/point."
+
+nulls_and_inference:
+  - "Session-level t is DIAGNOSTIC ONLY and is labelled as such everywhere it appears."
+  - "K_eff = K / (1 + (K-1) * rho_bar) with rho_bar (the daily series' lag-1 autocorrelation)
+     printed, and the deflated t printed beside the raw one."
+  - "G4 uses the exact contiguous-circular-window enumeration, not an iid resample."
+
+forbidden:
+  - "any read of a session >= 2026-08-01"
+  - "proposing a filter, a regime router, or any exposure-reducing rule (this repo is ELEVEN for
+     eleven against random-thinning controls, and this sub-wave is a DIAGNOSTIC, not a candidate)"
+  - "re-tuning the sleeve, re-tuning sigma, or re-testing W73's signed-sigma repair"
+  - "quoting a FULL-window figure as if ERABREAK01 did not exist"
+  - "redefining the opportunity metric after seeing the capture ratio"
+
+adoption: "NOTHING is adopted or proposed. This sub-wave produces a diagnosis or a closure."
+
+outputs: ["out/decay.txt", "out/decay_peryear.csv", "out/decay_opportunity.csv",
+          "out/decay_trades.csv"]
