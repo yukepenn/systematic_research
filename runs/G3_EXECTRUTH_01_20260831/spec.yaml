@@ -1,0 +1,202 @@
+run_id: G3_EXECTRUTH_01_20260831
+title: "EXECUTABLE OBJECT TRUTH - bar-level ACTION + STATE parity between the deployed C# object
+        and the Python research object, on 353,878 rows the executable wrote about itself."
+date: 2026-08-31
+campaign: GENESIS III - NQ CHAMPION CHALLENGE / WAVE A
+lane: EXECUTABLE TRUTH (directive section 4)
+status: PREREGISTERED - written and committed BEFORE any comparison was computed
+live_enabled: NO
+spend: 0
+orders_placed: NO
+
+# ==================================================================================================
+# 0. WHY THIS RUN EXISTS
+# ==================================================================================================
+problem: >
+  The strategy that is actually traded is the C# object. Every economic claim this campaign has ever
+  made about P1 was computed by a Python approximation of it. T2_P1SIZE01 measured that the two
+  disagree: recomputed causal score matched the ledger on only 81.21% of scored entries, while the
+  derived SIZE matched NT8 qty on 99.04% (2377/2400). A 99% size agreement was accepted as parity.
+  It is not parity. It is an aggregate that hides an 18.79% disagreement in the underlying statistic,
+  and it was never established WHICH object is right or WHY they differ.
+
+what_the_source_already_settles: >
+  Read directly from source before this run and stated here so the result cannot be reverse-fitted:
+
+    WeeklyEdgeP1PCT_v3.cs:1131-1152  the quality features are built from lagClose / lagAtr /
+      lagVwap / lagRunLen / lagCumDelta / lagVolNorm - the LAGGED cache.
+    WeeklyEdgeP1PCT_v3.cs:1197       CacheLagged() is called at the END of OnBarUpdate.
+      => during processing of bar b, lag* holds bar b-1's values.
+    WeeklyEdgeP1PCT_v3.cs:1174-1182  the entry order is submitted at bar b and fills at Open of b+1.
+
+    run_we_w98.py:69   want = dir_arr[i-1]        (direction decided at bar i-1)
+    run_we_w98.py:74   epx  = o[i]                (fill at bar i open)
+    run_we_w98.py:71   u    = size_at_entry[i]    (size read at the FILL bar index i)
+    we_quality.py:44-59 / we_fastctx.py           X[k][j] is built from bar j-1's close.
+
+  Therefore, writing the fill bar as i:
+    DIRECTION   C#: bar i-2   Python: bar i-2    - AGREE
+    QUALITY     C#: bar i-2   Python: bar i-1    - DISAGREE BY EXACTLY ONE BAR
+
+  Both are causally legal. Python's score uses the close of the decision bar itself, which is known
+  at the decision instant. The C# uses the close of the bar before that. The executable is the
+  STALER of the two, and the executable is what trades. The research object has been crediting the
+  sizing layer with an information set the deployed strategy does not have.
+
+hypothesis_to_be_tested_not_assumed: >
+  The source read above is a HYPOTHESIS about semantics, not a result. This run tests it against
+  353,878 rows that the executable object itself wrote, and it must be possible for the hypothesis
+  to lose. If H_STALE does not win P3 outright, the source read is wrong and this spec says so.
+
+# ==================================================================================================
+# 1. THE DATA - and why it is unusually strong here
+# ==================================================================================================
+executable_side: >
+  C:\NT8_ForwardLogs\export\we_p1pct_p1pct.csv
+  Written by the DEPLOYED object WeeklyEdgeP1PCT_v3 (deployment dep_9c51536a7045, strategy_id
+  399562877, account DEMO8383477, NQ 09-26, 1-min, DaysToLoad=365) at line :1189-1194.
+  353,878 rows, header:
+    pyts,close,nMem,nThr,dL,ratio,voteOK,size,score,qty,sessPnl,stopped,tilt,bmom,
+    t0,t1,t2,t3,sig0,pend0,anch0,s0
+  Verified before use: 353,878 distinct timestamps, 0 duplicates, 0 non-monotonic rows.
+  This is not a trade list. It is the executable object's INTERNAL STATE, every bar, for 365 days.
+
+research_side: >
+  The canonical chain, unmodified:
+    run_we_w17.load_deep -> run_we_w01.sm14_1m -> run_we_w76 mem/bmom/tilt cache ->
+    run_we_w97.votes -> run_we_w26.fills_daily -> run_we_w37.causal_score -> run_we_w98.gfills
+  with arm_kw("PCT", 1.183) exactly as run_we_w103.py:105-107 assembles P1_PCT.
+
+window: "2025-08-31 18:01 ET -> 2026-07-31 17:00 ET"
+window_justification: >
+  The export begins 2025-08-31 18:01 (365-day warm-up boundary) and the Python substrate ends
+  2026-07-31 16:59. The intersection is the whole comparable region.
+seal_compliance: >
+  NO read of any session >= 2026-08-01. The export rows from 2026-08-01 onward are DROPPED BY THE
+  PROGRAM before any statistic is computed, and the program prints the count it dropped.
+  2026-05-31 -> 2026-07-31 is already DIRECTLY_BURNED and carries no additional cost.
+evidence_status: VERIFICATION. This run selects no strategy, tunes no parameter, and produces no
+  candidate. It cannot consume discovery budget because it has no free parameters.
+
+# ==================================================================================================
+# 2. GATES - every clause coded; the table is printed BY THE PROGRAM
+# ==================================================================================================
+
+P0_bar_identity:
+  statement: >
+    Before any state comparison is meaningful, the two objects must be looking at the same bars.
+    NT8 serves a back-adjusted continuous NQ; the Python substrate is separately back-adjusted.
+  test: >
+    Inner-join on timestamp. Report matched / C#-only / Python-only counts. On the matched set
+    compute d = close_cs - close_py and report, PER CALENDAR MONTH: n, mean(d), sd(d), max|d - median(d)|.
+  PASS: >
+    joined rows >= 95% of the C# rows in-window, AND within every calendar month
+    sd(d) <= 0.25 index points (one tick) after removing that month's median offset.
+    A constant per-regime offset is EXPECTED (back-adjustment) and is not a failure.
+    A varying offset means the two objects are on different price series and everything below is void.
+  if_fail: "Report P0 only. All later gates are VOID and are not printed as if meaningful."
+
+P1_state_parity:
+  statement: "Do the two objects compute the same decision state on the same bar?"
+  fields_compared_exactly:
+    - nMem   vs Python nMemLong
+    - nThr   vs Python range-throttle voter count
+    - dL     vs Python lagged-cumulative-delta sign indicator
+    - ratio  vs Python range ratio        (tolerance 1e-3, the export writes F4)
+    - voteOK vs Python (nMem * nThr * (1+dL)) >= 16
+    - tilt   vs Python tilt
+    - bmom   vs Python bmom
+    - t0..t3 vs Python per-set target after hysteresis
+  reported: "per-field agreement rate, and for every field the FIRST 20 disagreeing timestamps"
+  PASS: "voteOK agreement >= 99.5% AND t0..t3 each >= 99.5%"
+  note: >
+    voteOK and t0..t3 are the ACTION-BEARING fields. ratio/tilt/bmom are diagnostic: they can
+    disagree slightly from float paths without changing an action, and that distinction is
+    reported rather than hidden.
+
+P2_action_parity:
+  statement: "Do the two objects take the same actions at the same bars?"
+  action_series: >
+    a[i] in {FLAT, ENTER, HOLD, EXIT} derived on each side from the qty/position path alone,
+    NOT from P&L.
+  reported:
+    - entry-bar set agreement (Jaccard), exit-bar set agreement (Jaccard)
+    - count of C#-only entries, Python-only entries, and for each the first 20 timestamps
+    - trade-count difference in percent
+  PASS: "entry-bar Jaccard >= 0.99 AND |trade count difference| <= 2%"
+  binding_note: >
+    Per the repo's parity band (WE_W52): >=99% decision agreement and counts within 2% = VALIDATED;
+    90-99% requires EVERY mismatch classified; <90% means it is not the same object. That band is
+    applied here to ACTIONS, not to dollars. A net-P&L match with hundreds of differing decisions
+    is recorded as a FAILURE of parity, never as a success.
+
+P3_size_semantics:
+  statement: >
+    THE DECIDING GATE. Three mutually exclusive hypotheses about which bar the executable reads
+    its quality features from. All three are computed by the same code path; only the index shifts.
+  arms:
+    H_FRESH: "score at fill bar i uses X[k][i]     (= bar i-1 close)  <- current Python"
+    H_STALE: "score at fill bar i uses X[k][i-1]   (= bar i-2 close)  <- source read predicts this"
+    H_STALE2:"score at fill bar i uses X[k][i-2]   (= bar i-3 close)  <- control, must lose"
+  measured_against: "the export's own `score` and `size` columns at the same timestamps"
+  reported: "score agreement and size agreement for each of the three arms"
+  PASS: >
+    H_STALE wins BOTH score agreement and size agreement outright, AND H_STALE score agreement
+    >= 99.0%. H_STALE2 must lose; if the control wins, the harness is wrong, not the object.
+  if_H_FRESH_wins: >
+    The source read in section 0 is WRONG and is retracted in the report in those words. The
+    campaign then uses H_FRESH as the executable semantics.
+  if_none_reaches_99: >
+    Neither hypothesis explains the object. Report the residual disagreement, characterise the
+    disagreeing rows (session position, score level, feature that flips), and state plainly that
+    the executable object is NOT YET REPRODUCED. No economics are quoted in that case.
+
+P4_economic_size_of_the_divergence:
+  statement: >
+    Only computed if P3 passes. How much money separates the object we trade from the object we
+    have been quoting?
+  computed: >
+    Using the T2_P1SIZE01 size-invariance identity (pnl_i = s_i * pnl_per_contract_i, verified
+    there at max error 0.00e+00), reprice the SAME trade schedule under the H_FRESH size vector and
+    the H_STALE size vector.
+  reported:
+    - number of trades sized differently, and their share of total net
+    - net difference in dollars over the window, and per week
+    - the difference restricted to the top decile of trades by |P&L|
+  explicitly_not_a_promotion: >
+    A difference in either direction is NOT a candidate. If H_FRESH earns more, that is a
+    P1_vNext HYPOTHESIS requiring its own locked challenge with its own null, because it changes
+    the traded object. This run may not promote it and does not attempt to.
+
+# ==================================================================================================
+# 3. TRAPS NAMED BEFORE RUNNING
+# ==================================================================================================
+traps:
+  - "The export's warm-up region is produced by NT8 HISTORICAL processing. If historical and
+     realtime processing differ, the early rows are not evidence about the live object. The program
+     therefore reports every gate BOTH on the full window and on the realtime-only tail, and any
+     gate that passes on one but not the other is reported as SPLIT, not as PASS."
+  - "353,878 rows is a huge n. Almost any agreement rate will be 'significant'. The gates are
+     therefore stated as AGREEMENT THRESHOLDS, not as p-values. No hypothesis test appears here."
+  - "The C# session box accumulates PER CONTRACT (v3 lines ~1152, ~1166). Comparing sessPnl against
+     a total-P&L Python box would manufacture a false disagreement. gfills is called with
+     per_ctr=True and this is asserted, not assumed."
+  - "A back-adjustment offset between the two price series will shift dist_open and dist_vwap
+     identically on both sides only if the offset is constant WITHIN a session. P0 tests exactly
+     that and voids the run if it fails."
+  - "Confirmation bias: section 0 states a prediction. P3 is constructed so that the prediction can
+     lose to a named control (H_STALE2) and to its own alternative (H_FRESH), and the report must
+     print all three regardless of which wins."
+  - "Agreement is not correctness. If both objects are wrong in the same way, P1-P3 all pass. This
+     run establishes WHICH OBJECT WE TRADE. It does not establish that the object is good."
+
+# ==================================================================================================
+# 4. PROHIBITIONS
+# ==================================================================================================
+prohibitions:
+  - no order, deploy, enable, disable, stop, or modify on any account
+  - no edit to any production .cs file
+  - no read of any session >= 2026-08-01
+  - no Databento, no DOM / Level-II / Market Replay
+  - no parameter is fitted; this run has zero free parameters by construction
+  - no promotion of any kind may originate from this run

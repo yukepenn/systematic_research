@@ -1,0 +1,190 @@
+run_id: G3_XMLAT_01_20260831
+title: "XM LATENCY FORENSICS - is XM_CONFLICT's edge causal under executable timing, and how much
+        of it survives a fill that a real retail order could actually get?"
+date: 2026-08-31
+campaign: GENESIS III - NQ CHAMPION CHALLENGE / WAVE A
+lane: EXECUTION TRUTH (directive sections 5, 6, 41)
+status: PREREGISTERED - written and committed BEFORE any decay curve was computed
+live_enabled: NO
+spend: 0
+orders_placed: NO
+
+# ==================================================================================================
+# 0. THE FINDING THAT TRIGGERED THIS, AND WHY IT IS NOT YET AN ACTIONABLE CLAIM
+# ==================================================================================================
+prior_measurement_to_be_reproduced_first: >
+  A Tier-1 diagnostic reported that delaying XM's ENTRY by one minute costs -$74.18/week (t -2.63),
+  while delaying its EXIT by one minute costs only -$11.43/week (t -0.84, not significant); that the
+  entry effect is $45.66 per trade against a booked round-turn cost of $16.86; and that XM earns
+  ~$15,800 (7.7% of gross) inside the single minute 09:45 -> 09:46.
+
+  THE ORCHESTRATOR'S OWN CORRECTION, STATED BEFORE THIS RUN:
+  those are not two findings. "Earns $15,800 in 09:45->09:46" and "+1 minute of entry delay costs
+  $74.18/week" are THE SAME MEASUREMENT viewed twice. 378 trades x $45.66 = $17,259, which is the
+  $15,800 figure up to the trade population used. Quoting them as mutually corroborating evidence
+  would be double counting, and this spec forbids it.
+
+  Reproduction of the -$74.18/wk figure from the frozen decision set is GATE X0. If it does not
+  reproduce, the entire premise of this run is withdrawn in the report.
+
+what_the_source_settles_before_any_measurement: >
+  WeeklyEdgeXMConflict_v4.cs:33-41, read directly:
+      anchor = OPEN of the bar stamped 09:31   (== the 09:30:00 print; bars are BAR-END stamped)
+      decide = CLOSE of the bar stamped 09:45  (== the last print before 09:45:00.000)
+      entry  = market order submitted on the 09:45 bar close -> fills at the 09:46 OPEN
+               (== the FIRST print at or after 09:45:00.000)
+      exit   = submitted on the 15:45 bar close -> fills at the 15:46 OPEN
+  export_xm_reference.py:38 ANCH,DEC,ENTM,EXITM,EXITNB = 571,585,586,945,946 - identical clock.
+
+  CONSEQUENCE, stated plainly: the modelled fill is the first executable print after the decision
+  instant. That is not a fill from the future. It is the correct FIRST CAUSALLY ELIGIBLE price -
+  and it assumes EXACTLY ZERO LATENCY between the bar-close event and the exchange match.
+  A real retail order incurs strategy-callback + platform + network + gateway + matching delay.
+  The economically relevant question is therefore not "is the fill in the future" (it is not) but
+  "how much of the edge lives inside the milliseconds a real order cannot recover".
+
+# ==================================================================================================
+# 1. GATES
+# ==================================================================================================
+
+X0_reproduce_the_premise:
+  test: >
+    Rebuild the frozen XM decision set from export_xm_reference.py semantics over
+    2022-01-03 -> 2026-07-31. Recompute net/week at entry fills of open(09:46) [incumbent] and
+    open(09:47) [+1 minute]. Recompute the exit-side +1 minute figure identically.
+  PASS: "entry-delay cost reproduces within +/-15% of -$74.18/wk and the sign and rough
+          magnitude of the exit-side non-effect reproduce."
+  if_fail: "The premise is withdrawn. Report X0 only; X1-X5 are VOID and are not printed."
+
+X1_causality_two_sided:
+  statement: >
+    A probe with no teeth proves nothing. Both directions are required and both are coded.
+  NEGATIVE_probe:
+    do: >
+      Corrupt every input strictly AFTER the decision cutoff of 09:45:00.000 - replace all NQ,
+      ES, RTY and YM prices from the bar stamped 09:46 onward with white noise of matched
+      volatility, on every session.
+    must_observe: "the decision series (drive, broad_composite, conflict_flag, desired_direction)
+                   is BIT-IDENTICAL to the uncorrupted run on 100% of sessions."
+    PASS: "100%. Anything less is a look-ahead leak and the strategy is downgraded immediately."
+  POSITIVE_probe:
+    do: >
+      Perturb a causally ADMISSIBLE input - the ES/RTY/YM closes at the 09:45 bar - by +/-0.5
+      sigma of their own 60-session sigma, one market at a time.
+    must_observe: "the action CHANGES on a material fraction of sessions."
+    PASS: ">= 5% of sessions flip desired_direction under at least one single-market perturbation."
+    why: >
+      If the action cannot move when admissible information moves, the NEGATIVE probe is
+      vacuous - it would 'pass' on a strategy that ignores its inputs entirely.
+
+X2_execution_decay_curve_1min:
+  statement: "The whole predefined surface, not a cherry-picked best delay."
+  fills_evaluated:
+    - "open(09:46)   = +0s      <- the incumbent's modelled fill"
+    - "close(09:46)  = +59s"
+    - "open(09:47)   = +60s"
+    - "open(09:48)   = +120s"
+    - "open(09:50)   = +240s"
+    - "high(09:46) and low(09:46) as WORST-CASE and BEST-CASE bounds on any within-minute fill"
+  reported_for_each: "net/week, $/trade, weekly SD, t on the weekly difference vs the incumbent
+                      fill, and the same split by LONG vs SHORT and by calendar year"
+  derived: "decay slope in $/trade per second, and the BREAK-EVEN LATENCY at which XM's expected
+            after-cost edge reaches zero"
+  this_is_a_diagnostic: >
+    The best-performing delay is NOT adopted, proposed, or described as an improvement. Choosing
+    the historically best delay would be a one-parameter search on the outcome and is prohibited.
+
+X3_execution_decay_curve_subsecond:
+  data: >
+    The NQ tick+BBO sessions we actually own: research/data_microstructure_v2/raw/NQ/ (58 sessions)
+    and research/scalping_lab/substrate/raw/NQ/ (61 files, 48 usable, bip 0=Last 1=Bid 2=Ask).
+  measurement_A_conditional: >
+    For every owned tick session that also carries an XM decision, measure the realised fill price
+    at +0ms (first print >= 09:45:00.000), +50ms, +100ms, +250ms, +500ms, +1s, +2s, +5s, +10s,
+    +30s, +60s, signed by the XM desired_direction, and report mean and CI of the slippage in
+    points and dollars per contract.
+  measurement_B_unconditional: >
+    Because measurement A will have a small n, ALSO measure the direction-free microstructure at
+    09:45:00 on EVERY owned tick session: the quoted bid-ask spread at that instant, the mean
+    |price change| over each delay bucket, and the fraction of buckets in which price moved at all.
+    This bounds the latency cost WITHOUT needing XM to have traded that day.
+  MANDATORY_REPORTING: >
+    The exact n for measurement A is printed next to every number derived from it. If n < 20 the
+    report states in its own sentence that the conditional sub-second curve is UNDERPOWERED and
+    the unconditional bound is the load-bearing quantity. No conditional sub-second number may be
+    quoted without its n.
+
+X4_signal_versus_execution_separation:
+  statement: >
+    SIGNAL PERTURBATION and EXECUTION COST PERTURBATION are different objects and are never mixed.
+  cost_stress: >
+    Holds the ACTION PATH FIXED - identical entries, identical exits, identical sizes - and varies
+    only the charged cost: $4.36 (commission only), $16.86 (booked), $24.00, $30.00 per ctrRT.
+    If any stress changes which trades occur, that is a bug and the run reports it as one.
+  policy_variants: >
+    Evaluated only if X1 passes. Immediate marketable order; marketable limit at the causally
+    known 09:45:00 quote +/- 1 tick; limit at the touch with a 60s give-up. Any variant that
+    changes WHICH trades occur is labelled a POLICY CHANGE, not an execution improvement, and
+    inherits the full challenger burden rather than being folded into a cost table.
+
+X5_the_required_decomposition:
+  statement: "Answer the directive's five-way split in dollars per week, with a stated method for each."
+  components:
+    A_signal_alpha: "edge remaining at a fill delayed past any plausible retail latency"
+    B_impossible_backtest_execution: "value that exists only at a zero-latency fill"
+    C_spread_and_slippage: "the modelled $12.50/ctrRT spread against measured BBO at 09:45:00"
+    D_latency_decay: "the sub-second portion of B, from X3"
+    E_realistically_capturable_tomorrow: "A + whatever of B survives a 250ms fill"
+  PASS_is_not_defined_here: >
+    X5 is an ESTIMATE, not a test. Every component carries its own uncertainty band and its own
+    evidence class. A point estimate without a band is not an acceptable output of X5.
+
+# ==================================================================================================
+# 2. THE VERDICT RULE - written before the numbers exist
+# ==================================================================================================
+downgrade_rule: >
+  If E (realistically capturable) is less than 50% of XM's currently quoted contribution, XM is
+  DOWNGRADED in the champion board and the report says so without hedging. The book's second leg
+  would then be resting on an execution assumption rather than on information.
+retain_rule: >
+  If the decay curve is shallow inside 1 second and steep only across minutes, then XM's edge is
+  robust to realistic latency, the -$74.18/wk one-minute figure is a red herring for deployment
+  purposes, and that must be stated just as plainly.
+neither_rule: >
+  If X3 is underpowered and the unconditional bound is inconclusive, the honest verdict is
+  UNRESOLVED WITH A NAMED NEXT MEASUREMENT - not a lean in either direction.
+
+# ==================================================================================================
+# 3. TRAPS NAMED BEFORE RUNNING
+# ==================================================================================================
+traps:
+  - "DOUBLE COUNTING: the $15,800-in-one-minute and the -$74.18/wk figures are one measurement.
+     Named in section 0. They may never be cited as two pieces of evidence."
+  - "n=378 trades over ~243 weeks. Weekly t-statistics on a 1.5-trade-per-week strategy are
+     fragile; a block bootstrap on the weekly difference series is the test and the t is a
+     diagnostic printed beside it."
+  - "The 58 tick sessions are NOT a random sample of history - they are what was exported, and
+     s20260525 is quarantined. Any sub-second number inherits that selection and the report says so."
+  - "SURVIVORSHIP: the XM trade panel excludes sessions that never armed (no 09:31 or no 09:45
+     bar). The decay curve must be computed on the SAME armed-session set at every delay, never
+     re-derived per delay, or a session could enter one arm and not another."
+  - "The 09:45 decision reads ES, RTY and YM. In NT8 these are separate BarsInProgress series. If
+     a secondary series is stale at 09:45:00 live, the live decision differs from the backtest
+     decision for a reason that has nothing to do with latency. The staleness rule
+     (MAXSTALE = 3 sessions, export_xm_reference.py:39,:89-93) is a SESSION-level rule and does
+     not protect against intraday staleness. This is reported as an open execution risk whatever
+     the decay curve says."
+  - "A shallow sub-second decay does not prove the fill is achievable - it proves the PRICE does
+     not move much. Queue position, order rejection, and partial fills are separate risks not
+     measured by any price series and are not claimed to be."
+
+# ==================================================================================================
+# 4. PROHIBITIONS
+# ==================================================================================================
+prohibitions:
+  - no order, deploy, enable, disable, stop, or modify on any account
+  - no edit to any production .cs file
+  - no read of any session >= 2026-08-01
+  - no Databento, no DOM / Level-II / Market Replay, no new collector
+  - the best-performing delay may not be adopted as a strategy parameter
+  - no promotion of any kind may originate from this run
