@@ -1,0 +1,25 @@
+
+======================================================================================================================
+=== GATE TABLE - TICK01ERA_20260831 - printed by the program, never assembled by hand
+=== mechanism FROZEN from G2_F1_TICK01 (trigger -1000 / re-arm -400 / NQ fwd 15 min)
+======================================================================================================================
+STRATUM               GATE SPEC                                                OBSERVED                        PASS-FAIL
+ERA_2013              --   gate not evaluable                                  only 1 scored events            N/A
+ERA_2015              T1   mean fwd15 > 0 AND session-clustered t >= 2.0       mean +12.647 bps, t +0.99 (n=6, G=6)FAIL
+                      T2   event mean > p95 of count-matched same-session drawsevent +12.647 vs ctrl p95 +27.046FAIL
+                      T3   real above p95 of session-block circular-shift null real +12.647 vs null p95 +9.260 PASS
+                           MDE 2.80*sd/sqrt(n) [printed BEFORE the verdict]    35.758 bps = 2.83x |mean|       UNDERPOWERED
+
+ERA_2017              --   gate not evaluable                                  only 0 scored events            N/A
+ERA_PRE2022_POOLED    T1   mean fwd15 > 0 AND session-clustered t >= 2.0       mean +9.567 bps, t +0.85 (n=7, G=7)FAIL
+                      T2   event mean > p95 of count-matched same-session drawsevent +9.567 vs ctrl p95 +25.384FAIL
+                      T3   real above p95 of session-block circular-shift null real +9.567 vs null p95 +7.463  PASS
+                           MDE 2.80*sd/sqrt(n) [printed BEFORE the verdict]    31.428 bps = 3.29x |mean|       UNDERPOWERED
+
+    VERDICT (from ERA_PRE2022_POOLED only, per the frozen verdict rule): FAILS AGAIN -> the closure is a MECHANISM closure, confirmed out of sample
+    UNDERPOWERED_STILL clause (declared in the spec, reported ADDITIONALLY): MDE 31.428 bps vs 2.0x|mean| 19.134 bps -> the re-test is ITSELF underpowered and closes nothing on its own
+
+    MODERN REFERENCE, quoted verbatim from the closed run, NEVER merged with the above:
+      G2_F1_TICK01 2022-01-03..2026-07-31: n=63, mean +2.841 bps, t +0.54, ctrl p95 +4.366, null p95 +3.885, MDE 15.112 bps = 5.32x |mean| -> T1/T2/T3 all FAIL
+    per-year strata above are REGIME DESCRIPTION ONLY; no verdict is taken from one year.
+    prohibitions honoured: no threshold search, no horizon selection, no policy, no P&L, no cost claim, no sealed read, no pre-2022/modern pooling.

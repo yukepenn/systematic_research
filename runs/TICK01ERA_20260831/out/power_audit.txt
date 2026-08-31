@@ -1,0 +1,44 @@
+
+====================================================================================================
+=== PREREGISTERED POWER-ARITHMETIC AUDIT (spec section power_arithmetic_to_verify_and_print)
+====================================================================================================
+    (a) WHAT IS ACTUALLY LOCAL (db\minute\^TICK, payload = file > 32 B):
+        2012: files     1  payload     1  <- pre-2022
+        2013: files   264  payload   252  <- pre-2022
+        2014: files   247  payload   243  <- pre-2022
+        2015: files   249  payload   247  <- pre-2022
+        2016: files   258  payload   249  <- pre-2022
+        2017: files   251  payload   251  <- pre-2022
+        2018: files   251  payload   251  <- pre-2022
+        2019: files   252  payload   252  <- pre-2022
+        2020: files   269  payload   258  <- pre-2022
+        2021: files   267  payload   257  <- pre-2022
+        2022: files   316  payload   270
+        2023: files   307  payload   266
+        2024: files   310  payload   265
+        2025: files   308  payload   257
+        2026: files   174  payload   151
+        pre-2022 payload sessions ACTUALLY LOCAL: 2,261
+
+        CAPPROBE01 claimed  1,147 -> ~3,380  (2.95x)  => MDE x 0.583
+        that figure assumes a COMPLETE 2013-2021 backfill: 2,233 extra sessions = 9 years x 248/yr
+        ACTUAL today: 1,147 + 2,261 = 3,408  (2.971x)  => MDE x 0.580
+        >>> 2014, 2016 and 2018-2021 are NOT local. The 2.95x / 0.58 pair describes an acquisition that has NOT happened.
+
+    (b) WHAT n THE 1.07x FIGURE WAS ACTUALLY COMPUTED ON:
+        gate.txt| P1 scoring entries                         2,139
+        gate.txt| ... AND on a session internals cover         764   (35.7 %)
+        gate.txt| n covered                     764
+        gate.txt| MDE at ~80 % power       $   241.49   = 1.07x the covered mean
+        gate.txt| n covered                     764
+        P1 scoring population: 2,139 rows, 2022-07-01 08:49:00 -> 2026-07-29 18:10:00
+        P1 scoring rows dated BEFORE 2022-01-01: 0
+
+    (c) CAN PRE-2022 INTERNALS ADD A ROW TO THAT n?
+        The 1.07x MDE is 2.80*sd/sqrt(n) on n = 764 P1 DECISIONS, not on n = 1,147 SESSIONS.
+        P1's ledger begins 2022-07-01 08:49:00. A 2013-2021 $TICK backfill adds 0 P1 decisions.
+        => MDE multiplier for the INTERNALS_ACQUIRE lane from this acquisition: x 1.000 (EXACTLY UNCHANGED).
+        The 1,147 -> 3,380 substitution swapped a SESSION count for a DECISION count. The two populations are different objects and only one of them is what the 1.07x measures.
+
+    (d) THE CORRECT MULTIPLIER FOR THIS RUN'S POPULATION:
+        This run's n is EVENTS, not sessions and not P1 decisions. Modern: 63 scored events on 1,147 sessions = 0.0549 events/session, but that rate is regime-carried (44 events in 2022 -> 2 in 2025), so no session count implies an event count. The realised era event counts are printed in the stratum blocks above/below and are the only honest version of this arithmetic.
