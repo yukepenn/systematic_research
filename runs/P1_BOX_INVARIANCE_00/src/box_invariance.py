@@ -247,8 +247,10 @@ def main():
                  os.path.join(W80OUT, "mem_deep_4908286.npz"), "DEEP")
 
     # ---------------------------------------------------------------- window / universe masks
-    sdM = MOD["sdate"].to_numpy()
-    inwinM = (sdM >= A_M) & (sdM < B_M)
+    # W98's window convention is the session's FIRST-BAR timestamp (18:01 the prior calendar
+    # day), not the session date. Reproduced exactly so H-C can be a real check.
+    _t0M = MOD["D"]["t"][MOD["st"]]
+    inwinM = (_t0M >= A_M) & (_t0M < B_M)
     inwinD = np.ones(DEEP["D"]["n_sess"], bool)
     for W in (MOD, DEEP):
         W["warm"] = np.arange(W["D"]["n_sess"]) >= WARMUP

@@ -1,0 +1,139 @@
+==================================================================================================================
+=== P1_BOX_INVARIANCE_00 - POST-HOC DIAGNOSTIC ADDENDUM
+=== ⚠ POST-HOC. Changes no verdict. GATE A PASS / GATE B FAIL stands as printed.
+==================================================================================================================
+
+--- D4  OVER-DISPERSION: the level-free version of C1 -----------------------------------
+    C1 (the preregistered criterion) is a RAW RANGE and is therefore sensitive to both the
+    arm's latch-rate LEVEL and to sampling noise. The statistically correct stability
+    statistic is between-year heterogeneity measured against the binomial sampling floor.
+    ⚠ sessions within a year are NOT independent, so every chi2 below is inflated by the
+    same serial-correlation factor. Read the RATIOS between arms, never the absolute chi2.
+
+arm           r_bar   SD(r_y)  binom SD   ratio      chi2   df  excess SD
+DOLLAR        0.212    0.2615    0.0344    7.61      1096   20     0.2593
+PRICEBOX      0.380    0.1797    0.0408    4.40       360   20     0.1750
+SIGMABOX      0.634    0.0491    0.0405    1.21        28   20     0.0278
+
+    SIGMABOX's year-to-year dispersion is 6.3x smaller than DOLLAR's relative to the sampling floor, and 3.6x smaller than PRICEBOX's.
+    It is nonetheless NOT flat: at ratio 1.21 it is still real heterogeneity, not noise.
+
+--- D5  LEAVE-ONE-YEAR-OUT on C1 (the tail audit the directive requires) ------------------
+    The preregistered C1 threshold is range >= 0.20. SIGMABOX printed 0.180 on the primary
+    calibration and 0.204 / 0.207 on the two robustness variants. That is a knife edge, so
+    the honest question is: which single year decides it?
+
+    [primary]
+        drop year         DOLLAR    PRICEBOX    SIGMABOX
+        (none)            0.8039      0.6570      0.1797
+        2006              0.8039      0.5366      0.1631
+        2025              0.8039      0.6570      0.1758
+        2007              0.8039      0.6570      0.1797
+        2024              0.8039      0.6570      0.1797
+        2026              0.6643      0.5673      0.1797
+
+    [rate-matched]
+        drop year         DOLLAR    PRICEBOX    SIGMABOX
+        (none)            0.8039      0.6570      0.2039
+        2006              0.8039      0.5366      0.1422
+        2022              0.8039      0.6570      0.2012
+        2007              0.8039      0.6570      0.2039
+        2025              0.8039      0.6570      0.2039
+        2026              0.6643      0.5673      0.2039
+
+--- D6  THE FIXED-COST FLOOR: why NO normalisation is exactly scale-invariant -------------
+    C3b already showed it: rescale prices and leave the $4.36 commission alone and EVERY
+    arm's decision series changes, PRICEBOX and SIGMABOX included. Commission is a fixed
+    dollar term inside the same accumulator the box reads, so a proportional box cannot
+    be proportional at the bottom of the vol range. Here is where that bites.
+
+year     medSig     $DOL     tk   comm%     $PRI     tk   comm%     $SIG     tk   comm%
+2006         19    1,300    260    0.34      324     65    1.34       71     14    6.15
+2007         28    1,300    260    0.34      335     67    1.30      103     21    4.25
+2008         48    1,300    260    0.34      322     64    1.35      177     35    2.46
+2009         34    1,300    260    0.34      299     60    1.46      126     25    3.46
+2010         34    1,300    260    0.34      327     65    1.33      126     25    3.47
+2011         46    1,300    260    0.34      353     71    1.24      170     34    2.56
+2012         38    1,300    260    0.34      376     75    1.16      141     28    3.09
+2013         34    1,300    260    0.34      399     80    1.09      125     25    3.49
+2014         45    1,300    260    0.34      455     91    0.96      168     34    2.59
+2015         62    1,300    260    0.34      490     98    0.89      229     46    1.90
+2016         60    1,300    260    0.34      499    100    0.87      223     45    1.96
+2017         56    1,300    260    0.34      577    115    0.76      208     42    2.10
+2018        108    1,300    260    0.34      647    129    0.67      401     80    1.09
+2019        115    1,300    260    0.34      683    137    0.64      426     85    1.02
+2020        253    1,300    260    0.34      823    165    0.53      937    187    0.47
+2021        208    1,300    260    0.34    1,119    224    0.39      774    155    0.56
+2022        326    1,300    260    0.34      928    186    0.47    1,211    242    0.36
+2023        241    1,300    260    0.34    1,084    217    0.40      896    179    0.49
+2024        281    1,300    260    0.34    1,300    260    0.34    1,042    208    0.42
+2025        401    1,300    260    0.34    1,438    288    0.30    1,488    298    0.29
+2026        502    1,300    260    0.34    1,679    336    0.26    1,861    372    0.23
+
+    2006-07 median box, DOLLAR    $   1,300  =   260 ticks   commission is  0.34 % of the whole budget
+    2006-07 median box, PRICEBOX  $     328  =    66 ticks   commission is  1.33 % of the whole budget
+    2006-07 median box, SIGMABOX  $      83  =    17 ticks   commission is  5.24 % of the whole budget
+    ⚠ THIS is what SIGMABOX's 2006 latch rate of 0.739 is: at a 19-point median session
+    range the vol-scaled box is a ~14-tick budget, small enough that ordinary bid/ask
+    granularity and a fixed commission dominate it. The volatility-scaled box has a FLOOR
+    it cannot scale below, and 2006-2007 is under that floor.
+
+--- D7  ⚠ SUBSTRATE DEFECT: one of the three arms reads an invalid quantity ---------------
+    The substrate is `nq1m_2005_202605.parquet`, documented in W9's own spec as an
+    'NQ 09-26 BACK-ADJUSTED merge', and in research/original_trader_reconstruction/
+    DATA_AUDIT.md as: 'Different back-adjust offsets than canonical ledger
+    (POINT-DIFFERENCES INVARIANT; LEVELS/RATIOS NOT).'
+
+    Observed here: median session open 2006 = 5,236 and
+    2026 = 27,107, a ratio of 5.18x, against a median
+    session RANGE that goes 19 -> 502 pts, a ratio of 26.2x. Ranges are
+    point differences and are trustworthy; the level is a back-adjusted level and is not.
+
+    CONSEQUENCE, per input:
+      DOLLAR    reads no market quantity at all           -> VALID
+      SIGMABOX  reads session (high - low), a POINT DIFF  -> VALID
+      PRICEBOX  reads the session OPEN LEVEL              -> ⚠ INVALID on this substrate
+      C1  latch-rate stability      -> VALID for all arms (C1 reads no level)
+      C5  realized-vol sensitivity  -> VALID (log of a point difference)
+      C4  price-level sensitivity   -> ⚠ magnitude NOT interpretable
+      C2  joint state conditionality-> ⚠ partially contaminated (log P is one of two regressors)
+
+    DOES THE VERDICT SURVIVE? Recompute both gates using ONLY the uncontaminated criteria.
+      breaches on the 3 uncontaminated criteria {C1, C3, C5}: DOLLAR 3/3, PRICEBOX 2/3, SIGMABOX 0/3
+      GATE A needs >= 3 of 5 -> DOLLAR reaches 3 on the uncontaminated three alone  ->  GATE A SURVIVES
+      GATE B failed on clauses (iv)/(v), both driven by C1 alone, which is uncontaminated
+      ->  GATE B's FAIL SURVIVES.
+
+    ⚠ IT ALSO CORRECTS A FIGURE THE DIRECTIVE TREATS AS VERIFIED. 'The box was ~43.4 bp of
+    index in 2022 and ~24.6 bp now' is 65 pts / 14,977 and 65 / 26,423 - both computed on
+    this back-adjusted level. The repo's own DATA_AUDIT says ratios on this series are not
+    valid. The DIRECTION (the box shrank relative to price) is right; the BASIS POINTS are
+    not index basis points and should not be quoted as such.
+
+--- D8  I AUDIT MY OWN PREREGISTERED CRITERION ------------------------------------------
+    C1 was declared as a RAW max-min range of 21 annual rates with n_y ~ 150. Before
+    interpreting it, calibrate it against a null in which the rule is EXACTLY invariant:
+    draw each year's latch count as Binomial(n_y, r_bar) and look at the range that pure
+    sampling noise alone produces. 20,000 draws, seed 20260831.
+
+arm           r_bar  observed range  null p50  null p95  P(range>=0.20)    verdict on the criterion
+DOLLAR        0.212          0.8039    0.1289    0.1783           0.013                      usable
+PRICEBOX      0.380          0.6570    0.1528    0.2125           0.090                        weak
+SIGMABOX      0.634          0.1797    0.1518    0.2096           0.080                        weak
+
+    ⚠ READ THIS AGAINST MY OWN GATE. For an arm latching near 0.6, an EXACTLY INVARIANT
+    rule already produces a median range of 0.152 and exceeds the
+    0.20 threshold 8 % of the time from sampling noise alone.
+    My C1 threshold therefore could not distinguish a perfectly invariant vol-scaled box
+    from noise. SIGMABOX's three observed ranges sit at these percentiles of the
+    EXACTLY-INVARIANT null: 0.180 -> 80th (p=0.197), 0.204 -> 93th (p=0.067), 0.207 -> 94th (p=0.058).
+    None of the three is significant at any conventional level: on the criterion I chose,
+    SIGMABOX is statistically indistinguishable from a PERFECTLY invariant rule, and it
+    still failed my gate because the gate was a bare threshold on a noisy statistic.
+    THE GATE IS STILL RECORDED FAILED. A criterion is not repaired after seeing its
+    result. What this licenses is a SUCCESSOR RUN with a criterion that has power -
+    the over-dispersion ratio of D4 - preregistered before it is computed on anything new.
+    For DOLLAR the threshold did have power: observed 0.804 against a
+    null p95 of 0.178. GATE A is unaffected by this audit.
+
+[addendum done - no verdict changed, no P&L computed]

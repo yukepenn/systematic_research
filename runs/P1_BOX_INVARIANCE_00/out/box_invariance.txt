@@ -1,0 +1,176 @@
+======================================================================================================================
+=== P1_BOX_INVARIANCE_00 - STAGE 1: STRUCTURE ONLY. NO P&L IS COMPUTED IN THIS STAGE.
+=== spec runs/P1_BOX_INVARIANCE_00/spec.yaml committed at 2a94aea, before this ran.
+======================================================================================================================
+
+--- substrates -----------------------------------------------------------------------
+    MODERN  1,620,044 bars / 1,187 sessions  2022-01-02T18:01:00 -> 2026-07-31T16:59:00  [4s]
+    MODERN  P1 signal built: long-target bars 275,855, size-2 bars 425  [16s]
+    DEEP    4,908,286 bars / 4,279 sessions  2006-01-05T08:59:00 -> 2021-12-31T17:00:00  [20s]
+    DEEP    P1 signal built: long-target bars 831,132, size-2 bars 2,062  [56s]
+
+======================================================================================================================
+=== B1 HARNESS CHECKS - printed before any criterion is read. Any failure stops the wave.
+======================================================================================================================
+    H-A[MODERN] gfills_box(const) == run_we_w98.gfills(per_ctr=True), byte for byte ... PASS  (2,401 trades)
+    H-B[MODERN] NOBOX schedule built: 3,368 trades, 638 active sessions in-window
+    H-A[DEEP] gfills_box(const) == run_we_w98.gfills(per_ctr=True), byte for byte ... PASS  (9,698 trades)
+    H-B[DEEP] NOBOX schedule built: 10,120 trades, 2,458 active sessions in-window
+    H-B2[MODERN] a huge PRICE-shaped box collapses to the same NOBOX schedule ... PASS
+    H-B2[DEEP] a huge PRICE-shaped box collapses to the same NOBOX schedule ... PASS
+    H-C  MODERN P1/PCT in-window trades == W98's committed 2,131 ................. PASS  (this run 2,131)
+    H-D  sigma_s is the mean of sessions [s-20, s-1] and P_s is session s's own open, both causal ... PASS
+    H-E  deep substrate == W98's committed 4,908,286 bars / 4,279 sessions ......... PASS
+
+    all harness checks PASS.
+
+======================================================================================================================
+=== PRIMARY CALIBRATION - CLOSED FORM, NO SEARCH. Mean box $ over MODERN == $1,300 exactly.
+======================================================================================================================
+    MODERN active sessions 638   mean session open      20,989.7 pts
+    mean prior-20 session range      350.4 pts     prior-60      342.4 pts
+    c_p  = 1300 / (20 * 20,989.7)   = 0.00309676  of index  (30.97 bp)
+    c_v20= 1300 / (20 * 350.4)  = 0.185520  of the prior-20 mean session range
+    c_v60= 1300 / (20 * 342.4)  = 0.189856
+    DEEP  active sessions 2,458   mean session open       8,254.9 pts   mean prior-20 range     82.8 pts
+
+--- building arms (primary calibration, sigma N=20) ------------------------------------
+    [primary] MODERN arms built  [61s]
+    [primary] DEEP arms built  [63s]
+
+======================================================================================================================
+=== C3 SCALE INVARIANCE - pure change of monetary unit (prices AND the $4.36 commission
+===  scaled by lambda), direction and size arrays HELD FIXED so only the box is exercised.
+===  ⚠ LABELLED INFERRED/TAUTOLOGICAL: this criterion is definitional, not evidence.
+======================================================================================================================
+    lambda=0.5  DOLLAR    C3a(unit change) CHANGED      C3b(prices only, $4.36 fixed) CHANGED
+    lambda=0.5  PRICEBOX  C3a(unit change) IDENTICAL    C3b(prices only, $4.36 fixed) CHANGED
+    lambda=0.5  SIGMABOX  C3a(unit change) IDENTICAL    C3b(prices only, $4.36 fixed) CHANGED
+    lambda=2.0  DOLLAR    C3a(unit change) CHANGED      C3b(prices only, $4.36 fixed) CHANGED
+    lambda=2.0  PRICEBOX  C3a(unit change) IDENTICAL    C3b(prices only, $4.36 fixed) CHANGED
+    lambda=2.0  SIGMABOX  C3a(unit change) IDENTICAL    C3b(prices only, $4.36 fixed) CHANGED
+    [65s]
+
+======================================================================================================================
+=== THE FIVE PREDECLARED STRUCTURAL CRITERIA (thresholds fixed at spec time, 2a94aea)
+======================================================================================================================
+criterion                         threshold (non-invariant if)            DOLLAR      PRICEBOX      SIGMABOX
+----------------------------------------------------------------------------------------------------------------------
+C1 trigger-rate range across yearsrange >= 0.20                            0.804         0.657         0.180
+   (SD across years)                                                       0.262         0.180         0.049
+C2 state conditionality McF R2    R2 >= 0.02 AND p < 0.01                 0.3720        0.1192        0.0024
+   (joint LR p, 2 df)                                                  5.02e-259     4.25e-107       0.00691
+C3a scale invariance (unit chg)   FAIL at either lambda                     FAIL          PASS          PASS
+   C3b prices only, $4.36 fixed   (diagnostic, not a gate)                  FAIL          FAIL          FAIL
+C4 price-level sens (p90-p10)     |delta| >= 0.15                          0.587         0.334        -0.052
+C5 realized-vol sens (p90-p10)    |delta| >= 0.15                          0.614         0.441        -0.065
+----------------------------------------------------------------------------------------------------------------------
+  pooled latch rate               (level, not a criterion)                 0.212         0.380         0.634
+  D1 SD(log box/session range)    (diagnostic)                             1.010         0.625         0.428
+  D1 median box / session range   (diagnostic)                             0.935         0.346         0.184
+
+--- C1 detail: latch rate by calendar year (years with >= 40 active sessions) ----------
+year        n      medP   medSig      DOLLAR    PRICEBOX    SIGMABOX   ntr/DOL   ntr/PRI   ntr/SIG
+2006      115     5,236       19       0.000       0.078       0.739      2.48      2.47      2.00
+2007      130     5,403       28       0.000       0.200       0.685      2.88      2.71      2.14
+2008      164     5,199       48       0.043       0.421       0.604      4.35      3.58      3.23
+2009      151     4,825       34       0.013       0.278       0.636      4.48      4.20      3.29
+2010      142     5,274       34       0.021       0.282       0.669      3.16      2.90      2.15
+2011      164     5,693       46       0.030       0.305       0.652      4.54      4.27      3.53
+2012      150     6,064       38       0.013       0.227       0.613      3.73      3.63      2.66
+2013      155     6,437       34       0.013       0.206       0.723      3.32      3.26      2.57
+2014      147     7,341       45       0.020       0.231       0.673      3.50      3.28      2.60
+2015      164     7,918       62       0.073       0.293       0.579      4.26      4.00      3.22
+2016      158     8,050       60       0.076       0.323       0.563      4.20      3.84      3.07
+2017      156     9,310       56       0.038       0.199       0.628      4.51      4.33      3.35
+2018      169    10,454      108       0.219       0.450       0.663      4.25      3.80      3.27
+2019      166    11,026      115       0.199       0.392       0.596      4.37      3.89      3.24
+2020      158    13,286      253       0.494       0.646       0.614      4.41      3.79      3.91
+2021      169    18,064      208       0.444       0.503       0.651      3.87      3.70      3.30
+2022       71    14,988      326       0.507       0.606       0.563      3.08      2.83      2.97
+2023      158    17,496      241       0.500       0.576       0.639      3.68      3.49      3.27
+2024      164    20,992      281       0.530       0.524       0.616      3.83      3.90      3.49
+2025      143    23,212      401       0.664       0.601       0.559      3.20      3.48      3.71
+2026      102    27,107      502       0.804       0.735       0.657      2.40      2.89      3.02
+
+--- D2: are PRICEBOX and SIGMABOX the same object? --------------------------------------
+    corr(log P_s, log sigma_s) = 0.9069     CV(sigma_s / P_s) = 0.6053
+    spec's same-object test: corr >= 0.98 AND CV <= 0.10  ->  DISTINCT OBJECTS
+
+======================================================================================================================
+=== ROBUSTNESS 1: sigma N=60 (declared in the spec; the verdict must hold at BOTH)
+======================================================================================================================
+    [N60] MODERN arms built  [66s]
+    [N60] DEEP arms built  [68s]
+criterion                                                                 DOLLAR      PRICEBOX      SIGMABOX
+C1 range                                                                  0.8039        0.6570        0.2068
+C2 McF R2                                                                 0.3720        0.1192        0.0021
+C4 delta                                                                  0.5868        0.3336       -0.0518
+C5 delta                                                                  0.6144        0.4409       -0.0288
+
+======================================================================================================================
+=== ROBUSTNESS 2: rate-matched calibration - c_p, c_v bisected so each arm's MODERN latch
+===  rate equals DOLLAR's to within 0.005. Targets a TRIGGER RATE, never a P&L quantity.
+======================================================================================================================
+    target MODERN latch rate (DOLLAR) = 0.5940
+    PRICEBOX c_p 0.00309676 -> 0.00309676  (x1.000)  modern latch rate 0.5972
+    SIGMABOX c_v 0.185520 -> 0.197976  (x1.067)  modern latch rate 0.5909
+    [ratematch] MODERN arms built  [70s]
+    [ratematch] DEEP arms built  [72s]
+
+criterion                                                                 DOLLAR      PRICEBOX      SIGMABOX
+pooled latch rate                                                         0.2119        0.3795        0.6124
+C1 range                                                                  0.8039        0.6570        0.2039
+C2 McF R2                                                                 0.3720        0.1192        0.0027
+C4 delta                                                                  0.5868        0.3336       -0.0595
+C5 delta                                                                  0.6144        0.4409       -0.0720
+
+--- rate-matched: latch rate by calendar year -------------------------------------------
+year        n      DOLLAR    PRICEBOX    SIGMABOX
+2006      115       0.000       0.078       0.739
+2007      130       0.000       0.200       0.662
+2008      164       0.043       0.421       0.585
+2009      151       0.013       0.278       0.623
+2010      142       0.021       0.282       0.655
+2011      164       0.030       0.305       0.646
+2012      150       0.013       0.227       0.613
+2013      155       0.013       0.206       0.677
+2014      147       0.020       0.231       0.646
+2015      164       0.073       0.293       0.549
+2016      158       0.076       0.323       0.538
+2017      156       0.038       0.199       0.609
+2018      169       0.219       0.450       0.627
+2019      166       0.199       0.392       0.560
+2020      158       0.494       0.646       0.601
+2021      169       0.444       0.503       0.609
+2022       71       0.507       0.606       0.535
+2023      158       0.500       0.576       0.620
+2024      164       0.530       0.524       0.585
+2025      143       0.664       0.601       0.552
+2026      102       0.804       0.735       0.647
+
+======================================================================================================================
+=== GATE TABLE - every clause coded, printed by the program, assembled by nobody
+======================================================================================================================
+arm               C1      C2      C3      C4      C5   breaches
+DOLLAR           YES     YES     YES     YES     YES          5
+PRICEBOX         YES     YES      no     YES     YES          4
+SIGMABOX          no      no      no      no      no          0
+
+    GATE A  'fixed dollars structurally non-invariant' : DOLLAR breaches 5 of 5, needs >= 3  ->  PASS
+    GATE B [PRICEBOX]  (i) breaches none False  (ii) beats SIGMABOX on >=4 False (0/5)  (iii) beats DOLLAR on >=4 True (5/5)
+                  (iv) rate-matched holds False  (v) N=60 holds False  (vi) not the same object True   ->  FAIL
+    GATE B [SIGMABOX]  (i) breaches none True  (ii) beats PRICEBOX on >=4 True (4/5)  (iii) beats DOLLAR on >=4 True (5/5)
+                  (iv) rate-matched holds False  (v) N=60 holds False  (vi) not the same object True   ->  FAIL
+
+    GATE B  'exactly one normalisation clearly superior' -> FAIL
+
+======================================================================================================================
+=== VERDICT: GATE A PASS, GATE B FAIL. The fixed-dollar box IS structurally
+===          non-invariant, but NO economically natural normalisation is clearly
+===          superior on the predeclared structural criteria.
+===          NOTHING IS FROZEN. NO ECONOMICS ARE RUN. Stage 2 is not reachable.
+======================================================================================================================
+
+    STAGE 2 IS NOT REACHED. No P&L was computed anywhere in this program.
+[done 72s]
