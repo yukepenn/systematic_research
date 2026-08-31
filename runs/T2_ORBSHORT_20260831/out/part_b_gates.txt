@@ -1,0 +1,44 @@
+eligible sessions (full RTH block present): 1137 of 1184
+
+========================================================================================================
+PART B — GATE B1 (ACTIVATION), printed BEFORE any P&L, exactly as the spec requires
+========================================================================================================
+ARM                                  fires  spec 40..500  VERDICT
+S1 SHORT_VWAP_RECLAIM_FAILURE          772       40..500  FAIL
+S2 SHORT_WEAK_OPEN_CONTINUATION         53       40..500  PASS
+  (S2 defective-clause count, disclosed: 0 sessions — the repair is load-bearing and is declared in this file's docstring)
+  (S1 sessions that ever reached the below-VWAP state in-window: 772)
+
+========================================================================================================
+ARM S1  —  SHORT_VWAP_RECLAIM_FAILURE
+========================================================================================================
+  B2 ECONOMICS: n=772  net $-160,969  $/trade $-209  win 46.0%  wk $-674  t -1.80  maxDD $190,133
+     -> B2 FAIL (spec: net > 0 after $18.80/ctrRT)
+  B3 RATE-MATCHED RANDOM-SHORT PLACEBO (1,000 draws, same n, same entry-slot distribution):
+     null mean $-72  p95 $51  REAL $-209  percentile 3.8   -> B3 FAIL
+  B4 STATE VALIDITY: mean RTH open->close $ move, in-state $-375 vs matched unconditional $40  -> B4 PASS
+  B5 TIMING TEETH (+30 min entry delay): net $-165,069 vs $-160,969  degradation 2.5%  -> B5 FAIL (spec >= 25%)
+  B6 CONCENTRATION (classification, never a kill gate): top-10% = 77 trades = -259.5% of net   [incumbent P1 fails this bar at 236.8%]
+  B7 TAIL AUDIT: top1% -55.7%  top5% -168.2%  ex-top-1 $-179,485  ex-top-5 $-224,275  median $-161
+     per-year: 2022: n=173 $2,538  2023: n=180 $-51,224  2024: n=165 $-28,737  2025: n=157 $-56,192  2026: n=97 $-27,354
+     LOYO net: excl2022: $-163,506  excl2023: $-109,745  excl2024: $-132,232  excl2025: $-104,777  excl2026: $-133,615
+  VERDICT S1: FAILED
+
+========================================================================================================
+ARM S2  —  SHORT_WEAK_OPEN_CONTINUATION
+========================================================================================================
+  B2 ECONOMICS: n=53  net $6,109  $/trade $115  win 49.1%  wk $26  t 0.23  maxDD $20,934
+     -> B2 PASS (spec: net > 0 after $18.80/ctrRT)
+  B3 RATE-MATCHED RANDOM-SHORT PLACEBO (1,000 draws, same n, same entry-slot distribution):
+     null mean $-56  p95 $775  REAL $115  percentile 63.8   -> B3 FAIL
+  B4 STATE VALIDITY: mean RTH open->close $ move, in-state $-2,206 vs matched unconditional $40  -> B4 PASS
+  B5 TIMING TEETH (+30 min entry delay): net $9,144 vs $6,109  degradation -49.7%  -> B5 FAIL (spec >= 25%)
+  B6 CONCENTRATION (classification, never a kill gate): top-10% = 5 trades = 566.5% of net   [incumbent P1 fails this bar at 236.8%]
+  B7 TAIL AUDIT: top1% 138.9%  top5% 365.9%  ex-top-1 $-2,378  ex-top-5 $-28,497  median $-14
+     per-year: 2022: n=10 $14,182  2023: n=12 $-11,926  2024: n=12 $9,694  2025: n=13 $-8,149  2026: n=6 $2,307
+     LOYO net: excl2022: $-8,073  excl2023: $18,034  excl2024: $-3,586  excl2025: $14,258  excl2026: $3,801
+  VERDICT S2: FAILED
+
+WEEKLY CORRELATION WITH THE INCUMBENT
+  S1: P1 -0.220  XM -0.009  M11 -0.161
+  S2: P1 -0.039  XM +0.187  M11 +0.092

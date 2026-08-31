@@ -1,0 +1,98 @@
+============================================================================================================
+PART A2 — ORB (B3, 30-min OR) DECOMPOSITION.  Population 2022-01-03..2026-07-31, 1,133 trades, 239 wks
+============================================================================================================
+
+1. DIRECTION SYMMETRY — the leg decomposition the scoreboard never printed
+leg            n   gross pts        net $   $/trade    win%   wk mean    wk t
+LONG         591     8,212.8      153,144       259    59.4       641    2.04
+SHORT        542     5,312.8       96,065       177    48.9       402    1.19
+BOTH        1133    13,525.5      249,210       220    54.4     1,043    2.19
+
+2. CONTROLS AT THE SAME ENTRY BARS  (the drift control B3 never had; ORB01 FAILED its version)
+ORB (real)               n= 1133  net $   249,210  $/tr     220  wk $  1,043  t  2.19  maxDD $   60,782
+C1 long @ same bars      n= 1133  net $    22,730  $/tr      20  wk $     95  t  0.21  maxDD $   61,118
+C2 flip @ same bars      n= 1133  net $  -291,810  $/tr    -258  wk $ -1,221  t -2.57  maxDD $  398,489
+C3 long 10:01 all sess   n= 1137  net $    32,279  $/tr      28  wk $    135  t  0.28  maxDD $   70,443
+  --> ORB minus C1 (does DIRECTION SELECTION add anything?) = $226,480 over 1,133 bars
+
+3. ERA STABILITY
+year        n   nL   nS       net $      long $     short $
+2022      249  122  127      72,079      15,471      56,607
+2023      245  134  111      31,644      38,541      -6,897
+2024      249  130  119      63,789      31,791      31,998
+2025      247  130  117      60,171      41,486      18,685
+2026      143   75   68      21,527      25,855      -4,328
+
+excl year         net $   wk mean    wk t  n_wk
+2022            177,131       947    1.85   187
+2023            217,566     1,163    2.01   187
+2024            185,421       992    1.74   187
+2025            189,038     1,006    1.94   188
+2026            227,683     1,089    2.29   209
+
+4. TAIL AUDIT (mandatory for every impressive result)
+  top 1%    =   11 trades = $   145,178 =    58.3% of net
+  top 5%    =   57 trades = $   456,893 =   183.3% of net
+  top 10%   =  113 trades = $   708,186 =   284.2% of net
+  net ex-top-1  = $   214,693
+  net ex-top-5  = $   160,479
+  median trade  = $       266   win rate 54.4%
+  top 10 WEEKS  = $   168,206 = 67.5% of net
+
+5. STATIONARY BLOCK BOOTSTRAP on the weekly net series (10,000 reps, mean block 4 wks)
+  weekly mean $1,043   bootstrap 95% CI [$18, $2,005]   P(mean<=0) = 0.0227
+
+6. ENTRY-TIME PROFILE
+  entry hm p25/median/p75 = 1001 / 1004 / 1018
+  hour       n       net $     $/tr
+  10      1068     253,072      237
+  11        42        -805      -19
+  12        10         192       19
+  13         6      -2,848     -475
+  14         4       1,970      492
+  15         3      -2,371     -790
+
+============================================================================================================
+7. OVERLAP WITH THE INCUMBENT M_11  (P1/PCT + XM_CONFLICT, NT8 certified trade files)
+============================================================================================================
+  in-window trades: P1 2400 of 2439 (Aug dropped)   XM 373 of 378
+  P1 entry-hour histogram: 0h:31, 1h:68, 2h:98, 3h:153, 4h:155, 5h:93, 6h:86, 7h:115, 8h:174, 9h:383, 10h:218, 11h:109, 12h:58, 13h:51, 14h:49, 15h:48, 16h:19, 18h:142, 19h:78, 20h:113, 21h:65, 22h:56, 23h:38
+  XM entry-hour histogram: 9h:373
+
+  in-window nets: P1 $342,923  XM $173,399  M_11 $516,321  ORB $249,210
+  P1     wk $  1,435  t  4.56  maxDD $   23,128  %pos  56.9  worst $   -8,461
+  XM     wk $    726  t  2.56  maxDD $   32,383  %pos  46.9  worst $  -14,502
+  M_11   wk $  2,160  t  4.85  maxDD $   45,086  %pos  60.7  worst $  -13,780
+  ORB    wk $  1,043  t  2.19  maxDD $   60,782  %pos  60.3  worst $  -36,829
+
+  CORRELATIONS (weekly, common ISO grid, n=239)
+  pearson:
+       ORB     P1     XM    M11
+ORB  1.000  0.026  0.067  0.061
+P1   0.026  1.000  0.110  0.776
+XM   0.067  0.110  1.000  0.713
+M11  0.061  0.776  0.713  1.000
+  spearman:
+       ORB     P1     XM    M11
+ORB  1.000  0.026  0.051  0.073
+P1   0.026  1.000  0.103  0.721
+XM   0.051  0.103  1.000  0.693
+M11  0.073  0.721  0.693  1.000
+  session-level pearson ORB~P1 0.185   ORB~XM 0.090
+
+8. ORB ACTIVITY AND ECONOMICS ON P1-FLAT SESSIONS  (with the matched unconditional control)
+  sessions: total 1184  P1-ACTIVE 714 (60.3%)  P1-FLAT 470 (39.7%)
+  P1-FLAT         ORB trades   435 ( 92.6% of the group)   net $    62,717   $/trade     144   long  191 / short  244
+  P1-ACTIVE       ORB trades   698 ( 97.8% of the group)   net $   186,493   $/trade     267   long  400 / short  298
+  ALL (control)   ORB trades  1133 ( 95.7% of the group)   net $   249,210   $/trade     220   long  591 / short  542
+  contrast FLAT-minus-ACTIVE $/trade = $-123  Welch t = -0.58
+
+9. SAME-DIRECTION CONCENTRATION (P1 is long-only; how much of ORB is long alongside it?)
+  ORB entries on P1-ACTIVE sessions: 698   of which LONG 400 (57.3%)
+  ORB LONG net on P1-ACTIVE sessions $183,990; ORB SHORT net there $2,503
+
+10. MARGINAL VALUE OF ORB TO M_11 AT COMMON TOTAL BOOK RISK (weekly maxDD-matched)
+  M_11 alone:  wk $2,160  maxDD $45,086  $/wk per $1 of maxDD = 0.04792
+  M_11 + 0.25xORB: wk $  2,421  maxDD $   39,942  t  5.17  ->  rescaled to M_11 maxDD: $  2,733/wk  (delta +572)
+  M_11 + 0.50xORB: wk $  2,682  maxDD $   48,763  t  5.18  ->  rescaled to M_11 maxDD: $  2,479/wk  (delta +319)
+  M_11 + 1.00xORB: wk $  3,203  maxDD $   69,885  t  4.78  ->  rescaled to M_11 maxDD: $  2,066/wk  (delta -94)
