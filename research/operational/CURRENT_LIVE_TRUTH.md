@@ -1,12 +1,23 @@
-# CURRENT_LIVE_TRUTH — 2026-09-01 00:45 ET
+# CURRENT_LIVE_TRUTH — 2026-09-01 05:10 ET
 
 ## 🔴 THE STATUS CHANGED: THE BOOK IS NOW ON REAL MONEY.
 
 **Owner enabled the MNQ book on live account `2047681` on 2026-09-01.**
 `LIVE = YES.` Account flat, **$10,206.86**, zero trades so far, zero commission paid.
+Re-verified 05:04 ET from `ListAllStrategies` / `ListOrders` / `ListExecutions` — all three
+independently report no order and no fill has ever been placed on this account.
 
 This file is the **authoritative live-state document**. Verified from the machine, not asserted.
 Build record: `runs/MX01_MNQ_EXECUTION_PORT_20260831/`.
+
+> ## 🔴 OPEN OWNER ACTION — the live P1 leg's decision ledger is DEAD
+> `WeeklyEdgeP1PCTMnq_v1` / `399562885` is **trading correctly** but has written **zero** rows
+> since **2026-09-01 00:41 ET**. Its export handle was lost to a startup collision and nulled by
+> the silent catch at `:992`, which has **no retry path**. Every health check still reports green.
+> Trading, sizing and guards are unaffected — this is an evidence defect.
+> **Full forensics, measured cost and the exact restart procedure:
+> [`OWNER_ACTION_20260901_P1_LEDGER_DEAD.md`](OWNER_ACTION_20260901_P1_LEDGER_DEAD.md).**
+> Detect it any time with `python -m research_sdk.writer_watchdog` (read-only; exit 1 = alarm).
 
 ---
 
@@ -24,8 +35,18 @@ Build record: `runs/MX01_MNQ_EXECUTION_PORT_20260831/`.
 demo — see `G3_FEEDSEM_01`). **The live book's fills are the first real execution evidence this
 campaign has ever had.**
 
-The two paper MNQ validation legs (`399562883` / `399562884`) were removed on 2026-09-01 after they
-had served their purpose. Removing them is also what cleared the export-handle collision.
+The two extra MNQ legs (`399562883` / `399562884`) were removed on 2026-09-01 after they had served
+their purpose.
+
+> 🔴 **CORRECTION 2026-09-01 05:10 — this section previously read "Removing them is also what
+> cleared the export-handle collision." That is BACKWARDS, and it was load-bearing.**
+> The NT8 log shows `399562883` was enabled at `00:30:58` and **won** the P1 file handle;
+> `399562885` — the surviving live leg — was enabled 3 s later at `00:31:01` and **silently failed
+> to open it**. Disabling `399562883` at `00:40:56` therefore removed the *only* P1 writer rather
+> than clearing anything. **XM recovered only by accident**: `399562886` was disabled at `00:40:57`
+> and *re-enabled* at `00:41:32` while fixing an unrelated `DaysToLoad = 5` misconfiguration, and
+> that restart re-opened its handle. **P1 got no such restart and is still mute.**
+> The original claim generalised one observed recovery (XM) to both legs without checking P1.
 
 ## THE LIVE OBJECT — verified from its own warm-up certificate
 
@@ -76,18 +97,51 @@ live account with real money.**
 `DiagDir` is set, so `EXEC` / `ORDER` / `FILLPX` / `POS` / `MXEXEC` rows will land in
 `C:\NT8_ForwardLogs\mnq\diag\` on the first realtime event.
 
-## 🔴 ROLL — red zone `2026-09-06 → 2026-09-18`
+## 🔴 ROLL — **this section is the single roll authority.** Every other doc points here.
 
-The certificate reports `roll_block_from = never`, which is **expected at that instant, not a
-defect**: `ResolveRollDates` runs from `HdRealtimeBarHook` on the first realtime *bar*, which is
-after the certificate is written. The real ROLL-PLAN line appears in the NT8 log. **Confirm it on
-the next session.**
+✅ **The `ROLL-PLAN` line is CONFIRMED from the machine** (`log.20260901.00000.txt`, `00:31:00.664`
+and again `00:32:05.580`). The certificate's `roll_block_from = never` was indeed a write-time
+artifact, not a defect — `ResolveRollDates` runs on the first realtime *bar*, after the certificate.
+**That open item is closed.**
 
-> **Do not re-enable either leg inside 2026-09-06 → 2026-09-18** — the fail-safe latches and blocks
-> new entries *permanently* while every health check still reports green.
-> Safe re-enable: **P1 ≥ 2026-09-17, XM ≥ 2026-09-19**, on `NQ 12-26` **and** `MNQ 12-26`, all
-> series moved together, `ExpectInstrument = "NQ 12-26"`, `ExpectMnq = "MNQ 12-26"`.
+```
+[P1] ROLL-PLAN blockNewEntriesFrom=2026-09-08 leadDays=8 earliestStoredRollover=2026-09-16
+                                            [s0=NQU6:2026-09-16 s1=MNQU6:2026-09-18]
+[XM] ROLL-PLAN blockNewEntriesFrom=2026-09-06 leadDays=8 earliestStoredRollover=2026-09-14
+       [s0=NQU6:2026-09-16 s1=ESU6:2026-09-14 s2=RTYU6:2026-09-15 s3=YMU6:2026-09-18 s4=MNQU6:2026-09-18]
+```
+
+The guard (`ResolveRollDates` `:504-533`, `RollBlocked` `:536-541`) takes the **MINIMUM** of
+`MasterInstrument.GetNextRolloverDate(now)` **over every loaded series**, subtracts
+`RollLeadDays = 8`, and **resolves once at strategy start — it is never recomputed.** It refuses
+**new entries only**; exits are never gated.
+
+| | date | why |
+|---|---|---|
+| XM blocks new entries from | **2026-09-06** | min series rollover = `ES 09-14`, −8 |
+| P1 blocks new entries from | **2026-09-08** | min series rollover = `NQ 09-16`, −8 |
+| **both legs safe again** | **≥ 2026-09-19**, practically **Mon 2026-09-21** | last series rollover is `MNQ`/`YM` `09-18` |
+
+> 🔴 **CORRECTION 2026-09-01 — "P1 ≥ 2026-09-17" was WRONG and is withdrawn.**
+> It was correct for the *single-series* certified P1. **MX01 added the MNQ execution series, whose
+> stored rollover is `2026-09-18` — two days after NQ's — and nobody re-derived the date.**
+> Restarting P1 on 09-17: `GetNextRolloverDate(09-17)` → NQ = December (09-16 passed), **MNQ = 09-18
+> (not passed)** → `earliest = 09-18` → `rollBlockFrom = 09-10` → `09-17 >= 09-10` → **blocked on
+> arrival, permanently, with every health check green.**
+>
+> **Do not re-enable either leg inside `2026-09-06 → 2026-09-18`.**
+> **Redeploy both legs on or after Monday `2026-09-21`**, onto `NQ 12-26`, `MNQ 12-26`, `ES 12-26`,
+> `RTY 12-26`, `YM 12-26` — **all five series moved together** — and **re-enter
+> `ExpectInstrument = "NQ 12-26"` and `ExpectMnq = "MNQ 12-26"`**, plus `ExportDir`, `DiagDir` and
+> `WarmupCertDir`: all of them revert to `""` on a fresh deploy, and an empty `ExpectInstrument` /
+> `ExpectMnq` means the identity guard is **DISABLED**, not lenient.
+> `2026-09-19` is a Saturday and the September contracts expire `2026-09-18`, so this is a
+> **redeploy onto December**, never a re-enable on September.
 > `MxInstrumentGuard` hard-halts if the decision and execution contracts ever differ in month.
+
+**The blackout is the largest single execution cost in the book (~$437/wk full-size).** Trading it
+rather than sitting it out is a design problem, not an operational one — see `GENESIS_III_VERDICT.md`
+and the successor-roll work; it must never be a hot fix to a running class.
 
 ## CAPITAL — the priced risk, recorded
 
@@ -112,8 +166,21 @@ so all-in ≈ **1.35×**, roughly **$35/wk** at 3 MNQ.
 
 - **Never restart a leg while it holds a position** — every stop in this book is synthetic and dies
   with the strategy.
-- To stop: **`StopStrategy(deployment_id)`**, not `DisableStrategy(strategyId)` — the latter returns
-  `strategy_not_found` on a strategy simultaneously reported as `Realtime`. Different id spaces.
+- ⚠️ **There is no `deployment_id` for either live leg.** This section previously said *"To stop:
+  `StopStrategy(deployment_id)`, not `DisableStrategy(strategyId)`."* But
+  `ListDeployedStrategies(account="2047681")` returns `total: 4, deployments: []` — the MCP
+  deployment registry holds **no entry** for either leg, because both were enabled through the NT8
+  UI rather than via `DeployStrategy`. **There is no id to pass. The NT8 Control Center is the only
+  route**, and starting/stopping is an owner action regardless.
+- ⚠️ **Four rows, two strategies.** `ListAllStrategies` returns the two live `Realtime` instances
+  **plus two stale `Finalized` shells** carrying the same ids with **empty parameters**
+  (`ExportDir ""`, `ExpectInstrument ""`, `ExpectMnq ""`, `DiagDir ""`, `WarmupCertDir ""`).
+  🔴 **Enabling a shell would trade real money with both identity guards DISABLED, no ledger, no
+  diagnostics and no warm-up certificate.** Always enable the row whose parameters are populated.
+- ⚠️ **A green health check does not mean the evidence writer is alive.** Run
+  `python -m research_sdk.writer_watchdog` (read-only, exit 1 = alarm). It checks the **last data
+  row inside each file** — never file length or `LastWriteTime`, both of which lie
+  (`WeeklyEdgeP1PCTMnq_v1.cs:1010-1021`).
 - **Never hot-edit a production object.** Every alternative is a new named challenger.
 - ⚠️ **`ListStrategies(account)` can return an incomplete set** — on 2026-09-01 it returned 2 of 4
   rows and the 2 it returned were stale empty shells, which produced a wrong audit. **Use
