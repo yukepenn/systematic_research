@@ -26,7 +26,7 @@ _Landing page. Current as of **2026-09-01**. It links; it does not duplicate._
 **That is the entire default read set.** **Do not recursively read `runs/` or `research/archive/`
 "to understand the repo"** — there are 464 run directories and doing so is explicitly forbidden.
 
-Most recent synthesis: **[`STATE_20260901.md`](research/operational/STATE_20260901.md)**.
+Most recent synthesis: **[`CLEANSET_20260901.md`](research/operational/CLEANSET_20260901.md)** — the 2026-09-01 clean-set closeout: what was found, what was fixed, what is still open, and the three owner actions. Prior: [`STATE_20260901.md`](research/operational/STATE_20260901.md).
 
 ## What this is
 
