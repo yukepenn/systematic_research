@@ -1,0 +1,319 @@
+
+============================================================================================================
+G3_SHORTALPHA_20260831 / asymmetric-cost -- DOES THE SHORT SIDE PAY MORE?
+============================================================================================================
+spec: runs/G3_SHORTALPHA_20260831/src/asymmetric-cost/spec.yaml (written before results)
+cost identity used throughout: cost_per_ctrRT_$ = 2.5 x (spread_tk_entry + spread_tk_exit)   [G2_EXEC01's own arithmetic]
+COST FLOOR STATEMENT (binding): $4.36/ctrRT is the COMMISSION FLOOR and is never a headline.
+   PRIMARY measured all-in-spread cost is $20.65/ctrRT (G2_EXEC01, 113 real round turns,
+   contract-weighted; median $20.00, p90 $35.00). $25.01/ctrRT is the all-in (spread + commission).
+
+============================================================================================================
+PHASE 0 -- SUBSTRATE, SEAL, AND THE TWO MIRROR ARMS (harness gates H1-H3)
+============================================================================================================
+substrate: 1,558,497 bars, 1,141 sessions, last bar 2026-05-29 16:59:00
+SEAL ASSERTION: assert_presealed(substrate) PASSED -- max timestamp 2026-05-29 16:59:00 < 2026-08-01. No sealed value read.
+window A=2022-07-01 B=2026-08-01 -> 1012 in-window sessions (2022-07-04 .. 2026-05-29)
+ERABREAK01 note: this window is MODERN by construction (>= 2022-07). No PRE/MODERN pool is formed anywhere in this run. Per-year strata are printed in PHASE 5.
+
+HARNESS GATESPEC                                                      OBSERVED                  PASS/FAIL
+H1        instrumented streams == originals on (d,u,et,xt,pnl)      True                      PASS
+H2        LONG arm == W73 L_sym 14.86 pts/session (+/-0.30)         14.86                     PASS
+H3        SHORT arm == W73 S_sym 6.00 pts/session (+/-0.30)         6.00                      PASS
+
+LONG  arm: 1,942 trades, 2,300 contract RTs, net $300,817 (commission-only)
+SHORT arm: 2,225 trades, 2,225 contract RTs, net $121,454 (commission-only)
+SEAL ASSERTION: assert_presealed on both arms' fill instants PASSED (3,884 long legs, 4,450 short legs).
+overnight-hold check (entry session != exit session): LONG 0, SHORT 0 -> both arms are intra-session; NO overnight financing differential exists for either.
+
+============================================================================================================
+PHASE 1 -- THE SPREAD SURFACE, FITTED ONLY ON MINUTE SAMPLES (never on fills)
+============================================================================================================
+minute samples: 132,945 causal (hour, trailing-vol, spread) triples from 101 quote sessions, 20250814..20260731
+SEAL ASSERTION: assert_presealed(minute samples) PASSED.
+PROVENANCE: these are G2_EXEC01's own published samples, taken at BAR-OPEN instants with a
+   5s freshness cap and ask>=bid. They come from bid/ask events only. No last price.
+
+vol decile edges (trailing 60-min sd of 1-min logret): 0.000112 0.000152 0.000185 0.000217 0.000250 0.000290 0.000338 0.000408 0.000539
+surface: 221 (hour x vol-decile) cells with n>=30; fallback hour-level (23 hours: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23]); global fallback mean 4.119 / median 4.000 tk
+in-sample surface fit on its own samples: mean predicted 4.119 tk vs actual 4.119 tk
+
+H4 detail: reconstructed 4,128 of 4,262 EXEC01 P1_PCT legs (4,958 contract-legs vs its published 5,112); 134 legs dropped (this run's substrate ends 2026-05-29, EXEC01's extended to 2026-07-31)
+HARNESS GATESPEC                                                      OBSERVED                  PASS/FAIL
+H4        reproduce EXEC01 P1 state-map projection 3.496 tk +/-0.10 3.4615                    PASS
+H4b       max |cell contract-share - EXEC01 published| < 0.010      0.0042                    PASS
+   -> the leg -> (hour, trailing-vol) -> spread pipeline used below is EXEC01's own, verified
+      cell-by-cell against its published map. The finer hour x vol-DECILE surface is used from
+      here on because cost is paid at the MEAN, not the median; both statistics are reported.
+cell-fallback usage: LONG 12/3,884 legs, SHORT 5/4,450 legs fell back to an hour-level value
+
+============================================================================================================
+PHASE 2 -- E2: PROJECTED SPREAD AT EVERY FILL, FULL WINDOW (n = all legs)
+============================================================================================================
+arm         legs  ctr-wtd tk  entry tk   exit tk  cost/ctrRT $  median tk   p90 tk
+LONG       3,884      3.6761    3.7433    3.6089         18.38      3.478    5.290
+SHORT      4,450      3.9051    3.9224    3.8879         19.53      3.556    5.671
+
+DELTA (SHORT - LONG): +0.2291 ticks per leg   -> +1.15 $/ctrRT
+ROBUSTNESS, same surface but cell MEDIAN (EXEC01's own statistic): LONG 3.5041 tk, SHORT 3.6975 tk, delta +0.1934 tk = +0.97 $/ctrRT
+N1 session block bootstrap (2000 draws, whole sessions resampled): delta = +0.2291 tk  95% CI [+0.1170, +0.3390]
+   in dollars per ctrRT: +1.15  95% CI [+0.58, +1.70]   (2 legs x $2.50/tk)
+N4 dependence: rho_bar (within-session ICC of projected spread) = 0.5157 over K=937 sessions -> K_eff = 1.9
+   (session-level t is DIAGNOSTIC ONLY in this repo; the bootstrap above is the test.)
+
+N2 HOUR-MATCHED CONTROL -- reweight LONG legs to the SHORT legs' hour histogram.
+   LONG projected spread, RAW              : 3.6761 tk
+   LONG projected spread, HOUR-MATCHED to SHORT: 3.6909 tk
+   SHORT projected spread                  : 3.9051 tk
+   -> delta attributable to HOUR-OF-DAY        : +0.0148 tk
+   -> delta remaining WITHIN-HOUR (vol state)  : +0.2142 tk
+
+N3 LABEL-SHUFFLE (state-blind) NULL, 2000 draws: 95% band [-0.0501, +0.0536] tk; observed +0.2291 -> OUTSIDE the null band
+   NOTE this null destroys within-session clustering, so it is the WEAKER of the two and
+   N1 (session block) is the binding one.
+
+============================================================================================================
+PHASE 3 -- E1: DIRECT SPREAD AT THE ACTUAL FILL INSTANT (raw BBO events; bid/ask only)
+============================================================================================================
+grid1s is NOT read. Its `last` column carries a recorded lookahead defect (AUCTION04/01_build_clean_substrate.py:17-21:
+   a bucket labelled T aggregates trades in [T, T+1)). This phase reads the RAW per-event store
+   those grids were built from and uses ONLY bip==1 (bid) and bip==2 (ask). No last-price column
+   is loaded, so the defect cannot enter this measurement.
+
+BLIND-POOL ENFORCEMENT (printed before the first esnq open):
+   allowlist entries 44 | esnq on disk 44 | OUTSIDE allowlist (BLIND) 0 -> NONE opened
+   esnq sessions this run will open: 37 (violations: 0)
+   quote inventory: 101 sessions (v2 58, esnq 37, v1 6)
+   sessions that carry a fill from either arm AND have quotes: 55
+   quote sessions opened and seal-checked: 55
+   legs with a fresh two-sided book at the fill instant: 429 of 448 (95.8%)
+
+arm         legs  trades w/ both  ctr-wtd tk  entry tk   exit tk  cost/ctrRT $  median tk
+LONG         184              92      3.5619    3.6000    3.5238         17.81      3.000
+SHORT        245             122      3.4367    3.6748    3.1967         17.18      3.000
+
+DELTA (SHORT - LONG): -0.1252 ticks per leg -> -0.63 $/ctrRT
+N1 session block bootstrap: delta = -0.1252 tk  95% CI [-0.6448, +0.4111] tk
+   in $/ctrRT: -0.63  95% CI [-3.22, +2.06]
+
+ANCHOR: EXEC01 measured $20.65/ctrRT on P1_PCT. This run's LONG arm (W73 L_sym, a different
+   but same-family object) measures $17.81/ctrRT on 184 legs by the same method. This run applies no inside-band filter
+   (EXEC01 dropped 56/334 legs as outside_band), which is why the level sits lower; the
+   PRIMARY $20.65 remains the repo figure and nothing here revises it.
+
+POWER OF E1: the 95% CI half-width is $2.68/ctrRT, so the direct sample
+   (429 legs, 54 sessions) could not have resolved anything smaller than that.
+   It DOES exclude a differential of $3.22/ctrRT or more at 95%.
+
+HONEST CONTRADICTION: in the direct sample the SHORT's EXIT spread (3.1967 tk) is
+   LOWER than its entry spread (3.6748 tk) -- the opposite of what the projection
+   predicts and of what the vol-spike-exit story requires. On 122 short exit legs this cannot
+   adjudicate the mechanism; it is recorded, not explained away.
+
+============================================================================================================
+PHASE 4 -- E3/E4: WHERE THE DIFFERENTIAL LIVES, AND THE VOL-SPIKE-EXIT CLAIM
+============================================================================================================
+The standing structural claim is: down-moves cluster with vol spikes, so a short is most in
+profit exactly when spreads are widest, and pays for it on the EXIT leg.
+
+leg            LONG tk  SHORT tk   delta tk  delta $/leg
+ENTRY           3.7433    3.9224     0.1791         0.45
+EXIT            3.6089    3.8879     0.2790         0.70
+G4 mechanism prediction (exit delta > entry delta): +0.2790 > +0.1791 -> PASS
+
+OUTCOME-CONDITIONED EXIT SPREAD (projected, full window):
+arm     outcome      trades   exit tk  entry tk   vol@entry   vol@exit  vol ratio
+LONG    WIN             735    3.4872    3.7187    0.000291   0.000297     1.0193
+LONG    LOSS          1,207    3.6856    3.7588    0.000287   0.000296     1.0291
+SHORT   WIN             827    3.8995    3.8768    0.000316   0.000343     1.0872
+SHORT   LOSS          1,398    3.8810    3.9493    0.000309   0.000319     1.0336
+
+G5 (short WINNERS' exit spread - long WINNERS' exit spread >= +0.25 tk): +0.4123 tk -> PASS
+
+VOL PATH (trailing 60-min sd of 1-min logret, all trades):
+arm        vol@entry   vol@exit    ratio   % exits vol>entry vol
+LONG        0.000289   0.000296   1.0253                   58.5%
+SHORT       0.000311   0.000328   1.0538                   64.8%
+
+VOL -> SPREAD ELASTICITY (minute samples only, RTH+ETH pooled):
+vol decile          n    mean vol  mean spread tk
+0              13,295    0.000088           2.851
+1              13,294    0.000133           3.338
+2              13,295    0.000169           3.631
+3              13,294    0.000201           4.095
+4              13,294    0.000233           4.310
+5              13,295    0.000269           4.417
+6              13,294    0.000313           4.667
+7              13,295    0.000369           4.667
+8              13,294    0.000462           4.615
+9              13,295    0.000746           4.600
+   top decile vs bottom decile: 4.600 vs 2.851 tk = +8.75 $/ctrRT of vol-state cost range
+
+============================================================================================================
+PHASE 5 -- PER-YEAR STRATA (MODERN window; no PRE-era pooling anywhere)
+============================================================================================================
+year      LONG legs   LONG tk  SHORT legs  SHORT tk  delta tk  delta $/ctrRT
+2022            414    4.3310         658    4.4775    0.1465           0.73
+2023          1,100    3.4212       1,302    3.5755    0.1543           0.77
+2024          1,190    3.3743       1,200    3.6769    0.3026           1.51
+2025            854    3.9149         926    3.9134   -0.0015          -0.01
+2026            326    4.2059         364    4.7811    0.5752           2.88
+PRE-2022 IS NOT MEASURABLE HERE: the repository holds NO NQ quote sample below NQ 23,036
+   (W82 defect 19a). A pre-2022 spread number is not manufactured in this run.
+
+ERA-TRANSFER CAVEAT ON THE E2 *LEVEL* (W82 defect 19a, applied to my own work):
+   the surface is fitted on 2025-08..2026-07 quotes (NQ 23,036-29,479) and applied to legs
+   back to 2022-07 (NQ ~11,000). A TICK-denominated spread does not transfer across that
+   price range, so the E2 LEVEL for 2022-2024 is NOT quotable. What is defensible is the
+   DIFFERENTIAL: both arms pass through the identical surface, so a common level error
+   cancels in (SHORT - LONG). The per-year deltas above show that differential is itself
+   unstable (-0.01 to +0.58 tk), which is the honest reading: it is small AND noisy.
+
+============================================================================================================
+PHASE 6 -- E5: THE STRUCTURAL (NON-EXECUTION) ASYMMETRY, PRICED
+============================================================================================================
+modern-window per-minute futures drift: +0.012114 pts/min  (naive-iid SE 0.005359, t = +2.26, 1,381,723 bars)
+   = +16.717 pts/session, +84,256 $/yr at 1 contract held always
+   THE NAIVE-IID t IS NOT THE TEST. 1.38M minutes inside 1,012 sessions are not 1.38M
+   independent observations. The dependence-preserving statement follows.
+   SESSION BLOCK BOOTSTRAP (2000 draws, whole sessions): mu = +0.012114 pts/min, 95% CI [+0.001482, +0.022487]
+   -> drift is DISTINGUISHABLE from zero once within-session dependence is preserved.
+   MOVING-BLOCK SENSITIVITY (blocks of L consecutive sessions, so day-to-day dependence is
+   preserved too -- the session bootstrap above assumes sessions are independent):
+   L (sessions)       mu pts/min                            95% CI   excludes 0?
+   1                    0.012114            [+0.001988, +0.022011]           YES
+   5                    0.012114            [+0.001841, +0.022088]           YES
+   21                   0.012114            [+0.002224, +0.023637]           YES
+   -> the CONSERVATIVE (L=21, monthly blocks) reading is used for the per-trade CI below:
+      drift is DISTINGUISHABLE from zero.
+   (Orchestrator's stated premise measured +0.008057 pts/min t=+1.48 on >=2022-05 to 2026-07.
+    This run's window is 2022-07-01..2026-05-29 because W73's substrate ends 2026-05-29; the
+    naive t differs, and the block-bootstrap statement above is the one to quote.)
+
+arm       trades  signed ctr-min  per trade     DRIFT $   $/trade     95% CI $/trade (block bs)
+LONG       1,942         212,087      109.2      51,385     26.46               [+4.86, +51.63]
+SHORT      2,225        -146,696      -65.9     -35,542    -15.97               [-31.17, -2.93]
+   READ: the drift term is the market moving under the position, per trade. It is not an
+   execution cost and no broker charges it; it is the direction the two arms disagree on.
+
+DRIFT BY YEAR, AND LEAVE-ONE-YEAR-OUT (is the whole thing one year?):
+year            bars     pts/min   pts/session  mu WITHOUT this year                L=21 CI without it  excl 0?
+2022         177,006   -0.001507         -2.08              0.014115            [+0.003394, +0.025442]      YES
+2023         352,834    0.015229         21.02              0.011046            [-0.000917, +0.025136]       NO
+2024         354,706    0.007173          9.90              0.013821            [+0.001301, +0.026466]      YES
+2025         352,273    0.008914         12.30              0.013209            [+0.002364, +0.025238]      YES
+2026         144,904    0.041043         56.64              0.008725            [-0.000752, +0.018175]       NO
+   READ: if dropping ONE year flips 'excludes 0' to NO, the modern drift rests on that year alone.
+   VERDICT ON THE DRIFT: it excludes zero on the FULL 2022-07..2026-05 window at every block
+   length, but the exclusion does NOT survive dropping 2023, and does NOT survive dropping the
+   partial 2026 stub. Two of five years carry it. The orchestrator's premise -- 'the drift is not
+   measurable on the modern window' -- is therefore NOT refuted here; it is FRAGILE IN BOTH
+   DIRECTIONS, and W73's -$23,078 short-side drift attribution stays unestablished. This run does
+   NOT claim the drift explains the short deficit; it claims only that the drift term is ~37x the
+   cost-asymmetry term, so cost asymmetry cannot be the explanation regardless of which way
+   the drift resolves.
+
+THE COMPARISON THAT MATTERS -- per trade, SHORT minus LONG:
+term                                          LONG $/trade  SHORT $/trade         gap
+spread cost at the PRIMARY $20.65/ctrRT             -24.46         -20.65        3.81
+measured per-ctrRT COST ASYMMETRY (E2, this run)          0.00          -1.15       -1.15
+drift / carry (market moving underneath)             26.46         -15.97      -42.43
+gross per trade (commission-only, measured)         154.90          54.59     -100.31
+
+   the COST-asymmetry gap is $1.15/trade. The DRIFT gap is $42.43/trade -- 37x larger.
+
+EVERY OTHER CANDIDATE STRUCTURAL ASYMMETRY, PRICED:
+item                                  long   short  differential   why
+stock-borrow / locate fee               $0      $0         $0.00   a FUTURE has no borrow leg at all
+dividend payable when short             $0      $0         $0.00   dividends live in the basis, symmetric
+hard-to-borrow / recall risk            $0      $0         $0.00   no share to recall
+initial + maintenance margin          same    same         $0.00   CME margins are side-symmetric
+uptick / short-sale restriction        n/a     n/a         $0.00   no SSR in futures
+overnight financing                     $0      $0         $0.00   both arms flat at session close (PHASE 0: 0 overnight holds)
+roll cost                             same    same         $0.00   the calendar spread is paid on both sides at the same size
+   The equity-short intuition (borrow cost, dividends, locate, SSR) transfers to an index
+   FUTURE as EXACTLY ZERO dollars. The only structural term that survives is the drift
+   above, and that drift is already the futures drift, net of carry.
+
+============================================================================================================
+PHASE 7 -- E6: COST BURDEN. THE SAME $/ctrRT IS NOT THE SAME COST.
+============================================================================================================
+arm    basis                                                            ctrRT    gross $     cost $      net $  cost/gross
+LONG   floor $4.36/ctrRT = COMMISSION FLOOR, never a headline           2,300    300,817     10,028    290,789        3.3%
+LONG   PRIMARY $20.65/ctrRT spread (G2_EXEC01, long-side)               2,300    300,817     47,495    253,322       15.8%
+LONG   all-in $25.01/ctrRT = $20.65 spread + $4.36 comm (comm already in gross)   2,300    300,817     47,495    253,322       15.8%
+LONG   this arm's own E1-measured spread $17.81/ctrRT                   2,300    300,817     40,962    259,855       13.6%
+SHORT  floor $4.36/ctrRT = COMMISSION FLOOR, never a headline           2,225    121,454      9,701    111,753        8.0%
+SHORT  PRIMARY $20.65/ctrRT spread (G2_EXEC01, long-side)               2,225    121,454     45,946     75,508       37.8%
+SHORT  all-in $25.01/ctrRT = $20.65 spread + $4.36 comm (comm already in gross)   2,225    121,454     45,946     75,508       37.8%
+SHORT  this arm's own E1-measured spread $17.18/ctrRT                   2,225    121,454     38,223     83,231       31.5%
+
+G8 burden ratio at the SAME $20.65/ctrRT: SHORT 37.8% / LONG 15.8% = 2.40x -> PASS
+   This is ARITHMETIC on established quantities (trade count x contracts / gross), not a
+   per-round-turn claim. It is scored separately and may not substitute for G1/G2.
+
+PER-TRADE ECONOMICS AT THE PRIMARY $20.65/ctrRT:
+arm       trades  ctr/trade  gross $/trade  spread $/trade  net $/trade  net pts/session
+LONG       1,942      1.184         154.90           24.46       130.44            12.52
+SHORT      2,225      1.000          54.59           20.65        33.94             3.73
+
+============================================================================================================
+GATE TABLE -- PREREGISTERED IN spec.yaml BEFORE RESULTS EXISTED
+============================================================================================================
+GATE    SPEC                                                      OBSERVED                      PASS/FAIL
+G1      |E1 direct delta| >= $1.00/ctrRT and N1 CI excludes 0     -0.63 CI[-3.22,+2.06]         FAIL
+G2      |E2 projected delta| >= $1.00/ctrRT and N1 CI excludes 0  +1.15 CI[+0.58,+1.70]         PASS
+G3      E1 and E2 agree in sign                                   E1 -0.1252 tk / E2 +0.2291 tk FAIL
+G4      exit-leg delta > entry-leg delta (mechanism)              exit +0.2790 vs entry +0.1791 PASS
+G5      short WIN exit spread - long WIN exit spread >= +0.25 tk  +0.4123 tk                    PASS
+G6      E2 delta outside N3 label-shuffle 95% band                +0.2291 vs [-0.0501,+0.0536]  PASS
+G7      delta cost/ctrRT >= $5.00 (MATERIAL: >= 9% of short gross)E2 +1.15 / E1 -0.63           FAIL
+G8      short cost/gross >= 1.5x long cost/gross at same $20.65   37.8% / 15.8% = 2.40x         PASS
+
+PREREGISTERED DECISION RULE APPLIED:
+   NO MATERIAL per-round-turn cost asymmetry is established. The E2 95% CI is
+   [+0.58, +1.70] $/ctrRT, so a differential larger than $1.70/ctrRT is EXCLUDED at 95%.
+   That CLOSES the 'shorts are secretly more expensive per round turn' explanation for the short deficit.
+
+============================================================================================================
+WHAT THIS RUN SHOWS, AND WHAT IT DOES NOT
+============================================================================================================
+SHOWS:
+  1. The MECHANISM is real and survives its controls. Shorts do fire and exit in higher-vol
+     states than longs (vol@exit 0.000328 vs 0.000296; 64.8% vs 58.5% of exits are into
+     rising vol), the differential is
+     concentrated on the EXIT leg (G4), it is largest for the short's WINNERS (G5, +0.412 tk),
+     it is NOT explained by hour-of-day (N2: only +0.07 of +1.15 $/ctrRT is hour), and it
+     sits far outside the state-blind label-shuffle null (G6).
+  2. The DOLLARS are small. +1.15 $/ctrRT, 95% CI [+0.58, +1.70]. That is 2.1% of the
+     short sleeve's $54.59/trade commission-only gross. The preregistered materiality bar was
+     $5.00/ctrRT and it is MISSED by a factor of 4.4.
+  3. The DIRECT measurement does not confirm even that. On 429 real fill instants it is
+     -0.63 $/ctrRT, CI [-3.22, +2.06] -- the WRONG SIGN, and consistent with zero. G3 FAILS.
+  4. Every non-execution asymmetry an equity short would face prices at EXACTLY $0 in an
+     index FUTURE: no borrow, no locate, no dividend liability, no SSR, side-symmetric
+     margin, and both arms flat at the close so no overnight financing either.
+DOES NOT SHOW:
+  a. It does not measure a pre-2022 spread. No NQ quote below NQ 23,036 exists in this repo.
+  b. The E2 LEVEL for 2022-2024 is not quotable (tick-denominated spread across a 2x price
+     range). Only the SHORT-minus-LONG differential is defended, and that differential is itself
+     unstable year to year (-0.01 to +0.58 tk).
+  c. It does not test whether a short-specific ENTRY or EXIT POLICY could avoid the wide-spread
+     states. That would be an exposure-reducing rule and would require a state-blind random-
+     thinning control, which this repo's record says it would lose (11 for 11). None is proposed.
+  d. It does not revise the repo's $20.65/ctrRT. It says that number applies to the short side
+     too, within about a dollar.
+
+THE ONE NUMBER THAT DID MOVE, AND IT IS NOT A COST-ASYMMETRY NUMBER:
+   At the SAME measured $20.65/ctrRT, the short sleeve pays 37.8% of its own gross in spread
+   against the long object's 15.8% -- 2.40x -- purely because it needs 2225 contract round
+   turns to earn $121,454 while the long needs 2300 to earn $300,817. W61/W62/W73/W120 all
+   quote this sleeve COMMISSION-ONLY. Its honest post-spread standalone figure is
+   3.73 pts/session, not the 6.00 in the record -- a 38% haircut,
+   against the long object's 16%. This is arithmetic, not a new measurement, and it was
+   always available; it is stated here because no short-side report in the repo states it.
+
+WALL TIME 63s
+STATUS: diagnostic. NOTHING ADOPTED. NO CANDIDATE PROPOSED. No CrossTrade/NT8 call was made;
+   no order, deploy, backtest or .cs edit occurred; no file under research/weekly_edge/src or
+   research_sdk was modified.

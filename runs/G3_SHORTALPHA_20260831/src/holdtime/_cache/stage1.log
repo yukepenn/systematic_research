@@ -1,0 +1,24 @@
+====================================================================================================================
+=== SEAL ASSERTION
+====================================================================================================================
+   substrate  1,558,497 bars  1,141 sessions   2022-01-02T18:01:00 -> 2026-05-29T16:59:00
+   max bar timestamp 2026-05-29T16:59:00 < 2026-08-01  -> SEAL HELD (asserted in code, not asserted by narration)
+   window A=2022-07-01  B=2026-08-01 (exclusive)
+   sessions in window: 1012
+
+====================================================================================================================
+=== RICH-FILL IDENTITY CHECK (the rich ledger must be the SAME object, not a variant)
+====================================================================================================================
+   fills_qexit_rich vs fills_qexit : identical  -> PASS
+   sfills_rich      vs sfills      : identical  -> PASS
+
+====================================================================================================================
+=== B1 GATE (must reproduce W73 exactly: L = 14.86 pts/session, S = 6.00, 2,225 trades)
+====================================================================================================================
+arm                          trades        net $   pts/sess   expect   verdict
+L  P1 long                    1,942      300,817      14.86    14.86      PASS
+S  mirrored short             2,225      121,454       6.00     6.00      PASS
+   L: max |reconstructed pnl - ledger pnl| = 0.00e+00  -> PASS
+   S: max |reconstructed pnl - ledger pnl| = 0.00e+00  -> PASS
+   sigma460 finite on entries: L 100.0%  S 100.0%
+   cached 1,942 long and 2,225 short rich trades [24s]

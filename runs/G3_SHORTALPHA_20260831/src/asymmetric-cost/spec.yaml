@@ -1,0 +1,107 @@
+key: asymmetric-cost
+run: G3_SHORTALPHA_20260831
+title: >
+  Does the SHORT side of NQ face a different EXECUTION COST and FINANCING reality than the
+  LONG side, and if so by how many dollars per round turn?
+written_before_results: true
+date: 2026-08-31
+
+premise:
+  - Every measured cost figure in this repository was measured on P1, which is LONG-ONLY.
+    G2_EXEC01 measured $20.65/ctrRT from 113 real round turns, all of them BUY-then-SELL.
+  - If shorts systematically fire in wider-spread states, every short candidate in the repo
+    (W61 mirror sleeve, W120 MIRROR_CONT, W73 S_sym/S_sig) has been quoted at a flattering cost.
+  - Standing prior to be attacked: an index-future short "carries the equity risk premium
+    against it" and "exits into vol spikes when spreads are widest".
+
+objects:
+  long_arm:  W73 L_sym  = P1 incumbent (vote/fills_daily/causal_score/fills_qexit chain)
+  short_arm: W73 S_sym  = mirror short sleeve (vote(-1) -> sfills), 1 contract
+  window:    A = 2022-07-01, B = 2026-08-01 (W73/W51 window; MODERN era only by construction)
+  cost identity used throughout:
+    cost_per_ctrRT_usd = 2.5 * (spread_ticks_at_entry_fill + spread_ticks_at_exit_fill)
+    (this is G2_EXEC01's own arithmetic: half_spread_usd = (ask-bid)/2 * $20/pt)
+
+data:
+  substrate:      run_we_w51c.setup() -> load_deep("2022-01-01","2026-07-31 17:00")
+  quote sessions: SAME inventory rule as G2_EXEC01 - data_microstructure_v2 (all),
+                  data_esnq (ONLY the 44 in ALLOWLIST_DEV_44.txt; blind sessions never opened),
+                  scalping_lab/substrate/raw/NQ minus V1_NO_BBO {20250811,20250924,20260430}.
+                  Event-level bip==1 (bid) / bip==2 (ask). NOT grid1s.
+  grid1s_note:    research/scalping_lab/substrate/grid1s/NQ has a RECORDED LOOKAHEAD DEFECT in
+                  its `last` column (AUCTION04 01_build_clean_substrate.py:17-21 - a bucket
+                  labelled T aggregates trades in [T,T+1)). This run reads NO grid1s file at all;
+                  it reads the RAW per-event BBO the grid was built from, and it never touches a
+                  last-price column of any kind. Only bid and ask are read.
+  minute surface: runs/G2_EXEC01_P1_EXECUTION_20260828/out/minute_samples.csv.gz
+                  (132,945 causal minute samples, hour + trailing-60m vol + spread_ticks)
+
+seal:
+  rule: no value >= 2026-08-01 is read. research_sdk.seal_guard.assert_presealed on the
+        substrate, on every quote session opened, and on both arms' entry and exit stamps.
+        The assertion result is PRINTED.
+
+era:
+  ERABREAK01 (p=0.0011) forbids pooling pre-2022 with modern. The W73 window is 2022-07 onward,
+  so the primary object is MODERN by construction. Per-year strata are printed. The repo holds
+  NO NQ quote sample below NQ 23,036 (W82 defect 19a), so a PRE-era spread number is
+  UNMEASURABLE here and is not manufactured.
+
+estimators:
+  E1_DIRECT:   spread in ticks at the actual fill instant (bar-open for open-fills, bar-close for
+               close-fills), asof the last bid and last ask, both <= 5s stale, ask >= bid.
+               Long legs vs short legs. Small n by construction; n is printed.
+  E2_PROJECTED: E[spread_tk | hour, trailing-vol decile] surface fitted ONLY on the 132,945
+               minute samples (never on fills), then applied to every leg of both arms over the
+               full 2022-07..2026-05 window. Harness check: re-projecting G2_EXEC01's own
+               published P1_PCT legs through this surface must land near its published 3.50 tk.
+  E3_DECOMP:   entry-leg vs exit-leg differential; and winners vs losers.
+  E4_VOLPATH:  trailing-vol at entry vs at exit per arm; the mechanism claim is that shorts exit
+               into HIGHER vol than longs.
+  E5_STRUCT:   drift/carry per trade = signed contract-minutes * mu_modern * $20, with SE and t.
+               Borrow / locate / dividend / margin differentials, priced.
+  E6_BURDEN:   total spread cost as a fraction of each arm's own commission-only gross.
+
+nulls_and_controls:
+  N1: session block bootstrap, 2000 draws, whole sessions resampled with replacement (preserves
+      within-session dependence). 95% percentile CI on every reported delta.
+  N2: HOUR-MATCHED control - reweight long legs to the short legs' hour histogram. Isolates
+      "shorts trade at different hours" from "shorts trade in worse vol states within the hour".
+  N3: LABEL-SHUFFLE (state-blind) control - pool all legs, randomly reassign long/short labels
+      preserving counts, 2000 draws. The observed delta must sit outside the 2.5-97.5 band.
+  N4: rho_bar of the per-session leg-mean series is printed and K_eff = K/(1+(K-1)*rho_bar) is
+      used for every effective-N statement. Session-level t is DIAGNOSTIC ONLY.
+  anti_filter: this angle proposes NO exposure-reducing rule, so champion_eval.thinning_placebo
+      is not applicable. If any rule is proposed it must carry one. It will not be.
+
+gates:
+  G1_DIRECT_ASYM:  |cost/ctrRT(short) - cost/ctrRT(long)| >= $1.00 on E1 AND the N1 95% CI
+                   excludes 0.
+  G2_PROJ_ASYM:    same test on E2 (full-window projection).
+  G3_SIGN:         E1 and E2 agree in sign.
+  G4_MECHANISM:    exit-leg differential (short - long) > entry-leg differential.
+  G5_OUTCOME:      short WINNERS' exit spread minus long WINNERS' exit spread >= +0.25 ticks.
+  G6_SHUFFLE:      observed E2 delta outside the 2.5-97.5 percentile of N3.
+  G7_MATERIAL:     delta cost/ctrRT >= $5.00 (>= 9% of the short sleeve's $54.59/trade
+                   commission-only gross).
+  G8_BURDEN:       short arm's spread cost as a share of its own gross exceeds the long arm's
+                   by >= 1.5x, at the SAME $20.65/ctrRT.
+
+decision_rule_preregistered:
+  - G1 and G2 and G3 and G7 all PASS -> CLOSES_A_DIRECTION on the short sleeve's headline
+    economics: every short candidate in this repo has been evaluated at a flattering cost, and
+    the corrected figure must be stated.
+  - G1 and G2 and G3 PASS but G7 FAILS -> the per-round-turn asymmetry is REAL but SMALL;
+    report the number and state that it does not by itself explain the short deficit.
+  - G1 or G2 FAILS -> INCONCLUSIVE or CLOSES depending on power: if the N1 CI is tight enough
+    to exclude a $5 differential, this CLOSES the "shorts are secretly more expensive per round
+    turn" explanation. Publish the exclusion bound.
+  - G8 is scored and reported independently of G1-G7; it is an arithmetic burden statement, not
+    a per-round-turn claim, and it is not allowed to substitute for G1/G2.
+
+prohibitions:
+  - No CrossTrade / NinjaTrader call of any kind. No order, no deploy, no backtest, no .cs edit.
+  - No edit to research/weekly_edge/src/ or research_sdk/ - import only.
+  - No blind data_esnq session opened. Enforcement printed before the first open.
+  - No candidate manufactured. A closure is an acceptable and preferred outcome.
+  - No population redefined after seeing a result. A gate that fails is recorded failed.

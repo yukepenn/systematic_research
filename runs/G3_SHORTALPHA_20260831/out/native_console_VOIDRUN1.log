@@ -1,0 +1,32 @@
+======================================================================================================================
+=== G3_SHORTALPHA / NATIVE - what is P1's own DISCARDED short target worth?
+=== spec: runs/G3_SHORTALPHA_20260831/src/native/spec_native.yaml (written before results)
+======================================================================================================================
+
+--- SUBSTRATE + SEAL ------------------------------------------------------------------
+    MODERN    1,620,044 bars   1,187 sessions  2022-01-02T18:01:00 -> 2026-07-31T16:59:00   max < 2026-08-01 : PASS
+    PRE       4,908,286 bars   4,279 sessions  2006-01-05T08:59:00 -> 2021-12-31T17:00:00   max < 2026-08-01 : PASS
+    G0 SEAL ASSERTION (no read of any session >= 2026-08-01): PASS
+    contexts + member caches loaded [16s]
+    MODERN eval 1,058 sessions 2022-07-04 -> 2026-07-31  (213 ISO weeks)
+    PRE    eval 4,279 sessions 2006-01-05 -> 2021-12-31  (834 ISO weeks)
+    signals built [53s]
+
+======================================================================================================================
+=== G1  B1 HARNESS CHECKS - printed before any economics is read. Any FAIL voids the run.
+======================================================================================================================
+    numba gfills vs run_we_w98.gfills  MODERN LONG      2,401 trades  byte-for-byte
+    numba gfills vs run_we_w98.gfills  MODERN SHORT     2,586 trades  byte-for-byte
+    numba gfills vs run_we_w98.gfills  PRE    LONG      9,698 trades  byte-for-byte
+    numba gfills vs run_we_w98.gfills  PRE    SHORT    10,869 trades  byte-for-byte
+
+  G1 HARNESS
+  GATE                      SPEC                                      OBSERVED                               VERDICT
+  ----------------------------------------------------------------------------------------------------------------
+  G1a numba==python         byte-for-byte on 4 arms                   4/4 identical                             PASS
+  G1b P1 counts == W98 H-C2 2,002 trades / 2,368 ctrRT                2,002 trades / 2,368 ctrRT                PASS
+  G1c P1 pts/session        14.72 +/- 0.60 (W61 committed)            13.24                                     FAIL
+  G1d ABS box == PCT box    identical at size 1 (u==1 always)         identical                                 PASS
+  G1e weekly_fast == champion_evalidentical weekly series, both strata      identical                                 PASS
+
+    A HARNESS GATE FAILED -> RUN VOID. No economics is reported.

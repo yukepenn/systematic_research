@@ -1,0 +1,119 @@
+# G3_SHORTALPHA / angle NATIVE — "P1 discards its own short target every bar: what is it worth?"
+# Written BEFORE any number was computed. Every clause below is coded in run_native.py and the
+# program prints its own GATE / SPEC / OBSERVED / PASS-FAIL table. Nothing is assembled by hand.
+
+run_id: G3_SHORTALPHA_20260831
+angle: native
+author: subagent "native"
+date: 2026-08-31
+
+question: >
+  WeeklyEdgeP1PCT_v3.cs computes a per-member-set target tgt = -1 (lines 1098, 1103) and never
+  aggregates or acts on it: step 6 counts only nMemLong, and there is no EnterShort in the file.
+  The canonical Python chain DOES aggregate it: run_we_w97.votes() returns (long_target,
+  short_target). Two questions, in order:
+    Q1  Is P1's NATIVE discarded short target the SAME OBJECT as W61's mirrored short sleeve,
+        or a different one?
+    Q2  What does the native short target earn STANDALONE, stratified PRE / MODERN, at three
+        cost lines, against a dependence-preserving null?
+
+objects:
+  substrate_MODERN: load_deep("2022-01-01", "2026-07-31 17:00", extend=True)
+  substrate_PRE:    load_deep("2006-01-05", "2021-12-31 17:00")
+  eval_MODERN: sessions whose first bar lies in [2022-07-01, 2026-08-01)   # W61/W73/W98 window
+  eval_PRE:    all sessions of substrate_PRE
+  NATIVE_SHORT: dir = -1 on every bar where run_we_w97.votes(...)[1] is True, else 0.
+                size 1. Session box halt -1300 / target +1000, per_ctr=False
+                (at size 1 the ABS and PCT boxes coincide identically — asserted, not assumed).
+  W61_SHORT:    -(run_we_w38.vote(targets(D), D, X, -1) >= 0.5), built on the SAME substrate and
+                the SAME context so the only thing that can differ is the signal construction.
+  P1:           the certified long object, votes()[0] -> fills_daily -> causal_score -> fills_qexit.
+
+cost_lines:                       # G2_EXEC01, 113 real round turns
+  FLOOR:   4.36    # commission only. PRINTED AS A FLOOR, NEVER AS A HEADLINE.
+  PRIMARY: 20.65   # measured all-in per contract round turn = 1.03 NQ points
+  ALLIN:   25.01
+  note: >
+    gfills charges 4.36/ctrRT internally. Two treatments are reported and never conflated:
+    NAIVE REPRICE (subtract (C-4.36)*u after the fact, box path unchanged) and COST-CONSISTENT
+    (the session box itself sees cost C, so the -1300 halt trips earlier). The cost-consistent
+    figure is the honest one for the short sleeve.
+
+gates:
+  G0_SEAL:
+    spec: max bar timestamp of every substrate < 2026-08-01T00:00
+    on_fail: run is VOID, nothing is reported
+  G1_HARNESS:
+    G1a: numba gfills reproduces run_we_w98.gfills byte-for-byte (d,u,et,xt,pnl) on both
+         the long and the short direction arrays, both strata
+    G1b: MODERN P1 trade/contract counts == W98's committed H-C2 row (2,002 tr / 2,368 ctr)
+    G1c: MODERN P1 pts/session within 0.60 of W61's committed 14.72
+    G1d: NATIVE_SHORT with per_ctr=True is byte-identical to per_ctr=False (size 1)
+    on_fail: run is VOID
+  G2_IDENTITY:
+    spec: bar-level agreement between NATIVE_SHORT's target and W61_SHORT's target on the
+          shared substrate, plus trade-count and net-$ agreement.
+    bands (repo parity doctrine, CLAUDE.md sec 6):
+      >= 99.0 % decision agreement AND trade counts within 2 %  -> SAME OBJECT
+      90.0 - 99.0 %                                              -> classify every mismatch
+      < 90.0 %                                                   -> DIFFERENT OBJECTS
+  G3_STANDALONE (the primary falsifier; evaluated per stratum x per cost line):
+    G3a: net $ > 0
+    G3b: net $ >= 95th percentile of 1,000 circular-shift nulls of the direction array
+    G3c: not in the bottom quartile of its own by-year distribution in the latest year
+    PROMOTION-WORTHY requires G3a AND G3b at the PRIMARY (20.65) cost line on MODERN,
+    cost-consistent box. Anything less is a diagnostic, not a candidate.
+  G4_INCREMENT:
+    spec: champion_eval.incremental(P1_weekly, SHORT_weekly) at the PRIMARY cost line.
+          Requires increment vs risk-matched scaled base > 0 on >= 1 of {vol, es, dd}
+          AND the stationary-bootstrap 90 % CI on the weekly difference excluding zero.
+
+nulls:
+  design: circular shift of the SHORT DIRECTION ARRAY against price, offset drawn uniformly in
+          [20_000, n-20_000] bars, 1,000 draws per stratum. This preserves the signal's own duty
+          cycle, run-length structure and autocorrelation and destroys only its alignment with
+          price. Session-level t statistics are printed DIAGNOSTIC ONLY and are never the test.
+  family: 3 reported arms (NATIVE_SHORT, W61_SHORT, NETFUSE_1). rho_bar between the arms' weekly
+          series is printed and K_eff = K/(1+(K-1)*rho_bar) is reported alongside.
+
+anti_filter_clause: >
+  NATIVE_SHORT ADDS exposure; it is not an exposure-reducing rule, so champion_eval's mandatory
+  random-thinning placebo is not the applicable control and exposure_reducing is set False.
+  If any arm in this wave removes exposure it must carry thinning_placebo(). Stated in advance.
+
+era_clause: >
+  ERABREAK01 (p=0.0011) forbids pooling pre-2022 with modern. PRE and MODERN are reported
+  separately; FULL is a diagnostic label only and carries no gate.
+
+burn_clause: >
+  2026-05-31 -> 2026-07-31 is BURNED. A MODERN_EX_BURNED row is reported beside MODERN and any
+  recency claim must survive on MODERN_EX_BURNED.
+
+what_would_close_this_direction: >
+  If G2 returns SAME OBJECT, then the "free short signal inside the certified object" is not a new
+  object at all — it is W61's already-killed sleeve, and this angle CLOSES. If in addition G3
+  fails at the PRIMARY cost line on MODERN, the closure is economic as well as structural.
+
+# ------------------------------------------------------------------------------------------------
+# ADDENDUM, declared 2026-08-31 AFTER G2 returned SAME OBJECT (100.0000 %) and BEFORE the variant
+# arms below were computed. Recorded as an addendum, not folded into the original gates.
+#
+# G2 established that votes()[1] == W61's mirrored sleeve. But votes()[1] mirrors the DELTA GATE
+# too: it uses ctx["dS"] where the long side uses ctx["dL"]. WeeklyEdgeP1PCT_v3.cs contains ONLY
+# dL (line 1126) and only nMemLong (line 1112). So the LITERAL "aggregate what the .cs already
+# computes, inventing nothing" reading is a DIFFERENT object from both W61 and votes()[1]:
+#       voteShort = (nMemShort * nThr * (1 + dL)) >= 16          <- reuses the LONG gate
+# and a third reading drops the gate entirely:
+#       voteShort = (nMemShort * nThr * 2) >= 16                 <- no delta gate
+# These are the only untested aggregations of the discarded set-level target. If either is
+# materially different AND better, the closure reopens.
+#
+# G5_VARIANTS:
+#   arms:  S_dS (= votes()[1] = W61)  |  S_dL (long gate reused)  |  S_nogate
+#   spec:  bar-level agreement vs S_dS, and net $ at the PRIMARY $20.65 cost-consistent line,
+#          PRE and MODERN, plus a 1,000-draw circular-shift null on any arm that beats S_dS.
+#   verdict rule, fixed in advance:
+#     REOPEN only if a variant is (a) < 99 % bar-agreement with S_dS, AND (b) net > 0 on BOTH
+#     PRE and MODERN at $20.65, AND (c) >= 95th percentile of its own circular-shift null on
+#     BOTH strata. Anything less leaves the closure standing.
+#   K = 3 correlated arms; rho_bar and K_eff printed.

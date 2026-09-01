@@ -1,0 +1,248 @@
+======================================================================================================================
+=== G3_SHORTALPHA / NATIVE - what is P1's own DISCARDED short target worth?
+=== spec: runs/G3_SHORTALPHA_20260831/src/native/spec_native.yaml (written before results)
+======================================================================================================================
+
+--- SUBSTRATE + SEAL ------------------------------------------------------------------
+    MODERN    1,620,044 bars   1,187 sessions  2022-01-02T18:01:00 -> 2026-07-31T16:59:00   max < 2026-08-01 : PASS
+    PRE       4,908,286 bars   4,279 sessions  2006-01-05T08:59:00 -> 2021-12-31T17:00:00   max < 2026-08-01 : PASS
+    G0 SEAL ASSERTION (no read of any session >= 2026-08-01): PASS
+    contexts + member caches loaded [16s]
+    MODERN eval 1,058 sessions 2022-07-04 -> 2026-07-31  (213 ISO weeks)
+    PRE    eval 4,279 sessions 2006-01-05 -> 2021-12-31  (834 ISO weeks)
+    signals built [52s]
+
+======================================================================================================================
+=== G1  B1 HARNESS CHECKS - printed before any economics is read. Any FAIL voids the run.
+======================================================================================================================
+    numba gfills vs run_we_w98.gfills  MODERN LONG      2,401 trades  byte-for-byte
+    numba gfills vs run_we_w98.gfills  MODERN SHORT     2,586 trades  byte-for-byte
+    numba gfills vs run_we_w98.gfills  PRE    LONG      9,698 trades  byte-for-byte
+    numba gfills vs run_we_w98.gfills  PRE    SHORT    10,869 trades  byte-for-byte
+
+    G1f rebuilding the native short on W61's OWN substrate (extend=False) ...
+        non-extended substrate is a bit-identical PREFIX: True   context prefix-identical: True   (1,558,497 of 1,620,044 bars)
+
+  G1 HARNESS
+  GATE                      SPEC                                      OBSERVED                               VERDICT
+  ----------------------------------------------------------------------------------------------------------------
+  G1a numba==python         byte-for-byte on 4 arms                   4/4 identical                             PASS
+  G1b P1 counts == W98 H-C2 2,002 trades / 2,368 ctrRT                2,002 trades / 2,368 ctrRT                PASS
+  G1c P1 pts/session        14.72 +/- 0.60 (W61, WRONG POPULATION)    13.24                                     FAIL
+  G1c2 P1 pts/session       13.2387 +/- 0.02 (W98 dashboard, same population)13.2387   (net $280,131 vs W98 $280,131, 1058 sessions)    PASS
+  G1d ABS box == PCT box    identical at size 1 (u==1 always)         identical                                 PASS
+  G1e weekly_fast == champion_evalidentical weekly series, both strata      identical                                 PASS
+  G1f == W61 committed ledger2,225 trades / $121,454 / 1,012 sessions  2,225 trades / $121,454 / 1,012 sessions (6.00 pts/sess)    PASS
+
+    NOTE: G1c is recorded FAILED and is NOT rewritten. It cited 14.72, a constant that
+    belongs to W61's substrate (extend=False, 1,012 sessions to 2026-05-29). This run's
+    population is extend=True, 1,058 sessions to 2026-07-31. G1c2 recomputes the correct
+    reference IN-PROGRAM from W98's committed dashboard.csv for THIS population, and G1f
+    reproduces W61's own committed ledger on W61's own substrate. The VOID condition is
+    evaluated on {G1a, G1b, G1c2, G1d, G1e, G1f}; G1c is superseded, not excused.
+
+======================================================================================================================
+=== G2  IDENTITY: is P1's NATIVE discarded short the SAME OBJECT as W61's mirrored sleeve?
+======================================================================================================================
+    W61 built its short as   -(run_we_w38.vote(targets(D), D, X, -1) >= 0.5)
+    where targets(D)[m] = sm14_1m(D, 460, return_targets=True, volmults=MEMBERS[m]).
+    run_we_w97.votes()[1] instead rebuilds each member target from the CACHED 13-member
+    pending matrix and re-applies the .cs combiner  hyst(0.7086*Tp + 2.83*bmom).
+    Those are two code paths to the same definition IF m_pend for a given VolMult does not
+    depend on which set it is run in. This gate MEASURES it rather than asserting it.
+
+    EVIDENCE 1 - NUMERICAL REPRODUCTION OF W61's COMMITTED LEDGER (G1f above).
+        native short on W61's own substrate: 2,225 trades, net $121,454,
+        6.00 pts/session over 1,012 sessions.
+        W61 out/short.txt committed:         2,225 trades, net $121,454, 6.00 pts/session
+        over 1,012 sessions.   MATCH: EXACT
+        per-SESSION ledger max |difference| vs W61's committed ledger.csv: $0.0000000000
+
+    EVIDENCE 2 - CODE-PATH IDENTITY (rebuild W61's signal from scratch on this window).
+    sm14_1m member set narrow5  rebuilt from scratch [107s]
+    sm14_1m member set narrow6  rebuilt from scratch [140s]
+    sm14_1m member set narrow7  rebuilt from scratch [174s]
+    sm14_1m member set all13    rebuilt from scratch [210s]
+
+    bar-level target agreement ................. 100.0000 %  (0 disagreeing bars of 1,620,044)
+    native short-target bars ................... 252,479
+    W61 short-target bars ...................... 252,479
+    trades   native  2,294   W61  2,294   difference 0.000 %
+    net $    native      132,918   W61      132,918  (at the $4.36 FLOOR)
+
+    per-member-set target agreement (W97 hyst rebuild vs sm14_1m tgt_arr):
+        narrow5    100.0000 %   (0 disagreeing bars)
+        narrow6    100.0000 %   (0 disagreeing bars)
+        narrow7    100.0000 %   (0 disagreeing bars)
+        all13      100.0000 %   (0 disagreeing bars)
+
+  G2 IDENTITY
+  GATE                      SPEC                                      OBSERVED                               VERDICT
+  ----------------------------------------------------------------------------------------------------------------
+  G2 parity band            >=99% agree & <=2% trade delta -> SAME    100.000% / 0.000% -> SAME OBJECT          PASS
+
+    >>> P1's 'discarded native short target' IS W61's mirrored short sleeve. It is not a
+    >>> second, cheaper signal hiding inside the certified object. Anything measured
+    >>> below re-measures an object this repo has already tried and not adopted.
+
+======================================================================================================================
+=== G3  STANDALONE ECONOMICS of the native short, PRE / MODERN, three cost lines.
+===     gfills charges $4.36/ctrRT internally. NAIVE = reprice after the fact (box path
+===     unchanged). CONSISTENT = the session box itself sees the cost, so -1300 trips
+===     earlier. $4.36 is a FLOOR and is never a headline; $20.65 is the PRIMARY.
+======================================================================================================================
+
+stratum  box         cost line         trades   ctrRT        net $  $/trade  pts/sess     wk $   wk+%      maxDD      ES95  fixDD wk$     t*
+MODERN   naive       FLOOR   $4.36      2,294   2,294      132,918       58      6.28      624  49.3%     34,903    -5,856        362   2.38
+MODERN   naive       PRIMARY $20.65     2,294   2,294       95,549       42      4.52      449  47.9%     39,415    -6,065        230   1.71
+MODERN   naive       ALL-IN  $25.01     2,294   2,294       85,547       37      4.04      402  46.9%     40,623    -6,121        200   1.53
+
+MODERN   consistent  FLOOR   $4.36      2,294   2,294      132,918       58      6.28      624  49.3%     34,903    -5,856        362   2.38
+MODERN   consistent  PRIMARY $20.65     2,273   2,273      103,663       46      4.90      487  48.8%     43,755    -6,025        225   1.84
+MODERN   consistent  ALL-IN  $25.01     2,268   2,268       91,427       40      4.32      429  48.4%     45,798    -6,030        190   1.62
+
+PRE      naive       FLOOR   $4.36     10,869  10,869      -50,014       -5     -0.58      -60  37.8%     57,929    -3,236        -21  -1.20
+PRE      naive       PRIMARY $20.65    10,869  10,869     -227,070      -21     -2.65     -272  31.1%    230,566    -3,567        -24  -5.34
+PRE      naive       ALL-IN  $25.01    10,869  10,869     -274,459      -25     -3.21     -329  28.9%    277,793    -3,660        -24  -6.42
+
+PRE      consistent  FLOOR   $4.36     10,869  10,869      -50,014       -5     -0.58      -60  37.8%     57,929    -3,236        -21  -1.20
+PRE      consistent  PRIMARY $20.65    10,831  10,831     -223,530      -21     -2.61     -268  31.1%    227,026    -3,492        -24  -5.30
+PRE      consistent  ALL-IN  $25.01    10,818  10,818     -273,918      -25     -3.20     -328  28.7%    277,253    -3,567        -24  -6.47
+
+    t* is a WEEKLY t and is DIAGNOSTIC ONLY - it is never the test (see the null below).
+
+--- BURN CONTROL: MODERN excluding the BURNED span 2026-05-31 -> 2026-07-31 -------------
+    MODERN_EX_BURNED  1,012 sessions  2,203 trades  net 89,108  4.40 pts/sess  wk$ 437  wk+% 48.5  maxDD 40,657
+
+--- BY YEAR, native short standalone, PRIMARY $20.65, cost-consistent box ---------------
+year     sessions   trades        net $   pts/sess   $/trade
+2006          350      301       -9,841      -1.41       -33
+2007          274      498       -9,344      -1.71       -19
+2008          268      831       -5,985      -1.12        -7
+2009          262      682      -19,538      -3.73       -29
+2010          264      562      -11,415      -2.16       -20
+2011          263      646       -9,585      -1.82       -15
+2012          264      609       -7,301      -1.38       -12
+2013          261      553      -13,384      -2.56       -24
+2014          257      699      -13,594      -2.64       -19
+2015          262      942      -23,272      -4.44       -25
+2016          261      838      -19,125      -3.66       -23
+2017          257      742      -19,417      -3.78       -26
+2018          258      842      -21,077      -4.08       -25
+2019          259      712      -20,823      -4.02       -29
+2020          260      697        4,667       0.90         7
+2021          259      677      -24,495      -4.73       -36
+2022          130      322       30,011      11.54        93
+2023          258      650          632       0.12         1
+2024          259      598       64,911      12.53       109
+2025          259      456       23,564       4.55        52
+2026          152      247      -15,456      -5.08       -63
+
+======================================================================================================================
+=== G3b  CIRCULAR-SHIFT NULL. The SHORT DIRECTION ARRAY is rolled against price, so its
+===      duty cycle, run lengths and autocorrelation are preserved and only its ALIGNMENT
+===      with price is destroyed. Cost-consistent box at $20.65. 1,000 draws per stratum.
+======================================================================================================================
+    MODERN nulls 250/1000 [222s]
+    MODERN nulls 500/1000 [225s]
+    MODERN nulls 750/1000 [228s]
+    MODERN nulls 1000/1000 [231s]
+
+    --- MODERN ---
+statistic                 REAL     null mean      null p50      null p95  percentile   verdict
+net $                  103,663       -90,460       -89,547       -13,055      100.0%      PASS
+fixed-DD wk$               225           -69           -77           -18       99.9%      PASS
+% pos weeks                 49            42            42            47       97.6%      PASS
+    PRE nulls 250/1000 [240s]
+    PRE nulls 500/1000 [249s]
+    PRE nulls 750/1000 [257s]
+    PRE nulls 1000/1000 [265s]
+
+    --- PRE ---
+statistic                 REAL     null mean      null p50      null p95  percentile   verdict
+net $                 -223,530      -287,102      -288,170      -232,358       97.2%      PASS
+fixed-DD wk$               -24           -24           -24           -23       55.6%      fail
+% pos weeks                 31            26            26            28       99.9%      PASS
+
+--- FAMILY SIZE: the three short arms this angle touches, and their weekly dependence ---
+    arms K = 3   pairwise weekly rho = +1.0000, +0.7184, +0.7184   rho_bar = +0.8123   K_eff = 1.14
+    arm                trades        net $      wk $    wk+%       maxDD
+    NATIVE_SHORT        2,273      103,663       487   48.8%      43,755
+    W61_SHORT           2,273      103,663       487   48.8%      43,755
+    NETFUSE_1           3,877      245,635     1,153   56.8%      30,253
+
+======================================================================================================================
+=== G4  FULL RISK VECTOR (research_sdk/champion_eval.py) and the incumbent increment.
+===     NATIVE_SHORT *ADDS* exposure, so exposure_reducing=False and the random-thinning
+===     placebo is not the applicable control - stated in the spec in advance.
+======================================================================================================================
+
+    ================= MODERN @ $20.65/ctrRT, cost-consistent box =================
+    metric                                   P1 @20.65NATIVE_SHORT @20.65
+    ------------------------------------------------------------------
+    net / week                                   1,134           486.7
+    median / week                                105.3           -92.6
+    % positive weeks                            0.5305          0.4883
+    weekly SD                                    4,704           3,863
+    downside SD                                  2,806           3,003
+    ES95 (worst 5% mean)                        -5,785          -6,025
+    worst week                                  -7,727          -7,885
+    max drawdown                             2.665e+04       4.376e+04
+    DD duration (weeks)                             62              52
+    capital proxy                            7.665e+04       6.876e+04
+    fixed-DD income / wk                         861.4           225.2
+    top 1% share of net                         0.9006           2.012
+    top 10% share of net                         2.883           6.022
+    trades                                       2,002           2,273
+    contract round turns                         2,368           2,273
+    
+    correlation with incumbent          0.1531
+    combined net/week                 1,620.74   (base 1,134.06)
+    increment vs risk-matched base [vol]       46.86   (k = 1.3878)
+    increment vs risk-matched base [ es]     -242.73   (k = 1.6432)
+    increment vs risk-matched base [ dd]     -608.41   (k = 1.9656)
+    candidate in incumbent's worst decile      -690.88   (incumbent there -4,779.37)
+    diff mean 486.68   bootstrap 90% CI [13.58, 960.01]   excludes 0: True
+      (t = 1.839 - DIAGNOSTIC ONLY, not the test)
+
+    ================= PRE @ $20.65/ctrRT, cost-consistent box =================
+    metric                                   P1 @20.65NATIVE_SHORT @20.65
+    ------------------------------------------------------------------
+    net / week                                  -130.9            -268
+    median / week                               -195.1          -323.2
+    % positive weeks                            0.3741          0.3106
+    weekly SD                                    1,570           1,461
+    downside SD                                  1,372           1,275
+    ES95 (worst 5% mean)                        -3,508          -3,492
+    worst week                                  -7,166          -8,243
+    max drawdown                             1.569e+05        2.27e+05
+    DD duration (weeks)                            833             833
+    capital proxy                            2.069e+05        2.52e+05
+    fixed-DD income / wk                        -16.89           -23.9
+    top 1% share of net                           -2.9           -1.21
+    top 10% share of net                        -7.796          -3.263
+    trades                                       9,557       1.083e+04
+    contract round turns                     1.156e+04       1.083e+04
+    
+    correlation with incumbent          0.0300
+    combined net/week                  -398.94   (base -130.92)
+    increment vs risk-matched base [vol]     -217.49   (k = 1.3860)
+    increment vs risk-matched base [ es]     -200.94   (k = 1.5124)
+    increment vs risk-matched base [ dd]     -115.37   (k = 2.1660)
+    candidate in incumbent's worst decile      -281.11   (incumbent there -2,710.48)
+    diff mean -268.02   bootstrap 90% CI [-338.86, -196.52]   excludes 0: True
+      (t = -5.299 - DIAGNOSTIC ONLY, not the test)
+
+======================================================================================================================
+=== DIAGNOSTICS: how the native short sits against P1's long target
+======================================================================================================================
+    MODERN   long-target bars    275,855   short-target bars    252,479   BOTH        0 (0.00 % of short bars)
+             P1 flat on 420 sessions (39.7 %); the native short trades 343 of them (81.7 %) and wins 42.6 % of those
+             daily rho(P1, native short) +0.0008   weekly rho +0.1531   (W61 reported daily -0.003 on its own window)
+
+    PRE      long-target bars    831,132   short-target bars    780,121   BOTH        0 (0.00 % of short bars)
+             P1 flat on 1,816 sessions (42.4 %); the native short trades 1,219 of them (67.1 %) and wins 33.2 % of those
+             daily rho(P1, native short) -0.0130   weekly rho +0.0300   (W61 reported daily -0.003 on its own window)
+
+
+[done 268s]

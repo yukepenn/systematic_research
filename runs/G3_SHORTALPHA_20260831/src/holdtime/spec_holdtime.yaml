@@ -1,0 +1,101 @@
+run_id: G3_SHORTALPHA_20260831 / holdtime
+title: "The leverage effect and the HOLD: does a mirrored short reach its maximum favourable
+        excursion earlier in the hold than the long, and give more of it back?"
+date: 2026-08-31
+campaign: GENESIS III, short-alpha wave
+status: PREREGISTERED  (written before any result in this sub-run existed)
+evidence_status: DIRECTLY_BURNED (2022-07 -> 2026-07 is the campaign's development window)
+
+question: >
+  W73 established that the mirrored short sleeve's TIMING component is +$144,532 = 119% of its
+  net, and that making the ENTRY scale sigma direction-signed makes the short WORSE (6.00 ->
+  4.79 pts/session). W73 did not touch the HOLD. The leverage effect says down moves are faster
+  and more violent. If down legs COMPLETE faster, a mirrored trend-follower holds too long and
+  gives the move back - which reads as good entry timing and bad exit timing, exactly W73's
+  signature. This wave measures the hold, on the sleeve's own trades.
+
+hypothesis_H_LEV:
+  A_GEOMETRY: "shorts reach MFE at a smaller FRACTION of their holding time than longs
+               (median t_MFE/dur short < long)"
+  B_COST:     "shorts give back a larger fraction of their MFE at the exit than longs
+               (median (MFE - final)/MFE short > long)"
+  C_HAZARD:   "the expected forward P&L from minute tau to the exit, for trades still open at
+               tau, turns negative EARLIER for shorts than for longs"
+  Both A and B and C must point the same way for H_LEV to be supported. If A holds but B does
+  not, the geometry is asymmetric but is not costing money and the direction is CLOSED for this
+  repair.
+
+falsifier_stated_in_advance:
+  F1: >
+    H_LEV is FALSIFIED if the session-block-bootstrap 95% interval for
+    median(t_MFE/dur)_short - median(t_MFE/dur)_long CONTAINS ZERO.
+  F2: >
+    H_LEV is FALSIFIED if the session-block-bootstrap 95% interval for
+    mean(giveback/|entry sigma|)_short - mean(giveback/|entry sigma|)_long CONTAINS ZERO,
+    OR if the sign is the opposite of B.
+  F3 (the money gate, decided in advance): >
+    The single frozen alternative exit is ADOPTABLE ONLY IF ALL FOUR hold:
+      (i)   it beats the untouched short sleeve on net $ at the $20.65/ctrRT PRIMARY cost;
+      (ii)  it beats the 95th percentile of the RATE-MATCHED RANDOM EXIT control (constant-hazard,
+            state-blind, calibrated to the same MEAN realised holding time), 1000 draws;
+      (iii) the SAME rule applied to the LONG object does NOT improve it by as much
+            (else it is "capping helps", not a direction finding);
+      (iv)  the parameter chosen on the FIRST HALF holds up on the SECOND HALF.
+    Failing any clause is recorded as a failure. The population is not redefined afterwards.
+
+design:
+  substrate: "load_deep('2022-01-01','2026-07-31 17:00') via run_we_w17, extend=False (the
+              W51c setup() used by W61/W73, so the B1 gate is comparable bit-for-bit)."
+  window: "A = 2022-07-01, B = 2026-08-01 (exclusive) - W61/W73's window, unchanged."
+  arms:
+    - "L : P1 long, vote(+1) -> fills_daily -> causal_score -> fills_qexit (the incumbent)."
+    - "S : mirrored short sleeve, vote(-1) -> sfills, 1 contract (W61's object, unchanged)."
+  B1_gate: "L must return 14.86 pts/session (W73 measured) and S must return 6.00 pts/session
+            with 2,225 trades. Any deviation > 0.6 pts/session VOIDS the wave."
+  rich_fills: "local re-implementations of sfills and fills_qexit that additionally record the
+               entry/exit bar index and price. Asserted BIT-IDENTICAL to the imported functions
+               on (d, u, et, xt, pnl) before any measurement is taken."
+  per_trade_measures:
+    - "dur = number of live 1-minute bars"
+    - "MFE / MAE in points from bar extremes over the live bars (symmetric in direction, so the
+       optimism of using bar extremes cancels between the two arms)"
+    - "t_MFE, t_MAE in minutes from entry; t_MFE/dur"
+    - "final = signed points realised; giveback = MFE - final"
+    - "sigma_entry = mean |dClose| over the trailing 460 bars at the entry bar (the vendor's own
+       scale) - every points quantity is also reported divided by it"
+  stratification: >
+    ERABREAK01 forbids pooling pre-2022 with modern. W61's object is defined ONLY on
+    2022-07 -> 2026-07, so the whole primary sample is MODERN and there is no pooling to do.
+    An out-of-era PRE replication (2006-2021, identical construction) is run as a SEPARATE
+    stratum and is NEVER pooled with MODERN; FULL is not reported as a headline anywhere.
+  dependence: >
+    Trades cluster inside sessions. Every long-vs-short difference is bootstrapped by resampling
+    WHOLE SESSIONS with replacement (1000 draws). The one-way intra-session ICC (rho_bar) and
+    K_eff = K/(1+(K-1)*rho_bar) are printed. Trade-level t is DIAGNOSTIC ONLY.
+  costs: >
+    $4.36/ctrRT printed as a FLOOR only. $20.65/ctrRT is the PRIMARY headline (G2_EXEC01, 113
+    real round turns). $25.01/ctrRT all-in is printed beside it. The exit rule is a TRUNCATION,
+    not an extra trade, so it adds no round turns - cost is held fixed across arms by
+    construction and cannot manufacture the result.
+
+the_one_frozen_exit:
+  form: "cap the hold at T minutes; no re-entry inside the same signal leg (same entries, capped
+         hold). One parameter, one form, chosen from the measured hazard curve BEFORE its P&L is
+         computed and written into this file before the P&L cell is run."
+  T_selection_rule: >
+    T = the smallest 5-minute-rounded tau at which the measured E[forward points | still open at
+    tau] for SHORTS is <= 0 and stays <= 0 for the rest of the grid. Stated as a RULE now so the
+    number is a consequence, not a choice. The same rule, applied to the FIRST HALF only, gives
+    T_half, which is evaluated on the SECOND HALF as the out-of-sample clause of F3.
+  controls:
+    - "RATE-MATCHED RANDOM EXIT: cap_i ~ Exponential(lambda), lambda solved so that
+       mean(min(dur_i, cap_i)) equals the rule's mean realised hold. 1000 draws. State-blind."
+    - "UNIFORM RANDOM EXIT: cap_i ~ Uniform(0, 2T). Second, differently-shaped control."
+    - "SAME RULE ON THE LONG OBJECT (the direction placebo)."
+
+what_this_wave_may_NOT_do:
+  - "No grid over T. One rule, one number, from the stated selection rule."
+  - "No re-definition of the window, the sleeve, the fills or the costs after seeing a result."
+  - "No adoption. This wave can only produce a diagnostic and a WATCHLIST-or-CLOSED verdict."
+
+seal: "assert every bar timestamp used is < 2026-08-01. Printed by the program."

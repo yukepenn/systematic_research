@@ -1,0 +1,455 @@
+MIRROR_CONT - WHAT WOULD A FORWARD VERDICT NEED?   (G3_SHORTALPHA, angle: mirror-cont)
+Produces a decision packet. No P&L. No candidate. No new object.
+
+======================================================================================================================
+=== 0. SEAL ASSERTION (printed, not assumed)
+======================================================================================================================
+    sessions.csv      last session date         2026-07-31   < 2026-08-01 ? YES
+    sessions.csv      max date in ANY week      2026-07-31   < 2026-08-01 ? YES
+    weekly_joint.csv  last ISO week LABEL         2026-W31   nominal Sunday 2026-08-02, but its CONTENT ends 2026-07-31
+    files opened by this program: 5 - all listed below with sha256[:12]
+        b51ddab05e9c  runs\WE_W120_MOMMARGINAL\out\weekly_joint.csv
+        1253de33d3c8  runs\WE_W120_MOMMARGINAL\out\sessions.csv
+        dc7992c0f934  research\weekly_edge\src\run_we_w118.py
+        7226c6de56ca  research\weekly_edge\src\run_we_w120.py
+        926f37fc3a41  research\weekly_edge\src\run_we_w114.py
+
+    NO BAR SUBSTRATE IS LOADED. No session >= 2026-08-01 is read. ASSERTION: PASS
+
+======================================================================================================================
+=== (a) THE OBJECT, RESTATED WITH ZERO REMAINING CHOICES
+======================================================================================================================
+    Every row below is a FROZEN value read out of the source that produced W120's numbers.
+    A forward implementation that changes any row is a DIFFERENT OBJECT and does not
+    inherit W120's evidence.
+
+element                 frozen value                                                  note
+----------------------------------------------------------------------------------------------------------------------
+instrument              NQ front-month continuous, 1-minute, END-STAMPED              the bar stamped 09:31 covers 09:30:00-09:30:59
+substrate loader        run_we_w17.load_deep(a, b, extend=True)                       extend=True supplies the pre-window warm-up the 250-session roll needs
+session universe        every session in the window; one trade per session at most    the `done[r]` latch in scan() makes the trade unique per session
+anchor bar RTH0         minute-of-day 571 = 09:31                                     o0 = the OPEN of that bar = the 09:30:00 print. NOT the prior close
+bars scanned            mod in [571, 944] = [09:31, 15:44]                            session skipped if <60 such bars or if the first is not exactly RTH0
+running excursion       up = runH - o0 ; dn = o0 - runL ; E = max(up, dn)             runH/runL are RUNNING extremes of HIGH/LOW from RTH0 to bar j inclusive
+extreme deadline        tset <= 720 = 12:00                                           tset = the minute at which the CURRENT running extreme was set
+trigger deadline        loop breaks when mod > 870 = 14:30                            no entry may be initiated after 14:30
+threshold source        exc12[s] = E evaluated at mod == 720 (12:00)                  fallback if the 12:00 bar is absent: E at loop exit. FROZEN, including the fallback
+causal threshold        pd.Series(exc12).rolling(250, min_periods=60).quantile(1 - 0.50).shift(1)= trailing MEDIAN of the prior 250 sessions' 12:00 excursion. shift(1) => causal
+gate rate               0.50  (W118's primary cell; RATES = (0.25, 0.5, 0.75))        NOT re-chosen. W120 spec: 'no threshold, level, gate, exit or window may be re-chosen'
+gate application        E >= thr[s] must hold AT THE TRIGGER BAR                      the W118 CORRECTION: applying it to the 12:00 excursion after the fact was the defect
+retracement level R     0.50  (RETR = (0.25, 0.5, 0.75))                              retr measured on bar j's CLOSE: (runH-c)/E if up>=dn else (c-runL)/E
+trigger                 first bar j with E>=thr, tset<=12:00, retr >= 0.50            ties: if up == dn the UP branch wins (`if up >= dn`)
+entry                   the OPEN of bar j+1 (idx[j+1])                                one full bar of latency. If j+1 does not exist the session is skipped
+DIRECTION (the mirror)  sgn_MIRROR = +1 if the extreme is the HIGH, -1 if the LOW     W118's reversal is the NEGATIVE of this. MIRROR trades WITH the prevailing move
+exit                    the CLOSE of the bar stamped 944 = 15:44                      no stop, no target, no trailing, no intrabar risk control of any kind
+size                    1 contract, always                                            no sizing rule, no vol targeting, no scaling
+point value             $20 / NQ point                                                
+research cost charged   $4.36 + 5 * (sp[m_entry] + sp[944]) / 2                       sp = W82 per-minute spread profile, in ticks
+
+    REMAINING FREE CHOICES: NONE. Everything above is a literal in run_we_w118.py /
+    run_we_w114.py, or a constant passed by run_we_w120.py line 63:
+        R = econ(W, tg[0.50], -dg[0.50], ALL)      # the minus sign IS the mirror
+
+    THE ONE THING THAT IS *NOT* PARAMETER-FREE, contrary to the W120 report's phrase
+    'parameter-light and needs no refit':
+        the 250-session trailing median threshold is STATE, not a parameter. A forward
+        implementation must carry 250 sessions (~12 calendar months) of prior 12:00
+        excursions into its first forward decision, or it is not the same object. It is
+        causal, so this is a WARM-UP requirement, not a refit - but a forward run that
+        starts cold at 2026-08-01 with min_periods=60 uses a 60-session median for its
+        first ~190 decisions and IS A DIFFERENT OBJECT for those decisions.
+
+======================================================================================================================
+=== 1. REPRODUCTION OF W120's GATE TABLE (must match the committed run, or stop)
+======================================================================================================================
+    213 weeks. book-losing weeks = 87 (40.8 %). P(MIRROR<0) = 0.329
+
+statistic                        REAL       W120   match  null mean   null p95   pctile
+rho                             0.145      0.145      OK     -0.001      0.099    99.5th
+rho | book losing              -0.158     -0.158      OK      0.001      0.173     7.5th
+P(cand<0 | book<0)              0.310      0.310      OK      0.329      0.379    24.5th
+worst-decile overlap            0.019      0.019      OK      0.011      0.023    80.2th
+$ on book-losing weeks        614.021    614.021      OK    662.963   1247.316    42.9th
+tail beta                      -1.861     -1.861      OK      0.009      1.014     0.9th
+
+    REPRODUCTION: EXACT
+
+======================================================================================================================
+=== 2. THE TWO GATES W120 PASSED WITHOUT A NULL. Supplying the nulls now.
+======================================================================================================================
+    W120 ran a 1,000-shift circular null for gate 2 and gate 4 only. Gate 1 ('earns > 0')
+    and gate 3 ('incremental fixed-DD > 0 at either convention') were scored against ZERO,
+    not against chance. A candidate with a positive unconditional mean passes gate 1 by
+    construction, and CLAUDE.md forbids letting a reduced risk denominator masquerade as
+    information. So: same object, ALIGNMENT DESTROYED by circular shift, both gates re-run.
+
+    GATE 1  -- $ on book-losing weeks > 0
+        REAL $614   |   circular-shift null: mean $663, P(null > 0) = 0.976
+        => a SHIFTED (alignment-destroyed) MIRROR passes gate 1 97.6 % of the time.
+        GATE 1 CARRIES NO INFORMATION ABOUT ALIGNMENT. It is a restatement of 'MIRROR is profitable'.
+
+    GATE 3  -- incremental fixed-DD weekly $ > 0 at EITHER weighting convention
+convention      base fixDD  with MIRROR  REAL incr  null mean   null p95   pctile  P(null>0)
+invvol               2,012        2,414       +402        +90       +729    74.5th      0.542
+income               1,785        2,030       +245       -178       +392    88.2th      0.283
+
+    A circularly-shifted MIRROR has the SAME marginal distribution, the same weekly
+    volatility and the same autocorrelation as the real one - only its ALIGNMENT with the
+    book is destroyed. Read the P(null>0) column: that is how often a THIRD LEG WITH NO
+    RELATIONSHIP TO THE BOOK AT ALL raises drawdown-matched income.
+
+    Mechanically, on invvol weights: adding a third leg re-weights P1 and XM DOWNWARD.
+        2-leg book:  wk $  1,142   maxDD $  11,489   fixDD $  2,012
+        3-leg book:  wk $    971   maxDD $   8,143   fixDD $  2,414
+        RAW weekly dollars FALL $171/wk (-15.0 %). The gain is entirely in the DENOMINATOR.
+
+======================================================================================================================
+=== 3. (b) WHAT GATE 2 ACTUALLY TESTS - and it is not what the sentence says
+======================================================================================================================
+    Gate 2: mean(MIRROR weekly $ | book week < 0)  >  95th pct of a 1,000-shift null.
+    Under a circular shift the alignment is random, so the null's EXPECTATION is exactly
+    MIRROR's UNCONDITIONAL weekly mean. Check that identity numerically:
+
+        MIRROR unconditional weekly mean      $    662.73
+        circular-shift null mean               $    662.96
+        difference                             $     -0.23   (pure edge-effect of the shift)
+
+    ==> GATE 2 IS THE SINGLE STATISTIC:
+
+            DELTA  =  mean(MIRROR | book < 0)  -  mean(MIRROR)
+
+        i.e. 'does MIRROR earn MORE when the book loses than it earns on an average week?'
+        Equivalently -Cov(MIRROR_wk, 1{book<0}) / P(book<0). It is a ONE-NUMBER question
+        and it has NOTHING to do with whether MIRROR is profitable.
+
+======================================================================================================================
+=== 4. THE OBSERVED EFFECT SIZE, stated so it can be wrong
+======================================================================================================================
+quantity                                             value
+------------------------------------------------------------
+weeks N                                                213
+book-losing weeks nL                                    87
+P(book < 0)                                          0.408
+MIRROR mean | book losing                           614.02
+MIRROR unconditional mean                           662.73
+DELTA (the gate-2 effect size)                      -48.71
+sd of MIRROR weekly $                             4,167.10
+
+    ############################################################################
+    #  THE OBSERVED EFFECT IS NEGATIVE.  MIRROR earns $49/wk LESS on the book's
+    #  losing weeks than on an average week.  Gate 2 does not 'narrowly fail' -
+    #  the POINT ESTIMATE IS ON THE WRONG SIDE OF THE NULL MEAN.
+    ############################################################################
+
+======================================================================================================================
+=== 5. THE SAMPLING DISTRIBUTION OF DELTA (three independent constructions)
+======================================================================================================================
+construction                                   SE of DELTA
+----------------------------------------------------------
+circular shift of MIRROR (W120 instrument)          353.18
+analytic permutation, finite-population             344.42
+moving-block bootstrap (L=4 wk, paired)             360.08
+
+    They agree to within 2 %. The SE used from here on is the circular-shift SE, $353, because it is the
+    instrument the preregistered gate actually used.
+
+    DELTA = $-49   95 % CI [$-741, $+644]   z = -0.138   one-sided p(DELTA>0) = 0.555
+    Gate-2 pass threshold at N=213: DELTA >= 1.645 * SE = $581. Observed is $-49.
+    The observed DELTA is 1.78 standard errors SHORT of its own gate.
+
+======================================================================================================================
+=== 6. (b) REQUIRED N. Computed honestly, and the honest answer is ugly.
+======================================================================================================================
+    SE(DELTA) scales as 1/sqrt(N) because it is a difference of means over a fixed
+    fraction p of weeks:  SE(N) = SE(213) * sqrt(213 / N).
+    Gate 2 is ONE-SIDED at alpha = 0.05 (beat the null's 95th percentile).
+    Required N for power 1-beta:   N = 213 * ( SE(213) * (z_0.95 + z_{1-beta}) / DELTA_true )^2
+
+    z_0.95 = 1.645   SE(213) = $353
+
+    ---- CASE 1: the true DELTA equals the observed DELTA ----------------------------
+
+        DELTA_true = $-49.  It is NEGATIVE. The gate requires DELTA > +1.645*SE.
+        A test statistic whose EXPECTATION is negative converges AWAY from the gate as N
+        grows. Power at every N is BELOW alpha and DECREASING:
+
+ forward weeks N   years     SE(N)  gate thr     power
+              52     1.0       715     1,176   0.04336
+             104     2.0       505       831   0.04082
+             156     3.0       413       679   0.03896
+             208     4.0       357       588   0.03744
+             260     5.0       320       526   0.03615
+             520    10.0       226       372   0.03142
+           1,040    20.0       160       263   0.02561
+           5,200   100.0        71       118   0.01000
+
+    ####################################################################################
+    #  REQUIRED N AT THE OBSERVED EFFECT SIZE = INFINITE. NOT 'three years'. NOT ANY
+    #  NUMBER OF YEARS. There is no forward sample size at which a true DELTA of
+    #  $-49 passes a gate that requires DELTA > 0. More data makes it fail HARDER.
+    ####################################################################################
+
+    ---- CASE 2: the true DELTA is at the top of what the data still permits ---------
+
+        The 95 % CI upper limit is $+644. This is the MOST OPTIMISTIC true effect
+        the in-sample evidence does not already exclude. Treat it as the ceiling.
+
+    DELTA_true  interpretation                            N @80%     yr    N @50%     yr
+          +644  95 % CI upper limit (ceiling)                  397    7.6       174    3.3
+          +483  75 % of the ceiling                            705   13.6       309    5.9
+          +322  half the ceiling                             1,587   30.5       694   13.4
+          +581  exactly the in-sample gate threshold           487    9.4       213    4.1
+          +250  a $250/wk conditional lift                   2,628   50.5     1,150   22.1
+          +100  a $100/wk conditional lift                  16,426  315.9     7,188  138.2
+
+    Read the top row. EVEN IF the true effect is the single most favourable value the
+    in-sample data still permits ($+644/wk), settling gate 2 forward at 80 % power
+    takes 7.6 YEARS of forward weeks. At 50 % power - a coin flip - 3.3 years.
+
+    ---- CASE 3: POOLING the forward weeks with the in-sample 213 ---------------------
+
+    Weaker standard (the 213 weeks are DISCOVERY_CONSUMED for this object: W118 chose the
+    cell, W120 read it), but it is the only route with a finite answer, so price it.
+    Pooled DELTA = (213*DELTA_obs + N*DELTA_fwd) / (213+N), threshold 1.645*SE(213+N).
+
+   forward N   years     required forward DELTA to pass pooled  x the ceiling
+          52     1.0                                    +2,854           4.43
+         104     2.0                                    +1,551           2.41
+         156     3.0                                    +1,111           1.73
+         208     4.0                                      +886           1.38
+         260     5.0                                      +749           1.16
+         520    10.0                                      +461           0.72
+
+    Every row demands a forward DELTA well ABOVE the ceiling of the in-sample CI. Pooling
+    does not rescue the gate; it makes the forward window carry the in-sample deficit too.
+
+======================================================================================================================
+=== 7. THE TAIL GATES - the statistics that DID pass, and what they rest on
+======================================================================================================================
+    Book's worst decile: 22 weeks (threshold $-2,283/wk). The W120 REPORT says 21;
+    its own code's mask (`a <= 10th pct`) holds 22. Small, but the report quoted a number
+    it did not print. The W120 report is right about the substance: 'the bottom decile is
+    ... a small sample carrying the most favourable statistic in the wave'.
+
+    tail beta REAL -1.861   null mean +0.009   null p05 -1.011   pctile 0.9th
+
+    LEAVE-ONE-OUT over the 21 tail weeks. If one week owns the slope, the statistic is a
+    single observation wearing a regression's clothes.
+
+dropped week       book $   MIRROR $   tail beta w/o it   pctile
+2026-W23           -6,819     19,297             -0.535    20.8th
+2025-W14           -2,718     -7,516             -1.709     0.9th
+2026-W30           -5,218      5,304             -1.788     0.9th
+2025-W19           -2,976     -4,144             -1.801     0.9th
+2025-W12           -2,630      4,412             -2.009     0.5th
+2025-W42           -7,611       -754             -3.252     0.0th
+
+    jackknife range of the tail beta: [-3.252, -0.535]   sign flips? NO
+
+    MIRROR is FLAT (zero P&L) in 4 of the 22 tail weeks.
+    Non-zero tail weeks: 18. The regression that carries the whole
+    portfolio case is fitted on that many effective points.
+
+    FORWARD REQUIREMENT FOR THE TAIL GATES
+    The worst decile is a RELATIVE definition, so it is always N/10 weeks. To reproduce
+    the 22 tail weeks the current case rests on requires 220 forward weeks = 4.2 YEARS.
+    With an ABSOLUTE threshold frozen at $-2,283/wk the rate is the same (10.3 % of weeks).
+
+  forward weeks   years  tail weeks  MIRROR-active tail wks (est)
+             52     1.0         5.2                           4.3
+            104     2.0        10.4                           8.5
+            156     3.0        15.6                          12.8
+            208     4.0        20.8                          17.0
+            260     5.0        26.0                          21.3
+
+    A slope on 5 points (one forward year) is not evidence. The tail gates need FOUR YEARS
+    of forward weeks before they carry the mass they already carry in sample - and in
+    sample they already failed to move the verdict.
+
+======================================================================================================================
+=== 8. WHERE THE -29 % MAX-DRAWDOWN HEADLINE COMES FROM
+======================================================================================================================
+    P1+XM          maxDD $  11,489   episode 2026-W19 -> 2026-W24  (5 weeks)
+    P1+XM+MIRROR   maxDD $   8,143   episode 2025-W46 -> 2025-W50  (4 weeks)
+
+    Inside the INCUMBENT's own worst episode (2026-W19 -> 2026-W24, 5 weeks):
+        MIRROR total $    18,841   over 6 active weeks
+        MIRROR best single week in that span $    19,297
+        share of MIRROR's episode $ from its single best week: 102.4 %
+
+    The -29 % is a statement about ONE episode. It is not a distributional property.
+
+======================================================================================================================
+=== 8b. THE ONE WEEK. Both surviving statistics are the same observation.
+======================================================================================================================
+    Most influential tail week: 2026-W23  (Mon 2026-06-01 - Sun 2026-06-07)
+        book  $    -6,819      MIRROR $    19,297
+
+statistic                                          with it    without it   change
+----------------------------------------------------------------------------------------------------
+tail beta                                           -1.861        -0.535   20.8th pctile, was 0.9th
+incremental fixed-DD  invvol                          +402           +34   same sign
+incremental fixed-DD  income                          +245          -527   SIGN FLIPS
+gate-2 DELTA                                           -49          -178   still negative
+
+    ####################################################################################
+    #  BOTH surviving statistics are ONE WEEK: 2026-W23.
+    #  Section 8 already showed the same week is 102 % of MIRROR's dollars inside the
+    #  incumbent's worst drawdown episode. The tail beta, the -29 % maxDD headline and
+    #  the +$402 fixed-DD increment are NOT three pieces of evidence. They are one.
+    ####################################################################################
+
+    AND WHERE DOES THAT WEEK SIT IN THE SEAL REGISTER?
+        BURNED span (CLAUDE.md section 5): 2026-05-31 -> 2026-07-31
+        2026-W23 starts 2026-06-01  ->  INSIDE THE BURNED SPAN: YES
+
+        9 of 213 weeks are burned. They hold $49,354 of MIRROR's $141,162 net (35.0 %) on 4.2 % of the weeks.
+
+    RE-RUN EVERY GATE WITH THE BURNED WEEKS REMOVED (evidence-status: the remaining weeks
+    are still DISCOVERY_CONSUMED, so this is a fragility probe, not a clean test):
+
+gate                                            all 213 wk     ex-burned   verdict
+----------------------------------------------------------------------------------------------------
+2. DELTA (needs > +1.645*SE)                           -49          -332   FAIL -> FAIL  (thr $579)
+tail beta                                           -1.861        -0.582   0.9th -> 16.7th pctile
+3. incremental fixed-DD invvol                        +402          -858   SIGN FLIPS
+3. incremental fixed-DD income                        +245        -1,074   SIGN FLIPS
+
+    The tail gate - the ONLY statistic on the favourable side of its null - is a burned-
+    window artifact. W120's report flagged t3m and t6m as burned and did NOT flag this.
+
+======================================================================================================================
+=== 9. (c) CAN THE FORWARD PAPER DECISION STREAM SETTLE THIS? Component by component.
+======================================================================================================================
+    Gate 2 needs exactly two weekly series aligned on the same ISO weeks:
+        (i)  BOOK weekly $   - the inverse-vol blend of P1/PCT and XM_CONFLICT
+        (ii) MIRROR weekly $ - the object defined in section (a)
+
+component                         in the paper stream?    verdict
+----------------------------------------------------------------------------------------------------------------------
+MIRROR decisions                  NO                      no .cs exists; W120 wrote none; it is not on the DEMO8383477 roster
+MIRROR fills / slippage           NO                      nothing to fill - but gate 2 does not test execution, see below
+MIRROR weekly $ (simulated)       COMPUTABLE              pure function of NQ 1-min bars + a 250-session causal roll. NO refit needed
+P1/PCT weekly $                   YES (from 2026-09-01)   paper leg, parity-certified
+XM_CONFLICT_v2 weekly $           YES (from 2026-09-01)   paper leg, parity-certified
+the inverse-vol BOOK              NO - THE TRAP           the paper account runs qty 1 + qty 1 = an EXECUTABLE_COMPONENT_SET, not the blend
+
+    ---- THE BOOK-DEFINITION TRAP, PRICED ----------------------------------------------
+    CLAUDE.md section 3: 'running both legs at quantity 1 is not that mapping and does not
+    reproduce the research economics'. Gate 2 conditions on 1{book < 0}, so a different
+    book is a DIFFERENT CONDITIONING EVENT. Measure how different, in sample:
+
+book definition                     losing wks      DELTA       SE       z   gate 2  agree w/ research
+inv-vol (research, w_P1=0.473)              87        -49      353   -0.14     FAIL             100.0%
+qty 1 + qty 1 (paper)                       86        -54      363   -0.15     FAIL              99.5%
+P1 alone                                    91        -42      341   -0.12     FAIL              75.6%
+
+    HONEST CORRECTION TO MY OWN PRIOR: I expected the qty-1 paper book to be a materially
+    different conditioning event. IT IS NOT. It agrees with the research book on the SIGN
+    of the week 99.5 % of the time in sample (one week in 213), and its DELTA is $-54
+    against the research book's $-49. THE PAPER STREAM *CAN* LEGITIMATELY SUPPLY THE
+    CONDITIONING EVENT 1{book<0}. What it cannot supply is the other leg. (P1 alone is a
+    genuinely different event - 75.6 % sign agreement - so 'the book' must stay both legs.)
+
+    ---- WHAT THIS MEANS OPERATIONALLY -------------------------------------------------
+    1. NO DEPLOYMENT IS NEEDED. MIRROR's forward weekly $ is a deterministic function of
+       NQ 1-min bars. Freezing run_we_w118.scan/econ + the four literals and hash-
+       registering them BEFORE the read gives a legitimate PRE-FROZEN forward series. A
+       .cs, an account, and fills add execution realism that GATE 2 DOES NOT TEST.
+    2. THE PAPER STREAM CAN SUPPLY THE BOOK SIGN, and that is a real (small) contribution:
+       99.5 % sign agreement with the research book. But it supplies HALF a statistic. The
+       MIRROR leg has to be simulated regardless, and once you are simulating one leg on
+       sealed bars you may as well simulate both - which is cheaper, is not roll-gapped,
+       and does not have to wait for the paper account. The paper stream is therefore
+       NEITHER NECESSARY NOR SUFFICIENT here. It is not the bottleneck.
+    3. THE PAPER STREAM IS ALSO CONTAMINATED FOR THIS PURPOSE IN ITS FIRST MONTH: the
+       contract roll blocks NEW ENTRIES for XM from 2026-09-06 and P1 from 2026-09-08,
+       with safe re-enable P1 >= 09-17 / XM >= 09-19. That is a ~2-week hole in the book
+       leg that has no counterpart in the MIRROR leg. Weeks 2026-W37..W38 are unusable.
+    4. THE SHADOW LEDGER CANNOT HOLD IT ANYWAY. shadow_ledger.py refuses rows at or before
+       SHADOW_START and refuses non-advancing timestamps; a simulated MIRROR series is a
+       backtest overlay, not a decision-first row. It belongs under LOCKED_FORWARD.md as a
+       preregistered one-shot read, NOT in the prospective shadow.
+
+    ==> ANSWER TO (c): NO DEPLOYMENT IS NEEDED and none should be built. The correct
+        forward instrument is a preregistered, hash-frozen SIMULATED read of both legs on
+        sealed bars - not a .cs, not the paper account, not the shadow ledger. The paper
+        stream can corroborate the book leg (99.5 % sign agreement) but is not required
+        and is roll-gapped in its first month. The ONLY binding constraint is CALENDAR
+        TIME - and section 6 shows the required calendar time does not exist.
+
+======================================================================================================================
+=== 10. COST FLOOR RESTATEMENT (the research number is not the tradable number)
+======================================================================================================================
+    W118/W120 charge COMM_RT $4.36 + a modelled per-minute spread. Recovered
+    from W118's own printout (reversal -$438 + momentum +$407 = -2c):
+        implied research cost  $15.50 / ctrRT
+
+cost model                                     $/ctrRT  MIRROR $/trade  MIRROR net $     wk $
+commission only  (A FLOOR, never a headline)      4.36             418       145,028      681
+W118/W120 research model                         15.50             407       141,162      663
+G2_EXEC01 measured  (PRIMARY)                    20.65             402       139,375      654
+all-in                                           25.01             397       137,862      647
+
+    Cost is NOT what kills this object: at the $20.65 PRIMARY it still earns
+    roughly $400/trade in sample. Gate 2 is a CORRELATION question and is cost-invariant -
+    a constant shifts the conditional and unconditional means by the SAME amount, so DELTA
+    is EXACTLY unchanged. Recording that so nobody proposes 'better fills' as the fix.
+
+======================================================================================================================
+=== 11. THE PACKET - the four gates after the two missing nulls are supplied
+======================================================================================================================
+
+gate                                          W120    after this wave
+----------------------------------------------------------------------------------------------------------------------
+1. earns > 0 on book-losing weeks             PASS    VACUOUS - an ALIGNMENT-DESTROYED MIRROR passes 98% of the time
+                                                      it is a restatement of 'MIRROR is profitable', not of alignment
+2. beats its circular-shift null there        FAIL    FAIL, and the POINT ESTIMATE IS NEGATIVE: DELTA = $-49 +/- $353
+                                                      no forward N passes it at this effect size
+3. incremental fixed-DD > 0 at either conv.   PASS    75th / 88th pctile of its OWN null - not significant
+                                                      a random-phase third leg raises fixed-DD 54% / 28% of the time
+4. worst-decile overlap <= null 95th          PASS    PASS BY NON-REJECTION: REAL 0.019 vs null MEAN 0.011
+                                                      the real overlap is WORSE than chance, merely not by enough to fail
+
+    Exactly ONE statistic in the entire W120 battery sits on the favourable side of its
+    own null: the tail beta, at the 0.9th percentile. Section 7 shows one week owns it
+    and section 8b shows that week is inside the BURNED span.
+
+======================================================================================================================
+    THE DECISION-READY ANSWER
+======================================================================================================================
+
+    (a) The object is fully specified with zero remaining choices (section a). The one
+        non-obvious requirement is 250 sessions of causal warm-up, which a cold forward
+        start does NOT supply for its first ~190 decisions.
+
+    (b) The forward statistic is DELTA = mean(MIRROR wk | book wk < 0) - mean(MIRROR wk).
+        Observed DELTA = $-49 +/- $353. IT IS NEGATIVE.
+        REQUIRED FORWARD N AT THE OBSERVED EFFECT SIZE: INFINITE. The gate cannot be
+        passed by waiting, because the estimate is on the wrong side of zero and more
+        data tightens it AROUND A NEGATIVE NUMBER.
+        Even at the 95 % CI UPPER LIMIT ($+644/wk - the most generous effect the
+        data still permits) the answer is 397 forward weeks = 7.6 YEARS at 80 % power.
+        The honest sentence is not 'three years'. It is 'longer than the evidence would
+        stay relevant, for an effect the data already estimates as negative'.
+
+    (c) It does NOT need a deployment - MIRROR's forward series is a deterministic
+        function of bars, so a hash-frozen simulated read on sealed data is the right
+        instrument. The paper stream is NEITHER NECESSARY NOR SUFFICIENT: it can supply
+        the book-sign conditioning (99.5 % agreement with the research book, contrary to
+        what I expected), but it cannot supply the MIRROR leg, and the roll gap
+        2026-09-06/08 -> 09-19 holes the book leg in its first month. Nothing about the
+        paper account is the bottleneck. CALENDAR TIME is, and there is not enough of it.
+
+    AND THE THING THAT MAKES (b) ACADEMIC: the only statistic that ever sat on the good
+    side of its null - the tail beta at the 0.9th percentile - is ONE WEEK, 2026-W23,
+    and that week is INSIDE THE BURNED SPAN. Drop it and the tail beta goes 0.9th ->
+    20.8th percentile. The -29 % maxDD headline is the same week (102 % of MIRROR's
+    dollars inside the incumbent's worst episode). There is nothing left to confirm.
+
+    ==> RECOMMENDATION: CLOSE the 'forward evidence will settle MIRROR_CONT' item. It is
+        not a scheduled read waiting on data; it is a test with no attainable N. Keep the
+        object as the standing MIRROR_CONTINUATION_CONTROL, which is what it is genuinely
+        good for. Do not build a .cs. Do not add it to the monitoring calendar.
+
+[done 0s]

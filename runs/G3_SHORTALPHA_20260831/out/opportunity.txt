@@ -1,0 +1,520 @@
+================================================================================================================
+G3_SHORTALPHA / OPPORTUNITY -- STRATEGY-FREE CENSUS OF NQ DOWN-MOVES, 2006 -> 2026-07
+is the SHORT OPPORTUNITY there at all, independent of any strategy?
+================================================================================================================
+
+--- GATE G1  SEAL --------------------------------------------------------------------
+  SPEC     : no bar may carry session_date >= 2026-08-01
+  OBSERVED : last bar 2026-07-31T16:59:00   last session_date 2026-07-31   first session_date 2006-01-05
+  VERDICT  : PASS
+  bars 6,528,330   sessions 5,466   [4s]
+
+--- COST FLOOR (printed, never buried) -----------------------------------------------
+  FLOOR    commission only     $  4.36/ctrRT = 0.2180 pts   <- A FLOOR. NEVER a headline.
+  PRIMARY  G2_EXEC01 measured  $ 20.65/ctrRT = 1.0325 pts   (113 real round turns; median $20.00, p90 $35.00)
+  ALL-IN                       $ 25.01/ctrRT = 1.2505 pts
+
+--- GATE G2  SEGMENT GEOMETRY --------------------------------------------------------
+  SPEC     : mso monotone within every session; RTH = mso[931,1320] = 09:31..16:00 ET,
+             ON = mso[1,930] = 18:01..09:30 ET (bars END-stamped: 09:31 covers 09:30:00)
+  OBSERVED : sessions with non-monotone mso = 0
+             median bars/session  FULL 1302   ON 879   RTH 390
+  VERDICT  : PASS
+
+--- GATE G3  SESSION ADMISSION -------------------------------------------------------
+  SPEC     : admit only sessions with >=300 RTH bars, >=400 overnight bars, finite ATR14
+  OBSERVED : 4,831 of 5,466 admitted (635 dropped: holidays, half-days, the 14-session ATR warm-up)
+             admitted window 2006-01-18 -> 2026-07-31
+  VERDICT  : PASS
+
+--- GATE G3b HARNESS SELF-CHECK ------------------------------------------------------
+  SPEC     : (a) every zigzag down leg <= that session's max peak-to-trough decline
+             (b) leg count is monotone non-increasing in the threshold k
+  OBSERVED : (a) 0 violations across 10 rungs x 4,831 sessions
+             (b) monotone = True
+  VERDICT  : PASS
+
+================================================================================================================
+TABLE A -- PER-YEAR DOWN-MOVE CENSUS (medians). Largest peak-to-trough decline / session.
+  'ATR'=decline/causal session ATR14.  'start'=ET clock of the peak bar.
+  'mins'=peak->trough elapsed.  'retr'=fraction handed back by the segment's last close.
+  POINTS ARE NOT COMPARABLE ACROSS YEARS (NQ ~1,700 in 2006, ~23,000 in 2026). ATR is.
+================================================================================================================
+year      N   ATR14 |  FULLpts   ATR  start  mins  retr |   RTHpts   ATR  start  mins  retr |    ONpts   ATR  mins
+------------------------------------------------------------------------------------------------------------------
+2006     76    24.0 |     20.9  0.82  01:14   232  0.44 |     18.6  0.77  10:17   146  0.48 |      8.5  0.36   155
+2007    177    29.1 |     21.8  0.75  02:24   194  0.59 |     19.5  0.67  10:16   130  0.54 |      9.5  0.33   149
+2008    238    46.9 |     40.6  0.76  02:51   294  0.44 |     34.6  0.66  10:17   160  0.44 |     18.0  0.36   202
+2009    243    33.3 |     23.5  0.67  04:17   263  0.51 |     20.2  0.59  09:55   112  0.51 |     12.8  0.36   213
+2010    247    32.9 |     22.2  0.70  05:12   273  0.50 |     18.8  0.57  09:59    99  0.52 |     11.5  0.36   236
+2011    247    41.7 |     32.0  0.68  04:24   295  0.50 |     24.2  0.54  10:02   117  0.55 |     17.0  0.39   233
+2012    241    35.8 |     25.5  0.71  05:39   297  0.53 |     21.0  0.59  10:00   118  0.54 |     13.8  0.38   264
+2013    241    33.9 |     23.5  0.69  06:48   243  0.53 |     19.5  0.57  10:00   101  0.52 |     11.0  0.33   237
+2014    243    45.0 |     29.8  0.67  06:46   231  0.64 |     27.2  0.60  10:00   108  0.58 |     14.2  0.33   219
+2015    248    61.6 |     46.0  0.68  04:46   323  0.56 |     38.2  0.58  09:58   123  0.51 |     21.2  0.35   258
+2016    248    58.2 |     40.9  0.71  04:24   342  0.49 |     30.8  0.55  10:02   132  0.47 |     22.2  0.37   290
+2017    249    51.5 |     33.5  0.61  07:57   249  0.68 |     27.0  0.52  09:48    82  0.64 |     17.0  0.32   271
+2018    248   115.1 |     82.2  0.73  07:24   300  0.49 |     69.8  0.55  10:00   106  0.52 |     44.0  0.35   296
+2019    249   109.0 |     69.8  0.65  05:47   302  0.58 |     55.5  0.50  09:51   109  0.56 |     41.5  0.37   292
+2020    249   248.8 |    163.0  0.64  03:51   304  0.68 |    120.5  0.49  10:08    97  0.59 |     96.2  0.39   272
+2021    251   205.7 |    154.5  0.67  06:47   329  0.55 |    125.8  0.53  09:50    90  0.61 |     82.2  0.38   297
+2022    249   359.8 |    278.8  0.76  07:17   359  0.44 |    217.8  0.59  10:01   128  0.46 |    148.8  0.39   309
+2023    247   238.8 |    168.0  0.72  09:04   253  0.61 |    135.0  0.57  10:02   110  0.59 |     83.2  0.36   292
+2024    249   281.6 |    197.0  0.68  08:30   274  0.56 |    161.2  0.57  10:02   116  0.53 |    115.0  0.38   253
+2025    247   386.6 |    257.0  0.66  06:02   311  0.57 |    216.8  0.53  09:56   113  0.51 |    137.5  0.36   275
+2026    144   526.0 |    369.0  0.74  04:22   339  0.54 |    274.2  0.52  09:52    84  0.51 |    236.0  0.45   275
+
+  2026 IS PARTIAL (Jan..Jul). Every 2026 cell is 7 months, not 12.
+
+================================================================================================================
+TABLE B -- MATCHED UNCONDITIONAL CONTROL: the largest ADVANCE, same sessions, mirrored.
+  If declines shrink and advances do not, the drought is SHORT-SPECIFIC.
+  If both move together it is a VOLATILITY effect and says nothing about direction.
+  retrD/retrU = how much of the decline / of the advance is handed back by the close.
+================================================================================================================
+year   |   decATR  advATR    d/a |  decRTH_A advRTH_A    d/a |   retrD  retrU    D-U
+------------------------------------------------------------------------------------
+2006   |    0.820   0.800  1.025 |     0.772    0.717  1.077 |   0.438  0.325  0.113
+2007   |    0.754   0.849  0.888 |     0.668    0.758  0.881 |   0.588  0.311  0.278
+2008   |    0.764   0.706  1.082 |     0.659    0.597  1.103 |   0.436  0.448 -0.013
+2009   |    0.674   0.781  0.863 |     0.589    0.631  0.934 |   0.511  0.312  0.199
+2010   |    0.703   0.759  0.926 |     0.572    0.603  0.949 |   0.503  0.301  0.202
+2011   |    0.682   0.737  0.925 |     0.543    0.580  0.935 |   0.500  0.338  0.162
+2012   |    0.706   0.736  0.958 |     0.587    0.624  0.941 |   0.532  0.330  0.202
+2013   |    0.693   0.774  0.895 |     0.573    0.635  0.903 |   0.526  0.286  0.241
+2014   |    0.670   0.764  0.878 |     0.598    0.644  0.929 |   0.644  0.278  0.366
+2015   |    0.678   0.729  0.930 |     0.575    0.579  0.993 |   0.563  0.273  0.290
+2016   |    0.709   0.721  0.982 |     0.546    0.562  0.972 |   0.488  0.290  0.198
+2017   |    0.614   0.787  0.780 |     0.519    0.613  0.847 |   0.677  0.196  0.481
+2018   |    0.727   0.751  0.968 |     0.550    0.607  0.907 |   0.494  0.315  0.180
+2019   |    0.648   0.731  0.887 |     0.496    0.546  0.910 |   0.583  0.244  0.340
+2020   |    0.643   0.753  0.854 |     0.493    0.573  0.860 |   0.683  0.252  0.431
+2021   |    0.672   0.770  0.873 |     0.534    0.592  0.903 |   0.549  0.239  0.310
+2022   |    0.759   0.721  1.053 |     0.588    0.573  1.026 |   0.441  0.384  0.056
+2023   |    0.721   0.749  0.963 |     0.573    0.633  0.904 |   0.610  0.269  0.341
+2024   |    0.682   0.738  0.925 |     0.574    0.594  0.966 |   0.556  0.296  0.260
+2025   |    0.662   0.721  0.918 |     0.532    0.564  0.942 |   0.574  0.297  0.277
+2026   |    0.736   0.780  0.944 |     0.520    0.564  0.922 |   0.542  0.290  0.252
+
+================================================================================================================
+TABLE C -- ERA STRATA. ERABREAK01 (p=0.0011) forbids pooling PRE with MODERN.
+  TRANS = 2020-01-01..2022-04-30, the transition ERABREAK01 itself excluded.
+  The '(all)' row is a DIAGNOSTIC ONLY and is never used as a test.
+================================================================================================================
+stratum       N  ATRpts |   decATR  advATR    d/a |  decRTH_A advRTH_A    d/a |   retrD  retrU
+----------------------------------------------------------------------------------------------
+PRE        3195    45.3 |    0.696   0.750  0.927 |     0.580    0.613  0.946 |   0.542  0.296
+TRANS       582   250.6 |    0.674   0.759  0.888 |     0.528    0.582  0.908 |   0.580  0.265
+MODERN     1054   312.5 |    0.699   0.734  0.952 |     0.555    0.581  0.956 |   0.546  0.300
+(all)      4831    67.8 |    0.696   0.749  0.930 |     0.567    0.604  0.940 |   0.545  0.294
+
+  PAIRED ASYMMETRY TEST -- per session, (max advance - max decline) in ATR units.
+  Stationary block bootstrap over sessions (mean block 10, B=20,000). This is
+  strategy-free measure of the short side's structural handicap.
+  stratum       N  mean(adv-dec)  boot p2.5  boot p97.5   >0 ?  rho_bar   K_eff
+  -----------------------------------------------------------------------------
+  PRE        3195         0.0085    -0.0105      0.0272     no   -0.055  3195.0
+  TRANS       582         0.0078    -0.0377      0.0514     no   -0.064   582.0
+  MODERN     1054         0.0055    -0.0284      0.0387     no   -0.077  1054.0
+
+  The MEAN test is not significant in any era. It is recorded FAILED (G7). The reason
+  is visible above: the MEDIAN decline is ~7% smaller than the median advance in every
+  era, but declines are far more skewed, so the MEANS converge. Both facts are true and
+  the mean is the one that pays a strategy holding to a fixed horizon.
+
+  ROBUST (median-free) form of the same question: P(advance > decline) per session.
+  stratum       N  P(adv>dec)  boot p2.5  boot p97.5  >0.5 ?
+  ----------------------------------------------------------
+  PRE        3195      0.5268     0.5108      0.5427     YES
+  TRANS       582      0.5223     0.4897      0.5550      no
+  MODERN     1054      0.5294     0.5028      0.5560     YES
+
+================================================================================================================
+TABLE D -- PERFECT-FORESIGHT UPPER BOUND, THRESHOLD LADDER.  k*ATR reversal zigzag,
+  every down leg taken at the exact top and the exact bottom. NO strategy, NO risk,
+  NO slippage, NO stop. 'net' charges the PRIMARY $20.65/ctrRT = 1.0325 pts per leg.
+  The BRIEF asked for k=2. It is printed. At session-ATR scale it is DEGENERATE.
+================================================================================================================
+     k |  MODERN legs  PFshort      net   PFlong    S/L |  PRE legs  PFsATR  PFlATR    S/L
+------------------------------------------------------------------------------------------
+  0.10 |        25.59   1695.7   1669.3   1702.3  0.996 |     27.47   5.213   5.250  0.993
+  0.15 |        10.60   1076.2   1065.3   1085.9  0.991 |     11.31   3.280   3.323  0.987
+  0.20 |         5.85    794.8    788.8    806.5  0.986 |      6.23   2.412   2.461  0.980
+  0.25 |         3.81    635.5    631.6    647.7  0.981 |      3.98   1.914   1.964  0.975  <- PRIMARY (freq-matched)
+  0.33 |         2.21    477.2    474.9    492.8  0.968 |      2.30   1.437   1.498  0.959
+  0.50 |         1.03    313.2    312.1    321.4  0.974 |      1.07   0.947   0.998  0.950
+  0.75 |         0.49    197.0    196.5    195.2  1.010 |      0.51   0.610   0.620  0.985
+  1.00 |         0.27    131.6    131.3    117.4  1.121 |      0.28   0.418   0.387  1.083
+  1.50 |         0.07     49.4     49.3     40.3  1.227 |      0.10   0.194   0.119  1.632
+  2.00 |         0.03     23.7     23.7     10.6  2.243 |      0.03   0.084   0.033  2.540  <- BRIEF k=2
+
+  MODERN columns are pts/session at 1 contract; PRE columns are in ATR units because
+  PRE points (NQ ~2,000) and MODERN points (NQ ~23,000) are different currencies.
+
+================================================================================================================
+TABLE D2 -- PER-YEAR PF-SHORT BOUND at the frequency-matched rung k=0.25 (~3.8 legs/session)
+  and at the brief's k=2.00 rung, side by side. ATR-normalised columns are the
+  cross-era-legal ones.
+================================================================================================================
+year      N |  PFs_k.25  legs  PFsATR  PFlATR    S/L |   PFs_k2  legs2  PFs2ATR
+-------------------------------------------------------------------------------
+2006     76 |      63.9  6.89   3.252   3.242  1.003 |      0.8  0.026    0.062
+2007    177 |      71.1  5.16   2.461   2.549  0.965 |      3.5  0.051    0.136
+2008    238 |     105.5  3.96   1.964   1.891  1.038 |      2.7  0.025    0.060
+2009    243 |      58.6  3.77   1.756   1.853  0.947 |      0.5  0.008    0.018
+2010    247 |      59.7  3.73   1.802   1.849  0.974 |      2.6  0.028    0.079
+2011    247 |      78.8  3.73   1.813   1.830  0.991 |      2.3  0.028    0.066
+2012    241 |      65.2  3.85   1.811   1.857  0.975 |      0.7  0.008    0.018
+2013    241 |      58.9  3.76   1.775   1.857  0.955 |      2.6  0.037    0.084
+2014    243 |      83.9  3.92   1.919   1.981  0.968 |      4.6  0.053    0.120
+2015    248 |     122.5  3.92   1.904   1.930  0.986 |      7.6  0.052    0.124
+2016    248 |     119.2  3.97   1.934   1.960  0.987 |      6.9  0.040    0.116
+2017    249 |      90.4  3.74   1.768   1.893  0.934 |      6.3  0.044    0.130
+2018    248 |     250.4  4.12   2.036   2.057  0.989 |     10.4  0.036    0.099
+2019    249 |     182.9  3.59   1.682   1.782  0.944 |      5.5  0.024    0.058
+2020    249 |     488.5  4.14   2.001   2.097  0.954 |     25.5  0.052    0.133
+2021    251 |     419.5  3.93   1.912   1.969  0.971 |     24.1  0.048    0.121
+2022    249 |     637.2  3.47   1.732   1.657  1.045 |     14.6  0.020    0.047
+2023    247 |     409.1  3.66   1.726   1.823  0.947 |      2.4  0.004    0.009
+2024    249 |     538.5  3.80   1.841   1.870  0.984 |     26.5  0.040    0.101
+2025    247 |     791.0  4.13   1.980   1.999  0.991 |     47.4  0.049    0.125
+2026    144 |     986.4  4.06   1.931   1.994  0.969 |     27.9  0.021    0.060
+
+================================================================================================================
+TABLE E -- CAPTURE.  WE_W61 mirrored short sleeve realized points vs the opportunity,
+  on EXACTLY the sessions the sleeve's own ledger covers. Three denominators, because
+  a capture ratio with a near-zero or sign-flipping denominator is not a statistic.
+================================================================================================================
+  matched sessions 969 of 1,012 ledger rows (2022-07-05 -> 2026-05-29); the 43 unmatched
+  rows are half-days/holidays dropped by G3.
+  sleeve net over matched sessions:     6,247 pts = $    124,933   (6.45 pts/session)
+
+year      N |  sleeve p/s sleeve/ATR |  maxdec p/s  share% |  PFs_k.25   cap%  capNET% |   PFs_k2   cap%
+--------------------------------------------------------------------------------------------------------
+2022    124 |       10.80     0.0375 |       263.9    4.09 |     534.2   2.02     2.04 |     16.6  65.04
+2023    247 |        2.59     0.0093 |       185.5    1.40 |     409.1   0.63     0.64 |      2.4 106.63
+2024    249 |       14.58     0.0507 |       243.2    5.99 |     538.5   2.71     2.73 |     26.5  55.02
+2025    247 |        7.01     0.0291 |       327.8    2.14 |     791.0   0.89     0.89 |     47.4  14.79
+2026    102 |      -10.75    -0.0220 |       358.4   -3.00 |     863.4  -1.24    -1.25 |      7.5-144.27
+
+  share%   = sleeve pts/session / mean largest-decline pts/session. The denominator is
+             ALWAYS positive and never near zero, so this ratio is the stable one.
+  cap%     = sleeve pts/session / perfect-foresight pts/session at that rung.
+  2022 is a half year (the ledger starts 2022-07-04); 2026 ends 2026-05-29.
+
+================================================================================================================
+TABLE F -- RETRACE ASYMMETRY AND CLOSE LOCATION.  *** DISCOVERY, NOT PREREGISTERED ***
+  evidence-status DISCOVERY_CONSUMED. This is a lead, not a passed falsifier, and it
+  is not counted in the adjudication above.
+  retrD = fraction of the session's biggest DECLINE handed back by the close.
+  retrU = fraction of the session's biggest ADVANCE handed back by the close.
+  clv   = (close - session low) / session range. 0.50 = the close sits mid-range.
+  CAUTION: retrD-retrU and clv are two views of the SAME thing -- where the close sits.
+  The conditional split below is the control that separates 'structure' from 'drift'.
+================================================================================================================
+stratum       N |   retrD  retrU    D-U    clv  up-cls% |   D-U | up-close  D-U | dn-close
+------------------------------------------------------------------------------------------
+PRE        3195 |   0.788  0.542  0.246  0.566     55.6 |            0.949          -0.634
+TRANS       582 |   0.844  0.541  0.303  0.577     56.7 |            1.105          -0.747
+MODERN     1054 |   0.805  0.547  0.258  0.557     53.0 |            1.033          -0.617
+2026 only   144 |   0.828  0.486  0.342  0.559     54.2 |            1.032          -0.475
+
+  PAIRED test on (retrD - retrU), stationary block bootstrap, mean block 10, B=20,000:
+  stratum        N   mean(D-U)  boot p2.5  boot p97.5   >0 ?  rho_bar   K_eff
+  ---------------------------------------------------------------------------
+  PRE         3195      0.2458     0.1991      0.2920    YES   -0.038  3195.0
+  TRANS        582      0.3029     0.2051      0.3962    YES   -0.088   582.0
+  MODERN      1054      0.2581     0.1861      0.3281    YES   -0.040  1054.0
+
+================================================================================================================
+TABLE F2 -- THE HEADWIND ITSELF, two ways.  The orchestrator's own measurement found
+  the modern drift NOT measurable in mean terms (t=1.48 all-session). The FREQUENCY
+  form of the same quantity has far more power against a heavy-tailed return, so it is
+  the fair test of 'is there a drift for a short to fight'.
+  retA = (session close - prior session close) / causal ATR14.  upday = P(retA > 0).
+================================================================================================================
+stratum        N  mean retA     p2.5    p97.5  >0 ? |  P(up day)    p2.5   p97.5  >0.5 ? |  P(up close vs open)  >0.5 ?
+-----------------------------------------------------------------------------------------------------------------------
+PRE         3194     0.0388   0.0144   0.0627   YES |     0.5545  0.5373  0.5717     YES |               0.5559     YES
+TRANS        582     0.0333  -0.0253   0.0889    no |     0.5653  0.5258  0.6048     YES |               0.5670     YES
+MODERN      1054     0.0332  -0.0075   0.0738    no |     0.5361  0.5085  0.5636     YES |               0.5304     YES
+2026 only    144     0.0366  -0.0721   0.1642    no |     0.5208  0.4375  0.6111      no |               0.5417      no
+
+  This is the drift a mirrored short pays for. Read the PRE and MODERN rows against
+  each other before quoting either: ERABREAK01 forbids pooling them.
+
+================================================================================================================
+TABLE G -- SEGMENT MIGRATION.  *** DISCOVERY, NOT PREREGISTERED ***
+  Overnight share of the session's biggest move: dec_ON/dec_FULL and its matched
+  control adv_ON/adv_FULL. Answers 'did the down-move move to a different clock?'
+================================================================================================================
+year      N |  decON/dec advON/adv   diff |  decA_ON advA_ON |  decA_RTH advA_RTH
+---------------------------------------------------------------------------------
+2006     76 |      0.469     0.460  0.009 |    0.442   0.423 |     0.866    0.866
+2007    177 |      0.502     0.510 -0.007 |    0.400   0.431 |     0.805    0.813
+2008    238 |      0.529     0.560 -0.032 |    0.406   0.400 |     0.740    0.681
+2009    243 |      0.590     0.580  0.011 |    0.415   0.450 |     0.670    0.685
+2010    247 |      0.580     0.574  0.006 |    0.414   0.440 |     0.694    0.698
+2011    247 |      0.620     0.631 -0.011 |    0.455   0.491 |     0.660    0.654
+2012    241 |      0.591     0.601 -0.009 |    0.429   0.455 |     0.668    0.680
+2013    241 |      0.564     0.545  0.019 |    0.393   0.429 |     0.679    0.693
+2014    243 |      0.548     0.526  0.022 |    0.387   0.414 |     0.747    0.727
+2015    248 |      0.598     0.594  0.004 |    0.435   0.457 |     0.691    0.674
+2016    248 |      0.617     0.606  0.011 |    0.464   0.458 |     0.650    0.644
+2017    249 |      0.588     0.556  0.032 |    0.386   0.431 |     0.671    0.691
+2018    248 |      0.589     0.572  0.017 |    0.438   0.441 |     0.712    0.689
+2019    249 |      0.649     0.626  0.023 |    0.442   0.476 |     0.591    0.619
+2020    249 |      0.667     0.650  0.017 |    0.500   0.527 |     0.632    0.651
+2021    251 |      0.632     0.599  0.033 |    0.459   0.463 |     0.667    0.681
+2022    249 |      0.604     0.610 -0.006 |    0.454   0.444 |     0.666    0.625
+2023    247 |      0.591     0.549  0.042 |    0.423   0.422 |     0.650    0.686
+2024    249 |      0.599     0.603 -0.004 |    0.437   0.467 |     0.675    0.655
+2025    247 |      0.621     0.628 -0.007 |    0.445   0.475 |     0.653    0.627
+2026    144 |      0.691     0.659  0.031 |    0.513   0.547 |     0.634    0.640
+
+================================================================================================================
+TABLE H -- WHAT CHANGED IN THE SLEEVE.  *** DISCOVERY, NOT PREREGISTERED ***
+  Per year OLS on matched sessions:  sleeve_pts/ATR  ~  a + b*decA_FULL + c*advA_FULL
+  b = how much the sleeve earns per unit of AVAILABLE DECLINE (its capture coefficient)
+  c = how much it loses per unit of ADVERSE ADVANCE (its exposure to being run over)
+  95% CIs from a stationary block bootstrap over sessions (mean block 10, B=2000).
+================================================================================================================
+year      N |        a |   b (decA)    CI2.5   CI97.5 |   c (advA)    CI2.5   CI97.5 |     R2
+---------------------------------------------------------------------------------------------
+2022    124 |  -0.1751 |     0.3055   0.0982   0.5021 |    -0.0496  -0.1603   0.0294 |  0.234
+2023    247 |  -0.1944 |     0.2775   0.1641   0.3794 |    -0.0161  -0.0778   0.0451 |  0.170
+2024    249 |  -0.2898 |     0.4430   0.3271   0.5252 |    -0.0345  -0.1242   0.0468 |  0.448
+2025    247 |  -0.2133 |     0.3616   0.1670   0.5226 |    -0.0685  -0.1397   0.0546 |  0.334
+2026    102 |  -0.0821 |     0.1566   0.0538   0.2452 |    -0.0712  -0.1296  -0.0168 |  0.123
+
+  Read b and c together. A capture failure shows up as b collapsing. Being run over by
+  the other side shows up as c falling. n is ~100-250 sessions/year -- these are NOISY,
+  the CIs are wide, and no promotion may rest on this table.
+
+================================================================================================================
+TABLE I -- ATTRIBUTION.  How much of 2026's loss is the RAW MATERIAL changing, and how
+  much is the RELATIONSHIP changing?  Fit the sleeve's response to session geometry on
+  2022-2025 ONLY, then predict 2026 from 2026's OWN geometry. What the model predicts is
+  the part a drought/headwind explains. The residual is the capture failure.
+  M1: sleeve/ATR ~ 1 + decA_FULL + advA_FULL
+  M2: M1 + retA  (adds the realised session drift, so the headwind is fully absorbed)
+================================================================================================================
+model   train N  test N |  actual /ATR  predicted    resid |  actual p/s predicted p/s  resid p/s resid CI2.5   CI97.5
+----------------------------------------------------------------------------------------------------------------------
+M1          867     102 |      -0.0220     0.0182  -0.0402 |      -10.30          8.50     -18.80      -35.27    -2.96
+M2          867     102 |      -0.0220     0.0201  -0.0421 |      -10.30          9.40     -19.70      -37.04    -2.82
+
+  M1 fitted on 2022-2025:  intercept -0.2340   decA_FULL +0.3669   advA_FULL -0.0415
+  M2 fitted on 2022-2025:  intercept -0.2298   decA_FULL +0.3173   advA_FULL +0.0048   retA -0.0440
+
+  EXTRAPOLATION CHECK -- everything here is ATR-normalised, so 2026's higher point-scale
+  cannot by itself push the test set outside the training range. Predictor means and
+  ranges, train vs test:
+  predictor    train mean  train p5  train p95  test mean  inside?
+  ----------------------------------------------------------------
+  decA_FULL        0.8143    0.2844     1.6976     0.7877      YES
+  advA_FULL        0.8178    0.3493     1.5577     0.8880      YES
+  retA             0.0380   -1.0842     1.1128     0.0980      YES
+
+  CAVEAT, stated plainly: this is a LINEAR proxy for a path-dependent ratchet, R2 ~0.12
+  to 0.45. It does not decompose the strategy's mechanics and no promotion may rest on
+  it. What it does support is the narrow claim it is used for: the sleeve's RESPONSE to
+  available session geometry changed sign in 2026, and the size of that change is far
+  larger than the change in the geometry itself.
+
+  units: pts/session at 1 contract; 2026 matched-window mean ATR14 = 468 pts.
+  A NEGATIVE predicted value means the 2026 raw material alone should have lost money.
+  A NEGATIVE residual whose CI excludes zero means the sleeve underperformed even after
+  the raw material is accounted for -- that residual IS the capture failure, in points.
+
+================================================================================================================
+INFERENCE -- dependence-preserving. Stationary block bootstrap over SESSIONS, mean
+  block 10, B=20,000, drawn from MODERN pre-2026 sessions (2022-05-01..2025-12-31),
+  window length = the 2026 session count. rho_bar and K_eff printed for every row.
+  '+-MC' is the MONTE-CARLO standard error of the percentile itself, in pp. A percentile
+  within ~2 x MC of a gate bar is NOT distinguishable from that bar. Seeds are crc32 of
+  the column name -- deterministic, because Python's hash() is randomised per process.
+================================================================================================================
+  modern pre-2026 pool 910 sessions | 2026 window 144 sessions
+
+metric                            2026      pool   boot p5  boot p50  boot p95    pct  +-MC  rho_bar   K_eff
+------------------------------------------------------------------------------------------------------------
+atr14 (pts)  SCALE            529.6942  325.5059  272.1497  320.3421  395.3461  100.0  0.00    0.989     1.0
+dec_FULL  pts                 428.8281  257.9363  211.9478  254.6458  316.6255  100.0  0.00    0.341     2.9
+dec_RTH   pts                 330.2344  206.8843  171.5762  204.0382  252.4833  100.0  0.00    0.357     2.8
+decA_FULL ATR                   0.8257    0.8123    0.7387    0.8103    0.8908   63.1  0.34    0.126     7.9
+decA_RTH  ATR                   0.6338    0.6548    0.5922    0.6532    0.7200   30.5  0.33    0.149     6.7
+decA_ON   ATR                   0.5126    0.4390    0.4008    0.4385    0.4782   99.8  0.03    0.101     9.8
+advA_FULL ATR  CONTROL          0.8663    0.8122    0.7599    0.8117    0.8673   94.7  0.16    0.067    14.7
+advA_RTH  ATR  CONTROL          0.6398    0.6494    0.6038    0.6482    0.6993   38.4  0.34    0.074    13.4
+dvar_FULL pts (downvar)      4346.1806 2427.7780 2015.7041 2387.0556 2967.2424  100.0  0.00    0.812     1.2
+pfS_FULL  pts k=0.25          986.3837  579.9706  446.9388  554.5321  802.4727   99.5  0.05    0.513     1.9
+pfSA_FULL ATR k=0.25            1.9313    1.8152    1.5455    1.7919    2.1503   77.0  0.30    0.406     2.5
+pfLA_FULL ATR k=0.25 CTRL       1.9938    1.8461    1.6127    1.8253    2.1484   83.3  0.26    0.366     2.7
+pfSn_FULL legs k=0.25           4.0625    3.7758    3.2569    3.7292    4.4514   80.3  0.28    0.391     2.6
+pfSA_FULL ATR k=2.0             0.0595    0.0723    0.0152    0.0664    0.1464   39.1  0.35    0.072    13.8
+retrD_FULL frac                 0.8279    0.8017    0.7040    0.8003    0.9043   67.7  0.33   -0.018   910.0
+retrU_FULL frac CONTROL         0.4863    0.5568    0.4762    0.5545    0.6422    7.6  0.19   -0.070   910.0
+retrD-retrU  DISCOVERY          0.3416    0.2449    0.0823    0.2449    0.4012   84.4  0.26   -0.040   910.0
+clv (close in range)            0.5592    0.5567    0.5186    0.5573    0.5952   53.3  0.35   -0.041   910.0
+advA_ON   ATR  CONTROL          0.5473    0.4509    0.4170    0.4505    0.4863  100.0  0.00    0.105     9.5
+decON/decFULL share             0.6906    0.6065    0.5736    0.6064    0.6399  100.0  0.00    0.031    31.6
+advON/advFULL sh CTRL           0.6592    0.5951    0.5607    0.5957    0.6278  100.0  0.01   -0.010   910.0
+retA (headwind, ATR)            0.0366    0.0327   -0.0590    0.0341    0.1217   51.8  0.35   -0.050   910.0
+upday P(close>prevC)            0.5208    0.5385    0.4792    0.5417    0.5972   27.6  0.32   -0.025   910.0
+
+  pct = percentile of the 2026 mean inside the dependence-preserving bootstrap of the
+        modern pre-2026 pool. LOW pct = 2026 is unusually SMALL on that metric.
+  NOTE the atr14 row has rho_bar 0.99 / K_eff ~1: its percentile is NOT an inference,
+  it is a statement that 2026 sits in a high-vol regime. It is printed as SCALE only.
+
+  PF short/long RATIO at k=0.25:  2026 0.9706   pool 0.9841   boot p5 0.9261   p50 0.9831   pct 35.8
+  capture% (k=0.25) 2022-2025 span [0.63, 2.71]   2026 = -1.24   inside = False
+  share%  (vs max decline) 2022-2025 span [1.40, 5.99]   2026 = -3.00   inside = False
+
+================================================================================================================
+GATE TABLE -- every clause preregistered in the module docstring, coded, program-printed.
+================================================================================================================
+gate  SPEC                                                            OBSERVED                   VERDICT
+--------------------------------------------------------------------------------------------------------
+G1    no session_date >= 2026-08-01 is read                           max 2026-07-31                PASS
+G2    mso monotone in every session                                   0 violations                  PASS
+G3    >= 3,000 admitted sessions                                      4,831                         PASS
+G3b   zigzag legs consistent with the MDD census; legs monotone in k  0 viol / mono True            PASS
+G4    DROUGHT: 2026 PF-short/ATR pct <= 10 vs modern bootstrap        pct 77.0                      FAIL
+G4b   DROUGHT-ATR: 2026 max-decline/ATR pct <= 10                     pct 63.1                      FAIL
+G4c   DROUGHT-ATR (RTH only): pct <= 10                               pct 30.5                      FAIL
+G5    SHORT-SPECIFIC: PF short/long ratio pct <= 10                   pct 35.8                      FAIL
+G6    CAPTURE STABLE: 2026 capture% inside the 2022-2025 span         -1.2 vs [0.6,2.7]             FAIL
+G7    STRUCTURAL: mean(adv-dec) > 0 in BOTH PRE and MODERN (boot 95% CI)PRE +0.0085 MOD +0.0055       FAIL
+
+================================================================================================================
+ROBUSTNESS -- the sleeve's ledger ends 2026-05-29; the census runs to 2026-07-31.
+  Re-testing the opportunity on EXACTLY the 2026 sessions the sleeve actually traded,
+  so the 'the moves were there' claim is made on the same sessions as the loss.
+================================================================================================================
+  metric                      2026 matched  2026 all      pool   boot p5  boot p95    pct  +-MC
+  ---------------------------------------------------------------------------------------------
+  decA_FULL ATR                     0.7877    0.8257    0.8123    0.7265    0.9065   33.5  0.33
+  decA_RTH ATR                      0.6004    0.6338    0.6548    0.5820    0.7337   11.6  0.23
+  pfSA_FULL ATR k=0.25              1.9040    1.9313    1.8152    1.5063    2.2278   71.1  0.32
+  dec_FULL pts                    358.4387  428.8281  257.9363  204.5074  326.9591   98.5  0.08
+  upday P(close>prevC)              0.5784    0.5208    0.5385    0.4608    0.6078   78.1  0.29
+  retA (headwind, ATR)              0.0980    0.0366    0.0327   -0.0773    0.1392   83.9  0.26
+  (102 matched 2026 sessions vs 144 in the full census year.)
+
+================================================================================================================
+CONTROL TABLE -- the rival explanations for 2026, each measured. THESE ARE CONTROLS,
+  NOT PREREGISTERED FALSIFIERS. They cannot promote anything; they can only remove an
+  alternative reading of the gates above.
+================================================================================================================
+  Percentiles are shown BOTH ways: 'full yr' = the 144 census sessions to 2026-07-31,
+  'matched' = the 102 sessions the sleeve's ledger actually covers (to 2026-05-29).
+  Where they disagree, the MATCHED column is the one that bears on the sleeve's loss.
+rival explanation                                 metric                  full yr  matched  supported?
+------------------------------------------------------------------------------------------------------
+the down-moves got smaller (drought, ATR units)   decA_FULL                  63.1     33.5          no
+the down-moves got smaller inside RTH             decA_RTH                   30.5     11.6          no
+the perfect-foresight ceiling shrank              pfSA k=0.25                77.0     71.1          no
+the up-drift headwind grew (mean form)            retA                       51.8     83.9          no
+the up-drift headwind grew (frequency form)       upday                      27.6     78.1          no
+declines shrank RELATIVE to advances (short-specific)S/L ratio                  35.8       --          no
+the down-move migrated to a clock the sleeve missesdecON share               100.0       --          no
+   ... its MATCHED CONTROL, the advance, migrated tooadvON share               100.0       --            
+2026 is simply a lower-volatility year            atr14 (HIGHEST)           100.0       --          no
+
+  NO rival explanation clears its bar. But TWO of them LEAN the short-hostile way on
+  the matched window and must be reported, not buried: RTH decline size sits at the
+  12th percentile and the up-day frequency at the 78th. Neither
+  crosses the preregistered 10/90 bar, and TABLE I prices what they are worth.
+
+  The segment-migration row is 'no' because its MATCHED CONTROL moved with it: the
+  advance migrated overnight just as much as the decline did, so 2026's overnight
+  concentration is a session-structure fact, not a short-side fact.
+
+================================================================================================================
+ADJUDICATION (rule fixed before the numbers were seen): CAPTURE FAILURE
+================================================================================================================
+
+================================================================================================================
+MAGNITUDE -- what the bound is worth, and what it is NOT.
+================================================================================================================
+  MODERN  k=0.25  PF-short    580.0 pts/session over   3.78 legs = $    11,599/session gross
+          - floor $4.36     ->    579.1 pts = $    11,583/session   (cost eats   0.1% of the bound)
+          - PRIMARY $20.65  ->    576.1 pts = $    11,521/session   (cost eats   0.7% of the bound)
+          - all-in $25.01   ->    575.2 pts = $    11,505/session   (cost eats   0.8% of the bound)
+  MODERN  k=2.0   PF-short     23.0 pts/session over   0.03 legs = $       461/session gross
+          - floor $4.36     ->     23.0 pts = $       461/session   (cost eats   0.0% of the bound)
+          - PRIMARY $20.65  ->     23.0 pts = $       460/session   (cost eats   0.1% of the bound)
+          - all-in $25.01   ->     23.0 pts = $       460/session   (cost eats   0.2% of the bound)
+  2026    k=0.25  PF-short    986.4 pts/session over   4.06 legs = $    19,728/session gross
+          - floor $4.36     ->    985.5 pts = $    19,710/session   (cost eats   0.1% of the bound)
+          - PRIMARY $20.65  ->    982.2 pts = $    19,644/session   (cost eats   0.4% of the bound)
+          - all-in $25.01   ->    981.3 pts = $    19,626/session   (cost eats   0.5% of the bound)
+  2026    k=2.0   PF-short     27.9 pts/session over   0.02 legs = $       559/session gross
+          - floor $4.36     ->     27.9 pts = $       558/session   (cost eats   0.0% of the bound)
+          - PRIMARY $20.65  ->     27.9 pts = $       558/session   (cost eats   0.1% of the bound)
+          - all-in $25.01   ->     27.9 pts = $       558/session   (cost eats   0.1% of the bound)
+
+  the sleeve realizes 6.45 pts/session against a 603.5 pts/session k=0.25 bound = 1.07% of perfect foresight.
+  A bound this loose is NOT headroom. It is a ceiling on the SIZE of the object; it is
+  no evidence whatever that any part of it is reachable by a causal rule.
+
+================================================================================================================
+SUMMARY -- what this wave establishes, and what it does not.
+================================================================================================================
+ESTABLISHED
+  1. The opportunity did NOT shrink. In ATR units the largest session decline has been
+     0.696 +/- a few percent EVERY YEAR since 2006 (PRE 0.696, MODERN 0.699) -- a flat
+     line through the GFC, the 2018 vol shock, COVID and the 0DTE break. 2026 sits at
+     the 63th percentile of the modern bootstrap on the full year and the 34th on the
+     matched window. In POINTS 2026 is the LARGEST short opportunity in the 21-year
+     record: 429 pts/session of largest decline vs a modern pool mean of 258.
+  2. THE LOAD-BEARING NUMBER. Fit the sleeve's response to session geometry on
+     2022-2025, feed it 2026's OWN geometry: it predicts +9.4 pts/session.
+     The sleeve delivered -10.3. Residual -19.7 pts/session, block-bootstrap
+     CI [-37.0, -2.8], EXCLUDES ZERO. That is the capture failure priced in points,
+     and M2 already absorbs the realised drift, so it is not a headwind story.
+  3. The 'headwind grew' reading does not carry the loss. On the full 2026 year the
+     up-day frequency is at the 28th percentile. On the matched window it rises to the 78th --
+     a real short-hostile lean, below the 90 bar, and TABLE I shows it is worth far
+     less than the loss.
+  4. A correction to the premise this wave was launched under. The modern drift IS
+     measurable -- just not in the mean. Mean retA in MODERN has a bootstrap CI that
+     spans zero, but P(up day) = 0.5361 with CI [0.5076, 0.5626], which excludes 0.50.
+     The census shows why: the MEDIAN decline is ~5% smaller than the median advance
+     while the MEANS are equal. Declines are RARER AND FATTER. A short wins less often
+     and bigger. That is a frequency handicap, and a mean-based t-test cannot see it.
+
+NOT ESTABLISHED / NEGATIVE
+  5. G7 FAILED. The mean (advance - decline) asymmetry is NOT significant in any era.
+     The short's structural handicap is a MEDIAN and FREQUENCY effect only.
+  6. The retrace asymmetry (declines hand back 80% by the close, advances 55%) is
+     arithmetically the up-close frequency: conditioned on an up close it is +1.03, on
+     a down close it is -0.62. It is NOT an independent structural fact. Recorded as a
+     control that came back negative, not as a finding.
+  7. The overnight migration is real and large but NOT short-specific -- the matched
+     advance control migrated with it.
+  7b. HONEST CAVEAT. On the 102 sessions the sleeve actually traded in 2026, the RTH
+     decline in ATR units sits at the 12th percentile -- the single
+     closest any drought measure comes to its 10th-percentile bar. It does not cross it,
+     the FULL-session and PF-ceiling measures on the same sessions are at the 34th and
+     71th, and TABLE I prices the whole raw-material change as POSITIVE for a short.
+     Two more leans belong in the same paragraph: on the full year the largest ADVANCE
+     in ATR units sits at the 95th percentile while the decline sits at the 63th, and on
+     the matched window the realised drift is at the 84th. The strongest honest statement is
+     PREDOMINANTLY a capture failure with a mild short-hostile tilt in the raw material,
+     not a pure one. TABLE I is what separates them, and it puts the tilt's value at
+     +9.4 pts/session -- the WRONG SIGN to explain a loss.
+  8. NO CANDIDATE IS PROPOSED. The perfect-foresight ceiling is enormous and entirely
+     unreachable; 1.07% of it is realized, and a ceiling is not headroom. Nothing here
+     licenses building anything.
+
+WHAT WOULD KILL THIS
+  A demonstration that the causal ATR14 normaliser is the wrong denominator -- if the
+  sleeve's risk unit scales with something other than trailing session range (e.g. the
+  60/460-minute sigma the Solar ratchet actually uses), then 'the opportunity is
+  constant in ATR units' may not be the opportunity the sleeve can see. The point-level
+  result (2026 is the largest decline year on record) does not depend on that choice.
+
+[done 11s]  wrote opportunity_sessions.csv, _peryear.csv, _pf_peryear.csv, _capture.csv

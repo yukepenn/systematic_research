@@ -1,0 +1,43 @@
+======================================================================================================================
+=== G3_SHORTALPHA / NATIVE - G5_VARIANTS: the only untested aggregations of the .cs's
+===     discarded set-level short target. Spec addendum committed before this ran.
+======================================================================================================================
+    SEAL re-asserted: MODERN 2026-07-31T16:59:00  PRE 2021-12-31T17:00:00  both < 2026-08-01  PASS
+    substrates + reference signals ready [56s]
+    MODERN three short aggregations built [83s]
+    PRE three short aggregations built [164s]
+
+--- CONTROL: the rebuilt S_dS must equal run_we_w97.votes()[1] bar for bar ------------
+    MODERN   S_dS == votes()[1] : IDENTICAL  (0 disagreeing bars)
+    PRE      S_dS == votes()[1] : IDENTICAL  (0 disagreeing bars)
+
+======================================================================================================================
+=== G5  THE THREE AGGREGATIONS, PRIMARY $20.65 cost-consistent box.
+======================================================================================================================
+
+stratum  arm          agree vs S_dS  target bars   trades        net $  pts/sess     wk $   wk+%      maxDD  fixDD wk$
+MODERN   S_dS             100.0000%      252,479    2,273      103,663      4.90      487  48.8%     43,755        225
+MODERN   S_dL              90.9020%      196,185    2,443       -5,958     -0.28      -28  45.5%     53,039        -11
+MODERN   S_nogate          97.1884%      298,028    2,082       45,597      2.15      214  46.9%     64,478         67
+
+PRE      S_dS             100.0000%      780,121   10,831     -223,530     -2.61     -268  31.1%    227,026        -24
+PRE      S_dL              92.0198%      654,460   11,416     -216,620     -2.53     -260  28.8%    228,624        -23
+PRE      S_nogate          97.2900%      913,136    9,547     -179,906     -2.10     -216  33.0%    185,745        -24
+
+    MODERN weekly pairwise rho across the 3 arms: +0.5390, +0.7990, +0.6626   rho_bar +0.6669   K_eff 1.29
+
+======================================================================================================================
+=== THE PREREGISTERED REOPEN RULE (spec addendum): a variant reopens the closure ONLY if
+===   (a) < 99 % bar-agreement with S_dS, AND (b) net > 0 on BOTH strata at $20.65,
+===   AND (c) >= 95th percentile of its own circular-shift null on BOTH strata.
+======================================================================================================================
+
+  ARM        (a) <99% agree      (b) net>0 both strata       (c) null >=95th both        REOPEN?
+  ------------------------------------------------------------------------------------------------
+  S_dS       no  100.0000%       no  M 103,663 / P -223,530  n/a (is the reference)           no
+  S_dL       YES 90.9020%        no  M -5,958 / P -216,620   n/a (a or b failed)              no
+  S_nogate   YES 97.1884%        no  M 45,597 / P -179,906   n/a (a or b failed)              no
+
+  VERDICT: the closure stands unless a row above says REOPEN.
+
+[done 164s]
