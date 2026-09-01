@@ -21,10 +21,13 @@ TOTAL CONTRACT/RISK MAPPING:
   Peak simultaneous exposure 3 NQ contracts. Peak simultaneous exposure 3 NQ contracts.
   SUPERSEDED 2026-08-31/09-01: the MNQ variant was not merely evaluated - it was BUILT, gate-verified
   (MX01 gates G1-G6 all PASS; per-bar decision exports byte-identical, same sha256, 61,600 bars per
-  leg) and DEPLOYED LIVE. MNQ friction is MEASURED: $1.30/ctr RT vs NQ $4.36 - 3.35x cheaper per
-  CONTRACT but 2.98x dearer per unit of EXPOSURE ($13.00 vs $4.36). Spread does not degrade (same
-  0.25 tick, point value scales exactly 1/10), so all-in ratio is only ~1.35x, roughly $35/week at
-  3 MNQ. See runs/MX01_MNQ_EXECUTION_PORT_20260831/ and CURRENT_LIVE_TRUTH.md.
+  leg) and DEPLOYED LIVE. MNQ COMMISSION is MEASURED: $1.30/ctr RT vs NQ $4.36 - 3.35x cheaper per
+  CONTRACT but 2.98x dearer per unit of EXPOSURE ($13.00 vs $4.36). ** MNQ SPREAD IS NOT MEASURED.**
+  The '~$35/week at 3 MNQ' figure is the COMMISSION penalty ALONE and contains no spread term; the
+  'spread does not degrade' premise is an ASSUMPTION whose tick arithmetic is right and whose
+  empirical half was never checked. Band it leaves open: -$5.6/wk to +$76.3/wk. Corrected
+  2026-09-01; authority research/operational/COST_MODEL.md SS5. See
+  runs/MX01_MNQ_EXECUTION_PORT_20260831/ and CURRENT_LIVE_TRUTH.md.
 
 CAPITAL:  [1 NQ + 1 NQ CONFIGURATION ONLY - THIS IS NOT WHAT IS DEPLOYED]
   $75,000 - $90,000. WEEKLY-bucketed max drawdown $45,138 (2022-W05 -> 2022-W17) gives ~2x
@@ -315,7 +318,7 @@ Estimated dollars/week lost, against the book's $2,211/wk NT8-basis headline:
 |---|---:|---|
 | **roll blackout** | **≈ $437** | **19.7% of net falls in the ~9-day no-new-entry window; 10.3% of trades** |
 | spread + slippage | ≈ **$282** | ⚠️ **CORRECTED**: EXEC01's `$20.65/ctrRT` is **SPREAD ONLY**, not all-in — true all-in is **$25.01** ($20.65 spread + $4.36 commission). The original row subtracted commission out of $20.65 and then charged it again in the row below, double-discounting. $20.65 × 3,317 ctrRT ÷ 243 wk = **$282**, not $222. Net effect: NQ friction was understated by ≈ **$59/wk** |
-| commission | ≈ $60 | $4.36/ctrRT × 3,317 ctrRT ÷ 243 weeks |
+| commission ⚠️ **NOT A DEDUCTION** | ($60) | $4.36/ctrRT × 3,317 ctrRT ÷ 243 weeks. 🔴 **The $2,211/wk baseline this column is measured against ALREADY NETS COMMISSION** (`IS_IT_PHACKING_20260831.md:31`, "NT8 only (commission in)"). Listed as an inventory item, never subtracted. Correct ladder: $2,211 − $282 = **$1,929** — exactly IS_IT_PHACKING's own measured row. See `COST_MODEL.md` §4 |
 | latency (XM, at 250 ms) | ≈ $17 | `G3_XMLAT_01` component D |
 | far-side vs print fill | ≈ $6 | measured −$11.50/ctr vs $7.50 charged |
 | operational downtime | ~$0 observed | no trade was missed by any redeploy today |

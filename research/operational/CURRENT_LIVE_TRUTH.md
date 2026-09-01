@@ -153,14 +153,30 @@ and the successor-roll work; it must never be a hot fix to a running class.
 | initial margin | **never applies**: `ForcedFlatMin = 21` flattens at **16:39 ET**, six minutes inside NinjaTrader's 16:45 ET cutoff. Measured: 0 exposure on all 5,228 bars from 16:40–17:59 across a full year |
 | 🔴 **drawdown** | 0.30 × $51,891 = **$15,567 = 152.5 % of the account**. A repeat of the book's own already-observed worst episode (2022-W05 → W17) ends it. **1 MNQ = 50.8 %, 2 MNQ = 101.7 %.** `MnqPerNq` is a deployable input; resizing needs no rebuild and G1–G6 hold for any value |
 
-## MEASURED COSTS
+## COSTS — authority is `research/operational/COST_MODEL.md`
 
-NQ **$4.36**/ctr RT · MNQ **$1.30**/ctr RT → micros are 3.35× cheaper per *contract*, **2.98× dearer
-per unit of exposure**. Spread does not degrade (same 0.25 tick, point value scales exactly 1/10),
-so all-in ≈ **1.35×**, roughly **$35/wk** at 3 MNQ.
+**Commission is MEASURED. The spread half of the MNQ estimate is ASSUMED.** Do not quote one
+number for both.
 
-⚠️ Recorded, not yet applied: `GENESIS_III_VERDICT.md` §H/§I treat **$20.65/ctrRT as all-in**; it is
-**spread only**. True all-in is **$25.01**, understating NQ friction by ~$59/wk.
+| | | evidence |
+|---|---|---|
+| NQ commission | **$4.36**/ctr RT | MEASURED, Lifetime template |
+| MNQ commission | **$1.30**/ctr RT | MEASURED, n = 704 fills |
+| per unit of exposure | micros **2.98× dearer** ($13.00 vs $4.36 per NQ-equivalent) | arithmetic |
+| 🔴 MNQ **spread** | **NEVER MEASURED** | 🔴 **ASSUMED** equal to NQ in ticks |
+
+> 🔴 **The shipped "≈ $35/wk at 3 MNQ" is the COMMISSION penalty ALONE.** It contains no spread
+> term. `research_sdk/cost_model.py` reproduces it exactly and shows the band the unmeasured
+> spread leaves open: **−$5.6/wk (MNQ 2 ticks tighter) to +$76.3/wk (2 ticks wider)** — that is
+> **−1 % to +28 %** of the $270–570/wk live expectation, decided by an input nobody has measured.
+> Evidence points **both ways**: `EXECUTION_REALITY.md:6-7` says MNQ is *wider in ticks at times*;
+> one live snapshot on 2026-09-01 05:17 ET measured **NQ 5 ticks vs MNQ 3** — n=1, overnight,
+> asynchronous. **UNRESOLVED.** Cheapest closure: poll `GetQuote` on both through one RTH session.
+
+✅ **Closed 2026-09-01:** the `GENESIS_III_VERDICT.md` §H/§I "$20.65 all-in" error **was already
+corrected at `cf6f7e8`**; this file previously said "not yet applied", which was stale. $20.65 is
+**spread only**; all-in is **$25.01**. ⚠️ A *residual* defect remains one row below it — §H deducts
+commission from a baseline that already nets it. See `research/operational/COST_MODEL.md` §4.
 
 ## STANDING CONSTRAINTS
 

@@ -119,6 +119,12 @@ portfolio figure for M_11 or for the live book**, and multiply any full-size res
   09:30:00. There is **no ±1-minute shift** — applying one *was* the original phase error (W52).
 - Commission templates installed: `NinjaTrader Brokerage Free / Lifetime / Monthly`. Plain
   "NinjaTrader Brokerage" does not exist. Research uses **Lifetime, $4.36/ctrRT**.
+- ⭐ **Every cost figure carries a BASIS (`COMMISSION_ONLY`/`SPREAD_ONLY`/`ALL_IN`) and an
+  EVIDENCE tag.** Single authority: `research/operational/COST_MODEL.md`, machine-readable in
+  `research_sdk/cost_model.py`. **Never call a spread figure "all-in"** — that one word
+  understated NQ friction by ~$59/wk in a published table. Watch two numeral collisions:
+  **$14.36** (C1, all-in) vs **$14.44** (P1 spread, addend), and **$24.00** used for both a
+  spread bound and an all-in stress rung.
 - **Cost models differ.** Research charges commission **plus** a candidate-specific modelled spread
   (P1 $14.44, XM $12.50 per ctrRT); NT8 charges the template and zero slippage. **A research
   headline and an NT8 net are not the same quantity.**

@@ -51,7 +51,7 @@ evidence yet**; the shadow (start 2026-09-01) is the first non-consumed class it
    Impact ≈ **−$70/wk raw** (fixed-DD ≈ $1,168 vs $1,230). Era cut: 2025H2/2026H1 ≈ $17.12,
    **2026 Jun–Jul $28.69** (WATCH in shadow). P1 fills in cheap minutes; the overrun is at fill
    instants. +1-min delay −$90/wk (n.s.); passive entry available 0.7% of the time.
-   *(Supersedes: "bounded at $24.00/RT on 35 fills". XM's spread remains unmeasured — same audit owed.)*
+   *(Supersedes: "bounded at $24.00/RT on 35 fills". ~~XM's spread remains unmeasured~~ — ✅ measured 2026-08-31 at **$18.42/ctrRT** (n=30, 8.7 %, CI $15.08–$22.67), model optimistic by 47 % — same audit owed.)*
 2. **Bar-open zero-impact fills** are shared by BOTH parity sides — parity cannot detect this
    error class by construction.
 3. **No intrabar risk control — but the exposure is now MEASURED (G2_F1_MAE01, 2026-08-29):**

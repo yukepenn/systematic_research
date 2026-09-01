@@ -169,7 +169,9 @@ to adjudicate — **on forward data only, earliest read ~2027-03-01.**
    profit. Motivated by the 1.8× silent tightening in §4. W98 already answered the *money* question
    (a uniformly looser box is worth **+$6/wk, p = 0.940**); this is the *specification* question,
    which is different and unasked.
-8. **Audit XM's spread** — never measured. P1's audit found the model optimistic ($20.65 vs $14.44).
+8. ~~**Audit XM's spread** — never measured.~~ ✅ **DONE 2026-08-31**, after this file was written:
+   `XM_EXEC_COST_AUDIT_V1_20260831` → **$18.42/ctrRT** (n=30, 8.7 %, CI $15.08–$22.67) vs $12.50
+   modelled — **the XM model is optimistic too**, by 47 %, matching P1's 43 %. Authority `research/operational/COST_MODEL.md`.
 
 **Then wait.** First legitimate read of the XM correlation tripwire is **~2027-03-01**.
 

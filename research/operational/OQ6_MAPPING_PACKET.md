@@ -21,7 +21,8 @@ mapping. It ALSO wins the tie-break outright:
 
 The happy accident is real: **because the legs are naturally vol-matched, the simplest mapping IS
 the inverse-vol mapping** to within 5pp of risk share. ⚠️ **SUPERSEDED 2026-08-31/09-01: micro contracts are exactly what got deployed.** MNQ friction is
-now **MEASURED** ($1.30/ctr RT; spread does not degrade; all-in ratio ≈1.35× ≈ $35/wk at 3 MNQ), and
+now **PART-MEASURED**: commission $1.30/ctr RT is measured (n=704); 🔴 **the SPREAD is not, and the
+≈$35/wk figure is the commission penalty alone** (`research/operational/COST_MODEL.md` §5), and
 the 🔴 **LIVE book is the MX01 MNQ port of M_11 at `MnqPerNq = 3` = 0.30 × M_11** on account
 `2047681` · `runs/MX01_MNQ_EXECUTION_PORT_20260831/`. The "no micro complexity needed" conclusion
 was correct for the *mapping* question and wrong as a forecast.
@@ -32,8 +33,10 @@ was correct for the *mapping* question and wrong as a forecast.
    from W103's session-date convention — the RELATIVE comparison between candidates is the
    deliverable; do not quote the $2,318 as superseding the recorded honest portfolio band
    ($1,750–1,800/wk); both conventions will be reconciled by the shadow's real stream.
-2. **Costs**: P1 leg at modeled $14.44 (measured $20.65 ⇒ ≈ −$58/wk on this leg); **XM's spread
-   has never been measured** — it owes the same EXEC01-style audit.
+2. **Costs**: P1 leg at modeled $14.44 (measured $20.65 ⇒ ≈ −$58/wk on this leg). ~~XM's spread has
+   never been measured~~ — ✅ **it WAS, on 2026-08-31**: `XM_EXEC_COST_AUDIT_V1_20260831` measured
+   **$18.42/ctrRT** (n=30 = 8.7 % coverage, 95 % CI $15.08–$22.67) against the $12.50 modelled;
+   verdict **"XM SPREAD MODEL OPTIMISTIC"**. Authority `research/operational/COST_MODEL.md`.
 3. **Shape**: the combined stream inherits both legs' tail-carried profile (worst dev week
    −$15.3k; 2026-07 saw both legs lose together). The tail-aware shadow-reading frame applies to
    the portfolio too.

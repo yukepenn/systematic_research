@@ -11,7 +11,7 @@ there; not duplicated). Every row cites a run artifact + ledger trial.
 | **P1/PCT** @ modeled $14.44/ctrRT | REPRODUCED FACT (backtest), DISCOVERY_CONSUMED | 1,394 | 4.16 | 22,931 | **1,230** | INCUMBENT |
 | **P1/PCT @ MEASURED $20.65/ctrRT** ⚠️ stress row required by `G2_EXEC01` (G00015, spread model OPTIMISTIC; 131 ctrRT overlap, 5.1%) | measurement-adjusted | ≈1,324 | — | — | **≈1,168** | INCUMBENT (cost-stressed) |
 | ⚠️ if the 2026-Jun–Jul spread regime ($28.69/ctrRT) persists | era-cut, WATCH in shadow | ≈1,271 | — | — | ≈1,122 | scenario, not a quote |
-| XM_CONFLICT_v2 @ $12.50 modeled | REPRODUCED | 916 | 3.05 | 20,201 | 918 | COMPONENT (spread unmeasured for XM — same audit owed) |
+| XM_CONFLICT_v2 @ $12.50 modeled | REPRODUCED | 916 | 3.05 | 20,201 | 918 | COMPONENT (✅ XM spread MEASURED 2026-08-31: **$18.42/ctrRT** (n=30, 8.7 %) vs $12.50 modelled — optimistic by 47 %) |
 | {P1/PCT + XM} inv-vol (honest causal) | recorded, selection-flagged | ≈1,750–1,800 | 4.90 | 11,489 | — | PORTFOLIO (recorded) |
 
 Hostile-reading band for P1 standalone now: **$900–1,168/wk in-sample post-selection**
