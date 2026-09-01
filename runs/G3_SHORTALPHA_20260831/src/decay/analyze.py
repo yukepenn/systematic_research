@@ -900,8 +900,15 @@ def main():
       f"{prt['gross_pts'].mean():.4f} pts/trade against a {PTS_PRIMARY:.4f}-pt cost floor.")
     P(f"    Negative in {int((YR[YR['year']<2022]['net2065']<0).sum())} of "
       f"{int((YR['year']<2022).sum())} pre-2022 years at $20.65/ctrRT.")
-    P("  * W61's 'every one of its 22 rolling 24-month windows is positive, median t +2.13' was")
-    P("    computed on 2022+ only. On the full history it is not that object.")
+    P("  * THE RECENCY TEST INVERTS. W61 reported '22 rolling 24-month windows, 100 % positive,")
+    P("    median t +2.13, latest at the 0th percentile of its own history' and made that the")
+    P("    revival condition. All 22 of those windows lie inside the sleeve's single best")
+    P(f"    stretch. On the full history there are {len(RR)} windows, "
+      f"{100*float((RR['mean']>0).mean()):.1f} % positive, median t "
+      f"{RR['t'].median():+.2f}, and the LATEST window sits at the "
+      f"{100*float((RR['t'].values < last['t']).mean()):.1f}th percentile - the top sixth, not")
+    P("    the bottom. Both statements are arithmetically correct; they differ only in how much")
+    P("    of the object's own history the measurer could see.")
     P("  * DRIFT-NEUTRAL EXPECTANCY, the monthly panel's intercept - the sleeve's expectancy")
     P("    with the market's own direction taken out, and the sharpest form of the era break:")
     P("        PRE   196 months  +0.408 pts/session  90% CI [-0.339, +1.187]  hurdle 2.62  BELOW")
