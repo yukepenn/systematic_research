@@ -1,0 +1,231 @@
+run_id: MX01_MNQ_EXECUTION_PORT_20260831
+title: "MNQ execution port of M_11 at 3/10 size for the live account"
+opened: 2026-08-31
+status: PREREGISTERED
+campaign: "#7 WEEKLY_EDGE / operational"
+evidence_status: NOT_A_RESEARCH_CLAIM
+
+# =====================================================================================
+# WHAT THIS RUN IS - and, more importantly, what it is NOT
+# =====================================================================================
+# This is an ENGINEERING run, not a research run. It promotes nothing, measures no new
+# alpha, and its falsifier is about IDENTITY, not about profitability.
+#
+# It exists because of an owner instruction on 2026-08-31: the live account holds
+# USD 10,206.86, which cannot carry M_11 at 1 NQ + 1 NQ, so the book is to be executed on
+# MNQ at 3 contracts per NQ contract (= 3/10 of the research size).
+#
+# THE CLAIM UNDER TEST IS NOT "does this make money".  It is:
+#   "the ported object makes THE SAME DECISIONS as the certified object, and differs
+#    only in which contract the resulting orders are routed to."
+# Everything about expected profitability is INHERITED from the certified object and
+# scaled by 0.30, minus a measured micro-contract cost penalty.  No new edge is claimed.
+
+owner_instruction:
+  date: 2026-08-31
+  verbatim_zh: "基于我们目前live账户资金不多。我们把这个我们的strategy量切到3/10，也就是3MNQ作为base的程度。当然什么1300 1000固定金额都会乘上3/10。虽有triggrr跟我们现在demo live一样但是execute with mnq。仔细深度分析验证把这两个strategy造出来（有一定差异是肯定的）然后把我们这个m11 3mnq版本上线live trading"
+  reading:
+    - "scale the book to 3/10 using 3 MNQ as the base unit"
+    - "same triggers as the demo book, executed with MNQ"
+    - "build both, verify deeply, then go live"
+
+# =====================================================================================
+# THE ONE PLACE THIS RUN DEPARTS FROM THE OWNER'S LITERAL INSTRUCTION, AND WHY
+# =====================================================================================
+# The instruction says the fixed dollar amounts (1300 / 1000) should also be multiplied
+# by 3/10, giving 390 / 300.  THIS RUN DOES NOT DO THAT, and the reason is arithmetic
+# rather than preference.  Recorded here, before any result, so it cannot be a
+# retrospective rationalisation:
+#
+#   WeeklyEdgeP1PCT_v3 accumulates the session box PER CONTRACT (the W98 change):
+#       sessPnl += (px - entryPx) * PointValue - CommissionRT        # NOT * quantity
+#   and PointValue is the PRIMARY series', which this port keeps as NQ = USD 20.
+#   So HaltDollars = 1300 is a threshold of 1300/20 = 65.0 INDEX POINTS, and
+#      TargetDollars = 1000 is 1000/20 = 50.0 INDEX POINTS.
+#   Those point distances ARE the decision.  They are already independent of how many
+#   contracts are held - that independence was the entire point of W98.
+#
+#   Scaling them to 390 / 300 while PointValue stays 20 would move the halt to
+#   195 points and the target to 150 points: a box THREE TIMES WIDER than certified,
+#   which in practice would stop the session box from ever firing.  That is not the
+#   same strategy at smaller size; it is a different strategy.
+#
+#   The owner's intent - "same triggers, smaller size" - is served EXACTLY by leaving
+#   these two numbers alone.  The size reduction is delivered entirely by MnqPerNq and
+#   the 1/10 contract multiplier, which is where it belongs.
+#
+# CONSEQUENCE, stated plainly: realised P&L per session is 0.30x the NQ book, while the
+# session box halts at the SAME point move.  That is the correct scaling of a
+# per-contract risk box, and it is what "the same strategy at 3/10 size" means.
+
+# =====================================================================================
+# ARCHITECTURE
+# =====================================================================================
+architecture:
+  principle: >
+    The primary data series remains NQ so that 100% of the decision computation is
+    byte-identical to the certified object. MNQ is added as an extra series used ONLY as
+    the order-routing target. The decision instrument and the execution instrument are
+    deliberately separated.
+  rejected_alternative:
+    what: "attach the certified class directly to MNQ and rescale the dollar parameters"
+    why_rejected: >
+      It recomputes the entire decision stack on a different tape. P1's cumulative delta
+      and volume normalisation are computed from the primary series' own volume, and the
+      delta gate enters the vote directly via dL in nMemLong * nThr * (1 + dL) >= 16.
+      MNQ's volume profile is not NQ's, so decisions would drift for a reason unrelated
+      to the edge, and the drift would be unbounded and unmeasurable. Under the chosen
+      architecture the drift is not merely small - it is ZERO BY CONSTRUCTION, because
+      the MNQ series is never read by a decision.
+
+  p1:
+    class: WeeklyEdgeP1PCTMnq_v1
+    derived_from: WeeklyEdgeP1PCT_v3
+    derived_from_sha256: a9ccc2331d78aea43b1eefeff24189d0277a4cdfb718f2b817f56f7ef60f6be6
+    transform: scratchpad/port_p1.py (19 edits, each asserted to match exactly once)
+    series:
+      0: "NQ  1-min  - SIG.  every signal, clock, threshold, quantile, accumulator"
+      1: "MNQ 1-min  - EXEC. orders only; never read by a decision"
+  xm:
+    class: WeeklyEdgeXMConflictMnq_v1
+    derived_from: WeeklyEdgeXMConflict_v4
+    derived_from_sha256: 0360f894724cfd1fe59eb2a3a14d434b6e8a082eb2f25ba483e97ff2b854bae8
+    transform: scratchpad/port_xm.py (24 edits, each asserted to match exactly once)
+    series:
+      0: "NQ  1-min - primary, THE DECISION INSTRUMENT"
+      1: "ES  1-min - signal"
+      2: "RTY 1-min - signal"
+      3: "YM  1-min - signal"
+      4: "MNQ 1-min - EXECUTION ONLY; appended last so every 'i < 4' signal loop keeps its meaning"
+
+  ledger_units: >
+    The ledger stays in NQ CONTRACT UNITS (myQty, pendingSize, Qty, myPos, sessPnl,
+    realizedPnl). MnqPerNq multiplies at exactly two kinds of site: the order calls and
+    the reconciliation comparisons. Nothing else. This is what makes the per-bar export
+    BYTE-IDENTICAL to the certified object's and therefore makes decision parity a
+    checkable fact rather than an assertion.
+
+  new_inputs:
+    MnqInstrument: "MNQ 09-26"
+    MnqPerNq: 3        # 3 MNQ per 1 NQ = 0.30 NQ-equivalent.  AN INPUT, not a constant.
+    ExpectMnq: ""      # "MNQ 09-26" when deployed; "" = guard disabled
+
+  new_gate:
+    name: MxExecReadiness
+    gates: ENTRIES ONLY
+    never_gates: EXITS
+    conditions: [NO-SERIES, NO-BAR, "MnqPerNq < 1", "STALE (> 3 min vs the NQ bar)"]
+    rationale: >
+      Placed at the ORDER SITE, never in the certified early-return. A return would skip
+      the accumulator writes (sigma, ATR, VWAP, quality quantiles, XM's hist[] sigma
+      append) and silently change the decision object on every subsequent session. This
+      is TRAP 1 from the certified files' own comments, restated.
+
+# =====================================================================================
+# THE FALSIFIER - decided in advance, every clause coded, table printed by the program
+# =====================================================================================
+# The acceptance bar here is HIGHER than the usual parity band (>=99% decisions, +/-2%
+# trades). Because the signal code is byte-identical and reads the same NQ bars, anything
+# less than EXACT agreement means the port introduced a defect. 99% is a FAILURE here.
+gates:
+  G1_source_identity:
+    claim: "every certified decision construct survives the transform byte-identical"
+    method: "MUST_KEEP audit inside the transform scripts; both must exit 0"
+    pass: "all constructs present, all edits matched exactly once"
+
+  G2_compiles:
+    claim: "both classes compile against the running NT8 AppDomain"
+    method: "CompileNinjaScript in_memory:true"
+    pass: "compiled == true, 0 errors"
+
+  G3_decision_identity:
+    claim: >
+      Over a common backtest window, the ported class emits a per-bar decision export
+      that is IDENTICAL to the certified class's on every decision column.
+    method: >
+      RunStrategyBacktest both the certified class (on NQ 09-26) and the ported class
+      (on NQ 09-26 primary + MNQ 09-26 exec), same period, same trading hours, same
+      DaysToLoad; diff the per-bar export files.
+    p1_columns: [voteOK, size, qty, sessPnl, stopped, nMem, nThr, dL, ratio, score, tilt, bmom]
+    xm_columns: [nq_drive, broad_composite, conflict_flag, desired_direction, decision_ready, entry_request, exit_request, position]
+    pass: "0 differing rows on every listed column"
+    fail_action: "the port is defective; do not deploy; find the defect"
+
+  G4_trade_count_and_direction:
+    claim: "same number of trades, same direction, same bar"
+    method: "compare the backtest trade lists"
+    pass: "identical entry bar, exit bar and direction for every trade"
+
+  G5_quantity_mapping:
+    claim: "every ported order quantity is exactly MnqPerNq times the certified one"
+    method: "compare trade-list quantities"
+    pass: "ported_qty == certified_qty * MnqPerNq for every trade, no exceptions"
+
+  G6_no_hardening_state_in_backtest:
+    claim: "the M1 inertness claim still holds after the port"
+    method: "grep the backtest output for HARDENING-STATE-MARK"
+    pass: "zero occurrences"
+
+# =====================================================================================
+# MEASURED CAPITAL FACTS - recorded before deployment, from the live machine
+# =====================================================================================
+live_account:
+  name: "2047681"
+  provider: Provider31   # Tradovate
+  connection: Live
+  cash_value_usd: 10206.86
+  flat_at_open: true
+  measured: 2026-08-31
+
+exposure_profile:   # measured from the DEPLOYED objects' own per-bar ledgers, 260 sessions
+  source: "C:/NT8_ForwardLogs/export/{we_p1pct_p1pct,we_xm_xm2}.csv"
+  p1_bars_in_position_pct: 12.09
+  p1_sessions_with_entry: "156 / 260 (60.0%)"
+  p1_sessions_reaching_size_2: 44
+  xm_bars_in_position_pct: 8.74
+  xm_position_window_et: "09:46 -> 15:45, never later"
+  max_simultaneous_mnq: 9      # P1 size 2 (=6) + XM 1 (=3)
+  mnq_distribution: {0: "80.13%", 3: "16.51%", 6: "2.84%", 9: "0.51%"}
+  held_at_1600_et: "14 / 249 sessions (5.6%), max 6 MNQ"
+  held_at_1659_et: "0 / 249 sessions - the book is flat at every session boundary"
+
+# =====================================================================================
+# THE RISK THE OWNER MUST PRICE - stated before, not after
+# =====================================================================================
+drawdown_vs_capital:
+  m11_realised_maxdd_trade_level_usd: 51891
+  m11_realised_maxdd_weekly_usd: 45138
+  at_3_10_trade_level_usd: 15567
+  at_3_10_weekly_usd: 13541
+  account_usd: 10206.86
+  ratio_trade_level: 1.525
+  ratio_weekly: 1.327
+  plain_statement: >
+    A repeat of the book's OWN WORST MEASURED EPISODE (2022-W05 -> 2022-W17) ends this
+    account before the episode ends. At 3 MNQ the historical drawdown is 152% of the
+    account. This is not a projection or a tail scenario - it is a drawdown the book has
+    already produced once, rescaled. It is recorded here as a preregistered fact so that
+    the decision to run at 3/10 is a priced decision and not an unpriced one.
+  scale_that_survives:
+    "1 MNQ (s=0.10)": "maxDD 5189 = 50.8% of account - survivable"
+    "2 MNQ (s=0.20)": "maxDD 10378 = 101.7% of account - almost exactly a wipeout"
+    "3 MNQ (s=0.30)": "maxDD 15567 = 152.5% of account - blows through by half again"
+  mitigation_built_in: >
+    MnqPerNq is a deployable INPUT, not a compiled constant. 1, 2 and 3 are all available
+    without a rebuild, a recompile or a re-verification. The owner can change the size
+    decision at any deploy without changing the object.
+
+# =====================================================================================
+# HARD CONSTRAINTS THAT DO NOT RELAX FOR THIS RUN
+# =====================================================================================
+constraints:
+  - "LIVE enablement requires an explicit owner action. This run prepares; it does not enable."
+  - "No order is placed by this run."
+  - "The certified classes WeeklyEdgeP1PCT_v3 / WeeklyEdgeXMConflict_v4 are NOT modified,
+     NOT renamed and NOT redeployed. The port is a NEW class, per the repo's rename rule."
+  - "The paper book on DEMO8383477 is left running and untouched."
+  - "ROLL RED ZONE 2026-09-06 -> 2026-09-18 applies to the MNQ book identically.
+     Do not enable either leg inside it. Safe re-enable: P1 >= 2026-09-17, XM >= 2026-09-19,
+     on the 12-26 contracts, all series moved together."
+  - "MNQ 09-26 expires on the same schedule as NQ 09-26; the cross-series guard in
+     MxInstrumentGuard hard-halts if the decision and execution contracts ever differ in month."
