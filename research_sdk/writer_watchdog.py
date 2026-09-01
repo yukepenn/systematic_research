@@ -49,6 +49,28 @@ import json
 import os
 import sys
 
+try:
+    from zoneinfo import ZoneInfo
+    ET = ZoneInfo("America/New_York")
+except Exception:                                      # pragma: no cover
+    ET = None
+
+
+def now_et():
+    """Wall clock IN EXCHANGE TIME, explicitly.
+
+    ⚠️ v1 of this module used a NAIVE `datetime.now()` and compared it against ET bar
+    stamps while printing the result labelled "ET". It worked only because this box
+    happens to run Eastern time. On any other machine -- or if the TZ ever changes --
+    every age would be silently wrong by the offset and a DEAD WRITER WOULD READ ALIVE,
+    which is the one thing this module exists to prevent. Caught by an adversarial review
+    on 2026-09-01. Same defect class as the DST string-vs-instant bug the shadow ledger's
+    preflight found before its first row.
+    """
+    if ET is None:
+        return _dt.datetime.now()                      # last resort; documented, not silent
+    return _dt.datetime.now(_dt.timezone.utc).astimezone(ET).replace(tzinfo=None)
+
 # ---------------------------------------------------------------------------------------
 # The registry.  One entry per (book, leg).  `dir` is the ExportDir the strategy was
 # deployed with -- read it off `ListAllStrategies`, never guess it.
@@ -92,14 +114,14 @@ def _tail_line(path, probe=65536):
     return lines[-1].decode("utf-8", "replace").strip()
 
 
-def _session_is_open(now_et):
+def _session_is_open(t_et):
     """CME equity-index ETH: 18:00 ET -> 17:00 ET next day, closed Fri 17:00 -> Sun 18:00.
 
     A writer that is silent because the market is shut is IDLE, not STALE.  Deliberately
     conservative: the daily 17:00-18:00 maintenance break is treated as closed, and any
     ambiguity resolves toward 'open' so a real outage is never excused as a weekend.
     """
-    wd, hh = now_et.weekday(), now_et.hour            # Mon=0 .. Sun=6
+    wd, hh = t_et.weekday(), t_et.hour            # Mon=0 .. Sun=6
     if wd == 5:                                        # Saturday
         return False
     if wd == 6:                                        # Sunday: opens 18:00
@@ -109,10 +131,66 @@ def _session_is_open(now_et):
     return not (hh == 17)                              # daily maintenance hour
 
 
+# =========================================================================================
+# [F-A2] HALT SCANNER. A latched leg has NO machine-readable surface anywhere.
+#
+# HdEnvRows() -- the only structured self-report, feeding the warm-up certificate and the
+# TEMPLATE log line -- does not emit haltEntries, haltReason, warmupBlocked or mxExecBlocked.
+# A halt latched AFTER start (RECONCILE-BREAK, PARTIAL-FILL, a reject, the XLsess shadow leak)
+# surfaces ONLY as a one-off LogErr in NinjaTrader's own log. Meanwhile ListAllStrategies
+# still reports Realtime/enabled/flat, and this watchdog's writer check still reports ALIVE,
+# because the export keeps writing -- only ENTRIES stop.
+#
+# At 1.68 entries/session a latched leg is indistinguishable from a quiet week until someone
+# greps. This makes the grep automatic. Read-only: it opens NT8's log file for reading.
+# =========================================================================================
+HALT_PATTERNS = [
+    "RECONCILE-BREAK", "PARTIAL-FILL", "ZERO-FILL", "NON-TERMINAL",
+    "ENTRIES LATCHED", "HALT", "ROLL-BLOCK", "MX-EXEC-BLOCKED",
+    "DEAD-SERIES", "ROLL-RESOLVE-FAILED", "SESSIONEND-STALE", "config_fault",
+]
+
+# `config_fault` appears on EVERY healthy TEMPLATE line as `config_fault,none`, and a bare
+# substring match on it flagged 11 perfectly healthy startup lines on the first run. An alarm
+# that cries wolf is worse than no alarm -- it is how the export outage went unnoticed for
+# five hours. Suppress the benign form explicitly rather than dropping the pattern, because
+# a REAL config fault is exactly what this must catch.
+BENIGN = ["config_fault,none"]
+
+
+def _is_benign(line):
+    return any(b in line for b in BENIGN)
+NT8_LOG_DIR = os.path.join(os.path.expanduser("~"), "Documents", "NinjaTrader 8", "log")
+
+
+def scan_halts(log_dir=NT8_LOG_DIR, days=2):
+    """Return NT8 log lines matching any halt/latch pattern, newest file first."""
+    hits = []
+    if not os.path.isdir(log_dir):
+        return [{"file": log_dir, "line": "LOG DIRECTORY NOT FOUND", "pattern": "SETUP"}]
+    files = sorted((f for f in os.listdir(log_dir)
+                    if f.startswith("log.") and f.endswith(".txt") and ".en." not in f),
+                   reverse=True)[:days]
+    for fn in files:
+        p = os.path.join(log_dir, fn)
+        try:
+            with io.open(p, encoding="utf-8", errors="replace") as fh:
+                for ln in fh:
+                    if _is_benign(ln):
+                        continue
+                    for pat in HALT_PATTERNS:
+                        if pat in ln:
+                            hits.append({"file": fn, "pattern": pat, "line": ln.strip()[:220]})
+                            break
+        except Exception as ex:                                   # pragma: no cover
+            hits.append({"file": fn, "pattern": "READ-ERROR", "line": str(ex)})
+    return hits
+
+
 def check(entries=None, max_stale_min=DEFAULT_MAX_STALE_MIN, now=None):
     """Return (rows, worst_status). Pure; performs no writes."""
     entries = REGISTRY if entries is None else entries
-    now = now or _dt.datetime.now()
+    now = now or now_et()
     open_now = _session_is_open(now)
     rows = []
 
@@ -167,9 +245,11 @@ def main(argv=None):
     ap.add_argument("--max-stale", type=float, default=DEFAULT_MAX_STALE_MIN,
                     help="minutes before an open-session writer is STALE (default %(default)s)")
     ap.add_argument("--json", action="store_true", help="machine-readable output")
+    ap.add_argument("--halts", action="store_true",
+                    help="also scan the NT8 log for halts/latches (see HALT_PATTERNS)")
     a = ap.parse_args(argv)
 
-    now = _dt.datetime.now()
+    now = now_et()
     rows, worst = check(max_stale_min=a.max_stale, now=now)
 
     if a.json:
@@ -194,7 +274,21 @@ def main(argv=None):
                              "IDLE (session closed)" if worst == 1 else
                              "*** ALARM: a live evidence writer is not writing ***"))
 
-    return 0 if worst <= 1 else 1
+    halt_hits = []
+    if a.halts:
+        halt_hits = scan_halts()
+        if not a.json:
+            print()
+            print("HALT SCAN of the NT8 log -- the ONLY channel a latched leg appears on")
+            if not halt_hits:
+                print("  no halt/latch line found. Entries are not blocked by a latch.")
+            else:
+                for h in halt_hits[:40]:
+                    print("  [%-18s] %s" % (h["pattern"], h["line"]))
+                print("  *** %d halt/latch line(s). A LATCHED LEG STILL REPORTS Realtime/enabled/flat"
+                      " AND ITS WRITER STILL READS ALIVE. ***" % len(halt_hits))
+
+    return 0 if (worst <= 1 and not halt_hits) else 1
 
 
 if __name__ == "__main__":

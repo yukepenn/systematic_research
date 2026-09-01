@@ -146,7 +146,7 @@ Full inventory and removals: `research/operational/REPO_CONSOLIDATION_20260827.m
 |---|---|---|---|
 | paper NQ decisions | 2026-08-30 18:00 ET | `C:\NT8_ForwardLogs\export\` | `FORWARD_DECISION_FIRST`; fills `SIMULATED_FILL_NON_EVIDENTIAL` |
 | hash-chained shadow ledger | ingesting since 2026-08-30; accepts rows from `SHADOW_START` 2026-09-01 18:00 ET | `research/operational/shadow/` | formal prospective |
-| 🔴 **LIVE MNQ book** | **2026-09-01** | **`C:\NT8_ForwardLogs\mnq\`** | **first real execution evidence — NO ledger owns it yet** |
+| 🔴 **LIVE MNQ book** | **2026-09-01**, `LIVE_FORWARD_START` **00:42 ET** | **`C:\NT8_ForwardLogs\mnq\`** → `research/operational/forward_v2/` | **first real execution evidence.** ✅ **`FORWARD_EVIDENCE_LEDGER_V2` BUILT 2026-09-01** (`research_sdk/forward_ledger_v2.py`, 21/21 adversarial; `FORWARD_EVIDENCE_LEDGER_V2.md`). ⚠️ Decision ingestion starts once the dead P1 writer is restarted |
 
 🔴 **THE EXPORT-HANDLE TRAP:** every P1 class writes `we_p1pct_<Tag>.csv` and every XM class writes
 `we_xm_<Tag>.csv` with `append:false`. Only one handle can hold each file; the second strategy to

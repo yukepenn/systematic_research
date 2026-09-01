@@ -1,0 +1,60 @@
+====================================================================================================
+CAP01B -- CORRECTED RUIN TABLE.  DISCOVERY_CONSUMED, in-sample, LOWER BOUND on risk.
+====================================================================================================
+873 traded sessions over 4.641 calendar years  ->  188.1 traded sessions/year
+TRUE horizons: 1 yr = 188 units, 2 yr = 376 units.  CAP01 used 252/504 = 1.34/2.68 yr.
+
+GATE         SPEC                                                         SPEC     OBSERVED  VERDICT
+----------------------------------------------------------------------------------------------------
+CAP01B-G1    reproduce CAP01's P(maxDD>E)=0.662 at ITS horizon           0.662        0.666  PASS
+CAP01B-G2    maxdd >= worst_equity on EVERY draw (the identity)           True         True  PASS
+CAP01B-G3    full-pool trade-level max DD == $51,891                    51,891       51,891  PASS
+CAP01B-G4    traded sessions/year == 188.1 (1%)                          188.1        188.1  PASS
+
+THE CORRECTION, in one line, at CAP01's own horizon and scale:
+  P(maxDD from peak > equity) = 0.666      <- what CAP01 called 'P(lose the account)'
+  P(equity actually reaches 0) = 0.058     <- what that phrase means
+  the drift is what separates them: the modelled peak runs far above the start.
+
+====================================================================================================
+THE CORRECTED TABLE -- MEASURED basis, MNQ commission charged, TRUE 2-year horizon
+account $10206.86.  NO SIZE IS RECOMMENDED.
+====================================================================================================
+POOL    MNQ     p50 DD     p90 DD     P(DD>acct)      P(RUIN) P(margin call)
+full      1        36%        58%          0.004        0.001          0.001
+full      2        71%       115%          0.195        0.019          0.024
+full      3       108%       175%          0.576        0.065          0.082
+warm      1        28%        42%          0.000        0.000          0.000
+warm      2        57%        84%          0.035        0.002          0.003
+warm      3        85%       126%          0.356        0.017          0.026
+
+====================================================================================================
+DRIFT SENSITIVITY -- the input CAP01 never varied, and its answer is dominated by it
+in-sample drift is $1933/wk full size; the campaign's HONEST band is $900-1,900.
+====================================================================================================
+ASSUMED EDGE ($/wk full)        P(RUIN) P(margin call)
+in-sample (as CAP01)              0.059        0.075
+honest HIGH 1900                  0.054        0.067
+honest CENTRAL 1450               0.097        0.115
+honest LOW 900                    0.216        0.245
+ZERO EDGE                         0.604        0.635
+
+=> at MnqPerNq=3 the defensible 2-year RUIN band is roughly 6%-22%,
+   reaching 60% only if the edge is zero (the campaign puts P(edge~0) at 10-30%).
+
+[D4] THE FIVE WORST SESSIONS, decomposed -- CAP01 called all five 'JOINT'
+session              P1         XM   verdict
+2026-07-29        -2388      -8864   joint
+2022-04-21            0     -10749   XM ONLY -- P1 did not trade
+2026-07-17        -1722      -7524   joint
+2026-07-20        -2764      -6229   joint
+2026-06-04        -1764      -6444   joint
+
+[D5] correlation POPULATION matters: rho = 0.242 on n=231 (both legs traded, CAP01's choice)
+     rho = 0.205 on n=378 (all days XM traded -- the repo's canonical population)
+     rho = 0.105 on all 873 sessions
+
+[D6] 'sum of the legs' sums NON-CONTEMPORANEOUS troughs: P1's max-DD trough is 2022-03-15,
+     XM's is 2022-07-19. Adding them is not an attainable no-diversification benchmark.
+
+ALL GATES PASS

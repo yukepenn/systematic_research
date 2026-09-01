@@ -74,6 +74,31 @@ owner action performed in the NT8 UI — never an agent one.
 ## 🔴 OQ-7 · Capital vs drawdown at `MnqPerNq = 3` — **STANDING, PRICED, UNRESOLVED**
 **OPEN.** The book's own already-observed worst episode (2022-W05 → W17) rescales to
 **0.30 × $51,891 = $15,567 = 152.5 % of the $10,206.86 account** — a repeat ends the account.
+
+> 🔴 **UPDATED 2026-09-01 — that figure is ONE DRAW, and not the middle one.**
+> `runs/CAP01_CAPITAL_RUIN_20260901/` replaces the point estimate with a distribution
+> (stationary bootstrap, sessions as whole units, 20,000 draws, all four gates reproducing
+> the repo's own $51,891 / $36,943 / $537,353):
+>
+> | `MnqPerNq` | median 2-yr DD | **P(2-yr DD > the whole account)** |
+> |---|---:|---:|
+> | 1 | 37 % | **0.4 %** |
+> | 2 | 74 % | **23.7 %** |
+> | 🔴 **3 — running now** | **111 %** | 🔴 **66.2 %** |
+>
+> And `P(>100 %)` **understates** ruin: the model has no liquidation, but below ~$900 of equity
+> the book cannot post margin for 9 MNQ and is liquidated. `dailyLossLimit` and
+> `trailingMaxDrawdown` are both **0** — no broker-side limit stops it earlier, and every stop
+> in this book is synthetic and dies with the strategy.
+>
+> **The comparison that makes the decision concrete:** this repo's own *corrected* capital plan
+> is **$75,000–90,000 at full size**. At 0.30 scale that is **$22,500–$27,000 against $10,206.86
+> — the book is funded at 38–45 % of its own plan.** At `MnqPerNq = 1` the plan needs
+> $7,500–9,000, which the account does fund.
+>
+> **CAP01 recommends no size** — that was excluded in its spec before results existed. Resizing
+> needs no rebuild, no recompile and no re-verification: `MnqPerNq` is a deployable input and
+> MX01's G1–G6 hold for any value. **This decision is the owner's and remains open.**
 **1 MNQ = 50.8 %, 2 MNQ = 101.7 %.** `MnqPerNq` is a **deployable input**: resizing needs no rebuild
 and MX01 gates G1–G6 hold for any value. **No live-book drawdown trip-wire exists anywhere in this
 repo.** This is a priced owner decision, not an oversight.

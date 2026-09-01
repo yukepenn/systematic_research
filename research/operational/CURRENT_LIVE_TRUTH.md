@@ -79,8 +79,17 @@ exports are byte-identical, same `sha256`, over 61,600 bars (MX01 gates G1–G6,
 🔴 **THE TRAP:** every P1 class writes `we_p1pct_<Tag>.csv` and every XM class writes
 `we_xm_<Tag>.csv`, opened with `append:false`. Only one handle can hold each file. The second
 strategy to open it **throws into a silent catch, sets `export = null`, and then runs with no
-ledger and no diagnostics while every health check still reports green.** Give any new MNQ book its
-own directory. Never point one at `\mnq\`.
+ledger while every health check still reports green.** Give any new MNQ book its own directory.
+Never point one at `\mnq\`.
+
+⚠️ **CORRECTED 2026-09-01: this said "no ledger AND NO DIAGNOSTICS". Diagnostics survive.**
+`hdDiag` is a **separate** writer, opened lazily in **append** mode, and it re-enters the open
+path on every call while it is null — so it self-heals the moment the other holder releases.
+Believing otherwise means writing off the diag tree as expected-dead, and it is the only place
+`EXEC`/`ORDER`/`FILLPX`/`POS`/`MXEXEC` rows land. ⚠️ **But it retries the OPEN, not the WRITE**:
+if the open succeeds and a later `Flush` throws, the catch swallows it and leaves the handle
+non-null — permanently silent. And `RECONCILE-BREAK` reaches you via **NT8's own log**, which is
+independent of both writers, not via `hdDiag`.
 
 ## 🔴 THE UNVERIFIED PATH — the standing watch item
 
@@ -131,10 +140,34 @@ The guard (`ResolveRollDates` `:504-533`, `RollBlocked` `:536-541`) takes the **
 >
 > **Do not re-enable either leg inside `2026-09-06 → 2026-09-18`.**
 > **Redeploy both legs on or after Monday `2026-09-21`**, onto `NQ 12-26`, `MNQ 12-26`, `ES 12-26`,
-> `RTY 12-26`, `YM 12-26` — **all five series moved together** — and **re-enter
-> `ExpectInstrument = "NQ 12-26"` and `ExpectMnq = "MNQ 12-26"`**, plus `ExportDir`, `DiagDir` and
-> `WarmupCertDir`: all of them revert to `""` on a fresh deploy, and an empty `ExpectInstrument` /
-> `ExpectMnq` means the identity guard is **DISABLED**, not lenient.
+> `RTY 12-26`, `YM 12-26` — **all five series moved together.**
+>
+> 🔴 **THE PARAMETERS THAT SELECT THE CONTRACTS ARE NOT THE ONES THAT GUARD THEM**, and an
+> earlier version of this section named only the guards:
+>
+> | parameter | role | default on a fresh deploy |
+> |---|---|---|
+> | `MnqInstrument` | **SELECTS** the execution series | 🔴 **`"MNQ 09-26"`** — an EXPIRED contract |
+> | `EsInstrument` / `RtyInstrument` / `YmInstrument` | **SELECT** XM's secondaries | 🔴 September strings |
+> | `ExpectInstrument` / `ExpectMnq` | only **CHECK** the choice | `""` = guard **DISABLED** |
+> | `ExportDir` / `DiagDir` / `WarmupCertDir` | evidence writers | `""` = **write nothing** |
+>
+> **An empty box is visibly wrong. `MNQ 09-26` is a plausible pre-filled value a redeployer
+> scrolls past** — and post-roll it names a dead contract. The failure is quiet: `MxExecReadiness`
+> sets `NO-BAR`, entries are refused, exits are not, and one `LogErr` per bar goes to a log nobody
+> is grepping. **Set all eight. Then run the acceptance check below.**
+>
+> ✅ **ACCEPTANCE, after any redeploy — the check that does not go stale:**
+> 1. `ListAllStrategies` → P1 `instruments` = `NQZ6` **+ `MNQZ6`**; XM = `NQZ6/ESZ6/RTYZ6/YMZ6`
+>    **+ `MNQZ6`**. A live check that does not see `MNQZ6` has verified nothing about execution.
+> 2. **Read the new `ROLL-PLAN` line in the NT8 log and ABORT if `blockNewEntriesFrom` is not in
+>    the future.** Every hardcoded date in this repo has gone stale; this check cannot.
+> 3. 🔴 `roll_block_from = never` is **AMBIGUOUS**. It is benign at startup (the certificate is
+>    written before the first realtime bar) **and it is also what a FAILED resolve prints**:
+>    `rollResolved` latches *before* the `try`, so one throw disables the roll guard permanently
+>    and fail-OPEN. **The discriminator is the log**: `ROLL-PLAN …` = healthy,
+>    `ROLL-RESOLVE-FAILED …` = the guard does not exist. The December schedule has never been probed.
+> 4. `python -m research_sdk.writer_watchdog --halts` → exit 0.
 > `2026-09-19` is a Saturday and the September contracts expire `2026-09-18`, so this is a
 > **redeploy onto December**, never a re-enable on September.
 > `MxInstrumentGuard` hard-halts if the decision and execution contracts ever differ in month.
@@ -160,22 +193,38 @@ and the successor-roll work; it must never be a hot fix to a running class.
 $51,891 / $36,943 / $537,353 exactly. `EVIDENCE STATUS: DISCOVERY_CONSUMED` — in-sample and
 post-selection, so **every figure is a LOWER BOUND on risk.**
 
-| `MnqPerNq` | 2-yr p50 DD | 2-yr p90 DD | **P(2-yr DD > the whole account)** |
-|---|---:|---:|---:|
-| **1** | 37 % | 60 % | **0.4 %** |
-| **2** | 74 % | 120 % | **23.7 %** |
-| 🔴 **3 — LIVE NOW** | **111 %** | **180 %** | 🔴 **66.2 %** |
+🔴 **CORRECTED 2026-09-01 — an earlier version of this table said "P(2-yr DD > the whole
+account) = 66.2 %" and called it P(losing the account). THAT IS NOT WHAT IT MEANT**, and the
+bound beneath it was inverted. `maxDD` is measured peak-to-trough and the modelled path carries
+the drift, so a path that makes +$40k and gives back $11k has `maxDD > equity` and has lost
+nothing. Full correction: `runs/CAP01B_RUIN_CORRECTION_20260901/`.
 
-> **At the size running on real money, the MEDIAN two-year drawdown is 111 % of the account.**
-> Over one year the same probability is **41 %**. Cost basis moves it a few points and never a
-> category (0.586 NT8 → 0.683 HOSTILE).
+**TRUE 2-year horizon (376 traded sessions — CAP01's "504" was 2.68 years), MEASURED basis,
+MNQ commission charged:**
 
-⚠️ **`P(>100 %)` UNDERSTATES RUIN.** The model has no liquidation. In reality peak exposure of
-9 MNQ needs $900 of day margin, so below roughly $900 of equity the book cannot post margin and
-is liquidated, locking the loss in — ruin sits **between `P(>75 %) = 0.87` and `P(>100 %) = 0.66`.**
-Machine-confirmed: `dailyLossLimit = 0`, `trailingMaxDrawdown = 0` — **no broker-side limit stops
-it earlier.** And **every stop in this book is synthetic and dies with the strategy**; none rests
-broker-side. There is no structural bound.
+| `MnqPerNq` | p50 DD | p90 DD | P(DD > account) | **P(RUIN — equity reaches zero)** | P(margin call) |
+|---|---:|---:|---:|---:|---:|
+| **1** | 36 % | 58 % | 0.004 | **0.001** | 0.001 |
+| **2** | 71 % | 115 % | 0.195 | **0.019** | 0.024 |
+| 🔴 **3 — LIVE NOW** | **108 %** | **175 %** | 0.576 | 🔴 **0.065** | **0.082** |
+
+> 🔴 **AND THE ANSWER IS DOMINATED BY THE ASSUMED EDGE, which the first run never varied.**
+> At `MnqPerNq = 3`, P(RUIN) over a true two years is **5.4 %** at the honest HIGH edge
+> ($1,900/wk), **9.7 %** at the central ($1,450), **21.6 %** at the low ($900) — and
+> **60.4 % if the edge is zero.** The campaign's own estimate is a ~70 % chance two years of
+> live data cannot distinguish this book from zero, which is why that last row is not academic.
+> **The defensible band is 6 %–22 %.**
+
+⚠️ **`P(margin call)` is the operative number, and it is HIGHER than ruin.** Peak exposure of
+9 MNQ needs $900 of day margin, so below ~$900 of equity the book cannot post margin and is
+liquidated, locking the loss in. Machine-confirmed: `dailyLossLimit = 0`,
+`trailingMaxDrawdown = 0` — **no broker-side limit stops it earlier** — and **every stop in this
+book is synthetic and dies with the strategy.** There is no structural bound.
+
+⚠️ The un-warmed 37-session cold start is in the pool above. Dropping it (the live book runs
+`DaysToLoad = 365`, so it is configured not to reproduce it) gives P(RUIN) **0.017** at 3 MNQ —
+**but the warm cut is defined exactly at the trough of the drawdown it removes.** Both are in
+the run; neither is quoted alone.
 
 **The comparison nobody had made:** the repo's own **corrected** capital plan is **$75,000–90,000
 at full size** (set 2026-08-31, when `$45,000` was retired for being a sample maximum). At 0.30

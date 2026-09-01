@@ -74,16 +74,25 @@ Commission and spread are charged in **different places**, which is itself a tra
 ## §4 🔴 A RESIDUAL DEFECT IN THE §H LADDER — commission is double-attributed
 
 `GENESIS_III_VERDICT.md` §H was corrected on 2026-09-01 for the spread row. **The correction
-left a commission double-count one row below**, and this page records it rather than quietly
-patching a headline table.
+left a commission double-count one row below.** ✅ **That residual has since been patched in
+place** — the row now reads `commission ⚠️ NOT A DEDUCTION` with the ladder inline. This
+section is kept as the explanation, not as an open item.
 
 §H is headed *"Estimated dollars/week lost, **against the book's $2,211/wk NT8-basis headline**"*.
 But `IS_IT_PHACKING_20260831.md:31` labels that same $2,211 **"NT8 only (commission in)"** — the
 baseline **already nets commission**. §H then lists `| commission | ≈ $60 |` as a deduction.
 
 > Read as a ladder, §H gives `$2,211 − $282 − $60`. The correct ladder is **`$2,211 − $282 = $1,929`**,
-> which is **exactly** IS_IT_PHACKING's own `+ MEASURED $20.65 both legs` row. That cross-check
-> settles it.
+> which is **exactly** IS_IT_PHACKING's own `+ MEASURED $20.65 both legs` row.
+>
+> 🔴 **BUT THE IMPACT CLAIM WAS WRONG, AND IT WAS MINE.** Both this page and
+> `GENESIS_III_VERDICT.md` §H said the error *"understated NQ friction by ≈ $59/wk"*.
+> **It did not.** The original spread row was `(20.65 − 4.36) × 13.6502 = $222.36` and the
+> commission row was `4.36 × 13.6502 = $59.51`. **The two errors cancelled to the cent:**
+> `2211 − 222.36 − 59.51 = $1929.12`, and the corrected ladder gives `2211 − 281.88 = $1929.12`.
+> **The label and the decomposition were wrong; the total and the bottom line were always right.**
+> The $59 is real only as an *inventory* total ($282 vs $342 including commission), which is not
+> what §H's header describes. Corrected 2026-09-01 after an adversarial statistical review.
 
 **The commission row is not wrong as an inventory item** — $60/wk of commission is really paid.
 It is wrong **as a deduction from a commission-inclusive baseline**. Fixed by labelling the basis
@@ -154,7 +163,9 @@ of *"we don't have X"* meaning *"this repo hasn't looked."*
 ## §6 STANDING RULES
 
 1. **Never subtract commission twice.** Ask what the baseline already nets before deducting.
-2. **Never call a spread figure "all-in".** That single word cost ≈$59/wk of understated friction.
+2. **Never call a spread figure "all-in".** That one word produced a wrong decomposition in a
+   headline table — and then a wrong *correction*, because the follow-up claimed a $59/wk impact
+   that two cancelling errors had already netted to zero. **Mislabels propagate into their own fixes.**
 3. **Name the instrument.** NQ and MNQ have different commissions and the live book is MNQ.
 4. **Quote coverage with every measured spread.** 5.1 % and 8.7 % are not "measured" in the sense
    a reader assumes.

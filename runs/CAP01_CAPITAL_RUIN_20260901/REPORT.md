@@ -1,5 +1,19 @@
 # CAP01 — capital adequacy and ruin probability at `MnqPerNq` = 1, 2, 3
 
+> 🔴 **THE HEADLINE OF THIS REPORT IS SUPERSEDED. See
+> [`runs/CAP01B_RUIN_CORRECTION_20260901/`](../CAP01B_RUIN_CORRECTION_20260901/REPORT.md).**
+> §0's *"P(2-year DD > the whole account) = 66 %"* is a **drawdown-from-peak** statistic and was
+> **wrongly labelled P(losing the account)**; the true figure is **6.5 %**. §6's claim that
+> `P(>100 %)` is a *lower* bound on ruin is **inverted** — `maxDD ≥ −min(cum)` identically, so it
+> is an **upper** bound. The horizons are 34 % long (873 traded sessions / 4.641 yr = 188/yr, so
+> "504 = 2y" is 2.68 yr). The run prices the **NQ** book × 0.30 rather than the MNQ book
+> (commission does not scale). And §3's *"the five worst sessions are all joint-loss days"* is
+> **false** — 2022-04-21 is a single-leg XM loss.
+>
+> **The body below is preserved unaltered.** Its method — the bootstrap, the zero-prepend, the
+> session boundary, the spread convention — was independently verified CORRECT. The arithmetic
+> was right; the label on the output was wrong. **The qualitative conclusion survives.**
+
 **2026-09-01.** Spec committed before results (`bb39825`). All four gates PASS.
 `EVIDENCE STATUS: DISCOVERY_CONSUMED` — in-sample, post-selection. **Every number below is a
 LOWER BOUND on risk.**

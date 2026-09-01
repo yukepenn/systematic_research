@@ -5,7 +5,10 @@ machine, not from memory.** Written for the two PAPER clocks; §4's "complete" i
 🔴 **A THIRD, HIGHER-GRADE STREAM EXISTS as of 2026-09-01**: the LIVE MNQ book on real-money account
 `2047681`, logging to `C:\NT8_ForwardLogs\mnq\`. **Its fills are the campaign's first non-simulated
 execution evidence** and must never be filed under the paper book's `SIMULATED_FILL_NON_EVIDENTIAL`
-label. It has **no clock, no ledger and no owner yet** — see §6.
+label. ✅ **RESOLVED 2026-09-01**: `LIVE_FORWARD_START` is pinned mechanically at **2026-09-01
+00:42:00 ET** and the ledger is built — `research/operational/FORWARD_EVIDENCE_LEDGER_V2.md`,
+`research_sdk/forward_ledger_v2.py` (21/21 adversarial tests). This section's §6 specification
+was the design input; treat V2 as the implementation of it.
 
 > The owner considers the demo/paper deployment to be the beginning of real forward observation.
 > The pre-existing ledger contract says forward evidence starts 2026-09-01 18:00 ET.

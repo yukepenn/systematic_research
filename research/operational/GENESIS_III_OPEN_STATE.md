@@ -173,7 +173,7 @@ Neither is rewritten. Nothing is backfilled into either.
 
 🔴 **SUPERSEDED 2026-09-01 — see `CURRENT_LIVE_TRUTH.md`. The live book is NOT the book this section
 plans for.** Live: account `2047681`, **$10,206.86**, `MnqPerNq = 3` = **0.30 NQ-equivalent** →
-0.30 × $51,891 = **$15,567 = 152.5 % of the account**. A repeat of the book's own already-observed
+0.30 × $51,891 = **$15,567 = 152.5 % of the account** (**one draw, not the middle one** — the distribution is `runs/CAP01_CAPITAL_RUIN_20260901/`: **median 2-yr DD 111 % of the account, P(2-yr DD > the whole account) = 66 %**. Authority: `CURRENT_LIVE_TRUTH.md` §CAPITAL). A repeat of the book's own already-observed
 worst episode ends it. **1 MNQ = 50.8 %, 2 MNQ = 101.7 %.**
 
 **$75,000 – $90,000 is the plan for the 1 NQ + 1 NQ book, which is NOT what is deployed.**

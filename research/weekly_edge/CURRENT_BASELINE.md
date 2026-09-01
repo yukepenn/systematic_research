@@ -48,7 +48,7 @@ modelled spread (P1 $14.44, XM $12.50). **NT8 nets are a different quantity** �
 > `MnqPerNq = 3` = **0.30 NQ-equivalent** (decisions on `NQ 09-26`, orders on `MNQ 09-26`). The
 > certified NQ pair (`_v3` / `_v4`) runs on paper `DEMO8383477` as the **forward-evidence** book.
 > ⚠️ **Every drawdown figure above is at full 1-NQ research size.** At the live 0.30 scale the M_11
-> realised trade-level maxDD is **$15,567 = 152.5 % of the $10,206.86 live account.**
+> realised trade-level maxDD is **$15,567 = 152.5 % of the $10,206.86 live account** — **one draw, not the middle one** — the distribution is `runs/CAP01_CAPITAL_RUIN_20260901/`: **median 2-yr DD 111 % of the account, P(2-yr DD > the whole account) = 66 %**. Authority: `CURRENT_LIVE_TRUTH.md` §CAPITAL.
 > **EXECUTABLE · PARITY-CERTIFIED · LIVE-ENABLED are three separate statuses**, and this book
 > reached LIVE-ENABLED **without** passing SHADOW-VALIDATED, by owner decision.
 > **Evidence status of A and B: `DISCOVERY_CONSUMED`** — the 2022-07 → 2026-08 window has been mined

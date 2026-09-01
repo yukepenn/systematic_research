@@ -145,6 +145,14 @@ def all_in(leg, spread="model"):
     spread 'model' | 'measured' | 'bound' | 'hostile'
     """
     leg = leg.upper()
+    # A latent mislabel trap in the module built to prevent mislabels, found by an
+    # adversarial review 2026-09-01: `bound` and `hostile` are P1-ONLY measurements, and
+    # all_in("XM", "hostile") silently returned P1's number wearing an XM label.
+    if spread in ("bound", "hostile") and leg != "P1":
+        raise ValueError(
+            "%r is a P1-only measurement; there is no %s figure for %s. Asking for one and\n"
+            "  getting P1's number back is exactly the mislabel this module exists to stop."
+            % (spread, spread, leg))
     key = {"model": "%s_spread_model", "measured": "%s_spread_measured",
            "bound": "p1_spread_bound", "hostile": "p1_spread_hostile"}[spread]
     key = key % leg.lower() if "%s" in key else key

@@ -46,8 +46,15 @@ does *not* work is the most reused asset here.
 |---|---|---|
 | **A** | RESEARCH_SINGLE | **`P1/PCT`** |
 | **B** | RESEARCH_PORTFOLIO_FRONTIER | **`{P1/PCT + XM_CONFLICT}`**, inverse-vol |
-| **C** | EXECUTABLE_SINGLE | **`WeeklyEdgeP1PCT_v3`** |
-| **D** | EXECUTABLE_COMPONENT_SET | **`WeeklyEdgeP1PCT_v3` + `WeeklyEdgeXMConflict_v4`** — both legs individually parity-certified |
+| **C** | EXECUTABLE_SINGLE | **`WeeklyEdgeP1PCT_v1`** — the PARITY-CERTIFIED class |
+| **D** | EXECUTABLE_COMPONENT_SET | **`WeeklyEdgeP1PCT_v1` + `WeeklyEdgeXMConflict_v2`** — both legs individually parity-certified |
+
+> ⚠️ **CORRECTED 2026-09-01: this table previously named `_v3`/`_v4` as C and D.** Those are the
+> **hardened deployed descendants**, not the certified objects — the parity certificates
+> (`EXECUTION_MANIFEST.md`) belong to `_v1`/`_v2`, and `_v3`/`_v4`'s own source headers still say
+> `NOT CERTIFIED`. Calling them "parity-certified" here collapsed the exact distinction
+> `CLAUDE.md` §3 exists to protect: **EXECUTABLE · PARITY-CERTIFIED · LIVE-ENABLED are three
+> separate statuses.**
 
 Economics, evidence labels and caveats: **[`CURRENT_BASELINE.md`](research/weekly_edge/CURRENT_BASELINE.md)**.
 Exactly what is installed, compiled and reproducible:
@@ -67,9 +74,12 @@ The design separates the **decision instrument** (NQ, primary series, every sign
 construction**, and measured: the per-bar decision exports are **byte-identical, same `sha256`,
 over 61,600 bars**. All six MX01 gates pass.
 
-> 🔴 **At `MnqPerNq = 3` the book's own already-observed worst drawdown rescales to $15,567 =
-> 152.5 % of the $10,206.86 account.** 1 MNQ = 50.8 %, 2 MNQ = 101.7 %. This is a priced owner
-> decision, not an oversight. `MnqPerNq` is a deployable input requiring no rebuild.
+> 🔴 **At `MnqPerNq = 3` the MEDIAN two-year drawdown is 111 % of the $10,206.86 account, and
+> P(a two-year drawdown exceeds the whole account) is 66 %.** At 2 MNQ that is 24 %; at 1 MNQ,
+> 0.4 %. The older single line — *0.30 × $51,891 = $15,567 = 152.5 %* — is one draw from that
+> distribution and not the middle one. Full run: `runs/CAP01_CAPITAL_RUIN_20260901/`; authority:
+> `CURRENT_LIVE_TRUTH.md` §CAPITAL. This is a priced owner decision, not an oversight.
+> `MnqPerNq` is a deployable input requiring no rebuild.
 
 ## What is running right now
 

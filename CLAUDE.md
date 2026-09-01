@@ -68,6 +68,11 @@ portfolio figure for M_11 or for the live book**, and multiply any full-size res
   Never overwrite a run directory. Enforced by `research_sdk/prereg_guard.py`.
 - **Decide the falsifier in advance**, code *every* clause of it, and print a
   GATE / SPEC / OBSERVED / PASS-FAIL table from the program — never assembled by hand.
+- ⭐ **When a run's headline is a PROBABILITY, one gate must state in words what event it is
+  over, and a second must compute that event a different way.** CAP01 passed all four of its
+  gates and still published a drawdown statistic as "P(losing the account)" — 66 % where the
+  truth was 6.5 % — because every gate tested the *reconstruction* and none tested what the
+  output *meant*. **A gate that checks arithmetic cannot catch a mislabelled statistic.**
 - **Nulls must preserve dependence.** One shared draw per session across a family, circular shifts
   for time series, effective `K = K/(1+(K−1)ρ̄)`. Independent draws inside a correlated family give
   a bar that is far too high.
