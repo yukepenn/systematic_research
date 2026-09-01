@@ -5,11 +5,24 @@ override default behaviour. Historical campaigns are archive; do not narrate the
 
 ## 1. Hard safety boundary (never violate, no exception)
 
-- **Research/backtest accounts only.** Never place, modify or cancel an order. Never enable, deploy
-  or start a strategy. Never touch Sim101 or any real account. Never alter connections, credentials
-  or licensing. Never modify the licensed RenkoKings vendor assembly.
+- **Never place, modify or cancel an order. Never enable or start a strategy.** Never alter
+  connections, credentials or licensing. Never modify the licensed RenkoKings vendor assembly.
+- 🔴 **THERE IS A LIVE REAL-MONEY BOOK since 2026-09-01**: account `2047681`, the MNQ book at
+  `MnqPerNq = 3`. This supersedes the old "research accounts only" line, which is now false.
+  **The agent may READ it freely and must not enable, disable, resize, reconfigure or order on
+  it.** Enabling is an owner action performed in the NT8 UI, and stays that way even when the
+  owner asks the agent to do it. Read `research/operational/CURRENT_LIVE_TRUTH.md` FIRST, always.
 - **No live enablement, ever, without an explicit recorded owner instruction.** "Executable" and
   "parity-certified" do **not** imply enabled.
+- 🔴 **NEVER SEND STRATEGY SOURCE THROUGH THE CROSSTRADE MCP.** It is a **remote** server
+  (`https://app.crosstrade.io/v1/api/mcp` — verified in `~/.claude.json`, `"type": "http"`), and
+  its own Terms of Service are **silent on any confidentiality obligation owed to the customer**,
+  with liability capped at **$100**. Its Privacy Policy retains "API request and response logs"
+  for **90 days**. Banned: `CompileNinjaScript`, `WriteNinjaScriptFile`, `ReadNinjaScriptFile`
+  on our own classes. Use the local path in §6 instead — it costs nothing and is not slower.
+  Read-only state, account, quote and deployment queries remain fine: that is the accepted price
+  of using the tool. Recorded breach: on 2026-08-31 the full source of both MNQ classes (~80 KB
+  each) was sent twice for compile verification. Those logs age out ~2026-11-30.
 - Never delete raw research evidence, erase failed experiments, rewrite historical results, or use
   locked-forward data for tuning.
 - **No force-push. No history rewrites.** Never `git add -A` blindly.
@@ -19,7 +32,8 @@ override default behaviour. Historical campaigns are archive; do not narrate the
 
 ## 2. Read order
 
-**Tier 0 (always):** `README.md` → this file → `research/weekly_edge/CURRENT_BASELINE.md`.
+**Tier 0 (always):** `README.md` → this file → **`research/operational/CURRENT_LIVE_TRUTH.md`**
+(real money is running — read it before touching anything) → `research/weekly_edge/CURRENT_BASELINE.md`.
 **Tier 1 (if the task needs it):** `research/operational/EXECUTION_MANIFEST.md`,
 `ninjascript/LIVE_READINESS.md`, `INFORMATION_COVERAGE_*`, `DATA_CENSUS_*`, `LOCKED_FORWARD.md`,
 `OPPORTUNITY_LANGUAGE.md`, `research/operational/OWNER_QUEUE.md`.
@@ -71,12 +85,28 @@ research economics.** Never quote a research portfolio figure for a component se
 
 ## 6. NinjaTrader / CrossTrade conventions
 
-- **CrossTrade MCP can compile and backtest.** `GetMcpCapabilities` → add-on v1.13.9, NT8 8.1.8.1,
-  `backtest_engine.available`. `RunStrategyBacktest` is the real Strategy Analyzer engine on the
-  isolated **Backtest** account. **Never assert an action is "owner-only" without re-probing the
-  tool surface today** — a stale capability claim cost this campaign a full day.
-- Dropping a `.cs` into `Documents/NinjaTrader 8/bin/Custom/Strategies` is picked up without an F5.
-  Verify by **resolving the class**, not by trusting a `compile_engine` flag.
+- **CrossTrade MCP can compile and backtest, but §1 bans using it to compile OUR classes.**
+  `GetMcpCapabilities` → add-on v1.13.9, NT8 8.1.8.1, `backtest_engine.available`.
+  `RunStrategyBacktest` is the real Strategy Analyzer engine on the isolated **Backtest** account
+  and is **still allowed** — it takes a *class name*, not source. **Never assert an action is
+  "owner-only" without re-probing the tool surface today** — a stale capability claim cost this
+  campaign a full day.
+- ⭐ **THE LOCAL PATH — the correct way to get a class into NT8, and it is not slower.** Measured
+  working 2026-08-31 on both MNQ classes:
+  1. `cp` the `.cs` into `Documents/NinjaTrader 8/bin/Custom/Strategies/` with a shell command.
+     Nothing leaves the machine.
+  2. NT8 picks it up **without an F5**. (If it does not, press F5 in the NinjaScript Editor.)
+  3. **Verify by RESOLVING THE CLASS** — `LookupNinjaScriptSymbol(name, max_members:10)` returns
+     `assembly:` with a *fresh* name when the rebuild took. Never trust a `compile_engine` flag.
+  4. `sha256sum` the repo copy against the NT8 copy and assert they match.
+  For a pure syntax check before copying, compile a **small synthetic probe** of only the new
+  constructs — a 25-line probe caught the `CS0118 Position/Instrument are properties` trap on this
+  port before any real source existed. A probe leaks nothing; the full file leaks everything.
+- ⚠️ **`ListStrategies(account)` CAN RETURN AN INCOMPLETE SET.** On 2026-09-01 it returned 2 of 4
+  rows and both were stale `Finalized` shells with empty parameters, which produced a confidently
+  wrong audit that was reported to the owner. **Use `ListAllStrategies` for any state judgement**,
+  and prefer a warm-up certificate's own `env,DaysToLoad` / `env,trading_hours` lines over
+  inferring configuration from bar counts.
 - **Session boundary:** `to` = one second before the *next* 18:00 ET open. Never "end of day D".
 - **Timestamps in payloads are exchange-session time (ET).** Sessions 18:00 → 17:00 ET.
 - **Bars are END-stamped** in both the Python substrate and NT8. The bar stamped 09:31 opens at
