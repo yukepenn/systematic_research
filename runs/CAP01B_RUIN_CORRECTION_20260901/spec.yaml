@@ -1,0 +1,91 @@
+run_id: CAP01B_RUIN_CORRECTION_20260901
+title: "CAP01 CORRECTED: drawdown-from-peak is not ruin; horizons were 34% long"
+supersedes_headline_of: CAP01_CAPITAL_RUIN_20260901
+committed_before_results: true
+date: 2026-09-01
+classification: ENGINEERING_ONLY / RISK_ACCOUNTING / DEFECT_REPAIR
+evidence_status: DISCOVERY_CONSUMED
+
+# ---------------------------------------------------------------------------------------
+why: >
+  An adversarial statistical review of CAP01, run the same day, found four defects. Three
+  are mine and one is material enough that the corrected run gets its own directory rather
+  than an edit: CAP01 is NOT overwritten, per CLAUDE.md §4.
+
+defects_being_repaired:
+
+  D1_CRITICAL_ruin_is_not_drawdown: >
+    CAP01 printed P(maxDD > starting equity) and LABELLED IT "P(lose the account)".
+    It is not. maxDD is measured peak-to-trough, and the modelled path carries the
+    in-sample drift: mean P&L over the horizon is +$81,384 on a $10,206.86 account. A path
+    that makes +$40k and gives back $11k has maxDD > equity and has lost nothing.
+    VERIFIED: P(maxDD > equity) = 0.660 while P(equity actually reaches zero) = 0.054 --
+    a 12x gap.
+    AND THE BOUND IN CAP01 §6 WAS INVERTED. Because the drawdown series prepends a zero
+    peak, maxDD >= -min(cum) holds on EVERY path (verified true on all 20,000 draws), so
+    P(maxDD > E) is an UPPER bound on no-liquidation ruin, never a lower one. CAP01 said
+    "the reported 0.662 is a lower bound on ruin". That is backwards.
+
+  D2_HIGH_horizon_mislabelled: >
+    sess_series() is a groupby-sum, so only sessions on which a trade CLOSED exist in the
+    series. 873 such sessions span 4.641 calendar years = 188.1 traded sessions/year.
+    CAP01's "1y = 252 units" is really 1.34 yr and "2y = 504" is really 2.68 yr -- 34% long.
+    CAP01's own §4 contradicted this by correctly calling the sample "4.6-year".
+    TRUE horizons: 188 and 376 units.
+
+  D3_MEDIUM_prices_the_NQ_book_not_the_MNQ_book: >
+    Scaling by MnqPerNq/10 is EXACT for gross P&L (3 MNQ = $6/pt vs 1 NQ = $20/pt = 0.30
+    exactly) but commission does NOT scale: the CSV nets NQ commission $4.36/ctrRT, and
+    0.30 x that is $1.31 where the live book pays 3 x $1.30 = $3.90. Shortfall $2.59 per
+    full-size ctrRT = $35.4/wk at MnqPerNq=3 -- exactly research_sdk/cost_model.py's
+    weekly_penalty(13.65, 3, 0.0), which was committed ONE COMMIT BEFORE CAP01 and not used.
+
+  D4_MEDIUM_mislabelled_worst_days: >
+    CAP01 printed s_nt8.nsmallest(5) under the label "WORST 5 JOINT DAYS". 2022-04-21 is a
+    single-leg XM loss on a session P1 did not trade, and is excluded by CAP01's own
+    `aligned` filter. 4 of 5, not 5 of 5. The claim is load-bearing for the
+    "diversification is worth less than it looks" argument.
+
+# ---------------------------------------------------------------------------------------
+method_changes_vs_CAP01:
+  - report TWO distinct quantities on every draw and never conflate them:
+      maxdd_from_peak : max(runmax(cum) - cum)      -- a drawdown statistic
+      worst_equity    : -min(cum)                   -- how close the ACCOUNT came to zero
+  - horizons in TRADED SESSIONS calibrated to 188.1/yr: 188 (1 yr) and 376 (2 yr)
+  - charge the MNQ commission delta explicitly: 0.30-scaled NQ commission is replaced by
+    MnqPerNq x $1.30 per contract-round-turn actually traded
+  - report BOTH pools: full 873 and warm-only 836 (the repo retired the cold start, and the
+    live book runs DaysToLoad=365 so it is configured not to reproduce it).
+    ⚠️ declared in advance: the warm cut is defined AT THE TROUGH of the drawdown it removes,
+    so it is not innocent either. Both are reported; neither is quoted alone.
+  - DRIFT SENSITIVITY, which CAP01 never varied although its answer is dominated by it.
+    The in-sample series carries $1,933/wk full-size, ABOVE the top of the campaign's own
+    honest band. Re-centre the series (variance untouched) at: in-sample, $1,900, $1,450,
+    $900, and ZERO edge. The campaign puts P(edge ~ 0) at 10-30%.
+
+unchanged_and_verified_sound: >
+  The stationary bootstrap is a correct Politis-Romano (block ~ Geom(1/L), circular wrap,
+  starts with replacement; E[sum] matches 504 x mean to 0.02%; index usage uniform to ~1.9%).
+  The zero-prepend in maxdd is CORRECT and is what makes D1 provable. The 18:00 ET session
+  boundary agrees with research_sdk/session_boundary.py and is DST-safe. The spread charge
+  matches we_lab.py's one-full-width-per-contract-round-turn convention. Session-unit
+  resampling is safe: 1 of 2,817 trades crosses a session boundary. 20,000 draws are stable
+  across five seeds (p50 111.1-111.9%). None of this is re-litigated here.
+
+gates:
+  CAP01B-G1: "reproduce CAP01's published P(maxDD>E)=0.662 at its OWN horizon, proving the difference is the correction and not a new bug"
+  CAP01B-G2: "maxdd_from_peak >= worst_equity on EVERY draw (the identity that makes the old bound an upper bound)"
+  CAP01B-G3: "full-pool trade-level max DD still reproduces $51,891 within 1%"
+  CAP01B-G4: "traded-sessions-per-year is within 1% of 188.1"
+
+declared_in_advance:
+  - NO SIZE IS RECOMMENDED. Unchanged from CAP01.
+  - >
+    The qualitative conclusion is expected to survive: badly under-funded at 3 MNQ,
+    adequately funded at 1. If the corrections OVERTURN that, it will be reported as an
+    overturn, not softened.
+  - >
+    Ruin under liquidation is HIGHER than no-liquidation ruin, because a margin call
+    realises the loss. Report both, and never quote the drawdown statistic as ruin again.
+
+outputs: [out/cap01b.txt, out/cap01b_table.csv, REPORT.md]
