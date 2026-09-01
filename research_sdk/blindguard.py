@@ -42,6 +42,24 @@ def normalized_sha256(path: str) -> str:
     A tamper-evidence hash that changes with a git checkout setting is a weak one: the BBO pool
     manifest hashed differently in the working tree (CRLF) than in the committed blob (LF) while
     the content was identical. Normalise, then hash.
+
+    ⚠️ WHAT THIS CANNOT SEE -- stated next to what it can (added 2026-09-01):
+
+    THIS HASHES THE MANIFEST, NOT THE DATA. It detects SESSION SUBSTITUTION -- someone
+    quietly changing WHICH sessions are in the pool -- and it is structurally blind to the
+    underlying .ncd bytes changing underneath an unchanged list of names.
+
+    That is not hypothetical. On 2026-08-28, 48-92 minutes AFTER
+    BBO_BLIND_POOL_MANIFEST.csv was committed and hashed, NT8 backfilled quotes into 15 of
+    its 19 sessions: every Bid file and every Ask file rewritten, not one Last file touched,
+    588,524,279 bytes, and those sessions went from 23 to 24 quote chunks each -- while the
+    manifest still records bid_coverage = 0.739 for all nineteen, and this hash still
+    verifies. Quote coverage is the pool's DEFINING property.
+    See research/operational/BLIND_POOL_FREEZE_DEFECT_20260901.md.
+
+    THE FIX is a per-session content fingerprint on the backing files --
+    (n_files, total_bytes, max_mtime) is enough. It reads no .ncd content, so it consumes
+    no seal. It cannot restore the three pools already affected.
     """
     b = open(path, "rb").read().replace(b"\r\n", b"\n")
     return hashlib.sha256(b).hexdigest()
