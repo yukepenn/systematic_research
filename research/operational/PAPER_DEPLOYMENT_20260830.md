@@ -363,8 +363,13 @@ XM  ROLL-PLAN blockNewEntriesFrom=2026-09-06 leadDays=8 earliestStoredRollover=2
 
 **XM binds first, 2026-09-06**, because it takes the MIN across four series and **ES rolls earliest
 (09-14)** — a coupling that only exists on the multi-series leg. P1 binds 09-08.
-⇒ **Roll both legs by Friday 2026-09-04.** My earlier ~09-02 figure was a guess built on a guessed
-09-10 rollover; it is superseded. Exits are never gated, so a missed roll stops new risk rather
+⇒ ~~**Roll both legs by Friday 2026-09-04.**~~ My earlier ~09-02 figure was a guess built on a
+guessed 09-10 rollover; it is superseded.
+🔴 **AND SO IS THIS ONE — WITHDRAWN 2026-08-30, MARKED INLINE 2026-09-01.** Rolling on 09-04
+would re-enable the book *before* its block dates and then latch it dead from 09-06/09-08 with
+every health check green. Recorded as withdrawn in `STATE_20260831.md:42`, but this line was
+reachable un-annotated from `MONITORING_CALENDAR.md`. Correct rule: **both legs ≥ 2026-09-19** (practically Mon 2026-09-21) — P1's MNQ series rolls **09-18**, two days after NQ's.
+Authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL. Exits are never gated, so a missed roll stops new risk rather
 than stranding a position.
 
 ### What to expect tonight

@@ -229,5 +229,9 @@ agent does, whatever the authorisation — the deploy call for the live account 
    an input; nothing else changes.
 2. **The roll red zone `2026-09-06 → 2026-09-18`.** It applies to this book identically. Enabling now
    is fine; **re-enabling inside the window latches the fail-safe permanently while every health
-   check still reports green.** Safe re-enable: P1 ≥ 2026-09-17, XM ≥ 2026-09-19, on `12-26`, all
-   series moved together, `ExpectMnq = "MNQ 12-26"`.
+   check still reports green.** Safe re-enable: **BOTH legs ≥ 2026-09-19**, on `12-26`, all series
+   moved together, `ExpectMnq = "MNQ 12-26"`.
+   🔴 **CORRECTED 2026-09-01:** this report originally said `P1 ≥ 2026-09-17`. That date came
+   from NQ's 09-16 rollover — but **this very run added the MNQ series, which rolls 09-18**, and the
+   guard takes the MIN over all series. The port invalidated the date and the report did not notice.
+   Authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL.

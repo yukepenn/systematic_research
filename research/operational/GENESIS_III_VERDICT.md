@@ -372,7 +372,7 @@ opportunity, and it interacts with the latching-guard red zone — see §I.
 | capital | **$75–90k**; realised maxDD $45,138 |
 | max expected position | 3 NQ contracts simultaneously |
 | **synthetic-stop caveat** | 🔴 **every stop in this book is synthetic and dies with the strategy.** Never restart while positioned. There is no intrabar risk control anywhere |
-| roll instructions | 🔴 **red zone 2026-09-06 → 2026-09-18.** Safe re-enable **P1 ≥ 09-17, XM ≥ 09-19** on `NQ 12-26`, all four XM series together, `ExpectInstrument="NQ 12-26"`. **The guard LATCHES** — a re-enable inside the window blocks entries permanently while every health check reads green |
+| roll instructions | 🔴 **red zone 2026-09-06 → 2026-09-18.** Safe re-enable **BOTH legs ≥ 2026-09-19** on `NQ 12-26` **and `MNQ 12-26`**, all series together, `ExpectInstrument="NQ 12-26"` **and `ExpectMnq="MNQ 12-26"`**. 🔴 **"P1 ≥ 09-17" WITHDRAWN 2026-09-01** — the live P1's MNQ series rolls 09-18 and the guard takes the MIN over all series. **The guard LATCHES** — a re-enable inside the window blocks entries permanently while every health check reads green. Authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL |
 | restart rules | plan for full redeploy; rows return DISABLED regardless |
 | kill conditions | `RECONCILE-BREAK`, `PARTIAL-FILL`, `instrumentMismatch`, warm-up verdict ≠ `GO`, or `ROLL-PLAN` date in the past |
 | logging | `research_sdk/live_readiness_check.py` R1–R8; **R1 (roll plan must be in the FUTURE) is the only check that catches a latched-dead book** |

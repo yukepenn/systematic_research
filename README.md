@@ -80,7 +80,8 @@ over 61,600 bars**. All six MX01 gates pass.
   Its decisions are `FORWARD_DECISION_FIRST`; its fills remain `SIMULATED_FILL_NON_EVIDENTIAL`.
 - 🔴 **ROLL RED ZONE `2026-09-06 → 2026-09-18`.** Re-enabling inside it latches the fail-safe
   **permanently** while every health check still reports green. The roll now involves **`MNQ 12-26`
-  as well as `NQ 12-26`** — any instruction naming only NQ is incomplete.
+  as well as `NQ 12-26`** — any instruction naming only NQ is incomplete, **including the dates:
+  both legs are safe only `≥ 2026-09-19`.** Single authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL.
 - 🔴 **Strategy source must never go through the CrossTrade MCP** — it is a *remote* server whose
   terms owe the customer no confidentiality. `CompileNinjaScript` / `WriteNinjaScriptFile` /
   `ReadNinjaScriptFile` on our own classes are banned; see `CLAUDE.md` §1 and the local path in §6.

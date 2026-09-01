@@ -158,8 +158,10 @@ to adjudicate — **on forward data only, earliest read ~2027-03-01.**
    mapping table's $21,740, whose window structurally **excludes** the book's worst drawdown.
 
 **The roll (6 days away, highest-risk item on the calendar):**
-6. ⛔ **Do not roll early.** Safe re-enable **P1 ≥ 2026-09-17, XM ≥ 2026-09-19**, on NQ 12-26 with all
-   four XM series moved together and `DaysToLoad = 365`. Record the ~10-day new-entry gap in the
+6. ⛔ **Do not roll early.** ~~Safe re-enable **P1 ≥ 2026-09-17, XM ≥ 2026-09-19**, on NQ 12-26 with
+   all four XM series moved together~~ and `DaysToLoad = 365`.
+   🔴 **CORRECTED 2026-09-01 (text above preserved as written):** **both legs ≥ 2026-09-19** (practically Mon 2026-09-21) — P1's MNQ series rolls **09-18**, two days after NQ's, and the LIVE book
+   has **five** series, not four. Authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL. Record the ~10-day new-entry gap in the
    shadow ledger so it is never read as a signal drought.
 
 **Research — preregister exactly two, and neither can be alpha:**

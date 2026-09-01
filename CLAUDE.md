@@ -26,6 +26,10 @@ override default behaviour. Historical campaigns are archive; do not narrate the
 - Never delete raw research evidence, erase failed experiments, rewrite historical results, or use
   locked-forward data for tuning.
 - **No force-push. No history rewrites.** Never `git add -A` blindly.
+- 🔴 **The roll fail-safe LATCHES and every health check stays green while it does.** Re-enabling
+  either live leg inside `2026-09-06 → 2026-09-18` blocks new entries permanently. **Both legs are
+  safe only `≥ 2026-09-19`**, on December contracts, all five series together. The single authority
+  is `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL — never a date remembered from anywhere else.
 - **DOM / Level-II / Market Replay collection is PAUSED** (owner risk-control, 2026-08-12).
   Do not resume without explicit recorded owner re-authorization —
   `research/system_master/DOM_PAUSE_CLEANUP_20260812.md`.

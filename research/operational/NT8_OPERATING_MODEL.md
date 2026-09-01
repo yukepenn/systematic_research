@@ -32,16 +32,28 @@ strategy re-enabled *after* its block date recomputes the *same* block date and 
 
 | leg | re-enabled anywhere in… | resulting `blockFrom` | outcome |
 |---|---|---|---|
-| P1 | **2026-09-08 → 09-16** | 2026-09-08 | **blocked instantly, forever** |
+| P1 (paper, 1 series) | **2026-09-08 → 09-16** | 2026-09-08 | **blocked instantly, forever** |
+| 🔴 **P1 (LIVE, NQ+MNQ)** | **2026-09-08 → 09-18** | 09-08, then **09-10** after NQ rolls | **blocked instantly, forever** |
 | XM | **2026-09-06 → 09-18** | 09-06/07/08/10 | **blocked instantly, forever** |
 
 The book would read **Enabled · Realtime · bars advancing · warm-up GO · flat** and take **zero
 trades indefinitely.** Every item in the obvious acceptance checklist passes.
 
-### ✅ Safe re-enable dates: **P1 on/after 2026-09-17 · XM on/after 2026-09-19**
+### ✅ Safe re-enable: **BOTH legs on/after 2026-09-19**
 
-(XM waits for YM's 09-18, the latest of its four series; it then resolves to RTY 2026-12-08 →
-`blockFrom` 2026-11-30.)
+> 🔴 **CORRECTION 2026-09-01 — "P1 on/after 2026-09-17" is WITHDRAWN.** It was derived from
+> NQ's 09-16 rollover alone, which was correct for the **single-series paper** P1. The **live**
+> P1 carries a second series, `MNQU6`, whose stored rollover is **2026-09-18**, and
+> `ResolveRollDates` takes the **MIN over every loaded series**. A P1 restart on 09-17 resolves
+> `earliest = 09-18` → `rollBlockFrom = 09-10` → **blocked on the first bar.**
+> Authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL.
+
+(Both legs wait for the latest of their series — `YM 09-18` **and** `MNQ 09-18`.)
+
+⭐ **And do not trust this date either.** It is stale the moment a series is added or the
+December schedule differs. The durable rule is mechanical: **restart, read the new `ROLL-PLAN`
+line, and if `blockNewEntriesFrom` is not in the future, stop that leg immediately.**
+`research_sdk/live_readiness_check.py` R1 already asserts exactly that and is date-generic.
 
 ### And the cost of waiting is ZERO
 
@@ -49,7 +61,7 @@ The reasoning that produced the bad plan was *"don't trade a dying contract."* *
 the strategies already refuse new entries from 09-06 / 09-08 by design.** Nothing enters between
 09-08 and 09-19 under any plan. Waiting forfeits **nothing**; rolling early forfeits **everything**.
 
-⚠️ **Consequence to accept: a ~10-day new-entry gap (09-06/08 → 09-17/19) in the forward evidence
+⚠️ **Consequence to accept: a ~13-day new-entry gap (09-06/08 → 09-19) in the forward evidence
 stream.** Exits are never gated. This is the fail-safe working, not a fault — but the shadow ledger
 must record the gap so it is never mistaken for a signal drought.
 
@@ -256,7 +268,7 @@ contaminating exactly the execution evidence the shadow ledger exists to collect
 
 - **2026-09-06 (XM) / 09-08 (P1)** — the book stops taking **new entries**. **Expected, not a fault.**
   Record it in the shadow ledger as a *structural gap* so it is never read as a signal drought.
-- **2026-09-17 (P1) / 09-19 (XM)** — roll **BOTH books**.
+- **2026-09-19, BOTH legs** (practically Mon 2026-09-21) — roll **BOTH books**.
   **PAPER `DEMO8383477`**: re-point all **four** series to **12-26**, set `ExpectInstrument="NQ 12-26"`.
   🔴 **LIVE `2047681`**: re-point all **FIVE** series (P1: NQ + MNQ; XM: NQ/ES/RTY/YM + MNQ) to
   **12-26**, and set **both** `ExpectInstrument="NQ 12-26"` **and** `ExpectMnq="MNQ 12-26"` — the
@@ -264,7 +276,7 @@ contaminating exactly the execution evidence the shadow ledger exists to collect
   stays 3. Then re-enable and **assert the new `ROLL-PLAN` points at the December roll
   (~2026-11-30)**. Re-run the December pre-flight for **ES/RTY/YM 12-26 AND `MNQ 12-26`** first —
   only NQ has been cleared, and **`MNQ 12-26` has never been probed.**
-- ⛔ **No restarts between 09-06 and 09-17.** Pointless (the book is already blocked) and it invites
+- ⛔ **No restarts between 09-06 and 09-18 inclusive.** Pointless (the book is already blocked) and it invites
   a re-enable inside the latch window.
 
 ### Standing rules this establishes

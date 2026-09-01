@@ -1,6 +1,17 @@
 # DEPLOY_LIVE — the exact live-account step, for the owner to run
 
-**Status: NOT RUN. The live account `2047681` has zero deployments and is flat with $10,206.86.**
+**Status: 🔴 RUN — executed by the owner on 2026-09-01. `LIVE = YES`.**
+`WeeklyEdgeP1PCTMnq_v1` (`399562885`) and `WeeklyEdgeXMConflictMnq_v1` (`399562886`) are Realtime
+and enabled on account `2047681`. Live state authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL.
+
+> ⚠️ **This sheet is now a HISTORICAL record of the 2026-09-01 deploy, and it is NOT safe to
+> re-run verbatim at the roll.** Every `09-26` below must become `12-26`, and the log directory it
+> names (`C:\NT8_ForwardLogs\live_mnq\`) is **not** the one the live book actually uses — the live
+> book writes to `C:\NT8_ForwardLogs\mnq\`, and `live_mnq\` is empty. Pointing a redeploy at
+> `live_mnq\` would split the live evidence tree in two.
+
+*(original status line, preserved: "NOT RUN. The live account `2047681` has zero deployments and is
+flat with $10,206.86.")*
 
 Everything below is verified and ready. Enabling real-money orders is an owner action; this agent
 prepares it and does not perform it. Nothing here executes until you run it.
@@ -27,8 +38,10 @@ gates G1–G6 hold for any value.
 Deploying **now** is fine. What is not fine is **re-enabling inside the window**: the fail-safe
 latches and blocks new entries *permanently* while every health check still reports green.
 
-> Safe re-enable: **P1 ≥ 2026-09-17, XM ≥ 2026-09-19**, on `NQ 12-26` **and** `MNQ 12-26`, all
-> series moved together, `ExpectInstrument = "NQ 12-26"`, `ExpectMnq = "MNQ 12-26"`.
+> Safe re-enable: **BOTH legs ≥ 2026-09-19**, on `NQ 12-26` **and** `MNQ 12-26`, all series moved
+> together, `ExpectInstrument = "NQ 12-26"`, `ExpectMnq = "MNQ 12-26"`.
+> 🔴 **CORRECTED 2026-09-01: "P1 ≥ 2026-09-17" was wrong** — MNQ rolls 09-18 and the guard takes
+> the MIN over all series. Authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL.
 
 The `MxInstrumentGuard` cross-series clause hard-halts if the decision contract and the execution
 contract are ever on different months, so a partial roll fails loudly rather than silently trading

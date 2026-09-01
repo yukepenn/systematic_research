@@ -15,13 +15,16 @@ STRATEGY_AUDIT.md — parameter/hazard audit). Written 2026-08-30, the day the b
 > **2026-09-10 is INSIDE the latching red zone `2026-09-06 → 2026-09-18`.** `ResolveRollDates` runs
 > once on the first realtime bar, `RollBlocked()` is monotone, and `GetNextRolloverDate` is a
 > ROOT-level lookup that cannot tell you already rolled — so re-enabling P1 anywhere in
-> `09-08 → 09-16`, or XM in `09-06 → 09-18`, blocks new entries **instantly and permanently**
+> `09-08 → 09-18`, or XM in `09-06 → 09-18`, blocks new entries **instantly and permanently**
 > while the book still reads Enabled · Realtime · bars advancing · warm-up GO · flat.
-> ✅ **SAFE RE-ENABLE: P1 on/after 2026-09-17 · XM on/after 2026-09-19**, on `NQ 12-26` **and**
-> `MNQ 12-26`. **Waiting costs ZERO** — nothing enters between 09-06/09-08 and those dates under
-> any plan. Withdrawn for exactly the reason "roll by 09-04" was withdrawn.
+> ✅ **SAFE RE-ENABLE: BOTH LEGS on/after 2026-09-19**, on `NQ 12-26` **and** `MNQ 12-26`.
+> **Waiting costs ZERO** — nothing enters between 09-06/09-08 and that date under any plan.
+> 🔴 **CORRECTION 2026-09-01: "P1 on/after 2026-09-17" is ALSO WITHDRAWN**, for the same class
+> of reason as "roll by 09-10" — it is a date inside a latch window. It was computed from NQ's
+> 09-16 rollover when P1 had one series; the live P1 now carries `MNQ`, rolling **09-18**, and the
+> guard takes the **MIN over all series**. A 09-17 restart resolves `blockFrom = 09-10` and latches.
 > 🔴 **This is now a REAL-MONEY instruction — account `2047681` is live.**
-> Authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL and `NT8_OPERATING_MODEL.md` §0.
+> Authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL. This file is a pointer, not a second source of dates.
 
 > ## **VERIFIED, verbatim from NinjaTrader's own documentation:**
 > ## *"NinjaScript strategies are not rolled forward and must be manually rolled over."*
@@ -68,7 +71,7 @@ re-certification). The operational control replaces it:
 2. Verify the account is **FLAT** (`GetPosition` / Control Center). If not, wait for the
    strategies' own exits — do not hand-flatten a strategy position (see hazard H1).
 3. **Stop both strategies** (`StopStrategy`), confirm 0 running.
-4. Redeploy with `DaysToLoad = 365`. ⚠️ **Not before P1 ≥ 2026-09-17 / XM ≥ 2026-09-19.**
+4. Redeploy with `DaysToLoad = 365`. ⚠️ **Not before 2026-09-19, EITHER leg** (see §0).
 
    **PAPER `DEMO8383477`** — `WeeklyEdgeP1PCT_v3` / `WeeklyEdgeXMConflict_v4`, **four** series:
    - P1 on **NQ 12-26**, `ExpectInstrument="NQ 12-26"`
@@ -84,8 +87,16 @@ re-certification). The operational control replaces it:
      month, so rolling NQ while leaving MNQ on September is the exact partial roll this title forbids.
 
    **The two books roll independently and BOTH must be verified.**
-5. Verify: state Realtime, `instruments` list shows **NQZ6/ESZ6/RTYZ6/YMZ6**, warm-up bars
-   ≈350k, account flat, `ordersCount 0`.
+5. Verify: state Realtime, warm-up bars ≈350k, account flat, `ordersCount 0`, and the
+   `instruments` list shows — **PAPER**: `NQZ6/ESZ6/RTYZ6/YMZ6`;
+   🔴 **LIVE**: P1 = `NQZ6` + **`MNQZ6`**, XM = `NQZ6/ESZ6/RTYZ6/YMZ6` + **`MNQZ6`**.
+   A live acceptance check that does not see `MNQZ6` has verified nothing about the execution series.
+6. 🔴 **Read the new `ROLL-PLAN` line and abort if `blockNewEntriesFrom` is not in the future.**
+   This is the only check that does not go stale; every hardcoded date in this repo has.
+7. ⚠️ **Re-enter `ExportDir`, `DiagDir` and `WarmupCertDir` too.** They default to `""`
+   (`WeeklyEdgeP1PCTMnq_v1.cs:930,936`). Omit them and the live leg runs with **no ledger, no
+   diagnostics and no warm-up certificate** — exactly the 2026-09-01 P1 outage, but by
+   configuration rather than collision. Live dirs: `C:\NT8_ForwardLogs\mnq\{export,diag,warmup}`.
 6. Record the swap in `PAPER_DEPLOYMENT_20260830.md`.
 
 ---

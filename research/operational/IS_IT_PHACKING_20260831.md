@@ -223,5 +223,5 @@ two); and whether the measured spread stays near June–July 2026's **$28.69/ctr
 
 ⚠️ **Correction to an agent artifact:** the audit's verdict text says *"roll both legs by Friday
 2026-09-04."* **That instruction was WITHDRAWN on 2026-08-30** — the roll fail-safe latches, and
-re-enabling inside the block window kills the book permanently. Safe re-enable is **P1 ≥ 09-17,
-XM ≥ 09-19**. See `NT8_OPERATING_MODEL.md` §0.
+re-enabling inside the block window kills the book permanently. ~~Safe re-enable is **P1 ≥ 09-17,
+XM ≥ 09-19**~~ — 🔴 **that date was itself withdrawn 2026-09-01** for the same reason: **both legs ≥ 2026-09-19** (practically Mon 2026-09-21) — P1's MNQ series rolls **09-18**, two days after NQ's. See `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL.
