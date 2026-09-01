@@ -1,0 +1,100 @@
+================================================================================================
+CAP01 -- CAPITAL ADEQUACY AND RUIN PROBABILITY   (spec committed before results)
+EVIDENCE STATUS: DISCOVERY_CONSUMED -- in-sample, post-selection. LOWER BOUND on risk.
+================================================================================================
+P1 trades 2439   XM trades 378   account $10,206.86
+sessions 873   2022-01-03 -> 2026-08-25
+
+GATE       SPEC                                             SPEC VAL       OBSERVED  VERDICT
+------------------------------------------------------------------------------------------------
+CAP01-G1   full trade-level max DD == $51,891 (1%)            51,891         51,891  PASS
+CAP01-G2   warm-only max DD == $36,943 (1%)                   36,943         36,943  PASS
+CAP01-G3   combined net == $537,353 (1%)                     537,353        537,353  PASS
+
+OBSERVED, FULL SIZE (1 NQ + 1 NQ), by cost basis
+BASIS                     NET   maxDD_sess    worst_day     worst_wk    worst_20d
+NT8                   537,353       51,891      -11,252      -13,780      -51,891
+RESEARCH_MODEL        490,189       52,870      -11,308      -14,007      -52,870
+MEASURED              469,700       53,296      -11,333      -14,106      -53,296
+HOSTILE               442,188       53,870      -11,367      -14,239      -53,870
+
+PER-LEG (NT8 basis):  P1 maxDD $26,318   XM maxDD $34,193   sum-of-legs $60,511   combined $51,891
+JOINT (both legs active, n=231):  P(both lose) 0.264   P(either loses) 0.706   P(both | either) 0.374   corr 0.242
+WORST 5 JOINT DAYS: 2026-07-29 $-11,252, 2022-04-21 $-10,749, 2026-07-17 $-9,247, 2026-07-20 $-8,993, 2026-06-04 $-8,209
+
+BY YEAR (NT8 basis):  2022 net $41,732 dd $51,891   2023 net $82,615 dd $10,616   2024 net $180,102 dd $14,490   2025 net $136,676 dd $22,223   2026 net $96,228 dd $36,943
+
+================================================================================================
+DEPENDENCE-AWARE RESAMPLING -- stationary bootstrap, sessions as whole units
+20000 draws, seed 20260901. A bootstrap tail is NOT a bound.
+================================================================================================
+BASIS            HOR  BLOCK        p50        p75        p90        p95        p99
+NT8              1y   5         27,595     36,336     46,357     53,572     69,234
+NT8              1y   10        27,590     37,593     50,895     56,434     74,175
+NT8              1y   21        26,083     38,166     52,252     57,448     73,305
+NT8              2y   5         34,984     43,745     54,044     61,224     78,686
+NT8              2y   10        36,943     46,819     56,761     63,480     82,378
+NT8              2y   21        36,943     51,891     57,670     65,191     86,184
+RESEARCH_MODEL   1y   5         29,101     38,070     48,793     56,328     73,074
+RESEARCH_MODEL   1y   10        28,992     39,304     52,870     58,896     78,080
+RESEARCH_MODEL   1y   21        27,341     39,827     54,530     60,179     78,265
+RESEARCH_MODEL   2y   5         36,867     46,328     57,512     65,864     85,549
+RESEARCH_MODEL   2y   10        37,536     49,347     59,808     68,055     87,426
+RESEARCH_MODEL   2y   21        37,536     52,870     60,567     68,292     89,490
+MEASURED         1y   5         29,915     39,100     50,015     58,274     77,247
+MEASURED         1y   10        30,000     40,048     53,296     60,224     78,338
+MEASURED         1y   21        27,895     40,318     54,891     61,361     79,408
+MEASURED         2y   5         37,795     47,530     59,220     67,365     86,765
+MEASURED         2y   10        38,077     50,204     61,154     69,445     89,230
+MEASURED         2y   21        37,795     53,296     62,303     70,394     92,467
+HOSTILE          1y   5         30,981     40,681     52,010     59,936     78,134
+HOSTILE          1y   10        30,580     40,808     53,870     61,847     79,907
+HOSTILE          1y   21        28,956     41,478     56,478     62,928     81,408
+HOSTILE          2y   5         38,767     49,167     61,432     69,971     88,543
+HOSTILE          2y   10        39,221     52,020     63,130     71,767     92,666
+HOSTILE          2y   21        38,242     53,870     63,986     72,895     95,130
+MEASURED(mvblk)  1y   10        30,754     39,913     50,827     58,680     77,805
+MEASURED(mvblk)  2y   10        38,599     48,249     60,045     68,594     88,656
+
+CAP01-G4   p50 1y DD finite,>0,<= sample max                  51,891         27,590  PASS
+
+================================================================================================
+THE OWNER-FACING TABLE -- risk of each size. NO SIZE IS RECOMMENDED HERE.
+account $10,206.86   live scale = MnqPerNq / 10
+================================================================================================
+
+--- horizon 1y, block 10 sessions ---
+BASIS             MNQ   p50 %eq   p90 %eq   p99 %eq    P>25%    P>50%    P>75%   P>100%
+NT8                 1       27%       49%       71%    0.565    0.095    0.007    0.001
+NT8                 2       54%       99%      143%    0.981    0.565    0.235    0.095
+NT8                 3       81%      148%      214%    1.000    0.874    0.565    0.353
+RESEARCH_MODEL      1       28%       52%       76%    0.599    0.113    0.011    0.001
+RESEARCH_MODEL      2       57%      103%      152%    0.986    0.599    0.264    0.113
+RESEARCH_MODEL      3       85%      155%      228%    1.000    0.911    0.599    0.395
+MEASURED            1       29%       52%       76%    0.624    0.119    0.011    0.001
+MEASURED            2       58%      104%      152%    0.988    0.624    0.282    0.119
+MEASURED            3       87%      157%      228%    1.000    0.920    0.624    0.410
+HOSTILE             1       30%       53%       80%    0.647    0.131    0.015    0.002
+HOSTILE             2       60%      106%      159%    0.995    0.647    0.298    0.131
+HOSTILE             3       90%      158%      239%    1.000    0.931    0.647    0.429
+
+--- horizon 2y, block 10 sessions ---
+BASIS             MNQ   p50 %eq   p90 %eq   p99 %eq    P>25%    P>50%    P>75%   P>100%
+NT8                 1       36%       56%       81%    0.814    0.194    0.017    0.002
+NT8                 2       72%      112%      163%    0.999    0.814    0.429    0.194
+NT8                 3      109%      168%      244%    1.000    0.986    0.814    0.586
+RESEARCH_MODEL      1       37%       58%       84%    0.846    0.221    0.023    0.003
+RESEARCH_MODEL      2       74%      116%      169%    1.000    0.846    0.471    0.221
+RESEARCH_MODEL      3      110%      175%      253%    1.000    0.992    0.846    0.640
+MEASURED            1       37%       60%       88%    0.865    0.237    0.028    0.004
+MEASURED            2       74%      120%      176%    1.000    0.865    0.490    0.237
+MEASURED            3      111%      180%      265%    1.000    0.994    0.865    0.662
+HOSTILE             1       38%       62%       92%    0.883    0.261    0.035    0.005
+HOSTILE             2       77%      123%      184%    1.000    0.883    0.524    0.261
+HOSTILE             3      115%      185%      276%    1.000    0.995    0.883    0.683
+
+MEASURED basis, 2-year: MnqPerNq=1 -> p90 DD = 60% of the account, P(lose the account) = 0.4%
+MEASURED basis, 2-year: MnqPerNq=2 -> p90 DD = 120% of the account, P(lose the account) = 23.7%
+MEASURED basis, 2-year: MnqPerNq=3 -> p90 DD = 180% of the account, P(lose the account) = 66.2%
+
+ALL GATES PASS

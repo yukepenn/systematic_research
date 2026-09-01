@@ -151,7 +151,48 @@ and the successor-roll work; it must never be a hot fix to a running class.
 | max simultaneous exposure | 9 MNQ (P1 size 2 = 6, plus XM = 3), 0.51 % of bars |
 | day margin needed | 9 × $100 = **$900** — covered 11.3× |
 | initial margin | **never applies**: `ForcedFlatMin = 21` flattens at **16:39 ET**, six minutes inside NinjaTrader's 16:45 ET cutoff. Measured: 0 exposure on all 5,228 bars from 16:40–17:59 across a full year |
-| 🔴 **drawdown** | 0.30 × $51,891 = **$15,567 = 152.5 % of the account**. A repeat of the book's own already-observed worst episode (2022-W05 → W17) ends it. **1 MNQ = 50.8 %, 2 MNQ = 101.7 %.** `MnqPerNq` is a deployable input; resizing needs no rebuild and G1–G6 hold for any value |
+| 🔴 **drawdown** | **See the distribution below.** The old single line — *0.30 × $51,891 = $15,567 = 152.5 %* — is one draw from it, and not the middle one |
+
+### 🔴 THE DISTRIBUTION — `CAP01`, 2026-09-01
+
+`runs/CAP01_CAPITAL_RUIN_20260901/` — stationary bootstrap, sessions resampled as whole units,
+20,000 draws, MEASURED cost basis. All four gates reproduce the repo's own recorded
+$51,891 / $36,943 / $537,353 exactly. `EVIDENCE STATUS: DISCOVERY_CONSUMED` — in-sample and
+post-selection, so **every figure is a LOWER BOUND on risk.**
+
+| `MnqPerNq` | 2-yr p50 DD | 2-yr p90 DD | **P(2-yr DD > the whole account)** |
+|---|---:|---:|---:|
+| **1** | 37 % | 60 % | **0.4 %** |
+| **2** | 74 % | 120 % | **23.7 %** |
+| 🔴 **3 — LIVE NOW** | **111 %** | **180 %** | 🔴 **66.2 %** |
+
+> **At the size running on real money, the MEDIAN two-year drawdown is 111 % of the account.**
+> Over one year the same probability is **41 %**. Cost basis moves it a few points and never a
+> category (0.586 NT8 → 0.683 HOSTILE).
+
+⚠️ **`P(>100 %)` UNDERSTATES RUIN.** The model has no liquidation. In reality peak exposure of
+9 MNQ needs $900 of day margin, so below roughly $900 of equity the book cannot post margin and
+is liquidated, locking the loss in — ruin sits **between `P(>75 %) = 0.87` and `P(>100 %) = 0.66`.**
+Machine-confirmed: `dailyLossLimit = 0`, `trailingMaxDrawdown = 0` — **no broker-side limit stops
+it earlier.** And **every stop in this book is synthetic and dies with the strategy**; none rests
+broker-side. There is no structural bound.
+
+**The comparison nobody had made:** the repo's own **corrected** capital plan is **$75,000–90,000
+at full size** (set 2026-08-31, when `$45,000` was retired for being a sample maximum). At 0.30
+scale that is **$22,500–$27,000 against a $10,206.86 account** — **the live book is funded at
+38–45 % of its own recommended plan.** At `MnqPerNq = 1` the plan needs $7,500–9,000, which the
+account does fund, and CAP01 independently agrees (2-yr `P(>100 %) = 0.4 %`).
+
+**Diversification is worth less than it looks:** P1 alone $26,318, XM alone $34,193, sum $60,511,
+combined $51,891 — **the pair saves 14 %**. ρ = 0.242 overall, and the five worst sessions in the
+record are all joint-loss days.
+
+**Cost eats the RETURN, not the RISK:** NT8 → HOSTILE drops net 18 % ($537k → $442k) and raises
+max DD only 4 %.
+
+**No size is recommended by CAP01** — it reports the risk of each. `MnqPerNq` is a deployable
+input: resizing needs no rebuild, no recompile and no re-verification, because MX01's G1–G6 hold
+for any value. **This is an owner decision and remains open.**
 
 ## COSTS — authority is `research/operational/COST_MODEL.md`
 
