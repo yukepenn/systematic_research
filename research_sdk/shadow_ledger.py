@@ -38,7 +38,17 @@ OUTCOME_FIELDS = [
     "gross_pnl", "costs", "net_pnl", "data_quality", "note",
     "prev_hash", "row_hash",
 ]
-QUALITY = ("OK", "GAP", "STALE_QUOTE", "FILL_TIMEOUT", "BLOCKED")
+# [CLEANSET 4, 2026-09-01] COSTS_MODELLED was MISSING and the seam was never tested.
+#   shadow_runner.exec_costs() (:88) returns ("...", "COSTS_MODELLED") whenever the broker
+#   reports $0.00 commission -- which is EVERY execution this broker produces -- and passes
+#   it straight to append_outcome(data_quality=dq) at :176.  append_outcome then raised
+#   `data_quality 'COSTS_MODELLED' not in QUALITY` and the row spilled to spillover.jsonl.
+#   Both sides were unit-tested (runner selftest 10/10 asserts exec_costs returns the tuple;
+#   ledger selftest 11/11 asserts the enum rejects unknown values). NOBODY TESTED THE JOIN.
+#   The chain has zero rows so it has never fired; it fires on the first outcome after
+#   SHADOW_START = 2026-09-01 18:00 ET.  Adding the value the emitter already intends to
+#   emit is the fix.  SHADOW_START, _canon and _hash are untouched -- the chain is unchanged.
+QUALITY = ("OK", "GAP", "STALE_QUOTE", "FILL_TIMEOUT", "BLOCKED", "COSTS_MODELLED")
 ACTIONS = ("LONG", "SHORT", "FLAT", "NO_DECISION")
 
 
