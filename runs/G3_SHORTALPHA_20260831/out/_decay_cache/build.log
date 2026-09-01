@@ -1,0 +1,50 @@
+==============================================================================================================
+G3_SHORTALPHA / decay - STAGE 1 BUILD
+==============================================================================================================
+
+[CORE] rebuilding W61/W73's exact object (setup(), extend OFF)
+   SEAL ASSERTION [CORE]: max bar 2026-05-29T16:59:00 < 2026-08-01  ->  PASS
+   substrate 1,558,497 bars, 1141 sessions (2022-01-02T18:01:00 .. 2026-05-29T16:59:00)  [22s]
+   [CORE] P1 raw trades: 2,212 (causal-score history from 2,072 entries)
+   [CORE] short sleeve raw trades: 2,517
+
+   CORE window 2022-07-01 .. 2026-08-01: 1012 sessions
+   G1 B1 GATE  : P1 14.86 pts/session (W61 expect 14.72 +-0.60, W73 got 14.86)  -> PASS
+   G2 OBJECT   : short 2,225 trades (expect 2,225 +-2%), 6.00 pts/session (expect 6.00 +-0.30) -> PASS
+   [core cached] [24s]
+
+[CORE] ratchet leg control against W73's published table (retrace/S medians):
+   VolMult  dir        legs  medBars   medMFE  medRetr     medS   retr/S   W73 pub
+   6        up       23,321       18    14.25    23.00    19.02   1.1332   1.1332
+   6        down     23,321       16    13.75    22.75    18.93   1.1309   1.1309
+   16       up        4,310       79    39.50    62.00    56.25   1.0654   1.0654
+   16       down      4,311       62    37.75    59.50    54.33   1.0576   1.0576
+   30       up        1,253      319    86.75   128.25   121.92   1.0397   1.0397
+   30       down      1,254      208    81.00   119.25   113.61   1.0304   1.0304
+
+[FULL] loading 2006-01-01 .. 2026-07-31 17:00 with extend=True [24s]
+   SEAL ASSERTION [FULL]: max bar 2026-07-31T16:59:00 < 2026-08-01  ->  PASS
+   substrate 6,528,330 bars, 5466 sessions (2006-01-05T08:59:00 .. 2026-07-31T16:59:00)  [28s]
+   context built [161s]
+   targets built [703s]
+   [FULL] short sleeve raw trades: 13,478
+   [FULL] P1 raw trades: 11,806 (causal-score history from 12,097 entries)
+   fills done [709s]
+
+[FULL] O1 ratchet-native opportunity [709s]
+   VolMult 6: 99,058 legs [710s]
+   VolMult 16: 29,334 legs [711s]
+   VolMult 30: 10,049 legs [712s]
+
+[FULL] O2 state-blind zigzag [712s]
+   thresh 20 pts: down 44,212 swings, up 44,489 [712s]
+   thresh 40 pts: down 14,984 swings, up 15,074 [713s]
+   thresh 80 pts: down 4,225 swings, up 4,250 [713s]
+
+[cached] 5,466 sessions -> full_sessions.csv  [713s]
+
+[CROSS-CHECK] 1014 shared sessions between CORE and FULL
+   short: CORE $121,454 vs FULL $121,454  | daily rho +1.0000  | identical sessions 100.0 %
+   P1   : CORE $300,603 vs FULL $305,485  | daily rho +0.9971
+
+done [713s]

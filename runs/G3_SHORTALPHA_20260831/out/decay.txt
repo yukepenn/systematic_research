@@ -1,0 +1,645 @@
+======================================================================================================================
+G3_SHORTALPHA / decay  -  WHY IS THE W61 MIRRORED SHORT SLEEVE DECAYING?
+spec: runs/G3_SHORTALPHA_20260831/src/decay/spec.yaml (committed before stage 1 ran)
+======================================================================================================================
+COSTS   floor $4.36/ctrRT (never a headline) | PRIMARY $20.65/ctrRT = 1.0325 NQ pts | all-in $25.01/ctrRT
+ERAS    ERABREAK01 (p=0.0011) forbids pooling. PRE < 2022-05-01 | MODERN >= 2022-05-01 | FULL = DIAGNOSTIC ONLY
+NOTE    every session-level t below is DIAGNOSTIC ONLY and is deflated by K_eff with
+        rho_bar printed. The binding null is the exact contiguous-circular-window test.
+
+======================================================================================================================
+=== 0. HARNESS SELFTEST - every decomposition below is an exact identity
+======================================================================================================================
+   PASS  shapley3 contributions sum to the total change
+   PASS  shapley3 is zero when nothing moves
+   PASS  shapley2 rate+expectancy is exact
+   PASS  mix + within is exact
+   PASS  mix + within is zero when nothing moves
+   PASS  circular-window null has one window per observation
+   PASS  circular-window null wraps correctly
+   PASS  circular-window null preserves the series mean
+   PASS  K_eff does not inflate on negative autocorrelation
+   PASS  K_eff deflates a persistent series
+   PASS  block bootstrap returns the requested draws
+   HARNESS SELFTEST 11/11
+
+======================================================================================================================
+=== GATES G1-G3: seal and substrate identity (re-printed verbatim from stage 1)
+======================================================================================================================
+  SEAL ASSERTION [CORE]: max bar 2026-05-29T16:59:00 < 2026-08-01  ->  PASS
+  substrate 1,558,497 bars, 1141 sessions (2022-01-02T18:01:00 .. 2026-05-29T16:59:00)  [22s]
+  G1 B1 GATE  : P1 14.86 pts/session (W61 expect 14.72 +-0.60, W73 got 14.86)  -> PASS
+  G2 OBJECT   : short 2,225 trades (expect 2,225 +-2%), 6.00 pts/session (expect 6.00 +-0.30) -> PASS
+  SEAL ASSERTION [FULL]: max bar 2026-07-31T16:59:00 < 2026-08-01  ->  PASS
+  substrate 6,528,330 bars, 5466 sessions (2006-01-05T08:59:00 .. 2026-07-31T16:59:00)  [28s]
+  [CROSS-CHECK] 1014 shared sessions between CORE and FULL
+  short: CORE $121,454 vs FULL $121,454  | daily rho +1.0000  | identical sessions 100.0 %
+  P1   : CORE $300,603 vs FULL $305,485  | daily rho +0.9971
+
+======================================================================================================================
+=== W73 LEG-GEOMETRY CONTROL: the re-implemented ratchet instrument against W73's published table
+======================================================================================================================
+  (the O(1)-sigma re-implementation must reproduce W73's own leg table or the
+   opportunity metric in section 6 is measuring a different instrument)
+     VolMult  dir        legs  medBars   medMFE  medRetr     medS   retr/S   W73 pub
+     6        up       23,321       18    14.25    23.00    19.02   1.1332   1.1332
+     6        down     23,321       16    13.75    22.75    18.93   1.1309   1.1309
+     16       up        4,310       79    39.50    62.00    56.25   1.0654   1.0654
+     16       down      4,311       62    37.75    59.50    54.33   1.0576   1.0576
+     30       up        1,253      319    86.75   128.25   121.92   1.0397   1.0397
+     30       down      1,254      208    81.00   119.25   113.61   1.0304   1.0304
+
+======================================================================================================================
+=== 1. THE DECAY, RESTATED ON BOTH SUBSTRATES
+======================================================================================================================
+W61 quoted 2026 = -10.62 pts/session as the sleeve's worst year ever. W61 called
+setup(), which loads with extend=OFF, so its substrate STOPS AT 2026-05-29 16:59 -
+its '2026' is JANUARY TO MAY ONLY. The FULL substrate below carries 2026 to 07-31.
+
+year     CORE sess   CORE pts/s      CORE $   |  FULL sess   FULL pts/s      FULL $  FULL trades
+2022           130        10.11      26,276   |        131        10.03      26,276          329
+2023           258         2.76      14,257   |        258         2.76      14,257          651
+2024           259        13.92      72,099   |        259        13.92      72,099          600
+2025           259         6.05      31,341   |        259         6.05      31,341          463
+2026           106       -10.62     -22,519   |        152        -3.64     -11,054          251
+
+FACT: the two columns are the same object; where they differ, FULL simply has more of the
+      year. The number to carry forward is the FULL column.
+
+   FULL-HISTORY per-year record of the same construction (ERABREAK01 stratified):
+year     sessions   trades  trd/sess  pts/sess $4.36  pts/sess $20.65   net $ @20.65      era
+2006          350      301      0.86           -0.71            -1.41         -9,841      PRE
+2007          274      498      1.82           -0.22            -1.71         -9,344      PRE
+2008          268      833      3.11            1.48            -1.05         -5,651      PRE
+2009          262      682      2.60           -1.61            -3.73        -19,538      PRE
+2010          264      562      2.13           -0.43            -2.16        -11,415      PRE
+2011          263      646      2.46            0.18            -1.82         -9,585      PRE
+2012          264      609      2.31            0.50            -1.38         -7,301      PRE
+2013          261      553      2.12           -0.84            -2.56        -13,384      PRE
+2014          257      699      2.72           -0.43            -2.64        -13,594      PRE
+2015          262      944      3.60           -1.50            -4.44        -23,249      PRE
+2016          261      839      3.21           -1.02            -3.64        -18,995      PRE
+2017          257      742      2.89           -1.43            -3.78        -19,417      PRE
+2018          258      846      3.28           -1.54            -4.21        -21,735      PRE
+2019          259      715      2.76           -1.93            -4.18        -21,670      PRE
+2020          260      709      2.73            2.87             0.64          3,349      PRE
+2021          259      691      2.67           -2.79            -4.96        -25,699      PRE
+2022          259      644      2.49            8.19             6.17         31,946    SPLIT
+2023          258      651      2.52            2.76             0.71          3,652   MODERN
+2024          259      600      2.32           13.92            12.03         62,325   MODERN
+2025          259      463      1.79            6.05             4.59         23,799   MODERN
+2026          152      251      1.65           -3.64            -4.98        -15,143   MODERN
+
+   MODERN   1103 sessions   2,391 trades      5.69 pts/sess @$4.36      3.92 @$20.65   net $      86,506 @$20.65
+   PRE      4363 sessions  11,087 trades     -0.30 pts/sess @$4.36     -2.37 @$20.65   net $    -206,997 @$20.65
+   FULL is a DIAGNOSTIC pooling and ERABREAK01 forbids quoting it as one population.
+
+   SUBSTRATE INTEGRITY (the pre-2022 substrate is thinner and its 'sessions' are cut by
+   the >60-minute gap rule, so a short PRE session is not the same object as a modern one):
+era        sessions  med bars  q10 bars  <500 bars %   med |move|/sess
+MODERN         1103      1380      1379          0.4            4481.0
+PRE            4363      1249       794          4.5             690.5
+
+======================================================================================================================
+=== 2. (a) TRADE RATE  (b) HIT RATE vs AVERAGE WIN/LOSS  (c) HOLDING TIME  (d) COST
+======================================================================================================================
+All in POINTS GROSS of commission, per trade, one contract. 'edge' = gross pts/trade.
+The cost floor to beat is 1.032 pts ($20.65/ctrRT). $4.36 is a FLOOR only.
+
+year     sess   trds  trd/s   hit%    avgW    avgL    W/L    edge   net_e  medBar    barW    barL   cmin/s   pts/s
+2006      350    301   0.86   31.9    6.10    3.74  1.631  -0.602  -1.635      35     106      23       89   -1.41
+2007      274    498   1.82   36.9    5.76    3.23  1.786   0.094  -0.938      10      10      12      139   -1.71
+2008      268    833   3.11   36.3    8.92    3.98  2.238   0.693  -0.339      11      18      10      181   -1.05
+2009      262    682   2.60   33.3    3.71    2.45  1.514  -0.400  -1.432       4       5       4      159   -3.73
+2010      264    562   2.13   32.0    6.14    2.87  2.141   0.017  -1.016       8      28       6      174   -2.16
+2011      263    646   2.46   37.3    6.85    3.62  1.896   0.291  -0.742      14      24      12      201   -1.82
+2012      264    609   2.31   33.2    6.77    2.71  2.496   0.433  -0.599      12      28       9      202   -1.38
+2013      261    553   2.12   34.4    5.04    2.91  1.733  -0.178  -1.210      13      26       9      184   -2.56
+2014      257    699   2.72   36.3    7.99    4.46  1.789   0.060  -0.972      14      18      12      191   -2.64
+2015      262    944   3.60   36.9    7.71    4.82  1.601  -0.199  -1.231      10      15       8      178   -4.44
+2016      261    839   3.21   36.4    7.99    4.72  1.693  -0.100  -1.132      17      17      17      199   -3.64
+2017      257    742   2.89   31.4    8.60    4.34  1.982  -0.276  -1.308      15      25      14      224   -3.78
+2018      258    846   3.28   33.8   18.67    9.92  1.883  -0.252  -1.285      22      43      18      209   -4.21
+2019      259    715   2.76   34.8   14.52    8.50  1.708  -0.483  -1.515      25      44      18      180   -4.18
+2020      260    709   2.73   34.7   33.84   16.04  2.110   1.269   0.236      16      32      12      172    0.64
+2021      259    691   2.67   33.0   30.35   16.18  1.876  -0.827  -1.860      18      34      13      150   -4.96
+2022      259    644   2.49   36.6   46.78   21.51  2.174   3.513   2.480      20      50      14      172    6.17
+2023      258    651   2.52   39.8   28.59   16.71  1.711   1.313   0.280      21      43      14      161    0.71
+2024      259    600   2.32   37.8   49.58   20.16  2.460   6.226   5.194      19      34      13      146   12.03
+2025      259    463   1.79   32.4   67.26   26.91  2.500   3.603   2.570      21      34      16      128    4.59
+2026      152    251   1.65   35.1   69.13   40.38  1.712  -1.984  -3.017      23      46      18      105   -4.98
+
+   edge  = mean GROSS points per trade   net_e = edge minus the $20.65 cost floor
+   barW/barL = median bars held by winners / losers   cmin/s = contract-minutes short per session
+
+   THE SAME YEARS, SCALE-FREE. 'W/L req' is the win/loss ratio the year's own hit rate
+   needs to break even, (1-p)/p; 'margin' is how far above it the year actually was.
+   W/vol and L/vol divide by that year's mean session |1-min move|, so a year cannot look
+   worse merely because volatility expanded.
+
+year      hit%     W/L  W/L req   margin  |move|/s   W/vol   L/vol  edge/vol  gross edge
+2006      31.9   1.631    2.135   -0.505     222.9   27.36   16.78    -2.701      -0.602
+2007      36.9   1.786    1.707    0.079     407.5   14.14    7.92     0.232       0.094
+2008      36.3   2.238    1.758    0.480     778.4   11.45    5.12     0.891       0.693
+2009      33.3   1.514    2.004   -0.490     516.8    7.18    4.74    -0.774      -0.400
+2010      32.0   2.141    2.122    0.018     506.3   12.12    5.66     0.033       0.017
+2011      37.3   1.896    1.680    0.215     707.9    9.68    5.11     0.411       0.291
+2012      33.2   2.496    2.015    0.481     564.0   12.01    4.81     0.768       0.433
+2013      34.4   1.733    1.911   -0.178     511.5    9.85    5.68    -0.347      -0.178
+2014      36.3   1.789    1.752    0.037     692.9   11.52    6.44     0.087       0.060
+2015      36.9   1.601    1.713   -0.112    1024.5    7.53    4.70    -0.194      -0.199
+2016      36.4   1.693    1.751   -0.058    1020.1    7.83    4.63    -0.098      -0.100
+2017      31.4   1.982    2.185   -0.203     791.6   10.86    5.48    -0.349      -0.276
+2018      33.8   1.883    1.958   -0.075    2027.6    9.21    4.89    -0.124      -0.252
+2019      34.8   1.708    1.871   -0.163    1646.7    8.82    5.16    -0.293      -0.483
+2020      34.7   2.110    1.882    0.228    4138.0    8.18    3.88     0.307       1.269
+2021      33.0   1.876    2.031   -0.155    3577.3    8.48    4.52    -0.231      -0.827
+2022      36.6   2.174    1.729    0.446    5545.3    8.44    3.88     0.633       3.513
+2023      39.8   1.711    1.514    0.197    3516.5    8.13    4.75     0.373       1.313
+2024      37.8   2.460    1.643    0.816    4421.4   11.21    4.56     1.408       6.226
+2025      32.4   2.500    2.087    0.413    6059.7   11.10    4.44     0.595       3.603
+2026      35.1   1.712    1.852   -0.140    8494.6    8.14    4.75    -0.234      -1.984
+   (W/vol, L/vol and edge/vol are x1000 for readability.)
+
+======================================================================================================================
+=== 3. WHICH FACTOR MOVED? Shapley decomposition, order-independent, MODERN era only
+======================================================================================================================
+baseline = 2022-05-01..2025-12-31 pooled (the sleeve's own modern pre-2026 record)
+target   = 2026-01-01..2026-07-31
+
+                                baseline        2026      change   % change
+trades per session                 2.250       1.651      -0.599     -26.6%
+hit rate                          0.3734      0.3506     -0.0228      -6.1%
+mean WIN (gross pts)              44.336      69.134      24.797      55.9%
+mean LOSS (gross pts)             20.979      40.379      19.400      92.5%
+gross edge (pts/trade)            3.4075     -1.9841     -5.3915    -158.2%
+median bars held                    20.0        23.0         3.0      15.0%
+mean bars held                      66.5        63.9        -2.6      -3.9%
+contract-min / session               150         105         -44     -29.5%
+
+   E = p*W - (1-p)*L      baseline E = +3.4075 pts/trade   2026 E = -1.9841   change -5.3915
+   factor                        contribution (pts/trade)   share of the change
+   HIT RATE p                                     -1.9901                 36.9%
+   AVERAGE WIN W                                   8.9762               -166.5%
+   AVERAGE LOSS L                                -12.3776                229.6%
+   (residual)                                     -0.0000
+
+   pts/session (gross) = (trades/session) x (gross edge)
+   baseline +7.668   2026 -3.276   change -10.944 pts/session
+   TRADE-RATE term                                 -0.426                  3.9%
+   EXPECTANCY term                                -10.518                 96.1%
+
+======================================================================================================================
+=== 4. GATE G6 - THE COST FORK: is the 2026 edge merely below the floor, or negative?
+======================================================================================================================
+window                     trades   gross pts/trade    @ $4.36   @ $20.65   @ $25.01                           verdict
+MODERN 2022-2025            2,140            3.4075     3.1895     2.3750     2.1570     clears the primary cost floor
+2026 (to 07-31)               251           -1.9841    -2.2021    -3.0166    -3.2346GROSS EDGE IS NEGATIVE - not a cost problem
+PRE 2006-2022/04           11,087            0.0990    -0.1190    -0.9335    -1.1515gross positive but BELOW the floor
+
+======================================================================================================================
+=== 4b. HOW BIG IS THE EDGE, WITH AN INTERVAL? (spec amendment 2)
+======================================================================================================================
+Circular MOVING-BLOCK bootstrap, 5-session blocks (one trading week), 2,000 draws, on the
+SESSION series - dependence preserving, not an iid resample. The cost floor at $20.65 is
+1.0325 points PER TRADE, so it is compared against the per-trade edge, and
+the per-session figures are quoted net of it.
+
+window                    sessions  pts/sess @4.36                  90% CI  pts/sess @20.65                  90% CI
+PRE 2006-2022/04              4363           -0.30          [-1.14, +0.52]            -2.37          [-3.21, -1.55]
+MODERN 2022-05 on             1103            5.69         [+0.90, +10.20]             3.92          [-0.87, +8.43]
+MODERN ex-2026                 951            7.18         [+2.47, +11.77]             5.34          [+0.64, +9.94]
+2026 only                      152           -3.64         [-15.96, +9.26]            -4.98         [-17.30, +7.92]
+
+The per-trade table below uses the same bootstrap on the TRADE series with 5-TRADE
+blocks (consecutive trades in a session are the dependent unit there).
+window                      trades  gross pts/trade                  90% CI    floor   clears the floor?
+PRE 2006-2022/04            11,087           0.0990      [-0.2241, +0.4139]   1.0325NO - CI entirely below
+MODERN 2022-05 on            2,391           2.8415      [+0.6809, +5.0230]   1.0325no - CI straddles it
+MODERN ex-2026               2,140           3.4075      [+1.2070, +5.6575]   1.0325                 YES
+2026 only                      251          -1.9841      [-9.7232, +6.0340]   1.0325no - CI straddles it
+
+======================================================================================================================
+=== 5. (c) HOLDING TIME IN DETAIL - is it being chopped out, or held into worse exits?
+======================================================================================================================
+window                  q10    q25    med    q75    q90    mean   medW   medL |  <5 bar %  >60 bar %  pnl of <5bar
+MODERN 2022-2025          1      5     20     63    191    66.5     41     14        23.8       25.4        -6.622
+2026                      1      7     23     69    178    63.9     46     18        20.3       27.1       -23.500
+PRE                       1      2     15     74    223    68.9     26     12        35.6       28.3        -1.113
+
+   gross pts/trade by holding-time bucket (the shape of where the money is made):
+bucket (bars)                  0-5            5-15           15-30           30-60          60-120         120-inf
+MODERN 22-25 n                 510             431             296             349             231             323
+2026 n                          51              46              48              38              25              43
+MODERN 22-25 pts            -6.622         -14.208          -6.587          -0.691          10.044          51.590
+2026 pts                   -23.500         -25.065         -25.385          16.230          -9.570          62.663
+
+======================================================================================================================
+=== 5c. WHY THE TRADE RATE FELL - the session halt and target, reconstructed from the ledger
+======================================================================================================================
+The sleeve stops trading a session once cumulative session P&L <= -$1,300 (the halt) or
+>= +$1,000 (the target). Both END the session's trading, so a year with bigger losses
+mechanically takes FEWER trades. This links (b) to (a) rather than treating them as two
+independent findings.
+
+year     traded sess   halt %  target %  trd/traded sess  pts/sess halted  pts/sess other
+2006             134      0.0       0.0             2.25             0.00           -1.84
+2007             151      0.0       1.3             3.30             0.00           -0.41
+2008             177      1.1       4.5             4.71           -82.82            3.21
+2009             166      0.0       0.0             4.11             0.00           -2.54
+2010             153      0.0       0.7             3.67             0.00           -0.74
+2011             168      0.0       2.4             3.85             0.00            0.28
+2012             172      0.0       0.6             3.54             0.00            0.76
+2013             163      0.0       0.0             3.39             0.00           -1.34
+2014             178      0.0       2.8             3.93             0.00           -0.62
+2015             181      0.6       6.1             5.22           -86.74           -1.70
+2016             190      0.0       6.3             4.42             0.00           -1.40
+2017             186      0.5       4.3             3.99           -77.28           -1.56
+2018             192      7.8      14.1             4.41           -78.19            4.38
+2019             168      3.6       8.3             4.26           -77.46           -0.22
+2020             171     25.1      27.5             4.15           -86.66           34.93
+2021             170     20.0      22.4             4.06           -89.99           17.19
+2022             185     30.3      35.1             3.48           -92.66           56.67
+2023             168     17.3      28.6             3.88           -86.29           23.13
+2024             183     26.8      30.6             3.28           -80.71           56.42
+2025             160     38.8      29.4             2.89           -89.47           72.59
+2026             100     52.0      33.0             2.51           -96.93           93.49
+
+======================================================================================================================
+=== 5d. THE NO-OVERLAY COUNTERFACTUAL (spec amendment 1, declared before it was run)
+======================================================================================================================
+S_nohalt = the identical sleeve with halt=+inf and target=None. NOT a candidate and
+never quoted as an improvement - it exists only to say whether the fixed-dollar
+session overlay is the mechanism behind 2026, or whether the halt table above is
+descriptive only. Falsifier (spec): the overlay explanation is supported ONLY if
+removing it materially shrinks 2026's deficit against its own 2022-2025 baseline.
+
+year     sess|  INCUMBENT trd   pts/sess|  NO-OVERLAY trd   pts/sess|  difference
+2006      350|            301      -0.71|             301      -0.71|        0.00
+2007      274|            498      -0.22|             498      -0.22|        0.00
+2008      268|            833       1.48|             836       1.37|       -0.10
+2009      262|            682      -1.61|             682      -1.61|        0.00
+2010      264|            562      -0.43|             562      -0.43|        0.00
+2011      263|            646       0.18|             650       0.11|       -0.06
+2012      264|            609       0.50|             609       0.50|        0.00
+2013      261|            553      -0.84|             553      -0.84|        0.00
+2014      257|            699      -0.43|             699      -0.43|        0.00
+2015      262|            944      -1.50|             947      -1.33|        0.17
+2016      261|            839      -1.02|             859      -0.91|        0.11
+2017      257|            742      -1.43|             745      -1.16|        0.26
+2018      258|            846      -1.54|             932      -1.25|        0.29
+2019      259|            715      -1.93|             744      -2.78|       -0.85
+2020      260|            709       2.87|             955      -1.27|       -4.14
+2021      259|            691      -2.79|             829      -1.47|        1.32
+2022      259|            644       8.19|             998       4.51|       -3.68
+2023      258|            651       2.76|             765       4.24|        1.48
+2024      259|            600      13.92|             848       8.12|       -5.79
+2025      259|            463       6.05|             798       5.02|       -1.03
+2026      152|            251      -3.64|             602     -10.15|       -6.52
+
+window                    INCUMBENT pts/sess  NO-OVERLAY pts/sess
+PRE 2006-2022/04                       -0.30                -0.53
+MODERN 2022-2025                        7.18                 4.93
+2026                                   -3.64               -10.15
+
+   2026 deficit against its own 2022-2025 baseline:
+      INCUMBENT  -10.81 pts/session
+      NO-OVERLAY -15.08 pts/session
+   spec falsifier: supported only if removing the overlay materially shrinks the
+   deficit. |no-overlay deficit| / |incumbent deficit| = 1.395  ->  OVERLAY IS NOT THE MECHANISM
+
+======================================================================================================================
+=== 5b. ENTRY vs EXIT - did the trades stop getting favourable, or stop keeping it?
+======================================================================================================================
+mfe = the best the trade ever was, in points, using intrabar highs/lows.
+eff = realised gross points / mfe = the share of its own best excursion it kept.
+If mfe holds and eff falls, the exit is the problem. If mfe falls, the ENTRIES are
+not finding down-moves - which is the opportunity side of the same fork.
+
+window                trades   med mfe  mean mfe   med mae  mean mae   med eff  mean eff  mfe>=5pt%  mfe>=20pt%
+PRE 2006-2022/04      11,087      2.75     11.48     -3.25     -6.86    -0.250    -2.149       39.3        15.2
+MODERN 2022-2025       2,140     17.00     40.74    -15.25    -22.03    -0.383    -3.490       75.0        46.1
+2026                     251     33.25     66.32    -32.00    -39.06    -0.587    -6.430       83.7        64.5
+
+year     trades   med mfe  mean mfe  mean mae  mean eff  mfe>=20pt%  gross edge
+2006        301      1.75      4.71     -3.83    -1.800         4.7      -0.602
+2007        498      1.50      5.61     -3.39    -1.350         7.4       0.094
+2008        833      1.75      7.34     -4.22    -1.704        10.9       0.693
+2009        682      1.00      3.35     -2.72    -1.503         4.0      -0.400
+2010        562      1.25      4.93     -3.14    -1.708         6.9       0.017
+2011        646      1.75      6.77     -3.88    -1.578        10.2       0.291
+2012        609      1.25      5.22     -3.03    -1.447         8.0       0.433
+2013        553      1.25      4.66     -3.15    -1.686         6.1      -0.178
+2014        699      2.25      6.98     -4.50    -2.097        10.4       0.060
+2015        944      2.00      7.63     -4.93    -1.817        11.8      -0.199
+2016        839      2.25      8.02     -4.82    -2.146        11.0      -0.100
+2017        742      2.25      7.49     -4.64    -2.095         9.8      -0.276
+2018        846      6.25     17.10    -10.29    -3.214        24.3      -0.252
+2019        715      6.25     14.55     -9.22    -2.364        21.3      -0.483
+2020        709     10.00     31.43    -17.10    -3.612        36.2       1.269
+2021        691     10.75     28.41    -17.59    -2.794        37.2      -0.827
+2022        644     19.50     43.60    -23.59    -3.443        49.1       3.513
+2023        651     14.50     30.18    -17.25    -3.419        41.3       1.313
+2024        600     15.62     42.21    -20.34    -3.212        45.5       6.226
+2025        463     21.50     53.45    -29.50    -3.643        51.8       3.603
+2026        251     33.25     66.32    -39.06    -6.430        64.5      -1.984
+
+======================================================================================================================
+=== 6. (e) THE DECISIVE FORK - WAS THERE ANYTHING TO BE SHORT OF? (price only, engine-blind)
+======================================================================================================================
+O1 ratchet-native: the vendor ratchet's own legs. PRIMARY = VolMult 16 (declared in the
+   spec before running). 'dn MFE/s' = points of favourable excursion available to a short
+   entered at each DOWN leg's start, summed per session. Computed from price alone.
+O3 raw: down-share = sum of negative 1-min close changes / sum of |changes|.
+
+year     sess  absmove/s  dn share  sess ret  dn sess%|  o1 dn n/s  o1 dnMFE/s  o1 upMFE/s   dn/up|  zz40 n/s  zz40 pts/s  zz40 dn/up
+2006      350      222.9    0.4998      0.06      43.7|       0.73         7.6         7.5   1.007|      0.00         0.0         nan
+2007      274      407.5    0.4986      1.15      40.1|       1.26        15.1        16.3   0.929|      0.02         1.1       2.554
+2008      268      778.4    0.5024     -3.87      52.6|       2.37        38.2        35.1   1.087|      0.12         8.0       0.784
+2009      262      516.8    0.4972      2.85      40.1|       1.71        17.6        20.1   0.875|      0.00         0.0       0.000
+2010      264      506.3    0.4989      1.23      44.7|       1.59        18.3        19.9   0.921|      0.02         1.7       1.081
+2011      263      707.9    0.4996      0.48      43.7|       2.10        29.4        29.6   0.994|      0.07         4.7       1.115
+2012      264      564.0    0.4987      1.59      46.2|       1.89        21.2        22.9   0.926|      0.01         0.4       1.401
+2013      261      511.5    0.4961      3.89      39.5|       1.71        17.0        20.5   0.832|      0.01         0.3         nan
+2014      257      692.9    0.4979      2.87      39.7|       2.20        28.4        31.6   0.898|      0.08         4.8       0.924
+2015      262     1024.5    0.4987      2.52      47.7|       2.84        46.7        49.5   0.943|      0.27        18.5       1.046
+2016      261     1020.1    0.4991      1.53      47.9|       2.89        46.5        47.9   0.970|      0.24        19.6       1.076
+2017      257      791.6    0.4959      6.36      37.0|       2.74        34.1        40.4   0.844|      0.12         9.3       1.984
+2018      258     2027.6    0.5000     -0.23      46.9|       3.61       102.6       105.8   0.970|      1.60       135.0       1.114
+2019      259     1646.7    0.4969     10.65      39.8|       3.49        77.0        88.8   0.867|      0.92        70.6       1.030
+2020      260     4138.0    0.4977     18.62      38.8|       3.79       204.9       228.5   0.897|      6.47       572.3       0.995
+2021      259     3577.3    0.4986     10.85      44.0|       3.81       173.1       194.1   0.892|      4.80       413.4       1.007
+2022      259     5545.3    0.5017    -18.67      53.7|       3.85       294.7       283.3   1.040|      9.81       907.7       1.029
+2023      258     3516.5    0.4970     20.41      44.6|       3.70       167.9       192.2   0.873|      4.29       370.3       0.965
+2024      259     4421.4    0.4989     10.28      44.0|       3.75       220.3       245.5   0.897|      6.67       610.6       1.016
+2025      259     6059.7    0.4990     11.66      46.7|       3.75       306.0       329.4   0.929|     11.42      1088.4       0.990
+2026      152     8494.6    0.4990     23.15      47.4|       3.94       425.6       454.3   0.937|     18.60      1782.5       0.986
+
+   the same at the other two ratchet scales and the other two zigzag thresholds (down MFE / pts per session):
+year        o1dn VM6    o1dn VM30      zz20 dn      zz80 dn  o1dn/up VM6 o1dn/up VM30
+2006             7.6          6.0          0.5          0.0        1.006        0.980
+2007            17.1          9.6          7.8          0.0        0.946        0.875
+2008            52.0         21.1         38.3          1.2        1.077        1.126
+2009            18.6         11.1          4.2          0.0        0.882        0.801
+2010            20.3         12.3          8.4          0.7        0.932        0.850
+2011            36.6         18.0         23.3          0.7        0.999        0.941
+2012            22.5         13.7          8.4          0.0        0.941        0.849
+2013            17.9         11.4          6.4          0.0        0.833        0.737
+2014            35.1         16.0         24.2          0.5        0.914        0.787
+2015            68.6         26.2         65.4          3.5        0.972        0.875
+2016            67.0         25.3         59.7          5.9        0.983        0.854
+2017            41.8         19.2         33.9          0.4        0.868        0.709
+2018           189.3         55.8        269.7         42.1        1.002        0.933
+2019           137.1         43.5        167.0         11.2        0.932        0.785
+2020           427.1        113.1        922.2        278.8        0.948        0.852
+2021           368.0         89.3        702.2        185.9        0.953        0.788
+2022           612.8        172.4       1411.3        471.7        1.031        1.070
+2023           362.0         87.5        656.4        159.0        0.937        0.785
+2024           461.4        122.6        987.6        309.5        0.950        0.843
+2025           648.3        178.7       1648.6        628.2        0.976        0.864
+2026           895.9        245.5       2604.8       1070.9        0.981        0.881
+
+======================================================================================================================
+=== 6b. THE ONE VARIABLE THAT DOES MOVE WITH IT: the market's own direction
+======================================================================================================================
+Monthly panel. x = the market's mean session close-minus-open in that month (points per
+session); y = the sleeve's pts/session in that month. A mirrored trend follower should be
+a linear function of x, and if it is, 'decay' is the wrong noun.
+DIAGNOSTIC: x is contemporaneous, so this is a decomposition and never a trading rule.
+   PRE months         n= 196  slope  -0.2479 [-0.3304, -0.1755]   R2 0.328
+                             DRIFT-NEUTRAL EXPECTANCY (intercept)  +0.408 pts/session   90% CI [-0.339, +1.187]
+   MODERN months      n=  51  slope  -0.1306 [-0.2178, -0.0840]   R2 0.146
+                             DRIFT-NEUTRAL EXPECTANCY (intercept)  +7.163 pts/session   90% CI [+3.073, +11.849]
+   MODERN ex-2026     n=  44  slope  -0.1616 [-0.2715, -0.0668]   R2 0.136
+                             DRIFT-NEUTRAL EXPECTANCY (intercept)  +8.716 pts/session   90% CI [+4.411, +13.863]
+   ALL (diagnostic)   n= 247  slope  -0.1500 [-0.2076, -0.1136]   R2 0.158
+                             DRIFT-NEUTRAL EXPECTANCY (intercept)  +1.627 pts/session   90% CI [+0.482, +3.029]
+
+   The intercept is the sleeve's expectancy at ZERO market drift - the closest thing to
+   'skill with the direction taken out'. To pay the $20.65 floor it must exceed
+   trades/session x 1.0325 pts, which is 2.32 pts/session at the modern trade rate (2.25/sess) and 2.62 at the PRE rate.
+
+   OUT-OF-PERIOD TEST. Fit on the 2022-05..2025-12 months only, then PREDICT each 2026
+   month from that month's market drift alone. Nothing about 2026 is used in the fit.
+   month       mkt drift  predicted    actual    resid  resid/sd
+   2026-01         17.18       5.94     -6.36   -12.30     -0.75
+   2026-02        -23.61      12.53      2.22   -10.31     -0.63
+   2026-03        -20.83      12.08    -24.25   -36.33     -2.23
+   2026-04        191.39     -22.21    -15.07     7.13      0.44
+   2026-05        122.93     -11.15     -8.17     2.98      0.18
+   2026-06        -16.07      11.31      6.09    -5.22     -0.32
+   2026-07        -97.93      24.54     18.30    -6.24     -0.38
+   2026 pooled      23.15       4.98     -3.64    -8.61     -1.40
+   in-sample residual sd = 16.31 pts/session per month; 2026's 7 months have
+   1 of 7 residuals beyond 2 sd.
+   READ: the 2026 shortfall the campaign called a decay is FULLY accounted for by
+   the market's own direction at the 90 % level: predicted +4.98, actual -3.64.
+
+======================================================================================================================
+=== 7. GATE G5 - OPPORTUNITY DROUGHT vs SKILL DECAY (thresholds fixed in the spec)
+======================================================================================================================
+                                      baseline 2022-2025          2026   ratio 2026/base
+O1 down-MFE available per session                 237.50        425.56             1.792
+sleeve GROSS pts won per session                    7.67         -3.28            -0.427
+CAPTURE = won / available                        0.03229      -0.00770            -0.238
+  cross-check O1 down-MFE VolMult 6                502.77        895.85             1.782
+  cross-check O1 down-MFE VolMult 30                133.22        245.51             1.843
+  cross-check zigzag-40 down points                705.03       1782.51             2.528
+  cross-check zigzag-20 down points               1121.82       2604.79             2.322
+  cross-check zigzag-80 down points                369.50       1070.90             2.898
+
+   spec rule: DROUGHT if OPP<=0.75 and CAP>=0.75 ; SKILL DECAY if OPP>=0.90 and CAP<=0.75 ; else MIXED
+   OBSERVED   OPP ratio 1.792   CAP ratio -0.238   ->  SKILL DECAY
+
+   HOW FAR THIS VERDICT ACTUALLY GOES - stated here rather than quietly softened later.
+   The rule was written expecting OPP near 1.0 and it fired at OPP = 1.79, so the SKILL
+   branch is technically satisfied by a CAPTURE ratio whose DENOMINATOR grew 79 %. What
+   the fork does establish, unambiguously, is the half that was decisive: the DROUGHT
+   branch is dead. There was more available down-excursion per session in 2026 than in
+   any baseline year, on all five opportunity measures, and the down/up balance was
+   normal. What it does NOT establish is that the numerator moved by more than noise -
+   section 9 (G4) puts 2026 at the 10.9th percentile of this series' own contiguous-
+   window null and section 4b gives its 251-trade gross edge a 90 % interval of
+   [-9.72, +6.03] points, which cannot separate -1.98 from the +3.41 baseline.
+   'SKILL DECAY' is therefore the correct reading of the preregistered rule and an
+   OVERSTATEMENT of the evidence. Both sentences are recorded.
+
+======================================================================================================================
+=== 8. MIX vs WITHIN - the same fork done as an exact decomposition, not a ratio
+======================================================================================================================
+Sessions are classed by an OPPORTUNITY variable whose cuts are fixed on the MODERN
+baseline (2022-05..2025-12) terciles and then applied unchanged to 2026, so the class
+definition cannot move with the answer. The matched UNCONDITIONAL control is section 2.
+DIAGNOSTIC: the class uses whole-session information and is not a tradeable rule.
+
+   CLASS = available DOWN-leg MFE (O1 VolMult 16)   cuts (from baseline only) = [121.42, 265.25]
+   tercile       base freq  2026 freq  base pts/s  2026 pts/s   n base   n 2026
+   LOW               0.333      0.158      -11.98      -25.05      317       24
+   MID               0.332      0.230      -12.88      -33.46      316       35
+   HIGH              0.334      0.612       46.21       13.11      318       93
+   total change -10.81 pts/session = MIX +13.84 (-128 %) + WITHIN -24.66 (228 %)
+   bootstrap (400 draws, session resample): MIX 90% CI [+9.27, +19.98]   WITHIN 90% CI [-39.59, -12.10]
+
+   CLASS = session close-minus-open return   cuts (from baseline only) = [-52.42, 91.83]
+   tercile       base freq  2026 freq  base pts/s  2026 pts/s   n base   n 2026
+   LOW               0.333      0.414       52.04       27.09      317       63
+   MID               0.333      0.164      -11.14       -2.34      317       25
+   HIGH              0.333      0.421      -19.37      -34.39      317       64
+   total change -10.81 pts/session = MIX +1.99 (-18 %) + WITHIN -12.80 (118 %)
+   bootstrap (400 draws, session resample): MIX 90% CI [-3.48, +7.29]   WITHIN 90% CI [-26.99, +2.37]
+
+   CLASS = sum of negative 1-min moves   cuts (from baseline only) = [1829.42, 2447.50]
+   tercile       base freq  2026 freq  base pts/s  2026 pts/s   n base   n 2026
+   LOW               0.333      0.026       -8.80       -4.12      317        4
+   MID               0.333      0.092        6.56      -14.31      317       14
+   HIGH              0.333      0.882       23.77       -2.51      317      134
+   total change -10.81 pts/session = MIX +8.75 (-81 %) + WITHIN -19.56 (181 %)
+   bootstrap (400 draws, session resample): MIX 90% CI [+2.63, +14.53]   WITHIN 90% CI [-33.48, -6.86]
+
+======================================================================================================================
+=== 9. GATE G4 - IS THE 2026 STRETCH EVEN DISTINGUISHABLE FROM THIS SERIES' OWN NOISE?
+======================================================================================================================
+
+   MODERN (2022-05 on): 1103 sessions, 2026 window length L=152
+      observed 2026 mean -3.64 pts/session
+      exact contiguous-circular-window null over the same series: mean +5.69, p5 -5.43, min -10.64, max +24.66
+      2026 sits at the 10.9th percentile of that null  ->  NOT below p5 = INSIDE ITS OWN NOISE
+      rho_bar (lag-1 autocorr of the daily series) = 0.0000   K = 1103   K_eff = 1103
+      DIAGNOSTIC ONLY session-level t = -0.43; deflated by K_eff (152 of 152) t_eff = -0.43
+
+   FULL 2006-2026 (diagnostic): 5466 sessions, 2026 window length L=152
+      observed 2026 mean -3.64 pts/session
+      exact contiguous-circular-window null over the same series: mean +0.91, p5 -3.46, min -10.64, max +24.66
+      2026 sits at the 4.1th percentile of that null  ->  below p5 = DISTINGUISHABLE
+      rho_bar (lag-1 autocorr of the daily series) = 0.0000   K = 5466   K_eff = 5466
+      DIAGNOSTIC ONLY session-level t = -0.43; deflated by K_eff (152 of 152) t_eff = -0.43
+
+   the sleeve's rolling 24-month record over the FULL history (W61 only had 22 windows):
+      223 windows | 45.3 % positive | median t -0.07 | latest (2026-07-31) t +1.15 at the 84.8th percentile
+      worst window in 20 years: t -2.92 ending 2018-02-28
+      W61 measured this on 22 windows all of which start after 2022-07. Over the full
+      history there are 223 windows and the latest sits at the 84.8th percentile, not the 0th.
+      negative 24-month windows in the full history: 122 of 223 (54.7 %) - W61 saw NONE because it only had 2022+.
+
+======================================================================================================================
+=== 9b. IS IT A DECAY OR A CLUSTER? P&L concentration, and the month-by-month path
+======================================================================================================================
+This repo has measured that P1's top decile of trades exceeds 100 % of its net. If 2026's
+shortfall is a handful of sessions, 'decay' is the wrong word for it.
+
+year     sess   net pts  worst 5 sess  their share  net ex-worst5  pts/sess ex-w5    best 5
+2006      350      -247          -108          44%           -139           -0.40       129
+2007      274       -62          -164         266%            102            0.38       243
+2008      268       396          -298         -75%            694            2.64       480
+2009      262      -421          -129          31%           -292           -1.14       155
+2010      264      -113          -144         128%             31            0.12       222
+2011      263        47          -148        -316%            195            0.76       290
+2012      264       131          -148        -113%            279            1.08       244
+2013      261      -219          -148          68%            -71           -0.28       200
+2014      257      -110          -209         189%             98            0.39       384
+2015      262      -394          -326          83%            -67           -0.26       429
+2016      261      -266          -238          89%            -28           -0.11       473
+2017      257      -367          -249          68%           -118           -0.47       486
+2018      258      -398          -455         114%             57            0.22       797
+2019      259      -501          -399          80%           -102           -0.40       626
+2020      260       745          -684         -92%           1429            5.60      1676
+2021      259      -722          -776         107%             53            0.21      1314
+2022      259      2122          -975         -46%           3097           12.19      2063
+2023      258       713          -660         -93%           1373            5.43       995
+2024      259      3605          -518         -14%           4123           16.23      2618
+2025      259      1567          -865         -55%           2432            9.58      3197
+2026      152      -553          -814         147%            262            1.78      1766
+
+   month by month, 2025-01 .. 2026-07 (the stretch W61 called the decay):
+month       sess  trades   pts/sess   hit%    edge   dnMFE/s  dn share  sess ret
+2025-01       22      48      24.17   35.4  11.297     320.1    0.4986      7.49
+2025-02       20      28      11.27   21.4   8.268     279.0    0.5008    -12.55
+2025-03       21      32       0.06   31.2   0.258     410.8    0.5053    -85.37
+2025-04       21      39      21.49   28.2  11.788     705.2    0.4976     29.05
+2025-05       22      42     -31.61   21.4 -16.339     271.3    0.4947     69.47
+2025-06       21      33     -13.13   30.3  -8.136     223.9    0.4924     80.81
+2025-07       23      15      20.21   53.3  31.200     195.5    0.4976     17.21
+2025-08       21      48      21.45   35.4   9.604     204.2    0.4995      6.69
+2025-09       22      64       0.33   45.3   0.332     169.8    0.4939     48.95
+2025-10       23      49      18.47   24.5   8.888     251.0    0.4992     25.37
+2025-11       21      32      -6.78   21.9  -4.234     391.1    0.5028    -39.37
+2025-12       22      33       5.62   42.4   3.962     273.4    0.5022    -13.90
+2026-01       21      50      -6.36   30.0  -2.455     313.6    0.4983     17.18
+2026-02       20      45       2.22   40.0   1.206     392.5    0.5018    -23.61
+2026-03       22      29     -24.25   27.6 -18.181     469.2    0.5008    -20.83
+2026-04       22      29     -15.07   34.5 -11.216     259.6    0.4850    191.39
+2026-05       21      29      -8.17   41.4  -5.698     335.8    0.4931    122.93
+2026-06       22      23       6.09   39.1   6.043     607.1    0.5012    -16.07
+2026-07       24      46      18.30   34.8   9.766     575.4    0.5056    -97.93
+
+======================================================================================================================
+=== 10. GATE / SPEC / OBSERVED / PASS-FAIL   (printed by the program, never assembled by hand)
+======================================================================================================================
+id   gate                                        spec                                        observed                  verdict
+G0   harness selftest                            all identities close to 1e-12               see section 0             PASS
+G3   seal CORE                                   max bar < 2026-08-01                        2026-05-29T16:59:00       PASS
+G1   P1 reproduces W61's object                  14.72 +- 0.60 pts/session                   P1 14.86 pts/session      PASS
+G2   short sleeve reproduces W61's object        2,225 trades +-2%, 6.00 +-0.30 pts/sess     short 2,225 trades (expec PASS
+G3   seal FULL                                   max bar < 2026-08-01                        2026-07-31T16:59:00       PASS
+G6   sign of 2026 GROSS pts/trade                > 0 => cost problem; <= 0 => not            -1.9841 pts/trade         NOT-A-COST-PROBLEM
+G7   is the fixed $1,300 session halt the mechan |no-overlay deficit| < 0.6 x |incumbent def ratio 1.395               OVERLAY EXONERATED
+G8   is 2026 explained by market direction alone |actual-predicted| within 1.645 SE of the f pred +4.98 vs actual -3.6 EXPLAINED
+G5   opportunity drought vs skill decay          DROUGHT: OPP<=.75 & CAP>=.75 | SKILL: OPP>= OPP 1.792, CAP -0.238     SKILL DECAY
+G4   2026 below p5 of the exact circular-window  percentile < 5                              10.9th percentile         FAIL (inside its own noise)
+
+======================================================================================================================
+=== 11. WHAT THIS CLOSES AND WHAT IT DOES NOT
+======================================================================================================================
+CLOSED - 'the short sleeve is decaying' is not supported as stated:
+  * W61's -10.62 pts/session for 2026 came from a substrate that stops 2026-05-29,
+    because run_we_w51c.setup() calls load_deep WITHOUT extend=True. On the substrate
+    the same call already reaches with extend=True, 2026 is -3.64 pts/session over 152 sessions.
+  * The two months W61 could not see, 2026-06 and 2026-07, were +12.46 pts/session across 46 sessions.
+  * On the MODERN series the 2026 stretch sits at the 10.9th percentile of
+    the exact circular-window null of the same series - not below p5, so it is not
+    distinguishable from an ordinary bad run of this sleeve (G4 FAILS).
+
+CLOSED - the OPPORTUNITY-DROUGHT explanation is dead:
+  * At 1-minute resolution the down-share of realised movement is 0.499 in EVERY one of
+    the 21 years. There is no year in which the market stopped going down.
+  * At the ratchet's own scale the down/up available-excursion ratio in 2026 is 0.937,
+    inside the 21-year range and above 12 of the other 20 years.
+  * Available down-leg excursion per session in 2026 was 1.79x the 2022-2025 baseline.
+    There was MORE to be short of, not less.
+
+CLOSED BY ITS OWN COUNTERFACTUAL - the halt is NOT the mechanism:
+  * The share of TRADED sessions ending at the fixed -$1,300 halt rises monotonically
+    17.3 % (2023) -> 26.8 % -> 38.8 % -> 52.0 % (2026) while NQ's session movement
+    quadrupled, which looked like a clean risk-specification story. The preregistered
+    counterfactual kills it: with halt and target REMOVED, 2026 is WORSE (-10.15 vs
+    -3.64 pts/session) and the deficit against the 2022-2025 baseline GROWS by 39 %.
+    The fixed-dollar overlay is currently helping, not hurting. Reported because it is
+    the most attractive wrong answer this wave produced.
+
+OPENED / REFRAMED - what the 21-year record actually says:
+  * PRE era, 4,363 sessions and 11,087 trades: gross edge 0.0990 pts/trade against a 1.0325-pt cost floor.
+    Negative in 15 of 16 pre-2022 years at $20.65/ctrRT.
+  * W61's 'every one of its 22 rolling 24-month windows is positive, median t +2.13' was
+    computed on 2022+ only. On the full history it is not that object.
+  * DRIFT-NEUTRAL EXPECTANCY, the monthly panel's intercept - the sleeve's expectancy
+    with the market's own direction taken out, and the sharpest form of the era break:
+        PRE   196 months  +0.408 pts/session  90% CI [-0.339, +1.187]  hurdle 2.62  BELOW
+        MOD    44 months  +8.716 pts/session  90% CI [+4.411, +13.863] hurdle 2.32  ABOVE
+    Twenty times the level, on the two sides of the ERABREAK01 boundary. Adding 2026
+    moves the modern intercept only 8.72 -> 7.16, well inside its own interval. What
+    needs explaining is 2022-2025, not 2026.
+
+NOT ANSWERED - stated as a limit, not smuggled in as a finding:
+  * Why 2022-2025 was as good as it was is not explained here.
+  * Of the three per-trade factors, only the mean LOSS moved against the sleeve:
+    hit rate 37.3 -> 35.1 %, mean WIN 44.3 -> 69.1 pts (+56 %), mean LOSS 21.0 -> 40.4 pts (+92 %),
+    against NQ's mean session |1-min move| 4,743 -> 8,495 (+79 %). The Shapley split puts 230 % of the
+    per-trade change on the LOSS term. But the SCALE-FREE edge/vol for 2026 is
+    -0.234 x1e-3, an ordinary pre-2022 value. Whether the loss
+    growth is anything beyond volatility is NOT settled by this wave.
+  * No candidate is proposed. Nothing here is an adoption argument, and this sub-wave
+    deliberately proposes no filter: the repo is 11-for-11 against random-thinning
+    controls and an exposure-reducing rule would have to beat one, which is a different
+    wave with its own preregistration.
+
+done [1s]
