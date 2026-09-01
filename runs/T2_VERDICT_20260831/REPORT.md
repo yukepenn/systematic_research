@@ -43,6 +43,21 @@ than any candidate moves it*. Under **weekly-vol matching**, which has no such d
 ⇒ **Every fixed-DD gain in this repo must now be read beside its random-thinning placebo, or it is
 uninterpretable.** This retroactively voids the most flattering numbers in the wave.
 
+> ⚠️ **2026-09-01 — the RULE is upheld and CODIFIED; the specific NUMBER does not reproduce.**
+> `research_sdk/eval_battery.py` re-ran side-blind random thinning on **M_11's** certified weekly
+> series (243 weeks, 2,817 trades, $2,211/wk — all three reproduce exactly). DD-matched income
+> came out **monotonically NEGATIVE at every deletion rate from 2 % to 70 %** (−$20, −$61, −$91,
+> −$236, −$527, −$1,046). **The +$129…139/wk lift does not appear on this object.**
+> Most likely because it was measured on **Book 7** (M_11 + ORB30 + MC01), not M_11 alone, and/or
+> on a different period grid — grid choice moves max DD from **$45,086 weekly to $51,891 on
+> sessions**. Recorded rather than tuned away.
+>
+> **The underlying indictment survives, and is now demonstrated directly instead of by proxy.**
+> An *oracle* rule — drop the worst 10 % of trades, using knowledge nobody has — reads
+> **2.2× native, 2.5× weekly-vol, 2.1× gross-exposure, but 12.7× fixed-DD and 21.8× fixed-CDaR.**
+> The order-statistic bases carry 5–10× the dynamic range of the others for the identical rule.
+> **That is the mechanism, and the governance rule now rests on it rather than on one number.**
+
 ## ⭐ A REAL OBJECT DIVERGENCE IN THE DEPLOYED CODE — verified by me from the lane's console
 
 ```

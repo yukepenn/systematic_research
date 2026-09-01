@@ -76,6 +76,12 @@ portfolio figure for M_11 or for the live book**, and multiply any full-size res
 - **Every metric carries an evidence-status tag**: FORWARD / PRE-FROZEN / DISCOVERY_CONSUMED /
   DIRECTLY_BURNED / LEGACY_DIAGNOSTIC.
 - **Never let leverage, sizing or a reduced risk denominator masquerade as information alpha.**
+- ⭐ **A fixed-maxDD or fixed-CDaR figure is NOT QUOTABLE without its rate-matched, side-blind
+  random-thinning placebo.** Those denominators are **order statistics of the path**, so removing
+  trades shrinks them faster than it shrinks return. Measured on M_11: an oracle rule that drops
+  the worst 10 % of trades reads **2.2× native, 2.5× on weekly-vol — and 12.7× on fixed-DD,
+  21.8× on CDaR.** Use `research_sdk/eval_battery.py`, which makes the unguarded figure raise
+  rather than print. Judge every candidate on **several** bases and lead with weekly-vol.
 - Classify any improvement: NEW INFORMATION / MECHANISM-POLICY / REGIME ROUTING / DIVERSIFICATION /
   RISK SPECIFICATION / EXECUTION / LEVERAGE / SELECTION LUCK.
 - `OPPORTUNITY_LANGUAGE.md` is **binding**: every ceiling figure names its level or is not quotable.
