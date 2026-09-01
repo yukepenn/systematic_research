@@ -1,0 +1,255 @@
+run_id: G3_SHORTROUTE01_20260831
+title: "Is the mirrored short sleeve a REGIME-ROUTING object? Identify, in PRE 2006-2019 ONLY, an
+        ex-ante state variable that separates its drift-neutral expectancy - then ONE look at
+        MODERN. Either answer closes something."
+date: 2026-08-31
+campaign: GENESIS III - NQ CHAMPION CHALLENGE / WAVE C follow-on
+status: PREREGISTERED - written and committed BEFORE any conditional statistic was computed
+live_enabled: NO
+spend: 0
+orders_placed: NO
+
+# ==================================================================================================
+# 0. WHY THIS IS THE ONLY REMAINING QUESTION ON THE SHORT AXIS
+# ==================================================================================================
+what_wave_c_established: >
+  The mirrored short sleeve's DIRECTIONAL INFORMATION IS REAL - MODERN sits at the 100.0th
+  percentile of 1,000 circular shifts, PRE at the 97.2nd. It is not noise.
+  It nonetheless does not pay, and the reason is ARITHMETIC rather than statistical: its gross edge
+  is $54.59 per contract round turn against P1's $154.90, so it trades 15% MORE for 40% of the
+  money and a flat $20.65/ctrRT eats 37.8% of its gross versus the long object's 15.8% - 2.40x.
+  W73's identity closes exactly once cost is added as a third bucket:
+      TIMING +$144,532  +  DRIFT -$23,078  +  COST -$45,946  =  $75,508 = the direct measurement.
+
+the_fork_this_run_resolves: >
+  The measured fork, from WAVE C:
+  PRE 2006-2019 drift-neutral expectancy +0.408 pts/session, 90% CI [-0.339, +1.187];
+  MODERN ex-2026 +8.716 pts/session, 90% CI [+4.411, +13.863];
+  cost hurdle 2.62 (PRE) / 2.32 (MODERN) pts/session.
+  On the 4x-larger PRE sample the whole confidence interval sits BELOW the hurdle. So 2022-2025 -
+  at 20x the PRE level - is the anomaly, and 2026's reversion is the base case.
+  EITHER that four-year run had an ex-ante HANDLE, or it did not.
+  HANDLE -> the sleeve is a REGIME-ROUTING object (a legitimate improvement class, CLAUDE.md 4)
+  that runs only in an identified state, and W61 / W62 / W120 must all be re-run inside the routed
+  population rather than the full one.
+  NO HANDLE -> 2022-2025 was a four-year regime with no observable trigger, and THE SHORT AXIS
+  CLOSES PERMANENTLY. That is a real result and it saves every future wave.
+
+# ==================================================================================================
+# 1. POPULATIONS - fixed here so neither can be re-chosen after a result
+# ==================================================================================================
+identification_window: "PRE: 2006-01-01 -> 2019-12-31"
+why_that_window_and_not_more: >
+  ERABREAK01 (p=0.0011) places the structural break at 2022-05. 2020-01-01 -> 2022-04-30 is TRANS
+  and is EXCLUDED from identification entirely - COVID is a volatility regime unlike anything
+  before or after it and including it would let one episode define the state variable.
+  PRE is GENUINELY FRESH for this object: W61, W62, W73 and W120 are all 2022+. WAVE C's `native`
+  angle ran PRE but consumed only the AGGREGATE (a single pooled number), never a conditioning.
+confirmation_window: "MODERN: 2022-05-01 -> 2026-05-29"
+confirmation_is_ONE_LOOK: >
+  MODERN is already DISCOVERY_CONSUMED for this sleeve and therefore CANNOT serve as
+  identification. It is read exactly once, to answer exactly one question: was the
+  PRE-identified state elevated during 2022-2025? No refitting, no threshold selection, no second
+  variable, no "while we are here". If the PRE stage produces no winner, MODERN IS NOT READ AT ALL.
+seal_compliance: "NO read of any session >= 2026-08-01. The MODERN window ends 2026-05-29 by
+  construction (that is where the base substrate ends). Rows dropped are printed."
+substrate_note: >
+  load_deep MUST be called with extend=True. WAVE C established that run_we_w51c.py:38 calls it
+  WITHOUT extend, silently truncating at 2026-05-29 and changing W61/W62/W73's 2026 conclusion.
+  This run does not import setup(); it builds its own loader and ASSERTS the max bar timestamp.
+
+# ==================================================================================================
+# 2. THE DEPENDENT VARIABLE - chosen so a result cannot be a restatement of drift
+# ==================================================================================================
+dependent_variable: >
+  MONTHLY DRIFT-NEUTRAL EXPECTANCY, exactly as WAVE C's `decay` angle defined it: regress the
+  sleeve's pts/session on the market's own mean session (close - open) over the same months, and
+  take the INTERCEPT. The market-direction headwind is absorbed by construction, so a positive
+  result cannot be "the market fell more in that state".
+  Reported with a 6-month circular moving-block bootstrap on both coefficients, 1,000 draws.
+why_not_raw_pnl: >
+  Raw P&L conditioned on a volatility state would rediscover that big moves make big numbers.
+  The intercept asks the only question that matters: in this state, does the sleeve earn beyond
+  what the market's own direction handed it?
+
+# ==================================================================================================
+# 3. CANDIDATE STATE VARIABLES - SIX, FROZEN, each with its mechanism stated BEFORE any result
+# ==================================================================================================
+frozen_rule_for_all_six: >
+  Every variable is measured at the SESSION START (18:00 ET) from STRICTLY PRIOR sessions only.
+  The sleeve trades around the clock, so a 09:30-available variable would be a look-ahead for its
+  overnight legs. Each is turned into a state by a CAUSAL trailing-252-session tercile
+  (research_sdk-style: quantile over prior observations only, never full-sample).
+  No variable may be added, dropped, transformed or re-binned after any result is seen.
+
+S1_trailing_realised_vol:
+  definition: "stdev of the prior 21 sessions' close-to-close log returns"
+  mechanism: >
+    THE PRIMARY HYPOTHESIS, and it follows directly from WAVE C's arithmetic. The sleeve's problem
+    is AMPLITUDE: $54.59 gross per ctrRT against a $20.65 flat cost. Amplitude scales with
+    volatility. If the sleeve only pays when moves are large enough to clear a fixed cost, then
+    trailing realised vol is the handle, and 2022-2025 was simply a high-vol regime.
+  predicted_sign: POSITIVE - high-vol tercile carries the higher drift-neutral expectancy.
+
+S2_vol_of_vol:
+  definition: "stdev of the prior 21 sessions' daily realised-vol series, over a 63-session window"
+  mechanism: >
+    Distinct from S1: a trend-follower is hurt by CHANGING volatility even at a constant level,
+    because its retracement distance S is estimated from a trailing window and is therefore always
+    stale when vol is moving. High vol-of-vol should hurt BOTH sides but the short more, because
+    the short has less amplitude to absorb a mis-set S.
+  predicted_sign: NEGATIVE.
+
+S3_trend_state:
+  definition: "the market's own trailing 63-session log return, sign and magnitude"
+  mechanism: >
+    A mirrored trend-follower's short legs are structurally advantaged in a downtrend. This is the
+    most OBVIOUS variable and it is included precisely so that it can be compared against the
+    others - if S3 wins, the sleeve is a market-direction bet wearing a strategy's clothes, and
+    the drift-neutral dependent variable is the control that exposes it.
+  predicted_sign: NEGATIVE (downtrend -> higher short expectancy).
+
+S4_range_compression:
+  definition: "prior-session high-low range divided by the median of the prior 60 sessions' ranges"
+  mechanism: >
+    Compression precedes expansion. A trend-follower needs a move to develop; if the sleeve pays
+    after compressed sessions, the handle is about the SUPPLY of trending legs rather than about
+    volatility level.
+  predicted_sign: NEGATIVE (compression today -> expansion tomorrow -> higher expectancy).
+
+S5_overnight_share:
+  definition: >
+    the fraction of the prior 21 sessions' total absolute movement that occurred in the OVERNIGHT
+    segment (bars outside 09:31-16:00), a rolling ratio
+  mechanism: >
+    P1 takes ~59% of its net overnight (W79). If the sleeve's edge is concentrated where liquidity
+    is thin, its cost burden rises exactly when its opportunity does, and this ratio would separate
+    the two. It also tests, from a different angle, the RTH-vs-overnight structure my earlier
+    drift hypothesis failed on.
+  predicted_sign: UNSIGNED - stated as unsigned in advance, and a two-sided test is used for it.
+
+S6_vix_level:
+  definition: "prior-session close of VIX, from runs/GENESIS_FREEDATA_CBOE_20260828/certified/idx_VIX_daily.parquet"
+  mechanism: >
+    An EX-ANTE volatility expectation rather than a realised one. It is included as the natural
+    competitor to S1: if implied beats realised, the handle is about the priced expectation of
+    movement, not about movement already delivered.
+  declared_selection_debt: >
+    G3_VOLSHORT01 already read pre-2022 VIX/VXN, for a DIFFERENT dependent variable (NQ RTH drift
+    conditioned on vol state) and found nine-for-nine positive drift. That is not this question,
+    but the DATA is not fresh and this run says so rather than pretending otherwise. If S6 wins,
+    that debt is a stated caveat on the result and must travel with it.
+
+explicitly_excluded_and_why:
+  - "Any variable that requires the CURRENT session's prices. The sleeve trades overnight; those
+     are look-aheads for its own legs."
+  - "Day-of-week and calendar effects. No mechanism connects them to the AMPLITUDE problem, and
+     including them would be a scan."
+  - "The sleeve's own trailing performance. Routing a strategy on its own recent P&L is a
+     momentum-of-strategy bet, it is not an ex-ante market state, and it cannot be executed
+     without a further parameter, namely how much history."
+
+# ==================================================================================================
+# 4. GATES - every clause coded, table printed BY THE PROGRAM
+# ==================================================================================================
+G0_reproduction:
+  test: "Rebuild the sleeve and reproduce WAVE C's figures: 2,225 trades / 6.00 pts/session /
+         net $121,454 on the 2022+ window, and P1 at 14.86 pts/session (the W73 B1 gate)."
+  PASS: "both to the cent / to two decimals."
+  if_fail: "The object is not the same one and every number below is void. Report G0 only."
+
+G1_separation:
+  statistic: >
+    For each of the six variables: SPREAD = (drift-neutral expectancy in the predicted-favourable
+    tercile) - (drift-neutral expectancy in the predicted-unfavourable tercile), in PRE only.
+    For S5 the two-sided |spread| is used, as declared above.
+  PASS: "the best variable's SPREAD survives G2 below."
+
+G2_the_null_that_prices_the_search:
+  why: >
+    Six variables x three terciles is a scan, and this repo has lost to exactly this before
+    (MC-11: 13 buckets x 40 configs, best-of reported). The null must replicate the argmax.
+  null: >
+    CIRCULAR SHIFT of the state-variable series against the sleeve's monthly series, preserving
+    each variable's own distribution and serial dependence. 2,000 draws. ON EVERY DRAW THE ENTIRE
+    ANALYSIS IS REDONE INCLUDING THE MAX-OVER-SIX-VARIABLES STEP, and the max statistic recorded.
+  PASS: "observed best SPREAD exceeds the 95th percentile of that max-statistic distribution."
+
+G3_the_state_must_be_ECONOMICALLY_live_not_merely_separating:
+  test: >
+    In the favourable tercile, the drift-neutral expectancy must CLEAR THE COST HURDLE:
+    trades_per_session x 1.0325 pts, computed within that tercile, at $20.65/ctrRT.
+    Also printed at $25.01 and at the $4.36 commission-only FLOOR (a floor, never a headline).
+  PASS: "favourable-tercile expectancy > hurdle at $20.65, with the bootstrap 90% CI lower bound
+         also above the hurdle."
+  why_this_gate_is_binding: >
+    A variable can separate a quantity that is negative everywhere. Separation is necessary and
+    nowhere near sufficient. WAVE C's whole finding is that this object lives just under a cost
+    line; a router that moves it from "well below" to "slightly below" is worth nothing.
+
+G4_monotonicity:
+  test: "the three terciles must be ordered consistently with the predicted sign (or, for S5,
+         monotone in one direction), not merely extreme-vs-extreme."
+  PASS: "middle tercile lies between the two extremes."
+  why: "An extremes-only effect with a non-monotone middle is the signature of a few episodes."
+
+G5_episode_concentration:
+  test: "leave-one-year-out over the 14 PRE years, and leave-one-episode-out where an episode is a
+         maximal run of favourable-state months separated by >= 2 months. Both printed in full,
+         with the episode count and rho_bar, and K_eff = K/(1+(K-1)*rho_bar)."
+  PASS: "the SPREAD stays positive in >= 11 of 14 leave-one-year-out folds AND in >= 80% of
+         leave-one-episode-out folds."
+
+decision_rule: >
+  ALL of G1..G5 -> the PRE stage has a WINNER, and exactly ONE confirmation look at MODERN is
+  taken (section 5). ANY fail -> NO WINNER, MODERN IS NOT READ, and the short axis is recorded
+  CLOSED with the reason. The population is never redefined and no second variable set is tried.
+
+# ==================================================================================================
+# 5. THE CONFIRMATION - one look, one question, no fitting
+# ==================================================================================================
+runs_only_if: "G1..G5 all PASS."
+the_single_question: >
+  Was the PRE-identified state elevated during MODERN 2022-05-01 -> 2026-05-29, and specifically
+  during the 2022-2025 sub-period that ran at 20x the PRE level?
+what_is_computed: >
+  (a) the distribution of the winning variable across MODERN months, versus its PRE distribution;
+  (b) the share of MODERN months in the PRE-defined favourable tercile (thresholds taken FROM PRE,
+      never re-estimated on MODERN);
+  (c) the sleeve's realised drift-neutral expectancy in MODERN months that fall in each PRE-defined
+      tercile.
+what_is_NOT_computed: >
+  No re-fit, no MODERN-estimated thresholds, no second variable, no economics of a routed strategy,
+  no candidate. If (b) shows 2022-2025 was NOT in the favourable state, the handle does not explain
+  the anomaly and the axis closes anyway - that outcome must be reported as prominently as a
+  confirmation would be.
+
+# ==================================================================================================
+# 6. TRAPS NAMED BEFORE RUNNING
+# ==================================================================================================
+traps:
+  - "SIX VARIABLES IS A SCAN. G2 is the only defence and it must replicate the argmax on every
+     draw. Reporting the best variable without it would be MC-11 exactly."
+  - "S1 and S6 are near-collinear (realised vs implied vol). If both 'work', that is ONE finding,
+     not two, and the report must say so and not count it twice."
+  - "S3 is included as a TRAP FOR ITSELF: if the trend state wins, the sleeve is a directional bet
+     and the drift-neutral dependent variable should already have absorbed it. An S3 win with a
+     drift-neutral dependent variable is more likely a specification failure than a discovery, and
+     the report must investigate that before celebrating."
+  - "PRE sessions are structurally thinner - median 1,249 bars vs 1,380 MODERN, and NQ's median
+     per-session movement is ~6x smaller. WAVE C flagged this as the main reason someone might
+     reject the PRE record entirely. Every PRE number must be printed in ATR/vol-normalised units
+     ALONGSIDE raw points so a reader can judge it."
+  - "A WINNER IS NOT A CANDIDATE. Even a full pass produces only 'the sleeve is a regime-routing
+     object' - it does not produce a rule, a weight, an exit, or a .cs. Building anything requires
+     its own preregistration with its own economics and its own random-routing control."
+  - "The routed population will be SMALLER. Any economics computed later on a third of the sessions
+     inherits a third of the power, and the MDE must be printed before that is attempted."
+
+prohibitions:
+  - no order, deploy, enable, disable, stop or modify on any account
+  - no edit to any production .cs file, to research/weekly_edge/src/, or to research_sdk/
+  - no read of any session >= 2026-08-01
+  - MODERN is not read unless G1..G5 all pass, and then exactly once
+  - no seventh variable, no re-binning, no transformation added after a result is seen
+  - no promotion, no build, no deployment may originate from this run
