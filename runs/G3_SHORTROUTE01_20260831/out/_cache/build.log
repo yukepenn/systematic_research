@@ -1,0 +1,54 @@
+==============================================================================================================
+G3_SHORTROUTE01 - STAGE 1 BUILD  (spec 9a18980, unedited)
+==============================================================================================================
+
+[CORE] G0-ONLY substrate: load_deep('2022-01-01','2026-07-31 17:00', extend=False).
+       extend is OFF *on purpose*: this is the exact truncated object W61/W73 measured,
+       and G0 asks whether this run rebuilds THAT object. It is used for nothing else.
+   SEAL ASSERTION [CORE]: max bar 2026-05-29T16:59:00  <  2026-08-01  ->  PASS
+   substrate 1,558,497 bars, 1141 sessions (2022-01-02T18:01:00 .. 2026-05-29T16:59:00)   [3s]
+   TRUNCATION CONFIRMED: this substrate stops at 2026-05-29T16:59:00 although 2026-07-31 17:00 was requested.
+   targets narrow5  REUSED from runs\WE_W38_SHORTQ\out\tg_narrow5_1558497_31469512933.npy
+   targets narrow6  REUSED from runs\WE_W38_SHORTQ\out\tg_narrow6_1558497_31469512933.npy
+   targets narrow7  REUSED from runs\WE_W38_SHORTQ\out\tg_narrow7_1558497_31469512933.npy
+   targets all13    REUSED from runs\WE_W38_SHORTQ\out\tg_all13_1558497_31469512933.npy
+   [CORE] short sleeve raw trades: 2,517
+   [CORE] P1 raw trades: 2,212 (causal-score history from 2,072 entries)
+
+   CORE window 2022-07-01 .. 2026-08-01: 1012 sessions
+   G0a short trades   : 2,225          (WAVE C: 2,225)
+   G0b short pts/sess : 6.00            (WAVE C: 6.00)
+   G0c short net $4.36: $121,454      (WAVE C: $121,454)
+   G0d P1 pts/session : 14.86           (WAVE C / W73: 14.86)
+
+[FULL] ANALYSIS substrate: load_deep('2006-01-01','2026-07-31 17:00', extend=TRUE)  [23s]
+   SEAL ASSERTION [FULL]: max bar 2026-07-31T16:59:00  <  2026-08-01  ->  PASS
+   substrate 6,528,330 bars, 5466 sessions (2006-01-05T08:59:00 .. 2026-07-31T16:59:00)   [27s]
+   EXTEND WORKED: max bar 2026-07-31T16:59:00 > CORE's 2026-05-29 -> the truncation trap is not present in this run.
+   context built [159s]
+   targets narrow5  REUSED from runs\G3_SHORTALPHA_20260831\out\_decay_cache\tg_narrow5_6528330_74737602615.npy
+   targets narrow6  REUSED from runs\G3_SHORTALPHA_20260831\out\_decay_cache\tg_narrow6_6528330_74737602615.npy
+   targets narrow7  REUSED from runs\G3_SHORTALPHA_20260831\out\_decay_cache\tg_narrow7_6528330_74737602615.npy
+   targets all13    REUSED from runs\G3_SHORTALPHA_20260831\out\_decay_cache\tg_all13_6528330_74737602615.npy
+   [FULL] short sleeve raw trades: 13,478
+   fills done [161s]
+
+[VIX] runs\GENESIS_FREEDATA_CBOE_20260828\certified\idx_VIX_daily.parquet
+   9,241 rows; 0 dropped by the >=2026-08-01 seal; kept 9,241 (1990-01-02 .. 2026-07-31)
+   look-ahead assertion: VIX rows dated >= their own session date = 0  -> PASS
+   sessions with no prior VIX close: 0
+
+[cached] 5,466 sessions -> full_sessions.csv   [161s]
+
+[CROSS-CHECK] the FULL substrate restricted to the CORE session set must be the SAME
+              object (WAVE C measured 100.0 % identical sessions).
+   1014 shared sessions | CORE $121,454 vs FULL $121,454 | identical sessions 100.0 %
+
+[SEAL / WINDOW EXCLUSIONS - printed, not assumed]
+   sessions >= 2026-08-01 in the substrate            : 0  (seal)
+   sessions 2026-05-30 .. 2026-07-31 present but OUTSIDE the spec's MODERN window (ends 2026-05-29): 46
+   sessions 2020-01-01 .. 2022-04-30 (TRANS, EXCLUDED ENTIRELY by the spec): 603
+   sessions in PRE 2006-01-01 .. 2019-12-31           : 3760
+   sessions in MODERN 2022-05-01 .. 2026-05-29        : 1057
+
+done [161s]

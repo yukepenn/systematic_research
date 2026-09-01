@@ -1,0 +1,395 @@
+======================================================================================================================
+G3_SHORTROUTE01 - DID THE MIRRORED SHORT SLEEVE'S 2022-2025 RUN HAVE AN EX-ANTE HANDLE?
+spec: runs/G3_SHORTROUTE01_20260831/spec.yaml  (committed 9a18980, BEFORE any
+      conditional statistic existed; not edited)
+======================================================================================================================
+POPULATIONS   IDENTIFICATION  PRE     2006-01-01 .. 2019-12-31
+              EXCLUDED        TRANS   2020-01-01 .. 2022-04-30  (entirely)
+              CONFIRMATION    MODERN  2022-05-01 .. 2026-05-29  ONE LOOK, only if G1..G5 pass
+COSTS         floor $4.36/ctrRT = 0.2180 pts (A FLOOR, NEVER A HEADLINE) | PRIMARY $20.65/ctrRT = 1.0325 pts | all-in $25.01 = 1.2505 pts
+DEPENDENT     monthly DRIFT-NEUTRAL EXPECTANCY = intercept of (sleeve pts/session) on
+              (market mean session close-minus-open), months as observations.
+STATE         six frozen variables, each measured at 18:00 ET from STRICTLY PRIOR sessions,
+              each binned by a CAUSAL trailing-252-session tercile. No seventh variable.
+
+======================================================================================================================
+=== 0. HARNESS SELFTEST - the estimator, the causal binning and the null are checked first
+======================================================================================================================
+   PASS  closed-form ols2 == numpy lstsq to 1e-10
+   PASS  ols2 recovers a known intercept
+   PASS  ols2 refuses a degenerate design (zero x-variance)
+   PASS  causal tercile leaves the first `win` observations unlabelled
+   PASS  causal tercile of observation i is unchanged by anything after i
+   PASS  causal tercile is NOT the full-sample tercile
+   PASS  causal tercile splits roughly into thirds
+   PASS  circular shift preserves each state's own distribution exactly
+   PASS  circular shift preserves serial dependence (same adjacency multiset)
+   PASS  block bootstrap returns the requested draws
+   PASS  block bootstrap brackets the point estimate
+   PASS  K_eff does not inflate on negative autocorrelation
+   PASS  K_eff deflates a persistent series
+   HARNESS SELFTEST 13/13
+
+======================================================================================================================
+=== G0. REPRODUCTION OF WAVE C - is this the same object?
+======================================================================================================================
+  SEAL ASSERTION [CORE]: max bar 2026-05-29T16:59:00  <  2026-08-01  ->  PASS
+  substrate 1,558,497 bars, 1141 sessions (2022-01-02T18:01:00 .. 2026-05-29T16:59:00)   [3s]
+  TRUNCATION CONFIRMED: this substrate stops at 2026-05-29T16:59:00 although 2026-07-31 17:00 was requested.
+  G0a short trades   : 2,225          (WAVE C: 2,225)
+  G0b short pts/sess : 6.00            (WAVE C: 6.00)
+  G0c short net $4.36: $121,454      (WAVE C: $121,454)
+  G0d P1 pts/session : 14.86           (WAVE C / W73: 14.86)
+  SEAL ASSERTION [FULL]: max bar 2026-07-31T16:59:00  <  2026-08-01  ->  PASS
+  substrate 6,528,330 bars, 5466 sessions (2006-01-05T08:59:00 .. 2026-07-31T16:59:00)   [27s]
+  EXTEND WORKED: max bar 2026-07-31T16:59:00 > CORE's 2026-05-29 -> the truncation trap is not present in this run.
+  look-ahead assertion: VIX rows dated >= their own session date = 0  -> PASS
+  [CROSS-CHECK] the FULL substrate restricted to the CORE session set must be the SAME
+  1014 shared sessions | CORE $121,454 vs FULL $121,454 | identical sessions 100.0 %
+  sessions >= 2026-08-01 in the substrate            : 0  (seal)
+
+  OBSERVED  2,225 trades | 6.00 pts/session | $121,454 net | P1 14.86 pts/session
+  SPEC      2,225 trades | 6.00 pts/session | $121,454 net | P1 14.86 pts/session
+  -> PASS. The object below is W61's mirrored short sleeve, bit-for-bit.
+
+======================================================================================================================
+=== 1. THE SIX FROZEN STATE VARIABLES - all measured at 18:00 ET from STRICTLY PRIOR sessions
+======================================================================================================================
+The sleeve trades overnight, so any 09:30-available quantity would be a look-ahead for its
+own legs. Every series below is shifted so that the value carried into session s uses only
+sessions < s, and is then binned by the terciles of its own prior 252 observations.
+
+id  definition                                                    predicted sign               first defined
+S1  trailing realised vol (21-sess stdev of close-to-close log returns)POSITIVE (HIGH favourable)      2006-01-23
+S2  vol-of-vol (63-sess stdev of the S1 series)                   NEGATIVE (LOW favourable)       2006-03-15
+S3  trend state (market trailing 63-session log return)           NEGATIVE (LOW favourable)       2006-02-27
+S4  range compression (prior range / median of prior 60 ranges)   NEGATIVE (LOW favourable)       2006-02-23
+S5  overnight share of absolute movement, 21-session rolling      UNSIGNED (two-sided)            2006-01-23
+S6  prior-close VIX (certified Cboe)                              POSITIVE (HIGH favourable)      2006-01-05
+
+S6's predicted sign is not written as a field in the spec; the spec states S6 is included
+as 'the natural competitor to S1' and shares S1's AMPLITUDE mechanism, so it is declared
+POSITIVE here. That is the only reading that does not silently widen the test to two-sided.
+
+id    labelled sessions   first labelled     LOW     MID    HIGH
+S1                5,192       2006-09-29   1,650   1,654   1,888
+S2                5,130       2006-12-13   1,637   1,606   1,887
+S3                5,150       2006-11-22   1,783   1,567   1,800
+S4                5,154       2006-11-17   1,701   1,716   1,737
+S5                5,193       2006-09-28   1,515   1,503   2,175
+S6                5,214       2006-09-01   2,134   1,386   1,694
+
+======================================================================================================================
+=== 2. THE PRE MONTHLY PANEL (identification population - nothing else is read yet)
+======================================================================================================================
+months in PRE 2006-01..2019-12 with >= 10 sessions AND all six variables
+labelled by their own causal 252-session terciles: 157
+   panel runs 2006-12 .. 2019-12, 3,436 sessions, 9,201 sleeve trades
+   PRE months dropped for warm-up / thinness: 11 (2006-01, 2006-02, 2006-03, 2006-04, 2006-05, 2006-06 ...)
+   The warm-up is mechanical, not a choice: S2 needs 21+63 sessions before its first value
+   and then 252 more before its first causal tercile. 2006 therefore carries no
+   labelled month. This is printed rather than absorbed.
+
+year     months  sessions   trades  trd/sess   pts/sess  mkt ret/sess  |move|/sess
+2006          1        26       33      1.27       0.51         -1.71        213.1
+2007         12       274      498      1.82      -0.22          1.15        407.5
+2008         12       268      833      3.11       1.48         -3.87        778.4
+2009         12       262      682      2.60      -1.61          2.85        516.8
+2010         12       264      562      2.13      -0.43          1.23        506.3
+2011         12       263      646      2.46       0.18          0.48        707.9
+2012         12       264      609      2.31       0.50          1.59        564.0
+2013         12       261      553      2.12      -0.84          3.89        511.5
+2014         12       257      699      2.72      -0.43          2.87        692.9
+2015         12       262      944      3.60      -1.50          2.52       1024.5
+2016         12       261      839      3.21      -1.02          1.53       1020.1
+2017         12       257      742      2.89      -1.43          6.36        791.6
+2018         12       258      846      3.28      -1.54         -0.23       2027.6
+2019         12       259      715      2.76      -1.93         10.65       1646.7
+
+   G0 CONTROL (not a spec gate, no conditioning, no MODERN month): rebuilding WAVE C's
+   OWN PRE cut - 2006-01-01..2022-04-30, no warm-up filter - with this file's estimator:
+      196 months, drift-neutral expectancy +0.408 pts/session, 90% CI [-0.324, +1.234], hurdle 2.62
+      WAVE C published: 196 months, +0.408, [-0.339, +1.187], hurdle 2.62
+      -> the estimator is WAVE C's. Any difference below is the SPEC'S POPULATION
+         (2006-2019, warm-up removed), which is what this run was told to use.
+
+   UNCONDITIONAL PRE (the matched control every conditional table below is measured
+   against): drift-neutral expectancy -0.075 pts/session, 90% CI [-0.492, +0.360]; slope -0.2550 [-0.3498, -0.1920]
+   trades/session 2.678  ->  hurdle 2.76 pts/session at $20.65 (0.58 at the $4.36 FLOOR, 3.35 at $25.01)
+   WAVE C measured +0.408 [-0.339, +1.187] against 2.62 on a slightly different PRE cut
+   (its PRE ran to 2022-04-30 and used no warm-up); this panel is 2006-01..2019-12 with
+   the warm-up removed, so the two are close but not identical by construction.
+
+======================================================================================================================
+=== 3. SCALE - PRE sessions are structurally thinner, so every PRE number is printed twice
+======================================================================================================================
+The spec names this as the main reason a reader might reject the PRE record entirely.
+'vol-normalised' below = the same number divided by the mean session |1-minute move| of
+the population it came from, x1000. It is a RESCALING of the identical estimate, not a
+different estimator.
+
+population                  sessions  med bars  med bars RTH  med |move|/sess  med session range
+PRE 2006-01..2019-12           3,760      1223           390            619.9               40.5
+TRANS (EXCLUDED)                 603      1365           390           3623.0              241.0
+MODERN 2022-05..2026-05        1,057      1380           390           4417.0              291.5
+
+   PRE vol normaliser (median month's mean session |1-min move|) = 653.9 points.
+   Every PRE points figure below is also shown as pts/session per 1000 points of session
+   movement, i.e. value / 653.9 x 1000.
+
+======================================================================================================================
+=== 4. G1 - SEPARATION. The six SPREADs, PRE only.
+======================================================================================================================
+SPREAD = drift-neutral expectancy in the PREDICTED-FAVOURABLE tercile minus the
+PREDICTED-UNFAVOURABLE tercile. S5 is the declared two-sided case and uses |spread|.
+The predicted-favourable end was fixed in the spec BEFORE any of this was computed, so a
+negative spread here means the variable ran the WRONG WAY, and it is recorded that way.
+
+id  predicted                    int LOW   int MID  int HIGH    n LOW/MID/HIGH    SPREAD  SPREAD /vol
+S1  POSITIVE (HIGH favourable)     0.019    -0.235    -0.019          48/50/59    -0.038       -0.058
+S2  NEGATIVE (LOW favourable)      0.158     0.673    -0.743          52/45/60     0.901        1.379
+S3  NEGATIVE (LOW favourable)      0.056    -0.537     0.512          58/45/54    -0.456       -0.697
+S4  NEGATIVE (LOW favourable)     -0.741    -0.634     0.818          56/47/54    -1.559       -2.384
+S5  UNSIGNED (two-sided)           0.246     0.645    -0.768          45/39/73     1.015        1.552
+S6  POSITIVE (HIGH favourable)     0.173    -0.850     0.189          75/35/47     0.016        0.025
+
+   BEST = S5  (overnight share of absolute movement, 21-session rolling)   SPREAD +1.015 pts/session   (+1.552 vol-normalised)
+   favourable tercile = LOW, unfavourable = HIGH
+
+   S1 vs S6 COLLINEARITY (the spec says: if both 'work' that is ONE finding, not two):
+      session-level Pearson r(S1, S6) = +0.4649
+      monthly state labels agree on 60.5 % of PRE months
+   PAIRWISE label agreement across all six (a scan of six correlated variables is not six
+   independent chances, which is exactly why G2 shares one shift across the family):
+           S1     S2     S3     S4     S5     S6
+   S1     100     39     20     45     40     61
+   S2      39    100     32     31     34     39
+   S3      20     32    100     30     33     25
+   S4      45     31     30    100     37     42
+   S5      40     34     33     37    100     39
+   S6      61     39     25     42     39    100
+
+======================================================================================================================
+=== 5. G2 - THE NULL THAT PRICES THE SEARCH (the one that matters)
+======================================================================================================================
+CIRCULAR SHIFT of the state-label series against the sleeve's monthly (y, x) series,
+2,000 draws. Each draw redoes THE ENTIRE ANALYSIS - all six variables, all three
+terciles, the S5 two-sided rule - and records the MAX over the six. That is the statistic
+the observed best must beat. MC-11 died for lack of exactly this step.
+ONE SHIFT IS SHARED BY ALL SIX VARIABLES on each draw (CLAUDE.md sec.4): the six are a
+correlated family, and independent shifts would price a search that was never run.
+
+   observed best SPREAD (S5)           +1.015 pts/session
+   max-statistic null: mean +0.985  p50 +0.950  p90 +1.592  p95 +1.680  p99 +2.347  max +2.384
+   the observed best sits at the 56.2th percentile of the max-statistic null
+   -> DOES NOT EXCEED the 95th percentile
+
+   Per-variable, for the record - each variable's own spread against its own marginal null
+   (NOT the gate; the gate is the max-statistic column above, because the argmax was a
+   choice this run made and it must be priced):
+id      SPREAD   marginal null p95   marginal pctile   max-stat p95   vs max-stat
+S1      -0.038               1.553             47.8%          1.680         below
+S2       0.901               1.226             89.6%          1.680         below
+S3      -0.456               1.156             29.4%          1.680         below
+S4      -1.559               1.279              2.2%          1.680         below
+S5       1.015               1.433             86.6%          1.680         below
+S6       0.016               1.050             43.3%          1.680         below
+
+======================================================================================================================
+=== 6. G3 - THE BINDING GATE: is the favourable state ECONOMICALLY LIVE, not merely separating?
+======================================================================================================================
+A variable can separate a quantity that is negative everywhere. This object lives just
+under a cost line, so a router that moves it from 'well below' to 'slightly below' is
+worth nothing. The hurdle is computed WITHIN the favourable tercile, from its own trade
+rate, exactly as the spec specifies.
+
+id  tercile    months  sessions  trd/sess  drift-neut                  90% CI  hurdle@20.65                   clears?
+S1  LOW            48     1,042     2.475       0.019        [-0.835, +0.724]         2.555                         -
+    MID            50     1,101     2.418      -0.235        [-1.095, +0.448]         2.496                         -
+    HIGH           59     1,293     3.063      -0.019        [-0.570, +0.689]         3.162          BELOW THE HURDLE
+
+S2  LOW            52     1,154     2.295       0.158        [-0.289, +0.793]         2.370          BELOW THE HURDLE
+    MID            45       972     2.568       0.673        [-0.228, +1.590]         2.651                         -
+    HIGH           60     1,310     3.096      -0.743        [-1.556, -0.057]         3.197                         -
+
+S3  LOW            58     1,277     2.953       0.056        [-0.635, +0.810]         3.049          BELOW THE HURDLE
+    MID            45       977     2.469      -0.537        [-1.547, +0.607]         2.549                         -
+    HIGH           54     1,182     2.553       0.512        [-0.443, +1.721]         2.636                         -
+
+S4  LOW            56     1,228     2.879      -0.741        [-1.236, -0.164]         2.972          BELOW THE HURDLE
+    MID            47     1,033     2.577      -0.634        [-1.476, +0.112]         2.661                         -
+    HIGH           54     1,175     2.557       0.818        [+0.217, +1.399]         2.640                         -
+
+S5  LOW            45       984     2.458       0.246        [-0.584, +1.244]         2.538          BELOW THE HURDLE
+    MID            39       851     2.857       0.645        [-0.124, +1.581]         2.949                         -
+    HIGH           73     1,601     2.718      -0.768        [-1.718, -0.040]         2.806                         -
+
+S6  LOW            75     1,640     2.426       0.173        [-0.431, +0.878]         2.504                         -
+    MID            35       757     2.737      -0.850        [-2.236, +0.803]         2.826                         -
+    HIGH           47     1,039     3.033       0.189        [-0.660, +0.847]         3.131          BELOW THE HURDLE
+
+   WINNER S5, favourable tercile LOW:
+      drift-neutral expectancy   +0.246 pts/session   90% CI [-0.584, +1.244]
+      trades/session in tercile  2.458
+      hurdle @ $4.36  FLOOR      0.536 pts/session   (A FLOOR - never a headline)
+      hurdle @ $20.65 PRIMARY    2.538 pts/session   <- THE GATE
+      hurdle @ $25.01 all-in     3.074 pts/session
+      vol-normalised expectancy  +0.342 per 1000 pts of session movement (tercile mean |move|/session 720)
+
+   THE WHOLE G3 SURFACE IN ONE LINE - across ALL SIX preregistered variables and ALL
+   EIGHTEEN terciles, favourable or not, how many states clear their OWN cost hurdle?
+      states clearing the $20.65 PRIMARY hurdle : 0 of 18
+      states clearing the $4.36 FLOOR (a floor, never a headline): 3 of 18
+      the single best state on this surface is S4 HIGH: +0.818 against a 2.640 hurdle, short by 1.822 pts/session
+      the highest 90% CI UPPER bound anywhere on the surface is +1.721, still 0.916
+      pts/session below that state's own hurdle. There is no cell in this design in which
+      even the optimistic end of the interval pays $20.65/ctrRT.
+
+   POWER / MDE, printed BEFORE anyone proposes economics on a routed third of the
+   sessions (spec trap 6): the winner's favourable tercile holds 45 months
+   and 984 sessions. Bootstrap sd of its drift-neutral intercept 0.549 pts/session,
+   so the smallest effect this population could separate from zero at 90% one-sided is
+   about 0.90 pts/session. The hurdle it must clear is 2.54. The gap between the
+   observed +0.246 and that hurdle is 2.29 pts/session = 4.2 bootstrap sd. This is not
+   an underpowered near-miss; it is not close.
+
+======================================================================================================================
+=== 7. G4 - MONOTONICITY across all three terciles, not extremes-only
+======================================================================================================================
+An extremes-only effect with a non-monotone middle is the signature of a few episodes.
+
+id         LOW       MID      HIGH       predicted direction   monotone?
+S1       0.019    -0.235    -0.019      increasing LOW->HIGH          NO
+S2       0.158     0.673    -0.743      decreasing LOW->HIGH          NO
+S3       0.056    -0.537     0.512      decreasing LOW->HIGH          NO
+S4      -0.741    -0.634     0.818      decreasing LOW->HIGH          NO
+S5       0.246     0.645    -0.768  monotone either way (S5)          NO
+S6       0.173    -0.850     0.189      increasing LOW->HIGH          NO
+
+======================================================================================================================
+=== 8. G5 - EPISODE CONCENTRATION: leave-one-year-out and leave-one-episode-out
+======================================================================================================================
+Leave-one-year-out over the 14 declared PRE years. A year the warm-up left with no months
+gives a degenerate fold (nothing is removed); it is flagged rather than hidden.
+
+year drop    months left  months in year    SPREAD  positive?
+2006                 156               1     1.019        YES
+2007                 145              12     1.098        YES
+2008                 145              12     0.995        YES
+2009                 145              12     0.951        YES
+2010                 145              12     1.203        YES
+2011                 145              12     1.252        YES
+2012                 145              12     0.983        YES
+2013                 145              12     0.939        YES
+2014                 145              12     0.890        YES
+2015                 145              12     0.893        YES
+2016                 145              12     1.456        YES
+2017                 145              12     0.673        YES
+2018                 145              12     1.044        YES
+2019                 145              12     0.966        YES
+
+   positive folds 14 of 14 declared PRE years   (spec: >= 11 of 14)
+   of the 14 years that actually carry months, 14 are positive
+
+   EPISODES of the favourable state (LOW tercile of S5):
+   an episode is a maximal run of favourable months separated by >= 2 non-favourable
+   months. count = 14, covering 45 months.
+
+episode        from        to  months   SPREAD without it  positive?
+1           2006-12   2007-02       2               0.976        YES
+2           2008-05   2008-07       3               0.910        YES
+3           2009-11   2009-11       1               1.011        YES
+4           2010-02   2010-08       6               1.109        YES
+5           2012-03   2012-05       3               0.995        YES
+6           2012-09   2013-05       8               1.024        YES
+7           2013-10   2014-01       3               0.861        YES
+8           2014-04   2014-07       4               0.909        YES
+9           2014-10   2014-10       1               1.074        YES
+10          2015-03   2015-03       1               1.083        YES
+11          2016-08   2017-06       8               1.014        YES
+12          2017-10   2017-10       1               1.020        YES
+13          2018-04   2018-05       2               1.111        YES
+14          2018-09   2018-10       2               1.277        YES
+
+   leave-one-episode-out positive share 100.0 %  (spec: >= 80 %)
+   K (favourable months) = 45   rho_bar (lag-1 autocorr of the favourable-tercile
+   monthly series) = 0.0071   K_eff = K/(1+(K-1)*rho_bar) = 34.3
+   for reference the whole PRE monthly series: K = 157, rho_bar 0.0000, K_eff 157.0
+
+======================================================================================================================
+=== 9. THE TRAPS THE SPEC NAMED - checked whether or not they fired
+======================================================================================================================
+(a) S3 IS A TRAP FOR ITSELF. With a drift-neutral dependent variable the market's own
+    trend should already be absorbed, so an S3 win is more likely a specification failure
+    than a discovery. Here S3's spread is -0.456, rank 5 of 6 -> S3 did not win.
+(b) THE INTERCEPT IS AN EXTRAPOLATION TO x = 0. If a tercile's market-drift distribution
+    is centred far from zero, its 'drift-neutral' intercept is read off the fitted line
+    outside the data. This is printed for every variable because it can manufacture a
+    spread out of nothing but different x-supports.
+
+id  tercile      mean x     sd x  |mean x|/sd     slope   intercept  slope x mean x
+S1  LOW            3.25     5.75        0.566   -0.3166       0.019          -1.030
+    MID            4.63     7.61        0.609   -0.2127      -0.235          -0.985
+    HIGH          -0.31    10.96        0.029   -0.2571      -0.019           0.081
+S2  LOW            1.96     9.79        0.200   -0.1760       0.158          -0.344
+    MID            3.20     7.85        0.408   -0.2836       0.673          -0.908
+    HIGH           2.06     8.64        0.238   -0.3323      -0.743          -0.684
+S3  LOW            0.41    10.62        0.039   -0.2387       0.056          -0.099
+    MID            2.08     8.00        0.261   -0.2261      -0.537          -0.471
+    HIGH           4.66     6.61        0.705   -0.3407       0.512          -1.587
+S4  LOW            4.84     6.83        0.708   -0.2067      -0.741          -1.000
+    MID            2.93     8.68        0.338   -0.2364      -0.634          -0.693
+    HIGH          -0.73     9.87        0.074   -0.2493       0.818           0.182
+S5  LOW            1.49     7.27        0.204   -0.2576       0.246          -0.383
+    MID            1.61    10.09        0.160   -0.3076       0.645          -0.496
+    HIGH           3.28     8.92        0.367   -0.2065      -0.768          -0.677
+S6  LOW            3.90     6.19        0.629   -0.2813       0.173          -1.096
+    MID            4.39     9.58        0.459   -0.2247      -0.850          -0.987
+    HIGH          -1.63    10.44        0.156   -0.2444       0.189           0.399
+
+(c) S1 and S6 are near-collinear. If both separate, that is ONE finding. Their spreads
+    are S1 -0.038 and S6 +0.016; they are NOT two independent
+    confirmations of anything and are not counted twice anywhere in this report.
+(d) A WINNER IS NOT A CANDIDATE. Nothing in this run produces a rule, a weight, an exit,
+    a routed-strategy P&L or a .cs file, on any outcome.
+
+======================================================================================================================
+=== 10. GATE / SPEC / OBSERVED / PASS-FAIL   (printed by the program, never assembled by hand)
+======================================================================================================================
+id   gate                                            spec                                                observed                                    verdict
+G0   reproduce WAVE C's object                       2,225 trd / 6.00 pts/s / $121,454 / P1 14.86        2,225 / 6.00 / $121,454 / 14.86             PASS
+G1   separation in PRE (passes iff its spread surviv best variable's SPREAD survives G2                  best S5 +1.015                              FAIL
+G2   best SPREAD beats the MAX-over-six circular-shi observed best > 95th pctile of the max-statistic nu +1.015 vs p95 +1.680 (56.2th pctile)        FAIL
+G3   favourable tercile clears the $20.65 cost hurdl point AND bootstrap 90% CI lower bound above trd/se +0.246 (CI lo -0.584) vs hurdle 2.538       FAIL
+G4   monotone across all three terciles              middle tercile lies between the extremes, in the pr S5: +0.246 -> +0.645 -> -0.768              FAIL
+G5   episode concentration (LOYO and LOEO)           >= 11 of 14 LOYO folds positive AND >= 80% LOEO fol LOYO 14/14, LOEO 100.0% over 14 episodes    PASS
+
+   DECISION RULE (spec sec.4): ALL of G1..G5 -> a WINNER and exactly ONE look at MODERN.
+                               ANY fail      -> NO WINNER, MODERN IS NOT READ, the short
+                                                axis is recorded CLOSED with the reason.
+   OBSERVED: AT LEAST ONE GATE FAILED  ->  NO WINNER; MODERN IS NOT READ
+
+======================================================================================================================
+=== 11. CONFIRMATION - NOT RUN
+======================================================================================================================
+At least one of G1..G5 failed. Under the preregistered decision rule MODERN IS NOT
+READ for the conditional analysis, and it has not been: no MODERN month enters any
+statistic above. The only 2022+ figures anywhere in this run are G0's reproduction
+numbers, which are on the already-DISCOVERY_CONSUMED aggregate and are permitted
+explicitly by the spec.
+
+THE SHORT AXIS IS RECORDED CLOSED, with the reason given by the failing gate(s):
+   G1  separation in PRE (passes iff its spread survives G2)
+        spec     best variable's SPREAD survives G2
+        observed best S5 +1.015
+   G2  best SPREAD beats the MAX-over-six circular-shift null
+        spec     observed best > 95th pctile of the max-statistic null
+        observed +1.015 vs p95 +1.680 (56.2th pctile)
+   G3  favourable tercile clears the $20.65 cost hurdle
+        spec     point AND bootstrap 90% CI lower bound above trd/sess x 1.0325
+        observed +0.246 (CI lo -0.584) vs hurdle 2.538
+   G4  monotone across all three terciles
+        spec     middle tercile lies between the extremes, in the predicted direction
+        observed S5: +0.246 -> +0.645 -> -0.768
+
+done [2s]
