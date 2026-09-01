@@ -100,6 +100,39 @@ forbidden:
   - "quoting a FULL-window figure as if ERABREAK01 did not exist"
   - "redefining the opportunity metric after seeing the capture ratio"
 
+amendment_1:
+  date: 2026-08-31, written AFTER phase 1 printed and BEFORE the counterfactual was run
+  why: >
+    Phase 1 showed that the share of TRADED sessions ending at the fixed -$1,300 session halt
+    rose monotonically 17.3 % (2023) -> 26.8 % -> 38.8 % -> 52.0 % (2026), while NQ's mean
+    session |1-minute move| rose from 2,028 pts (2018) to 8,495 (2026). Conditioning on "was
+    this session halted" is post-outcome selection and is a TAUTOLOGY on its own - halted
+    sessions are bad sessions by definition. The only way to turn it into a measurement is a
+    counterfactual, so one is declared here before it is run.
+  arm: >
+    S_nohalt = the identical mirrored short sleeve with the session risk overlay REMOVED
+    (halt=+inf, target=None). Nothing else changes: same vote, same threshold, same fills, same
+    one contract, same session box. This is not a proposal and is never quoted as a candidate;
+    it exists only to say whether the overlay is the mechanism.
+  falsifier, named before running: >
+    the halt-frequency explanation is SUPPORTED only if S_nohalt's 2026 deficit against its own
+    2022-2025 baseline is materially smaller than the incumbent's (i.e. removing the overlay
+    removes a large part of the 2026 shortfall). If S_nohalt's 2026 is just as bad, the overlay
+    is NOT the mechanism and the halt table is descriptive only. The FULL per-year table for
+    both arms is printed so no single year can be quoted in isolation.
+  forbidden in this amendment: >
+    scanning the halt or the target over a grid, proposing a re-scaled halt, or quoting
+    S_nohalt anywhere as an improvement.
+
+amendment_2:
+  date: 2026-08-31, same point in time
+  why: "phase 1 produced a 21-year record the campaign has never had. An assertion that the
+         pre-2022 edge is 'zero' needs an interval, not an adjective."
+  measure: >
+    dependence-preserving circular moving-block bootstrap (weekly blocks) on the PRE-era and
+    MODERN-era session series and on the per-trade gross edge, reporting 90 % intervals against
+    the $20.65 cost floor of 1.0325 points.
+
 adoption: "NOTHING is adopted or proposed. This sub-wave produces a diagnosis or a closure."
 
 outputs: ["out/decay.txt", "out/decay_peryear.csv", "out/decay_opportunity.csv",
