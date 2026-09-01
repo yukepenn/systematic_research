@@ -120,10 +120,14 @@ calendar warm-up guarantees it and it must be read from the certificate.
    - `env,instrument,NQU6` and `env,exec_instrument,MNQU6` — **decision on NQ, fills on MNQ**
    - `env,mnq_per_nq,<the value you chose>`
    - XM only: `env,series_4_instrument,MNQU6` and `series_0..3` = NQU6/ESU6/RTYU6/YMU6
-3. `ls C:\NT8_ForwardLogs\live_mnq\export\` → **two** files, both non-zero and advancing.
-   If either is missing, the handle collided and that leg is running blind — stop it.
-4. `ls C:\NT8_ForwardLogs\live_mnq\diag\` → any row containing `MXEXEC blocked=1` means the MNQ
-   execution series is unavailable or stale and **entries are being refused**. Exits are never gated.
+3. 🔴 **CORRECTED 2026-09-01 — checks 3 and 4 named `live_mnq\`, which is EMPTY BY DESIGN.**
+   The live book writes to `C:\NT8_ForwardLogs\mnq\`. As written, check 3 **always** reported
+   zero files and its remedy was *"stop it"* — a live action on a healthy leg — and check 4 read
+   an empty directory so it could never have seen a real execution outage.
+   Correct check: **`python -m research_sdk.writer_watchdog --halts`** → exit 0. It reads the
+   **last data row inside** each export (never file length, which lies) and also scans the NT8
+   log for `MXEXEC blocked=1`, `PARTIAL-FILL`, `RECONCILE-BREAK` and `ROLL-BLOCK` — the only
+   channel a **latched** leg ever appears on.
 5. `GetAccount("2047681")` → confirm cash and that margin is what you expect once a position opens.
 
 ## 🔴 THE FIRST REAL FILL IS THE REAL TEST

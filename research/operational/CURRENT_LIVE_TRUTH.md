@@ -283,6 +283,16 @@ commission from a baseline that already nets it. See `research/operational/COST_
   (`ExportDir ""`, `ExpectInstrument ""`, `ExpectMnq ""`, `DiagDir ""`, `WarmupCertDir ""`).
   🔴 **Enabling a shell would trade real money with both identity guards DISABLED, no ledger, no
   diagnostics and no warm-up certificate.** Always enable the row whose parameters are populated.
+- ⚠️ **THE FOUR DEPLOYED `.cs` HEADERS STILL SAY `NOT CERTIFIED / NOT DEPLOYED / NOT ENABLED`.**
+  That is **false for all four** and it is **deliberately unfixed**: editing a file in
+  `bin/Custom/Strategies` triggers a `NinjaTrader.Custom.dll` recompile against a **running
+  real-money book**. **The deployment tables in THIS file are authoritative over the source
+  comments.** Fix the comments at the next window with both legs stopped and flat.
+- ⚠️ **`EmergencyFlattenOnDeadSeries` is ON by default on XM** and submits a **real order**:
+  on a dead secondary series it flattens the MNQ position and then deliberately latches
+  `RECONCILE-BREAK` with the ledger unadjusted. **That is the design, not a fault** — but until
+  2026-09-01 it appeared in no operational document, so an unexplained MNQ exit plus a permanent
+  RECONCILE-BREAK would have read as a defect.
 - ⚠️ **A green health check does not mean the evidence writer is alive.** Run
   `python -m research_sdk.writer_watchdog` (read-only, exit 1 = alarm). It checks the **last data
   row inside each file** — never file length or `LastWriteTime`, both of which lie

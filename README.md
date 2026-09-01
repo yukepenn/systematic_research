@@ -74,12 +74,16 @@ The design separates the **decision instrument** (NQ, primary series, every sign
 construction**, and measured: the per-bar decision exports are **byte-identical, same `sha256`,
 over 61,600 bars**. All six MX01 gates pass.
 
-> 🔴 **At `MnqPerNq = 3` the MEDIAN two-year drawdown is 111 % of the $10,206.86 account, and
-> P(a two-year drawdown exceeds the whole account) is 66 %.** At 2 MNQ that is 24 %; at 1 MNQ,
-> 0.4 %. The older single line — *0.30 × $51,891 = $15,567 = 152.5 %* — is one draw from that
-> distribution and not the middle one. Full run: `runs/CAP01_CAPITAL_RUIN_20260901/`; authority:
-> `CURRENT_LIVE_TRUTH.md` §CAPITAL. This is a priced owner decision, not an oversight.
-> `MnqPerNq` is a deployable input requiring no rebuild.
+> 🔴 **At `MnqPerNq = 3` the MEDIAN two-year drawdown is 108 % of the $10,206.86 account, and
+> the two-year probability of actually LOSING the account is 6.5 % on the in-sample edge —
+> 9.7 % at the campaign's central honest edge, 21.6 % at its low edge, and 60 % if the edge is
+> zero.** At 1 MNQ it is 0.1 %. The older single line — *0.30 × $51,891 = 152.5 %* — is one draw
+> from that distribution and not the middle one.
+> ⚠️ **An earlier version of this paragraph said 66 %.** That figure is
+> `P(drawdown from peak > equity)`, which is **not** the probability of losing the account — the
+> modelled peak runs far above the starting balance. Corrected in
+> `runs/CAP01B_RUIN_CORRECTION_20260901/`; authority `CURRENT_LIVE_TRUTH.md` §CAPITAL.
+> This is a priced owner decision, not an oversight. `MnqPerNq` is a deployable input.
 
 ## What is running right now
 
@@ -107,6 +111,12 @@ over 61,600 bars**. All six MX01 gates pass.
 |---|---|
 | [`research/operational/STATE_20260901.md`](research/operational/STATE_20260901.md) | latest synthesis: what changed, what it cost to learn |
 | [`runs/MX01_MNQ_EXECUTION_PORT_20260831/`](runs/MX01_MNQ_EXECUTION_PORT_20260831/) | the live object: spec, report, transforms, live deploy sheet |
+| 🔴 [`research/operational/OWNER_ACTION_20260901_P1_LEDGER_DEAD.md`](research/operational/OWNER_ACTION_20260901_P1_LEDGER_DEAD.md) | **OPEN owner action** — the live P1 decision ledger is dead |
+| 🔴 [`research/operational/LIVE_SAFETY_FINDINGS_20260901.md`](research/operational/LIVE_SAFETY_FINDINGS_20260901.md) | adversarial live-safety review: a **second latching bug**, and what survived |
+| ⭐ [`research/operational/COST_MODEL.md`](research/operational/COST_MODEL.md) | **the single cost authority.** Every figure carries a basis and an evidence tag |
+| ⭐ [`runs/CAP01B_RUIN_CORRECTION_20260901/`](runs/CAP01B_RUIN_CORRECTION_20260901/REPORT.md) | **the capital/ruin distribution** — supersedes CAP01's headline |
+| [`research/operational/FORWARD_EVIDENCE_LEDGER_V2.md`](research/operational/FORWARD_EVIDENCE_LEDGER_V2.md) | where the **live** book's real fills are recorded; the three clocks |
+| [`research/operational/TRUNCATION_BLAST_RADIUS_20260901.md`](research/operational/TRUNCATION_BLAST_RADIUS_20260901.md) | the silent-truncation defect: complete caller inventory + the loud fix |
 | [`research/operational/EXECUTION_MANIFEST.md`](research/operational/EXECUTION_MANIFEST.md) | what is installed / compiled / certified |
 | [`research/operational/NT8_OPERATING_MODEL.md`](research/operational/NT8_OPERATING_MODEL.md) · [`NT8_RUNBOOK.md`](research/operational/NT8_RUNBOOK.md) | NinjaTrader operations |
 | [`research/weekly_edge/ninjascript/LIVE_READINESS.md`](research/weekly_edge/ninjascript/LIVE_READINESS.md) | NinjaScript design, risk limits, parity protocol |

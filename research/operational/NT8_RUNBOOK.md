@@ -70,7 +70,7 @@ re-certification). The operational control replaces it:
    per-contract roll date; do not rely on the 8-day convention alone).
 2. Verify the account is **FLAT** (`GetPosition` / Control Center). If not, wait for the
    strategies' own exits — do not hand-flatten a strategy position (see hazard H1).
-3. **Stop both strategies** (`StopStrategy`), confirm 0 running.
+3. **Stop both strategies.** 🔴 **NOT via `StopStrategy(deployment_id)` — there is no `deployment_id` for these legs.** `ListDeployedStrategies(account="2047681")` returns `total: 4, deployments: []` because both were enabled through the NT8 UI, not `DeployStrategy`. **The NT8 Control Center is the only route, and stopping is an OWNER action.** Confirm 0 running.
 4. Redeploy with `DaysToLoad = 365`. ⚠️ **Not before 2026-09-19, EITHER leg** (see §0).
 
    **PAPER `DEMO8383477`** — `WeeklyEdgeP1PCT_v3` / `WeeklyEdgeXMConflict_v4`, **four** series:

@@ -103,10 +103,16 @@ today**, and its per-bar decision context would not be recorded by the live leg.
 
 - **Fills are recoverable.** NT8 records executions independently (`ListExecutions`, `GetExecution`).
 - **Diagnostics still work.** `hdDiag` (`HdDiagRow`, `:603-624`) is a **separate** writer, opened
-  **lazily** in **append** mode inside a try/catch that does **not** null it permanently — it
-  retries on every call. Nothing holds `we_p1pct_hardening_20260901Z.csv`; `C:\NT8_ForwardLogs\mnq\diag\`
-  is empty only because no realtime diagnostic event has fired yet. **The `RECONCILE-BREAK` /
-  `PARTIAL-FILL` watch item remains observable.**
+  **lazily** in **append** mode inside a try/catch that does **not** null it permanently.
+  `C:\NT8_ForwardLogs\mnq\diag\` is empty only because no realtime diagnostic event has fired yet.
+  ⚠️ **CORRECTED 2026-09-01: it retries the OPEN, not the WRITE.** The reopen is gated on
+  `hdDiag == null`, so if the open succeeds and a later `WriteLine`/`Flush` throws, `:625`
+  swallows it and leaves the handle **non-null** — permanently silent thereafter. "It retries on
+  every call" was true of the open and overstated for the write.
+- 🔴 **`RECONCILE-BREAK` reaches you via NT8's OWN LOG, not via `hdDiag`.** `Halt` → `LogErr` →
+  `Documents\NinjaTrader 8\log\log.*.txt`, independent of both writers. This document originally
+  justified the watch item through the weaker channel. **Scan it mechanically:**
+  `python -m research_sdk.writer_watchdog --halts` (read-only; exit 1 on any halt or latch).
 - **A decision-identical proxy exists.** The paper book's `WeeklyEdgeP1PCT_v3` (`399562881`) runs the
   same parameters on the same `NQ 09-26` feed, and MX01 G3 proved the two classes' decision exports
   byte-identical over 61,600 bars. `C:\NT8_ForwardLogs\export\we_p1pct_p1pct.csv` is a valid
@@ -146,9 +152,17 @@ strategy, and I have not.**
 1. In **Control Center → Strategies**, find the row `WeeklyEdgeP1PCTMnq_v1` on account `2047681`
    whose parameters are populated (`ExportDir = C:\NT8_ForwardLogs\mnq\export`,
    `ExpectInstrument = NQ 09-26`, `ExpectMnq = MNQ 09-26`).
-2. **Untick Enabled.** Wait for the log line `Disabling NinjaScript strategy '…/399562885'`.
-3. **Re-tick Enabled** on the *same* row, so the saved parameters are reused.
-4. ⚠️ **Enable exactly ONE P1 row.** A second enabled instance re-creates this exact bug. There are
+2. 🔴 **STOP IF THE LEG IS NOT FLAT AT THIS MOMENT.** Disabling a **positioned** leg does
+   **not** flatten it, and every stop in this book is synthetic and dies with the strategy — an
+   untick while long leaves a naked 3–6 MNQ position with no stop and no 16:39 forced flatten.
+   Re-check `ListAllStrategies` → `position: Flat`, `activeOrderCount: 0` **immediately before
+   unticking**, not once at the top of the procedure.
+   ⚠️ **"Before 09:30 ET" is NOT a safety window.** P1 enters overnight — it is in position on
+   **12.09 %** of all bars and entries are gated only from 30 minutes before session end. The
+   real precondition is **flat, checked now.**
+3. **Untick Enabled.** Wait for the log line `Disabling NinjaScript strategy '…/399562885'`.
+4. **Re-tick Enabled** on the *same* row, so the saved parameters are reused.
+5. ⚠️ **Enable exactly ONE P1 row.** A second enabled instance re-creates this exact bug. There are
    two stale `Finalized` shells of each class visible to `ListAllStrategies` (see §9) — do not
    enable those.
 

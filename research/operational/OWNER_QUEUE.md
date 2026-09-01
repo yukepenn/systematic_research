@@ -76,15 +76,25 @@ owner action performed in the NT8 UI — never an agent one.
 **0.30 × $51,891 = $15,567 = 152.5 % of the $10,206.86 account** — a repeat ends the account.
 
 > 🔴 **UPDATED 2026-09-01 — that figure is ONE DRAW, and not the middle one.**
-> `runs/CAP01_CAPITAL_RUIN_20260901/` replaces the point estimate with a distribution
-> (stationary bootstrap, sessions as whole units, 20,000 draws, all four gates reproducing
-> the repo's own $51,891 / $36,943 / $537,353):
+> `runs/CAP01B_RUIN_CORRECTION_20260901/` replaces the point estimate with a distribution
+> (stationary bootstrap, sessions as whole units, 20,000 draws, TRUE 2-year horizon, MNQ
+> commission charged, all four gates PASS):
 >
-> | `MnqPerNq` | median 2-yr DD | **P(2-yr DD > the whole account)** |
-> |---|---:|---:|
-> | 1 | 37 % | **0.4 %** |
-> | 2 | 74 % | **23.7 %** |
-> | 🔴 **3 — running now** | **111 %** | 🔴 **66.2 %** |
+> | `MnqPerNq` | median 2-yr DD | **P(actually LOSING the account)** | P(margin call) |
+> |---|---:|---:|---:|
+> | 1 | 36 % | **0.1 %** | 0.1 % |
+> | 2 | 71 % | **1.9 %** | 2.4 % |
+> | 🔴 **3 — running now** | **108 %** | 🔴 **6.5 %** | **8.2 %** |
+>
+> 🔴 **AND IT DEPENDS ALMOST ENTIRELY ON WHETHER THE EDGE IS REAL.** At 3 MNQ, P(losing the
+> account) over a true two years is **5.4 %** at the honest HIGH edge ($1,900/wk full size),
+> **9.7 %** at the central ($1,450), **21.6 %** at the low ($900) — and **60.4 % if the edge is
+> zero.** The campaign's own estimate is a ~70 % chance two years of live data cannot
+> distinguish this book from zero. **The defensible band is 6 %–22 %.**
+>
+> ⚠️ An earlier version of this row said **66.2 %**. That was `P(drawdown from peak > equity)`,
+> **not** the probability of losing the account, and the two differ by 10× because the modelled
+> peak runs far above the starting balance.
 >
 > And `P(>100 %)` **understates** ruin: the model has no liquidation, but below ~$900 of equity
 > the book cannot post margin for 9 MNQ and is liquidated. `dailyLossLimit` and

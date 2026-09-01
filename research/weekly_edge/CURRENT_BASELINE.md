@@ -331,7 +331,7 @@ average** (tail beta −1.861, 0.9th percentile) on **21 weeks**. It is now the 
 | | |
 |---|---|
 | window | 2022-07-01 → 2026-08-01 · 1,058 sessions · 213 weeks |
-| substrate | `load_deep(..., extend=True)` |
+| substrate | `load_deep(..., extend=True)` — 🔴 **as of 2026-09-01 `load_deep` RAISES `SubstrateTruncationError` if the request overshoots the data.** The old default silently truncated at 2026-05-29; 52 direct callers, 22 via `run_we_w51c.setup()`, and 5 that bypass the loader entirely were exposed. New work passes `extend=True`; a deliberate pre-W76 reproduction passes `allow_truncation=True`. Inventory: [`TRUNCATION_BLAST_RADIUS_20260901.md`](../operational/TRUNCATION_BLAST_RADIUS_20260901.md) |
 | cost | $4.36/ctrRT commission **inside** the fill engine + candidate-specific spread (`WE_W82_FILLAUDIT`) |
 | headline metric | weekly $ at fixed **$20,245** max drawdown |
 | exposure convention | **income-matched** — the only one with no free parameter |

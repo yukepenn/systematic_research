@@ -1,6 +1,11 @@
 # MX01 — MNQ EXECUTION PORT — RESULT: **DECISION-IDENTICAL. ALL SIX GATES PASS.**
 
-**`LIVE = NO` · `$0` · no order placed on any real-money account.**
+> 🔴 **STATUS AS OF 2026-09-01: RUN. `LIVE = YES`.** The owner enabled both ported legs on the
+> real-money account `2047681` (`399562885` / `399562886`). **The status line below was true when
+> this report was written on 2026-08-31 and is false now**; it is preserved because the report is
+> the build record. Live-state authority: `research/operational/CURRENT_LIVE_TRUTH.md`.
+
+*(as written 2026-08-31)* **`LIVE = NO` · `$0` · no order placed on any real-money account.**
 Both ported legs are running on **paper** (`DEMO8383477`) for realtime validation.
 The live account `2047681` is **untouched and flat**.
 
