@@ -18,12 +18,22 @@ NEW SLEEVE 2: NONE
 
 TOTAL CONTRACT/RISK MAPPING:
   1 NQ per leg. P1 sizes 1 or 2 by its causal quality score; XM is always 1.
-  Peak simultaneous exposure 3 NQ contracts. Micro (MNQ) variants NOT evaluated - MNQ friction
-  is unmeasured in this repo and 1,449 sessions of MNQ 1-min sit unextracted.
+  Peak simultaneous exposure 3 NQ contracts. Peak simultaneous exposure 3 NQ contracts.
+  SUPERSEDED 2026-08-31/09-01: the MNQ variant was not merely evaluated - it was BUILT, gate-verified
+  (MX01 gates G1-G6 all PASS; per-bar decision exports byte-identical, same sha256, 61,600 bars per
+  leg) and DEPLOYED LIVE. MNQ friction is MEASURED: $1.30/ctr RT vs NQ $4.36 - 3.35x cheaper per
+  CONTRACT but 2.98x dearer per unit of EXPOSURE ($13.00 vs $4.36). Spread does not degrade (same
+  0.25 tick, point value scales exactly 1/10), so all-in ratio is only ~1.35x, roughly $35/week at
+  3 MNQ. See runs/MX01_MNQ_EXECUTION_PORT_20260831/ and CURRENT_LIVE_TRUTH.md.
 
-CAPITAL:
-  $75,000 - $90,000. Realised max drawdown $45,138 (2022-W05 -> 2022-W17), so this is ~2x
-  coverage. The retired figures $21,740 and $45,000 stay retired AS CAPITAL REQUIREMENTS.
+CAPITAL:  [1 NQ + 1 NQ CONFIGURATION ONLY - THIS IS NOT WHAT IS DEPLOYED]
+  $75,000 - $90,000. WEEKLY-bucketed max drawdown $45,138 (2022-W05 -> 2022-W17) gives ~2x
+  coverage - but section A2.2 of this same file rules that the TRADE-LEVEL $51,891 is "the figure
+  capital planning must use". Against $51,891 the coverage is 1.4x - 1.7x, NOT ~2x.
+  The retired figures $21,740 and $45,000 stay retired AS CAPITAL REQUIREMENTS.
+
+  LIVE, AS DEPLOYED 2026-09-01: account 2047681, $10,206.86, MnqPerNq=3 = 0.30 NQ-equivalent.
+  0.30 x $51,891 = $15,567 = 152.5% of the account. Coverage 0.66x. See CURRENT_LIVE_TRUTH.md.
 
 EXPECTED AFTER-COST FORWARD RANGE:
   $900 - $1,900 / week, central region ~$1,300 - $1,600. UNCHANGED by this campaign.
@@ -107,7 +117,8 @@ half the return with more than all of the risk", seen from the drawdown side.
 
 | capital | **trade-level** maxDD as % of it | annualised @ $1,300/wk | @ $1,600/wk |
 |---|---:|---:|---:|
-| **$10,207** (account `2047681`) | 🔴 **508%** | — | — |
+| **$10,207** (account `2047681`) — **at 1 NQ + 1 NQ (full size), NOT DEPLOYED** | 🔴 **508%** | — | — |
+| **$10,207** (account `2047681`) — 🔴 **AS DEPLOYED, `MnqPerNq = 3` = 0.30 NQ-eq** | 🔴 **152.5%** (0.30 × $51,891 = $15,567) | — | — |
 | **$75,000** | **69%** | 90% | 111% |
 | **$90,000** | **58%** | 75% | 92% |
 | $157,245 | 33% | 43% | 53% |
@@ -303,7 +314,7 @@ Estimated dollars/week lost, against the book's $2,211/wk NT8-basis headline:
 | source | $/week | basis |
 |---|---:|---|
 | **roll blackout** | **≈ $437** | **19.7% of net falls in the ~9-day no-new-entry window; 10.3% of trades** |
-| spread + slippage | ≈ $222 | EXEC01 measured $20.65/ctrRT all-in, minus commission, × 3,317 ctrRT |
+| spread + slippage | ≈ **$282** | ⚠️ **CORRECTED**: EXEC01's `$20.65/ctrRT` is **SPREAD ONLY**, not all-in — true all-in is **$25.01** ($20.65 spread + $4.36 commission). The original row subtracted commission out of $20.65 and then charged it again in the row below, double-discounting. $20.65 × 3,317 ctrRT ÷ 243 wk = **$282**, not $222. Net effect: NQ friction was understated by ≈ **$59/wk** |
 | commission | ≈ $60 | $4.36/ctrRT × 3,317 ctrRT ÷ 243 weeks |
 | latency (XM, at 250 ms) | ≈ $17 | `G3_XMLAT_01` component D |
 | far-side vs print fill | ≈ $6 | measured −$11.50/ctr vs $7.50 charged |
@@ -331,6 +342,22 @@ opportunity, and it interacts with the latching-guard red zone — see §I.
 
 # I. REAL-MONEY READINESS PACKET
 
+> 🔴 **SUPERSEDED 2026-09-01 — this packet describes the 1 NQ + 1 NQ book on the PAPER account.**
+> **What actually went live:** `WeeklyEdgeP1PCTMnq_v1` (`399562885`) + `WeeklyEdgeXMConflictMnq_v1`
+> (`399562886`) on **real-money account `2047681`**, capital **$10,206.86**, decisions on `NQ 09-26`
+> and orders on **`MNQ 09-26`** at `MnqPerNq = 3` (= 0.30 NQ-equivalent). **Max simultaneous
+> position is 9 MNQ, not 3 NQ.** 0.30-scaled trade-level maxDD **$15,567 = 152.5 % of the account**
+> (the `capital` row's `$45,138` is the WEEKLY figure; §A2.2 of this file rules the trade-level
+> **$51,891** is what capital planning must use).
+> 🔴 **The `roll instructions` row below is INCOMPLETE for the live book: `MNQ 12-26` must move with
+> `NQ 12-26`, and `ExpectMnq = "MNQ 12-26"` must be set, or `MxInstrumentGuard` hard-halts on the
+> month mismatch.**
+> ⚠️ The `expected cost` row's "$20.65/ctrRT ... all-in" label is **wrong** — $20.65 is **spread
+> only**; true all-in is **$25.01**. See the §H correction.
+> Authority for live state: **`research/operational/CURRENT_LIVE_TRUTH.md`**.
+
+| item | value |
+
 | item | value |
 |---|---|
 | source files | `research/weekly_edge/ninjascript/WeeklyEdgeP1PCT_v3.cs`, `WeeklyEdgeXMConflict_v4.cs` |
@@ -341,7 +368,7 @@ opportunity, and it interacts with the latching-guard red zone — see §I.
 | warm-up | convergence measured at ~9 months; `DaysToLoad=365` required; certificates verdict `GO`, 7/7 gates |
 | account | `DEMO8383477` (Tradovate server-side demo) — **paper only** |
 | expected latency | any fill inside ~1 s is economically equivalent; break-even ≥ 16 s |
-| expected cost | $20.65/ctrRT measured all-in (median $20.00, p90 $35.00) |
+| expected cost | ⚠️ **$25.01/ctrRT all-in on NQ** = $20.65 measured **spread** (median $20.00, p90 $35.00) **+ $4.36 commission**. The earlier "$20.65 all-in" label was wrong and understated NQ friction by ≈$59/wk. **MNQ (the live execution instrument): $1.30/ctr RT commission; spread does not degrade** (same 0.25 tick, point value scales exactly 1/10) → all-in ratio ≈1.35×, ≈$35/wk at 3 MNQ |
 | capital | **$75–90k**; realised maxDD $45,138 |
 | max expected position | 3 NQ contracts simultaneously |
 | **synthetic-stop caveat** | 🔴 **every stop in this book is synthetic and dies with the strategy.** Never restart while positioned. There is no intrabar risk control anywhere |

@@ -168,8 +168,15 @@ Neither is rewritten. Nothing is backfilled into either.
 
 ## 8. CAPITAL DOCTRINE
 
-**$75,000 – $90,000.** `$45,000` and `$21,740` are RETIRED and must not be requoted (swept at
-`75b7af3`, `3a94ba2`). Account cash value $93,536.28 sits just above the top of the planning band.
+🔴 **SUPERSEDED 2026-09-01 — see `CURRENT_LIVE_TRUTH.md`. The live book is NOT the book this section
+plans for.** Live: account `2047681`, **$10,206.86**, `MnqPerNq = 3` = **0.30 NQ-equivalent** →
+0.30 × $51,891 = **$15,567 = 152.5 % of the account**. A repeat of the book's own already-observed
+worst episode ends it. **1 MNQ = 50.8 %, 2 MNQ = 101.7 %.**
+
+**$75,000 – $90,000 is the plan for the 1 NQ + 1 NQ book, which is NOT what is deployed.**
+`$45,000` and `$21,740` are RETIRED and must not be requoted (swept at `75b7af3`, `3a94ba2`).
+⚠️ The `$93,536.28` cash value formerly cited here is the **SIMULATED** account `DEMO8383477`'s
+balance (this file's own line 104, connection `Simulation`) — **it capitalises nothing.**
 
 ## 9. EVIDENCE-CLASS MAP AS IT STANDS TODAY
 

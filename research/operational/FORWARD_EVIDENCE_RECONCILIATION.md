@@ -1,7 +1,11 @@
 # FORWARD EVIDENCE RECONCILIATION — `OWNER_FORWARD_START` vs `LEGACY_FORMAL_SHADOW_START`
 
 Opened 2026-08-31 under the NQ ALPHA MASTER DIRECTIVE §0. **Established mechanically from the
-machine, not from memory.** Paper account. LIVE real money = NO.
+machine, not from memory.** Written for the two PAPER clocks; §4's "complete" is scoped to those.
+🔴 **A THIRD, HIGHER-GRADE STREAM EXISTS as of 2026-09-01**: the LIVE MNQ book on real-money account
+`2047681`, logging to `C:\NT8_ForwardLogs\mnq\`. **Its fills are the campaign's first non-simulated
+execution evidence** and must never be filed under the paper book's `SIMULATED_FILL_NON_EVIDENTIAL`
+label. It has **no clock, no ledger and no owner yet** — see §6.
 
 > The owner considers the demo/paper deployment to be the beginning of real forward observation.
 > The pre-existing ledger contract says forward evidence starts 2026-09-01 18:00 ET.
@@ -106,4 +110,10 @@ Superset of the current shadow ledger, ingesting from `OWNER_FORWARD_START`:
 `OWNER_FORWARD_START` is **pinned with evidence**. `LEGACY_FORMAL_SHADOW_START` is **untouched**.
 The gap window is **preserved in §4 of this file** and will be refused by the formal ledger as
 designed. `FORWARD_EVIDENCE_LEDGER_V2` is **specified but not yet built** — building it is an
-engineering task, not a research decision, and it is on the queue.
+engineering task, not a research decision. 🔴 **It is now TOP of the engineering queue:** since
+2026-09-01 it is the **only** specified home for the LIVE book's fills, which the hash-chained
+shadow refuses both by account (`TARGET_ACCOUNTS` excludes `2047681`) and by `SHADOW_START`.
+A third clock, **`LIVE_FORWARD_START`**, must be pinned to the live legs' first realtime bar —
+read it from the warm-up certificates at `0430` / `0431` / `044132Z` UTC on 2026-09-01 in
+`C:\NT8_ForwardLogs\mnq\warmup\` — and carry its own evidence class (proposed:
+`FORWARD_EXECUTION_REAL`), **kept separable from both paper clocks. NO BACKFILL, and no merge.**

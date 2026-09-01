@@ -25,8 +25,12 @@ Asymmetry disclosed: his side is gross-of-commission and display-selected; ours 
 frozen. Beating his numbers under our measurement standard is therefore a STRICTER bar.
 
 ## Binding constraints (inherited, never relax)
-1. **Safety boundary** (CLAUDE.md, verbatim force): research/backtest only; never place orders,
-   never enable/deploy, never touch Sim101/real accounts, never modify the vendor assembly.
+1. **Safety boundary** — ⚠️ **`CLAUDE.md` §1 is the source; read it there rather than trusting any
+   paraphrase here.** In force as of 2026-09-01: never place, modify or cancel an order; never
+   enable, disable, resize or start a strategy; never modify the vendor assembly. 🔴 **A LIVE
+   real-money book exists on account `2047681`** — the agent may **read** it freely and must not
+   touch it. ⛔ Never send strategy source through the CrossTrade MCP.
+   Deployment decisions belong to the owner alone.
    Deployment decisions belong to the owner alone.
 2. **LOCKED_FORWARD**: data ≥ 2026-08-01 is VIRGIN. Build/select on ≤ 2026-07-31 only. Forward
    consumption ONLY via a preregistered champion-vs-challenger protocol written BEFORE the read

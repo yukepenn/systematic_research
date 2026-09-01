@@ -23,7 +23,7 @@
 |---|---|
 | **status** | ✅ **RE-PROMOTED 2026-08-28 for the INCUMBENT, by owner directive.** Superseding the same-day demotion, which was scoped to a void object |
 | created | 2026-08-28 · demoted · **re-promoted the same day, for a different and better reason** |
-| **LIVE ENABLED** | **NO.** Shadow is evidence accumulation, never authorization to trade. **No live order. No simulated order. No Sim101. No account modification.** |
+| **LIVE ENABLED** | 🔴 **REPO-WIDE: YES** since 2026-09-01 (real-money account `2047681` — see `CURRENT_LIVE_TRUTH.md`). **THIS RUNNER: emits no orders at all.** Shadow is evidence accumulation, never authorization to trade. **No live order. No simulated order. No Sim101. No account modification.** Its `TARGET_ACCOUNTS` allowlist (`research_sdk/shadow_runner.py:35`) is `{DEMO8383477, Sim101}` and **deliberately excludes `2047681`** — that allowlist is now load-bearing, not theoretical. ⚠️ **Consequence: the live book has NO forward ledger.** |
 
 > ## **THE REASON FOR RE-PROMOTION — and it is not a new candidate.**
 > ### **The project must stop waiting for a magical new candidate before it begins accumulating
@@ -169,8 +169,16 @@ asserts that verification catches it.
 
 Before any simulated order is emitted, the runner must **programmatically assert** that the target
 account is a simulation/backtest/playback account. **If account identity is not positively verified,
-no order is sent.** There is no fallback path to a real account and none may be added.
-`LIVE ENABLED = NO` is binding and is **not** a per-strategy setting.
+no order is sent.** There is no fallback path to a real account and none may be added — and as of
+2026-09-01 **a real account exists on this box (`2047681`)**, so that rule is now enforced by the
+`TARGET_ACCOUNTS` allowlist rather than by the absence of any target.
+
+> 🔴 **AMENDMENT 2026-09-01 — an owner decision, not a silent edit.** The repo-wide
+> `LIVE ENABLED = NO` claim is superseded: the book is live on `2047681`. This runner still emits
+> nothing and still ingests paper only, which means **the campaign's first real fills will be
+> observed by no ledger at all.** The choice — extend this runner to ingest `2047681` as a
+> separate labelled stream, or build `FORWARD_EVIDENCE_LEDGER_V2` for it — is **open and belongs
+> to the owner.** ⛔ **Do not change `SHADOW_START` or the hash chain either way.**
 
 ⚠️ **The current architecture emits NO ORDERS AT ALL.** It is a decision/outcome logger. §5 applies
 the moment anyone adds an execution leg, and adding one is an owner decision.

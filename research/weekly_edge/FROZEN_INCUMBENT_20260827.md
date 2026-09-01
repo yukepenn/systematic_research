@@ -5,8 +5,10 @@
 > validated superior expert, may replace it — **through a new campaign, on new evidence, never by
 > historical re-optimisation of these objects.**
 
-> # 🔒 LIVE ENABLED: **NO.** Freezing a definition is not enabling it. Nothing is deployed,
-> # started, or attached to any account. `Sim101` and every real account remain untouched.
+> # 🔒 **The DEFINITIONS below remain FROZEN** for forward adjudication — that is unchanged.
+> # Freezing a definition is not enabling it. But 🔴 **the objects derived from them ARE now live:**
+> # since **2026-09-01** the M_11 pair executes on MNQ at `MnqPerNq = 3` on **real-money account
+> # `2047681`** (`research/operational/CURRENT_LIVE_TRUTH.md`). `Sim101` remains untouched.
 
 ---
 

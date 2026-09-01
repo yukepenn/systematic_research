@@ -5,8 +5,12 @@ _**SUPERSEDED IN PART, 2026-08-27 (operational reset).** Both strategies are now
 PARITY-CERTIFIED** — see `research/operational/EXECUTION_MANIFEST.md`,
 `runs/WE_P1PCT_PARITY_20260827/` and `runs/WE_XM_PARITY_20260827/`. The **design, risk-limit and
 protocol** sections below remain authoritative. **The XM object is now `WeeklyEdgeXMConflict_v2`;
-`_v1` is superseded.** **Neither strategy is enabled, and neither ever places an order without the
-owner doing it.**_
+`_v1` is superseded.** 🔴 **BOTH LINEAGES ARE NOW ENABLED** — the certified NQ pair (`_v3` / `_v4`)
+on paper `DEMO8383477` since 2026-08-30, and the **MNQ execution ports**
+(`WeeklyEdgeP1PCTMnq_v1` / `WeeklyEdgeXMConflictMnq_v1`) on **real-money account `2047681` since
+2026-09-01**. The owner did the enabling, and that has not changed: **no agent enables, disables,
+resizes or orders.** Live state: `research/operational/CURRENT_LIVE_TRUTH.md`. The **design,
+risk-limit and protocol** sections below remain authoritative._
 
 ---
 
@@ -182,6 +186,15 @@ real Analyzer parity check; **neither of these has.**
 > Strategy Analyzer backtests, and `WE_W52` had already used it the previous day. The claim was
 > inherited from an earlier wave instead of re-probed. **Standing rule: never assert an action is
 > owner-only without re-probing the tool surface that day.**
+>
+> 🔴 **BUT DO NOT USE IT TO COMPILE — banned 2026-09-01, `CLAUDE.md` §1.** The capability claim
+> above stays correct (it *can* compile); the **permission** does not. The MCP is a **remote**
+> server at `app.crosstrade.io` whose Terms owe the customer **no confidentiality**, so
+> `CompileNinjaScript` / `WriteNinjaScriptFile` / `ReadNinjaScriptFile` on our own classes would
+> ship the full strategy source to a third party. Use the local path in `CLAUDE.md` §6: `cp` into
+> `bin/Custom/Strategies`, verify by **resolving the class**, `sha256` both copies; syntax-check
+> with a small synthetic **probe**, never the real file. `RunStrategyBacktest` remains allowed —
+> it takes a class name, not source.
 
 1. ✅ **Both are compiled.** `WeeklyEdgeP1PCT_v1` and `WeeklyEdgeXMConflict_v2` resolve as NT8 types.
 2. ✅ **Parity is reconciled.** P1/PCT certified (5/5 gates, matched rate 99.672 %, weekly ρ 0.9852);

@@ -33,18 +33,24 @@ it cannot be inflated by leverage. Cost model: $4.36/ctrRT commission **plus** c
 modelled spread (P1 $14.44, XM $12.50). **NT8 nets are a different quantity** — see the manifest.
 
 > ### ⚠️ **D IS A CERTIFIED COMPONENT SET, NOT PORTFOLIO B.**
-> **B is inverse-volatility weighted. The integer-contract / capital mapping that would implement it
-> has NOT been selected.** Running both legs at their default quantity 1 is **not** that mapping and
+> **B is inverse-volatility weighted, and running both legs at quantity 1 is not an implementation
+> of it.** ✅ An integer-contract mapping **was** selected — **`M_11`** (P1 ×1 + XM ×1), owner-ratified
+> 2026-08-30 — and is 🔴 **live at 0.30 scale on MNQ** (`MnqPerNq = 3`, account `2047681`). **M_11 is
+> not B.** Running both legs at their default quantity 1 is **not** B's mapping and
 > **does not reproduce B's economics** — B's $2,012/wk at fixed DD is a research figure under
 > research weights and the research cost model. Selecting the mapping is an owner capital-allocation
 > decision (see `research/operational/EXECUTION_MANIFEST.md`), and until it is made the
 > **executable implementation of B remains PENDING.**
 >
-> ### 🔒 LIVE STATUS: **NOT LIVE ENABLED** — every object above, without exception.
-> **EXECUTABLE ≠ ENABLED.** C and D reproduce inside NinjaTrader's Strategy Analyzer on the
-> isolated Backtest account. Neither is deployed, started or connected to any account, no live
-> order authorization exists, and enabling either requires an explicit recorded owner
-> instruction. **EXECUTABLE · PARITY-CERTIFIED · LIVE-ENABLED are three separate statuses.**
+> ### 🔴 LIVE STATUS: **LIVE ENABLED = YES** since 2026-09-01 — authority
+> ### **[`research/operational/CURRENT_LIVE_TRUTH.md`](../operational/CURRENT_LIVE_TRUTH.md)**. Read it before touching anything.
+> The M_11 pair is live on **real-money account `2047681`** via the **MX01 MNQ execution port** at
+> `MnqPerNq = 3` = **0.30 NQ-equivalent** (decisions on `NQ 09-26`, orders on `MNQ 09-26`). The
+> certified NQ pair (`_v3` / `_v4`) runs on paper `DEMO8383477` as the **forward-evidence** book.
+> ⚠️ **Every drawdown figure above is at full 1-NQ research size.** At the live 0.30 scale the M_11
+> realised trade-level maxDD is **$15,567 = 152.5 % of the $10,206.86 live account.**
+> **EXECUTABLE · PARITY-CERTIFIED · LIVE-ENABLED are three separate statuses**, and this book
+> reached LIVE-ENABLED **without** passing SHADOW-VALIDATED, by owner decision.
 > **Evidence status of A and B: `DISCOVERY_CONSUMED`** — the 2022-07 → 2026-08 window has been mined
 > for 123 waves. Forward evidence on the sealed ≥2026-08-01 data is the only clean test remaining.
 

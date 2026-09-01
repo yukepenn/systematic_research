@@ -46,7 +46,19 @@
 ## 2026-08-24j — NT8/CrossTrade UNLOCKED: R6 parity BIT-EXACT; June-July data ingested; VF-CAND1 survives TRUE OOS
 
 Owner re-authorized CrossTrade (recorded in runs/OTR_R6_NT8_PARITY/spec.yaml);
-full self-serve loop now: sandbox compile -> Strategy Analyzer backtest via MCP.
+INSERT immediately after line 1 (`# OTR CURRENT TRUTH (prepend-newest)`), do NOT alter the dated entry below:
+
+## 2026-09-01 — ⛔ CROSSTRADE SOURCE TRANSMISSION IS BANNED (supersedes every earlier entry on this point only)
+
+The CrossTrade MCP is a **remote** server (`https://app.crosstrade.io/v1/api/mcp`) whose Terms are
+silent on confidentiality owed to the customer, with liability capped at $100 and API request/response
+logs retained 90 days. **`CompileNinjaScript` / `WriteNinjaScriptFile` / `ReadNinjaScriptFile` on our
+own classes are BANNED** (CLAUDE.md §1). Every earlier entry describing a "sandbox compile → Strategy
+Analyzer via MCP" self-serve loop is superseded **on that point only** — those entries remain accurate
+history otherwise. **The loop is now: local `cp` into `Documents/NinjaTrader 8/bin/Custom/Strategies/`
+→ `LookupNinjaScriptSymbol` to confirm the class resolved → `RunStrategyBacktest` (class name only,
+still allowed).** Also note: a 🔴 LIVE real-money book now runs on account `2047681` —
+`research/operational/CURRENT_LIVE_TRUTH.md`.
 - **R6 PARITY (PHASE C3 §8): PASS.** Layer A Jan-2023 cent-exact 91/91,
   $6,815.00 == $6,815.00, trade-for-trade. Layer B two-year master BIT-EXACT:
   4,592/4,592 trades, $279,655.00 net, DD −30,305.00, consec 7/15, ZERO trade

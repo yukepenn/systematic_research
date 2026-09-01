@@ -1,7 +1,7 @@
 # PAPER DEPLOYMENT RECORD — {P1/PCT + XM_v2} @ M_11 on DEMO8383477
 
 **Deployed 2026-08-30 ~06:16 ET** under the owner instruction recorded in
-`OWNER_DECISION_20260830.md`. **Paper account only. LIVE (real money) ENABLED = NO.**
+`OWNER_DECISION_20260830.md`. **Paper account only. LIVE (real money) ENABLED = NO.** — ⚠️ **true for THIS deployment and on the day it was written.** A separate real-money book was enabled on `2047681` on 2026-09-01; this document does not describe it. See `CURRENT_LIVE_TRUTH.md`.
 
 ## ⚠️ COLD-START DEFECT FOUND AND FIXED (same morning, before the first session)
 

@@ -144,9 +144,12 @@ stable mapping to confirm.
 NinjaScript Editor* to rebuild the custom assembly after new files are added — a plain application
 restart alone did not pick up 5 newly-written `.cs` files (confirmed directly: a backtest attempt
 right after restart returned `strategy_class_not_found` listing only pre-existing objects in
-`compiled_strategies`). `compile_engine=file_only` from `WriteNinjaScriptFile` is a real, load-bearing
-signal here, not just a formality — verify by attempting to resolve the class, not by trusting a
-restart alone.
+`compiled_strategies`). ⛔ **SUPERSEDED 2026-09-01 on two points.** (a) **`WriteNinjaScriptFile` is BANNED** — it transmits
+the whole file body to a remote server (CLAUDE.md §1); a class gets into NT8 by a local `cp` into
+`Documents/NinjaTrader 8/bin/Custom/Strategies/`. (b) The F5 claim above is stale: CLAUDE.md §6
+records (measured 2026-08-31, both MNQ classes) that **NT8 picks the file up without an F5.**
+The surviving, still-correct half of the lesson: **verify by attempting to RESOLVE the class**
+(`LookupNinjaScriptSymbol`), never by trusting a returned flag or a restart alone.
 
 ---
 

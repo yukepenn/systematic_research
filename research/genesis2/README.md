@@ -30,7 +30,7 @@ parallel and neither waits for the other:
    public material — mechanism, never source code. No licensing bypass, no piracy.
 6. Anti-P1 supervised mining stays barred; portfolio complementarity is measured AFTER standalone
    survival. Protected pools spend only behind frozen candidates with power calcs, via the owner
-   gate. `LIVE ENABLED = NO`. $0 without the owner spend gate.
+   gate. **The agent never enables anything live** — but note a live real-money book exists on `2047681` since 2026-09-01 (`research/operational/CURRENT_LIVE_TRUTH.md`). $0 without the owner spend gate.
 
 ## Files
 

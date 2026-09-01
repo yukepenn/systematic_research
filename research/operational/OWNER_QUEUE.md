@@ -64,11 +64,19 @@ payment** — those, and only those, still wait on you.
 
 ---
 
-## OQ-6 · Live enablement — standing, never assumed
-**OPEN by design.** Both `WeeklyEdgeP1PCT_v1` and `WeeklyEdgeXMConflict_v2` are now **EXECUTABLE and
-PARITY-CERTIFIED** and **NOT ENABLED**. Enabling either — or any SIM forward run on a real account —
-requires an explicit recorded owner instruction naming strategy version, instrument, account,
-parameters, session, quantity and risk settings. See `EXECUTION_MANIFEST.md`.
+## OQ-6 · Live enablement — ✅ **CLOSED 2026-09-01. The owner enabled the book on real money.**
+Account `2047681`, `WeeklyEdgeP1PCTMnq_v1` (`399562885`) + `WeeklyEdgeXMConflictMnq_v1`
+(`399562886`), decisions on `NQ 09-26` / orders on `MNQ 09-26`, `MnqPerNq = 3`. Recorded in
+`CURRENT_LIVE_TRUTH.md`; paper authorization in `OWNER_DECISION_20260830.md`.
+**The standing rule survives its closure:** enabling, disabling, resizing or ordering remains an
+owner action performed in the NT8 UI — never an agent one.
+
+## 🔴 OQ-7 · Capital vs drawdown at `MnqPerNq = 3` — **STANDING, PRICED, UNRESOLVED**
+**OPEN.** The book's own already-observed worst episode (2022-W05 → W17) rescales to
+**0.30 × $51,891 = $15,567 = 152.5 % of the $10,206.86 account** — a repeat ends the account.
+**1 MNQ = 50.8 %, 2 MNQ = 101.7 %.** `MnqPerNq` is a **deployable input**: resizing needs no rebuild
+and MX01 gates G1–G6 hold for any value. **No live-book drawdown trip-wire exists anywhere in this
+repo.** This is a priced owner decision, not an oversight.
 
 **Two live-policy choices the owner still owns, both priced and neither selected:**
 1. **`DisasterStopPoints` for XM.** Default **0 = OFF**. 300 pts costs 0.7 % of gross edge (13
@@ -98,8 +106,12 @@ effect.
 ### Closed in the 2026-08-27 reset (recorded once, then dropped from this queue)
 
 - **OQ-3 · "press F5 to compile NinjaScript" — RESOLVED, and it was never a real blocker.**
-  CrossTrade MCP compiles and runs true Strategy Analyzer backtests (add-on v1.13.9, NT8 8.1.8.1).
-  Dropping a `.cs` into the Strategies folder is picked up without an F5. **Standing rule: never
-  assert an action is owner-only without re-probing the tool surface that day.**
+  **The compile route is a local `cp` into `Documents/NinjaTrader 8/bin/Custom/Strategies/`** — NT8
+  picks it up without an F5 (measured 2026-08-31, both MNQ classes); **verify by RESOLVING the class
+  with `LookupNinjaScriptSymbol`, never by trusting a `compile_engine` flag.** CrossTrade MCP also
+  runs true Strategy Analyzer backtests via `RunStrategyBacktest` (class name only, no source),
+  which remains allowed. ⛔ **`CompileNinjaScript` / `WriteNinjaScriptFile` / `ReadNinjaScriptFile`
+  on our own classes are BANNED as of 2026-09-01** — remote server, CLAUDE.md §1. **Standing rule:
+  never assert an action is owner-only without re-probing the tool surface that day.**
 - **C-drive space drain (2026-08-12)** — resolved by observation (recovered 22.2 → 34.5 GB, cause
   never identified). Standing rule: check free space before any bulk download.

@@ -1,3 +1,8 @@
+> ⚠️ **Written 2026-08-31, one day before the book went live. Every capital and drawdown
+> figure below is at 1 NQ + 1 NQ (FULL SIZE).** The live book runs at **0.30 scale** on a
+> $10,206.86 account — multiply by 0.30 before comparing. See
+> `research/operational/CURRENT_LIVE_TRUTH.md`. Body unaltered.
+
 # IS THE EDGE REAL, OR IS IT SELECTION? — owner audit, 2026-08-31
 
 Owner asked: *"explain the strategies in depth. WHY do they work, rather than being p-hacking?"*

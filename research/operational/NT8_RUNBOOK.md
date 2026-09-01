@@ -1,11 +1,27 @@
-# NT8 OPERATIONS RUNBOOK — the paper book on DEMO8383477
+# NT8 OPERATIONS RUNBOOK — the paper book on `DEMO8383477` **and the 🔴 LIVE book on `2047681`**
+
+> ⚠️ Written 2026-08-30 for the paper book. Since **2026-09-01** a **real-money** book runs on
+> account `2047681` (`WeeklyEdgeP1PCTMnq_v1` / `WeeklyEdgeXMConflictMnq_v1`, `MnqPerNq = 3`).
+> Every hazard and standing rule below applies to it too, and harder. Live state authority:
+> **`research/operational/CURRENT_LIVE_TRUTH.md`**.
 
 Evidence: `runs/G2_NT8_OPS_20260830/` (NT8_OPERATIONS_RULES.md — official-doc research;
 STRATEGY_AUDIT.md — parameter/hazard audit). Written 2026-08-30, the day the book went to paper.
 
 ---
 
-# 🔴 URGENT — CONTRACT ROLL BY 2026-09-10 (11 days)
+# 🔴 THE "ROLL BY 2026-09-10" INSTRUCTION IS **WITHDRAWN** — following it would permanently kill the book
+
+> **2026-09-10 is INSIDE the latching red zone `2026-09-06 → 2026-09-18`.** `ResolveRollDates` runs
+> once on the first realtime bar, `RollBlocked()` is monotone, and `GetNextRolloverDate` is a
+> ROOT-level lookup that cannot tell you already rolled — so re-enabling P1 anywhere in
+> `09-08 → 09-16`, or XM in `09-06 → 09-18`, blocks new entries **instantly and permanently**
+> while the book still reads Enabled · Realtime · bars advancing · warm-up GO · flat.
+> ✅ **SAFE RE-ENABLE: P1 on/after 2026-09-17 · XM on/after 2026-09-19**, on `NQ 12-26` **and**
+> `MNQ 12-26`. **Waiting costs ZERO** — nothing enters between 09-06/09-08 and those dates under
+> any plan. Withdrawn for exactly the reason "roll by 09-04" was withdrawn.
+> 🔴 **This is now a REAL-MONEY instruction — account `2047681` is live.**
+> Authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL and `NT8_OPERATING_MODEL.md` §0.
 
 > ## **VERIFIED, verbatim from NinjaTrader's own documentation:**
 > ## *"NinjaScript strategies are not rolled forward and must be manually rolled over."*
@@ -24,8 +40,12 @@ not a chart-attached one. NT8's "Rollover" feature (Tools → Database Managemen
 > ⇒ **The roll is a RECONFIGURE, not a restart.** (`runs/G2_LIVE_HARDENING_20260830/R1_ROLLOVER.md`)
 
 - **NQ 09-26 expires Friday 2026-09-18**; volume rolls to 12-26 around **Thursday 2026-09-10**.
-- **The danger window is 09-10 → 09-18**: U6 still prints, so **no guard fires**, while liquidity
-  drains to Z6. The book would trade on degrading data and nothing would announce it.
+- **The red zone is `2026-09-06 → 2026-09-18`** — machine-resolved from NT8 at the 2026-08-30
+  18:00 ET session open, **not** the 8-day convention: XM's `blockNewEntriesFrom = 2026-09-06`
+  (ES rolls earliest, 09-14) and P1's is `2026-09-08`. The strategies **refuse new entries** from
+  those dates by design — that is the fail-safe working, not a fault. Exits are never gated.
+  ⚠️ The earlier text here ("the danger window is 09-10 → 09-18", "no guard fires") was wrong and
+  implied four safe days that do not exist.
 - After expiry it fails *safe*: XM's freshness check disqualifies every session; P1 stops
   receiving bars.
 
@@ -41,17 +61,29 @@ healthy. This is the exact defect class the guard exists to prevent.
 ⛔ The file is **parity-certified and must not be edited** (a fix requires a new class + its own
 re-certification). The operational control replaces it:
 
-## ROLL PROCEDURE — all four instruments together, never partially
+## ROLL PROCEDURE — **FIVE** instruments on the live book, FOUR on paper · never partially · TWO BOOKS, rolled independently
 
 1. Before 2026-09-10, confirm the roll date in **Tools → Instruments → NQ** (NT8 stores a
    per-contract roll date; do not rely on the 8-day convention alone).
 2. Verify the account is **FLAT** (`GetPosition` / Control Center). If not, wait for the
    strategies' own exits — do not hand-flatten a strategy position (see hazard H1).
 3. **Stop both strategies** (`StopStrategy`), confirm 0 running.
-4. Redeploy **both** with `DaysToLoad = 365`:
-   - P1 on **NQ 12-26**
-   - XM on **NQ 12-26** with parameters `EsInstrument="ES 12-26"`, `RtyInstrument="RTY 12-26"`,
+4. Redeploy with `DaysToLoad = 365`. ⚠️ **Not before P1 ≥ 2026-09-17 / XM ≥ 2026-09-19.**
+
+   **PAPER `DEMO8383477`** — `WeeklyEdgeP1PCT_v3` / `WeeklyEdgeXMConflict_v4`, **four** series:
+   - P1 on **NQ 12-26**, `ExpectInstrument="NQ 12-26"`
+   - XM on **NQ 12-26** with `EsInstrument="ES 12-26"`, `RtyInstrument="RTY 12-26"`,
      `YmInstrument="YM 12-26"` — **all three must be passed explicitly; the defaults are 09-26.**
+
+   🔴 **LIVE `2047681`** — `WeeklyEdgeP1PCTMnq_v1` / `WeeklyEdgeXMConflictMnq_v1`, **FIVE** series
+   (P1: NQ + MNQ; XM: NQ/ES/RTY/YM + MNQ). Everything above, **plus on both legs**:
+   - `MnqInstrument="MNQ 12-26"` and `ExpectMnq="MNQ 12-26"` — **the hard-coded default is
+     `MNQ 09-26`** (`WeeklyEdgeP1PCTMnq_v1.cs:939`)
+   - `ExpectInstrument="NQ 12-26"`, `MnqPerNq` unchanged at **3**
+   - `MxInstrumentGuard` **hard-halts** if the decision and execution contracts ever differ in
+     month, so rolling NQ while leaving MNQ on September is the exact partial roll this title forbids.
+
+   **The two books roll independently and BOTH must be verified.**
 5. Verify: state Realtime, `instruments` list shows **NQZ6/ESZ6/RTYZ6/YMZ6**, warm-up bars
    ≈350k, account flat, `ordersCount 0`.
 6. Record the swap in `PAPER_DEPLOYMENT_20260830.md`.
@@ -144,9 +176,12 @@ workspace/config file, and the add-on registry is in-memory.
 
 ## What this means operationally — it is the single biggest availability risk
 
-**Any NT8 restart — crash, Windows update, power event, or a deliberate one — silently stops the
-book. Nothing announces it. Any open position is left with no manager** (and neither strategy has
-a stop). The strategies were redeployed manually (`dep_68588bacd445` P1, `dep_7f22307847c2` XM,
+**Any NT8 restart — crash, Windows update, power event, or a deliberate one — silently stops BOTH
+books: the paper NQ book on `DEMO8383477` and the 🔴 LIVE MNQ book on `2047681`. Nothing announces
+it. Any open position is left with no manager** — no strategy here has a resting protective order;
+every stop is synthetic and dies with the strategy. 🔴 **On the live book that can leave up to
+9 MNQ of real money naked against a $10,206.86 account. "Never restart while positioned" is a
+real-money rule, not hygiene.** The strategies were redeployed manually (`dep_68588bacd445` P1, `dep_7f22307847c2` XM,
 both verified Realtime/flat, warm-up identical: 352,670 bars, $70,585 / $43,705).
 
 ## Standing rules that follow
@@ -154,8 +189,13 @@ both verified Realtime/flat, warm-up identical: 352,670 bars, $70,585 / $43,705)
 1. **After ANY NT8 restart, redeploy both legs with `DaysToLoad = 365` and verify** — the shadow
    runner does not do this and cannot detect it.
 2. **Be flat before any deliberate restart.**
-3. A **daily availability check** belongs in the routine: `ListDeployedStrategies` must show two
-   Realtime deployments. A silent zero is the failure mode to watch for.
+3. A **daily availability check** belongs in the routine: **`ListAllStrategies` must show 2 Realtime
+   rows on `DEMO8383477` AND 2 Realtime rows on `2047681`, asserted PER ACCOUNT with class names
+   checked.** A bare count of "two" passes while the live pair is silently down. ⚠️ **Never count with
+   `ListDeployedStrategies` or `ListStrategies`** — the deployment registry has reported 3
+   deployments for 2 strategies, and on 2026-09-01 `ListStrategies` returned 2 of 4 rows, both stale
+   shells, producing a confidently wrong audit. A silent zero **on either account** is the failure
+   mode to watch for.
 4. This is an argument for eventually attaching the strategies via the NT8 UI (which persists in
    a saved workspace) rather than programmatically — **untested**, and a separate decision.
 

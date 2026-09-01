@@ -4,17 +4,25 @@ _Authoritative for **execution** truth. Created 2026-08-27 (operational reset §
 _`research/weekly_edge/CURRENT_BASELINE.md` answers "what does research support?"_
 _**This file answers "what exactly is installed and reproducible?"** They are different questions._
 
-> # 🔒 LIVE ENABLED: **NO** — for every object below, without exception.
-> **No live order authorization exists.** Nothing is deployed, started, or attached to any account.
-> Every backtest here ran on NinjaTrader's isolated **Backtest** scratch account. `Sim101` and all
-> real accounts were never touched.
+> # 🔴 LIVE ENABLED: **YES**, since 2026-09-01.
+> **`research/operational/CURRENT_LIVE_TRUTH.md` is the authority for live state;** this file is the
+> authority for what is *installed and reproducible*. Different questions.
+>
+> **🔴 LIVE `2047681`** (real money, $10,206.86): `WeeklyEdgeP1PCTMnq_v1` (`399562885`) +
+> `WeeklyEdgeXMConflictMnq_v1` (`399562886`) — decisions on `NQ 09-26`, orders on `MNQ 09-26`,
+> `MnqPerNq = 3` = **0.30 NQ-equivalent** · `runs/MX01_MNQ_EXECUTION_PORT_20260831/`.
+> **PAPER `DEMO8383477`**: `WeeklyEdgeP1PCT_v3` + `WeeklyEdgeXMConflict_v4` — the forward-evidence
+> book; its fills remain `SIMULATED_FILL_NON_EVIDENTIAL`.
+>
+> `Sim101` has never been touched. Historical backtests below ran on the isolated **Backtest**
+> scratch account.
 
 ## Environment
 
 | | |
 |---|---|
 | NinjaTrader | **8.1.8.1** |
-| CrossTrade add-on | **v1.13.9** · features `[compile, strategy_state, alert_relay, backtest]` |
+| CrossTrade add-on | **v1.13.9** · features `[compile, strategy_state, alert_relay, backtest]` — ⛔ **the `compile` feature is BANNED for our own classes** (remote server, CLAUDE.md §1): no `CompileNinjaScript` / `WriteNinjaScriptFile` / `ReadNinjaScriptFile`. `backtest` (`RunStrategyBacktest`, class name only) and read-only state/account/quote/deployment queries remain allowed |
 | engine | `nt8_strategy_analyzer`, fingerprint `sha256:b4255f1b0dd7fba1` |
 | account | `Backtest` (isolated, reset per run) |
 | NT8 strategies folder | `C:\Users\Yuke Zhang\Documents\NinjaTrader 8\bin\Custom\Strategies` |
@@ -26,7 +34,7 @@ _**This file answers "what exactly is installed and reproducible?"** They are di
 | **A** | RESEARCH_SINGLE | `P1/PCT` | research object — see `CURRENT_BASELINE.md` §0 |
 | **B** | RESEARCH_PORTFOLIO_FRONTIER | `{P1/PCT + XM_CONFLICT}` inverse-vol | research object — see `CURRENT_BASELINE.md` §0 |
 | **C** | **EXECUTABLE_SINGLE** | **`WeeklyEdgeP1PCT_v1`** | **EXECUTABLE · PARITY-CERTIFIED · NOT ENABLED** |
-| **D** | **EXECUTABLE_PORTFOLIO (mapping M_11)** — ⭐ upgraded 2026-08-30, owner-ratified 「确认 M_11」 | **`WeeklyEdgeP1PCT_v1` ×1 NQ + `WeeklyEdgeXMConflict_v2` ×1 NQ** | mapping selected per `runs/G2_OQ6_MAPPING_20260830` (risk-share dev 0.054 vs inverse-vol; wins all three axes) and **frozen BEFORE the 2026-09-01 shadow start**. Both legs PARITY-CERTIFIED. **Paper deployment to DEMO8383477 owner-authorized** (`OWNER_DECISION_20260830.md`) — pending the owner's permission click. **LIVE (real money) ENABLED = NO** |
+| **D** | **EXECUTABLE_PORTFOLIO (mapping M_11)** — ⭐ upgraded 2026-08-30, owner-ratified 「确认 M_11」 | **`WeeklyEdgeP1PCT_v1` ×1 NQ + `WeeklyEdgeXMConflict_v2` ×1 NQ** | mapping selected per `runs/G2_OQ6_MAPPING_20260830` (risk-share dev 0.054 vs inverse-vol; wins all three axes) and **frozen BEFORE the 2026-09-01 shadow start**. Both legs PARITY-CERTIFIED. **Paper deployment to DEMO8383477 EXECUTED 2026-08-30** (`OWNER_DECISION_20260830.md`), now running `WeeklyEdgeP1PCT_v3` / `WeeklyEdgeXMConflict_v4`. 🔴 **LIVE (real money) ENABLED = YES since 2026-09-01** — the deployed implementation is the **MX01 MNQ execution port at `MnqPerNq = 3` = 0.30 × M_11** on account `2047681` (`WeeklyEdgeP1PCTMnq_v1` `399562885` / `WeeklyEdgeXMConflictMnq_v1` `399562886`); per-bar decision exports byte-identical to the certified objects over 61,600 bars per leg, gates G1–G6 all PASS · `runs/MX01_MNQ_EXECUTION_PORT_20260831/`. ⚠️ **Research-portfolio figures are full-size — multiply by 0.30 before comparing to the live account.** |
 
 ## Certified objects
 
@@ -117,20 +125,35 @@ Baseline B is the **inverse-volatility** research weighting. The certified execu
 > **What IS established:** each leg reproduces its own research object inside NinjaTrader. **What is
 > NOT established:** any executable allocation that reproduces the portfolio.
 
-**The research weighting has not been silently changed.** Mapping inverse-vol weights onto integer
-contract counts is an open **owner capital-allocation decision**, and no such mapping is asserted
-anywhere in this repo. Until it is selected, **`EXECUTABLE_PORTFOLIO` proper remains PENDING** and
-what exists is the certified component set above.
+**The research weighting has not been silently changed.** ✅ **The integer-contract mapping WAS selected: `M_11` (P1 ×1 NQ + XM ×1 NQ), owner-ratified
+2026-08-30 「确认 M_11」** (`OQ6_MAPPING_PACKET.md`, `runs/G2_OQ6_MAPPING_20260830`), which upgraded
+slot D to `EXECUTABLE_PORTFOLIO (mapping M_11)` above. 🔴 **The LIVE implementation is the MX01 MNQ
+port at `MnqPerNq = 3` = 0.30 × M_11**, on account `2047681` since 2026-09-01.
+⚠️ **M_11 is still NOT an implementation of inverse-vol Portfolio B** — it lands within 5pp of B's
+risk share by happy accident, and **B's `$2,012/wk` must never be quoted for it, nor for the live
+book.** Multiply any full-size research figure by **0.30** before comparing it to the live account.
 
 ## Active NT8 strategy set
 
-**Keep active (4):** `WeeklyEdgeP1PCT_v1` · `WeeklyEdgeXMConflict_v2` · `WeeklyEdgeP1_v3`
+**Deployed right now (4 across two accounts):** 🔴 LIVE on `2047681` — `WeeklyEdgeP1PCTMnq_v1` · `WeeklyEdgeXMConflictMnq_v1` (`runs/MX01_MNQ_EXECUTION_PORT_20260831/`); PAPER on `DEMO8383477` — `WeeklyEdgeP1PCT_v3` · `WeeklyEdgeXMConflict_v4`.
+**Superseded but still installed:** `WeeklyEdgeP1PCT_v1` · `WeeklyEdgeXMConflict_v2` · `WeeklyEdgeP1_v3`
 (comparator, §38) · `@Sample*` (NT8 built-ins, not ours).
 Full inventory and removals: `research/operational/REPO_CONSOLIDATION_20260827.md`.
 
-## Forward logging — not yet started
+## Forward logging — THREE streams, all running
 
-No forward SIM run has occurred, so no forward ledger rows exist. **Historical backtest rows must
+| stream | since | where | evidence class |
+|---|---|---|---|
+| paper NQ decisions | 2026-08-30 18:00 ET | `C:\NT8_ForwardLogs\export\` | `FORWARD_DECISION_FIRST`; fills `SIMULATED_FILL_NON_EVIDENTIAL` |
+| hash-chained shadow ledger | ingesting since 2026-08-30; accepts rows from `SHADOW_START` 2026-09-01 18:00 ET | `research/operational/shadow/` | formal prospective |
+| 🔴 **LIVE MNQ book** | **2026-09-01** | **`C:\NT8_ForwardLogs\mnq\`** | **first real execution evidence — NO ledger owns it yet** |
+
+🔴 **THE EXPORT-HANDLE TRAP:** every P1 class writes `we_p1pct_<Tag>.csv` and every XM class writes
+`we_xm_<Tag>.csv` with `append:false`. Only one handle can hold each file; the second strategy to
+open it **throws into a silent catch, sets `export = null`, and runs with no ledger and no
+diagnostics while every health check reports green.** Give any new book its own directory.
+
+**Historical backtest rows must never be backfilled into a forward ledger.** **Historical backtest rows must
 never be backfilled into a forward ledger.** Before any forward run, record: strategy version +
 sha256, git hash, instrument, account, every parameter, session template, quantity, risk settings.
 

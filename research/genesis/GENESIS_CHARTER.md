@@ -47,7 +47,7 @@ under: native sizing · one-contract · fixed-vol · fixed-drawdown · fixed-cap
 ⛔ No real-money orders · no live enablement · no Sim101 · no order-path tool calls ·
 no money spent · no subscriptions · no uncontrolled DOM/L2 capture · no C:-disk exhaustion ·
 ≥2026-08-01 seal stays sealed during discovery · blind pools stay unspent absent a written case ·
-no history rewrites. **`LIVE ENABLED = NO` throughout.**
+no history rewrites. **The agent places no real-money order and performs no live enablement — that boundary is unchanged.** ⚠️ The old repo-status claim "`LIVE ENABLED = NO` throughout" is overtaken: the owner enabled a live book on `2047681` on 2026-09-01 (`CURRENT_LIVE_TRUTH.md`).
 
 ## Phase plan
 

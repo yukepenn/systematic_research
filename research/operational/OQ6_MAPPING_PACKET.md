@@ -20,8 +20,11 @@ mapping. It ALSO wins the tie-break outright:
 | M_12 (1:2) | 0.116 | $3,404 | $39,778 | $1,732 | 61.8% | −$29,926 |
 
 The happy accident is real: **because the legs are naturally vol-matched, the simplest mapping IS
-the inverse-vol mapping** to within 5pp of risk share. No micro-contract complexity needed
-(MNQ variants stay FLAGGED-ONLY — MNQ friction is unmeasured here).
+the inverse-vol mapping** to within 5pp of risk share. ⚠️ **SUPERSEDED 2026-08-31/09-01: micro contracts are exactly what got deployed.** MNQ friction is
+now **MEASURED** ($1.30/ctr RT; spread does not degrade; all-in ratio ≈1.35× ≈ $35/wk at 3 MNQ), and
+the 🔴 **LIVE book is the MX01 MNQ port of M_11 at `MnqPerNq = 3` = 0.30 × M_11** on account
+`2047681` · `runs/MX01_MNQ_EXECUTION_PORT_20260831/`. The "no micro complexity needed" conclusion
+was correct for the *mapping* question and wrong as a forecast.
 
 ## Caveats that travel with the numbers
 
@@ -41,8 +44,10 @@ the inverse-vol mapping** to within 5pp of risk share. No micro-contract complex
 
 Slot D upgrades from `EXECUTABLE_COMPONENT_SET` to **`EXECUTABLE_PORTFOLIO (mapping M_11)`** in
 the execution manifest; the shadow's component streams combine under M_11 as the preregistered
-portfolio object. **LIVE ENABLED stays NO** — live enablement remains a separate, later,
-owner-recorded decision.
+portfolio object. ✅ **That later owner-recorded decision was subsequently made: live enablement happened 2026-09-01**
+on account `2047681`, at **0.30 scale via the MX01 MNQ execution port** (`MnqPerNq = 3`) —
+`runs/MX01_MNQ_EXECUTION_PORT_20260831/`, `CURRENT_LIVE_TRUTH.md`. The principle held: **ratifying a
+mapping did not enable anything;** enablement was a separate, later, owner-recorded act.
 
 > **To ratify, reply: "确认 M_11"** (or name another candidate / decline — all three candidates'
 > full economics are above and in `out/mapping_table.csv`).

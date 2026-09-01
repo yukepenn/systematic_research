@@ -8,7 +8,9 @@
 [`FROZEN_INCUMBENT_20260827.md`](FROZEN_INCUMBENT_20260827.md).
 **Seal register:** `research/operational/LOCKED_FORWARD.md`.
 
-> # 🔒 LIVE ENABLED: **NO.** This protocol reads data. It authorises no order and no deployment.
+> # 🔒 **This protocol reads data. It authorises no order and no deployment.**
+> *(The repo-wide "LIVE ENABLED: NO" prefix is removed — a live real-money book exists on account
+> `2047681` since 2026-09-01. This protocol simply is not it.)*
 
 ---
 
@@ -146,7 +148,12 @@ error — see `FROZEN_INCUMBENT` §1.
 
 - **a negative CPA** — **13.9 %** likely with nothing wrong (empirical)
 - **any single losing week, month, or quarter**
-- **a drawdown inside the research max** ($22,931 P1 / $11,489 B)
+- **a drawdown inside the research max** ($22,931 P1 / $11,489 B) — ⚠️ **these are RESEARCH / PAPER
+  thresholds at full 1-NQ size and are NOT live-account trip-wires.** At the live `MnqPerNq = 3`
+  scale divide every dollar threshold by 3.33 (≈ $6,879 / ≈ $3,447). **As written, losing the entire
+  $10,206.86 live account would be "inside the research max" and an explicit NON-trigger.**
+  🔴 **No live-book drawdown trip-wire exists anywhere in this repo.** That gap belongs to
+  `research/operational/CURRENT_LIVE_TRUTH.md` / `OWNER_QUEUE.md` OQ-7, not to this protocol.
 - **XM being quiet** — it trades ~1.6×/week and silence is its normal state
 - **old-regime underperformance** — owner doctrine, post-W115: *old-regime failure is a RISK
   CLASSIFICATION, not a promotion veto*

@@ -1,7 +1,13 @@
 # TOMORROW PRODUCTION CANDIDATE — 2026-08-27
 
-> # 🔒 **LIVE ENABLED: NO.** This document answers *"what is ready?"*. It authorises nothing.
-> Real-money enablement is **owner-only** and is not requested here.
+> # 🔴 **SUPERSEDED 2026-09-01 — the future this document plans for has arrived.**
+> Its §5 decisions **1 (real-money enablement)** and **2 (integer-contract capital mapping)** are
+> both **CLOSED**: `M_11` was owner-ratified 2026-08-30, and the book went live on account
+> `2047681` on 2026-09-01 at `MnqPerNq = 3` (0.30 NQ-equivalent, MNQ execution).
+> **Current answer: [`research/operational/CURRENT_LIVE_TRUTH.md`](CURRENT_LIVE_TRUTH.md).**
+> §2's Panel A economics and §4's risk table are measurements and remain valid.
+>
+> _Written 2026-08-27. It answered "what is ready?". It authorised nothing then, and nothing now._
 
 **The question (§22):** *if real trading had to start with the strongest defensible book using
 information available today, what exactly would it contain?*

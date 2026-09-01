@@ -104,7 +104,7 @@ is immutable.
    constant basis with identical daily changes must produce the *same* economic return.
    **If changing the roll spread changes alpha, the simulator is wrong.**
 5. **A completed job with missing output is FAIL.** Verified from the artifact on disk, never from
-   a returned status flag — `WriteNinjaScriptFile` reported `compile_engine: file_only` while the
+   a returned status flag — ⛔ (**`WriteNinjaScriptFile` is BANNED as of 2026-09-01**, CLAUDE.md §1; the same verify-the-artifact discipline now applies to the local `cp` + `sha256sum` + `LookupNinjaScriptSymbol` path.) It reported `compile_engine: file_only` while the
    class resolved fine, and `SWBarExport_v3`'s first run reported success while writing nothing
    (the cause was that `D:\` root is not writable, so `Directory.CreateDirectory` threw inside
    `DataLoaded`).

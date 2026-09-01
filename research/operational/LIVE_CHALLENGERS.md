@@ -57,7 +57,21 @@ assigns exactly one label:
 ## THE ACCEPTANCE SET IS CODE, NOT A CHECKLIST
 
 `research_sdk/live_readiness_check.py` — `--selftest` (10/10, every guard proven to fire) and
-`--tags p1pct,xm2`. Each assertion was bought with a specific failure:
+`--tags p1pct,xm2`.
+
+> 🔴 **THE DEFAULT INVOCATION CHECKS THE PAPER BOOK ONLY.** `DEFAULT_WARMUP` / `DEFAULT_EXPORT`
+> (`live_readiness_check.py:46-47`) are `C:\NT8_ForwardLogs\warmup` / `\export` — `DEMO8383477`'s
+> directories. **The LIVE book writes to `C:\NT8_ForwardLogs\mnq\`.** To check the real-money book
+> you MUST pass them explicitly:
+>
+> ```
+> python research_sdk/live_readiness_check.py --tags p1pct,xm2 ^
+>   --warmup C:\NT8_ForwardLogs\mnq\warmup --export C:\NT8_ForwardLogs\mnq\export
+> ```
+>
+> **Run it for BOTH books.** A PASS on the defaults says nothing about `2047681`.
+
+Each assertion was bought with a specific failure:
 
 | | check | why it exists |
 |---|---|---|

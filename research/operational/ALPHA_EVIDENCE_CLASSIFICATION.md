@@ -37,7 +37,7 @@ PORTFOLIO-ADDITIVE → EXECUTABLE → PARITY-CERTIFIED → SHADOW-VALIDATED → 
 
 | object | ladder status | **evidence class** | the reason, in one line |
 |---|---|---|---|
-| **`P1/PCT`** | **PARITY-CERTIFIED** · not live | **STRUCTURAL CORE + REGIME-LOCAL `PCT` POLICY** | the Solar/B-MOM core has deep-history support; **the `PCT` sizing layer reverses −31.4 % on 2006–2021** and 90.8 % of its gross difference lives in 53 of 1,058 sessions. **`ABS` is retained beside `PCT` in every table** |
+| **`P1/PCT`** | 🔴 **LIVE-ENABLED 2026-09-01** (as the MX01 MNQ port at 0.30 scale, account `2047681`) · ⚠️ **the `SHADOW-VALIDATED` rung was SKIPPED by owner decision — the ladder status advanced, the evidence class below did NOT** | **STRUCTURAL CORE + REGIME-LOCAL `PCT` POLICY** | the Solar/B-MOM core has deep-history support; **the `PCT` sizing layer reverses −31.4 % on 2006–2021** and 90.8 % of its gross difference lives in 53 of 1,058 sessions. **`ABS` is retained beside `PCT` in every table** |
 | **`XM_CONFLICT_v2`** | **PARITY-CERTIFIED** · not live | **REGIME-LOCAL by data availability** | ES/RTY/YM substrates **begin 2022-01-02**, so no 2006–2021 test exists *or can be built*. Strong modern evidence + coherent mechanism ≠ structural evidence. N = 348, discovery-consumed |
 | `Portfolio B` (P1+XM inverse-vol) | **RESEARCH ONLY** | **REGIME-LOCAL** *(inherited)* | contains XM and is measured only on the modern common window — **rule 2**. Also: **no integer-contract mapping exists** (`OQ-6`) |
 | `PAIR23` | research challenger | STRUCTURAL *(economics)*, but see reason | economics stand over 16 unseen years; **`RR_W003` showed its `X9a` leg *contains* P1**, making it the most double-counted component, not the least |
