@@ -10,14 +10,26 @@ independently report no order and no fill has ever been placed on this account.
 This file is the **authoritative live-state document**. Verified from the machine, not asserted.
 Build record: `runs/MX01_MNQ_EXECUTION_PORT_20260831/`.
 
-> ## 🔴 OPEN OWNER ACTION — the live P1 leg's decision ledger is DEAD
-> `WeeklyEdgeP1PCTMnq_v1` / `399562885` is **trading correctly** but has written **zero** rows
-> since **2026-09-01 00:41 ET**. Its export handle was lost to a startup collision and nulled by
-> the silent catch at `:992`, which has **no retry path**. Every health check still reports green.
-> Trading, sizing and guards are unaffected — this is an evidence defect.
-> **Full forensics, measured cost and the exact restart procedure:
-> [`OWNER_ACTION_20260901_P1_LEDGER_DEAD.md`](OWNER_ACTION_20260901_P1_LEDGER_DEAD.md).**
-> Detect it any time with `python -m research_sdk.writer_watchdog` (read-only; exit 1 = alarm).
+> ## ✅ RESOLVED 2026-09-01 09:34 ET — the live P1 ledger is writing again
+> The owner disabled `399562885` at `09:33:28.486` and re-enabled it at `09:34:05.206` — same id,
+> single row. **All four writers now ALIVE** (`writer_watchdog` exit 0, halt scan clean).
+> Verified from the machine, not asserted:
+> `WARMUP START verdict=GO` · `DaysToLoad 365` · `config_fault none` · `instrument NQU6` ·
+> `exec_instrument MNQU6` · `mnq_per_nq 3` · `WARMUP-CARRY-FLAT ledger=0 strategyPosition=0` ·
+> **`ROLL-PLAN blockNewEntriesFrom=2026-09-08 [NQU6:09-16 MNQU6:09-18]`** re-resolved on the first
+> realtime bar at `09:35:00.062` — **identical to the pre-restart plan and in the future**, so the
+> guard is live and did **not** fail open (see §ROLL on why `never` would have been ambiguous).
+>
+> ⭐ **Less was lost than forecast.** The restart truncates and regenerates (`append:false`), and
+> the 365-day warm-up **replayed the outage window**: the ledger now holds **354,989 rows** against
+> **354,453** in the pre-restart backup — **exactly the 536 minutes 00:41 → 09:36**. The decision
+> rows for the blind window **exist**. ⚠️ **Their evidence class is downgraded**: they were written
+> by historical replay, not at decision time, so they cannot support a committed-before-outcome
+> claim. **Immaterial here — zero fills occurred in the window**, so there were no outcomes for
+> them to precede. Recorded as a `WRITER_RESTORED` row in `forward_v2/gaps.csv` (chain verifies).
+>
+> History and forensics: [`OWNER_ACTION_20260901_P1_LEDGER_DEAD.md`](OWNER_ACTION_20260901_P1_LEDGER_DEAD.md).
+> Re-check any time: `python -m research_sdk.writer_watchdog --halts` (read-only; exit 1 = alarm).
 
 ---
 

@@ -1,4 +1,21 @@
-# 🔴 OWNER ACTION — the live P1 leg is trading with a DEAD decision ledger
+# ✅ CLOSED — OWNER ACTION: the live P1 leg was trading with a DEAD decision ledger
+
+> ## ✅ **RESOLVED 2026-09-01 09:34 ET by the owner.** Disabled `09:33:28.486`, re-enabled
+> `09:34:05.206` — same id, single row, parameters reused. **All four writers ALIVE; halt scan
+> clean; account still flat with zero fills.** Verified: `WARMUP START verdict=GO`,
+> `DaysToLoad 365`, `config_fault none`, `NQU6`/`MNQU6`, `mnq_per_nq 3`,
+> `WARMUP-CARRY-FLAT ledger=0 strategyPosition=0`, and **`ROLL-PLAN blockNewEntriesFrom=2026-09-08
+> [NQU6:09-16 MNQU6:09-18]`** re-resolved on the first realtime bar — identical to the pre-restart
+> plan and in the future, so the guard did not fail open.
+>
+> ⭐ **The outage window was CONTENT-RECOVERED.** The 365-day warm-up replayed it: 354,989 rows now
+> vs 354,453 in the backup — exactly the 536 minutes. §5's forecast of "~6–7 real-money entries
+> recorded without decision rows" **did not materialise**, on two counts: the rows exist, and zero
+> fills occurred. ⚠️ Their **evidence class** is still downgraded — replayed, not written at
+> decision time.
+>
+> **This document is retained in full as the forensic record.** The mechanism it describes is
+> unfixed in source (§11) and will recur on any future double-enable.
 
 **Raised 2026-09-01 05:10 ET. Machine-verified, reproducible, not inferred.**
 **Live account `2047681`. Strategy `WeeklyEdgeP1PCTMnq_v1`, strategy id `399562885`.**
