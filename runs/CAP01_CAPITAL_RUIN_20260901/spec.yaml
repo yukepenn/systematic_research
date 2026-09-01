@@ -1,0 +1,113 @@
+run_id: CAP01_CAPITAL_RUIN_20260901
+title: "Capital adequacy and ruin probability for the live MNQ book at MnqPerNq = 1, 2, 3"
+committed_before_results: true
+date: 2026-09-01
+campaign: "#7 WEEKLY_EDGE"
+classification: ENGINEERING_ONLY / RISK_ACCOUNTING
+
+# ---------------------------------------------------------------------------------------
+purpose: >
+  The live book's capital line is a single number -- "0.30 x $51,891 = 152.5% of the account".
+  That number is (a) the UN-WARMED backtest-start artifact the repo itself already retired,
+  (b) a sample maximum, and (c) presented without any distribution. Meanwhile the repo's own
+  CORRECTED capital plan is $75,000-90,000 at full size, which nobody has ever restated at
+  live scale. This run replaces one point estimate with a distribution, at all three sizes.
+
+  THIS IS NOT AN ALPHA TEST. No signal, parameter, threshold or population is selected here.
+  No gate promotes or demotes anything. It re-accounts risk on data that is ALREADY SPENT.
+
+evidence_status: DISCOVERY_CONSUMED
+evidence_note: >
+  Input is the certified NT8 trade lists over 2022-01 -> 2026-08, which are in-sample and
+  post-selection. A drawdown distribution estimated on the same data the strategy was
+  selected on is OPTIMISTIC, and no amount of resampling fixes that. Every output must be
+  read as a LOWER BOUND on risk, never as a forecast.
+
+# ---------------------------------------------------------------------------------------
+inputs:
+  p1_trades: runs/G2_AUG_INCUMBENT_READ_20260830/out/p1_trades_full.csv
+  xm_trades: runs/G2_AUG_INCUMBENT_READ_20260830/out/xm_trades_full.csv
+  schema: "et,xt,qty,pnl,comm,m,wk -- pnl is NT8 basis, commission INCLUDED, zero slippage"
+  account_equity_usd: 10206.86        # machine-read 2026-09-01 05:04 ET, GetAccountSummary
+  object: "M_11 = P1/PCT x1 NQ + XM_CONFLICT x1 NQ, full size"
+  live_scale: "MnqPerNq / 10  (3 -> 0.30)"
+
+cost_bases:                            # from research_sdk/cost_model.py, basis-tagged
+  - name: NT8                          # as-supplied: commission in, no spread
+    p1_spread_add: 0.00
+    xm_spread_add: 0.00
+  - name: RESEARCH_MODEL               # what every research headline charges
+    p1_spread_add: 14.44
+    xm_spread_add: 12.50
+  - name: MEASURED                     # EXEC01 / XM_EXEC_COST_AUDIT_V1
+    p1_spread_add: 20.65
+    xm_spread_add: 18.42
+  - name: HOSTILE                      # 2026-06/07 era spread, both legs
+    p1_spread_add: 28.69
+    xm_spread_add: 28.69
+
+# ---------------------------------------------------------------------------------------
+method:
+  session_boundary: "18:00 ET; a trade is attributed to the session containing its EXIT"
+  drawdown: "peak-to-trough on the cumulative net equity curve, in dollars"
+
+  observed:
+    - trade-level, daily, weekly max drawdown, combined and per leg
+    - worst single trade / day / week / rolling 5-day / rolling 20-day
+    - joint-loss clustering: P(both legs lose | either loses), and the worst joint days
+    - year-by-year and episode cuts (2022, 2026-07)
+    - warm vs un-warmed: with and without the first 37 sessions
+
+  resampling:
+    primary: STATIONARY_BOOTSTRAP          # Politis-Romano, geometric block length
+    secondary: [MOVING_BLOCK, YEAR_BLOCK]
+    unit: SESSION                          # a session carries BOTH legs together
+    rationale: >
+      Sessions are resampled as whole units so the P1/XM correlation, which is regime
+      dependent (rho +0.408 when XM is long, -0.204 when XM is short), survives resampling.
+      IID trade shuffling is FORBIDDEN as a primary risk model: it destroys the clustering
+      that produces drawdowns, and this book's worst month is four consecutive joint-loss
+      days. An IID model cannot generate that month and would understate the tail.
+    mean_block_sessions: [5, 10, 21]       # ~1 week, 2 weeks, 1 month
+    horizons_sessions: [252, 504]          # 1 year, 2 years
+    draws: 20000
+    seed: 20260901
+
+  reported:
+    - max-DD distribution p50/p75/p90/p95/p99 per horizon, per block length, per cost basis
+    - P(max DD > 25% / 50% / 75% / 100% of $10,206.86) at MnqPerNq = 1, 2, 3
+    - the size at which p90 2-year DD first exceeds the account
+
+# ---------------------------------------------------------------------------------------
+declared_in_advance:
+  - >
+    NO SIZE IS RECOMMENDED BY THIS RUN. It reports the risk of each size. Choosing a risk
+    tolerance is the owner's decision and is deliberately not made here.
+  - >
+    "Margin is not a constraint" and "capital is adequate" are DIFFERENT CLAIMS. Day margin
+    at 9 MNQ is $900 against $10,206.86; that says the position can be HELD, not that the
+    drawdown can be SURVIVED. The run must not let one stand in for the other.
+  - >
+    A bootstrap tail is not a bound. There is no true bound unless one exists structurally,
+    and none does here: the book has no broker-side stop, and every stop in it is synthetic
+    and dies with the strategy.
+  - >
+    If the resampled p90 exceeds the observed sample maximum, that is the EXPECTED result of
+    resampling a short record, not a defect. It will be reported as such and not clipped.
+
+falsifier_n_a: >
+  There is no PASS/FAIL gate. This run cannot promote or demote an object. Its only failure
+  mode is arithmetic, guarded by CAP01-G1..G4 below.
+
+gates:
+  CAP01-G1: "reconstructed full-size trade-level max DD reproduces the recorded $51,891 within 1%"
+  CAP01-G2: "warm-only (drop first 37 sessions) reproduces the recorded $36,943 within 1%"
+  CAP01-G3: "combined net reproduces the recorded $537,353 within 1%"
+  CAP01-G4: "resampled p50 1-year DD is finite, positive, and <= the observed sample max"
+
+outputs:
+  - out/cap01_observed.csv
+  - out/cap01_bootstrap.csv
+  - out/cap01_ruin_table.csv
+  - out/cap01.txt
+  - REPORT.md
