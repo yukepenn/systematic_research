@@ -25,13 +25,31 @@ OUT = os.path.join(ROOT, "runs", "WE_W17_DEEPHISTORY", "out")
 os.makedirs(OUT, exist_ok=True)
 
 
-def load_deep(a, b, extend=False):
+class SubstrateTruncationError(RuntimeError):
+    """The loader cannot reach the requested end date. Raised INSTEAD of returning short."""
+
+
+def load_deep(a, b, extend=False, allow_truncation=False):
     """W76: `extend` concatenates the newer substrate beyond the base file's end.
 
     The base file ends 2026-05-29 16:59 while every caller in this campaign asks for
     2026-07-31 - so the whole campaign has been silently truncated by ~44 sessions. `extend`
     defaults to OFF so all 75 preceding waves stay bit-reproducible; only W76 onward opts in.
-    The overlap is asserted bit-exact at load time rather than assumed."""
+    The overlap is asserted bit-exact at load time rather than assumed.
+
+    [CLEANSET 3, 2026-09-01] COVERAGE GUARD. `extend` fixed the DATA. It did not fix the
+    SILENCE, and the silence is the defect: line 51 is a boolean mask, not a range assertion,
+    so `time <= "2026-07-31"` selects every row of a file ending 2026-05-29 and raises
+    nothing. Callers received a well-formed frame with a plausible n_sess and no way to know.
+    That silently changed at least W61/W62/W73's published 2026 conclusions -- W61's
+    -10.62 pts/session became -3.64, because the two months it could not see ran +12.46.
+
+    The guard raises when the request overshoots the DATA's own end by more than a day.
+    A day of slack is deliberate: callers legitimately ask for "17:00" when the last bar of
+    a session is 16:59. The real defect was 63 days wide, so the margin costs nothing.
+
+    `allow_truncation=True` restores the exact historical behaviour and is the correct flag
+    for a DELIBERATE bit-reproduction of a pre-W76 wave. It must be passed on purpose."""
     df = pd.read_parquet(os.path.join(ROOT, "research", "scalping_lab", "substrate",
                                       "minute", "NQ", "nq1m_2005_202605.parquet"))
     df["time"] = pd.to_datetime(df["time"])
@@ -48,6 +66,23 @@ def load_deep(a, b, extend=False):
             if not (ov_a[c].to_numpy() == ov_b[c].to_numpy()).all():
                 raise ValueError(f"extend: overlap differs on column {c} - refusing to join")
         df = pd.concat([df, nd[nd["time"] > cut]], ignore_index=True)
+
+    # ---- [CLEANSET 3] COVERAGE GUARD. Asked-through must be answerable, or say so.
+    data_max = df["time"].max()
+    want_to = pd.Timestamp(b)
+    if want_to - data_max > pd.Timedelta(days=1) and not allow_truncation:
+        raise SubstrateTruncationError(
+            "load_deep asked through %s but the substrate ends %s -- short by %s.\n"
+            "  extend=%s. The base file nq1m_2005_202605.parquet ends 2026-05-29 16:59.\n"
+            "  This is the defect that silently changed W61/W62/W73: the date filter is a\n"
+            "  mask, not an assertion, so you would have received a short frame and no error.\n"
+            "  Choose ONE, explicitly:\n"
+            "    extend=True            -> load through 2026-07-31 (the CORRECT choice for new work;\n"
+            "                              tag results DISCOVERY_CONSUMED / DIRECTLY_BURNED, the\n"
+            "                              2026-05-31..07-31 window is BURNED, not virgin)\n"
+            "    allow_truncation=True  -> reproduce a pre-W76 wave bit-exactly, on purpose"
+            % (want_to, data_max, want_to - data_max, extend))
+
     df = df[(df["time"] >= a) & (df["time"] <= b)].sort_values("time").reset_index(drop=True)
     t = df["time"].values.astype("datetime64[s]")
     n = len(df)

@@ -34,8 +34,20 @@ KS = ("TREND-UP", "TREND-DOWN", "REVERSAL", "RANGE", "MIXED")
 
 
 # --------------------------------------------------------------------------- shared plumbing
-def setup():
-    D = load_deep("2022-01-01", "2026-07-31 17:00")
+def setup(extend=False, allow_truncation=False):
+    """[CLEANSET 3, 2026-09-01] THIS WRAPPER WAS THE CAMPAIGN'S MAIN TRUNCATION VECTOR.
+
+    21 files do `from run_we_w51c import setup`, and this call silently truncated every one
+    of them at 2026-05-29. It was never fixed when `extend` was added to load_deep on
+    2026-08-26 -- and three files committed on 2026-08-31, five days AFTER the fix, still
+    routed through it and silently inherited the defect.
+
+    It now forwards both flags, and load_deep RAISES rather than returning short. Callers
+    must choose. New work wants extend=True; a deliberate bit-reproduction of a pre-W76
+    wave wants allow_truncation=True. There is no longer a default that quietly lies.
+    """
+    D = load_deep("2022-01-01", "2026-07-31 17:00",
+                  extend=extend, allow_truncation=allow_truncation)
     W1.DEV_END = pd.Timestamp("2026-07-31").date()
     X = build_context(D)
     TG = targets(D)
