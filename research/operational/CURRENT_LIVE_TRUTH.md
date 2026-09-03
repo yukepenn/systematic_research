@@ -1,4 +1,39 @@
-# CURRENT_LIVE_TRUTH — 2026-09-01 05:10 ET
+# CURRENT_LIVE_TRUTH — 2026-09-01 05:10 ET, **head updated 2026-09-03 19:25 ET**
+
+> # 🔴 STATE NOW — 2026-09-03 19:25 ET: **NOTHING IS RUNNING. THE ACCOUNT IS FLAT.**
+>
+> | | |
+> |---|---|
+> | account `2047681` | **flat** · `netLiquidation` **$10,047.32** · day **+$367.82** · week **+$963.12** |
+> | `WeeklyEdgeP1PCTMnq_v1` | **DISABLED 19:06:41 by NT8 itself** |
+> | `WeeklyEdgeXMConflictMnq_v1` | **DISABLED by the owner** (it had been latched since 09-01 13:23) |
+> | both paper legs | **DISABLED 19:06:41 by NT8 itself** |
+>
+> **Why NT8 disabled them** — its own log, `log.20260903.00000.txt`:
+> `"lost price connection more than 4 times in the past 5 minutes and will be disabled"`
+> (8 feed flaps 19:05:39 → 19:06:54; `NumberRestartAttempts=4`, `RestartsWithinMinutes=5`).
+> **Correct behaviour, account flat, no position stranded.** The feed has been stable since.
+>
+> 🔴 **THREE INCIDENTS ON 2026-09-03. Read
+> [`INCIDENT_20260903_GHOST_POSITION.md`](INCIDENT_20260903_GHOST_POSITION.md) before re-enabling.**
+> 1. **A P1 exit OPENED a naked short 6 MNQ** and held it 51 minutes, because the owner had closed
+>    P1's long by hand at 11:16 and *no witness in the class looks at the account*. Tradovate
+>    `AutoLiq` covered it at 16:48:42 (`"text":"AutoLiq"`, `isAutomated:true`, `senderId:-1`).
+>    **Closed +$105.** Nothing about auto-liquidation changed — it had simply never had a position
+>    across the overnight margin boundary before, because the 15:45/16:39 flatten always won.
+> 2. **XM had been latched since 2026-09-01 13:23** — **1,218** `RECONCILE-BREAK` lines, every
+>    entry refused, while `ListAllStrategies` reported it Realtime/enabled/healthy. Root cause is
+>    mechanical and reproduces on **any** restart holding a position (HD-20).
+> 3. NT8's own auto-disable, above.
+>
+> 🔴 **DO NOT trade MNQ by hand on `2047681` while a leg holds a position** until HD-23 ships.
+> The strategy cannot see it. A manual trade in a *different* instrument is harmless.
+>
+> ✅ **Fixes are BUILT, CERTIFIED OFFLINE (32/32) AND NOT DEPLOYED** — four new classes,
+> `_v2`/`_v4`/`_v5`. Nothing was copied into NT8; no `Custom.dll` was rebuilt.
+> Deploy at the 09-21 roll window: [`DEPLOY_HD23_20260921.md`](DEPLOY_HD23_20260921.md).
+
+---
 
 ## 🔴 THE STATUS CHANGED: THE BOOK IS NOW ON REAL MONEY.
 
@@ -35,12 +70,16 @@ Build record: `runs/MX01_MNQ_EXECUTION_PORT_20260831/`.
 
 ## THE TWO BOOKS
 
-| account | connection | legs | class | id | state |
+| account | connection | legs | class | id | state **as of 2026-09-03 19:25 ET** |
 |---|---|---|---|---|---|
-| **`2047681`** | **Live** | **P1 MNQ** | `WeeklyEdgeP1PCTMnq_v1` | `399562885` | Realtime, flat |
-| **`2047681`** | **Live** | **XM MNQ** | `WeeklyEdgeXMConflictMnq_v1` | `399562886` | Realtime, flat |
-| `DEMO8383477` | Simulation | P1 NQ | `WeeklyEdgeP1PCT_v3` | `399562881` | Realtime, flat |
-| `DEMO8383477` | Simulation | XM NQ | `WeeklyEdgeXMConflict_v4` | `399562882` | Realtime, flat |
+| **`2047681`** | **Live** | **P1 MNQ** | `WeeklyEdgeP1PCTMnq_v1` | `399562885` | 🔴 **DISABLED** (NT8, 19:06:41) |
+| **`2047681`** | **Live** | **XM MNQ** | `WeeklyEdgeXMConflictMnq_v1` | `399562886` | 🔴 **DISABLED** (owner) |
+| `DEMO8383477` | Simulation | P1 NQ | `WeeklyEdgeP1PCT_v3` | `399562881` | 🔴 **DISABLED** (NT8, 19:06:41) |
+| `DEMO8383477` | Simulation | XM NQ | `WeeklyEdgeXMConflict_v4` | `399562882` | 🔴 **DISABLED** (NT8, 19:06:41) |
+
+⚠️ **The `state` column is a snapshot and goes stale the moment anything is enabled.** The head
+banner is the current reading; `ListAllStrategies` (never `ListStrategies(account)` — it returned
+2 of 4 rows on 09-01) is the machine truth.
 
 **The paper NQ book is the FORWARD-EVIDENCE book and is unchanged.** Its decisions remain
 `FORWARD_DECISION_FIRST`; its fills remain `SIMULATED_FILL_NON_EVIDENTIAL` (Tradovate server-side
@@ -103,7 +142,24 @@ if the open succeeds and a later `Flush` throws, the catch swallows it and leave
 non-null — permanently silent. And `RECONCILE-BREAK` reaches you via **NT8's own log**, which is
 independent of both writers, not via `hdDiag`.
 
-## 🔴 THE UNVERIFIED PATH — the standing watch item
+## ✅ THE UNVERIFIED PATH — CLOSED 2026-09-01, and what replaced it
+
+> **CLOSED.** The first real fill came on 2026-09-01 09:45 ET (XM short 3 MNQ @ 29081.9167,
+> submitted → accepted → working → **PartFilled 2** → **Filled 3**). **`RECONCILE-BREAK` did not
+> fire** and the partial fill correctly did **not** halt, because `shFilled == reqQty == 3`. The
+> `Positions[EXEC]` fix held on real money. P1's own first fill followed 2026-09-03 11:05, also
+> clean.
+>
+> 🔴 **What that verification could NOT see, and what happened instead:** the guard it exercised
+> compares this instance against *itself*. On 2026-09-03 the account and the instance diverged and
+> **every one of the three witnesses still agreed** — see
+> [`INCIDENT_20260903_GHOST_POSITION.md`](INCIDENT_20260903_GHOST_POSITION.md) §3.
+> **HD-23 is the new standing watch item, and it is again a `State.Realtime`-only path that no
+> backtest can exercise. Watch the first live bar after the 09-21 deploy.**
+
+<details><summary>the original wording, kept because it was right about the risk class</summary>
+
+## 🔴 THE UNVERIFIED PATH — the standing watch item (superseded)
 
 `AssertLedgerMatchesStrategyPosition` is `State.Realtime`-gated, so **no backtest has ever
 exercised it.** It is the guard the unindexed-`Position` defect would have broken, and the fix
@@ -117,6 +173,8 @@ live account with real money.**
 
 `DiagDir` is set, so `EXEC` / `ORDER` / `FILLPX` / `POS` / `MXEXEC` rows will land in
 `C:\NT8_ForwardLogs\mnq\diag\` on the first realtime event.
+
+</details>
 
 ## 🔴 ROLL — **this section is the single roll authority.** Every other doc points here.
 

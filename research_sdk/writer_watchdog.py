@@ -148,6 +148,17 @@ HALT_PATTERNS = [
     "RECONCILE-BREAK", "PARTIAL-FILL", "ZERO-FILL", "NON-TERMINAL",
     "ENTRIES LATCHED", "HALT", "ROLL-BLOCK", "MX-EXEC-BLOCKED",
     "DEAD-SERIES", "ROLL-RESOLVE-FAILED", "SESSIONEND-STALE", "config_fault",
+    # ---- added 2026-09-03 for the HD-20..23 challenger.  THE FIRST THREE ARE THE POINT:
+    # AcctWitnessMode defaults to DETECT, which changes NO order and logs at ERROR instead.
+    # If this watchdog does not grep for them, DETECT mode is equivalent to OFF -- the alarm
+    # would exist and nobody would ever read it.  That is the same shape as the outage this
+    # tool was written for: the evidence was there, in a channel nobody watched.
+    "ACCT-MISMATCH",          # the account disagrees with (me + published peers)   -- DETECT
+    "ACCT-DIVERGENCE",        # ...confirmed, and ENFORCE latched the halt
+    "EXIT-CLAMPED",           # ENFORCE stopped an exit from OPENING a position
+    "ACCT-WITNESS-BLIND",     # the witness could not be evaluated; it did NOT gate
+    "EXPORT-DEAD",            # HD-22: the forward ledger is not being written, retrying
+    "EXPORT-OPEN-FAILED",     # HD-22: the open threw -- was a silent `catch` before today
 ]
 
 # `config_fault` appears on EVERY healthy TEMPLATE line as `config_fault,none`, and a bare
