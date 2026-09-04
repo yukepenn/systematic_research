@@ -1,18 +1,32 @@
 # CURRENT_LIVE_TRUTH — 2026-09-01 05:10 ET, **head updated 2026-09-03 19:25 ET**
 
-> # 🔴 STATE NOW — 2026-09-03 19:25 ET: **NOTHING IS RUNNING. THE ACCOUNT IS FLAT.**
+> # 🔴 STATE NOW — 2026-09-03 22:25 ET: **ZERO STRATEGIES EXIST. THE ACCOUNT IS FLAT.**
+>
+> ```
+> ListAllStrategies  ->  count: 0   ·  2047681: strategyCount 0  ·  DEMO8383477: strategyCount 0
+> all four export writers frozen at 19:06:02
+> ```
 >
 > | | |
 > |---|---|
-> | account `2047681` | **flat** · `netLiquidation` **$10,047.32** · day **+$367.82** · week **+$963.12** |
-> | `WeeklyEdgeP1PCTMnq_v1` | **DISABLED 19:06:41 by NT8 itself** |
-> | `WeeklyEdgeXMConflictMnq_v1` | **DISABLED by the owner** (it had been latched since 09-01 13:23) |
-> | both paper legs | **DISABLED 19:06:41 by NT8 itself** |
+> | account `2047681` | **flat** · `netLiquidation` **$10,047.32** · week **+$963.12** |
+> | all four legs | 🔴 **GONE — not merely disabled.** The strategy ROWS no longer exist. |
 >
-> **Why NT8 disabled them** — its own log, `log.20260903.00000.txt`:
-> `"lost price connection more than 4 times in the past 5 minutes and will be disabled"`
-> (8 feed flaps 19:05:39 → 19:06:54; `NumberRestartAttempts=4`, `RestartsWithinMinutes=5`).
-> **Correct behaviour, account flat, no position stranded.** The feed has been stable since.
+> **Two separate events, in order:**
+> 1. **19:06:41 — NT8 disabled all three running legs itself.** `log.20260903.00000.txt`:
+>    `"lost price connection more than 4 times in the past 5 minutes and will be disabled"`
+>    (8 feed flaps 19:05:39 → 19:06:54; `NumberRestartAttempts=4`, `RestartsWithinMinutes=5`).
+>    **Correct behaviour, account flat, nothing stranded.**
+> 2. **22:23:04 → 22:25:01 — NT8 was fully restarted** (sessions `.00001`, which logged one
+>    `Unhandled exception: Object reference not set...`, then `.00002`, which restored the
+>    workspace from `workspaces.nt8bk`). **The restart removed every strategy row.**
+>
+> 🔴 **RE-ENABLING IS A FULL REDEPLOY, NOT A CHECKBOX.** Ten settings must be typed back in and
+> their defaults are actively wrong (`""` = *writes nothing* / *guard disabled*; `DaysToLoad`
+> defaults to **5** where convergence needs **365**).
+> **The sheet is `INCIDENT_20260903_GHOST_POSITION.md` §12 — do not re-enable from memory.**
+> On September contracts today the guard should resolve `blockNewEntriesFrom` = **09-08** (P1) /
+> **09-06** (XM), both in the future — so entries work, **for a few days only**.
 >
 > 🔴 **THREE INCIDENTS ON 2026-09-03. Read
 > [`INCIDENT_20260903_GHOST_POSITION.md`](INCIDENT_20260903_GHOST_POSITION.md) before re-enabling.**

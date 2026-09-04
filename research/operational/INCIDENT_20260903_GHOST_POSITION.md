@@ -87,18 +87,36 @@ Arithmetic: 6 MNQ overnight initial margin ≈ **$4,649.23 × 6 = $27,895** agai
 **The accidental short made money**: 29516.5417 → 29507.7917 = 8.75 pt × 6 × $2 = **+$105.00**,
 confirmed to the cent by the three `Cbi.Account.OnAddTrade` rows (18 + 70 + 17).
 
-## 6 · TWO THINGS I COULD NOT EXPLAIN — recorded, not guessed
+## 6 · THE $231 THAT DID NOT ADD UP — ✅ RESOLVED, by the owner
 
-1. 🔴 **`netLiquidation` fell $231.02 that the trades do not account for.**
-   11:23 ET `netLiquidation 10,278.34`, account flat. 19:01 ET `10,047.32`, account flat.
-   Between them the only fills were the ghost round trip: `grossRealizedProfitLoss` **+$105.00**
-   and `weeklyProfitLoss` **+$47.32**. Every commission today at the measured MNQ rate (68 MNQ
-   sides + 2 NQ sides) is ≈ **$48**. **≈$278 is unexplained.** No fee or commission posting
-   appears in any adapter payload in the log. Plausible causes (a monthly data/platform fee, an
-   end-of-session settlement) are **not evidence**; this needs the Tradovate cash statement.
-   **It is not a trading loss** — both P&L counters moved up.
-2. ⚠️ **`realizedProfitLoss` reset 367.82 → 0.00** across the 18:00 ET session rollover. Expected,
-   noted so it is not mistaken for the item above.
+**The question:** 11:23 ET `netLiquidation 10,278.34`, account flat. 19:01 ET `10,047.32`,
+account flat. Between them the only fills were the ghost round trip:
+`grossRealizedProfitLoss` **+$105.00**, `weeklyProfitLoss` **+$47.32**. Every commission that day
+at the measured MNQ rate (68 MNQ sides + 2 NQ sides) is ≈ **$48**. **≈$278 was unaccounted for**,
+and no fee or commission posting appeared in any adapter payload in the log.
+
+> ✅ **ANSWER, 2026-09-03, owner: a cash WITHDRAWAL plus a Tradovate AUTO-LIQUIDATION FEE.**
+>
+> **Evidence class: `OWNER_TESTIMONY`, not machine-verified.** Both components are real and
+> neither is visible anywhere in NT8: a withdrawal is a cash-ledger event the adapter never
+> pushes, and the auto-liq fee is billed by Tradovate outside the fill stream. **This closes the
+> question and does NOT convert it into a measured number** — the split between the two is
+> unknown and the Tradovate cash statement remains the only source that could apportion it.
+
+⭐ **The durable lesson is about `netLiquidation`, not about $231:** it is a **cash balance**, so
+**owner deposits, withdrawals and out-of-band fees move it and no trading record explains them.**
+Any performance figure taken by differencing `netLiquidation` across time is therefore **wrong by
+construction on this account**. Use `grossRealizedProfitLoss` and the fill record, never the
+balance. Recorded because P&L-by-balance-difference is the obvious shortcut and it is invalid here.
+
+⚠️ **Also noted:** `realizedProfitLoss` reset 367.82 → 0.00 across the 18:00 ET session rollover.
+Expected; recorded so it is never mistaken for the item above.
+
+🔴 **The auto-liq fee is a real, recurring cost of the HD-23 defect.** It is charged for a
+liquidation the strategy caused and would not otherwise have incurred, and it is **not in
+`COST_MODEL.md`** — it cannot be, because it is not a per-trade cost. It is a **penalty for
+letting a position cross the overnight boundary**, and the correct response is the fix, not a
+cost line.
 
 ## 7 · SECOND FINDING THE SAME DAY — XM had been latched since 2026-09-01, silently
 
@@ -175,13 +193,78 @@ Therefore:
 
 ---
 
-## 11 · OWNER ACTIONS
+## 11 · FOURTH EVENT, 22:23–22:25 — NT8 fully restarted and **all strategy rows are gone**
 
-1. ⚠️ **Decide whether to re-enable tonight.** Everything is disabled and flat (section 8). Nothing
-   is broken; the price feed has been stable since 19:06:54.
+```
+22:23:02  Live/Simulation: Primary connection=Disconnecting          <- session .00000 ends
+22:23:13  Session Break (Version 8.1.8.1)                            <- session .00001
+22:24:18  NinjaTrader successfully restored the backup archive file 'workspaces.nt8bk'
+22:24:20  Unhandled exception: Object reference not set to an instance of an object.
+22:24:51  vendor assemblies reloaded                                 <- session .00002
+22:25:01  Live: Primary connection=Connected, Price feed=Connected
+```
+
+`ListAllStrategies` at 22:25: **`count: 0`**, `2047681` `strategyCount 0`, `DEMO8383477`
+`strategyCount 0`. All four export writers still frozen at `19:06:02`.
+
+🔴 **THE RESTART REMOVED EVERY STRATEGY ROW. Re-enabling is a FULL REDEPLOY, not a checkbox** —
+and the eight parameters in §12 do **not** survive it, with defaults that are actively wrong
+(September contract strings, and `""` for `ExportDir` / `DiagDir` / `ExpectInstrument` /
+`ExpectMnq`, where `""` means *write nothing* and *guard disabled*).
+
+⚠️ **`workspaces.nt8bk` was restored from backup** and one session logged an unhandled
+`NullReferenceException`. Neither is known to have damaged anything — the account is flat and
+correct — but the workspace is not necessarily the one that was running this morning.
+
+---
+
+## 12 · REDEPLOY PARAMETER SHEET — the eight that do not survive a restart
+
+Reconstructed from the last **verified-Realtime** rows (`ListAllStrategies`, 2026-09-03 11:19 ET)
+and from the warm-up certificates in `C:\NT8_ForwardLogs\mnq\warmup\`.
+
+| parameter | **LIVE `2047681`** | **PAPER `DEMO8383477`** | default if not typed |
+|---|---|---|---|
+| `ExportDir` | `C:\NT8_ForwardLogs\mnq\export` | `C:\NT8_ForwardLogs\export` | 🔴 `""` = writes nothing |
+| `DiagDir` | `C:\NT8_ForwardLogs\mnq\diag` | `C:\NT8_ForwardLogs\diag` | 🔴 `""` |
+| `WarmupCertDir` | `C:\NT8_ForwardLogs\mnq\warmup` | `C:\NT8_ForwardLogs\warmup` | 🔴 `""` |
+| `ExpectInstrument` (P1) | `NQ 09-26` | `NQ 09-26` | 🔴 `""` = **guard disabled** |
+| `ExpectMnq` (both, live only) | `MNQ 09-26` | *n/a* | 🔴 `""` = **guard disabled** |
+| `MnqInstrument` (both, live only) | `MNQ 09-26` | *n/a* | `MNQ 09-26` ✅ |
+| `EsInstrument`/`RtyInstrument`/`YmInstrument` (XM) | `ES 09-26` / `RTY 09-26` / `YM 09-26` | same | September ✅ **until the roll** |
+| `MnqPerNq` (live only) | **`3`** | *n/a* | `3` ✅ |
+| `Tag` | `p1pct` / `xm2` | `p1pct` / `xm2` | ✅ |
+| **`DaysToLoad`** | **`365`** | **`365`** | 🔴 `5` — convergence needs ~9 months |
+
+**Then read the machine's own line and abort if it is wrong:**
+
+```
+grep ROLL-PLAN in the NT8 log, per leg
+```
+Expected **today, on September contracts**: P1 `blockNewEntriesFrom=2026-09-08`,
+XM `blockNewEntriesFrom=2026-09-06`. 🔴 **Both are in the future, so entries work — but only for
+a few days.** After those dates each leg refuses new entries and that is the fail-safe working,
+not a fault. December redeploy is `≥ 2026-09-19` (practically Mon 09-21) —
+**`CURRENT_LIVE_TRUTH.md` §ROLL is the authority, never a date remembered from here.**
+
+Expect one **`WARMUP-CARRY-AGREE`** (currently `WARMUP-CARRY-FLAT`) line per leg with
+`ledger=0 strategyPosition=0`. The account is flat, so the HD-20 carry path is **not** exercised
+by this restart.
+
+Verify within one bar: `python research_sdk/writer_watchdog.py --halts` → four writers **ALIVE**.
+
+---
+
+## 13 · OWNER ACTIONS
+
+1. 🔴 **The redeploy did not take — nothing is running.** `ListAllStrategies` = 0 at 22:25.
+   Use §12; do not re-enable from memory.
 2. 🔴 **Do not trade MNQ by hand on `2047681` while a leg holds a position.** Until HD-23 ships,
-   the strategy cannot see it, and today shows what that costs. Its own book is untouched by a
-   manual trade in a *different* instrument.
-3. ⚠️ **Ask Tradovate for the 2026-09-03 cash statement** to close section 6 item 1.
+   the strategy cannot see it, and §1–§5 show what that costs. A manual trade in a **different**
+   instrument is harmless.
+3. ⚠️ **Never compute this book's P&L by differencing `netLiquidation`** — §6. Withdrawals and
+   out-of-band fees move it and no trading record explains them.
 4. 🔴 **Deploy the challenger at the 2026-09-21 roll window** — `DEPLOY_HD23_20260921.md`.
    Both legs are down for the roll anyway, so the recompile costs nothing extra.
+5. ⚠️ **Run the syntax probe (`ProbeHd23Constructs_v1.cs`) only when nothing is about to be
+   enabled.** A compile error blocks every subsequent build until the file is removed.
