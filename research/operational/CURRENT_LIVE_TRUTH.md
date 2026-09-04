@@ -1,6 +1,33 @@
-# CURRENT_LIVE_TRUTH — 2026-09-01 05:10 ET, **head updated 2026-09-03 19:25 ET**
+# CURRENT_LIVE_TRUTH — 2026-09-01 05:10 ET, **head updated 2026-09-03 22:29 ET**
 
-> # 🔴 STATE NOW — 2026-09-03 22:25 ET: **ZERO STRATEGIES EXIST. THE ACCOUNT IS FLAT.**
+> # 🟡 STATE NOW — 2026-09-03 22:29 ET: **1 OF 4 LEGS RUNNING. ACCOUNT FLAT.**
+> 
+> | leg | state | writer |
+> |---|---|---|
+> | **LIVE P1** `WeeklyEdgeP1PCTMnq_v1/399562885` | ✅ **Realtime, enabled, flat** | ✅ ALIVE |
+> | **LIVE XM** `WeeklyEdgeXMConflictMnq_v1` | 🔴 **NOT DEPLOYED** | dead since 09-02 10:40 |
+> | PAPER P1 `WeeklyEdgeP1PCT_v3` | 🔴 **NOT DEPLOYED** | frozen 19:06 |
+> | PAPER XM `WeeklyEdgeXMConflict_v4` | 🔴 **NOT DEPLOYED** | frozen 19:06 |
+> 
+> ⚠️ **`DEMO8383477` reports `connection: null`** — the Simulation connection itself is down, so
+> **the uncontaminated FORWARD-EVIDENCE book is not running at all.** That book is also the only
+> clean reconstruction source for the 09-03 owner-intervened P1 trade (`gaps.csv` seq 5).
+> 
+> **LIVE P1 redeploy VERIFIED FROM THE MACHINE** (`warmup_p1pct_20260904_022711Z.csv`):
+> `verdict GO, 7/7 PASS` · `DaysToLoad 365` · `bars_count 355,940` from 2025-09-02 ·
+> `instrument NQU6` · `exec_instrument MNQU6` · `exec_bars 354,687` · `mnq_per_nq 3` ·
+> `config_fault none` · **both identity guards ARMED** (`ExpectInstrument=NQ 09-26`,
+> `ExpectMnq=MNQ 09-26`) · halt scan **clean**.
+> **`ROLL-PLAN blockNewEntriesFrom=2026-09-08 [NQU6:09-16 MNQU6:09-18]`** resolved on the first
+> realtime bar at `22:28:03.465` — **in the future, so the guard is live and did NOT fail open.**
+> ⚠️ The certificate's `env,roll_block_from,never` is the **START-phase snapshot taken before**
+> `ResolveRollDates` runs; the `ROLL-PLAN` line is the authority. Do not read `never` as fail-open.
+> 
+> 🔴 **P1 stops taking new entries on 2026-09-08. XM would stop on 09-06.**
+> 
+> <details><summary>what happened before this (22:25 reading)</summary>
+> 
+> # 🔴 22:25 ET: **ZERO STRATEGIES EXISTED. THE ACCOUNT IS FLAT.**
 >
 > ```
 > ListAllStrategies  ->  count: 0   ·  2047681: strategyCount 0  ·  DEMO8383477: strategyCount 0
@@ -46,6 +73,8 @@
 > ✅ **Fixes are BUILT, CERTIFIED OFFLINE (32/32) AND NOT DEPLOYED** — four new classes,
 > `_v2`/`_v4`/`_v5`. Nothing was copied into NT8; no `Custom.dll` was rebuilt.
 > Deploy at the 09-21 roll window: [`DEPLOY_HD23_20260921.md`](DEPLOY_HD23_20260921.md).
+>
+> </details>
 
 ---
 
@@ -84,12 +113,12 @@ Build record: `runs/MX01_MNQ_EXECUTION_PORT_20260831/`.
 
 ## THE TWO BOOKS
 
-| account | connection | legs | class | id | state **as of 2026-09-03 19:25 ET** |
+| account | connection | legs | class | id | state **as of 2026-09-03 22:29 ET** |
 |---|---|---|---|---|---|
-| **`2047681`** | **Live** | **P1 MNQ** | `WeeklyEdgeP1PCTMnq_v1` | `399562885` | 🔴 **DISABLED** (NT8, 19:06:41) |
-| **`2047681`** | **Live** | **XM MNQ** | `WeeklyEdgeXMConflictMnq_v1` | `399562886` | 🔴 **DISABLED** (owner) |
-| `DEMO8383477` | Simulation | P1 NQ | `WeeklyEdgeP1PCT_v3` | `399562881` | 🔴 **DISABLED** (NT8, 19:06:41) |
-| `DEMO8383477` | Simulation | XM NQ | `WeeklyEdgeXMConflict_v4` | `399562882` | 🔴 **DISABLED** (NT8, 19:06:41) |
+| **`2047681`** | **Live** | **P1 MNQ** | `WeeklyEdgeP1PCTMnq_v1` | `399562885` | ✅ **Realtime, enabled, flat** (redeployed 22:28) |
+| **`2047681`** | **Live** | **XM MNQ** | `WeeklyEdgeXMConflictMnq_v1` | `399562886` | 🔴 **NOT DEPLOYED** |
+| `DEMO8383477` | Simulation | P1 NQ | `WeeklyEdgeP1PCT_v3` | `399562881` | 🔴 **NOT DEPLOYED** · connection null |
+| `DEMO8383477` | Simulation | XM NQ | `WeeklyEdgeXMConflict_v4` | `399562882` | 🔴 **NOT DEPLOYED** · connection null |
 
 ⚠️ **The `state` column is a snapshot and goes stale the moment anything is enabled.** The head
 banner is the current reading; `ListAllStrategies` (never `ListStrategies(account)` — it returned
