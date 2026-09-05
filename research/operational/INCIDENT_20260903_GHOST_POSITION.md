@@ -268,3 +268,53 @@ Verify within one bar: `python research_sdk/writer_watchdog.py --halts` → four
    Both legs are down for the roll anyway, so the recompile costs nothing extra.
 5. ⚠️ **Run the syntax probe (`ProbeHd23Constructs_v1.cs`) only when nothing is about to be
    enabled.** A compile error blocks every subsequent build until the file is removed.
+
+---
+
+## 14 · 🔴 CORRECTION 2026-09-05 — **THIS DEFECT FIRED FIRST ON 2026-09-01, ON XM. n = 2, NOT 1.**
+
+Found by an adversarial reader commissioned to audit the repo against the XM withdrawal, then
+verified independently from the machine record.
+
+**The same mechanism, two days earlier, with the opposite symptom:**
+
+| | 2026-09-01 · XM | 2026-09-03 · P1 |
+|---|---|---|
+| strategy opened | `XM_S` short 3 MNQ @ 29081.9167, 09:45:00 | `L` long 6 MNQ @ 29440.875, 11:05:00 |
+| **owner closed it by hand** | **12:20:46, Buy 9 (covering 6 own shorts + XM's 3)** | **11:16:16, Sell 6** |
+| strategy never told | ✅ | ✅ |
+| strategy's own exit | **`XM_X` NEVER REACHED THE BROKER** — matched internally against NT8's stale strategy position | **`XL` DID reach the broker and OPENED a naked short 6** |
+| damage | the only live trade record XM will ever have was **destroyed** | 51 minutes of unowned short, closed by Tradovate `AutoLiq` |
+
+**Proof the 09-01 exit was never submitted:**
+
+```
+grep "name='XM_X'" every trace file | grep -c "(Live)"      ->  0
+```
+
+Every `XM_X` row in the entire corpus is `581992641276/DEMO8383477`, `NQU6`, qty 1 — the **paper**
+leg. The only strategy order ever created on `2047681` is the `XM_S` entry, `18930730071`.
+
+**Account `MNQU6` position on 09-01** (`Cbi.Account.PositionUpdateCallback`):
+`09:45 Short 3` (XM) → `10:27 Short 6` (manual) → `10:31 Short 9` (manual) →
+**`12:20:46 FLAT`** (manual `Buy 9`, order `18930730255`, `name=''`).
+
+### What this changes
+
+1. 🔴 **The `−$192.50` round trip previously recorded for XM is WITHDRAWN.** The exit price 29114
+   never occurred on this account. **XM has no scoreable live P&L at all.**
+2. 🔴 **The claim that XM's execution beat the model by `$11.50` is WITHDRAWN** — it was the
+   phantom exit's arithmetic. The one real datum is the **entry**, and it was **adverse**: the
+   model assumed selling at 29084, the fill sold at 29081.9167, **−2.083 pts = −$12.50 on 3 MNQ.**
+3. ⭐ **HD-23 is fixing a defect with n = 2 occurrences in three sessions**, on both legs, in both
+   directions. The 2026-09-03 write-up called it a first occurrence; that was wrong.
+4. ⚠️ **The HD-20 restart diagnosis in §7 still stands and is not affected.** Both were true at
+   once: the account was already flat from 12:20:46, *and* the 13:22:01 restart reset `shNetQty`
+   to 0, which is what produced the `execImplied=0` halt on the next bar.
+
+⭐ **The lesson is the file's own, one turn later: I reported a P&L from a fill that never
+happened, because the strategy's own diagnostic said it did.** `HdDiagRow("EXEC", ...)` fires from
+`OnExecutionUpdate`, which reports what **NT8's strategy layer** matched — **not what the broker
+filled.** A diagnostic written by the thing under test is not independent evidence of what the
+account did. **The account is the only witness for what the account did**, which is the entire
+point of HD-23.
