@@ -64,21 +64,33 @@ Exactly what is installed, compiled and reproducible:
 > that integer-contract mapping was never selected, and running both legs at quantity 1 does
 > **not** reproduce B's economics. **Never quote a research-portfolio figure for a component set.**
 
-### The live object — a fifth thing, and it is not A/B/C/D
+### The live object — and it is not A/B/C/D
 
-**`WeeklyEdgeP1PCTMnq_v1` + `WeeklyEdgeXMConflictMnq_v1`** (`runs/MX01_MNQ_EXECUTION_PORT_20260831/`)
-are the certified objects' **decisions** executing on a **different contract at 3/10 size**.
+🔴 **Since 2026-09-03 the live book is ONE LEG: `WeeklyEdgeP1PCTMnq_v1` `399562885` alone, at
+`MnqPerNq = 3`.** The XM leg was **withdrawn to OBSERVATION by owner decision 2026-09-05**
+([`OWNER_DECISION_20260905_XM_WITHDRAWN.md`](research/operational/OWNER_DECISION_20260905_XM_WITHDRAWN.md)) —
+an **operational** withdrawal that changes no research baseline.
+**Dropping a leg does not make a smaller `M_11`; it makes a different object.**
+
+`WeeklyEdgeP1PCTMnq_v1` (`runs/MX01_MNQ_EXECUTION_PORT_20260831/`) is a certified object's
+**decisions** executing on a **different contract at 3/10 size**.
 
 The design separates the **decision instrument** (NQ, primary series, every signal) from the
 **execution instrument** (MNQ, added series, orders only). Decision drift is therefore **zero by
 construction**, and measured: the per-bar decision exports are **byte-identical, same `sha256`,
 over 61,600 bars**. All six MX01 gates pass.
 
-> 🔴 **At `MnqPerNq = 3` the MEDIAN two-year drawdown is 108 % of the $10,206.86 account, and
-> the two-year probability of actually LOSING the account is 6.5 % on the in-sample edge —
-> 9.7 % at the campaign's central honest edge, 21.6 % at its low edge, and 60 % if the edge is
-> zero.** At 1 MNQ it is 0.1 %. The older single line — *0.30 × $51,891 = 152.5 %* — is one draw
-> from that distribution and not the middle one.
+> 🔴 **RISK OF THE OBJECT THAT IS ACTUALLY LIVE (P1 alone, 3 MNQ), `CAP02B`, 6/6 gates PASS:**
+> two-year **P(losing the account) = 2.5 %** (full pool) / 0.8 % (warm), **honest band ~2 %–20 %**,
+> and **48 % if the edge is zero**. Median two-year drawdown **76 %** of the $10,260 account.
+> ⭐ Assumption-free anchor (n=1, the realised path at 3 MNQ): P1 alone troughed at **69 %** of
+> equity and **survived**; the **pair** troughed at **140 %** and **would have been wiped out.**
+>
+> ⚠️ **The numbers below are the PAIR's and no longer describe the live book.** Kept because the
+> pair may return. At `MnqPerNq = 3` the pair's median two-year drawdown is 108 % of the
+> $10,206.86 account and its two-year P(losing the account) is 6.5 % in-sample — 9.7 % central,
+> 21.6 % low, 60 % if the edge is zero. At 1 MNQ, 0.1 %. The older single line —
+> *0.30 × $51,891 = 152.5 %* — is one draw from that distribution and not the middle one.
 > ⚠️ **An earlier version of this paragraph said 66 %.** That figure is
 > `P(drawdown from peak > equity)`, which is **not** the probability of losing the account — the
 > modelled peak runs far above the starting balance. Corrected in
@@ -87,11 +99,23 @@ over 61,600 bars**. All six MX01 gates pass.
 
 ## What is running right now
 
-- 🔴 **LIVE `2047681`** — `WeeklyEdgeP1PCTMnq_v1` + `WeeklyEdgeXMConflictMnq_v1`, NQ 09-26 decisions
-  / MNQ 09-26 fills, `MnqPerNq = 3`. **The first real fill is the standing watch item** — the
-  realtime reconcile guard is `State.Realtime`-gated and no backtest ever exercised it.
-- **PAPER `DEMO8383477`** — the certified NQ book (`_v3` / `_v4`), the **forward-evidence** book.
-  Its decisions are `FORWARD_DECISION_FIRST`; its fills remain `SIMULATED_FILL_NON_EVIDENTIAL`.
+*(verified from `ListAllStrategies` 2026-09-05 — never from `ListStrategies(account)`, which
+returned 2 of 4 rows on 09-01 and produced a confidently wrong audit.)*
+
+- 🔴 **LIVE `2047681` — ONE leg.** `WeeklyEdgeP1PCTMnq_v1` `399562885`, Realtime, enabled, flat,
+  NQ 09-26 decisions / MNQ 09-26 fills, `MnqPerNq = 3`. **Its roll guard blocks new entries from
+  2026-09-08.** Exits are never gated.
+- 🔴 **NOT RUNNING: live XM** — withdrawn to OBSERVATION 2026-09-05 (owner decision).
+- 🔴 **NOT RUNNING: the PAPER book** (`_v3` / `_v4`) — NT8 auto-disabled every leg on 2026-09-03
+  19:06:41 after 8 price-feed flaps, a 22:23 restart then removed all strategy rows, and
+  `DEMO8383477` reports `connection: null`. **The uncontaminated forward-evidence book is dark.**
+- ⭐ **The standing watch item is CLOSED and a new one replaced it.** The first real fill
+  (2026-09-01 09:45) did **not** trip `RECONCILE-BREAK`. But on 2026-09-03 a P1 exit **opened a
+  naked short 6 MNQ** because all three witnesses describe what the *instance* did and none
+  describes what the *account* holds —
+  [`INCIDENT_20260903_GHOST_POSITION.md`](research/operational/INCIDENT_20260903_GHOST_POSITION.md).
+  Fixed offline as HD-20..23 (32/32 certified); **not deployed** —
+  [`DEPLOY_HD23_20260921.md`](research/operational/DEPLOY_HD23_20260921.md).
 - 🔴 **ROLL RED ZONE `2026-09-06 → 2026-09-18`.** Re-enabling inside it latches the fail-safe
   **permanently** while every health check still reports green. The roll now involves **`MNQ 12-26`
   as well as `NQ 12-26`** — any instruction naming only NQ is incomplete, **including the dates:

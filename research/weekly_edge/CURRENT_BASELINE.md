@@ -42,13 +42,27 @@ modelled spread (P1 $14.44, XM $12.50). **NT8 nets are a different quantity** �
 > decision (see `research/operational/EXECUTION_MANIFEST.md`), and until it is made the
 > **executable implementation of B remains PENDING.**
 >
-> ### 🔴 LIVE STATUS: **LIVE ENABLED = YES** since 2026-09-01 — authority
+> ### 🔴 LIVE STATUS — updated 2026-09-05. Authority
 > ### **[`research/operational/CURRENT_LIVE_TRUTH.md`](../operational/CURRENT_LIVE_TRUTH.md)**. Read it before touching anything.
-> The M_11 pair is live on **real-money account `2047681`** via the **MX01 MNQ execution port** at
-> `MnqPerNq = 3` = **0.30 NQ-equivalent** (decisions on `NQ 09-26`, orders on `MNQ 09-26`). The
-> certified NQ pair (`_v3` / `_v4`) runs on paper `DEMO8383477` as the **forward-evidence** book.
-> ⚠️ **Every drawdown figure above is at full 1-NQ research size.** At the live 0.30 scale the M_11
-> realised trade-level maxDD is **$15,567 = 152.5 % of the $10,206.86 live account** — **one draw, not the middle one** — the distribution is `runs/CAP01_CAPITAL_RUIN_20260901/`: **median 2-yr DD 111 % of the account, P(2-yr DD > the whole account) = 66 %**. Authority: `CURRENT_LIVE_TRUTH.md` §CAPITAL.
+> **`LIVE ENABLED = YES` since 2026-09-01, but the live object CHANGED on 2026-09-03.**
+> 🔴 **The M_11 pair is NO LONGER live. Only the P1 leg is deployed** (`WeeklyEdgeP1PCTMnq_v1`
+> `399562885`, `MnqPerNq = 3`, account `2047681`, decisions on `NQ 09-26`, orders on `MNQ 09-26`).
+> The XM leg was **withdrawn to OBSERVATION by owner decision on 2026-09-05** —
+> [`OWNER_DECISION_20260905_XM_WITHDRAWN.md`](../operational/OWNER_DECISION_20260905_XM_WITHDRAWN.md).
+> ⚠️ **That withdrawal is OPERATIONAL. It changes NOTHING in this document's baselines A, B or D**,
+> whose evidence and certification stand exactly as recorded above.
+> ⚠️ The paper NQ pair (`_v3` / `_v4`) was the forward-evidence book and is **also not running**
+> since 2026-09-03 19:06.
+>
+> 🔴 **DO NOT quote any figure in this document, or `CAP01B`'s 6.5 % two-year ruin, for the book
+> that is actually live** — those are PAIR figures and the live object is one leg.
+> P1-alone at 3 MNQ: 2-yr P(ruin) **0.025** full pool / 0.008 warm, honest band **~2 %–20 %**,
+> **0.483 if the edge is zero** — `runs/CAP02B_P1_ONLY_RUIN_CORRECTED_20260905/`, 6/6 gates PASS,
+> `DISCOVERY_CONSUMED`, a LOWER BOUND.
+> ⚠️ **Every drawdown figure above is at full 1-NQ research size.** At 0.30 scale the M_11 realised
+> trade-level maxDD is **$15,567 = 152.5 % of the $10,206.86 account** — one draw, not the middle
+> one. Distribution: `runs/CAP01B_RUIN_CORRECTION_20260901/` (**not** CAP01, whose 66 % headline
+> was `P(drawdown > equity)` mislabelled as ruin).
 > **EXECUTABLE · PARITY-CERTIFIED · LIVE-ENABLED are three separate statuses**, and this book
 > reached LIVE-ENABLED **without** passing SHADOW-VALIDATED, by owner decision.
 > **Evidence status of A and B: `DISCOVERY_CONSUMED`** — the 2022-07 → 2026-08 window has been mined

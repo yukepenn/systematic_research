@@ -34,7 +34,8 @@ _**This file answers "what exactly is installed and reproducible?"** They are di
 | **A** | RESEARCH_SINGLE | `P1/PCT` | research object — see `CURRENT_BASELINE.md` §0 |
 | **B** | RESEARCH_PORTFOLIO_FRONTIER | `{P1/PCT + XM_CONFLICT}` inverse-vol | research object — see `CURRENT_BASELINE.md` §0 |
 | **C** | **EXECUTABLE_SINGLE** | **`WeeklyEdgeP1PCT_v1`** | **EXECUTABLE · PARITY-CERTIFIED · NOT ENABLED** |
-| **D** | **EXECUTABLE_PORTFOLIO (mapping M_11)** — ⭐ upgraded 2026-08-30, owner-ratified 「确认 M_11」 | **`WeeklyEdgeP1PCT_v1` ×1 NQ + `WeeklyEdgeXMConflict_v2` ×1 NQ** | mapping selected per `runs/G2_OQ6_MAPPING_20260830` (risk-share dev 0.054 vs inverse-vol; wins all three axes) and **frozen BEFORE the 2026-09-01 shadow start**. Both legs PARITY-CERTIFIED. **Paper deployment to DEMO8383477 EXECUTED 2026-08-30** (`OWNER_DECISION_20260830.md`), now running `WeeklyEdgeP1PCT_v3` / `WeeklyEdgeXMConflict_v4`. 🔴 **LIVE (real money) ENABLED = YES since 2026-09-01** — the deployed implementation is the **MX01 MNQ execution port at `MnqPerNq = 3` = 0.30 × M_11** on account `2047681` (`WeeklyEdgeP1PCTMnq_v1` `399562885` / `WeeklyEdgeXMConflictMnq_v1` `399562886`); per-bar decision exports byte-identical to the certified objects over 61,600 bars per leg, gates G1–G6 all PASS · `runs/MX01_MNQ_EXECUTION_PORT_20260831/`. ⚠️ **Research-portfolio figures are full-size — multiply by 0.30 before comparing to the live account.** |
+| **D** | **EXECUTABLE_PORTFOLIO (mapping M_11)** — ⭐ upgraded 2026-08-30, owner-ratified 「确认 M_11」 | **`WeeklyEdgeP1PCT_v1` ×1 NQ + `WeeklyEdgeXMConflict_v2` ×1 NQ** | 🔴 **SUSPENDED 2026-09-05 — the XM leg was withdrawn to OBSERVATION by owner decision, so this slot has no second leg and NOTHING implements it.** Authority: [`OWNER_DECISION_20260905_XM_WITHDRAWN.md`](OWNER_DECISION_20260905_XM_WITHDRAWN.md). **The mapping itself is NOT retracted and the certification is NOT revoked** — both legs remain PARITY-CERTIFIED and the selection record stands (`runs/G2_OQ6_MAPPING_20260830`, risk-share dev 0.054 vs inverse-vol, frozen BEFORE the 2026-09-01 shadow start). ⚠️ **This is an OPERATIONAL withdrawal, NOT a research falsification: baselines A and B are untouched, and `CURRENT_BASELINE.md` may not be edited on account of it.** History: paper deployment to `DEMO8383477` executed 2026-08-30 (`OWNER_DECISION_20260830.md`); live at `MnqPerNq = 3` = 0.30 × M_11 on `2047681` from 2026-09-01 to 2026-09-03; per-bar exports byte-identical over 61,600 bars/leg, MX01 G1–G6 all PASS. |
+| **E** | 🔴 **THE OBJECT ACTUALLY LIVE SINCE 2026-09-03 — `P1_ONLY_MNQ3`** | **`WeeklyEdgeP1PCTMnq_v1` `399562885` alone, `MnqPerNq = 3`** on `2047681` | **This is a SIXTH object and it is none of A–D.** Dropping a leg does not produce a smaller `M_11`; it produces a different object. 🔴 **No A–D figure may be quoted for it**, and in particular **`CAP01B`'s 6.5 % two-year ruin is the PAIR's number, not this one.** Its own risk: `runs/CAP02B_P1_ONLY_RUIN_CORRECTED_20260905/` (6/6 gates PASS) — 2-yr P(ruin) at 3 MNQ **0.025** full pool / 0.008 warm, honest band **~2 %–20 %**, **0.483 if the edge is zero**; `DISCOVERY_CONSUMED`, a LOWER BOUND, recommends no size. 🔴 **Roll guard blocks new entries from 2026-09-08**; December redeploy on/after 2026-09-21 (`CURRENT_LIVE_TRUTH.md` §ROLL is the authority). ⚠️ **NOT parity-certified as a standalone portfolio** — it is a certified leg run alone, which is a configuration choice, not a new certification. |
 
 ## Certified objects
 
@@ -135,16 +136,29 @@ book.** Multiply any full-size research figure by **0.30** before comparing it t
 
 ## Active NT8 strategy set
 
-**Deployed right now (4 across two accounts):** 🔴 LIVE on `2047681` — `WeeklyEdgeP1PCTMnq_v1` · `WeeklyEdgeXMConflictMnq_v1` (`runs/MX01_MNQ_EXECUTION_PORT_20260831/`); PAPER on `DEMO8383477` — `WeeklyEdgeP1PCT_v3` · `WeeklyEdgeXMConflict_v4`.
+**Deployed right now — ONE, verified `ListAllStrategies` 2026-09-05:**
+🔴 LIVE on `2047681` — **`WeeklyEdgeP1PCTMnq_v1` `399562885` ONLY**, Realtime, enabled, flat,
+`MnqPerNq = 3` (`runs/MX01_MNQ_EXECUTION_PORT_20260831/`).
+
+| not deployed | why |
+|---|---|
+| `WeeklyEdgeXMConflictMnq_v1` (live XM) | 🔴 **withdrawn to OBSERVATION 2026-09-05 by owner decision** — [`OWNER_DECISION_20260905_XM_WITHDRAWN.md`](OWNER_DECISION_20260905_XM_WITHDRAWN.md) |
+| `WeeklyEdgeP1PCT_v3` · `WeeklyEdgeXMConflict_v4` (paper) | NT8 auto-disabled all legs 2026-09-03 19:06:41 after 8 price-feed flaps, then a 22:23 restart removed every strategy row. **`DEMO8383477` also reports `connection: null`.** 🔴 **The uncontaminated FORWARD-EVIDENCE book is not running.** |
+
+⚠️ **Use `ListAllStrategies`, never `ListStrategies(account)`** — on 2026-09-01 the latter
+returned 2 of 4 rows, both stale `Finalized` shells with empty parameters, and produced a
+confidently wrong audit that was reported to the owner.
+⚠️ **A restart removes every strategy row**, so re-enabling is a FULL REDEPLOY with ten settings
+retyped; the sheet is `INCIDENT_20260903_GHOST_POSITION.md` §12.
 **Superseded but still installed:** `WeeklyEdgeP1PCT_v1` · `WeeklyEdgeXMConflict_v2` · `WeeklyEdgeP1_v3`
 (comparator, §38) · `@Sample*` (NT8 built-ins, not ours).
 Full inventory and removals: `research/operational/REPO_CONSOLIDATION_20260827.md`.
 
-## Forward logging — THREE streams, all running
+## Forward logging — three streams; ⚠️ **only ONE is running as of 2026-09-05**
 
 | stream | since | where | evidence class |
 |---|---|---|---|
-| paper NQ decisions | 2026-08-30 18:00 ET | `C:\NT8_ForwardLogs\export\` | `FORWARD_DECISION_FIRST`; fills `SIMULATED_FILL_NON_EVIDENTIAL` |
+| paper NQ decisions | 2026-08-30 18:00 ET | `C:\NT8_ForwardLogs\export\` | `FORWARD_DECISION_FIRST`; fills `SIMULATED_FILL_NON_EVIDENTIAL`. 🔴 **STOPPED 2026-09-03 19:06** — both legs undeployed, `DEMO8383477` connection null. `forward_v2/gaps.csv` seq 6 is open on it |
 | hash-chained shadow ledger | ingesting since 2026-08-30; accepts rows from `SHADOW_START` 2026-09-01 18:00 ET | `research/operational/shadow/` | formal prospective |
 | 🔴 **LIVE MNQ book** | **2026-09-01**, `LIVE_FORWARD_START` **00:42 ET** | **`C:\NT8_ForwardLogs\mnq\`** → `research/operational/forward_v2/` | **first real execution evidence.** ✅ **`FORWARD_EVIDENCE_LEDGER_V2` BUILT 2026-09-01** (`research_sdk/forward_ledger_v2.py`, 21/21 adversarial; `FORWARD_EVIDENCE_LEDGER_V2.md`). ⚠️ Decision ingestion starts once the dead P1 writer is restarted |
 
