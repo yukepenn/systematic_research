@@ -23,7 +23,28 @@
 > ⚠️ The certificate's `env,roll_block_from,never` is the **START-phase snapshot taken before**
 > `ResolveRollDates` runs; the `ROLL-PLAN` line is the authority. Do not read `never` as fail-open.
 > 
-> 🔴 **P1 stops taking new entries on 2026-09-08. XM would stop on 09-06.**
+> 🔴 **P1 STOPS TAKING NEW ENTRIES ON 2026-09-08.** Today is Sat 09-05; Mon 09-07 is
+> **Labor Day** (shortened CME session). **One shortened session of entries remains**, then the
+> roll guard blocks P1 until the December redeploy on/after **Mon 2026-09-21**. Exits are never
+> gated. This is the fail-safe working, not a fault.
+> 
+> 🔴 **THE LIVE OBJECT IS NO LONGER `M_11`.** Only P1 is deployed. Dropping a leg does not
+> make a smaller M_11 — it makes a **different object**, and `EXECUTABLE_PORTFOLIO`/`M_11`
+> figures may not be quoted for it. Its own risk number now exists:
+> **`runs/CAP02B_P1_ONLY_RUIN_CORRECTED_20260905/`, 6/6 gates PASS.**
+> 
+> | 2-yr P(ruin) at `MnqPerNq=3`, E=$10,260 | **P1 alone** | pair (M_11 × 0.30) |
+> |---|---:|---:|
+> | full pool | **0.025** | 0.061 |
+> | warm pool | **0.008** | 0.017 |
+> | if the edge is only 40% of in-sample | **0.196** | 0.265 |
+> | if the edge is ZERO | **0.483** | 0.594 |
+> 
+> **P1 alone is ~2.4× less likely to wipe the account than the pair at the same size.**
+> Honest band **~2%–20%**. ⭐ Assumption-free anchor (n=1, the realised path at 3 MNQ): P1 alone
+> troughed at **$7,077 (69% of equity) — survived**; the pair troughed at **$14,380 (140%) —
+> would have been wiped out.** Both in March–May 2022.
+> **This is `DISCOVERY_CONSUMED`, a LOWER BOUND, and it recommends no size.**
 > 
 > <details><summary>what happened before this (22:25 reading)</summary>
 > 

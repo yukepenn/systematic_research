@@ -1,0 +1,72 @@
+========================================================================================================
+CAP02B -- P1-ONLY RUIN TABLE.  The live object since 2026-09-03 is P1 ALONE at MnqPerNq=3.
+EVIDENCE: DISCOVERY_CONSUMED, in-sample, post-selection.  A LOWER BOUND ON RISK.
+========================================================================================================
+
+WHAT THE HEADLINE PROBABILITY IS OVER  [G4, in words, before any number]
+  P(ruin) = P( the cumulative realised P&L path reaches or passes below -EQUITY at ANY
+            point within the horizon ), i.e. THE ACCOUNT IS WIPED OUT.
+  It is NOT P(max drawdown from peak > equity): the modelled peak runs far above the
+  start, so that number is strictly larger.  Calling it ruin is the 10x error CAP01
+  published on 2026-09-01.  Both are printed side by side in every table below.
+  It is NOT P(margin call), reported separately on the day-margin floor.
+
+EQUITY = $10,260.14 (netLiquidation, 2026-09-05 06:03 ET).  Reproduction gates use CAP01B's $10,206.86.
+The P1-only series is NOT padded with XM-only days: padding would add flat sessions,
+cut per-session variance and UNDERSTATE ruin.
+
+POOLS.  warm = sessions on/after 2022-03-16, the date CAP01B's iloc[37:] cut falls on.
+OBJ    POOL          n       yrs   sess/yr   2y units
+--------------------------------------------------------------------------------------------------------
+P1     full        726     4.641     156.4        313
+P1     warm        692     4.444     155.7        311
+PAIR   full        873     4.641     188.1        376
+PAIR   warm        836     4.444     188.1        376
+
+GATE         SPEC                                                           SPEC   OBSERVED  VERDICT
+--------------------------------------------------------------------------------------------------------
+CAP02B-G1a   REPRODUCTION: pair FULL 2yr 3MNQ == CAP01B 0.06535           0.0654     0.0617  PASS
+CAP02B-G1b   REPRODUCTION: pair WARM 2yr 3MNQ == CAP01B 0.0167            0.0167     0.0169  PASS
+CAP02B-G2    IDENTITY: maxdd >= worst_equity, all 4 obj x pool              True       True  PASS
+CAP02B-G3    POPULATION: P1 unpadded; warm cut by DATE not index             726        726  PASS
+CAP02B-G4    SEMANTIC: reported P(ruin) is worst_equity, NOT maxdd         >0.02      0.184  PASS
+CAP02B-G5    SECOND METHOD: absorbing-barrier walk agrees                <=0.010     0.0017  PASS
+--------------------------------------------------------------------------------------------------------
+ALL GATES PASS
+
+P1-ONLY, FULL POOL  (MEASURED spread, MNQ commission, true horizons, E=$10,260)
+MNQ       medDD$   medDD%   P(ruin)1y   P(ruin)2y    P(dd>E)2y  P(margin)2y PAIR P(ruin)2y
+--------------------------------------------------------------------------------------------------------
+1          2,606      25%       0.000       0.000        0.000        0.000          0.001
+2          5,211      51%       0.002       0.004        0.026        0.005          0.018
+3          7,817      76%       0.020       0.025        0.209        0.034          0.061  <- LIVE
+4         10,423     102%       0.056       0.061        0.517        0.086          0.109
+5         13,028     127%       0.099       0.107        0.752        0.146          0.155
+
+P1-ONLY, WARM POOL  (MEASURED spread, MNQ commission, true horizons, E=$10,260)
+MNQ       medDD$   medDD%   P(ruin)1y   P(ruin)2y    P(dd>E)2y  P(margin)2y PAIR P(ruin)2y
+--------------------------------------------------------------------------------------------------------
+1          2,261      22%       0.000       0.000        0.000        0.000          0.000
+2          4,523      44%       0.001       0.001        0.007        0.001          0.002
+3          6,784      66%       0.007       0.008        0.106        0.014          0.017  <- LIVE
+4          9,046      88%       0.029       0.031        0.355        0.046          0.044
+5         11,307     110%       0.058       0.060        0.624        0.093          0.082
+
+[G6] EMPIRICAL ANCHOR -- the SINGLE realised path at 3 MNQ, no resampling.  n=1, NOT gated.
+  P1 full    worst equity trough $    7,077 (  69.0% of equity) at 2022-05-09  -> survived
+  P1 warm    worst equity trough $      399 (   3.9% of equity) at 2022-05-09  -> survived
+  PAIR full  worst equity trough $   14,380 ( 140.2% of equity) at 2022-03-15  -> WOULD HAVE BEEN WIPED OUT
+  PAIR warm  worst equity trough $       -0 (  -0.0% of equity) at 2022-03-16  -> survived
+  One path cannot estimate a tail probability. It exists so the bootstrap has an
+  assumption-free anchor beside it, and because a realised path can be checked by hand.
+
+DRIFT SENSITIVITY (full pools) -- the input that dominates the answer, varied not assumed.
+edge assumption              P1 P(ruin)2y   PAIR P(ruin)2y
+--------------------------------------------------------------------------------------------------------
+in-sample (as is)                   0.023            0.061
+70% of in-sample                    0.077            0.127
+40% of in-sample                    0.196            0.265
+edge is ZERO                        0.483            0.594
+
+NO SIZE IS RECOMMENDED.  That is the owner's decision, and this run may not make it.
+========================================================================================================
