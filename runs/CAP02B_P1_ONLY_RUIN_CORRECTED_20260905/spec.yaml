@@ -1,0 +1,64 @@
+run_id: CAP02B_P1_ONLY_RUIN_CORRECTED_20260905
+campaign: WEEKLY_EDGE
+committed_before_results: true
+supersedes_gate: CAP02-G1
+date_et: 2026-09-05
+
+why_this_run_exists: >
+  CAP02-G1 FAILED and is recorded FAILED. It is not reinterpreted, and CAP02's output stands
+  as run. The failure was MINE and it was in the SPEC, not the machine: G1 named
+  "warm pool = 0.065", but 0.06535 is CAP01B's FULL-pool figure and its warm-pool figure is
+  0.0167. CAP02 observed 0.016 -- i.e. it reproduced the warm pool correctly against a
+  target that named the wrong pool.
+
+  Correcting a mis-transcribed REPRODUCTION TARGET is not redefining a population to rescue a
+  hypothesis, and the difference matters, so the correction is made ONLY under a strictly
+  HARDER gate: CAP02B must reproduce BOTH pools, not one.
+
+  CAP02 also reported P1-only on the FULL pool alone. The pair's full-vs-warm spread is
+  0.065 vs 0.017 -- a factor of four - so a single-pool answer hides most of the uncertainty.
+  CAP02B reports both pools for both objects.
+
+gates:
+  - id: CAP02B-G1a
+    kind: REPRODUCTION
+    spec: "pair, FULL pool, 2yr true horizon, 3 MNQ, measured basis == CAP01B 0.06535"
+    threshold: "abs(obs - 0.06535) <= 0.010"
+  - id: CAP02B-G1b
+    kind: REPRODUCTION
+    spec: "pair, WARM pool, same conventions == CAP01B 0.0167.  BOTH G1a and G1b must pass."
+    threshold: "abs(obs - 0.0167) <= 0.010"
+  - id: CAP02B-G2
+    kind: IDENTITY
+    spec: "maxdd_from_peak >= worst_equity_loss on EVERY draw, both objects, both pools"
+    threshold: "all(dd >= we - 1e-9)"
+  - id: CAP02B-G3
+    kind: POPULATION
+    spec: >
+      P1-only series contains exactly P1-traded sessions, never padded with XM-only days.
+      The WARM trim for P1 is defined by CALENDAR DATE -- the first session date of CAP01B's
+      warm pair pool - so the two objects are trimmed at the same instant in time, not at the
+      same ordinal index. Trimming by index would cut different amounts of history.
+    threshold: "n_p1_full == p1 traded sessions; warm start dates equal across objects"
+  - id: CAP02B-G4
+    kind: SEMANTIC
+    spec: >
+      Print IN WORDS the event the headline is over, and assert MECHANICALLY that the number
+      reported as P(ruin) is the worst_equity one, not maxdd_from_peak, by requiring the two
+      to differ by more than 0.02 and the reported value to equal the worst_equity one.
+    threshold: "reported == P(we*scale >= E) and abs(P(dd*scale > E) - reported) > 0.02"
+  - id: CAP02B-G5
+    kind: SECOND_METHOD
+    spec: "sequential absorbing-barrier walk agrees with vectorised min-of-cumsum"
+    threshold: "abs(p_vectorised - p_absorbing) <= 0.010"
+  - id: CAP02B-G6
+    kind: EMPIRICAL_ANCHOR
+    spec: "single realised path, no resampling, both objects, both pools. Reported, NOT gated."
+    threshold: "reported"
+
+method: same as CAP02 except as stated above. seed 20260905. draws 20000. equity 10260.14.
+evidence_status: DISCOVERY_CONSUMED
+prohibitions:
+  - "May not recommend a size."
+  - "May not edit or re-run CAP02. Its failure is part of the record."
+  - "A gate that fails here is recorded failed, and there is no CAP02C."

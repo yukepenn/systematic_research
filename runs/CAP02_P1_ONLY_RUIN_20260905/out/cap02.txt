@@ -1,0 +1,63 @@
+========================================================================================================
+CAP02 -- P1-ONLY RUIN TABLE.  The live object since 2026-09-03 is P1 ALONE at MnqPerNq=3.
+EVIDENCE: DISCOVERY_CONSUMED, in-sample, post-selection.  A LOWER BOUND ON RISK.
+========================================================================================================
+
+WHAT THE HEADLINE PROBABILITY IS OVER  [G4, in words, before any number]
+  P(ruin) = P( the cumulative realised P&L path reaches or passes below -EQUITY at ANY
+            point within the horizon ), i.e. THE ACCOUNT IS WIPED OUT.
+  It is NOT P(max drawdown from peak > equity): the modelled peak runs far above the
+  start, so that number is strictly larger.  Calling it ruin is the 10x error CAP01
+  published on 2026-09-01.  Both are printed below, side by side, every time.
+  It is NOT P(margin call), which is reported separately on the day-margin floor.
+
+EQUITY = $10,260.14 (netLiquidation, GetAccount 2026-09-05 06:03 ET).  CAP01B used $10,206.86.
+P1-only pool: 726 P1-traded sessions over 4.641 years -> 156.4/yr.  1yr=156, 2yr=313 units.
+Pair pool (control): 873 sessions.  The P1-only series is NOT padded with XM-only days;
+  padding would add flat sessions, cut per-session variance and UNDERSTATE ruin.
+
+GATE         SPEC                                                           SPEC   OBSERVED  VERDICT
+--------------------------------------------------------------------------------------------------------
+CAP02-G1     REPRODUCTION: pair, warm, 2yr, 3 MNQ == CAP01B 0.065          0.065      0.016  FAIL
+CAP02-G2     IDENTITY: maxdd >= worst_equity on EVERY draw                  True       True  PASS
+CAP02-G3     POPULATION: P1 series == P1-traded sessions only                726        726  PASS
+CAP02-G4     SEMANTIC: reported P(ruin) is worst_equity, NOT maxdd    >0.02 apart      0.184  PASS
+CAP02-G5     SECOND METHOD: absorbing-barrier walk agrees                <=0.010     0.0017  PASS
+--------------------------------------------------------------------------------------------------------
+*** AT LEAST ONE GATE FAILED -- the table below is NOT quotable ***
+
+THE P1-ONLY TABLE   (MEASURED spread basis, MNQ commission charged, true horizons)
+MNQ        medDD$     medDD%   P(ruin) 1y   P(ruin) 2y   P(dd>E) 2y P(margin) 2y
+--------------------------------------------------------------------------------------------------------
+1           2,606        25%        0.000        0.000        0.000        0.000
+2           5,211        51%        0.002        0.004        0.026        0.005
+3           7,817        76%        0.020        0.025        0.209        0.034  <- LIVE
+4          10,423       102%        0.056        0.061        0.517        0.086
+5          13,028       127%        0.099        0.107        0.752        0.146
+
+MATCHED CONTROL -- the PAIR, same draws, same equity, same horizon.  A class-conditional
+table requires its unconditional control in the same wave (CLAUDE.md section 4).
+MNQ      P1 P(ruin)2y PAIR P(ruin)2y      P1 medDD$    PAIR medDD$
+--------------------------------------------------------------------------------------------------------
+1               0.000          0.000          2,606          3,417
+2               0.004          0.019          5,211          6,834
+3               0.025          0.064          7,817         10,251  <- LIVE
+4               0.061          0.110         10,423         13,668
+5               0.107          0.158         13,028         17,085
+
+[G6] EMPIRICAL ANCHOR -- the SINGLE realised path, no resampling, n=1.  Reported, NOT gated.
+  P1-only  worst equity trough $    7,077 ( 69.0% of equity) at 2022-05-09   -> survived
+  PAIR     worst equity trough $   14,380 (140.2% of equity) at 2022-03-15   -> WOULD HAVE BEEN WIPED OUT
+  n=1. One path cannot estimate a tail probability; it exists so the bootstrap has an
+  assumption-free anchor beside it, and because a realised path can be checked by hand.
+
+DRIFT SENSITIVITY -- the input that dominates the answer, varied rather than assumed.
+edge assumption          P1 P(ruin)2y PAIR P(ruin)2y
+--------------------------------------------------------------------------------------------------------
+in-sample (as is)               0.023          0.061
+70% of in-sample                0.077          0.126
+40% of in-sample                0.196          0.258
+edge is ZERO                    0.483          0.565
+
+NO SIZE IS RECOMMENDED.  That is the owner's decision, and this run may not make it.
+========================================================================================================
