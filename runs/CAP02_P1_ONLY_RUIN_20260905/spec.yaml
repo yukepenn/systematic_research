@@ -1,0 +1,141 @@
+run_id: CAP02_P1_ONLY_RUIN_20260905
+campaign: WEEKLY_EDGE
+committed_before_results: true
+author: agent
+date_et: 2026-09-05
+
+# =============================================================================================
+# WHY THIS RUN EXISTS
+# =============================================================================================
+motivation: >
+  On 2026-09-03 the owner redeployed ONLY the P1 leg to the live account 2047681 at
+  MnqPerNq = 3, and stated the intent to run P1 alone for now. XM is not deployed.
+
+  THE LIVE OBJECT IS THEREFORE NO LONGER M_11. M_11 is the owner-ratified pair
+  (P1 x1 NQ + XM x1 NQ); the live book was its MNQ port at 3/10. Dropping a leg does not
+  produce a smaller M_11 -- it produces a DIFFERENT OBJECT, and that object has no risk
+  number anywhere in this repo.
+
+  CAP01B's table (2-year P(ruin) 6.5% in-sample, band 6-22%) is a PAIR number at 0.30 scale.
+  Quoting it for a single leg would be the same class of error CAP01 made: a figure that is
+  arithmetically fine and is about the wrong thing. This run computes the P1-only number and
+  prints the pair beside it from the same draws as the matched control.
+
+# =============================================================================================
+# EVIDENCE STATUS -- declared before any number exists
+# =============================================================================================
+evidence_status: DISCOVERY_CONSUMED
+evidence_note: >
+  In-sample, post-selection, on the same pool P1 was selected on. This is a LOWER BOUND on
+  risk, not a forecast. No forward or blind data is touched. Nothing here is a promotion.
+
+# =============================================================================================
+# THE HEADLINE AND WHAT IT IS OVER  -- CLAUDE.md section 4, the CAP01 rule
+# =============================================================================================
+headline_statistic: >
+  P(ruin) = the probability that the account's CUMULATIVE REALISED P&L PATH, started from the
+  current netLiquidation and measured in dollars, REACHES OR PASSES BELOW -EQUITY AT ANY POINT
+  WITHIN THE HORIZON. In plain words: the probability that the account is wiped out.
+
+headline_is_NOT:
+  - "P(max drawdown from peak > equity). That is a DRAWDOWN statistic. The modelled peak runs
+     far above the start, so it is strictly larger, and calling it ruin is exactly the 10x
+     error CAP01 published on 2026-09-01."
+  - "P(margin call). Reported separately, on the day-margin floor."
+
+# =============================================================================================
+# GATES -- every clause coded, table printed BY THE PROGRAM, never assembled by hand
+# =============================================================================================
+gates:
+  - id: CAP02-G1
+    kind: REPRODUCTION
+    spec: >
+      Re-running this harness on BOTH legs must reproduce CAP01B's published 2-year
+      P(ruin) at MnqPerNq=3, measured basis, warm pool = 0.065, within +/-0.010 absolute.
+      Proves the machinery is the same one, before any new number is trusted.
+    threshold: "abs(observed - 0.065) <= 0.010"
+
+  - id: CAP02-G2
+    kind: IDENTITY
+    spec: >
+      maxdd_from_peak >= worst_equity_loss on EVERY draw, for the P1-only series.
+      The zero-prepend anchors the first peak at starting equity, so this holds identically.
+      A violation means the bootstrap is wrong.
+    threshold: "all(dd >= we - 1e-9)"
+
+  - id: CAP02-G3
+    kind: POPULATION
+    spec: >
+      The P1-only session series must contain EXACTLY the sessions in which P1 traded, and
+      its count and per-year rate must be printed. A P1-only series must NOT inherit XM-only
+      sessions as zero rows -- that would silently dilute the risk by adding flat days.
+    threshold: "n_p1_sessions == (p1.qty > 0).groupby(sess).any().sum() and rate printed"
+
+  - id: CAP02-G4
+    kind: SEMANTIC
+    spec: >
+      THIS IS THE GATE CAP01 DID NOT HAVE. The program must (a) print, in words, the event
+      the headline is over, and (b) assert MECHANICALLY that the number reported as P(ruin)
+      is computed from worst_equity_loss and NOT from maxdd_from_peak, by requiring the two
+      to differ by more than 0.02 absolute at the live size and by asserting the reported
+      value equals the worst_equity one to the last digit.
+    threshold: "reported == P(we*scale >= E) and abs(P(dd*scale > E) - reported) > 0.02"
+
+  - id: CAP02-G5
+    kind: SECOND_METHOD
+    spec: >
+      The same event, computed a DIFFERENT WAY: an explicit sequential absorbing-barrier
+      simulator that walks each path step by step and stops it the first time cumulative P&L
+      <= -EQUITY, counting stopped paths. Vectorised min-of-cumsum and the sequential
+      absorbing walk must agree within 0.010 absolute. This tests the IMPLEMENTATION of the
+      event, which G4 tests the MEANING of.
+    threshold: "abs(p_vectorised - p_absorbing) <= 0.010"
+
+  - id: CAP02-G6
+    kind: EMPIRICAL_ANCHOR
+    spec: >
+      On the SINGLE REALISED HISTORICAL PATH, with no resampling at all, report the worst
+      equity trough of P1-only at MnqPerNq=3 and whether it would have wiped the current
+      account. n=1, so this is REPORTED AND NOT GATED on a threshold -- it exists so the
+      bootstrap has an assumption-free anchor beside it.
+    threshold: "reported, not gated"
+
+# =============================================================================================
+# METHOD
+# =============================================================================================
+method:
+  resampler: >
+    Politis-Romano stationary bootstrap, geometric block length, circular wrap, mean block 10
+    sessions. Sessions are resampled AS WHOLE UNITS. For the pair control this preserves the
+    regime-dependent P1/XM correlation; for P1-only it preserves P1's own serial dependence.
+  draws: 20000
+  seed: 20260905
+  horizons: >
+    Derived from the data as traded-sessions-per-year, NOT assumed to be 252. CAP01's 252/504
+    were 34% long. Both 1-year and 2-year are reported with their unit counts printed.
+  cost_basis: >
+    MEASURED spread (P1 $20.65/ctrRT, n=113) as headline, NT8-template basis reported beside
+    it. MNQ commission ($1.30/ctrRT, n=704) substituted for the NQ commission netted into the
+    source pnl, per CAP01B [D3]. Commission does NOT scale with size and that is handled.
+  equity: >
+    EQUITY = 10260.14, the netLiquidation read from GetAccount on 2026-09-05 06:03 ET.
+    CAP01B's 10206.86 is also reported so the two runs are comparable.
+  sizes: [1, 2, 3, 4, 5]
+  margin_floor_per_mnq: 100.0
+
+# =============================================================================================
+# WHAT THIS RUN MAY NOT DO
+# =============================================================================================
+prohibitions:
+  - "May not recommend a size. Sizing is the owner's decision."
+  - "May not quote a fixed-maxDD or fixed-CDaR normalised PERFORMANCE figure (eval_battery
+     placebo rule). This run reports a probability, not a risk-adjusted return, so the rule
+     is noted and not triggered."
+  - "May not touch data at or after 2026-08-01 (VIRGIN) or the blind pools."
+  - "May not redefine the population after seeing a result. A failed gate is recorded failed."
+  - "May not be used to argue that dropping XM is good or bad. It reports one object's risk."
+
+outputs:
+  - out/cap02.txt
+  - out/cap02_table.csv
+  - REPORT.md
