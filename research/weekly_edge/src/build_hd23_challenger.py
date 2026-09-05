@@ -59,9 +59,32 @@ WHAT IS BEING FIXED  (all four bought with a measured live failure, all four dat
         someone else" from "someone else opened 6 against me" -- they are the same account
         event, and FIFO attribution is a broker convention, not a fact.  The position bus
         removes the OTHER LEG from the sum by having each leg publish its own position.  It
-        CANNOT remove manual trading.  Therefore ENFORCE is correct ONLY on an account no human
-        trades by hand; on a hand-traded account DETECT is the only honest setting.
-        DETECT IS THE DEFAULT.  A guard that would misfire is worse than no guard.
+        CANNOT remove manual trading.  DETECT IS THE DEFAULT: a guard that would misfire is
+        worse than no guard.
+
+  [HD-24] SOLE-STRATEGY DECLARATION -- added 2026-09-05, and it CHANGES THE HD-23 CONCLUSION
+        The 2026-09-03 write-up said "ENFORCE is correct ONLY on an account no human trades by
+        hand."  THAT WAS TOO STRONG, and the reason it was stated is now gone: it rested on the
+        account being a THREE-way sum (this leg + the other leg + the human).  XM was withdrawn
+        on 2026-09-05, so the account is a TWO-way sum, and for a two-way sum the clamp's
+        guarantee is ONE-SIDED and holds WITHOUT attributing anything:
+
+            AN EXIT MAY NEVER TAKE THE ACCOUNT ACROSS FLAT AGAINST ME.
+
+        `safe = max(0, min(want, accountInMyDirection))` can only ever submit FEWER contracts
+        than asked, so it can never CREATE an unowned position, whoever removed the original.
+        A hand-flattened account makes the exit submit ZERO -- which is exactly right, and is
+        precisely what would have prevented 2026-09-03.  The residual cost is that a WRONG or
+        STALE account read could leave a real position partly open; that is why it also Halts
+        and logs at ERROR, so the owner is told rather than silently protected.
+
+        The blocker was mechanical, not conceptual: with no peer, `PosBusDir` is empty,
+        `PosBusReadOthers` returned false, `acctArmed` stayed false, and ENFORCE was a NO-OP --
+        unreachable in the ONLY configuration that can use it.  HD-24 lets the owner DECLARE
+        `SoleStrategyOnAccount`, which makes `others = 0` KNOWN rather than unknown.
+        🔴 The declaration is load-bearing and is the owner's: setting it true while a second
+        strategy trades the account would subtract that leg as if it were the human.
+        Default FALSE -- an undeclared account stays BLIND, and BLIND never gates.
 
 M1 DISCIPLINE (unchanged from the certified classes)
     Every added method's first statement is `if (State != State.Realtime) return;` or returns
@@ -207,6 +230,24 @@ FIELDS_AND_HELPERS = r'''
         {
             others = 0; why = "";                                      // C# definite assignment
             if (State != State.Realtime) { why = "not_realtime"; return false; }   // M1
+            // [HD-24] THE SOLE-STRATEGY DECLARATION.  Added 2026-09-05.
+            // Without this, an account running exactly ONE strategy is BLIND -- there is no peer
+            // to publish a bus file, PosBusDir is empty, this returns false, acctArmed stays
+            // false, and ENFORCE silently becomes a NO-OP.  That is the exact configuration the
+            // live account has had since XM was withdrawn, so the strongest available guard was
+            // unreachable in the only configuration that can actually use it.
+            // When the owner DECLARES this is the sole strategy on the account, `others = 0` is
+            // not a guess -- it is known, and the witness arms.
+            // ⚠️ WHAT IT STILL CANNOT SEE: manual trading by a human. That remains provably
+            // unattributable from the account alone.  It does not need to be attributed: the
+            // clamp's guarantee is one-sided and holds regardless -- AN EXIT MAY NEVER TAKE THE
+            // ACCOUNT ACROSS FLAT AGAINST ME, so it can only ever submit FEWER contracts than
+            // asked, and can therefore never CREATE an unowned position.  A hand-flattened
+            // account makes the exit submit ZERO, which is exactly right.
+            // 🔴 THE DECLARATION IS THE OWNER'S AND IT IS LOAD-BEARING.  Setting it true while a
+            // second strategy trades this account would let this leg subtract the other leg's
+            // position as if it were the owner's, and clamp a real exit to zero.
+            if (SoleStrategyOnAccount && string.IsNullOrEmpty(PosBusDir)) return true;   // others = 0, DECLARED
             if (string.IsNullOrEmpty(PosBusDir)) { why = "posbus_dir_unset"; return false; }
             try
             {
@@ -448,11 +489,16 @@ PROPS = '''
         [NinjaScriptProperty] public string AcctWitnessMode { get; set; }   // OFF|DETECT|ENFORCE
         [NinjaScriptProperty] public int    PosBusStaleSec  { get; set; }   // HD-23, 300
         [NinjaScriptProperty] public int    AcctConfirmBars { get; set; }   // HD-23, 2
+        // [HD-24] owner DECLARES this is the only strategy on the account, so peers = 0 is
+        //         KNOWN rather than unknown and the witness can arm without a bus.
+        //         Default FALSE: an undeclared account stays BLIND, and BLIND never gates.
+        [NinjaScriptProperty] public bool   SoleStrategyOnAccount { get; set; }   // HD-24, false
 '''
 
 DEFAULTS = '''
                 // [HD-23] SAFE DEFAULTS: bus off, witness DETECT-only, nothing gated.
-                PosBusDir = ""; AcctWitnessMode = "DETECT"; PosBusStaleSec = 300; AcctConfirmBars = 2;'''
+                PosBusDir = ""; AcctWitnessMode = "DETECT"; PosBusStaleSec = 300; AcctConfirmBars = 2;
+                SoleStrategyOnAccount = false;   // [HD-24] undeclared => BLIND => never gates'''
 
 
 FILES = [

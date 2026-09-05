@@ -126,6 +126,10 @@ namespace NinjaTrader.NinjaScript.Strategies
         [NinjaScriptProperty] public string AcctWitnessMode { get; set; }   // OFF|DETECT|ENFORCE
         [NinjaScriptProperty] public int    PosBusStaleSec  { get; set; }   // HD-23, 300
         [NinjaScriptProperty] public int    AcctConfirmBars { get; set; }   // HD-23, 2
+        // [HD-24] owner DECLARES this is the only strategy on the account, so peers = 0 is
+        //         KNOWN rather than unknown and the witness can arm without a bus.
+        //         Default FALSE: an undeclared account stays BLIND, and BLIND never gates.
+        [NinjaScriptProperty] public bool   SoleStrategyOnAccount { get; set; }   // HD-24, false
         [NinjaScriptProperty] public int    RollLeadDays     { get; set; }   // HD-06, 8
         [NinjaScriptProperty] public string WarmupCertDir    { get; set; }   // HD-08, "" = off
         [NinjaScriptProperty] public string DiagDir          { get; set; }   // HD-13, "" = off
@@ -371,6 +375,24 @@ namespace NinjaTrader.NinjaScript.Strategies
         {
             others = 0; why = "";                                      // C# definite assignment
             if (State != State.Realtime) { why = "not_realtime"; return false; }   // M1
+            // [HD-24] THE SOLE-STRATEGY DECLARATION.  Added 2026-09-05.
+            // Without this, an account running exactly ONE strategy is BLIND -- there is no peer
+            // to publish a bus file, PosBusDir is empty, this returns false, acctArmed stays
+            // false, and ENFORCE silently becomes a NO-OP.  That is the exact configuration the
+            // live account has had since XM was withdrawn, so the strongest available guard was
+            // unreachable in the only configuration that can actually use it.
+            // When the owner DECLARES this is the sole strategy on the account, `others = 0` is
+            // not a guess -- it is known, and the witness arms.
+            // ⚠️ WHAT IT STILL CANNOT SEE: manual trading by a human. That remains provably
+            // unattributable from the account alone.  It does not need to be attributed: the
+            // clamp's guarantee is one-sided and holds regardless -- AN EXIT MAY NEVER TAKE THE
+            // ACCOUNT ACROSS FLAT AGAINST ME, so it can only ever submit FEWER contracts than
+            // asked, and can therefore never CREATE an unowned position.  A hand-flattened
+            // account makes the exit submit ZERO, which is exactly right.
+            // 🔴 THE DECLARATION IS THE OWNER'S AND IT IS LOAD-BEARING.  Setting it true while a
+            // second strategy trades this account would let this leg subtract the other leg's
+            // position as if it were the owner's, and clamp a real exit to zero.
+            if (SoleStrategyOnAccount && string.IsNullOrEmpty(PosBusDir)) return true;   // others = 0, DECLARED
             if (string.IsNullOrEmpty(PosBusDir)) { why = "posbus_dir_unset"; return false; }
             try
             {
@@ -1039,6 +1061,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                 RollLeadDays = 8; WarmupCertDir = ""; DiagDir = "";
                 // [HD-23] SAFE DEFAULTS: bus off, witness DETECT-only, nothing gated.
                 PosBusDir = ""; AcctWitnessMode = "DETECT"; PosBusStaleSec = 300; AcctConfirmBars = 2;
+                SoleStrategyOnAccount = false;   // [HD-24] undeclared => BLIND => never gates
                 ExportStampUtc = false; TraceOrdersLive = false; ExpectInstrument = "";
 
                 // ---- [HD-09/HD-10] declared platform properties (spec 4).  M3: every one of these
