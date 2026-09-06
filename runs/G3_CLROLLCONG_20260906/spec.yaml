@@ -1,0 +1,29 @@
+run_id: G3_CLROLLCONG_20260906
+campaign: GENESIS III (Wave 7 final sweep — world-scan #19: post-decay re-measurement)
+mechanism: "GSCI/commodity-index roll congestion (the Goldman roll, business days 5-9): once a
+  large documented effect, then arbitraged away post-~2010. The card's own expected outcome is
+  CLOSE-AS-COMPETED-AWAY — a clean negative permanently retires a folklore family; the only
+  open increment is the impaired-arb conditional (high-vol cells)."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+frozen_object: |
+  CL primary (GC/SI reported where pairable): per month, the F1-F2 calendar-spread return over
+  the GSCI roll window (business days 5-9 of the month), per-contract day store, POINTS.
+  Position sense: the congestion trade = LONG-back/SHORT-front through the window.
+  Conditional split (the open increment): trailing-20-day vol tercile of the outright —
+  top-tercile (impaired-arb) vs rest, WITH the matched unconditional control.
+gates:
+  G1_MDE_first: "printed (~200 CL months, pairing-coverage honest)."
+  G2_pooled: "pooled after-cost mean vs circular-shifted placebo windows (same construction,
+    shifted month-days), p < 0.05."
+  G3_era_thirds: "2009-14 / 2015-20 / 2021-26 printed — the DECAY READ is the deliverable."
+  G4_impaired_arb: "top-vol-tercile cell vs its control (delta CI); the ONLY cell that could
+    revive the family."
+  G5_cost: "{1,2}-tick band on both legs; conservative gates."
+decision_rule: "G2+G4 both fail -> CLOSED-AS-COMPETED-AWAY, permanent, the expected and
+  BANKABLE outcome (the folklore family retires with a measured decay curve). G4 alone
+  passing -> a narrow impaired-arb lead (Class-P at best; next-stage falsifier required)."
+evidence_status: DISCOVERY
+ledger: "G00094, family GENESIS3_RV."
+outputs: [out/gate_table.txt, out/monthly_panel.csv, out/era_thirds.csv, REPORT.md]

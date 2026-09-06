@@ -1,0 +1,35 @@
+run_id: G3_SWEEPREV_20260906
+campaign: GENESIS III (Wave 7 final sweep — world-scan #15: the one surviving intraday-MR shot)
+mechanism: "Liquidity provision after forced-aggressor sweeps (Nagel-2012 family): a sweep
+  through the recent range on elevated 1-min range/volume exhausts one side; providers fade
+  it. Kept by the skeptic ONLY because it carries the exact discriminator the graveyard
+  demands: it must beat the plain k-sigma MR control or die."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+frozen_object: |
+  Markets: ES, RTY, YM, ZB, CL 1-min substrates (NQ excluded — flagged). POINTS.
+  SWEEP event: 1-min bar breaches the trailing-30-min high/low AND that bar's range >= 2x
+  the trailing-30-min median 1-min range (forced-aggressor signature). Direction: FADE the
+  sweep (short after up-sweep, long after down-sweep). Exit: +30 min.
+  Splits (all preregistered): ex-macro sweeps (outside 08:25-08:50 and 13:55-14:20 ET) vs
+  macro-window sweeps; the vol-matched non-sweep placebo (same |1-min move| >= same z but NO
+  30-min-extreme breach, same wave).
+  THE DISCRIMINATOR (the card's own): the plain k-sigma MR control = fade any 1-min move
+  >= the same z threshold regardless of breach/range, same exit — the sweep object must
+  BEAT it (delta CI excludes 0) or the mechanism claim dies as generic-MR.
+gates:
+  G1_MDE_first: "printed per market."
+  G2_edge: "pooled ex-macro after-cost mean > 0, session-block CI excludes 0, shared-draw
+    circular null p < 0.05 (K_eff over 5 markets printed)."
+  G3_beats_generic_MR: "sweep minus k-sigma-control delta CI excludes 0 (the discriminator)."
+  G4_placebo: "the vol-matched non-sweep placebo shows LESS than the sweep cells."
+  G5_zb_cost_bar: "the ZB leg explicitly clears the G00062 cost-fragility bar (per-event
+    gross >= breakeven ticks at the 2-tick rung) or the ZB cell is recorded cost-dead."
+  G6_chronology: "2022-23 vs 2024-26 sign consistency on the pooled ex-macro cell."
+  G7_cost: "{1,2}-tick per-market band; 30-min horizon is cost-hostile — conservative gates."
+decision_rule: "G2+G3+G4+G6 PASS -> SWEEPREV01 candidate. Else closed at scope (S28) — and
+  with it the last open intraday-MR representation on the non-NQ complex."
+evidence_status: DISCOVERY
+ledger: "G00092, family GENESIS3_EVENT."
+outputs: [out/gate_table.txt, out/cells.csv, out/discriminator.csv, REPORT.md]

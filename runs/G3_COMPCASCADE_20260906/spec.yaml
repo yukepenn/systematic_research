@@ -1,0 +1,32 @@
+run_id: G3_COMPCASCADE_20260906
+campaign: GENESIS III (Wave 7 final sweep — world-scan #16: the untested compression->expansion row)
+mechanism: "Compression-primed stop cascades: a range break AFTER a multi-day compression
+  finds clustered stops and thin books, so the break RUNS; the same break without compression
+  does not. The WITH-trend vs AGAINST-trend asymmetry is the tested object."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+frozen_object: |
+  Markets: ES, NQ, CL, ZB, GC daily (causal-rolled/certified series; NQ allowed here — daily
+  breakout is not a P1 object and NQ's Donchian-family closures were intraday/ensemble scopes;
+  the dedup note is printed). POINTS.
+  COMPRESSION: trailing-5-day range in the bottom quintile of trailing-60.
+  BREAK event: close breaches the prior 5-day high/low ON a compression day.
+  Object: hold the break direction for k in {1, 2, 3} days (k=2 primary, fixed).
+  Splits: WITH-trend (break agrees with the trailing-20-day drift sign) vs AGAINST-trend.
+  CONTROL (mandatory, same wave): matched unconditional breaks (same breach, NO compression).
+gates:
+  G1_MDE_first: "printed per market; pooled."
+  G2_edge: "pooled compression-break k=2 after-cost mean > 0, event-block CI excludes 0,
+    shared-draw circular null p < 0.05."
+  G3_vs_control: "beats the unconditional-break control (delta CI excludes 0) — if the
+    control shows the same drift, compression adds nothing = FAIL (the card's kill)."
+  G4_asymmetry: "with-trend vs against-trend split printed; an asymmetry claim requires its
+    own CI; unpowered asymmetry = reported, not claimed."
+  G5_era: "3-era signs on the pooled cell; modern-negative = FAIL."
+  G6_cost: "{1,2}-tick band; multi-day horizon, cost light — printed."
+decision_rule: "G2+G3+G5 PASS -> COMPCASCADE01 candidate. Else closed at scope (S28) — the
+  compression->expansion row gets its first strategy-object entries across 5 markets."
+evidence_status: DISCOVERY
+ledger: "G00093, family GENESIS3_EVENT."
+outputs: [out/gate_table.txt, out/cells.csv, out/control_delta.csv, REPORT.md]
