@@ -1,0 +1,128 @@
+run_id: XINST01_WEEKLY_EDGE_PORT_20260906
+campaign: WEEKLY_EDGE — cross-instrument extension (owner directive 2026-09-06: "apply the NQ
+  approach to other big futures — ES, gold, FX, commodities — build the same kind of object")
+stage: "DISCOVERY on new instruments. A per-instrument PASS is INFORMATION-SUPPORTED at best
+  (in-sample, DISCOVERY_CONSUMED); it licenses a forward-validation queue entry, never a
+  promotion or a live deploy."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+hypothesis: |
+  The P1/PCT mechanism CLASS — the 13-member Solar volatility-ratchet ensemble OR-gated with the
+  B-MOM channel, long-only, range-throttled, delta-gated, causal quality sizing, flat at every
+  session close, session box denominated PER CONTRACT — carries a positive after-cost weekly edge
+  on OTHER liquid futures, transferred by a SCALE-INVARIANT rule with NO per-instrument parameter
+  mining. The prize is a genuinely ORTHOGONAL second engine on a different underlying (ZB/rates),
+  which would restore the diversification the XM withdrawal removed — from a KNOWN mechanism,
+  not a new one.
+
+the_no_mining_transfer_rule:  # the scientific core — this is what makes it not 6-way p-hacking
+  scale_invariant_kept_identical: |
+    Every Solar feature in we_features.build_universe is ATR-normalized (mom_k/atr, dist_hi60/atr,
+    atr_rel = atr/rolling_mean(atr), range_compress/atr, sess_extension = rng/atr, ...). Because
+    they are ATR-relative, the SAME thresholds apply on any instrument in its own ATR units with
+    NO refit. Likewise day-count and quantile params are scale-free and kept IDENTICAL: B-MOM
+    lookback (BmomBandDays), range throttle q=0.8, EntryLevel=3/ExitLevel=1, EntryBlockMin,
+    QualWindow=250/QualMinHist=100, ForcedFlatMin=21, TiltSma/TiltMult/TiltRescale, VolPeriod,
+    WSolar/WBmom. NOTHING in the signal is re-optimized per instrument. This is the whole point:
+    if P1's edge is real STRUCTURE it survives the transfer; if it was NQ-specific overfitting it
+    does not — and either answer is worth having.
+  the_one_dollar_param_transferred_by_percentile: |
+    The session box (NQ: HaltDollars=1300 / TargetDollars=1000 = +/-65 / +/-50 POINTS at PV=20,
+    per W98) is the ONLY scale/dollar-dependent param. Transfer rule: set each instrument's box in
+    ITS OWN POINTS to the value that is the SAME PERCENTILE of that instrument's session
+    point-range distribution as 65 pts (halt) / 50 pts (target) are for NQ. Computed once from the
+    instrument's dev-window session ranges; recorded before any P&L is read. NO search over box
+    values.
+  per_instrument_scale_inputs: "PV (point value), tick size, commission $/ctrRT, and a modeled
+    spread — these are FACTS about the instrument, not tuned params. Listed under cost below."
+
+instruments:
+  wave1_ready:  # already-extracted clean OHLCV, >= 1yr for the 250-entry warmup + a real window
+    - {root: ES,  pv: 50.0,  sub: "runs/SM1M_ES_SUBSTRATE/out/es_1m_2022_2026.parquet",  class: equity-index, role: "generalization check (correlated w/ NQ)"}
+    - {root: RTY, pv: 50.0,  sub: "runs/SM1M_RTY_SUBSTRATE/out/rty_1m_2022_2026.parquet", class: equity-index, role: "generalization check"}
+    - {root: YM,  pv: 5.0,   sub: "runs/SM1M_YM_SUBSTRATE/out/ym_1m_2022_2026.parquet",  class: equity-index, role: "generalization check"}
+    - {root: ZB,  pv: 1000.0, sub: "runs/SM1M_ZB_SUBSTRATE/out/zb_1m_2023_2026.parquet", class: rates, role: "🎯 ORTHOGONAL diversification candidate — the prize", note: "additively back-adjusted: box/range in POINTS (32nds) only, DELEV01"}
+  data_gated_deferred:  # honest: not enough clean local 1-min history for a faithful intraday port
+    - "GC / MGC (gold): local 1-min ~185 sessions from 2025-12 — below the ~9-month warmup need. DEFER: needs a longer 1-min extraction."
+    - "6E / 6J (FX): local 1-min ~185 sessions from 2025-12 — same. DEFER."
+    - "CL (crude, a commodity the owner named): ~1,481 sessions ON DISK but UNEXTRACTED; extraction is the SM1M NT8-recompile path -> session-break + live-state-check only. Queue for Wave 2."
+  note: "MNQ excluded — it is NQ/10, the same underlying, not a diversifier."
+
+port_validation:  # G0 — the hard gate; nothing cross-instrument is read until this passes
+  rule: "The parameterized bench, instantiated on NQ with NQ's own PV/commission/spread and the
+    identical mechanism, MUST reproduce the repo's committed P1/PCT weekly figures
+    (CURRENT_BASELINE.md baseline A: raw $1,394/wk, maxDD $22,931, t 4.16; and the we_lab/W103
+    frozen artifact) to within rounding. The run script ASSERTS this FIRST and RAISES on failure.
+    A port that cannot reproduce P1 on NQ is void, and any cross-instrument number it produced is
+    discarded, not reported."
+
+cost:  # every figure carries BASIS + EVIDENCE tag (COST_MODEL.md discipline)
+  commission_per_ctrRT_modeled: {ES: 4.36, RTY: 4.36, YM: 4.36, ZB: 4.36}   # Lifetime template placeholder; EVIDENCE: MODELED (not per-instrument-measured) — flag, and run a +/-50% sensitivity
+  spread_modeled: "no BBO for these instruments (Last OHLCV only). Model each instrument's spread
+    as a CONSERVATIVE tick count from its liquidity (ES 1 tick; RTY/YM/ZB 1-2 ticks), tagged
+    ASSUMED, and report a spread-sensitivity band (0 / 1 / 2 / 3 ticks). BASIS: SPREAD_ONLY,
+    EVIDENCE: ASSUMED. A candidate that only survives at 0-tick spread is not a candidate."
+  all_in: "commission + modeled spread, per instrument, tagged ALL_IN."
+
+multiple_testing:
+  family: "N = 4 instruments (Wave 1). Preregistered family-wise control: an instrument's weekly
+    edge must clear a Bonferroni-corrected bar (alpha 0.05/4 = 0.0125) on its primary statistic,
+    AND be reported with its BH-FDR q-value. The NQ reproduction is the reference, not a test."
+  no_redefinition: "the instrument set and the transfer rule are frozen here; no instrument is
+    dropped or added after seeing results, no param is mined to rescue a failing instrument."
+
+evaluation:
+  battery: "research_sdk.eval_battery — judge on SEVERAL bases, LEAD WITH WEEKLY-VOL. fixed-DD /
+    fixed-CDaR only WITH the rate-matched side-blind random-thinning placebo (the module raises
+    otherwise). Native, weekly_vol, realized_vol, gross_exposure all printed."
+  primary_statistic: "after-cost weekly net at WEEKLY-VOL-matched basis, and its t vs a
+    circular-shift / block-bootstrap null (dependence-preserving)."
+  walk_forward: "report an expanding-window / chronological split per instrument, not just the
+    pooled figure."
+
+orthogonality:  # the diversification value — the actual reason this serves the live book
+  metric: "for each instrument that shows a positive after-cost edge, compute the daily-PnL
+    correlation of its ported strategy vs P1's daily PnL on the SAME dates (dev window). Report
+    trade-overlap and drawdown-overlap too. LOW correlation + positive independent edge = the
+    diversification prize (an XM replacement from a known mechanism); high correlation = a
+    generalization confirmation but not a diversifier."
+
+seal: "each instrument's dev window = its full pre-seal 1-min history (>= 2026-08-01 is GLOBAL
+  VIRGIN, hard-dropped at load, boundary printed). Everything here is DISCOVERY_CONSUMED and
+  in-sample; forward validation on sealed data is a separate future read. The NQ P1/XM burn
+  (2026-05-31->07-31) is P1-specific and does not bind new instruments, but note it for ES because
+  ESNQ consumed ES cross-market — ES results may not be cited for/against the closed ESNQ scope."
+
+gates:  # program-printed GATE / SPEC / OBSERVED / PASS-FAIL
+  G0_port_validation: "reproduce NQ P1/PCT to rounding; RAISE on failure (hard gate)."
+  G0b_seal: "every instrument's max session < 2026-08-01; ZB observables POINTS basis; assert."
+  G1_MDE_first: "per-instrument MDE at 80% power printed BEFORE the observed weekly edge (barrier)."
+  G2_primary: "after-cost weekly-vol net > 0 with t clearing the Bonferroni bar (p <= 0.0125) vs
+    the dependence-preserving null."
+  G3_placebo: "fixed-DD figure printed ONLY beside its random-thinning placebo; if the edge only
+    exists at fixed-DD and evaporates at weekly-vol, it is NOT a candidate (the T2 lesson)."
+  G4_cost_robustness: "survives the 0/1/2/3-tick spread sensitivity band at a realistic tick;
+    a 0-tick-only survivor is recorded cost-fragile, not a candidate."
+  G5_orthogonality: "daily-PnL corr vs P1 printed for every positive-edge instrument."
+  G6_semantic: "one printed sentence per instrument: population, window, what the weekly-net
+    number is over, and its evidence tag (DISCOVERY_CONSUMED, in-sample)."
+
+decision_rule: |
+  Per instrument: G2 PASS (Bonferroni) + G3 (weekly-vol, not fixed-DD-only) + G4 (cost-robust) ->
+  INFORMATION-SUPPORTED candidate; queue a forward-validation read on sealed data and record its
+  orthogonality to P1. The DIVERSIFICATION prize is a LOW-corr positive-edge instrument (ZB is
+  the a-priori best shot). FAIL -> the mechanism does not transfer to that instrument at scale,
+  FAILURE_MEMORY row (this is itself valuable: it tells us whether P1 is structure or NQ-specific).
+  NO promotion, NO live deploy, NO sizing change from this run. Multiple-testing honesty is
+  absolute: report all four, corrected, whatever the outcome.
+
+ledger: "one trial per instrument (4), family XINST_WEEKLY_EDGE, registered before outcomes;
+  results recorded serially by the coordinator."
+
+outputs:
+  - out/port_validation.txt   # the NQ reproduction proof
+  - out/gate_table.txt        # program-printed, per instrument
+  - out/per_instrument.csv    # weekly net by basis, t, MDE, cost band, orthogonality
+  - out/orthogonality.csv
+  - REPORT.md
