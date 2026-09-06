@@ -400,3 +400,32 @@ the 2-tick ON cost rung. BANKED: the full ES overnight hour-grid map (out/hour_g
 reason = fix-day slope ~0 in BOTH eras (absence, not 2015-reform decay); reversal leg wrong-signed;
 top-tercile conditioning INVERTS the sign (-$89/event gross). MDE ~$230/event documented.
 ```
+
+
+## GENESIS III Wave 7 closures (2026-09-06) — the final sweep
+
+### Post-sweep liquidity reversal (G00092) — killed by its own discriminator
+```
+observable = 118,847 pooled ex-macro sweep events, ES/RTY/YM/ZB/CL 1-min, 2022-2026-07
+representation = fade 30-min-extreme breach on 2x range bar, 30-min hold, vs plain k-sigma control
+reason = the conditioning SUBTRACTS value (delta -1.77 $/ev, ZB -5.51 significant); placebo > sweep;
+eras flip; -50 $/ev at the 2-tick rung; ZB 0.19 ticks vs the 2.14-tick G00062 bar (~11x short).
+```
+The SWEEP01 NQ verdict extends MEASURED to the whole complex: sweep/level dressing is mildly
+ANTI-informative. The last open non-NQ intraday-MR representation is closed.
+
+### Compression-primed stop cascade (G00093) — powered null with durable facts
+```
+observable = 2,534 compression-primed daily breaks, 5 markets, 2009-2026-07 (MDE80 $145 vs obs -$22)
+reason = the primed cell stays <= 0 after cost; the DELTA vs unconditional breaks (+$127, positive
+every market and era) has CI including 0 - "less bad" is not an edge; cascades die inside a day.
+```
+BANKED: unconditional daily close-breakout continuation is NEGATIVE in all 5 markets BEFORE costs.
+
+### GSCI roll congestion (G00094) — CLOSED-AS-COMPETED-AWAY, permanent
+```
+observable = CL F1-F2 spread over business days 5-9, 80/211 direct months (store truncation:
+CL >= 2016-02 contracts carry final month only; era-3 via GC/SI secondaries)
+reason = +$47/month gross vs shifted placebos p 0.29; net +$7 CI spans 0; impaired-arb cell fails.
+```
+The folklore family retires with a measured decay curve. Coverage caveat recorded, not hidden.

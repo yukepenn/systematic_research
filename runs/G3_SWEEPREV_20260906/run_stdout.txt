@@ -1,0 +1,240 @@
+====================================================================================================
+G3_SWEEPREV_20260906  (ledger G00092, family GENESIS3_EVENT)   EVIDENCE STATUS: DISCOVERY
+Post-sweep liquidity-provision reversal on ES/RTY/YM/ZB/CL 1-min (NQ EXCLUDED — flagged outlier),
+with THE DISCRIMINATOR: sweep-fade must beat the plain k-sigma MR control (delta CI excl. 0) or die.
+POINTS basis. Frozen mechanical readings R1-R14 in src header. Seed 20260906.
+cost model (BASIS=MODELED ALL_IN, comm $4.36/ctRT + spread ticks PER SIDE; 2tk/side rung GATES):
+   ES  tick 0.25000 pt = $12.50, $    50/pt:  1tk/side $ 29.36/RT   2tk/side $  54.36/RT (GATING)
+   RTY tick 0.10000 pt = $ 5.00, $    50/pt:  1tk/side $ 14.36/RT   2tk/side $  24.36/RT (GATING)
+   YM  tick 1.00000 pt = $ 5.00, $     5/pt:  1tk/side $ 14.36/RT   2tk/side $  24.36/RT (GATING)
+   ZB  tick 0.03125 pt = $31.25, $  1000/pt:  1tk/side $ 66.86/RT   2tk/side $ 129.36/RT (GATING)
+   CL  tick 0.01000 pt = $10.00, $  1000/pt:  1tk/side $ 24.36/RT   2tk/side $  44.36/RT (GATING)
+   ZB G5 spec-named bar: G00062 model 2-tick rung $66.86/RT = 2.1395 ticks/event (GROSS bar)
+
+[G0] substrates, seal, session convention (end-stamp > 17:00 ET -> next trade date), eligible universe
+   ES  runs\SM1M_ES_SUBSTRATE\out\es_1m_2022_2026.parquet
+       sha256 0fd13777fa8fa79e2447c8be193031b40807eb272019b8541b1a47f84c927e9b
+       bars 1,620,385; span 2022-01-02 18:01:00 .. 2026-07-31 16:59:00; bars >= 2026-08-01: 0  SEAL OK
+       sessions 1,184; eligible bars 1,549,283 (95.6% of bars); min inter-session gap 61 min
+   RTY runs\SM1M_RTY_SUBSTRATE\out\rty_1m_2022_2026.parquet
+       sha256 a3a4edf3034fad5385211137c0e2f742223ccccb272950b3c65ee54538bdcb24
+       bars 1,568,111; span 2022-01-02 18:01:00 .. 2026-07-31 16:59:00; bars >= 2026-08-01: 0  SEAL OK
+       sessions 1,177; eligible bars 1,489,961 (95.0% of bars); min inter-session gap 61 min
+   YM  runs\SM1M_YM_SUBSTRATE\out\ym_1m_2022_2026.parquet
+       sha256 106273ea753373dae89e46324da7c857f8ce60deaef28f5a6012532949df8f95
+       bars 1,595,378; span 2022-01-02 18:01:00 .. 2026-07-31 16:59:00; bars >= 2026-08-01: 0  SEAL OK
+       sessions 1,177; eligible bars 1,524,433 (95.6% of bars); min inter-session gap 61 min
+   ZB  runs\SM1M_ZB_SUBSTRATE\out\zb_1m_2023_2026.parquet
+       sha256 ae04d0a7cdc745cc3cf1ab734666104108207543c4d16ead4e1f058363ffef39
+       bars 1,086,151; span 2022-12-26 18:01:00 .. 2026-07-31 16:59:00; bars >= 2026-08-01: 0  SEAL OK
+       sessions 923; eligible bars 939,442 (86.5% of bars); min inter-session gap 61 min
+   CL  runs\SM1M_CL_SUBSTRATE\out\cl_1m_2022_2026.parquet
+       sha256 e587486c23f5b61184b6a49aaeebc77f1a3e74e0731d8d0f4192087587adc137
+       bars 1,608,018; span 2022-01-02 18:01:00 .. 2026-07-31 16:59:00; bars >= 2026-08-01: 0  SEAL OK
+       sessions 1,182; eligible bars 1,536,570 (95.6% of bars); min inter-session gap 61 min
+
+[events] raw event bars -> after non-overlap suppression (R9); macro split (R10) on entry stamp
+   mkt obj           raw    kept  exmacro  macro   notes
+   ES  SWEEP      65,914  24,894   23,846  1,048   both-side-breach kept 166, r==0 dropped 0; sweep∩ctrl raw 31428
+   ES  CONTROL    96,480  33,611   32,269  1,342   
+   ES  PLACEBO    56,754  27,520   26,399  1,121   
+   RTY SWEEP      74,787  25,244   24,268    976   both-side-breach kept 232, r==0 dropped 3; sweep∩ctrl raw 30891
+   RTY CONTROL    92,497  32,624   31,267  1,357   
+   RTY PLACEBO    53,443  26,670   25,559  1,111   
+   YM  SWEEP      77,380  26,246   25,179  1,067   both-side-breach kept 218, r==0 dropped 1; sweep∩ctrl raw 33809
+   YM  CONTROL    94,888  33,206   31,846  1,360   
+   YM  PLACEBO    53,028  26,510   25,435  1,075   
+   ZB  SWEEP      50,670  19,873   19,060    813   both-side-breach kept 78, r==0 dropped 8; sweep∩ctrl raw 12810
+   ZB  CONTROL    49,756  19,077   18,214    863   
+   ZB  PLACEBO    34,971  16,036   15,274    762   
+   CL  SWEEP      74,372  27,624   26,494  1,130   both-side-breach kept 135, r==0 dropped 2; sweep∩ctrl raw 35830
+   CL  CONTROL    97,276  34,174   32,722  1,452   
+   CL  PLACEBO    54,819  27,375   26,212  1,163   
+
+[G1] MDE FIRST (printed before any observed mean). Ex-macro cells, per-event USD/contract.
+     SE = sd_s(session sums)*sqrt(n_sess)/n_events (session-cluster); MDE_sig=1.96*SE; MDE_80=2.8016*SE.
+     cell               n_ev  n_sess  SE($/ev)  MDE_sig   MDE_80  cost1($)  cost2($)
+     ES SWEEP exm     23,846   1,184      2.60     5.10     7.29     29.36     54.36
+     RTY SWEEP exm    24,268   1,177      1.48     2.91     4.15     14.36     24.36
+     YM SWEEP exm     25,179   1,177      1.64     3.22     4.60     14.36     24.36
+     ZB SWEEP exm     19,060     923      0.95     1.85     2.65     66.86    129.36
+     CL SWEEP exm     26,494   1,182      2.15     4.22     6.03     24.36     44.36
+     POOLED SWEEP exm118,847   1,184      1.11     2.17     3.10                    
+
+[cells] per-event means (USD/contract, GROSS and NET at both rungs); CI95 = circular session-block
+        bootstrap (L=10, B=2000) of the GROSS mean, per market on its own session axis; era split R14.
+   mkt obj      cell    era         n_ev  n_ss  mean_pts   gross$    net1$    net2$   ci_lo$   ci_hi$
+   ES  SWEEP    EXMACRO ALL       23,846 1,184   -0.0171    -0.85   -30.21   -55.21    -5.49     3.69
+   ES  SWEEP    EXMACRO 2022-23   10,362   516   -0.1245    -6.23   -35.59   -60.59        -        -
+   ES  SWEEP    EXMACRO 2024-26   13,484   668    0.0655     3.28   -26.08   -51.08        -        -
+   ES  SWEEP    MACRO   ALL        1,048   832    0.1004     5.02   -24.34   -49.34   -28.86    38.10
+   ES  SWEEP    MACRO   2022-23      474   377    0.2874    14.37   -14.99   -39.99        -        -
+   ES  SWEEP    MACRO   2024-26      574   455   -0.0540    -2.70   -32.06   -57.06        -        -
+   ES  CONTROL  EXMACRO ALL       32,269 1,184    0.0399     2.00   -27.36   -52.36    -2.14     6.31
+   ES  CONTROL  EXMACRO 2022-23   13,994   516   -0.0352    -1.76   -31.12   -56.12        -        -
+   ES  CONTROL  EXMACRO 2024-26   18,275   668    0.0975     4.87   -24.49   -49.49        -        -
+   ES  CONTROL  MACRO   ALL        1,342   960    0.1852     9.26   -20.10   -45.10   -18.19    37.03
+   ES  CONTROL  MACRO   2022-23      617   425    0.2314    11.57   -17.79   -42.79        -        -
+   ES  CONTROL  MACRO   2024-26      725   535    0.1459     7.29   -22.07   -47.07        -        -
+   ES  PLACEBO  EXMACRO ALL       26,399 1,184    0.0290     1.45   -27.91   -52.91    -3.26     6.04
+   ES  PLACEBO  EXMACRO 2022-23   11,313   516   -0.0139    -0.70   -30.06   -55.06        -        -
+   ES  PLACEBO  EXMACRO 2024-26   15,086   668    0.0612     3.06   -26.30   -51.30        -        -
+   ES  PLACEBO  MACRO   ALL        1,121   865    0.2821    14.11   -15.25   -40.25   -16.60    44.61
+   ES  PLACEBO  MACRO   2022-23      494   378    0.0127     0.63   -28.73   -53.73        -        -
+   ES  PLACEBO  MACRO   2024-26      627   487    0.4944    24.72    -4.64   -29.64        -        -
+   RTY SWEEP    EXMACRO ALL       24,268 1,177    0.0085     0.42   -13.94   -23.94    -2.58     3.43
+   RTY SWEEP    EXMACRO 2022-23   10,591   509   -0.0532    -2.66   -17.02   -27.02        -        -
+   RTY SWEEP    EXMACRO 2024-26   13,677   668    0.0562     2.81   -11.55   -21.55        -        -
+   RTY SWEEP    MACRO   ALL          976   776    0.1311     6.56    -7.80   -17.80   -15.95    29.17
+   RTY SWEEP    MACRO   2022-23      441   347    0.5975    29.88    15.52     5.52        -        -
+   RTY SWEEP    MACRO   2024-26      535   429   -0.2533   -12.66   -27.02   -37.02        -        -
+   RTY CONTROL  EXMACRO ALL       31,267 1,177    0.0725     3.63   -10.73   -20.73     1.00     6.49
+   RTY CONTROL  EXMACRO 2022-23   13,500   509    0.0121     0.60   -13.76   -23.76        -        -
+   RTY CONTROL  EXMACRO 2024-26   17,767   668    0.1184     5.92    -8.44   -18.44        -        -
+   RTY CONTROL  MACRO   ALL        1,357   969    0.1350     6.75    -7.61   -17.61   -10.79    25.69
+   RTY CONTROL  MACRO   2022-23      607   428    0.3921    19.60     5.24    -4.76        -        -
+   RTY CONTROL  MACRO   2024-26      750   541   -0.0731    -3.65   -18.01   -28.01        -        -
+   RTY PLACEBO  EXMACRO ALL       25,559 1,177    0.0380     1.90   -12.46   -22.46    -1.22     5.06
+   RTY PLACEBO  EXMACRO 2022-23   10,883   509   -0.0223    -1.12   -15.48   -25.48        -        -
+   RTY PLACEBO  EXMACRO 2024-26   14,676   668    0.0828     4.14   -10.22   -20.22        -        -
+   RTY PLACEBO  MACRO   ALL        1,111   841    0.4293    21.47     7.11    -2.89     4.05    40.37
+   RTY PLACEBO  MACRO   2022-23      495   374    0.5317    26.59    12.23     2.23        -        -
+   RTY PLACEBO  MACRO   2024-26      616   467    0.3471    17.35     2.99    -7.01        -        -
+   YM  SWEEP    EXMACRO ALL       25,179 1,177    0.1494     0.75   -13.61   -23.61    -2.33     3.86
+   YM  SWEEP    EXMACRO 2022-23   10,765   509   -0.4661    -2.33   -16.69   -26.69        -        -
+   YM  SWEEP    EXMACRO 2024-26   14,414   668    0.6092     3.05   -11.31   -21.31        -        -
+   YM  SWEEP    MACRO   ALL        1,067   830   -0.0815    -0.41   -14.77   -24.77   -21.96    21.63
+   YM  SWEEP    MACRO   2022-23      478   367    3.1025    15.51     1.15    -8.85        -        -
+   YM  SWEEP    MACRO   2024-26      589   463   -2.6655   -13.33   -27.69   -37.69        -        -
+   YM  CONTROL  EXMACRO ALL       31,846 1,177    0.3219     1.61   -12.75   -22.75    -1.40     4.65
+   YM  CONTROL  EXMACRO 2022-23   13,780   509   -0.7026    -3.51   -17.87   -27.87        -        -
+   YM  CONTROL  EXMACRO 2024-26   18,066   668    1.1033     5.52    -8.84   -18.84        -        -
+   YM  CONTROL  MACRO   ALL        1,360   965    3.2588    16.29     1.93    -8.07    -2.22    35.45
+   YM  CONTROL  MACRO   2022-23      617   432    4.0535    20.27     5.91    -4.09        -        -
+   YM  CONTROL  MACRO   2024-26      743   533    2.5989    12.99    -1.37   -11.37        -        -
+   YM  PLACEBO  EXMACRO ALL       25,435 1,177    0.0730     0.36   -14.00   -24.00    -3.25     3.80
+   YM  PLACEBO  EXMACRO 2022-23   10,900   509   -0.3268    -1.63   -15.99   -25.99        -        -
+   YM  PLACEBO  EXMACRO 2024-26   14,535   668    0.3728     1.86   -12.50   -22.50        -        -
+   YM  PLACEBO  MACRO   ALL        1,075   826    4.8595    24.30     9.94    -0.06     5.08    43.43
+   YM  PLACEBO  MACRO   2022-23      468   361    3.9744    19.87     5.51    -4.49        -        -
+   YM  PLACEBO  MACRO   2024-26      607   465    5.5420    27.71    13.35     3.35        -        -
+   ZB  SWEEP    EXMACRO ALL       19,060   923    0.0058     5.84   -61.02  -123.52     4.05     7.60
+   ZB  SWEEP    EXMACRO 2022-23    5,864   255    0.0048     4.82   -62.04  -124.54        -        -
+   ZB  SWEEP    EXMACRO 2024-26   13,196   668    0.0063     6.29   -60.57  -123.07        -        -
+   ZB  SWEEP    MACRO   ALL          813   642    0.0048     4.84   -62.02  -124.52    -9.13    18.30
+   ZB  SWEEP    MACRO   2022-23      233   181   -0.0008    -0.80   -67.66  -130.16        -        -
+   ZB  SWEEP    MACRO   2024-26      580   461    0.0071     7.11   -59.75  -122.25        -        -
+   ZB  CONTROL  EXMACRO ALL       18,214   923    0.0113    11.34   -55.52  -118.02     9.17    13.49
+   ZB  CONTROL  EXMACRO 2022-23    5,646   255    0.0089     8.88   -57.98  -120.48        -        -
+   ZB  CONTROL  EXMACRO 2024-26   12,568   668    0.0124    12.45   -54.41  -116.91        -        -
+   ZB  CONTROL  MACRO   ALL          863   658    0.0074     7.35   -59.51  -122.01    -5.29    19.60
+   ZB  CONTROL  MACRO   2022-23      236   180    0.0143    14.30   -52.56  -115.06        -        -
+   ZB  CONTROL  MACRO   2024-26      627   478    0.0047     4.73   -62.13  -124.63        -        -
+   ZB  PLACEBO  EXMACRO ALL       15,274   923    0.0126    12.60   -54.26  -116.76    10.24    14.97
+   ZB  PLACEBO  EXMACRO 2022-23    4,694   255    0.0089     8.89   -57.97  -120.47        -        -
+   ZB  PLACEBO  EXMACRO 2024-26   10,580   668    0.0142    14.24   -52.62  -115.12        -        -
+   ZB  PLACEBO  MACRO   ALL          762   599    0.0206    20.59   -46.27  -108.77     6.52    33.74
+   ZB  PLACEBO  MACRO   2022-23      205   165    0.0332    33.23   -33.63   -96.13        -        -
+   ZB  PLACEBO  MACRO   2024-26      557   434    0.0159    15.93   -50.93  -113.43        -        -
+   CL  SWEEP    EXMACRO ALL       26,494 1,182    0.0024     2.35   -22.01   -42.01    -1.61     6.17
+   CL  SWEEP    EXMACRO 2022-23   11,171   515    0.0031     3.11   -21.25   -41.25        -        -
+   CL  SWEEP    EXMACRO 2024-26   15,323   667    0.0018     1.81   -22.55   -42.55        -        -
+   CL  SWEEP    MACRO   ALL        1,130   861   -0.0047    -4.67   -29.03   -49.03   -33.02    20.66
+   CL  SWEEP    MACRO   2022-23      465   368    0.0272    27.18     2.82   -17.18        -        -
+   CL  SWEEP    MACRO   2024-26      665   493   -0.0269   -26.95   -51.31   -71.31        -        -
+   CL  CONTROL  EXMACRO ALL       32,722 1,182    0.0015     1.47   -22.89   -42.89    -2.55     5.39
+   CL  CONTROL  EXMACRO 2022-23   14,285   515    0.0028     2.84   -21.52   -41.52        -        -
+   CL  CONTROL  EXMACRO 2024-26   18,437   667    0.0004     0.40   -23.96   -43.96        -        -
+   CL  CONTROL  MACRO   ALL        1,452 1,010   -0.0052    -5.22   -29.58   -49.58   -25.46    13.61
+   CL  CONTROL  MACRO   2022-23      642   445   -0.0037    -3.69   -28.05   -48.05        -        -
+   CL  CONTROL  MACRO   2024-26      810   565   -0.0064    -6.43   -30.79   -50.79        -        -
+   CL  PLACEBO  EXMACRO ALL       26,212 1,182   -0.0012    -1.21   -25.57   -45.57    -5.35     2.99
+   CL  PLACEBO  EXMACRO 2022-23   11,380   515    0.0005     0.46   -23.90   -43.90        -        -
+   CL  PLACEBO  EXMACRO 2024-26   14,832   667   -0.0025    -2.50   -26.86   -46.86        -        -
+   CL  PLACEBO  MACRO   ALL        1,163   874   -0.0149   -14.88   -39.24   -59.24   -38.20     5.34
+   CL  PLACEBO  MACRO   2022-23      526   390   -0.0198   -19.75   -44.11   -64.11        -        -
+   CL  PLACEBO  MACRO   2024-26      637   484   -0.0109   -10.86   -35.22   -55.22        -        -
+   --- pooled (5 markets, USD/contract) ---
+   POOLSWEEP    EXMACRO ALL      118,847 1,184               1.53   -26.48   -50.14    -0.53     3.54
+   POOLSWEEP    EXMACRO 2022-23   48,753   516              -1.12   -27.28   -49.07        -        -
+   POOLSWEEP    EXMACRO 2024-26   70,094   668               3.38   -25.93   -50.89        -        -
+   POOLSWEEP    MACRO   ALL        5,034 1,150               1.96   -26.24   -50.09   -12.91    16.51
+   POOLSWEEP    MACRO   2022-23    2,091   496              19.06    -6.77   -28.25        -        -
+   POOLSWEEP    MACRO   2024-26    2,943   654             -10.18   -40.08   -65.61        -        -
+   POOLCONTROL  EXMACRO ALL      146,318 1,184               3.31   -23.13   -45.21     1.26     5.23
+   POOLCONTROL  EXMACRO 2022-23   61,205   516               0.42   -24.55   -45.15        -        -
+   POOLCONTROL  EXMACRO 2024-26   85,113   668               5.38   -22.12   -45.26        -        -
+   POOLCONTROL  MACRO   ALL        6,374 1,177               6.67   -20.24   -42.78    -5.05    18.42
+   POOLCONTROL  MACRO   2022-23    2,719   512              11.97   -12.71   -33.03        -        -
+   POOLCONTROL  MACRO   2024-26    3,655   665               2.73   -25.83   -50.03        -        -
+   POOLPLACEBO  EXMACRO ALL      118,879 1,184               2.16   -24.48   -46.76    -0.08     4.26
+   POOLPLACEBO  EXMACRO 2022-23   49,170   516               0.19   -24.95   -45.73        -        -
+   POOLPLACEBO  EXMACRO 2024-26   69,709   668               3.55   -24.15   -47.49        -        -
+   POOLPLACEBO  MACRO   ALL        5,232 1,167              12.26   -15.18   -38.26    -0.03    24.43
+   POOLPLACEBO  MACRO   2022-23    2,188   507               8.77   -16.30   -37.01        -        -
+   POOLPLACEBO  MACRO   2024-26    3,044   660              14.77   -14.38   -39.17        -        -
+
+[G2] pooled ex-macro SWEEP cell (GATING cell), USD/contract at the 2tk/side rung
+     after-cost mean (2tk/side): -50.14 $/event   (gross +1.53; 1tk/side -26.48)
+     session-block CI95 of the after-cost mean: [-52.40, -47.88]   (gross CI [-0.53, +3.54])
+     K_eff over 5 markets: rho_bar = +0.1689 (10 pairs, session gross-sum corr) -> K_eff = 5/(1+4*rho_bar) = 2.984 (printed per spec; the pooled test is ONE test at alpha 0.05)
+     OPERATIVE shared-draw CIRCULAR null (whole-session shift of the event overlay, k=1..S_union-1,
+     S_union=1184; entry/exit via per-session minute-slot ffilled close grids; identity-checked at k=0):
+       obs gross mean +1.53 $/ev; null mean +0.04, sd 0.89; two-sided p = 0.0853
+       in words: the probability, under the null that the sweep-overlay (clock slots + fade directions)
+       carries no session-specific information, of a pooled gross per-event mean at least this large in
+       magnitude when the whole overlay is circularly shifted by k sessions (shared k, all markets).
+       SECOND COMPUTATION (sign-flip, one shared eps per session, B=10,000): p = 0.1623
+     G2a after-cost mean>0: False   G2b CI excl 0: True   G2c circular p<0.05: False   => G2 FAIL
+
+[G3] THE DISCRIMINATOR: pooled ex-macro GROSS per-event mean, SWEEP minus k-sigma CONTROL;
+     joint circular session-block bootstrap CI95 (same draws both objects).
+     mkt    n_sweep  n_ctrl   sweep$    ctrl$   delta$    ci_lo    ci_hi
+     ES      23,846  32,269    -0.85     2.00    -2.85    -8.03     2.58
+     RTY     24,268  31,267     0.42     3.63    -3.20    -6.60     0.10
+     YM      25,179  31,846     0.75     1.61    -0.86    -4.49     3.01
+     ZB      19,060  18,214     5.84    11.34    -5.51    -7.80    -3.28
+     CL      26,494  32,722     2.35     1.47     0.89    -3.86     5.49
+     POOLED 118,847 146,318     1.53     3.31    -1.77    -3.93     0.42
+     G3 clause: delta_obs > 0 AND CI lo > 0  =>  G3 FAIL  (sweep does NOT beat the generic k-sigma MR control)
+
+[G4] vol-matched non-sweep placebo vs sweep, pooled ex-macro GROSS per-event mean
+     sweep +1.53 $/ev (n=118,847)  placebo +2.16 $/ev (n=118,879)  delta -0.63  CI95 [-3.40, +2.24] (context)
+     G4 clause (spec 'shows LESS', point estimates): placebo < sweep  =>  G4 FAIL
+
+[G5] ZB leg vs the spec-named G00062 cost-fragility bar (per-event GROSS >= breakeven ticks at the 2-tick rung)
+     ZB ex-macro sweep per-event gross: +0.1867 ticks (n=19,060)  vs bar 2.1395 ticks ($66.86/RT G00062 model)
+     (family 2tk/side rung for scale: $129.36/RT = 4.140 ticks)
+     G5 FAIL  -> the ZB cell is recorded COST-DEAD (non-blocking for the decision rule)
+
+[G6] chronology: sign consistency of the pooled ex-macro GROSS mean, 2022-23 vs 2024-26
+     era1 2022-23: -1.12 $/ev (n=48,753)   era2 2024-26: +3.38 $/ev (n=70,094)   (ZB era1 starts 2022-12-27)
+     G6 clause: sign(era1) == sign(era2)  =>  G6 FAIL
+
+[G7] {1,2}-tick/side per-market band, pooled + per-market after-cost means (ex-macro sweep cell)
+     mkt      gross$  net@1tk/s  net@2tk/s
+     ES        -0.85     -30.21     -55.21
+     RTY        0.42     -13.94     -23.94
+     YM         0.75     -13.61     -23.61
+     ZB         5.84     -61.02    -123.52
+     CL         2.35     -22.01     -42.01
+     POOLED     1.53     -26.48     -50.14
+     G7: band printed for every market; the CONSERVATIVE 2tk/side rung gates G2 (30-min horizon is cost-hostile).  APPLIED
+
+====================================================================================================
+GATE TABLE (program-printed)
+GATE  | SPEC                                                                          | OBSERVED | PASS-FAIL
+G1    | MDE printed per market BEFORE any observed mean                               | printed  | PASS
+G2    | pooled ex-macro after-cost mean>0 AND session-block CI excl 0 AND circular p<.05| -50.14$/p=0.085 | FAIL
+G3    | DISCRIMINATOR: sweep minus k-sigma control delta CI excludes 0 (delta>0)      | -1.77$   | FAIL
+G4    | vol-matched non-sweep placebo shows LESS than the sweep cells                 | +2.16!<+1.53 | FAIL
+G5    | ZB per-event gross >= G00062 breakeven ticks at the 2-tick rung (else COST-DEAD)| +0.19tk  | FAIL
+G6    | 2022-23 vs 2024-26 sign consistency, pooled ex-macro gross mean               | -1.1/+3.4 | FAIL
+G7    | {1,2}-tick/side per-market band printed; conservative 2tk/side rung gates     | applied  | PASS
+
+DECISION RULE (spec verbatim, mechanical): G2+G3+G4+G6 NOT all PASS -> CLOSED AT SCOPE (S28)
+   -> and with it the last open intraday-MR representation on the non-NQ complex closes.
+====================================================================================================
+
+wrote out/gate_table.txt, out/cells.csv, out/discriminator.csv
+exit=0

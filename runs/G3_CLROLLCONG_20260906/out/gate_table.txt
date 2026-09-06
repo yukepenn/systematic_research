@@ -1,0 +1,135 @@
+====================================================================================================
+G3_CLROLLCONG_20260906 (G00094) — Goldman-roll congestion, CL primary, GC/SI secondary
+====================================================================================================
+transport ncd_day.py sha256 = 17603bdc722d30f386b013d35a33f8b2cb510d8b7ea6fdbc07f0274bf01baec9
+seal: all rows >= 2026-08-01 dropped at load; candidate months 2009-01..2026-07
+G3_CLROLLCONG_20260906 (G00094) — GSCI/commodity-index roll congestion (the Goldman roll).
+
+FROZEN OBJECT (spec.yaml, committed before results): CL primary (GC/SI reported where pairable):
+per month, the F1-F2 calendar-spread return over the GSCI roll window (business days 5-9 of the
+month), per-contract day store, POINTS. Congestion trade = LONG-back/SHORT-front through the
+window. Conditional split: trailing-20-day vol tercile of the outright, top vs rest, with the
+matched unconditional control.
+(full frozen-interpretation notes I1-I12 in src/clrollcong.py header)
+
+seal assert PASS: max loaded/used date 2026-07-31 < 2026-08-01
+tick-header asserts PASS on every loaded contract: CL=209 contracts @ 0.01, GC=89 contracts @ 0.1, SI=89 contracts @ 0.005
+
+----------------------------------------------------------------------------------------------------
+PAIRING COVERAGE (census of all candidate months; the store's systematic gaps, itemized)
+----------------------------------------------------------------------------------------------------
+
+CL: census 211 months; status counts: {'F2_WINDOW_GAP_6of6': 128, 'OK': 80, 'NO_F1_DATA': 3}
+  usable-for-primary 80; per frozen era: {'2009-14': 69, '2015-20': 11, '2021-26': 0}
+  usable span 2009-04 .. 2015-11
+
+GC: census 211 months; status counts: {'OK': 142, 'F2_WINDOW_GAP_6of6': 52, 'F1_SHORT_MONTH': 8, 'F2_WINDOW_GAP_3of6': 2, 'F2_WINDOW_GAP_4of6': 2, 'F2_WINDOW_GAP_2of6': 2, 'F2_WINDOW_GAP_5of6': 2, 'NO_F1_DATA': 1}
+  usable-for-primary 142; per frozen era: {'2009-14': 67, '2015-20': 39, '2021-26': 36}
+  usable span 2009-04 .. 2026-07
+
+SI: census 211 months; status counts: {'OK': 154, 'F2_WINDOW_GAP_6of6': 43, 'F1_SHORT_MONTH': 6, 'F2_WINDOW_GAP_2of6': 3, 'NO_F1_DATA': 2, 'F2_WINDOW_GAP_3of6': 2, 'F2_WINDOW_GAP_5of6': 1}
+  usable-for-primary 154; per frozen era: {'2009-14': 67, '2015-20': 44, '2021-26': 43}
+  usable span 2009-04 .. 2026-07
+
+CL gap anatomy (the TSYROLL-style systematic store truncation, measured):
+  months lost to F2_WINDOW_GAP: 128; first lost month 2015-12; every CL contract with delivery >= 2016-02 carries only ~its final month of rows,
+  so the F2 leg (delivery M+2) is born ~day 16-18 of month M and can never overlap bd5-9.
+  This is DATA ABSENCE in the store, not market absence; itemized in monthly_panel.csv.
+
+----------------------------------------------------------------------------------------------------
+G1 — MDE FIRST (printed before any observed pooled mean)
+----------------------------------------------------------------------------------------------------
+CL usable months N = 80 (census 211; shortfall itemized above, honest)
+monthly window-return sd = 0.27751 pt  (cost-invariant)
+MDE (one-sided 5%, 80% power) = 2.4865*sd/sqrt(N) = 0.07715 pt = $77/month-trade
+
+----------------------------------------------------------------------------------------------------
+G2 — POOLED AFTER-COST MEAN vs CIRCULAR-SHIFT NULL (CL, gating)
+----------------------------------------------------------------------------------------------------
+pooled GROSS mean       = +0.04713 pt = $+47.13/month-trade  (share>0 47.5%)
+pooled NET-CONS mean    = +0.00713 pt = $+7.13/month-trade  (share>0 38.8%)
+month-bootstrap 95% CI (net-cons) = [-0.04975, +0.07250] pt  (cross-check, non-gating)
+flagged-day construction T0 = +0.04713 pt vs per-month pooled gross +0.04713 pt (same event two ways; T0 uses all 400 valid window days incl. partial months)
+shift null: 1307 circular shifts over 1308 valid daily ΔS obs; placebo mean +0.00574, sd 0.06580 pt
+EVENT IN WORDS: p = probability that a circularly-shifted placement of the 5-day window
+  over the same daily spread-change series yields pooled drift >= the observed bd5-9 one.
+p_1s(shift rank) = 0.2913   |   second computation, normal tail of placebo dist: z = +0.629, p = 0.2647
+G2 clause A (net-cons mean > 0): PASS   clause B (p_shift < 0.05): FAIL   ==> G2 FAIL
+
+----------------------------------------------------------------------------------------------------
+G3 — ERA THIRDS (frozen 2009-14 / 2015-20 / 2021-26) — THE DECAY READ
+----------------------------------------------------------------------------------------------------
+root era          n   gross_pt  netcons_pt      ci_lo      ci_hi   sh>0
+CL   2009-14     69    0.03348    -0.00652   -0.07131    0.06711  43.5%
+CL   2015-20     11    0.13273     0.09273    0.01182    0.16909  72.7%
+CL   2021-26      0                                  EMPTY (store-limited)
+GC   2009-14     67    0.08657    -0.31343   -0.47463   -0.13433  56.7%
+GC   2015-20     39    0.38462    -0.01538   -0.34359    0.42564  61.5%
+GC   2021-26     36    0.43056     0.03056   -0.20556    0.29451  63.9%
+SI   2009-14     67    0.00746    -0.01254   -0.02642    0.00179  55.2%
+SI   2015-20     44   -0.00030    -0.02030   -0.03095   -0.00891  43.2%
+SI   2021-26     43    0.00840    -0.01160   -0.02056   -0.00214  55.8%
+
+SUPPLEMENTARY (non-gating) — CL usable months in three equal-n chronological thirds
+CL   T1:2009-04..2011-06     27    0.08333     0.04333   -0.10371    0.21075  40.7%
+CL   T2:2011-07..2013-09     27   -0.03185    -0.07185   -0.11370   -0.03296  40.7%
+CL   T3:2013-10..2015-11     26    0.09154     0.05154   -0.02116    0.11923  61.5%
+
+SUPPLEMENTARY (non-gating) — GC/SI actual-roll months only (F1 changed vs prior month)
+GC   2009-14/rollmo  28    0.05714    -0.34286   -0.64643    0.02500  42.9%
+GC   2015-20/rollmo  14    0.37857    -0.02143   -0.35714    0.39304  64.3%
+GC   2021-26/rollmo  11    0.34545    -0.05455   -0.45477    0.42727  54.5%
+SI   2009-14/rollmo  27    0.00148    -0.01852   -0.04649    0.01241  48.1%
+SI   2015-20/rollmo  17    0.00071    -0.01929   -0.02700   -0.01059  41.2%
+SI   2021-26/rollmo  17    0.01094    -0.00906   -0.02159    0.00459  64.7%
+
+G3 (report gate, all cells printed incl. empties): PASS-AS-PRINTED
+
+----------------------------------------------------------------------------------------------------
+G4 — TOP-VOL-TERCILE (IMPAIRED-ARB) vs REST, with matched unconditional control (CL)
+----------------------------------------------------------------------------------------------------
+months with valid vol20: 79 of 80 usable (1 excluded, <17 trailing closes)
+tercile cuts (full-sample, in-sample conditioning, DISCOVERY): q33=0.01350 q67=0.01946 (daily log-ret sd)
+  TOP (impaired-arb)     n= 27  gross +0.04370  net-cons +0.00370 pt  CI[-0.05223,+0.05926]  share>0(net) 44.4%
+  REST                   n= 52  gross +0.03462  net-cons -0.00538 pt  CI[-0.08366,+0.08366]  share>0(net) 34.6%
+  ALL (uncond control)   n= 79  gross +0.03772  net-cons -0.00228 pt  CI[-0.05798,+0.06114]  share>0(net) 38.0%
+  ALL usable (pooled)    n= 80  gross +0.04713  net-cons +0.00713 pt  CI[-0.04975,+0.07100]  share>0(net) 38.8%
+  delta (TOP - REST) net-cons = +0.00909 pt, bootstrap 95% CI [-0.09284, +0.10650]
+G4 clause A (TOP net-cons mean > 0): PASS   clause B (delta CI_lo > 0): FAIL   ==> G4 FAIL
+NOTE: with the CL store truncated post-2016-01, this cell can only speak for 2009-15;
+      the 2020 negative-price episode (the canonical impaired-arb month) is NOT in the CL panel.
+
+----------------------------------------------------------------------------------------------------
+G5 — COST MODEL (MODELED, SPREAD_ONLY, {1,2}-tick band per leg; CONS rung gates)
+----------------------------------------------------------------------------------------------------
+  CL: tick 0.01 pt ($10.00); base 2x1 tick = 0.020 pt = $20.00; cons 2x2 ticks = 0.040 pt = $40.00 per month-trade (2 legs x 1 RT)
+  GC: tick 0.1 pt ($10.00); base 2x1 tick = 0.200 pt = $20.00; cons 2x2 ticks = 0.400 pt = $40.00 per month-trade (2 legs x 1 RT)
+  SI: tick 0.005 pt ($25.00); base 2x1 tick = 0.010 pt = $50.00; cons 2x2 ticks = 0.020 pt = $100.00 per month-trade (2 legs x 1 RT)
+  COMMISSION_ONLY info, non-gating: 2 x $4.36 = $8.72/month-trade
+  tick headers asserted == declared on every loaded contract (see assert line above)
+G5: PASS (printed; cons rung gates G2/G3/G4 net figures; EVIDENCE=MODELED)
+
+----------------------------------------------------------------------------------------------------
+IDENTITY SCREENS (non-gating, disclosed)
+----------------------------------------------------------------------------------------------------
+  CL: merged-path contamination flags (F1==F2 volume >=3 window days): 0 
+      absurd-spread flags (|S(bd4)| > 10 pt): 0 
+  GC: merged-path contamination flags (F1==F2 volume >=3 window days): 0 
+      absurd-spread flags (|S(bd4)| > 50 pt): 2 ['2025-07', '2026-07']
+  SI: merged-path contamination flags (F1==F2 volume >=3 window days): 0 
+      absurd-spread flags (|S(bd4)| > 50 pt): 0 
+
+====================================================================================================
+GATE / SPEC / OBSERVED / PASS-FAIL (program-printed)
+====================================================================================================
+GATE              SPEC                                      OBSERVED                                                  VERDICT
+G1_MDE_first      MDE printed before observed; honest N     N=80 (census 211), MDE=0.0771 pt ($77)                    PASS
+G2_pooled         net-cons mean>0 AND shift p<0.05          net-cons +0.0071 pt, p_shift 0.2913                       FAIL
+G3_era_thirds     2009-14/2015-20/2021-26 printed           printed; CL era3 EMPTY (store-limited), GC/SI carry era3  PASS
+G4_impaired_arb   TOP net-cons>0 AND delta CI_lo>0          TOP +0.0037 pt, delta +0.0091 CI[-0.0928,+0.1065]         FAIL
+G5_cost           {1,2}-tick band, cons gates, ticks assertedprinted; asserts PASS                                     PASS
+
+DECISION (mechanical): CLOSED-AS-COMPETED-AWAY — permanent; the expected and bankable outcome (spec decision rule: G2+G4 both fail)
+EVIDENCE STATUS of every number above: DISCOVERY (first read of this representation; consumed).
+
+wrote out/monthly_panel.csv, out/era_thirds.csv, out/verdicts.json

@@ -1,0 +1,98 @@
+======================================================================================================================
+=== G3_COMPCASCADE_20260906 -- compression-primed stop cascades, 5-market daily breakout (G00093, family GENESIS3_EVENT)
+======================================================================================================================
+DEDUP NOTE (spec): NQ allowed here -- daily breakout is not a P1 object, and NQ's prior Donchian-family
+closures were intraday/ensemble scopes; this is the compression->expansion row's first strategy-object entry.
+CL: no certified daily exists; built in-run from SM1M_CL_SUBSTRATE 1m (session close-to-close, POINTS);
+CL holdout freeze RETIRED 2026-09-06 (owner directive) -> full pre-seal history discovery-consumable.
+
+INPUT ES   sha256 249921cb6d790b8478910fabbc480e0ac82a3d20a206b38fedb34fa1b2054f91  [MATCH]
+INPUT ZB   sha256 9446e7f19ee17754d5afd31c65790e5fe24ae76f23ebf128101c7c0bdf786c56  [MATCH]
+INPUT GC   sha256 93ec562d3ebb3ce7021855945545b3bb60365e8b090c6d62de2a675f39ed98a1  [MATCH]
+INPUT NQ   sha256 15d247470379e8818aaf4a3dd3cfea7edcde7387e05b9a36e71adccb40471e9f  [MATCH]
+INPUT CL1M sha256 e587486c23f5b61184b6a49aaeebc77f1a3e74e0731d8d0f4192087587adc137  [MATCH]
+
+CL daily BUILT: 1182 sessions 2022-01-03 -> 2026-07-31, clean_daily==0: 0; session census == MANIFEST (1,182 / 2022-01-03 -> 2026-07-31) PASS
+CL daily parquet sha256 6221e4d8d4ffbd6205d47fa603ba787b37dd32f262dec2a6227835285c5d35a1  (out/cl_daily.parquet)
+
+ES: 4308 rows 2009-03-31 -> 2026-07-31; diff(A)==certified ret_points maxerr 0.0e+00; K steps: 69 roll/contract-change + 1 gap-day(clean==0) + 0 HOLE(same-contract clean day; excluded from windows); window-excluded days total 17
+ZB: 4393 rows 2009-03-31 -> 2026-07-31; diff(A)==certified ret_points maxerr 0.0e+00; K steps: 69 roll/contract-change + 1 gap-day(clean==0) + 1 HOLE(same-contract clean day; excluded from windows); window-excluded days total 12
+GC: 4347 rows 2009-03-31 -> 2026-07-31; diff(A)==certified ret_points maxerr 9.1e-13; K steps: 89 roll/contract-change + 0 gap-day(clean==0) + 0 HOLE(same-contract clean day; excluded from windows); window-excluded days total 18
+GC cross-check: in-run level series vs certified close_padj -- offset moves only where an adjustment (roll/gap/hole) is by-design; max move on quiet days 9.09e-13 PASS
+NQ spine: 5262 sessions 2006-01-05 -> 2026-05-29; diff(close_adj) vs ret_pts maxerr 0.0e+00 (finite rets only); clean_daily==0: 1
+
+SEAL ES: max session 2026-07-31 < 2026-08-01 PASS | grid assert: closes on half-tick settlement grid (0.125); max residual 0.00e+00 PASS  (cost tick 0.25 = certified manifest tick_size)
+SEAL ZB: max session 2026-07-31 < 2026-08-01 PASS | grid assert: closes on half-tick settlement grid (0.015625); max residual 0.00e+00 PASS  (cost tick 0.03125 = certified manifest tick_size)
+SEAL GC: max session 2026-07-31 < 2026-08-01 PASS | grid assert: closes on half-tick settlement grid (0.05); max residual 2.96e-12 PASS  (cost tick 0.1 = certified manifest tick_size)
+SEAL CL: max session 2026-07-31 < 2026-08-01 PASS | grid assert: closes on half-tick settlement grid (0.005); max residual 0.00e+00 PASS  (cost tick 0.01 = certified manifest tick_size)
+SEAL NQ: max session 2026-05-29 < 2026-08-01 PASS | tick assert: n/a on back-adjusted spine (tick 0.25 from contract spec; noted)
+
+ES: breaks with prior-compression (PRIMARY events) 575 | no-compression breaks (CONTROL) 1632 | spec-literal comp[t] events 340 | window-invalid at k=2 among breaks: 78
+ZB: breaks with prior-compression (PRIMARY events) 589 | no-compression breaks (CONTROL) 1460 | spec-literal comp[t] events 301 | window-invalid at k=2 among breaks: 51
+GC: breaks with prior-compression (PRIMARY events) 570 | no-compression breaks (CONTROL) 1495 | spec-literal comp[t] events 275 | window-invalid at k=2 among breaks: 72
+NQ: breaks with prior-compression (PRIMARY events) 682 | no-compression breaks (CONTROL) 1977 | spec-literal comp[t] events 392 | window-invalid at k=2 among breaks: 6
+CL: breaks with prior-compression (PRIMARY events) 159 | no-compression breaks (CONTROL) 379 | spec-literal comp[t] events 75 | window-invalid at k=2 among breaks: 0
+
+G1 MDE (PRINTED BEFORE ANY OBSERVED EVENT MEAN)  -- sigma from UNCONDITIONAL k=2 forward $ moves, N = valid event count
+    ES: uncond 2d $sd      2,366  n_event(k2)  563  MDE80(one-sided 5%) $     248/event
+    ZB: uncond 2d $sd      1,300  n_event(k2)  576  MDE80(one-sided 5%) $     135/event
+    GC: uncond 2d $sd      3,631  n_event(k2)  554  MDE80(one-sided 5%) $     384/event
+    NQ: uncond 2d $sd      3,632  n_event(k2)  682  MDE80(one-sided 5%) $     346/event
+    CL: uncond 2d $sd      2,914  n_event(k2)  159  MDE80(one-sided 5%) $     574/event
+    POOLED: sigma_pool $2,931 (composition-weighted), N 2534, MDE80 $145/event
+
+PRIMARY (k=2, pooled 5 markets, $/event/contract):  n_event 2534  n_control 6777
+    gross mean       $+10.37/event
+    after-cost OPT   $-8.03/event      after-cost CONS $-22.07/event   [GATING]
+    event-block bootstrap 95% CI (cons): [$-128.25, $+84.51]   (414 blocks, 10000 draws)
+    shared-draw circular-shift null (2000 draws, ONE uniform per draw across all 5 markets):
+        null mean $-10.90, sd $75.73; p one-sided(cons mean > null) = 0.5697 [GATING], two-sided = 0.8596
+    P-MEANING IN WORDS: p = share of 2,000 random circular placements of the SAME signed event structure
+        (dependence preserved by one shared draw) whose pooled after-cost(cons) mean >= the observed $-22.07.
+        Second, independent computation of the same event: the event-block bootstrap CI above (does 0 sit inside?).
+    ANNEX (non-gating) z-pooled k=2 gross: mean z +0.0017 (points / causal trailing-60 daily sd x sqrt2; n 2534)
+
+MANDATORY CONTROL (same breach, NO prior compression, same k=2, same costs, same validity rule):
+    control mean (cons) $-149.05/event over n 6777 (163 blocks); gross $-117.52
+    DELTA (event - control, cons) = $+126.98;  independent-block bootstrap 95% CI [$-13.46, $+263.59]
+    ANNEX composition-matched delta (event-weighted per-market deltas): $+129.73
+
+ASYMMETRY (k=2 cons): WITH-trend n 1408 mean $-13.30 CI [-157.36,+129.28] | AGAINST n 1126 mean $-33.03 CI [-189.28,+129.97]
+    WITH-minus-AGAINST = $+19.74, block-bootstrap 95% CI [$-201.34, $+233.60]  -> NOT CLAIMED (unpowered/indistinct -- reported only)
+
+ERA TABLE (k=2 after-cost CONS, pooled; sign gates G5; CL contributes only to era3 by span):
+    era1_<=2015    n 1010  gross $   +13.86  aftercost $   -18.00  ctrl $   -82.99  sign -
+    era2_2016-21   n  771  gross $   +58.20  aftercost $   +25.05  ctrl $   -67.62  sign +
+    era3_2022-26   n  753  gross $   -43.28  aftercost $   -75.77  ctrl $  -326.49  sign -
+    ERA CLASSIFICATION: -+- -> SIGN-FLIP / modern-negative
+
+PER-MARKET k=2 (events, after-cost cons $/event):
+    ES: n  563  gross $   -28.86  cons $   -58.22  (ctrl cons $   -86.78, n_ctrl 1566)
+    ZB: n  576  gross $    +7.22  cons $   -59.64  (ctrl cons $  -144.50, n_ctrl 1422)
+    GC: n  554  gross $   +83.75  cons $   +59.39  (ctrl cons $  -217.16, n_ctrl 1439)
+    NQ: n  682  gross $   -33.13  cons $   -47.49  (ctrl cons $  -118.56, n_ctrl 1971)
+    CL: n  159  gross $   +91.64  cons $   +67.28  (ctrl cons $  -323.33, n_ctrl 379)
+
+SPEC-LITERAL comp[t] annex (k=2 pooled, cons): n 1355  mean $-38.46   (non-gating; O2 disclosed)
+
+COSTS/ct RT (MODELED ALL_IN rungs = {1,2}-tick RT spread band + $4.36 commission; basis MODELED, EVIDENCE: family convention COST_MODEL.md):
+    ES: tick 0.25 x $50/pt -> opt $16.86 | cons $29.36
+    NQ: tick 0.25 x $20/pt -> opt $9.36 | cons $14.36
+    CL: tick 0.01 x $1,000/pt -> opt $14.36 | cons $24.36
+    ZB: tick 0.03125 x $1,000/pt -> opt $35.61 | cons $66.86
+    GC: tick 0.1 x $100/pt -> opt $14.36 | cons $24.36
+
+GATE TABLE  (printed by program)
+GATE            SPEC                                                                                          OBSERVED                                                                                    PASS-FAIL
+G1_MDE_FIRST    MDE printed per market + pooled BEFORE observed means                                         per-market + pooled MDE80 $145/event at N=2534                                              PASS
+G2_EDGE         pooled k=2 after-cost(cons) mean > 0 AND event-block CI excl 0 AND shared-draw p < .05        mean $-22.07, CI [-128.25,+84.51], p_1s 0.5697                                              *** FAIL ***
+G3_VS_CONTROL   beats unconditional-break control; delta CI excludes 0 (same drift in control = FAIL)         delta $+126.98, CI [-13.46,+263.59]; comp-matched $+129.73                                  *** FAIL ***
+G4_ASYMMETRY    WITH vs AGAINST printed, each with own CI; claim only if diff CI excl 0                       WITH $-13.30 vs AGAINST $-33.03; diff CI [-201.34,+233.60] -> NOT CLAIMED (unpowered/indistinct -- reported only)PASS
+G5_ERA          3-era signs on pooled cell; modern(era3 2022-26)-negative = FAIL                              -+- -> SIGN-FLIP / modern-negative; era3 mean $-75.77                                       *** FAIL ***
+G6_COST         {1,2}-tick RT band + $4.36 comm; ticks asserted from data; cons rung gates                    all 5 rungs printed; ticks asserted on raw closes (NQ spine: contract-spec, noted)          PASS
+
+DECISION RULE (spec, mechanical): G2=FAIL G3=FAIL G5=FAIL -> CLOSED AT SCOPE (S28 block)
+events/yr (pooled, union span ~20.6y) = 123.2; after-cost economics at cons rung = $-2,719/yr across the 5-market union
+
+PREREG CONSTANTS ECHO: {"range_win": 5, "quantile_win": 60, "bottom_q": 0.2, "break_lookback": 5, "drift_win": 20, "k_holds": [1, 2, 3], "k_primary": 2, "warmup": 64, "clean_gap_days_max": 5, "block_chain_gap_days": 5, "n_shift": 2000, "n_boot": 10000, "commission": 4.36, "cost_rungs_ticks_RT": [1, 2], "gating_rung": "cons", "eras": ["<=2015", "2016-21", "2022-26"], "compression_timing_primary": "comp[t-1] (O2)", "seed": 93}
+======================================================================================================================

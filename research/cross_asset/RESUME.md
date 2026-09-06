@@ -18,20 +18,21 @@ integration; every update is committed and pushed immediately (owner checkpoint 
 - ⭐ Standing survivor: **ZBMACRO01** (G00072 PASS/selected) — engine candidate, Class-P
   pre-read = G00078.
 
-## In flight (Wave 5) — updated 2026-09-06 after Wave-4 integration
+## CAMPAIGN STATE: CONSOLIDATION (updated 2026-09-06 after Wave 7)
 
-Wave 4 DONE and integrated (G00079 PASS/FT0-licensed · G00080 FAIL/family-closed · G00081
-DEFECT/not-cleared-at-debt-bar · G00082 NULL/facts-banked). ⭐ **ZBMACRO01 is on the FAST TRACK.**
+**Waves 1-7 complete and integrated. Ledger G00066-94 all recorded. No workflow in flight.**
+The consolidated §33 print lives at the bottom of `CAMPAIGN_STATE.md`.
 
-Wave 5 (specs being frozen at this checkpoint):
-- `runs/G3_ZBMACRO_FT_20260906` (G00083): FT0 freeze doc + FT1 independent reproduction +
-  FT4 NinjaScript class WRITTEN OFFLINE (🔴 NOT copied into NT8 — a .cs copy rebuilds
-  Custom.dll against the RUNNING live book; compile/Analyzer/parity happen at the 09-21
-  window, precedent = the HD-23 offline certification) + FT10 owner packet draft.
-- Falsifiers: post-FOMC sign-conditioned ZB drift (G00084) · close-hour hedging-flow momentum
-  ES/RTY/YM vol-gated (G00085) · bond-index duration-extension day (G00086).
+- ⭐ ZBMACRO01 = READY-FOR-09-21-WINDOW (`runs/G3_ZBMACRO_FT_20260906/DEPLOYMENT_PACKET.md`).
+- The $0 frontier exhaustion is now SCOPED by `REPRESENTATION_COVERAGE_MATRIX.md` (the §16
+  conditions are met and documented, not asserted).
+- Remaining EV: the 09-21 window (owner-present) · roll-quote sampling (cron, through 09-22) ·
+  forward-accrual reads (ZBMACRO monitor, RATESCARRY revival) · owner-gated data spends ·
+  epsilon tail only on owner request.
 
-**Recovery rule:** unchanged.
+**A fresh session:** read this file + the CAMPAIGN_STATE.md print + CURRENT_LIVE_TRUTH.md;
+recreate the roll cron; no research work is owed unless the owner directs or the 09-21 window
+opens.
 
 ## Standing duties every session
 

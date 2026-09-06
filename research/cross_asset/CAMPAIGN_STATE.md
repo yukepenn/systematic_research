@@ -171,7 +171,61 @@ stay closed; adjacent questions with genuinely different targets are legitimate.
 | **Wave 4** | engine+skeptic · concession · rates carry · XPASS01 | ✅ DONE — ⭐ **G00079 PASS: ZBMACRO01 ENGINE FROZEN-READY (FT0: rule + 08:46 entry + k=2)** — latency fear REFUTED (retention 1.048; edge accrues 10:30-14:00); skeptic 4/4 with binding riders. G00080 FAIL: concession positive-below-MDE, portfolio CI includes 0 → **auction family fully closed**; era mirror −/+/+ banked. G00081 DEFECT: split-null AT the 97.5 debt bar (97.3/98.5) → NOT-CLEARED; banked: carry-timing survived the 2022-26 bear (+$23k vs always-long −$22k); revival = forward accrual. G00082 NULL: fills 0.9s median (momentum does NOT run away), adverse selection grows with T → no live policy change; 🔴 governance premise corrected (21/104 sessions were W5-pool members, caught pre-read). |
 | **Wave 5** | fast track + 3 falsifiers | ✅ DONE — ⭐ **G00083 PASS: ZBMACRO01 READY-FOR-09-21-WINDOW** (FT1 clean-room 40/40 exact · `ZbMacroResponse_v1.cs` 849 lines run-dir-only · offline cert 82/82 = 100.000%, 0 phantoms, and it CAUGHT a Good-Friday early-close defect pre-cert · FT9 no-open-risk · DEPLOYMENT_PACKET.md drafted with the account-architecture owner box). G00084 FAIL: post-FOMC ZB drift wrong-sign + modern-negative (h=15 REVERSES). G00085 FAIL: close-hour flow anti-mechanism 6/6 cells — **law extended: the cash-close hour also mean-reverts** (and ρ-P1 +0.27 would have stacked anyway). G00086 FAIL: duration-extension killed by its own concentration clause (T−2 carries the same premium — diffuse month-turn tilt, not extension flow). |
 | **Wave 6** | 5 world-scan falsifiers (ranks 13-23) | ✅ DONE — **5/5 closed, several powered**: TSYROLL powered null (no drift even gross vs MDE $89; OI sidecar: local day store has NO open interest → #14 DATA-GATED); EQROLLRICH directional null (spread richens INTO the roll — reverse placement, insignificant); FXOVERSHOOT one-third-concentrated (all of it 2009-14 ZLB, gone since); ONDEALER card-kill verbatim (Euro-open flattest cell in the grid; **ES overnight hour-grid map banked**); FIX6E powered null everywhere (absence, not reform decay; top-tercile INVERTS). **The data-held world-scan tranche ranks 1-23 is fully swept.** |
-| **Wave 7 (final sweep)** | the last genuinely-open cheap cards: post-sweep liquidity reversal (#15) · compression-primed stop cascade (#16) · commodity roll congestion re-measurement (#19, expected-negative closure value) | 🔒 preregistering |
+| **Wave 7 (final sweep)** | #15 / #16 / #19 | ✅ DONE — 3/3 closed: SWEEPREV killed by its own discriminator (sweep conditioning SUBTRACTS value vs plain MR — **the last open non-NQ intraday-MR representation closes, measured**); COMPCASCADE powered null (⭐ banked: **unconditional daily breakout-chasing loses in all 5 markets BEFORE costs**; compression only softens the loss; cascades die inside a day); CLROLLCONG **CLOSED-AS-COMPETED-AWAY permanent** (the Goldman-roll folklore retires with a measured decay curve). |
+
+## 🏁 GENESIS III CONSOLIDATED PRINT (§33) — 2026-09-06, waves 1-7 complete, ledger G00066-94
+
+### TESTED (29 trials in one day; every spec frozen before results; zero relabels)
+One engine cleared the full chain; ~26 representations closed at precise scope (each has a §28
+block in FAILURE_MEMORY): equity-MR portfolio value · CL 7-event + GC 6-event catalogs · SI/GC
+carry (windows SPENT) · LIQREV01 standalone · auction cycle BOTH halves · ZN/ZB slope RV ·
+basis-momentum (data-collapsed) · corr-gated FTQ (inverted) · month-end conjunction · post-FOMC
+ZB drift (reverses) · close-hour flow (anti-mechanism) · duration-extension (diffuse) · treasury
+roll drift (powered null) · equity roll richness (wrong sign) · 6E overshooting (era-fragile) ·
+ES overnight dealer drift (card-kill verbatim) · 6E fix (powered null) · post-sweep reversal
+(anti-informative) · compression cascade (less-bad ≠ edge) · CL roll congestion (competed-away) ·
+XPASS01 entry policy (NULL, facts banked). **The $0 world-scan slate ranks 1-23 + the final
+sweep are fully adjudicated.**
+
+### PRODUCTION CANDIDATE
+⭐ **ZBMACRO01 — READY-FOR-09-21-WINDOW** (G00067→72→78→79→83): SHORT 2 ZB at the 08:46 close on
+NFP/CPI down first-responses, exit 15:00. ρ-P1 −0.006; k=2 raises book Sharpe AND shrinks tails;
+~$4.1k/yr, 11 tr/yr, DISCOVERY_CONSUMED, riders attached. `.cs` written + offline-certified
+100.000%; packet drafted. Remaining stages are owner-present at the 09-21 window.
+
+### LEADS (alive but not cleared)
+1. **RATESCARRY01** not-cleared-at-debt-bar (G00081) — bear-survival fact banked; revival =
+   forward accrual ONLY (no re-registration on the same sample).
+2. Auction-concession era-mirror (regime-local, below MDE) — recorded, no path at this N.
+3. Diffuse ZB month-turn tilt (gross-only, modern ≈ 0 after cost) — a fact, not a lead.
+
+### REPRESENTATION GAPS (honest, with the reason each is not being run)
+- DATA-GATED (owner spend decisions): full contract strips (basis-mom re-test, CL curve
+  post-2015), OI (absent locally), Databento MBO order-flow, GAMMA00 options/dealer-state.
+- EPISODIC/UNPOWERED at current N: SI/GC squeeze episodes (#21), trapped pre-positioning (#26).
+- ADVERSE-PRIOR after this week: EIA curve-gated (#10), jump taxonomy (#18).
+- EPSILON-PRIOR tail (#24-34): rescue-adjacent or 12th-member-of-dead-family cards.
+- NQ curve/carry cell: untested (NQ calendar economics = financing, already read via #17 ES).
+
+### HIGHEST-EVI NEXT 5 (ranked)
+1. **The 09-21 window** (calendar-gated, owner-present): P1 HD-23 redeploy + ZBMACRO01 NT8
+   compile/parity/enable-decision. This is where the realized EV now sits.
+2. **Roll-crossover quote sampling** (running, through 09-22): prices the MNQ spread (the last
+   ASSUMED input in the live book cost line) + the roll blackout.
+3. **Forward accrual reads** (calendar-gated): ZBMACRO01 forward monitor (KILL rule armed),
+   RATESCARRY revival read when enough post-seal weeks exist.
+4. **Owner-gated spends** — the case is now surgical: we know exactly which representations are
+   data-gated and what each surface would adjudicate.
+5. The epsilon tail — only on explicit owner request; autonomous grinding of it would be
+   activity, not EV.
+
+### The §16 exhaustion statement, made precisely this time
+At $0 and respecting the seals, the search has now exhausted raw-info shift (all local surfaces
+censused + used), representation shift (the coverage matrix rows are filled or scoped-closed),
+policy shift (XPASS01 + entry-deferral measured), horizon shift (1-min to monthly tested),
+RV shift (metals/rates/equity/commodity RV all adjudicated), and market shift (all 9 mapped
+markets carry entries). **The claim is scoped by `REPRESENTATION_COVERAGE_MATRIX.md`, not
+asserted** — the difference from the 2026-09-06-morning claim GENESIS III corrected.
 
 Discipline unchanged (ledger, spec-first, matched controls, dependence-preserving nulls, DELEV01
 points basis, market-native sessions, cost bands, no promotion from research, live book untouched).
