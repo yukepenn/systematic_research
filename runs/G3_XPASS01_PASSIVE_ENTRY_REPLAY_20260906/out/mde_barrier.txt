@@ -1,0 +1,15 @@
+G3_XPASS01 - G1 MDE-FIRST BARRIER (written before any policy outcome was computed)
+Class-X EXECUTION / DISCOVERY-grade - never alpha.
+
+  n_measurable = 127 entry events (145 contract-entries, 53 sessions)
+  anchor quoted spread (baseline descriptor): mean $26.26/ctr, SD $13.45 [BASIS SPREAD_ONLY, EVIDENCE MEASURED]
+  MDE = (z_bonf 2.3940 + z_80 0.8416) * SD / sqrt(n), two-sided Bonferroni alpha = 0.05/3
+  ACCOUNTING A (CHASE, primary): variance proxy = anchor-spread distribution ->
+    MDE_A = $3.86/ctr-entry at 80% power  (proxy covers the filled-leg savings
+    dispersion only; timeout-drift variance is NOT in the proxy - the binding
+    adjudication for A is the G2 bootstrap CI itself)
+  ACCOUNTING B (CANCEL, secondary): variance proxy = bench per-ctr all-in trade P&L SD $1,180 ->
+    MDE_B = $338.70/ctr-entry at 80% power
+    ceiling (fill_rate=1 x full quoted spread): $15/ctr RTH (3 tk, MEASURED) / $20/ctr all-hours (4 tk, MEASURED)
+    MDE_B $338.70 > ceiling $20 ? True -> ACCOUNTING B: UNPOWERED-BY-DESIGN - components-only reporting, can neither adopt nor kill
+    (MDE_B / ceiling = 16.9x)

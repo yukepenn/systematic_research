@@ -1,0 +1,144 @@
+====================================================================================================
+G3_ZBMACRO_ENGINE_20260906  (ledger G00079, family GENESIS3_ENGINE)
+ZBMACRO01 engine construction + adversarial skeptic.  EVIDENCE STATUS: DISCOVERY_CONSUMED (all tables).
+substrate: runs\SM1M_ZB_SUBSTRATE\out\zb_1m_2023_2026.parquet  sessions=923 (2022-12-27 .. 2026-07-31)
+frozen rule (G00072, zero retuning): NFP/CPI day, close(08:45)-close(08:30)<0 -> SHORT k ZB
+  at entry close, exit close(15:00). k=2 (G00078 decision cell); k=1 also dossiered.
+cost arms (BASIS=MODELED ALL_IN = comm $4.36 + spread): PRIMARY $66.86 RT, STRESS $129.36 RT; a 1-min-later close fill does not change the modeled cost
+
+[E0] seal + identity vs frozen artifacts
+     substrate seal: max session 2026-07-31 <= 2026-07-31 OK; input seals (trades max 2026-06-05, joint max 2026-05-29) < 2026-08-01 : OK
+     trades.csv sha256 = 245431500d42becbc6ed8c8f07c0696e9057346d3b52cad05d8976bb2d8e2273
+       expected (G00078)= 245431500d42becbc6ed8c8f07c0696e9057346d3b52cad05d8976bb2d8e2273 : MATCH
+     40-trade reproduction from substrate: dates EXACT; fwd moves EXACT<1e-9; r1 EXACT<1e-9
+     joint_series.csv sha256 = b6579fb797ae27a90fdf6e20a0e500f86867a3657b660a43e0d4f066a86977ab
+     joint identity: rows/span/active OK; rho_d -0.0058 (exp -0.0058), rho_w +0.1004 (exp +0.1004) : OK
+     E0: PASS
+
+[G_DELAY] THE DECISIVE QUESTION -- delayed-entry curve (same 40 events, same signal, same
+          15:00 exit, PRIMARY cost; paired moving-block bootstrap L=5 B=2000 seed 20260910)
+     entry    n fresh  gross pt net move pt  net $/ct      CI95 profit $/ct retention
+     08:45   40    40   -0.2445     -0.1777     177.7   [   +48.0,  +428.5]     1.000
+     08:46   40    40   -0.2531     -0.1863     186.3   [   +44.8,  +432.4]     1.048
+     08:47   40    40   -0.2703     -0.2035     203.5   [   +59.7,  +450.4]     1.145
+     08:48   40    40   -0.2695     -0.2027     202.7   [   +64.4,  +444.1]     1.141
+     08:50   40    40   -0.2641     -0.1972     197.2   [   +55.0,  +435.5]     1.110
+     STRESS-arm net $/ct along the curve: 08:45 +115.2  08:46 +123.8  08:47 +141.0  08:48 +140.2  08:50 +134.7
+     08:46 clause: net +186.3 $/ct > 0 : True; CI95 of move [-0.4324,-0.0448] excludes 0 : True
+     fallback clauses: retention 1.048 (>=0.60: True); monotone non-increasing 45>=46>=47>=48>=50: False
+     G_DELAY VERDICT: PASS
+
+[D1] per-minute drift decomposition on the 40 event days (cumulative from 08:45 close;
+     short $/ct = -move*1000; nanmean over available as-of closes)
+     minute    n cum move pt cum short $   incr pt
+     08:45    40      0.0000        -0.0    0.0000
+     08:46    40      0.0086        -8.6    0.0086
+     08:47    40      0.0258       -25.8    0.0172
+     08:48    40      0.0250       -25.0   -0.0008
+     08:49    40      0.0086        -8.6   -0.0164
+     08:50    40      0.0195       -19.5    0.0109
+     08:51    40      0.0172       -17.2   -0.0023
+     08:52    40      0.0078        -7.8   -0.0094
+     08:53    40      0.0016        -1.6   -0.0063
+     08:54    40      0.0063        -6.2    0.0047
+     08:55    40     -0.0156        15.6   -0.0219
+     08:56    40     -0.0078         7.8    0.0078
+     08:57    40     -0.0156        15.6   -0.0078
+     08:58    40     -0.0250        25.0   -0.0094
+     08:59    40     -0.0195        19.5    0.0055
+     09:00    40     -0.0250        25.0   -0.0055
+     09:01    40     -0.0352        35.2   -0.0102
+     09:02    40     -0.0211        21.1    0.0141
+     09:03    40     -0.0242        24.2   -0.0031
+     09:04    40     -0.0383        38.3   -0.0141
+     09:05    40     -0.0359        35.9    0.0023
+     09:06    40     -0.0359        35.9    0.0000
+     09:07    40     -0.0414        41.4   -0.0055
+     09:08    40     -0.0484        48.4   -0.0070
+     09:09    40     -0.0516        51.6   -0.0031
+     09:10    40     -0.0477        47.7    0.0039
+     09:11    40     -0.0539        53.9   -0.0063
+     09:12    40     -0.0523        52.3    0.0016
+     09:13    40     -0.0437        43.8    0.0086
+     09:14    40     -0.0602        60.2   -0.0164
+     09:15    40     -0.0617        61.7   -0.0016
+     coarse checkpoints (report-only):
+     09:30    40     -0.0406        40.6
+     10:30    40     -0.0539        53.9
+     12:00    40     -0.1469       146.9
+     14:00    40     -0.2406       240.6
+     15:00    40     -0.2445       244.5
+     share of the eventual mean move realized by 08:50: -8.0% ; by 09:15: 25.2%  (gross, pts basis)
+
+[D2] eval battery -- WEEKLY-VOL LEAD; LEAD arm = EXECUTABLE entry 08:46; 08:45 reference
+     entry 08:46 [EXECUTABLE (LEAD)] k=1: Sharpe_wk 0.91 (mean $39.6/wk sd $313.7/wk); total $7,451 = $2,074/yr on 11.1 tr/yr
+       path descriptors ($, k=1): weekly maxDD $1,674, CDaR95 $1,333; trade-seq maxDD $1,674, CDaR95 $1,441
+       k=2: $4,148/yr; weekly maxDD $3,347, CDaR95 $2,667 (linear in k; Sharpe invariant)
+     entry 08:45 [research reference] k=1: Sharpe_wk 0.86 (mean $37.8/wk sd $318.8/wk); total $7,107 = $1,978/yr on 11.1 tr/yr
+       path descriptors ($, k=1): weekly maxDD $1,799, CDaR95 $1,510; trade-seq maxDD $1,799, CDaR95 $1,652
+       k=2: $3,957/yr; weekly maxDD $3,597, CDaR95 $3,019 (linear in k; Sharpe invariant)
+     fixed-DD/CDaR figures above are DOLLAR PATH DESCRIPTORS ONLY -- no income is normalized
+     by them; NO trade-removal rule is evaluated in this run -> thinning placebo N/A (stated).
+
+[D3] MAE/MFE from the 1-min as-of path (short; pts; PRIMARY cost applied to net only)
+     entry 08:45: MAE mean 0.427 med 0.344 p90 0.819 max 1.594 pt ($427/$1594 mean/max per ct); MFE mean 0.632 med 0.562 max 2.219 pt
+     entry 08:46: MAE mean 0.417 med 0.375 p90 0.797 max 1.531 pt ($417/$1531 mean/max per ct); MFE mean 0.641 med 0.547 max 2.188 pt
+     08:46 winners (n=23): MAE mean 0.213 pt; losers (n=17): MAE mean 0.693 pt
+
+     WORST-5 anatomy (by net $ at the EXECUTABLE 08:46 entry):
+     date        rel         r1 pt  net46 $  net45 $  MAE pt      @  MFE pt      @ pnl@0915$
+     2023-01-12  CPI        -0.656  -1160.6  -1504.4   1.250  13:14   1.031  09:55      62.5
+     2023-10-06  NFP        -1.219   -879.4   -816.9   1.281  11:50   0.688  08:57     281.2
+     2025-12-16  NFP        -0.469   -723.1   -785.6   0.688  14:47   0.156  09:19      62.5
+     2024-01-11  CPI        -0.812   -629.4   -816.9   0.625  14:56   0.625  09:00     375.0
+     2024-08-14  CPI        -0.188   -598.1   -535.6   0.719  12:45   0.125  08:52      -0.0
+
+[D4] calendar honesty
+     NFP+CPI same-session overlaps among the 40: 0
+     weekday table: Friday 21  Thursday 7  Tuesday 6  Wednesday 6
+     NFP events NOT on Friday (holiday-shift check): 3 (2025-07-03, 2025-12-16, 2026-02-11)
+     roll windows (ASSUMED-PROXY: last session of Feb/May/Aug/Nov; TRUE volume crossover
+     NOT MEASURABLE from the merged chain -- it carries only the rolled contract's volume):
+     event days within +-3 sessions of a proxy crossover: 2 -> 2023-06-02 (d=2), 2023-09-01 (d=1)
+
+[D5] session/margin facts (ASSUMED-flagged) + capacity note
+     entry 08:45-08:46 ET, flat at the 15:00 close -> intraday only, NO overnight margin.
+     ZB day margin ASSUMED ~$2,000/ct (FLAGGED: not broker-verified; no broker surface
+     touched by this run). k=2 ~ $4,000 intraday for ~6h14m on ~11 days/yr.
+     capacity: ZB top-of-book depth is deep (among the deepest CME treasuries books);
+     k=2 is negligible size. STATED, NOT PROVEN -- no depth data is read by this run.
+
+[D6] orthogonality recomputation at k=2 (G00078 joint_series.csv AS-IS; 178-wk grid)
+     rho(ZB k=2, P1): daily -0.0058, weekly +0.1004 (scale-invariant in k: k=1 gives -0.0058/+0.1004 -- identical, as stated)
+     k=2 LIVE_SCALE marginal weekly-vol Sharpe: 2.2796 - 2.1874 = +0.0923 (G00078 printed +0.0923; reproduction OK)
+
+[SKEPTIC] adversarial section -- preregistered kill criteria (see src header), applied
+          mechanically; full prose in out/skeptic.md
+     L1 duplication: last-half after-cost mean -0.1363 pt (kill iff >= 0, i.e. arbitraged
+        in-sample): NO KILL -> mechanism LABEL: post-announcement
+        drift / slow repricing of the 08:30 surprise on the bond side (a label, not a kill).
+     L2 fragility: G_DELAY = PASS (kill iff KILLED-AT-EXECUTION): NO KILL
+        single most likely way this is nothing: n=40 tail-carried (66% in 3 trades),
+        |mean| below its own MDE_80, selected from the G00067 event-screen family.
+     L3 regime: halves -0.2191 / -0.1363 pt (kill iff BOTH >= 0): NO KILL; decay condition + prospective monitor in skeptic.md
+     L4 implementation: fail-closed NT8 path exists (1-min ZB primary, flatten 15:00,
+        no-bar-guard on 08:30/08:45): NO KILL; FT4-FT9 risks enumerated in skeptic.md
+     SKEPTIC VERDICT: SURVIVES
+
+====================================================================================================
+GATE              SPEC                                                                     PASS/FAIL
+----------------------------------------------------------------------------------------------------
+E0_seal_identity  seals; trades.csv sha; 40-trade exact repro; joint identity (878/39, rho 4dp)      PASS
+                  OBSERVED: sha MATCH; dates/fwd/r1 EXACT; joint OK rho_d -0.0058 rho_w +0.1004
+G_delay           08:46 net>0 & CI95 excl 0 -> PASS; else >=60% retention & monotone -> FAST-EXEC; else KILLED      PASS
+                  OBSERVED: net46 +186.3 $/ct, CI [+44.8,+432.4], retention 1.048, monotone False -> PASS
+D_dossier         drift, battery (wk-vol lead, no DD-normalized income), MAE/MFE, worst-5, calendar, margin(ASSUMED), capacity(stated), orthogonality k=2 -- all printed      PASS
+                  OBSERVED: all sections printed; battery lead = 08:46 executable arm; placebo N/A stated
+S_skeptic         four lenses, preregistered kill criteria, mechanical verdict                  PASS
+                  OBSERVED: kills: {'duplication': False, 'fragility': False, 'regime': False, 'implementation': False} -> SURVIVES
+----------------------------------------------------------------------------------------------------
+DECISION RULE: G_delay in {PASS, FAST-EXECUTION-REQUIRED} AND skeptic SURVIVES -> ledger PASS
+G_delay = PASS; skeptic = SURVIVES
+DECISION (mechanical): ZBMACRO01 ENGINE FROZEN-READY (FT0 licensed: rule + entry close(08:46) + k=2)  (ledger PASS)
+EVIDENCE STATUS: DISCOVERY_CONSUMED -- nothing here is forward evidence; no baseline is touched.
+====================================================================================================

@@ -1,0 +1,127 @@
+======================================================================================================================
+=== G3_RATESCARRY_20260906 — outright rates carry-timing sign(own carry), ZN+ZB, equal-vol pool.
+=== Window 2009-01-01 -> < 2026-08-01.  EVIDENCE STATUS: DISCOVERY_CONSUMED — the per-root arms were
+=== OBSERVED as positive controls in G00074 BEFORE this registration; the debt is priced by the 97.5
+=== null bar and the mandatory static-arm victory.  Costs MODELED; research sizing.
+=== run at 2026-09-06T14:19:48.954136+00:00
+======================================================================================================================
+
+=== MACHINERY HASH AUDIT — imported modules vs G00074's recorded sha256
+    carry_znzb.py    b443803f0c4b23a4...  == G00074 recorded
+    run_znzb.py      fc61d3fe05352923...  == G00074 recorded
+    ncd_day.py       17603bdc722d30f3...  == G00074 recorded
+    roll.py          b88a5176f8ed1dbc...  == G00074 recorded
+
+=== s6/s7 UNIT TESTS (certified roll construction, reused not reinvented)
+
+=== building ZN/ZB panels (CARRY_V1 construction verbatim, structural truncation < 2026-08-01)
+    ZN   paired days   2421  2009-06-29 -> 2026-07-31  median gap 3mo  median |carry| 0.499
+    ZB   paired days   2600  2009-06-29 -> 2026-07-24  median gap 3mo  median |carry| 0.438
+    seal assert: max session 2026-07-31 < 2026-08-01  PASS
+
+=== CAUSALITY PROBE - both clauses must hold, and the second is what gives it teeth
+    week 2017-W07, effective 2017-02-13
+    corrupt FUTURE (>= t) carry:  max |dw| = 0.000e+00   PASS - weights unchanged
+    corrupt PAST  (<  t) carry:  max |dw| = 1.000e+00   PASS - weights DO respond
+
+    decided weeks 504   root-weeks 1008   exact-zero carries 5 (flat that root-week if any)
+    ZN: long share of decided weeks 80.6%  (the 'mostly-long through a bond bull' threat, quantified)
+    ZB: long share of decided weeks 77.4%  (the 'mostly-long through a bond bull' threat, quantified)
+    exposure match: pool |w| = 1/2 per root-week = static arms' |w| except 5 zero-carry rows
+    RECON-A pool == arm_ZN + arm_ZB:  max weekly |d| = $9.09e-13  PASS
+    RECON-B arms == G00074 outright_control.csv:  596 vs 596 weeks, max |d| = $4.55e-13  PASS
+
+======================================================================================================================
+=== G1 — MDE, printed BEFORE any observed edge number  [DISCOVERY_CONSUMED]
+======================================================================================================================
+    N = 596 ISO weeks   weekly-net sd = $1,733
+    SE(weekly mean) = $71   MDE (5% two-sided, 80% power) = $199/week
+    SE(annualized Sharpe) ~ 0.295   MDE Sharpe ~ 0.827
+    NOTE the bar here is TIGHTER than powered-MDE convention: the shift-null must be cleared at the
+    97.5 percentile (selection debt), so a true edge near the MDE can still honestly FAIL.
+
+======================================================================================================================
+=== OBSERVED — frozen object, MODELED costs  [DISCOVERY_CONSUMED]
+======================================================================================================================
+    POOL PRIMARY (1 tick): gross $     117,203   cost $    10,778   net $     106,425   weekly mean $  178.56   ann Sharpe   0.743
+    POOL STRESS  (2 tick): net $      97,523   weekly mean $  163.63
+    ARM ZN:  total net $      47,713   weekly mean $   80.06   ann Sharpe   0.611
+    ARM ZB:  total net $      58,711   weekly mean $   98.51   ann Sharpe   0.701
+    turnover: mean weekly |dUnits| 0.7223
+
+======================================================================================================================
+=== G2 — pool after-cost weekly mean > 0, block CI excludes 0, shift-null >= 97.5 pctl
+======================================================================================================================
+    13-wk circular block bootstrap CI of the weekly mean (2000 draws, seed 20260916):
+    weekly mean $178.56   95% CI [$29.20, $327.97]
+    RECON-C pivot-reconstruction net vs direct: |d| = $0.000000  OK
+    EVENT IN WORDS: the null percentile is over the probability, under weekly signed position streams whose TIMING is destroyed by a circular shift (all offsets, both roots shifted TOGETHER, preserving each root's serial structure, the cross-root dependence, and the stream's composition/turnover) but evaluated against the SAME realized returns and the SAME cost machinery, of an after-cost weekly-mean pool P&L at least as large as observed.
+    circular-shift null: 595 offsets on a 596-week grid   null weekly-mean mean $47.39 sd $62.82
+    observed $178.56 -> percentile 97.3  (debt-tightened bar 97.5)
+
+======================================================================================================================
+=== G2b — second null computation; agreement judged TAIL-SIDE, never raw percentile distance
+======================================================================================================================
+    second computation of the SAME event by a different route: 13-week block PERMUTATION of the weekly position grid (both roots permuted together, preserving 13-week local serial structure while destroying long-range timing), 2000 draws; agreement judged TAIL-SIDE against the 97.5 bar.
+    block-permutation null: 2000 draws of 46 13-wk blocks (seed 20260918)   null weekly-mean mean $43.67 sd $59.26
+    observed $178.56 -> percentile 98.5
+    TAIL-SIDE verdicts vs the 97.5 bar: shift=BELOW  perm=ABOVE  -> *** SPLIT — INVALID-RUN ***
+
+======================================================================================================================
+=== G3 — MANDATORY victory over BOTH exposure-matched static arms (same sizing/costs/calendar)
+======================================================================================================================
+    static LONG  total net $      55,960   weekly mean $   93.89   ann Sharpe   0.360
+    static SHORT total net $     -75,535   weekly mean $ -126.74   ann Sharpe  -0.487
+    alpha regression pool ~ static-LONG: alpha $127.59/wk   beta +0.543   R2 0.346
+    alpha 95% block-bootstrap CI [$20.29, $243.49]   seed 20260917   (spec clause: CI excludes 0; alpha sign +)
+    Sharpe: pool 0.743 vs LONG 0.360 vs SHORT -0.487
+
+======================================================================================================================
+=== G4 — era signs; the 2022-26 cell DECIDES: negative modern = FAIL regardless of pooled total
+======================================================================================================================
+    2009-15: pool $     74,114 (+)   ZN $    36,739   ZB $    37,375   staticL $     74,081   staticS $    -84,825   (1322 days)
+    2016-21: pool $      9,016 (+)   ZN $     3,631   ZB $     5,386   staticL $      4,127   staticS $    -10,685   (782 days)
+    2022-26: pool $     23,295 (+)   ZN $     7,344   ZB $    15,951   staticL $    -22,248   staticS $     19,975   (627 days)
+    2022-26 pool cell: $23,295 -> POSITIVE through the bond bear
+    pool net by year: 2009:-579  2010:+22,451  2011:+17,737  2012:+14,642  2013:-11,912  2014:+31,607  2015:+168  2016:+1,189  2017:+10,780  2018:-8,442  2019:+3,918  2020:+10,369  2021:-8,798  2022:-327  2023:+16,364  2024:+3,721  2025:+6,470  2026:-2,933
+
+=== G5 — MODELED cost band [$4.36 RT commission + {1,2}-tick spread per leg]  BASIS: modeled, not measured
+    PRIMARY drag: $10,778 total   weekly cost $18.08   = 9.2% of |gross|
+    STRESS  drag: $19,680 total   weekly cost $33.02
+    weekly turnover (|dUnits|): 0.7223
+
+=== G6 — eval_battery: WEEKLY-VOL LEAD; fixed-DD/CDaR as DOLLAR DESCRIPTORS only; rho-to-P1
+    LEAD  weekly-vol annualized Sharpe = 0.743  (mean $178.56/wk, sd $1,733/wk)
+    path descriptors ONLY (no DD-normalized income is quoted; the eval_battery thinning-placebo
+    guard is honored by never reading those bases as a denominator):
+        weekly maxDD $25,886   weekly CDaR95 $21,192
+    rho to P1 (SOURCE: runs/WE_W56_BREADTH/out/p1_daily.csv, zero-filled common calendar 2022-08-26..2026-05-27, 591 sessions):
+        daily rho = -0.0069   weekly rho = +0.0362   (spec expectation: ~-0.05 class)
+
+======================================================================================================================
+=== GATES — GATE / SPEC / OBSERVED / PASS-FAIL [2009-01-01 -> 2026-07-31, DISCOVERY_CONSUMED, MODELED costs]
+======================================================================================================================
+    GATE                                           SPEC                                         OBSERVED                                                 VERDICT
+    HASH  machinery == G00074 recorded             4 files byte-identical                       see audit above                                          PASS
+    UT    s6/s7 unit tests                         telescope+basis+causality                    all pass                                                 PASS
+    SEAL  max session < 2026-08-01                 < 2026-08-01                                 2026-07-31                                               PASS
+    CAUS  two-sided causality probe                future<1e-12, past>1e-9                      see probe above                                          PASS
+    RECON-A pool == armZN + armZB                  max weekly |d| < 1e-6                        $9.09e-13                                                PASS
+    RECON-B arms == G00074 controls                596 weeks, |d| < 1e-6                        596 wks, $4.55e-13                                       PASS
+    RECON-C pivot == direct simulate               |d net| < 1e-6                               $0.00e+00                                                PASS
+    G1    MDE printed before observed              printed                                      MDE $199/wk over 596 wks                                 PASS
+    G2a   pool after-cost weekly mean > 0          > $0                                         $178.56                                                  PASS
+    G2ci  95% block-boot CI excludes 0             CI_lo > 0                                    [$29.20, $327.97]                                        PASS
+    G2n   circular-shift null at 97.5              >= 97.5 pctl (debt bar)                      97.3                                                     *** FAIL ***
+    G2b   second-null TAIL-SIDE agreement          both ABOVE or both BELOW the bar             shift 97.3 / perm 98.5: SPLIT                            *** FAIL ***
+    G3a   pool Sharpe > static-LONG                > 0.360                                      0.743                                                    PASS
+    G3b   pool Sharpe > static-SHORT               > -0.487                                     0.743                                                    PASS
+    G3c   alpha vs static-LONG, CI excl. 0         CI excludes 0                                $127.59/wk, CI [$20.29, $243.49]                         PASS
+    G4    modern era (2022-26) not negative        pool 2022-26 cell > 0                        $23,295                                                  PASS
+    G5    cost band printed                        drag + turnover                              1tk $18/wk, 2tk $33/wk                                   REPORT-ONLY
+    G6    battery + rho-to-P1 printed              weekly-vol lead; DD as $ only                S 0.74; maxDD $25,886; rho_w +0.036                      REPORT-ONLY
+
+======================================================================================================================
+=== PREREGISTERED BINARY VERDICT: INVALID-RUN (split null verdict)   (ledger G00081: DEFECT)
+======================================================================================================================
+    outputs: out/gate_table.txt, out/weekly_pnl.csv, out/static_arms.csv, out/era_table.csv, out/ratescarry_verdict.json, out/ratescarry_console.txt

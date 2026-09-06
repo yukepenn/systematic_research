@@ -1,0 +1,218 @@
+
+======================================================================================================================
+=== G3_XPASS01_PASSIVE_ENTRY_REPLAY_20260906 - ledger G00082 - run start
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  parameters: T family [5, 30, 120]s, latency primary 250ms (sens [100, 1000]ms), tick 0.25, PV 20.0, bootstrap B=10000 seed=20260906
+
+======================================================================================================================
+=== PHASE 0 - clean tick union + mechanical pool re-intersection (file NAMES only)
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  substrates: v2 58 sessions | v1 61 files / 48 sessions | ESNQ 44 sessions | UNION 104 sessions (20250811 -> 20260731)
+  registers: W5-168 168 | batch1 8 | MICRO 141 | BBO_BLIND 19 | ESNQ_BLIND 15
+  104-union ∩ (W5∪MICRO∪BBO∪ESNQ) = 21 session(s): ['20250819', '20250912', '20251015', '20251028', '20251125', '20260122', '20260217', '20260219', '20260302', '20260422', '20260512', '20260513', '20260514', '20260515', '20260518', '20260521', '20260522', '20260526', '20260527', '20260528', '20260529']
+    decomposition: 8 batch-1-CONSUMED ['20250819', '20250912', '20251028', '20251125', '20260217', '20260302', '20260422', '20260512']
+                 + 13 W5 protected members with tick content later materialized by MS01/ESNQ dev ['20251015', '20260122', '20260219', '20260513', '20260514', '20260515', '20260518', '20260521', '20260522', '20260526', '20260527', '20260528', '20260529']
+    (matches BBO_GOVERNANCE_MEMO footnote: '13 W5 members were batch-consumed or later
+     legitimately materialized' = 8 batch-1 + 13 materialized = 21; the memo's
+     'pool ∩ extracted = 0' claim held only for the BBO/MICRO/ESNQ registers.)
+    union ∩ W5-168: 21
+    union ∩ MICRO: 0
+    union ∩ BBO_BLIND: 0
+    union ∩ ESNQ_BLIND: 0
+  GATE G0b-i 104-union ∩ pools    | SPEC = ∅ (GOVERNANCE_PRECHECK premise)                          | OBSERVED 21 sessions (all W5-168; other 3 registers = 0) | FAIL (premise false; recorded)
+  -> CONSERVATIVE EXCLUSION applied at load: the 21 W5-pool sessions are
+     DROPPED from the replay set before any tick file is opened. No pool member's price
+     content is read by this program. Replay set = 83 sessions.
+  GATE G0b-ii replay-set ∩ pools  | SPEC = ∅ after exclusion; RAISE if nonempty                     | OBSERVED 0 sessions over 4 registers                  | PASS
+  GATE G0b-iii 2026-05-05 absent  | SPEC 2026-05-05 ∉ union and ∉ replay set                        | OBSERVED absent=True                                  | PASS
+  GATE G0 seal (session names)    | SPEC every replay session < 20260801                            | OBSERVED max session 20260731                         | PASS
+  precedence v2 > ESNQ > v1: v2 45 | ESNQ 32 | v1 6
+  v1 truncated files (== 12,000,000 rows exactly): 15
+
+======================================================================================================================
+=== PHASE 1 - G0c bench parity: xinst_bench reproduces P1/PCT (RAISE on failure)
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  substrate: 1,620,044 bars / 1,187 sessions  2022-01-03 -> 2026-07-31   dropped>=seal 0
+  GATE G0 seal (1-min substrate)  | SPEC max session < 2026-08-01 at load                           | OBSERVED max 2026-07-31, dropped 0                    | PASS
+  rebuilt: 2,401 in-window trades / 2,139 fills_daily entries / size-2 share 19.9%   [57s]
+  metric               REBUILT         COMMITTED    rel diff
+  weekly           1393.573663       1393.573663     0.0000%
+  maxdd           22930.665853      22930.665853     0.0000%
+  t                   4.163612          4.163612     0.0000%
+  trades           2401.000000       2401.000000     0.0000%
+  rate               14.436483         14.436483     0.0000%
+  GATE G0c bench parity           | SPEC all 5 committed metrics reproduced to 0.0000%; RAISE on failure | OBSERVED all 5 at 0.0000%                             | PASS
+
+======================================================================================================================
+=== PHASE 2 - entry population: bench-regenerated P1/PCT entry events
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  bench in-window trades: 2,131 (convention: et = END-stamp of entry bar; action instant = et - 60s; anchor = action + δ)
+  in 104-union sessions: 168 | in POOL-EXCLUDED sessions (not replayed): 40 | in replay set: 128
+  REPLAY POPULATION: 128 entry events / 146 contract-entries in 54 sessions
+  bench per-ctr all-in trade P&L SD (n=2,131, G1 proxy for accounting B): $1,180  [ALL_IN approx: commission-in, $14.44/ctrRT modelled spread; DISCOVERY_CONSUMED]
+
+======================================================================================================================
+=== PASS 1 - measurability census + anchor BBO snapshots (NO policy outcome evaluated)
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  (This pass reads quote VALIDITY and the anchor quoted spread only - the baseline-leg
+   descriptor preregistered as the G1 variance proxy. No fill rule is evaluated and no
+   chase price is stored in this pass.)
+  scanned 54 sessions  [38s]
+
+  measurability census (reasons):
+    measurable=False  reason=NO_VALID_ANCHOR_BBO    n=   1  ctr=   1
+    measurable=True   reason=OK                     n= 127  ctr= 145
+  crossed-BBO instants skipped while forming anchor snapshots (primary δ): 0
+
+======================================================================================================================
+=== G1 - MDE-FIRST BARRIER (printed BEFORE any observed policy outcome)
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  n_measurable = 127 entry events (145 contract-entries, 53 sessions)
+  anchor quoted spread (baseline descriptor): mean $26.26/ctr, SD $13.45 [BASIS SPREAD_ONLY, EVIDENCE MEASURED]
+  MDE = (z_bonf 2.3940 + z_80 0.8416) * SD / sqrt(n), two-sided Bonferroni alpha = 0.05/3
+  ACCOUNTING A (CHASE, primary): variance proxy = anchor-spread distribution ->
+    MDE_A = $3.86/ctr-entry at 80% power  (proxy covers the filled-leg savings
+    dispersion only; timeout-drift variance is NOT in the proxy - the binding
+    adjudication for A is the G2 bootstrap CI itself)
+  ACCOUNTING B (CANCEL, secondary): variance proxy = bench per-ctr all-in trade P&L SD $1,180 ->
+    MDE_B = $338.70/ctr-entry at 80% power
+    ceiling (fill_rate=1 x full quoted spread): $15/ctr RTH (3 tk, MEASURED) / $20/ctr all-hours (4 tk, MEASURED)
+    MDE_B $338.70 > ceiling $20 ? True -> ACCOUNTING B: UNPOWERED-BY-DESIGN - components-only reporting, can neither adopt nor kill
+    (MDE_B / ceiling = 16.9x)
+  GATE G1 MDE-first barrier       | SPEC MDE printed before outcomes; if MDE_B > ceiling, B is UNPOWERED (components only) | OBSERVED MDE_A $3.86, MDE_B $339 vs ceil $20 -> B UNPOWERED | PASS
+
+======================================================================================================================
+=== PASS 2 - policy replay: fills (strict / at-touch / +1-tick stress), chase, time-to-fill
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  replayed 127 measurable entries  [38s]
+  GATE G0 seal (tick files)       | SPEC every loaded tick file max ts < 2026-08-01 (in-code RAISE) | OBSERVED all loaded files passed the load-time assertion | PASS
+
+======================================================================================================================
+=== G2/G3 - accounting A (CHASE, powered primary): per-ctr-entry net delta, session-level block bootstrap
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  [All figures: BASIS SPREAD_ONLY (entry-side, vs baseline first-valid-ask fill), EVIDENCE MEASURED (tick replay).]
+  [Bonferroni family = 3 T-variants; per-test two-sided alpha = 0.05/3; shared session resample across the family.]
+  STRICT-THROUGH (primary):
+       T   fill%  mean $/ctr                CI-Bonf                  CI-95  sav|fill  cost|unf
+       5   73.8%        3.97 [    -7.32,    13.23] [    -4.90,    11.86]     24.35     53.42
+      30   87.6%        4.66 [   -12.57,    19.07] [    -9.21,    16.92]     25.59    143.06
+     120   91.0%       -3.28 [   -36.57,    20.38] [   -29.73,    17.54]     25.53    295.77
+  +1-TICK STRESS (G3, barrier B-1tk both clauses):
+       T   fill%  mean $/ctr                CI-Bonf                  CI-95  sav|fill  cost|unf
+       5   67.6%        0.48 [   -10.03,     9.24] [    -7.94,     7.90]     24.44     49.47
+      30   83.4%        1.34 [   -15.77,    16.19] [   -12.50,    13.64]     25.91    122.50
+     120   88.3%       -8.38 [   -42.83,    16.71] [   -35.33,    13.42]     25.66    264.71
+  stress literal-reading sensitivity (print<B only):
+       T   fill%  mean $/ctr                CI-Bonf                  CI-95  sav|fill  cost|unf
+       5   71.7%        3.38 [    -7.79,    12.67] [    -5.38,    11.19]     24.42     50.00
+      30   86.2%        3.07 [   -13.98,    17.52] [   -10.46,    15.30]     25.68    138.25
+     120   90.3%       -4.07 [   -37.36,    19.64] [   -30.42,    16.60]     25.53    281.07
+  AT-TOUCH (upper-bound diagnostic):
+       T   fill%  mean $/ctr                CI-Bonf                  CI-95  sav|fill  cost|unf
+       5   80.0%        8.10 [    -2.91,    16.83] [    -0.61,    15.65]     24.70     58.28
+      30   93.1%       12.79 [    -0.07,    23.68] [     2.37,    22.07]     25.59    160.00
+     120   93.8%        3.93 [   -22.60,    23.21] [   -17.27,    20.79]     25.59    323.33
+  GATE G2 primary T=5             | SPEC strict-through net > 0 at Bonferroni (lower CI > 0)        | OBSERVED mean +3.97, CI-Bonf lo -7.32                 | FAIL
+  GATE G2 primary T=30            | SPEC strict-through net > 0 at Bonferroni (lower CI > 0)        | OBSERVED mean +4.66, CI-Bonf lo -12.57                | FAIL
+  GATE G2 primary T=120           | SPEC strict-through net > 0 at Bonferroni (lower CI > 0)        | OBSERVED mean -3.28, CI-Bonf lo -36.57                | FAIL
+  GATE G3 +1-tick stress T=5      | SPEC stress net > 0 at Bonferroni; positive-only-without-stress = FILL-FRAGILE | OBSERVED stress CI-Bonf lo -10.03                     | FAIL
+  GATE G3 +1-tick stress T=30     | SPEC stress net > 0 at Bonferroni; positive-only-without-stress = FILL-FRAGILE | OBSERVED stress CI-Bonf lo -15.77                     | FAIL
+  GATE G3 +1-tick stress T=120    | SPEC stress net > 0 at Bonferroni; positive-only-without-stress = FILL-FRAGILE | OBSERVED stress CI-Bonf lo -42.83                     | FAIL
+
+  latency sensitivity (strict-through mean $/ctr-entry, point estimates):
+    delta =   100ms (n=127): T=5: +7.34  T=30: +7.69  T=120: +4.72
+    delta =   250ms (n=127): T=5: +3.97  T=30: +4.66  T=120: -3.28
+    delta =  1000ms (n=127): T=5: +2.69  T=30: +9.17  T=120: +7.00
+
+======================================================================================================================
+=== ACCOUNTING B - CANCEL (secondary) - UNPOWERED-BY-DESIGN: measured COMPONENTS ONLY, no net headline, cannot adopt or kill
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+    T=  5: fill 73.8% | savings|fill $24.35/ctr [SPREAD_ONLY, MEASURED] | unfilled entries' incumbent all-in P&L $-31/ctr [ALL_IN approx (comm-in + $14.44 modelled), DISCOVERY_CONSUMED]
+    T= 30: fill 87.6% | savings|fill $25.59/ctr [SPREAD_ONLY, MEASURED] | unfilled entries' incumbent all-in P&L $+58/ctr [ALL_IN approx (comm-in + $14.44 modelled), DISCOVERY_CONSUMED]
+    T=120: fill 91.0% | savings|fill $25.53/ctr [SPREAD_ONLY, MEASURED] | unfilled entries' incumbent all-in P&L $+339/ctr [ALL_IN approx (comm-in + $14.44 modelled), DISCOVERY_CONSUMED]
+    (net = savings - foregone NOT quoted: MDE_B $339 vs ceiling $20 -> any observed net is noise at this n.)
+
+======================================================================================================================
+=== G4 - semantic double-computation (the CAP01 rule)
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  T=5: the headline $+3.97/ctr-entry is: over N=127 measurable bench-regenerated P1/PCT entry events (145 contract-entries, contract-weighted) in the 83-session strictly-clean replay union, the mean of (first-valid-ask-at-anchor minus effective fill) x $20/pt, where the effective fill is the join-bid limit B when the strict-through rule fills within (anchor, anchor+5s], else the first valid ask at/after anchor+5s (CHASE). It is an EXECUTION cost delta vs the baseline marketable buy - not P&L, not alpha.
+  GATE G4 identity T=5            | SPEC fill_rate x E[sav|fill] - (1-fill_rate) x E[cost|unf] == direct mean (independent recompute from CSV) | OBSERVED identity +3.965517 vs direct +3.965517 (|diff| 8.88e-16) | PASS
+  T=30: the headline $+4.66/ctr-entry is: over N=127 measurable bench-regenerated P1/PCT entry events (145 contract-entries, contract-weighted) in the 83-session strictly-clean replay union, the mean of (first-valid-ask-at-anchor minus effective fill) x $20/pt, where the effective fill is the join-bid limit B when the strict-through rule fills within (anchor, anchor+30s], else the first valid ask at/after anchor+30s (CHASE). It is an EXECUTION cost delta vs the baseline marketable buy - not P&L, not alpha.
+  GATE G4 identity T=30           | SPEC fill_rate x E[sav|fill] - (1-fill_rate) x E[cost|unf] == direct mean (independent recompute from CSV) | OBSERVED identity +4.655172 vs direct +4.655172 (|diff| 0.00e+00) | PASS
+  T=120: the headline $-3.28/ctr-entry is: over N=127 measurable bench-regenerated P1/PCT entry events (145 contract-entries, contract-weighted) in the 83-session strictly-clean replay union, the mean of (first-valid-ask-at-anchor minus effective fill) x $20/pt, where the effective fill is the join-bid limit B when the strict-through rule fills within (anchor, anchor+120s], else the first valid ask at/after anchor+120s (CHASE). It is an EXECUTION cost delta vs the baseline marketable buy - not P&L, not alpha.
+  GATE G4 identity T=120          | SPEC fill_rate x E[sav|fill] - (1-fill_rate) x E[cost|unf] == direct mean (independent recompute from CSV) | OBSERVED identity -3.275862 vs direct -3.275862 (|diff| 1.55e-14) | PASS
+
+======================================================================================================================
+=== G5 - censoring & selection control
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  unmeasurable entries: 1 of 128 (0.8%)
+    MEASURABLE    n= 127 ctr= 145 incumbent all-in P&L mean $+7/ctr SD $1,798
+    UNMEASURABLE  n=   1 ctr=   1 incumbent all-in P&L mean $+3,526/ctr SD $nan
+      reason NO_VALID_ANCHOR_BBO: 1
+  adverse-selection diagnostic (strict rule; mechanism prior: unfilled entries skew toward winners):
+    T=  5: incumbent all-in P&L filled $+86/ctr (n=94) vs unfilled $-31/ctr (n=33)
+    T= 30: incumbent all-in P&L filled $+55/ctr (n=111) vs unfilled $+58/ctr (n=16)
+    T=120: incumbent all-in P&L filled $+28/ctr (n=115) vs unfilled $+339/ctr (n=12)
+  GATE G5 censoring/selection     | SPEC census + measurable-vs-unmeasurable P&L + adverse-selection diagnostic printed, all cells | OBSERVED 1 unmeasurable censused; diagnostics printed | PASS
+
+======================================================================================================================
+=== G6 - evidence-status tags (per session) + run class
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  replayed sessions with entries: 53 (31 BURNED-WINDOW, 22 DISCOVERY-CONSUMED pre-burn)
+  run class: Class-X EXECUTION - DISCOVERY-grade - prices an execution policy - NEVER alpha evidence.
+  dollar bases used: savings/deltas = SPREAD_ONLY + MEASURED (tick replay); incumbent P&L = ALL_IN approx (commission-in + $14.44/ctrRT MODELLED spread), DISCOVERY_CONSUMED.
+  GATE G6 evidence tags           | SPEC per-session tag table + BASIS/EVIDENCE on every $ figure + run class printed | OBSERVED 53 sessions tagged; bases stated             | PASS
+  time-to-fill (strict, within 120s, n=115): p10 0.0s p25 0.2s p50 0.9s p75 3.4s p90 11.4s
+
+======================================================================================================================
+=== DECISION RULE (DESIGN_FROZEN 5, applied mechanically)
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  T=  5: G2 FAIL & G3 FAIL & fill_rate 73.8% >= 20% PASS -> not a candidate
+  T= 30: G2 FAIL & G3 FAIL & fill_rate 87.6% >= 20% PASS -> not a candidate
+  T=120: G2 FAIL & G3 FAIL & fill_rate 91.0% >= 20% PASS -> not a candidate
+  KILL-2 (mechanism): strict fill_rate(T=120) = 91.0% < 20% ? False
+  KILL-1 (powered kill): upper 95% CI per T = T=5: +11.86, T=30: +16.92, T=120: +17.54 - ALL < $2.50 ? False
+  GATE KILL-2 mechanism           | SPEC strict fill_rate(T=120) < 20% => CLOSED-BY-MECHANISM       | OBSERVED fill_rate(120) 91.0%                         | not fired
+  GATE KILL-1 powered kill        | SPEC all T: strict upper 95% CI < $2.50 => PASSIVE-ENTRY-AT-L1 CLOSED | OBSERVED all upper CIs +11.86, +16.92, +17.54         | not fired
+
+  DECISION: NO CANDIDATE, NO KILL - indeterminate at this n (recorded NULL).
+  LEDGER G00082 (family EXEC_PASSIVE_ENTRY, 3 T-variants = one family): NULL
+
+======================================================================================================================
+=== GATE / SPEC / OBSERVED / PASS-FAIL (program-printed)
+    [Class-X EXECUTION replay - DISCOVERY-grade by construction - NEVER alpha evidence]
+======================================================================================================================
+  G0b-i 104-union ∩ pools      | = ∅ (GOVERNANCE_PRECHECK premise)                            | 21 sessions (all W5-168; other 3 registers = 0) | FAIL (premise false; recorded)
+  G0b-ii replay-set ∩ pools    | = ∅ after exclusion; RAISE if nonempty                       | 0 sessions over 4 registers                    | PASS
+  G0b-iii 2026-05-05 absent    | 2026-05-05 ∉ union and ∉ replay set                          | absent=True                                    | PASS
+  G0 seal (session names)      | every replay session < 20260801                              | max session 20260731                           | PASS
+  G0 seal (1-min substrate)    | max session < 2026-08-01 at load                             | max 2026-07-31, dropped 0                      | PASS
+  G0c bench parity             | all 5 committed metrics reproduced to 0.0000%; RAISE on failure | all 5 at 0.0000%                               | PASS
+  G1 MDE-first barrier         | MDE printed before outcomes; if MDE_B > ceiling, B is UNPOWERED (components only) | MDE_A $3.86, MDE_B $339 vs ceil $20 -> B UNPOWERED | PASS
+  G0 seal (tick files)         | every loaded tick file max ts < 2026-08-01 (in-code RAISE)   | all loaded files passed the load-time assertion | PASS
+  G2 primary T=5               | strict-through net > 0 at Bonferroni (lower CI > 0)          | mean +3.97, CI-Bonf lo -7.32                   | FAIL
+  G2 primary T=30              | strict-through net > 0 at Bonferroni (lower CI > 0)          | mean +4.66, CI-Bonf lo -12.57                  | FAIL
+  G2 primary T=120             | strict-through net > 0 at Bonferroni (lower CI > 0)          | mean -3.28, CI-Bonf lo -36.57                  | FAIL
+  G3 +1-tick stress T=5        | stress net > 0 at Bonferroni; positive-only-without-stress = FILL-FRAGILE | stress CI-Bonf lo -10.03                       | FAIL
+  G3 +1-tick stress T=30       | stress net > 0 at Bonferroni; positive-only-without-stress = FILL-FRAGILE | stress CI-Bonf lo -15.77                       | FAIL
+  G3 +1-tick stress T=120      | stress net > 0 at Bonferroni; positive-only-without-stress = FILL-FRAGILE | stress CI-Bonf lo -42.83                       | FAIL
+  G4 identity T=5              | fill_rate x E[sav|fill] - (1-fill_rate) x E[cost|unf] == direct mean (independent recompute from CSV) | identity +3.965517 vs direct +3.965517 (|diff| 8.88e-16) | PASS
+  G4 identity T=30             | fill_rate x E[sav|fill] - (1-fill_rate) x E[cost|unf] == direct mean (independent recompute from CSV) | identity +4.655172 vs direct +4.655172 (|diff| 0.00e+00) | PASS
+  G4 identity T=120            | fill_rate x E[sav|fill] - (1-fill_rate) x E[cost|unf] == direct mean (independent recompute from CSV) | identity -3.275862 vs direct -3.275862 (|diff| 1.55e-14) | PASS
+  G5 censoring/selection       | census + measurable-vs-unmeasurable P&L + adverse-selection diagnostic printed, all cells | 1 unmeasurable censused; diagnostics printed   | PASS
+  G6 evidence tags             | per-session tag table + BASIS/EVIDENCE on every $ figure + run class printed | 53 sessions tagged; bases stated               | PASS
+  KILL-2 mechanism             | strict fill_rate(T=120) < 20% => CLOSED-BY-MECHANISM         | fill_rate(120) 91.0%                           | not fired
+  KILL-1 powered kill          | all T: strict upper 95% CI < $2.50 => PASSIVE-ENTRY-AT-L1 CLOSED | all upper CIs +11.86, +16.92, +17.54           | not fired

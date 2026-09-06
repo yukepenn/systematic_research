@@ -18,24 +18,20 @@ integration; every update is committed and pushed immediately (owner checkpoint 
 - ⭐ Standing survivor: **ZBMACRO01** (G00072 PASS/selected) — engine candidate, Class-P
   pre-read = G00078.
 
-## In flight (Wave 4) — updated 2026-09-06 after Wave-3 integration
+## In flight (Wave 5) — updated 2026-09-06 after Wave-4 integration
 
-Wave 3 DONE and integrated (G00073-77 FAIL recorded with §28 blocks; G00078 PASS/STACK-MEMBER).
-Wave 4 executing (specs frozen; launch = workflow `genesis3-wave4`):
+Wave 4 DONE and integrated (G00079 PASS/FT0-licensed · G00080 FAIL/family-closed · G00081
+DEFECT/not-cleared-at-debt-bar · G00082 NULL/facts-banked). ⭐ **ZBMACRO01 is on the FAST TRACK.**
 
-| run | trial | object |
-|---|---|---|
-| `runs/G3_ZBMACRO_ENGINE_20260906` | G00079 | engine construction + skeptic; DELAY CURVE decisive (08:46 entry is the executable claim) |
-| `runs/G3_AUCTCONC_20260906` | G00080 | concession-short, frozen ERA-UNREAD, x2 mirror debt, portfolio rendering carries G2 |
-| `runs/G3_RATESCARRY_20260906` | G00081 | outright ZN/ZB carry-timing; 97.5-pct debt bar; static arms; 2022-26 bear decisive |
-| `runs/G3_XPASS01_PASSIVE_ENTRY_REPLAY_20260906` | G00082 | Class-X passive-entry replay (gov pre-check DONE: CLEAN-PATH-EXISTS, 104 sessions; design frozen sha 3689e279) |
+Wave 5 (specs being frozen at this checkpoint):
+- `runs/G3_ZBMACRO_FT_20260906` (G00083): FT0 freeze doc + FT1 independent reproduction +
+  FT4 NinjaScript class WRITTEN OFFLINE (🔴 NOT copied into NT8 — a .cs copy rebuilds
+  Custom.dll against the RUNNING live book; compile/Analyzer/parity happen at the 09-21
+  window, precedent = the HD-23 offline certification) + FT10 owner packet draft.
+- Falsifiers: post-FOMC sign-conditioned ZB drift (G00084) · close-hour hedging-flow momentum
+  ES/RTY/YM vol-gated (G00085) · bond-index duration-extension day (G00086).
 
-⚠️ 2026-09-06 ~10:10 ET: the first Wave-4 launch was killed by the 5-hr session limit (3 of 4
-agents died pre-output; entrypolicy completed and is integrated). Relaunched fresh as
-`genesis3-wave4-relaunch`. Recovery cost: zero (checkpoint doctrine held).
-
-**Recovery rule:** same as before — finished (final DECISION line in out/gate_table.txt) →
-integrate + record ledger; unfinished → re-execute the frozen spec exactly.
+**Recovery rule:** unchanged.
 
 ## Standing duties every session
 

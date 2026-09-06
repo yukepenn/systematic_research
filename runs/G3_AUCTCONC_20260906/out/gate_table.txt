@@ -1,0 +1,69 @@
+======================================================================================================================
+=== G3_AUCTCONC_20260906 -- auction CONCESSION half: SHORT ZN/ZB close(D-5)->close(D0) (G00080, family GENESIS3_EVENT)
+======================================================================================================================
+INPUT SHAS (AS-IS from runs/G3_AUCTCYCLE_20260906/out/):
+    event_study.csv          dc1064b80d87d2f5d57943d0939bd2435ebed7d3612efe531776f40248f2e7f3
+    auction_calendar.csv     f829afff6acc16521c854bff5a23d9059f0cdd8fddb62be55c9a002241ba1662
+    zn_daily.parquet         13fc5165b8b2171bcb459e1fdb1ee47005ffa231027eb045f658de4db2fd2527
+    zb_daily.parquet         9446e7f19ee17754d5afd31c65790e5fe24ae76f23ebf128101c7c0bdf786c56
+    es_daily.parquet         249921cb6d790b8478910fabbc480e0ac82a3d20a206b38fedb34fa1b2054f91
+seal: ZN/ZB/ES max session 2026-07-31 < 2026-08-01 OK; calendar max 2026-07-09 <= 2026-07-31 OK
+events: 414 AS-IS; finite concession-short outcome n_eff = 411 (3 dropped: window predates series start / masked session)
+integrity: conc_A recompute max|err| < 1e-9 on 411 finite rows; close-diff meaning check 411/411 roll-free windows exact; era bounds OK
+costs/ct RT (C1): ZN opt $19.98 cons $35.61 | ZB opt $35.61 cons $66.86 | ES opt $16.86 cons $29.36  (cons rung GATES, C1)
+
+G6 OVERLAP HONESTY (C5): D-5..D0 windows across the two roots:
+    overlap fraction (event overlaps ANY other event's window): 0.993 (411/414); cross-root only: 0.993 (411/414)
+    deduplicated one-position-at-a-time portfolio: 207 taken / 204 skipped-BUSY / 3 no-outcome  (ZN 205, ZB 2)
+    the PORTFOLIO rendering carries the G2 gate (spec G6); pooled table printed beside
+
+G1 MDE (PRINTED BEFORE ANY OBSERVED EVENT MEAN; alpha one-sided 2.5% = 5%/2 mirror debt, 80% power; multiplier 2.802):
+    POOLED     sigma_pool $1,554/event (ZN 0.50 / ZB 0.50), N_eff 411 -> MDE $215/event
+    PORTFOLIO  sigma_pool $912/event (ZN 0.99 / ZB 0.01), N_taken 207 -> MDE $178/event
+
+OBSERVED (SHORT close(D-5)->close(D0), per contract, after cost, cons rung):
+    null event IN WORDS (C3): P(random joint circular placement of the auction mask on the ZN/ZB axes gives a mean
+    after-cost concession-short >= observed); GATE compares 2 x p_1s to 0.05 (mirror debt).
+    POOLED     n=411  gross $+161.72  cons $+110.53  opt $+133.95  CI95 [$-40.84, $+271.42]  [printed beside, non-gating]
+               null mean $-71.20 sd $73.77; p_1s 0.0085 -> p x2 = 0.0170
+    PORTFOLIO  n=207  gross $+105.83  cons $+69.92  opt $+85.69  CI95 [$-67.25, $+207.98]  [GATING, C4]
+               null mean $-52.06 sd $58.71; p_1s 0.0215 -> p x2 = 0.0430
+
+G3 MATCHED CONTROL (market x weekday of window-end, no auction within +/-5 sessions, same backward window, SHORT side, cons cost):
+    control days: 3,748 across 10 cells
+    POOLED     ctrl $-148.54  DELTA $+259.07  CI95 [$+78.02, $+448.94]   [GATING, C6]
+    PORTFOLIO  ctrl $-82.55  DELTA $+152.46  CI95 [$-14.48, $+306.45]   [annex, non-gating]
+
+G4 ERA TABLE (pooled after-cost CONS short GATES the sign rule, C7; portfolio annex beside; FIRST EVER read of this split):
+    era             n      gross$  aftercost$     ctrl$    delta$ sign   nPort      port$
+    2009-15       161       +9.61      -41.53   -144.15   +102.62   -       81    -111.81
+    2016-21       144     +237.85     +186.61   -152.15   +338.76   +       73    +175.43
+    2022-26/07    106     +289.36     +238.12   -150.30   +388.42   +       53    +202.30
+    ERA CLASSIFICATION: REGIME-LOCAL
+
+G5 ES SAME-WINDOW READ (C9; 414 auction dates on the ES axis, close(D-5)->close(D0)):
+    n = 391; ES LONG gross drift $+507.58/event CI95 [$+114.44, $+908.13]
+    ES SHORT after-cost           $-536.94/event CI95 [$-937.49, $-143.80]
+    standardized SHORT-side effect: rates z-bar +0.1000 vs ES z-bar -0.1397 (ratio -1.40)
+
+G7 ECONOMICS (cons rung):
+    POOLED     23.8 events/yr x $+110.53 = $+2,634/yr/contract (double-counts overlapping weeks)
+    PORTFOLIO  12.0 trades/yr x $+69.92 = $+839/yr/contract (economically honest rendering)
+    ANNEX cluster-by-month CI95 (pooled): [$-81.09, $+307.30] (206 clusters)
+    ANNEX ZN: n=206  gross $+62.96  cons $+27.35
+    ANNEX ZB: n=205  gross $+260.98  cons $+194.12
+    ANNEX originals: n=138  cons $+128.91
+    ANNEX reopenings: n=273  cons $+101.24
+
+GATE TABLE  (printed by program)
+GATE            SPEC                                                                            OBSERVED                                                                      PASS-FAIL
+G1_MDE_FIRST    MDE printed before observed; x2 debt on alpha; pooled floor 300                 pooled MDE $215 @N=411; portfolio MDE $178 @N=207                             PASS
+G2_EDGE(PORT)   PORTFOLIO after-cost cons mean>0 AND event-CI ex 0 AND 2xp_shift<.05            mean $+69.92, CI [-67.25,+207.98], px2 0.0430                                 *** FAIL ***
+G3_CONTROL      beats matched mkt x weekday non-auction control (short); delta CI ex 0          delta $+259.07, CI [+78.02,+448.94]                                           PASS
+G4_ERA          signs 2009-15/2016-21/2022-26; all+ STRUCT / modern-only RL / modern<=0 FAIL    -/+/+ -> REGIME-LOCAL                                                         PASS
+G5_SPECIFICITY  ES same-window read printed (short side fights equity beta?)                    ES long gross $+507.58; short cons $-536.94 CI [-937.49,-143.80]              PASS
+G6_OVERLAP      overlap fraction + dedup one-position portfolio printed; carries G2             overlap 0.993 (cross-root 0.993); 207 taken of 414                            PASS
+G7_COST         ZN $35.61 / ZB $66.86 cons rung asserted; events/yr economics printed           rungs asserted; 23.8 ev/yr pooled, 12.0 trades/yr port                        PASS
+
+DECISION RULE (spec, mechanical): G2(portfolio)=FAIL G3=PASS G4=REGIME-LOCAL -> CLOSED -- auction-cycle family FULLY closed (both halves) -> FAILURE_MEMORY
+======================================================================================================================

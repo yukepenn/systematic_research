@@ -1,0 +1,200 @@
+{
+  "run_id": "G3_RATESCARRY_20260906",
+  "ledger": "G00081",
+  "verdict": "INVALID-RUN (split null verdict)",
+  "ledger_result": "DEFECT",
+  "gates": [
+    {
+      "gate": "HASH  machinery == G00074 recorded",
+      "spec": "4 files byte-identical",
+      "observed": "see audit above",
+      "pass": true
+    },
+    {
+      "gate": "UT    s6/s7 unit tests",
+      "spec": "telescope+basis+causality",
+      "observed": "all pass",
+      "pass": true
+    },
+    {
+      "gate": "SEAL  max session < 2026-08-01",
+      "spec": "< 2026-08-01",
+      "observed": "2026-07-31",
+      "pass": true
+    },
+    {
+      "gate": "CAUS  two-sided causality probe",
+      "spec": "future<1e-12, past>1e-9",
+      "observed": "see probe above",
+      "pass": true
+    },
+    {
+      "gate": "RECON-A pool == armZN + armZB",
+      "spec": "max weekly |d| < 1e-6",
+      "observed": "$9.09e-13",
+      "pass": true
+    },
+    {
+      "gate": "RECON-B arms == G00074 controls",
+      "spec": "596 weeks, |d| < 1e-6",
+      "observed": "596 wks, $4.55e-13",
+      "pass": true
+    },
+    {
+      "gate": "RECON-C pivot == direct simulate",
+      "spec": "|d net| < 1e-6",
+      "observed": "$0.00e+00",
+      "pass": true
+    },
+    {
+      "gate": "G1    MDE printed before observed",
+      "spec": "printed",
+      "observed": "MDE $199/wk over 596 wks",
+      "pass": true
+    },
+    {
+      "gate": "G2a   pool after-cost weekly mean > 0",
+      "spec": "> $0",
+      "observed": "$178.56",
+      "pass": true
+    },
+    {
+      "gate": "G2ci  95% block-boot CI excludes 0",
+      "spec": "CI_lo > 0",
+      "observed": "[$29.20, $327.97]",
+      "pass": true
+    },
+    {
+      "gate": "G2n   circular-shift null at 97.5",
+      "spec": ">= 97.5 pctl (debt bar)",
+      "observed": "97.3",
+      "pass": false
+    },
+    {
+      "gate": "G2b   second-null TAIL-SIDE agreement",
+      "spec": "both ABOVE or both BELOW the bar",
+      "observed": "shift 97.3 / perm 98.5: SPLIT",
+      "pass": false
+    },
+    {
+      "gate": "G3a   pool Sharpe > static-LONG",
+      "spec": "> 0.360",
+      "observed": "0.743",
+      "pass": true
+    },
+    {
+      "gate": "G3b   pool Sharpe > static-SHORT",
+      "spec": "> -0.487",
+      "observed": "0.743",
+      "pass": true
+    },
+    {
+      "gate": "G3c   alpha vs static-LONG, CI excl. 0",
+      "spec": "CI excludes 0",
+      "observed": "$127.59/wk, CI [$20.29, $243.49]",
+      "pass": true
+    },
+    {
+      "gate": "G4    modern era (2022-26) not negative",
+      "spec": "pool 2022-26 cell > 0",
+      "observed": "$23,295",
+      "pass": true
+    },
+    {
+      "gate": "G5    cost band printed",
+      "spec": "drag + turnover",
+      "observed": "1tk $18/wk, 2tk $33/wk",
+      "pass": null
+    },
+    {
+      "gate": "G6    battery + rho-to-P1 printed",
+      "spec": "weekly-vol lead; DD as $ only",
+      "observed": "S 0.74; maxDD $25,886; rho_w +0.036",
+      "pass": null
+    }
+  ],
+  "headline": {
+    "n_weeks": 596,
+    "weekly_mean": 178.56476717253267,
+    "weekly_sd": 1733.033635794333,
+    "ann_sharpe_weekly": 0.7430028024086903,
+    "total_net": 106424.60123482948,
+    "total_gross": 117202.8338971118,
+    "total_cost": 10778.232662282333,
+    "stress_total_net": 97523.28510747748,
+    "ci_lo": 29.199588935671702,
+    "ci_hi": 327.9710707187573,
+    "mde_weekly_mean": 198.76590632862414,
+    "null_shift_pctl": 97.3109243697479,
+    "null_shift_n_offsets": 595,
+    "null_perm_pctl": 98.5,
+    "null_perm_draws": 2000,
+    "arm_zn_total": 47713.14613592212,
+    "arm_zb_total": 58711.45509890735,
+    "arm_zn_sharpe": 0.6109182454444102,
+    "arm_zb_sharpe": 0.7006947969563834,
+    "static_long": [
+      55960.0890622288,
+      93.89276688293423,
+      0.36041171968470187
+    ],
+    "static_short": [
+      -75534.86180323793,
+      -126.73634530744619,
+      -0.48660005843682086
+    ],
+    "alpha_weekly": 127.59448036264885,
+    "alpha_ci": [
+      20.292310200360575,
+      243.49294119072962
+    ],
+    "beta_long": 0.5428563722425361,
+    "r2": 0.346278641671089,
+    "eras": {
+      "2009-15": {
+        "pool": 74113.71074054009,
+        "ZN": 36738.55413424953,
+        "ZB": 37375.15660629058,
+        "LONG": 74081.10450941487,
+        "SHORT": -84825.0182299646
+      },
+      "2016-21": {
+        "pool": 9016.247808105814,
+        "ZN": 3630.5689952031234,
+        "ZB": 5385.678812902699,
+        "LONG": 4126.545998256301,
+        "SHORT": -10684.78998633008
+      },
+      "2022-26": {
+        "pool": 23294.642686183557,
+        "ZN": 7344.0230064694815,
+        "ZB": 15950.619679714082,
+        "LONG": -22247.561445442403,
+        "SHORT": 19974.946413056736
+      }
+    },
+    "long_share": {
+      "ZN": 0.8055555555555556,
+      "ZB": 0.7738095238095238
+    },
+    "weekly_maxdd": 25885.583593545947,
+    "weekly_cdar95": 21191.516869302843,
+    "rho_p1_daily": -0.006901194417667469,
+    "rho_p1_weekly": 0.03623545019578816,
+    "turnover_weekly": 0.7222910130727543
+  },
+  "seeds": {
+    "boot_mean": 20260916,
+    "boot_alpha": 20260917,
+    "perm": 20260918,
+    "shift_null": "deterministic all-offsets"
+  },
+  "evidence_status": "DISCOVERY_CONSUMED (arms observed as G00074 controls before registration; debt priced by 97.5 bar + static-arm victory; 2026-06/07 segment BURNED-window, no forward claim)",
+  "machinery_hashes_verified": {
+    "carry_znzb.py": "b443803f0c4b23a4d2a18f16601d50215e839f3c0ede1c236df7d2eb161d775a",
+    "run_znzb.py": "fc61d3fe0535292374e471440908edfe187607f44aa86e11086431639620dee4",
+    "ncd_day.py": "17603bdc722d30f386b013d35a33f8b2cb510d8b7ea6fdbc07f0274bf01baec9",
+    "roll.py": "b88a5176f8ed1dbc3903e300f6238993099046437c4b921293c9ba1d2eda837f"
+  },
+  "utc": "2026-09-06T14:20:22.789100+00:00"
+}

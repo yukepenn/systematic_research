@@ -306,3 +306,36 @@ representation = two-leg conjunction vs all-turns control      sample = 45 condi
 reason = BOTH legs wrong-signed (flow delta -0.318 p 0.81; revert +0.468 p 0.84); no era shows the pair.
 Banked controls: generic ES/ZB turn-of-month spread ~= $6/event ~ zero; early-month ES drift +8.85pt (fact).
 ```
+
+
+## GENESIS III Wave 4 closures (2026-09-06)
+
+### Auction concession-short (G00080, `G3_AUCTCONC_20260906`) — closes the AUCTION-CYCLE FAMILY (both halves)
+```
+Closed:  observable = same 414 mapped 10y/30y auctions      representation = SHORT close(D-5)->close(D0)
+horizon = 5 days      target = concession capture vs matched control, x2 mirror debt
+execution = MODELED 2-tick rung      sample = n_eff 411, windows overlap 0.993 across roots
+reason = the honest one-position PORTFOLIO rendering event-block CI includes 0 ([-67,+208], mean +70
+vs MDE 178) - positive-below-MDE; pooled rendering cleared its null (p x2 = .017) but double-counts
+exposure. First-ever era read: -/+/+ REGIME-LOCAL, the mirror of the rebound +/-/- decay. ~$839/yr/ct.
+```
+The family is closed; the era-mirror is a banked FACT (the cycle sign structure migrated post-2015).
+
+### Outright ZN/ZB carry-timing (G00081, `G3_RATESCARRY_20260906`) — NOT-CLEARED-AT-DEBT-BAR
+```
+Recorded DEFECT (preregistered tail-side split clause: shift 97.3 / perm 98.5 straddle the 97.5
+debt bar). NOT closed as false, NOT cleared as real. BANKED FACTS: pool +$178.56/wk Sharpe 0.743,
+alpha vs static-long +$127.59/wk (CI excludes 0), ALL eras positive incl. 2022-26 (+$23,295 while
+always-long lost -$22,248 - the timing genuinely survived the bond bear).
+```
+No successor on the same sample (the min-rule outcome is pre-known = registration theater).
+Revival: forward accrual (the seal boundary advances for free) or new rates data.
+
+### XPASS01 passive-entry policy (G00082) — NULL, engineering facts banked
+```
+NULL: join-bid + timeout on 83 governance-clean sessions - fills 74-91% (median 0.9s: momentum
+does NOT run away at second scale), point estimates +$4-5/ctr-entry vs $26.26 measured anchor
+spread, CIs +-$10-27 - nothing clears, no kill fires. Adverse selection CONFIRMED and T-increasing
+(T=120 unfilled entries are the +$339 winners). CANCEL accounting unpowered-by-design (stated
+before results). NO live policy change. Governance premise correction recorded in the census.
+```

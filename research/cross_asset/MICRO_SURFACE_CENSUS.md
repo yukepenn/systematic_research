@@ -149,3 +149,15 @@ not a Wave-H object.
 | minute, 2022+ cross-market | SM1M seven-instrument family | Last + COST_MODEL spread |
 | minute, multi-era | NQ deep 2006→2026-05 | Last + COST_MODEL spread |
 | live/forward execution cost | GetQuote sampling (roll_quotes) | direct quotes, ops-only |
+
+
+---
+
+## 🔴 CORRECTION (2026-09-06, from G00082 XPASS01 G0b-i)
+
+The BBO governance memo claim "pool ∩ extracted = 0 across all four registers" is **FALSE for
+the W5 168-session register**: 21 of the 104 already-extracted tick sessions ARE
+`confirmation_pool_168_dates.txt` members. The XPASS01 mechanical re-intersection caught this
+BEFORE any price read; the 21 were excluded and the replay ran on 83 clean sessions.
+**Rule reaffirmed and strengthened: never trust a recorded intersection claim — recompute
+pool ∩ surface mechanically at load, every run, and gate on it.**

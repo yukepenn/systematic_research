@@ -1,0 +1,25 @@
+
+======================================================================================================================
+=== GATES — GATE / SPEC / OBSERVED / PASS-FAIL [2009-01-01 -> 2026-07-31, DISCOVERY_CONSUMED, MODELED costs]
+======================================================================================================================
+    GATE                                           SPEC                                         OBSERVED                                                 VERDICT
+    HASH  machinery == G00074 recorded             4 files byte-identical                       see audit above                                          PASS
+    UT    s6/s7 unit tests                         telescope+basis+causality                    all pass                                                 PASS
+    SEAL  max session < 2026-08-01                 < 2026-08-01                                 2026-07-31                                               PASS
+    CAUS  two-sided causality probe                future<1e-12, past>1e-9                      see probe above                                          PASS
+    RECON-A pool == armZN + armZB                  max weekly |d| < 1e-6                        $9.09e-13                                                PASS
+    RECON-B arms == G00074 controls                596 weeks, |d| < 1e-6                        596 wks, $4.55e-13                                       PASS
+    RECON-C pivot == direct simulate               |d net| < 1e-6                               $0.00e+00                                                PASS
+    G1    MDE printed before observed              printed                                      MDE $199/wk over 596 wks                                 PASS
+    G2a   pool after-cost weekly mean > 0          > $0                                         $178.56                                                  PASS
+    G2ci  95% block-boot CI excludes 0             CI_lo > 0                                    [$29.20, $327.97]                                        PASS
+    G2n   circular-shift null at 97.5              >= 97.5 pctl (debt bar)                      97.3                                                     *** FAIL ***
+    G2b   second-null TAIL-SIDE agreement          both ABOVE or both BELOW the bar             shift 97.3 / perm 98.5: SPLIT                            *** FAIL ***
+    G3a   pool Sharpe > static-LONG                > 0.360                                      0.743                                                    PASS
+    G3b   pool Sharpe > static-SHORT               > -0.487                                     0.743                                                    PASS
+    G3c   alpha vs static-LONG, CI excl. 0         CI excludes 0                                $127.59/wk, CI [$20.29, $243.49]                         PASS
+    G4    modern era (2022-26) not negative        pool 2022-26 cell > 0                        $23,295                                                  PASS
+    G5    cost band printed                        drag + turnover                              1tk $18/wk, 2tk $33/wk                                   REPORT-ONLY
+    G6    battery + rho-to-P1 printed              weekly-vol lead; DD as $ only                S 0.74; maxDD $25,886; rho_w +0.036                      REPORT-ONLY
+
+PREREGISTERED BINARY VERDICT: INVALID-RUN (split null verdict)   (ledger G00081: DEFECT)

@@ -1,0 +1,30 @@
+G3_XPASS01_PASSIVE_ENTRY_REPLAY_20260906 - ledger G00082
+Class-X EXECUTION replay - DISCOVERY-grade - NEVER alpha evidence
+run finished 2026-09-06 10:31:52.544099  wall 2.2 min
+
+GATE                         | SPEC                                                         | OBSERVED                                       | VERDICT
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+G0b-i 104-union ∩ pools      | = ∅ (GOVERNANCE_PRECHECK premise)                            | 21 sessions (all W5-168; other 3 registers = 0) | FAIL (premise false; recorded)
+G0b-ii replay-set ∩ pools    | = ∅ after exclusion; RAISE if nonempty                       | 0 sessions over 4 registers                    | PASS
+G0b-iii 2026-05-05 absent    | 2026-05-05 ∉ union and ∉ replay set                          | absent=True                                    | PASS
+G0 seal (session names)      | every replay session < 20260801                              | max session 20260731                           | PASS
+G0 seal (1-min substrate)    | max session < 2026-08-01 at load                             | max 2026-07-31, dropped 0                      | PASS
+G0c bench parity             | all 5 committed metrics reproduced to 0.0000%; RAISE on failure | all 5 at 0.0000%                               | PASS
+G1 MDE-first barrier         | MDE printed before outcomes; if MDE_B > ceiling, B is UNPOWERED (components only) | MDE_A $3.86, MDE_B $339 vs ceil $20 -> B UNPOWERED | PASS
+G0 seal (tick files)         | every loaded tick file max ts < 2026-08-01 (in-code RAISE)   | all loaded files passed the load-time assertion | PASS
+G2 primary T=5               | strict-through net > 0 at Bonferroni (lower CI > 0)          | mean +3.97, CI-Bonf lo -7.32                   | FAIL
+G2 primary T=30              | strict-through net > 0 at Bonferroni (lower CI > 0)          | mean +4.66, CI-Bonf lo -12.57                  | FAIL
+G2 primary T=120             | strict-through net > 0 at Bonferroni (lower CI > 0)          | mean -3.28, CI-Bonf lo -36.57                  | FAIL
+G3 +1-tick stress T=5        | stress net > 0 at Bonferroni; positive-only-without-stress = FILL-FRAGILE | stress CI-Bonf lo -10.03                       | FAIL
+G3 +1-tick stress T=30       | stress net > 0 at Bonferroni; positive-only-without-stress = FILL-FRAGILE | stress CI-Bonf lo -15.77                       | FAIL
+G3 +1-tick stress T=120      | stress net > 0 at Bonferroni; positive-only-without-stress = FILL-FRAGILE | stress CI-Bonf lo -42.83                       | FAIL
+G4 identity T=5              | fill_rate x E[sav|fill] - (1-fill_rate) x E[cost|unf] == direct mean (independent recompute from CSV) | identity +3.965517 vs direct +3.965517 (|diff| 8.88e-16) | PASS
+G4 identity T=30             | fill_rate x E[sav|fill] - (1-fill_rate) x E[cost|unf] == direct mean (independent recompute from CSV) | identity +4.655172 vs direct +4.655172 (|diff| 0.00e+00) | PASS
+G4 identity T=120            | fill_rate x E[sav|fill] - (1-fill_rate) x E[cost|unf] == direct mean (independent recompute from CSV) | identity -3.275862 vs direct -3.275862 (|diff| 1.55e-14) | PASS
+G5 censoring/selection       | census + measurable-vs-unmeasurable P&L + adverse-selection diagnostic printed, all cells | 1 unmeasurable censused; diagnostics printed   | PASS
+G6 evidence tags             | per-session tag table + BASIS/EVIDENCE on every $ figure + run class printed | 53 sessions tagged; bases stated               | PASS
+KILL-2 mechanism             | strict fill_rate(T=120) < 20% => CLOSED-BY-MECHANISM         | fill_rate(120) 91.0%                           | not fired
+KILL-1 powered kill          | all T: strict upper 95% CI < $2.50 => PASSIVE-ENTRY-AT-L1 CLOSED | all upper CIs +11.86, +16.92, +17.54           | not fired
+
+DECISION: NO CANDIDATE, NO KILL - indeterminate at this n (recorded NULL).
+LEDGER: NULL
