@@ -1,0 +1,76 @@
+run_id: G2_F10_MC50_MACRONIGHT_20260906
+campaign: GENESIS_II (Formal Wave 4)
+card: MC-50 (macro leg ONLY — the earnings leg stays demoted contingent-on-N per the skeptic)
+stage: "Stage 2-5 falsifier of the W2 skeptic's FROZEN PRIMARY, adopted verbatim. No strategy
+  licensed by a PASS; a PASS licenses a minimal-rule spec with its own gates."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+frozen_primary_verbatim: |
+  "NQ 18:00->08:29 net return on NFP/CPI nights at $35/RT + $5.25 ON tax vs matched same-weekday
+  non-release nights, eras split 2017/2023, circular-shift shared draw, NQ 1-min pre-burn
+  (~450 events — adequate)."  — runs/G2_WORLDSCAN_W2_20260829/out/skeptic_verdicts_w2.md, MC-50.
+
+anti_rescue_gate: |
+  GENESIS_H2 closed: 11 calendar day-types -> SAME-SESSION mean (including NFP/CPI/FOMC DAY).
+  This run tests the OVERNIGHT window ENDING at the release morning (18:00 prev evening ->
+  08:29), which the skeptic explicitly ruled "genuinely untested window, H2's closure doesn't
+  cover it". A FAIL closes the macro-night hold at this scope; it does not re-litigate H2.
+
+mechanism: |
+  Event risk premium: holders of overnight exposure into a scheduled macro release earn
+  compensation for announcement risk (Savor-Wilson class). Direction of the primary: LONG NQ
+  held 18:00 -> 08:29 into the release. The claim is the release-night mean NET return exceeds
+  the matched non-release-night mean.
+
+data:
+  nq_1m: research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet   # deep spine, ends 2026-05-29
+  nfp_dates: runs/GENESIS_H2_CALENDAR_20260828/out/calendar_artifacts/daytype_sessions_NFP_DAY.csv
+  cpi_dates: runs/GENESIS_H2_CALENDAR_20260828/out/calendar_artifacts/daytype_sessions_CPI_DAY.csv
+  dev_end: "2026-05-29"   # hard-asserted; nothing after is read
+  note: "a release DAY d defines the release NIGHT as the overnight session 18:00 ET on the
+    prior trading day -> 08:29 ET on d (releases print 08:30 ET). Price basis: NQ points x $20,
+    1 contract, additive back-adjusted substrate is acceptable here because the statistic is a
+    POINT P&L within single nights (no cross-era percent thresholds — DELEV01 substrate law
+    respected)."
+
+population: |
+  Events: all NFP and CPI release nights with complete 18:00 and 08:29 bars in the substrate,
+  2006 -> 2026-05-29 (~450 expected; the realized N is printed). Controls: ALL same-weekday
+  non-release nights in the same era with complete bars. Duplicate nights (NFP and CPI same
+  date) count once, tagged both.
+
+cost_model: "BASIS: ALL_IN floor per the skeptic: $35.00/RT + $5.25 overnight friction tax =
+  $40.25 per event night, charged against the long side. EVIDENCE: EXEC01-derived floor
+  (overnight spreads 4.5-6 ticks), not a measured MNQ/NQ fill."
+
+gates:  # program-printed GATE / SPEC / OBSERVED / PASS-FAIL
+  G0_seal: "max substrate date <= 2026-05-29, hard assert."
+  G1_semantic: "one printed sentence: what population (release nights vs same-weekday controls,
+    which years), what event (mean net point P&L per night on 1 NQ long after $40.25)."
+  G2_primary: "difference in mean net P&L (release-night minus matched-control) tested against a
+    circular-shift null: 401 shifts of the release-night LABEL series along the calendar of
+    eligible nights, offsets drawn once (fixed seed), SHARED across the NFP-only / CPI-only /
+    pooled variants. PASS bar: pooled p <= 0.05, two-sided. NFP-only and CPI-only are printed as
+    decomposition, not separate chances."
+  G3_era_stability: "sign of the pooled difference agrees in >= 2 of 3 eras (2006..2016,
+    2017..2022, 2023..2026-05). Fail G3 while passing G2 -> REGIME_LOCAL classification."
+  G4_gross_decomposition: "gross vs net printed; if gross passes and net fails, the verdict is
+    'cost-killed at the $40.25 floor' — a different closure than 'no information', and the
+    measured-MNQ-spread update (crossover sampling) may reopen it."
+  G5_power: "MDE at 80% power printed on any FAIL; UNDERPOWERED_STILL if MDE > 3x |observed|,
+    with the verbatim 'closes nothing on its own'."
+
+decision_rule: |
+  G2+G3 PASS -> minimal-rule spec (its own run) with exposure-matched controls and the
+  concentration/timing-teeth CLASSIFICATION rungs per current doctrine. FAIL -> FAILURE_MEMORY
+  row at scope "NQ overnight hold into NFP/CPI at $40.25 floor, 2006-2026-05". Evidence status
+  of every number: DISCOVERY_CONSUMED.
+
+ledger: "one trial, registered before outcomes; results recorded serially by the coordinator."
+
+outputs:
+  - out/gate_table.txt
+  - out/night_table.csv      # per event night: date, type, gross pts, net $, control-era mean
+  - out/era_table.csv
+  - REPORT.md
