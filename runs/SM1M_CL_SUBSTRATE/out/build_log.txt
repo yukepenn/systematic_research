@@ -1,0 +1,58 @@
+====================================================================================================
+=== SM1M_CL_SUBSTRATE build -- DATA EXTRACTION ONLY (no signal, no P&L)
+====================================================================================================
+    input CSV            C:\Users\Yuke Zhang\Documents\NinjaTrader 8\out\cl1m_2022_2026_1m.csv
+    input sha256         3d7364ec1e7cd702933d25a23c11e6b8d314c47aa5394888a4eb038bc4609fd3
+    rows read            1,608,018
+
+    PRICE-GRID CHECK  (CL outright tick = $0.01 = F2 precision; F2 loss-free -- see docstring)
+      max |csv - snapped-to-0.01|            0.0000000000   (must be <= half-tick 0.005: PASS)
+      share of prices already on 0.01 grid   100.000000%   (expected ~100%: F2 exactly encodes CL's 0.01 grid, nothing finer to destroy)
+
+    GATE time strictly increasing            PASS
+    GATE no stamps in (17:00,18:00] ET       PASS  (found 0)
+    GATE OHLC sanity                          PASS
+    GATE volume >= 0                          PASS
+
+    SEAL RULE (CLAUDE.md s5 / LOCKED_FORWARD): HARD-DROP session >= 2026-08-01
+      rows dropped at build time             0   (export was already capped at the s5 boundary; 0 expected)
+      max retained session date              2026-07-31
+      ASSERT max retained session < 2026-08-01   PASS
+
+    CROSS-CHECK  session minute-volume sum vs db/day (true unmerged front contract,
+                 reader ncd_day.py -- format validated against GetBars; CL is MONTHLY
+                 so 'front' = the max-day-volume candidate around that date)
+      2023-02-15 front CL 03-23: minute-sum   180,236  day-bar   180,236  rel 0.0000%  MATCH
+                     close(1m-last) 52.50  day close 78.59  offset -26.09  (whole 0.01 multiple: yes)
+      2024-05-14 front CL 06-24: minute-sum   166,746  day-bar   166,746  rel 0.0000%  MATCH
+                     close(1m-last) 55.27  day close 78.02  offset -22.75  (whole 0.01 multiple: yes)
+      2025-10-15 front CL 11-25: minute-sum   100,281  day-bar   100,288  rel 0.0070%  MATCH
+                     close(1m-last) 47.87  day close 58.27  offset -10.40  (whole 0.01 multiple: yes)
+      all continuous-minus-day offsets are whole 0.01 multiples: PASS
+
+    BACK-ADJUSTMENT PROFILE  (merged 'CL 09-26' minus true day-store close, median;
+                              nonzero before the last roll is the expected merge
+                              back-adjustment, same as all SM1M substrates)
+      CL 03-22: median(last-1m-close - day-close) over  25 sessions = -39.48 pts
+      CL 03-23: median(last-1m-close - day-close) over  24 sessions = -25.99 pts
+      CL 06-24: median(last-1m-close - day-close) over  23 sessions = -23.08 pts
+      CL 11-25: median(last-1m-close - day-close) over  23 sessions = -10.86 pts
+      CL 09-26: median(last-1m-close - day-close) over  12 sessions = +0.16 pts
+
+    OUTPUT
+      parquet              D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\SM1M_CL_SUBSTRATE\out\cl_1m_2022_2026.parquet
+      rows                 1,608,018
+      sessions             1,182
+      first bar            2022-01-02 18:01:00
+      last bar             2026-07-31 16:59:00
+      first session        2022-01-03
+      last session         2026-07-31
+      sha256               e587486c23f5b61184b6a49aaeebc77f1a3e74e0731d8d0f4192087587adc137
+
+    5-ROW SAMPLE (head 3 + tail 2)
+                       time   open   high    low  close  volume
+0       2022-01-02 18:01:00  35.56  35.80  35.45  35.60     723
+1       2022-01-02 18:02:00  35.59  35.67  35.52  35.64     168
+2       2022-01-02 18:03:00  35.67  35.70  35.50  35.54     147
+1608016 2026-07-31 16:58:00  86.21  86.83  86.19  86.59     610
+1608017 2026-07-31 16:59:00  86.59  86.63  86.24  86.30     217
