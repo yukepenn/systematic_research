@@ -1,0 +1,150 @@
+====================================================================================================
+G2_SWING01_BAND_DIAGNOSTIC_20260906 -- program-printed gate table (never hand-assembled)
+BASE_SEED=20260906  N_SHIFTS=401  FAMILY_BAR p<=0.0167  MDE factor (80% power)=3.2349
+Evidence status of every number below: DISCOVERY_CONSUMED, gross, costless, no strategy licensed.
+====================================================================================================
+
+G0 SEAL --------------------------------------------------------------------------------------------
+GATE            | SPEC                                                | OBSERVED                                        | PASS-FAIL
+G0.ndx          | max date <= 2026-05-29 after truncation             | max=2026-05-29                                  | PASS
+G0.vx           | max trade_date <= 2026-05-29; D1 slice <= 2021-12-31| D1 slice max<=2021-12-31 OK; rows_used=32018    | PASS
+G0.vx.reserve   | ZERO implied-vol rows >= 2022-01-01 in D1           | count=0                                         | PASS
+G0.vx.legacy    | zero LEGACY_10X_SUSPECT rows in D1 window           | asserted in loader                              | PASS
+G0.cot          | max report_date <= 2026-05-29 after truncation      | max=2026-05-26                                  | PASS
+
+D2 MARKET SELECTION (recorded BEFORE outcomes; rule = longest continuous weekly history,
+continuity = no gap > 14 days between consecutive reports; candidates inspected):
+    MICRO E-MINI NASDAQ-100 INDEX - CHICAGO MERCANTILE EXCHANGE: longest continuous run 278 reports (2021-01-12 -> 2026-05-26)
+    NASDAQ MINI - CHICAGO MERCANTILE EXCHANGE: longest continuous run 225 reports (2022-02-08 -> 2026-05-26)
+    NASDAQ-100 Consolidated - CHICAGO MERCANTILE EXCHANGE: longest continuous run 828 reports (2010-07-20 -> 2026-05-26)
+    NASDAQ-100 STOCK INDEX (MINI) - CHICAGO MERCANTILE EXCHANGE: longest continuous run 603 reports (2010-07-20 -> 2022-02-01)
+    NASDAQ-100 STOCK INDEX - CHICAGO MERCANTILE EXCHANGE: longest continuous run 186 reports (2006-06-13 -> 2009-12-29)
+  CHOSEN: NASDAQ-100 Consolidated - CHICAGO MERCANTILE EXCHANGE
+  row set = its longest continuous run: 2010-07-20 -> 2026-05-26 (828 reports)
+  Lev columns verified by inspection: Lev_Money_Positions_Long_All, Lev_Money_Positions_Short_All, Open_Interest_All
+
+G1 SEMANTIC ----------------------------------------------------------------------------------------
+  [D1_VXSLOPE] The D1 headline statistic is computed over 745 weekly Friday-close observations (2007-04-05 -> 2021-12-31; VX settle inputs strictly 2007-04..2021-12); the event it measures is whether the full-window QUINTILE of the VX front/second settlement-ratio slope is monotonically associated with the MEAN forward 21-trading-day NDX log return (gross, costless conditional means; NOT a P&L, NOT next-session timing, NO tradable rule).
+  [D2_COTFLOW] The D2 headline statistic is computed over 819 weekly COT-knowability observations (2010-08-23 -> 2026-04-27, market 'NASDAQ-100 Consolidated - CHICAGO MERCANTILE EXCHANGE'); the event it measures is whether the QUINTILE of the 4-report change in leveraged-fund net position / open interest is monotonically associated with the MEAN forward 21-trading-day NDX log return measured from the first close at which the report was public (gross, costless conditional means; NOT a P&L).
+  [D3_PATHCONT] The D3 headline statistic is computed over 2099 weekly Friday-close observations (1986-01-31 -> 2026-04-24); the event it measures is whether the CONTINUATION SPREAD (mean forward 21-trading-day NDX log return after a positive trailing-21d sign minus after a negative sign) is LARGER in the top efficiency-ratio tercile than in the bottom tercile -- an interaction contrast of conditional means (gross, costless; NOT a P&L, NOT unconditional TSMOM).
+  [D1 note] 25 Friday observations dropped (verified contiguous 2012-11-30..2013-05-17): at the archive/modern file boundary the certified store has only ONE live contract per session 2012-11-26..2012-12-19, zero rows 2012-12-20..31, and settle=0 across the whole curve for 95 sessions 2013-01-02..2013-05-17. A missing or bad front settle NEVER promotes the second contract; the Friday is dropped instead.
+
+G6 KNOWABILITY AUDIT -------------------------------------------------------------------------------
+criterion coded for EVERY observation: knowable-timestamp(all signal inputs) <= forward-window
+start timestamp. D1/D3: inputs dated <= obs close t; fwd starts AT close t (the preregistered
+close-to-close population; margin 0 = same 16:00 ET mark). D2: release Friday 15:30 ET must
+STRICTLY precede the next-Monday 16:00 ET close (asserted per-row in the builder).
+  [D1_VXSLOPE] 10 random observation points of 745:
+    obs=2009-11-20  signal[VX settle 2009-11-20 (front exp 2009-12-16)]  knowable=2009-11-20 16:00:00  fwd_start=2009-11-20 16:00:00 (close)  fwd_end_21=2009-12-22  margin=0.0h  OK
+    obs=2009-12-24  signal[VX settle 2009-12-24 (front exp 2010-01-20)]  knowable=2009-12-24 16:00:00  fwd_start=2009-12-24 16:00:00 (close)  fwd_end_21=2010-01-27  margin=0.0h  OK
+    obs=2010-10-08  signal[VX settle 2010-10-08 (front exp 2010-10-20)]  knowable=2010-10-08 16:00:00  fwd_start=2010-10-08 16:00:00 (close)  fwd_end_21=2010-11-08  margin=0.0h  OK
+    obs=2015-02-13  signal[VX settle 2015-02-13 (front exp 2015-02-18)]  knowable=2015-02-13 16:00:00  fwd_start=2015-02-13 16:00:00 (close)  fwd_end_21=2015-03-17  margin=0.0h  OK
+    obs=2015-07-24  signal[VX settle 2015-07-24 (front exp 2015-08-19)]  knowable=2015-07-24 16:00:00  fwd_start=2015-07-24 16:00:00 (close)  fwd_end_21=2015-08-24  margin=0.0h  OK
+    obs=2016-02-05  signal[VX settle 2016-02-05 (front exp 2016-02-17)]  knowable=2016-02-05 16:00:00  fwd_start=2016-02-05 16:00:00 (close)  fwd_end_21=2016-03-08  margin=0.0h  OK
+    obs=2016-12-09  signal[VX settle 2016-12-09 (front exp 2016-12-21)]  knowable=2016-12-09 16:00:00  fwd_start=2016-12-09 16:00:00 (close)  fwd_end_21=2017-01-11  margin=0.0h  OK
+    obs=2018-03-23  signal[VX settle 2018-03-23 (front exp 2018-04-18)]  knowable=2018-03-23 16:00:00  fwd_start=2018-03-23 16:00:00 (close)  fwd_end_21=2018-04-24  margin=0.0h  OK
+    obs=2020-09-11  signal[VX settle 2020-09-11 (front exp 2020-09-16)]  knowable=2020-09-11 16:00:00  fwd_start=2020-09-11 16:00:00 (close)  fwd_end_21=2020-10-12  margin=0.0h  OK
+    obs=2020-11-20  signal[VX settle 2020-11-20 (front exp 2020-12-16)]  knowable=2020-11-20 16:00:00  fwd_start=2020-11-20 16:00:00 (close)  fwd_end_21=2020-12-22  margin=0.0h  OK
+  [D2_COTFLOW] 10 random observation points of 819:
+    obs=2012-03-12  signal[COT as-of 2012-03-06 (Tuesday), released 2012-03-09 15:30:00]  knowable=2012-03-09 15:30:00  fwd_start=2012-03-12 16:00:00 (close)  fwd_end_21=2012-04-11  margin=72.5h  OK
+    obs=2014-10-27  signal[COT as-of 2014-10-21 (Tuesday), released 2014-10-24 15:30:00]  knowable=2014-10-24 15:30:00  fwd_start=2014-10-27 16:00:00 (close)  fwd_end_21=2014-11-25  margin=72.5h  OK
+    obs=2015-07-06  signal[COT as-of 2015-06-30 (Tuesday), released 2015-07-03 15:30:00]  knowable=2015-07-03 15:30:00  fwd_start=2015-07-06 16:00:00 (close)  fwd_end_21=2015-08-04  margin=72.5h  OK
+    obs=2017-01-23  signal[COT as-of 2017-01-17 (Tuesday), released 2017-01-20 15:30:00]  knowable=2017-01-20 15:30:00  fwd_start=2017-01-23 16:00:00 (close)  fwd_end_21=2017-02-22  margin=72.5h  OK
+    obs=2017-07-03  signal[COT as-of 2017-06-27 (Tuesday), released 2017-06-30 15:30:00]  knowable=2017-06-30 15:30:00  fwd_start=2017-07-03 16:00:00 (close)  fwd_end_21=2017-08-02  margin=72.5h  OK
+    obs=2019-03-25  signal[COT as-of 2019-03-19 (Tuesday), released 2019-03-22 15:30:00]  knowable=2019-03-22 15:30:00  fwd_start=2019-03-25 16:00:00 (close)  fwd_end_21=2019-04-23  margin=72.5h  OK
+    obs=2022-07-11  signal[COT as-of 2022-07-05 (Tuesday), released 2022-07-08 15:30:00]  knowable=2022-07-08 15:30:00  fwd_start=2022-07-11 16:00:00 (close)  fwd_end_21=2022-08-09  margin=72.5h  OK
+    obs=2024-09-03  signal[COT as-of 2024-08-27 (Tuesday), released 2024-08-30 15:30:00]  knowable=2024-08-30 15:30:00  fwd_start=2024-09-03 16:00:00 (close)  fwd_end_21=2024-10-02  margin=96.5h  OK
+    obs=2024-10-14  signal[COT as-of 2024-10-08 (Tuesday), released 2024-10-11 15:30:00]  knowable=2024-10-11 15:30:00  fwd_start=2024-10-14 16:00:00 (close)  fwd_end_21=2024-11-12  margin=72.5h  OK
+    obs=2026-04-27  signal[COT as-of 2026-04-21 (Tuesday), released 2026-04-24 15:30:00]  knowable=2026-04-24 15:30:00  fwd_start=2026-04-27 16:00:00 (close)  fwd_end_21=2026-05-27  margin=72.5h  OK
+  [D3_PATHCONT] 10 random observation points of 2099:
+    obs=1986-05-16  signal[21d window 1986-04-17..1986-05-16]  knowable=1986-05-16 16:00:00  fwd_start=1986-05-16 16:00:00 (close)  fwd_end_21=1986-06-17  margin=0.0h  OK
+    obs=1986-11-14  signal[21d window 1986-10-16..1986-11-14]  knowable=1986-11-14 16:00:00  fwd_start=1986-11-14 16:00:00 (close)  fwd_end_21=1986-12-16  margin=0.0h  OK
+    obs=1987-05-22  signal[21d window 1987-04-23..1987-05-22]  knowable=1987-05-22 16:00:00  fwd_start=1987-05-22 16:00:00 (close)  fwd_end_21=1987-06-23  margin=0.0h  OK
+    obs=1988-01-29  signal[21d window 1987-12-30..1988-01-29]  knowable=1988-01-29 16:00:00  fwd_start=1988-01-29 16:00:00 (close)  fwd_end_21=1988-03-01  margin=0.0h  OK
+    obs=1988-08-05  signal[21d window 1988-07-07..1988-08-05]  knowable=1988-08-05 16:00:00  fwd_start=1988-08-05 16:00:00 (close)  fwd_end_21=1988-09-06  margin=0.0h  OK
+    obs=1991-08-23  signal[21d window 1991-07-25..1991-08-23]  knowable=1991-08-23 16:00:00  fwd_start=1991-08-23 16:00:00 (close)  fwd_end_21=1991-09-24  margin=0.0h  OK
+    obs=1992-01-17  signal[21d window 1991-12-17..1992-01-17]  knowable=1992-01-17 16:00:00  fwd_start=1992-01-17 16:00:00 (close)  fwd_end_21=1992-02-18  margin=0.0h  OK
+    obs=2001-01-19  signal[21d window 2000-12-19..2001-01-19]  knowable=2001-01-19 16:00:00  fwd_start=2001-01-19 16:00:00 (close)  fwd_end_21=2001-02-20  margin=0.0h  OK
+    obs=2001-09-21  signal[21d window 2001-08-16..2001-09-21]  knowable=2001-09-21 16:00:00  fwd_start=2001-09-21 16:00:00 (close)  fwd_end_21=2001-10-22  margin=0.0h  OK
+    obs=2005-04-08  signal[21d window 2005-03-09..2005-04-08]  knowable=2005-04-08 16:00:00  fwd_start=2005-04-08 16:00:00 (close)  fwd_end_21=2005-05-09  margin=0.0h  OK
+  G6 all-row asserts held for all three sub-families -> PASS
+
+#### everything ABOVE this line was written to gate_table.txt BEFORE any outcome was computed ####
+
+====================================================================================================
+SUB-FAMILY D1_VXSLOPE   (n=745, primary horizon h=21; h=5/63 exploratory, CANNOT generate a PASS)
+====================================================================================================
+GATE      | SPEC                                                      | OBSERVED                                                              | PASS-FAIL
+G0        | seal (see table above)                                    | asserts held                                                          | PASS
+G1        | semantic sentence printed                                 | see G1 section above                                                  | PASS
+G2        | weighted Spearman(bucket rank, bucket mean fwd21) vs 401-shift null, p<=0.0167| stat=+0.600000  p=0.4677  (null sd=0.598342)                          | FAIL
+G3        | era sign agreement >= 2 of 3 (with full-window sign +)    | 2/3 agree  [2007-04..2009:-, 2010..2015:+, 2016..2021:+]              | PASS
+G4        | top-minus-bottom quintile spread vs null, p<=0.0167       | spread=+0.005715  p=0.6070  (null sd=0.011898)                        | FAIL
+G5        | MDE at 80% power for failed gate                          | G2 failed: MDE@80%power=1.935557 vs |obs|=0.600000 (MDE/|obs|=3.23x) -> UNDERPOWERED_STILL| INFO
+G5        | MDE at 80% power for failed gate                          | G4 failed: MDE@80%power=0.038489 vs |obs|=0.005715 (MDE/|obs|=6.74x) -> UNDERPOWERED_STILL| INFO
+G6        | knowability audit, any violation = run invalid            | printed above; all-row asserts held                                   | PASS
+SECONDARY (never the gate): Newey-West t (lag=21) of the h=21 spread: est=+0.005715, t=+0.49
+EXPLORATORY h=5 (cannot PASS): primary stat=-0.100000 p=0.8731 | spread/contrast=+0.001810 p=0.6119 (n=745, shared offsets)
+EXPLORATORY h=63 (cannot PASS): primary stat=+0.300000 p=0.7861 | spread/contrast=+0.020406 p=0.5000 (n=745, shared offsets)
+VERDICT D1_VXSLOPE: UNDERPOWERED_STILL -- closes nothing on its own
+
+====================================================================================================
+SUB-FAMILY D2_COTFLOW   (n=819, primary horizon h=21; h=5/63 exploratory, CANNOT generate a PASS)
+====================================================================================================
+GATE      | SPEC                                                      | OBSERVED                                                              | PASS-FAIL
+G0        | seal (see table above)                                    | asserts held                                                          | PASS
+G1        | semantic sentence printed                                 | see G1 section above                                                  | PASS
+G2        | weighted Spearman(bucket rank, bucket mean fwd21) vs 401-shift null, p<=0.0167| stat=+0.100122  p=0.8383  (null sd=0.567891)                          | FAIL
+G3        | era sign agreement >= 2 of 3 (with full-window sign -)    | 1/3 agree  [2006..2012:+, 2013..2019:-, 2020..2026-05:+]              | FAIL
+G4        | top-minus-bottom quintile spread vs null, p<=0.0167       | spread=-0.001613  p=0.8259  (null sd=0.007616)                        | FAIL
+G5        | MDE at 80% power for failed gate                          | G2 failed: MDE@80%power=1.837054 vs |obs|=0.100122 (MDE/|obs|=18.35x) -> UNDERPOWERED_STILL| INFO
+G5        | MDE at 80% power for failed gate                          | G4 failed: MDE@80%power=0.024636 vs |obs|=0.001613 (MDE/|obs|=15.28x) -> UNDERPOWERED_STILL| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 2006..2012 spread=+0.006231 (n=124), era-scaled MDE~0.063314 [approx: full null sd x sqrt(N/n_era)]| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 2013..2019 spread=-0.007858 (n=365), era-scaled MDE~0.036903 [approx: full null sd x sqrt(N/n_era)]| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 2020..2026-05 spread=+0.000800 (n=330), era-scaled MDE~0.038811 [approx: full null sd x sqrt(N/n_era)]| INFO
+G6        | knowability audit, any violation = run invalid            | printed above; all-row asserts held                                   | PASS
+SECONDARY (never the gate): Newey-West t (lag=21) of the h=21 spread: est=-0.001613, t=-0.25
+EXPLORATORY h=5 (cannot PASS): primary stat=-0.300367 p=0.5871 | spread/contrast=-0.000910 p=0.7512 (n=819, shared offsets)
+EXPLORATORY h=63 (cannot PASS): primary stat=-0.598986 p=0.3856 | spread/contrast=-0.002146 p=0.8557 (n=810, shared offsets)
+VERDICT D2_COTFLOW: UNDERPOWERED_STILL -- closes nothing on its own
+
+====================================================================================================
+SUB-FAMILY D3_PATHCONT   (n=2099, primary horizon h=21; h=5/63 exploratory, CANNOT generate a PASS)
+====================================================================================================
+GATE      | SPEC                                                      | OBSERVED                                                              | PASS-FAIL
+G0        | seal (see table above)                                    | asserts held                                                          | PASS
+G1        | semantic sentence printed                                 | see G1 section above                                                  | PASS
+G2        | interaction contrast (topER sign-spread - botER sign-spread) vs 401-shift null, p<=0.0167| stat=+0.009278  p=0.3483  (null sd=0.009801)                          | FAIL
+G3        | era sign agreement >= 3 of 4 (with full-window sign +)    | 2/4 agree  [1986..1999:+, 2000..2009:+, 2010..2017:-, 2018..2026-05:-]| FAIL
+G4        | contrast IS the spread (sign diff-in-diff), same null     | spread=+0.009278  p=0.3483  (null sd=0.009801)                        | FAIL
+G5        | MDE at 80% power for failed gate                          | G2 failed: MDE@80%power=0.031706 vs |obs|=0.009278 (MDE/|obs|=3.42x) -> UNDERPOWERED_STILL| INFO
+G5        | MDE at 80% power for failed gate                          | G4 failed: MDE@80%power=0.031706 vs |obs|=0.009278 (MDE/|obs|=3.42x) -> UNDERPOWERED_STILL| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 1986..1999 spread=+0.021476 (n=726), era-scaled MDE~0.053911 [approx: full null sd x sqrt(N/n_era)]| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 2000..2009 spread=+0.023936 (n=522), era-scaled MDE~0.063579 [approx: full null sd x sqrt(N/n_era)]| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 2010..2017 spread=-0.028052 (n=417), era-scaled MDE~0.071134 [approx: full null sd x sqrt(N/n_era)]| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 2018..2026-05 spread=-0.005382 (n=434), era-scaled MDE~0.069727 [approx: full null sd x sqrt(N/n_era)]| INFO
+G6        | knowability audit, any violation = run invalid            | printed above; all-row asserts held                                   | PASS
+SECONDARY (never the gate): Newey-West t (lag=21) of the h=21 interaction coefficient: est=+0.009278, t=+0.93
+EXPLORATORY h=5 (cannot PASS): primary stat=-0.004616 p=0.2264 | spread/contrast=-0.004616 p=0.2264 (n=2099, shared offsets)
+EXPLORATORY h=63 (cannot PASS): primary stat=+0.006935 p=0.6716 | spread/contrast=+0.006935 p=0.6716 (n=2091, shared offsets)
+VERDICT D3_PATHCONT: UNDERPOWERED_STILL -- closes nothing on its own
+
+====================================================================================================
+BUCKET / CELL MEANS (h=21, log fwd return; full tables in out/bucket_tables.csv)
+  [D1_VXSLOPE] Q1:+0.01248(n=149,t=+3.5)  Q2:+0.01230(n=149,t=+3.1)  Q3:+0.00387(n=149,t=+0.8)  Q4:+0.01447(n=149,t=+2.4)  Q5:+0.01819(n=149,t=+1.6)
+  [D2_COTFLOW] Q1:+0.01721(n=164,t=+2.9)  Q2:+0.01480(n=164,t=+4.6)  Q3:+0.01244(n=163,t=+2.8)  Q4:+0.01956(n=164,t=+3.5)  Q5:+0.01560(n=164,t=+3.7)
+  [D3_PATHCONT] neg/ER_bot:+0.00940(n=312,t=+1.3)  neg/ER_mid:+0.01827(n=300,t=+2.6)  neg/ER_top:+0.00289(n=174,t=+0.4)  pos/ER_bot:+0.01152(n=388,t=+2.7)  pos/ER_mid:+0.00563(n=399,t=+1.6)  pos/ER_top:+0.01428(n=526,t=+5.1)
+
+ALIGNMENT HAND-CHECK ROWS (for REPORT.md verification)
+  [D1_VXSLOPE] sig_date=2014-11-14 front=14.35/exp 2014-11-19 second=15.3/exp 2014-12-17 slope=-0.062092 | obs(fwd start)=2014-11-14 close=4224.99 | fwd_end_21=2014-12-16 close=4089.6 | fwd_21=ln(4089.6/4224.99)=-0.032570 (stored -0.032570)
+  [D2_COTFLOW] as_of=2018-06-19 release=2018-06-22 15:30:00 net/OI=-0.086759 signal(d4)=+0.077996 | obs(fwd start)=2018-06-25 close=7038.17 | fwd_end_21=2018-07-25 close=7508.59 | fwd_21=ln(7508.59/7038.17)=+0.064700 (stored +0.064700)
+  [D3_PATHCONT] sig_date=2006-03-17 win=2006-02-15..2006-03-17 r21=+0.007449 sign=1 ER=0.0464 ter=0 | obs(fwd start)=2006-03-17 close=1685.66 | fwd_end_21=2006-04-18 close=1726.64 | fwd_21=ln(1726.64/1685.66)=+0.024020 (stored +0.024020)
+
+FINAL VERDICTS -------------------------------------------------------------------------------------
+  D1_VXSLOPE: UNDERPOWERED_STILL -- closes nothing on its own
+  D2_COTFLOW: UNDERPOWERED_STILL -- closes nothing on its own
+  D3_PATHCONT: UNDERPOWERED_STILL -- closes nothing on its own
+Decision rule (spec): PASS -> Stage-5/6 preregistered minimal-rule spec (NEW run). FAIL ->
+closed at the stated scope. REGIME_LOCAL -> recorded, revival needs a mechanism for the era
+break. No headline here is quotable as edge: conditional means, gross, costless,
+DISCOVERY-CONSUMED the moment they printed.

@@ -28,11 +28,18 @@ MC-52/56 (blocked on the P-1 reserve) · MC-35 (blocked-as-rescue).
 3/3 eras, negative even gross (`G2_F10`, G00048); earnings leg stays demoted. ROLL02 killed
 exec-series roll gating and re-measured the pooled blackout at $93,173 (G00047).
 
-**Registered lane, still untouched (2026-08-29 → now): the SWING band** — 3-session-to-3-month
-NQ-direction mechanisms on the 1,043-week deep spine, the only band where t=2 is reachable at
-Sharpe ≈ 0.45 (`META_ADVERSARY_01.md` Q3). ⚠️ Any spec must use a ratio-adjusted or cash-index
-basis (the additive back-adjustment defect, `G2_F3_DELEV01`) and exposure-matched always-long
-controls; TSMOM/XSMOM exact scopes and H7's COT-tercile scope stay closed.
+**The SWING band lane — FIRST READ DONE 2026-09-06 (`G2_SWING01`, G00044-46): all three
+sub-families (VX slope · COT flow · ER-conditioned continuation) UNDERPOWERED_STILL — "closes
+nothing on its own"; the lane stays OPEN with a sharpened design law.** ⭐ The durable output is
+a POWER FACT: at weekly sampling the shift-null sd of a 21d quintile spread is ~0.8–1.2 % log, so
+bucket tables need a ~2.5–3.9 %/21d conditional spread to detect — an edge that size wouldn't
+need detecting. **Any future swing wave must use FULL-SERIES statistics** (continuous-signal
+regression / portfolio-weighted exposure with overlap-aware nulls), not bucket tables — that is
+what the "t=2 at Sharpe 0.45" arithmetic assumed. Unquotable color for a next design: D3's
+continuation contrast flips sign cleanly pre/post-2010. Standing constraints unchanged:
+ratio-adjusted or cash-index basis (`G2_F3_DELEV01`), exposure-matched always-long controls,
+TSMOM/XSMOM exact scopes and H7's COT-tercile scope closed, H1's 2022+ implied-vol reserve
+untouched (SWING01 asserted zero VX rows ≥ 2022).
 
 **Replenishment check:** MED tier ≥ 3 → no scan trigger; the binding shortage is *execution of
 the registered swing lane*, not new cards.
