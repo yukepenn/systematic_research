@@ -1,0 +1,77 @@
+run_id: G2_F11_MC54LEG2_VOLFORECAST_20260906
+campaign: GENESIS_II (Formal Wave 5)
+card: MC-54 leg 2 (frozen-profile OOS vol forecast). Leg 1 (era-break) already CLOSED by
+  G2_F3_ERABREAK01 (p=0.0011), which fixes the admissible training era as POST-break.
+stage: "DIAGNOSTIC — is diurnal-deseasonalized early-session vol an incremental forecaster of
+  rest-of-day RV? A PASS is a RISK-SPECIFICATION input (sizing), NOT an alpha claim and NOT a
+  strategy. The dead-list punishes day-level RV terciles at 5.5x-under-MDE; the binding rule is
+  MDE-BEFORE-LOOKING, printed by the program."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+anti_rescue_gate: |
+  Closed: day-LEVEL RV terciles (GENESIS_H2/COND01, 5.5x under MDE). MC-54 leg 2 differs by
+  REPRESENTATION: it removes the deterministic diurnal clock (Engle-Sokalska multiplicative
+  decomposition) and asks whether the RESIDUAL early-session state forecasts rest-of-day RV
+  beyond the raw early-session RV and prior-day RV. A NULL here closes "deseasonalized first-hour
+  vol as an incremental RV forecaster on NQ", not the day-level scope again.
+
+mechanism: |
+  Intraday RV ~ daily x diurnal(minute-of-session) x stochastic. Conditioning on raw first-hour
+  RV mixes the deterministic U-shape phase with the stochastic state. If the state component
+  carries forecast information the incumbent lacks, deseasonalized first-hour vol beats raw.
+
+data:
+  nq_1m: research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet   # ends 2026-05-29
+  dev_end: "2026-05-29"    # hard-asserted
+  admissible_era: |
+    Post-0DTE-break only, per ERABREAK01 (pre-2022 intraday-vol stats are inadmissible modern
+    priors). TRAIN (freeze the diurnal profile): 2022-06-01 -> 2024-12-31. TEST (out-of-sample
+    forecast eval): 2025-01-01 -> 2026-05-29. The diurnal profile is frozen on TRAIN and never
+    refit on TEST. No pre-2022 data enters any computation; program asserts min date >= 2022-06.
+  basis: "RTH session only (09:30-16:00 ET), end-stamped 1-min bars. RV = sum of squared 1-min
+    log returns over the stated window. Additive back-adjustment is fine: RV is within-session
+    and scale-free in log returns (DELEV01 law respected)."
+
+definitions:
+  diurnal_profile: "frozen on TRAIN: mean of (squared 1-min log return) by minute-of-session,
+    RTH. Smoothed only if the implementer records the method BEFORE the OOS read."
+  first_hour: "09:30-10:29 ET (first 60 min)."
+  rest_of_day_RV: "10:30-16:00 ET realized variance (the forecast TARGET)."
+  raw_early: "log( sum of squared 1-min returns 09:30-10:29 )."
+  deseason_early: "log( sum of (squared 1-min return / diurnal_profile[minute]) over 09:30-10:29 )
+    — the clock-removed state component."
+  prior_day_RV: "log of the prior RTH session's full-day RV."
+
+test: |
+  Nested OLS on the TEST era, HAC/Newey-West errors (lag = 5):
+    RAW model : rest_of_day_logRV ~ 1 + prior_day_logRV + raw_early
+    FULL model: RAW + deseason_early
+  Headline = the incremental value of deseason_early: its HAC t and the OOS incremental
+  adjusted-R2 (FULL minus RAW). Because raw_early and deseason_early are correlated, the program
+  prints their correlation and a VIF; the test is the partial contribution of deseason_early.
+
+null_model: |
+  Stationary block bootstrap (mean block 10 sessions, 2000 draws, fixed seed) of the TEST-era
+  rows to get the CI of the incremental adjusted-R2 and the deseason_early coefficient. Two-sided.
+
+gates:  # program-printed GATE / SPEC / OBSERVED / PASS-FAIL
+  G0_seal_era: "min date >= 2022-06-01 in every computation; max <= 2026-05-29. Hard assert."
+  G1_semantic: "one printed sentence: population (TEST-era RTH sessions), event (whether
+    deseason_early adds forecast power for rest-of-day RV after prior-day RV and raw_early)."
+  G2_MDE_first: "print the MDE at 80% power for the incremental adjusted-R2 BEFORE printing the
+    observed value (barrier line). This is the 5.5x lesson made mechanical."
+  G3_primary: "deseason_early HAC t two-sided p <= 0.05 on TEST AND OOS incremental
+    adjusted-R2 > 0 beyond the bootstrap CI lower bound."
+  G4_power: "if G3 fails, UNDERPOWERED_STILL verbatim when MDE > 3x |observed incremental R2|."
+  G5_collinearity: "print corr(raw_early, deseason_early) and VIF; if VIF > 10 the incremental
+    term is not separately identified and the verdict is NOT-IDENTIFIED, not PASS/FAIL."
+
+decision_rule: |
+  G3 PASS with adequate power -> deseasonalized first-hour vol is an INCREMENTAL RV forecaster;
+  it advances to a sizing-overlay spec (RISK SPECIFICATION lane, its own run, matched-exposure
+  control, the VOLSIZE01 leverage-masquerade guard). FAIL/NOT-IDENTIFIED -> FAILURE_MEMORY row.
+  Every number DISCOVERY_CONSUMED. No alpha, no strategy licensed here.
+
+ledger: "one trial, registered before outcomes; recorded serially by the coordinator."
+outputs: [out/gate_table.txt, out/regression_summary.txt, REPORT.md]

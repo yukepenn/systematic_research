@@ -1,0 +1,69 @@
+run_id: G2_F12_MC55_FOMCCRUSH_20260906
+campaign: GENESIS_II (Formal Wave 5)
+card: MC-55 (post-FOMC uncertainty-resolution vol crush — CORE RV-contraction leg only; the
+  VX/VIX confirmation leg is descriptive, not a gate, per the skeptic's P-1 tolerance)
+stage: "MEASUREMENT with MDE gate — does NQ realized vol contract after the 14:00 ET FOMC
+  release relative to matched non-FOMC days? A PASS is a bankable FACT (a subtractive policy
+  input: do not trade expansion into a known crush). It licenses NO new engine — no engine
+  currently trades the 14:00-16:00 window. N is small; the MDE gate is mandatory (macro N-bound
+  lesson)."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+anti_rescue_gate: |
+  Closed: GENESIS_H2 FOMC-DAY session MEAN (first moment), and pre-FOMC drift is dead-listed
+  (first moment, different window). MC-55 tests the SECOND moment in an event-clocked window
+  (14:05-15:30 vs 12:00-13:30), explicitly not day-means. A NULL closes the NQ post-FOMC
+  RV-contraction claim, not H2's scope.
+
+mechanism: |
+  Scheduled binary uncertainty resolves at 14:00 ET; vol priced for the event is released and
+  realized vol contracts after the initial reaction settles, regardless of surprise direction.
+  Pre-stated expected direction: the post-window/pre-window RV ratio is LOWER on FOMC days than
+  on matched controls (contraction). Two-sided null, but the sign is preregistered here.
+
+data:
+  nq_1m: research/scalping_lab/substrate/minute/NQ/nq1m_2005_202605.parquet   # ends 2026-05-29
+  fomc_calendar: |
+    FOMC scheduled-meeting decision dates 2006 -> 2026-05. The implementer builds this from the
+    public Fed schedule (decision days, incl. the 2013+ shift to ~14:00 ET releases; pre-2011
+    releases were ~14:15 ET -- use the actual release-time-of-era for the window anchor and
+    RECORD the per-era anchor before computing). UNSCHEDULED/intermeeting actions EXCLUDED and
+    listed. Cross-check count against the ~8/yr expectation and print it.
+  dev_end: "2026-05-29"   # hard-asserted; releases and windows all pre-seal
+  controls: "all Tue/Wed non-FOMC RTH sessions in the same era with complete bars (FOMC decisions
+    land Tue/Wed); matched by weekday and era."
+
+definitions:
+  pre_window:  "RV over 12:00-13:30 ET (midday, pre-announcement)."
+  post_window: "RV over 14:05-15:30 ET (post-announcement, after the immediate 14:00-14:05 spike)."
+  ratio: "log( post_window RV / pre_window RV ) per session."
+  statistic: "mean(ratio | FOMC) - mean(ratio | matched controls)."
+
+null_model: |
+  Circular shift of the FOMC-day LABEL along the chronological calendar of eligible Tue/Wed
+  sessions, 401 shifts, offsets drawn once (fixed seed). Two-sided p of the difference statistic.
+
+gates:  # program-printed
+  G0_seal: "max date <= 2026-05-29; hard assert. Print realized FOMC N and the excluded
+    intermeeting list."
+  G1_semantic: "one printed sentence: population (FOMC decision Tue/Wed vs matched non-FOMC
+    Tue/Wed, which years), event (post/pre RV-ratio difference)."
+  G2_MDE_first: "MDE at 80% power for the difference statistic printed BEFORE the observed value
+    (barrier). If MDE > 3x the plausible effect, declare N-BOUND up front."
+  G3_primary: "difference two-sided p <= 0.05 vs the label-shift null AND sign matches the
+    preregistered contraction direction (post/pre lower on FOMC days)."
+  G4_era_stability: "sign agrees in >= 2 of 3 eras (2006-2012 / 2013-2019 / 2020-2026-05);
+    PASS on G3 + FAIL on G4 = REGIME_LOCAL."
+  G5_power: "UNDERPOWERED_STILL verbatim on any FAIL with MDE > 3x |observed|."
+  G6_descriptive_only: "certified-VIX/VX daily dVIX/dVX on FOMC vs non-FOMC dates printed as
+    DESCRIPTIVE CONTEXT ONLY (joins VX to FOMC DATES, not to NQ outcomes -> P-1 tolerable); it
+    is explicitly not a gate and cannot change the verdict."
+
+decision_rule: |
+  G3(+G4) PASS -> bank the fact "NQ post-FOMC RV contracts by X" as a subtractive-policy input;
+  no engine spec follows until an engine trades that window. FAIL -> FAILURE_MEMORY row
+  "NQ post-FOMC RV contraction at N~160, MDE Y". Every number DISCOVERY_CONSUMED.
+
+ledger: "one trial, registered before outcomes; recorded serially by the coordinator."
+outputs: [out/gate_table.txt, out/fomc_table.csv, out/era_table.csv, REPORT.md]
