@@ -133,6 +133,15 @@ same number of ticks*. **Nobody has measured whether they do.**
 Against a live expectation of **$270–570/wk**, that band is **−1 % to +28 % of the edge**, decided
 by one input nobody has measured.
 
+> ✅ **PARTIAL MEASUREMENT 2026-09-06 — the NQ side of the comparison is now MEASURED at minute
+> resolution** (`runs/NQ1M_BIDASK_EXTRACT_20260906/`, 66 sessions 2026-05-01→07-31, minute-close
+> BBO, burned window — BASIS: `SPREAD_ONLY`, EVIDENCE: `MEASURED`):
+> **NQ RTH median 3 ticks ($15.00/ctrRT) · all-hours median 4 ticks ($20.00) · p90 7 ticks** ·
+> roll session 06-12 median 10 ticks (liquidity migration). Convergent with EXEC01's $20.65
+> measured all-hours figure and close to the $14.44 modelled RTH spread.
+> 🔴 **The MNQ side stays UNMEASURED** (no MNQ quote store exists locally) — the table above is
+> still open; the 2026-09 crossover `GetQuote` sampling is the closure path.
+
 ### What evidence exists, in full, both directions
 
 - ❌ `research/system_master/EXECUTION_REALITY.md:6-7` (2026-08-08): *"MNQ spreads are wider in

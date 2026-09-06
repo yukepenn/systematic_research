@@ -1,0 +1,53 @@
+====================================================================================================
+=== SM1M_MNQ_SUBSTRATE build -- DATA EXTRACTION ONLY (no signal, no P&L)
+====================================================================================================
+    input CSV            C:\Users\Yuke Zhang\Documents\NinjaTrader 8\out\mnq1m_2022_2026_1m.csv
+    input sha256         65d47e38a20fb3f40206d298a00e544be04f12b021bd27b6c887c6755b6c7743
+    rows read            1,627,987
+    GATE time strictly increasing            PASS
+    GATE no stamps in (17:00,18:00] ET       PASS  (found 0)
+    GATE OHLC sanity                          PASS
+    GATE volume >= 0                          PASS
+
+    SEAL RULE (CLAUDE.md s5 / LOCKED_FORWARD): HARD-DROP session >= 2026-08-01
+      rows dropped at build time             0   (export was already capped at the s5 boundary; 0 expected)
+      max retained session date              2026-07-31
+      ASSERT max retained session < 2026-08-01   PASS
+
+    CROSS-CHECK A  bar-stamp grid vs runs/SM1M_SUBSTRATE nq_1m_2022_2026.parquet
+      session 2023-06-15: MNQ bars  1380  NQ bars  1380  stamp-set Jaccard 1.0000
+      session 2025-03-12: MNQ bars  1380  NQ bars  1380  stamp-set Jaccard 1.0000
+      session 2026-06-10: MNQ bars  1380  NQ bars  1380  stamp-set Jaccard 1.0000
+
+    CROSS-CHECK B  session minute-volume sum vs db/day (true unmerged contract data,
+                   reader ncd_day.py -- format validated against GetBars)
+      2023-02-15 MNQ 03-23: minute-sum  1,058,855  day-bar  1,058,855  rel diff 0.0000%  MATCH
+      2024-05-14 MNQ 06-24: minute-sum  1,093,216  day-bar  1,093,216  rel diff 0.0000%  MATCH
+      2025-11-18 MNQ 12-25: minute-sum  3,083,450  day-bar  3,083,466  rel diff 0.0005%  MATCH
+
+    BACK-ADJUSTMENT PROFILE  (merged 'MNQ 09-26' series minus true day-store close,
+                              median per year; nonzero before the last rolls is the
+                              expected merge back-adjustment, same as all SM1M substrates)
+      MNQ 03-22: median(last-1m-close - day-close) over  55 sessions = +3378.00 pts
+      MNQ 03-23: median(last-1m-close - day-close) over  67 sessions = +3153.00 pts
+      MNQ 06-24: median(last-1m-close - day-close) over  73 sessions = +2201.50 pts
+      MNQ 09-26: median(last-1m-close - day-close) over  36 sessions = +0.00 pts
+      MNQ 12-25: median(last-1m-close - day-close) over  69 sessions = +765.00 pts
+
+    OUTPUT
+      parquet              D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\SM1M_MNQ_SUBSTRATE\out\mnq_1m_2022_2026.parquet
+      rows                 1,627,987
+      sessions             1,189
+      first bar            2021-12-26 18:01:00
+      last bar             2026-07-31 16:59:00
+      first session        2021-12-27
+      last session         2026-07-31
+      sha256               94fa4b12c78eff8eccb9b2453b44986cc6c4cb3305a0e1fdf862a862f2f71c25
+
+    5-ROW SAMPLE (head 3 + tail 2)
+                       time      open      high       low     close  volume
+0       2021-12-26 18:01:00  19682.25  19716.25  19682.25  19706.75    1044
+1       2021-12-26 18:02:00  19708.25  19711.75  19704.75  19708.50     444
+2       2021-12-26 18:03:00  19709.25  19709.50  19698.75  19703.25     455
+1627985 2026-07-31 16:58:00  28311.50  28317.50  28295.75  28302.00     867
+1627986 2026-07-31 16:59:00  28300.00  28312.00  28294.75  28305.75     585

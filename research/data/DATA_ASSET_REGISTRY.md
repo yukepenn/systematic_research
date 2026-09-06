@@ -48,7 +48,7 @@ Two mechanics that must travel with that row:
 > authoritative (`research/data/DATA_VERDICT_20260831.md`); any absence claim must cite the census,
 > never this table. Known rows this table still under-reports (per the census):
 > **MNQ tick** ~186 dates Last-only 2026-01-01→08-05 (128 pre-burn, 0 extracted) ·
-> **NQ minute Bid/Ask** 81 sessions 2026-05-10→08-11 (0 extracted, spread-capable) ·
+> **NQ minute Bid/Ask** — ✅ EXTRACTED 2026-09-06: 66 pre-seal sessions 2026-05-01→07-31 (`runs/NQ1M_BIDASK_EXTRACT_20260906/`, RTH median spread 3 ticks); the 9 sealed 08-01→08-11 dates never requested ·
 > **NQ full-BBO unextracted remainder** ~129 pre-seal sessions ·
 > certified daily VIX-complex/VX-settlements/COT-TFF assets in `runs/GENESIS_FREEDATA_CBOE_20260828/certified/`.
 
@@ -68,10 +68,10 @@ Two mechanics that must travel with that row:
 | NQ tick store (UNEXTRACTED remainder) | NQ | tick | Last (+Bid/Ask where present) | 2025-08-12 | 2026-05-08 | 141 | ON DISK, NOT EXTRACTED | $0 | MICROSTRUCTURE-CURRENT | pre-2026-08-01 |
 | ES 1-minute store | ES | 1-minute | Last OHLCV | 2021-12-30 | 2026-07-31 | 1486 | **EXTRACTED** (`runs/SM1M_ES_SUBSTRATE/out/es_1m_2022_2026.parquet`) — this row previously said NOT EXTRACTED, stale | $0 | unclassified | pre-2026-08-01 |
 | CL 1-minute store | CL | 1-minute | Last OHLCV | 2022-01-02 | 2026-07-31 | 1481 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |
-| MNQ 1-minute store | MNQ | 1-minute | Last OHLCV | 2021-12-30 | 2026-07-31 | 1479 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |
+| MNQ 1-minute store | MNQ | 1-minute | Last OHLCV | 2021-12-27 | 2026-07-31 | **1,189 trading sessions** (census 1,479 counts calendar-date files) | **EXTRACTED 2026-09-06** (`runs/SM1M_MNQ_SUBSTRATE/out/mnq_1m_2022_2026.parquet`, 1,627,987 rows) | $0 | unclassified | pre-2026-08-01, 0 sealed rows |
 | RTY 1-minute store | RTY | 1-minute | Last OHLCV | 2021-12-30 | 2026-07-31 | 1472 | **EXTRACTED** (`runs/SM1M_RTY_SUBSTRATE/out/rty_1m_2022_2026.parquet`) — this row previously said NOT EXTRACTED, stale | $0 | unclassified | pre-2026-08-01 |
 | YM 1-minute store | YM | 1-minute | Last OHLCV | 2021-12-30 | 2026-07-31 | 1458 | **EXTRACTED** (`runs/SM1M_YM_SUBSTRATE/out/ym_1m_2022_2026.parquet`) — this row previously said NOT EXTRACTED, stale | $0 | unclassified | pre-2026-08-01 |
-| ZB 1-minute store | ZB | 1-minute | Last OHLCV | 2023-01-02 | 2026-07-31 | 1161 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |
+| ZB 1-minute store | ZB | 1-minute | Last OHLCV | 2022-12-27 | 2026-07-31 | **923 trading sessions** | **EXTRACTED 2026-09-06** (`runs/SM1M_ZB_SUBSTRATE/out/zb_1m_2023_2026.parquet`, 1,086,151 rows; 1/32-grid restored exactly from the exporter's F2 rounding) | $0 | unclassified | pre-2026-08-01, 0 sealed rows |
 | 6J 1-minute store | 6J | 1-minute | Last OHLCV | 2025-12-30 | 2026-07-31 | 185 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |
 | ZN 1-minute store | ZN | 1-minute | Last OHLCV | 2025-12-30 | 2026-07-31 | 185 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |
 | MGC 1-minute store | MGC | 1-minute | Last OHLCV | 2025-12-30 | 2026-07-31 | 184 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |

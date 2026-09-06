@@ -1,0 +1,123 @@
+====================================================================================================
+=== NQ1M_BIDASK_EXTRACT_20260906 build -- DATA EXTRACTION + ENGINEERING FIRST-LOOK
+====================================================================================================
+    leg NQ 06-26
+      bid  csv C:\Users\Yuke Zhang\Documents\NinjaTrader 8\out\nqbid0626_1m.csv
+           sha256 722bb3dad426143ff2a797ae40f6aab85f2a4b8ebda6ef092faf5ed2e5e32a17
+      ask  csv C:\Users\Yuke Zhang\Documents\NinjaTrader 8\out\nqask0626_1m.csv
+           sha256 eb521cc0e6a1abc7b47ce2ad74fdb668482750e7e0304800cfaa310079208d8d
+      bid rows 42,539  ask rows 42,539  timestamp-unmatched 0  joined+windowed rows 41,159  sessions 30 (2026-05-01 -> 2026-06-11)
+    leg NQ 09-26
+      bid  csv C:\Users\Yuke Zhang\Documents\NinjaTrader 8\out\nqbid0926_1m.csv
+           sha256 e2cdf191f1dbcae326b5a77dbc56fdbc32a9af2f616ea1c170d12f63df6340fe
+      ask  csv C:\Users\Yuke Zhang\Documents\NinjaTrader 8\out\nqask0926_1m.csv
+           sha256 b04b71a5b04b33b6866e28a960983f786bd13f2b3113514928a2a41d3d92ae37
+      bid rows 50,579  ask rows 50,579  timestamp-unmatched 0  joined+windowed rows 49,199  sessions 36 (2026-06-12 -> 2026-07-31)
+
+    GATE time strictly increasing across legs   PASS
+    GATE leg sessions disjoint                   PASS
+    GATE no stamps in (17:00,18:00] ET           PASS  (found 0)
+    GATE bid OHLC sanity                        PASS
+    GATE ask OHLC sanity                        PASS
+    crossed minute-closes (ask_close < bid_close)  0 of 90,358  (0.0000%)  -- retained as-is, reported
+
+    SEAL RULE (CLAUDE.md s5 / LOCKED_FORWARD): HARD-DROP session >= 2026-08-01
+      rows dropped at build time             0
+      max retained session date              2026-07-31
+      ASSERT max retained session < 2026-08-01   PASS
+
+    OUTPUT
+      parquet              D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\NQ1M_BIDASK_EXTRACT_20260906\out\nq_1m_bidask_202605_202607.parquet
+      rows                 90,358
+      sessions             66
+      first bar            2026-04-30 18:01:00
+      last bar             2026-07-31 16:59:00
+      first session        2026-05-01
+      last session         2026-07-31
+      sha256               4b32e1bf1d0195d6b12200348c70c96696b6769e1adeca03f9f3186fbe685dc0
+
+    5-ROW SAMPLE (head 3 + tail 2)
+                     time    session  contract  bid_open  bid_high   bid_low  bid_close  bid_vol  ask_open  ask_high   ask_low  ask_close  ask_vol
+0     2026-04-30 18:01:00 2026-05-01  NQ 06-26  27630.25  27638.75  27613.50   27621.50     7802  27633.00  27643.25  27614.75   27623.50     5283
+1     2026-04-30 18:02:00 2026-05-01  NQ 06-26  27621.75  27630.25  27619.75   27623.75     1821  27623.25  27632.00  27620.50   27625.00     2778
+2     2026-04-30 18:03:00 2026-05-01  NQ 06-26  27623.00  27623.25  27610.75   27616.00     1390  27624.75  27624.75  27613.25   27617.25     1679
+90356 2026-07-31 16:58:00 2026-07-31  NQ 09-26  28311.00  28315.75  28293.25   28299.75     7200  28314.50  28318.00  28296.50   28302.75    10118
+90357 2026-07-31 16:59:00 2026-07-31  NQ 09-26  28299.50  28310.25  28292.25   28303.50     4872  28302.75  28314.75  28295.75   28305.50     5615
+
+====================================================================================================
+    FIRST-LOOK  NQ minute-close BBO spread, per session, in ticks (tick = 0.25)
+    BASIS: SPREAD_ONLY, EVIDENCE: MEASURED (minute-close BBO, burned window)
+    (engineering/cost measurement on <= 2026-07-31 data; sessions < 2026-05-31 are
+     PRE_BURN, >= 2026-05-31 BURNED; none of this is forward evidence)
+====================================================================================================
+    session     era      contract   bars  median     p90  medRTH
+    2026-05-01  PRE_BURN NQ 06-26   1380    3.00    5.00    2.00
+    2026-05-04  PRE_BURN NQ 06-26   1380    3.00    5.00    3.00
+    2026-05-05  PRE_BURN NQ 06-26   1380    3.00    5.00    2.00
+    2026-05-06  PRE_BURN NQ 06-26   1380    3.00    4.00    2.00
+    2026-05-07  PRE_BURN NQ 06-26   1380    3.00    5.00    3.00
+    2026-05-08  PRE_BURN NQ 06-26   1380    3.00    5.00    2.00
+    2026-05-11  PRE_BURN NQ 06-26   1380    3.00    4.00    2.00
+    2026-05-12  PRE_BURN NQ 06-26   1380    3.00    5.00    3.00
+    2026-05-13  PRE_BURN NQ 06-26   1380    3.00    4.00    2.00
+    2026-05-14  PRE_BURN NQ 06-26   1380    3.00    5.00    3.00
+    2026-05-15  PRE_BURN NQ 06-26   1380    4.00    5.00    3.00
+    2026-05-18  PRE_BURN NQ 06-26   1380    4.00    6.00    3.00
+    2026-05-19  PRE_BURN NQ 06-26   1380    4.00    6.00    3.00
+    2026-05-20  PRE_BURN NQ 06-26   1380    5.00    7.00    3.00
+    2026-05-21  PRE_BURN NQ 06-26   1380    5.00    8.00    3.00
+    2026-05-22  PRE_BURN NQ 06-26   1380    4.00    6.00    3.00
+    2026-05-25  PRE_BURN NQ 06-26   1140    4.00    5.00    3.00
+    2026-05-26  PRE_BURN NQ 06-26   1380    3.00    5.00    2.00
+    2026-05-27  PRE_BURN NQ 06-26   1380    3.00    4.00    3.00
+    2026-05-28  PRE_BURN NQ 06-26   1380    3.00    5.00    2.00
+    2026-05-29  PRE_BURN NQ 06-26   1380    3.00    5.00    3.00
+    2026-06-01  BURNED   NQ 06-26   1380    3.00    4.00    3.00
+    2026-06-02  BURNED   NQ 06-26   1380    3.00    5.00    2.00
+    2026-06-03  BURNED   NQ 06-26   1380    3.00    4.00    3.00
+    2026-06-04  BURNED   NQ 06-26   1380    4.00    5.00    2.00
+    2026-06-05  BURNED   NQ 06-26   1380    4.00    5.00    3.00
+    2026-06-08  BURNED   NQ 06-26   1380    4.00    7.00    3.00
+    2026-06-09  BURNED   NQ 06-26   1380    5.00    7.00    4.00
+    2026-06-10  BURNED   NQ 06-26   1380    7.00   10.00    5.00
+    2026-06-11  BURNED   NQ 06-26   1379    7.00    9.00    5.00
+    2026-06-12  BURNED   NQ 09-26   1380   10.00   15.00   11.00
+    2026-06-15  BURNED   NQ 09-26   1380    5.00    8.00    3.00
+    2026-06-16  BURNED   NQ 09-26   1380    4.00    6.00    3.00
+    2026-06-17  BURNED   NQ 09-26   1380    4.00    6.00    4.00
+    2026-06-18  BURNED   NQ 09-26   1380    4.00    6.00    3.00
+    2026-06-19  BURNED   NQ 09-26   1140    6.00    8.00    4.00
+    2026-06-22  BURNED   NQ 09-26   1380    4.00    6.00    3.00
+    2026-06-23  BURNED   NQ 09-26   1380    5.00    7.00    4.00
+    2026-06-24  BURNED   NQ 09-26   1380    6.00    7.00    4.00
+    2026-06-25  BURNED   NQ 09-26   1380    5.00    7.00    5.00
+    2026-06-26  BURNED   NQ 09-26   1380    7.00   10.00    5.00
+    2026-06-29  BURNED   NQ 09-26   1380    7.00   10.00    3.00
+    2026-06-30  BURNED   NQ 09-26   1380    5.00    7.00    3.00
+    2026-07-01  BURNED   NQ 09-26   1380    4.00    6.00    3.00
+    2026-07-02  BURNED   NQ 09-26   1380    5.00    7.00    4.00
+    2026-07-03  BURNED   NQ 09-26   1140    6.00    8.00    4.00
+    2026-07-06  BURNED   NQ 09-26   1380    5.00    7.00    3.00
+    2026-07-07  BURNED   NQ 09-26   1380    5.00    6.00    4.00
+    2026-07-08  BURNED   NQ 09-26   1380    6.00    8.00    4.00
+    2026-07-09  BURNED   NQ 09-26   1380    5.00    8.00    3.00
+    2026-07-10  BURNED   NQ 09-26   1380    4.00    6.00    3.00
+    2026-07-13  BURNED   NQ 09-26   1380    5.00    7.00    3.00
+    2026-07-14  BURNED   NQ 09-26   1380    5.00    7.00    3.00
+    2026-07-15  BURNED   NQ 09-26   1380    5.00    7.00    3.00
+    2026-07-16  BURNED   NQ 09-26   1380    6.00    8.00    4.00
+    2026-07-17  BURNED   NQ 09-26   1380    5.00    8.00    4.00
+    2026-07-20  BURNED   NQ 09-26   1380    6.00    9.00    3.00
+    2026-07-21  BURNED   NQ 09-26   1380    5.00    7.00    3.00
+    2026-07-22  BURNED   NQ 09-26   1380    5.00    7.00    3.00
+    2026-07-23  BURNED   NQ 09-26   1380    5.00    7.00    3.00
+    2026-07-24  BURNED   NQ 09-26   1380    5.00    6.00    3.00
+    2026-07-27  BURNED   NQ 09-26   1380    5.00    6.00    4.00
+    2026-07-28  BURNED   NQ 09-26   1380    5.00    7.00    3.00
+    2026-07-29  BURNED   NQ 09-26   1380    6.00    9.00    4.00
+    2026-07-30  BURNED   NQ 09-26   1380    6.00    8.00    3.00
+    2026-07-31  BURNED   NQ 09-26   1379    5.00    7.00    3.00
+    ------------------------------------------------------------
+    ALL                            90358    4.00    7.00    3.00
+
+    dollar view: 1 tick = $5.00/NQ contract; median spread 4.00 t = $20.00 one-way quote width at minute close
