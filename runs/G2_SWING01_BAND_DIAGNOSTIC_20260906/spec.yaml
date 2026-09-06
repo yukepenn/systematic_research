@@ -1,0 +1,121 @@
+run_id: G2_SWING01_BAND_DIAGNOSTIC_20260906
+campaign: GENESIS_II
+stage: "Stage-2 DIAGNOSTIC (research ladder) — conditional-structure tables only. A PASS licenses
+  a follow-on preregistered rule spec; it licenses NO strategy, NO sizing, NO deployment."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+why_now: |
+  The 3-session-to-3-month swing band was registered as a lane on 2026-08-29
+  (ACTIVE_ALPHA_QUEUE.md; META_ADVERSARY_01.md Q3) and has been untouched since. It is the ONLY
+  band where the programme's gates have power against modest edges: at ~1,043 weeks, t=2 is
+  reachable at annualized Sharpe ~= 0.45. All 56 mechanism cards and every formal wave to date
+  tested minutes-to-3-sessions. This run opens the lane with three cheap diagnostics.
+
+anti_rescue_gate:
+  # FAILURE_MEMORY.md check — each sub-family states what is MATERIALLY different from the
+  # nearest closed scope. Written BEFORE any outcome was computed.
+  D1_vs_GENESIS_H1: |
+    H1 closed: VX front-month basis / VXN ratio / VIX3M ratio DAILY terciles -> NEXT-SESSION NQ
+    mean. D1 differs in: (a) horizon/decision-role — 21-trading-day positioning, not next-session
+    timing; this is not a knob tweak, it is the registered band whose absence META_ADVERSARY
+    indicted; (b) observable — the VX futures curve's own front/second slope, not basis-to-cash
+    or index ratios. If D1 fails it closes the VX-slope observable at the swing band, not H1's
+    scope again.
+  D2_vs_GENESIS_H7: |
+    H7 closed: Lev-funds COT net/OI trailing-156-week PERCENTILE terciles -> next-week NQ,
+    contrarian. D2 differs in: (a) observable transform — 4-report CHANGE (flow) in net/OI, not a
+    level percentile; the mechanism is position-adjustment pressure, not crowding level;
+    (b) horizons 21/63d in the powered band, not next-week only.
+  D3_vs_daily_TSMOM_closures: |
+    Inherited closure: single-index daily TSMOM (V1/V2/TAIL-H1) — UNCONDITIONAL sign-of-lookback.
+    D3 differs by representation: continuation CONDITIONED on realized path efficiency, i.e. an
+    interaction test. FAILURE_MEMORY "NOT closed" list names path representations explicitly.
+    D3's null result would close the ER-conditioned continuation scope, not TSMOM again.
+
+data:
+  dev_end: "2026-05-29"          # session_boundary canonical dev end; nothing after this date is read
+  ndx_daily: runs/G2_F4_NDX_DELEV02_20260829/certified/nasdaq100_daily.csv   # percent-clean basis (DELEV02 substrate law)
+  vx_settlements: runs/GENESIS_FREEDATA_CBOE_20260828/certified/vx_settlements_daily.parquet
+  cot_tff: runs/GENESIS_FREEDATA_CBOE_20260828/certified/cot_tff_futures_only.parquet
+  reserves_respected:
+    - "H1's 2022+ implied-vol pristine window: D1 reads NO implied-vol observable dated on/after
+       2022-01-01. Its window is 2007-04-01 -> 2021-12-31 (start also skips the pre-2007-03-26
+       LEGACY_10X_SUSPECT VX scale rows)."
+    - "P-1 / blind pools / sealed >= 2026-08-01: not touched. Dev end 2026-05-29 applies to all
+       three sub-families."
+
+population: |
+  Observation points: weekly, sampled at each Friday close (D1, D3) or at each COT release
+  knowability point (D2). Forward returns are log(NDX close t+h / NDX close t) with h in
+  {5, 21, 63} trading days. h=21 is THE PRIMARY for every sub-family; 5 and 63 are exploratory
+  and cannot generate a PASS. Windows overlap; the null preserves that dependence (below).
+
+sub_families:
+  D1_VXSLOPE:
+    signal: "front/second VX settlement ratio minus 1 (curve slope), sampled Friday close"
+    window: "2007-04-01 -> 2021-12-31"
+    buckets: quintiles (full-window breakpoints)
+    eras: ["2007-04..2009", "2010..2015", "2016..2021"]
+  D2_COTFLOW:
+    signal: "Delta over 4 weekly reports of Lev_Money (Long-Short)/Open_Interest, NASDAQ-100
+      mini market (implementer selects the NASDAQ-100 Market_and_Exchange_Names row with the
+      longest continuous weekly history and RECORDS the choice before computing outcomes)"
+    knowability: "a report with as-of Tuesday T is released Friday 15:30 ET; the forward window
+      starts at the NEXT Monday close after release. G6 prints the audit."
+    window: "2006 -> 2026-05-29"
+    buckets: quintiles
+    eras: ["2006..2012", "2013..2019", "2020..2026-05"]
+  D3_PATHCONT:
+    signal: "sign(trailing 21d NDX log return) x efficiency-ratio tercile, where ER =
+      |sum of daily log returns| / sum of |daily log returns| over the same 21d"
+    window: "1986 -> 2026-05-29"
+    buckets: "2 signs x 3 ER terciles = 6 cells; primary contrast = continuation spread
+      (positive-sign minus negative-sign forward mean) in the TOP ER tercile vs the BOTTOM"
+    eras: ["1986..1999", "2000..2009", "2010..2017", "2018..2026-05"]
+
+null_model: |
+  Circular shift of the SIGNAL series against the outcome series: 401 shifts, offsets drawn once
+  and SHARED across all horizons within a sub-family (dependence-preserving; CLAUDE.md section 4).
+  Two-sided p from the shift distribution of the tested statistic. Newey-West t (lag = h) printed
+  as a secondary, never the gate.
+
+gates:  # every clause coded; program prints GATE / SPEC / OBSERVED / PASS-FAIL
+  G0_seal: "after truncation, max date in every input <= 2026-05-29; D1 additionally has zero
+    implied-vol rows >= 2022-01-01. Hard assert, run dies on violation."
+  G1_semantic: "for each sub-family the program prints one sentence stating in words what
+    population and what event the headline statistic is over (CAP01 lesson)."
+  G2_primary: "monotonic trend statistic (Spearman rho of bucket rank vs bucket mean forward 21d
+    return, weighted by bucket n; for D3 the pre-stated interaction contrast) vs the circular-
+    shift null. FAMILY BAR: p <= 0.0167 (= 0.05/3, three primaries preregistered)."
+  G3_era_stability: "sign of the top-minus-bottom (or interaction) spread agrees in >= 2 of 3
+    eras (D1, D2) / >= 3 of 4 eras (D3). Failing G3 while passing G2 = classification
+    REGIME_LOCAL, recorded, and does NOT advance the lane."
+  G4_drift_control: "the conditional structure must beat the exposure-matched always-long
+    control: the spread statistic itself (not the top bucket's raw mean) must clear the null.
+    Measured twice in this repo: modern long drift masquerades as strategy. Any 'monotonic'
+    pattern whose spread p > 0.0167 is drift, not information."
+  G5_power: "MDE at 80% power printed for every gate that fails; UNDERPOWERED_STILL declared if
+    MDE > 3x |observed| — in that case the verdict is 'closes nothing on its own' verbatim."
+  G6_knowability: "printed audit: for 10 random observation points per sub-family, the timestamp
+    at which every signal input was knowable vs the forward-window start. Any violation = run
+    invalid."
+
+decision_rule: |
+  PASS (G2+G3+G4) for a sub-family -> that observable advances to a Stage-5/6 preregistered
+  minimal-rule spec (NEW run, its own falsifiers, exposure-matched controls, cost model applied
+  there — none of that happens here). FAIL -> closed at the stated scope, row added to
+  FAILURE_MEMORY.md. REGIME_LOCAL -> recorded on the card, revival requires a mechanism for the
+  era break. No headline from this run is quotable as edge; these are conditional means, gross,
+  costless, and DISCOVERY-CONSUMED the moment they print.
+
+ledger:
+  trials: 3 (one per sub-family), registered via research_sdk.genesis_ledger.new_trial BEFORE
+    outcomes are computed; results recorded serially by the coordinator (not by parallel agents)
+    to keep the hash chain linear.
+
+outputs:
+  - out/gate_table.txt        # program-printed, never hand-assembled
+  - out/bucket_tables.csv     # every cell: n, mean fwd return per horizon, NW t
+  - out/era_tables.csv
+  - REPORT.md

@@ -1,0 +1,60 @@
+run_id: ROLL02_EXECSERIES_GATING_20260906
+campaign: WEEKLY_EDGE (execution science)
+stage: "DIAGNOSTIC with gates — prices ROLL01's 'per-series gating' claim. Builds nothing,
+  deploys nothing, changes no class. Earliest possible ship of any successor: the 2026-12 roll
+  window, and only via a NEW named class with its own certification (ROLL01 section 5)."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+hypothesis: |
+  ROLL01 (design-only) computed that resolving blockNewEntriesFrom from the EXECUTION series
+  alone — instead of the MIN over every loaded series — would recover ~4 blackout days/quarter
+  for XM and ~2 for P1. That is calendar arithmetic, not money. This run attaches money to the
+  recovered strip and lets four falsifiers kill the family cheaply. Context that binds: XM was
+  withdrawn to observation 2026-09-05, so the P1-ONLY arm is the PRIMARY; XM is secondary.
+  DRAWDOWN_ANATOMY_20260831 already killed the latch-fix variant at ~1 recovered day/quarter;
+  this run must clear that bar or die the same death.
+
+method: |
+  Re-run G3_ROLLCOST_00's classification (same trade ledger, same quarterly roll-date
+  construction, same windows) with exactly ONE rule changed: the block date derives from the
+  execution series' stored rollover (MNQ pattern; for the pre-MX01 record the historically
+  implied execution series) minus the same RollLeadDays=8, not the min over all series.
+  The 'recovered strip' = days between the all-series block date and the exec-series block date,
+  per quarter. Report per-leg and pooled: trades, entry rate, net P&L in the strip; compare the
+  strip's entry rate to the leg's all-window baseline rate.
+
+data:
+  source: "the exact trade ledger and roll-date table G3_ROLLCOST_00_20260831 consumed (see its
+    spec.yaml/src). No new market data is read; this is a re-cut of an already-published
+    diagnostic and inherits its evidence class: DISCOVERY_CONSUMED, in-sample."
+
+gates:  # program prints GATE / SPEC / OBSERVED / PASS-FAIL; falsifiers written before running
+  G1_money: "pooled recovered-strip net (P1-only arm): stationary-bootstrap CI90 must exclude 0
+    AND the strip net must be positive in >= 3 of the 5 calendar years 2022..2026. Otherwise the
+    recovered days are a calendar artifact, not money -> KILL family."
+  G2_frequency: "strip entry rate printed vs baseline entry rate. If strip rate < 50% of
+    baseline, every headline is restated at the measured rate (the strip sits over the pre-roll
+    lull; a naive net-in-window overstates the prize)."
+  G3_materiality_vs_latch_kill: "P1-only recovered trading days per quarter must exceed 1.0
+    (the latch-fix recovery DRAWDOWN_ANATOMY killed as immaterial). At or below it -> KILL."
+  G4_risk_premise: "OPEN by construction: the strip is only free if the execution series is
+    genuinely tradable there. This gate is NOT decidable from local data (no historical back-month
+    quotes exist) and is explicitly deferred to the 2026-09 crossover quote capture now running
+    (research/operational/roll_quotes/quotes.csv). The report must print it as OPEN — a G1-G3
+    PASS with G4 open licenses further measurement, never a build."
+  G5_semantic: "one printed sentence per headline stating what population/event it is over, and
+    the arithmetic identity strip_net + remaining_blackout_net = G3_ROLLCOST's blackout net must
+    reconcile to the dollar."
+
+decision_rule: |
+  Any of G1/G3 KILL -> per-series gating closed as not-worth-building; the blackout stands as the
+  price of the fail-safe; FAILURE_MEMORY row added. G1-G3 PASS -> a ROLL03 successor-build spec
+  MAY be preregistered for the December window, still gated on G4 (crossover pricing) and on
+  full re-certification rules (new class name, exact decision agreement, paper deployment
+  alongside — never replacing — the certified class; owner decision).
+
+outputs:
+  - out/gate_table.txt
+  - out/strip_by_quarter.csv   # per quarter x leg: strip days, trades, entries, net
+  - REPORT.md
