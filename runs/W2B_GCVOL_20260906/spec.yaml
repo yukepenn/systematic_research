@@ -1,0 +1,64 @@
+run_id: W2B_GCVOL_20260906
+campaign: CROSS_ASSET (Wave 2b — gold vol-managed diversification sleeve)
+instrument: GC (COMEX gold), daily, 2009-03-31 → 2026-07-31
+stage: "Stage-5 — a PORTFOLIO-DIVERSIFICATION test, not an alpha test. Gold's buy-hold is
+  Sharpe ~0.45 and ρ 0.04 to NQ; the question is whether a vol-managed gold sleeve adds
+  portfolio value to the NQ book (better tail / capital efficiency), NOT whether it has reversion
+  alpha (GC-MR already failed that). Judged on the PORTFOLIO delta. No deploy."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+why: |
+  GC-MR (G00060) failed because the 'edge' was gold's secular drift, not reversion. But that drift
+  is itself real (Sharpe ~0.45) and ORTHOGONAL to NQ (ρ 0.04) — and the owner's doctrine is
+  explicit: orthogonality is a first-class product objective; a modest-Sharpe, ρ≈0 sleeve can beat
+  pushing NQ. Gold's binding risk is a fat LEFT (liquidation) tail + strong vol clustering
+  (forecastable). So a VOL-TARGETED gold long (down-weight when RV is high) may deliver the
+  orthogonal drift with a truncated tail — a legitimate diversifier sleeve.
+
+hypothesis: |
+  A vol-targeted long-gold sleeve (position ∝ target_vol / trailing_realized_vol, capped) achieves
+  a materially better return/DD and worst-month than buy-hold gold, AND when combined with NQ/P1
+  under a simple risk-budget rule improves the portfolio's Sharpe / maxDD / tail vs NQ-alone.
+
+data: "runs/DAILY_GC_EXTRACT_AUTOPSY_20260906/out/gc_daily.parquet — returns on the ratio-stitched
+  series (%-safe), DELEV01. Seal <2026-08-01 asserted."
+
+mechanism_rule: |
+  Sleeve = LONG gold, daily position w_t = clip(target_ann_vol / trailing-N-day realized vol,
+  0, w_max), N ∈ {21, 63}, target_vol from the buy-hold's own realized vol (NOT tuned to returns),
+  w_max = 2. Expanding-window realized-vol calibration only (Cederburg discipline — no full-sample
+  vol). Compare sleeve vs buy-hold gold on the eval battery.
+
+controls:
+  vs_buyhold: "the sleeve must beat buy-hold gold on return/maxDD and worst-month at MATCHED mean
+    exposure (leverage-masquerade guard — VOLSIZE01 lesson: it must be a TAIL/growth improvement
+    at matched exposure, not just more leverage). If it only wins by taking more exposure, it is
+    not a real improvement."
+  placebo: "eval_battery random-thinning placebo on any fixed-DD figure; lead with weekly-vol."
+
+portfolio_test:  # the actual deliverable
+  rule: "NQ/P1 daily PnL (reproduced from the XINST01 bench) + the gold sleeve under (a) equal-risk
+    and (b) fixed-vol-budget — transparent, NOT optimized. Report NQ-alone vs NQ+gold-sleeve:
+    annualized Sharpe, maxDD, return/maxDD, CDaR, worst month, rolling-12m Sharpe stability, tail
+    co-loss (worst-decile-day overlap). Show both the live P1-object (MnqPerNq=3) basis and the
+    research full-size basis, labeled."
+
+gates:  # program-printed
+  G0_seal: "max session <2026-08-01; ratio-series returns; assert."
+  G1_matched_exposure: "sleeve beats buy-hold gold at MATCHED mean exposure on return/DD + worst
+    month (else it is leverage, not improvement)."
+  G2_orthogonality: "sleeve daily-PnL ρ-to-P1 printed (expect ~0.04, verify)."
+  G3_portfolio_delta: "NQ+sleeve vs NQ-alone: report the delta on Sharpe / maxDD / return-DD /
+    tail. PORTFOLIO-ADDITIVE only if it materially improves return-consistency or drawdown or
+    capital efficiency; NEUTRAL/NOT-ADDITIVE otherwise."
+  G4_weekly_vol_placebo: "fixed-DD only beside its placebo; weekly-vol lead."
+
+decision_rule: |
+  G1 + G3 PORTFOLIO-ADDITIVE → a gold diversification sleeve worth carrying (a low-Sharpe but
+  orthogonal component of the multi-engine portfolio). NEUTRAL/NOT-ADDITIVE → recorded; gold does
+  not earn a sleeve. DISCOVERY_CONSUMED; no deploy. Honest framing: this is DIVERSIFICATION value,
+  never 'alpha' — label it so.
+
+ledger: "one trial (family CROSS_ASSET_NATIVE), registered before outcomes."
+outputs: [out/gate_table.txt, out/sleeve_vs_buyhold.csv, out/portfolio.csv, out/daily_pnl.csv, REPORT.md]

@@ -1,0 +1,75 @@
+run_id: W2B_EQMR_20260906
+campaign: CROSS_ASSET (Wave 2b — the raw-equity-index MR lead)
+instruments: ES (lead), YM, RTY — daily RTH, POINTS, 2022-07-01 → 2026-07-31
+stage: "Stage-5 falsifier of the campaign's strongest lead. A survivor with LOW PnL-ρ-to-P1 is
+  the first portfolio-additive engine → portfolio assembly. Judged to the P1 bar (in-sample +
+  robust, no forward freeze). No deploy."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+the_lead: |
+  Wave-2's ES-NQ-residual test (G00061) measured its 'matched raw-ES MR control' at +$370/wk,
+  Sharpe 0.78 — a real edge the β-hedge had removed. Reframe: every equity index MEAN-REVERTS
+  (Wave-1 law), and a raw-index MR engine trades the OPPOSITE structure to P1's momentum, so its
+  PnL may be diversifying to the live NQ book EVEN AT price ρ 0.94. This spec tests that properly.
+
+hypothesis: |
+  A raw daily mean-reversion engine on a liquid equity index (fade the extension of the trailing
+  return) has a positive after-cost edge that (a) BEATS a drift-matched always-long control — i.e.
+  it is genuine reversion, not just captured equity drift — and (b) has PnL that is
+  low/negatively correlated with P1's momentum PnL, making it portfolio-additive.
+
+reproduce_first:  # G0 — the port-validation discipline
+  rule: "Reconstruct the EXACT 'raw-ES MR control' from runs/W2_EQRESID_ESNQ_20260906/src/ and
+    reproduce its +$370/wk, Sharpe 0.78 on ES to rounding BEFORE any new gate is read. If it does
+    not reproduce, RAISE — the lead is not trustworthy and the run is void."
+
+mechanism_rule: |
+  Daily, per instrument (POINTS, additively-back-adjusted → point returns only, DELEV01): signal
+  = z-score of the trailing-W daily return (or cumulative-return level, matching the reproduced
+  control's exact definition); FADE the extension — SHORT when z ≥ +k, LONG when z ≤ −k; exit on
+  z mean-cross or a max-hold H. Parameters from the reproduced control, then a neighborhood
+  {W∈60,120} × {k∈1.0,1.5,2.0}; a plateau is required, no magic cell.
+
+controls_and_nulls:
+  drift_control: "🔴 CO-PRIMARY KILL TEST (this is what killed GC-MR). The MR engine must beat an
+    EXPOSURE-MATCHED always-long control on the same instrument — equities have +drift, so a
+    long-biased fade earns drift free. Report the SPREAD over the drift-matched control; if its
+    block-bootstrap CI includes 0, the 'edge' is drift → FAIL."
+  pnl_orthogonality: "🔴 CO-PRIMARY VALUE TEST. Measure the engine's daily-PnL correlation to P1
+    (reproduce P1 from the XINST01 bench). The engine's portfolio value = LOW/NEGATIVE ρ-to-P1 +
+    a positive drift-independent edge. High ρ-to-P1 → not a diversifier regardless of Sharpe."
+  null: "circular-shift of the MR signal vs forward return, 2000 shifts, fixed seed; block-boot CI."
+
+cost: "ALL_IN single-leg = MODELED $4.36/ctrRT (FLAGGED) + ASSUMED spread {1,2} ticks (ES/RTY 0.25pt
+  $12.5/$5; YM 1pt $5). Report the band; a candidate inside the friction band is not carried."
+
+multiple_testing: "family = 3 instruments (ES/YM/RTY). ES is the lead (reproduced); YM/RTY are the
+  extension. Bonferroni within the family (α 0.05/3 = 0.0167) on the drift-control spread. Report
+  all three whatever the outcome; no dropping/adding after results."
+
+evaluation:
+  battery: "eval_battery, weekly-vol lead, fixed-DD only with placebo; Sharpe/maxDD/return-DD."
+  walk_forward: "2022-2024 / 2025-2026-07 chronological split per instrument."
+
+gates:  # program-printed
+  G0_reproduce: "raw-ES MR control reproduced to Sharpe 0.78 / +$370-ish wk (RAISE otherwise)."
+  G0b_seal_basis: "points basis, seal <2026-08-01 asserted."
+  G1_MDE_first: "MDE for the drift-control spread printed before observed."
+  G2_drift_control: "after-cost SPREAD over the exposure-matched always-long control > 0, CI
+    excludes 0 (Bonferroni α 0.0167) AND clears the circular-shift null."
+  G3_neighborhood: "W×k plateau of positive after-cost spread, not one cell."
+  G4_weekly_vol_placebo: "edge on weekly-vol, not fixed-DD-only."
+  G5_era_stability: "positive spread in both walk-forward eras (or REGIME_LOCAL)."
+  G6_pnl_orthogonality: "PnL-ρ-to-P1 printed per instrument."
+  G7_cost: "survives the {1,2}-tick band at a realistic tick."
+
+decision_rule: |
+  G2+G3+G4+G7 PASS AND G6 shows low/negative PnL-ρ-to-P1 → the campaign's first PORTFOLIO-ADDITIVE
+  orthogonal engine; carry to the portfolio assembly (NQ + engine, equal-risk/fixed-vol). PASS on
+  edge but HIGH ρ-to-P1 → real but not a diversifier (record, low portfolio value). FAIL drift
+  control → the 'edge' was equity drift (like GC-MR); FAILURE_MEMORY row. DISCOVERY_CONSUMED; no
+  deploy. Extend YM/RTY conclusions only where each clears independently.
+
+ledger: "one trial (family CROSS_ASSET_NATIVE, 3 instruments), registered before outcomes."
+outputs: [out/reproduce.txt, out/gate_table.txt, out/neighborhood.csv, out/daily_pnl_ES.csv, out/daily_pnl_YM.csv, out/daily_pnl_RTY.csv, REPORT.md]
