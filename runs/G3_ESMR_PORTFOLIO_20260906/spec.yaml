@@ -1,0 +1,64 @@
+run_id: G3_ESMR_PORTFOLIO_20260906
+campaign: GENESIS III (Wave B — economic adjudication of an already-observed effect)
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+what_this_is_and_is_not: |
+  This is NOT a rescue of G00063 (its family-corrected FAIL stands, untouched, forever).
+  It is a NEW decision question under the owner's GENESIS III doctrine (§5/§11): the exact,
+  already-frozen ES MR rule is treated as a pre-existing economically motivated engine with
+  ZERO retuning, and we compute its SHRUNK expected PORTFOLIO contribution to P1. A candidate
+  can fail a publication-style family-wise bar and still carry positive economic value under
+  uncertainty-shrunk sizing — or not. Either answer closes the question.
+
+frozen_object: |
+  The EXACT daily PnL series produced by W2B_EQMR's frozen mechanism rule on ES —
+  runs/W2B_EQMR_20260906/out/daily_pnl_ES.csv
+  sha256 = 67c97694b373b0c82fe96224555adafd0662863113bf5d5c0dad39e5c31e2318
+  Used AS-IS. No recompute, no parameter change, no population change, no sign change.
+  G0 asserts the hash before anything else runs.
+
+p1_side: |
+  P1 daily PnL = the identical series/code-path W2B_EQMR used for its orthogonality (G6)
+  computation (the XINST01 bench reproduction). Reproduce it and ASSERT the daily rho to the
+  frozen ES series matches the recorded W2B value within ±0.005 — an identity check that both
+  inputs are the same objects W2B measured.
+
+portfolio_construction: |
+  Book(lambda) = P1 + lambda * k * ESMR, where k is the vol-match ratio sigma(P1)/sigma(ESMR).
+  Two k variants, both reported: (a) static full-sample k (DESCRIPTIVE label), (b) causal
+  expanding-window k (min 250 obs). lambda in {0.25, 0.5, 1.0}. No optimizer, no other weights.
+
+shrinkage_grid: |
+  PnL_s = PnL - (1-s) * mean(PnL) applied to the ESMR leg only, s in {1.0, 0.75, 0.5, 0.25, 0}.
+  Break-even s* (largest s at which the book stops beating P1-alone on the primary metric)
+  printed. Rationale: uncertainty shrinks the MEAN, not the vol.
+
+metrics:  # all program-printed, weekly-vol lead per eval_battery doctrine
+  - marginal weekly-vol Sharpe (book vs P1-alone), per lambda x s cell
+  - marginal annualized return; maxDD; CDaR 5%; worst month
+  - fixed-DD basis ONLY beside its rate-matched random-thinning placebo (eval_battery)
+  - losing-P1-week conditional ESMR mean (reported, non-binding)
+  - worst-decile-day co-loss overlap; joint-drawdown windows
+  - incremental capital: ES margin + practical minimum size note
+
+gates:  # program-printed GATE/SPEC/OBSERVED/PASS-FAIL table
+  G0_identity: "sha256 of daily_pnl_ES.csv matches; rho reproduction within ±0.005."
+  G1_table: "full lambda x s marginal-economics table printed by the program."
+  G2_breakeven: "break-even shrinkage s* stated in words (what event the number is over: the
+    s at which marginal weekly-vol Sharpe of the lambda=0.5 causal-k book crosses zero) AND
+    recomputed a second way (grid interpolation vs direct sign-scan) — the CAP01 lesson."
+  G3_decision: "the preregistered decision rule below applied mechanically."
+
+decision_rule: |
+  CLASS-P ADMISSIBLE-LEAD iff, at s = 0.5 and lambda = 0.5 with causal k:
+    (a) marginal weekly-vol Sharpe > 0 vs P1-alone, AND
+    (b) book maxDD and CDaR5 each within +5% of P1-alone (no material tail worsening).
+  Else CLOSED-PORTFOLIO-INERT. Either way G00063's statistical verdict is untouched.
+  ADMISSIBLE-LEAD licenses ONLY the next stage (dedicated Class-P engine construction +
+  skeptic + cost stress on ES execution) — never promotion, never deploy.
+
+evidence_status: DISCOVERY_CONSUMED (the effect was observed in W2B; this is decision analysis).
+seal: "inputs end 2026-07-31; assert max date < 2026-08-01."
+ledger: "G00066, family GENESIS3_DECISION, registered before outcomes."
+outputs: [out/gate_table.txt, out/marginal_table.csv, out/portfolio_series.csv, REPORT.md]

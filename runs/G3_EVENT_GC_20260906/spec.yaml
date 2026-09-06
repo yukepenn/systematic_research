@@ -1,0 +1,45 @@
+run_id: G3_EVENT_GC_20260906
+campaign: GENESIS III (Wave E — GC native EVENT diagnostic, DAILY resolution)
+stage: "DIAGNOSTIC / DISCOVERY. Daily-only (no local GC 1-min — honesty rule). Event ->
+  conditional-path tables with DRIFT-MATCHED controls; verdict DEAD / DESCRIPTIVE / LEAD."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+why: |
+  GC is orthogonal (rho 0.07) with a real drift (Sharpe ~0.45) and a fat LEFT tail. The closed
+  scopes are the washout z-MR (drift-explained, G00060) and the vol-managed sleeve (neutral,
+  G00064). Open: liquidation/forced-flow events, flight-to-quality states, vol transitions,
+  cross-metal divergence. The G00060 lesson makes the DRIFT-MATCHED control MANDATORY on every
+  GC conditional cell: gold's secular drift can masquerade as any long-side event edge.
+
+data: |
+  runs/DAILY_GC_EXTRACT_AUTOPSY_20260906/out/gc_daily.parquet (OHLC daily, ~2009+; ratio-
+  stitched returns basis per its autopsy — %-safe). NQ daily from the deep spine for joint
+  events. SI daily: IF the multi-market daily inventory has an SI series usable with a causal
+  roll (check DATA_INVENTORY.md), build it the same way as the GC autopsy did; else E5 is
+  reported NOT-RUNNABLE (never faked). Sessions <= 2026-07-31; assert seal.
+
+event_catalog:
+  E1_liquidation_signature: "down day AND range >= 1.5 x trailing-20 median range AND close in
+    bottom quartile of day range; measure next 1/2/3/5 days vs drift-matched control."
+  E2_flight_to_quality: "GC daily ret >= +1 sigma AND NQ daily ret <= -1 sigma (both trailing-
+    60 sigmas); measure GC next 1/2/5 days."
+  E3_vol_transition: "trailing-5 realized vol crosses from bottom quintile (trailing-250 ref)
+    to above median within <= 3 sessions; measure direction and path next 1-5 days."
+  E4_multisession_extreme: "close breaches trailing-20-day high/low; next 1/2/3/5 days,
+    long and short sides separately (asymmetry lab: report both, never pick one post-hoc)."
+  E5_cross_metal_divergence: "z of (GC 5-day ret - SI 5-day ret) vs trailing-120 >= 2; measure
+    convergence over next 5/10 days. CONDITIONAL on SI data existing (see data section)."
+  E6_gap_day: "|open - prior close| >= 1 x trailing-60 daily sigma; measure open->close and
+    next day by gap sign."
+
+method:
+  controls: "drift-matched random-entry control with identical holding period for EVERY cell
+    (MANDATORY — G00060); plus the standard unconditional time-matched control."
+  nulls: "block bootstrap on days; circular shift for LEAD cells; K_eff printed."
+  lead_screen: "K_eff-corrected p<0.05 vs the DRIFT-MATCHED control + economically material
+    (>= 2x conservative cost: MODELED $4.36 RT + spread {1,2} ticks, GC tick $10) + >= 30 events."
+anti_patterns_banned: "no post-hoc thresholds/horizons; both directions always reported."
+evidence_status: DISCOVERY
+ledger: "G00069, family GENESIS3_EVENT, registered before outcomes."
+outputs: [out/event_tables.csv, out/gate_table.txt, out/controls.csv, REPORT.md]

@@ -112,6 +112,18 @@ GAMMA00 options) — the only path to alpha the $0 search cannot reach; (2) acce
 alone and shift effort to protecting its realized edge (09-21 ENFORCE deploy, roll/MNQ-spread);
 (3) a different research direction the owner names. **Not launching more low-EV cross-asset waves
 autonomously — that would be activity, not EV.**
+
+> ### ⚠️ SCOPE RIDER (GENESIS III, owner directive 2026-09-06) — the closure above is REPRESENTATION-SCOPED
+> "Exhausted-for-now" covers ONLY the enumerated tested objects: the P1-transfer construction,
+> raw daily/multi-day MR (ES/RTY/YM z-score family, the GC washout formulation, ZB intraday MR,
+> CL multi-day z-score MR), the ES-NQ β-residual construction, scheduled-macro **pre-event
+> direction**, and the gold vol-managed long sleeve. It must NOT be read as "these markets contain
+> no tradeable alpha." Untested axes: **event-conditioned representations, relative value / curve /
+> carry, session mechanics, conditional continuation, regime-local objects, execution/policy
+> engines, cross-sectional structure** — see `REPRESENTATION_COVERAGE_MATRIX.md`. The owner's
+> GENESIS III directive reopens the campaign on those axes (the NQ lesson: the flip EVENT carried
+> ~24× the per-bar expectancy of the generic trend state — search each market's flip-event
+> analogue, not its indicator).
 | **CL extraction + freeze** | ✅ DONE — 1,182 sess, no recompile (exporter pre-installed, P1 verified intact), holdout frozen | DONE (`SM1M_CL_SUBSTRATE`, `CL_HOLDOUT_FREEZE_20260906`) |
 | Wave 1 (CL autopsy) | descriptive science on CL DISCOVERY (≤2025-06-30) — add to the ES/RTY/YM/ZB batch | 🟡 queued (next) |
 | Wave 1b | daily autopsies GC/6E (+SI/NG…) after daily extraction | pending |
@@ -133,3 +145,27 @@ autonomously — that would be activity, not EV.**
 - Instrument-native sessions — **never copy NQ 09:30-16:00 to other futures.**
 - Move HORIZONTALLY when a family is exhausted; never mutate a consumed dataset until it turns green.
 - No promotion / no live deploy / no sizing change from research runs. $0.
+
+## GENESIS III — NATIVE ENGINE BREAKOUT (opened 2026-09-06, owner directive)
+
+**Objective: more real, explainable, robust, deployable engines** — three admission classes
+(S standalone · P portfolio · X execution/policy). Search unit = **EVENT → state → action**, not
+indicator. Horizon is a first-class dimension. Family-wise verdicts stay; ECONOMIC value under
+shrinkage is computed separately (never rewriting a failed statistical verdict). Failed objects
+stay closed; adjacent questions with genuinely different targets are legitimate.
+
+### GENESIS III wave tracker
+
+| wave | object | status |
+|---|---|---|
+| **A — SI/GC carry confirmation** | selection-debt-aware read of CARRY_V1's never-computed 2019+ windows (frozen relation, no retuning; null family = comparable sector pairs) | 🟡 DESIGN (agent) → coordinator freezes spec BEFORE any post-2018 carry PnL exists |
+| **B — ES MR portfolio adjudication** | exact W2B_EQMR rule, no retuning: shrunk marginal portfolio economics vs P1 | 🟡 PREREGISTERED `G3_ESMR_PORTFOLIO_20260906` (G00066) |
+| **C — ZB event diagnostic** | preregistered event catalog, response-path / transitions, matched controls | 🟡 PREREGISTERED `G3_EVENT_ZB_20260906` (G00067) |
+| **D — CL event diagnostic** | settlement / EIA-response-path / overnight-displacement / shock catalog | 🟡 PREREGISTERED `G3_EVENT_CL_20260906` (G00068) |
+| **E — GC event diagnostic (daily)** | liquidation / FTQ / vol-transition / cross-metal catalog, drift-controlled | 🟡 PREREGISTERED `G3_EVENT_GC_20260906` (G00069) |
+| **F — LIQREV01 re-adjudication** | exact frozen post-2020 object as REGIME-LOCAL standalone (no retuning), production verdict | 🟡 RECOVERY + DESIGN (agent) |
+| **G — representation world scan** | mechanism-first external scan (20 mechanism classes) + skeptic dedup vs graveyards | 🟡 RUNNING (workflow) |
+| **H — micro/execution surface census** | causal materialized surfaces only; frozen pools untouched | 🟡 RUNNING (agent) |
+
+Discipline unchanged (ledger, spec-first, matched controls, dependence-preserving nulls, DELEV01
+points basis, market-native sessions, cost bands, no promotion from research, live book untouched).

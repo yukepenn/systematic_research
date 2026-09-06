@@ -1,0 +1,43 @@
+run_id: G3_EVENT_CL_20260906
+campaign: GENESIS III (Wave D — CL native EVENT diagnostic)
+stage: "DIAGNOSTIC / DISCOVERY. Same contract as G3_EVENT_ZB: event -> conditional-path tables
+  with matched controls; verdict DEAD / DESCRIPTIVE / LEAD per event; no strategy tested."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+why: |
+  CL is maximally orthogonal (rho 0.05) and its autopsy said: pit RETURNS ~ random walk,
+  structure lives in VOLATILITY. The only closed strategy scopes are multi-day z-MR (G00065,
+  underpowered) and EIA pre-event direction. Open question: which CL displacement events are
+  followed by continuation vs reversal, and what pre-event state separates them? Energy-native
+  candidates: settlement mechanics, inventory-shock response paths, overnight->pit handoff.
+
+data: "runs/SM1M_CL_SUBSTRATE/out/cl_1m_2022_2026.parquet (1,182 sess, sha256 e587486c...) —
+  POINTS basis (DELEV01; CL $0.01 tick was F2-lossless). Sessions <= 2026-07-31; assert seal.
+  CL tick $10, point $1000. Pit session 09:00-14:30 ET; settlement 14:30 ET. Cost: MODELED
+  $4.36 RT + spread {1,2,3} ticks."
+
+event_catalog:
+  E1_eia_response_path: "EIA Wednesdays 10:30 ET. Condition on SIGN and SIZE-tercile of the
+    10:30->10:45 move; measure 10:45->12:00 and 10:45->14:30. Pre-event direction is CLOSED;
+    realized-response conditioning is open."
+  E2_settlement_transition: "sign/size-tercile of the 14:00->14:30 drift; measure
+    14:30->17:00 and next-session 09:00->10:30."
+  E3_overnight_pit_handoff: "|18:00->09:00 move| >= {1.5, 2.0} x trailing-20 overnight sigma;
+    measure 09:00->10:30 and 09:00->14:30 by sign (gap continuation vs fade)."
+  E4_shock_day_next_path: "|session net| >= 2.5 x trailing-20 daily sigma; measure next 1/2/3
+    sessions, conditioned on close-location-in-range tercile (top/mid/bottom)."
+  E5_compression_break: "as ZB E3 (trailing-5 range bottom quintile + 5-session breach)."
+  E6_multisession_extreme: "trailing-20-session high/low breach; next 1/2/3 sessions."
+  E7_expansion_failure: "session range >= 2 x trailing-20 median range AND |net| <= 25% of
+    range (travel without displacement); measure next session."
+
+method:
+  controls: "matched unconditional control per cell, same wave, time-matched where time-locked."
+  nulls: "session-block bootstrap CIs; circular-shift for LEAD cells; shared family draw;
+    K_eff correction printed."
+  lead_screen: "as G3_EVENT_ZB: K_eff-corrected p<0.05 + >= 2x conservative cost + >= 30 events."
+anti_patterns_banned: "no post-hoc thresholds/horizons; all cells reported."
+evidence_status: DISCOVERY
+ledger: "G00068, family GENESIS3_EVENT, registered before outcomes."
+outputs: [out/event_tables.csv, out/gate_table.txt, out/controls.csv, REPORT.md]

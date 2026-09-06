@@ -1,0 +1,51 @@
+run_id: G3_EVENT_ZB_20260906
+campaign: GENESIS III (Wave C — ZB native EVENT diagnostic)
+stage: "DIAGNOSTIC / DISCOVERY. Event -> conditional-forward-path tables with matched
+  unconditional controls. NO strategy object is tested; no gate can 'pass' into promotion.
+  Output verdict per event: DEAD / DESCRIPTIVE / LEAD. A LEAD graduates only via a separate
+  preregistered falsifier spec."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+why: |
+  ZB outright daily returns are the most orthogonal surface we have (rho -0.05 to P1) and the
+  ONLY tested strategy objects are intraday z-MR (cost-fragile, G00062) and pre-event macro
+  direction (closed). The GENESIS III correction: VR<1 is descriptive, not a law. Search the
+  rates market's flip-event analogue: which price-discovery events produce temporary inventory
+  imbalance (fade) vs durable repricing (follow)?
+
+data: "runs/SM1M_ZB_SUBSTRATE/out/zb_1m_2023_2026.parquet — POINTS basis ONLY (additively
+  back-adjusted, DELEV01). Sessions <= 2026-07-31; assert seal. ZB tick 1/32 = $31.25;
+  cost band from the G00062 model (MODELED commission ~$4.36 RT + spread {1,2} ticks)."
+
+event_catalog:  # preregistered and FINITE; parameters listed are the whole neighborhood
+  E1_macro_response_path: "08:30-release sessions (calendar = the same macro-flag set used by
+    G2_F10/G2_F13). Condition on SIGN and SIZE-tercile of the 08:30->08:45 move; measure
+    08:45->10:30 and 08:45->15:00 paths. NOTE: pre-event direction is CLOSED; this conditions
+    on the REALIZED first response — a different, open representation."
+  E2_overnight_displacement: "|18:00->08:00 move| >= {1.5, 2.0} x trailing-20-session
+    overnight sigma; measure 08:00->settlement path by sign."
+  E3_compression_break: "trailing-5-session range in bottom quintile of trailing-60 AND
+    session breaches the prior 5-session high/low; measure break-day remainder + next session."
+  E4_multisession_extreme: "close breaches trailing-20-session high/low; measure next 1/2/3
+    session path (continuation vs reversal)."
+  E5_shock_no_followthrough: "30-min move >= 2.5 x trailing sigma(30-min) followed by < 25%
+    further displacement in the next 60 min; measure path to close + next session."
+  E6_settlement_transition: "14:55->15:00 into 15:00->17:00 behavior vs the day's net move."
+
+method:
+  controls: "EVERY conditional cell gets its matched unconditional control in the same wave:
+    same horizon sampled on all sessions (time-matched where the event is time-locked)."
+  nulls: "session-level block bootstrap CIs; circular-shift null for any cell advanced as a
+    LEAD; one shared draw per family; effective-K correction across the catalog (correlated
+    events); print K and K_eff."
+  basis: "point moves and $ per contract; end-stamped bars; ET session time 18:00->17:00."
+  lead_screen: "LEAD requires (i) control-matched delta clears the K_eff-corrected screen
+    p<0.05, (ii) gross size economically material vs the cost band (>= 2x conservative
+    all-in cost per trade), (iii) >= 30 events. Screen, not promotion."
+
+anti_patterns_banned: "No threshold added after seeing results; the listed parameter sets are
+  exhaustive. No horizon added post-hoc. Cells reported ALL, not selectively."
+evidence_status: "DISCOVERY (this substrate is already DISCOVERY_CONSUMED for MR objects)."
+ledger: "G00067, family GENESIS3_EVENT, registered before outcomes."
+outputs: [out/event_tables.csv, out/gate_table.txt, out/controls.csv, REPORT.md]
