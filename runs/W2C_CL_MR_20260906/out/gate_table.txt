@@ -1,0 +1,20 @@
+============================================================================================================
+W2C_CL_MR_20260906  --  GATE TABLE  (program-printed)   trial G00065 / CROSS_ASSET_NATIVE
+PRIMARY cell (a-priori from autopsy): basis=FULL W=10 k=1.5 H=5 ; realistic cost 1 tick (ALL_IN $14.36/ctrRT)
+============================================================================================================
+gate  spec                                                                          observed verdict
+G0    points basis, max session < 2026-08-01 (seal)                               2026-07-31    PASS
+G1    MDE printed before observed spread (barrier)                      MDE $457 vs obs $168   False
+G2    spread>0 & block-boot CI excl 0 & clears null                 $168 CI[-248,547] p0.135    FAIL
+G3    W x k x H plateau of positive spread (>=60%)                   7/12 multi-day cells >0    FAIL
+G4    edge on weekly-vol, not fixed-DD-only                               wv(spread) $327/wk    PASS
+G5    positive spread in BOTH walk-forward eras                       22-24 $223 | 25-26 $63    PASS
+G6    PnL-rho-to-P1 printed (low/neg = diversifier)               daily +0.148 weekly +0.029    PASS
+G7    survives {0.5,1,2}-tick ALL_IN cost band                       spread>0 all rungs True    PASS
+------------------------------------------------------------------------------------------------------------
+SURVIVES (G2 & null & weekly-vol & cost-robust & low PnL-rho & plateau) = False
+VERDICT = underpowered
+
+SEMANTICS: every figure is an IN-SAMPLE, pre-seal (<2026-08-01), POINTS-basis, after-cost
+  DISCOVERY_CONSUMED measurement of a ported research mechanism -- NOT a forward or live
+  number, and NOT multiplied by any live-book factor. No order, no enable, $0.

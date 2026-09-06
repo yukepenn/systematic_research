@@ -129,6 +129,21 @@ invalid; see GENESIS_ENGINEERING_DOCTRINE substrate trap.**
 | **Raw equity-index daily MR (ES/YM/RTY), as an orthogonal engine** | **FAIL — real timing edge, but underpowered + NOT orthogonal.** The Sharpe-0.78 raw-ES MR reproduced exactly; the drift-control VINDICATED it (net-short fade, drift-free spread ES $409/YM $348/wk, spread-Sharpe 0.82-1.09 — NOT drift-explained). Dies on (1) power: block-boot spread CI misses Bonferroni 0.0167 (t~1.7); (2) **PnL-ρ-to-P1 POSITIVE +0.13..+0.23** — a long-biased equity fade comoves with the long-NQ book, so it is not the diversifier. A real edge that is neither significant-at-the-family-bar nor portfolio-additive | W2B_EQMR (G00063) |
 | **Vol-managed long-gold diversification sleeve** | **NEUTRAL** — does NOT beat buy-hold gold at matched exposure (ret/DD 0.124<0.131); NQ+sleeve not portfolio-additive. Gold's ρ-to-P1 is +0.10 (P1-overlap window, not the 0.04 full-history figure); a passive gold long is a mild diversifier but not an engine, and vol-managing it adds nothing | W2B_GCVOL (G00064) |
 
+## Closed at exact scope (2026-09-06, cross-asset Wave 2c)
+
+| scope | verdict | run |
+|---|---|---|
+| **CL short-horizon / multi-day MR** (2022-2026-07, the last untested orthogonal-market directional engine) | **UNDERPOWERED (FAIL)** — weak directionally-sensible edge (+$168/wk point est) that is NOT drift (drift absorbed $3.92/wk) and NOT cost-fragile, and is genuinely orthogonal (ρ-to-P1 +0.03 weekly) — but CI includes 0 (p 0.135, below MDE $457), 0/36 cells clear. The diversifier PROPERTY is real; there is no establishable EDGE. Multi-day>1-day coherence holds (autopsy: CL returns ≈ RW at 1 lag) | W2C_CL_MR (G00065) |
+
+> ⭐ **CROSS-ASSET DIRECTIONAL FRONTIER ($0) EXHAUSTED-FOR-NOW (2026-09-06).** Mean-reversion tested
+> on all four asset classes — equity (real timing edge but underpowered + POSITIVELY corr to P1),
+> gold (drift), rates (cost-fragile), energy (underpowered) — plus P1-transfer (NQ-specific) and
+> the macro-vol law (powered vol, zero direction, 3 instruments). **No orthogonal engine cleared
+> the P1 bar.** The liquid futures we have $0 data for are efficient at the daily/intraday
+> directional scale; edges are small-vs-cost / drift / non-directional / non-orthogonal. Deliverable
+> = the map (`research/cross_asset/`), not an engine. Reopening needs a NEW surface (owner-gated
+> spend) or a genuinely different representation, not more parameter search on these series.
+
 ## Blocked-as-rescue (recorded rulings)
 
 MC-35 meta-labeling/sizing **on P1 with existing surfaces** = rescue of RR_W002A's closure ("no

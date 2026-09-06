@@ -1,0 +1,84 @@
+============================================================================================================
+W2C_CL_MR_20260906  --  CL short-horizon / multi-day MEAN-REVERSION falsifier (trial G00065)
+  spec: runs/W2C_CL_MR_20260906/spec.yaml   evidence: DISCOVERY_CONSUMED   NO DEPLOY   $0
+============================================================================================================
+
+G0  substrate CL: 1,608,018 bars / 1,184 sessions 2022-01-03 -> 2026-07-31  dropped>=seal 0
+    POINTS basis (additively back-adjusted, DELEV01); PV $1,000/pt, $/tick $10, tick 0.01
+    SEAL: max session 2026-07-31 < 2026-08-01 ? True   (asserted PASS)
+    daily bars: 1183 dates  2022-01-03 -> 2026-07-31; pit sessions (>=250 bars) 1172
+
+  reproducing P1 daily PnL from runs/XINST01_WEEKLY_EDGE_PORT_20260906/src/xinst_bench.py ...
+    P1: 1056 days 2022-07-04->2026-07-31, spread $14.436/ctrRT, 2401 trades, weekly-vol ref built  [54s]
+
+============================================================================================================
+NEIGHBORHOOD  (after-cost SPREAD over the exposure-matched drift control, realistic 1-tick cost)
+  cell metrics: raw weekly $, drift-control SPREAD weekly $, block-boot 95% CI on weekly spread,
+  circular-shift null p (2000 shifts, seed 20260906), weekly-vol of spread (matched to P1).
+============================================================================================================
+  PIT: 18 cells done  [55s]
+  FULL: 18 cells done  [57s]
+
+  PLATEAU[PIT multi-day, 12 cells]: spread>0 in 6/12 ; CI-excludes-0 in 0/12 ; clears-null in 2/12
+  PLATEAU[FULL multi-day, 12 cells]: spread>0 in 7/12 ; CI-excludes-0 in 0/12 ; clears-null in 1/12
+  COHERENCE[PIT]: mean spread 1-day $-5.7/wk vs multi-day $60.5/wk -> multi-day > 1-day
+  COHERENCE[FULL]: mean spread 1-day $-42.5/wk vs multi-day $52.9/wk -> multi-day > 1-day
+
+============================================================================================================
+PRIMARY cell (a-priori from the autopsy, BEFORE results): basis=FULL W=10 k=1.5 H=5, realistic 1-tick cost
+============================================================================================================
+  trades 54, avg hold 4.81d, win-rate 0.611, mean net exposure +0.0186
+  raw after-cost weekly $172.40/wk ; drift-control weekly $3.92/wk
+
+  G1  MDE for the drift-control SPREAD (80% power, alpha 0.05, weekly-spread sd $2,842, 239 wk):
+      MDE = $457.08/wk   <-- PRINTED BEFORE THE OBSERVED SPREAD (barrier)
+      OBSERVED after-cost weekly SPREAD = $168.48/wk (BELOW MDE)
+
+  G2  after-cost SPREAD $168.48/wk ; block-boot 95% CI [$-248.36, $547.28] -> excludes 0 ? False
+      circular-shift null (2000 shifts, seed 20260906): one-sided p = 0.1354 -> clears (p<0.05) ? False
+
+  EVAL BATTERY (LED BY WEEKLY-VOL; 213 shared ISO weeks with P1):
+      native           $      202.06/wk
+      weekly_vol       $      331.58/wk  <== PRIMARY (strategy P&L)
+      realized_vol     $      331.58/wk
+      gross_exposure   $      572.74/wk
+      weekly-vol of the SPREAD (drift-free edge, matched to P1) = $326.98/wk
+
+  fixed-DD (ORDER STATISTIC -> shown ONLY with placebo): self fixed-DD income $172.40/wk ;
+      side-blind 10%-thinning median $155.01/wk (lift -17.40); obs at pct 64.0
+  weekly Sharpe(ann) 0.442 ; maxDD $38,992 ; return/DD 1.06 (native, spread-agnostic)
+
+  G4  drift-free edge on WEEKLY-VOL (not fixed-DD-only): weekly-vol(spread) $326.98/wk -> >0
+
+  G5  walk-forward SPREAD: 2022-2024 $223.01/wk (157wk) | 2025-2026-07 $63.31/wk (83wk) -> both positive ? True 
+
+  G6  PnL-rho-to-P1: daily +0.1478 (1054 shared days) ; weekly +0.0292 (213 shared wk) -> low/negative (|rho_d|<0.30) ? True
+
+  G7  cost band (after-cost SPREAD weekly $ ; CI-lo):  0.5tk $169.6 (lo $-245.3)  1.0tk $168.5 (lo $-246.4)  2.0tk $166.2 (lo $-248.6)
+      spread>0 across the whole band ? True ; CI-excludes-0 across band ? False
+
+  G3  neighborhood plateau [FULL multi-day]: spread>0 in 7/12 cells -> plateau (>=60%) ? False
+
+  DRIFT CONTROL absorbed $3.92/wk of the $172.40/wk raw edge (mean net exposure +0.0186) -> the failure is NOT drift; it is POWER
+  ==> PRIMARY VERDICT: underpowered   (survives-flag = False)
+
+============================================================================================================
+W2C_CL_MR_20260906  --  GATE TABLE  (program-printed)   trial G00065 / CROSS_ASSET_NATIVE
+PRIMARY cell (a-priori from autopsy): basis=FULL W=10 k=1.5 H=5 ; realistic cost 1 tick (ALL_IN $14.36/ctrRT)
+============================================================================================================
+gate  spec                                                                          observed verdict
+G0    points basis, max session < 2026-08-01 (seal)                               2026-07-31    PASS
+G1    MDE printed before observed spread (barrier)                      MDE $457 vs obs $168   False
+G2    spread>0 & block-boot CI excl 0 & clears null                 $168 CI[-248,547] p0.135    FAIL
+G3    W x k x H plateau of positive spread (>=60%)                   7/12 multi-day cells >0    FAIL
+G4    edge on weekly-vol, not fixed-DD-only                               wv(spread) $327/wk    PASS
+G5    positive spread in BOTH walk-forward eras                       22-24 $223 | 25-26 $63    PASS
+G6    PnL-rho-to-P1 printed (low/neg = diversifier)               daily +0.148 weekly +0.029    PASS
+G7    survives {0.5,1,2}-tick ALL_IN cost band                       spread>0 all rungs True    PASS
+------------------------------------------------------------------------------------------------------------
+SURVIVES (G2 & null & weekly-vol & cost-robust & low PnL-rho & plateau) = False
+VERDICT = underpowered
+
+SEMANTICS: every figure is an IN-SAMPLE, pre-seal (<2026-08-01), POINTS-basis, after-cost
+  DISCOVERY_CONSUMED measurement of a ported research mechanism -- NOT a forward or live
+  number, and NOT multiplied by any live-book factor. No order, no enable, $0.

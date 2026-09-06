@@ -86,7 +86,32 @@ there. The **ESNQ_V1 blind ES∩NQ 15-session tick pool remains UNSPENT** (do no
 | **Wave 0** (infra) | NQ Research Playbook ✅ · data/roll/cost inventory ✅ · Tier-1 rank ✅ | DONE (`NQ_RESEARCH_PLAYBOOK.md`, `DATA_INVENTORY.md`) |
 | **Wave 1** (autopsies, all 7 markets) | ES/RTY/YM/ZB (intraday) + CL (intraday) + GC/6E (daily) | ✅ DONE. ⭐ **NQ is the momentum OUTLIER — everything else MEAN-REVERTS.** ρ-to-NQ: ES 0.94, RTY 0.75, YM 0.74, **ZB 0.06, GC 0.07, CL 0.05** (orthogonal prizes), 6E 0.15 regime-varying. Native engines must be MR / vol-regime, not trend. |
 | **Wave 2** (native money-engines) | GC-MR, ES-NQ residual, ZB-native | ✅ DONE (G00060-62): **0/3 cleared.** GC=DRIFT-EXPLAINED, ES-resid=FAIL (β-hedge kills signal), ZB=COST-FRAGILE. ⭐ LEAD surfaced: **raw-ES MR = Sharpe 0.78** (the residual control). Banked law: scheduled-macro = powered vol, zero direction (3 instruments). |
-| **Wave 2b** | 🎯 raw-ES MR judged on PnL-ρ-to-P1 (the lead); CL native (EIA/shock-MR); GC vol-regime | 🟡 LAUNCHING |
+| **Wave 2b** | raw-ES MR (PnL-ρ-to-P1); GC vol-sleeve | ✅ DONE (G00063-64): EQMR real Sharpe-0.78 timing edge but UNDERPOWERED at family bar + POSITIVELY corr to P1 (not a diversifier); GCVOL NEUTRAL (no better than buy-hold). |
+| **Wave 2c** | CL multi-day MR (last orthogonal shot) | ✅ DONE (G00065): UNDERPOWERED — orthogonal but no establishable edge. |
+
+## 🔴 FRONTIER ASSESSMENT (2026-09-06): the $0 cross-asset DIRECTIONAL frontier is EXHAUSTED-FOR-NOW
+
+**Comprehensive negative, honestly.** Across the futures universe we have $0 data for, **no
+orthogonal engine cleared the P1 bar.** MR tested on all four asset classes (equity — real timing
+edge but underpowered + positively corr to P1; gold — drift; rates — cost-fragile; energy —
+underpowered); P1-transfer (NQ-specific); macro-vol (powered vol, zero direction, 3 instruments);
+gold vol-sleeve (no better than buy-hold). The liquid futures are efficient at the daily/intraday
+directional scale; their edges are small-vs-cost / drift / non-directional / non-orthogonal.
+
+**This is a legitimate scientific result + the three durable assets the owner wanted** (Futures
+Alpha Map, Mechanism Transfer Matrix, and the load-bearing law: NQ is the momentum outlier of the
+complex — everything else mean-reverts, which is exactly why P1 is special and doesn't port).
+
+**What remains (all LOW-EV — grinding these would be the "mutate until green" trap):** cost-fragile
+intraday MR on GC/CL; thin/illiquid secondaries (SI/HG/NG/6J/ZN, daily-only); passive long-only
+diversification sleeves (gold ρ0.10 / ZB ρ0.06 — mild, not "engines"); session/auction geometry
+(ES showed it's mostly geometry).
+
+**The genuine forks (owner decision):** (1) spend on a NEW surface (Databento order-flow /
+GAMMA00 options) — the only path to alpha the $0 search cannot reach; (2) accept NQ-P1 stands
+alone and shift effort to protecting its realized edge (09-21 ENFORCE deploy, roll/MNQ-spread);
+(3) a different research direction the owner names. **Not launching more low-EV cross-asset waves
+autonomously — that would be activity, not EV.**
 | **CL extraction + freeze** | ✅ DONE — 1,182 sess, no recompile (exporter pre-installed, P1 verified intact), holdout frozen | DONE (`SM1M_CL_SUBSTRATE`, `CL_HOLDOUT_FREEZE_20260906`) |
 | Wave 1 (CL autopsy) | descriptive science on CL DISCOVERY (≤2025-06-30) — add to the ES/RTY/YM/ZB batch | 🟡 queued (next) |
 | Wave 1b | daily autopsies GC/6E (+SI/NG…) after daily extraction | pending |
