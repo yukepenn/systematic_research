@@ -1,6 +1,17 @@
 # GENESIS II — RESUME STATE
 
-> ## ⚡ ACTIVE 2026-09-06: CROSS-ASSET FUTURES campaign — Wave 0 DONE, Wave 1 running.
+> ## ⚡ ACTIVE 2026-09-06: CROSS-ASSET campaign — Waves 0+1 DONE, Wave 2 (native engines) running.
+> Wave 1 (all 7 markets autopsied) headline: **NQ is the momentum OUTLIER; everything else
+> mean-reverts.** ρ-to-NQ: ES 0.94 / RTY 0.75 / YM 0.74 / ZB 0.06 / GC 0.07 / CL 0.05 / 6E 0.15.
+> Wave 2 running `wf_30d97d8a-790` (trials G00060 GC-MR, G00061 ES-NQ resid, G00062 ZB-native) →
+> adversarial verify survivors → **portfolio pre-read (NQ + survivor)**. **On resume:** read the
+> workflow journal / `runs/W2_*/out/`, record ledger G00060-62 SERIALLY (survives→needs verify;
+> tokens PASS/FAIL/NULL/DEFECT), update FUTURES_ALPHA_MAP + MECHANISM_TRANSFER_MATRIX + CAMPAIGN_
+> STATE, commit. The prize = a PORTFOLIO-ADDITIVE orthogonal engine (GC-MR best shot, ES-resid
+> orthogonal-by-construction). HEAD `1fdb983`. Wave 2b: CL (EIA/shock-MR) + GC-vol + 6E + YM-resid.
+> Success bar = P1-class in-sample+robust (NO forward freeze — owner). ⏰ roll cron through 09-22.
+
+> ## (prior) CROSS-ASSET Wave 0 DONE, Wave 1 running.
 > Owner reframe: transfer the NQ RESEARCH PROCESS (not P1) to other futures; prize = multi-engine
 > low-corr PORTFOLIO. Home `research/cross_asset/` (CAMPAIGN_STATE, FUTURES_ALPHA_MAP,
 > MECHANISM_TRANSFER_MATRIX, NQ_RESEARCH_PLAYBOOK, DATA_INVENTORY). HEAD `2287c5d`+.
