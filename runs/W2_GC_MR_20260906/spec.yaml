@@ -1,0 +1,81 @@
+run_id: W2_GC_MR_20260906
+campaign: CROSS_ASSET (Wave 2 — native money-engines)
+instrument: GC (COMEX gold), daily, 2009-03-31 → 2026-07-31 (full window; ≥2026-08-01 sealed)
+stage: "Stage-5 falsifier — a DIRECT MONEY-ENGINE test. Judged to the P1 bar (in-sample +
+  robustness, NO forward-freeze). A survivor is an INFORMATION/AFTER-COST-SUPPORTED orthogonal
+  engine → goes to the portfolio assembly (Wave 6). No promotion/deploy from this run."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+hypothesis: |
+  Gold exhibits short-horizon liquidation-overshoot MEAN-REVERSION: after a washout day the next
+  return is positive (autopsy R2: prior-day-DOWN → +6.98 bps, t 2.94; VR<1 at every horizon; runs
+  revert). Economic reason: forced-liquidation overshoots in a fear/real-rate asset revert while
+  the slow driver is unchanged. This is a LONG-biased dip-buy on an asset with a secular +drift —
+  so the ENTIRE test hinges on beating a drift-matched control. ρ(GC,NQ)=+0.07 → orthogonal to the
+  live P1 book: even a modest Sharpe carries real marginal portfolio value.
+
+why_this_is_the_best_shot: |
+  Among the orthogonal prizes (GC/ZB/CL), GC-MR is the only one with (a) a MEASURED directional
+  edge (not just vol structure) AND (b) cost ~10× under the edge (~0.72 bps vs ~7 bps), so it is
+  NOT killed by friction — the kill test is the drift-matched control. ZB/CL vol families are
+  non-directional and/or cost-fragile; GC-MR can be an actual money engine.
+
+data:
+  substrate: runs/DAILY_GC_EXTRACT_AUTOPSY_20260906/out/gc_daily.parquet (pure-Python .ncd, causal
+    roll, identity-gated to certified returns; DELEV01 dual series)
+  basis: "returns via the RATIO/returns-stitched series (close_radj / ret_pct — cross-era %-safe);
+    level/range features via the point-diff series. NEVER mix. Seal ≥2026-08-01 already dropped
+    (assert max < 2026-08-01)."
+
+mechanism_rule: |
+  Minimal, derived-not-chosen: entry LONG at the close of a 'washout' day (day return below a
+  preregistered washout threshold), hold H days, exit at close. Washout defined by the autopsy's
+  own signal (prior-day-down, strengthened to the lower tail). Parameters set from the autopsy,
+  NOT mined: threshold = {0 (any down day), −1σ, −2σ of trailing-63d daily return}; H = {1, 2, 3}
+  days. Report the full 3×3 neighborhood surface — a plateau is required, not a magic cell.
+
+controls_and_nulls:  # the kill tests, preregistered
+  drift_matched_control: "🔴 THE PRIMARY KILL TEST. The dip-buy must beat an EXPOSURE-MATCHED
+    always-long control (same average time-in-market, same $ exposure) — on a +drift asset 'buy
+    the dip' earns the drift for free (WE_W111b lesson). The reported edge is the SPREAD over this
+    control, not the raw return. If the spread's CI includes 0, KILL."
+  null: "circular-shift of the washout-signal series vs forward returns, 2000 shifts, fixed seed,
+    two-sided; block bootstrap (mean block 10d) CI on the spread."
+  matched_unconditional: "also compare to a matched-count random-entry-day control."
+
+cost:
+  basis: "ALL_IN = MODELED commission ($4.36/ctrRT, FLAGGED — not GC-measured) + ASSUMED spread
+    band {0.5, 1, 2} ticks (GC tick $10). Report the band; a 0-tick-only survivor is COST-FRAGILE.
+    Turnover is low (H-day hold), so cost is ~10× under the edge — but prove it, don't assume."
+
+evaluation:
+  battery: "research_sdk.eval_battery — LEAD WITH WEEKLY-VOL; fixed-DD/CDaR only WITH the
+    random-thinning placebo (module raises otherwise); native / realized-vol / gross-exposure
+    printed. Report Sharpe, maxDD, return/DD, worst-month."
+  walk_forward: "expanding-window / chronological split (e.g. 2009-2016 / 2017-2026-07) printed —
+    the edge must not live in one era."
+  orthogonality: "daily-PnL correlation of the GC-MR engine vs P1's daily PnL on shared dates; +
+    trade/DD overlap. Low corr + positive after-cost spread-over-control = the portfolio prize."
+
+gates:  # program-printed GATE / SPEC / OBSERVED / PASS-FAIL
+  G0_seal_basis: "max session < 2026-08-01; returns on ratio series, level on point series — assert."
+  G1_MDE_first: "MDE at 80% power for the spread-over-control printed BEFORE the observed spread."
+  G2_drift_control: "after-cost SPREAD over the exposure-matched always-long control > 0, CI
+    excludes 0 (block bootstrap) AND clears the circular-shift null. THIS is the gate."
+  G3_neighborhood: "the 3×3 (threshold×H) surface shows a PLATEAU of positive after-cost spread,
+    not a single magic cell."
+  G4_weekly_vol_placebo: "the edge exists on the WEEKLY-VOL basis, not only fixed-DD (T2 lesson);
+    fixed-DD printed only beside its placebo."
+  G5_era_stability: "positive after-cost spread in BOTH walk-forward eras (or REGIME_LOCAL)."
+  G6_cost_robust: "survives the {0.5,1,2}-tick spread band at a realistic tick."
+  G7_orthogonality: "ρ-to-P1 printed."
+
+decision_rule: |
+  G2+G3+G4+G6 PASS → INFORMATION/AFTER-COST-SUPPORTED orthogonal GC engine; carry to the portfolio
+  assembly (NQ + GC-MR under equal-risk / fixed-vol) — the real prize is the portfolio delta, not
+  the standalone Sharpe. FAIL (esp. G2 drift-control) → the 'edge' was the secular drift;
+  FAILURE_MEMORY row. DISCOVERY_CONSUMED; no promotion, no deploy, no sizing change.
+
+ledger: "one trial (family CROSS_ASSET_NATIVE), registered before outcomes; recorded serially."
+outputs: [out/gate_table.txt, out/neighborhood.csv, out/walkforward.csv, out/daily_pnl.csv, REPORT.md]

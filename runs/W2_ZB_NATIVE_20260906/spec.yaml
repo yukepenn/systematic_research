@@ -1,0 +1,71 @@
+run_id: W2_ZB_NATIVE_20260906
+campaign: CROSS_ASSET (Wave 2 — native money-engines)
+instrument: ZB (30-yr Treasury bond), 1-min, 2022-12-27 → 2026-07-31
+stage: "Stage-5 falsifier on the MOST ORTHOGONAL market (ρ 0.06). Two legs: (A) intraday
+  MEAN-REVERSION / range-fade — a directional engine, COST-FIRST because the autopsy warns it
+  'dies cheapest on cost'; (B) 08:30 scheduled-macro-release vol/path structure. Judged to the
+  P1 bar. No deploy."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+hypothesis: |
+  ZB is a near-24h duration instrument, mean-reverting at every horizon (VR(60)=0.65, efficiency
+  0.04, tortuosity 23×), with the sharpest scheduled-macro-vol structure in the complex (08:30 ET
+  rates data = the highest-vol minutes; 08:00 hour ~2× any overnight hour). ρ(ZB,NQ)=+0.06 →
+  orthogonal to the live NQ book. Leg A: does intraday reversion from an intraday anchor beat cost?
+  Leg B: is the 08:30 vol structure powered, and does a continuation-or-reversion capture beat cost?
+
+data:
+  substrate: runs/SM1M_ZB_SUBSTRATE/out/zb_1m_2023_2026.parquet
+  basis: "🔴 POINTS (32nds) ONLY — ZB is additively back-adjusted (DELEV01); $/tick = PV·tick =
+    $31.25, 1 pt = 32 ticks. Seal ≥2026-08-01 already dropped (assert). Native session ~08:00-16:00
+    ET liquid block (from the autopsy volume profile)."
+
+leg_A_intraday_MR:
+  rule: "fade displacement from an intraday anchor (session VWAP or opening-range midpoint) at a
+    TRADEABLE horizon H ∈ {5,15,30} min (beyond bid-ask bounce), enter when |price−anchor| exceeds
+    a preregistered band {1,1.5,2}×trailing intraday σ, exit at anchor-touch or H. Neighborhood
+    reported."
+  cost_first: "🔴 median RTH range is ~0.9 pt ≈ 29 ticks and 1-tick spread = $31.25, so the
+    edge-to-cost ratio is thin. Compute the gross reversion FIRST, then subtract {0.5,1,2}-tick
+    ALL_IN; if gross doesn't clear cost at a realistic tick, record COST-FRAGILE and stop leg A."
+
+leg_B_macro_vol:
+  rule: "on the scheduled-release calendar (08:30 ET econ + 10:00 ISM/JOLTS + 14:00 FOMC), test
+    (i) RV(points) in the release window vs matched non-release days with MDE printed FIRST
+    (powered? ~50-100 days/yr), then (ii) post-release continuation-vs-reversion net of ~2-tick
+    cost. Pre-stated: releases EXPAND vol (G2_F12/CL-EIA); the money question is whether the
+    post-release PATH is tradeable (a directional continuation/reversion or a range capture), or
+    whether — like NQ FOMC and CL EIA — it is powered vol with ZERO directional edge (a fact, not
+    an engine)."
+
+controls_and_nulls:
+  leg_A: "reversion vs a matched unconditional same-clock/vol continuation control; circular-shift null."
+  leg_B: "release vs matched non-release (same weekday/era); event-time-shift null; MDE first."
+  anti_rescue: "differs from ESNQ (sub-minute cross-market, closed) — this is single-instrument
+    intraday MR; differs from G2_F12 (NQ FOMC) and CL-EIA (different instrument/clock); leg B is
+    not GENESIS_H2 (calendar-mean null) nor G2_F10 (overnight-hold)."
+
+cost: "ALL_IN = MODELED $4.36/ctrRT (FLAGGED) + ASSUMED spread {0.5,1,2} ticks ($15.6/$31.25/$62.5).
+  Report the band; ZB's thin edge-to-range makes this the decisive axis."
+
+evaluation:
+  battery: "eval_battery, weekly-vol lead, fixed-DD only with placebo."
+  orthogonality: "ρ of any surviving ZB engine's daily PnL vs P1 — expected ~0 (the prize)."
+
+gates:  # program-printed
+  G0_seal_points: "points basis, seal asserted."
+  G1_MDE_first: "MDE / cost-to-edge printed before observed (both legs)."
+  G2A_costfirst: "leg A gross reversion clears {realistic-tick} ALL_IN, CI excludes 0 vs null."
+  G2B_powered_then_tradeable: "leg B RV excess powered (MDE first) AND a tradeable post-release
+    path net of cost; a powered-vol/zero-directional-edge result is recorded as a FACT, not PASS."
+  G3_weekly_vol_placebo: "any edge on weekly-vol not fixed-DD-only."
+  G4_orthogonality: "ρ-to-P1 printed."
+
+decision_rule: |
+  Leg A PASS (cost-robust) or Leg B PASS (tradeable path) → orthogonal ZB engine → portfolio
+  assembly. COST-FRAGILE / vol-only-no-direction → record the fact (still valuable: it maps the
+  most orthogonal market) + FAILURE_MEMORY row. DISCOVERY_CONSUMED; no deploy.
+
+ledger: "one trial (family CROSS_ASSET_NATIVE), registered before outcomes; recorded serially."
+outputs: [out/gate_table.txt, out/legA_neighborhood.csv, out/legB_release.csv, out/daily_pnl.csv, REPORT.md]

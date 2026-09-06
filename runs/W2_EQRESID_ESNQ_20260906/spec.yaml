@@ -1,0 +1,67 @@
+run_id: W2_EQRESID_ESNQ_20260906
+campaign: CROSS_ASSET (Wave 2 — native money-engines)
+instrument: ES residual vs NQ (point-hedged), daily, 2022-07-01 → 2026-07-31
+stage: "Stage-5 falsifier — the ONLY family that structurally defeats ρ(ES,NQ)=0.94: a
+  point-hedged residual has ~0 index beta BY CONSTRUCTION, so a residual-MR engine is orthogonal
+  to the live NQ book even though ES and NQ move together. Judged to the P1 bar. No deploy."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+hypothesis: |
+  The ~6% of ES variance NOT shared with NQ (ρ 0.94) is the value/growth / cyclical / rate-sensitivity
+  dispersion — a distinct priced factor. The point-hedged residual e = ES_pt − β·NQ_pt (β from a
+  chronological POINTS regression, never $ or %) MEAN-REVERTS (both indices are daily-MR; the
+  spread more so). Trading the residual (long/short a beta-neutral ES−NQ pair) is orthogonal to NQ
+  direction by construction — the campaign's stated prize despite the 0.94 raw correlation.
+
+data:
+  es: runs/SM1M_ES_SUBSTRATE/out/es_1m_2022_2026.parquet (aggregate to daily RTH o→c, POINTS)
+  nq: runs/SM1M_SUBSTRATE/out/nq_1m_2022_2026.parquet (daily RTH o→c, POINTS, PV 20; ES PV 50)
+  basis: "POINTS only (both additively back-adjusted — DELEV01). β is a POINTS regression
+    coefficient (units: NQ-points per ES-point-equivalent), fit on a TRAILING chronological window,
+    never full-sample. Seal ≥2026-08-01 dropped (assert)."
+  reserve_note: "does NOT touch the ESNQ blind 15-session tick pool (that is sub-minute; this is
+    daily). ES results not cited for/against the closed ESNQ sub-minute scope."
+
+mechanism_rule: |
+  Daily: e_t = ES_ret_pt − β_t·NQ_ret_pt, β_t from trailing-{60,120}d chronological regression.
+  Signal = z-score of the trailing residual level (cumulative e); enter the residual AGAINST its
+  extension (short the spread when z high, long when z low), hold to mean or H days, at a
+  preregistered z threshold {1.0, 1.5, 2.0}. Report the neighborhood; a plateau is required.
+
+controls_and_nulls:
+  half_life_gate: "🔴 estimate the residual's mean-reversion half-life FIRST. If ≤ 1 trading day,
+    the spread is already arbitraged / bid-ask bounce — KILL (untradeable net of two-leg cost)."
+  matched_raw_control: "the residual-MR must beat a matched unconditional RAW-ES MR control (does
+    the beta-hedge ADD over just fading ES?)."
+  null: "circular-shift of the residual-z signal vs forward residual return; block bootstrap CI."
+
+cost:
+  basis: "ALL_IN, TWO LEGS (ES + NQ each pay commission + spread). MODELED commission $4.36/ctrRT
+    each leg (FLAGGED); ASSUMED spread {1,2} ticks each leg. The two-leg friction band is the
+    binding constraint — report it explicitly. A residual edge inside the two-leg band is not a
+    candidate."
+
+evaluation:
+  battery: "eval_battery, weekly-vol lead, fixed-DD only with placebo; Sharpe/maxDD/return-DD."
+  walk_forward: "2022-2024 / 2025-2026-07 chronological split printed."
+  orthogonality: "ρ of the residual-engine daily PnL vs P1 daily PnL — expected ~0 BY
+    CONSTRUCTION; verify it (a non-zero ρ means the hedge leaked index beta)."
+
+gates:
+  G0_seal_basis: "points basis, β trailing-not-full-sample, seal asserted."
+  G1_MDE_first: "MDE printed before the observed edge."
+  G2_half_life: "residual half-life > 1 day (else KILL — arbitraged)."
+  G3_primary: "after-cost (two-leg) residual-MR net > 0, CI excludes 0 vs the null AND beats the
+    matched raw-ES MR control."
+  G4_weekly_vol_placebo: "edge on weekly-vol, not fixed-DD-only."
+  G5_neighborhood: "z-threshold plateau, not a magic cell."
+  G6_orthogonality: "ρ-to-P1 ≈ 0 verified (β-hedge did not leak beta)."
+
+decision_rule: |
+  PASS → an orthogonal-by-construction equity engine; carry to portfolio assembly; extend to YM−NQ
+  ONLY if ES clears (don't pay twice for one mechanism). FAIL/half-life≤1 → the residual is
+  arbitraged or inside the two-leg band; FAILURE_MEMORY row. DISCOVERY_CONSUMED; no deploy.
+
+ledger: "one trial (family CROSS_ASSET_NATIVE), registered before outcomes; recorded serially."
+outputs: [out/gate_table.txt, out/neighborhood.csv, out/half_life.txt, out/daily_pnl.csv, REPORT.md]
