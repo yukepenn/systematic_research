@@ -1,0 +1,49 @@
+YM DEPENDENCE AUTOPSY — POINTS BASIS
+==============================================================================
+  1-min return autocorr (within-session diffs):
+    lag: 1=-0.0087 2=-0.0015 3=+0.0019 5=-0.0030 10=+0.0012 20=+0.0019 30=+0.0006 60=+0.0038
+  1-min |return| (vol) autocorr:
+    lag: 1=+0.3941 2=+0.3673 3=+0.3537 5=+0.3440 10=+0.3225 20=+0.2980 30=+0.2878 60=+0.2544
+  daily RTH-ret autocorr:
+    lag: 1=-0.1013 2=+0.0293 3=-0.1027 5=-0.0059 10=-0.0207
+  daily RTH realized-vol autocorr:
+    lag: 1=+0.7248 2=+0.6584 3=+0.5523 5=+0.4189 10=+0.2778
+
+  sign persistence 1-min: P(same sign next)=0.4827  (n=1446217, P(up)=0.5022)
+  sign persistence daily: P(same sign next)=0.4987  (n=1130, P(up)=0.5310)
+
+  Variance Ratio (VR(q)>1 trending, <1 mean-reverting; z het-robust):
+   1-min within-session returns:
+     q=  2: VR=0.9913  z=-2.00
+     q=  5: VR=0.9872  z=-1.49
+     q= 15: VR=0.9723  z=-1.89
+     q= 30: VR=0.9602  z=-2.05
+     q= 60: VR=0.9574  z=-1.71
+   daily RTH returns:
+     q=  2: VR=0.9003  z=-1.54
+     q=  3: VR=0.8873  z=-1.21
+     q=  5: VR=0.7722  z=-1.79
+     q= 10: VR=0.6837  z=-1.82
+
+  Conditional continuation vs reversal — daily RTH ret magnitude terciles:
+    |prevRTH| small (n= 377): P(continue)=45.623%  E[next RTH]=+7.666pt  E[signed cont]=-4.764pt
+    |prevRTH| mid   (n= 379): P(continue)=51.187%  E[next RTH]=+5.438pt  E[signed cont]=+1.639pt
+    |prevRTH| large (n= 375): P(continue)=52.267%  E[next RTH]=+17.157pt  E[signed cont]=-15.419pt
+
+YM<->NQ DAILY POINT-RETURN CORRELATION (diversification pre-read)
+==============================================================================
+  shared full-RTH session-dates: 1132
+  rho(YM RTH o->c , NQ RTH o->c)   = +0.7534   [POINTS basis]
+  rho(YM RTH close-close, NQ c-c)  = +0.7405   [POINTS basis]
+  NOTE: correlation is scale-invariant -> points-basis rho == dollar-basis rho (YM $5.0/pt, NQ $20.0/pt).
+  per-year rho(YM,NQ) RTH o->c:
+    2022: +0.8807
+    2023: +0.7138
+    2024: +0.5686
+    2025: +0.8290
+    2026: +0.5975
+
+  STRUCTURAL CONTRAST (is YM a more mean-reverting regime than NQ?):
+    daily RTH VR(q=5):  YM=0.7722   NQ=0.8822   (both <1 => MR; lower = stronger)
+    1-min VR(q=30):     YM=0.9602   NQ=0.9945
+    RTH efficiency ratio median: YM=0.0467   NQ=0.0534 (lower = choppier/more reversion)

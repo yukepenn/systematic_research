@@ -1,0 +1,41 @@
+CL MARKET AUTOPSY -- DISTRIBUTION  (points basis; PV=$1,000/pt)
+============================================================================================
+
+--- 1-min close-to-close return (within session, all hours) ---
+  n=1,227,524 mean=-0.00002 std=0.05589 skew=-0.005 exkurt=61.5
+  quantiles(pt): 0.1%=-0.350  1%=-0.160  5%=-0.080  25%=-0.020  50%=+0.000  75%=+0.020  95%=+0.080  99%=+0.160  99.9%=+0.340
+  P(|1-min move| > 0.05pt) = 19.484%  (~1 per 5 bars)
+  P(|1-min move| > 0.10pt) = 6.495%  (~1 per 15 bars)
+  P(|1-min move| > 0.20pt) = 1.147%  (~1 per 87 bars)
+  P(|1-min move| > 0.50pt) = 0.055%  (~1 per 1829 bars)
+
+--- daily distributions (pt) ---
+  PIT session ret  n= 894 mean=-0.0934 std=  1.515 skew=-0.805 exkurt=  5.01 min=  -8.720 max=   6.510
+  overnight gap    n= 893 mean= 0.1127 std=  1.461 skew=-0.187 exkurt=  5.02 min=  -6.700 max=   7.450
+  full-day ret     n= 893 mean= 0.0177 std=  2.018 skew=-0.647 exkurt=  5.32 min= -14.770 max=   8.170
+
+--- overnight gap distribution ---
+  |gap| mean=1.0013pt median=0.7100pt  P(gap up)=55.8%  P(|gap|>0.50pt)=63.2%
+  gap quantiles(pt): 1%=-4.649  5%=-2.018  25%=-0.560  50%=+0.150  75%=+0.820  95%=+2.140  99%=+4.226
+
+--- range: intraday (PIT) vs overnight (pt) ---
+  PIT range       mean=2.100 median=1.740 p95=4.521 max=15.870
+  overnight range mean=1.894 median=1.485 p95=4.203 max=13.320
+  overnight/PIT range ratio (median) = 0.86
+
+--- realized vol: daily PIT RV = sqrt(sum sq 1-min ret), pt, by year ---
+      count     mean   median      max
+yr                                    
+2022    258    1.941    1.811    7.439
+2023    257    1.166    1.124    2.130
+2024    259    0.949    0.916    2.190
+2025    127    0.929    0.813    3.123
+
+--- extreme-day frequency by year (pt); 'big pit range' = >90th pct = 3.58pt ---
+        n  pit_ret_std  p_bigrange  worst_ret  best_ret  max_range
+yr                                                                
+2022  252        2.260      30.159     -8.720     6.510     15.870
+2023  256        1.203       3.906     -3.480     3.060      4.720
+2024  259        0.988       0.386     -3.130     2.640      4.890
+2025  127        1.073       2.362     -5.160     6.120      6.870
+

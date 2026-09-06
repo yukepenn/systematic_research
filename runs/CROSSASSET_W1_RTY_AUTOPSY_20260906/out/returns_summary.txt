@@ -1,0 +1,77 @@
+RTY RETURNS — POINTS BASIS.  point value $50/pt.
+==========================================================================================
+
+[A1] POINT-RETURN BY TIME-OF-DAY (30-min buckets of contiguous 1-min close-to-close, POINTS)
+  clock=bucket start (ET, END-stamp); mean/std/sum in POINTS; t = mean/(std/sqrt(n)).
+clock           seg     n  mean_pt  std_pt     sum_pt   t_stat
+00:00 ETH_overnight 27024 -0.00052 0.38569  -14.10000 -0.22238
+00:30 ETH_overnight 26954 -0.00275 0.36797  -74.10000 -1.22656
+01:00 ETH_overnight 29949  0.00145 0.41893   43.40000  0.59862
+01:30 ETH_overnight 31004  0.00041 0.43655   12.60000  0.16392
+02:00 ETH_overnight 33763  0.00369 0.52510  124.60000  1.29140
+02:30 ETH_overnight 34017 -0.00326 0.47873 -110.80000 -1.25488
+03:00 ETH_overnight 35135  0.00235 0.78048   82.40000  0.56324
+03:30 ETH_overnight 35081  0.00397 0.63540  139.10000  1.16881
+04:00 ETH_overnight 35136  0.00510 0.69597  179.30000  1.37440
+04:30 ETH_overnight 35051 -0.00202 0.59951  -70.80000 -0.63079
+05:00 ETH_overnight 34999  0.00071 0.56678   24.70000  0.23295
+05:30 ETH_overnight 34849  0.00258 0.53009   89.90000  0.90847
+06:00 ETH_overnight 34980 -0.00221 0.60851  -77.20000 -0.67833
+06:30 ETH_overnight 35045  0.00346 0.57693  121.10000  1.12126
+07:00 ETH_overnight 35139  0.00746 0.75667  262.10000  1.84785
+07:30 ETH_overnight 35166  0.00027 0.66515    9.40000  0.07536
+08:00 ETH_overnight 35224 -0.00510 0.73183 -179.70000 -1.30834
+08:30 ETH_overnight 35275 -0.00018 1.61699   -6.50000 -0.02140
+09:00 ETH_overnight 35290 -0.01279 0.82245 -451.40000 -2.92165
+09:30           RTH 35243  0.00836 2.08471  294.70000  0.75300
+10:00           RTH 35236 -0.00626 1.77523 -220.60000 -0.66200
+10:30           RTH 35221 -0.00185 1.38955  -65.30000 -0.25040
+11:00           RTH 35248  0.00177 1.21328   62.30000  0.27350
+11:30           RTH 35237  0.00097 1.07845   34.10000  0.16844
+12:00           RTH 35208 -0.00402 1.00253 -141.40000 -0.75168
+12:30           RTH 35223 -0.00476 0.96477 -167.80000 -0.92673
+13:00           RTH 34163 -0.00059 1.08768  -20.00000 -0.09948
+13:30           RTH 33976  0.01095 0.95390  371.90000  2.11514
+14:00           RTH 33964 -0.00118 1.10388  -40.00000 -0.19662
+14:30           RTH 33956  0.00383 1.09989  130.20000  0.64240
+15:00           RTH 33960 -0.00438 1.03188 -148.60000 -0.78146
+15:30           RTH 33960 -0.00273 1.06762  -92.70000 -0.47117
+16:00 ETH_overnight 33939  0.00539 0.76987  182.80000  1.28886
+16:30 ETH_overnight 33850  0.00040 0.45685   13.40000  0.15942
+17:00 ETH_overnight  1131 -0.00336 0.58143   -3.80000 -0.19434
+18:00 ETH_overnight 31083 -0.00054 0.74840  -16.70000 -0.12657
+18:30 ETH_overnight 31826  0.00241 0.53500   76.60000  0.80257
+19:00 ETH_overnight 31168 -0.00285 0.50711  -88.80000 -0.99188
+19:30 ETH_overnight 31731 -0.00342 0.48192 -108.60000 -1.26506
+20:00 ETH_overnight 33818  0.00055 0.62453   18.60000  0.16195
+20:30 ETH_overnight 33106 -0.00006 0.53432   -2.10000 -0.02160
+21:00 ETH_overnight 32485 -0.00076 0.51543  -24.80000 -0.26695
+21:30 ETH_overnight 32013  0.00351 0.49376  112.50000  1.27342
+22:00 ETH_overnight 31142 -0.00178 0.43866  -55.50000 -0.71695
+22:30 ETH_overnight 29690 -0.00184 0.41315  -54.50000 -0.76557
+23:00 ETH_overnight 28455  0.00449 0.38698  127.80000  1.95777
+23:30 ETH_overnight 27696 -0.00117 0.36577  -32.40000 -0.53226
+
+[A2] SESSION vs OVERNIGHT (per-session POINT returns)
+  RTH intraday (open->close)   n= 1175  mean=+0.0448  std=24.530  sum=+52.6  skew=+0.078  exkurt=+3.10
+  Overnight (pClose->open)     n= 1174  mean=+0.2927  std=18.224  sum=+343.6  skew=-0.071  exkurt=+5.51
+  Close-to-close (daily)       n= 1174  mean=+0.3239  std=29.421  sum=+380.3  skew=+0.032  exkurt=+1.47
+  => share of total drift: RTH sum=+52.6pt  ON sum=+343.6pt
+
+[A3] DAY-OF-WEEK (per-session POINT returns; 0=Mon .. 4=Fri)
+  Mon  c2c n= 233 mean=+2.9798 std=24.814 | RTH mean=+1.8154 | ON mean=+1.2249
+  Tue  c2c n= 238 mean=+0.4387 std=27.664 | RTH mean=+1.4592 | ON mean=-1.0206
+  Wed  c2c n= 236 mean=+0.2394 std=31.233 | RTH mean=-1.8627 | ON mean=+2.1021
+  Thu  c2c n= 234 mean=-0.8778 std=31.801 | RTH mean=-0.6179 | ON mean=-0.2598
+  Fri  c2c n= 233 mean=-1.1567 std=31.053 | RTH mean=-0.5807 | ON mean=-0.5760
+
+[A4] CONDITIONAL ON PRIOR SIGN (continuation vs reversal, POINTS)
+  prior daily c2c sign -> today daily c2c
+     after UP   : n= 601 mean=-0.8354 std=28.990 P(out>0)= 48.6%
+     after DOWN : n= 570 mean=+1.5281 std=29.879 P(out>0)= 54.0%
+  prior RTH sign -> today RTH
+     after UP   : n= 594 mean=-0.3074 std=23.093 P(out>0)= 50.2%
+     after DOWN : n= 580 mean=+0.3781 std=25.947 P(out>0)= 50.9%
+  today overnight sign -> today RTH (does the gap continue?)
+     after UP   : n= 614 mean=-0.9073 std=24.263 P(out>0)= 51.0%
+     after DOWN : n= 559 mean=+1.1132 std=24.804 P(out>0)= 50.1%

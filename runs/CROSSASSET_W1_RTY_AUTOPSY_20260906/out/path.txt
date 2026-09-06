@@ -1,0 +1,20 @@
+RTY PATH STRUCTURE — POINTS BASIS. (RTH session as the unit of a path)
+==========================================================================================
+
+[D1] EFFICIENCY RATIO (Kaufman) per RTH session = |net| / sum|1-min step|.  1=straight, 0=noise.
+  ER: mean=0.0573 med=0.0503 p10=0.0099 p90=0.1156
+  TORTUOSITY (1/ER): median=19.867
+  (low ER => choppy/noisy intraday path; high ER => directional/trending day)
+  daily path length (sum|1-min step|, pts): mean=328.61 med=304.70
+  net |displacement| (pts): mean=18.46 med=14.60
+
+[D2] MFE / MAE per RTH session (long-frame from RTH open, POINTS)
+  MFE (max high-open)    mean= 17.844 med= 13.900 p90=  37.78
+  MAE (open-min low)     mean= 18.835 med= 14.900 p90=  40.56
+  On UP days   (net>0): median MFE=23.80 median MAE(heat)=7.10  -> heat/target=0.30
+  On DOWN days (net<0): median MAE=25.40 median MFE(heat)=6.50
+
+[D3] COMPRESSION / EXPANSION (range clustering)
+  today RTH range / trailing-20 mean range: median=0.929 p10=0.564 p90=1.565
+  RTH-range ACF: L1=+0.4174 L2=+0.3777 L3=+0.2937 L5=+0.2552 L10=+0.1339
+  next-day RTH range after a bottom-tercile (compressed) day: mean=30.30 vs after non-compressed 39.86

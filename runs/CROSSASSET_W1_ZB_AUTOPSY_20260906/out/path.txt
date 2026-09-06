@@ -1,0 +1,22 @@
+================================================================================================
+PATH (POINTS). Efficiency, MFE/MAE, tortuosity, compression/expansion.
+================================================================================================
+
+[4a] Kaufman EFFICIENCY RATIO over RTH day (|net|/path-length), n=923:
+  mean 0.0474  median 0.0425  p25 0.0205  p75 0.0681
+  (near 0 = choppy/mean-reverting path; near 1 = clean directional path)
+
+[4b] TORTUOSITY = path-length/|net| (RTH), higher = more winding:
+  median 23.18  mean 50.17  (reciprocal of efficiency; median path is ~23.2x the net displacement)
+
+[4c] MFE / MAE from RTH open (long perspective), points:
+  MFE (open->high): mean 0.4912  median 0.3750  p95 1.3125
+  MAE (open->low) : mean 0.5032  median 0.4062  p95 1.3125
+  MFE/MAE symmetry ratio (mean) = 0.976  (>1 favors long, <1 favors short from open)
+  median RTH range = 0.9062; net move as frac of range: median 0.488
+
+[4d] COMPRESSION -> EXPANSION (range autocorr & NR-style conditioning):
+  RTH-range ACF lags 1..5: +0.2801  +0.2796  +0.2891  +0.2610  +0.2050
+  after BOTTOM-quartile range day: next-day RTH range mean 0.8414
+  after TOP-quartile    range day: next-day RTH range mean 1.1759
+  (expansion-after-compression would show LOWER-after-low; clustering shows the opposite)

@@ -1,0 +1,81 @@
+====================================================================================================
+=== GC (COMEX GOLD) DAILY EXTRACT + AUTOPSY  --  metals pod Wave-1 (DESCRIPTIVE, $0)
+====================================================================================================
+    roll.py causal-roll unit tests: telescoping / basis-invariance / causality  ALL PASS
+
+--- STEP 1  EXTRACT
+    reader           research/multi_market/src/ncd_day.py::read_ncd_day (48-byte DAY record)
+    raw panel        10,645 contract-days, max date 2026-09-04 (pre-seal)
+    SEAL applied     dropped rows with date >= 2026-08-01
+    retained max     2026-07-31   assert < 2026-08-01: PASS
+    panel after seal 10,621 contract-days, 91 contracts, 2009-03-30 -> 2026-07-31
+    validity         ohlc_bad=0 vol_neg=0 vol_zero=0 dup_contract_dates=0
+    usable_start     2023-04-17 (>=1 live contract, <=3bd outage) -> 2026-07-31, 847 clean-contiguous days; roll_overlap_frac 0.681
+    ROLL METHOD      CAUSAL volume-crossover (uses t-1 volume ONLY) + 5-day pre-expiry safety override (contract mechanics, no future data). One-way, never backward.
+    roll ledger      91 rows: 71 volume-crossover, 19 pre-expiry, 1 init
+    causality assert every info_cutoff < decision_date on 90 rolls: PASS
+    identity gate    my ret_points == roll.economic_returns (max err 0.00e+00): PASS
+    return-days      4,347  2009-03-31 -> 2026-07-31  (18 span a coverage gap >5cal-d -> clean_daily=False)
+    WROTE            D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\DAILY_GC_EXTRACT_AUTOPSY_20260906\out\gc_daily.parquet
+    representations  (a) close_radj = ratio/returns-stitched  [use for %-return / cross-era]
+                     (b) close_padj/open_padj/high_padj/low_padj = point-diff back-adj [use for LEVEL / RANGE]; open/high/low/close = RAW true held-contract prices
+
+====================================================================================================
+--- STEP 2  DAILY AUTOPSY   (n=4,329 clean daily returns, ret_pct, 2009-03-31 -> 2026-07-31)
+====================================================================================================
+
+[RETURNS]
+    unconditional daily ret_pct: mean +3.032 bps  t +1.87  n 4,329  => ~+7.64%/yr drift, ann.vol 16.9%
+    day-of-week mean ret (bps) [t]:  Mon +5.8[+1.6]  Tue +3.1[+0.9]  Wed +2.8[+0.9]  Thu -0.1[-0.0]  Fri +3.5[+0.9]
+    month-of-year mean ret (bps) [t]:
+      01:+14.8[+2.4]  02:+4.9[+0.8]  03:+2.7[+0.4]  04:+7.1[+1.1]  05:-1.0[-0.2]  06:-5.3[-0.9]  07:+5.1[+1.1]  08:+10.3[+2.1]  09:-6.4[-1.1]  10:+4.7[+0.9]  11:-0.7[-0.1]  12:+0.7[+0.1]
+    prior-day UP  -> next mean -0.37 bps [t -0.17] n 2,282
+    prior-day DOWN-> next mean +6.98 bps [t +2.94] n 2,034  (diff -7.35 bps; >0 => momentum, <0 => reversal)
+    prior-day |ret| quintile -> next mean / next |ret| (bps):
+      q0 (small->large): next +7.32[t+2.2]  next|ret| 71.7  n 866
+      q1 (small->large): next -4.38[t-1.2]  next|ret| 75.8  n 865
+      q2 (small->large): next -0.52[t-0.1]  next|ret| 74.3  n 866
+      q3 (small->large): next +6.96[t+2.2]  next|ret| 67.8  n 865
+      q4 (small->large): next +5.68[t+1.4]  next|ret| 82.2  n 866
+
+[DISTRIBUTION]
+    mean +3.03bps  sd 1.065%  skew -0.695  exkurt +7.48  min -11.39%  max 6.07%
+    pctiles %: p0.1 -5.73  p1 -2.94  p5 -1.68  p25 -0.46  p50 0.04  p75 0.58  p95 1.66  p99 2.79  p99.9 4.62
+    tail |z|>k:  k2: 5.059% (12.7/yr) vs N 4.550% [1.1x]  k3: 1.271% (3.2/yr) vs N 0.270% [4.7x]  k4: 0.554% (1.4/yr) vs N 0.006% [87.5x]  k5: 0.231% (0.6/yr) vs N 0.000% [4029.3x]
+    overnight(gap) ret: mean +2.26bps sd 0.566%  |  intraday ret: mean +0.78bps sd 0.888%
+    variance share: overnight 28.9%  intraday 71.1%  corr(on,intra) +0.026
+    daily range (high-low)/close: median 1.115%  mean 1.311%  p95 2.692%
+
+[DEPENDENCE]
+    return autocorr:  L1:-0.024  L2:-0.023  L3:+0.012  L4:-0.025  L5:+0.009  L10:-0.010  L20:+0.003
+    |ret| autocorr :  L1:+0.080  L2:+0.166  L3:+0.114  L4:+0.134  L5:+0.126  L10:+0.109  L20:+0.105
+    ret^2 autocorr :  L1:+0.092  L2:+0.199  L3:+0.048  L4:+0.092  L5:+0.063  L10:+0.054  L20:+0.050
+    sign persistence P(sign_t==sign_t-1) 47.41%  vs iid 50.15%  (P(up)=52.71%)
+    variance ratio VR(k) [>1 trend/persistence, <1 reversal]:  k2:0.976  k5:0.934  k10:0.884  k20:0.838
+    multi-day (non-overlapping) return autocorr L1:
+      2d:-0.035(n2165)  3d:-0.019(n1443)  5d:-0.037(n866)  10d:-0.090(n433)  20d:-0.031(n217)
+    circular-shift null (1000): AC(L1) obs -0.024 pctile 92.3 (null sd 0.000) | VR(5) obs 0.934 pctile 37.6 (null sd 0.002)
+
+[PATH]
+    Kaufman efficiency ratio (net move / gross path) [higher => trendier]:
+      5d mean 0.473 med 0.449  10d mean 0.338 med 0.295  20d mean 0.243 med 0.204  40d mean 0.170 med 0.142
+    trend maturation -- next-day mean ret after m consecutive same-sign days:
+      run>=1d: next-day-in-run-direction -3.48 bps [t -2.2] n 4,327
+      run>=2d: next-day-in-run-direction -3.63 bps [t -1.5] n 2,051
+      run>=3d: next-day-in-run-direction -2.58 bps [t -0.7] n 981
+      run>=4d: next-day-in-run-direction -8.65 bps [t -1.6] n 479
+      run>=5d: next-day-in-run-direction -7.18 bps [t -0.8] n 239
+
+[STRUCTURE / CROSS-ASSET]
+    vol-regime: next |ret| in HIGH-rv21 86.8bps vs LOW-rv21 61.6bps (vol clustering)
+    NQ built identically: 4,354 return-days 2009-03-31->2026-07-31 (identity gate err 0e+00)
+    corr(GC, NQ) daily ret on 4,195 shared dates: Pearson +0.074  Spearman +0.045
+    per-year rho(GC,NQ): 2009:+0.12  2010:+0.14  2011:-0.01  2012:+0.27  2013:+0.15  2014:-0.17  2015:-0.08  2016:-0.29  2017:-0.17  2018:+0.04  2019:-0.24  2020:+0.28  2021:+0.04  2022:+0.15  2023:-0.02  2024:+0.14  2025:+0.02  2026:+0.33
+    rho range -0.29..+0.33, mean +0.039 -- LOW/near-zero equity correlation is the portfolio prize
+
+    wrote 9 autopsy tables to out/autopsy_*.csv
+    parquet sha256   93ec562d3ebb3ce7021855945545b3bb60365e8b090c6d62de2a675f39ed98a1
+
+====================================================================================================
+=== DONE. DESCRIPTIVE ONLY. No P&L object, no ledger trial, no promotion. DISCOVERY_CONSUMED.
+====================================================================================================

@@ -1,0 +1,53 @@
+CL MARKET AUTOPSY -- SHOCK RESPONSE  (points basis)
+============================================================================================
+CL is a physical-commodity market with information shocks (EIA inventories, OPEC,
+geopolitics, outages). This section characterizes (A) large-bar / vol-burst frequency,
+(B) the EIA Wednesday 10:30 ET scheduled shock, and (C) shock CONTINUATION vs REVERSAL
+after large bars / abnormal volume -- the key energy question.
+============================================================================================
+
+--- (A) large 1-min bar / volatility-burst frequency (PIT) ---
+  99.0th pct |1-min move| = 0.280pt  -> ~1 per 110 bars (~3.00 per pit session)
+  99.5th pct |1-min move| = 0.340pt  -> ~1 per 208 bars (~1.58 per pit session)
+  99.9th pct |1-min move| = 0.550pt  -> ~1 per 1035 bars (~0.32 per pit session)
+
+  jump-vs-diffusion by year: share of daily PIT sum-sq-return contributed by the
+  largest 1% of 1-min bars (high share = jumpy/shock-driven; low = diffusive):
+    2022: top-1% bars carry  23.9% of PIT variance  (n_bars=84,551)
+    2023: top-1% bars carry  17.0% of PIT variance  (n_bars=84,432)
+    2024: top-1% bars carry  19.1% of PIT variance  (n_bars=85,204)
+    2025: top-1% bars carry  33.0% of PIT variance  (n_bars=41,896)
+
+--- (B) EIA weekly petroleum-inventory shock (Wednesday 10:30 ET release) ---
+  |move| at 10:30->10:31 (release bar): WED mean|r|=0.2079pt (n=180) vs non-WED 0.0676pt (n=721) -> ratio 3.08x
+  |move| at 10:29->10:30: WED mean|r|=0.0487pt (n=180) vs non-WED 0.0496pt (n=721) -> ratio 0.98x
+  RV(10:30-11:00): WED mean=0.5722pt vs non-WED 0.4008pt -> expansion 1.43x  (Welch t=+7.97)
+  PIT range: WED mean=2.229pt vs non-WED 2.067pt
+  post-release continuation (Wed): release-bar sign -> 10:31-11:00 move  P(continue)=50.0%  E[rest*sign(rel)]=-0.0255pt (n=176)
+  release-bar sign -> 10:31-14:30 (rest of pit): P(continue)=51.1%  E[restpit*sign(rel)]=+0.0131pt (n=176)
+
+--- (C) continuation vs reversal after a LARGE 1-min bar (PIT), multi-horizon ---
+    (event = |1-min move| > threshold; forward k-min = cumulative move over next k bars,
+     within the same session only; sign-projected onto the event direction) ---
+
+  large = >99.0th pct (=0.280pt), n_events=2696:
+    fwd  1-min: E[proj]=-0.0062pt (n=2691)  baseline=+0.0001pt  -> REVERSAL
+    fwd  3-min: E[proj]=-0.0010pt (n=2616)  baseline=-0.0002pt  -> REVERSAL
+    fwd  5-min: E[proj]=+0.0058pt (n=2591)  baseline=+0.0002pt  -> CONTINUATION
+    fwd 15-min: E[proj]=-0.0011pt (n=2531)  baseline=+0.0003pt  -> REVERSAL
+
+  large = >99.5th pct (=0.340pt), n_events=1422:
+    fwd  1-min: E[proj]=-0.0094pt (n=1421)  baseline=+0.0004pt  -> REVERSAL
+    fwd  3-min: E[proj]=-0.0022pt (n=1383)  baseline=+0.0000pt  -> REVERSAL
+    fwd  5-min: E[proj]=+0.0112pt (n=1371)  baseline=-0.0005pt  -> CONTINUATION
+    fwd 15-min: E[proj]=+0.0171pt (n=1341)  baseline=-0.0006pt  -> CONTINUATION
+
+--- (C2) abnormal-VOLUME bar -> next-move (PIT) ---
+  vol > 3x session-median: n=16200  E[next 1-min proj]=-0.0005pt  P(continue)=45.3%
+  vol > 5x session-median: n=4231  E[next 1-min proj]=-0.0025pt  P(continue)=43.6%
+  vol > 10x session-median: n=573  E[next 1-min proj]=+0.0001pt  P(continue)=44.9%
+
+READING: VR<1 + reversal-after-large-bar => intraday shocks tend to OVER-shoot and
+partially revert at the 1-min scale; a positive multi-minute projection at longer k
+would indicate genuine continuation. Compare (C) horizons and (B) EIA persistence.
+

@@ -1,0 +1,53 @@
+================================================================================================
+RETURNS (POINTS). $/pt(ZB)=1000; 1 tick=1/32=0.03125 pt=$31.25.
+================================================================================================
+
+[1a] Mean 1-min point-return by HOUR of day (ET) -- drift concentration:
+ hour    mean_pt     std_pt       sum_pt         n   mean_usd
+    0  -0.000052    0.02050       -1.844     35446    -0.0520
+    1   0.000006    0.02096        0.219     38946     0.0056
+    2   0.000082    0.02492        3.906     47834     0.0817
+    3  -0.000059    0.02746       -3.031     51681    -0.0587
+    4  -0.000009    0.02496       -0.469     50039    -0.0094
+    5  -0.000018    0.02316       -0.844     47804    -0.0177
+    6  -0.000074    0.02328       -3.688     49712    -0.0742
+    7  -0.000043    0.02708       -2.281     52747    -0.0432
+    8  -0.000253    0.04924      -13.844     54807    -0.2526
+    9   0.000110    0.03973        6.031     54911     0.1098
+   10   0.000033    0.04026        1.812     54793     0.0331
+   11  -0.000095    0.03258       -5.156     54470    -0.0947
+   12   0.000141    0.02822        7.562     53796     0.1406
+   13   0.000088    0.03118        4.594     52250     0.0879
+   14  -0.000189    0.02945       -9.844     52054    -0.1891
+   15   0.000152    0.02723        7.969     52310     0.1523
+   16   0.000049    0.02614        2.406     49509     0.0486
+   17  -0.000881    0.02758       -0.781       887    -0.8808
+   18  -0.000115    0.02486       -4.094     35686    -0.1147
+   19  -0.000090    0.02244       -3.188     35551    -0.0897
+   20   0.000095    0.02406        4.125     43233     0.0954
+   21   0.000119    0.02261        5.000     41927     0.1193
+   22   0.000024    0.02092        0.906     38138     0.0238
+   23  -0.000138    0.02053       -5.062     36697    -0.1380
+
+[1b] Session close-to-close point-return by DAY-OF-WEEK (trade date):
+       dow    mean_pt     std_pt      n   mean_usd       t
+       Mon    -0.1252     0.8160    183    -125.17   -2.07
+       Tue     0.0439     0.7542    186      43.85    0.79
+       Wed     0.0709     0.8941    185      70.95    1.08
+       Thu    -0.0622     0.7752    184     -62.16   -1.09
+       Fri    -0.0221     0.8243    184     -22.08   -0.36
+
+[1c] RTH-day return (open->close) vs OVERNIGHT return (prior RTH close -> RTH open), points:
+  RTH day (open->close)            mean   0.0024 pt  ($    2.40)  std   0.669  n  923  t   0.11  sum      2.22
+  Overnight (ETH+gap)              mean  -0.0220 pt  ($  -22.00)  std   0.494  n  922  t  -1.35  sum    -20.28
+  Full session (close->close)      mean  -0.0186 pt  ($  -18.57)  std   0.815  n  922  t  -0.69  sum    -17.12
+
+[1d] Today session cc-return CONDITIONAL on PRIOR-session cc-return sign (persistence vs reversal):
+  after prior UP  (>0)  : next cc mean  -0.0326 pt  n  447  t  -0.81
+  after prior DOWN (<0) : next cc mean   0.0062 pt  n  457  t   0.17
+  corr(prev_cc, next_cc) = -0.0235  (daily return autocorr lag-1)
+
+[1e] RTH-day return CONDITIONAL on OVERNIGHT return sign (does the gap continue or fade in RTH?):
+  overnight UP  (>0)  : RTH mean   0.0106 pt  n  417  t   0.32
+  overnight DOWN (<0) : RTH mean   0.0101 pt  n  482  t   0.34
+  corr(overnight_ret, rth_ret) = -0.0206

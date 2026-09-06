@@ -1,0 +1,101 @@
+============================================================================================
+CL MARKET AUTOPSY -- NATIVE SESSION DETERMINATION (from CL's own volume, not assumed)
+============================================================================================
+FREEZE: discovery window ONLY, sessions <= 2025-06-30 (holdout 2025-07-01->2026-07-31 and virgin >=2026-08-01 NOT read).
+Retained: 2022-01-03 .. 2025-06-30  n_sessions=901  n_bars=1,228,425
+Container: CME energy 18:00 ET -> 17:00 ET next day, maintenance halt 17:00-18:00.
+Point value $1,000/pt ($10/tick, tick $0.01). ALL stats below are POINT differences.
+
+--- volume share by HOUR of day (ET) ---
+  00:00   0.73%  ##
+  01:00   1.06%  ####
+  02:00   1.82%  #######
+  03:00   3.66%  ##############
+  04:00   4.25%  ################
+  05:00   3.46%  #############
+  06:00   3.15%  ############
+  07:00   3.63%  ##############
+  08:00   6.59%  ##########################
+  09:00  13.42%  #####################################################
+  10:00  12.63%  ##################################################
+  11:00  11.27%  #############################################
+  12:00   7.77%  ###############################
+  13:00   6.78%  ###########################
+  14:00   9.88%  #######################################
+  15:00   2.35%  #########
+  16:00   1.20%  ####
+  17:00   0.03%  
+  18:00   0.90%  ###
+  19:00   0.53%  ##
+  20:00   1.42%  #####
+  21:00   1.60%  ######
+  22:00   1.09%  ####
+  23:00   0.80%  ###
+
+--- top 12 single clock-minutes by total volume (open / settlement / release spikes) ---
+  14:30  share 1.070%  mean/sess    2397  coverage  98.1%
+  14:29  share 1.055%  mean/sess    2362  coverage  98.1%
+  09:01  share 0.560%  mean/sess    1229  coverage 100.0%
+  14:31  share 0.387%  mean/sess     877  coverage  96.9%
+  09:02  share 0.386%  mean/sess     848  coverage 100.0%
+  14:28  share 0.382%  mean/sess     856  coverage  98.0%
+  11:30  share 0.371%  mean/sess     815  coverage 100.0%
+  10:31  share 0.359%  mean/sess     789  coverage 100.0%
+  09:32  share 0.315%  mean/sess     691  coverage 100.0%
+  11:31  share 0.310%  mean/sess     682  coverage 100.0%
+  09:03  share 0.309%  mean/sess     678  coverage 100.0%
+  09:31  share 0.301%  mean/sess     662  coverage 100.0%
+
+Clock-minutes covering 90% of volume span 00:31 .. 21:07 ET.
+
+--- settlement clock evidence (14:28-14:32 ET) ---
+  14:27 share 0.279% mean/sess     625
+  14:28 share 0.382% mean/sess     856
+  14:29 share 1.055% mean/sess    2362
+  14:30 share 1.070% mean/sess    2397
+  14:31 share 0.387% mean/sess     877
+  14:32 share 0.199% mean/sess     452
+Peak single clock-minute = 14:30 ET -> CL SETTLEMENT is 14:30 ET.
+
+--- pit-open evidence (08:59-09:04 ET) ---
+  08:59 share 0.127% mean/sess     278
+  09:00 share 0.156% mean/sess     343
+  09:01 share 0.560% mean/sess    1229
+  09:02 share 0.386% mean/sess     848
+  09:03 share 0.309% mean/sess     678
+  09:04 share 0.268% mean/sess     588
+Volume steps up sharply at 09:01 (opens 09:00) -> CL PIT OPEN is 09:00 ET.
+
+--- ADOPTED SESSION PARTITION (economically grounded in the profile above) ---
+  PIT / US day session (RTH-equivalent) : [09:00, 14:30] ET  (pit open 09:00 -> settlement 14:30); carries 59.0% of volume in 5.5h.
+  European overlap (03:00-08:00 ET)     : 18.2% of volume (materially liquid -- CL overnight is NOT dead, unlike equity indices).
+  Overnight / inter-pit                 : complement (prev 14:30 settle -> today 09:00 open).
+  Maintenance halt 17:00-18:00 ET bar-count = 0 (confirms the daily break).
+  NOTE: CL's day session opens at 09:00 ET and closes at a hard 14:30 ET SETTLEMENT --
+        this is NOT NQ's 09:30-16:00. Settlement concentrates hedger/physical flow.
+
+============================================================================================
+CL SESSION STRUCTURE (descriptive, points basis)
+============================================================================================
+
+--- overnight (Globex, pre-09:00) high/low behavior during the PIT session ---
+  P(PIT takes out overnight HIGH) = 57.4%
+  P(PIT takes out overnight LOW)  = 49.4%
+  P(PIT takes out BOTH)           = 15.0%
+  P(PIT stays INSIDE overnight range) = 8.2%
+
+--- opening range (OR) from the 09:00 pit open, pt ---
+  OR15min: range mean=0.576pt median=0.490 P(break up later)=80.6% P(break dn later)=82.6%  P(day-high in OR)=19.4% P(day-low in OR)=17.4%
+  OR30min: range mean=0.728pt median=0.610 P(break up later)=75.8% P(break dn later)=77.9%  P(day-high in OR)=24.2% P(day-low in OR)=22.1%
+  OR60min: range mean=1.058pt median=0.880 P(break up later)=65.2% P(break dn later)=66.3%  P(day-high in OR)=34.8% P(day-low in OR)=33.7%
+
+--- gap behavior vs prior settlement (pt) ---
+  P(gap fills to prior settle during PIT) = 52.2%
+  gap-up (>0.10pt)  n=472  fill%=50.0  E[PIT ret]=-0.1240
+  gap-dn (<-0.10pt) n=359  fill%=48.7 E[PIT ret]=-0.0582
+
+--- prior-day PIT level interaction ---
+  P(today PIT touches prior-day HIGH) = 53.1%
+  P(today PIT touches prior-day LOW)  = 46.8%
+  P(today PIT range engulfs prior-day range) = 9.6%
+

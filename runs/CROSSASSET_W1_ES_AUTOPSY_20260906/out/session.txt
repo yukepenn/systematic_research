@@ -1,0 +1,85 @@
+ES MARKET AUTOPSY — SESSION STRUCTURE & NATIVE-SESSION DETERMINATION
+==============================================================================
+Retained boundary: sessions < 2026-08-01 (>=2026-08-01 hard-dropped).
+Data span: 2022-01-03 .. 2026-07-31  n_full_RTH_sessions=1139
+
+=== ES VOLUME / BAR-COUNT PROFILE by 30-min bucket (ET, END-stamp) ===
+Determines the NATIVE session from the market's own activity, not an assumption.
+
+clock  n_bars   tot_vol vol_share_%
+00:00   35373   3159856        0.18
+00:30   35386   3025399        0.17
+01:00   35441   3848471        0.22
+01:30   35442   4263458        0.24
+02:00   35452   6470934        0.37
+02:30   35455   5932808        0.34
+03:00   35460  13073162        0.74
+03:30   35458  10380953        0.59
+04:00   35441  11687374        0.66
+04:30   35460   9229320        0.52
+05:00   35458   8725212        0.49
+05:30   35484   8215402        0.46
+06:00   35488   8882554        0.50
+06:30   35480   9214673        0.52
+07:00   35490  12078191        0.68
+07:30   35490  12994575        0.73
+08:00   35490  18154597        1.03
+08:30   35507  36289511        2.05
+09:00   35492  33591968        1.90
+09:30   35428 188510118       10.65
+10:00   35421 154288705        8.72
+10:30   35411 124804254        7.05
+11:00   35429 105838520        5.98
+11:30   35425  93007539        5.25
+12:00   35426  79767166        4.51
+12:30   35428  73628289        4.16
+13:00   34347  74877871        4.23
+13:30   34166  71147059        4.02
+14:00   34170  78820233        4.45
+14:30   34170  81371732        4.60
+15:00   34170  88328556        4.99
+15:30   34170 142882743        8.07
+16:00   34161 121428605        6.86
+16:30   34168  11375364        0.64
+17:00    1137   1266753        0.07
+18:00   34262   7534647        0.43
+18:30   35401   4249302        0.24
+19:00   35364   4631978        0.26
+19:30   35401   4418088        0.25
+20:00   35455   7030103        0.40
+20:30   35484   5743501        0.32
+21:00   35486   5442174        0.31
+21:30   35467   5370926        0.30
+22:00   35448   4489191        0.25
+22:30   35429   3849753        0.22
+23:00   35410   3559250        0.20
+23:30   35404   3167936        0.18
+
+Active minutes present: 1380 distinct minute-of-day stamps (out of 1440).
+Minutes present in >=50% of sessions span 00:00 to 23:59 (END-stamp).
+RTH core (09:30-16:00 ET) carries 79.9% of total volume (28.0% of bars).
+Maintenance window 17:00-18:00 ET bar-count = 0 (near-zero confirms the ETH break).
+
+=== SESSION STRUCTURE (descriptive, points basis) ===
+
+--- overnight high/low behavior during RTH ---
+P(RTH takes out overnight HIGH) = 52.5%
+P(RTH takes out overnight LOW)  = 49.3%
+P(RTH takes out BOTH on/night extremes) = 18.3%
+P(RTH stays INSIDE overnight range) = 16.6%
+
+--- opening range (OR), pt ---
+OR15min: range mean=17.24pt median=14.50  P(break up later)=82.4% P(break dn later)=79.5%  P(day-high in OR)=17.6% P(day-low in OR)=20.5%
+OR30min: range mean=23.08pt median=20.25  P(break up later)=75.4% P(break dn later)=71.6%  P(day-high in OR)=24.6% P(day-low in OR)=28.4%
+OR60min: range mean=31.73pt median=27.50  P(break up later)=65.8% P(break dn later)=61.4%  P(day-high in OR)=34.2% P(day-low in OR)=38.6%
+
+--- gap behavior (pt) ---
+P(gap fills to prior close during RTH) = 62.5%
+  gap-up (>2pt)  n=567  fill%=60.0  E[RTH ret]=-1.06
+  gap-dn (<-2pt) n=484  fill%=59.5 E[RTH ret]=3.00
+
+--- prior-day RTH level interaction ---
+P(today RTH touches prior-day HIGH) = 55.4%
+P(today RTH touches prior-day LOW)  = 46.4%
+P(today's RTH range engulfs prior-day range) = 10.6%
+

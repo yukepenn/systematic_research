@@ -1,0 +1,31 @@
+================================================================================================
+DEPENDENCE (POINTS).
+================================================================================================
+
+[3a] Return autocorrelation:
+  1-min ret ACF lags 1..10:
+    -0.1460  -0.0121  -0.0071  -0.0038  -0.0024  -0.0018  +0.0006  -0.0006  -0.0027  +0.0030
+  daily ret ACF lags 1..10:
+    -0.0235  -0.0443  +0.0136  +0.0113  -0.0376  -0.0509  +0.0626  +0.0611  -0.0471  -0.0220
+
+[3b] Sign persistence P(next same sign | this sign):
+  1-min: P(same sign) = 0.3629   P(up) = 0.2374   base-rate if iid = 0.6379
+  daily: P(same sign) = 0.4978   P(up) = 0.4848   base-rate if iid = 0.5005
+
+[3c] Volatility autocorrelation (ACF of |ret|):
+  |1-min ret| ACF lags 1..10:
+    +0.1831  +0.1445  +0.1352  +0.1335  +0.1324  +0.1267  +0.1238  +0.1229  +0.1224  +0.1255
+  |daily ret| ACF lags 1..10:
+    +0.1232  +0.1217  +0.1177  +0.1852  +0.1396  +0.1135  +0.0851  +0.0893  +0.1306  +0.0945
+  daily RV ACF lags 1..10 (vol clustering):
+    +0.5827  +0.5238  +0.4710  +0.4083  +0.3532  +0.2723  +0.2765  +0.2135  +0.2086  +0.1866
+
+[3d] Variance ratio VR(q) (Lo-MacKinlay; >1 trend, <1 mean-revert):
+  1-min returns:  VR(2)=0.854  VR(5)=0.745  VR(10)=0.699  VR(30)=0.660  VR(60)=0.650
+  daily returns:  VR(2)=0.976  VR(3)=0.939  VR(5)=0.924  VR(10)=0.889  VR(20)=0.864
+
+[3e] Conditional continuation vs reversal after a LARGE 1-min move (top-decile |ret|):
+  large-move threshold (90th pct |1-min ret|) = 0.0312 pt
+  after large UP  : next-bar mean -0.00709 pt  (n 257399)  [continuation if >0]
+  after large DOWN: next-bar mean +0.00693 pt  (n 256885)  [continuation if <0]
+  signed continuation (dir-aligned next-bar mean) = -0.00701 pt  (>0 momentum, <0 reversal)

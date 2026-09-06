@@ -1,0 +1,41 @@
+================================================================================================
+DISTRIBUTION (POINTS). All figures point differences; NO percent-of-price (DELEV01).
+================================================================================================
+
+[1-min close-to-close point return]  n=1,085,228
+  mean -0.000009 pt   std 0.02912 pt   (std $29.12)
+  skew -0.2109   excess-kurtosis +51.7465
+  min -1.4062  max +1.4062  pt
+  quantiles pt [0.1,1,5,25,50,75,95,99,99.9]:
+    -0.1250  -0.0625  -0.0312  +0.0000  +0.0000  +0.0000  +0.0312  +0.0625  +0.1250
+
+[Daily (session) close-to-close point return]  n=922
+  mean -0.018574 pt   std 0.81503 pt   (std $815.03)
+  skew -0.0911   excess-kurtosis +1.4035
+  min -4.4062  max +3.0312  pt
+  quantiles pt [0.1,1,5,25,50,75,95,99,99.9]:
+    -3.3126  -1.9869  -1.3734  -0.5312  +0.0000  +0.4922  +1.2812  +1.9869  +2.8873
+
+[2a] Extreme 1-min move frequency (|point ret| thresholds):
+  |ret| >=   2 ticks (0.0625 pt = $  62.50):   74946 bars   6.9060%  ~1 per 14 bars
+  |ret| >=   4 ticks (0.1250 pt = $ 125.00):    4774 bars   0.4399%  ~1 per 227 bars
+  |ret| >=   8 ticks (0.2500 pt = $ 250.00):     435 bars   0.0401%  ~1 per 2,495 bars
+  |ret| >=  16 ticks (0.5000 pt = $ 500.00):      71 bars   0.0065%  ~1 per 15,285 bars
+  |ret| >=  32 ticks (1.0000 pt = $1000.00):      11 bars   0.0010%  ~1 per 98,657 bars
+  1-min: empirical |99th| = 0.0938 pt vs Gaussian 2.576*sd = 0.0750 pt  (fat-tail ratio 1.25x)
+  daily: empirical |99th| = 2.2434 pt vs Gaussian 2.576*sd = 2.0995 pt  (fat-tail ratio 1.07x)
+
+[2b] OVERNIGHT GAP distribution (prior RTH close -> today RTH open), points:
+  mean -0.0220  std 0.4941  skew -0.243  kurt +4.234  n 922
+  quantiles pt [1,5,25,50,75,95,99]: -1.1366  -0.6875  -0.3672  -0.0312  +0.2812  +0.7500  +1.2500
+  median |gap| / RTH-range = 0.347
+
+[2c] RTH-day range vs OVERNIGHT range (points):
+  RTH range            mean  0.9944  median  0.9062  std  0.4737  p95  1.9344
+  Overnight range      mean  1.0171  median  0.8750  std  0.5370  p95  2.0281
+  Full-session range   mean  1.2262  median  1.0938  std  0.5612  p95  2.2188
+  median RTH-range / full-session-range = 0.857  (share of daily range made in RTH)
+
+[2d] Daily realized volatility (sqrt sum of 1-min squared point returns), points:
+  mean 0.9659  median 0.9233  std 0.2527  p5 0.7071  p95 1.3816  n 923
+  in $: mean daily RV ~= $966

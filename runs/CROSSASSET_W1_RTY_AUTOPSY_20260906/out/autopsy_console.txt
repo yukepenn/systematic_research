@@ -1,0 +1,313 @@
+==========================================================================================
+MARKET AUTOPSY — RTY (E-mini Russell 2000), point value $50.  DESCRIPTIVE, DISCOVERY_CONSUMED.
+POINTS BASIS ONLY (additively back-adjusted substrate; DELEV01 law).
+==========================================================================================
+[LOAD RTY] rows=1568111 -> 1568111 after seal-drop (dropped 0 rows with session >= 2026-08-01)
+[LOAD RTY] retained time range: 2022-01-02 18:01:00 .. 2026-07-31 16:59:00
+[LOAD RTY] retained session range: 2022-01-03 .. 2026-07-31  (n sessions=1177)
+RTY NATIVE-SESSION VOLUME PROFILE (from RTY's own data — not assumed)
+================================================================================
+Volume by HOUR (ET, END-stamp):
+           sum  count  vol_share_%
+time                              
+0       581143  60962         0.26
+1       768337  65232         0.35
+2      1301102  69081         0.59
+3      2695145  70360         1.23
+4      2609341  70332         1.19
+5      2165684  70174         0.98
+6      2435139  70286         1.11
+7      3400430  70428         1.55
+8      8329333  70541         3.79
+9     36215997  70539        16.47
+10    33656905  70466        15.31
+11    21945451  70490         9.98
+12    16404359  70464         7.46
+13    15287889  68147         6.95
+14    17116837  67921         7.78
+15    27372078  67920        12.45
+16    21031255  67849         9.56
+17      108677   1131         0.05
+18     1640912  66393         0.75
+19     1060822  66273         0.48
+20     1312477  68583         0.60
+21     1044147  67213         0.47
+22      802487  65056         0.36
+23      613185  62270         0.28
+
+Distinct minute-of-day buckets present: 1380  (1380 = 23h => ETH spans 18:00->17:00 with a 17:00-18:00 break)
+
+Minute-of-day volume around key boundaries (mod = HH*60+MM of END-stamp):
+  -- RTH OPEN 09:25-09:40 --
+    09:25  vol=    147495
+    09:26  vol=    240364
+    09:27  vol=    184999
+    09:28  vol=    227235
+    09:29  vol=    283643
+    09:30  vol=    583571
+    09:31  vol=   3392888
+    09:32  vol=   2042889
+    09:33  vol=   1699378
+    09:34  vol=   1383172
+    09:35  vol=   1252934
+    09:36  vol=   1359595
+    09:37  vol=   1167655
+    09:38  vol=   1072506
+    09:39  vol=   1013235
+    09:40  vol=    951279
+  -- RTH CLOSE 15:55-16:05 --
+    15:55  vol=    912889
+    15:56  vol=   1222813
+    15:57  vol=    969628
+    15:58  vol=   1143679
+    15:59  vol=   1711859
+    16:00  vol=   9973635
+    16:01  vol=   2689807
+    16:02  vol=    811498
+    16:03  vol=    553456
+    16:04  vol=    439219
+    16:05  vol=    406875
+  -- MAINT BREAK 16:58-18:03 --
+    16:58  vol=     73932
+    16:59  vol=     77881
+    17:00  vol=    108677
+    18:01  vol=    172261
+    18:02  vol=     86691
+    18:03  vol=     61070
+
+DETERMINED NATIVE SESSION:
+  ETH (full electronic): 18:00 -> 17:00 ET next day (~23h), maintenance halt 17:00-18:00 ET.
+  RTH (cash-equity core): 09:30 -> 16:00 ET (first bar END-stamped 09:31 opens 09:30;
+       last bar END-stamped 16:00; the 16:00 print carries the settlement volume spike).
+  Volume mass: hours 09-10 (open drive) + 15-16 (cash close) dominate; 17:00 hour ~0 (break).
+  This is CME equity-index structure CONFIRMED from RTY's own tape, NOT copied from NQ.
+
+[ANCHORS] sessions in table: 1175; half-days (RTH ended <16:00): 43
+[ANCHORS] identity check ret_c2c == ret_on+ret_rth : max abs diff = 0.000000 pts
+RTY RETURNS — POINTS BASIS.  point value $50/pt.
+==========================================================================================
+
+[A1] POINT-RETURN BY TIME-OF-DAY (30-min buckets of contiguous 1-min close-to-close, POINTS)
+  clock=bucket start (ET, END-stamp); mean/std/sum in POINTS; t = mean/(std/sqrt(n)).
+clock           seg     n  mean_pt  std_pt     sum_pt   t_stat
+00:00 ETH_overnight 27024 -0.00052 0.38569  -14.10000 -0.22238
+00:30 ETH_overnight 26954 -0.00275 0.36797  -74.10000 -1.22656
+01:00 ETH_overnight 29949  0.00145 0.41893   43.40000  0.59862
+01:30 ETH_overnight 31004  0.00041 0.43655   12.60000  0.16392
+02:00 ETH_overnight 33763  0.00369 0.52510  124.60000  1.29140
+02:30 ETH_overnight 34017 -0.00326 0.47873 -110.80000 -1.25488
+03:00 ETH_overnight 35135  0.00235 0.78048   82.40000  0.56324
+03:30 ETH_overnight 35081  0.00397 0.63540  139.10000  1.16881
+04:00 ETH_overnight 35136  0.00510 0.69597  179.30000  1.37440
+04:30 ETH_overnight 35051 -0.00202 0.59951  -70.80000 -0.63079
+05:00 ETH_overnight 34999  0.00071 0.56678   24.70000  0.23295
+05:30 ETH_overnight 34849  0.00258 0.53009   89.90000  0.90847
+06:00 ETH_overnight 34980 -0.00221 0.60851  -77.20000 -0.67833
+06:30 ETH_overnight 35045  0.00346 0.57693  121.10000  1.12126
+07:00 ETH_overnight 35139  0.00746 0.75667  262.10000  1.84785
+07:30 ETH_overnight 35166  0.00027 0.66515    9.40000  0.07536
+08:00 ETH_overnight 35224 -0.00510 0.73183 -179.70000 -1.30834
+08:30 ETH_overnight 35275 -0.00018 1.61699   -6.50000 -0.02140
+09:00 ETH_overnight 35290 -0.01279 0.82245 -451.40000 -2.92165
+09:30           RTH 35243  0.00836 2.08471  294.70000  0.75300
+10:00           RTH 35236 -0.00626 1.77523 -220.60000 -0.66200
+10:30           RTH 35221 -0.00185 1.38955  -65.30000 -0.25040
+11:00           RTH 35248  0.00177 1.21328   62.30000  0.27350
+11:30           RTH 35237  0.00097 1.07845   34.10000  0.16844
+12:00           RTH 35208 -0.00402 1.00253 -141.40000 -0.75168
+12:30           RTH 35223 -0.00476 0.96477 -167.80000 -0.92673
+13:00           RTH 34163 -0.00059 1.08768  -20.00000 -0.09948
+13:30           RTH 33976  0.01095 0.95390  371.90000  2.11514
+14:00           RTH 33964 -0.00118 1.10388  -40.00000 -0.19662
+14:30           RTH 33956  0.00383 1.09989  130.20000  0.64240
+15:00           RTH 33960 -0.00438 1.03188 -148.60000 -0.78146
+15:30           RTH 33960 -0.00273 1.06762  -92.70000 -0.47117
+16:00 ETH_overnight 33939  0.00539 0.76987  182.80000  1.28886
+16:30 ETH_overnight 33850  0.00040 0.45685   13.40000  0.15942
+17:00 ETH_overnight  1131 -0.00336 0.58143   -3.80000 -0.19434
+18:00 ETH_overnight 31083 -0.00054 0.74840  -16.70000 -0.12657
+18:30 ETH_overnight 31826  0.00241 0.53500   76.60000  0.80257
+19:00 ETH_overnight 31168 -0.00285 0.50711  -88.80000 -0.99188
+19:30 ETH_overnight 31731 -0.00342 0.48192 -108.60000 -1.26506
+20:00 ETH_overnight 33818  0.00055 0.62453   18.60000  0.16195
+20:30 ETH_overnight 33106 -0.00006 0.53432   -2.10000 -0.02160
+21:00 ETH_overnight 32485 -0.00076 0.51543  -24.80000 -0.26695
+21:30 ETH_overnight 32013  0.00351 0.49376  112.50000  1.27342
+22:00 ETH_overnight 31142 -0.00178 0.43866  -55.50000 -0.71695
+22:30 ETH_overnight 29690 -0.00184 0.41315  -54.50000 -0.76557
+23:00 ETH_overnight 28455  0.00449 0.38698  127.80000  1.95777
+23:30 ETH_overnight 27696 -0.00117 0.36577  -32.40000 -0.53226
+
+[A2] SESSION vs OVERNIGHT (per-session POINT returns)
+  RTH intraday (open->close)   n= 1175  mean=+0.0448  std=24.530  sum=+52.6  skew=+0.078  exkurt=+3.10
+  Overnight (pClose->open)     n= 1174  mean=+0.2927  std=18.224  sum=+343.6  skew=-0.071  exkurt=+5.51
+  Close-to-close (daily)       n= 1174  mean=+0.3239  std=29.421  sum=+380.3  skew=+0.032  exkurt=+1.47
+  => share of total drift: RTH sum=+52.6pt  ON sum=+343.6pt
+
+[A3] DAY-OF-WEEK (per-session POINT returns; 0=Mon .. 4=Fri)
+  Mon  c2c n= 233 mean=+2.9798 std=24.814 | RTH mean=+1.8154 | ON mean=+1.2249
+  Tue  c2c n= 238 mean=+0.4387 std=27.664 | RTH mean=+1.4592 | ON mean=-1.0206
+  Wed  c2c n= 236 mean=+0.2394 std=31.233 | RTH mean=-1.8627 | ON mean=+2.1021
+  Thu  c2c n= 234 mean=-0.8778 std=31.801 | RTH mean=-0.6179 | ON mean=-0.2598
+  Fri  c2c n= 233 mean=-1.1567 std=31.053 | RTH mean=-0.5807 | ON mean=-0.5760
+
+[A4] CONDITIONAL ON PRIOR SIGN (continuation vs reversal, POINTS)
+  prior daily c2c sign -> today daily c2c
+     after UP   : n= 601 mean=-0.8354 std=28.990 P(out>0)= 48.6%
+     after DOWN : n= 570 mean=+1.5281 std=29.879 P(out>0)= 54.0%
+  prior RTH sign -> today RTH
+     after UP   : n= 594 mean=-0.3074 std=23.093 P(out>0)= 50.2%
+     after DOWN : n= 580 mean=+0.3781 std=25.947 P(out>0)= 50.9%
+  today overnight sign -> today RTH (does the gap continue?)
+     after UP   : n= 614 mean=-0.9073 std=24.263 P(out>0)= 51.0%
+     after DOWN : n= 559 mean=+1.1132 std=24.804 P(out>0)= 50.1%
+RTY DISTRIBUTION — POINTS BASIS.
+==========================================================================================
+
+[B] daily close-to-close: n=1174 mean=+0.3239 std=29.4208 skew=+0.032 exkurt=+1.47 POINTS
+     pctiles(pt) 0.1%=-106.58 1%=-76.49 5%=-46.93 25%=-17.88 50%=+0.90 75%=+18.90 95%=+47.23 99%=+68.44 99.9%=+127.87
+     min=-134.40 max=+150.60  (in $: 1pt=$50; std=$1,471)
+     |z|>2: empirical  4.429%  (gaussian  4.550%)
+     |z|>3: empirical  0.681%  (gaussian  0.270%)
+     |z|>4: empirical  0.256%  (gaussian  0.006%)
+     |z|>5: empirical  0.085%  (gaussian  0.000%)
+
+[B] RTH intraday: n=1175 mean=+0.0448 std=24.5304 skew=+0.078 exkurt=+3.10 POINTS
+     pctiles(pt) 0.1%=-105.97 1%=-63.70 5%=-39.56 25%=-14.10 50%=+0.40 75%=+14.80 95%=+38.59 99%=+60.23 99.9%=+96.25
+     min=-118.60 max=+171.90  (in $: 1pt=$50; std=$1,227)
+     |z|>2: empirical  4.426%  (gaussian  4.550%)
+     |z|>3: empirical  1.106%  (gaussian  0.270%)
+     |z|>4: empirical  0.340%  (gaussian  0.006%)
+     |z|>5: empirical  0.085%  (gaussian  0.000%)
+
+[B] overnight: n=1174 mean=+0.2927 std=18.2241 skew=-0.071 exkurt=+5.51 POINTS
+     pctiles(pt) 0.1%=-95.11 1%=-50.15 5%=-27.17 25%=-8.80 50%=+0.65 75%=+10.17 95%=+27.10 99%=+50.36 99.9%=+85.94
+     min=-113.40 max=+124.80  (in $: 1pt=$50; std=$911)
+     |z|>2: empirical  4.514%  (gaussian  4.550%)
+     |z|>3: empirical  1.193%  (gaussian  0.270%)
+     |z|>4: empirical  0.511%  (gaussian  0.006%)
+     |z|>5: empirical  0.256%  (gaussian  0.000%)
+
+[B] 1-min RTH: n=450552 mean=+0.0002 std=1.2652 skew=+0.582 exkurt=+35.89 POINTS
+     pctiles(pt) 0.1%=-6.30 1%=-3.50 5%=-1.90 25%=-0.60 50%=+0.00 75%=+0.60 95%=+1.90 99%=+3.50 99.9%=+6.80
+     min=-37.80 max=+56.50  (in $: 1pt=$50; std=$63)
+     |z|>2: empirical  4.888%  (gaussian  4.550%)
+     |z|>3: empirical  1.556%  (gaussian  0.270%)
+     |z|>4: empirical  0.538%  (gaussian  0.006%)
+     |z|>5: empirical  0.225%  (gaussian  0.000%)
+
+[B-GAP] OPENING GAP = RTH_open(D) - RTH_close(D-1), POINTS
+  n=1174 mean=+0.2927 std=18.224 skew=-0.071 exkurt=+5.51
+  |gap| median=9.600pt mean=12.919pt
+  pctiles 1%=-50.15 5%=-27.17 25%=-8.80 50%=+0.65 75%=+10.17 95%=+27.10 99%=+50.36
+  P(gap up)=52.3%  P(|gap|<2pt)=11.9%  P(|gap|>10pt)=48.2%
+
+[B-RANGE] RANGE (POINTS): RTH high-low vs OVERNIGHT high-low
+  RTH range          mean= 36.679 med= 32.400 std= 18.350 p5= 16.40 p95=  68.15 max= 207.40
+  Overnight range    mean= 26.848 med= 22.300 std= 17.037 p5= 10.67 p95=  57.80 max= 159.20
+  Opening-range 30m  mean= 17.466 med= 16.400 std=  6.829 p5=  8.67 p95=  29.90 max=  56.90
+  RTH/Overnight range ratio: median=1.442 mean=1.646
+
+[B-RV] REALIZED VOL per session (sqrt sum sq 1-min POINT returns)
+  RTH  RV: mean=22.941 med=21.160 p95=39.21
+  ONite RV: mean=17.794 med=14.900 p95=35.71
+  RTH/ON RV ratio (median of per-session): 1.395
+RTY DEPENDENCE — POINTS BASIS.
+==========================================================================================
+
+[C1] RETURN AUTOCORRELATION (ACF)
+  daily c2c    L1=-0.0160 L2=-0.0418 L3=-0.0066 L4=-0.0207 L5=+0.0275 L10=-0.0156 L20=+0.0273
+  RTH          L1=-0.0301 L2=-0.0483 L3=-0.0704 L4=-0.0321 L5=+0.0095 L10=-0.0074 L20=-0.0166
+  overnight    L1=+0.0463 L2=-0.0543 L3=+0.0028 L4=+0.0225 L5=+0.0474 L10=+0.0160 L20=+0.0254
+  1-min RTH    L1=+0.0008 L2=+0.0000 L3=-0.0012 L4=+0.0046 L5=-0.0017 L10=+0.0002 L20=+0.0083
+
+[C2] SIGN PERSISTENCE
+  daily c2c    P(same sign as prev)= 47.4%  P(up)= 51.2%  (indep would be  50.0%)
+  RTH          P(same sign as prev)= 49.7%  P(up)= 50.6%  (indep would be  50.0%)
+  overnight    P(same sign as prev)= 51.5%  P(up)= 52.3%  (indep would be  50.1%)
+
+[C3] VOLATILITY AUTOCORRELATION (|ret| and RV clustering)
+  |daily c2c|  L1=+0.0919 L2=+0.0349 L3=+0.0552 L4=+0.0866 L5=+0.0512 L10=-0.0440 L20=-0.0019
+  RTH RV       L1=+0.5946 L2=+0.5427 L3=+0.4427 L4=+0.3829 L5=+0.3476 L10=+0.2464 L20=+0.1686
+  daily range  L1=+0.4174 L2=+0.3777 L3=+0.2937 L4=+0.2625 L5=+0.2552 L10=+0.1339 L20=+0.1298
+
+[C4] VARIANCE RATIO (Lo-MacKinlay, overlapping). VR<1 mean-revert, >1 trend/persistent.
+  daily c2c    VR(2)=0.986  VR(5)=0.913  VR(10)=0.870  VR(20)=0.801
+  RTH          VR(2)=0.971  VR(5)=0.826  VR(10)=0.770  VR(20)=0.724
+  1-min RTH    VR(2)=1.001  VR(5)=1.002  VR(10)=0.999  VR(20)=0.989
+
+[C5] CONDITIONAL CONTINUATION vs REVERSAL (magnitude, POINTS)
+  prior bottom-tercile   today c2c mean=+1.8077 std=30.600 n=391 P(up)= 53.7%
+  prior mid              today c2c mean=-0.2938 std=27.618 n=390 P(up)= 48.5%
+  prior top-tercile      today c2c mean=-0.5321 std=30.010 n=392 P(up)= 51.5%
+RTY PATH STRUCTURE — POINTS BASIS. (RTH session as the unit of a path)
+==========================================================================================
+
+[D1] EFFICIENCY RATIO (Kaufman) per RTH session = |net| / sum|1-min step|.  1=straight, 0=noise.
+  ER: mean=0.0573 med=0.0503 p10=0.0099 p90=0.1156
+  TORTUOSITY (1/ER): median=19.867
+  (low ER => choppy/noisy intraday path; high ER => directional/trending day)
+  daily path length (sum|1-min step|, pts): mean=328.61 med=304.70
+  net |displacement| (pts): mean=18.46 med=14.60
+
+[D2] MFE / MAE per RTH session (long-frame from RTH open, POINTS)
+  MFE (max high-open)    mean= 17.844 med= 13.900 p90=  37.78
+  MAE (open-min low)     mean= 18.835 med= 14.900 p90=  40.56
+  On UP days   (net>0): median MFE=23.80 median MAE(heat)=7.10  -> heat/target=0.30
+  On DOWN days (net<0): median MAE=25.40 median MFE(heat)=6.50
+
+[D3] COMPRESSION / EXPANSION (range clustering)
+  today RTH range / trailing-20 mean range: median=0.929 p10=0.564 p90=1.565
+  RTH-range ACF: L1=+0.4174 L2=+0.3777 L3=+0.2937 L5=+0.2552 L10=+0.1339
+  next-day RTH range after a bottom-tercile (compressed) day: mean=30.30 vs after non-compressed 39.86
+RTY SESSION STRUCTURE — POINTS BASIS. (descriptive geometry, not strategies)
+==========================================================================================
+
+[E1] OVERNIGHT HIGH/LOW takeout by RTH
+  RTH takes out overnight HIGH: 60.1%   overnight LOW: 60.8%
+  takes out BOTH: 26.7%   NEITHER (RTH inside overnight range): 5.7%
+
+[E2] OPENING RANGE (first 30 min, 09:30-10:00)
+  OR range as % of full RTH range: median=50.7%
+  session HIGH set inside OR window: 35.8%   session LOW inside OR: 33.7%
+  RTH stays entirely inside the OR (no breakout either side): 0.9%
+  when OR high is broken, close finishes above OR high: 54.1%
+
+[E3] GAP behavior (POINTS)
+  gap-up sessions: 614 (52.3%); gap filled (RTH trades back to prev close): 63.7%
+  gap-dn sessions: 559 (47.6%); gap filled: 60.3%
+  gap-up  -> RTH ret mean=-0.907pt (continuation if >0)
+  gap-dn  -> RTH ret mean=+1.113pt
+
+[E4] PRIOR-DAY LEVELS (PDH/PDL touch by today's RTH)
+  RTH touches prior-day HIGH (PDH): 50.4%
+  RTH touches prior-day LOW  (PDL): 49.7%
+  RTH stays inside prior-day range: 10.5%
+
+[E5] HALF-DAY / DATA notes
+  half-day sessions (RTH ended <16:00): 43 of 1175 (US early closes 13:00/13:15).
+  These are retained for daily-return continuity but flagged; excluding them changes RTH means negligibly.
+[LOAD NQ] rows=1620044 -> 1620044 after seal-drop (dropped 0 rows with session >= 2026-08-01)
+[LOAD NQ] retained time range: 2022-01-02 18:01:00 .. 2026-07-31 16:59:00
+[LOAD NQ] retained session range: 2022-01-03 .. 2026-07-31  (n sessions=1184)
+RTY <-> NQ DAILY POINT-RETURN CORRELATION (diversification pre-read)
+==========================================================================================
+
+  shared sessions (dev window, <2026-08-01): 1174
+  window: 2022-01-04 .. 2026-07-31
+  daily close-to-close   Pearson rho=+0.7506   Spearman=+0.7226   (POINT-return basis)
+  RTH intraday           Pearson rho=+0.7444   Spearman=+0.6853   (POINT-return basis)
+
+  per-year daily c2c Pearson rho (points):
+    2022: rho=+0.9062  (n=257)
+    2023: rho=+0.6178  (n=251)
+    2024: rho=+0.6001  (n=259)
+    2025: rho=+0.8039  (n=257)
+    2026: rho=+0.7472  (n=150)
+
+  OLS slope d(RTY_pt)/d(NQ_pt) = 0.0856 pts/pt (informational; not a hedge ratio in $)
+  In $ terms 1 RTY-pt=$50, 1 NQ-pt=$20.
+
+  READ: RTY is another CME equity-index; expect HIGH co-movement with NQ. A high rho means
+  RTY as a *directional clone* adds little diversification — its value to the book would have
+  to come from a NATIVE mechanism whose *underwater curve* decouples, not from the index itself.

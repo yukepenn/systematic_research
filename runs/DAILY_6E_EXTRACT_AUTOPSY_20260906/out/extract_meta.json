@@ -1,0 +1,24 @@
+{
+  "root": "6E",
+  "sector": "fx",
+  "point_value": 125000,
+  "rows": 4273,
+  "first_session": "2009-03-30",
+  "last_session": "2026-07-31",
+  "seal_boundary_retained": "2026-07-31",
+  "seal_assert": "max session 2026-07-31 < 2026-08-01 : True",
+  "contracts_used": 71,
+  "roll_method": "causal volume-crossover (t-1 volume) + 5-day pre-expiry override, one-way (roll.py s6). FX SPECIFIC REALITY: 6E produces 1 VOLUME_CROSSOVER rolls and 69 PRE_EXPIRY_OVERRIDE rolls, so the 6E roll is EFFECTIVELY A FIXED 5-DAY-PRE-EXPIRY RULE (contract lives barely overlap; median ~3 sessions). This is s6-sanctioned when volume cannot be trusted, and is named rather than implied.",
+  "roll_counts": {
+    "volume_crossover": 1,
+    "pre_expiry_override": 69,
+    "initialise": 1
+  },
+  "point_return_reproduction": {
+    "n": 4227,
+    "max_abs_err_vs_certified_s7": 0.0,
+    "note": "our ret_points reproduces research/multi_market/out/economic_returns.parquet (6E) exactly \u2014 the certified basis-invariant s7 construction was reused, not re-derived."
+  },
+  "sha256_6e_daily_parquet": "af70be2d857019b932be715feb8d3362233da6f9278f6e75687b121e8aa19eae",
+  "reader": "research/multi_market/src/ncd_day.py::read_ncd_day (48-byte DAY record; hdr28 int32 ver|f64 tick|f64 firstPrice|i64 firstTicks; rec48 i64 ticks|f64 OHLC|i64 vol). PURE PYTHON, no NT8."
+}
