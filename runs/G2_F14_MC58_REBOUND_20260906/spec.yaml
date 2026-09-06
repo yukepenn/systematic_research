@@ -1,0 +1,80 @@
+run_id: G2_F14_MC58_REBOUND_20260906
+campaign: GENESIS_II (Formal Wave 6)
+card: MC-58 (breadth-washout REBOUND, long side). Skeptic verdict TRIAGE-MED (modern leg; era
+  leg DATA-GATED + sequential). This spec is the skeptic's FROZEN PRIMARY (modern leg) transcribed.
+stage: "Stage-5 falsifier — a DIRECT PROFIT test (mean net $/event of a long). The era leg is
+  NOT in this run (data-gated: local pre-2022 $TICK is non-contiguous 2013/2015/2017)."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+why: |
+  MC-41 banked a real state fact: P(afternoon takes morning low | bottom-tercile 11:00 cum TICK)
+  = 58.6% vs 48.9% matched, +9.62pp, p 0.0019 (G00030, control-beating). The AFTERNOON-SHORT
+  monetization was killed (G2_F6_BREADTHPM01: worse than random shorts; washout-then-rebound
+  shape recorded). This tests the REBOUND (long) side of that same washout, which G00033's own
+  closure said "enters the queue only through a fresh card with the graveyard history addressed."
+
+anti_rescue_gate: |
+  W118 closed event-driven reversal at endogenous triggers (continuation +$374 at the same bars);
+  this IS a long reversal at an endogenous intraday trigger. The ONLY discriminator vs the fade
+  graveyard (TICK fade, sweep-reclaim, seven 2022-era geometries, SWEEP01 generic post-cross MR)
+  is the single banked state fact +9.62pp/G00030. Therefore B2(i) — beating the same trigger on
+  NON-bottom-tercile takeout sessions — is THE PRIMARY GATE, not a robustness rung. Direction,
+  entry anchor (event-time takeout vs state-time 11:01), and population (~154 takeout vs 263) are
+  materially different from the barred full-window mirror long; any drift toward 11:01 full-window
+  in execution VOIDS the run.
+
+frozen_primary_modern_leg:
+  population: "bottom-tercile (trailing-252 causal) 11:00 cumulative adjusted-TICK sessions whose
+    afternoon 1-min low TAKES OUT the morning 1-min low (POINTS), G00030 construction verbatim on
+    the manifest-checked pair (TICK_1m sha256 72612a1e..., nq_1m sha256 87aa53f0...),
+    2023-01 -> 2026-05-31, expected n ~= 154. Program prints n, events/yr, pre/post-breach
+    decomposition, B1 mean-MDE AND B2 increment-MDE BEFORE any return table."
+  statistic: "mean net $/event of LONG 1 NQ at the open of the first 1-min bar AFTER the first
+    afternoon takeout bar, exit at the 15:59-stamped close, NO stop, at $40/RT ALL_IN
+    ($25.01/$33 printed non-gate)."
+  cost_basis: "ALL_IN $40/RT (the p90-spread regime: buying a fresh afternoon low on a
+    weak-breadth tape). EVIDENCE: EXEC01-derived stressed floor."
+
+gates:  # program-printed
+  G0_seal: "max session <= 2026-05-31; hard assert. DELEV01 not implicated (within-session POINTS
+    takeout, additive offsets cancel) — assert points basis."
+  G1_MDE_first: "B1 mean-MDE AND B2 increment-MDE printed BEFORE any return table (barrier)."
+  B1_economics: "event-clustered t >= 2.0 on mean net > 0."
+  B2i_primary_discriminator: "beats the identical trigger on NON-bottom-tercile takeout sessions
+    (n ~= 258, time-of-day matched). THIS is the gate that separates the +9.62pp state from
+    generic post-cross MR."
+  B2ii_random: "beats p95 of >= 10,000 count-matched random-session longs at resampled takeout
+    times."
+  B3_null: "circular-shift null on the state series, ONE draw SHARED across the MC-23/41/58
+    family, effective-K per CLAUDE.md 4."
+  timing_teeth: "+5/+15/+30-min delayed entries; NUMERIC valence band pre-stated: a +30-min delay
+    must lose >= 40% of mean net. A FLAT delay curve FALSIFIES the flush-anchored mechanism even
+    if economics pass (adjectives don't kill — AUCTREV lesson)."
+  concentration: "printed as CLASSIFICATION only, carrying 'the incumbent fails this bar at
+    236.8%' (F9); never a kill-gate by itself."
+
+outcome_taxonomy:  # preregistered per the skeptic's Attack 1 (do NOT mislabel an under-MDE middle)
+  closed_as_generic_MR: "B2(i) control >= candidate OR increment ~= 0 => CLOSED-AS-GENERIC-MR
+    (collapses onto SWEEP01 + W118, PERMANENT)."
+  closed_by_power: "positive but under the printed increment-MDE => CLOSED-BY-POWER at exact
+    scope — a WEAKER, different closure that MUST be labeled as such (not 'closed for good')."
+  survives: "B1 + B2(i) + B2(ii) + B3 all pass, identified, delay curve decays per the band."
+
+prohibitions_locked: "no tercile/delay/exit search; no stops; no reclaim gating; no era pooling.
+  The reclaim-anchored variant may be printed SHAPE-ONLY, labeled DIAGNOSTIC_CONSUMED, gateable
+  by no future card without a fresh window."
+
+era_leg: "NOT IN THIS RUN. DATA-GATED: local pre-2022 $TICK is non-contiguous 2013/2015/2017
+  (trailing-252 terciles unbuildable on isolated years). Runs only after a modern B1+B2 pass,
+  after contiguous multi-year extraction with a per-era burn-in year, as PROTECTED_CONFIRMATION
+  (TICK01ERA precedent), sign-only, ERABREAK pooling ban. Never spend the one-shot pre-2022 read
+  decorating a dead card."
+
+decision_rule: |
+  SURVIVES -> licenses ONLY robustness + the gated era leg + scheduled virgin reads, NEVER
+  promotion. Any closure per the taxonomy -> FAILURE_MEMORY row at the exact (and correctly
+  labeled) scope. Headline carries DISCOVERY_CONSUMED whatever happens.
+
+ledger: "one trial, registered before outcomes; recorded serially by the coordinator."
+outputs: [out/gate_table.txt, out/event_table.csv, out/delay_curve.csv, REPORT.md]

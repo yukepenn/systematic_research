@@ -1,0 +1,84 @@
+run_id: G2_F13_MC57_ZBSTATE_20260906
+campaign: GENESIS_II (Formal Wave 6)
+card: MC-57 (rates-complex intraday STATE for NQ). Skeptic verdict TRIAGE-HIGH with three
+  MANDATORY amendments (runs/G2_WAVE5_CARDS_20260906/out/skeptic_verdicts_w5.md). This spec is
+  the skeptic's FROZEN PRIMARY (leg a) transcribed; the amendments are binding, not optional.
+stage: "DIAGNOSTIC / RISK-SPECIFICATION. Question: does ZB (30-yr bond future) intraday state
+  improve the NQ rest-of-session RV forecast beyond NQ's own history + $0 macro flags? A PASS is
+  a NEW-SURFACE information win (Level F) that (a) can feed sizing and (b) would UNBLOCK MC-35
+  (conditioning P1 on a genuinely new surface, currently blocked-as-rescue). It licenses NO
+  strategy and NO sizing change here; the profit test is a separate Wave-7 spec gated on this."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+why_this_is_the_flagship: |
+  After 54 trials GENESIS II has 0 live candidates and the intraday single-mechanism space is
+  mostly closed. ZB 1-min (extracted 2026-09-06, SM1M_ZB_SUBSTRATE) is the ONLY genuinely new raw
+  information surface external mining found. Its highest leverage is not standalone: MC-35
+  (meta-labeling/sizing P1) is blocked-as-rescue "unless a genuinely NEW surface exists." If ZB
+  state carries incremental NQ information here, that block lifts and the profit path opens.
+
+binding_amendments:  # from the skeptic; each guards a specific measured failure
+  A1_no_VXN: "VXN excluded from BOTH arms. The HAR(NQ-RV)+VXN baseline would DISCOVER on the P-1
+    reserve (2022+ implied-vol-daily -> NQ join, the exact join W2 stripped from MC-38). Control
+    = univariate plain HAR-RV (RS-/ON refinement already killed by G2_F3) + $0 macro-calendar
+    flags. No VXN anywhere."
+  A2_points_basis_and_seal: "Every ZB observable is POINTS (32nds) basis, never percent: the ZB
+    parquet is additively back-adjusted (median -41/32nds offset in late-2025), so percent RV on
+    adjusted levels is era-distorted by construction (DELEV01). AND hard-drop every session
+    > 2026-05-31 at load (the parquet physically runs to 2026-07-31 = the BURNED window inside an
+    owned file), printing the retained boundary."
+  A3_alignment: "ZB prints no bar in zero-trade minutes -> pinned alignment: inner-join on common
+    NQ/ZB minutes, minimum-coverage per rolling window, coverage PRINTED, or the corr state is
+    silently RTH-biased and overnight flips are missingness artifacts."
+
+frozen_primary_leg_a:
+  population: "ZB INTERSECT NQ sessions 2022-12-27 -> 2026-05-31 (program-printed n ~= 860;
+    sessions > 2026-05-31 hard-dropped at load; boundary printed)."
+  target: "rest-of-session-from-11:00 ET NQ realized variance (PRIMARY); next-session NQ RV
+    (SECONDARY, pre-declared, cannot generate a PASS alone)."
+  models: |
+    BASE : HAR(NQ-RV) + $0 macro-calendar flags (NFP/CPI/FOMC/Treasury-auction day dummies)
+    FULL : BASE + pre-declared ZB terms {session & 30-min diurnal-adjusted ZB RV in POINTS;
+           60-min NQ-ZB point-return corr level and sign (inner-join minutes, min-coverage rule);
+           ZB range-expansion count to 11:00}
+  statistic: "OOS QLIKE improvement of FULL over BASE via Diebold-Mariano (HAC errors)."
+  split: "ONE fit, no refit. Train 2022-12-27 -> 2024-12-31; test 2025-01-02 -> 2026-05-31."
+  null_model: "ONE shared per-session circular-shift draw across legs (a)/(b)/(c) — one family,
+    effective-K corrected (K/(1+(K-1)*rho_bar))."
+
+legs_bc:  # secondary; same shared null; triple-matched controls
+  leg_b: "ZB 95th-pct range-expansion events -> NQ forward RV/return-dispersion vs control."
+  leg_c: "NQ-ZB 60-min corr FLIP (<=-0.3 -> >=+0.3, i.e. hedge->liquidation) -> NQ forward state."
+  controls_mandatory: "each leg's control is same-timestamp AND NQ-trailing-60min-RV-decile
+    matched AND macro-calendar-flag matched. ZB must add beyond ALL THREE or the leg is recorded
+    a REDUNDANCY closure (the PDH/PDL geometry trap in cross-asset costume)."
+
+gates:  # program-printed GATE / SPEC / OBSERVED / PASS-FAIL
+  G0_seal_points: "max retained session <= 2026-05-31 (hard assert, boundary printed); assert all
+    ZB observables computed on POINTS not percent (print a basis flag)."
+  G1_MDE_first: "DM-detectable QLIKE delta at test-n, per-era session counts, and legs (b)/(c)
+    event counts (95th-pct expansions; corr-flips) PRINTED BEFORE any gate (barrier line)."
+  G2_cell_occupancy: "per-era cell occupancy printed; the post-2022 corr regime may leave the
+    'bonds still hedging' cell near-empty -> thin cells (< 20 events) go CLOSED-BY-POWER unread,
+    not PASS/FAIL."
+  G3_identification: "VIF between each ZB term and the NQ-RV baseline printed; a collinear
+    increment => NOT-IDENTIFIED, not PASS (the F11/MC-54 lesson, now mandatory equipment)."
+  G4_primary: "DM test two-sided p <= 0.05 on the OOS QLIKE improvement (FULL vs BASE) AND the
+    improvement survives the shared circular-shift null. Identified (G3) and powered (G1)."
+  G5_semantic: "one printed sentence: what population, what event (does ZB state lower the OOS
+    QLIKE of the NQ rest-of-session RV forecast beyond NQ history + macro flags)."
+
+decision_rule: |
+  G4 PASS, identified, powered -> ZB state is an INCREMENTAL NQ-vol-forecast surface (Level F,
+  new information). Bank it and preregister Wave 7: does ZB state condition P1 action quality /
+  sizing (MC-35 unblocked)? FAIL / NOT-IDENTIFIED / COLLAPSE-INTO-NQ-CONTROLS -> ZB retires the
+  'last genuinely new raw surface' flag (bankable), FAILURE_MEMORY row. Every number
+  DISCOVERY_CONSUMED. RISK-SPECIFICATION / REGIME-ROUTING only; no strategy, no sizing here.
+
+reserve_ruling: "With VXN out (A1) no frozen reserve is touched. P-2 (2019+ multi-market DAILY)
+  not consumed (new intraday substrate, 2nd-moment role) BUT results may NOT be cited for/against
+  MC-53's daily stock-bond-corr leg. Pre-burn only after the >2026-05-31 load drop."
+
+ledger: "one trial, registered before outcomes; recorded serially by the coordinator."
+outputs: [out/gate_table.txt, out/dm_summary.txt, out/leg_bc_tables.csv, REPORT.md]
