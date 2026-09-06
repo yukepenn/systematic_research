@@ -1,0 +1,109 @@
+{
+  "decision": "CLOSED AT SCOPE (SS28)",
+  "g2": false,
+  "g3": false,
+  "pos_pays": false,
+  "all_gates_pass": false,
+  "n_sessions": 4270,
+  "n_events": 298,
+  "ev_neg": 226,
+  "ev_pos": 72,
+  "n_clusters": 159,
+  "max_cluster_span": 18,
+  "primary": {
+    "h": 3,
+    "d_neg": -0.16692045643239653,
+    "d_neg_ci": [
+      -0.394910724086332,
+      0.05158724612832883
+    ],
+    "p_neg_shift": 0.9535232383808095,
+    "p_neg_boot": 0.9300349825087456,
+    "d_pos": 0.045949531819105535,
+    "d_pos_ci": [
+      -0.3512310596947781,
+      0.4851842896851591
+    ],
+    "inter": -0.21286998825150205,
+    "inter_ci": [
+      -0.6967514130160616,
+      0.2513558265952927
+    ],
+    "p_inter_shift": 0.8250874562718641,
+    "p_inter_boot": 0.8130934532733634
+  },
+  "gates": [
+    {
+      "gate": "G0a_SEAL",
+      "spec": "max ES and ZB session < 2026-08-01",
+      "observed": "ES 2026-07-31, ZB 2026-07-31",
+      "ok": true
+    },
+    {
+      "gate": "G0b_IDENTITY",
+      "spec": "ret_points == roll.economic_returns, err < 1e-9 (both roots)",
+      "observed": "ES 0.0e+00, ZB 0.0e+00",
+      "ok": true
+    },
+    {
+      "gate": "G0c_ROLL_CAUSAL",
+      "spec": "every roll info_cutoff < decision_date (both roots)",
+      "observed": "ES True, ZB True",
+      "ok": true
+    },
+    {
+      "gate": "G0d_REGIME_LAG",
+      "spec": "regime at d == corr recomputed from data STRICTLY before d (independent check, 25 sample days)",
+      "observed": "max err 4.4e-16",
+      "ok": true
+    },
+    {
+      "gate": "G0e_POINTS_ONLY",
+      "spec": "all math in points on per-contract self-financing returns (DELEV01)",
+      "observed": "no % column formed anywhere",
+      "ok": true
+    },
+    {
+      "gate": "G1_MDE_first",
+      "spec": "MDE table printed BEFORE observed cells; ~150-250 events expected",
+      "observed": "printed first; 298 events (NEG 226 / POS 72)",
+      "ok": true
+    },
+    {
+      "gate": "G2_interaction",
+      "spec": "h=3 interaction (NEG delta - POS delta) > 0, clustered CI excludes 0",
+      "observed": "-0.2129 pts, CI [-0.6968, +0.2514], p_shift 0.8251, p_boot 0.8131",
+      "ok": false
+    },
+    {
+      "gate": "G3_neg_cell",
+      "spec": "h=3 NEG-regime delta vs own-regime uncond control > 0, CI excludes 0",
+      "observed": "-0.1669 pts, CI [-0.3949, +0.0516], p_shift 0.9535, p_boot 0.9300",
+      "ok": false
+    },
+    {
+      "gate": "G4_pos_cell_honesty",
+      "spec": "POS cell printed with its own-regime control + year table + 2022 sub-cell; 'also pays' check applied",
+      "observed": "printed; POS delta +0.0459, CI [-0.3512, +0.4852], does not pay",
+      "ok": true
+    },
+    {
+      "gate": "G5_cost",
+      "spec": "cost band printed ({1,2}-tick RT on ZB)",
+      "observed": "$35.61 / $66.86; NEG h3 delta $-166.92/ct/event",
+      "ok": true
+    },
+    {
+      "gate": "G6_P_MEANING",
+      "spec": "IN WORDS: p_shift = one-sided fraction of 2000 shared-offset circular shifts of the EVENT FLAG whose statistic >= observed (regime+outcomes fixed)",
+      "observed": "second, independent computation: p_boot from the block bootstrap (printed per cell)",
+      "ok": true
+    },
+    {
+      "gate": "G7_CLUSTER_SPAN",
+      "spec": "block length 60 >= max measured event-cluster span",
+      "observed": "159 clusters, span P95 11, max 18",
+      "ok": true
+    }
+  ]
+}

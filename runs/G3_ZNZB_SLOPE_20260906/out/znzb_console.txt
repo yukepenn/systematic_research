@@ -1,0 +1,98 @@
+================================================================================================================
+=== G3_ZNZB_SLOPE_20260906 — ZN/ZB duration-neutral slope-carry RV.  Window 2009-01-01 -> < 2026-08-01.
+=== run at 2026-09-06T13:08:44.831303+00:00   [DISCOVERY; costs MODELED; research sizing]
+================================================================================================================
+    diff(carry_v1.py -> carry_znzb.py):
+        -DEV_START, DEV_END = pd.Timestamp("2009-01-01"), pd.Timestamp("2019-01-01")
+        +DEV_START, DEV_END = pd.Timestamp("2009-01-01"), pd.Timestamp("2026-08-01")
+        -    for cid, r, m, y in N.contracts_for(root, 2009, 2019):
+        +    for cid, r, m, y in N.contracts_for(root, 2009, 2027):
+    diff audit: PASS - exactly the two sanctioned changes
+
+=== s6/s7 UNIT TESTS (certified roll construction, reused not reinvented)
+
+=== building ZN/ZB panels (CARRY_V1 construction verbatim, structural truncation < 2026-08-01)
+    ZN   paired days   2421  2009-06-29 -> 2026-07-31  median gap 3mo  median |carry| 0.499
+    ZB   paired days   2600  2009-06-29 -> 2026-07-24  median gap 3mo  median |carry| 0.438
+    seal assert: max session 2026-07-31 < 2026-08-01  PASS
+
+=== CAUSALITY PROBE - both clauses must hold, and the second is what gives it teeth
+    week 2017-W07, effective 2017-02-13
+    corrupt FUTURE (>= t) carry:  max |dw| = 0.000e+00   PASS - weights unchanged
+    corrupt PAST  (<  t) carry:  max |dw| = 1.000e+00   PASS - weights DO respond
+    sign convention check: carry-richer root LONG in 100.0% of 504 decided weeks (must be 100%; exact ties counted as pass)
+
+================================================================================================================
+=== G1 — MDE, printed BEFORE any observed edge number
+================================================================================================================
+    N = 596 ISO weeks   weekly-net sd = $618
+    SE(weekly mean) = $25   MDE (5% two-sided, 80% power) = $71/week
+    SE(annualized Sharpe) ~ 0.295   MDE Sharpe ~ 0.827
+    -> only an edge of roughly P1-class weekly consistency is detectable; a small true edge most likely reads as FAIL and closes the object at scope.
+
+================================================================================================================
+=== OBSERVED — frozen object, MODELED costs [DISCOVERY]
+================================================================================================================
+    PRIMARY (1 tick):  gross $      -9,476   cost $    15,429   net $     -24,905   weekly mean $  -41.79   ann Sharpe  -0.487
+    STRESS  (2 tick):  net $     -37,595   weekly mean $  -63.08
+    turnover: mean daily |dUnits| 0.2300   mean weekly |dUnits| 1.0540
+
+================================================================================================================
+=== G2 — after-cost weekly mean > 0, CI excludes 0, clears circular-shift null at 5%
+================================================================================================================
+    second computation of the same 'distinguishable from zero' event by a different route: 13-week circular block bootstrap CI of the weekly mean (2000 draws)
+    weekly mean $-41.79   95% block-bootstrap CI [$-82.28, $-0.44]  seed 20260906 (recorded for shared draws)
+    pivot-reconstruction net vs direct: |d| = $0.000000  OK
+    EVENT IN WORDS: the null percentile is over the probability, under weekly signed position streams whose TIMING is destroyed by a circular shift (all offsets, preserving each leg's serial structure, the pair's cross-leg dependence, and the stream's composition/turnover) but evaluated against the SAME realized returns and the SAME cost machinery, of an after-cost weekly-mean P&L at least as large as observed.
+    circular-shift null: 595 offsets on a 596-week grid   null weekly-mean mean $-25.23 sd $19.47
+    observed $-41.79 -> percentile 20.5  (bar 95)
+    shared-draw note: the shift null is DETERMINISTIC (all offsets) — inherently shared with G3_BASISMOM on overlapping windows; bootstrap seeds recorded above.
+
+================================================================================================================
+=== G3 — reduce-to-outright control: RV alpha vs BOTH single-root carry-timing arms
+================================================================================================================
+    controls: identical machinery — same weekly calendar/decision rule, position sign(own carry) [long when own carry positive, short when negative], legs 1/sigma, same 1-tick+commission cost model, same normalization.
+    ctrl ZN: total net $      47,713   weekly mean $   80.06   ann Sharpe   0.611
+    ctrl ZB: total net $      58,711   weekly mean $   98.51   ann Sharpe   0.701
+    OLS: alpha $-46.64/wk   beta_ZN +0.139   beta_ZB -0.063   R2 0.031
+    alpha 95% block-bootstrap CI [$-84.14, $-3.43]   seed 20260907   alpha not distinguishable from outright carry -> curve object NOT established
+
+=== beta-stability audit (control, REPORT-ONLY): 52-week alternative sigma vs frozen 63d
+    hedge ratio sigma_ZN/sigma_ZB: min 0.274  median 0.464  max 0.650
+    carry-ordering agreement 63d-sigma vs 252d-sigma: 446 comparable weeks, 20 flips = 4.5%  (below 20% flag)
+    week-over-week ordering flip rate (choppiness): 13.1%
+
+=== G4 — era signs (classification per owner doctrine, NOT a veto)
+    2009-15: net $      -7,236  (1322 days)  sign -
+    2016-21: net $      -8,792  (782 days)  sign -
+    2022-26: net $      -8,876  (627 days)  sign -
+    net by year: 2009:+2,873  2010:+790  2011:-2,200  2012:-7,301  2013:+435  2014:-1,303  2015:-530  2016:-1,243  2017:+842  2018:+1,250  2019:-1,395  2020:-3,210  2021:-5,036  2022:-1,504  2023:-3,532  2024:-1,233  2025:+191  2026:-2,799
+
+=== G5 — MODELED cost band [$4.36 RT commission + {1,2}-tick spread per leg]
+    PRIMARY drag: $15,429 total = 162.8% of |gross|   weekly cost $25.89
+    STRESS  drag: $28,120 total   weekly cost $47.18
+    weekly turnover (|dUnits|): 1.0540   ZN tick $15.62   ZB tick $31.25
+    ZN/ZB are the deepest CME spread markets; the band above PROVES the claim rather than assuming it — the 2-tick arm is the fragility rung.
+
+================================================================================================================
+=== GATES — GATE / SPEC / OBSERVED / PASS-FAIL [2009-01-01 -> 2026-07-31, DISCOVERY, MODELED costs]
+================================================================================================================
+    GATE                                           SPEC                                     OBSERVED                                             VERDICT
+    DIFF  module = carry_v1 + 2 changes            exactly 2 sanctioned line-pairs          see diff above                                       PASS
+    UT    s6/s7 unit tests                         telescope+basis+causality                all pass                                             PASS
+    SEAL  max session < 2026-08-01                 < 2026-08-01                             2026-07-31                                           PASS
+    CAUS  two-sided causality probe                future<1e-12, past>1e-9                  see probe above                                      PASS
+    RECON pivot==direct simulate                   |d net| < 1e-6                           $0.00e+00                                            PASS
+    G1    MDE printed before observed              printed                                  MDE $71/wk over 596 wks                              PASS
+    G2a   after-cost weekly mean > 0               > $0                                     $-41.79                                              *** FAIL ***
+    G2b   95% block-boot CI excludes 0             CI_lo > 0                                [$-82.28, $-0.44]                                    *** FAIL ***
+    G2c   circular-shift null at 5%                >= 95 pctl                               20.5                                                 *** FAIL ***
+    G3    positive alpha vs BOTH outrights         alpha > 0 and CI_lo > 0                  $-46.64/wk, CI [$-84.14, $-3.43]                     *** FAIL ***
+    G4    era signs printed                        3 eras                                   2009-15:- 2016-21:- 2022-26:-                        REPORT-ONLY
+    G5    cost band printed                        drag + turnover                          1tk $26/wk, 2tk $47/wk                               REPORT-ONLY
+    BETA  stability audit (flag only)              flip share <= 20%                        4.5% alt-sigma flips; wow 13.1%                      REPORT-ONLY
+
+================================================================================================================
+=== PREREGISTERED BINARY VERDICT: CLOSED AT SCOPE (s28 block in REPORT.md)   (ledger G00074: FAIL)
+================================================================================================================
+    outputs: out/gate_table.txt, out/weekly_pnl.csv, out/outright_control.csv, out/znzb_verdict.json, out/znzb_console.txt

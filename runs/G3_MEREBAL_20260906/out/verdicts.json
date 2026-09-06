@@ -1,0 +1,174 @@
+{
+  "M_eligible": 134,
+  "n_cond": 45,
+  "n_turns": 170,
+  "drops": {
+    "short_month": 7,
+    "short_next": 1,
+    "no_prev_month": 1,
+    "mtd_unclean": 14,
+    "sigma_nan": 2,
+    "window_unclean": 10
+  },
+  "obs": {
+    "flow_cond": -0.4126246030972883,
+    "flow_uncond": -0.09425676632129035,
+    "rev_cond": -0.15023597700713007,
+    "rev_uncond": -0.6185216814691598,
+    "d_flow": -0.318367836775998,
+    "d_rev": 0.46828570446202966,
+    "d_flow_usd": -439.2962271973466,
+    "d_rev_usd": 228.09701492537317
+  },
+  "p1_flow": 0.8125937031484258,
+  "p1_rev": 0.8350824587706147,
+  "p2_flow": 0.3758120939530235,
+  "p2_rev": 0.3308345827086457,
+  "p_conj": 0.6776611694152923,
+  "ci_flow": [
+    -0.9394571970240878,
+    0.24907360638243137
+  ],
+  "ci_rev": [
+    -0.5034738131287481,
+    1.406196488577187
+  ],
+  "ci_flow_normal": [
+    -0.9706893070431208,
+    0.33395363349112483
+  ],
+  "ci_rev_normal": [
+    -0.44642990706844154,
+    1.3830013159925008
+  ],
+  "mde_flow": 0.8275496611322454,
+  "mde_rev": 1.1604287592196514,
+  "mde_flow_usd": 945.1504566833455,
+  "eras": [
+    {
+      "era": 1,
+      "span": "2012-12..2017-05",
+      "n_elig": 44,
+      "n_cond": 15,
+      "d_flow": -0.7083529733719718,
+      "d_rev": 1.0375814780409722,
+      "flow_sign": "-",
+      "rev_sign": "+"
+    },
+    {
+      "era": 2,
+      "span": "2017-06..2021-08",
+      "n_elig": 45,
+      "n_cond": 15,
+      "d_flow": 0.02147650923676364,
+      "d_rev": 0.487115263652911,
+      "flow_sign": "+",
+      "rev_sign": "+"
+    },
+    {
+      "era": 3,
+      "span": "2021-09..2026-05",
+      "n_elig": 45,
+      "n_cond": 15,
+      "d_flow": -0.2586133027085872,
+      "d_rev": -0.12078243615258377,
+      "flow_sign": "-",
+      "rev_sign": "-"
+    }
+  ],
+  "cost": {
+    "1": 52.47,
+    "2": 96.22
+  },
+  "gates": [
+    {
+      "gate": "G0a_SEAL_ES",
+      "spec": "max ES session < 2026-08-01",
+      "observed": "2026-07-31",
+      "ok": true
+    },
+    {
+      "gate": "G0b_SEAL_ZB",
+      "spec": "max ZB session < 2026-08-01",
+      "observed": "2026-07-31",
+      "ok": true
+    },
+    {
+      "gate": "G0c_IDENTITY",
+      "spec": "both builds: ret_points == roll.economic_returns, err < 1e-9",
+      "observed": "ES 0.0e+00, ZB 0.0e+00",
+      "ok": true
+    },
+    {
+      "gate": "G0d_ROLL_CAUSAL",
+      "spec": "every roll info_cutoff < decision_date, both roots",
+      "observed": "ES True, ZB True",
+      "ok": true
+    },
+    {
+      "gate": "G0e_SIGNAL_CAUSAL",
+      "spec": "signal cutoff (T-3 close) strictly before flow entry (T-2 close), every turn",
+      "observed": "170/170 turns",
+      "ok": true
+    },
+    {
+      "gate": "G0f_POINTS_ONLY",
+      "spec": "all window math in POINTS / vol-units; no % anywhere (DELEV01)",
+      "observed": "ret_points sums only; sigmas in points",
+      "ok": true
+    },
+    {
+      "gate": "G1_MDE_first",
+      "spec": "MDE printed before observed; power honesty stated",
+      "observed": "flow MDE 0.8275 vs |delta| 0.3184; revert MDE 1.1604 vs |delta| 0.4683",
+      "ok": true
+    },
+    {
+      "gate": "G2_flow",
+      "spec": "conditional flow spread > matched unconditional control, CI excludes 0",
+      "observed": "delta -0.3184, boot CI [-0.9395,+0.2491], p1 0.8126",
+      "ok": false
+    },
+    {
+      "gate": "G3_revert",
+      "spec": "conditional revert delta opposite-signed (<0) vs control, CI excludes 0",
+      "observed": "delta +0.4683, boot CI [-0.5035,+1.4062], p1 0.8351",
+      "ok": false
+    },
+    {
+      "gate": "G4_conjunction",
+      "spec": "BOTH G2 and G3 (single-leg pass recorded but object FAILS)",
+      "observed": "G2=FAIL, G3=FAIL",
+      "ok": false
+    },
+    {
+      "gate": "G5_era",
+      "spec": "3-era signs printed, all cells",
+      "observed": "3/3 eras printed",
+      "ok": true
+    },
+    {
+      "gate": "G6_cost",
+      "spec": "{1,2}-tick band, 2 RTs per event per leg, printed",
+      "observed": "$52.47 / $96.22 per event per leg, printed with nets",
+      "ok": true
+    },
+    {
+      "gate": "G7_P_MEANING",
+      "spec": "IN WORDS: p_shift(1s) = share of 2000 shared-offset circular shifts of the condition flag whose delta is at least as favorable (flow >=, revert <=) as observed; CI = 2.5/97.5 pct of 2000 circular block-bootstrap (block 6) deltas",
+      "observed": "2nd computations printed: block-bootstrap CI vs normal-approx CI; shift p vs CI agreement visible above",
+      "ok": true
+    },
+    {
+      "gate": "G8_PREREG_ECHO",
+      "spec": "constants echoed vs spec.yaml",
+      "observed": "T-labelling, tercile 36m/q2/3, windows T-2->T+1 & T+1->T+5, sigma60 declared",
+      "ok": true
+    }
+  ],
+  "g2": false,
+  "g3": false,
+  "g4": false,
+  "all_validity_pass": true,
+  "verdict": "CLOSED AT SCOPE (S28) -- conjunction failed; generic ToM control table banked"
+}

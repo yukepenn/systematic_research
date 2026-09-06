@@ -1,0 +1,132 @@
+{
+  "run_id": "G3_ZNZB_SLOPE_20260906",
+  "verdict": "CLOSED AT SCOPE (s28 block in REPORT.md)",
+  "ledger_result": "FAIL",
+  "gates": [
+    {
+      "gate": "DIFF  module = carry_v1 + 2 changes",
+      "spec": "exactly 2 sanctioned line-pairs",
+      "observed": "see diff above",
+      "pass": true
+    },
+    {
+      "gate": "UT    s6/s7 unit tests",
+      "spec": "telescope+basis+causality",
+      "observed": "all pass",
+      "pass": true
+    },
+    {
+      "gate": "SEAL  max session < 2026-08-01",
+      "spec": "< 2026-08-01",
+      "observed": "2026-07-31",
+      "pass": true
+    },
+    {
+      "gate": "CAUS  two-sided causality probe",
+      "spec": "future<1e-12, past>1e-9",
+      "observed": "see probe above",
+      "pass": true
+    },
+    {
+      "gate": "RECON pivot==direct simulate",
+      "spec": "|d net| < 1e-6",
+      "observed": "$0.00e+00",
+      "pass": true
+    },
+    {
+      "gate": "G1    MDE printed before observed",
+      "spec": "printed",
+      "observed": "MDE $71/wk over 596 wks",
+      "pass": true
+    },
+    {
+      "gate": "G2a   after-cost weekly mean > 0",
+      "spec": "> $0",
+      "observed": "$-41.79",
+      "pass": false
+    },
+    {
+      "gate": "G2b   95% block-boot CI excludes 0",
+      "spec": "CI_lo > 0",
+      "observed": "[$-82.28, $-0.44]",
+      "pass": false
+    },
+    {
+      "gate": "G2c   circular-shift null at 5%",
+      "spec": ">= 95 pctl",
+      "observed": "20.5",
+      "pass": false
+    },
+    {
+      "gate": "G3    positive alpha vs BOTH outrights",
+      "spec": "alpha > 0 and CI_lo > 0",
+      "observed": "$-46.64/wk, CI [$-84.14, $-3.43]",
+      "pass": false
+    },
+    {
+      "gate": "G4    era signs printed",
+      "spec": "3 eras",
+      "observed": "2009-15:- 2016-21:- 2022-26:-",
+      "pass": null
+    },
+    {
+      "gate": "G5    cost band printed",
+      "spec": "drag + turnover",
+      "observed": "1tk $26/wk, 2tk $47/wk",
+      "pass": null
+    },
+    {
+      "gate": "BETA  stability audit (flag only)",
+      "spec": "flip share <= 20%",
+      "observed": "4.5% alt-sigma flips; wow 13.1%",
+      "pass": null
+    }
+  ],
+  "headline": {
+    "n_weeks": 596,
+    "weekly_mean": -41.78665672012303,
+    "weekly_sd": 618.1361304955203,
+    "ann_sharpe_weekly": -0.4874781654126504,
+    "total_net": -24904.847405193323,
+    "total_gross": -9475.585617287856,
+    "total_cost": 15429.261787905472,
+    "stress_total_net": -37595.300654950894,
+    "ci_lo": -82.28398738979827,
+    "ci_hi": -0.44214521138236323,
+    "null_pctl": 20.50420168067227,
+    "null_n_offsets": 595,
+    "alpha_weekly": -46.64182399374873,
+    "alpha_ci": [
+      -84.1374853743745,
+      -3.4322642408656563
+    ],
+    "beta_zn": 0.13850454014518243,
+    "beta_zb": -0.0632722807345986,
+    "r2": 0.030767625323908532,
+    "ctrl_zn_total": 47713.14613592212,
+    "ctrl_zb_total": 58711.45509890735,
+    "flip_share_alt_sigma": 0.04484304932735426,
+    "wow_flip": 0.13095238095238096,
+    "eras": {
+      "2009-15": -7235.902990445258,
+      "2016-21": -8792.472666858102,
+      "2022-26": -8876.47174788997
+    },
+    "mde_weekly_mean": 70.89555890592747
+  },
+  "seeds": {
+    "boot_mean": 20260906,
+    "boot_alpha": 20260907,
+    "shift_null": "deterministic all-offsets"
+  },
+  "evidence_status": "DISCOVERY (2026-06/07 segment lies in the BURNED window; sample includes it per frozen spec; no forward claim)",
+  "code_hashes": {
+    "carry_znzb.py": "b443803f0c4b23a4d2a18f16601d50215e839f3c0ede1c236df7d2eb161d775a",
+    "run_znzb.py": "fc61d3fe0535292374e471440908edfe187607f44aa86e11086431639620dee4",
+    "spec.yaml": "6895d0dacc7a3346a0a5b2fa7cbca59255f649af05702742591f90b2bffe779c",
+    "carry_v1.py": "bbd28b53b81eebbe9a464a019fa0fb0cd4ce381e510e989bac6dc7183887c9f4",
+    "ncd_day.py": "17603bdc722d30f386b013d35a33f8b2cb510d8b7ea6fdbc07f0274bf01baec9",
+    "roll.py": "b88a5176f8ed1dbc3903e300f6238993099046437c4b921293c9ba1d2eda837f"
+  },
+  "utc": "2026-09-06T13:08:54.914601+00:00"
+}

@@ -1,0 +1,79 @@
+========================================================================================================
+G3_ZBMACRO_CLASSP_20260906  (ledger G00078, family GENESIS3_DECISION)
+EXPLORATORY Class-P pre-read for ZBMACRO01 -- is it a rational STACK MEMBER next to P1?
+EVIDENCE STATUS (every table in this run): DISCOVERY_CONSUMED + EXPLORATORY
+  -> a pre-read; licenses ONLY the next research stage (engine construction); NEVER deploy.
+========================================================================================================
+input ZB ledger : runs\G3_ZBMACRO_FALSIFIER_20260906\out\trades.csv
+                  sha256 245431500d42becbc6ed8c8f07c0696e9057346d3b52cad05d8976bb2d8e2273
+                  n=40 trades 2023-01-12..2026-06-05, PRIMARY cost arm (comm $4.36 + 1tk/side; BASIS=MODELED ALL_IN), $ per 1 ZB contract
+input P1 daily  : runs\WE_W56_BREADTH\out\p1_daily.csv
+                  sha256 9bc2d7f7000653b4d15f82b9ac9bf76ac25ec4cdbdb008d382453ec082a75357
+                  n=607 days 2022-07-05..2026-05-29, $ per 1.00 NQ
+                  DISCLOSED: Python-chain P1 figures are ~2.0% optimistic (double-lagged ATR,
+                  we_fastctx.py:81 -- GENESIS III finding); not corrected here, stated.
+joint calendar  : ZB substrate sessions inside the P1 span (falsifier-G9-identical), zero-filled
+                  2022-12-27..2026-05-29, 878 sessions, 39/40 ZB trades in overlap (2026-06-05 sits outside the P1 span -- excluded, disclosed)
+                  identity: rho_d -0.0058 rho_w +0.1004 (G00072 quoted -0.006/+0.100) -> MATCH
+
+========================================================================================================
+[T1] STACK TABLE -- all cells, both scale bases, k in [1, 2, 4]   (DISCOVERY_CONSUMED + EXPLORATORY)
+     weekly grid: 178 calendar weeks; Sharpe = mean/sd * sqrt(52); tails on DAILY $ series
+     maxDD/CDaR5: dollar path descriptives + book/P1 RATIOS only; no DD-normalized income;
+     no trade removed anywhere -> no thinning placebo owed (eval_battery guard honored).
+
+     basis           k    S_p1  S_book      dS   condL$   wday_p1   wday_bk    wwk_p1    wwk_bk    rMDD  rCDaR5
+     LIVE_SCALE      1   2.187   2.283  +0.096    +23.0     -1735     -1735     -2225     -2225  0.7826  0.8468
+     LIVE_SCALE      2   2.187   2.280  +0.092    +45.9     -1735     -3009     -2225     -3700  0.9588  0.9869
+     LIVE_SCALE      4   2.187   2.123  -0.064    +91.9     -1735     -6017     -2225     -6709  1.4165  1.4201
+     RESEARCH_FULL   1   2.187   2.228  +0.041    +23.0     -5783     -5783     -7418     -7418  0.9348  0.9145
+     RESEARCH_FULL   2   2.187   2.258  +0.071    +45.9     -5783     -5783     -7418     -7418  0.8696  0.8609
+     RESEARCH_FULL   4   2.187   2.289  +0.102    +91.9     -5783     -6315     -7418     -8323  0.7757  0.8614
+     losing-P1 weeks: n=71 of 178 (set is scale-invariant); condL$ = ZB weekly mean over ALL those weeks (zeros kept);
+     active-only subset: 13 losing-P1 weeks had a ZB trade; active-only mean at k=1 = +125.5 $/wk
+
+[T2] P1 BOTTOM-DECILE DAYS (worst 88 of 878 joint-calendar days; threshold -1568 $ full-scale)   (DISCOVERY_CONSUMED + EXPLORATORY)
+     ZB active on 3 of 88 (chance expectation ~3.9); those days (k=1 $/ct):
+     date           P1 full $    ZB k=1 $
+     2023-02-03         -2612       308.1
+     2024-01-11         -3047      -816.9
+     2024-04-10         -1657       808.1
+     sum +299.4 $, mean +99.8 $/ct on those days (x k for the stack; sign is what matters at this n)
+
+[T3] ANNUAL ECONOMICS + CONCENTRATION HONESTY   (DISCOVERY_CONSUMED + EXPLORATORY)
+     full ledger (40 tr): net $7,107 over 3.59 yr substrate span = $1,978/yr/ct on 11.1 trades/yr  -> x k: k=1: $1,978/yr, k=2: $3,957/yr, k=4: $7,914/yr
+     joint window (39 tr): net $7,267 over 3.42 yr = $2,125/yr/ct
+     EFFECTIVE N IS SMALL: ~11 trades/yr; one trade sits in the BURNED 2026-06..07 window
+     top-3 trade share of total net PnL: $4,706 / $7,107 = 66%  (dates: 2023-10-12, 2023-06-13, 2023-09-01)
+     -> the edge is TAIL-CARRIED (G00072 drop-k: +$91/ct at k=2, +$18 at k=5); a Class-P
+        stack read at ~11 tr/yr rests on very few observations. Stated, not hidden.
+
+[T4] ZB DAY-MARGIN / CAPITAL NOTE -- broker figure ASSUMED, NOT verified (flagged)
+     object is intraday-only (08:45->15:00 ET), so DAY margin binds. ASSUMED ~$2,000/ct
+     (typical retail futures day margin for ZB; CME maintenance ~$4,000-4,500/ct would
+     bind only if held past the session -- it never is). Against the ~$10.2k live account
+     (MX01-era figure, not re-read here): k=1 ~20%, k=2 ~39%, k=4 ~78% of equity tied up
+     during the 6h15m window on ~11 days/yr. k=4 is capital-implausible at current size.
+     NO probability-style statement is quoted anywhere in this run -- the CAP01 two-way
+     clause is satisfied on its 'or none quoted' arm.
+
+========================================================================================================
+GATE TABLE (program-printed; DISCOVERY_CONSUMED + EXPLORATORY)
+GATE                    SPEC                                                               PASS/FAIL
+--------------------------------------------------------------------------------------------------------
+C0_seal_identity        seals hold; joint calendar reproduces G00072-G9 (878 sess, 39/40, rho -0.006/+0.100 @3dp)      PASS
+                        OBSERVED: 2022-12-27..2026-05-29, 878 sess, 39/40, rho_d -0.0058 rho_w +0.1004
+CP_a_marginal_sharpe    k=2 LIVE_SCALE: marginal weekly-vol Sharpe (book - P1-alone) > 0        PASS
+                        OBSERVED: S_book 2.2796 - S_p1 2.1874 = +0.0923
+CP_b_tail_ratios        k=2 LIVE_SCALE: maxDD ratio <= 1.02 AND CDaR5 ratio <= 1.02             PASS
+                        OBSERVED: maxDD 0.9588 ($6,573->$6,302); CDaR5 0.9869 ($4,806->$4,743)
+CP_c_no_harm            k=2 LIVE_SCALE: losing-P1-week conditional ZB mean > -50 $/wk           PASS
+                        OBSERVED: +45.94 $/wk over 71 losing weeks
+R_all_cells             all 6 basis x k cells + decile table + concentration + margin note printed      PASS
+                        OBSERVED: 6/6 cells; T2 3 rows; T3/T4 printed
+R_probability_clause    any probability-style statement computed 2 ways, OR none quoted         PASS
+                        OBSERVED: none quoted (stated in T4)
+--------------------------------------------------------------------------------------------------------
+DECISION (mechanical): STACK-MEMBER -- next stage licensed: ZBMACRO01 engine construction (frozen rule restated, eval_battery full pass, adversarial skeptic, THEN fast-track consideration). NOT a deploy decision.
+LEDGER G00078 RESULT: PASS
+========================================================================================================

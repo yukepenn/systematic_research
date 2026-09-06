@@ -1,0 +1,56 @@
+======================================================================================================================
+=== G3_AUCTCYCLE_20260906 -- Treasury auction concession cycle, ZN/ZB rebound D0->D+5 (G00073, family GENESIS3_EVENT)
+======================================================================================================================
+calendar: 422 auctions (213 x 10Y -> ZN, 209 x 30Y -> ZB), 282 reopenings; 2009-01-08 -> 2026-07-09
+mapped events: 414 (414 exact-date, 0 next-session<=3cd; 8 UNMAPPED -- series start 2009-03-31 postdates early-2009 auctions)
+events with finite D+1..D+5 outcome (n_eff): 406 (8 dropped: window incomplete/gap-spanning)
+sessions: ZN 4,364 / ZB 4,393 / ES 4,308; unconditional 5d-sum sd: ZN 0.894 pts, ZB 2.010 pts, ES 72.68 pts
+costs/ct RT (D1): ZN opt $19.98 cons $35.61 | ZB opt $35.61 cons $66.86 | ES opt $16.86 cons $29.36
+
+G1 MDE (PRINTED BEFORE ANY OBSERVED EVENT MEAN): sigma_pool = $1,553/event (composition ZN 0.50 / ZB 0.50), N_eff = 406
+    MDE(one-sided 5%, 80% power) = 2.486 x sigma_pool / sqrt(N) = $192 per event (~0.192 ZN-pts)
+
+PRIMARY (rebound, LONG at auction close -> close D+5, per contract, after cost):
+    gross mean       $-12.89/event  (ZN -0.0279 pts, ZB +0.0022 pts)
+    after-cost CONS  $-64.05/event   [GATING]   after-cost OPT $-40.65
+    event-block bootstrap 95% CI (cons): [$-211.27, $+80.35]
+    shared-draw shift null: mean $-28.05, sd $77.02; p one-sided(LONG) = 0.6822 [GATING], two-sided = 0.6367
+    ANNEX (non-gating, D10): cluster-by-month bootstrap 95% CI [$-243.82, $+126.61] (204 clusters)
+
+MATCHED CONTROL (same market x weekday, no 10y/30y auction within +/-5 sessions, same 5d window, same costs):
+    control days: 3,726 across 10 cells; matched control mean $+59.78/event-equivalent
+    DELTA (event - control) = $-123.83; bootstrap 95% CI [$-314.11, $+51.46]
+
+ERA TABLE (after-cost CONS, pooled; sign gates D6):
+    era             n      gross$  aftercost$     ctrl$    delta$ sign
+    2009-15       158     +254.85     +203.61    +65.72   +137.89   +
+    2016-21       142      -30.81      -81.82    +55.26   -137.08   -
+    2022-26/07    106     -387.97     -439.21    +56.97   -496.17   -
+    ERA CLASSIFICATION: SIGN-FLIP
+
+ES SPECIFICITY READ (same events, same construction, ES costs):
+    n = 397; after-cost mean $+377.09/event, 95% CI [$-8.57, $+746.61]
+    standardized effect: rates z-bar -0.0151 vs ES z-bar +0.1118 (ratio -7.40); same-size rule (D7): not tripped
+
+SECONDARY (non-gating):
+    concession A close(D-5)->close(D0)     mean $-160.75/event gross (n=403)
+    concession B close(D-6)->close(D-1)    mean $-150.65/event gross (n=402)
+    combined cycle (rebound - concession A)  mean $+148.38/event gross (n=403)
+    originals    n=138  after-cost cons $+81.58/event
+    reopenings   n=268  after-cost cons $-139.04/event
+    ZN           n=204  after-cost cons $-63.49/event  gross $-27.88
+    ZB           n=202  after-cost cons $-64.62/event  gross $+2.24
+
+GATE TABLE  (printed by program)
+GATE            SPEC                                                                                        OBSERVED                                                                PASS-FAIL
+G0_FOUNDATIONS  calendar persisted; roll identity+causality; seal < 2026-08-01                              422 auctions; maxerr 0.0e+00 x3; seal max 2026-07-31                    PASS
+G1_MDE_FIRST    MDE printed before observed; N ~ 400+ (declared floor 300)                                  MDE $192/event at N_eff=406                                             PASS
+G2_EDGE         after-cost mean > 0 AND event-block CI excludes 0 AND 1-sided shift p < .05                 mean $-64.05, CI [-211.27,+80.35], p_1s 0.6822                          *** FAIL ***
+G3_CONTROL      beats matched (market x weekday, +/-5-session-clean) control; delta CI ex 0                 delta $-123.83, CI [-314.11,+51.46]                                     *** FAIL ***
+G4_ERA          sign per era; all+ STRUCTURAL / modern-only REGIME-LOCAL / modern<=0 SIGN-FLIP              +/-/- -> SIGN-FLIP                                                      *** FAIL ***
+G5_SPECIFICITY  ES same-event read printed; same-size rule (D7) evaluated                                   ES $+377.09 CI [-8.57,+746.61]; z ratio -7.40; not same-size            PASS
+G6_COST         modeled $4.36 RT + {1,2}-tick band; ticks asserted from data; cons rung gates               ZN 35.61 / ZB 66.86 cons; opt rung printed                              PASS
+
+DECISION RULE (spec, mechanical): G2=FAIL G3=FAIL G4=SIGN-FLIP -> CLOSED AT SCOPE (S28 block)
+events/yr = 23.5; after-cost economics at cons rung = $-1,508/yr/contract-pair-mix
+======================================================================================================================

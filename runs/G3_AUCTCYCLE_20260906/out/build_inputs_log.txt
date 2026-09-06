@@ -1,0 +1,37 @@
+====================================================================================================
+=== G3_AUCTCYCLE_20260906  STEP 2: ZN / ZB / ES daily via CERTIFIED causal roll
+====================================================================================================
+    roll.py causal-roll unit tests: telescoping / basis-invariance / causality  ALL PASS
+
+--- ZN DAILY (per-contract day .ncd -> causal roll)
+    raw panel        7,997 contract-days, raw max 2026-08-04
+    SEAL             dropped >= 2026-08-01; retained max 2026-07-31  assert PASS
+    panel            7,994 contract-days, 71 contracts, 2009-03-30 -> 2026-07-31  tick_size=0.015625
+    validity         ohlc_bad=0 vol_zero=0 dup=0
+    roll ledger      71 rows (56 vol-crossover, 14 pre-expiry, 1 init); causality PASS
+    identity gate    ret_points == roll.economic_returns max err 0.00e+00  PASS
+    return-days      4,364  2009-03-31 -> 2026-07-31  (14 gap-spanning flagged clean_daily=False)
+    WROTE            D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\G3_AUCTCYCLE_20260906\out\zn_daily.parquet
+
+--- ZB DAILY (per-contract day .ncd -> causal roll)
+    raw panel        8,292 contract-days, raw max 2026-08-04
+    SEAL             dropped >= 2026-08-01; retained max 2026-07-31  assert PASS
+    panel            8,288 contract-days, 71 contracts, 2009-03-30 -> 2026-07-31  tick_size=0.03125
+    validity         ohlc_bad=0 vol_zero=1 dup=0
+    roll ledger      71 rows (56 vol-crossover, 14 pre-expiry, 1 init); causality PASS
+    identity gate    ret_points == roll.economic_returns max err 0.00e+00  PASS
+    return-days      4,393  2009-03-31 -> 2026-07-31  (11 gap-spanning flagged clean_daily=False)
+    WROTE            D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\G3_AUCTCYCLE_20260906\out\zb_daily.parquet
+
+--- ES DAILY (per-contract day .ncd -> causal roll)
+    raw panel        7,934 contract-days, raw max 2026-09-04
+    SEAL             dropped >= 2026-08-01; retained max 2026-07-31  assert PASS
+    panel            7,908 contract-days, 71 contracts, 2009-03-30 -> 2026-07-31  tick_size=0.25
+    validity         ohlc_bad=0 vol_zero=16 dup=0
+    roll ledger      71 rows (35 vol-crossover, 35 pre-expiry, 1 init); causality PASS
+    identity gate    ret_points == roll.economic_returns max err 0.00e+00  PASS
+    return-days      4,308  2009-03-31 -> 2026-07-31  (17 gap-spanning flagged clean_daily=False)
+    WROTE            D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\G3_AUCTCYCLE_20260906\out\es_daily.parquet
+
+    wrote out/inputs_manifest.json
+====================================================================================================
