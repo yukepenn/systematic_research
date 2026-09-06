@@ -1,0 +1,52 @@
+run_id: G3_ZBMACRO_FT_20260906
+campaign: GENESIS III (Wave 5 — ZBMACRO01 fast track, offline stages)
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+licensed_by: "G00079 FROZEN-READY. Ledger G00083."
+
+ft0_frozen_engine:  # verbatim; ANY deviation later = new class name + re-certification
+  name: ZBMACRO01
+  calendar: "NFP_DAY / CPI_DAY per GENESIS_H2_CALENDAR_20260828 (BLS schedule; maintained as
+    a calendar CSV — an OPERATIONAL DEPENDENCY documented in the packet)"
+  signal: "r1 = close(08:45) - close(08:30) on ZB 1-min (END-stamped, ET). Trade iff r1 < 0."
+  action: "SHORT k=2 ZB filled at the close of the 08:46 bar (one full minute of latency
+    charged in research); EXIT buy at the 15:00 bar close. No overnight. No other conditions."
+  cost_basis: "MODELED ALL_IN $66.86/RT PRIMARY, $129.36 STRESS."
+  binding_riders: "n=40 tail-carried fragility statement travels with every quote; forward
+    chronology monitor: KILL if cumulative forward mean <= 0 at n_fwd >= 20; regime label
+    REGIME-ADJACENT(2023+ inflation-attention era) carried."
+
+stages_this_run:  # OFFLINE ONLY
+  FT1_independent_repro: "a SECOND implementation, clean-room from the FT0 text above (may not
+    import or copy from runs/G3_ZBMACRO_*/src), reproduces the 40 trade dates, directions and
+    08:46/15:00 fill prices from the substrate. Bar: 40/40 dates exact, fills < 1e-9 pt."
+  FT4_ninjascript_offline: |
+    Write class `ZbMacroResponse_v1.cs` INTO THIS RUN DIRECTORY ONLY.
+    🔴 ABSOLUTE BAN: nothing is copied into Documents/NinjaTrader 8/** — a .cs copy triggers a
+    Custom.dll rebuild against the RUNNING real-money book. NT8 compile/Analyzer/parity are
+    DEFERRED to the 09-21 window (precedent: HD-23 offline certification).
+    Conventions: study the existing certified classes (find repo copies under ninjascript/)
+    for: warm-up certificate writer, export/diag writers pointed at a NEW directory (never
+    \mnq\), identity guard (ExpectInstrument), roll guard (ResolveRollDates MIN-over-series
+    pattern), session flatten, fail-closed on missing 08:30/08:45/08:46 bars (holiday/thin),
+    calendar-CSV reader with FAIL-CLOSED on missing/stale file, single-instrument (ZB) design.
+  FT4b_offline_cert: "a Python harness replaying the .cs decision logic event-for-event
+    (state machine mirrored from the source) over the 923-session substrate: decision-series
+    agreement vs FT1 must be 100.000% on event days AND all non-event days (no phantom
+    entries). Print the cert table."
+  FT9_safety_audit: "checklist against the .cs source: every fail-closed path enumerated with
+    line numbers; the ghost-position/account-witness lesson applied (this class runs
+    ALONGSIDE P1 on 2047681 — SoleStrategyOnAccount conflict is REAL and goes to the packet
+    as an owner architecture decision, incl. margin arithmetic: ~2x ZB day margin + P1's
+    6 MNQ vs the ~$10.3k account)."
+  FT10_packet_draft: "DEPLOYMENT_PACKET.md: exact owner enable steps for the 09-21 window,
+    params table, calendar-maintenance duty, riders, monitor wiring (MONITOR-01 quarterly +
+    the forward KILL rule), account-architecture decision box, margin, what-would-tell-us-it-
+    stopped-existing section (§37)."
+
+decision_rule: "ALL five stages complete + FT1 bar met + FT4b 100.000% + FT9 no-open-risk ->
+  ledger PASS = READY-FOR-09-21-WINDOW (NT8 compile/parity + owner enablement remain).
+  Any stage fails -> FAIL with the stage named; the science verdicts stand."
+ledger: "G00083, family GENESIS3_ENGINE."
+outputs: [FROZEN_ENGINE.md, src/ZbMacroResponse_v1.cs, src/ft1_repro.py, src/ft4b_cert.py,
+  out/cert_table.txt, out/ft1_table.txt, DEPLOYMENT_PACKET.md, REPORT.md]

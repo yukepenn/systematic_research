@@ -1,0 +1,32 @@
+run_id: G3_CLOSEHOUR_20260906
+campaign: GENESIS III (Wave 5 — world-scan #7: close-hour hedging-flow momentum, vol-gated)
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+dedup_scope: "NQ EXCLUDED (P1 conflict + the prior clock-bucket kill was P1-conditional).
+  MC-13 (late-day hedging) was bench-parked, never closed; the close-window cluster survived
+  the world-scan skeptic as this exact card. Mechanism: LETF/dealer-gamma rebalancing flows
+  amplify the day's direction into the cash close (JFE pedigree)."
+
+frozen_object: |
+  Markets: ES, RTY, YM (1-min substrates, 2022+, ~1,180 sessions, POINTS).
+  Signal at 15:00 ET: s = sign(close(15:00) - close(09:30)).
+  Position: hold s from close(15:00) to close(16:00) (cash close). One RT/day max.
+  Vol gate (PRIMARY arm): trade only when trailing-20-session daily range is in its top half
+  (causal). UNGATED arm reported beside it. Family = 3 markets x 2 arms = 6 cells,
+  K_eff-corrected; the PREREGISTERED HEADLINE CELL = gated-ES.
+gates:
+  G1_MDE_first: "printed per cell (~590 gated sessions ES)."
+  G2_edge: "gated-ES after-cost mean > 0, session-block CI excludes 0, clears the
+    K_eff-corrected shift null."
+  G3_coherence: "RTY/YM same-sign support printed (classification, not veto); ungated-vs-
+    gated ordering consistent with the flow story (gated >= ungated)."
+  G4_chronology: "2022-23 vs 2024-26 halves; both-wrong-sign = FAIL."
+  G5_cost: "1 RT/day at the deepest window; {1,2}-tick band; ES $12.50/tick."
+  G6_battery: "weekly-vol lead; rho-to-P1 printed (15:00-16:00 overlaps P1's live window —
+    the stacking question is real and answered here)."
+decision_rule: "G2+G4 PASS -> CLOSEHOUR01 candidate (Class-P/S assessment; the rho-to-P1
+  number decides how it stacks). Else closed at scope (§28)."
+evidence_status: DISCOVERY (substrates DISCOVERY_CONSUMED for other objects).
+ledger: "G00085, family GENESIS3_EVENT."
+outputs: [out/gate_table.txt, out/cells.csv, out/era_table.csv, REPORT.md]

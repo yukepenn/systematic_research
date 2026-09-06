@@ -1,0 +1,31 @@
+run_id: G3_FOMCDRIFT_20260906
+campaign: GENESIS III (Wave 5 — world-scan #6: slow-capital post-FOMC drift in bonds)
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+dedup_scope: "Distinct from every closure: pre-event direction (closed, 3 instruments) — this
+  conditions on the REALIZED announcement-day move; ZBMACRO01 (NFP/CPI 08:30 intraday) — this
+  is FOMC 14:00 multi-day; GENESIS_H2 FOMC-DAY same-session NQ mean (closed) — different
+  market, window, horizon. NBER-sourced mechanism: slow-moving capital re-prices duration
+  over days after the announcement."
+
+frozen_object: |
+  Events: FOMC announcement days (the repo FOMC calendar used by G2_F10/F12; assert coverage
+  2009..2026-07, ~140 events). Signal: sign of ZB close(D-1)->close(D0) (points, causal at
+  D0 close). PRIMARY: hold ZB in the signal direction close(D0)->close(D+5). SECONDARY
+  (reported): D+1..D+15 path. ZN mirror reported.
+gates:
+  G1_MDE_first: "printed (~140 events)."
+  G2_edge: "PRIMARY after-cost mean > 0, event-block CI excludes 0, shared-draw circ-shift
+    null p < 0.05."
+  G3_control: "beats matched non-FOMC same-weekday days (same 5-day window)."
+  G4_era_mandated: "ZLB (2009-15) / hiking-normalization (2016-21) / inflation (2022-26)
+    signs printed; modern-negative = FAIL; ZLB-only = REGIME-LOCAL-DEAD (the regime ended)."
+  G5_cost: "trivial at 5d; {1,2}-tick band printed."
+  G6_battery: "weekly-vol lead; rho-to-P1 and rho-to-ZBMACRO01 printed (same-market stacking
+    question answered up front)."
+decision_rule: "G2+G3+G4(not modern-negative/ZLB-only) -> FOMCDRIFT01 candidate (Class-P;
+  natural stack-sibling of ZBMACRO01 if low rho). Else closed at scope (§28)."
+evidence_status: DISCOVERY (first read of this representation on ZB).
+ledger: "G00084, family GENESIS3_EVENT."
+outputs: [out/gate_table.txt, out/event_table.csv, out/era_table.csv, REPORT.md]

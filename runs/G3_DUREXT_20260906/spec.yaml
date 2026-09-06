@@ -1,0 +1,32 @@
+run_id: G3_DUREXT_20260906
+campaign: GENESIS III (Wave 5 — world-scan #11: bond-index duration-extension day)
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+honest_prior: |
+  ADVERSE-LEANING and said so: G00077's banked control measured the generic ES/ZB
+  turn-of-month SPREAD at ~$6/event ≈ zero over T-2..T+1 (n=170). This object differs — it is
+  ZB/ZN ALONE, on the LAST trading day specifically, with a CONCENTRATION clause (index
+  duration extension settles at the month-end close; the flow should sit AT day T, not smear
+  across the turn). The concentration clause is the kill power; a diffuse positive = generic
+  seasonality = FAIL.
+
+frozen_object: |
+  Events: last trading day T of each month (2009..2026-07, ~210 events).
+  PRIMARY: LONG ZB close(T-1) -> close(T). ZN mirror reported.
+  CONCENTRATION placebos (same machinery): the T-2 day and the T+1 day (each vs all-days
+  control) — the PRIMARY must exceed BOTH placebo cells.
+gates:
+  G1_MDE_first: "printed (~210 events)."
+  G2_edge: "PRIMARY after-cost mean > 0, event-block CI excludes 0, shared-draw shift null
+    p < 0.05."
+  G3_concentration: "PRIMARY delta-vs-control > each placebo-day delta (the effect sits AT
+    the extension day)."
+  G4_era: "3-era signs; modern-negative = FAIL."
+  G5_cost: "1-day hold; {1,2}-tick band."
+decision_rule: "G2+G3+G4 PASS -> DUREXT01 candidate (small calendar engine, Class-P).
+  Else closed at scope (§28) — and the closure completes the month-end/rates calendar family
+  alongside G00077."
+evidence_status: DISCOVERY.
+ledger: "G00086, family GENESIS3_EVENT."
+outputs: [out/gate_table.txt, out/event_table.csv, out/placebo_days.csv, REPORT.md]
