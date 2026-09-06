@@ -139,7 +139,7 @@ XM `HD05 … ES/RTY/YM all NQU6/ESU6/RTYU6/YMU6 → instrumentMismatch=False`.
 
 **Both block dates are in the future, so neither leg is latched dead.** The guard latches: a
 re-enable *inside* the window blocks new entries permanently while every health check still reports
-green. **Red zone 2026-09-06 → 2026-09-18. Safe re-enable: **both legs ≥ 2026-09-19** (practically Mon 2026-09-21) — P1's MNQ series rolls **09-18**, two days after NQ's.**
+green. **Red zone 2026-09-06 → 2026-09-18. Safe re-enable: **both legs ≥ 2026-09-19** (practically Mon 2026-09-21) *(superseded 2026-09-05: P1 only — XM withdrawn to observation)* — P1's MNQ series rolls **09-18**, two days after NQ's.**
 🔴 **"P1 ≥ 09-17" WITHDRAWN 2026-09-01.** §5's quoted ROLL-PLAN is the **PAPER** book's (four
 series); the LIVE book has five and P1 has two. Roll on `NQ 12-26` **and `MNQ 12-26`**, all series
 together, `DaysToLoad=365`, `ExpectInstrument="NQ 12-26"`, **`ExpectMnq="MNQ 12-26"`**.

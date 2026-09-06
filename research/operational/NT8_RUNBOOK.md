@@ -1,7 +1,9 @@
 # NT8 OPERATIONS RUNBOOK — the paper book on `DEMO8383477` **and the 🔴 LIVE book on `2047681`**
 
 > ⚠️ Written 2026-08-30 for the paper book. Since **2026-09-01** a **real-money** book runs on
-> account `2047681` (`WeeklyEdgeP1PCTMnq_v1` / `WeeklyEdgeXMConflictMnq_v1`, `MnqPerNq = 3`).
+> account `2047681` — 🔴 **since 2026-09-03 it is ONE leg: `WeeklyEdgeP1PCTMnq_v1` alone,
+> `MnqPerNq = 3`. XM was withdrawn to OBSERVATION by owner decision 2026-09-05**
+> (`OWNER_DECISION_20260905_XM_WITHDRAWN.md`) **and the paper book is dark since 2026-09-03 19:06.**
 > Every hazard and standing rule below applies to it too, and harder. Live state authority:
 > **`research/operational/CURRENT_LIVE_TRUTH.md`**.
 
@@ -17,7 +19,10 @@ STRATEGY_AUDIT.md — parameter/hazard audit). Written 2026-08-30, the day the b
 > ROOT-level lookup that cannot tell you already rolled — so re-enabling P1 anywhere in
 > `09-08 → 09-18`, or XM in `09-06 → 09-18`, blocks new entries **instantly and permanently**
 > while the book still reads Enabled · Realtime · bars advancing · warm-up GO · flat.
-> ✅ **SAFE RE-ENABLE: BOTH LEGS on/after 2026-09-19**, on `NQ 12-26` **and** `MNQ 12-26`.
+> ✅ **SAFE REDEPLOY: on/after 2026-09-19 (practically Mon 2026-09-21)**, on `NQ 12-26` **and**
+> `MNQ 12-26`. 🔴 **The 09-21 redeploy is P1 ONLY** — XM is in observation and is **not**
+> redeployed unless the owner reverses `OWNER_DECISION_20260905_XM_WITHDRAWN.md`; the paper
+> book's restoration is a separate owner decision staged in `DEPLOY_HD23_20260921.md`.
 > **Waiting costs ZERO** — nothing enters between 09-06/09-08 and that date under any plan.
 > 🔴 **CORRECTION 2026-09-01: "P1 on/after 2026-09-17" is ALSO WITHDRAWN**, for the same class
 > of reason as "roll by 09-10" — it is a date inside a latch window. It was computed from NQ's
@@ -64,32 +69,37 @@ healthy. This is the exact defect class the guard exists to prevent.
 ⛔ The file is **parity-certified and must not be edited** (a fix requires a new class + its own
 re-certification). The operational control replaces it:
 
-## ROLL PROCEDURE — **FIVE** instruments on the live book, FOUR on paper · never partially · TWO BOOKS, rolled independently
+## ROLL PROCEDURE — 🔴 **at the 2026-09-21 window this is a P1-ONLY redeploy (TWO series)**
+
+> 🔴 **THE 2026-09-21 REDEPLOY IS GOVERNED BY `DEPLOY_HD23_20260921.md`** — it deploys the
+> HD-20..24 challenger classes, not the September class names below. **Only the live P1 lineage
+> is redeployed on `2047681`. XM stays in observation** (owner decision 2026-09-05); restoring the
+> paper forward-evidence book is staged there as a recommended owner action. The steps below are
+> the generic roll mechanics; class names/parameters for 09-21 come from the deploy packet.
 
 1. Before 2026-09-10, confirm the roll date in **Tools → Instruments → NQ** (NT8 stores a
    per-contract roll date; do not rely on the 8-day convention alone).
 2. Verify the account is **FLAT** (`GetPosition` / Control Center). If not, wait for the
    strategies' own exits — do not hand-flatten a strategy position (see hazard H1).
-3. **Stop both strategies.** 🔴 **NOT via `StopStrategy(deployment_id)` — there is no `deployment_id` for these legs.** `ListDeployedStrategies(account="2047681")` returns `total: 4, deployments: []` because both were enabled through the NT8 UI, not `DeployStrategy`. **The NT8 Control Center is the only route, and stopping is an OWNER action.** Confirm 0 running.
-4. Redeploy with `DaysToLoad = 365`. ⚠️ **Not before 2026-09-19, EITHER leg** (see §0).
+3. **Stop the one running live strategy (`399562885`).** 🔴 **NOT via `StopStrategy(deployment_id)` — there is no `deployment_id` for this leg.** It was enabled through the NT8 UI, not `DeployStrategy`. **The NT8 Control Center is the only route, and stopping is an OWNER action.** Confirm 0 running.
+4. Redeploy with `DaysToLoad = 365`. ⚠️ **Not before 2026-09-19** (see §0).
 
-   **PAPER `DEMO8383477`** — `WeeklyEdgeP1PCT_v3` / `WeeklyEdgeXMConflict_v4`, **four** series:
-   - P1 on **NQ 12-26**, `ExpectInstrument="NQ 12-26"`
-   - XM on **NQ 12-26** with `EsInstrument="ES 12-26"`, `RtyInstrument="RTY 12-26"`,
-     `YmInstrument="YM 12-26"` — **all three must be passed explicitly; the defaults are 09-26.**
-
-   🔴 **LIVE `2047681`** — `WeeklyEdgeP1PCTMnq_v1` / `WeeklyEdgeXMConflictMnq_v1`, **FIVE** series
-   (P1: NQ + MNQ; XM: NQ/ES/RTY/YM + MNQ). Everything above, **plus on both legs**:
+   🔴 **LIVE `2047681`** — the P1 lineage only, **TWO** series (NQ decision + MNQ execution):
    - `MnqInstrument="MNQ 12-26"` and `ExpectMnq="MNQ 12-26"` — **the hard-coded default is
      `MNQ 09-26`** (`WeeklyEdgeP1PCTMnq_v1.cs:939`)
-   - `ExpectInstrument="NQ 12-26"`, `MnqPerNq` unchanged at **3**
+   - `ExpectInstrument="NQ 12-26"`, `MnqPerNq` — 🔴 whatever the owner sets (OQ-7 is open); carry
+     3 forward only if unchanged
    - `MxInstrumentGuard` **hard-halts** if the decision and execution contracts ever differ in
      month, so rolling NQ while leaving MNQ on September is the exact partial roll this title forbids.
 
-   **The two books roll independently and BOTH must be verified.**
+   **PAPER `DEMO8383477`** (only if the owner restores the forward-evidence book — recommended,
+   staged in `DEPLOY_HD23_20260921.md`): P1 on **NQ 12-26** `ExpectInstrument="NQ 12-26"`; XM
+   with `EsInstrument="ES 12-26"`, `RtyInstrument="RTY 12-26"`, `YmInstrument="YM 12-26"` —
+   **all passed explicitly; the defaults are 09-26.** Paper XM is observation, not executable.
 5. Verify: state Realtime, warm-up bars ≈350k, account flat, `ordersCount 0`, and the
-   `instruments` list shows — **PAPER**: `NQZ6/ESZ6/RTYZ6/YMZ6`;
-   🔴 **LIVE**: P1 = `NQZ6` + **`MNQZ6`**, XM = `NQZ6/ESZ6/RTYZ6/YMZ6` + **`MNQZ6`**.
+   `instruments` list shows — 🔴 **LIVE**: **exactly ONE row on `2047681`**, P1 = `NQZ6` +
+   **`MNQZ6`** (a second live row is a DEFECT — XM is withdrawn); **PAPER** (if restored):
+   `NQZ6/ESZ6/RTYZ6/YMZ6` + P1's `NQZ6`.
    A live acceptance check that does not see `MNQZ6` has verified nothing about the execution series.
 6. 🔴 **Read the new `ROLL-PLAN` line and abort if `blockNewEntriesFrom` is not in the future.**
    This is the only check that does not go stale; every hardcoded date in this repo has.
@@ -190,19 +200,21 @@ workspace/config file, and the add-on registry is in-memory.
 **Any NT8 restart — crash, Windows update, power event, or a deliberate one — silently stops BOTH
 books: the paper NQ book on `DEMO8383477` and the 🔴 LIVE MNQ book on `2047681`. Nothing announces
 it. Any open position is left with no manager** — no strategy here has a resting protective order;
-every stop is synthetic and dies with the strategy. 🔴 **On the live book that can leave up to
-9 MNQ of real money naked against a $10,206.86 account. "Never restart while positioned" is a
-real-money rule, not hygiene.** The strategies were redeployed manually (`dep_68588bacd445` P1, `dep_7f22307847c2` XM,
+every stop is synthetic and dies with the strategy. 🔴 **On the live P1-only book that can leave up
+to 6 MNQ of real money naked (P1 size 2 × `MnqPerNq` 3) against a ~$10,260 account. "Never restart
+while positioned" is a real-money rule, not hygiene.** The strategies were redeployed manually (`dep_68588bacd445` P1, `dep_7f22307847c2` XM,
 both verified Realtime/flat, warm-up identical: 352,670 bars, $70,585 / $43,705).
 
 ## Standing rules that follow
 
-1. **After ANY NT8 restart, redeploy both legs with `DaysToLoad = 365` and verify** — the shadow
-   runner does not do this and cannot detect it.
+1. **After ANY NT8 restart, redeploy the live P1 leg only (`WeeklyEdgeP1PCTMnq_v1`) with
+   `DaysToLoad = 365` and verify** — the shadow runner does not do this and cannot detect it.
+   Use the §12 parameter sheet in `INCIDENT_20260903_GHOST_POSITION.md`; do not redeploy XM.
 2. **Be flat before any deliberate restart.**
-3. A **daily availability check** belongs in the routine: **`ListAllStrategies` must show 2 Realtime
-   rows on `DEMO8383477` AND 2 Realtime rows on `2047681`, asserted PER ACCOUNT with class names
-   checked.** A bare count of "two" passes while the live pair is silently down. ⚠️ **Never count with
+3. A **daily availability check** belongs in the routine: **`ListAllStrategies` must show exactly
+   1 Realtime row on `2047681` (`399562885`, parameters populated), asserted with the class name
+   checked. `DEMO8383477` is expected at 0 rows until the owner restores the paper book.**
+   ⚠️ **Never count with
    `ListDeployedStrategies` or `ListStrategies`** — the deployment registry has reported 3
    deployments for 2 strategies, and on 2026-09-01 `ListStrategies` returned 2 of 4 rows, both stale
    shells, producing a confidently wrong audit. A silent zero **on either account** is the failure

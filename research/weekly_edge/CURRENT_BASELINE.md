@@ -35,7 +35,8 @@ modelled spread (P1 $14.44, XM $12.50). **NT8 nets are a different quantity** �
 > ### ⚠️ **D IS A CERTIFIED COMPONENT SET, NOT PORTFOLIO B.**
 > **B is inverse-volatility weighted, and running both legs at quantity 1 is not an implementation
 > of it.** ✅ An integer-contract mapping **was** selected — **`M_11`** (P1 ×1 + XM ×1), owner-ratified
-> 2026-08-30 — and is 🔴 **live at 0.30 scale on MNQ** (`MnqPerNq = 3`, account `2047681`). **M_11 is
+> 2026-08-30 — and **was live at 0.30 scale on MNQ 2026-09-01 → 09-03** (`MnqPerNq = 3`, account
+> `2047681`); see the LIVE STATUS block below for what runs now. **M_11 is
 > not B.** Running both legs at their default quantity 1 is **not** B's mapping and
 > **does not reproduce B's economics** — B's $2,012/wk at fixed DD is a research figure under
 > research weights and the research cost model. Selecting the mapping is an owner capital-allocation

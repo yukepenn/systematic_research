@@ -6,9 +6,10 @@
 > historical re-optimisation of these objects.**
 
 > # 🔒 **The DEFINITIONS below remain FROZEN** for forward adjudication — that is unchanged.
-> # Freezing a definition is not enabling it. But 🔴 **the objects derived from them ARE now live:**
-> # since **2026-09-01** the M_11 pair executes on MNQ at `MnqPerNq = 3` on **real-money account
-> # `2047681`** (`research/operational/CURRENT_LIVE_TRUTH.md`). `Sim101` remains untouched.
+> # Freezing a definition is not enabling it. But 🔴 **a derived object IS live:** since
+> # **2026-09-01** on **real-money account `2047681`** — since 2026-09-03 **the P1 leg alone** at
+> # `MnqPerNq = 3` (XM withdrawn to observation 2026-09-05;
+> # `research/operational/CURRENT_LIVE_TRUTH.md`). `Sim101` remains untouched.
 
 ---
 

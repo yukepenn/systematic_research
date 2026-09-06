@@ -27,8 +27,9 @@ override default behaviour. Historical campaigns are archive; do not narrate the
   locked-forward data for tuning.
 - **No force-push. No history rewrites.** Never `git add -A` blindly.
 - 🔴 **The roll fail-safe LATCHES and every health check stays green while it does.** Re-enabling
-  either live leg inside `2026-09-06 → 2026-09-18` blocks new entries permanently. **Both legs are
-  safe only `≥ 2026-09-19`**, on December contracts, all five series together. The single authority
+  ANY leg inside `2026-09-06 → 2026-09-18` blocks new entries permanently. **Safe redeploy is
+  `≥ 2026-09-19` (practically Mon 09-21), P1 ONLY, onto December** — XM was withdrawn to
+  observation 2026-09-05 and is not redeployed. The single authority
   is `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL — never a date remembered from anywhere else.
 - **DOM / Level-II / Market Replay collection is PAUSED** (owner risk-control, 2026-08-12).
   Do not resume without explicit recorded owner re-authorization —
@@ -55,12 +56,15 @@ A baseline being empty does not erase the others. **EXECUTABLE · PARITY-CERTIFI
 are three separate statuses.**
 
 ⚠️ **Certifying both legs of a portfolio does NOT produce an executable portfolio.** Slot D's
-mapping **was** selected: **`M_11`** (P1 ×1 NQ + XM ×1 NQ), owner-ratified 2026-08-30 「确认 M_11」.
-🔴 **The LIVE object is the MX01 MNQ port of M_11 at `MnqPerNq = 3` = 0.30 × M_11**, running on
-account `2047681` since 2026-09-01 — a **fifth** object, not A/B/C/D. The research portfolio B is
-**inverse-vol weighted** and M_11 is *not* an implementation of it. **Never quote a research
-portfolio figure for M_11 or for the live book**, and multiply any full-size research figure by
-**0.30** before comparing it to the live account.
+mapping **was** selected: **`M_11`** (P1 ×1 NQ + XM ×1 NQ), owner-ratified 2026-08-30 「确认 M_11」
+— 🔴 **slot D is SUSPENDED since 2026-09-05: the owner withdrew XM to OBSERVATION**
+(`research/operational/OWNER_DECISION_20260905_XM_WITHDRAWN.md`; mapping not retracted,
+certification not revoked). 🔴 **The LIVE object since 2026-09-03 is `P1_ONLY_MNQ3`** — the P1 leg
+alone at `MnqPerNq = 3` on `2047681` — a **sixth** object (slot E), none of A–D and **not a smaller
+M_11**. The research portfolio B is **inverse-vol weighted** and M_11 is *not* an implementation of
+it. **Never quote any A–D or M_11 figure for the live book** — in particular CAP01B's 6.5 % ruin is
+the PAIR's number; the live book's risk is **`CAP02B`** (0.025 full pool at 3 MNQ, band ~2–20 %,
+0.483 at zero edge). A ×0.30 rescale of a pair figure is still a pair figure.
 
 ## 4. Method (non-negotiable — each rule was bought with a measured failure)
 

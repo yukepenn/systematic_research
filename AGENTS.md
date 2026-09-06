@@ -5,9 +5,9 @@ Read [`CLAUDE.md`](CLAUDE.md) first. It is the operating contract.
 - **Active campaign:** #7 `WEEKLY_EDGE` (`research/weekly_edge/`).
 - **Current research state:** `research/weekly_edge/CURRENT_BASELINE.md`.
 - **Current executable state:** `research/operational/EXECUTION_MANIFEST.md`.
-- 🔴 **THERE IS A LIVE REAL-MONEY BOOK** since 2026-09-01: account `2047681`, the M_11 pair
-  executing on MNQ at `MnqPerNq = 3`. **Read `research/operational/CURRENT_LIVE_TRUTH.md` before
-  touching anything.**
+- 🔴 **THERE IS A LIVE REAL-MONEY BOOK** since 2026-09-01: account `2047681` — since 2026-09-03
+  it is **ONE leg, `WeeklyEdgeP1PCTMnq_v1` at `MnqPerNq = 3`** (XM withdrawn to observation
+  2026-09-05). **Read `research/operational/CURRENT_LIVE_TRUTH.md` before touching anything.**
 - **Bootstrap = README + CLAUDE + CURRENT_LIVE_TRUTH + CURRENT_BASELINE.** Nothing else by default.
 - **Do not read `research/archive/` or `runs/` recursively** to orient yourself.
 - **Never place, modify or cancel an order. Never enable, disable, resize or start a strategy** —

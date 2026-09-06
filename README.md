@@ -2,15 +2,16 @@
 
 Autonomous systematic research on NQ / MNQ futures.
 
-> 🔴 **THIS REPO NOW HAS A LIVE REAL-MONEY BOOK.** Since **2026-09-01**, account `2047681`
-> runs the M_11 pair executing on MNQ at `MnqPerNq = 3`. The line that used to stand here —
+> 🔴 **THIS REPO NOW HAS A LIVE REAL-MONEY BOOK.** Since **2026-09-01**, account `2047681` —
+> and since **2026-09-03** it runs **ONE leg: `WeeklyEdgeP1PCTMnq_v1` at `MnqPerNq = 3`** (the
+> XM leg was withdrawn to observation by owner decision 2026-09-05). The line that used to stand here —
 > *"nothing is authorized for live trading, and no live order has ever been placed"* — is
 > **no longer true**. Read
 > **[`CURRENT_LIVE_TRUTH.md`](research/operational/CURRENT_LIVE_TRUTH.md)** before touching
 > anything. Enabling, disabling, resizing or ordering on that account is an **owner action**,
 > never an agent one.
 
-_Landing page. Current as of **2026-09-01**. It links; it does not duplicate._
+_Landing page. Current as of **2026-09-05**. It links; it does not duplicate._
 
 ---
 
@@ -119,7 +120,8 @@ returned 2 of 4 rows on 09-01 and produced a confidently wrong audit.)*
 - 🔴 **ROLL RED ZONE `2026-09-06 → 2026-09-18`.** Re-enabling inside it latches the fail-safe
   **permanently** while every health check still reports green. The roll now involves **`MNQ 12-26`
   as well as `NQ 12-26`** — any instruction naming only NQ is incomplete, **including the dates:
-  both legs are safe only `≥ 2026-09-19`.** Single authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL.
+  P1 is safe to redeploy only `≥ 2026-09-19` (P1 ONLY — XM is in observation and is not
+  redeployed).** Single authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL.
 - 🔴 **Strategy source must never go through the CrossTrade MCP** — it is a *remote* server whose
   terms owe the customer no confidentiality. `CompileNinjaScript` / `WriteNinjaScriptFile` /
   `ReadNinjaScriptFile` on our own classes are banned; see `CLAUDE.md` §1 and the local path in §6.

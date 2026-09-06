@@ -368,7 +368,7 @@ guessed 09-10 rollover; it is superseded.
 🔴 **AND SO IS THIS ONE — WITHDRAWN 2026-08-30, MARKED INLINE 2026-09-01.** Rolling on 09-04
 would re-enable the book *before* its block dates and then latch it dead from 09-06/09-08 with
 every health check green. Recorded as withdrawn in `STATE_20260831.md:42`, but this line was
-reachable un-annotated from `MONITORING_CALENDAR.md`. Correct rule: **both legs ≥ 2026-09-19** (practically Mon 2026-09-21) — P1's MNQ series rolls **09-18**, two days after NQ's.
+reachable un-annotated from `MONITORING_CALENDAR.md`. Correct rule: **both legs ≥ 2026-09-19** (practically Mon 2026-09-21) *(superseded 2026-09-05: P1 only — XM withdrawn to observation)* — P1's MNQ series rolls **09-18**, two days after NQ's.
 Authority: `research/operational/CURRENT_LIVE_TRUTH.md` §ROLL. Exits are never gated, so a missed roll stops new risk rather
 than stranding a position.
 

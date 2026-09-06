@@ -43,6 +43,15 @@ Two mechanics that must travel with that row:
 
 ## Registry
 
+> 🔴 **PATCHED 2026-09-05 — the machine census is the authority, this table is a VIEW.**
+> `research_sdk/data_census.py` + `research/data/NT8_CAPABILITY_CENSUS.csv` (51,936 rows) are
+> authoritative (`research/data/DATA_VERDICT_20260831.md`); any absence claim must cite the census,
+> never this table. Known rows this table still under-reports (per the census):
+> **MNQ tick** ~186 dates Last-only 2026-01-01→08-05 (128 pre-burn, 0 extracted) ·
+> **NQ minute Bid/Ask** 81 sessions 2026-05-10→08-11 (0 extracted, spread-capable) ·
+> **NQ full-BBO unextracted remainder** ~129 pre-seal sessions ·
+> certified daily VIX-complex/VX-settlements/COT-TFF assets in `runs/GENESIS_FREEDATA_CBOE_20260828/certified/`.
+
 | asset | symbol | resolution | series | first | last | usable_sessions | extraction | cost | evidence_class | seal |
 |---|---|---|---|---|---|---|---|---|---|---|
 | NQ 1-minute bars (nq1m_base) | NQ | 1-minute | Last OHLCV | 2006-01-05 08:59:00 | 2026-05-29 16:59:00 | 6223 | MATERIALIZED | $0 | STRUCTURAL | pre-2026-08-01 only |
@@ -53,15 +62,15 @@ Two mechanics that must travel with that row:
 | NQ grid1s (1-sec L1 grid, has sflow) | NQ | 1-second | derived L1 | 2025-08-11 | 2026-05-20 | 48 | MATERIALIZED | $0 | MICROSTRUCTURE-CURRENT | pre-2026-08-01 |
 | NQ sechilo (per-sec mid hi/lo) | NQ | 1-second | derived L1 | 2025-08-14 | 2026-05-20 | 45 | MATERIALIZED | $0 | MICROSTRUCTURE-CURRENT | pre-2026-08-01 |
 | ES tick+BBO (OLD) | ES | tick | Last+Bid+Ask | 2025-08-14 | 2026-05-20 | 39 | MATERIALIZED | $0 | MICROSTRUCTURE-CURRENT | pre-2026-08-01 |
-| Market internals $TICK | $TICK | 1-minute | OHLC index (NO volume) | 2022-01-03 09:31:00 | 2026-07-31 15:59:00 | 1147 | MATERIALIZED | $0 | REGIME-LOCAL (2022+) | pre-2026-08-01, hard-dropped at build |
-| Market internals $TRIN | $TRIN | 1-minute | OHLC index (NO volume) | 2022-01-03 09:31:00 | 2026-07-31 15:59:00 | 1147 | MATERIALIZED | $0 | REGIME-LOCAL (2022+) | pre-2026-08-01, hard-dropped at build |
+| Market internals $TICK | $TICK | 1-minute | OHLC index (NO volume) | **2012-12-31** (extended, CAPPROBE02) | 2026-07-31 15:59:00 | **3,402 payload** (was 1147; 99.25 % of 2013-21 NYSE cal) | MATERIALIZED | $0 | spans eras — 2013-21 slice PRE-FROZEN/UNSPENT, era-stratified use only (ERABREAK01 forbids pooling) | pre-2026-08-01, hard-dropped at build |
+| Market internals $TRIN | $TRIN | 1-minute | OHLC index (NO volume) | **2013-01-02** (extended, CAPPROBE02) | 2026-07-31 15:59:00 | **3,400 payload** (99.43 % of 2013-21 NYSE cal) | MATERIALIZED | $0 | spans eras — same PRE-FROZEN rule as $TICK | pre-2026-08-01, hard-dropped at build |
 | Market internals $VIX | $VIX | 1-minute | OHLC index (NO volume) | 2022-01-03 09:32:00 | 2026-07-31 15:59:00 | 1147 | MATERIALIZED | $0 | REGIME-LOCAL (2022+) | pre-2026-08-01, hard-dropped at build |
 | NQ tick store (UNEXTRACTED remainder) | NQ | tick | Last (+Bid/Ask where present) | 2025-08-12 | 2026-05-08 | 141 | ON DISK, NOT EXTRACTED | $0 | MICROSTRUCTURE-CURRENT | pre-2026-08-01 |
-| ES 1-minute store | ES | 1-minute | Last OHLCV | 2021-12-30 | 2026-07-31 | 1486 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |
+| ES 1-minute store | ES | 1-minute | Last OHLCV | 2021-12-30 | 2026-07-31 | 1486 | **EXTRACTED** (`runs/SM1M_ES_SUBSTRATE/out/es_1m_2022_2026.parquet`) — this row previously said NOT EXTRACTED, stale | $0 | unclassified | pre-2026-08-01 |
 | CL 1-minute store | CL | 1-minute | Last OHLCV | 2022-01-02 | 2026-07-31 | 1481 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |
 | MNQ 1-minute store | MNQ | 1-minute | Last OHLCV | 2021-12-30 | 2026-07-31 | 1479 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |
-| RTY 1-minute store | RTY | 1-minute | Last OHLCV | 2021-12-30 | 2026-07-31 | 1472 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |
-| YM 1-minute store | YM | 1-minute | Last OHLCV | 2021-12-30 | 2026-07-31 | 1458 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |
+| RTY 1-minute store | RTY | 1-minute | Last OHLCV | 2021-12-30 | 2026-07-31 | 1472 | **EXTRACTED** (`runs/SM1M_RTY_SUBSTRATE/out/rty_1m_2022_2026.parquet`) — this row previously said NOT EXTRACTED, stale | $0 | unclassified | pre-2026-08-01 |
+| YM 1-minute store | YM | 1-minute | Last OHLCV | 2021-12-30 | 2026-07-31 | 1458 | **EXTRACTED** (`runs/SM1M_YM_SUBSTRATE/out/ym_1m_2022_2026.parquet`) — this row previously said NOT EXTRACTED, stale | $0 | unclassified | pre-2026-08-01 |
 | ZB 1-minute store | ZB | 1-minute | Last OHLCV | 2023-01-02 | 2026-07-31 | 1161 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |
 | 6J 1-minute store | 6J | 1-minute | Last OHLCV | 2025-12-30 | 2026-07-31 | 185 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |
 | ZN 1-minute store | ZN | 1-minute | Last OHLCV | 2025-12-30 | 2026-07-31 | 185 | ON DISK, NOT EXTRACTED | $0 | unclassified | pre-2026-08-01 |

@@ -5,12 +5,12 @@ _**SUPERSEDED IN PART, 2026-08-27 (operational reset).** Both strategies are now
 PARITY-CERTIFIED** — see `research/operational/EXECUTION_MANIFEST.md`,
 `runs/WE_P1PCT_PARITY_20260827/` and `runs/WE_XM_PARITY_20260827/`. The **design, risk-limit and
 protocol** sections below remain authoritative. **The XM object is now `WeeklyEdgeXMConflict_v2`;
-`_v1` is superseded.** 🔴 **BOTH LINEAGES ARE NOW ENABLED** — the certified NQ pair (`_v3` / `_v4`)
-on paper `DEMO8383477` since 2026-08-30, and the **MNQ execution ports**
-(`WeeklyEdgeP1PCTMnq_v1` / `WeeklyEdgeXMConflictMnq_v1`) on **real-money account `2047681` since
-2026-09-01**. The owner did the enabling, and that has not changed: **no agent enables, disables,
-resizes or orders.** Live state: `research/operational/CURRENT_LIVE_TRUTH.md`. The **design,
-risk-limit and protocol** sections below remain authoritative._
+`_v1` is superseded.** 🔴 **ONE object is enabled (as of 2026-09-05): `WeeklyEdgeP1PCTMnq_v1` on
+real-money `2047681`** — the paper NQ pair (`_v3`/`_v4`, enabled 2026-08-30) has been down since
+2026-09-03 19:06, and live XM (`WeeklyEdgeXMConflictMnq_v1`, enabled 2026-09-01) was **withdrawn
+to observation 2026-09-05**. The owner did the enabling, and that has not changed: **no agent
+enables, disables, resizes or orders.** Live state: `research/operational/CURRENT_LIVE_TRUTH.md`.
+The **design, risk-limit and protocol** sections below remain authoritative._
 
 ---
 

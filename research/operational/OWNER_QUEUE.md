@@ -68,6 +68,8 @@ payment** — those, and only those, still wait on you.
 Account `2047681`, `WeeklyEdgeP1PCTMnq_v1` (`399562885`) + `WeeklyEdgeXMConflictMnq_v1`
 (`399562886`), decisions on `NQ 09-26` / orders on `MNQ 09-26`, `MnqPerNq = 3`. Recorded in
 `CURRENT_LIVE_TRUTH.md`; paper authorization in `OWNER_DECISION_20260830.md`.
+⚠️ **Since then: XM withdrawn to observation 2026-09-05** (`OWNER_DECISION_20260905_XM_WITHDRAWN.md`)
+— **the live book is P1 alone.**
 **The standing rule survives its closure:** enabling, disabling, resizing or ordering remains an
 owner action performed in the NT8 UI — never an agent one.
 
@@ -84,13 +86,16 @@ owner action performed in the NT8 UI — never an agent one.
 > |---|---:|---:|---:|
 > | 1 | 36 % | **0.1 %** | 0.1 % |
 > | 2 | 71 % | **1.9 %** | 2.4 % |
-> | 🔴 **3 — running now** | **108 %** | 🔴 **6.5 %** | **8.2 %** |
+> | **3 — the PAIR (🔴 not the live book)** | **108 %** | **6.5 %** | **8.2 %** |
+> | 🔴 **3 — RUNNING NOW: P1 alone (`CAP02B`, 6/6 PASS)** | **76 %** | 🔴 **2.5 %** full / 0.8 % warm | — |
 >
-> 🔴 **AND IT DEPENDS ALMOST ENTIRELY ON WHETHER THE EDGE IS REAL.** At 3 MNQ, P(losing the
-> account) over a true two years is **5.4 %** at the honest HIGH edge ($1,900/wk full size),
-> **9.7 %** at the central ($1,450), **21.6 %** at the low ($900) — and **60.4 % if the edge is
-> zero.** The campaign's own estimate is a ~70 % chance two years of live data cannot
-> distinguish this book from zero. **The defensible band is 6 %–22 %.**
+> 🔴 **UPDATED 2026-09-05 — the deployed object is P1 ALONE** (XM withdrawn to observation), so
+> **this decision is priced off `CAP02B`, not CAP01B**: P1-alone band **~2 %–20 %**, **48.3 % if
+> the edge is zero** (`runs/CAP02B_P1_ONLY_RUIN_CORRECTED_20260905/`).
+> *(PAIR figures, kept for reference:)* at 3 MNQ, P(losing the account) over a true two years is
+> **5.4 %** at the honest HIGH edge ($1,900/wk full size), **9.7 %** central ($1,450), **21.6 %**
+> low ($900), **60.4 %** if the edge is zero; pair band **6 %–22 %**. The campaign's own estimate
+> is a ~70 % chance two years of live data cannot distinguish this book from zero.
 >
 > ⚠️ An earlier version of this row said **66.2 %**. That was `P(drawdown from peak > equity)`,
 > **not** the probability of losing the account, and the two differ by 10× because the modelled

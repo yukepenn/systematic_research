@@ -8,11 +8,12 @@ _**This file answers "what exactly is installed and reproducible?"** They are di
 > **`research/operational/CURRENT_LIVE_TRUTH.md` is the authority for live state;** this file is the
 > authority for what is *installed and reproducible*. Different questions.
 >
-> **🔴 LIVE `2047681`** (real money, $10,206.86): `WeeklyEdgeP1PCTMnq_v1` (`399562885`) +
-> `WeeklyEdgeXMConflictMnq_v1` (`399562886`) — decisions on `NQ 09-26`, orders on `MNQ 09-26`,
-> `MnqPerNq = 3` = **0.30 NQ-equivalent** · `runs/MX01_MNQ_EXECUTION_PORT_20260831/`.
-> **PAPER `DEMO8383477`**: `WeeklyEdgeP1PCT_v3` + `WeeklyEdgeXMConflict_v4` — the forward-evidence
-> book; its fills remain `SIMULATED_FILL_NON_EVIDENTIAL`.
+> **🔴 LIVE `2047681`** (real money, ~$10,260): `WeeklyEdgeP1PCTMnq_v1` (`399562885`) **ALONE**
+> — decisions on `NQ 09-26`, orders on `MNQ 09-26`, `MnqPerNq = 3` = **0.30 NQ-equivalent** ·
+> `runs/MX01_MNQ_EXECUTION_PORT_20260831/`. 🔴 **XM (`399562886`) WITHDRAWN TO OBSERVATION
+> 2026-09-05** (`OWNER_DECISION_20260905_XM_WITHDRAWN.md`) — slot E below is the live object.
+> **PAPER `DEMO8383477`**: not running since 2026-09-03 19:06 (connection null); when it ran,
+> its fills were `SIMULATED_FILL_NON_EVIDENTIAL`.
 >
 > `Sim101` has never been touched. Historical backtests below ran on the isolated **Backtest**
 > scratch account.
@@ -128,8 +129,9 @@ Baseline B is the **inverse-volatility** research weighting. The certified execu
 
 **The research weighting has not been silently changed.** ✅ **The integer-contract mapping WAS selected: `M_11` (P1 ×1 NQ + XM ×1 NQ), owner-ratified
 2026-08-30 「确认 M_11」** (`OQ6_MAPPING_PACKET.md`, `runs/G2_OQ6_MAPPING_20260830`), which upgraded
-slot D to `EXECUTABLE_PORTFOLIO (mapping M_11)` above. 🔴 **The LIVE implementation is the MX01 MNQ
-port at `MnqPerNq = 3` = 0.30 × M_11**, on account `2047681` since 2026-09-01.
+slot D to `EXECUTABLE_PORTFOLIO (mapping M_11)` above. 🔴 **The MX01 MNQ port at `MnqPerNq = 3`
+= 0.30 × M_11 was live 2026-09-01 → 09-03; since then the live implementation is `P1_ONLY_MNQ3`
+(slot E), not 0.30 × M_11.**
 ⚠️ **M_11 is still NOT an implementation of inverse-vol Portfolio B** — it lands within 5pp of B's
 risk share by happy accident, and **B's `$2,012/wk` must never be quoted for it, nor for the live
 book.** Multiply any full-size research figure by **0.30** before comparing it to the live account.

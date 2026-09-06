@@ -1,11 +1,14 @@
-# CURRENT_LIVE_TRUTH — 2026-09-01 05:10 ET, **head updated 2026-09-03 22:29 ET**
+# CURRENT_LIVE_TRUTH — 2026-09-01 05:10 ET, **head updated 2026-09-05 23:50 ET**
 
-> # 🟡 STATE NOW — 2026-09-03 22:29 ET: **1 OF 4 LEGS RUNNING. ACCOUNT FLAT.**
+> # 🟡 STATE NOW — 2026-09-05 23:50 ET: **1 OF 4 LEGS RUNNING. ACCOUNT FLAT.**
+> **Re-verified from the machine 09-05**: `ListAllStrategies` → exactly ONE row on `2047681`
+> (`399562885`, Realtime, enabled, flat, params populated, guards armed); account flat,
+> `netLiquidation $10,260.14`; halt scan clean; no stale `Finalized` shells remain.
 > 
 > | leg | state | writer |
 > |---|---|---|
 > | **LIVE P1** `WeeklyEdgeP1PCTMnq_v1/399562885` | ✅ **Realtime, enabled, flat** | ✅ ALIVE |
-> | **LIVE XM** `WeeklyEdgeXMConflictMnq_v1` | 🔴 **NOT DEPLOYED** | dead since 09-02 10:40 |
+> | **LIVE XM** `WeeklyEdgeXMConflictMnq_v1` | 🔴 **WITHDRAWN TO OBSERVATION 2026-09-05** (owner decision — `OWNER_DECISION_20260905_XM_WITHDRAWN.md`). **Do not redeploy.** | dead since 09-02 10:40 |
 > | PAPER P1 `WeeklyEdgeP1PCT_v3` | 🔴 **NOT DEPLOYED** | frozen 19:06 |
 > | PAPER XM `WeeklyEdgeXMConflict_v4` | 🔴 **NOT DEPLOYED** | frozen 19:06 |
 > 
@@ -90,6 +93,10 @@
 >
 > 🔴 **DO NOT trade MNQ by hand on `2047681` while a leg holds a position** until HD-23 ships.
 > The strategy cannot see it. A manual trade in a *different* instrument is harmless.
+> *(Superseded 2026-09-05: the owner hand-trades MNQ as standing practice. Mitigations: run
+> `python -m research_sdk.ghost_watch --watch 60` while trading — read-only, replays the 09-03
+> incident 5/5 — and at 09-21 deploy with `SoleStrategyOnAccount=true` + `AcctWitnessMode=ENFORCE`;
+> see `DEPLOY_HD23_20260921.md` §6.)*
 >
 > ✅ **Fixes are BUILT, CERTIFIED OFFLINE (32/32) AND NOT DEPLOYED** — four new classes,
 > `_v2`/`_v4`/`_v5`. Nothing was copied into NT8; no `Custom.dll` was rebuilt.
@@ -102,9 +109,10 @@
 ## 🔴 THE STATUS CHANGED: THE BOOK IS NOW ON REAL MONEY.
 
 **Owner enabled the MNQ book on live account `2047681` on 2026-09-01.**
-`LIVE = YES.` Account flat, **$10,206.86**, zero trades so far, zero commission paid.
-Re-verified 05:04 ET from `ListAllStrategies` / `ListOrders` / `ListExecutions` — all three
-independently report no order and no fill has ever been placed on this account.
+`LIVE = YES.` *(Reading as of 2026-09-01 05:04 ET:)* account flat, **$10,206.86**, zero trades so
+far, zero commission paid — verified then from `ListAllStrategies` / `ListOrders` / `ListExecutions`.
+⚠️ **Stale as a balance**: real fills followed on both legs (XM 09-01 09:45, P1 09-03 11:05, AutoLiq
+close +$105); balance 09-05 is **$10,260.14** and the deployed set is **P1 alone** (head banner).
 
 This file is the **authoritative live-state document**. Verified from the machine, not asserted.
 Build record: `runs/MX01_MNQ_EXECUTION_PORT_20260831/`.
@@ -134,10 +142,10 @@ Build record: `runs/MX01_MNQ_EXECUTION_PORT_20260831/`.
 
 ## THE TWO BOOKS
 
-| account | connection | legs | class | id | state **as of 2026-09-03 22:29 ET** |
+| account | connection | legs | class | id | state **as of 2026-09-05 23:50 ET** |
 |---|---|---|---|---|---|
-| **`2047681`** | **Live** | **P1 MNQ** | `WeeklyEdgeP1PCTMnq_v1` | `399562885` | ✅ **Realtime, enabled, flat** (redeployed 22:28) |
-| **`2047681`** | **Live** | **XM MNQ** | `WeeklyEdgeXMConflictMnq_v1` | `399562886` | 🔴 **NOT DEPLOYED** |
+| **`2047681`** | **Live** | **P1 MNQ** | `WeeklyEdgeP1PCTMnq_v1` | `399562885` | ✅ **Realtime, enabled, flat** (redeployed 09-03 22:28) |
+| **`2047681`** | **Live** | **XM MNQ** | `WeeklyEdgeXMConflictMnq_v1` | `399562886` | 🔴 **WITHDRAWN TO OBSERVATION 2026-09-05 — do not redeploy** (`OWNER_DECISION_20260905_XM_WITHDRAWN.md`) |
 | `DEMO8383477` | Simulation | P1 NQ | `WeeklyEdgeP1PCT_v3` | `399562881` | 🔴 **NOT DEPLOYED** · connection null |
 | `DEMO8383477` | Simulation | XM NQ | `WeeklyEdgeXMConflict_v4` | `399562882` | 🔴 **NOT DEPLOYED** · connection null |
 
@@ -164,6 +172,11 @@ their purpose.
 > The original claim generalised one observed recovery (XM) to both legs without checking P1.
 
 ## THE LIVE OBJECT — verified from its own warm-up certificate
+
+🔴 **The live object's current certificate is `warmup_p1pct_20260904_022711Z.csv`** (verdict GO,
+7/7, `DaysToLoad 365`, `bars_count 355,940`, `instrument NQU6`, `exec_instrument MNQU6`,
+`mnq_per_nq 3`, `config_fault none`, both identity guards ARMED — see head banner). The block
+below is the **2026-09-01 deployment record, kept for history; XM is no longer deployed**:
 
 `C:\NT8_ForwardLogs\mnq\warmup\warmup_xm2_20260901_044132Z.csv` and the P1 pair at `0430`/`0431`:
 
@@ -261,9 +274,9 @@ The guard (`ResolveRollDates` `:504-533`, `RollBlocked` `:536-541`) takes the **
 
 | | date | why |
 |---|---|---|
-| XM blocks new entries from | **2026-09-06** | min series rollover = `ES 09-14`, −8 |
+| XM blocks new entries from | **2026-09-06** | min series rollover = `ES 09-14`, −8 *(moot — XM withdrawn 09-05)* |
 | P1 blocks new entries from | **2026-09-08** | min series rollover = `NQ 09-16`, −8 |
-| **both legs safe again** | **≥ 2026-09-19**, practically **Mon 2026-09-21** | last series rollover is `MNQ`/`YM` `09-18` |
+| **P1 safe to redeploy** | **≥ 2026-09-19**, practically **Mon 2026-09-21** | last series rollover is `MNQ`/`YM` `09-18` |
 
 > 🔴 **CORRECTION 2026-09-01 — "P1 ≥ 2026-09-17" was WRONG and is withdrawn.**
 > It was correct for the *single-series* certified P1. **MX01 added the MNQ execution series, whose
@@ -272,9 +285,11 @@ The guard (`ResolveRollDates` `:504-533`, `RollBlocked` `:536-541`) takes the **
 > (not passed)** → `earliest = 09-18` → `rollBlockFrom = 09-10` → `09-17 >= 09-10` → **blocked on
 > arrival, permanently, with every health check green.**
 >
-> **Do not re-enable either leg inside `2026-09-06 → 2026-09-18`.**
-> **Redeploy both legs on or after Monday `2026-09-21`**, onto `NQ 12-26`, `MNQ 12-26`, `ES 12-26`,
-> `RTY 12-26`, `YM 12-26` — **all five series moved together.**
+> **Do not re-enable ANY leg inside `2026-09-06 → 2026-09-18`.**
+> 🔴 **Redeploy P1 ONLY on or after Monday `2026-09-21`**, onto `NQ 12-26` + `MNQ 12-26` (two
+> series, moved together). **XM is in OBSERVATION (owner decision 2026-09-05) and is NOT
+> redeployed**; its `ES/RTY/YM 12-26` parameter set applies only if the owner reverses that
+> decision. The 09-21 deploy itself is governed by `DEPLOY_HD23_20260921.md` (challenger classes).
 >
 > 🔴 **THE PARAMETERS THAT SELECT THE CONTRACTS ARE NOT THE ONES THAT GUARD THEM**, and an
 > earlier version of this section named only the guards:
@@ -292,8 +307,9 @@ The guard (`ResolveRollDates` `:504-533`, `RollBlocked` `:536-541`) takes the **
 > is grepping. **Set all eight. Then run the acceptance check below.**
 >
 > ✅ **ACCEPTANCE, after any redeploy — the check that does not go stale:**
-> 1. `ListAllStrategies` → P1 `instruments` = `NQZ6` **+ `MNQZ6`**; XM = `NQZ6/ESZ6/RTYZ6/YMZ6`
->    **+ `MNQZ6`**. A live check that does not see `MNQZ6` has verified nothing about execution.
+> 1. `ListAllStrategies` → **exactly ONE row on `2047681`** with P1 `instruments` = `NQZ6`
+>    **+ `MNQZ6`**. A second live row is a DEFECT (XM is withdrawn). A live check that does not
+>    see `MNQZ6` has verified nothing about execution.
 > 2. **Read the new `ROLL-PLAN` line in the NT8 log and ABORT if `blockNewEntriesFrom` is not in
 >    the future.** Every hardcoded date in this repo has gone stale; this check cannot.
 > 3. 🔴 `roll_block_from = never` is **AMBIGUOUS**. It is benign at startup (the certificate is
@@ -314,9 +330,9 @@ and the successor-roll work; it must never be a hot fix to a running class.
 
 | | |
 |---|---|
-| account | $10,206.86 |
-| max simultaneous exposure | 9 MNQ (P1 size 2 = 6, plus XM = 3), 0.51 % of bars |
-| day margin needed | 9 × $100 = **$900** — covered 11.3× |
+| account | $10,260.14 (09-05) |
+| max simultaneous exposure | 🔴 **live P1-only book: 6 MNQ** (P1 size 2 × `MnqPerNq` 3). *(Pair basis, no longer deployed: 9 MNQ, 0.51 % of bars.)* |
+| day margin needed | 6 × $100 = **$600** — covered ~17× *(pair basis was $900 / 11.3×)* |
 | initial margin | **never applies**: `ForcedFlatMin = 21` flattens at **16:39 ET**, six minutes inside NinjaTrader's 16:45 ET cutoff. Measured: 0 exposure on all 5,228 bars from 16:40–17:59 across a full year |
 | 🔴 **drawdown** | **See the distribution below.** The old single line — *0.30 × $51,891 = $15,567 = 152.5 %* — is one draw from it, and not the middle one |
 
@@ -340,30 +356,34 @@ MNQ commission charged:**
 |---|---:|---:|---:|---:|---:|
 | **1** | 36 % | 58 % | 0.004 | **0.001** | 0.001 |
 | **2** | 71 % | 115 % | 0.195 | **0.019** | 0.024 |
-| 🔴 **3 — LIVE NOW** | **108 %** | **175 %** | 0.576 | 🔴 **0.065** | **0.082** |
+| **3 — the PAIR at 0.30 (🔴 NOT the live book)** | **108 %** | **175 %** | 0.576 | **0.065** | **0.082** |
+| 🔴 **3 — LIVE NOW (P1 alone, `CAP02B` 6/6 PASS)** | — | — | — | 🔴 **0.025** full / **0.008** warm | — |
 
 > 🔴 **AND THE ANSWER IS DOMINATED BY THE ASSUMED EDGE, which the first run never varied.**
-> At `MnqPerNq = 3`, P(RUIN) over a true two years is **5.4 %** at the honest HIGH edge
-> ($1,900/wk), **9.7 %** at the central ($1,450), **21.6 %** at the low ($900) — and
+> *(PAIR figures:)* at `MnqPerNq = 3`, P(RUIN) over a true two years is **5.4 %** at the honest
+> HIGH edge ($1,900/wk), **9.7 %** at the central ($1,450), **21.6 %** at the low ($900) — and
 > **60.4 % if the edge is zero.** The campaign's own estimate is a ~70 % chance two years of
 > live data cannot distinguish this book from zero, which is why that last row is not academic.
-> **The defensible band is 6 %–22 %.**
+> **The pair's defensible band is 6 %–22 %.**
+> 🔴 **For the LIVE P1-only book use `CAP02B`: band ~2 %–20 %, 0.483 if the edge is zero**
+> (`runs/CAP02B_P1_ONLY_RUIN_CORRECTED_20260905/`).
 
 ⚠️ **`P(margin call)` is the operative number, and it is HIGHER than ruin.** Peak exposure of
-9 MNQ needs $900 of day margin, so below ~$900 of equity the book cannot post margin and is
-liquidated, locking the loss in. Machine-confirmed: `dailyLossLimit = 0`,
+6 MNQ on the live P1-only book needs $600 of day margin (the pair needed 9 MNQ / $900), so below
+~$600 of equity the book cannot post margin and is liquidated, locking the loss in. Machine-confirmed: `dailyLossLimit = 0`,
 `trailingMaxDrawdown = 0` — **no broker-side limit stops it earlier** — and **every stop in this
 book is synthetic and dies with the strategy.** There is no structural bound.
 
 ⚠️ The un-warmed 37-session cold start is in the pool above. Dropping it (the live book runs
-`DaysToLoad = 365`, so it is configured not to reproduce it) gives P(RUIN) **0.017** at 3 MNQ —
-**but the warm cut is defined exactly at the trough of the drawdown it removes.** Both are in
-the run; neither is quoted alone.
+`DaysToLoad = 365`, so it is configured not to reproduce it) gives P(RUIN) **0.017** at 3 MNQ
+*(pair; P1-alone warm = **0.008**, CAP02B)* — **but the warm cut is defined exactly at the trough
+of the drawdown it removes.** Both are in the run; neither is quoted alone.
 
-**The comparison nobody had made:** the repo's own **corrected** capital plan is **$75,000–90,000
-at full size** (set 2026-08-31, when `$45,000` was retired for being a sample maximum). At 0.30
-scale that is **$22,500–$27,000 against a $10,206.86 account** — **the live book is funded at
-38–45 % of its own recommended plan.** At `MnqPerNq = 1` the plan needs $7,500–9,000, which the
+**The comparison nobody had made** *(PAIR basis — the plan was written for M_11)*: the repo's own
+**corrected** capital plan is **$75,000–90,000 at full size** (set 2026-08-31, when `$45,000` was
+retired for being a sample maximum). At 0.30 scale that is **$22,500–$27,000 against a ~$10,260
+account** — **the pair would be funded at 38–45 % of its own recommended plan.** No equivalent
+plan has been derived for P1-alone; CAP02B is its risk statement. At `MnqPerNq = 1` the plan needs $7,500–9,000, which the
 account does fund, and CAP01 independently agrees (2-yr `P(>100 %) = 0.4 %`).
 
 **Diversification is worth less than it looks:** P1 alone $26,318, XM alone $34,193, sum $60,511,

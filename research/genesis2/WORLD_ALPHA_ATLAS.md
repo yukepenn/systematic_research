@@ -4,6 +4,11 @@
 ~230 leads, 16 scouts). Verdicts: `out/skeptic_verdicts.md`. This file tracks STATUS; it never
 duplicates card content.
 
+> ⚠️ **This file covers WAVE 1 ONLY (MC-01…37).** Wave 2's cards **MC-38…56** live in
+> `runs/G2_WORLDSCAN_W2_20260829/out/mechanism_cards_w2.md` (+ `skeptic_verdicts_w2.md`), and
+> **current per-card status for both waves is `ACTIVE_ALPHA_QUEUE.md` §Health (2026-09-05)** —
+> read that, not this, for what is open.
+
 ## Wave 1 (2026-08-28/29) outcome
 
 | verdict | n | cards |

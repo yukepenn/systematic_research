@@ -4,13 +4,46 @@
 new scan wave. Statuses: DISCOVERED → TRIAGED → PREREGISTERED → TESTING → CLOSED / SURVIVED →
 FORWARD-QUEUED.
 
-## Health (2026-08-29, post-Formal-Wave-1)
+## Health (2026-09-05 — post-Formal-Wave-3, WORLDSCAN-W2, GENESIS III)
+
+> ⚠️ Wave-2 cards (MC-38…56) live in `runs/G2_WORLDSCAN_W2_20260829/out/mechanism_cards_w2.md` +
+> `out/skeptic_verdicts_w2.md` — **`WORLD_ALPHA_ATLAS.md` is Wave-1 only** and points here.
+
+**Formal Wave 3 outcomes (all 2026-08-29):** MC-47 CLOSED NULL (`G2_F3_EXECSTATE01` — but the
+cost model f(spread,depth,hour) = $21.71/ctrRT was VALIDATED in scope) · MC-40 CLOSED NULL
+(`G2_F4_NDX_DELEV02`, −$401.51/event on certified cash NDX) · MC-38/MC-51 CLOSED as growth/sizing
+(`G2_F3_VOLSIZE01`; **V2 tail-only PASS banked**: maxDD 18.69 % vs 24.82 %) · MC-53 CLOSED FAIL 0/4
+(`G2_F8_DUO`) · MC-43/44/45 EVENTTIME family CLOSED (`G2_F8_DUO`) · MC-46 AUCTREV CLOSED at
+certification (`G2_F7`, R_c alone after the F9 re-adjudication; the 15:50-break FACT stays banked)
+· MC-54 leg 1 = **ERABREAK01 doctrine line** (intraday-vol era break p 0.0011, binding).
+**`G2_F9_P1_SYMCERT`**: incumbent half-passed its own battery — R_d shift-null PASS at the 100.0th
+percentile (p 0.0009), R_a concentration FAIL at 236.8 % → **R_a demoted to a CLASSIFICATION rung
+for every object**; a quiet shadow quarter is expected behaviour, not decay.
+
+**Still OPEN:** MC-50 macro-night overnight holds (**strongest untested card**, frozen primary
+written, N≈450) · MC-54 legs 2–4 (cheap, NQ-1-min-only) · MC-41 rebound-side rule (the +9.62 pp
+fact stands; afternoon-short formulation dead) · MC-42 (banked, no rule) · MC-48 (LOW) · MC-55
+(parked until an engine trades 14:00–16:00) · MC-39 (DATA-GATED: VX 1-min has no free backfill) ·
+MC-52/56 (blocked on the P-1 reserve) · MC-35 (blocked-as-rescue).
+
+**Registered lane, still untouched (2026-08-29 → now): the SWING band** — 3-session-to-3-month
+NQ-direction mechanisms on the 1,043-week deep spine, the only band where t=2 is reachable at
+Sharpe ≈ 0.45 (`META_ADVERSARY_01.md` Q3). ⚠️ Any spec must use a ratio-adjusted or cash-index
+basis (the additive back-adjustment defect, `G2_F3_DELEV01`) and exposure-matched always-long
+controls; TSMOM/XSMOM exact scopes and H7's COT-tercile scope stay closed.
+
+**Replenishment check:** MED tier ≥ 3 → no scan trigger; the binding shortage is *execution of
+the registered swing lane*, not new cards.
+
+<details><summary>Health (2026-08-29, post-Formal-Wave-1 — historical)</summary>
 
 **28 live cards** (37 − 4 killed − 4 closed-by-test − 1 measurement-done): 13 MED (bench),
 12 LOW (parked), 1 FORWARD-QUEUED, 2 METHODS, 1 DATA-GATED, and MC-35 **BLOCKED-AS-RESCUE** on
 P1 (needs a new surface). **Replenishment check: 13 MED ≥ 3 → no trigger; but the HIGH tier is
 now EMPTY — the next world-scan wave should target archetypes orthogonal to the wave-1 kills
 (short-side mechanisms, event-time/path representations, execution-state) per directive §65.**
+
+</details>
 
 ## Formal Wave 2 — CLOSED (2026-08-29)
 

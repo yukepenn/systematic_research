@@ -173,7 +173,7 @@ Also: NT8 re-warms from bar 0 on every enable, so the re-based history at a roll
 
 | # | item | status |
 |---|---|---|
-| 1 | ✅ **CLOSED for both LIVE legs, 2026-09-01** — `ExpectInstrument="NQ 09-26"` **and** `ExpectMnq="MNQ 09-26"` are armed and logged (`HD05 primary OK` / `MX01 exec OK`). ⚠️ **Standing requirement: these are DEPLOY-TIME inputs. They revert to `""` = DISABLED on every redeploy and MUST be re-passed at the roll** (`ExpectInstrument="NQ 12-26"`, `ExpectMnq="MNQ 12-26"`). Historical: P1's guard shipped disabled through the whole first forward window; XM's fired for real on 2026-08-30 (09:20:21 `CROSS-SERIES-MISMATCH`). **Set `ExpectInstrument="NQ 12-26"` at the roll.** XM's guard is armed and **fired for real today** (09:20:21 `CROSS-SERIES-MISMATCH`). | VERIFIED |
+| 1 | ✅ **CLOSED for the live P1 leg (the only deployed leg since 2026-09-03)** — `ExpectInstrument="NQ 09-26"` **and** `ExpectMnq="MNQ 09-26"` are armed and logged (`HD05 primary OK` / `MX01 exec OK`). ⚠️ **Standing requirement: these are DEPLOY-TIME inputs. They revert to `""` = DISABLED on every redeploy and MUST be re-passed at the roll** (`ExpectInstrument="NQ 12-26"`, `ExpectMnq="MNQ 12-26"`). Historical: P1's guard shipped disabled through the whole first forward window; XM's fired for real on 2026-08-30 (09:20:21 `CROSS-SERIES-MISMATCH`). **Set `ExpectInstrument="NQ 12-26"` at the roll.** XM's guard is armed and **fired for real today** (09:20:21 `CROSS-SERIES-MISMATCH`). | VERIFIED |
 | 2 | **December minute history does not exist locally**: `NQ 12-26` **has no directory**, `ES 12-26` has **0 files**, `RTY/YM 12-26` no directory. All four legs must download ~365 days at roll time, and Sep→Dec offsets are NaN until NT8 computes them. **Pre-flight days ahead** with a throwaway chart. | VERIFIED |
 | 3 | **No resting protective orders anywhere.** Zero `SetStopLoss`/`SetProfitTarget` in either file; `DisasterStopPoints = 0`. **Every stop is synthetic**, computed in code and fired as a market order at bar close by the live strategy. ⇒ if NT8 dies holding a position the position is **naked**, and *"never restart while positioned"* is **load-bearing, not hygiene**. | VERIFIED |
 | 4 | **NT8's own backup has NEVER run** (`LastTimeBackup 01/01/1800`). There is no snapshot to recover a wiped grid from. A manual copy of `db\NinjaTrader.sqlite` was taken 2026-08-30 20:20. | VERIFIED |
@@ -190,12 +190,14 @@ wrong instrument. Assert all of:
    real-money** book; `DEMO8383477` is the paper forward-evidence book. Never assert one and assume
    the other. **Run the whole set twice, once per account.** Use `ListAllStrategies` — `ListStrategies`
    returned 2 of 4 rows on 2026-09-01 and both were stale shells.
-1. 🔴 **ACCEPTANCE-LIVE:** `account == 2047681`; exactly **2** rows; class names exactly
-   `WeeklyEdgeP1PCTMnq_v1` (`399562885`) and `WeeklyEdgeXMConflictMnq_v1` (`399562886`);
-   **five** series on XM / **two** on P1 with **MNQ as the execution series**; `mnq_per_nq = 3`;
-   `ExpectInstrument` **and** `ExpectMnq` both armed and matching in contract month.
-2. **ACCEPTANCE-PAPER:** `account == DEMO8383477`; exactly **2** rows; class names exactly
-   `WeeklyEdgeP1PCT_v3` and `WeeklyEdgeXMConflict_v4`; four series.
+1. 🔴 **ACCEPTANCE-LIVE (updated 2026-09-05):** `account == 2047681`; exactly **1** row; class
+   name exactly `WeeklyEdgeP1PCTMnq_v1` (`399562885`); **two** series (NQ decision + **MNQ as the
+   execution series**); `mnq_per_nq = 3`; `ExpectInstrument` **and** `ExpectMnq` both armed and
+   matching in contract month. 🔴 **A second row on `2047681` is a DEFECT — XM was WITHDRAWN TO
+   OBSERVATION 2026-09-05** (`OWNER_DECISION_20260905_XM_WITHDRAWN.md`).
+2. **ACCEPTANCE-PAPER:** `account == DEMO8383477`; **0 rows expected while the paper book is
+   down (since 2026-09-03 19:06)**; if the owner restores it: exactly **2** rows, the HD
+   challenger classes per `DEPLOY_HD23_20260921.md`.
 3. XM's `instruments[]` = NQU6 **and** ESU6/RTYU6/YMU6, **all the same contract month**
    (⚠️ XM's scalar `instrumentName` reports a *secondary* series — read `instruments[]`/`currentBars[0]`, never the scalar)
 4. `state=Realtime`, `isEnabled=true`, position **Flat**, `activeOrderCount=0`
@@ -266,16 +268,20 @@ contaminating exactly the execution evidence the shadow ledger exists to collect
 
 ### Then the calendar
 
-- **2026-09-06 (XM) / 09-08 (P1)** — the book stops taking **new entries**. **Expected, not a fault.**
+- **09-08 (P1)** — the book stops taking **new entries**. **Expected, not a fault.**
   Record it in the shadow ledger as a *structural gap* so it is never read as a signal drought.
-- **2026-09-19, BOTH legs** (practically Mon 2026-09-21) — roll **BOTH books**.
-  **PAPER `DEMO8383477`**: re-point all **four** series to **12-26**, set `ExpectInstrument="NQ 12-26"`.
-  🔴 **LIVE `2047681`**: re-point all **FIVE** series (P1: NQ + MNQ; XM: NQ/ES/RTY/YM + MNQ) to
-  **12-26**, and set **both** `ExpectInstrument="NQ 12-26"` **and** `ExpectMnq="MNQ 12-26"` — the
-  MNQ default is `MNQ 09-26` and `MxInstrumentGuard` hard-halts on a month mismatch. `MnqPerNq`
-  stays 3. Then re-enable and **assert the new `ROLL-PLAN` points at the December roll
-  (~2026-11-30)**. Re-run the December pre-flight for **ES/RTY/YM 12-26 AND `MNQ 12-26`** first —
-  only NQ has been cleared, and **`MNQ 12-26` has never been probed.**
+  *(XM's 09-06 date is moot — withdrawn to observation 2026-09-05.)*
+- **2026-09-19 (practically Mon 2026-09-21) — redeploy the LIVE P1 leg ONLY**, per
+  `DEPLOY_HD23_20260921.md` (the HD challenger class).
+  🔴 **LIVE `2047681`**: re-point P1's **TWO** series (NQ + MNQ) to **12-26**, and set **both**
+  `ExpectInstrument="NQ 12-26"` **and** `ExpectMnq="MNQ 12-26"` — the MNQ default is `MNQ 09-26`
+  and `MxInstrumentGuard` hard-halts on a month mismatch. `MnqPerNq` — owner's decision (OQ-7
+  open); carry 3 forward only if unchanged. Then re-enable and **assert the new `ROLL-PLAN`
+  points at the December roll (~2026-11-30)**. Re-run the December pre-flight for **`MNQ 12-26`**
+  first — only NQ has been cleared, and **`MNQ 12-26` has never been probed.**
+  **PAPER `DEMO8383477`** (only if the owner restores the forward-evidence book): re-point all
+  four series to **12-26**, set `ExpectInstrument="NQ 12-26"` (+ ES/RTY/YM 12-26 on paper XM).
+  **XM on the LIVE account is NOT redeployed** unless the owner reverses the withdrawal.
 - ⛔ **No restarts between 09-06 and 09-18 inclusive.** Pointless (the book is already blocked) and it invites
   a re-enable inside the latch window.
 

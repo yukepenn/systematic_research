@@ -1,11 +1,16 @@
 # LIVE CHALLENGERS — the promotion pipeline, and how to invoke it
 
-The champion is **`M_11` = `P1/PCT` ×1 + `XM_CONFLICT` ×1, as TWO INDEPENDENT LEGS.**
-Not `WeeklyEdgeBookM11_v1` (that class NETS the legs — a measurement convenience). Not the research
-inverse-vol Portfolio B. **Three different objects; keep them separate forever.**
+🔴 **The LIVE incumbent since 2026-09-03 is `P1_ONLY_MNQ3`** (slot E, `EXECUTION_MANIFEST.md`) —
+the P1 leg alone at `MnqPerNq = 3`. **The XM leg was withdrawn to observation 2026-09-05**, so
+slot D (`M_11`) is SUSPENDED with no second leg deployed.
 
-**M_11 stays the incumbent until beaten.** It is not defended because it was expensive to build, and
-it is not replaced because something looks exciting.
+The **executable-portfolio champion on paper remains `M_11` = `P1/PCT` ×1 + `XM_CONFLICT` ×1, as
+TWO INDEPENDENT LEGS.** Not `WeeklyEdgeBookM11_v1` (that class NETS the legs — a measurement
+convenience). Not the research inverse-vol Portfolio B. **Keep the objects separate forever.**
+
+**M_11 stays the research/executable-portfolio champion until beaten** — but it is not what is
+running. It is not defended because it was expensive to build, and it is not replaced because
+something looks exciting.
 
 ## THE TEN STAGES
 
@@ -69,7 +74,8 @@ assigns exactly one label:
 >   --warmup C:\NT8_ForwardLogs\mnq\warmup --export C:\NT8_ForwardLogs\mnq\export
 > ```
 >
-> **Run it for BOTH books.** A PASS on the defaults says nothing about `2047681`.
+> **Run it for the live book** (the paper book is dark since 2026-09-03; run both if restored).
+> A PASS on the defaults says nothing about `2047681`.
 
 Each assertion was bought with a specific failure:
 
@@ -96,7 +102,7 @@ Each assertion was bought with a specific failure:
 
 | challenger | status |
 |---|---|
-| `WeeklyEdgeP1PCT_v3` / `XMConflict_v4` | **DEPLOYED** — parity 0/2,439 and 0/378, durable-ledger fix only |
+| `WeeklyEdgeP1PCT_v3` / `XMConflict_v4` | **NOT DEPLOYED since 2026-09-03 19:06** (connection null) — parity 0/2,439 and 0/378, durable-ledger fix only |
 | ORB control | reproduced exactly, **t 2.1944** (591 L / 542 S) — a control, not yet a candidate |
 | two preregistered SHORT mechanisms | ❌ **FAILED** |
 | `P1_BOX_INVARIANCE_00` | Gate A PASS, **Gate B FAIL** — nothing frozen, **no economics run** |
@@ -104,3 +110,5 @@ Each assertion was bought with a specific failure:
 | XM direction economics · XM cost audit · FLOWSUB Stage 0 · P1 sizing | in flight |
 
 **`INCUMBENT CHANGE: NONE`** — nothing has beaten M_11 yet, which is the expected first-day result.
+*(2026-09-05: the LIVE incumbent became `P1_ONLY_MNQ3` by owner withdrawal of XM — an operational
+change, not a research promotion; M_11 remains the executable-portfolio champion on paper.)*
