@@ -224,3 +224,33 @@ reason = EMPTY vs drift: 0/33; closest liquidation-rebound +28bps@5d p .088; GC�
 Still open (adjacent): the SI/GC relative-CARRY object (G00070 — different observable: curve
 slopes, not price divergence), intraday GC (no local data), GC as portfolio ballast at
 raw-drift level (known, ρ 0.04, no engine claim).
+
+### SI/GC relative-carry confirmation (G00070, `CARRY_SIGC_CONFIRM_20260906`) — INVALID-RUN, adjudicated EFFECTIVELY CLOSED
+```
+Closed:  observable = SI/GC within-metals relative-carry switch (CARRY_V1 construction, zero free params)
+representation = weekly carry-ordering pair switch, vol-normalized legs
+event = carry-ordering flip      horizon = weekly rebalance      target = HEADLINE 2019-2026-05 net Sharpe >= 0.45 + tail-null
+execution = MODELED 3 cost arms incl. SI 3-tick      sample = 199 live weeks (PRE-FROZEN, now SPENT)
+reason = the SWITCH did not persist: 97.5% long-SI (dev 66.3%), 4 flips (dev 75); switch PnL == static-SI control;
+  both composition-preserving nulls put Sharpe 0.723 at the 63rd-74th pct (bar 95). Headline net = silver rally.
+  Run label DEFECT (G4a/G4b 5-pt agreement clause tripped at 10.4 in the fat middle); substance agreed by both nulls.
+```
+Adjacent questions NOT open: any n=2 same-sector carry pair on this substrate (spent-data selection);
+chasing ZC/ZW (family rank 1) — the family table is SELECTION-PRICING, not discovery. CARRY_V1 dev verdict unchanged.
+Process lesson (banked): percentile-agreement clauses calibrated for the tail are maximally noisy in the
+fat middle — future dual-null clauses should gate on tail-side agreement (both-above / both-below the bar),
+not raw percentile distance.
+
+### LIQREV01 regime-local standalone (G00071, `G3_LIQREV01_READJ_20260906`) — DEAD, PERMANENT
+```
+Closed:  observable = exact LIQREV01 s90_q20 post-2020 vol-acceleration reversal (byte-frozen)
+representation = stress-day next-session reversal, 1-day hold      event = rv5 acceleration into q20
+horizon = 1 day      target = regime-local standalone at 1 MNQ alongside live P1
+execution = worst-rung cost/fill stress PASSED ($1,470/tr at 1-NQ scale)      sample = 2020-2026-05 (DISCOVERY_CONSUMED)
+reason = no-harm portfolio gates: worst combined day 1.604x (bar 1.5x); daily rho +0.365, ACTIVE-DAY +0.614 —
+  the object trades exactly when P1 is stressed. Standalone economics were real (D2 CI_lo +$693, D3 +$608,
+  regime ON) and are NOT disputed; the kill is co-movement, not edge.
+```
+Adjacent questions still open: none as a standalone book-mate for P1. NOT closed: rv5 stress-state
+infrastructure, matched-placebo machinery, the historical 8-gate dev record. Shadow amendment retirement
+= owner decision (packet).
