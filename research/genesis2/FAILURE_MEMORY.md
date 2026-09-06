@@ -183,3 +183,44 @@ SPECIFICATION (sizing) · intraday VIX/VXN (only DAILY basis tested) · event re
 market-profile/auction claims (never tested here) · VWAP anything (never tested here) · path/
 event-time representations (never tested here) · short-side mechanisms (only mechanical mirrors
 tested) · re-entry/exit/sizing POLICY novelty on existing engines (never searched systematically).
+
+## GENESIS III Wave 1 closures (2026-09-06) — precise scope blocks (§28 format)
+
+### ES MR portfolio value (G00066, `G3_ESMR_PORTFOLIO_20260906`)
+```
+Closed:  observable = W2B_EQMR frozen ES daily z-MR PnL (sha 67c97694), used AS-IS
+representation = P1 + λ·k·shrunk-ESMR overlay, λ∈{.25,.5,1}, s∈{0..1}, vol-matched k
+event = n/a (daily MR overlay)      horizon = daily      target = marginal weekly-vol Sharpe/tails vs P1-alone
+execution = research sizing, W2B cost basis      sample = 2022-07..2026-07 (1,053 common sessions)
+reason = mean-side: leg Sharpe .78 < ρ·Sh_P1 under ANY shrinkage (s*>1); best cell +0.02 at λ=.25 s=1 only; tails fine (DD ratio 1.02)
+```
+Still open (adjacent): nothing on this axis — a HIGHER-Sharpe or LOWER-ρ equity object would be a
+different observable; the overlay construction itself is generic and reusable.
+
+### CL displacement-event catalog (G00068, `G3_EVENT_CL_20260906`)
+```
+Closed:  observable = CL 1-min points substrate 2022-01..2026-07 (1,182 sess)
+representation = 7 preregistered displacement events (EIA response-path, settlement transition,
+  overnight-pit handoff, shock-day next-path×close-location, compression break, 20-sess extreme,
+  expansion failure) → conditional forward paths vs matched controls
+event = the 7 above      horizon = 15min..3 sessions      target = direction-conditional path delta
+execution = screen-level cost only      sample = 52 cells, K_eff 27.7
+reason = EMPTY: 1/52 cells at raw p<.05 vs 2.6 expected by chance; EIA response-path flat 12/12
+```
+Still open (adjacent): CL curve/basis structure (never censused), CL-vs-energy-complex RV (no
+substrate yet), CL vol-as-conditioner for OTHER engines (the banked macro-vol law).
+
+### GC daily event catalog (G00069, `G3_EVENT_GC_20260906`)
+```
+Closed:  observable = GC ratio-stitched daily 2009..2026-07 + NQ spine + SI daily (causal roll)
+representation = 6 preregistered daily events (liquidation signature, flight-to-quality,
+  vol transition, 20d Donchian both sides, GC−SI 5d-divergence convergence, 1σ gaps) vs
+  MANDATORY drift-matched controls
+event = the 6 above      horizon = 1-10 days      target = excess-over-drift conditional path
+execution = screen-level cost only      sample = 33 cells, K_eff 9.9
+reason = EMPTY vs drift: 0/33; closest liquidation-rebound +28bps@5d p .088; GC−SI divergence
+  trends ANTI-convergent (kills naive convergence ideas independently of G00070's carry object)
+```
+Still open (adjacent): the SI/GC relative-CARRY object (G00070 — different observable: curve
+slopes, not price divergence), intraday GC (no local data), GC as portfolio ballast at
+raw-drift level (known, ρ 0.04, no engine claim).

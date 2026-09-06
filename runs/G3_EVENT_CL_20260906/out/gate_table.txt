@@ -1,0 +1,95 @@
+==============================================================================================================
+G3_EVENT_CL_20260906 -- CL EVENT DIAGNOSTIC (ledger G00068)  [DISCOVERY; cost MODELED/ALL_IN]
+==============================================================================================================
+substrate: runs\SM1M_CL_SUBSTRATE\out\cl_1m_2022_2026.parquet  sessions=1182  2022-01-03 .. 2026-07-31
+EIA calendar: 239 releases (239 matched to sessions, 0 unmatched->dropped), 36 holiday-shifted to Thursday
+notes: {'E1_zero_move': 3, 'E2_zero_move': 15, 'E5_same_bar_tie_excluded': 0, 'E5_compressed_sessions': 288}
+
+PROBABILITY MEANING (gate G8): p_raw_shift is the probability, over the exhaustive shared set of 1122 circular session-shifts decoupling each event's conditioning from the outcome series, that the shifted conditional-mean-minus-control delta is >= the observed |delta| (two-sided). It is a per-cell alignment-null probability, NOT a P(profit) and NOT corrected for the family; the family correction is the printed p < 0.05/K_eff = 0.00180 threshold.
+
+family: K=52 cells, rhobar(null)=0.0172, K_eff=27.71, corrected screen threshold p < 0.00180; shift draws S=1122 (exhaustive, shared); bootstrap B=1000 block L=10 (shared); seed=20260906
+LEAD screen: p_raw < 0.00180 AND |delta| >= $68.72 (0.06872 pts) AND n >= 30
+
+cell                          n     mean  ctlmean    delta      d$   ci95lo   ci95hi  p_shift  p_boot P C N  LEAD
+-----------------------------------------------------------------------------------------------------------------
+E1_up_t1_1045-1200           36  -0.0053  -0.0009  -0.0043      -4  -0.1869   0.1897  0.96438  0.9980 . . Y      
+E1_up_t1_1045-1430           36  -0.0944  -0.0476  -0.0469     -47  -0.3672   0.2858  0.78807  0.8320 . . Y      
+E1_up_t2_1045-1200           44   0.1123  -0.0009   0.1132     113  -0.1321   0.3328  0.27337  0.3480 . Y Y      
+E1_up_t2_1045-1430           44  -0.3777  -0.0476  -0.3302    -330  -0.9689   0.1846  0.05432  0.2620 . Y Y      
+E1_up_t3_1045-1200           39   0.0954  -0.0009   0.0963      96  -0.1906   0.3863  0.39181  0.5100 . Y Y      
+E1_up_t3_1045-1430           39   0.0731  -0.0476   0.1206     121  -0.1459   0.3956  0.47818  0.3820 . Y Y      
+E1_dn_t1_1045-1200           41  -0.0090  -0.0009  -0.0081      -8  -0.1773   0.1548  0.94390  0.9760 . . Y      
+E1_dn_t1_1045-1430           41   0.1334  -0.0476   0.1810     181  -0.1619   0.6116  0.34372  0.3340 . Y Y      
+E1_dn_t2_1045-1200           36  -0.0753  -0.0009  -0.0743     -74  -0.2880   0.1180  0.51558  0.4940 . Y Y      
+E1_dn_t2_1045-1430           35   0.0960  -0.0476   0.1436     144  -0.1535   0.4443  0.46037  0.3480 . Y Y      
+E1_dn_t3_1045-1200           40  -0.1283  -0.0009  -0.1273    -127  -0.3765   0.1066  0.26892  0.2420 . Y Y      
+E1_dn_t3_1045-1430           40  -0.3463  -0.0476  -0.2987    -299  -0.7554   0.1323  0.09795  0.1600 . Y Y      
+E2_up_t1_1430-close         204   0.0582   0.0443   0.0139      14  -0.0420   0.0670  0.68299  0.6020 . . Y      
+E2_up_t1_next0900-1030      204  -0.0012  -0.0274   0.0263      26  -0.0758   0.1258  0.62778  0.6060 . . Y      
+E2_up_t2_1430-close         173   0.0732   0.0443   0.0289      29  -0.0269   0.0946  0.46572  0.3180 . . Y      
+E2_up_t2_next0900-1030      173   0.0603  -0.0274   0.0878      88  -0.0343   0.2230  0.14248  0.1700 . Y Y      
+E2_up_t3_1430-close         171  -0.0191   0.0443  -0.0634     -63  -0.1441   0.0190  0.10775  0.1440 . . Y      
+E2_up_t3_next0900-1030      171  -0.1211  -0.0274  -0.0937     -94  -0.2474   0.0543  0.11932  0.2140 . Y Y      
+E2_dn_t1_1430-close         200  -0.0221   0.0443  -0.0664     -66  -0.1755   0.0087  0.06500  0.1040 . . Y      
+E2_dn_t1_next0900-1030      200  -0.0816  -0.0274  -0.0542     -54  -0.1554   0.0305  0.32591  0.2400 . . Y      
+E2_dn_t2_1430-close         188   0.0618   0.0443   0.0175      17  -0.0451   0.0744  0.64470  0.5900 . . Y      
+E2_dn_t2_next0900-1030      187   0.0631  -0.0274   0.0905      91  -0.0132   0.1963  0.12556  0.0900 . Y Y      
+E2_dn_t3_1430-close         209   0.1048   0.0443   0.0605      60  -0.0023   0.1350  0.07836  0.0660 . . Y      
+E2_dn_t3_next0900-1030      209  -0.0352  -0.0274  -0.0077      -8  -0.1313   0.1209  0.87801  0.9140 . . Y      
+E3_1.5x_up_0900-1030         75  -0.0744  -0.0280  -0.0464     -46  -0.2185   0.1174  0.63134  0.5760 . . Y      
+E3_1.5x_up_0900-1430         74  -0.4022  -0.0744  -0.3278    -328  -0.7403   0.0226  0.04987  0.0720 . Y Y      
+E3_1.5x_dn_0900-1030         94  -0.0243  -0.0280   0.0038       4  -0.1612   0.1773  0.96349  0.9460 . . Y      
+E3_1.5x_dn_0900-1430         94   0.0593  -0.0744   0.1336     134  -0.2216   0.4723  0.39181  0.4440 . Y Y      
+E3_2.0x_up_0900-1030         34  -0.0238  -0.0280   0.0042       4  -0.2610   0.2516  0.98041  0.9780 . . Y      
+E3_2.0x_up_0900-1430         34  -0.2209  -0.0744  -0.1465    -146  -0.5831   0.2564  0.57792  0.4400 . Y Y      
+E3_2.0x_dn_0900-1030         41  -0.0605  -0.0280  -0.0325     -32  -0.2634   0.2244  0.80410  0.8420 . . Y      
+E3_2.0x_dn_0900-1430         41  -0.1915  -0.0744  -0.1171    -117  -0.7752   0.4458  0.60908  0.7080 . Y Y      
+E4_bottom_next1              18  -0.7239   0.0324  -0.7563    -756  -1.7899   0.3296  0.13268  0.1640 . Y .      
+E4_bottom_next2              18   0.0356   0.0627  -0.0271     -27  -1.6052   1.3359  0.97596  0.9960 . . .      
+E4_bottom_next3              18   0.7728   0.0939   0.6789     679  -1.5212   3.1302  0.43010  0.5940 . Y .      
+E4_mid_next1                  2   0.2550   0.0324   0.2226     223  -1.8165   2.2564  0.86109  0.6960 . Y .      
+E4_mid_next2                  2   1.7550   0.0627   1.6923    1692   1.2924   2.0921  0.35352  0.0020 . Y .      
+E4_mid_next3                  2   2.6500   0.0939   2.5561    2556   1.0427   4.0527  0.28762  0.0020 . Y .      
+E4_top_next1                  9  -0.8578   0.0324  -0.8902    -890  -2.8539   1.1046  0.21193  0.3400 . Y .      
+E4_top_next2                  9  -0.9800   0.0627  -1.0427   -1043  -3.0271   0.9585  0.28940  0.3080 . Y .      
+E4_top_next3                  9  -0.8411   0.0939  -0.9350    -935  -3.5523   2.1663  0.43633  0.4760 . Y .      
+E5_upbrk_remainder          108  -0.0419  -0.0047  -0.0373     -37  -0.2760   0.2153  0.80588  0.7700 . . Y      
+E5_upbrk_next1              108   0.0190   0.0170   0.0020       2  -0.2830   0.3126  0.99644  0.9800 . . Y      
+E5_dnbrk_remainder           67  -0.1355  -0.0062  -0.1293    -129  -0.4548   0.2002  0.54230  0.4640 . Y Y      
+E5_dnbrk_next1               67  -0.0361   0.0170  -0.0531     -53  -0.4433   0.3640  0.83348  0.7780 . . Y      
+E6_up_next1                  78   0.3610   0.0324   0.3286     329  -0.0432   0.7311  0.17275  0.0780 . Y Y      
+E6_up_next2                  78   0.0709   0.0627   0.0082       8  -0.6177   0.5753  0.98219  1.0000 . . Y      
+E6_up_next3                  78   0.1438   0.0939   0.0500      50  -0.7438   0.8641  0.91184  0.9420 . . Y      
+E6_dn_next1                  52  -0.1400   0.0324  -0.1724    -172  -0.6672   0.2534  0.54497  0.4540 . Y Y      
+E6_dn_next2                  52   0.3173   0.0627   0.2546     255  -0.5110   0.9954  0.57614  0.4600 . Y Y      
+E6_dn_next3                  52   0.8854   0.0939   0.7915     792  -0.1004   1.7257  0.16385  0.0760 . Y Y      
+E7_all_next1                  8   1.4463   0.0324   1.4138    1414  -1.5494   3.8081  0.06589  0.3200 . Y .      
+
+raw-p<0.05 cells (uncorrected, expected ~2.6 by chance): 1/52
+
+VERDICTS (DEAD = no cell clears K_eff-corrected p<0.05; DESCRIPTIVE = clears corrected p but fails cost/n legs; LEAD = full screen):
+  E1_eia_response_path         DEAD         (cells=12, min p_shift=0.05432, max |d$|=330, n range 35-44)
+  E2_settlement_transition     DEAD         (cells=12, min p_shift=0.06500, max |d$|=94, n range 171-209)
+  E3_overnight_pit_handoff     DEAD         (cells=8, min p_shift=0.04987, max |d$|=328, n range 34-94)
+  E4_shock_day_next_path       DEAD         (cells=9, min p_shift=0.13268, max |d$|=2556, n range 2-18)
+  E5_compression_break         DEAD         (cells=4, min p_shift=0.54230, max |d$|=129, n range 67-108)
+  E6_multisession_extreme      DEAD         (cells=6, min p_shift=0.16385, max |d$|=792, n range 52-78)
+  E7_expansion_failure         DEAD         (cells=1, min p_shift=0.06589, max |d$|=1414, n range 8-8)
+
+GATE TABLE (program-printed)
+GATE                      SPEC                                                            OBSERVED                                                      PASS-FAIL
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+G1_DATA_SHA256            e587486c23f5b611...                                             e587486c23f5b611...                                           PASS     
+G2_SEAL_MAX_SESSION       < 2026-08-01                                                    2026-07-31                                                    PASS     
+G3_SESSION_COUNT          1182                                                            1182                                                          PASS     
+G4_POINTS_INVARIANCE      event sets identical & max|d(delta)|=0 under +1000.00-pt price  ev_same=True, max_dev=0.00e+00 cents                          PASS     
+G5_CELLS_REPORTED         52 preregistered                                                52 emitted                                                    PASS     
+G6_CONTROLS_MATCHED       every cell has a matched control row                            52/52 control rows                                            PASS     
+G7_NULL_SHARED_DRAW       one exhaustive offset set for all 52 cells; K,K_eff printed     S=1122 offsets shared; K=52, rhobar=0.0172, K_eff=27.71       PASS     
+G8_PROB_MEANING_WORDS     p-value event stated in words in output                         printed below                                                 PASS     
+G9_PROB_SECOND_WAY        LEAD p recomputed via block-bootstrap sign test agrees (<0.05)  no LEAD; min-p cell E3_1.5x_up_0900-1430: p_shift=0.04987, p  PASS     
+G10_EIA_CAL_SEAL          all release dates < 2026-08-01                                  239 dates, max 2026-07-29                                     PASS     
+G11_COST_CONSTANTS        comm 4.36 + spread{1,2,3}x$10; conservative 34.36; screen 2x=6  all-in band [14.36, 24.36, 34.36]; screen 68.72 USD = 0.0687  PASS     
+G12_MIN_EVENTS_ENFORCED   every LEAD cell n>=30                                           vacuous (no LEAD)                                             PASS     
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ALL GATES: PASS

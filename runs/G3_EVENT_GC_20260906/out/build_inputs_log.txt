@@ -1,0 +1,27 @@
+====================================================================================================
+=== G3_EVENT_GC_20260906  STEP 0: build SI daily (day store) + NQ daily (deep spine)
+====================================================================================================
+    roll.py causal-roll unit tests: telescoping / basis-invariance / causality  ALL PASS
+
+--- SI DAILY (per-contract day .ncd -> causal roll), method identical to GC autopsy
+    raw panel        10,712 contract-days, raw max 2026-08-04
+    SEAL             dropped >= 2026-08-01; retained max 2026-07-31  assert PASS
+    panel            10,708 contract-days, 89 contracts, 2009-03-30 -> 2026-07-31
+    validity         ohlc_bad=0 vol_zero=8 dup=0
+    roll ledger      89 rows (69 vol-crossover, 19 pre-expiry, 1 init); causality PASS
+    identity gate    ret_points == roll.economic_returns max err 0.00e+00  PASS
+    return-days      4,361  2009-03-31 -> 2026-07-31  (15 gap-spanning flagged clean_daily=False)
+    WROTE            D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\G3_EVENT_GC_20260906\out\si_daily.parquet
+
+--- NQ DAILY from deep spine (1-min, additively back-adjusted -> POINT DIFFERENCES ONLY)
+    spine            6,466,783 1-min rows  2006-01-05 08:59:00 -> 2026-05-29 16:59:00
+    sessions         5,262  2006-01-05 -> 2026-05-29  (seal assert PASS)
+    point returns    valid 5,260 (1 gap-spanning nulled)
+    WROTE            D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\G3_EVENT_GC_20260906\out\nq_daily_spine.parquet
+
+--- ALIGNMENT GATE  (spine NQ session returns vs day-store NQ causal-roll returns)
+    corr(spine, day-store) by lag (BDay): -1: -0.030   0: +0.962   +1: -0.045   shared dates lag0 n=4,281
+    ALIGNMENT: PASS
+
+    wrote out/inputs_manifest.json
+====================================================================================================

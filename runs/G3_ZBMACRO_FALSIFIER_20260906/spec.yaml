@@ -1,0 +1,65 @@
+run_id: G3_ZBMACRO_FALSIFIER_20260906
+campaign: GENESIS III (Wave C2 — graduation falsifier for the one Wave-C LEAD)
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+what_graduates: |
+  G3_EVENT_ZB_20260906 (G00067) E1 LEAD: on NFP/CPI 08:30 sessions, a DOWN realized first
+  response (08:30->08:45, points) continues DOWN into settlement. Diagnostic screen values
+  (DISCOVERY_CONSUMED, same data): delta vs matched null -$238/ct, CI95 [-489,-107],
+  p_corr 0.0441, n=40, release-specific (specificity null p 0.015), direction-concentrated
+  (UP responses show nothing). Thin margin, tail-carried (60% hit; -$158 after dropping the
+  2 worst). This run attacks it with the full robustness battery. Honest prior: MODEST —
+  after-cost t is expected borderline; a FAIL closes the lead cleanly.
+
+frozen_object: |
+  Trade rule, zero free parameters: on sessions flagged NFP_DAY or CPI_DAY in the
+  GENESIS_H2_CALENDAR_20260828 calendar (the exact E1 calendar), IF close(08:45) - close(08:30)
+  < 0 (points), SHORT 1 ZB at the 08:45 bar close, EXIT at the 15:00 bar close. No entry on
+  UP or zero first response. No other conditioning. The diagnostic's stronger sub-cell
+  (terc1_aligned, p_corr .0147, n=26) is NOT the object (n-floor failed; promoting it would be
+  selection) — it appears only inside the preregistered neighborhood report.
+
+data: "runs/SM1M_ZB_SUBSTRATE/out/zb_1m_2023_2026.parquet, POINTS basis (DELEV01), sessions
+  <= 2026-07-31 (assert); ZB tick 1/32 = $31.25; the 2026-06->07 stretch is inside the globally
+  BURNED window — usable for discovery, labeled, cannot serve as a clean sub-holdout."
+
+cost: "PRIMARY = MODELED $4.36 RT commission + 1 tick per side ($62.50 RT spread); STRESS =
+  2 ticks per side. All figures BASIS-tagged; never call a spread figure all-in."
+
+gates:  # program-printed GATE/SPEC/OBSERVED/PASS-FAIL; blocking unless marked
+  G0_seal_identity: "seal assert; reproduce the diagnostic's n=40 event set exactly (event-date
+    identity vs the E1 artifact) before anything else."
+  G1_MDE_first: "MDE for after-cost mean per trade printed BEFORE observed (session-block
+    bootstrap SE)."
+  G2_aftercost_edge: "PRIMARY after-cost mean per trade < 0 for the short (i.e. profit > 0)
+    with session-block bootstrap CI95 excluding 0."
+  G3_null: "circular-shift of the release-day flag against the session sequence (2000 shifts,
+    fixed seed, dependence-preserving): observed after-cost total in the <=5th percentile.
+    A second computation of the same event via sign-permutation of first-response direction
+    within release days; the two percentile reads must agree within 5 points (disagreement =
+    INVALID-RUN)."
+  G4_chronology: "sign survival: after-cost mean negative (profitable short) in BOTH halves of
+    the event sequence (first 20 vs last 20 events) — REGIME note, not veto, if one half is
+    flat but CI overall holds; BOTH-halves-wrong-sign = FAIL."
+  G5_tail_honesty: "drop-k curve (k=0..5 worst trades) printed; after-cost mean must remain
+    < 0 at k=2 (the diagnostic's own -$158 read)."
+  G6_neighborhood: "preregistered grid, ALL cells reported, headline stays the frozen object:
+    entry {08:40, 08:45, 08:50} x exit {14:00, 15:00} x conditioning {all-down, below-median-down,
+    terc1-aligned}; plateau statement (no isolated-cell pass)."
+  G7_release_split: "NFP-only and CPI-only after-cost means printed; both-negative strengthens;
+    one-side-flat = CLASSIFICATION (release-local), not veto."
+  G8_cost_stress: "after-cost mean < 0 at the 2-tick STRESS arm."
+  G9_battery: "eval_battery weekly-vol lead on the trade PnL series; any fixed-DD figure only
+    beside its rate-matched thinning placebo; UP-response mirror table reported (asymmetry
+    honesty); daily/weekly PnL rho-to-P1 printed (orthogonality preview)."
+
+decision_rule: |
+  G2+G3+G4+G5+G8 all PASS -> ZBMACRO01 ENGINE CANDIDATE (Class-S/P assessment next: honest
+  annual economics ~13 trades/yr — small dollars, so the CLASS-P portfolio question and the
+  when-does-it-pay profile decide whether construction proceeds; no deploy, no promotion).
+  ANY of G2/G3/G4/G5/G8 FAIL -> the E1 lead is CLOSED at scope (the G00067 screen PASS stands
+  as a screen; the strategy object is dead; FAILURE_MEMORY gets the precise closure block).
+evidence_status: DISCOVERY_CONSUMED (same substrate as the screen; stated in every table).
+ledger: "G00072, family GENESIS3_EVENT, registered before outcomes."
+outputs: [out/gate_table.txt, out/trades.csv, out/neighborhood.csv, out/dropk.csv, REPORT.md]

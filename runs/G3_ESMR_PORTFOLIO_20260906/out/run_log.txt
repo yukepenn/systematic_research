@@ -1,0 +1,105 @@
+================================================================================================================
+G3_ESMR_PORTFOLIO_20260906  trial G00066  family GENESIS3_DECISION
+SHRUNK portfolio contribution of the frozen ES MR series to P1 -- decision analysis, DISCOVERY_CONSUMED, NO deploy
+NOT a rescue of G00063: its family-corrected FAIL stands untouched.
+================================================================================================================
+
+[G0] IDENTITY -- frozen input hash, seal, and P1 rho reproduction
+  sha256(daily_pnl_ES.csv) = 67c97694b373b0c82fe96224555adafd0662863113bf5d5c0dad39e5c31e2318
+  expected                 = 67c97694b373b0c82fe96224555adafd0662863113bf5d5c0dad39e5c31e2318   match = True
+  ES MR series: 1053 sessions  2022-07-01 -> 2026-07-31  seal(max<2026-08-01) = True
+  [P1] NQ substrate 1,620,044 bars / 1,187 sess 2022-01-03 -> 2026-07-31  seal_ok=True
+  [P1] reproduced P1/PCT: 2,401 trades, spread $14.436/ctrRT, 1,056 P&L days, weekly $1,393.57
+  P1 series seal(max<2026-08-01) = True
+  daily rho(ESMR, P1) = +0.225974   recorded W2B value = +0.225974   |diff| = 0.000000  (tol 0.005)  ok = True
+  diagnostic: max|reproduced P1 - CSV p1_pnl column| = $0.000000
+  diagnostic: P1 PnL days outside the ES date basis = 4 ($0.00); both book and P1-alone are judged on the SAME 1053-session basis, so the comparison is fair
+
+[k] VOL-MATCH RATIOS  k = sigma(P1)/sigma(ESMR)  (daily, ddof=1)
+  sigma(P1) = $2,374.59/day   sigma(ESMR) = $1,670.48/day   k_static = 1.4215   [DESCRIPTIVE -- uses the full sample]
+  k_causal: expanding, strictly-prior, min 250 obs; warmup days with leg weight 0 = 250; k_causal range after warmup [1.3814, 1.6448], final 1.4217
+  full-sample mean(ESMR) = $75.2385/day  (the shrinkage target, R2)
+
+[REF] P1-ALONE on the common basis:
+  weekly $1,387.06/wk   weekly-vol Sharpe 2.0520   maxDD $28,092.06   CDaR5 $19,707.69   worst month $-15,458.25
+
+[G1] FULL lambda x s MARGINAL-ECONOMICS TABLE (both k variants; program-printed)
+  marg_Sh = book weekly-vol Sharpe minus P1-alone; marg_ann = 52*(wk mean diff); DD/CDaR ratios = book/P1-alone
+     kvar   lam     s   book$/wk  bookSh   margSh   marg$ann    maxDD$  DDrat    CDaR5$  CDrat   worstMo$
+   static  0.25  1.00   1,518.63  2.0718  +0.0197      6,841    25,176  0.896    18,460  0.937    -15,904
+   static  0.25  0.75   1,485.74  2.0269  -0.0251      5,131    25,383  0.904    18,864  0.957    -16,044
+   static  0.25  0.50   1,452.84  1.9821  -0.0699      3,421    25,590  0.911    19,270  0.978    -16,185
+   static  0.25  0.25   1,419.95  1.9373  -0.1148      1,710    25,797  0.918    19,677  0.998    -16,325
+   static  0.25  0.00   1,387.06  1.8924  -0.1596          0    26,068  0.928    20,091  1.019    -16,466
+   static  0.50  1.00   1,650.19  2.0085  -0.0436     13,683    26,319  0.937    18,764  0.952    -16,350
+   static  0.50  0.75   1,584.41  1.9285  -0.1236     10,262    27,548  0.981    19,674  0.998    -16,631
+   static  0.50  0.50   1,518.63  1.8485  -0.2036      6,841    28,778  1.024    20,620  1.046    -16,911
+   static  0.50  0.25   1,452.84  1.7684  -0.2836      3,421    30,008  1.068    21,589  1.095    -17,192
+   static  0.50  0.00   1,387.06  1.6884  -0.3636          0    31,367  1.117    22,641  1.149    -17,473
+   static  1.00  1.00   1,913.32  1.8058  -0.2463     27,366    35,583  1.267    25,672  1.303    -18,641
+   static  1.00  0.75   1,781.76  1.6817  -0.3703     20,524    39,075  1.391    28,286  1.435    -19,176
+   static  1.00  0.50   1,650.19  1.5576  -0.4945     13,683    45,037  1.603    33,541  1.702    -19,711
+   static  1.00  0.25   1,518.63  1.4335  -0.6186      6,841    51,006  1.816    40,217  2.041    -20,246
+   static  1.00  0.00   1,387.06  1.3093  -0.7427          0    56,995  2.029    47,298  2.400    -20,780
+   causal  0.25  1.00   1,512.09  2.0613  +0.0092      6,501    24,987  0.889    18,594  0.943    -16,073
+   causal  0.25  0.75   1,485.98  2.0261  -0.0259      5,144    25,213  0.898    18,775  0.953    -16,227
+   causal  0.25  0.50   1,459.88  1.9909  -0.0612      3,786    25,440  0.906    18,973  0.963    -16,380
+   causal  0.25  0.25   1,433.77  1.9556  -0.0964      2,429    25,666  0.914    19,210  0.975    -16,533
+   causal  0.25  0.00   1,407.67  1.9204  -0.1317      1,072    26,102  0.929    19,461  0.987    -16,687
+   causal  0.50  1.00   1,637.11  1.9963  -0.0557     13,002    26,265  0.935    18,843  0.956    -16,688
+   causal  0.50  0.75   1,584.90  1.9334  -0.1186     10,288    27,505  0.979    19,431  0.986    -16,995
+   causal  0.50  0.50   1,532.69  1.8704  -0.1817      7,573    28,746  1.023    20,051  1.017    -17,302
+   causal  0.50  0.25   1,480.48  1.8073  -0.2448      4,858    29,987  1.067    20,704  1.051    -17,609
+   causal  0.50  0.00   1,428.28  1.7440  -0.3080      2,143    31,228  1.112    21,422  1.087    -17,916
+   causal  1.00  1.00   1,887.16  1.7988  -0.2533     26,005    33,911  1.207    24,240  1.230    -17,918
+   causal  1.00  0.75   1,782.74  1.7003  -0.3518     20,575    36,366  1.295    26,115  1.325    -18,531
+   causal  1.00  0.50   1,678.32  1.6016  -0.4505     15,146    38,824  1.382    28,448  1.444    -19,145
+   causal  1.00  0.25   1,573.91  1.5027  -0.5494      9,716    41,305  1.470    31,326  1.590    -19,759
+   causal  1.00  0.00   1,469.49  1.4036  -0.6485      4,286    43,787  1.559    34,756  1.764    -20,373
+  cells printed = 30 / expected 30  -> G1 = True
+  NOTE (R7): no fixed-DD INCOME figure appears in this run. The book removes zero trades, so a rate-matched random-thinning placebo is undefined (rate 0); per doctrine the unguarded figure is unquotable. maxDD/CDaR5 above are DOLLAR tail statistics of the same calendar path, used only as tail-worsening checks, never as income denominators.
+
+[G2] BREAK-EVEN SHRINKAGE s* -- lambda=0.5, causal k
+  IN WORDS: s* is the fraction of the ES MR leg's full-sample mean that must be retained for the lambda=0.5 causal-k book's weekly-vol Sharpe to exactly equal P1-alone's. It is the s at which the MARGINAL weekly-vol Sharpe of that book CROSSES ZERO: for s > s* the book beats P1-alone on the primary metric, for s < s* it does not. The event is over the 1,053-session 2022-07..2026-07 in-sample path -- DISCOVERY_CONSUMED, not a forward claim.
+  method 1 (grid interpolation): no sign change -- marginal Sharpe < 0 at EVERY s -> s* > 1 (book never beats P1-alone, even unshrunk)
+  method 2 (direct sign-scan, step 0.001): marginal Sharpe < 0 at all 1001 points -> s* > 1
+  methods agree (tol 0.05 in s units, R6) = True
+    marginal weekly-vol Sharpe at s=0.00: -0.3080
+    marginal weekly-vol Sharpe at s=0.25: -0.2448
+    marginal weekly-vol Sharpe at s=0.50: -0.1817
+    marginal weekly-vol Sharpe at s=0.75: -0.1186
+    marginal weekly-vol Sharpe at s=1.00: -0.0557
+
+[SUPPORT] NON-BINDING DIAGNOSTICS (reported per spec metrics list)
+  losing-P1-week conditional ESMR mean (raw 1-contract engine): $203.44/wk over 91 losing weeks of 214 (unconditional $370.22/wk); weekly rho = +0.2259
+  losing-P1-week conditional DECISION-CELL leg mean (lam=0.5,s=0.5,causal): $-61.96/wk (unconditional $145.63/wk)
+  worst-decile-day co-loss overlap: P1 worst-decile days 106, ESMR worst-decile 106, joint 13 vs 10.7 expected under independence (lift 1.22x); ESMR<0 on 26/106 of P1's worst-decile days
+  joint-drawdown days (own worst-decile underwater depth): P1 106, ESMR 106, joint 0 vs 10.7 expected under independence (lift 0.00x)
+  top-3 P1 drawdown windows (peak day -> trough day, depth) with leg PnL inside:
+    2025-02-18 -> 2025-04-07  P1 depth $28,092  decision-leg PnL $+18,669  raw-ESMR PnL $+25,474
+    2023-07-19 -> 2023-10-30  P1 depth $23,714  decision-leg PnL $-2,772  raw-ESMR PnL $-1,059
+    2022-11-21 -> 2023-02-27  P1 depth $22,035  decision-leg PnL $+0  raw-ESMR PnL $-709
+  incremental capital: decision-cell leg ~ lambda*k = 0.5*1.422 = 0.711 ES contracts; ES initial margin ASSUMED $12,650/contract [ASSUMED, MODELED -- not verified today] -> ~$8,991 incremental margin. PRACTICAL MINIMUM: fractional ES is not tradable; nearest implementation is 7 MES (MES = 1/10 ES; MES costs per $-vol are WORSE and are NOT modeled here). The frozen series is a 37-trade/4yr engine -- execution granularity, not capital, is the binding constraint.
+
+[G3] PREREGISTERED DECISION RULE -- applied mechanically
+  cell: s=0.5, lambda=0.5, causal k
+  (a) marginal weekly-vol Sharpe = -0.1817 > 0 ?  False
+  (b) book maxDD $28,746 vs P1 $28,092 (ratio 1.0233 <= 1.05 ? True);  book CDaR5 $20,051 vs P1 $19,708 (ratio 1.0174 <= 1.05 ? True)  -> True
+  DECISION: CLOSED-PORTFOLIO-INERT
+  (the shrunk ES MR leg does not carry positive economic value to P1 under the preregistered sizing; the portfolio question is CLOSED. G00063's FAIL stands.)
+
+================================================================================================================
+G3_ESMR_PORTFOLIO_20260906  trial G00066  family GENESIS3_DECISION -- PROGRAM-PRINTED GATE TABLE
+shrunk portfolio contribution of frozen ES MR (W2B G00063 object) to P1 | DISCOVERY_CONSUMED | NO deploy
+================================================================================================================
+gate  spec                                                      observed                                 verdict
+G0    sha256 match + seal + rho reproduction within +-0.005     sha ok; rho +0.2260 vs +0.2260 (d=0.00      PASS
+G1    full lambda x s marginal-economics table printed          30/30 cells, both k variants                PASS
+G2    s* stated in words AND computed two agreeing ways         s* = >1 (negative at every s); agree=T      PASS
+G3    decision rule applied mechanically at s=.5,lam=.5,causal  (a) margSh -0.1817>0:False (b) tails:T      PASS
+
+decision cell: marginal weekly-vol Sharpe -0.1817; maxDD ratio 1.0233; CDaR5 ratio 1.0174 (bar: <=1.05 each)
+==> DECISION: CLOSED-PORTFOLIO-INERT
+G00063's family-corrected statistical FAIL is UNTOUCHED by this run.
+================================================================================================================
+

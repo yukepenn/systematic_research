@@ -158,14 +158,15 @@ stay closed; adjacent questions with genuinely different targets are legitimate.
 
 | wave | object | status |
 |---|---|---|
-| **A — SI/GC carry confirmation** | selection-debt-aware read of CARRY_V1's never-computed 2019+ windows (frozen relation, no retuning; null family = comparable sector pairs) | 🟡 DESIGN (agent) → coordinator freezes spec BEFORE any post-2018 carry PnL exists |
-| **B — ES MR portfolio adjudication** | exact W2B_EQMR rule, no retuning: shrunk marginal portfolio economics vs P1 | 🟡 PREREGISTERED `G3_ESMR_PORTFOLIO_20260906` (G00066) |
-| **C — ZB event diagnostic** | preregistered event catalog, response-path / transitions, matched controls | 🟡 PREREGISTERED `G3_EVENT_ZB_20260906` (G00067) |
-| **D — CL event diagnostic** | settlement / EIA-response-path / overnight-displacement / shock catalog | 🟡 PREREGISTERED `G3_EVENT_CL_20260906` (G00068) |
-| **E — GC event diagnostic (daily)** | liquidation / FTQ / vol-transition / cross-metal catalog, drift-controlled | 🟡 PREREGISTERED `G3_EVENT_GC_20260906` (G00069) |
-| **F — LIQREV01 re-adjudication** | exact frozen post-2020 object as REGIME-LOCAL standalone (no retuning), production verdict | 🟡 RECOVERY + DESIGN (agent) |
-| **G — representation world scan** | mechanism-first external scan (20 mechanism classes) + skeptic dedup vs graveyards | 🟡 RUNNING (workflow) |
-| **H — micro/execution surface census** | causal materialized surfaces only; frozen pools untouched | 🟡 RUNNING (agent) |
+| **A — SI/GC carry confirmation** | frozen SI/GC relative-carry switch on the never-computed 2019-2026-05 windows; 9-pair selection family; two-phase one-shot | 🔒 **FROZEN** `CARRY_SIGC_CONFIRM_20260906` (G00070) → executing |
+| **B — ES MR portfolio adjudication** | exact W2B_EQMR rule, shrunk marginal economics vs P1 | ✅ DONE (G00066 NULL): **CLOSED-PORTFOLIO-INERT** — s*>1, λ=0.5 book never beats P1-alone even unshrunk (marg Sharpe −0.056 at s=1); 2/30 cells positive, shrinkage kills both; tails fine, kill is mean-side. G00063 FAIL untouched. |
+| **C — ZB event diagnostic** | 6-event preregistered catalog | ✅ DONE (G00067 PASS): **ONE LEAD** — E1 macro-response-path: NFP/CPI DOWN first-response (08:30→08:45) continues to settlement, δ −$238/ct vs null, p_corr .0441, n=40, release-specific p .015, direction-concentrated. E3/E4 descriptive, E2/E5/E6 dead. |
+| **C2 — ZB E1 graduation falsifier** | frozen E1 object: after-cost CI, dual nulls, chronology halves, drop-2-worst, 2-tick stress | 🔒 **FROZEN** `G3_ZBMACRO_FALSIFIER_20260906` (G00072) → executing |
+| **D — CL event diagnostic** | 7-event preregistered catalog | ✅ DONE (G00068 NULL): **all DEAD** — 1/52 cells at raw p<.05 vs 2.6 expected; EIA response-path flat 12/12. CL pit returns are a random walk; structure is vol only. |
+| **E — GC event diagnostic (daily)** | 6-event catalog, drift-matched controls mandatory | ✅ DONE (G00069 NULL): **all DEAD vs drift control** — 0/33 cells; GC−SI divergence ANTI-convergent; G00060 lesson generalizes. Byproduct: SI daily built via certified causal roll (identity 0.0). |
+| **F — LIQREV01 re-adjudication** | exact s90_q20 post-2020 object as REGIME-LOCAL standalone at 1 MNQ; D1-D8; binary | 🔒 **FROZEN** `G3_LIQREV01_READJ_20260906` (G00071) → executing |
+| **G — representation world scan** | 6 mechanism scouts + graveyard skeptic | 🟡 RUNNING (`wf_a235b3bf-120`) |
+| **H — micro/execution surface census** | causal materialized surfaces only | ✅ DONE: `MICRO_SURFACE_CENSUS.md` — 6 candidates ranked; top = **H-X1 MNQSPREAD01** (measure live MNQ spread — the roll-quote sampling in flight covers it) and **H-X2 spread-state entry routing for P1** (Class-X EXECUTION); micro info-alpha lane honestly LOW-MED (4 consecutive prior negatives). |
 
 Discipline unchanged (ledger, spec-first, matched controls, dependence-preserving nulls, DELEV01
 points basis, market-native sessions, cost bands, no promotion from research, live book untouched).

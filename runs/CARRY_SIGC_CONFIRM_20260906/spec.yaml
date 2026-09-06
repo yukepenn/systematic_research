@@ -1,0 +1,45 @@
+run_id: CARRY_SIGC_CONFIRM_20260906
+campaign: GENESIS III (Wave A — the owner's Priority-1 lead)
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+binding_design: |
+  The full frozen design is DESIGN_FROZEN.md in this directory,
+  sha256 = 62d5a342c1e22daf52aebb0e415ca0b63607112380d5124be06f4bb02ca088a2.
+  It is executed EXACTLY: frozen SI/GC within-metals relative-carry switch (bit-identical to
+  CARRY_V1's construction, zero free parameters), two-phase execution (Phase A dev-reproduction
+  gates R0a/R0b/R2 must pass before any post-2018 row loads; Phase B one-shot with CONSUMED
+  marker), 9-pair same-sector selection-pricing family, dual dependence-preserving nulls
+  (G4a circular-shift + G4b 13-week block permutation, 5-point agreement clause), cost arms
+  PRIMARY/STRESS-A/STRESS-B (SI-thinness rung), gates G1-G8, binary decision rule.
+
+governance_sanction: |
+  CARRY_V1's REPORT.md §6 banned "metals-only carry" / "SI/GC pair" as post-failure DEV-DATA
+  searches. This confirmation is sanctioned notwithstanding, by the OWNER's recorded GENESIS III
+  directive §6 (2026-09-06), which explicitly instructs this exact selection-debt-aware,
+  no-retuning confirmation on the never-computed later windows ("Did the dev window identify a
+  real SI-vs-GC relative-curve mechanism, or was that the best accidental winner?... Do this
+  early."). The ban's target — fishing among dev-window losers — is priced here by G5's 9-pair
+  family and by the binary permanent-closure rule. The CARRY_V1 dev verdict (FAILED/CLOSED)
+  is unchanged by either outcome.
+
+coordinator_resolutions:  # the three design blockers, adjudicated 2026-09-06
+  R_sanction: "recorded above; owner directive §6 is the authority."
+  R_window: "RATIFIED — all blocking gates end 2026-05-30; 2026-06-01→07-31 is a non-gating
+    BURNED-WINDOW ANNEX (reported, never gated on)."
+  R_g2_bar: "RATIFIED — G2 = HEADLINE PRIMARY annualized net Sharpe >= 0.45 (half the measured
+    dev sleeve 0.932), fixed now. The design's own MDE states the severity honestly: only a
+    P1-class persistent effect passes; a halved edge most likely fails and closes. That matches
+    the campaign bar."
+
+key_facts_recorded_before_execution: |
+  - out/carry_v1_daily.csv ends 2018-11-23: the 2019+ windows were NEVER COMPUTED (verified).
+  - Dev facts to reproduce: pair PRIMARY Sharpe 0.932, net $286,211; long-SI 66.3% of live
+    weeks, 75 flips; switch beats both static arms (0.932 vs +0.047/−0.058).
+  - SI daily via the certified causal roll was independently rebuilt by G3_EVENT_GC_20260906
+    (identity gate 0.0) — the substrate path works.
+evidence_windows: "W1 2019-01-02→2022-12-31 + W2 2023-01-02→2026-05-30 = HEADLINE (PRE-FROZEN,
+  spent exactly once); ANNEX 2026-06→07 non-gating; >=2026-08-01 never read."
+ledger: "G00070, family GENESIS3_RV, registered before outcomes."
+outputs: [out/confirm.txt, out/confirm_verdict.json, out/family_table.csv,
+  out/sigc_daily_headline.csv, out/annex.txt, REPORT.md]

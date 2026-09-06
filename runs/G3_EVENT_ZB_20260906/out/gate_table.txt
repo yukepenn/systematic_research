@@ -1,0 +1,106 @@
+====================================================================================================
+G3_EVENT_ZB_20260906  (ledger G00067, family GENESIS3_EVENT)  ZB native EVENT diagnostic
+substrate: runs\SM1M_ZB_SUBSTRATE\out\zb_1m_2023_2026.parquet   sessions=923  (2022-12-27 .. 2026-07-31)   POINTS basis, $1000/pt, tick $31.25
+E1 calendar: G2_F10 macro-flag set (NFP_DAY + CPI_DAY, GENESIS_H2_CALENDAR_20260828); in-window releases=84 (NFP+CPI union)
+cost model (G00062, MODELED): ALL_IN rungs {'0.5tk': 19.98, '1tk': 35.61, '2tk': 66.86}; conservative=$66.86; screen 2x=$133.72 = 4.28 ticks
+null: circular shift, ONE shared draw (seed=20260906), N_SHIFTS=2000; delta_ctrl = obs - null-mean (the matched control for aligned cells)
+bootstrap: moving-block over chronological event series, L=5, B=2000
+
+event-family bookkeeping: E1 rel-events(nonzero r1)=78 (r1==0 dropped: 3); E2 universe=870 (on==0: 26); E3 events=122 (same-minute ties dropped: 0); E4 events=115; E5 shocks=830 -> no-FT events=564 (dropped +60 missing: 1, followed-through: 265); E6 universe=889 (s1==0: 241, dnet==0: 15)
+
+---- E1 --------------------------------------------------------------------------------------------
+cell                          n   obs pts  null pts   delta $  CI95 $ lo       hi   p_raw  p_corr  p_spec  P  C  N  LEAD
+E1_0845_1030_sign+           38    0.0099   -0.0028      12.6     -164.2    124.5  0.7936  1.0000  0.9385  .  .  Y    --
+E1_0845_1030_sign-           40   -0.0539   -0.0055     -48.4     -192.2     85.2  0.4168  1.0000  0.5457  .  .  Y    --
+E1_0845_1030_terc1_aligned   26    0.1707    0.0024     168.3      -22.8    336.6  0.0290  0.4260  0.0590  .  Y  .    --
+E1_0845_1030_terc2_aligned   26   -0.0829    0.0017     -84.6     -284.1     66.9  0.2609  1.0000  0.4008  .  .  .    --
+E1_0845_1030_terc3_aligned   26    0.0096    0.0003       9.3     -159.0    100.6  0.9225  1.0000  0.9355  .  .  .    --
+E1_0845_1030_sign+_terc1     16    0.1191   -0.0019     121.0     -132.9    296.8  0.1839  1.0000  0.3568  .  .  .    --
+E1_0845_1030_sign+_terc2     13   -0.1466   -0.0026    -144.0     -288.3     93.9  0.1649  1.0000  0.2829  .  Y  .    --
+E1_0845_1030_sign+_terc3      9    0.0417   -0.0047      46.3     -113.4    112.3  0.7406  1.0000  0.9635  .  .  .    --
+E1_0845_1030_sign-_terc1     10   -0.2531   -0.0092    -244.0     -315.8    -78.3  0.0500  0.7345  0.0360  .  Y  .    --
+E1_0845_1030_sign-_terc2     13    0.0192   -0.0060      25.2      -92.6    167.1  0.8296  1.0000  0.8736  .  .  .    --
+E1_0845_1030_sign-_terc3     17    0.0074   -0.0030      10.3     -134.9    137.2  0.9035  1.0000  0.9185  .  .  .    --
+E1_0845_1500_sign+           38    0.0946   -0.0044      99.0     -179.0    299.6  0.2709  1.0000  0.5387  .  .  Y    --
+E1_0845_1500_sign-           40   -0.2445   -0.0062    -238.3     -489.1   -107.1  0.0030  0.0441  0.0150  Y  Y  Y  LEAD
+E1_0845_1500_terc1_aligned   26    0.3918    0.0027     389.1      116.3    647.6  0.0010  0.0147  0.0010  Y  Y  .    --
+E1_0845_1500_terc2_aligned   26    0.0745    0.0010      73.5     -136.8    358.4  0.5077  1.0000  0.6027  .  .  .    --
+E1_0845_1500_terc3_aligned   26    0.0481   -0.0006      48.7     -149.7    198.9  0.6447  1.0000  0.9895  .  .  .    --
+E1_0845_1500_sign+_terc1     16    0.2891   -0.0006     289.7      -42.4    637.3  0.0430  0.6316  0.0710  .  Y  .    --
+E1_0845_1500_sign+_terc2     13   -0.0769   -0.0055     -71.4     -292.5    166.8  0.6557  1.0000  0.6097  .  .  .    --
+E1_0845_1500_sign+_terc3      9   -0.0035   -0.0094       5.9     -233.7    183.0  0.9875  1.0000  0.7386  .  .  .    --
+E1_0845_1500_sign-_terc1     10   -0.5563   -0.0080    -548.3     -602.4   -426.4  0.0040  0.0588  0.0020  .  Y  .    --
+E1_0845_1500_sign-_terc2     13   -0.2260   -0.0075    -218.4     -559.8   -139.1  0.1879  1.0000  0.2139  .  Y  .    --
+E1_0845_1500_sign-_terc3     17   -0.0754   -0.0041     -71.3     -304.7    136.4  0.6107  1.0000  0.8196  .  .  .    --
+  VERDICT E1: LEAD
+---- E2 --------------------------------------------------------------------------------------------
+cell                          n   obs pts  null pts   delta $  CI95 $ lo       hi   p_raw  p_corr  p_spec  P  C  N  LEAD
+E2_th1.5_sign+               59   -0.0551   -0.0177     -37.3     -184.6     72.3  0.6127  1.0000      --  .  .  Y    --
+E2_th1.5_sign-               57   -0.1250   -0.0178    -107.2     -276.6     55.7  0.2239  1.0000      --  .  .  Y    --
+E2_th1.5_aligned            116    0.0334   -0.0003      33.7      -74.1    131.7  0.5827  1.0000      --  .  .  Y    --
+E2_th2.0_sign+               32   -0.0127   -0.0169       4.2     -244.8    151.7  0.9745  1.0000      --  .  .  Y    --
+E2_th2.0_sign-               15   -0.1104   -0.0162     -94.2     -652.6    539.1  0.5997  1.0000      --  .  .  .    --
+E2_th2.0_aligned             47    0.0266   -0.0064      33.0     -247.6    244.4  0.6997  1.0000      --  .  .  Y    --
+  VERDICT E2: DEAD
+---- E3 --------------------------------------------------------------------------------------------
+cell                          n   obs pts  null pts   delta $  CI95 $ lo       hi   p_raw  p_corr  p_spec  P  C  N  LEAD
+E3_rem_up                    63    0.0045    0.0041       0.3     -139.1    120.9  0.9655  1.0000      --  .  .  Y    --
+E3_nxt_up                    63   -0.0392   -0.0249     -14.3     -156.6    116.7  0.8626  1.0000      --  .  .  Y    --
+E3_rem_down                  59    0.1451    0.0038     141.3       54.0    238.3  0.0470  0.6904      --  .  Y  Y    --
+E3_nxt_down                  59   -0.0191   -0.0229       3.8     -189.5    172.3  0.9735  1.0000      --  .  .  Y    --
+E3_rem_aligned              122   -0.0679    0.0003     -68.2     -156.3     -0.6  0.2369  1.0000      --  .  .  Y    --
+E3_nxt_aligned              122   -0.0110   -0.0018      -9.2     -114.0     89.1  0.9305  1.0000      --  .  .  Y    --
+  VERDICT E3: DESCRIPTIVE
+---- E4 --------------------------------------------------------------------------------------------
+cell                          n   obs pts  null pts   delta $  CI95 $ lo       hi   p_raw  p_corr  p_spec  P  C  N  LEAD
+E4_next1_up                  44   -0.2109   -0.0236    -187.3     -399.7    190.5  0.1000  1.0000      --  .  Y  Y    --
+E4_next1_down                71    0.1056   -0.0261     131.7      -24.1    288.0  0.1389  1.0000      --  .  .  Y    --
+E4_next1_aligned            115   -0.1459    0.0071    -153.0     -344.6     12.2  0.0330  0.4847      --  .  Y  Y    --
+E4_next2_up                  44   -0.4020   -0.0504    -351.6     -807.7     97.3  0.0510  0.7492      --  .  Y  Y    --
+E4_next2_down                71    0.1241   -0.0528     176.9      -33.4    369.8  0.2259  1.0000      --  .  Y  Y    --
+E4_next2_aligned            115   -0.2304    0.0133    -243.8     -492.1    -28.3  0.0360  0.5288      --  .  Y  Y    --
+E4_next3_up                  44   -0.6193   -0.0761    -543.2    -1055.3    -26.8  0.0260  0.3819      --  .  Y  Y    --
+E4_next3_down                71    0.0101   -0.0740      84.1     -196.7    351.7  0.6727  1.0000      --  .  .  Y    --
+E4_next3_aligned            115   -0.2432    0.0165    -259.7     -559.3    -30.9  0.1089  1.0000      --  .  Y  Y    --
+  VERDICT E4: DESCRIPTIVE
+---- E5 --------------------------------------------------------------------------------------------
+cell                          n   obs pts  null pts   delta $  CI95 $ lo       hi   p_raw  p_corr  p_spec  P  C  N  LEAD
+E5_toclose_aligned          564    0.0314   -0.0005      31.9      -17.9     80.7  0.2059  1.0000      --  .  .  Y    --
+E5_nxt_aligned              564   -0.0091   -0.0012      -7.9      -74.7     59.2  0.7946  1.0000      --  .  .  Y    --
+E5_toclose_up               289    0.0122   -0.0006      12.8      -60.5     79.1  0.6527  1.0000      --  .  .  Y    --
+E5_nxt_up                   289   -0.0268   -0.0262      -0.6     -103.6    110.2  0.9765  1.0000      --  .  .  Y    --
+E5_toclose_down             275   -0.0516    0.0004     -52.0     -119.7     24.7  0.1000  1.0000      --  .  .  Y    --
+E5_nxt_down                 275   -0.0095   -0.0251      15.5      -56.9     89.0  0.6867  1.0000      --  .  .  Y    --
+  VERDICT E5: DEAD
+---- E6 --------------------------------------------------------------------------------------------
+cell                          n   obs pts  null pts   delta $  CI95 $ lo       hi   p_raw  p_corr  p_spec  P  C  N  LEAD
+E6_s1sign+                  297    0.0085    0.0128      -4.3      -29.5     18.8  0.6167  1.0000      --  .  .  Y    --
+E6_s1sign-                  351    0.0161    0.0131       3.0      -15.6     24.4  0.7486  1.0000      --  .  .  Y    --
+E6_s1_aligned               648   -0.0048   -0.0012      -3.6      -19.7     10.5  0.6607  1.0000      --  .  .  Y    --
+E6_dnetsign+                435    0.0047    0.0129      -8.3      -26.8      8.6  0.2139  1.0000      --  .  .  Y    --
+E6_dnetsign-                439    0.0194    0.0130       6.5      -11.0     26.6  0.3448  1.0000      --  .  .  Y    --
+E6_dnet_aligned             874   -0.0074   -0.0001      -7.4      -20.3      5.1  0.2659  1.0000      --  .  .  Y    --
+  VERDICT E6: DEAD
+
+====================================================================================================
+GATE            SPEC                                                           PASS/FAIL
+----------------------------------------------------------------------------------------------------
+G0_SEAL         max session <= 2026-07-31 (>=2026-08-01 VIRGIN untouched)           PASS
+                OBSERVED: max session = 2026-07-31
+G1_BASIS        POINTS basis only (DELEV01): point differences, no %/level thresholds; 1/32 grid      PASS
+                OBSERVED: all stats are point diffs by construction; grid share(1/32)=1.000000
+G2_CALENDAR     E1 calendar = the G2_F10/G2_F13 macro-flag set (NFP+CPI 08:30 files)      PASS
+                OBSERVED: loaded daytype_sessions_NFP_DAY.csv + daytype_sessions_CPI_DAY.csv; in-window union=84; E1 usable events=78
+G3_CONTROLS     every conditional cell has a matched unconditional control in the same wave      PASS
+                OBSERVED: cells=55; control rows=15 (per-horizon, time-matched; null-mean is the matched center for every cell)
+G4_NULL         circular-shift null, ONE shared draw across the family; label tuple travels      PASS
+                OBSERVED: N_SHIFTS=2000, seed=20260906, offsets shared via one U(0,1) draw; min attainable two-sided p=0.00100
+G5_MULTIPLICITY print K and K_eff = K/(1+(K-1)rho_bar); screen at p_corr<0.05       PASS
+                OBSERVED: K=55, rho_bar=0.0508, K_eff=14.70, i.e. p_raw must be < 0.00340; reachable=YES
+G6_SCREEN       LEAD iff p_corr<0.05 AND |delta|>=$133.72 (2x conservative ALL_IN) AND n>=30      PASS
+                OBSERVED: applied to all 55 cells; LEAD cells=1
+G7_VERDICTS     per-event verdict DEAD/DESCRIPTIVE/LEAD per preregistered screen      PASS
+                OBSERVED: E1:LEAD  E2:DEAD  E3:DESCRIPTIVE  E4:DESCRIPTIVE  E5:DEAD  E6:DEAD
+----------------------------------------------------------------------------------------------------
+CATALOG RESULT: 1 LEAD / 2 DESCRIPTIVE / 3 DEAD (LEAD graduates only via a separate preregistered falsifier spec)
+====================================================================================================

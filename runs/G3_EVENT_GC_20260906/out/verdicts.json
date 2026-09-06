@@ -1,0 +1,122 @@
+{
+  "verdicts": {
+    "E1": "DEAD",
+    "E2": "DEAD",
+    "E3": "DEAD",
+    "E4": "DEAD",
+    "E5": "DEAD",
+    "E6": "DEAD"
+  },
+  "K": 33,
+  "rho_bar": 0.0733593111343168,
+  "K_eff": 9.858109080518561,
+  "alpha_eff": 0.005071966600451725,
+  "all_gates_pass": true,
+  "n_cells": 33,
+  "n_dir_cells": 28,
+  "e5_runnable": true,
+  "gates": [
+    {
+      "gate": "G01_SEAL_GC",
+      "spec": "max GC session < 2026-08-01",
+      "observed": "2026-07-31",
+      "ok": true
+    },
+    {
+      "gate": "G02_SEAL_NQ",
+      "spec": "max NQ spine session < 2026-08-01",
+      "observed": "2026-05-29",
+      "ok": true
+    },
+    {
+      "gate": "G03_SEAL_SI",
+      "spec": "max SI session < 2026-08-01 (if built)",
+      "observed": "2026-07-31",
+      "ok": true
+    },
+    {
+      "gate": "G04_DELEV01_NQ",
+      "spec": "NQ spine used in POINT space only (no % on back-adj levels)",
+      "observed": "z = ret_pts / trailing60 sd(ret_pts); no pct column formed",
+      "ok": true
+    },
+    {
+      "gate": "G05_GC_BASIS",
+      "spec": "GC returns basis-safe (self-financing pts / old_close_prev)",
+      "observed": "ret_pct from autopsy parquet (identity gate 0.0e+00)",
+      "ok": true
+    },
+    {
+      "gate": "G06_SI_IDENTITY",
+      "spec": "SI ret_points == roll.economic_returns, err < 1e-9",
+      "observed": "0.0",
+      "ok": true
+    },
+    {
+      "gate": "G07_SI_ROLL_CAUSAL",
+      "spec": "every SI roll info_cutoff < decision_date",
+      "observed": "True",
+      "ok": true
+    },
+    {
+      "gate": "G08_NQ_ALIGNMENT",
+      "spec": "spine-vs-daystore lag0 corr > 0.95 and dominates lag +/-1",
+      "observed": "lag0 +0.962, lag-1 -0.030, lag+1 -0.045",
+      "ok": true
+    },
+    {
+      "gate": "G09_CTRL_EVERY_CELL",
+      "spec": "drift-matched control computed for EVERY cell (G00060)",
+      "observed": "33/33 cells",
+      "ok": true
+    },
+    {
+      "gate": "G10_SHARED_NULLS",
+      "spec": "one shared uniform draw per iteration across family",
+      "observed": "2000 shift draws, shared offsets across 33 cells",
+      "ok": true
+    },
+    {
+      "gate": "G11_BOTH_DIRECTIONS",
+      "spec": "E4 H+L, E5 +/-, E6 U+D all present in output",
+      "observed": "present",
+      "ok": true
+    },
+    {
+      "gate": "G12_PREREG_PARAMS",
+      "spec": "constants match spec.yaml event_catalog verbatim",
+      "observed": "echoed to gate_table footer",
+      "ok": true
+    },
+    {
+      "gate": "G13_MIN_N",
+      "spec": "LEAD requires n >= 30",
+      "observed": "applied; min n among LEAD cells: no LEAD cells",
+      "ok": true
+    },
+    {
+      "gate": "G14_KEFF_APPLIED",
+      "spec": "LEAD requires p_shift < 0.05/K_eff (drift-matched control)",
+      "observed": "K=33, rho_bar=0.073, K_eff=9.9, alpha_eff=0.00507",
+      "ok": true
+    },
+    {
+      "gate": "G15_MATERIALITY",
+      "spec": "LEAD requires |excess$| >= 2x conservative cost",
+      "observed": "applied per cell (GC $24.36; pair $78.72)",
+      "ok": true
+    },
+    {
+      "gate": "G16_TWO_WAY_P",
+      "spec": "every p computed 2 independent ways (shift + block bootstrap)",
+      "observed": "disagreements (one<0.05, other>0.20): 2 of 33",
+      "ok": true
+    },
+    {
+      "gate": "G17_P_MEANING",
+      "spec": "IN WORDS: p_shift = two-sided percentile of the observed event-mean among 2000 drift-matched random-entry (circular-shift) event-means",
+      "observed": "second way = block-bootstrap random entries; both printed per cell",
+      "ok": true
+    }
+  ]
+}
