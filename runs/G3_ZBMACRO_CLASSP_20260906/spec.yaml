@@ -1,0 +1,36 @@
+run_id: G3_ZBMACRO_CLASSP_20260906
+campaign: GENESIS III (ZBMACRO01 Class-S/P assessment — the §20 EXPLORATORY portfolio pre-read)
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+what_this_is: |
+  EXPLORATORY, non-promoting, explicitly labeled. ZBMACRO01 cleared its falsifier (G00072,
+  10/10 gates, ρ-P1 daily −0.006) but is small (~$2k/yr/ct, 11 trades/yr). Before spending
+  engine-construction + skeptic effort, measure whether it is a rational STACK MEMBER of the
+  multi-engine book. This run licenses ONLY the next research stage, never deploy.
+
+inputs: |
+  - ZBMACRO01 trade ledger: runs/G3_ZBMACRO_FALSIFIER_20260906/out/trades.csv AS-IS
+    (sha printed), exit-day attributed to daily PnL, PRIMARY cost arm.
+  - P1 daily: runs/WE_W56_BREADTH/out/p1_daily.csv (sha printed; ~2.0% research-chain
+    optimism disclosed), overlap 2022-12-27..2026-05-29 (~39 of 40 trades).
+  - Live-scale basis: P1 at 0.30 NQ-equivalent (the deployed MnqPerNq=3) vs ZBMACRO at
+    k ∈ {1, 2, 4} ZB contracts; research full-size basis also printed, both labeled.
+
+measures:  # all program-printed
+  - marginal weekly-vol Sharpe (book vs P1-alone) per k, both scale bases
+  - losing-P1-week conditional ZBMACRO mean; P1 bottom-decile-day table (active trades, PnL)
+  - worst combined day/week vs P1-alone; maxDD + CDaR5 ratios (dollar tail checks)
+  - annual economics per k; ZB day-margin + capital note (broker figure ASSUMED, flagged)
+  - concentration honesty: top-3 trade share of total PnL; the 11-trades/yr effective-N stated
+  - a 2-way computation of any probability-style statement (CAP01 lesson) or none quoted
+
+decision_rule: |
+  STACK-MEMBER iff at k=2 (live-scale basis): (a) marginal weekly-vol Sharpe > 0,
+  (b) maxDD and CDaR5 ratios <= 1.02 (an orthogonal 11-trade/yr leg must not move the tail),
+  (c) losing-P1-week conditional mean > -$50/wk (no-harm, not hedging).
+  STACK-MEMBER -> next stage: ZBMACRO01 engine construction (frozen rule restated, eval_battery
+  full pass, adversarial skeptic, THEN fast-track consideration). Else PARK with the reason.
+evidence_status: DISCOVERY_CONSUMED + EXPLORATORY (this is a pre-read, stated on every table).
+ledger: "G00078, family GENESIS3_DECISION, registered before outcomes."
+outputs: [out/gate_table.txt, out/classp_table.csv, out/joint_series.csv, REPORT.md]
