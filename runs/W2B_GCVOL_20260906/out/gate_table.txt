@@ -1,0 +1,23 @@
+W2B_GCVOL GATE TABLE - program-printed. Vol-targeted long-gold DIVERSIFICATION
+SLEEVE (trial G00064). NOT an alpha test - judged on the PORTFOLIO delta.
+Primary N=63. NQ P1/PCT reproduced EXACTLY (0.0000% vs WE_W103).
+================================================================================================
+gate      spec                                                                observed   verdict
+------------------------------------------------------------------------------------------------
+G0a       gold max session < 2026-08-01 (seal, asserted)       2026-07-31 clean_ret n=      PASS
+G1[N=21]  matched-exp sleeve beats buy-hold on ret/DD AND wor  ret/DD 0.11v0.13; wMo -      FAIL
+G1[N=63]  matched-exp sleeve beats buy-hold on ret/DD AND wor  ret/DD 0.12v0.13; wMo -      FAIL
+G0b       NQ P1/PCT reproduced EXACTLY vs WE_W103 (weekly & m  wk $1393.5737 maxDD $22      PASS
+G2[N=21]  sleeve daily-PnL rho-to-P1 printed (expect ~0.04)                rho +0.1060      PASS
+G2[N=63]  sleeve daily-PnL rho-to-P1 printed (expect ~0.04)                rho +0.1033      PASS
+G3[N=21]  NQ+gold materially improves Sharpe AND ret/DD vs NQ   eq +0%/-21% fx +7%/-8%      FAIL
+G3[N=63]  NQ+gold materially improves Sharpe AND ret/DD vs NQ  eq +5%/-12% fx +10%/+8%      FAIL
+------------------------------------------------------------------------------------------------
+SURVIVES (G1 matched-exp beats buy-hold AND G3 portfolio-additive) = False
+VERDICT = NEUTRAL
+
+SEMANTIC: over the sleeve's causal active window on COMEX gold daily ratio-stitched
+%-returns (pre-seal, in-sample, DISCOVERY_CONSUMED), the vol-targeted long sleeve is
+compared to buy-hold at MATCHED mean exposure, and the NQ/P1 + sleeve portfolio to
+NQ/P1-alone under equal-risk and fixed-vol-budget. These are DIVERSIFICATION figures,
+never 'alpha', and never forward or live figures.

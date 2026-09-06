@@ -1,0 +1,105 @@
+============================================================================================================
+W2B_GCVOL - vol-targeted long-gold DIVERSIFICATION SLEEVE (trial G00064). NOT alpha.
+============================================================================================================
+G0 gold: 4347 rows loaded, 4347 < seal, 4329 clean-daily %-returns 2009-03-31 -> 2026-07-31
+   ret basis = ret_pct on ratio-stitched series (DELEV01, %-safe). seal max 2026-07-31 < 2026-08-01 ? True
+   sleeve N=21: active 4077 days 2010-05-07 -> 2026-07-31; mean w 1.2253  median w 1.2096  clipped-at-2 3.9%  clipped-at-0 0.0%
+   sleeve N=63: active 4077 days 2010-05-07 -> 2026-07-31; mean w 1.1621  median w 1.1510  clipped-at-2 0.1%  clipped-at-0 0.0%
+
+------------------------------------------------------------------------------------------------------------
+G1  SLEEVE vs BUY-HOLD gold at MATCHED MEAN EXPOSURE (leverage-masquerade guard). Compounded-equity return/DD + worst-month.
+------------------------------------------------------------------------------------------------------------
+  N=21  (mean exposure buy-hold 1.000, sleeve raw 1.225, sleeve MATCHED 1.000)
+     series                     CAGR    maxDD   ret/DD   worstMo   Sharpe
+     buy-hold gold             5.79%   44.18%    0.131   -12.39%    0.418
+     sleeve (raw)              5.77%   54.13%    0.107   -13.74%    0.395
+     sleeve (MATCHED exp)      4.96%   46.01%    0.108   -11.26%    0.395
+     -> MATCHED beats buy-hold on ret/DD? False   on worst-month? True   => G1(N=21) FAIL
+  N=63  (mean exposure buy-hold 1.000, sleeve raw 1.162, sleeve MATCHED 1.000)
+     series                     CAGR    maxDD   ret/DD   worstMo   Sharpe
+     buy-hold gold             5.79%   44.18%    0.131   -12.39%    0.418
+     sleeve (raw)              6.34%   51.23%    0.124   -14.24%    0.434
+     sleeve (MATCHED exp)      5.64%   45.32%    0.124   -12.26%    0.434
+     -> MATCHED beats buy-hold on ret/DD? False   on worst-month? True   => G1(N=63) FAIL
+
+------------------------------------------------------------------------------------------------------------
+G4  EVAL BATTERY on sleeve vs buy-hold (weekly grid). WEEKLY-VOL LEAD; fixed-DD ONLY beside its side-blind random-thinning placebo.
+------------------------------------------------------------------------------------------------------------
+  N=21 (sleeve income risk-matched to BUY-HOLD, 834 shared weeks, return units):
+     native               0.001424/wk
+     weekly_vol           0.001234/wk  <== PRIMARY (weekly-vol)
+     realized_vol         0.001234/wk
+     gross_exposure       0.001211/wk
+     fixed_dd (order stat)     0.001062/wk  vs side-blind 10%-thin median 0.001319/wk  (placebo pct 27.0)
+  N=63 (sleeve income risk-matched to BUY-HOLD, 834 shared weeks, return units):
+     native               0.001504/wk
+     weekly_vol           0.001372/wk  <== PRIMARY (weekly-vol)
+     realized_vol         0.001372/wk
+     gross_exposure       0.001353/wk
+     fixed_dd (order stat)     0.001271/wk  vs side-blind 10%-thin median 0.001363/wk  (placebo pct 41.6)
+
+------------------------------------------------------------------------------------------------------------
+COST ROBUSTNESS - GC turnover friction (1-tick spread + $4.36 comm, per-day |dw| one-way). Does the sleeve survive costs?
+------------------------------------------------------------------------------------------------------------
+  N=21: avg daily |dw| 0.0451  annual cost drag 0.069%  (GC RT $14.36); after-cost weekly-vol 0.001223 ret/wk (>0 vs buy-hold); matched ret/DD 0.106 vs buy-hold 0.131 -> cost-robust False
+  N=63: avg daily |dw| 0.0147  annual cost drag 0.023%  (GC RT $14.36); after-cost weekly-vol 0.001368 ret/wk (>0 vs buy-hold); matched ret/DD 0.124 vs buy-hold 0.131 -> cost-robust False
+
+------------------------------------------------------------------------------------------------------------
+P1 daily PnL - reproduced from the XINST01 parameterized bench (certified 0.0000% vs WE_W103).
+------------------------------------------------------------------------------------------------------------
+  P1/PCT: weekly $1,393.573663  maxDD $22,930.665853  t 4.1636  trades 2401  spread $14.436483  seal 2026-07-31
+  REPRODUCE-GATE vs WE_W103 (weekly 1393.5736635, maxDD 22930.6658528): PASS (0.0000%)
+
+------------------------------------------------------------------------------------------------------------
+G2  ORTHOGONALITY - sleeve daily rho-to-P1 (expect ~0.04). Correlation is scale-invariant, so sleeve-return vs P1-$ rho == sleeve-$ vs P1-$ rho.
+------------------------------------------------------------------------------------------------------------
+  N=21: sleeve daily rho-to-P1 = +0.1060  (buy-hold gold rho-to-P1 +0.1023) over 1009 shared trading days
+  N=63: sleeve daily rho-to-P1 = +0.1033  (buy-hold gold rho-to-P1 +0.1023) over 1009 shared trading days
+  (manifest cross-check: buy-hold gold rho-to-NQ-INDEX pearson 0.0744 / spearman 0.0449)
+
+============================================================================================================
+G3  PORTFOLIO DELTA - NQ/P1-alone vs NQ/P1 + gold sleeve, under (a) EQUAL-RISK and (b) FIXED-VOL-BUDGET (0.5x). Transparent, NOT optimized.
+============================================================================================================
+    Sizing constants use full-sample daily-$ vol over the shared window (an in-sample
+    portfolio-CONSTRUCTION device; the sleeve itself is causally vol-targeted). Ratios
+    (Sharpe, ret/DD, CDaR, tail) are scale-invariant -> IDENTICAL on both dollar bases;
+    only absolute $ (maxDD, worst-month) differ by the 0.30x live-object factor.
+
+  --- N=21  shared window 2022-07-04 -> 2026-07-31  (1009 days)   sig_P1 $2,357.8/day  sig_gold(ret) 0.01133  gold notional(eq-risk) $208,132
+      tail co-loss (worst-decile-day Jaccard, P1 vs gold sleeve) = 0.069
+      book                          Sharpe     maxDD$  ret/DD      CDaR$   worstMo$ roll12mMin
+      NQ-alone                       1.928     27,908  10.355     20,117    -15,274     -0.102
+      NQ+gold (equal-risk)           1.928     52,398   8.203     41,245    -25,216      0.069
+      NQ+gold (fixed-vol 0.5x)       2.059     37,547   9.572     29,214    -17,679      0.011
+      eval_battery (NQ+gold eq-risk income risk-matched to NQ-alone, 206 wk):
+         native           $    2,086.47/wk (NQ-alone native $1,402.82/wk)
+         weekly_vol       $    1,384.77/wk (NQ-alone native $1,402.82/wk)  <== PRIMARY
+         realized_vol     $    1,384.77/wk (NQ-alone native $1,402.82/wk)
+         gross_exposure   $    1,243.57/wk (NQ-alone native $1,402.82/wk)
+         fixed_dd $    1,049.48/wk vs side-blind 10%-thin median $1,890.39/wk (placebo pct 0.2)
+      G3 DELTA vs NQ-alone (Sharpe 1.928, ret/DD 10.355, roll12m-min -0.102):
+         equal-risk : Sharpe 1.928 (+0.0%)  ret/DD 8.203 (-20.8%)  roll-min 0.069  material=False
+         fixed-vol  : Sharpe 2.059 (+6.8%)  ret/DD 9.572 (-7.6%)  roll-min 0.011  material=False
+      => PORTFOLIO-ADDITIVE (N=21) ? False  [material = Sharpe & ret/DD BOTH +>=10% rel, roll-min not worse, sleeve weekly-vol>0]
+
+  --- N=63  shared window 2022-07-04 -> 2026-07-31  (1009 days)   sig_P1 $2,357.8/day  sig_gold(ret) 0.01106  gold notional(eq-risk) $213,146
+      tail co-loss (worst-decile-day Jaccard, P1 vs gold sleeve) = 0.058
+      book                          Sharpe     maxDD$  ret/DD      CDaR$   worstMo$ roll12mMin
+      NQ-alone                       1.928     27,908  10.355     20,117    -15,274     -0.102
+      NQ+gold (equal-risk)           2.026     49,434   9.125     35,255    -24,888      0.318
+      NQ+gold (fixed-vol 0.5x)       2.123     32,940  11.234     26,283    -16,497      0.188
+      eval_battery (NQ+gold eq-risk income risk-matched to NQ-alone, 206 wk):
+         native           $    2,189.75/wk (NQ-alone native $1,402.82/wk)
+         weekly_vol       $    1,464.38/wk (NQ-alone native $1,402.82/wk)  <== PRIMARY
+         realized_vol     $    1,464.38/wk (NQ-alone native $1,402.82/wk)
+         gross_exposure   $    1,343.40/wk (NQ-alone native $1,402.82/wk)
+         fixed_dd $    1,168.46/wk vs side-blind 10%-thin median $2,059.56/wk (placebo pct 0.1)
+      G3 DELTA vs NQ-alone (Sharpe 1.928, ret/DD 10.355, roll12m-min -0.102):
+         equal-risk : Sharpe 2.026 (+5.1%)  ret/DD 9.125 (-11.9%)  roll-min 0.318  material=False
+         fixed-vol  : Sharpe 2.123 (+10.1%)  ret/DD 11.234 (+8.5%)  roll-min 0.188  material=False
+      => PORTFOLIO-ADDITIVE (N=63) ? False  [material = Sharpe & ret/DD BOTH +>=10% rel, roll-min not worse, sleeve weekly-vol>0]
+
+============================================================================================================
+PRIMARY N = 63.  G1 matched-exposure beats buy-hold ? False   G3 PORTFOLIO-ADDITIVE ? False   => SURVIVES ? False
+VERDICT: NEUTRAL   (DIVERSIFICATION value, never 'alpha' - DISCOVERY_CONSUMED, no deploy)
+============================================================================================================

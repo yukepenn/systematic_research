@@ -1,0 +1,65 @@
+run_id: W2C_CL_MR_20260906
+campaign: CROSS_ASSET (Wave 2c — the last clean orthogonal-market directional shot)
+instrument: CL (WTI crude), daily/multi-day, 2022-01-03 → 2026-07-31 (full window; ≥2026-08-01 sealed)
+stage: "Stage-5 falsifier. CL is the ONE orthogonal market (ρ 0.05) not yet tested for a
+  directional engine. Daily/multi-day MR is cost-survivable (unlike ZB intraday) and CL's low
+  secular drift makes the drift-control less of a threat. Judged to the P1 bar. No deploy."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+honest_prior: |
+  MODEST. The CL autopsy found pit RETURNS ≈ random walk (structure is in VOLATILITY), but ALSO
+  found multi-day returns mean-revert (VR<1). So the live shot is SHORT-HORIZON / MULTI-DAY MR,
+  not intraday. ρ(CL,NQ)=+0.05 → if a drift-free MR edge exists AND its PnL is orthogonal to P1,
+  it is the diversifier the campaign wants. If not, the $0 cross-asset frontier is exhausted-for-now.
+
+hypothesis: |
+  CL short-horizon mean-reversion (fade the extension of the trailing multi-day return) has a
+  positive after-cost edge that BEATS a drift-matched control and has PnL orthogonal to P1.
+
+data: "runs/SM1M_CL_SUBSTRATE/out/cl_1m_2022_2026.parquet aggregated to daily pit-session o→c
+  (native CL pit 09:00-14:30 ET per the autopsy) AND full-session close; POINTS basis
+  (additively back-adjusted — DELEV01, CL $0.01 tick was F2-lossless). Seal <2026-08-01 asserted."
+
+mechanism_rule: |
+  Daily: signal = z-score of trailing-W daily point-return (W ∈ {5,10}); FADE — short z≥+k,
+  long z≤−k; exit on z mean-cross or max-hold H ∈ {2,5} days. Neighborhood {W}×{k∈1,1.5,2}×{H};
+  plateau required. Also report the 1-day analog (autopsy said daily≈RW, so expect the 1-day to
+  be weaker than multi-day — a within-run coherence check).
+
+controls_and_nulls:
+  drift_control: "beat an exposure-matched control (CL drift is small, but apply the GC-MR kill
+    test uniformly): report the SPREAD over the drift-matched hold; CI (block bootstrap) must
+    exclude 0."
+  pnl_orthogonality: "🔴 measure PnL-ρ-to-P1 (reproduce P1 from the XINST01 bench). Low/negative +
+    a positive drift-free edge = the diversifier. This is co-primary with the edge."
+  null: "circular-shift of the MR signal vs forward return, 2000 shifts, fixed seed; block-boot CI."
+
+cost: "ALL_IN = MODELED $4.36/ctrRT (FLAGGED) + ASSUMED spread {0.5,1,2} tick (CL tick $10).
+  Daily hold → low turnover → cost should not bind, but prove it. Report the band."
+
+evaluation:
+  battery: "eval_battery, weekly-vol lead, fixed-DD only with placebo; Sharpe/maxDD/return-DD."
+  walk_forward: "2022-2024 / 2025-2026-07 chronological split."
+
+gates:  # program-printed
+  G0_seal_basis: "points basis, seal <2026-08-01 asserted."
+  G1_MDE_first: "MDE for the drift-control spread printed before observed."
+  G2_drift_control: "after-cost SPREAD over the drift-matched control > 0, CI excludes 0 AND
+    clears the circular-shift null."
+  G3_neighborhood: "W×k×H plateau of positive after-cost spread, not one cell; the 1-day analog
+    coherence noted."
+  G4_weekly_vol_placebo: "edge on weekly-vol, not fixed-DD-only."
+  G5_era_stability: "positive spread in both walk-forward eras (or REGIME_LOCAL)."
+  G6_pnl_orthogonality: "PnL-ρ-to-P1 printed."
+  G7_cost: "survives the {0.5,1,2}-tick band at a realistic tick."
+
+decision_rule: |
+  G2+G3+G4+G7 PASS AND G6 low/negative PnL-ρ-to-P1 → the campaign's first portfolio-additive
+  orthogonal engine → portfolio assembly. FAIL → CL's returns are efficient (autopsy was right:
+  structure is vol, not returns); with equities/gold/rates/energy MR all now tested, the $0
+  cross-asset directional frontier is exhausted-for-now — record it and deliver the map.
+  DISCOVERY_CONSUMED; no deploy.
+
+ledger: "one trial (family CROSS_ASSET_NATIVE), registered before outcomes; recorded serially."
+outputs: [out/gate_table.txt, out/neighborhood.csv, out/daily_pnl.csv, REPORT.md]

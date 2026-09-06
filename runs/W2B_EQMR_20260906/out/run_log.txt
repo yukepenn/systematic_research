@@ -1,0 +1,115 @@
+================================================================================================================
+W2B_EQMR_20260906  trial G00063  family CROSS_ASSET_NATIVE  (raw equity-index mean reversion)
+POINTS basis, additively back-adjusted (DELEV01) | judged to the P1 bar (in-sample+robust) | NO deploy
+================================================================================================================
+
+[G0b] LOAD / SEAL / BASIS  (every bar >= 2026-08-01 hard-dropped)
+  [ES] loaded 1,620,385 bars, dropped>=seal 0; RTH daily sessions 1,181  2022-01-03 -> 2026-07-31  seal_ok=True
+  [YM] loaded 1,595,378 bars, dropped>=seal 0; RTH daily sessions 1,175  2022-01-03 -> 2026-07-31  seal_ok=True
+  [RTY] loaded 1,568,111 bars, dropped>=seal 0; RTH daily sessions 1,175  2022-01-03 -> 2026-07-31  seal_ok=True
+  [P1] NQ substrate 1,620,044 bars / 1,187 sess 2022-01-03 -> 2026-07-31  seal_ok=True
+  [P1] reproduced P1/PCT: 2,401 trades, spread $14.436/ctrRT, 1,056 P&L days, weekly $1,393.57
+
+[G0] REPRODUCE FIRST -- raw-ES MR control (W2_EQRESID G00061, primary W=60 z=1.5 cost=1tk)
+  aligned ES RTH sessions 1053  2022-07-01 -> 2026-07-31
+  raw-ES MR control: 37 trades  weekly $370.22/wk  Sharpe 0.777
+  reproduce target : $370.22/wk  Sharpe 0.777  (W2_EQRESID G00061)
+  G0 reproduce = True  (dwk $-0.00, dSharpe -0.0001)
+
+[G1] MDE for the DRIFT-CONTROL SPREAD (printed BEFORE observed) -- primary cell W=60 z=1.5 cost=1tk
+  [ES] spread weekly sd $3,512.65 over 214 wk, 80% power one-sided a=0.05 -> MDE $597.05/wk  |  OBSERVED spread $408.76/wk (BELOW MDE)
+  [YM] spread weekly sd $2,306.08 over 213 wk, 80% power one-sided a=0.05 -> MDE $392.89/wk  |  OBSERVED spread $348.32/wk (BELOW MDE)
+  [RTY] spread weekly sd $1,803.80 over 213 wk, 80% power one-sided a=0.05 -> MDE $307.31/wk  |  OBSERVED spread $205.73/wk (BELOW MDE)
+
+[G2] DRIFT-CONTROL SPREAD (CO-PRIMARY KILL) -- engine minus exposure-matched always-long
+  Bonferroni alpha = 0.05/3 = 0.0167 (one-sided) on the block-boot spread; circular-shift null 2000 shifts fixed seed
+  [ES] engine $370.22/wk (Sh 0.777, 37 tr, net-exposure c=-0.102, time-in-mkt 54%)
+        drift-control (c-long buy&hold) $-38.55/wk (Sh -0.616)  -> this is the equity DRIFT the engine captures free
+        SPREAD $408.76/wk (Sh 0.839)  block-boot 95% CI [$-27.06, $883.95]  Bonf lo(1.67pct) $-61.26
+        block-boot p(spread>0)=0.0411 (<0.0167? False)  circ-shift p=0.0120 (<0.0167? True)  ->  G2 FAIL (edge is drift)
+  [YM] engine $265.44/wk (Sh 0.835, 37 tr, net-exposure c=-0.247, time-in-mkt 49%)
+        drift-control (c-long buy&hold) $-82.88/wk (Sh -0.799)  -> this is the equity DRIFT the engine captures free
+        SPREAD $348.32/wk (Sh 1.089)  block-boot 95% CI [$36.95, $679.70]  Bonf lo(1.67pct) $14.81
+        block-boot p(spread>0)=0.0246 (<0.0167? False)  circ-shift p=0.0005 (<0.0167? True)  ->  G2 FAIL (edge is drift)
+  [RTY] engine $202.13/wk (Sh 0.809, 37 tr, net-exposure c=-0.035, time-in-mkt 53%)
+        drift-control (c-long buy&hold) $-3.60/wk (Sh -0.310)  -> this is the equity DRIFT the engine captures free
+        SPREAD $205.73/wk (Sh 0.822)  block-boot 95% CI [$-5.32, $436.32]  Bonf lo(1.67pct) $-21.03
+        block-boot p(spread>0)=0.0376 (<0.0167? False)  circ-shift p=0.0195 (<0.0167? False)  ->  G2 FAIL (edge is drift)
+
+[G3] NEIGHBORHOOD / PLATEAU  W x k x cost  (spread $/wk over drift control)
+  instr    W     k cost   eng$/wk  drift$/wk  spread$/wk   spr_p  circ_p  rho_P1   G2
+     ES   60   1.0    1       328        -49         377   0.081   0.039   0.220False
+     ES   60   1.0    2       325        -49         374   0.085   0.039   0.220False
+     ES   60   1.5    1       370        -39         409   0.041   0.012   0.226False
+     ES   60   1.5    2       368        -39         407   0.044   0.012   0.226False
+     ES   60   2.0    1       271        -21         293   0.077   0.028   0.274False
+     ES   60   2.0    2       270        -21         292   0.081   0.028   0.274False
+     ES  120   1.0    1       188        -76         264   0.123   0.097   0.155False
+     ES  120   1.0    2       185        -76         261   0.119   0.097   0.155False
+     ES  120   1.5    1       343        -41         384   0.042   0.013   0.227False
+     ES  120   1.5    2       341        -41         383   0.042   0.013   0.227False
+     ES  120   2.0    1       305        -11         316   0.054   0.011   0.241False
+     ES  120   2.0    2       304        -11         315   0.057   0.011   0.241False
+     YM   60   1.0    1       263        -88         351   0.050   0.001   0.171False
+     YM   60   1.0    2       262        -88         350   0.050   0.001   0.171False
+     YM   60   1.5    1       265        -83         348   0.025   0.000   0.201False
+     YM   60   1.5    2       265        -83         347   0.023   0.000   0.201False
+     YM   60   2.0    1       258        -47         305   0.022   0.000   0.285False
+     YM   60   2.0    2       257        -47         304   0.025   0.000   0.285False
+     YM  120   1.0    1       199       -134         333   0.033   0.002   0.109False
+     YM  120   1.0    2       198       -134         333   0.034   0.002   0.109False
+     YM  120   1.5    1       299       -107         405   0.011   0.000   0.128 True
+     YM  120   1.5    2       298       -107         405   0.011   0.000   0.128 True
+     YM  120   2.0    1       104        -37         141   0.156   0.047   0.269False
+     YM  120   2.0    2       104        -37         141   0.154   0.047   0.269False
+    RTY   60   1.0    1       164         -6         170   0.110   0.083   0.117False
+    RTY   60   1.0    2       163         -6         169   0.103   0.083   0.117False
+    RTY   60   1.5    1       202         -4         206   0.038   0.019   0.131False
+    RTY   60   1.5    2       201         -4         205   0.039   0.019   0.131False
+    RTY   60   2.0    1        79         -4          84   0.154   0.156  -0.038False
+    RTY   60   2.0    2        79         -4          83   0.152   0.156  -0.038False
+    RTY  120   1.0    1       172        -13         185   0.062   0.033   0.072False
+    RTY  120   1.0    2       171        -13         184   0.063   0.033   0.072False
+    RTY  120   1.5    1       211         -9         220   0.027   0.001   0.103False
+    RTY  120   1.5    2       210         -9         219   0.027   0.001   0.103False
+    RTY  120   2.0    1       165         -6         171   0.028   0.008  -0.055False
+    RTY  120   2.0    2       165         -6         171   0.028   0.008  -0.055False
+  [ES] 12/12 cells spread>0 ; 0/12 G2-pass -> plateau(>=60% spread>0)? True
+  [YM] 12/12 cells spread>0 ; 2/12 G2-pass -> plateau(>=60% spread>0)? True
+  [RTY] 12/12 cells spread>0 ; 0/12 G2-pass -> plateau(>=60% spread>0)? True
+
+[G4] WEEKLY-VOL LEAD (eval_battery; fixed-DD only WITH random-thinning placebo)
+  [ES] native spread $408.76/wk ; engine@drift-vol $48.65/wk vs drift $-38.55/wk -> vol-matched spread $87.19/wk
+        fixed-DD income (WITH placebo) $2,141.25/period at 53.5th pctile of side-blind thinning; self base $2,141.25; median thin $2,084.00 (lift -57.24)
+        G4 = edge on weekly-vol (not fixed-DD-only)? True
+  [YM] native spread $348.32/wk ; engine@drift-vol $86.52/wk vs drift $-82.88/wk -> vol-matched spread $169.40/wk
+        fixed-DD income (WITH placebo) $1,528.07/period at 55.4th pctile of side-blind thinning; self base $1,528.07; median thin $1,463.79 (lift -64.28)
+        G4 = edge on weekly-vol (not fixed-DD-only)? True
+  [RTY] native spread $205.73/wk ; engine@drift-vol $9.38/wk vs drift $-3.60/wk -> vol-matched spread $12.98/wk
+        fixed-DD income (WITH placebo) $1,163.61/period at 68.5th pctile of side-blind thinning; self base $1,163.61; median thin $1,033.33 (lift -130.28)
+        G4 = edge on weekly-vol (not fixed-DD-only)? True
+
+[G5] ERA STABILITY -- walk-forward 2022-07..2024 / 2025..2026-07 (spread $/wk, primary)
+  [ES] 2022-07..2024 $118.48/wk t=0.51 (132wk) | 2025..2026-07 $865.49/wk t=1.75 (83wk) -> both>0? True
+  [YM] 2022-07..2024 $165.04/wk t=1.01 (131wk) | 2025..2026-07 $633.40/wk t=2.04 (83wk) -> both>0? True
+  [RTY] 2022-07..2024 $121.56/wk t=0.80 (131wk) | 2025..2026-07 $336.09/wk t=1.62 (83wk) -> both>0? True
+
+[G6] PnL-rho-to-P1 (CO-PRIMARY VALUE) -- daily engine PnL vs reproduced P1 daily PnL
+  [ES] rho(engine daily PnL, P1 daily PnL) = +0.2260  (positive -> not a diversifier)
+  [YM] rho(engine daily PnL, P1 daily PnL) = +0.2013  (positive -> not a diversifier)
+  [RTY] rho(engine daily PnL, P1 daily PnL) = +0.1305  (low but POSITIVE comovement (not the prize))
+
+[G7] COST BAND {1,2} ticks -- does the drift-control spread survive both rungs?
+  [ES] 1tk spread $408.76/wk G2=False ; 2tk spread $406.61/wk G2=False -> cost-robust? False
+  [YM] 1tk spread $348.32/wk G2=False ; 2tk spread $347.46/wk G2=False -> cost-robust? False
+  [RTY] 1tk spread $205.73/wk G2=False ; 2tk spread $204.86/wk G2=False -> cost-robust? False
+
+================================================================================================================
+  [ES] survives(G0 & G2-Bonf & weekly-vol & cost-robust) = False   spread $408.76/wk   rho-to-P1 +0.2260
+  [YM] survives(G0 & G2-Bonf & weekly-vol & cost-robust) = False   spread $348.32/wk   rho-to-P1 +0.2013
+  [RTY] survives(G0 & G2-Bonf & weekly-vol & cost-robust) = False   spread $205.73/wk   rho-to-P1 +0.1305
+BEST INSTRUMENT: YM  (spread $348.32/wk, rho-to-P1 +0.2013)
+VERDICT: FAIL   any-instrument-survives = False
+  WHY: the raw fade is net-SHORT (c<0 on all three), so the exposure-matched hold LOSES (-$4..-$83/wk) and the drift-free timing SPREAD ($206..$409/wk) EXCEEDS the engine. This is NOT drift-explained (GC-MR's failure mode); the drift control VINDICATED the timing.
+  The kill is POWER, not drift: spread Sharpe ~0.8-1.1 -> t~1.7 over 214wk, short of the Bonferroni bar (alpha 0.0167 -> t~2.13). Circular-shift null (a 2nd computation of timing-beyond-drift) IS cleared for ES(0.012)/YM(0.0005) but block-boot CI does not exclude 0 at Bonferroni. AND rho-to-P1 is POSITIVE (+0.13..+0.23) -> not a diversifier.
+================================================================================================================

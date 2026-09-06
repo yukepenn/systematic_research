@@ -122,6 +122,13 @@ invalid; see GENESIS_ENGINEERING_DOCTRINE substrate trap.**
 | **ZB native intraday MR (leg A) + 08:30 macro-vol (leg B)** | **COST-FRAGILE + VOL-ONLY-NO-DIRECTION** — leg A reversion real (t 4-6) but 0.06-0.19 tk vs 1.14-tk breakeven (~6× too small); leg B releases expand vol powerfully but the post-release path is untradeable net of cost | W2_ZB_NATIVE (G00062) |
 | ⭐ **CROSS-ASSET LAW banked: scheduled macro releases = powered realized-vol EXPANSION with ZERO tradeable directional/path edge.** Verified on THREE instruments/clocks: NQ-FOMC 14:00 (G2_F12, expands ×5.66), CL-EIA Wed-10:30 (W1 autopsy, coin-flip), ZB-08:30 NFP/CPI/FOMC (G00062, path untradeable). A macro-release "event" card on any futures instrument must clear this — the vol is real, the direction is not. | (multi-run) |
 
+## Closed at exact scope (2026-09-06, cross-asset Wave 2b)
+
+| scope | verdict | run |
+|---|---|---|
+| **Raw equity-index daily MR (ES/YM/RTY), as an orthogonal engine** | **FAIL — real timing edge, but underpowered + NOT orthogonal.** The Sharpe-0.78 raw-ES MR reproduced exactly; the drift-control VINDICATED it (net-short fade, drift-free spread ES $409/YM $348/wk, spread-Sharpe 0.82-1.09 — NOT drift-explained). Dies on (1) power: block-boot spread CI misses Bonferroni 0.0167 (t~1.7); (2) **PnL-ρ-to-P1 POSITIVE +0.13..+0.23** — a long-biased equity fade comoves with the long-NQ book, so it is not the diversifier. A real edge that is neither significant-at-the-family-bar nor portfolio-additive | W2B_EQMR (G00063) |
+| **Vol-managed long-gold diversification sleeve** | **NEUTRAL** — does NOT beat buy-hold gold at matched exposure (ret/DD 0.124<0.131); NQ+sleeve not portfolio-additive. Gold's ρ-to-P1 is +0.10 (P1-overlap window, not the 0.04 full-history figure); a passive gold long is a mild diversifier but not an engine, and vol-managing it adds nothing | W2B_GCVOL (G00064) |
+
 ## Blocked-as-rescue (recorded rulings)
 
 MC-35 meta-labeling/sizing **on P1 with existing surfaces** = rescue of RR_W002A's closure ("no

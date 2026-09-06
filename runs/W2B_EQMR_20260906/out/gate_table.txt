@@ -1,0 +1,50 @@
+================================================================================================================
+W2B_EQMR_20260906  trial G00063  family CROSS_ASSET_NATIVE
+raw equity-index MEAN-REVERSION (ES lead, YM/RTY extension) -- PROGRAM-PRINTED GATE TABLE
+POINTS basis, back-adjusted (DELEV01) | judged to the P1 bar (in-sample+robust) | NO deploy
+================================================================================================================
+primary cell: W=60 z=1.5 cost=1tk/leg | family Bonferroni alpha = 0.05/3 = 0.0167
+
+G0   reproduce raw-ES MR control (else RAISE)                    $370/wk Sh0.777 vs $370/0.78    PASS
+G0b  points basis, back-adjusted, seal <2026-08-01                 POINTS; back-adj; asserted    PASS
+
+gate spec                                                            observed (ES / YM / RTY) verdict
+G1   MDE for drift-control spread (before observed)
+       [ES] MDE $597/wk  observed spread $409/wk  (BELOW)
+       [YM] MDE $393/wk  observed spread $348/wk  (BELOW)
+       [RTY] MDE $307/wk  observed spread $206/wk  (BELOW)
+G2   drift-control spread>0, CI-excl-0 Bonf, clears circ-null  (CO-PRIMARY KILL)
+       [ES] spread $409/wk  Bonf-lo $-61  p_block 0.041  p_circ 0.012  -> FAIL (underpowered; NOT drift, drift is a drag)
+       [YM] spread $348/wk  Bonf-lo $15  p_block 0.025  p_circ 0.000  -> FAIL (underpowered; NOT drift, drift is a drag)
+       [RTY] spread $206/wk  Bonf-lo $-21  p_block 0.038  p_circ 0.019  -> FAIL (underpowered; NOT drift, drift is a drag)
+G3   neighborhood plateau (>=60% cells spread>0)
+       [ES] 12/12 spread>0 -> plateau True
+       [YM] 12/12 spread>0 -> plateau True
+       [RTY] 12/12 spread>0 -> plateau True
+G4   edge on weekly-vol, not fixed-DD-only
+       [ES] native $409/wk vol-matched $87/wk -> True
+       [YM] native $348/wk vol-matched $169/wk -> True
+       [RTY] native $206/wk vol-matched $13/wk -> True
+G5   positive spread in BOTH walk-forward eras
+       [ES] both eras>0? True
+       [YM] both eras>0? True
+       [RTY] both eras>0? True
+G6   PnL-rho-to-P1 per instrument (CO-PRIMARY VALUE; low/neg = the prize)
+       [ES] rho-to-P1 +0.226  (positive=not a diversifier)
+       [YM] rho-to-P1 +0.201  (positive=not a diversifier)
+       [RTY] rho-to-P1 +0.131  (low but POSITIVE (not prize))
+G7   drift-control spread survives {1,2}-tick cost band
+       [ES] cost-robust? False
+       [YM] cost-robust? False
+       [RTY] cost-robust? False
+
+survives [ES] (G0 & G2-Bonf & weekly-vol & cost-robust) = False  spread $408.76/wk  rho-to-P1 +0.2260  eng $370.22/wk drift $-38.55/wk
+survives [YM] (G0 & G2-Bonf & weekly-vol & cost-robust) = False  spread $348.32/wk  rho-to-P1 +0.2013  eng $265.44/wk drift $-82.88/wk
+survives [RTY] (G0 & G2-Bonf & weekly-vol & cost-robust) = False  spread $205.73/wk  rho-to-P1 +0.1305  eng $202.13/wk drift $-3.60/wk
+
+BEST INSTRUMENT: YM  spread $348.32/wk  rho-to-P1 +0.2013
+SEMANTIC: 'spread' is the mean weekly P&L of the raw daily fade AFTER subtracting the income of an exposure-matched always-long hold. It is drift-free timing alpha, in-sample & DISCOVERY_CONSUMED -- NOT a forward or live figure.
+any-instrument-survives = False
+WHY (read before quoting the verdict): the raw fade is net-SHORT on all three (c<0), so the exposure-matched hold LOSES and the drift-free timing spread EXCEEDS the engine -- this is NOT the GC-MR drift-explained mode; the drift control vindicated the timing. The kill is POWER (spread Sharpe ~0.8-1.1 -> t~1.7 over 214wk < Bonferroni t~2.13; circ-null cleared ES/YM but block-boot CI does not exclude 0 at 0.0167) AND diversification (rho-to-P1 +0.13..+0.23, positive).
+==> VERDICT: FAIL
+================================================================================================================
