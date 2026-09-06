@@ -34,32 +34,51 @@ GENESIS II. State document — wave history lives in `runs/`, this file links.
 - **C — cross-asset / relative state** (strict chronology; predictor must precede the decision).
 - **D — portfolio value** (vs NQ under simple fixed risk allocation).
 
-## Data reality (PROVISIONAL — Wave 0 data agent confirms exactly)
+## Data reality (CONFIRMED — Wave-0 inventory, `DATA_INVENTORY.md`, 2026-09-06; every parquet opened)
 
-| root | class | local 1-min | daily (inventory) | status for intraday P1-depth |
+⚠️ Prior session counts were calendar-FILE counts; these are true trading sessions (end 2026-07-31).
+
+| root | class | local 1-min (extracted) | daily on disk | status for intraday P1-depth |
 |---|---|---|---|---|
-| NQ | equity idx | ✅ deep (2006+ spine, 2022+ SM1M) | — | ANCHOR (live P1) |
-| ES | equity idx | ✅ 1,427 sess 2022+ | ✅ ~2009+ | intraday-ready |
-| RTY | equity idx | ✅ 1,419 sess 2022+ | ✅ | intraday-ready |
-| YM | equity idx | ✅ 1,419 sess 2022+ | ✅ | intraday-ready |
-| ZB | rates | ✅ 1,114 sess 2022-12+ (back-adj) | ✅ | 🎯 intraday-ready, orthogonal class |
-| CL | energy | ⏳ 1,481 sess ON DISK, unextracted (recompile-path) | ✅ | extract in a session break (Wave 2) |
-| ZN | rates | ⚠️ ~185 sess only (2025-12+) | ✅ | daily-only for now |
-| GC | metals | ❓ not confirmed local (only MGC ~184 sess) | ✅ ~2009+ | **daily-only** unless found/extracted |
-| 6E | FX | ❓ not confirmed local (only 6J ~185 sess) | ✅ | **daily-only** unless found/extracted |
-| MGC/6J/SI/HG/NG/6B/6A/ZF | mixed | thin/absent 1-min | ✅ via inventory | daily-only / Tier-2 |
+| NQ | equity idx | ✅ 1,184 ext + 2006+ deep spine | ✅ | ANCHOR (live P1) |
+| ES | equity idx | ✅ **1,184** sess 2022+ | ✅ ~2009+ | intraday-ready · DISCOVERY_CONSUMED |
+| RTY | equity idx | ✅ **1,177** sess 2022+ | ✅ | intraday-ready · DISCOVERY_CONSUMED |
+| YM | equity idx | ✅ **1,177** sess 2022+ | ✅ | intraday-ready · DISCOVERY_CONSUMED |
+| ZB | rates | ✅ **923** sess 2022-12+ (back-adj) | ✅ | 🎯 intraday-ready, orthogonal class · DISCOVERY_CONSUMED |
+| MNQ | equity idx | ✅ 1,189 sess | ✅ | EXCLUDED (= NQ/10, not a diversifier) |
+| **CL** | energy | ⏳ 1,475 datefiles ON DISK, **UNEXTRACTED + genuinely UNTOUCHED** | ✅ | extract (recompile-path, session break) → 🔒 **freeze a holdout before looking** |
+| ZN | rates | ⚠️ ~190 files only (2025-12+, thin) | ✅ | daily-only for now |
+| GC | metals | 🔴 **ABSENT** (only micro MGC, thin) | ✅ ~2009+ | **DAILY-ONLY** |
+| 6E | FX | 🔴 **ABSENT** (only 6J, thin) | ✅ | **DAILY-ONLY** |
+| SI/HG/NG/6A/6B/6C/6S/ZF/ZT/ZC/ZW/ZL/ZM | metals/energy/FX/rates/ags | 🔴 absent 1-min | ✅ per-contract day .ncd 2009+ | DAILY-ONLY / Tier-2 |
 
-**Honesty rule:** metals & FX get a **daily-resolution** autopsy + native/daily-swing engine lane
-(legit: each market teaches its own mechanism); intraday P1-depth is reserved for the markets with
-deep 1-min data. Do not fake intraday history that isn't there.
+**Roll (the fake-alpha axis):** all six extracted substrates are NT8 **additive back-adjusted**
+continuous front-month chains. **Intraday continuity is CLEAN** (no roll-gap contamination —
+verified), so intraday signals are safe — **BUT absolute price LEVELS are shifted** (MNQ early-2022
+≈ +3,378 pt), so **every level/return/ratio feature must be POINT-difference, never % or a level
+threshold** (G2_F13 did ZB in points correctly). ES/RTY/YM roll treatment is INFERRED not
+annotated — document before any level use. Daily store is per-contract (no continuous) → needs a
+causal roll.
+
+**Cost:** only NQ ($4.36) / MNQ ($1.30) RT are MEASURED. Every other root's commission is MODELED
+(~$4.36 full / ~$1.30 micro, FLAGGED); no measured non-NQ commission or spread exists in-repo.
+Tick/point values are published CME specs (reliable). Use the optimistic/base/conservative/stress
+band; a candidate dead at +1 tick is fragile.
+
+**Honesty rule:** metals & FX (GC/6E/SI/NG/…) get a **daily-resolution** autopsy + native/daily-swing
+engine lane (legit — each market teaches its own mechanism); intraday P1-depth is reserved for the
+deep-1-min markets (ES/RTY/YM/ZB now; CL after extraction). Do not fake intraday history that isn't
+there. The **ESNQ_V1 blind ES∩NQ 15-session tick pool remains UNSPENT** (do not consume).
 
 ## Wave tracker
 
 | wave | scope | status |
 |---|---|---|
 | **XINST01** (Lane A benchmark) | P1 transfer → ES/RTY/YM/ZB, no-mining, NQ-reproduction gate, orthogonality | 🟡 RUNNING `wf_d97689db-200` (trials G00056-59) |
-| **Wave 0** (infra) | NQ Research Playbook · data/roll/cost inventory · pristine-data freeze · Tier-1 rank | 🟡 LAUNCHING |
-| Wave 1 | parallel market autopsies (descriptive science, instrument-native sessions) | pending Wave 0 |
+| **Wave 0** (infra) | NQ Research Playbook ✅ · data/roll/cost inventory ✅ · Tier-1 rank ✅ | DONE (`NQ_RESEARCH_PLAYBOOK.md`, `DATA_INVENTORY.md`) |
+| **Wave 1** (intraday autopsies) | descriptive science on ES/RTY/YM/ZB (native sessions, points-basis, ρ-to-NQ) | 🟡 LAUNCHING |
+| **CL extraction** | recompile-path in a session break (Sun, flat/closed verified) → freeze holdout, then autopsy | 🟡 LAUNCHING |
+| Wave 1b | daily autopsies GC/6E (+SI/NG…) after daily extraction | pending |
 | Wave 2 | cheap screening: transfer + native mechanism families per market | pending |
 | Wave 3 | deepen survivors (rules, neighborhood, chronology, cost stress) | pending |
 | Wave 4 | independent engine construction (1-2 strong mechanisms, not 10 weak) | pending |
