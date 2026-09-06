@@ -1,0 +1,20 @@
+==========================================================================================================
+FT4b -- OFFLINE CERTIFICATION of ZbMacroResponse_v1.cs  (G3_ZBMACRO_FT_20260906, G00083)
+Python state-machine mirror of the .cs OnBarUpdate flow (line refs in src/ft4b_cert.py header),
+replayed bar-by-bar over the substrate under Strategy Analyzer (historical) semantics.
+substrate: runs\SM1M_ZB_SUBSTRATE\out\zb_1m_2023_2026.parquet  sessions=923 (2022-12-27 .. 2026-07-31)  seal OK (<= 2026-07-31)
+calendar: NFP|CPI union; event sessions in window = 82; non-event sessions = 841
+replay: entries=40  exits at the exact 15:00 bar=40  exit-slips=0  flatten-failsafes=0  overnight-carries=0
+early-close stand-asides on event days (fail-closed guard, L744-759): 1
+
+GATE                    SPEC                                              OBSERVED                              PASS/FAIL
+-------------------------------------------------------------------------------------------------------------------------
+C1_event_agreement      decision agreement vs FT1 = 100.000% (event days) 82/82 = 100.000%                           PASS
+C2_phantom_entries      zero entries on non-event days                    0 phantom on 841 non-event sessions        PASS
+C3_fill_identity        40 entries; entry+exit fills vs FT1 < 1e-9 pt     n=40 dEntry=0 dExit=0                      PASS
+C4_no_overnight         zero overnight carries / flatten fail-safes       carry=0 failsafe=0                         PASS
+-------------------------------------------------------------------------------------------------------------------------
+FT4b VERDICT (mechanical): PASS -- 100.000% event-day agreement, zero phantoms
+SCOPE: this certifies the DECISION LOGIC offline.  NT8 compile + Strategy Analyzer parity on the
+real platform remain DEFERRED to the >= 2026-09-21 window (spec FT4).  EVIDENCE: DISCOVERY_CONSUMED.
+==========================================================================================================

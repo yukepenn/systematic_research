@@ -339,3 +339,30 @@ spread, CIs +-$10-27 - nothing clears, no kill fires. Adverse selection CONFIRME
 (T=120 unfilled entries are the +$339 winners). CANCEL accounting unpowered-by-design (stated
 before results). NO live policy change. Governance premise correction recorded in the census.
 ```
+
+
+## GENESIS III Wave 5 closures (2026-09-06)
+
+### Post-FOMC sign-conditioned ZB drift (G00084, `G3_FOMCDRIFT_20260906`)
+```
+Closed:  observable = 131 FOMC days, ZB close(D-1)->close(D0) sign      representation = hold D0->D+5 in signal direction
+horizon = 5d (15d secondary)      target = slow-capital continuation vs matched control      sample = 2009-2026-07
+reason = WRONG SIGN (-0.153 pt after cost, p .50); eras ZLB+/hiking-/inflation- = modern-negative;
+h=15 path REVERSES (-0.63). Generic ZB 5-day continuation is itself negative (the MR law). ZN mirror flat.
+```
+### Close-hour hedging-flow momentum (G00085, `G3_CLOSEHOUR_20260906`)
+```
+Closed:  observable = sign(0930->1500) held 1500->1600, ES/RTY/YM, vol-gated + ungated (6 cells)
+horizon = 1h      target = gated-ES headline vs K_eff-corrected null      sample = 2022-2026-07, 555 gated ES sessions
+reason = 6/6 net-negative; gated cells GROSS-negative; gate ordering anti-mechanism 3/3; both chrono
+halves wrong; mirror fade gross 0.494 < 0.587 cost. LAW EXTENDED: the cash-close hour mean-reverts too,
+harder on high-vol days. rho-to-P1 +0.27 - would have stacked, not diversified.
+```
+### Bond-index duration-extension day (G00086, `G3_DUREXT_20260906`)
+```
+Closed:  observable = last trading day T, LONG ZB close(T-1)->close(T), T-2/T+1 concentration placebos
+horizon = 1d      target = extension-day concentration      sample = 209 month-ends 2009-2026-07
+reason = the T-2 placebo carries the SAME premium (+169 vs +164) - diffuse month-turn tilt, not an
+extension-day flow; G2 CI includes 0; modern era ~zero after cost. The adverse prior (G00077 control) held.
+```
+Banked fact: a DIFFUSE gross ZB month-turn tilt exists (+/+/+ eras) but is ~uncapturable after cost in the modern era.

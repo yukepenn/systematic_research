@@ -1,0 +1,128 @@
+==============================================================================================================
+G3_FOMCDRIFT_20260906  slow-capital post-FOMC drift in ZB  |  ledger G00084  |  seed=20260906  shifts=999
+evidence status of EVERY number in this file: DISCOVERY_CONSUMED
+==============================================================================================================
+
+-- INPUT CERTIFICATION (reused AS-IS; shas printed; seal asserted) --
+  zb_daily.parquet sha256 9446e7f19ee17754d5afd31c65790e5fe24ae76f23ebf128101c7c0bdf786c56
+    manifest ZB sha       9446e7f19ee17754d5afd31c65790e5fe24ae76f23ebf128101c7c0bdf786c56  match=True
+  zn_daily.parquet sha256 13fc5165b8b2171bcb459e1fdb1ee47005ffa231027eb045f658de4db2fd2527
+    manifest ZN sha       13fc5165b8b2171bcb459e1fdb1ee47005ffa231027eb045f658de4db2fd2527  match=True
+  fomc_meetings_2006_2026.csv sha256 57a7acfb733ac88cb551bb8768ee888ffc8a5f533f6cb29feb901e1bc86c0c31
+  p1_daily.csv sha256 9bc2d7f7000653b4d15f82b9ac9bf76ac25ec4cdbdb008d382453ec082a75357
+  zbmacro trades.csv sha256 245431500d42becbc6ed8c8f07c0696e9057346d3b52cad05d8976bb2d8e2273
+  seal assert: ZB max 2026-07-31, ZN max 2026-07-31  (< 2026-08-01)  PASS
+  ZB rows 4393 span 2009-03-31..2026-07-31; ZN rows 4364 span 2009-03-31..2026-07-31
+  certification carried from G3_AUCTCYCLE: causal roll unit tests ALL PASS, identity gate max err 0.0 (both)
+
+-- FOMC CALENDAR (the repo artifact; scheduled decisions only -- conference calls/unscheduled excluded at parse) --
+  calendar rows 2006..2026: 167; events in window 2009-01-01..2026-07-31: 140
+  per-year: {2009: 8, 2010: 8, 2011: 8, 2012: 8, 2013: 8, 2014: 8, 2015: 8, 2016: 8, 2017: 8, 2018: 8, 2019: 8, 2020: 7, 2021: 8, 2022: 8, 2023: 8, 2024: 8, 2025: 8, 2026: 5}   (2020 has 7: the 2020-03 meeting was cancelled)
+  coverage assert PASS: 140-band [135,145], first 2009-01-28, last 2026-07-29
+  cross-check vs G2_F12 embedded calendar (2006..2026-04): csv=162 f12=162 symmetric-diff=NONE -- identical
+
+-- EVENT REALIZATION (ZB) --
+  excluded (7):
+    2009-01-28  BEFORE_SERIES
+    2009-03-18  BEFORE_SERIES
+    2014-01-29  SESSION_MISSING_DATA_HOLE
+    2015-12-16  SESSION_MISSING_DATA_HOLE
+    2018-12-19  SESSION_MISSING_DATA_HOLE
+    2024-12-18  SESSION_MISSING_DATA_HOLE
+    2026-07-29  WINDOW_BEYOND_SEAL
+  zero-signal no-trade (2):
+    2011-06-22  ZERO_SIGNAL_NO_TRADE
+    2025-01-29  ZERO_SIGNAL_NO_TRADE
+  realized traded events N = 131  (calendar 140 -> -7 excluded -> -2 zero-signal)
+  min gap between consecutive events = 17 sessions (> 5: windows never overlap)  PASS
+
+-- G1: MDE (printed BEFORE the observed statistic; null computed first; offset 0 never evaluated) --
+  SEMANTIC (what the p-value is over): the population is the 131 scheduled FOMC decision days 2009-04..2026-06
+  that trade on the certified ZB calendar with a nonzero D-1->D0 move and a complete D+5 window; the event is
+  'mean after-cost points of holding ZB 5 sessions in the direction of the announcement-day move'; the p is the
+  two-sided probability, under 999 shared circular shifts of the whole event family along the 4393-session
+  calendar (dependence preserved; rule incl. zero-signal drop re-applied at shifted positions), of |T| >= |T_obs|.
+  null sd = 0.1725 pt   MDE80 (two-sided alpha .05, 80% power) = 0.4833 pt  ($483/ct at $1000/pt)
+
+-- G2: PRIMARY after-cost edge --
+  gross mean          = -0.0860 pt  ($-86/ct)
+  after-cost mean     = -0.1529 pt  ($-153/ct)   [PRIMARY cost 0.06686 pt = $66.86 RT, BASIS COMMISSION+SPREAD MODELED]
+  event-block bootstrap CI95 = [-0.5274, +0.2242] pt   (10,000 draws, events are non-overlapping blocks)
+  [descriptive cross-check, NOT the gate: t-CI95 = [-0.5365, +0.2308]; t = -0.79]
+  shift-null two-sided p = 0.5000  (add-one, 999 shifts)
+  hit rate = 0.466   per-event sd = 2.2194 pt
+  power language: MDE80=0.4833 vs 3x|obs|=0.4586 -> UNDERPOWERED_STILL
+
+-- G3: matched non-FOMC same-weekday control (same rule, same 5-day window, same cost) --
+  control pool: 4215 non-FOMC sessions (every calendar decision day excluded); by weekday: Mon 858, Tue 866, Wed 755, Thu 870, Fri 866
+  event weekday mix: Tue 8, Wed 118, Thu 5
+  ctrl mean by weekday (after-cost pt): Mon +0.0107, Tue -0.1487, Wed -0.2879, Thu -0.1266, Fri -0.1932
+  FOMC after-cost mean -0.1529 vs weekday-matched control -0.2732  ->  diff +0.1204 pt
+  [descriptive, NOT the gate: era x weekday matched diff = +0.1145 pt]
+
+-- G4: era split (mandated: ZLB 2009-15 / hiking-normalization 2016-21 / inflation 2022-26) --
+  ZLB_2009_2015          n= 51  gross +0.2791  after-cost +0.2122 pt ($+212/ct)  sign=pos  hit=0.549
+  hiking_2016_2021       n= 46  gross -0.5353  after-cost -0.6022 pt ($-602/ct)  sign=neg  hit=0.348
+  inflation_2022_2026    n= 34  gross -0.0257  after-cost -0.0926 pt ($-93/ct)  sign=neg  hit=0.500
+  G4 classification: FAIL (modern-negative)
+
+-- G5: cost band ({1,2} ticks/side + $4.36/ctrRT commission; BASIS COMMISSION+SPREAD MODELED, not all-in) --
+  PRIMARY rung (1 tick/side): $66.86 RT = 0.06686 pt  -> after-cost mean -0.1529 pt
+  STRESS  rung (2 ticks/side): $129.36 RT = 0.12936 pt -> after-cost mean -0.2154 pt
+  cost is 3.0% of the per-event gross sd (2.219 pt) -- trivial at 5d hold
+  stress rung flips the sign of the mean: NO
+
+-- G6: battery (net PRIMARY $/ct; weekly-vol LEAD; DISCOVERY_CONSUMED) --
+  weekly grid: 895 calendar weeks (17.21 yr), zeros where flat
+  LEAD  weekly-vol annualized Sharpe = -0.19  (mean $-22.4/wk, sd $830.0/wk)
+  native: total net $-20,024 over 17.21 yr = $-1,163/yr on 7.6 trades/yr ($-152.9/trade)
+  path descriptives ONLY (research_sdk.eval_battery): weekly maxDD $36,918, CDaR95 $32,397; daily maxDD $37,047
+  NO fixed-DD- or CDaR-normalized income figure is quoted; the eval_battery thinning-placebo guard is
+  honored by never reading those bases as a denominator.
+  rho to P1 (runs/WE_W56_BREADTH/out/p1_daily.csv AS-IS; DISCLOSED ~2.0% optimistic Python chain;
+    zero-filled joint ZB-session calendar 2022-07-05..2026-05-29, 986 sessions, 143 active days ours):
+    daily rho = -0.0085   weekly rho = -0.0155
+  rho to ZBMACRO01 (runs/G3_ZBMACRO_FALSIFIER_20260906/out/trades.csv, profit_net_primary_usd summed by
+    session_date = EXIT-DAY attribution [same-session 08:45->15:00 trades]; zero-filled joint calendar
+    2023-01-12..2026-06-05, 856 sessions; 40/40 ZBMACRO trades in overlap):
+    daily rho = -0.0344   weekly rho = -0.0104   (same-market stacking question)
+
+-- SECONDARY (reported, no gate): mean signal-aligned cumulative path, h = 1..15 sessions after D0 --
+   h | n   | gross mean pt | after-cost(1-tick) pt
+   1 | 131 | +0.0562       | -0.0107
+   2 | 131 | +0.0165       | -0.0504
+   3 | 131 | -0.0932       | -0.1600
+   4 | 131 | +0.0321       | -0.0348
+   5 | 131 | -0.0860       | -0.1529
+   6 | 131 | -0.2358       | -0.3027
+   7 | 131 | -0.1271       | -0.1940
+   8 | 131 | -0.1252       | -0.1921
+   9 | 131 | -0.1452       | -0.2120
+  10 | 131 | -0.1708       | -0.2377
+  11 | 131 | -0.2994       | -0.3662
+  12 | 131 | -0.4164       | -0.4832
+  13 | 131 | -0.5392       | -0.6061
+  14 | 131 | -0.5419       | -0.6087
+  15 | 131 | -0.6266       | -0.6934
+
+-- ZN MIRROR (reported, no gate; ZN's own signal; ZN costs $35.61/$66.86 RT) --
+  excluded: [('2009-01-28', 'BEFORE_SERIES'), ('2009-03-18', 'BEFORE_SERIES'), ('2014-01-29', 'SESSION_MISSING_DATA_HOLE'), ('2015-12-16', 'SESSION_MISSING_DATA_HOLE'), ('2016-09-21', 'SESSION_MISSING_DATA_HOLE'), ('2018-12-19', 'SESSION_MISSING_DATA_HOLE'), ('2024-12-18', 'SESSION_MISSING_DATA_HOLE'), ('2026-07-29', 'WINDOW_BEYOND_SEAL')]
+  n=132  gross mean +0.0438 pt  after-cost mean +0.0082 pt ($+8/ct)  CI95 [-0.1416,+0.1609]  shift-null p 0.9350
+    ZLB_2009_2015          n= 52  after-cost +0.1306 pt  sign=pos
+    hiking_2016_2021       n= 45  after-cost -0.0172 pt  sign=neg
+    inflation_2022_2026    n= 35  after-cost -0.1410 pt  sign=neg
+
+==============================================================================================================
+GATE TABLE (program-printed)
+==============================================================================================================
+GATE            | PASS-FAIL | SPEC | OBSERVED
+--------------------------------------------------------------------------------------------------------------
+G1_MDE_first    | PASS      | MDE printed before observed (~140 events) | N=131 traded of 140 calendar; MDE80=0.4833 pt ($483); printed first (procedural)
+G2_edge         | FAIL      | after-cost mean > 0 AND event-block CI95 excludes 0 AND shift-null p < 0.05 | mean -0.1529 pt, CI [-0.5274,+0.2242], p 0.5000
+G3_control      | PASS      | beats matched non-FOMC same-weekday days (same 5-day window) | diff +0.1204 pt (FOMC -0.1529 vs ctrl -0.2732)
+G4_era_mandated | FAIL      | signs printed; modern-negative = FAIL; ZLB-only = REGIME-LOCAL-DEAD | ZLB_2009_2015:pos, hiking_2016_2021:neg, inflation_2022_2026:neg -> FAIL (modern-negative)
+G5_cost         | PASS      | trivial at 5d; {1,2}-tick band printed | primary -0.1529, stress -0.2154 pt; flip=NO
+G6_battery      | PASS      | weekly-vol lead; rho-to-P1 and rho-to-ZBMACRO01 printed | Sharpe_wk -0.19; rho_P1 d -0.008/w -0.015; rho_ZBM d -0.034/w -0.010
+--------------------------------------------------------------------------------------------------------------
+VERDICT: CLOSED AT SCOPE (s.28): G2 FAIL UNDERPOWERED_STILL; G4 FAIL (modern-negative)
+Every number above: evidence status DISCOVERY_CONSUMED.

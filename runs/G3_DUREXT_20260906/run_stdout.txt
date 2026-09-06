@@ -1,0 +1,61 @@
+======================================================================================================================
+=== G3_DUREXT_20260906 -- bond-index duration-extension day: LONG ZB close(T-1)->close(T) on month-end T (G00086)
+======================================================================================================================
+input ZB: D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\G3_AUCTCYCLE_20260906\out\zb_daily.parquet
+    sha256 9446e7f19ee17754d5afd31c65790e5fe24ae76f23ebf128101c7c0bdf786c56  (== upstream manifest)  rows 4393  span 2009-03-31 -> 2026-07-31  seal assert PASS
+    declared tick 0.03125 (manifest); data grid = half-tick (0.015625): all 4393 closes on it, 4302 on the full tick; COSTS use the declared (coarser) tick
+input ZN: D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\G3_AUCTCYCLE_20260906\out\zn_daily.parquet
+    sha256 13fc5165b8b2171bcb459e1fdb1ee47005ffa231027eb045f658de4db2fd2527  (== upstream manifest)  rows 4364  span 2009-03-31 -> 2026-07-31  seal assert PASS
+    declared tick 0.015625 (manifest); data grid = half-tick (0.0078125): all 4364 closes on it, 4364 on the full tick; COSTS use the declared (coarser) tick
+costs/ct RT (1-day hold, MODELED $4.36 RT + {1,2}-tick spread): ZB opt $35.61 cons $66.86 | ZN opt $19.98 cons $35.61   [cons rung GATES]
+events ZB: 209 month-end sessions, 2009-03-31 -> 2026-07-31 (months 2009-03 .. 2026-07; spec said ~210)
+events ZN: 208 month-end sessions, 2009-03-31 -> 2026-07-31 (months 2009-03 .. 2026-07; spec said ~210)
+
+G1 MDE (PRINTED BEFORE ANY OBSERVED EVENT MEAN):
+    ZB: unconditional daily sd $951; N=209; MDE(one-sided 5%, 80% power) = 2.486 x sd/sqrt(N) = $164/event (0.164 pts)
+    ZN: unconditional daily sd $418; N=208; MDE(one-sided 5%, 80% power) = 2.486 x sd/sqrt(N) = $72/event (0.072 pts)
+
+PRIMARY (LONG ZB close(T-1)->close(T) on month-end T, per contract):
+    n = 209 (dropped 0); gross mean +0.1681 pts = $+168.06/event
+    after-cost CONS $+101.20/event   [GATING]   after-cost OPT $+132.45/event
+    event-block bootstrap (10000, seed 20260907) 95% CI (cons): [$-4.29, $+210.35]
+    shared-draw shift null (2000 shifts, seed 20260906): null mean $+0.38, sd $66.70
+    p one-sided(LONG) = 0.0070 [GATING]; two-sided 0.0135; z = +2.51 (normal-approx p_1s = 0.0060 cross-check)
+    IN WORDS: p_1s is the probability, under 2000 dependence-preserving circular shifts of the
+    month-end event flag over the 4393-session ZB sequence (one shared draw with ZN), that a
+    randomly placed set of 209 pseudo-event days shows a mean 1-day ZB return >= the observed $+168.06.
+
+CONCENTRATION (each cell vs the all-days control, gross $ -- cost identical across cells so deltas are cost-invariant):
+    PRIMARY  T   (extension day)   n= 209  mean $ +168.06  delta vs all-days($+3.67, n=4393) = $ +164.39
+    placebo  T-2                   n= 208  mean $ +173.00  delta vs all-days($+3.67, n=4393) = $ +169.33
+    placebo  T+1                   n= 208  mean $ -121.69  delta vs all-days($+3.67, n=4393) = $ -125.37
+    concentration clause: delta_T > delta_T-2 (+164.39 > +169.33: False) AND delta_T > delta_T+1 (+164.39 > -125.37: True) -> False
+
+ERA TABLE (ZB PRIMARY, after-cost CONS; sign gates; modern-negative = FAIL):
+    2009-15      n=  82  gross $ +198.55  after-cost $ +131.69  sign +
+    2016-21      n=  72  gross $ +200.09  after-cost $ +133.23  sign +
+    2022-26/07   n=  55  gross $  +80.68  after-cost $  +13.82  sign +
+    ERA CLASSIFICATION: +/+/+ -> STRUCTURAL
+
+ZN MIRROR (reported, non-gating; same machinery):
+    n = 208; gross $+77.15; after-cost CONS $+41.54; shared-draw p_1s 0.0085
+    deltas vs all-days($+2.75): T +74.40 | T-2 +78.10 | T+1 -31.66 -> concentration False
+    NOTE ZB T: 3 gap-spanning (clean_daily=False) day(s) included (spec froze no exclusion)
+    NOTE ZB Tp1: 5 gap-spanning (clean_daily=False) day(s) included (spec froze no exclusion)
+    NOTE ZN T: 2 gap-spanning (clean_daily=False) day(s) included (spec froze no exclusion)
+    NOTE ZN Tp1: 6 gap-spanning (clean_daily=False) day(s) included (spec froze no exclusion)
+
+GATE TABLE  (printed by program)
+GATE              SPEC                                                                          OBSERVED                                                                PASS-FAIL
+G1_MDE_FIRST      MDE printed before observed (~210 events)                                     MDE $164/event at N=209 (printed first)                                 PASS
+G2_EDGE           after-cost mean > 0 AND event-block CI excludes 0 AND 1-sided shift p < .05   mean cons $+101.20, CI [-4.29,+210.35], p_1s 0.0070                     *** FAIL ***
+G3_CONCENTRATION  PRIMARY delta-vs-control > EACH placebo-day delta (T-2 and T+1)               delta T +164.39 vs T-2 +169.33 / T+1 -125.37                            *** FAIL ***
+G4_ERA            3-era signs (after-cost cons); modern-negative = FAIL                         +/+/+ -> STRUCTURAL                                                     PASS
+G5_COST           1-day hold; modeled $4.36 RT + {1,2}-tick band; cons gates                    ticks asserted from data; ZB opt $35.61 / cons $66.86; cons rung gates  PASS
+
+DECISION RULE (spec, mechanical): G2=FAIL G3=FAIL G4=PASS -> CLOSED AT SCOPE (S28 block) -- closure completes the month-end/rates calendar family alongside G00077
+events/yr = 12.1; after-cost economics at cons rung = $+1,214/yr/contract (12 events/yr)
+evidence_status: DISCOVERY (first read of this representation); honest prior was ADVERSE-LEANING (G00077 banked control)
+======================================================================================================================
+
+WROTE out/gate_table.txt, out/event_table.csv, out/placebo_days.csv

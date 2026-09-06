@@ -1,0 +1,111 @@
+====================================================================================================
+G3_CLOSEHOUR_20260906  (ledger G00085, family GENESIS3_EVENT)
+Close-hour hedging-flow momentum, vol-gated -- frozen object: s = sign(close(15:00)-close(09:30));
+hold s from close(15:00) to close(16:00) cash close; 1 RT/day max.  EVIDENCE STATUS: DISCOVERY
+(substrates DISCOVERY_CONSUMED for other objects).  POINTS basis on back-adjusted 1-min substrates.
+Vol gate (PRIMARY arm), frozen mechanical reading of 'trailing-20-session daily range top half,
+causal': at session t, the most recently COMPLETED full session's range R(t-1) must lie in the top
+half of the trailing-20 completed-session window {R(t-20)..R(t-1)}, i.e. R(t-1) >= median of the 20.
+Full session = reaches the 16:00 cash-close stamp; range = full-session high-low (18:00->17:00 ET).
+Everything the gate reads is complete before the 15:00 decision bar: CAUSAL.
+cost arms (BASIS=MODELED ALL_IN = comm $4.36 + spread, per ctRT): PRIMARY 1tk/side; STRESS 2tk/side
+  ES : tick 0.25 pt = $12.50; $50/pt; PRIMARY $29.36 RT = 0.5872 pt; STRESS $54.36 RT = 1.0872 pt
+  RTY: tick 0.1 pt = $5.00; $50/pt; PRIMARY $14.36 RT = 0.2872 pt; STRESS $24.36 RT = 0.4872 pt
+  YM : tick 1.0 pt = $5.00; $5/pt; PRIMARY $14.36 RT = 2.8720 pt; STRESS $24.36 RT = 4.8720 pt
+
+substrates (seal assert: all bars < 2026-08-01):
+  ES : sessions(nbars>=30)=1184; full(16:00 stamp)=1139; eligible(gate defined + 09:30/15:00/16:00 stamps)=1119 (2022-02-01 .. 2026-07-31); gated=558; s==0 days=6
+  RTY: sessions(nbars>=30)=1177; full(16:00 stamp)=1132; eligible(gate defined + 09:30/15:00/16:00 stamps)=1112 (2022-02-01 .. 2026-07-31); gated=544; s==0 days=3
+  YM : sessions(nbars>=30)=1177; full(16:00 stamp)=1132; eligible(gate defined + 09:30/15:00/16:00 stamps)=1112 (2022-02-01 .. 2026-07-31); gated=550; s==0 days=1
+
+[G1] MDE FIRST (session-block bootstrap SE over TRADED sessions; L=10, B=2000, seed 20260906)
+     printed before any observed mean.  MDE_sig = 1.96*SE; MDE_80 = 2.8016*SE (5% two-sided, 80% power)
+     ES  gated  : n=  555  SD= 18.0352 pt  SE_bb= 0.8427 pt  MDE_sig= 1.6517 pt ($  82.59)  MDE_80= 2.3610 pt ($ 118.05)
+     ES  ungated: n= 1113  SD= 17.0834 pt  SE_bb= 0.5511 pt  MDE_sig= 1.0801 pt ($  54.00)  MDE_80= 1.5439 pt ($  77.19)
+     RTY gated  : n=  543  SD=  8.4397 pt  SE_bb= 0.3857 pt  MDE_sig= 0.7560 pt ($  37.80)  MDE_80= 1.0807 pt ($  54.03)
+     RTY ungated: n= 1109  SD=  8.1036 pt  SE_bb= 0.2315 pt  MDE_sig= 0.4538 pt ($  22.69)  MDE_80= 0.6487 pt ($  32.43)
+     YM  gated  : n=  550  SD=126.1931 pt  SE_bb= 5.8082 pt  MDE_sig=11.3840 pt ($  56.92)  MDE_80=16.2721 pt ($  81.36)
+     YM  ungated: n= 1111  SD=112.7628 pt  SE_bb= 3.2822 pt  MDE_sig= 6.4332 pt ($  32.17)  MDE_80= 9.1955 pt ($  45.98)
+
+[family] 6 cells; mean pairwise corr of daily net PnL rho_bar = +0.6030 over 15 pairs
+         K_eff = 6/(1+5*rho_bar) = 1.494 -> clamped to [1,6] = 1.494
+         K_eff-corrected one-sided alpha = 0.05/K_eff = 0.0335  (right-tail pct threshold 3.35%)
+
+[cells] ALL 6 cells (PRIMARY = 1tk/side ALL_IN; per TRADED session; HEADLINE = gated-ES '<<')
+     market arm       n     gross_pt   net_pt    net_$/ses  total_net_$   CI95_net_pt(block)
+     ES    gated     555    -0.4941  -1.0813      -54.07    -30007.30   [ -2.5565,  0.6859]  <<
+     ES    ungated  1113     0.2302  -0.3570      -17.85    -19865.18   [ -1.3906,  0.6618]
+     RTY   gated     543    -0.1052  -0.3924      -19.62    -10652.48   [ -1.1820,  0.3537]
+     RTY   ungated  1109     0.0693  -0.2179      -10.89    -12080.24   [ -0.6814,  0.2546]
+     YM    gated     550    -6.9545  -9.8265      -49.13    -27023.00   [-20.9424,  1.6212]
+     YM    ungated  1111    -0.0216  -2.8936      -14.47    -16073.96   [ -9.3414,  3.7257]
+
+[null] circular-shift null: signal series rolled k sessions against fixed (return, gate);
+       SHARED offset k across all 6 cells per draw (dependence preserved); k = 1..1111 FULLY ENUMERATED
+       ES  gated  : obs total    -600.15 pt; right-tail pct =  70.05%  (null mean  -354.20, 95th   333.85)
+       ES  ungated: obs total    -397.30 pt; right-tail pct =  31.12%  (null mean  -650.92, 95th   317.32)
+       RTY gated  : obs total    -213.05 pt; right-tail pct =  61.06%  (null mean  -155.70, 95th   181.55)
+       RTY ungated: obs total    -241.60 pt; right-tail pct =  38.94%  (null mean  -318.59, 95th   134.90)
+       YM  gated  : obs total   -5404.60 pt; right-tail pct =  89.30%  (null mean -1707.22, 95th  3191.84)
+       YM  ungated: obs total   -3214.79 pt; right-tail pct =  49.73%  (null mean -3193.68, 95th  2988.21)
+       K_eff-corrected clearance bar (headline cell): pct <= 3.35%
+
+[G2] HEADLINE gated-ES, PRIMARY after-cost:
+     mean net = -1.0813 pt = -54.07 $/session-traded (gross -0.4941 pt); n=555
+     clause 1 mean>0: FAIL;  clause 2 CI95 [-2.5565,+0.6859] excludes 0 from above: FAIL
+     clause 3 shift-null pct 70.05% <= 3.35%: FAIL
+     vs MDE_80 2.3610 pt: observed |mean| 1.0813 pt < MDE_80 (informational)
+
+[G3] coherence (classification, not veto for RTY/YM):
+     ES : gated net -1.0813 pt vs ungated net -0.3570 pt; gated-ungated = -0.7244 pt; gated sign - (same as ES-gated)
+     RTY: gated net -0.3924 pt vs ungated net -0.2179 pt; gated-ungated = -0.1745 pt; gated sign - (same as ES-gated)
+     YM : gated net -9.8265 pt vs ungated net -2.8936 pt; gated-ungated = -6.9329 pt; gated sign - (same as ES-gated)
+     RTY/YM gated-cell positive support: 0/2
+     clause (ES): gated >= ungated per-traded-session net: FAIL
+
+[G4] chronology halves (gated-ES, PRIMARY after-cost)
+     ES  gated  : 2022-23 net -0.9305 pt | 2024-26 net -1.1842 pt
+     ES  ungated: 2022-23 net +0.7287 pt | 2024-26 net -1.1623 pt
+     RTY gated  : 2022-23 net -0.3187 pt | 2024-26 net -0.4410 pt
+     RTY ungated: 2022-23 net -0.0108 pt | 2024-26 net -0.3707 pt
+     YM  gated  : 2022-23 net -12.6800 pt | 2024-26 net -7.8659 pt
+     YM  ungated: 2022-23 net +0.2514 pt | 2024-26 net -5.1996 pt
+     clause (gated-ES): both-halves-negative = FAIL -> 2022-23 -0.9305, 2024-26 -1.1842: FAIL
+
+[G5] cost (1 RT/day by construction -- one decision bar, one exit bar, verified: max 1 trade/session)
+     gated-ES PRIMARY (1tk/side, $29.36 RT): net -1.0813 pt = -54.07 $/ses
+     gated-ES STRESS  (2tk/side, $54.36 RT): net -1.5813 pt = -79.07 $/ses
+     clause: after-cost mean > 0 at STRESS rung: FAIL
+
+[G6] eval battery -- WEEKLY-VOL LEAD (gated-ES net PRIMARY $; DISCOVERY)
+     weekly grid: 235 calendar weeks (4.49 yr), zeros where no trade
+     LEAD  weekly-vol annualized Sharpe = -0.59  (mean $-127.7/wk, sd $1562.2/wk)
+     native: total net $-30,007 over 4.49 yr = $-6,679/yr on 123.5 trades/yr ($-54.07/trade)
+     path descriptives ONLY: weekly maxDD $44,634, CDaR95 $43,709
+     NO fixed-DD- or CDaR-normalized income figure is quoted in this run (thinning-placebo guard honored).
+
+     rho to P1 (SOURCE: runs/WE_W56_BREADTH/out/p1_daily.csv -- P1 daily PnL reproduced from file;
+       zero-filled common calendar 2022-07-05..2026-05-29, 971 sessions; both-traded n=292):
+       daily rho = +0.2164   weekly rho = +0.2721   both-traded-days rho = +0.3052
+       (15:00-16:00 sits INSIDE P1's live exposure window -- the stacking question, answered by these numbers)
+
+====================================================================================================
+GATE              SPEC                                                                     PASS/FAIL
+----------------------------------------------------------------------------------------------------
+G1_MDE_first      MDE printed per cell (~590 gated ES sessions) BEFORE observed means           PASS
+                  OBSERVED: 6/6 cells printed; gated-ES n=555, MDE_80=2.3610 pt
+G2_edge           gated-ES net mean>0 AND block CI95 excl 0 AND K_eff-corrected shift null      FAIL
+                  OBSERVED: mean -1.0813 pt; CI [-2.5565,+0.6859]; pct 70.05% vs bar 3.35%
+G3_coherence      RTY/YM support printed (classification); ES gated >= ungated                  FAIL
+                  OBSERVED: support 0/2; ES gated -1.0813 vs ungated -0.3570 pt
+G4_chronology     2022-23 vs 2024-26 halves; both-wrong-sign = FAIL (gated-ES)                  FAIL
+                  OBSERVED: 2022-23 -0.9305 pt; 2024-26 -1.1842 pt
+G5_cost           1 RT/day; {1,2}-tick band; net>0 at 2tk/side STRESS                           FAIL
+                  OBSERVED: PRIMARY -1.0813 pt; STRESS -1.5813 pt
+G6_battery        weekly-vol lead; rho-to-P1 printed; no unguarded DD figure                    PASS
+                  OBSERVED: Sharpe_wk -0.59; rho_d +0.216 rho_w +0.272; guard honored
+----------------------------------------------------------------------------------------------------
+blocking set G2+G4: G2:FAIL  G4:FAIL
+DECISION (mechanical): CLOSED AT SCOPE (spec section 28)
+EVIDENCE STATUS: DISCOVERY (substrates DISCOVERY_CONSUMED for other objects).
+====================================================================================================
