@@ -1,0 +1,141 @@
+==============================================================================================================
+=== NQ P1/PCT reference (the STEP-C reproduction; used as weekly-vol reference and for
+===   orthogonality). Its exact reproduction is certified in out/port_validation.txt.
+==============================================================================================================
+  NQ P1/PCT: weekly $1,393.57  maxDD $22,931  t 4.164  weeks 213  spread $14.436/ctrRT
+  NQ vol scale (mean|dClose|, in-session) = 3.92206 pts   [49s]
+  NQ session point-range dist (1059 sessions): median 294.8 pts
+  TRANSFER PERCENTILES: halt 65pts -> 0.57th pctile ; target 50pts -> 0.19th pctile  (recorded BEFORE any port P&L)
+
+##############################################################################################################
+### ES  (equity-index)   PV=50.0  tick=0.25000  comm=$4.36  window 2022-07-01..2026-08-01
+##############################################################################################################
+  substrate: 1,620,385 bars / 1,186 sessions  2022-01-03 -> 2026-07-31  dropped>=seal 0
+  SEAL: max session 2026-07-31 < 2026-08-01 ? True
+  vol scale 0.84823 pts ; ratio to NQ 0.21627  ->  ratchet clamps (pts): SMIN 2.1627  SMAX 64.8819  STOPM 9.6782
+  session point-range dist (1058 sess): median 63.3750 pts ; box @ percentiles -> HALT 11.99717 pts ($600) / TARGET 9.49245 pts ($475)  [recorded before P&L]
+  ran: 2,235 trades (2,024 in-window), 2,028 entries, size-2 21.1% , $/tick $12.5000 , spread(1tk) $12.50/ctrRT   [99s]
+
+  G1 MDE (80% power, alpha 0.0125, weekly sd $2,794, 213 wk): $590.17/wk  <-- printed BEFORE the observed edge (barrier)
+     OBSERVED native after-cost weekly net: $110.67/wk (BELOW MDE)
+
+  EVAL BATTERY (candidate ES risk-matched to NQ P1/PCT, 213 shared wk):
+     native           $      110.67/wk
+     weekly_vol       $      193.50/wk  <== PRIMARY
+     realized_vol     $      193.50/wk
+     gross_exposure   $      225.91/wk
+
+  G3 fixed-DD (order statistic -> shown ONLY with placebo): self fixed-DD income $112.78/wk ; side-blind 10%-thinning median $115.79/wk (lift +3.00)
+     LEAD IS WEEKLY-VOL $193.50/wk. Edge survives at weekly-vol (not fixed-DD-only)? True
+
+  G2 weekly mean $110.67/wk ; analytic t 0.578 ; moving-block-bootstrap (L=4, 20k) one-sided p = 0.24384  -> Bonferroni (p<=0.0125) FAIL
+
+  G4 spread band (weekly-vol net $/wk):  0tk $448  1tk $193  2tk $-58  3tk $-304
+     cost robustness: positive weekly-vol through 1-tick
+  commission +-50% (weekly-vol $/wk): $2.18 $238  $4.36 $193  $6.54 $149
+
+  WALK-FORWARD (chronological halves): H1 $-80/wk t -0.40 (106wk) | H2 $299/wk t 0.91 (107wk)
+
+  ORTHOGONALITY vs NQ P1 (1056 shared days, 213 shared wk): daily rho +0.6538 ; weekly rho +0.6449 ; both-traded-day share 50.2% ; worst-decile-wk overlap (Jaccard) 0.200
+
+  ==> ES VERDICT: CLOSED-BY-POWER
+
+##############################################################################################################
+### RTY  (equity-index)   PV=50.0  tick=0.10000  comm=$4.36  window 2022-07-01..2026-08-01
+##############################################################################################################
+  substrate: 1,568,111 bars / 1,179 sessions  2022-01-03 -> 2026-07-31  dropped>=seal 0
+  SEAL: max session 2026-07-31 < 2026-08-01 ? True
+  vol scale 0.51172 pts ; ratio to NQ 0.13047  ->  ratchet clamps (pts): SMIN 1.3047  SMAX 39.1417  STOPM 5.8386
+  session point-range dist (1051 sess): median 38.4000 pts ; box @ percentiles -> HALT 9.18980 pts ($459) / TARGET 7.59490 pts ($380)  [recorded before P&L]
+  ran: 2,820 trades (2,583 in-window), 2,587 entries, size-2 21.2% , $/tick $5.0000 , spread(1tk) $5.00/ctrRT   [147s]
+
+  G1 MDE (80% power, alpha 0.0125, weekly sd $1,487, 212 wk): $314.79/wk  <-- printed BEFORE the observed edge (barrier)
+     OBSERVED native after-cost weekly net: $-64.25/wk (BELOW MDE)
+
+  EVAL BATTERY (candidate RTY risk-matched to NQ P1/PCT, 212 shared wk):
+     native           $      -64.25/wk
+     weekly_vol       $     -211.31/wk  <== PRIMARY
+     realized_vol     $     -211.31/wk
+     gross_exposure   $     -189.93/wk
+
+  G3 fixed-DD (order statistic -> shown ONLY with placebo): self fixed-DD income $-64.86/wk ; side-blind 10%-thinning median $-61.71/wk (lift +3.15)
+     LEAD IS WEEKLY-VOL $-211.31/wk. Edge survives at weekly-vol (not fixed-DD-only)? False
+
+  G2 weekly mean $-64.25/wk ; analytic t -0.629 ; moving-block-bootstrap (L=4, 20k) one-sided p = 0.78266  -> Bonferroni (p<=0.0125) FAIL
+
+  G4 spread band (weekly-vol net $/wk):  0tk $32  1tk $-211  2tk $-449  3tk $-682
+     cost robustness: 0-tick only (COST-FRAGILE)
+  commission +-50% (weekly-vol $/wk): $2.18 $-106  $4.36 $-211  $6.54 $-316
+
+  WALK-FORWARD (chronological halves): H1 $44/wk t 0.33 (106wk) | H2 $-172/wk t -1.11 (106wk)
+
+  ORTHOGONALITY vs NQ P1 (1049 shared days, 212 shared wk): daily rho +0.2737 ; weekly rho +0.1146 ; both-traded-day share 44.4% ; worst-decile-wk overlap (Jaccard) 0.105
+
+  ==> RTY VERDICT: COST-FRAGILE
+
+##############################################################################################################
+### YM  (equity-index)   PV=5.0  tick=1.00000  comm=$4.36  window 2022-07-01..2026-08-01
+##############################################################################################################
+  substrate: 1,595,378 bars / 1,179 sessions  2022-01-03 -> 2026-07-31  dropped>=seal 0
+  SEAL: max session 2026-07-31 < 2026-08-01 ? True
+  vol scale 5.90998 pts ; ratio to NQ 1.50686  ->  ratchet clamps (pts): SMIN 15.0686  SMAX 452.0570  STOPM 67.4318
+  session point-range dist (1051 sess): median 453.0000 pts ; box @ percentiles -> HALT 107.59207 pts ($538) / TARGET 88.79603 pts ($444)  [recorded before P&L]
+  ran: 2,789 trades (2,530 in-window), 2,534 entries, size-2 20.0% , $/tick $5.0000 , spread(1tk) $5.00/ctrRT   [197s]
+
+  G1 MDE (80% power, alpha 0.0125, weekly sd $1,793, 212 wk): $379.66/wk  <-- printed BEFORE the observed edge (barrier)
+     OBSERVED native after-cost weekly net: $56.65/wk (BELOW MDE)
+
+  EVAL BATTERY (candidate YM risk-matched to NQ P1/PCT, 212 shared wk):
+     native           $       56.65/wk
+     weekly_vol       $      154.48/wk  <== PRIMARY
+     realized_vol     $      154.48/wk
+     gross_exposure   $      149.54/wk
+
+  G3 fixed-DD (order statistic -> shown ONLY with placebo): self fixed-DD income $57.19/wk ; side-blind 10%-thinning median $57.19/wk (lift +0.00)
+     LEAD IS WEEKLY-VOL $154.48/wk. Edge survives at weekly-vol (not fixed-DD-only)? True
+
+  G2 weekly mean $56.65/wk ; analytic t 0.460 ; moving-block-bootstrap (L=4, 20k) one-sided p = 0.30298  -> Bonferroni (p<=0.0125) FAIL
+
+  G4 spread band (weekly-vol net $/wk):  0tk $352  1tk $154  2tk $-41  3tk $-233
+     cost robustness: positive weekly-vol through 1-tick
+  commission +-50% (weekly-vol $/wk): $2.18 $240  $4.36 $154  $6.54 $69
+
+  WALK-FORWARD (chronological halves): H1 $-66/wk t -0.46 (106wk) | H2 $180/wk t 0.90 (106wk)
+
+  ORTHOGONALITY vs NQ P1 (1049 shared days, 212 shared wk): daily rho +0.2389 ; weekly rho +0.1086 ; both-traded-day share 45.8% ; worst-decile-wk overlap (Jaccard) 0.105
+
+  ==> YM VERDICT: CLOSED-BY-POWER
+
+##############################################################################################################
+### ZB  (rates)   PV=1000.0  tick=0.03125  comm=$4.36  window 2023-07-01..2026-08-01
+##############################################################################################################
+  substrate: 1,086,151 bars / 925 sessions  2022-12-27 -> 2026-07-31  dropped>=seal 0
+  SEAL: max session 2026-07-31 < 2026-08-01 ? True
+  vol scale 0.01772 pts ; ratio to NQ 0.00452  ->  ratchet clamps (pts): SMIN 0.0452  SMAX 1.3556  STOPM 0.2022
+  ZB points basis: 1 pt = 32 ticks, $/tick = PV*tick = $31.2500 (all range/box/RV math in POINTS/32nds, per DELEV01)
+  session point-range dist (799 sess): median 1.0625 pts ; box @ percentiles -> HALT 0.37500 pts ($375) / TARGET 0.28169 pts ($282)  [recorded before P&L]
+  ran: 3,123 trades (2,667 in-window), 2,667 entries, size-2 18.9% , $/tick $31.2500 , spread(1tk) $31.25/ctrRT   [231s]
+
+  G1 MDE (80% power, alpha 0.0125, weekly sd $1,008, 161 wk): $245.00/wk  <-- printed BEFORE the observed edge (barrier)
+     OBSERVED native after-cost weekly net: $-796.25/wk (BELOW MDE)
+
+  EVAL BATTERY (candidate ZB risk-matched to NQ P1/PCT, 161 shared wk):
+     native           $     -796.25/wk
+     weekly_vol       $   -4,179.04/wk  <== PRIMARY
+     realized_vol     $   -4,179.04/wk
+     gross_exposure   $   -2,763.07/wk
+
+  G3 fixed-DD (order statistic -> shown ONLY with placebo): self fixed-DD income $-796.25/wk ; side-blind 10%-thinning median $-796.25/wk (lift +0.00)
+     LEAD IS WEEKLY-VOL $-4,179.04/wk. Edge survives at weekly-vol (not fixed-DD-only)? False
+
+  G2 weekly mean $-796.25/wk ; analytic t -10.020 ; moving-block-bootstrap (L=4, 20k) one-sided p = 1.00000  -> Bonferroni (p<=0.0125) FAIL
+
+  G4 spread band (weekly-vol net $/wk):  0tk $-1,099  1tk $-4,179  2tk $-5,995  3tk $-6,972
+     cost robustness: negative at 0-tick
+  commission +-50% (weekly-vol $/wk): $2.18 $-4,007  $4.36 $-4,179  $6.54 $-4,344
+
+  WALK-FORWARD (chronological halves): H1 $-768/wk t -5.90 (80wk) | H2 $-824/wk t -8.91 (81wk)
+
+  ORTHOGONALITY vs NQ P1 (797 shared days, 161 shared wk): daily rho -0.0478 ; weekly rho -0.1386 ; both-traded-day share 43.2% ; worst-decile-wk overlap (Jaccard) 0.032
+
+  ==> ZB VERDICT: FAIL

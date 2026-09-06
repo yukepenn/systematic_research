@@ -1,0 +1,66 @@
+XINST01 GATE TABLE - program-printed. NQ P1/PCT reproduced EXACTLY (port_validation.txt).
+Transfer percentiles: halt 0.57th / target 0.19th of session point-range.
+
+====================================================================================================
+INSTRUMENT ES - GATE / SPEC / OBSERVED / PASS-FAIL
+====================================================================================================
+gate  spec                                                                        observed   verdict
+G0b   max session < 2026-08-01 (seal)                                           2026-07-31      PASS
+G1    MDE(80%,a=.0125) printed before observed edge                   MDE $590 vs obs $111      FAIL
+G2    weekly-vol net>0 & Bonferroni p<=0.0125 (dep null)                 wv $193, p 0.2438      FAIL
+G3    edge at weekly-vol, not fixed-DD-only (T2)                    wv $193 / self-DD $113      PASS
+G4    cost-robust: weekly-vol net>0 at >=1 tick spread     positive weekly-vol through 1-t      PASS
+G5    daily-PnL corr vs P1 printed                                              rho +0.654      PASS
+G6  SEMANTIC: over 213 ISO weeks in 2022-07-01..2026-08-01 on ES 1-min
+    (pre-seal, DISCOVERY_CONSUMED, in-sample), the after-cost weekly-vol-matched
+    net (levered to NQ P1's weekly volatility) is $193.50/wk; the number is
+    the mean weekly P&L of the ported P1/PCT mechanism, NOT a forward or live figure.
+    ==> VERDICT CLOSED-BY-POWER
+
+====================================================================================================
+INSTRUMENT RTY - GATE / SPEC / OBSERVED / PASS-FAIL
+====================================================================================================
+gate  spec                                                                        observed   verdict
+G0b   max session < 2026-08-01 (seal)                                           2026-07-31      PASS
+G1    MDE(80%,a=.0125) printed before observed edge                   MDE $315 vs obs $-64      FAIL
+G2    weekly-vol net>0 & Bonferroni p<=0.0125 (dep null)                wv $-211, p 0.7827      FAIL
+G3    edge at weekly-vol, not fixed-DD-only (T2)                   wv $-211 / self-DD $-65      FAIL
+G4    cost-robust: weekly-vol net>0 at >=1 tick spread          0-tick only (COST-FRAGILE)      FAIL
+G5    daily-PnL corr vs P1 printed                                              rho +0.274      PASS
+G6  SEMANTIC: over 212 ISO weeks in 2022-07-01..2026-08-01 on RTY 1-min
+    (pre-seal, DISCOVERY_CONSUMED, in-sample), the after-cost weekly-vol-matched
+    net (levered to NQ P1's weekly volatility) is $-211.31/wk; the number is
+    the mean weekly P&L of the ported P1/PCT mechanism, NOT a forward or live figure.
+    ==> VERDICT COST-FRAGILE
+
+====================================================================================================
+INSTRUMENT YM - GATE / SPEC / OBSERVED / PASS-FAIL
+====================================================================================================
+gate  spec                                                                        observed   verdict
+G0b   max session < 2026-08-01 (seal)                                           2026-07-31      PASS
+G1    MDE(80%,a=.0125) printed before observed edge                    MDE $380 vs obs $57      FAIL
+G2    weekly-vol net>0 & Bonferroni p<=0.0125 (dep null)                 wv $154, p 0.3030      FAIL
+G3    edge at weekly-vol, not fixed-DD-only (T2)                     wv $154 / self-DD $57      PASS
+G4    cost-robust: weekly-vol net>0 at >=1 tick spread     positive weekly-vol through 1-t      PASS
+G5    daily-PnL corr vs P1 printed                                              rho +0.239      PASS
+G6  SEMANTIC: over 212 ISO weeks in 2022-07-01..2026-08-01 on YM 1-min
+    (pre-seal, DISCOVERY_CONSUMED, in-sample), the after-cost weekly-vol-matched
+    net (levered to NQ P1's weekly volatility) is $154.48/wk; the number is
+    the mean weekly P&L of the ported P1/PCT mechanism, NOT a forward or live figure.
+    ==> VERDICT CLOSED-BY-POWER
+
+====================================================================================================
+INSTRUMENT ZB - GATE / SPEC / OBSERVED / PASS-FAIL
+====================================================================================================
+gate  spec                                                                        observed   verdict
+G0b   max session < 2026-08-01 (seal)                                           2026-07-31      PASS
+G1    MDE(80%,a=.0125) printed before observed edge                  MDE $245 vs obs $-796      FAIL
+G2    weekly-vol net>0 & Bonferroni p<=0.0125 (dep null)              wv $-4,179, p 1.0000      FAIL
+G3    edge at weekly-vol, not fixed-DD-only (T2)                wv $-4,179 / self-DD $-796      FAIL
+G4    cost-robust: weekly-vol net>0 at >=1 tick spread                  negative at 0-tick      FAIL
+G5    daily-PnL corr vs P1 printed                                              rho -0.048      PASS
+G6  SEMANTIC: over 161 ISO weeks in 2023-07-01..2026-08-01 on ZB 1-min
+    (pre-seal, DISCOVERY_CONSUMED, in-sample), the after-cost weekly-vol-matched
+    net (levered to NQ P1's weekly volatility) is $-4,179.04/wk; the number is
+    the mean weekly P&L of the ported P1/PCT mechanism, NOT a forward or live figure.
+    ==> VERDICT FAIL

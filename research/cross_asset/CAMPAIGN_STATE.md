@@ -82,7 +82,7 @@ there. The **ESNQ_V1 blind ES∩NQ 15-session tick pool remains UNSPENT** (do no
 
 | wave | scope | status |
 |---|---|---|
-| **XINST01** (Lane A benchmark) | P1 transfer → ES/RTY/YM/ZB, no-mining, NQ-reproduction gate, orthogonality | 🟡 RUNNING `wf_d97689db-200` (trials G00056-59) |
+| **XINST01** (Lane A benchmark) | P1 transfer → ES/RTY/YM/ZB, no-mining, NQ-reproduction gate, orthogonality | ✅ DONE (G00056-59): **P1 does NOT transfer** — 0/4 info-supported; port reproduced NQ 0.0000%; ES/YM underpowered whisper (high-corr), RTY cost-fragile, ZB inverts (but ρ −0.05 orthogonal → native ZB engine is the target). **Thesis confirmed: value is native, not transfer.** |
 | **Wave 0** (infra) | NQ Research Playbook ✅ · data/roll/cost inventory ✅ · Tier-1 rank ✅ | DONE (`NQ_RESEARCH_PLAYBOOK.md`, `DATA_INVENTORY.md`) |
 | **Wave 1** (intraday autopsies) | descriptive science on ES/RTY/YM/ZB (native sessions, points-basis, ρ-to-NQ) | 🟡 LAUNCHING |
 | **CL extraction + freeze** | ✅ DONE — 1,182 sess, no recompile (exporter pre-installed, P1 verified intact), holdout frozen | DONE (`SM1M_CL_SUBSTRATE`, `CL_HOLDOUT_FREEZE_20260906`) |

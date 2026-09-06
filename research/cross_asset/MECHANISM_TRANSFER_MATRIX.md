@@ -9,7 +9,8 @@ n/a = not applicable. Every ✅/✗ must cite a run + ledger trial; do not write
 
 | Mechanism family | NQ | ES | RTY | YM | ZB | CL | GC | 6E | ZN |
 |---|---|---|---|---|---|---|---|---|---|
-| trend / momentum persistence | ✅ (P1 core) | ? | ? | ? | ? | ? | ? | ? | ? |
+| P1/PCT composite (trend-vol-ratchet ⊕ B-MOM), transferred | ✅ (native) | ✗ underpowered whisper (G00056) | ✗ cost-fragile (G00057) | ✗ underpowered whisper (G00058) | ✗✗ inverts, powered −ve (G00059) | ? | ? | ? | ? |
+| trend / momentum persistence (as a native family) | ✅ (P1 core) | ? | ? | ? | ? | ? | ? | ? | ? |
 | breakout / range expansion | ? | ? | ? | ? | ? | ? | ? | ? | ? |
 | mean reversion | ✗ (fade graveyard) | ? | ? | ? | ? | ? | ? | ? | ? |
 | compression → expansion | ? | ? | ? | ? | ? | ? | ? | ? | ? |

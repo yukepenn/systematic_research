@@ -107,6 +107,12 @@ invalid; see GENESIS_ENGINEERING_DOCTRINE substrate trap.**
 | **ZB (30-yr bond) intraday state as an incremental NQ RV-forecast surface** (points-basis diurnal-adj ZB RV + NQ-ZB corr level/sign + expansion count, augmenting HAR(NQ-RV)+macro; OOS DM/QLIKE, VXN excluded, 2022-12→2026-05) | **POWERED + IDENTIFIED NULL** — ZB makes the NQ rest-of-session RV forecast **worse** (−4.36% QLIKE, DM p 0.17, shift p 0.967), max VIF 4.45 (not collinearity), n=364. leg-c corr-flip had 0 events (CLOSED-BY-POWER). ⭐ **This retires the last "genuinely new raw surface" flag from external mining** and leaves **MC-35 (conditioning/sizing P1) BLOCKED** — ZB is not the new surface that unblocks it. Whisper survivor, banked, not promotable: leg-b ZB-expansion→NQ-forward-RV +2.06e-4 (shift p 0.001, 4-way-match-robust) — far too small to clear the primary | G2_F13 (G00054) |
 | **Breadth-washout REBOUND long** (long 1 NQ at first afternoon takeout of the morning low, bottom-tercile 11:00-TICK sessions, $40/RT, 2023-01→2026-05, n=154) | **CLOSED-AS-GENERIC-MR (PERMANENT)** — the rebound long LOSES to the identical trigger on NON-bottom-tercile takeout sessions (−$61/ev cand vs +$48/ev control; increment −$109). The breadth condition adds nothing, it hurts; collapses onto SWEEP01 + W118. The +9.62pp G00030 STATE fact stands as information but **monetizes on NEITHER side** (short killed by BREADTHPM01, long killed here) | G2_F14 (G00055) |
 
+## Closed at exact scope (2026-09-06, cross-asset Lane A)
+
+| scope | verdict | run |
+|---|---|---|
+| **P1/PCT mechanism TRANSFERRED to ES/RTY/YM/ZB** (no-mining: ATR-normalized signal identical, box + ratchet clamps scaled by the instrument's vol ratio, per-instrument cost) | **P1 IS NQ-SPECIFIC — 0 of 4 information-supported.** Port reproduced NQ to 0.0000% (ratchet bit-identical), so trustworthy. ES/YM = CLOSED-BY-POWER (underpowered +ve whisper, ρ-to-P1 +0.65/+0.24 → generalization not diversification); RTY = COST-FRAGILE (+ve 0-tick only); **ZB = FAIL powered −ve (−$4,179/wk, t −10) — P1's trend-vol-ratchet INVERTS on rates.** ⭐ ρ(ZB,P1) = −0.05 = genuinely orthogonal, so the diversifier exists on ZB but needs a NATIVE rates mechanism (MR/curve/level), not this transfer. ⚠️ **Lane-A scope only — does NOT close native-engine discovery on any of these markets** | XINST01 (G00056-59) |
+
 ## Blocked-as-rescue (recorded rulings)
 
 MC-35 meta-labeling/sizing **on P1 with existing surfaces** = rescue of RR_W002A's closure ("no
