@@ -46,7 +46,7 @@ GENESIS II. State document — wave history lives in `runs/`, this file links.
 | YM | equity idx | ✅ **1,177** sess 2022+ | ✅ | intraday-ready · DISCOVERY_CONSUMED |
 | ZB | rates | ✅ **923** sess 2022-12+ (back-adj) | ✅ | 🎯 intraday-ready, orthogonal class · DISCOVERY_CONSUMED |
 | MNQ | equity idx | ✅ 1,189 sess | ✅ | EXCLUDED (= NQ/10, not a diversifier) |
-| **CL** | energy | ⏳ 1,475 datefiles ON DISK, **UNEXTRACTED + genuinely UNTOUCHED** | ✅ | extract (recompile-path, session break) → 🔒 **freeze a holdout before looking** |
+| **CL** | energy | ✅ **EXTRACTED 2026-09-06** (1,182 sess 2022-01-03+, `runs/SM1M_CL_SUBSTRATE/`) — genuinely UNTOUCHED | ✅ | 🎯 intraday-ready · 🔒 **HOLDOUT FROZEN** (`runs/CL_HOLDOUT_FREEZE_20260906/`): discovery ≤2025-06-30, holdout 2025-07-01→2026-07-31. The ONLY intraday market with a clean OOS layer. |
 | ZN | rates | ⚠️ ~190 files only (2025-12+, thin) | ✅ | daily-only for now |
 | GC | metals | 🔴 **ABSENT** (only micro MGC, thin) | ✅ ~2009+ | **DAILY-ONLY** |
 | 6E | FX | 🔴 **ABSENT** (only 6J, thin) | ✅ | **DAILY-ONLY** |
@@ -77,7 +77,8 @@ there. The **ESNQ_V1 blind ES∩NQ 15-session tick pool remains UNSPENT** (do no
 | **XINST01** (Lane A benchmark) | P1 transfer → ES/RTY/YM/ZB, no-mining, NQ-reproduction gate, orthogonality | 🟡 RUNNING `wf_d97689db-200` (trials G00056-59) |
 | **Wave 0** (infra) | NQ Research Playbook ✅ · data/roll/cost inventory ✅ · Tier-1 rank ✅ | DONE (`NQ_RESEARCH_PLAYBOOK.md`, `DATA_INVENTORY.md`) |
 | **Wave 1** (intraday autopsies) | descriptive science on ES/RTY/YM/ZB (native sessions, points-basis, ρ-to-NQ) | 🟡 LAUNCHING |
-| **CL extraction** | recompile-path in a session break (Sun, flat/closed verified) → freeze holdout, then autopsy | 🟡 LAUNCHING |
+| **CL extraction + freeze** | ✅ DONE — 1,182 sess, no recompile (exporter pre-installed, P1 verified intact), holdout frozen | DONE (`SM1M_CL_SUBSTRATE`, `CL_HOLDOUT_FREEZE_20260906`) |
+| Wave 1 (CL autopsy) | descriptive science on CL DISCOVERY (≤2025-06-30) — add to the ES/RTY/YM/ZB batch | 🟡 queued (next) |
 | Wave 1b | daily autopsies GC/6E (+SI/NG…) after daily extraction | pending |
 | Wave 2 | cheap screening: transfer + native mechanism families per market | pending |
 | Wave 3 | deepen survivors (rules, neighborhood, chronology, cost stress) | pending |
