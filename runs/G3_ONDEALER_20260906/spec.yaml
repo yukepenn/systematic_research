@@ -1,0 +1,28 @@
+run_id: G3_ONDEALER_20260906
+campaign: GENESIS III (Wave 6 — world-scan #22)
+mechanism: "Dealer-inventory overnight drift: US-afternoon inventory imbalances unwind into
+  European liquidity (NY-Fed overnight-drift literature localizes ES overnight returns in
+  specific clock-hours around the European open)."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+frozen_object: |
+  ES 1-min substrate (2022+, POINTS). Stage 1 (the card's own falsifier, descriptive): mean
+  1-min return by overnight clock-hour (17:00->09:30 ET grid), circular-shift null that
+  PRESERVES the diurnal grid (shift whole sessions, never minutes). Stage 2 (conditional):
+  prior-RTH-DOWN days vs UP days: European-window (02:00->05:00 ET) return WITH the matched
+  unconditional control (all days, same window). PRIMARY = the 02:00-05:00 band; BOTH
+  directions reported, no post-hoc pick — the gate is |effect| vs the ON cost floor with
+  sign consistency across the era halves.
+gates:
+  G1_MDE_first: "printed per cell."
+  G2_hour_structure: "an overnight clock-hour cell clears the grid-preserving shift null at
+    K_eff-corrected 5% (print K and K_eff — the diurnal family is large)."
+  G3_conditional: "the down-day conditional cell beats its matched unconditional control."
+  G4_cost_floor: "ON cost floor: {1,2}-tick band, 2-tick rung GATES (thin overnight book);
+    net-of-cost survival post-2022 required (the card's kill)."
+  G5_chronology: "2022-23 vs 2024-26 sign consistency."
+decision_rule: "G2+G3+G4+G5 PASS -> ONDEALER01 candidate. Else closed at scope (S28) — and
+  the overnight hour-grid is banked as the ES overnight structure map either way."
+evidence_status: DISCOVERY
+ledger: "G00090, family GENESIS3_EVENT."
+outputs: [out/gate_table.txt, out/hour_grid.csv, out/conditional.csv, REPORT.md]

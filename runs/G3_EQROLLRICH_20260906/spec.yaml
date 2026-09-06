@@ -1,0 +1,26 @@
+run_id: G3_EQROLLRICH_20260906
+campaign: GENESIS III (Wave 6 — world-scan #17)
+mechanism: "Equity roll-cycle financing richness (Hazelkorn-Moskowitz-Vasudevan JF 2023):
+  futures-implied financing richens into the roll when leverage demand is high; the
+  richen-then-cheapen path within the cycle is the flow signature. Differenced constructions
+  only (dividend confound bound — no level claims)."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+frozen_object: |
+  ES per quarterly cycle (~68 cycles): calendar-spread richness path in event time around the
+  roll (front/back spread CHANGES only, points — dividend level differenced out). PRIMARY:
+  richen-then-cheapen shape statistic = mean(change over [FN-12,FN-6]) minus mean(change over
+  [FN-5,FN-1]); FN anchor = the CME quarterly equity roll convention, documented by the
+  program and fixed before results.
+gates:
+  G1_MDE_first: "printed (~68 cycles — POWER IS THIN, say so)."
+  G2_shape: "shape statistic > 0, cycle-level permutation p < 0.05."
+  G3_comovement: "MECHANISM GATE: ES and NQ within-cycle richness changes co-move (corr > 0,
+    printed) — if not, the financing story fails = FAIL regardless of G2."
+  G4_era: "post-2016 stability mandated."
+  G5_cost: "diagnostic only (licenses a signal-lead, not a trade); cost note printed."
+decision_rule: "G2+G3+G4 PASS -> EQROLLRICH01 signal-lead (a CONDITIONER lead; a separate
+  predictive falsifier would follow). Else closed at scope (S28 block)."
+evidence_status: DISCOVERY
+ledger: "G00088, family GENESIS3_RV."
+outputs: [out/gate_table.txt, out/cycle_paths.csv, REPORT.md]

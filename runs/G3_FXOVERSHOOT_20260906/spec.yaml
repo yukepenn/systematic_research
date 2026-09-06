@@ -1,0 +1,27 @@
+run_id: G3_FXOVERSHOOT_20260906
+campaign: GENESIS III (Wave 6 — world-scan #20; opens the 6E row)
+mechanism: "Delayed overshooting: FX adjusts to monetary surprises over days, not instantly
+  (Eichenbaum-Evans lineage). Surprise proxy = the RATES market's own event-day move (ZN),
+  never a purchased surprise series."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+frozen_object: |
+  Events: FOMC decision days (the G00084 calendar, minus its 4 recorded data-hole dates).
+  Signal: sign of ZN close(D-1)->close(D0) — rates DOWN = dovish = USD-negative => 6E UP
+  expected under overshooting (sign stated HERE, before results). PRIMARY: hold 6E in the
+  signal-implied direction close(D0)->close(D+10); {D+5, D+20} reported.
+gates:
+  G1_MDE_first: "printed (~130 events)."
+  G2_edge: "PRIMARY after-cost mean > 0, event-block CI excludes 0, shared-draw shift null
+    p < 0.05."
+  G3_control: "beats matched non-FOMC same-weekday days AND survives drift-residualization
+    (subtract 6E trailing-60d unconditional drift over the window; full rate-differential
+    carry is not locally computable — LIMITATION STATED, never hidden)."
+  G4_subsample_fragility: "Scholl-Uhlig gate: era thirds printed; effect living in ONE third
+    = FAIL (the card's own clause)."
+  G5_cost: "6E tick $6.25, 10-day hold — trivial; printed."
+decision_rule: "G2+G3+G4 PASS -> FXOVERSHOOT01 candidate (first 6E object). Else closed at
+  scope (S28 block) — either way the 6E event-transition cell gets its first entry."
+evidence_status: DISCOVERY
+ledger: "G00089, family GENESIS3_EVENT."
+outputs: [out/gate_table.txt, out/event_table.csv, out/era_thirds.csv, REPORT.md]

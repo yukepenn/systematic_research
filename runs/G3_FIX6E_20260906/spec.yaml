@@ -1,0 +1,26 @@
+run_id: G3_FIX6E_20260906
+campaign: GENESIS III (Wave 6 — world-scan #23)
+mechanism: "Month-end London 4pm fix: cross-border equity-hedge rebalancing creates
+  predictable month-end FX flow proportional to the month's equity performance; the 2015 fix
+  reform (widened window) is the structural decay test."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+frozen_object: |
+  6E daily + ES daily (2009-2026-07, ~210 month-ends). Signal: MTD ES return through T-2
+  (hedge-demand proxy, causal). PRIMARY regression (the card falsifier): fix-day 6E return
+  (close(T-1)->close(T)) on the signal; REVERSAL leg (close(T)->close(T+3)) on the same
+  signal — flow-then-revert is the signature. Conditional table: top-tercile |signal| months
+  (where the card says survivability lives), both signs reported.
+gates:
+  G1_MDE_first: "printed."
+  G2_slope: "fix-day slope significant (event-block bootstrap) with the mechanism sign:
+    strong US equity month -> hedge-rebalance USD selling -> 6E UP (stated HERE, before
+    results)."
+  G3_reversal: "reversal-leg slope opposite-signed (flow signature)."
+  G4_era_2015: "split AT the 2015 reform: dead if post-2015 slope ~ 0 (the card kill)."
+  G5_cost: "1-day hold; printed."
+decision_rule: "G2+G3+G4 PASS -> FIX6E01 candidate. Else closed at scope (S28); the 6E
+  session-mechanics cell gets its first entry either way."
+evidence_status: DISCOVERY
+ledger: "G00091, family GENESIS3_EVENT."
+outputs: [out/gate_table.txt, out/regression.csv, out/tercile_table.csv, REPORT.md]

@@ -1,0 +1,32 @@
+run_id: G3_TSYROLL_20260906
+campaign: GENESIS III (Wave 6 — world-scan #13)
+mechanism: "Front-running the passive bond roll: index funds roll ZN/ZB front->back on a
+  predictable schedule anchored to first notice; the calendar spread drifts during the heavy
+  roll days — the premium paid by predictable flow."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+frozen_object: |
+  Per root {ZN, ZB}, per quarterly cycle (~70 cycles 2009-2026-07): event-time panel of the
+  CALENDAR SPREAD (front minus back, points, per-contract dailies, both legs required) over
+  days FN-15..FN, FN = first notice = last business day of the month preceding delivery.
+  TRADEABLE primary (fixed in advance): LONG-back/SHORT-front held over [FN-10, FN-4],
+  pooled across roots (one shared draw).
+gates:
+  G1_MDE_first: "printed (~140 root-cycles)."
+  G2_drift: "primary after-cost mean > 0, cycle-block CI excludes 0, cycle-level
+    circular-shift null p < 0.05."
+  G3_sign_consistency: ">= 60% of cycles positive (the card gate)."
+  G4_placebo: "off-cycle +/-1-month placebo windows (same construction, no roll) must NOT
+    show the drift."
+  G5_not_carry: "must not be explained by carry mechanics: control = expected slide from the
+    measured average calendar-spread level (carry-neutral detrend); the EXCESS carries G2."
+  G6_era: "pre/post-2016 split mandated; modern-negative = FAIL."
+  G7_cost: "MODELED {1,2}-tick outright-equivalent band, conservative rung gating."
+extra_task: "OI CENSUS (world-scan #14 step 1, no trial): report whether the day-.ncd record
+  layout carries open interest (ncd_day.py + one raw record inspection); one paragraph, no
+  price analysis."
+decision_rule: "G2+G3+G4+G5 PASS and G6 not modern-negative -> TSYROLL01 candidate. Else
+  closed at scope (S28 block)."
+evidence_status: DISCOVERY
+ledger: "G00087, family GENESIS3_EVENT."
+outputs: [out/gate_table.txt, out/cycle_panel.csv, out/era_table.csv, REPORT.md]
