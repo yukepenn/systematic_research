@@ -86,6 +86,13 @@ the spec** is the kill-power test. AUCTREV's closure re-adjudicated: **stands on
 **Substrate law (DELEV01): additively back-adjusted series ⇒ cross-era percent thresholds
 invalid; see GENESIS_ENGINEERING_DOCTRINE substrate trap.**
 
+## Closed at exact scope (2026-09-06)
+
+| scope | verdict | run |
+|---|---|---|
+| **Exec-series-only roll gating** (recover the [R−10,R−8) P1 / [R−12,R−8) XM entry days; RollLeadDays 8; COMMISSION_ONLY ledger 2022-01..2026-08) | **KILL on money** — P1 strip +$13,445 but bootstrap CI90 spans 0 (P(≤0)=0.139) and 99 % of the point estimate is 2024 alone; **XM strip −$26,378 — the earlier all-series block historically HELPED that leg**. Two corrections banked: (1) G3_ROLLCOST's published window IS already the exec-series window (proved by 21/21 dollar-exact reproduction), so (2) **the pooled blackout's true foregone net is $93,173, not the $106,106 headline**. The blackout stands as the price of the fail-safe; the only roll-successor idea left alive is the early-execution-roll, gated on the 2026-09 crossover quote capture (n=1 says back month ~11× wider → likely uneconomic) | ROLL02 (G00047) |
+| **NQ overnight hold into NFP/CPI** at the $40.25 ALL_IN floor, 2006 → 2026-05, long side (MC-50 macro leg, the W2 skeptic's frozen primary verbatim) | **NULL — the premium is ABSENT**: D_net −$67/night (p 0.64), sign negative in **3/3 eras**, and **negative GROSS (−$27/night)** — so NOT cost-killed; there is no gross edge for a measured-spread update to rescue. ⚠️ Narrow closure: the *tradeable-premium* claim dies; the "no gross information" sub-claim is UNDERPOWERED_STILL (null sd $66/night) and closes nothing on its own. Earnings leg stays demoted contingent-on-N, untested | G2_F10 (G00048) |
+
 ## Blocked-as-rescue (recorded rulings)
 
 MC-35 meta-labeling/sizing **on P1 with existing surfaces** = rescue of RR_W002A's closure ("no

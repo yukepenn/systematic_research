@@ -20,11 +20,13 @@ certification (`G2_F7`, R_c alone after the F9 re-adjudication; the 15:50-break 
 percentile (p 0.0009), R_a concentration FAIL at 236.8 % → **R_a demoted to a CLASSIFICATION rung
 for every object**; a quiet shadow quarter is expected behaviour, not decay.
 
-**Still OPEN:** MC-50 macro-night overnight holds (**strongest untested card**, frozen primary
-written, N≈450) · MC-54 legs 2–4 (cheap, NQ-1-min-only) · MC-41 rebound-side rule (the +9.62 pp
+**Still OPEN:** MC-54 legs 2–4 (cheap, NQ-1-min-only) · MC-41 rebound-side rule (the +9.62 pp
 fact stands; afternoon-short formulation dead) · MC-42 (banked, no rule) · MC-48 (LOW) · MC-55
 (parked until an engine trades 14:00–16:00) · MC-39 (DATA-GATED: VX 1-min has no free backfill) ·
 MC-52/56 (blocked on the P-1 reserve) · MC-35 (blocked-as-rescue).
+**Closed 2026-09-06 (Formal Wave 4):** MC-50 macro leg **NULL** — premium absent, negative in
+3/3 eras, negative even gross (`G2_F10`, G00048); earnings leg stays demoted. ROLL02 killed
+exec-series roll gating and re-measured the pooled blackout at $93,173 (G00047).
 
 **Registered lane, still untouched (2026-08-29 → now): the SWING band** — 3-session-to-3-month
 NQ-direction mechanisms on the 1,043-week deep spine, the only band where t=2 is reachable at

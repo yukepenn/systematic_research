@@ -1,0 +1,48 @@
+====================================================================================================
+G2_F10_MC50_MACRONIGHT_20260906 — MC-50 macro-night falsifier  (seed=20260906, K=401 shifts)
+====================================================================================================
+
+G1 SEMANTIC: The population is every NQ overnight session 18:00 ET (prior evening) -> 08:29 ET with both anchor bars present, session dates 2006-01-01..2026-05-29 (5070 eligible nights); events are the 479 NFP/CPI release nights (240 NFP, 239 CPI, 0 tagged both, counted once); controls are ALL same-weekday non-release nights in the same era. The event tested is the mean NET point P&L per night of 1 long NQ contract ($20/pt) after the $40.25 ALL_IN floor on release nights, minus the matched same-weekday same-era control GROSS mean — i.e. whether holding long into the release pays more than the ordinary night drift by more than the cost floor.
+
+Realized N: 479 release nights (vs ~450 expected by the frozen primary). NFP=240, CPI=239, overlap counted once=0.
+Calendar files in range: NFP 244, CPI 242, union 486, overlap 0.
+
+EXCLUSIONS (release nights dropped, both-bars rule):
+reason                   n_release_dropped   dates
+entry_bar_missing                        4   2006-01-06, 2006-02-03, 2006-12-15, 2010-07-02
+exit_bar_missing                         3   2006-03-10, 2006-05-17, 2013-09-17
+both_missing                             0   -
+TOTAL                                    7
+(all-night exclusions incl. controls: entry 116, exit 3, both 0; release entries filled by a later-than-18:01 bar within (18:00,18:30]: 20)
+
+POOLED / DECOMPOSITION (NET diff = event net mean - matched control gross mean; GROSS diff = +$40.25):
+variant     N_ev   D_net $/night  D_gross $/night  p (two-sided)
+POOLED       479          -67.26           -27.01         0.6368
+NFP-only     240         -101.85           -61.60         0.4627
+CPI-only     239          -32.51             7.74         0.9851
+(NFP-only / CPI-only are decomposition prints, not separate chances.)
+
+ERA TABLE:
+         era  n_release  n_nfp  n_cpi  n_controls  release_gross_mean_usd  release_net_mean_usd  control_gross_mean_usd  diff_net_usd  diff_gross_usd
+   2006-2016        257    128    129        2391                   27.39                -12.86                   22.16        -25.57           14.68
+   2017-2022        142     72     70        1402                  -21.87                -62.12                   86.20       -156.76         -116.51
+2023-2026-05         80     40     40         798                   43.00                  2.75                  170.21        -42.30           -2.05
+
+G4 decomposition: release gross mean +15.40 $/night, net mean -24.85 $/night; pooled control gross mean +67.45; D_gross -27.01 (p=0.6368), D_net -67.26.
+
+Null sd (pooled, 401 shared circular shifts): 66.44 $/night; null mean of the NET stat: -36.55 (= ~-$40.25 as expected); MDE @80% power = 186.13 $/night.
+G5 literal comparison (spec formula, |observed| = |D_net|): MDE 186.13 vs 3x|D_net| = 201.77 -> not underpowered by the literal formula.
+G5 cost-invariant caveat: |D_net| embeds the constant -$40.25 floor; the observed INFORMATION departure from the null center is -30.71 $/night, and MDE 186.13 > 3x|departure| = 92.13 -> the 'no gross information' sub-claim is UNDERPOWERED_STILL and closes nothing on its own.
+
+GATE TABLE (program-printed)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+GATE                  | SPEC                                                                                    | OBSERVED                                                                                        | PASS-FAIL
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+G0_seal               | max substrate date <= 2026-05-29 (hard assert)                                          | max substrate timestamp = 2026-05-29 16:59:00                                                   | PASS
+G1_semantic           | one printed sentence: population + event                                                | printed above (population, event, cost basis named)                                             | PASS
+G2_primary            | pooled two-sided p <= 0.05 vs 401 shared circular shifts of the label series            | D_net=-67.26 $/night, p=0.6368 (p invariant net/gross: asserted)                                | FAIL
+G3_era_stability      | sign of pooled difference agrees in >= 2 of 3 eras (2006..2016 / 2017..2022 / 2023..2026-05)| pooled sign -; era D_net signs ['-', '-', '-']; agree=3/3                                       | PASS
+G4_gross_decomposition| gross vs net printed; cost-killed branch evaluated                                      | D_gross=-27.01 (p=0.6368), D_net=-67.26; gross_passes=False, net_fails=True                     | PRINTED
+G5_power              | MDE at 80% power printed on any FAIL; UNDERPOWERED_STILL if MDE > 3x|observed|          | MDE@80%=186.13 $/night; literal 3x|D_net|=201.77 -> not underpowered by the literal formula; cost-invariant 3x|departure|=92.13 -> no-information sub-claim UNDERPOWERED_STILL, closes nothing on its own| PRINTED
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+VERDICT: FAIL   | evidence status of every number: DISCOVERY_CONSUMED

@@ -1,0 +1,98 @@
+====================================================================================================
+ROLL02_EXECSERIES_GATING_20260906   trial G00047   seed 20260906   2026-09-06
+Prices exec-series-only roll gating: net in the strip [allSeriesBlock, execSeriesBlock).
+Cost basis COMMISSION_ONLY ($4.36/ctrRT); evidence DISCOVERY_CONSUMED, in-sample.
+====================================================================================================
+
+STEP 1 - G3_ROLLCOST_00 reproduction (must match to the dollar or this run aborts)
+   observed trades            observed        291   published        291   OK 
+   observed net $             observed    106,106   published    106,106   OK 
+   total trades               observed      2,817   published      2,817   OK 
+   total net $                observed    537,353   published    537,353   OK 
+   same-day trades            observed        269   published        269   OK 
+   same-day net $             observed     81,566   published     81,566   OK 
+   lead-4 trades              observed        192   published        192   OK 
+   lead-4 net $               observed     81,595   published     81,595   OK 
+   P1 in-window trades        observed        250   published        250   OK 
+   P1 total trades            observed      2,439   published      2,439   OK 
+   P1 in-window net $         observed     47,685   published     47,685   OK 
+   P1 total net $             observed    354,576   published    354,576   OK 
+   XM in-window trades        observed         41   published         41   OK 
+   XM total trades            observed        378   published        378   OK 
+   XM in-window net $         observed     58,421   published     58,421   OK 
+   XM total net $             observed    182,777   published    182,777   OK 
+   in-window net 2022 $       observed    -13,521   published    -13,521   OK 
+   in-window net 2023 $       observed     13,796   published     13,796   OK 
+   in-window net 2024 $       observed     48,197   published     48,197   OK 
+   in-window net 2025 $       observed     29,774   published     29,774   OK 
+   in-window net 2026 $       observed     27,860   published     27,860   OK 
+   -> all 21 published figures reproduced to the dollar: SAME LEDGER, SAME WINDOWS.
+
+STEP 2 - recovered strip per quarter (one rule changed: block from exec-series date only)
+   wrote D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\ROLL02_EXECSERIES_GATING_20260906\out\strip_by_quarter.csv
+   P1 strip [R-10,R-8): 56 trades  net $13,445.32  over 18 quarters  ($746.96/qtr, $55.49/wk on the ledger span)
+   XM strip [R-12,R-8): 18 trades  net $-26,378.48  over 18 quarters   [XM: in observation - secondary arm]
+
+====================================================================================================
+GATE TABLE  (GATE / SPEC / OBSERVED / PASS-FAIL)  - printed by the program
+====================================================================================================
+G1_money
+   SPEC    : P1-only pooled strip net: stationary-bootstrap CI90 excludes 0 AND net
+             positive in >= 3 of calendar years 2022..2026; else KILL family.
+   OBSERVED: strip net $13,445.32 (n=56 trades); stationary bootstrap
+             (B=10000, mean block 5, seed 20260906) CI90 = [$-5,077.24, $36,000.96]  -> excludes 0: False  (P(resample sum <= 0) = 0.139)
+             by-year strip net: 2022 $457.68, 2023 $-522.96, 2024 $13,255.76, 2025 $-1,278.48, 2026 $1,533.32  -> positive in 3/5 years (need >=3: True)
+   PASS-FAIL: FAIL -> KILL
+G2_frequency
+   SPEC    : print strip entry rate vs baseline entry rate; if strip < 50% of baseline,
+             restate every headline at the measured rate.
+   OBSERVED: P1 strip 1.556 entries/trading-day (56/36) vs baseline 2.014 (2439/1211 weekdays) -> ratio 77.2%
+             (calendar-day basis: strip 1.556 vs baseline 1.438 -> ratio 108.2%)
+   PASS-FAIL: ratio 77.2% >= 50% -> headlines stand at face value
+G3_materiality_vs_latch_kill
+   SPEC    : P1-only recovered TRADING days per quarter must exceed 1.0 (the bar at
+             which DRAWDOWN_ANATOMY killed the latch-fix as immaterial); else KILL.
+   OBSERVED: 2.00 trading days/quarter (36 days over 18 quarters; strip = Tue+Wed before expiry week)
+   PASS-FAIL: PASS
+G4_risk_premise
+   SPEC    : "OPEN by construction: the strip is only free if the execution series is
+             genuinely tradable there. This gate is NOT decidable from local data (no
+             historical back-month quotes exist) and is explicitly deferred to the
+             2026-09 crossover quote capture now running
+             (research/operational/roll_quotes/quotes.csv). The report must print it as
+             OPEN - a G1-G3 PASS with G4 open licenses further measurement, never a
+             build."
+   OBSERVED: deferred by construction; nothing in this run can close it.
+   PASS-FAIL: OPEN
+G5_semantic
+   SPEC    : one sentence per headline stating its population/event; and the identity
+             strip_net + remaining_blackout_net = blackout net must reconcile to the $.
+   HEADLINE SEMANTICS:
+     - '$13,445.32 P1 strip net' is the sum of COMMISSION_ONLY P&L of the 56 historical P1
+       trades (of 2439, 2022-01-02..2026-08-25, in-sample, DISCOVERY_CONSUMED) whose ENTRY
+       calendar date fell on the 2 trading days [R-10, R-8) before each of 18 quarterly
+       third-Friday rolls - the days the live all-series guard blocks but an exec-series-
+       only guard would not.  It is NOT forward, NOT a strategy, and says nothing about
+       fills (G4 OPEN).
+     - '$-26,378.48 XM strip net' is the same event over the 4-day strip [R-12, R-8) for the
+       XM leg (in observation - secondary); negative means the earlier all-series block
+       historically HELPED that leg.
+     - '2.00 recovered days/quarter' counts CME trading days (Mon-Fri minus
+       full closures) inside the P1 strip, averaged over the 18 observable quarters.
+   RECONCILIATION (all-series window = strip + remaining blackout, per leg, to the $):
+     P1: strip $13,445.32 + remaining $47,684.56 = all-series $61,129.88   trades 56+250=306   remaining==G3 published $47,685: True
+     XM: strip $-26,378.48 + remaining $58,421.24 = all-series $32,042.76   trades 18+41=59   remaining==G3 published $58,421: True
+     pooled: strip $-12,933.16 + remaining $106,105.80 = all-series $93,172.64   remaining==G3 published $106,106: True
+     NOTE (preregistration premise corrected): G3's published window is PROVEN above to
+     be the exec-series window itself (its single third-Friday table IS the MNQ/YM-like
+     date), so 'remaining blackout' EQUALS G3's cut and the strip lies OUTSIDE it; the
+     identity holds with G3's number as the remaining-blackout term.  Under the spec's
+     literal premise (G3 window = all-series window) the strip would be EMPTY - a
+     degenerate reading recorded as a deviation in REPORT.md, not used.
+   PASS-FAIL: PASS (reconciles to the dollar)
+
+====================================================================================================
+VERDICT: KILL
+  Per the preregistered decision rule: per-series roll gating is CLOSED as
+  not-worth-building; the blackout stands as the price of the fail-safe.
+====================================================================================================
