@@ -1,6 +1,21 @@
 # GENESIS II — RESUME STATE
 
-> ## ⚡ ACTIVE 2026-09-06: Formal Wave 6 running as workflow `wf_18c63c94-84c`.
+> ## ⚡ ACTIVE 2026-09-06: CROSS-INSTRUMENT extension XINST01 running as workflow `wf_d97689db-200`.
+> **Owner directive (2026-09-06): don't buy data; instead apply the NQ/P1 approach to other big
+> futures (ES/gold/FX/commodities) and build the same weekly-edge object.** XINST01 ports the
+> P1/PCT mechanism to **ES/RTY/YM/ZB** (trials G00056-59) with a no-mining transfer rule + a hard
+> NQ-reproduction gate; gold/FX/CL data-gated (thin local 1-min / needs recompile-path extraction).
+> Spec `ebafdba`. **On resume:** read the workflow journal / `runs/XINST01_.../out/`, verify the
+> port reproduced NQ P1/PCT to the dollar (if not, ALL instrument results are void — fix the port,
+> re-run), then **record ledger G00056-59 SERIALLY**, update the queue + a new CROSS-INSTRUMENT
+> state doc, commit. The prize is a LOW-corr positive-edge instrument (ZB) = an XM-replacement
+> diversifier from a known mechanism. If ZB survives + verifies -> preregister the forward read.
+> Resume with `resumeFromRunId: wf_d97689db-200` if it died mid-flight.
+>
+> (Wave 6 done: MC-57 ZB-forecast NULL, MC-58 rebound CLOSED-permanent; $0 intraday-alpha search
+> declared exhausted; HEAD `b105899`. This extension is the owner's chosen next direction.)
+
+> ## (prior) Formal Wave 6 ran as workflow `wf_18c63c94-84c`.
 > Two formal tests + adversarial verify of any survivor: **MC-57 ZB rates-state** RV-forecast
 > (G00054, the new-surface flagship — a PASS unblocks conditioning P1) + **MC-58 breadth rebound**
 > profit test (G00055). Specs committed `b264405`, transcribing the Wave-5 skeptic's frozen
