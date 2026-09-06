@@ -1,0 +1,65 @@
+========================================================================================================
+MC-57  GATE TABLE   (program-printed; GATE / SPEC / OBSERVED / PASS-FAIL)   trial G00054
+run G2_F13_MC57_ZBSTATE_20260906   seed 20260906   2026-09-06 03:44:12
+========================================================================================================
+
+--- G1 BARRIER (printed BEFORE gates; MDE printed BEFORE the observed improvement) ---
+  MDE (barrier)         SPEC: smallest DM-detectable |d_bar| @ a=0.05, power=0.80
+                        OBSERVED MDE = 2.9093e-02   (= (z_a/2+z_pow)*HAC_se = (1.960+0.842)*1.0385e-02)
+  observed |d_bar|      OBSERVED d_bar = -1.4135e-02   |d_bar|/MDE = -0.486   (<1 below barrier)
+  test-n                SPEC: adequate n     OBSERVED test sessions = 364   (PASS)
+  per-era session count OBSERVED  TRAIN=514  TEST=364
+  leg-b event count     OBSERVED  95th-pct expansion sessions = 34 (matched used 30/34)
+  leg-c event count     OBSERVED  corr-FLIP sessions = 0 (matched used 0/0)
+
+--- G0  SEAL + POINTS basis ---
+  G0 seal boundary      SPEC: max retained session <= 2026-05-31
+                        OBSERVED max session = 2026-05-29   [PASS]
+  G0 points basis       SPEC: every ZB observable in POINTS not percent
+                        OBSERVED ZB RV/TR/corr basis = POINTS/POINTS/POINT-RETURN   [PASS]
+
+--- G2  CELL OCCUPANCY (thin < 20 -> CLOSED-BY-POWER unread) ---
+  corr-cell hedging(<=-0.3)         TRAIN=  28 [ok]   TEST=  71 [ok]
+  corr-cell neutral                 TRAIN= 377 [ok]   TEST= 246 [ok]
+  corr-cell liquidation(>=+0.3)     TRAIN= 109 [ok]   TEST=  47 [ok]
+
+--- G3  IDENTIFICATION (VIF of each ZB term; >= 10 => NOT-IDENTIFIED) ---
+  VIF[log_zb_sess_rv_da   ] =    3.463  (R^2 vs NQ-base only = 0.307)  [ok]
+  VIF[log_zb_30m_rv_da    ] =    2.412  (R^2 vs NQ-base only = 0.233)  [ok]
+  VIF[zb_corr60           ] =    2.669  (R^2 vs NQ-base only = 0.038)  [ok]
+  VIF[zb_corr_sign        ] =    2.599  (R^2 vs NQ-base only = 0.047)  [ok]
+  VIF[log_zb_exp_cnt      ] =    4.449  (R^2 vs NQ-base only = 0.376)  [ok]
+  G3 max VIF            SPEC: max ZB VIF < 10.0
+                        OBSERVED max VIF = 4.449   [IDENTIFIED]
+
+--- G4  PRIMARY (leg a): DM p<=0.05 AND survives shared circular-shift null; identified & powered ---
+  mean QLIKE BASE       OBSERVED 3.240490e-01
+  mean QLIKE FULL       OBSERVED 3.381840e-01   (rel. improvement -4.3620%)
+  DM statistic (HAC)    SPEC: |DM| >= 1.960 (two-sided p<=0.05)
+                        OBSERVED DM = -1.361   p = 0.1735   [FAIL]
+  circular-shift null   SPEC: real OOS improvement in top 5% of 2000 shifts
+                        OBSERVED p_shift = 0.9670   [FAIL]  (d_obs -1.413e-02 vs null mean -2.789e-03)
+  identified (G3)       YES      powered (G1) YES
+  G4 PRIMARY VERDICT    ==> FAIL
+
+--- legs (b)/(c) SECONDARY (triple-matched controls; shared shift null; effective-K) ---
+    controls = same-era AND NQ-trailing-60min-RV-decile AND macro-flag matched (triple)
+  leg-b expansion       matched d(fwd RV) = +2.0557e-04  p_shift = 0.0010  (events used 30/34)  [read]
+  leg-c corr-flip       matched d(fwd RV) = +nan  p_shift = nan  (events used 0/0)  [CLOSED-BY-POWER (0 flip events; post-2022 hedging cell empty as G2 anticipated)]
+  family effective-K    active legs = 2 (a+b)   rho_bar = -0.091   K_eff = K/(1+(K-1)*rho_bar) = 2.200   per-leg alpha = 0.0227
+  leg-b SUPPLEMENTARY   +4th match on NQ overnight (rv_pre11) decile: d(fwd RV) = +2.4657e-04 (events used 23/34)
+  NOTE leg-b is SECONDARY and cannot PASS alone; its spec triple-match omits NQ OVERNIGHT
+       RV.  Adding that 4th dimension shrinks d(fwd RV) +2.06e-04 -> +2.47e-04 (-20% smaller), and leg-a's continuous HAR baseline shows ZB
+       does not help (indeed HURTS) OOS -> leg-b is a cross-asset REDUNDANCY, not new info.
+
+--- SECONDARY target (next-session NQ RV; pre-declared, cannot PASS alone) ---
+  next-session NQ RV (refit): rel.QLIKE +8.084% d_bar=+2.167e-02 DM=+3.28 p=0.001  (SECONDARY; cannot PASS alone)
+
+--- G5 SEMANTIC (one sentence; what population, what event) ---
+  Over 878 ZB-intersect-NQ sessions (2022-12-27..2026-05-29), does adding ZB intraday POINTS state (diurnal-adj RV, NQ-ZB 60m point-return corr level/sign, 95th-pct range-expansion count) to a HAR(NQ-RV)+$0-macro baseline LOWER the out-of-sample QLIKE of the NQ rest-of-session-from-11:00 realized-variance forecast? ANSWER: NO (FAIL) (rel. QLIKE -4.362%, DM p=0.173, shift p=0.967, max VIF=4.45).
+
+========================================================================================================
+FINAL VERDICT: FAIL    survives_info_gate = False
+  (survives_info_gate := DM p<=0.05 AND identified AND powered AND d_bar>0 AND survives-shift)
+  Evidence status: DISCOVERY_CONSUMED.  No strategy / no sizing licensed by this run.
+========================================================================================================

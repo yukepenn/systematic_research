@@ -1,0 +1,34 @@
+====================================================================================================
+MC-57  ZB intraday STATE -> NQ rest-of-session RV   (run G2_F13_MC57_ZBSTATE_20260906, trial G00054)
+====================================================================================================
+[load] ZB parquet sha256 prefix ae04d0a7  (spec expects ae04d0a7)  MATCH
+[SEAL A2] hard-drop sessions > 2026-05-31 at load.
+[SEAL A2]   ZB max session BEFORE drop 2026-07-31 -> AFTER drop 2026-05-29
+[SEAL A2]   NQ max session BEFORE drop 2026-05-29 -> AFTER drop 2026-05-29
+[SEAL A2]   RETAINED BOUNDARY (max session used) = 2026-05-29  (<= 2026-05-31 : PASS)
+
+[basis] BASIS FLAGS (A2):
+[basis]   ZB observables ...... POINTS  (dprice = close_t - close_{t-1}, 32nds), never percent
+[basis]   ZB true range ........ POINTS  (high - low)
+[basis]   NQ-ZB corr ........... POINT-RETURN corr, both legs point returns (unitless)
+[basis]   NQ RV (target+HAR) ... LOG-RETURN RV (dimensionless); NQ level ~15k-22k in-window
+[basis]                          so log-RV is undistorted & cross-day comparable; A2 scopes
+[basis]                          POINTS to ZB observables only -> NQ log-RV is compliant.
+
+[universe] ZB INTERSECT NQ sessions in [2022-12-27 .. 2026-05-31] : n = 878
+[universe]   first 2022-12-27  last 2026-05-29
+[universe]   TRAIN 2022-12-27..2024-12-31  n=514   TEST 2025-01-02..2026-05-31  n=364
+
+[ZB] 30-min diurnal factors f_b estimated on TRAIN pre-11:00 minutes; buckets=35; grand-mean sq point-return fbar=0.000904 pts^2
+[ZB] range-expansion threshold theta = TRAIN 95th pct of 1-min TR = 0.06250 pts  (2.00/32nds)
+[A3 coverage] 60-min corr window [10:01..11:00]: common-minute coverage min=0 med=60 max=60 of 60
+[A3 coverage] min-coverage rule = 30/60 common minutes; sessions below rule (corr set NaN -> imputed) = 3 of 878 (0.3%)
+[ZB] leg-b session event = pre-11 expansion count >= TRAIN 95th pct of count (87.35); n_events=34
+[ZB] leg-c corr-FLIP event (corr_early<=-0.3 & corr_late>=+0.3): n_events=0
+
+[macro] $0 macro-calendar flags built (SYMMETRIC across BOTH arms; imperfect dates cancel in the FULL-vs-BASE increment):
+[macro]   NFP=first-Friday(rule)  CPI=mid-month-Wed(rule,APPROX)  FOMC=hardcoded schedule  Auction=coupon-week(rule,APPROX)
+[macro]   day-counts over modeling window: NFP=40 CPI=40 FOMC=27 AUCTION=243
+
+[frame] rows before HAR/target NA-drop 878 -> after 878
+[frame] modeling TRAIN n=514  TEST n=364

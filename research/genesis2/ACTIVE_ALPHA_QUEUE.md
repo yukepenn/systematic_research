@@ -33,7 +33,21 @@ deseasonalization is 99.5% collinear with raw first-hour vol (VIF 92.9); design 
 (`G2_F11`, G00052). MC-55 **REFUTED, POWERED, INVERTED** — post-FOMC RV *expands* ×5.66, not
 crushes (`G2_F12`, G00053). MC-56 **not run** — its 2022+ VXN↔NQ join is the P-1 reserve.
 
-**NEW cards, survived the Wave-5 skeptic (`runs/G2_WAVE5_CARDS_20260906/`):**
+**Closed 2026-09-06 (Formal Wave 6, workflow `wf_18c63c94-84c`):** Both survivors of the Wave-5
+skeptic FAILED, no candidate advanced. **MC-57 ZB rates-state = POWERED+IDENTIFIED NULL** — ZB
+makes the NQ vol forecast −4.36% worse (VIF 4.45, n=364); **the last "new raw surface" flag is
+retired and MC-35/P1-conditioning stays BLOCKED** (`G2_F13`, G00054). **MC-58 rebound =
+CLOSED-AS-GENERIC-MR permanent** — the washout-rebound long loses to the same trigger without the
+breadth condition (`G2_F14`, G00055). 🔴 **Frontier assessment: the $0/seal-respecting
+incremental-alpha search is credibly EXHAUSTED** — 56 trials, 0 live candidates, and now the one
+genuinely new surface is inert on even the vol forecast. Remaining EV is NOT more cards: it is
+(1) the execution-cost measurement now in flight (roll-crossover sampling → the MNQ spread + roll
+cost, Level-B realized-P&L for the live book), (2) forward evidence accrual (shadow ledger +
+sealed ≥2026-08-01), (3) owner-gated SPEND that would open a new surface (Databento execution
+falsifier; GAMMA00 options/dealer-state) — an owner decision, not an autonomous one. A new card
+wave against the parked LOW bench would be activity, not EV.
+
+**NEW cards, survived the Wave-5 skeptic (`runs/G2_WAVE5_CARDS_20260906/`) — BOTH NOW CLOSED by Wave 6:**
 - **MC-57 — rates-complex intraday STATE for NQ (ZB), TRIAGE-HIGH.** ZB 1-min just extracted
   (923 sess). Decision role locked as RISK-SPEC / REGIME-ROUTING (second-moment conditioner),
   never lead-lag/direction (clears ESNQ-null + swing-park). 🔴 **Skeptic amendments are binding

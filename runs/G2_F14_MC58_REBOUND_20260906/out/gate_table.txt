@@ -1,0 +1,78 @@
+================================================================================================
+G2_F14_MC58_REBOUND_20260906 / MC-58 breadth-washout REBOUND (long) / trial G00055
+printed by program: runs/G2_F14_MC58_REBOUND_20260906/src/run_mc58.py
+================================================================================================
+TICK_1m.parquet sha256 72612a1e0f308b57862d6e0adfb5883ceee05dfc697c4cb980ea7b2c82b6d80f  manifest-match=True
+nq_1m_2022_2026.parquet sha256 87aa53f007aa47b9ee10d0080317a3cde8d22b55aa368267fa9a4aed7435295d  provenance-match=True
+seal_guard.assert_presealed PASS on both frames (TICK 428,924 rows, NQ 1,558,857 rows; pushdown-dropped >= 2026-06-01)
+G0 seal: max TICK session=2026-05-29, max NQ session=2026-05-31 (both <= 2026-05-31) PASS
+G0 basis: takeout & P&L computed on POINTS (price levels). DELEV01 not implicated —
+          within-session additive offsets cancel in (aft_low<morn_low) and in (exit-entry).
+
+################################################################################################
+G1 BARRIER — POWER BLOCK (n, events/yr, pre/post-breach decomp, MDEs) BEFORE any
+            return table. NOTHING about observed means is printed above this line.
+################################################################################################
+population: 1104 joined sessions; 10 dropped by quality; 1094 valid; 252 warm-up; 842 classified (2023-01-05 .. 2026-05-29, 3.39 yr)
+pre/post-breach decomposition of bottom-tercile (n=263): BREACHED/took-out morning low = 154 (candidate events); NOT-breached = 109
+candidate tradeable events: n_cand = 154 (unenterable-at/before-15:59 dropped = 0)   EVENTS/YR = 45.4
+control (non-bottom takeout) tradeable: n_ctrl = 256 (spec ~258; unenterable dropped = 2)
+B1 mean-MDE  (Z*sd/sqrt(n), a=.05 two-sided, power=.80): $515.14/event  [sd=$2281.81, n=154]
+   effective-K note: rho1(net)=-0.1047 -> K_eff=154.0; effective-K mean-MDE = $515.14/event
+B2 increment-MDE (two-sample cand vs control): $738.24/event  [sd_ctrl=$3020.00, n_ctrl=256]
+(cost basis: ALL_IN $40/RT — p90-spread regime, EXEC01-derived stressed floor)
+
+---- RETURN TABLE (net $/event; POINTS gross x $20/pt; ALL_IN $40/RT) ----
+LEG                                                 |     n |    mean/ev |       t |      total $ | winrate
+--------------------------------------------------------------------------------------------------------
+CANDIDATE rebound-long bottom-tercile takeout       |   154 |     -60.97 |   -0.33 |        -9390 |   46.1%
+CONTROL rebound-long NON-tercile takeout (B2i)      |   256 |     +47.73 |   +0.25 |       +12220 |   53.9%
+--------------------------------------------------------------------------------------------------------
+candidate gross: -1.05 pts/event; increment (cand - control) = $-108.71/event
+NON-gate cost sensitivity: mean net @ $25.01=-45.98, @ $33.00=-53.97, @ $40.00(gate)=-60.97
+
+---- B2(i) PRIMARY DISCRIMINATOR (identical trigger, non-tercile takeout) ----
+  candidate mean net    = $-60.97/event (n=154)
+  control  mean net     = $+47.73/event (n=256)
+  increment (cand-ctrl) = $-108.71/event   increment-MDE = $738.24
+  entry time-of-day (min-of-day) median: cand=686 (11:25), ctrl=708 (11:47)
+  -> control>=candidate: True    increment~=0: False
+
+---- B2(ii) count-matched random-session longs @ resampled takeout times (N=10000) ----
+  observed cand mean=$-60.97  vs  p95(random)=$+432.42  p50=$+68.99  p_one=0.7346  -> NOT BEATEN
+
+---- B3 circular-shift null on STATE series (N=10000, seed=20260906, family-shared offsets) ----
+  observed cand mean=$-60.97  vs  p95(null)=$+329.15  p_one=0.6548  K_eff=154.0  -> NOT BEATEN
+
+---- TIMING-TEETH delay curve (common enterable subset n=151) ----
+   delay |    n |    mean/ev |       t | mean(all avail)
+  +   0m |  151 |     -66.95 |   -0.36 |          -60.97 (n=154)
+  +   5m |  151 |     -38.58 |   -0.20 |          -38.07 (n=153)
+  +  15m |  151 |    -113.94 |   -0.59 |         -112.14 (n=152)
+  +  30m |  151 |    -170.86 |   -0.91 |         -170.86 (n=151)
+  band: +30m must lose >= 40% of mean net. base=$-66.95, +30=$-170.86, loss_frac=nan
+  NOTE: base mean net is NOT positive -> there is no positive flush-edge for a delay to erode; the decay band is VACUOUS and the mechanism is not defended here.
+  curve_decays_per_band = False
+
+---- CONCENTRATION (CLASSIFICATION ONLY — never a kill-gate) ----
+  top-1 |event| share of sum|net| = 2.7% ; top-5 share = 12.2%
+  carried classification note: the incumbent fails this bar at 236.8% (F9)
+
+GATE TABLE (printed by program)
+GATE                      | SPEC                                        | MDE / OBSERVED                              | PASS-FAIL
+--------------------------------------------------------------------------------------------------------------------------------
+G0 seal/points            | max session <= 2026-05-31; POINTS basis     | maxTICK=2026-05-29 maxNQ=2026-05-31; POINTS | PASS
+G1a manifest/prov         | sha256 match both substrates                | TICK=True NQ=True                           | PASS
+G1b MDE-first barrier     | B1 mean-MDE AND B2 incr-MDE before returns  | B1-MDE $515; incr-MDE $738 (printed first)  | PASS
+B1 economics              | mean net > 0 AND event-clustered t >= 2.0   | mean=$-60.97, t=-0.33                       | FAIL
+B2(i) PRIMARY             | beats identical trigger, non-tercile takeout| incr=$-108.71 (cand -61 vs ctrl +48)        | FAIL
+B2(ii) random             | >p95 of >=10k count-matched random longs    | obs $-60.97 vs p95 $+432.42                 | FAIL
+B3 circular-shift         | obs > p95 state-series shift null (K_eff)   | obs $-60.97 vs p95 $+329.15, K_eff=154      | FAIL
+timing-teeth              | +30m loses >=40%; FLAT curve falsifies      | base $-67 -> +30 $-171; decays=False        | FAIL/NA
+concentration             | CLASSIFICATION ONLY (not a kill-gate)       | top1 3%; F9 note carried                    | INFO
+--------------------------------------------------------------------------------------------------------------------------------
+VERDICT (trial G00055 / MC-58): CLOSED-AS-GENERIC-MR
+  B2(i) control >= candidate (or increment ~= 0): the rebound-long collapses onto SWEEP01 + W118 generic post-cross MR. PERMANENT.
+survives_info_gate = False
+REGIME-LOCAL: 2023-01 -> 2026-05-31 internals population only; ERA leg NOT in this run.
+evidence-status: DISCOVERY_CONSUMED

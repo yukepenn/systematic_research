@@ -1,0 +1,41 @@
+MC-57 Diebold-Mariano summary (OOS QLIKE, FULL vs BASE)   trial G00054
+================================================================================
+test sessions            364   (2025-01-02..2026-05-29)
+loss function            QLIKE  L = r/f - log(r/f) - 1  (variance forecasts)
+mean QLIKE  BASE         3.24048996e-01
+mean QLIKE  FULL         3.38183992e-01
+relative improvement     -4.36199%   (positive => FULL better)
+d_bar = mean(L_base-L_full)   -1.41349962e-02
+Newey-West lag L         5
+HAC se(d_bar)            1.03846143e-02
+DM statistic             -1.361148
+two-sided p-value        0.173467
+MDE (barrier)            2.90933820e-02   |d_bar|/MDE = -0.4858
+circular-shift p (leg a) 0.967000  (2000 shifts, shared draw)
+identified (max VIF)     True  (max VIF 4.449 vs threshold 10.0)
+powered                  True
+PRIMARY VERDICT          FAIL
+survives_info_gate       False
+
+Per-ZB-term VIF and R^2-vs-NQ-base:
+   log_zb_sess_rv_da      VIF=   3.463  R2_vs_base=0.3071
+   log_zb_30m_rv_da       VIF=   2.412  R2_vs_base=0.2327
+   zb_corr60              VIF=   2.669  R2_vs_base=0.0378
+   zb_corr_sign           VIF=   2.599  R2_vs_base=0.0468
+   log_zb_exp_cnt         VIF=   4.449  R2_vs_base=0.3757
+
+FULL coefficients (log-log OLS, TRAIN):
+   intercept              -3.043125
+   log_rv_pre11           +0.825364
+   log_rv_d               +0.080432
+   log_rv_w               -0.017558
+   log_rv_m               -0.172953
+   m_nfp                  -0.435272
+   m_cpi                  -0.204951
+   m_fomc                 +1.482407
+   m_auction              +0.146974
+   log_zb_sess_rv_da      -0.446316
+   log_zb_30m_rv_da       +0.250224
+   zb_corr60              +0.018578
+   zb_corr_sign           -0.053076
+   log_zb_exp_cnt         +0.191207
