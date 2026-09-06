@@ -1,5 +1,16 @@
 # GENESIS II — RESUME STATE
 
+> ## ⚡ ACTIVE 2026-09-06: Formal Wave 5 running as workflow `wf_8b14040d-134`.
+> Six agents: MC-54 leg 2 (G00052) + MC-55 core (G00053) formal tests [specs committed
+> `361abd4`, ledger trials registered]; ZB card MC-57 + MC-41-rebound card MC-58 → skeptic;
+> BBO-extraction governance check. **On resume:** read the workflow journal (or
+> `runs/G2_F11_*`/`G2_F12_*/out/gate_table.txt`, `runs/G2_WAVE5_CARDS_20260906/`), then
+> **the coordinator records ledger results SERIALLY** (G00052, G00053) with valid tokens
+> PASS/FAIL/NULL/DEFECT/ABORTED, updates FAILURE_MEMORY + ACTIVE_ALPHA_QUEUE, commits. If the
+> workflow died mid-flight, re-invoke with `resumeFromRunId: wf_8b14040d-134` (cached agents
+> replay free). ⏰ Also: recreate the roll-crossover quote cron every session through 09-22
+> ([[roll-crossover-sampling-20260906]] in memory); first real sample due tonight ≥18:00 ET.
+
 > ## ⚠️ UPDATE 2026-08-28 ~23:00+: **SESSION RESUMED after the limit reset — the pause below is
 > ## HISTORICAL.** Current state: all 16 scout reports committed
 > (`runs/G2_WORLDSCAN_W1_20260828/partial_snapshot/`, 16/16 at `f25fbde`); **EXEC01 completed**
