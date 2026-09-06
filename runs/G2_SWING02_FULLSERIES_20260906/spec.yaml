@@ -1,0 +1,84 @@
+run_id: G2_SWING02_FULLSERIES_20260906
+campaign: GENESIS_II (swing-band lane, read 2)
+stage: "Stage-2/4 DIAGNOSTIC at full-series power. No strategy licensed by a PASS."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+why_this_design: |
+  SWING01 (G00044-46) returned UNDERPOWERED_STILL on all three sub-families and banked a design
+  law: weekly-sampled 21d bucket tables carry a shift-null sd of ~0.8-1.2% log and can only
+  detect edges too large to need detecting. The lane's own power arithmetic (t=2 at Sharpe ~0.45
+  on ~1,043 weeks) assumed FULL-SERIES statistics. SWING02 is that design: NON-OVERLAPPING
+  weekly returns, continuous demeaned signal exposure, full-series mean tested against the
+  dependence-preserving null.
+
+sequential_refinement_disclosure: |
+  SWING01's point estimates were SEEN before this spec was written (D1 rho +0.60 p 0.47; D2 rho
+  +0.10; D3 contrast +0.009 p 0.35; D3 sign flip pre/post-2010). The hypotheses and signal
+  definitions below are UNCHANGED from SWING01's preregistration — nothing was sign-picked or
+  reshaped on those estimates — but the reader must treat this as read 2 of the same surfaces:
+  the effective number of looks at these observables is now 2, and the family bar stays at
+  0.0167 (=0.05/3) per read. Any PASS here still requires a fresh-shape confirmation in its
+  Stage-5/6 rule spec before promotion.
+
+data:  # identical substrates to SWING01; dev end 2026-05-29 hard-asserted
+  ndx_daily: runs/G2_F4_NDX_DELEV02_20260829/certified/nasdaq100_daily.csv
+  vx_settlements: runs/GENESIS_FREEDATA_CBOE_20260828/certified/vx_settlements_daily.parquet
+  cot_tff: runs/GENESIS_FREEDATA_CBOE_20260828/certified/cot_tff_futures_only.parquet
+  reserves: "H1's 2022+ implied-vol window untouched: S1 reads no implied-vol row >= 2022-01-01.
+    COT market fixed to the series SWING01 recorded: 'NASDAQ-100 Consolidated - CHICAGO
+    MERCANTILE EXCHANGE'."
+
+population: |
+  Non-overlapping Friday-to-Friday NDX log returns r_{t+1} (the week AFTER the signal is
+  knowable). Signals sampled as in SWING01: S1/S3 at Friday close; S2 at the release-knowability
+  point with the forward week starting the NEXT Monday close (same alignment audit).
+
+signal_transform: |
+  For each sub-family: causal expanding-window z-score of the raw signal (min 52 obs of history
+  before the first scored week), clipped to [-2, +2], used directly as the exposure weight w_t.
+  w is demeaned by construction; the program ASSERTS |mean(w)| < 0.10 and prints it. Overlay
+  weekly return = w_t * r_{t+1}. Because E[w] ~= 0, the overlay's mean is timing information and
+  long drift cannot leak in; the always-long comparison is therefore not the gate (G4 of SWING01)
+  but is still printed as context.
+
+sub_families:  # raw signals IDENTICAL to SWING01
+  S1_VXSLOPE:  { raw: "front/second VX settle ratio - 1", window: "2007-04-01..2021-12-31",
+                 eras: ["2007-04..2009","2010..2015","2016..2021"] }
+  S2_COTFLOW:  { raw: "4-report change of Lev_Money (L-S)/OI, Consolidated series",
+                 window: "2010-08..2026-05-29", eras: ["2010-08..2015","2016..2020","2021..2026-05"] }
+  S3_PATHCONT: { raw: "sign(trailing 21d NDX return) * efficiency ratio (same 21d)",
+                 window: "1986..2026-05-29", eras: ["1986..1999","2000..2009","2010..2017","2018..2026-05"] }
+  # S2 eras re-cut vs SWING01 because its effective window starts 2010-08 (recorded fact).
+
+null_model: |
+  Circular shift of the WEEKLY SIGNAL series against the weekly return series: 401 shifts,
+  offsets drawn once per sub-family (fixed seed), shared across any decomposition prints.
+  Two-sided p of the overlay mean. Newey-West t (lag 4) printed as secondary.
+
+gates:
+  G0_seal: "max input date <= 2026-05-29; S1 has zero implied-vol rows >= 2022-01-01. Hard assert."
+  G1_semantic: "one printed sentence per sub-family: what population, what event the headline
+    number is over (mean weekly overlay log return of a demeaned +/-2-clipped z exposure)."
+  G2_primary: "overlay mean weekly return vs shift null, two-sided p <= 0.0167."
+  G3_era_stability: "overlay mean sign agrees in >= 2/3 eras (S1,S2) / >= 3/4 (S3); PASS on G2
+    with FAIL on G3 = REGIME_LOCAL classification, does not advance."
+  G4_exposure_audit: "printed: mean(w), sd(w), mean weekly turnover |w_t - w_{t-1}|, and the
+    always-long weekly mean for context. Assert |mean(w)| < 0.10."
+  G5_power: "MDE at 80% power printed for every FAIL; UNDERPOWERED_STILL verbatim if
+    MDE > 3x |observed|. With ~780/820/2,100 weeks the design detects annualized Sharpe
+    ~0.45/0.45/0.28 — the lane's own bar; if THIS design is still underpowered the lane's
+    premise was wrong and that verdict must be printed."
+  G6_knowability: "same audit as SWING01 (10 random points per sub-family)."
+
+decision_rule: |
+  PASS (G2+G3) -> Stage-5/6 minimal-rule spec (new run; costs, exposure-matched controls,
+  concentration/timing-teeth CLASSIFICATION rungs, fresh-shape confirmation requirement per the
+  disclosure above). FAIL with adequate power -> the observable is CLOSED at the swing band and
+  FAILURE_MEMORY gains the row SWING01 could not write. UNDERPOWERED_STILL again -> the lane's
+  premise is recorded FALSIFIED-AS-ARGUED and the lane is parked pending genuinely new
+  observables. Every number DISCOVERY_CONSUMED.
+
+ledger: "three trials registered before outcomes; results recorded serially by the coordinator."
+
+outputs: [out/gate_table.txt, out/weekly_overlay.csv, out/era_tables.csv, REPORT.md]
