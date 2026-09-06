@@ -1,6 +1,21 @@
 # GENESIS II — RESUME STATE
 
-> ## ⚡ ACTIVE 2026-09-06: CROSS-INSTRUMENT extension XINST01 running as workflow `wf_d97689db-200`.
+> ## ⚡ ACTIVE 2026-09-06: CROSS-ASSET FUTURES campaign — Wave 0 DONE, Wave 1 running.
+> Owner reframe: transfer the NQ RESEARCH PROCESS (not P1) to other futures; prize = multi-engine
+> low-corr PORTFOLIO. Home `research/cross_asset/` (CAMPAIGN_STATE, FUTURES_ALPHA_MAP,
+> MECHANISM_TRANSFER_MATRIX, NQ_RESEARCH_PLAYBOOK, DATA_INVENTORY). HEAD `2287c5d`+.
+> **THREE things running concurrently:**
+> (1) XINST01 Lane-A transfer benchmark `wf_d97689db-200` (ES/RTY/YM/ZB, trials G00056-59) —
+>     record ledger serially on completion; verify NQ-reproduction gate first.
+> (2) CL extraction (agent) — recompile-path in a session break (live verified flat/closed);
+>     on completion verify P1 intact + freeze a CL discovery/holdout boundary before any signal.
+> (3) Wave-1 autopsies `wf_2e68fa9b-5b0` (ES/RTY/YM/ZB descriptive science + synthesis) — on
+>     completion fill MECHANISM_TRANSFER_MATRIX descriptive cells + preregister the ranked Wave-2
+>     NATIVE hypotheses (weight orthogonality; ZB is the a-priori prize).
+> Data reality CONFIRMED: intraday-ready = NQ/ES/RTY/YM/ZB(+MNQ excl); CL needs extraction (now);
+> GC/6E/SI/NG = DAILY-ONLY. ⏰ roll-crossover cron still due through 09-22.
+
+> ## (prior) CROSS-INSTRUMENT extension XINST01 running as workflow `wf_d97689db-200`.
 > **Owner directive (2026-09-06): don't buy data; instead apply the NQ/P1 approach to other big
 > futures (ES/gold/FX/commodities) and build the same weekly-edge object.** XINST01 ports the
 > P1/PCT mechanism to **ES/RTY/YM/ZB** (trials G00056-59) with a no-mining transfer rule + a hard
