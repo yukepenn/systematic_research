@@ -85,7 +85,8 @@ there. The **ESNQ_V1 blind ES∩NQ 15-session tick pool remains UNSPENT** (do no
 | **XINST01** (Lane A benchmark) | P1 transfer → ES/RTY/YM/ZB, no-mining, NQ-reproduction gate, orthogonality | ✅ DONE (G00056-59): **P1 does NOT transfer** — 0/4 info-supported; port reproduced NQ 0.0000%; ES/YM underpowered whisper (high-corr), RTY cost-fragile, ZB inverts (but ρ −0.05 orthogonal → native ZB engine is the target). **Thesis confirmed: value is native, not transfer.** |
 | **Wave 0** (infra) | NQ Research Playbook ✅ · data/roll/cost inventory ✅ · Tier-1 rank ✅ | DONE (`NQ_RESEARCH_PLAYBOOK.md`, `DATA_INVENTORY.md`) |
 | **Wave 1** (autopsies, all 7 markets) | ES/RTY/YM/ZB (intraday) + CL (intraday) + GC/6E (daily) | ✅ DONE. ⭐ **NQ is the momentum OUTLIER — everything else MEAN-REVERTS.** ρ-to-NQ: ES 0.94, RTY 0.75, YM 0.74, **ZB 0.06, GC 0.07, CL 0.05** (orthogonal prizes), 6E 0.15 regime-varying. Native engines must be MR / vol-regime, not trend. |
-| **Wave 2** (native money-engines) | orthogonality-weighted: GC-MR (best shot), ES-NQ residual MR, ZB native MR+macro-vol, then CL/6E/GC-vol | 🟡 LAUNCHING |
+| **Wave 2** (native money-engines) | GC-MR, ES-NQ residual, ZB-native | ✅ DONE (G00060-62): **0/3 cleared.** GC=DRIFT-EXPLAINED, ES-resid=FAIL (β-hedge kills signal), ZB=COST-FRAGILE. ⭐ LEAD surfaced: **raw-ES MR = Sharpe 0.78** (the residual control). Banked law: scheduled-macro = powered vol, zero direction (3 instruments). |
+| **Wave 2b** | 🎯 raw-ES MR judged on PnL-ρ-to-P1 (the lead); CL native (EIA/shock-MR); GC vol-regime | 🟡 LAUNCHING |
 | **CL extraction + freeze** | ✅ DONE — 1,182 sess, no recompile (exporter pre-installed, P1 verified intact), holdout frozen | DONE (`SM1M_CL_SUBSTRATE`, `CL_HOLDOUT_FREEZE_20260906`) |
 | Wave 1 (CL autopsy) | descriptive science on CL DISCOVERY (≤2025-06-30) — add to the ES/RTY/YM/ZB batch | 🟡 queued (next) |
 | Wave 1b | daily autopsies GC/6E (+SI/NG…) after daily extraction | pending |

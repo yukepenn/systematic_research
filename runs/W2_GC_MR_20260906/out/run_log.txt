@@ -1,0 +1,97 @@
+====================================================================================================
+W2_GC_MR_20260906  -  GC daily buy-the-washout MEAN-REVERSION  (trial G00060)
+  Stage-5 falsifier. In-sample + robustness, NO forward-freeze. No promotion / no deploy.
+====================================================================================================
+
+--- G0  SEAL / BASIS ---------------------------------------------------------------
+  GC daily: raw 4347 rows; dropped >=seal 0; dropped gap-spanning 18; clean 4329 rows 2009-03-31 -> 2026-07-31
+  SEAL max date 2026-07-31 < 2026-08-01 ? True   (asserted at load)
+  RETURNS via ret_pct (ratio/returns-stitched). Dollar P&L = ret_points*PV (= ret_pct * PV*close_prev, era-correct). Signal sigma on ret_pct. Basis NOT mixed.
+  evaluation window (post-63d sigma warmup): 2009-06-29 -> 2026-07-31  (4266 days)
+  unconditional drift mu = +3.014 bps/day  (~+7.60%/yr)  -- the control earns THIS per in-market day; the edge is the SPREAD over it.
+
+--- G1  MDE (80% power, two-sided a=0.05) printed BEFORE the observed spread -----------
+  anchor cell ('any_down', 1): daily spread sd 73.488 bps over 4266 days
+  MDE (mean daily spread detectable at 80% power) = +3.1522 bps/day  <== BARRIER
+
+--- G3  3x3 NEIGHBORHOOD (threshold x hold) : after-cost drift-control SPREAD ---------
+  base cost $14.36/RT (1-tick spread + $4.36 comm). SPREAD = engine - drift-control.
+  cell                   f%   nRT  gross bps/d   net bps/d  net ann%   net$/wk  sharpe
+  any_down/H1         47.1  1115        1.817       1.574      3.97     213.9    0.46
+  any_down/H2         73.3   577        1.484       1.359      3.43     169.4    0.28
+  any_down/H3         86.8   275        0.529       0.470      1.19      84.0    0.13
+  m1sigma/H1          12.2   461        0.426       0.323      0.81      42.0    0.18
+  m1sigma/H2          23.0   414        0.872       0.780      1.97      90.4    0.29
+  m1sigma/H3          32.7   360        1.028       0.948      2.39     129.0    0.33
+  m2sigma/H1           3.4   136       -0.309      -0.338     -0.85     -25.0   -0.19
+  m2sigma/H2           6.6   129       -0.210      -0.238     -0.60      -0.7   -0.00
+  m2sigma/H3           9.6   121       -0.238      -0.264     -0.66      19.9    0.07
+  positive-net cells: 6/9 ; H=1 row all positive? False (any_down +1.57, -1s +0.32, -2s -0.34 bps/d)
+  PLATEAU (contiguous positive region, not a single magic cell)? False
+
+--- G2  DRIFT-CONTROL SPREAD  (the gate): after-cost CI excl 0 + circular-shift null ---
+  anchor cell ('any_down', 1):  after-cost mean daily spread +1.5743 bps/day (+3.97%/yr), MDE +3.1522 bps/day (BELOW MDE)
+  block-bootstrap 95% CI (L=10, B=5000): [-0.5436, +3.5509] bps/day  -> excludes 0 ? False
+  circular-shift null (gross spread, B=5000, dependence-preserving): obs +1.8169 bps/d, two-sided p = 0.0260  -> clears (<0.05) ? True
+  matched-count random-entry control (B=5000): two-sided p = 0.0096
+  ==> G2 (CI excludes 0 AND clears circular-shift null): FAIL
+
+--- G4  eval_battery: LEAD WITH WEEKLY-VOL ; fixed-DD only beside its placebo ----------
+  872 shared ISO weeks. engine (after-cost) vs exposure-matched drift-control:
+     engine native           $    333.19/wk
+     engine weekly_vol       $      8.06/wk  <== PRIMARY (weekly-vol)
+     engine realized_vol     $      8.06/wk
+     engine gross_exposure   $     20.22/wk
+     control native income                       $    119.32/wk
+     WEEKLY-VOL edge (engine@ctrl-vol - ctrl)     $   -111.26/wk  -> >0 ? False
+     weekly SPREAD series mean                    $    213.87/wk (sd $3,359.05)
+  fixed-DD spread income $238.18/wk ; side-blind 10%-thin median $197.54/wk (lift -40.63); placebo pctile 74.6
+  ==> G4 (edge positive ON WEEKLY-VOL, not fixed-DD-only): FAIL
+  ENGINE book (after cost, 1 GC contract): $333.19/wk  Sharpe 0.72  maxDD $52,024  ret/DD 5.58  worst-wk $-37,494  worst-month $-17,006  pos-wk 59.5%
+
+--- G5  WALK-FORWARD  2009-2016 / 2017-2026-07  (spread must live in BOTH eras) --------
+  2009-2016      n= 1876  drift +0.87 bps  after-cost spread +1.4160 bps/day (+3.57%/yr)  t +0.76
+  2017-2026-07   n= 2390  drift +4.70 bps  after-cost spread +1.7340 bps/day (+4.37%/yr)  t +1.26
+  ==> G5 (positive after-cost spread in BOTH eras): PASS
+
+--- G6  COST band {0.5, 1, 2} ticks ($10/tick) + $4.36 comm : spread must stay > 0 -----
+   0.5 tick ($  9.36/RT): spread +1.6588 bps/day  95%CI [-0.4594,+3.6352]  CI>0 ? False
+   1.0 tick ($ 14.36/RT): spread +1.5743 bps/day  95%CI [-0.5436,+3.5509]  CI>0 ? False
+   2.0 tick ($ 24.36/RT): spread +1.4054 bps/day  95%CI [-0.7112,+3.3784]  CI>0 ? False
+  cost erodes the spread by only 0.253 bps/day across 0.5->2 tick (edge ~10x over cost, as the autopsy predicted -> cost is NOT the binding constraint)
+  ==> G6 point-estimate spread > 0 through 2.0 tick ; realistic (1tk) > 0 ? True -> PASS (cost not binding)
+      NOTE: the block-bootstrap CI includes 0 at EVERY tick (CI>0 only through 0.0 tick) -- that is a G2 POWER failure, not a cost failure.
+
+--- G7  ORTHOGONALITY: daily-PnL correlation of the GC-MR engine vs P1 -----------------
+  P1 reproduced: 1056 days, spread $14.436/ctrRT (=$14.44 doc).
+  shared dates (GC-MR engine vs P1): 1009  (2022-07-04 -> 2026-07-31)
+  daily-PnL rho(GC-MR, P1) = +0.0427 Pearson / +0.0703 Spearman ; both-traded-day share 28.6%
+  wrote out/daily_pnl.csv  (4266 rows; engine after-cost $ + spread + control)
+
+==================================================================================================================================
+W2_GC_MR_20260906  GATE / SPEC / OBSERVED / PASS-FAIL   (program-printed)  trial G00060
+  GC daily buy-the-washout MR. anchor cell = (any_down, H=1) [autopsy's measured signal].
+==================================================================================================================================
+gate  spec                                                                        observed verdict
+G0    max session < 2026-08-01 ; ret=ratio, lvl=pts                2026-07-31 seal_ok=True    PASS
+G1    MDE(80%,a=.05) printed BEFORE observed spread       MDE +3.1522 vs obs +1.5743 bps/d    FAIL
+G2    drift-ctrl SPREAD: CI excl 0 AND circ-shift null           CI[-0.544,+3.551] p=0.026    FAIL
+G3    3x3 neighborhood PLATEAU (not a magic cell)               6/9 pos, H1-row all+ False    FAIL
+G4    edge on WEEKLY-VOL (not fixed-DD-only)                  wv-edge $-111/wk spread $214    FAIL
+G5    positive after-cost spread in BOTH eras                      '09-16 +3.6% '17+ +4.4%    PASS
+G6    cost-robust: point spread>0 across {.5,1,2}tk       >0 through 2.0tk (erode 0.25bps)    PASS
+G7    rho-to-P1 daily PnL printed                                  rho +0.0427 (1009 days)    PASS
+----------------------------------------------------------------------------------------------------------------------------------
+DECISION (G2+G3+G4+G6): NOT SUPPORTED
+SURVIVES (G2 CI excl 0 AND weekly-vol placebo AND cost-robust @ realistic tick): False
+VERDICT: DRIFT-EXPLAINED
+  The primary KILL TEST (G2 drift-matched control) is NOT passed: the after-cost
+  drift-control spread's 95% block-bootstrap CI INCLUDES 0 at every tick, the
+  observed spread (+1.57 bps/d) is BELOW the +3.15 bps/d MDE,
+  there is NO 3x3 plateau, and on the WEEKLY-VOL basis the engine UNDERPERFORMS
+  the exposure-matched always-long. Decisively: the DEEPER the washout the WORSE
+  the reversion (-2sigma/H1 -0.34 vs any-down/H1 +1.57 bps/d) -- the opposite of the liquidation-overshoot
+  hypothesis. The apparent money is the secular +7.6%/yr drift harvested by being
+  long ~47% of days. Cost is NOT the binding constraint. DISCOVERY_CONSUMED; no
+  promotion, no deploy, no sizing change. FAILURE_MEMORY row.
+==================================================================================================================================

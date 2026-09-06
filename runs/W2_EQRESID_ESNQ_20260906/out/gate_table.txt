@@ -1,0 +1,24 @@
+============================================================================================================
+W2_EQRESID_ESNQ_20260906  trial G00061  family CROSS_ASSET_NATIVE
+ES residual vs NQ (point-hedged) mean-reversion -- PROGRAM-PRINTED GATE TABLE
+POINTS basis | beta TRAILING chronological (never full-sample) | judged to the P1 bar | NO deploy
+============================================================================================================
+window: 2022-07-01 -> 2026-07-31  (1053 aligned RTH daily sessions)
+primary cell: W=60 z=1.5 cost=1tk/leg  (full-sample beta 0.1986 shown for reference, NOT used)
+
+gate spec                                                                          observed verdict
+G0   points basis, beta trailing-not-full-sample, seal        POINTS; trailing; <2026-08-01    PASS
+G1   MDE printed before observed edge                                  MDE $200 vs obs $-56    PASS
+G2   residual half-life > 1 trading day (else KILL)         HL=55.946984124303974d b=+0.988    PASS
+G3   after-cost 2-leg net>0, CI/null, beats raw-ES ctrl             $-56/wk p0.743 bc=False    FAIL
+G4   edge on weekly-vol, not fixed-DD-only                                      wv $-165/wk    FAIL
+G5   z-threshold plateau, not a magic cell                               6/12 wv>0; 0/12 G3    FAIL
+G6   rho(residual daily PnL, P1 daily PnL) ~ 0                                   rho=-0.064    PASS
+
+RAW-ES MR control weekly $370.22/wk ; residual weekly-vol $-164.70/wk ; beats control = False
+walk-forward: 2022-07..2024 $-36.73/wk | 2025..2026-07 $-87.22/wk
+
+SEMANTIC: over 214 ISO weeks (pre-seal, in-sample, DISCOVERY_CONSUMED), the after-cost two-leg residual-MR net is $-56.49/wk. This is the mean weekly P&L of a beta-neutral ES-NQ spread MR rule, NOT a forward or live figure.
+survives(half-life>1d AND after-cost net>0 vs null AND beats raw-ES control) = False
+==> VERDICT: FAIL
+============================================================================================================

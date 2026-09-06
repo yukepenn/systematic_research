@@ -1,0 +1,114 @@
+============================================================================================================
+G0  SEAL + POINTS BASIS
+============================================================================================================
+  bars 1,086,151  sessions 925  dropped>=seal 0  (export pre-capped; 0 expected)
+  session range 2022-12-27 -> 2026-07-31
+  ASSERT max retained session < 2026-08-01 : 2026-07-31 < 2026-08-01  PASS
+  POINTS basis (DELEV01): $/pt = PV = $1,000 ; 1 tick = 1/32 pt = $31.25 ; 1 pt = 32 ticks
+  ASSERT all closes on the 1/32 grid : PASS  (max off-grid 0.00e+00)
+  RTH bars in window [2023-07-01,2026-08-01): 370,512  [0s]
+
+============================================================================================================
+P1/PCT reproduction (validated bench; reproduces the committed figures EXACTLY)
+============================================================================================================
+  P1/PCT weekly $1,393.573663  maxDD $22,930.665853  t 4.163612  (NQ 1,620,044 bars, seal_ok True)  [50s]
+
+============================================================================================================
+LEG A  intraday MEAN-REVERSION / range-fade  --  COST-FIRST
+============================================================================================================
+  anchor in ('VWAP', 'ORMID') ; H in (5, 15, 30) min ; band k in (1.0, 1.5, 2.0) x trailing sigma (rolling std of deviation, 60-bar/30-minp, causal)
+  fade: short if price>anchor, long if price<anchor ; exit at anchor-touch or H (time stop)
+  COST band ALL_IN = $4.36 comm + {0.5,1,2}tk spread = $19.98 / $35.61 / $66.86 per ctrRT
+  realistic-tick gate = 1 tick  (net>0 must clear $35.61 = 0.03561 pt = 1.140 ticks gross)
+
+  NEIGHBORHOOD (gross reversion per fade, POINTS basis; net = gross - ALL_IN):
+  anchor    H    k   ntr  grossTk   gross$      t    ciLo$  net@1tk  uncond$   circP
+  VWAP      5  1.0 49747    0.059     1.85   6.19     1.27   -33.76     1.69   1.000
+  VWAP      5  1.5 43421    0.064     2.00   6.38     1.40   -33.61     1.69   1.000
+  VWAP      5  2.0 37125    0.077     2.42   7.25     1.75   -33.19     1.69   0.985
+  VWAP     15  1.0 20719    0.117     3.67   4.99     2.24   -31.94     2.65   1.000
+  VWAP     15  1.5 18049    0.113     3.54   4.52     2.00   -32.07     2.65   0.997 *
+  VWAP     15  2.0 15541    0.128     3.99   4.77     2.38   -31.62     2.65   0.939
+  VWAP     30  1.0 12213    0.173     5.42   4.30     3.12   -30.19     3.14   0.972
+  VWAP     30  1.5 10444    0.173     5.41   3.91     2.53   -30.20     3.14   0.873
+  VWAP     30  2.0  8956    0.188     5.87   3.89     2.94   -29.74     3.14   0.685
+  ORMID     5  1.0 52856    0.031     0.97   3.42     0.46   -34.64     2.27   1.000
+  ORMID     5  1.5 48684    0.032     1.00   3.48     0.44   -34.61     2.27   1.000
+  ORMID     5  2.0 44504    0.032     0.99   3.34     0.41   -34.62     2.27   1.000
+  ORMID    15  1.0 21068    0.061     1.90   2.64     0.51   -33.71     4.08   0.999
+  ORMID    15  1.5 19171    0.061     1.90   2.52     0.40   -33.71     4.08   1.000
+  ORMID    15  2.0 17530    0.058     1.80   2.30     0.30   -33.81     4.08   0.999
+  ORMID    30  1.0 11812    0.092     2.87   2.20     0.23   -32.74     4.33   0.999
+  ORMID    30  1.5 10542    0.095     2.98   2.14     0.27   -32.63     4.33   1.000
+  ORMID    30  2.0  9566    0.079     2.46   1.70    -0.39   -33.15     4.33   1.000
+
+  best cell by net@1tk: VWAP H30 k2.0  gross $5.87 (0.188tk)  net@1tk $-29.74  ciLo $2.94  circP 0.685
+  primary cell ('VWAP', 15, 1.5): gross $3.54  net@1tk $-32.07  circP 0.997
+  cells clearing 1-tick net>0 AND CI excl 0 AND circular-null-excluded (Bonferroni 0.0028): 0
+  ==> LEG A COST-FRAGILE: gross reversion does not clear a realistic (1-tick) ALL_IN with CI>0 vs the null. STOP leg A (per spec cost_first).
+
+  LEG A tradeable (PRIMARY cell) -- eval_battery LED BY WEEKLY-VOL, matched to P1:
+    trades 18049 ; shared ISO weeks 161 ; native $-3,594.76/wk
+    native           $   -3,594.76/wk
+    weekly_vol       $  -14,991.46/wk  <== PRIMARY (weekly-vol)
+    realized_vol     $  -14,991.46/wk
+    gross_exposure   $   -3,624.21/wk
+    spread band (weekly-vol $/wk): 0tk $-416  0.5tk $-8,078  1tk $-14,991  2tk $-26,195
+    cost robustness: negative even at 0-tick
+    G3 fixed-DD (order-stat, shown ONLY with placebo): self fixed-DD $-3,594.76/wk ; side-blind 10%-thin median $-3,594.76/wk (lift +0.00) ; LEAD weekly-vol $-14,991.46/wk -> edge on weekly-vol (not fixed-DD-only)? False
+
+============================================================================================================
+LEG B  scheduled-macro-release VOL / PATH  --  MDE FIRST
+============================================================================================================
+  calendar: c01_announcement_calendar.csv  (bls.gov / federalreserve.gov)
+  08:30 releases in window (NFP+CPI): n=72  composition {'CPI': 36, 'NFP': 36}  (~23/yr)
+  14:00 FOMC in window: n=25
+  DEVIATION: 10:00 ISM/JOLTS releases -- NO provenanced in-repo calendar exists; fabricating dates would violate the no-unverified-data discipline (cf. SMV2X NFP/PCE deferral). 10:00 releases are DEFERRED, not silently dropped.
+  sessions in window 797 ; release 96 ; non-release 701
+
+  --- 0830_NFPCPI  window [08:30, +30min)  release n=72  non-release n=622 ---
+    (i) RV EXCESS.  MDE (80% power, one-sided a=0.05, pooled sd 0.1356 pt): $42 = 0.0420 pt  <-- PRINTED BEFORE OBSERVED
+        OBSERVED RV: release 0.6605 pt ($660) vs non-release 0.2279 pt ($228)
+        excess 0.4326 pt ($433) ; ratio 2.90x ; event-shift null p 0.0002 ; > MDE? True ; POWERED? True
+    (ii) POST-RELEASE PATH (first move 5min, continuation leg 5->30min), net of 2-tick ($66.86):
+        CONTINUATION mean net $-85.96/trade  (gross $-19.10) ; event-shift null p 0.8814
+        REVERSION    mean net $-47.76/trade  (gross $19.10) ; event-shift null p 0.1188
+        first-move mean $-48.18 (|mean| small => no directional bias) ; TRADEABLE net of cost? False
+        ==> 0830_NFPCPI: POWERED VOL, ZERO DIRECTIONAL EDGE -- recorded as a FACT, not a PASS.
+
+  --- 1400_FOMC  window [14:00, +30min)  release n=24  non-release n=348 ---
+    (i) RV EXCESS.  MDE (80% power, one-sided a=0.05, pooled sd 0.0544 pt): $29 = 0.0286 pt  <-- PRINTED BEFORE OBSERVED
+        OBSERVED RV: release 0.3703 pt ($370) vs non-release 0.1474 pt ($147)
+        excess 0.2229 pt ($223) ; ratio 2.51x ; event-shift null p 0.0002 ; > MDE? True ; POWERED? True
+    (ii) POST-RELEASE PATH (first move 5min, continuation leg 5->30min), net of 2-tick ($66.86):
+        CONTINUATION mean net $-89.00/trade  (gross $-22.14) ; event-shift null p 0.8774
+        REVERSION    mean net $-44.72/trade  (gross $22.14) ; event-shift null p 0.1512
+        first-move mean $-3.91 (|mean| small => no directional bias) ; TRADEABLE net of cost? False
+        ==> 1400_FOMC: POWERED VOL, ZERO DIRECTIONAL EDGE -- recorded as a FACT, not a PASS.
+
+============================================================================================================
+G4  ORTHOGONALITY -- rho of ZB engine daily PnL vs P1 (the diversification prize)
+============================================================================================================
+  ZB engine daily series = LEG A primary cell ('VWAP', 15, 1.5) net@1tk (dense daily; used ONLY
+    for the diversification read -- the engine's profitability verdict is below).
+  shared days 797 ; daily rho(ZB,P1) +0.0151 ; weekly rho +0.0076
+  (ZB autopsy daily point-return rho(ZB,NQ) was +0.064 -- orthogonality confirmed)
+  wrote out/daily_pnl.csv (797 rows)
+
+============================================================================================================
+W2_ZB_NATIVE_20260906  --  GATE / SPEC / OBSERVED / PASS-FAIL  (program-printed)
+============================================================================================================
+gate   spec                                                                          observedverdict
+------------------------------------------------------------------------------------------------------------
+G0     points basis + seal asserted                             grid&seal, maxsess 2026-07-31   PASS
+G1     MDE / cost-to-edge printed BEFORE observed          legA cost=$35.61; legB MDE printed   PASS
+G2A    legA gross clears 1tk ALL_IN, CI excl 0 vs null          0/18 cells; best net@1tk $-30   FAIL
+G2B    legB RV powered(MDE) AND tradeable path net cost    powered=True; tradeable_path=False   FACT
+G3     any edge on weekly-vol (not fixed-DD-only)                 legA weekly-vol $-14,991/wk   FAIL
+G4     rho-to-P1 daily PnL printed                           daily rho +0.0151 (797 shared d)   PASS
+------------------------------------------------------------------------------------------------------------
+SURVIVES (legA cost-robust CI>0  OR  legB tradeable net of cost) : False
+VERDICT : COST-FRAGILE
+
+NOTE: FACT = leg B powered-vol / zero-directional-edge is recorded as a FACT, not a PASS
+      (spec G2B). All figures in-sample, DISCOVERY_CONSUMED, POINTS/32nds basis. No deploy.

@@ -113,6 +113,15 @@ invalid; see GENESIS_ENGINEERING_DOCTRINE substrate trap.**
 |---|---|---|
 | **P1/PCT mechanism TRANSFERRED to ES/RTY/YM/ZB** (no-mining: ATR-normalized signal identical, box + ratchet clamps scaled by the instrument's vol ratio, per-instrument cost) | **P1 IS NQ-SPECIFIC — 0 of 4 information-supported.** Port reproduced NQ to 0.0000% (ratchet bit-identical), so trustworthy. ES/YM = CLOSED-BY-POWER (underpowered +ve whisper, ρ-to-P1 +0.65/+0.24 → generalization not diversification); RTY = COST-FRAGILE (+ve 0-tick only); **ZB = FAIL powered −ve (−$4,179/wk, t −10) — P1's trend-vol-ratchet INVERTS on rates.** ⭐ ρ(ZB,P1) = −0.05 = genuinely orthogonal, so the diversifier exists on ZB but needs a NATIVE rates mechanism (MR/curve/level), not this transfer. ⚠️ **Lane-A scope only — does NOT close native-engine discovery on any of these markets** | XINST01 (G00056-59) |
 
+## Closed at exact scope (2026-09-06, cross-asset Wave 2 native engines)
+
+| scope | verdict | run |
+|---|---|---|
+| **GC daily buy-the-washout MR** (2009-2026-07) | **DRIFT-EXPLAINED (FAIL)** — spread over the drift-matched always-long control CI [−0.54,+3.55] includes 0, below MDE; weekly-vol edge vs always-long is −$111/wk; deeper washouts revert LESS (refutes liquidation-overshoot). The apparent money is gold's secular drift, not reversion. Cost is not the issue. ⚠️ Does NOT close a GC vol-REGIME engine (R1, untested), nor the fact that gold's +0.45-Sharpe drift is ρ 0.04 to NQ | W2_GC_MR (G00060) |
+| **ES−NQ point-hedged residual MR** (2022-2026-07) | **FAIL** — the β-hedge REMOVES the signal (residual −$165/wk, gross −$53/wk, not cost-driven); ρ-to-P1 −0.06 confirms no beta-leak but there is no residual edge. 🔴 **LEAD, NOT a closure: the RAW-ES daily MR control measured +$370/wk, Sharpe 0.78** — a real edge that trades OPPOSITE to P1's momentum, so its PnL may diversify at price ρ 0.94. Its PnL-ρ-to-P1 is the Wave-2b priority | W2_EQRESID_ESNQ (G00061) |
+| **ZB native intraday MR (leg A) + 08:30 macro-vol (leg B)** | **COST-FRAGILE + VOL-ONLY-NO-DIRECTION** — leg A reversion real (t 4-6) but 0.06-0.19 tk vs 1.14-tk breakeven (~6× too small); leg B releases expand vol powerfully but the post-release path is untradeable net of cost | W2_ZB_NATIVE (G00062) |
+| ⭐ **CROSS-ASSET LAW banked: scheduled macro releases = powered realized-vol EXPANSION with ZERO tradeable directional/path edge.** Verified on THREE instruments/clocks: NQ-FOMC 14:00 (G2_F12, expands ×5.66), CL-EIA Wed-10:30 (W1 autopsy, coin-flip), ZB-08:30 NFP/CPI/FOMC (G00062, path untradeable). A macro-release "event" card on any futures instrument must clear this — the vol is real, the direction is not. | (multi-run) |
+
 ## Blocked-as-rescue (recorded rulings)
 
 MC-35 meta-labeling/sizing **on P1 with existing surfaces** = rescue of RR_W002A's closure ("no

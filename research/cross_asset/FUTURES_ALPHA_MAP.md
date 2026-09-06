@@ -10,7 +10,7 @@ correlation vs the live P1 object on shared dev-window dates; portfolio value fr
 | Market | Asset class | Best mechanism (verified) | Status | Standalone quality | NQ corr | Portfolio value |
 |---|---|---|---|---|---|---|
 | **NQ** | equity idx | P1/PCT (Solar vol-ratchet ⊕ B-MOM, weekly edge) | LIVE (P1-only, MNQ×3) · research DISCOVERY_CONSUMED | raw $1,394/wk, fixed-DD $1,230/wk, t 4.16, maxDD $22,931 | 1.00 | **ANCHOR** |
-| ES | equity idx | Lane-A P1 fails; **native = DAILY MEAN-REVERSION / gap-fade** (VR(10)=0.75, intraday martingale) | W2-EQ-RESID (point-hedged residual MR) queued | — (native untested) | **+0.94** (raw); **residual ~0 by construction** | via residual-MR only (raw direction adds ~0) |
+| ES | equity idx | 🔴 **LEAD: raw daily MR = Sharpe 0.78, +$370/wk** (surfaced as the W2 residual control; residual-hedge FAILED, killed the signal) | 🎯 **W2b-EQ-MR: raw ES-MR judged on PnL-ρ-to-P1** (opposite structure to P1 momentum → may diversify at price ρ0.94) | Sharpe 0.78 in-sample (needs full test) | price +0.94; **PnL-ρ-to-P1 UNMEASURED = the question** | 🎯 potentially high IF PnL-orthogonal to P1 |
 | RTY | equity idx | Lane-A P1 cost-fragile; native = MR (VR<1), drift lives overnight | native queued (extend after ES) | — | +0.75 | low unless residual |
 | YM | equity idx | Lane-A P1 fails; **native = value/growth residual MR** (price-weighted, MR) | W2 residual (extend after ES) | — | +0.74 | via residual only |
 | ZB | rates | Lane-A P1 INVERTS; **native = MR every horizon + sharp 08:30 macro-vol** | 🎯 W2-ZB-MACRO + W2-ZB-VOLSTATE queued | — (native untested) | **+0.06 (orthogonal — the prize)** | 🎯 **highest — orthogonal + native MR/vol structure** |

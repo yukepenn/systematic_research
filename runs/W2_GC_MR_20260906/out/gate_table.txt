@@ -1,0 +1,27 @@
+==================================================================================================================================
+W2_GC_MR_20260906  GATE / SPEC / OBSERVED / PASS-FAIL   (program-printed)  trial G00060
+  GC daily buy-the-washout MR. anchor cell = (any_down, H=1) [autopsy's measured signal].
+==================================================================================================================================
+gate  spec                                                                        observed verdict
+G0    max session < 2026-08-01 ; ret=ratio, lvl=pts                2026-07-31 seal_ok=True    PASS
+G1    MDE(80%,a=.05) printed BEFORE observed spread       MDE +3.1522 vs obs +1.5743 bps/d    FAIL
+G2    drift-ctrl SPREAD: CI excl 0 AND circ-shift null           CI[-0.544,+3.551] p=0.026    FAIL
+G3    3x3 neighborhood PLATEAU (not a magic cell)               6/9 pos, H1-row all+ False    FAIL
+G4    edge on WEEKLY-VOL (not fixed-DD-only)                  wv-edge $-111/wk spread $214    FAIL
+G5    positive after-cost spread in BOTH eras                      '09-16 +3.6% '17+ +4.4%    PASS
+G6    cost-robust: point spread>0 across {.5,1,2}tk       >0 through 2.0tk (erode 0.25bps)    PASS
+G7    rho-to-P1 daily PnL printed                                  rho +0.0427 (1009 days)    PASS
+----------------------------------------------------------------------------------------------------------------------------------
+DECISION (G2+G3+G4+G6): NOT SUPPORTED
+SURVIVES (G2 CI excl 0 AND weekly-vol placebo AND cost-robust @ realistic tick): False
+VERDICT: DRIFT-EXPLAINED
+  The primary KILL TEST (G2 drift-matched control) is NOT passed: the after-cost
+  drift-control spread's 95% block-bootstrap CI INCLUDES 0 at every tick, the
+  observed spread (+1.57 bps/d) is BELOW the +3.15 bps/d MDE,
+  there is NO 3x3 plateau, and on the WEEKLY-VOL basis the engine UNDERPERFORMS
+  the exposure-matched always-long. Decisively: the DEEPER the washout the WORSE
+  the reversion (-2sigma/H1 -0.34 vs any-down/H1 +1.57 bps/d) -- the opposite of the liquidation-overshoot
+  hypothesis. The apparent money is the secular +7.6%/yr drift harvested by being
+  long ~47% of days. Cost is NOT the binding constraint. DISCOVERY_CONSUMED; no
+  promotion, no deploy, no sizing change. FAILURE_MEMORY row.
+==================================================================================================================================

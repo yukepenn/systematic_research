@@ -1,0 +1,65 @@
+============================================================================================================
+W2_EQRESID_ESNQ_20260906  trial G00061  family CROSS_ASSET_NATIVE  (ES residual vs NQ)
+POINTS basis | beta from TRAILING chronological regression (NEVER full-sample) | judged to P1 bar
+============================================================================================================
+
+[G0] LOAD / SEAL / BASIS
+  [ES] loaded 1,620,385 bars, dropped>=seal 0; RTH daily sessions 1,181  2022-01-03 -> 2026-07-31  seal_ok=True
+  [NQ] loaded 1,620,044 bars, dropped>=seal 0; RTH daily sessions 1,181  2022-01-03 -> 2026-07-31  seal_ok=True
+  aligned RTH daily sessions in window: 1053  2022-07-01 -> 2026-07-31
+  basis=POINTS (both additively back-adjusted, DELEV01). PV_ES=50.0 PV_NQ=20.0 tick=0.25 -> $/tick ES $12.5 NQ $5.0
+  raw daily corr(ES_ret,NQ_ret)=+0.9354  (the 0.94-ish common factor the residual removes)
+  [BASIS CHECK] full-sample beta would be 0.1986 -- NOT USED; beta is trailing only.
+  [P1] NQ substrate 1,620,044 bars / 1,187 sess 2022-01-03 -> 2026-07-31  seal_ok=True
+  [P1] reproduced P1/PCT: 2,401 trades, spread $14.436/ctrRT, 1,056 P&L days, weekly $1,393.57
+
+[G1] MINIMUM DETECTABLE EFFECT (printed BEFORE the observed edge) -- primary cell W=60 z=1.5 cost=1tk/leg
+  weekly sd $1,178.57 over 214 weeks, 80% power, one-sided a=0.05  ->  MDE = $200.32/wk
+  ... OBSERVED after-cost native weekly net = $-56.49/wk  (BELOW MDE)
+
+[G2] RESIDUAL MEAN-REVERSION HALF-LIFE (estimated FIRST; KILL if <= 1 trading day)
+  W= 60: level AR(1) b=+0.9877 -> half-life=55.946984124303974 trading-days  (>1d? True)   [resid-return AR(1)=-0.0172; corr(resid,NQ)=+0.0025 (hedge leak check)]
+  W=120: level AR(1) b=+0.9938 -> half-life=111.4178694298377 trading-days  (>1d? True)   [resid-return AR(1)=-0.0156; corr(resid,NQ)=-0.0336 (hedge leak check)]
+  PRIMARY (W=60): half-life = 55.946984124303974 trading-days  -> G2 PASS (tradeable timescale)
+
+[G3] AFTER-COST (TWO-LEG) RESIDUAL-MR NET vs NULL and vs RAW-ES CONTROL  (primary cell)
+  two-leg cost model: ES leg comm $4.36+1tk*$12.5 + NQ leg 2.5*|beta|*(comm $4.36+1tk*$5.0) per round turn (ALL_IN, comm MODELED/flagged)
+  GROSS (0-cost) weekly : $-53.39/wk   -> after-cost native weekly net : $-56.49/wk   (31 trades, avg hold 17.5d ; two-leg cost only $3.10/wk -> cost NOT the binding constraint)
+  block-bootstrap 95% CI (mean/wk): [$-189.02, $93.48]  block-boot p(mean>0)=0.8223
+  circular-shift null p (signal vs fwd residual ret): 0.7426  (one-sided; a=0.05, Bonferroni/12=0.0042)
+  RAW-ES MR control weekly net: $370.22/wk  (Sharpe 0.777) ; residual matched-to-ctrl-vol = $-164.70/wk -> beats control? False
+  G3 = (net>0 AND CI-excl-0-or-null-sig AND beats control) = False
+
+[G4] WEEKLY-VOL LEAD (eval_battery; fixed-DD only WITH random-thinning placebo)
+  LEAD basis WEEKLY-VOL (residual matched to raw-ES-control weekly vol): $-164.70/wk ; realized-vol $-164.70/wk ; native $-56.49/wk
+  fixed-DD income (WITH placebo) $-389.94/period at 39.4th pctile of side-blind thinning; self base $-389.94; median thin $-366.47 (lift +23.48)
+  G4 = edge present on WEEKLY-VOL (not fixed-DD-only)? False
+
+[G5] Z-THRESHOLD NEIGHBOURHOOD / PLATEAU (window x z x cost)  weekly-vol $/wk (native)
+     W     z  cost      wv$/wk   native$/wk   sharpe   p_circ  beatsCtl   G3
+    60   1.0     1        -266          -90   -0.514   0.8167     FalseFalse
+    60   1.0     2        -275          -93   -0.531   0.8167     FalseFalse
+    60   1.5     1        -165          -56   -0.346   0.7426     FalseFalse
+    60   1.5     2        -171          -59   -0.359   0.7426     FalseFalse
+    60   2.0     1        -204          -67   -0.524   0.8310     FalseFalse
+    60   2.0     2        -209          -68   -0.536   0.8310     FalseFalse
+   120   1.0     1         130           42    0.267   0.3409     FalseFalse
+   120   1.0     2         124           40    0.254   0.3409     FalseFalse
+   120   1.5     1          23            7    0.055   0.4786     FalseFalse
+   120   1.5     2          19            5    0.044   0.4786     FalseFalse
+   120   2.0     1         163           46    0.466   0.2080     FalseFalse
+   120   2.0     2         160           45    0.458   0.2080     FalseFalse
+  plateau: 6/12 cells weekly-vol>0 ; 0/12 cells G3-pass -> plateau(>=60% wv>0)? False
+
+[G6] ORTHOGONALITY: rho(residual-engine daily PnL, P1 daily PnL) ~ 0 by construction
+  primary daily rho to P1 = -0.0636  (|rho|<0.15 verifies no beta leak)
+  hedge check corr(residual-return, NQ-return) = +0.0025 (near 0 = point-hedge removed index beta)
+  G6 = |rho_to_P1| < 0.15 ? True
+
+[WALK-FORWARD] chronological split (primary cell)
+  2022-07..2024   : $-36.73/wk  t=-0.41  (132 wk)
+  2025..2026-07   : $-87.22/wk  t=-0.57  (83 wk)
+
+============================================================================================================
+VERDICT: FAIL   survives(half-life>1d AND after-cost net>0 vs null AND beats raw-ES control) = False
+============================================================================================================

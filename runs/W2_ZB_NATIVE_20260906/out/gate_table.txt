@@ -1,0 +1,17 @@
+============================================================================================================
+W2_ZB_NATIVE_20260906  --  GATE / SPEC / OBSERVED / PASS-FAIL  (program-printed)
+============================================================================================================
+gate   spec                                                                          observedverdict
+------------------------------------------------------------------------------------------------------------
+G0     points basis + seal asserted                             grid&seal, maxsess 2026-07-31   PASS
+G1     MDE / cost-to-edge printed BEFORE observed          legA cost=$35.61; legB MDE printed   PASS
+G2A    legA gross clears 1tk ALL_IN, CI excl 0 vs null          0/18 cells; best net@1tk $-30   FAIL
+G2B    legB RV powered(MDE) AND tradeable path net cost    powered=True; tradeable_path=False   FACT
+G3     any edge on weekly-vol (not fixed-DD-only)                 legA weekly-vol $-14,991/wk   FAIL
+G4     rho-to-P1 daily PnL printed                           daily rho +0.0151 (797 shared d)   PASS
+------------------------------------------------------------------------------------------------------------
+SURVIVES (legA cost-robust CI>0  OR  legB tradeable net of cost) : False
+VERDICT : COST-FRAGILE
+
+NOTE: FACT = leg B powered-vol / zero-directional-edge is recorded as a FACT, not a PASS
+      (spec G2B). All figures in-sample, DISCOVERY_CONSUMED, POINTS/32nds basis. No deploy.
