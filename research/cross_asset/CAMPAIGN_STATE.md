@@ -14,6 +14,14 @@ GENESIS II. State document — wave history lives in `runs/`, this file links.
   NQ can beat pushing NQ from 1.2→1.25. The prize is a **multi-engine low-correlation portfolio**.
 - Accepted prior result (not reopened without new evidence): free incremental alpha *inside the
   existing NQ information surface* is credibly exhausted (56 trials, 0 live candidates).
+- 🔴 **SUCCESS BAR (owner, 2026-09-06): a "good engine" is one proven the way P1/PCT was — strong
+  across MANY robustness bases on the history we have** (circular-shift/block nulls, the fixed-DD
+  random-thinning placebo, weekly-vol lead, parameter neighborhood, chronology-WITHIN-sample
+  walk-forward, cost stress, class-conditional-with-control) **plus portfolio orthogonality.**
+  P1 itself is DISCOVERY_CONSUMED, in-sample, and live — that is the standard. **We do NOT gate an
+  engine behind a frozen forward holdout or "wait and observe the future."** Use the full available
+  history aggressively; the only reserve is the repo-wide ≥2026-08-01 seal (a standing safety rule,
+  ~5 weeks, not a discovery holdout). A forward read, if it happens, is a bonus, never the gate.
 - 🔴 **Owner decision, already made: DO NOT buy data/subscriptions.** Use extracted/extractable
   repo data, existing infra, free public data (with §24 rules), current tools. No purchase blocks
   this campaign. Live-book safety rules (CLAUDE.md §1) unchanged; nothing here touches `2047681`.
@@ -46,7 +54,7 @@ GENESIS II. State document — wave history lives in `runs/`, this file links.
 | YM | equity idx | ✅ **1,177** sess 2022+ | ✅ | intraday-ready · DISCOVERY_CONSUMED |
 | ZB | rates | ✅ **923** sess 2022-12+ (back-adj) | ✅ | 🎯 intraday-ready, orthogonal class · DISCOVERY_CONSUMED |
 | MNQ | equity idx | ✅ 1,189 sess | ✅ | EXCLUDED (= NQ/10, not a diversifier) |
-| **CL** | energy | ✅ **EXTRACTED 2026-09-06** (1,182 sess 2022-01-03+, `runs/SM1M_CL_SUBSTRATE/`) — genuinely UNTOUCHED | ✅ | 🎯 intraday-ready · 🔒 **HOLDOUT FROZEN** (`runs/CL_HOLDOUT_FREEZE_20260906/`): discovery ≤2025-06-30, holdout 2025-07-01→2026-07-31. The ONLY intraday market with a clean OOS layer. |
+| **CL** | energy | ✅ **EXTRACTED 2026-09-06** (1,182 sess 2022-01-03→2026-07-31, `runs/SM1M_CL_SUBSTRATE/`) | ✅ | 🎯 intraday-ready · **full window is discovery** (holdout freeze RETIRED by owner — judge like P1, in-sample+robust; only ≥2026-08-01 stays sealed) |
 | ZN | rates | ⚠️ ~190 files only (2025-12+, thin) | ✅ | daily-only for now |
 | GC | metals | 🔴 **ABSENT** (only micro MGC, thin) | ✅ ~2009+ | **DAILY-ONLY** |
 | 6E | FX | 🔴 **ABSENT** (only 6J, thin) | ✅ | **DAILY-ONLY** |

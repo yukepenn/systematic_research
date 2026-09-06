@@ -1,4 +1,20 @@
-# CL HOLDOUT FREEZE — committed 2026-09-06, BEFORE any CL signal is read
+# CL HOLDOUT FREEZE — 🔴 RETIRED 2026-09-06 (owner directive, same day)
+
+> **RETIRED by owner decision:** the owner wants engines proven the way P1/PCT was — strong
+> multi-basis IN-SAMPLE + robustness on the history we have — **NOT** candidates gated behind a
+> frozen forward holdout to "observe the future". *"我要的是那种过去已经很不错了各种证明的那种，
+> 比如nq的p1ct... 我要的不是什么还要freeze观察未来那种。"*
+> **Effect:** the 2025-07-01→2026-07-31 CL slice below is NO LONGER frozen — CL research uses its
+> **full pre-seal history 2022-01-03 → 2026-07-31** for discovery + robustness, exactly like
+> ES/RTY/YM/ZB and like P1 itself (DISCOVERY_CONSUMED). The judge is robustness (circular-shift
+> nulls, neighborhood, chronology-WITHIN-sample walk-forward, the fixed-DD placebo, cost stress,
+> orthogonality), not a future read. **The only seal that remains is the repo-wide ≥2026-08-01
+> VIRGIN** (CLAUDE.md §5 — a standing safety rule tied to the live book, ~5 weeks, not a
+> discovery holdout). The text below is kept as the record of what was frozen and then released.
+
+---
+
+## (RETIRED) original freeze — committed 2026-09-06, before any CL signal was read
 
 **Purpose (owner directive §6 — "preserve unused data before consuming it; if pristine data
 exists, FREEZE IT before looking").** CL is the ONE genuinely untouched intraday futures market in
