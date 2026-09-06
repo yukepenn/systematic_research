@@ -3,6 +3,19 @@
 **Run class:** $0 DATA EXTRACTION + one ENGINEERING/COST first-look (no hypothesis, no
 signal, no P&L). Built 2026-09-06.
 
+> 🔴 **GOVERNANCE EXPOSURE FOUND & RECORDED 2026-09-06 (Wave-5 governance check).** This run's
+> date set (verified: 80 sessions 2026-04-30 → 2026-07-31) includes **`2026-05-05`, a member of
+> the 19-session `BBO_BLIND_POOL`** (falsifier-grade, frozen by NAME), plus a handful in the
+> larger nested pools (141 / 160-of-168). The extraction materialized minute-close **bid/ask
+> (SPREAD)** on those dates — **NOT returns/outcomes** — so per the `2025-08-13` metadata precedent
+> the pools' RETURNS-falsifier status is preserved, but a SPREAD/cost-conditioned falsifier on
+> `2026-05-05` is compromised. **This was not intentional** — a $0 spread reader cannot see a
+> name-only freeze. **Recorded, owner-flagged (`OWNER_QUEUE.md`), pool row annotated
+> (`ALPHA_EVIDENCE_CLASSIFICATION.md`). Standing rule: any BBO/tick extraction must FIRST
+> intersect its date list against the frozen-pool registers** (the Wave-5 governance check,
+> `runs/G2_WAVE5_CARDS_20260906/BBO_GOVERNANCE_MEMO.md`). The evidence is not deleted (deleting
+> research evidence is barred); it is quarantined-by-annotation.
+
 Materializes the DATA_VERDICT_20260831 item *"NQ minute Bid/Ask — 81 sessions — 0 extracted,
 never recorded anywhere"* — the only owned object that can check the modelled NQ spread
 ($12.50–$14.44/ctrRT family, `research/operational/COST_MODEL.md`) at 1-minute resolution.

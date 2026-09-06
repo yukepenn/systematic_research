@@ -28,6 +28,35 @@ MC-52/56 (blocked on the P-1 reserve) · MC-35 (blocked-as-rescue).
 3/3 eras, negative even gross (`G2_F10`, G00048); earnings leg stays demoted. ROLL02 killed
 exec-series roll gating and re-measured the pooled blackout at $93,173 (G00047).
 
+**Closed 2026-09-06 (Formal Wave 5):** MC-54 leg 2 **NOT-IDENTIFIED** — fixed-window
+deseasonalization is 99.5% collinear with raw first-hour vol (VIF 92.9); design dead, scope open
+(`G2_F11`, G00052). MC-55 **REFUTED, POWERED, INVERTED** — post-FOMC RV *expands* ×5.66, not
+crushes (`G2_F12`, G00053). MC-56 **not run** — its 2022+ VXN↔NQ join is the P-1 reserve.
+
+**NEW cards, survived the Wave-5 skeptic (`runs/G2_WAVE5_CARDS_20260906/`):**
+- **MC-57 — rates-complex intraday STATE for NQ (ZB), TRIAGE-HIGH.** ZB 1-min just extracted
+  (923 sess). Decision role locked as RISK-SPEC / REGIME-ROUTING (second-moment conditioner),
+  never lead-lag/direction (clears ESNQ-null + swing-park). 🔴 **Skeptic amendments are binding
+  before it can run:** (1) the HAR+**VXN** baseline consumes the P-1 reserve → **VXN gated OUT of
+  both arms**; (2) ZB parquet is additively back-adjusted → **points basis, never percent**
+  (DELEV01). Frozen primary: OOS QLIKE/Diebold-Mariano improvement of HAR(NQ-RV)+macro-flags
+  augmented with pre-declared ZB terms, ZB∩NQ 2022-12→2026-05-31 (n≈860), MDE-first.
+- **MC-58 — MC-41 rebound (long) side, TRIAGE-MED.** Modern leg only (2023→2026-05, n≈154; era
+  leg WOULD consume the one-shot pre-2022 $TICK read — gated out). 🔴 **Skeptic's binding caveat:
+  the breadth increment's only measured prior (+$143/ev) already fails its control at n=263, so
+  the modal result is an inconclusive middle UNDER MDE — "permanent closure of the rebound side"
+  is licensed ONLY in the control-wins/≈0 cell; an underpowered middle must NOT be labeled
+  closed** (print B1 mean-MDE and B2 increment-MDE before any return table).
+
+**Governance (Wave-5 BBO check, `BBO_GOVERNANCE_MEMO.md`):** the "~129 extractable NQ-BBO
+sessions" premise **dissolved under measurement** — 187 census entries are file dates (29 Sundays
+fold), 104 already extracted across 3 substrates, true unextracted = **57 sessions; only 2 free**
+(2026-06-19, 07-03, both burned-window early-closes, legacy-grade); **55 are frozen-pool members**
+(nested 19⊂141⊂160-of-168; ESNQ-15⊂all). Ruling: HOLD on the 55. 🔴 **Exposure found & recorded:
+the 2026-09-06 NQ-BBO extraction had materialized SPREAD content on `2026-05-05`, a 19-pool
+member** — annotated in `ALPHA_EVIDENCE_CLASSIFICATION.md`, owner-flagged; returns-falsifier
+status preserved (spread ≠ outcome), spread-conditioned falsifier compromised for that one date.
+
 **The SWING band lane — TWO READS DONE 2026-09-06, LANE PARKED: its premise is
 FALSIFIED-AS-ARGUED** (`G2_SWING01` G00044-46 bucket tables; `G2_SWING02` G00049-51 full-series
 weekly overlays — the design the lane's own arithmetic demanded). ⭐ **The measured fact that

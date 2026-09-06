@@ -1,0 +1,17 @@
+G1 SEMANTIC: population = TEST-era (2025-01-01..2026-05-29) NQ RTH sessions (N=349); event = whether DESEASONALIZED first-hour log RV adds forecast power for rest-of-day (10:30-16:00) log RV beyond prior-day log RV and RAW first-hour log RV (partial contribution in a nested HAC(5) OLS).
+G2 MDE-BEFORE-LOOKING: MDE(80% power, alpha=.05, 1 added regressor, N=349, RAW R2=0.5972) = incremental R2 0.00886 (adjusted units 0.00776)
+---------------- BARRIER: everything above printed before the observed incremental value ----------------
+
+GATE              | SPEC                                                   | OBSERVED                                                                   | PASS-FAIL
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+G0_seal_era       | min>=2022-06-01 & max<=2026-05-29, every computation   | min=2022-06-01 09:31:00 max=2026-05-29 16:00:00 test[2025-01-02..2026-05-29]| PASS
+G1_semantic       | population+event sentence printed                      | printed above                                                              | PASS
+G2_MDE_first      | MDE printed BEFORE observed incremental value          | MDE dAdjR2=0.00776 printed above barrier                                   | PASS
+G3_primary        | HAC p<=0.05 AND dAdjR2>0 beyond bootstrap CI lower bound| t=3.842 p=0.0001 dAdjR2=0.01855 CI[0.00285,0.04587]                        | PASS
+G4_power          | if G3 fails: UNDERPOWERED_STILL when MDE > 3x|obs|     | MDE=0.00776 vs 3x|obs|=0.05566 -> n/a (G3 passed)                          | PASS
+G5_collinearity   | print corr+VIF; VIF>10 => NOT-IDENTIFIED               | corr(raw,deseason)=0.9946 VIF=92.86 -> NOT-IDENTIFIED                      | NOT-IDENTIFIED
+
+VERDICT: NOT-IDENTIFIED
+HEADLINE: deseason_early HAC(5) t=3.842 (p=0.0001), OOS incremental adjR2=0.01855 (bootstrap 95% CI [0.00285, 0.04587]), beta=1.5476 CI [0.7083, 2.2867]
+N_test=349  sessions_total=1030  dropped_incomplete=39  dropped_zero_rv=0  train_sessions=668
+EVIDENCE STATUS: DISCOVERY_CONSUMED (all numbers).

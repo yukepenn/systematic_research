@@ -1,0 +1,98 @@
+====================================================================================================
+MC-55  post-FOMC RV-contraction test  |  run G2_F12_MC55_FOMCCRUSH_20260906  |  ledger trial G00053
+seed=20260906  shifts=401  dev_end=2026-05-29
+====================================================================================================
+
+-- PREREGISTERED ANCHOR RECORD (fixed before any RV computation; see src header) --
+  anchor 14:00 ET -> pre [12:00-13:30], post [14:05-15:30]  (2013-03-20 ..)
+  anchor 14:15 ET -> pre [12:15-13:45], post [14:20-15:45]  (2006 .. 2013-01-30 non-presser)
+  anchor 12:30 ET -> pre [10:30-12:00], post [12:35-14:00]  (eight 2011-2012 press-conference releases)
+  windows are rigid translates of the spec's 14:00-era windows; ratio = log(RV_post/RV_pre)
+
+-- G0: seal & calendar --
+  NQ substrate max timestamp: 2026-05-29 16:59:00  (assert <= 2026-05-29 23:59: PASS)
+  scheduled decisions on calendar 2006->2026-05: 162  (21 years; per-year counts: {2006: 8, 2007: 8, 2008: 8, 2009: 8, 2010: 8, 2011: 8, 2012: 8, 2013: 8, 2014: 8, 2015: 8, 2016: 8, 2017: 8, 2018: 8, 2019: 8, 2020: 7, 2021: 8, 2022: 8, 2023: 8, 2024: 8, 2025: 8, 2026: 3})
+  cross-check vs ~8/yr expectation: 162 decisions / 21 calendar years = 7.71/yr (2020 has 7: the 2020-03-17/18 meeting was CANCELLED; 2026 partial year)
+  EXCLUDED unscheduled/intermeeting actions (14), by public release date:
+    2007-08-10 (Fri): liquidity statement (unscheduled)
+    2007-08-17 (Fri): intermeeting discount-rate cut statement (call 08-16)
+    2008-01-22 (Tue): intermeeting -75bp cut, released ~08:20 ET (call 01-21)
+    2008-03-11 (Tue): TSLF statement, released ~08:30 ET (call 03-10)
+    2008-10-08 (Wed): coordinated intermeeting -50bp cut, released ~07:00 ET (call 10-07)
+    2010-05-09 (Sun): swap-line reopening statement (unscheduled)
+    2019-10-11 (Fri): bill-purchase statement (call 10-04)
+    2020-03-03 (Tue): intermeeting -50bp cut, released 10:00 ET
+    2020-03-15 (Sun): intermeeting -100bp cut, released 17:00 ET
+    2020-03-19 (Thu): notation vote: swap lines
+    2020-03-23 (Mon): unscheduled statement: open-ended QE, released ~08:00 ET
+    2020-03-31 (Tue): notation vote: FIMA repo facility
+    2020-08-27 (Thu): framework statement via notation vote (Jackson Hole)
+    2025-08-22 (Fri): notation vote (per fomccalendars.htm)
+  EXCLUDED scheduled decisions NOT on Tue/Wed (7) [Tue/Wed control+null design]:
+    2006-06-29 (Thursday, anchor 14:15)
+    2007-06-28 (Thursday, anchor 14:15)
+    2012-09-13 (Thursday, anchor 12:30)
+    2015-09-17 (Thursday, anchor 14:00)
+    2018-11-08 (Thursday, anchor 14:00)
+    2020-11-05 (Thursday, anchor 14:00)
+    2024-11-07 (Thursday, anchor 14:00)
+  EXCLUDED scheduled Tue/Wed decisions failing data-completeness (3):
+    2006-05-10 (Wednesday, anchor 14:15)
+    2010-03-16 (Tuesday, anchor 14:15)
+    2014-01-29 (Wednesday, anchor 14:00)
+  realized FOMC N = 152 (vs ~160 expected); eligible Tue/Wed session calendar M = 2073
+
+-- G1: semantic statement --
+  Population: the 152 scheduled FOMC decision sessions falling on Tue/Wed, 2006-01-31 .. 2026-04-29, vs the 1921 other eligible Tue/Wed RTH sessions 2006->2026-05-29, matched by weekday and era (2006-2012/2013-2019/2020-2026.05). Event: the difference in mean per-session log(RV in the 85-min post-release window / RV in the 90-min pre-release window), windows anchored at each era's actual release time; the p-value is the two-sided probability, under 401 whole-family circular shifts of the FOMC label along the eligible-session calendar, of a |difference| at least as large as observed.
+
+-- G2: MDE (printed BEFORE the observed statistic; null computed first, offset 0 never evaluated) --
+  null: one shared circular offset per shift across the whole 152-label family (dependence preserved),
+        401 offsets drawn once without replacement, seed 20260906; labels carry their anchors.
+  null sd = 0.0815 log-units
+  MDE at 80% power (two-sided alpha=0.05, normal approx) = 0.2282 log-units
+  pre-stated plausible effect = 0.30 log-units; 3x plausible = 0.90
+  N-BOUND declaration: NOT N-BOUND (MDE <= 3x plausible effect)
+
+-- G3: primary statistic --
+  mean ratio | FOMC            = +1.8522
+  matched control mean         = +0.1191
+  OBSERVED difference T        = +1.7330 log-units  (ratio of RVs: x5.658)
+  two-sided p vs label-shift null = 0.0025   (event: |T_shift| >= |T_obs| under the 401 shifts)
+  preregistered direction: contraction => T < 0; observed sign: POSITIVE (EXPANSION - opposite)
+  [descriptive cross-check, NOT the gate: one-sample t on the 152 matched diffs: t=+24.63, normal-approx two-sided p=5.73e-134]
+
+-- G4: era stability --
+  2006-2012   : N_FOMC= 51  N_ctrl= 653  mean_ratio_FOMC=+1.7297  matched_ctrl=+0.2366  diff=+1.4931  sign=pos
+  2013-2019   : N_FOMC= 53  N_ctrl= 661  mean_ratio_FOMC=+1.7118  matched_ctrl=+0.1409  diff=+1.5709  sign=pos
+  2020-2026.05: N_FOMC= 48  N_ctrl= 607  mean_ratio_FOMC=+2.1373  matched_ctrl=-0.0297  diff=+2.1670  sign=pos
+  eras agreeing with pooled sign (pos): 3/3
+
+-- G5: power language --
+  MDE80=0.2282 vs 3x|observed|=5.1991
+  FAIL is powered: MDE <= 3x|observed|
+
+-- G6: DESCRIPTIVE CONTEXT ONLY -- daily dVIX on FOMC vs control dates (joins VIX to DATES; not a gate,
+        cannot change the verdict) --
+  source: research/breadth_lab/BREADTH03_VRP/data/_VIX.parquet, truncated at load to <= 2026-05-29 (parquet row filter; post-seal rows never materialized); certification: as-found store
+  mean dVIX on FOMC decision days:   -0.418 pts (n=152)
+  mean dVIX on control Tue/Wed days: -0.068 pts (n=1921)
+    2006-2012   : FOMC -0.929 (n=51)  vs ctrl -0.020 (n=653)
+    2013-2019   : FOMC -0.264 (n=53)  vs ctrl -0.061 (n=661)
+    2020-2026.05: FOMC -0.045 (n=48)  vs ctrl -0.127 (n=607)
+  dVX (VX futures daily): NO certified local VX daily store exists in this repo -- leg omitted; descriptive only, so this omission cannot affect any gate.
+
+====================================================================================================
+GATE TABLE (program-printed)
+====================================================================================================
+GATE                | PASS-FAIL | SPEC | OBSERVED
+----------------------------------------------------------------------------------------------------
+G0_seal             | PASS      | max date <= 2026-05-29; print N + excluded lists | max_ts=2026-05-29 16:59:00; N=152; 14 intermeeting + 7 non-Tue/Wed + 3 data-incomplete excluded (listed above)
+G1_semantic         | PASS      | one printed sentence: population + event | printed above
+G2_MDE_first        | PASS      | MDE at 80% power printed before observed; N-BOUND declared if MDE > 3x plausible (0.90) | MDE80=0.2282; not N-BOUND
+G3_primary          | FAIL      | two-sided p <= 0.05 AND sign = contraction (negative) | T=+1.7330, p=0.0025, sign=POS
+G4_era_stability    | PASS      | sign agrees with pooled sign in >= 2 of 3 eras | 3/3 agree (pos, pos, pos)
+G5_power            | PASS      | print UNDERPOWERED_STILL verbatim on any FAIL with MDE > 3x|observed| | FAIL but MDE <= 3x|obs|
+G6_descriptive_only | PASS      | dVIX/dVX printed as DESCRIPTIVE CONTEXT ONLY; explicitly not a gate | dVIX FOMC -0.418 vs ctrl -0.068; dVX unavailable locally
+----------------------------------------------------------------------------------------------------
+VERDICT: FAIL -- significant in the OPPOSITE (expansion) direction
+Every number above: evidence status DISCOVERY_CONSUMED.

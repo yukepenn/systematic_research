@@ -1,0 +1,72 @@
+run_id: G2_F11_MC54LEG2_VOLFORECAST_20260906  seed=20260906
+N_test=349  TRAIN sessions=668 (profile frozen, no smoothing)
+
+=== RAW model: y ~ 1 + prior_day_logRV + raw_early  [HAC lag 5] ===
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.597
+Model:                            OLS   Adj. R-squared:                  0.595
+Method:                 Least Squares   F-statistic:                     129.8
+Date:                Sun, 06 Sep 2026   Prob (F-statistic):           8.58e-43
+Time:                        02:10:43   Log-Likelihood:                -315.40
+No. Observations:                 349   AIC:                             636.8
+Df Residuals:                     346   BIC:                             648.4
+Df Model:                           2                                         
+Covariance Type:                  HAC                                         
+===================================================================================
+                      coef    std err          z      P>|z|      [0.025      0.975]
+-----------------------------------------------------------------------------------
+const              -0.3350      0.673     -0.498      0.619      -1.654       0.984
+prior_day_logRV     0.2450      0.065      3.786      0.000       0.118       0.372
+raw_early           0.6914      0.053     13.075      0.000       0.588       0.795
+==============================================================================
+Omnibus:                       23.338   Durbin-Watson:                   1.869
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               33.045
+Skew:                           0.493   Prob(JB):                     6.67e-08
+Kurtosis:                       4.139   Cond. No.                         197.
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity and autocorrelation robust (HAC) using 5 lags and without small sample correction
+
+=== FULL model: RAW + deseason_early  [HAC lag 5] ===
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                      y   R-squared:                       0.617
+Model:                            OLS   Adj. R-squared:                  0.613
+Method:                 Least Squares   F-statistic:                     113.3
+Date:                Sun, 06 Sep 2026   Prob (F-statistic):           4.51e-51
+Time:                        02:10:43   Log-Likelihood:                -306.71
+No. Observations:                 349   AIC:                             621.4
+Df Residuals:                     345   BIC:                             636.8
+Df Model:                           3                                         
+Covariance Type:                  HAC                                         
+===================================================================================
+                      coef    std err          z      P>|z|      [0.025      0.975]
+-----------------------------------------------------------------------------------
+const             -23.2614      5.991     -3.882      0.000     -35.004     -11.518
+prior_day_logRV     0.2361      0.060      3.922      0.000       0.118       0.354
+raw_early          -0.8554      0.412     -2.077      0.038      -1.663      -0.048
+deseason_early      1.5476      0.403      3.842      0.000       0.758       2.337
+==============================================================================
+Omnibus:                       32.101   Durbin-Watson:                   1.917
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               45.169
+Skew:                           0.644   Prob(JB):                     1.56e-10
+Kurtosis:                       4.202   Cond. No.                     2.64e+03
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity and autocorrelation robust (HAC) using 5 lags and without small sample correction
+[2] The condition number is large, 2.64e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.
+
+R2_raw=0.597156 adjR2_raw=0.594827
+R2_full=0.616715 adjR2_full=0.613382
+incremental adjR2 = 0.018555
+MDE (80% power) incremental R2 = 0.008861; adjusted units = 0.007763
+corr(raw_early, deseason_early) = 0.994593
+VIF(deseason_early | 1, prior_day_logRV, raw_early) = 92.8630
+bootstrap (stationary, mean block 10, B=2000, seed 20260906):
+  dAdjR2 95% CI = [0.002852, 0.045868]
+  beta_deseason 95% CI = [0.708332, 2.286670]
+VERDICT: NOT-IDENTIFIED

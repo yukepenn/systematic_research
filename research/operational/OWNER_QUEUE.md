@@ -143,6 +143,29 @@ effect.
 
 ---
 
+## OQ-8 · Blind-pool CONTENT exposure to disclose — `2026-05-05` (BBO_BLIND_POOL)
+**Opened** 2026-09-06 · **OPEN — precautionary disclosure, no action forced** · Severity: MED (governance, not live money).
+
+**What happened.** The 2026-09-06 `$0` NQ minute-BBO extraction (`runs/NQ1M_BIDASK_EXTRACT_20260906/`)
+materialized minute-close **bid/ask (SPREAD)** on **`2026-05-05`, a member of the 19-session
+`BBO_BLIND_POOL`** (falsifier-grade, frozen by NAME), plus several dates in the larger nested pools
+(141 / 160-of-168). A same-session governance check found and verified it (`2026-05-05 ∈` the
+19-pool manifest, confirmed by set intersection).
+
+**Assessment.** SPREAD was exposed, **not the RETURN/outcome** the pool's falsifier reads — so by
+the `2025-08-13` metadata precedent the **returns-falsifier status is preserved**; only a future
+*spread/cost-conditioned* falsifier on `2026-05-05` is compromised. It was not intentional: a
+spread reader cannot see a name-only freeze. **Recorded, not hidden**; evidence not deleted
+(deleting research evidence is barred) — quarantined by annotation in
+`ALPHA_EVIDENCE_CLASSIFICATION.md` and the run manifest.
+
+**What the owner may want to decide.** Whether the `2026-05-05` exposure materially affects any
+planned use of `BBO_BLIND_POOL`, and whether to re-draw that one session out of the pool. **Standing
+rule adopted meanwhile:** any BBO/tick extraction must first intersect its date list against the
+frozen-pool registers (the Wave-5 check, `runs/G2_WAVE5_CARDS_20260906/BBO_GOVERNANCE_MEMO.md`).
+
+---
+
 ### Closed in the 2026-08-27 reset (recorded once, then dropped from this queue)
 
 - **OQ-3 · "press F5 to compile NinjaScript" — RESOLVED, and it was never a real blocker.**
