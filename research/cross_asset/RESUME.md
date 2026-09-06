@@ -28,7 +28,11 @@ Wave 4 executing (specs frozen; launch = workflow `genesis3-wave4`):
 | `runs/G3_ZBMACRO_ENGINE_20260906` | G00079 | engine construction + skeptic; DELAY CURVE decisive (08:46 entry is the executable claim) |
 | `runs/G3_AUCTCONC_20260906` | G00080 | concession-short, frozen ERA-UNREAD, x2 mirror debt, portfolio rendering carries G2 |
 | `runs/G3_RATESCARRY_20260906` | G00081 | outright ZN/ZB carry-timing; 97.5-pct debt bar; static arms; 2022-26 bear decisive |
-| (no trial) | — | P1 passive-entry policy GOVERNANCE PRE-CHECK (BBO memo at runs/G2_WAVE5_CARDS_20260906/) |
+| `runs/G3_XPASS01_PASSIVE_ENTRY_REPLAY_20260906` | G00082 | Class-X passive-entry replay (gov pre-check DONE: CLEAN-PATH-EXISTS, 104 sessions; design frozen sha 3689e279) |
+
+⚠️ 2026-09-06 ~10:10 ET: the first Wave-4 launch was killed by the 5-hr session limit (3 of 4
+agents died pre-output; entrypolicy completed and is integrated). Relaunched fresh as
+`genesis3-wave4-relaunch`. Recovery cost: zero (checkpoint doctrine held).
 
 **Recovery rule:** same as before — finished (final DECISION line in out/gate_table.txt) →
 integrate + record ledger; unfinished → re-execute the frozen spec exactly.
