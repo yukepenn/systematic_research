@@ -1,0 +1,67 @@
+================================================================================================================
+=== CARRY_SIGC_CONFIRM  PHASE A - dev-window reproduction.  NO data >= 2019-01-01 enters any frame.
+=== run at 2026-09-06T12:54:36.238556+00:00
+================================================================================================================
+    diff(carry_v1.py -> carry_confirm.py):
+        -DEV_START, DEV_END = pd.Timestamp("2009-01-01"), pd.Timestamp("2019-01-01")
+        +DEV_START, DEV_END = pd.Timestamp("2018-01-02"), pd.Timestamp("2026-08-01")
+        -    for cid, r, m, y in N.contracts_for(root, 2009, 2019):
+        +    for cid, r, m, y in N.contracts_for(root, 2017, 2027):
+    diff audit: PASS - exactly the two sanctioned changes
+
+=== s6/s7 UNIT TESTS
+
+=== building DEV panel (10 roots, dev module, structural truncation < 2019-01-01)
+    ES   equity_index  paired days   1600  2009-06-29 -> 2018-09-14
+    YM   equity_index  paired days   1657  2009-06-29 -> 2018-09-14
+    ZN   rates         paired days   1483  2009-06-29 -> 2018-08-31
+    ZB   rates         paired days   1631  2009-06-29 -> 2018-08-31
+    GC   metals        paired days   1733  2009-06-29 -> 2018-07-30
+    SI   metals        paired days   1827  2009-06-29 -> 2018-08-30
+    ZC   ags           paired days   1454  2009-06-30 -> 2018-06-27
+    ZW   ags           paired days   1736  2009-06-30 -> 2018-08-14
+    ZM   ags           paired days   1933  2009-06-30 -> 2018-11-23
+    ZL   ags           paired days   1933  2009-06-30 -> 2018-11-23
+
+=== R2 - DEV family table (PRIMARY, dev window, research sizing)
+    pair       sector                   net   Sharpe
+    ES/YM      equity_index  $       -2,883   -1.018
+    ZN/ZB      rates         $       -6,387   -0.196
+    GC/SI      metals        $      286,211    0.932
+    ZC/ZW      ags           $         -332   -0.128
+    ZC/ZM      ags           $        2,281    0.383
+    ZC/ZL      ags           $      -16,504   -0.453
+    ZW/ZM      ags           $        2,791    0.463
+    ZW/ZL      ags           $      -17,477   -0.480
+    ZM/ZL      ags           $       17,914    0.513
+    frozen pair GC/SI dev rank by Sharpe: 1 of 9 (expected 1)
+
+=== NULL-MACHINERY SMOKE (dev window, already-consumed data; validation only, NOT a gate)
+    pivot-reconstruction net vs direct: |d| = $0.000000  OK
+    smoke shift k=30: Sharpe 0.202 (dev observed 0.932)
+    smoke shift k=60: Sharpe 0.074 (dev observed 0.932)
+    smoke shift k=90: Sharpe 0.556 (dev observed 0.932)
+    smoke: block-perm x3
+    null machinery exercised end-to-end on dev data: OK
+
+=== MDE TABLE (committed in design s7)
+    SE(annualized Sharpe) over 7.41y HEADLINE ~ 0.37 (H0) / 0.44 (at S~0.93)
+    P(pass G2 | S=0.932) ~ 0.87 ; P(pass G2 | S=0) ~ 0.11 before other gates
+    joint power ~ 0.65-0.70 if dev effect persists; ~0.3-0.45 at 40-50% decay
+    false-pass ~ <=1-2% under H0 incl. family-rank clause
+    smallest true Sharpe detectable at >=80% power ~ 0.8
+    -> only a P1-class persistent effect passes; a halved edge most likely FAILS and closes
+
+================================================================================================================
+=== PHASE A GATES - GATE / SPEC / OBSERVED / PASS-FAIL
+================================================================================================================
+    GATE                                         SPEC                               OBSERVED                                 VERDICT
+    A-DIFF  module diff = 2 sanctioned changes   exactly 2 lines changed            see diff above                           PASS
+    A-UT    s6/s7 unit tests                     all pass                           telescope+basis+causality pass           PASS
+    A-ROOTS 10 dev roots built                   10 roots, >200 paired days         10 roots                                 PASS
+    R0a     construction identity                3421 rows match 100%               rows 3421/3421, matched 3421, max|dw| 7.98e-17 PASS
+    R0b     pair-wrapper identity + economics    696/696, absent=['2012-W49', '2013-W49'], $286,211+-500, 0.932+-0.005 w_rank 696/696, sign-contra 0, absent ['2012-W49', '2013-W49'], net $286,211, Sharpe 0.932 PASS
+    R2      dev family rank                      GC/SI rank 1 of 9                  rank 1 of 9                              PASS
+
+=== PHASE A: ALL GATES PASS -> Phase B may open the confirmation windows
+    PASS marker written: D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\CARRY_SIGC_CONFIRM_20260906\out\PHASE_A_PASS

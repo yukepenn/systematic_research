@@ -1,0 +1,108 @@
+================================================================================================================
+=== CARRY_SIGC_CONFIRM  PHASE B - ONE-SHOT confirmation.  Windows are spent by this execution.
+=== run at 2026-09-06T12:54:52.896570+00:00
+================================================================================================================
+    diff(carry_v1.py -> carry_confirm.py):
+        -DEV_START, DEV_END = pd.Timestamp("2009-01-01"), pd.Timestamp("2019-01-01")
+        +DEV_START, DEV_END = pd.Timestamp("2018-01-02"), pd.Timestamp("2026-08-01")
+        -    for cid, r, m, y in N.contracts_for(root, 2009, 2019):
+        +    for cid, r, m, y in N.contracts_for(root, 2017, 2027):
+    diff audit: PASS - exactly the two sanctioned changes
+
+=== building CONFIRMATION panel (10 roots, 2018-01-02 warmup, seal < 2026-08-01)
+    ES   equity_index  paired days   1196  2018-04-03 -> 2024-09-13  median gap 3mo
+    YM   equity_index  paired days   1191  2018-04-03 -> 2025-09-12  median gap 3mo
+    ZN   rates         paired days   1036  2018-04-03 -> 2026-07-31  median gap 3mo
+    ZB   rates         paired days   1061  2018-04-03 -> 2026-07-24  median gap 3mo
+    GC   metals        paired days   1137  2018-04-03 -> 2026-03-27  median gap 2mo
+    SI   metals        paired days   1250  2018-04-03 -> 2026-07-24  median gap 2mo
+    ZC   ags           paired days    970  2018-04-05 -> 2026-06-30  median gap 2mo
+    ZW   ags           paired days   1169  2018-04-05 -> 2026-07-24  median gap 2mo
+    ZM   ags           paired days   1367  2018-04-05 -> 2026-07-28  median gap 1mo
+    ZL   ags           paired days   1364  2018-04-05 -> 2026-07-24  median gap 1mo
+    seal assert: max session 2026-07-31 < 2026-08-01  PASS
+    CONSUMED marker written (windows spent): D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\runs\CARRY_SIGC_CONFIRM_20260906\out\CONSUMED
+
+=== CAUSALITY PROBE - both clauses must hold, and the second is what gives it teeth
+    week 2022-W35, effective 2022-08-29
+    corrupt FUTURE (>= t) carry:  max |dw| = 0.000e+00   PASS - weights unchanged
+    corrupt PAST  (<  t) carry:  max |dw| = 1.000e+00   PASS - weights DO respond
+
+=== FAMILY TABLE - 9 same-sector pairs, identical wrapper, own calendars [PRE-FROZEN, MODELED costs]
+    ES/YM    equity_index  HL net $        -939  Sharpe  -0.538  W1  -0.850  W2  -0.087  SA $        -948  SB $        -939
+    ZN/ZB    rates         HL net $     -16,845  Sharpe  -0.949  W1  -1.252  W2  -0.648  SA $     -19,977  SB $     -16,845
+    GC/SI    metals        HL net $     157,547  Sharpe   0.723  W1   0.397  W2   1.035  SA $     156,496  SB $     155,463
+    ZC/ZW    ags           HL net $       1,229  Sharpe   0.754  W1   0.479  W2   1.075  SA $       1,147  SB $       1,229
+    ZC/ZM    ags           HL net $         136  Sharpe   0.037  W1  -0.863  W2   1.084  SA $          -5  SB $         136
+    ZC/ZL    ags           HL net $       9,189  Sharpe   0.393  W1   0.214  W2   0.601  SA $       8,917  SB $       9,189
+    ZW/ZM    ags           HL net $         661  Sharpe   0.169  W1   0.157  W2   0.184  SA $         530  SB $         661
+    ZW/ZL    ags           HL net $      14,633  Sharpe   0.619  W1   0.857  W2   0.338  SA $      14,424  SB $      14,633
+    ZM/ZL    ags           HL net $      13,277  Sharpe   0.562  W1   0.672  W2   0.434  SA $      12,552  SB $      13,277
+    note: STRESS-B is defined as 'SI 3 ticks / others 1 tick'; for pairs without SI it equals PRIMARY.
+
+=== G4a NULL - circular-shift (dependence-preserving), all offsets k in [26, N-26]
+    EVENT IN WORDS: the probability, under timing-destroyed signals that preserve each series' serial structure and the family's cross-pair dependence, of a HEADLINE net Sharpe at least as large as observed.
+    frozen pair: N=250 headline weeks, 199 offsets, null Sharpe mean +0.679 sd 0.112, observed +0.723 -> percentile 63.3
+    ES/YM    N=232 offsets=181 percentile 35.4 (same offset construction; shared set where N equal)
+    ZN/ZB    N=223 offsets=172 percentile 0.0 (same offset construction; shared set where N equal)
+    ZC/ZW    N=223 offsets=172 percentile 87.8 (same offset construction; shared set where N equal)
+    ZC/ZM    N=252 offsets=201 percentile 45.3 (same offset construction; shared set where N equal)
+    ZC/ZL    N=252 offsets=201 percentile 34.3 (same offset construction; shared set where N equal)
+    ZW/ZM    N=257 offsets=206 percentile 44.7 (same offset construction; shared set where N equal)
+    ZW/ZL    N=257 offsets=206 percentile 50.0 (same offset construction; shared set where N equal)
+    ZM/ZL    N=246 offsets=195 percentile 92.3 (same offset construction; shared set where N equal)
+
+=== G4b NULL - 13-week block permutation, 999 draws, seed 20260906 (second computation of the same event)
+    block-perm null mean +0.646 sd 0.138, observed +0.723 -> percentile 73.7   |G4a-G4b| = 10.4 pts
+
+=== PAIRING-COVERAGE clause (INVALID-RUN if any window < 50% of CARRY00 fraction)
+    GC W1: paired 543/1030 = 0.527  (threshold 0.367, CARRY00 ref 0.734)  OK
+    GC W2: paired 517/871 = 0.594  (threshold 0.367, CARRY00 ref 0.734)  OK
+    SI W1: paired 575/1030 = 0.558  (threshold 0.391, CARRY00 ref 0.781)  OK
+    SI W2: paired 527/876 = 0.602  (threshold 0.391, CARRY00 ref 0.781)  OK
+
+=== G7 DIAGNOSTICS (REPORT-ONLY, non-gating) [PRE-FROZEN, MODELED costs, research sizing]
+    net by year (PRIMARY):
+        2019  $      -6,247
+        2020  $      40,346
+        2021  $     -17,505
+        2022  $      25,610
+        2023  $       5,791
+        2024  $      34,605
+        2025  $      61,103
+        2026  $      13,846 (partial, Jan-May)
+    positive complete years 2019-2025: 5 of 7
+    turnover (mean daily |dUnits|, HEADLINE): 0.0351
+    cost/gross: PRIMARY 0.8%  STRESS-A 1.4%  STRESS-B 2.1%
+    realized gap GC W1: median 2mo (dev median 2mo), mean 2.25mo
+    realized gap GC W2: median 2mo (dev median 2mo), mean 2.29mo
+    realized gap SI W1: median 2mo (dev median 2mo), mean 2.44mo
+    realized gap SI W2: median 2mo (dev median 2mo), mean 2.35mo
+    long-SI share of live headline weeks: 97.5% (dev 66.3%), live weeks 199, sign flips 4 (dev 75)
+    long-SI state: 1078 days, switch net $     155,877 | static-SI ctrl $     156,012 | static-GC ctrl $    -157,497
+    long-GC state: 24 days, switch net $       1,650 | static-SI ctrl $      -1,800 | static-GC ctrl $       1,786
+    weekly P&L correlation vs P1/PCT: NOT-COMPUTED - no in-run P1 weekly P&L artifact exists in-repo; regenerating P1 is outside this run's frozen code surface (recorded).
+    ANNEX written to out/annex.txt (non-gating, not repeated here to keep the headline clean of burned-window numbers).
+
+================================================================================================================
+=== PHASE B GATES - GATE / SPEC / OBSERVED / PASS-FAIL [HEADLINE 2019-01-02 -> 2026-05-30, PRE-FROZEN, MODELED costs]
+================================================================================================================
+    GATE                                         SPEC                               OBSERVED                                 VERDICT
+    R1   two-sided causality (confirm panel)     future<1e-12, past>1e-9            see probe above                          PASS
+    SEAL max session < 2026-08-01                < 2026-08-01                       2026-07-31                               PASS
+    G1   HEADLINE PRIMARY net > 0                > $0                               $157,547                                 PASS
+    G2   HEADLINE PRIMARY ann net Sharpe         >= 0.45                            0.723                                    PASS
+    G3   sign survival W1 AND W2                 net > 0 in each                    W1 $42,204 / W2 $115,344                 PASS
+    G4a  circular-shift null percentile          >= 95.0                            63.3                                     *** FAIL ***
+    G4b  block-perm agreement (5-pt clause)      |d| <= 5 pts                       73.7 vs 63.3, |d|=10.4                   *** FAIL ***
+    G5   family rank (selection pricing)         <= 2 of 9                          rank 2 of 9                              PASS
+    G6a  STRESS-A HEADLINE net > 0               > $0                               $156,496                                 PASS
+    G6b  STRESS-B HEADLINE net > 0               > $0                               $155,463                                 PASS
+    G8   switch beats BOTH static arms           Sharpe > static-SI and > static-GC 0.723 vs +0.708/-0.717                   PASS
+    COV  pairing coverage clause                 >= 50% of CARRY00 frac, all windows GC_W1 0.527; GC_W2 0.594; SI_W1 0.558; SI_W2 0.602 PASS
+    G7   yearly diagnostic (REPORT-ONLY)         reported                           5/7 positive years                       REPORT-ONLY
+
+================================================================================================================
+=== PREREGISTERED BINARY VERDICT: INVALID-RUN   (ledger G00070: DEFECT)
+================================================================================================================
+    outputs: out/confirm.txt, out/confirm_verdict.json, out/family_table.csv, out/sigc_daily_headline.csv, out/annex.txt

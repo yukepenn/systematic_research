@@ -1,0 +1,129 @@
+====================================================================================================
+G3_ZBMACRO_FALSIFIER_20260906  (ledger G00072, family GENESIS3_EVENT)
+Graduation falsifier for the G00067 E1 LEAD -- frozen object: NFP/CPI down first response
+=> SHORT ZB 08:45 close -> 15:00 close.  EVIDENCE STATUS: DISCOVERY_CONSUMED (all tables).
+substrate: runs\SM1M_ZB_SUBSTRATE\out\zb_1m_2023_2026.parquet  sessions=923 (2022-12-27 .. 2026-07-31)  POINTS basis, $1000/pt, tick $31.25
+calendar: NFP_DAY+CPI_DAY (GENESIS_H2_CALENDAR_20260828); in-window releases=84; eligible universe=889; nonzero-r1 release events=78 (r1==0 dropped: 3)
+cost arms (BASIS=MODELED ALL_IN = comm $4.36 + spread): PRIMARY 1tk/side = $66.86 RT (0.06686 pt); STRESS 2tk/side = $129.36 RT (0.12936 pt)
+convention: x = (c1500-c0845) + cost_pts; x<0 = profitable short; profit_$ = -x*1000
+
+[G0] seal + event-set identity vs runs/G3_EVENT_ZB_20260906/out/event_tables.csv
+     seal: max session = 2026-07-31 <= 2026-07-31 : OK; 1/32-grid share = 1.000000
+     artifact carries no per-event dates; identity asserted on 9 jointly-constraining cells:
+     cell                         n_art n_rep     obs_art     obs_rep  match
+     E1_0845_1500_sign-              40    40   -0.244531   -0.244531     OK
+     E1_0845_1500_sign+              38    38    0.094572    0.094572     OK
+     E1_0845_1030_sign-              40    40   -0.053906   -0.053906     OK
+     E1_0845_1500_terc1_aligned      26    26    0.391827    0.391827     OK
+     E1_0845_1500_sign-_terc1        10    10   -0.556250   -0.556250     OK
+     E1_0845_1500_terc2_aligned      26    26    0.074519    0.074519     OK
+     E1_0845_1500_sign-_terc2        13    13   -0.225962   -0.225962     OK
+     E1_0845_1500_terc3_aligned      26    26    0.048077    0.048077     OK
+     E1_0845_1500_sign-_terc3        17    17   -0.075368   -0.075368     OK
+     identity: EXACT (9/9); n_down=40 (expected 40)
+
+[G1] MDE FIRST (session-block bootstrap SE; L=5, B=2000) -- printed before any observed mean
+     n=40 trades; trade-level SD = 0.6796 pt; block-bootstrap SE of mean = 0.0943 pt
+     MDE (5% two-sided significance) = 0.1849 pt = $185/ct
+     MDE (80% power at 5% two-sided) = 0.2641 pt = $264/ct
+     honest statement: the falsifier operates near its own power edge (E1 REPORT said so).
+
+[G2] PRIMARY after-cost edge (observed, now printed after the MDE)
+     mean after-cost move = -0.1777 pt = +177.7 $/ct profit; gross mean = -0.2445 pt
+     block-bootstrap CI95 of the after-cost mean: [-0.4113, -0.0449] pt (profit CI: [+44.9, +411.3] $/ct)
+     vs MDE: |mean| = 0.1777 pt vs MDE_80 0.2641 pt (BELOW the 80%-power bar; informational)
+
+[G3] circular-shift null + sign-permutation second computation (after-cost TOTAL, PRIMARY)
+     observed after-cost total = -7.1068 pt = +7107 $/ct
+     null 1 (shift release flag along 889 eligible sessions, 2000 shifts, shared draw seed 20260906): percentile of obs = 0.50 (null mean +1.013, 5th pct -3.716 pt)
+     null 2 (permute the 78 first-response signs, 2000 perms, seed 20260908): percentile of obs = 1.55 (null mean -0.414, 5th pct -5.515 pt)
+     agreement clause: |0.50 - 1.55| = 1.05 <= 5.0 : OK
+
+[G4] chronology halves (first 20 vs last 20 events, after-cost PRIMARY)
+     first-20  (2023-01-12 .. 2024-06-07):  mean = -0.2191 pt = +219.1 $/ct
+     last-20   (2024-08-14 .. 2026-06-05): mean = -0.1363 pt = +136.3 $/ct
+     both halves negative: YES
+
+[G5] drop-k tail honesty (drop the k most-negative moves = the short's largest winners)
+     k=0: n=40  after-cost mean = -0.1777 pt = +177.7 $/ct
+     k=1: n=39  after-cost mean = -0.1327 pt = +132.7 $/ct
+     k=2: n=38  after-cost mean = -0.0910 pt = +91.0 $/ct
+     k=3: n=37  after-cost mean = -0.0649 pt = +64.9 $/ct
+     k=4: n=36  after-cost mean = -0.0408 pt = +40.8 $/ct
+     k=5: n=35  after-cost mean = -0.0180 pt = +18.0 $/ct
+     clause: mean at k=2 = -0.0910 pt must be < 0
+
+[G6] preregistered 3x2x3 neighborhood -- ALL 18 cells (net PRIMARY profit; headline stays the frozen object)
+     entry  exit   conditioning           n  gross pt    net pt    net $  frozen
+     08:40  14:00  all_down              43    0.1461    0.0792     79.2        
+     08:40  14:00  below_median_down     20    0.1062    0.0394     39.4        
+     08:40  14:00  terc1_aligned         29    0.0991    0.0323     32.3        
+     08:40  15:00  all_down              43    0.1672    0.1003    100.3        
+     08:40  15:00  below_median_down     20    0.1547    0.0878     87.8        
+     08:40  15:00  terc1_aligned         29    0.1196    0.0528     52.8        
+     08:45  14:00  all_down              40    0.2406    0.1738    173.8        
+     08:45  14:00  below_median_down     16    0.4609    0.3941    394.1        
+     08:45  14:00  terc1_aligned         26    0.3810    0.3141    314.1        
+     08:45  15:00  all_down              40    0.2445    0.1777    177.7      <<
+     08:45  15:00  below_median_down     16    0.4883    0.4214    421.4        
+     08:45  15:00  terc1_aligned         26    0.3918    0.3250    325.0        
+     08:50  14:00  all_down              40    0.0813    0.0144     14.4        
+     08:50  14:00  below_median_down     15    0.0417   -0.0252    -25.2        
+     08:50  14:00  terc1_aligned         27   -0.1863   -0.2532   -253.2        
+     08:50  15:00  all_down              40    0.0844    0.0175     17.5        
+     08:50  15:00  below_median_down     15    0.0688    0.0019      1.9        
+     08:50  15:00  terc1_aligned         27   -0.1910   -0.2578   -257.8        
+     plateau: net>0 in 15/18 cells overall; 6/6 all-down cells; adjacent-entry (08:40/08:50, exit 15:00, all-down) positive: 2/2
+     plateau statement: PLATEAU -- the frozen object is not an isolated cell
+
+[G7] release split (after-cost PRIMARY)
+     NFP-only: n=23  mean = -0.0744 pt = +74.4 $/ct
+     CPI-only: n=17  mean = -0.3173 pt = +317.3 $/ct
+     both negative: YES -- strengthens (not release-local)
+
+[G8] cost stress (2 ticks/side, ALL_IN $129.36 RT)
+     mean after-cost move = -0.1152 pt = +115.2 $/ct profit
+
+[G9] eval battery -- WEEKLY-VOL LEAD (net PRIMARY $ per contract; DISCOVERY_CONSUMED)
+     weekly grid: 188 calendar weeks (3.62 yr), zeros where no trade
+     LEAD  weekly-vol annualized Sharpe = 0.86  (mean $37.8/wk, sd $318.8/wk)
+     native: total net $7,107 over 3.62 yr = $1,966/yr on 11.1 trades/yr ($177.7/trade)
+     path descriptives ONLY (research_sdk.eval_battery max_drawdown/cdar): weekly maxDD $1,799, CDaR95 $1,510; trade-sequence maxDD $1,799, CDaR95 $1,652
+     NO fixed-DD- or CDaR-normalized income figure is quoted in this run; the eval_battery
+     thinning-placebo guard is honored by never reading those bases as a denominator.
+
+     UP-response mirror (long at 08:45 on r1>0, exit 15:00; asymmetry honesty):
+       DOWN-short (frozen): n=40  net +177.7 $/ct (profit CI [+44.9,+411.3])
+       UP-long   (mirror): n=38  net +27.7 $/ct (profit CI [-252.0,+217.7])
+
+     rho to P1 (SOURCE: runs/WE_W56_BREADTH/out/p1_daily.csv, zero-filled common calendar 2022-12-27..2026-05-29, 878 sessions; 39/40 ZB trades in overlap):
+       daily rho = -0.0058   weekly rho = +0.1004   (orthogonality preview)
+
+====================================================================================================
+GATE                SPEC                                                                   PASS/FAIL
+----------------------------------------------------------------------------------------------------
+G0_seal_identity    seal <=2026-07-31; reproduce E1 n=40 event set exactly (identity vs artifact)      PASS
+                    OBSERVED: max sess 2026-07-31; 9/9 cell stats exact; n_down=40
+G1_MDE_first        MDE (block-bootstrap SE) printed BEFORE observed                            PASS
+                    OBSERVED: MDE_sig 0.1849 pt, MDE_80 0.2641 pt, printed first (procedural)
+G2_aftercost_edge   PRIMARY after-cost mean < 0 AND block-bootstrap CI95 excludes 0             PASS
+                    OBSERVED: mean -0.1777 pt, CI95 [-0.4113,-0.0449]
+G3_null             shift-null pct <= 5.0 AND |pct1-pct2| <= 5.0 (sign-permutation 2nd computation)      PASS
+                    OBSERVED: pct1 0.50, pct2 1.55, |diff| 1.05
+G4_chronology       after-cost mean < 0 in BOTH halves; both-wrong-sign = FAIL; one-flat = REGIME note      PASS
+                    OBSERVED: first20 -0.2191, last20 -0.1363
+G5_tail_honesty     drop-k curve printed; after-cost mean < 0 at k=2                            PASS
+                    OBSERVED: k=2 mean -0.0910 pt (curve in dropk.csv)
+G6_neighborhood     3x2x3 grid, ALL cells reported; headline stays frozen object; plateau statement      PASS
+                    OBSERVED: 18/18 cells; net>0 in 15/18; all-down 6/6; PLATEAU
+G7_release_split    NFP-only and CPI-only after-cost means printed; one-side-flat = classification      PASS
+                    OBSERVED: NFP n=23 -0.0744; CPI n=17 -0.3173; both negative
+G8_cost_stress      after-cost mean < 0 at 2-tick STRESS arm                                    PASS
+                    OBSERVED: mean -0.1152 pt = +115.2 $/ct
+G9_battery          weekly-vol lead; no unguarded fixed-DD figure; UP mirror; rho-to-P1         PASS
+                    OBSERVED: Sharpe_wk 0.86; no DD-normalized income quoted; UP-long net +27.7 $/ct; rho_d -0.006 rho_w +0.100
+----------------------------------------------------------------------------------------------------
+blocking set G2+G3+G4+G5+G8: G2:PASS  G3:PASS  G4:PASS  G5:PASS  G8:PASS
+DECISION (mechanical): ZBMACRO01 ENGINE CANDIDATE  (ledger PASS)
+EVIDENCE STATUS: DISCOVERY_CONSUMED (same substrate as the G00067 screen).
+====================================================================================================

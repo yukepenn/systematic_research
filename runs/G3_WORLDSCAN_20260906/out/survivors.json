@@ -1,0 +1,524 @@
+[
+ {
+  "name": "Treasury Auction Concession Cycle (slow-moving dealer capital)",
+  "novelty_class": "RAW_INFO",
+  "evi_rank": 1,
+  "evi_reason": "Best EVI in batch: ZB/ZN is the measured orthogonal class (rho to P1 ~ -0.05), daily 2009+ held, the auction calendar+sizes are $0 public data (allowed under the no-purchase rule), multi-day horizon makes cost a rounding error, RFS-2013 mechanism is canonical, and a rates-native supply-flow engine is exactly what XINST01 said to hunt after P1 inverted on ZB.",
+  "dedup_note": "MC-57 (G2_F13) closed a ZB rates-STATE directional surface; ROLL02 closed OUR exec-series roll gating on NQ/XM. Neither touches a supply-cycle event representation on ZB/ZN. Absorbs the killed exec-native duplicate (its 13:00 ET auction-result intraday leg folds in as a secondary).",
+  "card": {
+   "mechanism_class": "limits-to-arbitrage / anticipated repeated supply shocks",
+   "markets": "ZB, ZN; ES as specificity control",
+   "horizon": "+/-3-5 days per auction, 2-4 events/month",
+   "data": "daily ZB/ZN per-contract 2009+ (held) + free treasurydirect calendar; ZB 1-min 2022-12+ for intraday leg",
+   "falsifier": "event study D-5..D+5 vs matched non-auction same-weekday days, shared-draw null across the auction family; era gates 2009-15/16-21/22+; kill if post-2015 amplitude inside control or sign flips across eras",
+   "scout": "premium-behavior-regime",
+   "amendments": "fold into / coordinate with preregistered Wave C (G3_EVENT_ZB, G00067) so the ZB event catalog is one family; portfolio-sleeve claim only, per the card's own sizing honesty"
+  }
+ },
+ {
+  "name": "Signal-bar spread capture (passive-entry policy with timeout fallback)",
+  "novelty_class": "POLICY",
+  "evi_rank": 2,
+  "evi_reason": "Pure replay on owned BBO + P1's own frozen action set: zero new risk, zero governance risk, X-class (execution/policy) admission is an explicit GENESIS III objective, and the prize is a direct cost-line subtraction on the LIVE engine. Decisive falsifier across three timeout values in one run.",
+  "dedup_note": "NOT the closed MS-BBO scope (that was sub-minute quote ALPHA, -$1,786/session) and not G2_F3_EXECSTATE01 (second-of-minute timing, flat surface). Exit/entry POLICY novelty on existing engines is in the NOT-closed guard. EXEC01 E4 (limits at <=1-tick only 0.7% of time) is an adverse prior, not a closure - the replay measures fill reality directly at 2-3-tick spreads.",
+  "card": {
+   "mechanism_class": "execution alpha / passive-vs-aggressive policy",
+   "markets": "NQ/MNQ (P1 entries)",
+   "horizon": "seconds-minutes overlay on multi-hour holds",
+   "data": "P1 signal timestamps + archived 2025-26 NQ tick+BBO pre-burn + COST_MODEL.md \u2014 all in-house",
+   "falsifier": "replay P1 entries with join-bid limit + T-sec timeout, T in {5,30,120}; dead if fill-weighted improvement minus alpha foregone on unfilled entries <=0 for all T",
+   "scout": "execution-native",
+   "amendments": "run inside the MC-47 harness (TRIAGE-HIGH, Wave-3 pick) so cost states and this policy share one measurement wave"
+  }
+ },
+ {
+  "name": "Correlation-Regime-Gated Flight-to-Quality (conditional tail engine)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 3,
+  "evi_reason": "Orthogonal-by-construction (pays exactly when the long-P1 book suffers - the portfolio prize the campaign names), all data held daily 2009+ with both corr regimes sampled, cost-trivial, and the claim is a 2x2 interaction with its matched controls - house-compliant by design.",
+  "dedup_note": "Distinct from MC-57/G2_F13 (ZB directional state engine, NULL) as the card itself argues: cross-asset, event-conditional, long-ZB-on-equity-stress only. ZB regime-local cell is UNTESTED in the coverage matrix. Regime-gate lag cost must be inside the backtest (card says so).",
+  "card": {
+   "mechanism_class": "tail/crisis engine with observable regime gate",
+   "markets": "ZB execution leg, ES trigger",
+   "horizon": "hours-5 days, event-driven",
+   "data": "daily ES/ZB 2009+; 1-min 2022+ for timing \u2014 all held",
+   "falsifier": "2x2: ZB return after ES<-1.5sigma days x corr-regime sign, WITH per-regime unconditional ZB control; shared-draw bootstrap on clustered events; kill if interaction not positive/distinguishable",
+   "scout": "premium-behavior-regime",
+   "amendments": "GOVERNANCE: the 2019+ multi-market corr window sat in GENESIS II's P-2 reserve; owner's 2026-09-06 no-holdout rider appears to supersede it for this campaign \u2014 coordinator must rule ONCE before the spec is frozen"
+  }
+ },
+ {
+  "name": "DV01-neutral ZB-ZN slope carry/roll-down (preferred-habitat premium)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 4,
+  "evi_reason": "Rates curve/carry is a fully UNTESTED axis on the orthogonal class; the construction cleverly needs no cash-yield data (carry from own calendar spreads on the per-contract store); weekly horizon is cost-trivial; the collapse-to-outright-carry control is prespecified.",
+  "dedup_note": "CARRY_V1 (closed, SI-concentrated) was a cross-sectional static-carry engine; this is a time-series DV01-neutral slope object on rates with a control that kills it if it reduces to level carry. MC-57's rates-state null does not touch curve RV.",
+  "card": {
+   "mechanism_class": "relative value / curve",
+   "markets": "ZN, ZB (+ZF if in daily roots)",
+   "horizon": "1-4 weeks",
+   "data": "per-contract daily 2009+ (held), nothing external",
+   "falsifier": "slope-carry sign -> next-week DV01-neutral spread return, circular-shift null + beta-stability audit; close if PnL reduces to outright ZB carry",
+   "scout": "rv-curve-carry"
+  }
+ },
+ {
+  "name": "Basis-momentum (Boons-Prado) on the 5 curve-bearing roots",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 5,
+  "evi_reason": "Purpose-built for the per-contract daily store we hold; JF-2019 pedigree with t>4; the subsumption regression (vs static basis + 12m momentum) is the cheapest kill in the group and directly separates it from every closed carry/momentum scope; curve column is untested everywhere.",
+  "dedup_note": "Not GENESIS_H3 (XSMOM on outright returns, 2009-18) and not CARRY_V1 (static basis): basis-momentum is the front-minus-second momentum DIFFERENCE, and gate 2 closes it immediately if it is secretly either parent. Breadth-thinness (5 roots) honestly flagged; within-root spread arm is the claim.",
+  "card": {
+   "mechanism_class": "curve structure / cross-sectional + within-root ranking",
+   "markets": "CL, GC, SI, ZN, ZB",
+   "horizon": "1 week-1 month",
+   "data": "per-contract daily 2009+ (held; SI needs the pending daily .ncd extraction, $0 task)",
+   "falsifier": "gate 1: within-root spread-expression Sharpe>0 under cycle-block bootstrap with monotone ranks; gate 2: joint regression vs basis+momentum \u2014 close if subsumed",
+   "scout": "rv-curve-carry",
+   "amendments": "needs the causal-roll continuous construction first (campaign rule: daily store is per-contract; \u00a710 roll audit mandatory)"
+  }
+ },
+ {
+  "name": "Slow-Capital Post-FOMC Drift in Bond Futures",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 6,
+  "evi_reason": "Verified NBER source (abstract fetched), ~140 events on held daily 2009+, orthogonal market, hike-era/ZLB split pre-mandated, cost negligible at 1-15 day horizon.",
+  "dedup_note": "The banked macro law closes pre-event direction and the unconditional release-window path (ZB 08:30 leg, G00062); GENESIS_H2 closed FOMC-DAY same-session mean on NQ; G2_F10 closed the NQ overnight hold. A multi-day ZB drift conditioned on announcement-day sign is a different window, horizon, market and conditioning \u2014 exactly the response-path representation the SCOPE RIDER declares open.",
+  "card": {
+   "mechanism_class": "macro reaction path (post-announcement drift)",
+   "markets": "ZB, ZN; 6E/ES read-through",
+   "horizon": "1-15 days, 8 events/yr",
+   "data": "daily 2009+ (held); ZB 1-min 2022-12+ for window proxy; free FOMC calendar",
+   "falsifier": "sign-conditioned event study ~120 FOMC days vs matched non-FOMC controls, circular-shift null, mandatory ZLB-vs-hiking split",
+   "scout": "vol-event-paths",
+   "amendments": "fold into Wave C (G00067) event-catalog family"
+  }
+ },
+ {
+  "name": "Close-Hour Hedging-Flow Momentum, Vol-Gated",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 7,
+  "evi_reason": "Strongest-pedigree intraday mechanism in the batch (JFE 2018/2021), 1-min ES/RTY/YM held, one RT/day at the day's deepest liquidity, and this variant is the most house-compliant of the four sibling cards: NQ excluded (P1 overlap), interaction object, ungated control + rate-matched thinning placebo all pre-specified.",
+  "dedup_note": "Survives as the SINGLE representative of the 4-card close-window LETF/gamma cluster; must run as the MC-13 harness (alive, TRIAGE-MED, never measured). GENESIS_H4B closed only the Gao first-half-hour->last-half-hour geometry on NQ \u2014 that leg stays dead; the day-so-far-signed flow object was never measured. MC-11's kill covered unconditional clock-window folklore, not this interaction. Absorbs the killed siblings' overnight-reversal leg and NQ-vs-ES LETF-AUM cross-check as secondary columns.",
+  "card": {
+   "mechanism_class": "event-conditioned continuation (mandated close flow)",
+   "markets": "ES primary, RTY, YM \u2014 NQ excluded",
+   "horizon": "30-60 min, <=1/day",
+   "data": "1-min ES/RTY/YM 2022+ (held)",
+   "falsifier": "last-hour return by sign(day-to-15:00) x vol-gate tercile, WITH ungated control, circular-shift null, thinning placebo mandatory",
+   "scout": "vol-event-paths",
+   "amendments": "one null family with the MC-13/S1-02/03/04 declaration (binding); MC-42 era column rides in the same harness"
+  }
+ },
+ {
+  "name": "Month-End Stock-Bond Rebalance Flow (Dash-for-Cash)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 8,
+  "evi_reason": "Conditional two-leg (flow + reversal) falsifier is a sharp mechanism test, daily 2009+ held on all legs, cost-trivial, RFS-2020 source; the both-legs-must-hold clause gives it real kill power.",
+  "dedup_note": "GENESIS_H2 closed the ToM DAY-TYPE same-session mean on NQ, unconditional. This is MTD-spread-CONDITIONED, multi-day, two-legged, cross-asset (ES/ZB) \u2014 materially different observable, horizon and markets. The killed session-seasonal duplicate's unconditional-TOM leg enters only as a control, never as a claim.",
+  "card": {
+   "mechanism_class": "forced calendar rebalancing flow",
+   "markets": "ES/NQ/YM/RTY vs ZB/ZN",
+   "horizon": "2-5 days/leg, monthly",
+   "data": "daily 2009+ (held)",
+   "falsifier": "MTD equity-minus-bond terciles -> T-2..T and T+1..T+3 per leg, circular month-shift null, shared draw across equity roots; BOTH legs must carry predicted signs in extreme terciles",
+   "scout": "flow-inventory"
+  }
+ },
+ {
+  "name": "CL storage-state (backwardation/contango percentile) as regime conditioner",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 9,
+  "evi_reason": "Zero-trade conditioner layer with a built-in designed placebo (GC/SI slope must show nothing) and the house-mandated matched unconditional control; per-contract dailies held; directly upgrades every CL object incl. the in-flight Wave D.",
+  "dedup_note": "CL curve/carry cell is UNTESTED ('curve data census needed'). G00065 closed only multi-day z-score MR on CL; a state variable gating OTHER policies is a different decision role. Distribution-before-P&L gate order is the right anti-rescue structure.",
+  "card": {
+   "mechanism_class": "curve-as-conditioner (state, not signal)",
+   "markets": "CL primary; GC/SI negative controls",
+   "horizon": "state moves over weeks",
+   "data": "per-contract daily 2009+ (held)",
+   "falsifier": "class-conditional table (next-week ret/vol/skew by slope bucket) WITH matched unconditional control; vol/skew separation p<0.05 BEFORE any P&L claim; GC/SI must fail the same test",
+   "scout": "rv-curve-carry"
+  }
+ },
+ {
+  "name": "EIA Inventory Reaction Ride, Curve-Gated",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 10,
+  "evi_reason": "CL 1-min freshly extracted, ~190+ events, tick-cost tiny vs post-EIA ranges, and the curve-state interaction is the genuinely new object; the tape-derived surprise proxy routes around the N-bound veto on buying surprise data.",
+  "dedup_note": "The W1 CL autopsy measured EIA as 'powered vol shock, 0 dir edge' \u2014 that is the pre-event/unconditional direction the macro law closes. TAPE-CONDITIONED continuation and the curve-state interaction are the response-path representation the SCOPE RIDER explicitly leaves open. Survives as the merged EIA card (the plain exec-native duplicate is its nested unconditional arm). Overlaps preregistered Wave D (G00068) \u2014 fold in, do not double-spend.",
+  "card": {
+   "mechanism_class": "event-conditioned continuation x pre-event curve state",
+   "markets": "CL",
+   "horizon": "30-90 min, ~50 events/yr",
+   "data": "CL 1-min 2022+ (extracted 2026-09-06); per-contract dailies for the spread; free EIA calendar",
+   "falsifier": "2x2 (first-5-min sign x curve state) of 5->90-min continuation, matched 10:30 non-release control in same wave; kill if continuation absent unconditionally AND interaction unpowered",
+   "scout": "vol-event-paths"
+  }
+ },
+ {
+  "name": "Bond-Index Duration-Extension Day",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 11,
+  "evi_reason": "Deterministic calendar, held data, and the falsifier's concentration clause (effect must sit AT the close-mark window on the last day) gives it unusual kill power against generic month-end seasonality.",
+  "dedup_note": "No closure covers rates month-end index-extension marks; H2's calendar closure was NQ same-session day-types. Distinct mechanism from the dash-for-cash card (index duration extension vs stock-bond policy rebalance) \u2014 but share one month-end null family to avoid double-counting the calendar.",
+  "card": {
+   "mechanism_class": "month-end index-rebalancing forced flow in rates",
+   "markets": "ZB (1-min), ZN (daily)",
+   "horizon": "2h intraday leg; 1-2 day daily leg",
+   "data": "ZB 1-min 2022-12+ (~44 intraday events \u2014 thin; daily 2009+ ~200 events carries the power)",
+   "falsifier": "last-business-day 14:00-16:00 ZB mean vs all other days, circular-shift null; effect must CONCENTRATE at the mark or the card fails",
+   "scout": "flow-inventory",
+   "amendments": "declare one family with the dash-for-cash card's month-end events"
+  }
+ },
+ {
+  "name": "CL Settlement-Window TAS Hedging Pressure",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 12,
+  "evi_reason": "Strong mechanism paper trail (CFTC/Optiver), CL 1-min held, deterministic roll-calendar amplifiers computable from the per-contract store; marginal cost is the honest brake (~$10 spread vs 5-20 tick target).",
+  "dedup_note": "CL session mechanics cell is open \u2014 the preregistered Wave D (G00068) names 'settlement transition' but has not measured it; this card should BE that leg's spec input rather than a separate wave. No graveyard row touches settlement-window flow.",
+  "card": {
+   "mechanism_class": "settlement-fixing pressure / dealer replication flow",
+   "markets": "CL",
+   "horizon": "5-30 min around 14:30 ET",
+   "data": "CL 1-min 2022+; roll/expiry calendars computable",
+   "falsifier": "14:31-15:00 reversion signed by 14:00-14:28 drift, roll-window vs non-roll split, 11:00 same-day placebo window, circular-shift null; reversion must concentrate on roll/expiry days",
+   "scout": "flow-inventory",
+   "amendments": "power discipline: ~5 conditioned events/month \u2014 print event counts and MDE before the table (TICK lesson)"
+  }
+ },
+ {
+  "name": "Treasury roll-window calendar drift (front-running the passive bond roll)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 13,
+  "evi_reason": "~68 cycles on held per-contract dailies, event-time anchored on first-notice (computable), pre/post-2016 decay split pre-mandated, and ZN/ZB roll-month calendars are the deepest spread markets on CME.",
+  "dedup_note": "ROLL02 closed OUR OWN exec-series roll-gating policy on the NQ/XM book \u2014 a different object entirely (their roll, traded as a market phenomenon, was never measured). Survives as the merged Treasury-roll card; the killed session-seasonal duplicate's carry/repo-explanation control folds in as a mandatory clause.",
+  "card": {
+   "mechanism_class": "calendar / roll-flow relative value",
+   "markets": "ZN, ZB",
+   "horizon": "3-10 days, quarterly",
+   "data": "per-contract daily 2009+ (held)",
+   "falsifier": "event-time panel of calendar-spread changes across cycles, pre/post-2016 split; gate 1 mean drift vs cycle-level circular-shift null; gate 2 sign-consistency >=60%; off-cycle +/-1-month placebo; must not be explained by carry mechanics",
+   "scout": "rv-curve-carry"
+  }
+ },
+ {
+  "name": "Margin-Spiral OI-Purge Overshoot",
+  "novelty_class": "RAW_INFO",
+  "evi_rank": 14,
+  "evi_reason": "OI is a potentially unopened field in the held daily store (the one-line data census is the first step and is free); the OI-purge signature vs matched equal-move/equal-vol control is a genuinely distinguishing design against the generic-MR closures.",
+  "dedup_note": "G00060 closed the GC washout MR formulation (drift-explained) and G00065 the CL z-MR \u2014 both UNCONDITIONAL. The claim here is that days-3-10 reversion exists ONLY under OI destruction, with the matched no-OI-decline control in the same wave; if conditioning adds nothing it closes as generic MR by its own clause (MC-58 lesson pre-installed). DELEV02's NDX deleveraging-short null was a different (short-continuation) object.",
+  "card": {
+   "mechanism_class": "forced liquidation / margin cascade",
+   "markets": "CL, GC, SI, ZB, ES pooled",
+   "horizon": "1-2 weeks, rare events \u2014 pool cross-sectionally",
+   "data": "daily per-contract 2009+ IF OI populated (census first); fallback claim explicitly reduced",
+   "falsifier": "days-3-10 reversion conditional on |ret|>ksigma AND vol jump AND OI decline, vs equal-move/equal-vol no-OI-decline control, one shared circular-shift draw per family; close as generic MR if conditioning adds nothing",
+   "scout": "flow-inventory",
+   "amendments": "per-era event counts + MDE printed before any table (TICK regime-collapse lesson)"
+  }
+ },
+ {
+  "name": "Post-Sweep Liquidity-Provision Reversal (forced-aggressor conditioned)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 15,
+  "evi_reason": "The one surviving intraday-MR shot, kept because its own spec carries the exact discriminator the graveyard demands (beat the plain k-sigma MR control or die) plus the ex-macro exclusion; six 1-min roots held.",
+  "dedup_note": "Not the closed scopes: G00062 (ZB generic intraday MR, cost-fragile), G00063 (daily equity MR), G00065 (CL multi-day MR), MC-58 (breadth conditioning added nothing on NQ) \u2014 all either unconditional or different-horizon. The event-conditioning increment is the open question, and the card self-installs the MC-58 control. Absorbs the killed Stress-Time sibling as a state-gated arm in the same Nagel family/null draw. NQ leg only as flagged outlier context (W118/house law).",
+  "card": {
+   "mechanism_class": "liquidity recovery after sweeps / MM inventory reversion",
+   "markets": "ES, RTY, YM, ZB, CL (NQ flagged)",
+   "horizon": "5-60 min",
+   "data": "1-min 2022+ on six roots + in-house macro calendar",
+   "falsifier": "post-sweep 30-min drift: ex-macro sweeps vs macro-window sweeps vs vol-matched non-sweep placebo, shared-draw circular null; MUST beat plain k-sigma MR control in same wave; ZB leg must clear the G00062 cost-fragility bar (per-event gross >= breakeven ticks) explicitly",
+   "scout": "flow-inventory",
+   "amendments": "cost bands mandatory \u2014 no measured spreads exist off NQ; stressed-tape floor per W2 skeptic ($40/RT-equivalent scaled per root); thinning placebo before any DD figure"
+  }
+ },
+ {
+  "name": "Compression-Primed Stop Cascade Breakout",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 16,
+  "evi_reason": "Cross-market, multi-day, with the with/against-trend asymmetry as the tested object and the matched unfiltered-breakout control in-wave; compression->expansion row is untested on every root.",
+  "dedup_note": "G2_F1_COND01 closed NR7/RV as conditioners of the 15-min NQ ORB \u2014 a different event (opening range, intraday, NQ). Multi-day range-boundary breaks with trend-state interaction on ES/CL/ZN/ZB/GC were never measured. 'Dead short legs recur' pattern noted for the against-trend cell \u2014 it is a classification, not a veto (owner doctrine).",
+  "card": {
+   "mechanism_class": "vol transition x prior trend state",
+   "markets": "ES, NQ, CL, ZN/ZB, GC daily; intraday analog later",
+   "horizon": "hours-3 days",
+   "data": "daily 2009+ (held); 1-min 2022+ for intraday variant",
+   "falsifier": "k-day post-break return, with-trend vs against-trend, plus matched unconditional-break control, circular-shift null; kill if asymmetry unpowered or control shows same drift",
+   "scout": "vol-event-paths"
+  }
+ },
+ {
+  "name": "Equity-index roll-cycle financing richness (leverage-demand premium in the calendar)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 17,
+  "evi_reason": "JF-2023 mechanism with an honest dividend-confound bound (only differenced constructions claimed) and a sharp mechanism gate (ES/NQ richness must co-move within cycle); ~68 cycles on held dailies.",
+  "dedup_note": "Equity curve/carry cells are UNTESTED; no closure touches calendar-spread dynamics. Survives as the merged equity-roll card (same scout produced two overlapping cards); the killed sibling's post-roll-normalization and outright-return-tilt legs fold in, the tilt leg graded regime-input only.",
+  "card": {
+   "mechanism_class": "calendar structure / financing RV",
+   "markets": "ES, NQ",
+   "horizon": "2-4 weeks, quarterly",
+   "data": "per-contract daily 2009+ (held); no external rates feed by construction",
+   "falsifier": "cycle-aligned calendar paths: richen-then-cheapen shape under cycle-level permutation, stable post-2016; gate 2: cross-index richness co-movement or the financing story fails",
+   "scout": "rv-curve-carry"
+  }
+ },
+ {
+  "name": "Jump Taxonomy: News Jumps Continue, Orphan Jumps Revert",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 18,
+  "evi_reason": "One event study, four roots, the flagged-vs-unflagged DIFFERENCE as the object with magnitude-matched controls \u2014 cheap and it structures the whole shock-response column that Waves C/D are opening.",
+  "dedup_note": "Macro law closes unconditional release-path trading; this card's object is the taxonomy difference, open per SCOPE RIDER. AMENDMENT REQUIRED: exclude NQ from the orphan-fade leg (W118 measured continuation at endogenous NQ triggers) and treat ZB-08:30 flagged jumps as inside G00062's closed path scope (novelty there = the difference and non-08:30 events only).",
+  "card": {
+   "mechanism_class": "event-conditioned continuation AND reversal, one split",
+   "markets": "ZB, ES, CL (NQ fade-leg excluded)",
+   "horizon": "15-120 min",
+   "data": "1-min 2022+ + free release calendars",
+   "falsifier": "2-way table of post-jump 60-min drift flagged vs unflagged vs matched same-magnitude non-jump control, one shared draw per session; kill if difference unpowered",
+   "scout": "vol-event-paths",
+   "amendments": "coordinate with Waves C/D event catalogs \u2014 one family, no double-spend"
+  }
+ },
+ {
+  "name": "Commodity Index Roll-Window Congestion (post-decay re-measurement)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 19,
+  "evi_reason": "Cheap on held data with an expected-negative honest prior; the only open increment is the impaired-arb conditional (high-vol / low spread-OI / post-2020 cells), and a clean negative permanently retires a folklore family the external world keeps re-selling us.",
+  "dedup_note": "No in-house closure touches the Goldman roll. Survives as the merged card of a 3x duplicate cluster; the conditional re-measurement framing is the only version that is not a pure literature replay of a documented decay. Conditional cells require their matched unconditional control in-wave (house rule).",
+  "card": {
+   "mechanism_class": "roll-period flow / predictable rebalancing congestion",
+   "markets": "CL primary; GC/SI via daily store",
+   "horizon": "~5 business days, monthly",
+   "data": "per-contract daily 2009+ (held)",
+   "falsifier": "F1-F2 spread return in GSCI window vs circular-shifted placebo windows, era thirds; then vol/liquidity-conditioned split WITH matched unconditional control; close-as-competed-away is the expected, bankable outcome",
+   "scout": "flow-inventory"
+  }
+ },
+ {
+  "name": "Delayed Overshooting: FX Drift After Monetary Surprises",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 20,
+  "evi_reason": "Opens the 6E row (entirely untested), needs only held dailies + free calendars, and pre-commits the carry-residualization control and the Scholl-Uhlig subsample fragility gate.",
+  "dedup_note": "No closure touches FX event response; macro law's three instruments do not include 6E and the horizon (1-4 weeks post-event) is not the release-window path. Carry control separates it from any rebadged-carry rehash of CARRY_V1.",
+  "card": {
+   "mechanism_class": "macro reaction path, weeks-scale, FX",
+   "markets": "6E daily",
+   "horizon": "1-4 weeks, 8-16 events/yr",
+   "data": "daily 6E + ZN 2009+ (held), free FOMC/ECB calendars",
+   "falsifier": "5/10/20-day 6E drift conditional on ZN event-day sign vs matched non-event days, WITH carry-residualization; kill if drift vanishes under carry control or lives in one subsample",
+   "scout": "vol-event-paths"
+  }
+ },
+ {
+  "name": "SI-vs-GC relative curve tightness (physical squeeze persistence)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 21,
+  "evi_reason": "Differencing out the common rates term is a clean design and the event-ledger-first clause (count episodes, close-without-spending if <10) is exactly the house N-bound discipline; episodic nature caps the rank.",
+  "dedup_note": "Adjacent to Wave A (CARRY_V1 SI/GC confirmation) but a different observable (relative tightness z-episodes vs static carry level) \u2014 declare adjacency and share the metals family null. G00060's GC washout closure is unrelated (outright MR).",
+  "card": {
+   "mechanism_class": "relative value / curve divergence",
+   "markets": "SI, GC",
+   "horizon": "1-6 weeks, episodic",
+   "data": "per-contract daily 2009+ (held; SI daily extraction pending, $0)",
+   "falsifier": "episode count first (close if <10); then median forward beta-neutral SI-GC return vs matched unconditional windows + thinning placebo before any DD figure",
+   "scout": "rv-curve-carry"
+  }
+ },
+ {
+  "name": "Dealer-Inventory Overnight Drift (European-open window)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 22,
+  "evi_reason": "The falsifier is one day of work on held 1-min data and is a true post-publication out-of-sample read; survivability hinges on the ON cost floor, honestly framed (ES-first).",
+  "dedup_note": "'Overnight drift' is dead-listed as the UNCONDITIONAL external effect (authors' own update) \u2014 the surviving object is the conditional post-down-day branch that the MC-12 W2 update already flags as the live branch, and the 2022+ window IS the decay test. Survives as the merged card of the 2x overnight cluster; must share the wave and null draw with the MC-12-update/MC-48 decomposition and run at the $35/RT ON floor (W2 skeptic).",
+  "card": {
+   "mechanism_class": "overnight premium concentration via dealer inventory",
+   "markets": "ES primary; NQ/RTY/YM confirmatory",
+   "horizon": "1-2h fixed overnight windows",
+   "data": "1-min 2022+ (held); DST-aware window mapping (known trap)",
+   "falsifier": "mean 1-min return by overnight clock-hour, circular-shift null preserving diurnal grid; then down-day-conditional table WITH matched unconditional control; kill if Euro-open hour indistinguishable post-2022 net of ON costs",
+   "scout": "premium-behavior-regime"
+  }
+ },
+ {
+  "name": "Month-end London 4pm fix equity-hedge rebalancing in 6E",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 23,
+  "evi_reason": "Deliberately built to survive daily-only 6E data; ~200 events; the 2015 fix-reform era split is the right decay gate; conditioning to top-tercile signal months is where survivability lives.",
+  "dedup_note": "No closure touches FX fix flow; distinct mechanism from the month-end stock-bond card (FX hedge-ratio restoration vs asset-allocation rebalance) but same calendar \u2014 declare one month-end family for the null.",
+  "card": {
+   "mechanism_class": "FX benchmark-fix rebalancing flow",
+   "markets": "6E",
+   "horizon": "1-3 days around month-end",
+   "data": "daily 6E + ES 2009+ (held)",
+   "falsifier": "month-end 6E return regressed on MTD equity-performance signal + reversal leg, era-split at the 2015 reform; dead if post-2015 slope ~0",
+   "scout": "execution-native"
+  }
+ },
+ {
+  "name": "Cross-Sectional Skewness Premium in Futures (delta-1 skew premium)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 24,
+  "evi_reason": "Genuinely untested signal on held data with the orthogonalization-vs-TSMOM+carry regression as an honest null; 20-root breadth is thin and the construction cost (causal continuous series) is the real price.",
+  "dedup_note": "Not H3 (return momentum) and not CARRY_V1 (basis): realized-skew ranking is a third observable, and the card's own alpha-after-orthogonalization gate closes it if it is secretly either. Requires the causal-roll construction (per-contract store) before anything runs.",
+  "card": {
+   "mechanism_class": "asymmetric risk premium, skew preference",
+   "markets": "~20 daily roots, tercile/signal-weighted",
+   "horizon": "weekly-monthly",
+   "data": "per-contract daily 2009+ (held) + causal roll construction (prerequisite task)",
+   "falsifier": "rank-IC of trailing-12m skew vs next-month return, shared-draw block bootstrap; then L/S alpha after TSMOM+carry regression; kill if t<2 post-orthogonalization or pre-2015-only",
+   "scout": "premium-behavior-regime"
+  }
+ },
+ {
+  "name": "Liquidity-state-aware entry deferral (time-of-day cost curve routing)",
+  "novelty_class": "POLICY",
+  "evi_rank": 25,
+  "evi_reason": "Real but marginal: MC-47 (TRIAGE-HIGH, Wave-3 pick) already builds the cost curve; the only increment here is the P1-specific alpha-decay-vs-saving replay, which is cheap and decision-relevant for the live engine.",
+  "dedup_note": "G2_F3_EXECSTATE01 closed second-of-minute timing (flat, powered) \u2014 minutes-scale deferral across liquidity states is a different object and the NOT-closed guard covers execution-policy novelty. Runs strictly inside the MC-47 harness, no separate wave slot.",
+  "card": {
+   "mechanism_class": "execution alpha / spread-state timing",
+   "markets": "NQ/MNQ now",
+   "horizon": "minutes-scale re-timing",
+   "data": "NQ BBO sample + cost model + P1 trade history (all in-house)",
+   "falsifier": "two-column replay actual vs deferred clock; dead if cost saved < alpha lost (decay measured on same trades) or the intraday cost curve is flat in the BBO sample",
+   "scout": "execution-native"
+  }
+ },
+ {
+  "name": "Trapped Pre-Positioning: Confirm vs Contradict",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 26,
+  "evi_reason": "Genuinely open interaction with a coherent trapped-crowd mechanism, but N ~ 130-160 on 2022+ 1-min is borderline and the card knows it; the pre-committed minimum-effect gate is what keeps it admissible.",
+  "dedup_note": "Pre-FOMC drift is dead-listed UNCONDITIONALLY (2015); MC-29 (pre-release drift, alive) owns the pre-state \u2014 this is its interaction extension and must run inside the MC-29 harness with the pre/post-2017 split. Macro law untouched (the object is the agree/disagree difference, not release direction).",
+  "card": {
+   "mechanism_class": "macro reaction path x pre-event drift state",
+   "markets": "ZB, ES (NQ optional)",
+   "horizon": "30-240 min",
+   "data": "1-min 2022+ + free calendars",
+   "falsifier": "2x2 agree/disagree x post-window drift with matched non-release clock-time control; pre-committed minimum-effect gate; kill if disagree-cell continuation <= agree-cell",
+   "scout": "vol-event-paths"
+  }
+ },
+ {
+  "name": "Gold/silver beta-residual overshoot unwind (spec-amplification, NOT cointegration)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 27,
+  "evi_reason": "The placebo-pair design (GC-vs-ZB residual must show nothing) is a genuine generic-MR discriminator; adverse in-house prior from G00061 (the beta-hedge REMOVED the ES-NQ signal) caps the rank.",
+  "dedup_note": "G00061 closed the ES-NQ beta-residual construction \u2014 same representation family, DIFFERENT pair with a different actor story (retail spec share asymmetry), and the kill rule requires same-market scope. The card pre-answers the 'everything mean-reverts' objection with the placebo pair; that clause is binding.",
+  "card": {
+   "mechanism_class": "cross-metal residual reversion",
+   "markets": "GC, SI",
+   "horizon": "1-4 weeks",
+   "data": "daily 2009+ (held); COT optional free enhancer",
+   "falsifier": "residual-overshoot event study with matched unconditional control + thinning placebo + GC-vs-ZB placebo pair; close as generic MR if placebo shows same edge",
+   "scout": "rv-curve-carry"
+  }
+ },
+ {
+  "name": "Equity-index cross-sectional relative strength (compressed factor-flow momentum)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 28,
+  "evi_reason": "The daily rank arm is rescue-adjacent to H3 and must carry its structural null; the genuinely novel, cheap piece is the overnight-vs-intraday decomposition of the SPREAD on held 1-min data \u2014 lead with that arm.",
+  "dedup_note": "GENESIS_H3 closed XSMOM 12-1 cross-ALL-roots 2009-18 ('P&L = structure'). A 4-root equity-only 4-12wk variant shifts universe and horizon but shares the representation family \u2014 admissible only with the H3 drift/structure control as the primary gate, and the card's own effective-K~2 honesty. The session-decomposition arm was never tested anywhere in-house. RTY/ES rel-strength is marked UNTESTED in the coverage matrix.",
+  "card": {
+   "mechanism_class": "cross-sectional ranking / RV",
+   "markets": "NQ, ES, RTY, YM",
+   "horizon": "1-8 weeks; session-decomposition arm on 2022+ 1-min",
+   "data": "daily 2009+ + 1-min 2022+ (held)",
+   "falsifier": "pooled spread-momentum t>2 under shared-draw dependence-preserving null (effective K~2) + rank monotonicity; structural/always-long control per H3 lesson; single-pair-driven result = selection luck, close",
+   "scout": "rv-curve-carry"
+  }
+ },
+ {
+  "name": "Tug-of-War Component Persistence",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 29,
+  "evi_reason": "Cheap and decisive per its own kill clause (index-level aggregation may erase the single-name effect), but the daily-store session-split definition problem (Globex vs RTH open on per-contract dailies) must be resolved before any long-history claim.",
+  "dedup_note": "Overnight drift dead-listing covers the unconditional level, not component-persistence correlations; MC-48 (TRIAGE-LOW, NQ) owns the adjacent sign-structure question \u2014 share its wave/null. Cross-root breadth is the novel piece.",
+  "card": {
+   "mechanism_class": "overnight-vs-intraday decomposition",
+   "markets": "~20 daily roots",
+   "horizon": "session legs, weekly re-sign",
+   "data": "daily OHLC 2009+ (held, open-definition caveat) + 1-min 2022+ for split precision",
+   "falsifier": "per-root corr(trailing ON-component sum, next ON component), circular-shift nulls, effective-K correction across roots; kill if index-level own-persistence absent",
+   "scout": "session-seasonal-roll"
+  }
+ },
+ {
+  "name": "Panic-State Momentum Router (bear+vol two-state gate)",
+  "novelty_class": "POLICY",
+  "evi_rank": 30,
+  "evi_reason": "Power-first discipline is right (park if underpowered at ~30-40 panic months), but the in-house prior is adverse: every non-NQ root measured VR<1 with no native trend edge to route, so the interaction may modulate zero; the calm-leg promotion ban is binding.",
+  "dedup_note": "TSMOM closures (daily V1/V2, single-index dead-list, H3) covered unconditional engines; the state INTERACTION was never measured \u2014 a POLICY-novelty object the NOT-closed guard permits. NQ excluded (P1 turf + momentum-outlier law). Kill-adjacent cousin noted: state-veto policies on P1 (all 8 cells worse) \u2014 different book, recorded not binding.",
+  "card": {
+   "mechanism_class": "regime routing between continuation and reversal",
+   "markets": "non-NQ daily complex",
+   "horizon": "days-weeks, monthly state",
+   "data": "daily per-contract 2009+ (held) + causal roll construction",
+   "falsifier": "power calc FIRST; pooled regression of continuation-portfolio return on panic dummy, shared-draw per month; never promote the calm-state TSMOM leg alone",
+   "scout": "premium-behavior-regime"
+  }
+ },
+ {
+  "name": "Nearness-to-Rolling-High Anchoring (52-week-high underreaction in futures)",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 31,
+  "evi_reason": "One-afternoon test with subsumption-by-TSMOM as the expected outcome; kept for its cheap closure value on a signal the external world will keep re-pitching.",
+  "dedup_note": "Not measured in-house; distinct observable from H3's return-momentum (level-vs-reference disagrees with past-return after V-paths). The residual-alpha-after-TSMOM gate is the whole card; requires the causal-roll construction first.",
+  "card": {
+   "mechanism_class": "anchoring underreaction",
+   "markets": "~20 daily roots + ES/CL/GC TS variants",
+   "horizon": "weeks",
+   "data": "per-contract daily 2009+ (held) + causal roll construction",
+   "falsifier": "cross-root rank-IC + residual alpha after regressing nearness L/S on TSMOM L/S; kill if subsumed (likeliest) or t<2",
+   "scout": "premium-behavior-regime"
+  }
+ },
+ {
+  "name": "FOMC press-conference verbal price-discovery drift",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 32,
+  "evi_reason": "Cheapest decisive test in its group (one afternoon) but explicitly the weakest-powered card offered (~36 events); only a large effect can clear, and the card's own t<1 instant-kill keeps it honest.",
+  "dedup_note": "MC-55/G2_F12 measured the VOL side (crush refuted \u2014 vol EXPANDS x5.66 in this exact window); tape-conditioned DIRECTION 14:30-15:30 was not the measured object and is open per SCOPE RIDER. Lucca-Moench pre-drift (dead 2015) is a different window. The G2_F12 inverted-vol fact belongs in the spec as context.",
+  "card": {
+   "mechanism_class": "Fed-communication microstructure, sequential release",
+   "markets": "ZB primary; ES/NQ secondary",
+   "horizon": "1 hour, 8 events/yr",
+   "data": "1-min 2022+ (held) + FOMC calendar",
+   "falsifier": "36-event sign test + continuation regression vs matched non-FOMC 14:30-15:30 control; kill immediately if in-sample t<1",
+   "scout": "execution-native"
+  }
+ },
+ {
+  "name": "Micro-vs-full notional routing (MNQ vs NQ all-in cost crossover)",
+  "novelty_class": "POLICY",
+  "evi_rank": 33,
+  "evi_reason": "Bounded pure-cost prize riding a sampling programme that runs anyway \u2014 but at the CURRENT live size (3 MNQ ~ 0.3 NQ) no NQ-route alternative exists, so the decision surface is empty until size grows; EVI is deferred, not zero.",
+  "dedup_note": "No closure; in-house n=2 is the only direct evidence and the card says so. Built on the quarterly crossover GetQuote sampling (perishable through 09-22 this cycle) \u2014 it is a free rider on scheduled measurement, not a wave.",
+  "card": {
+   "mechanism_class": "execution routing policy",
+   "markets": "NQ vs MNQ",
+   "horizon": "per-entry",
+   "data": "paired front/back NQ+MNQ GetQuote samples (programme running), commission templates, live MNQ fills",
+   "falsifier": "all-in $/notional per route per sampled state; dead if NQ dominates >=95% of states; note size-mootness at the current 3-MNQ book",
+   "scout": "execution-native"
+  }
+ },
+ {
+  "name": "Pre-Holiday Inventory Trim",
+  "novelty_class": "REPRESENTATION",
+  "evi_rank": 34,
+  "evi_reason": "Epsilon-cost, epsilon-prior: a 12th member of a calendar family that went 0/11 at the family bar on NQ, with 1990s sources and a decay literature; the only genuine content is the cross-asset same-sign check (ZB/GC), which is one cheap column.",
+  "dedup_note": "Pre-holiday was NOT among GENESIS_H2's 11 measured day-types, so the exact scope is unmeasured and the kill rule does not fire \u2014 but the NQ leg is family-rescue-adjacent and MUST be corrected as the 12th member of the H2 family (family-wise bar includes the 11 prior nulls). DOW re-measured NULL 2026 is the sibling precedent.",
+  "card": {
+   "mechanism_class": "holiday calendar effect",
+   "markets": "ES/NQ + ZB/CL/GC cross-check",
+   "horizon": "hours-1 day, ~9 events/yr",
+   "data": "daily 2009+ (held); holiday calendar reconstructible from missing sessions",
+   "falsifier": "pre-holiday session mean vs all-weekday control, block bootstrap preserving vol clustering, era split 2015; kill if post-2015 inside control band, outlier-carried, or the cross-asset sign check fails",
+   "scout": "session-seasonal-roll",
+   "amendments": "apply H2 family-wise correction (12th test of a nulled family), not a fresh single-test bar"
+  }
+ }
+]

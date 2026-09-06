@@ -1,0 +1,39 @@
+run_id: G3_BASISMOM_20260906
+campaign: GENESIS III (Wave 3 — world-scan card #5, REPRESENTATION)
+mechanism: "Basis-momentum (Boons & Prado, JF 2019): the DIFFERENCE between front- and
+  second-nearby cumulative momentum predicts returns; captures curve-slope momentum that
+  neither static basis nor outright momentum carries. t>4 in the original cross-section."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+frozen_object: |
+  Universe: the 5 curve-bearing roots with usable per-contract dailies {CL, GC, SI, ZN, ZB}.
+  Signal (monthly, end-of-month, causal): BM_i = cumret_12m(front-nearby series_i) -
+  cumret_12m(second-nearby series_i), point-return basis on causal-rolled series.
+  TWO preregistered arms, both reported:
+  - ARM-W (the claim, per skeptic): WITHIN-ROOT calendar-spread expression — long front /
+    short second (vol-scaled) where BM_i > 0, reverse where BM_i < 0; hold 1 month.
+  - ARM-X (secondary, thin-breadth honest): cross-sectional rank on BM, long top-2 / short
+    bottom-2 outright; n=5 breadth flagged in every table.
+data: "per-contract daily .ncd via ncd_day.py; build BOTH front-nearby and second-nearby
+  causal continuous series per root (same certified roll rules; the second-nearby is the
+  deferred-leg convention already used by CARRY_V1's slope). 2009..2026-07; seal assert."
+controls_and_nulls:
+  subsumption: "the cheap kill (gate 2): regress ARM-W monthly PnL on (a) static-basis
+    strategy PnL and (b) 12m outright-momentum strategy PnL, same universe/machinery —
+    if alpha CI includes 0, the object is secretly a parent; CLOSE."
+  monotonicity: "rank-response monotone across BM terciles (printed)."
+  null: "cycle-block bootstrap (12-month blocks) + circular shift of BM vs forward returns,
+    shared draw with G3_ZNZB_SLOPE."
+gates:
+  G1_MDE_first: "printed (~200 root-months per arm)."
+  G2_armW: "ARM-W after-cost Sharpe > 0, CI excludes 0, clears null at 5%, monotone."
+  G3_subsumption: "positive alpha vs both parents."
+  G4_era: "3-era signs printed; classification not veto."
+  G5_cost: "calendar-spread execution: MODELED $4.36 RT x 2 legs + {1,2}-tick per leg;
+    monthly turnover; print drag. SI thinness rung: SI 3-tick arm."
+decision_rule: "G2+G3 PASS -> BASISMOM01 ENGINE CANDIDATE. Either fails -> closed at scope
+  (§28). ARM-X never rescues a failed ARM-W (breadth 5 is too thin to carry alone; ARM-X
+  informs the mechanism map only). DISCOVERY."
+ledger: "G00075, family GENESIS3_RV, registered before outcomes."
+outputs: [out/gate_table.txt, out/bm_signals.csv, out/armW_pnl.csv, out/subsumption.csv, REPORT.md]

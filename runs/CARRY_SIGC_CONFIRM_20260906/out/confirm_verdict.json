@@ -1,0 +1,114 @@
+{
+  "run_id": "CARRY_SIGC_CONFIRM_20260906",
+  "verdict": "INVALID-RUN",
+  "ledger_result": "DEFECT",
+  "gates": [
+    {
+      "gate": "R1   two-sided causality (confirm panel)",
+      "spec": "future<1e-12, past>1e-9",
+      "observed": "see probe above",
+      "pass": true
+    },
+    {
+      "gate": "SEAL max session < 2026-08-01",
+      "spec": "< 2026-08-01",
+      "observed": "2026-07-31",
+      "pass": true
+    },
+    {
+      "gate": "G1   HEADLINE PRIMARY net > 0",
+      "spec": "> $0",
+      "observed": "$157,547",
+      "pass": true
+    },
+    {
+      "gate": "G2   HEADLINE PRIMARY ann net Sharpe",
+      "spec": ">= 0.45",
+      "observed": "0.723",
+      "pass": true
+    },
+    {
+      "gate": "G3   sign survival W1 AND W2",
+      "spec": "net > 0 in each",
+      "observed": "W1 $42,204 / W2 $115,344",
+      "pass": true
+    },
+    {
+      "gate": "G4a  circular-shift null percentile",
+      "spec": ">= 95.0",
+      "observed": "63.3",
+      "pass": false
+    },
+    {
+      "gate": "G4b  block-perm agreement (5-pt clause)",
+      "spec": "|d| <= 5 pts",
+      "observed": "73.7 vs 63.3, |d|=10.4",
+      "pass": false
+    },
+    {
+      "gate": "G5   family rank (selection pricing)",
+      "spec": "<= 2 of 9",
+      "observed": "rank 2 of 9",
+      "pass": true
+    },
+    {
+      "gate": "G6a  STRESS-A HEADLINE net > 0",
+      "spec": "> $0",
+      "observed": "$156,496",
+      "pass": true
+    },
+    {
+      "gate": "G6b  STRESS-B HEADLINE net > 0",
+      "spec": "> $0",
+      "observed": "$155,463",
+      "pass": true
+    },
+    {
+      "gate": "G8   switch beats BOTH static arms",
+      "spec": "Sharpe > static-SI and > static-GC",
+      "observed": "0.723 vs +0.708/-0.717",
+      "pass": true
+    },
+    {
+      "gate": "COV  pairing coverage clause",
+      "spec": ">= 50% of CARRY00 frac, all windows",
+      "observed": "GC_W1 0.527; GC_W2 0.594; SI_W1 0.558; SI_W2 0.602",
+      "pass": true
+    },
+    {
+      "gate": "G7   yearly diagnostic (REPORT-ONLY)",
+      "spec": "reported",
+      "observed": "5/7 positive years",
+      "pass": null
+    }
+  ],
+  "headline": {
+    "net_primary": 157547.43328204434,
+    "sharpe_primary": 0.722997300803678,
+    "net_w1": 42203.56561497759,
+    "sharpe_w1": 0.3970547003705288,
+    "net_w2": 115343.86766706673,
+    "sharpe_w2": 1.0348104567420207,
+    "net_stressA": 156495.59524203365,
+    "sharpe_stressA": 0.7181764872242238,
+    "net_stressB": 155463.3514034405,
+    "sharpe_stressB": 0.7134429109248818,
+    "drag_primary": 0.007795694640515957,
+    "static_si_sharpe": 0.7077316970125049,
+    "static_gc_sharpe": -0.7166290077264883,
+    "null_pctl_g4a": 63.31658291457286,
+    "null_pctl_g4b": 73.67367367367368,
+    "family_rank": 2,
+    "long_si_share": 0.9748743718592965,
+    "flips": 4,
+    "positive_years_2019_2025": 5
+  },
+  "coverage": {
+    "GC_W1": 0.5271844660194175,
+    "GC_W2": 0.5935706084959816,
+    "SI_W1": 0.558252427184466,
+    "SI_W2": 0.6015981735159818
+  },
+  "evidence_status": "PRE-FROZEN (spent by this execution); costs MODELED; research sizing",
+  "utc": "2026-09-06T12:55:19.789897+00:00"
+}

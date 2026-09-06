@@ -1,0 +1,48 @@
+run_id: G3_FTQGATE_20260906
+campaign: GENESIS III (Wave 3 — world-scan card #3, REPRESENTATION; conditional tail engine)
+mechanism: "Flight-to-quality is CONDITIONAL on the prevailing stock-bond correlation regime:
+  long-ZB-after-equity-stress pays when the trailing ES-ZB correlation is NEGATIVE (bonds are
+  the hedge asset) and fails/inverts when it is POSITIVE (2022-style inflation regime). A
+  tail engine that pays exactly when the long-P1 book suffers — the portfolio prize."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+governance_ruling: |
+  The 2019+ multi-market correlation window sat in GENESIS II's P-2 reserve (a discovery
+  holdout). CO-ORDINATOR RULING, recorded once here: the owner's 2026-09-06 success-bar rider
+  ("we do NOT gate an engine behind a frozen forward holdout") and GENESIS III §25 ("forward
+  evidence is a bonus, not a prerequisite; use historical evidence NOW") supersede that
+  discovery reserve for this campaign — precedent: the CL holdout freeze was retired
+  same-day under the identical doctrine. The repo-wide >=2026-08-01 seal (a safety rule, not
+  a holdout) is untouched. META_ADVERSARY_01 had already flagged the reserve as possibly
+  negative-EVI to the owner.
+
+frozen_object: |
+  Event day: ES daily point-return <= -1.5 x trailing-60-session sigma (causal).
+  Regime (causal, lagged one day): sign of trailing-60-session ES-ZB daily-point-return
+  correlation.
+  The 2x2: {event day} x {corr regime NEG / POS} -> ZB forward returns at horizons
+  {next day, days +1..+3, +1..+5} (close-to-close, points).
+  The CLAIM (single primary): in the NEG-corr regime, post-event ZB forward return (+1..+3)
+  exceeds its own-regime unconditional control, AND the interaction (NEG-cell delta minus
+  POS-cell delta) is positive.
+data: "es_1m -> daily (or the ES daily store) + ZB causal-rolled daily, points, 2009..2026-07
+  where both exist (ZB daily 2009+; the 1-min substrate is NOT needed); seal assert."
+controls_and_nulls:
+  per_regime_controls: "unconditional ZB forward return within EACH regime, same wave (the
+    matched-control law) — FTQ must beat its own regime's base rate, not the pooled one."
+  null: "event-clustered block bootstrap + shared-draw circular shift of the event flag;
+    events cluster (2008-style runs) — blocks must span clusters."
+  regime_lag: "the regime gate uses data through d-1 only; the lag cost is inside the test."
+gates:
+  G1_MDE_first: "printed; expect ~150-250 stress events, unevenly split across regimes."
+  G2_interaction: "interaction delta > 0 with clustered CI excluding 0."
+  G3_neg_cell: "NEG-regime post-event delta vs own-regime control > 0, CI excludes 0."
+  G4_pos_cell_honesty: "POS-regime cell printed with its control (2022 is the decisive
+    modern cell); a POS-cell that also pays reclassifies (unconditional FTQ, simpler object)."
+  G5_cost: "trivial at 1-5d; printed anyway ({1,2}-tick band)."
+decision_rule: "G2+G3 PASS -> FTQGATE01 TAIL-ENGINE CANDIDATE -> immediate exploratory
+  portfolio pre-read vs P1 (when-P1-suffers conditional payoff is the whole point). Either
+  fails -> closed at scope (§28). DISCOVERY."
+ledger: "G00076, family GENESIS3_EVENT, registered before outcomes."
+outputs: [out/gate_table.txt, out/twobytwo.csv, out/regime_series.csv, REPORT.md]

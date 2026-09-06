@@ -1,0 +1,70 @@
+{
+ "verdict": "DEAD - PERMANENT CLOSURE",
+ "all_pass": false,
+ "failed_gates": [
+  "D6b worst combined day",
+  "D6c daily corr"
+ ],
+ "gates": [
+  {
+   "gate": "D1 repro",
+   "spec": "regenerated trade-table sha == canonical artifact sha",
+   "observed": "repro c133ba198bbfbdca / canon c133ba198bbfbdca",
+   "passfail": "PASS"
+  },
+  {
+   "gate": "D2 W2020 economics",
+   "spec": "episode-block bootstrap CI_lo > 0 (seed 20260819, 10k)",
+   "observed": "CI_lo +$692.71 (dev-def CI_lo +$687.42)",
+   "passfail": "PASS"
+  },
+  {
+   "gate": "D3 W2021 ex-COVID",
+   "spec": "episode-block bootstrap CI_lo > 0 on entries >= 2021-01-01",
+   "observed": "CI_lo +$607.63 (n_ep 20, n_trades 118)",
+   "passfail": "PASS"
+  },
+  {
+   "gate": "D4a worst trade @1MNQ",
+   "spec": "|worst historical trade| <= $2,594.55 (5% of full pool)",
+   "observed": "-$2,313.44",
+   "passfail": "PASS"
+  },
+  {
+   "gate": "D4b W2020 maxDD @1MNQ",
+   "spec": "maxDD (worse of two computations) <= $7,783.65 (15% of pool)",
+   "observed": "way1 -$2,314.37 / way2 -$2,314.37",
+   "passfail": "PASS"
+  },
+  {
+   "gate": "D5 regime monitor",
+   "spec": "R(2026-05) ON: >=8 trades in 36m AND trailing-36m net > 0",
+   "observed": "n36=72, net36 +$110,126.08, ON",
+   "passfail": "PASS"
+  },
+  {
+   "gate": "D6a bottom-decile damage",
+   "spec": "LIQREV net on P1 bottom-decile days > -$10,000 @1NQ",
+   "observed": "-$9,415.52 on 7 active of 61 days",
+   "passfail": "PASS"
+  },
+  {
+   "gate": "D6b worst combined day",
+   "spec": "<= 1.5x worst P1-alone day at deployed scale",
+   "observed": "1.604x (-$2,782.17 vs -$1,734.89)",
+   "passfail": "FAIL"
+  },
+  {
+   "gate": "D6c daily corr",
+   "spec": "full-overlap daily corr <= 0.25",
+   "observed": "+0.365 (active-day corr +0.614)",
+   "passfail": "FAIL"
+  },
+  {
+   "gate": "D7 worst-rung cost",
+   "spec": "W2020 net/trade > $500 @1NQ at worst fill x 4t/side x 3x comm",
+   "observed": "$1469.83 (next_open_0930)",
+   "passfail": "PASS"
+  }
+ ]
+}

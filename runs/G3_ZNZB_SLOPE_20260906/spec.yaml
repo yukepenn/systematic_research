@@ -1,0 +1,38 @@
+run_id: G3_ZNZB_SLOPE_20260906
+campaign: GENESIS III (Wave 3 — world-scan card #4, REPRESENTATION)
+mechanism: "Preferred-habitat / term-premium carry expressed duration-neutral: the ZB-vs-ZN
+  slope position toward the carry-richer leg earns roll-down without outright duration risk.
+  Needs no cash-yield data: carry measured from each root's OWN calendar spread."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+frozen_object: |
+  Weekly (ISO weeks, last observation strictly before the week's first trading day):
+  - carry_i = (P_near - P_deferred)/month_gap / sigma_i  for i in {ZN, ZB} — the CARRY_V1
+    construction verbatim (causal volume-crossover near contract, 5-day pre-expiry buffer;
+    sigma = lagged 63-day sd of daily point change).
+  - Position: LONG the carry-richer root, SHORT the other, legs sized 1/sigma_i (points-vol
+    neutral proxy for DV01-neutral; the approximation is named, not hidden).
+  - No threshold: always in, sign = carry ordering (zero free parameters).
+data: "per-contract daily .ncd via ncd_day.py; certified causal roll for continuous P&L
+  (points); ZN + ZB 2009..2026-07; seal assert < 2026-08-01."
+controls_and_nulls:
+  reduce_to_outright: "regress weekly RV PnL on BOTH single-root carry-timing strategies
+    (long-when-own-carry-positive ZB, same ZN, identical machinery): the RV object must have
+    positive alpha; if PnL is explained by outright carry (alpha CI includes 0), CLOSE —
+    it is not a curve object."
+  beta_stability: "rolling 52-week leg-ratio stability audit printed (a drifting hedge ratio
+    that flips the sign of carry ordering >20% of weeks = fragility flag)."
+  null: "circular-shift of the weekly signed position stream vs realized returns, all offsets,
+    shared draw with G3_BASISMOM where windows overlap; block bootstrap CIs."
+gates:
+  G1_MDE_first: "printed before observed (~910 weeks)."
+  G2_edge: "after-cost weekly mean > 0, CI excludes 0, clears shift null at 5%."
+  G3_not_outright: "the reduce-to-outright control passes (positive alpha)."
+  G4_era: "2009-15 / 2016-21 / 2022-26 signs printed; classification per owner doctrine."
+  G5_cost: "MODELED $4.36 RT + {1,2}-tick band on BOTH legs, weekly turnover — print the
+    drag; ZN/ZB are the deepest CME spread markets, but prove it."
+decision_rule: "G2+G3 PASS -> ZNZB_RV01 ENGINE CANDIDATE (Class-S/P; rho-to-P1). Either
+  fails -> closed at scope (§28 block). DISCOVERY."
+ledger: "G00074, family GENESIS3_RV, registered before outcomes."
+outputs: [out/gate_table.txt, out/weekly_pnl.csv, out/outright_control.csv, REPORT.md]

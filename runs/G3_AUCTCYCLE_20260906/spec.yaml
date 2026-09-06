@@ -1,0 +1,47 @@
+run_id: G3_AUCTCYCLE_20260906
+campaign: GENESIS III (Wave 3 — world-scan card #1, RAW_INFO)
+mechanism: "Treasury auction concession cycle (Lou-Yan-Zhang RFS 2013, slow-moving dealer
+  capital): prices concede into scheduled 10y/30y auctions and rebound after, because dealer
+  balance-sheet absorbs anticipated repeated supply shocks."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+frozen_object: |
+  PRIMARY (the tradeable leg): LONG the matching future (ZN for 10-year note auctions, ZB for
+  30-year bond auctions) at the AUCTION-DAY close; exit at close D+5 (5 trading days). One
+  event = one auction day (original issues AND reopenings, flagged separately in reporting).
+  SECONDARY (reported, non-gating): the pre-auction concession D-5..D-1 drift, and the
+  combined concession-rebound spread.
+data: |
+  - Auction calendar: TreasuryDirect public historical auction query (FREE public data, $0 —
+    allowed; no purchase). Pull all 10y note and 30y bond auction dates 2009-01-01..2026-07-31;
+    persist raw pull to out/auction_calendar.csv with source URL + pull timestamp.
+  - Prices: per-contract daily .ncd store via research/multi_market/src/ncd_day.py + the
+    CERTIFIED causal roll (research/multi_market/src/roll.py, same construction the GC/SI
+    builds used, identity-gated) -> ZN and ZB continuous POINTS series 2009..2026-07.
+  - Seal: assert max session < 2026-08-01.
+controls_and_nulls:
+  matched_control: "same-weekday non-auction days (no 10y/30y auction within +-5 days),
+    same D+1..D+5 window, same wave."
+  specificity: "ES on the same auction events must show ~nothing (rates-supply mechanism,
+    not a broad risk premium)."
+  null: "circular-shift of the auction-day flag across the session sequence, 2000 shifts,
+    fixed seed, ONE shared draw for ZN and ZB (dependence-preserving); block bootstrap by
+    event for CIs."
+gates:
+  G0: "calendar pulled + persisted; roll identity gates pass; seal assert."
+  G1_MDE_first: "MDE for the rebound-leg mean printed before observed (expected N ~ 400+)."
+  G2_edge: "PRIMARY rebound after-cost mean > 0, event-block CI excludes 0, clears the
+    shared-draw null at 5%."
+  G3_control: "beats the matched non-auction control (delta CI excludes 0)."
+  G4_era: "sign in each of 2009-15 / 2016-21 / 2022-26-07 printed; all-positive = STRUCTURAL,
+    modern-only = REGIME-LOCAL classification (owner doctrine: not a veto), sign-flip = FAIL."
+  G5_specificity: "ES same-event read printed; a same-size ES effect reclassifies the
+    mechanism (not auto-fail, but the rates-supply story dies and is said so)."
+  G6_cost: "MODELED $4.36 RT + {1,2}-tick spread band; 5-day horizon makes this trivial —
+    prove it, don't assume it."
+decision_rule: "G2+G3 PASS and G4 not sign-flip -> AUCT01 ENGINE CANDIDATE (Class-S/P
+  assessment: economics/yr, rho-to-P1, portfolio marginal). Any of G2/G3 FAIL -> closed at
+  scope with the §28 block. DISCOVERY on first read of this representation."
+ledger: "G00073, family GENESIS3_EVENT, registered before outcomes."
+outputs: [out/auction_calendar.csv, out/gate_table.txt, out/event_study.csv, out/era_table.csv, REPORT.md]

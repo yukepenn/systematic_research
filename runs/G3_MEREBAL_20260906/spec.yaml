@@ -1,0 +1,37 @@
+run_id: G3_MEREBAL_20260906
+campaign: GENESIS III (Wave 3 — world-scan card #8, REPRESENTATION)
+mechanism: "Month-end stock-bond rebalancing flow: after months where equities strongly
+  outperformed bonds, balanced mandates sell equities / buy bonds at the turn; the flow
+  presses prices at the turn and REVERTS after (both legs are the mechanism's signature —
+  flow without reversal is just seasonality; reversal without flow is just MR)."
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+frozen_object: |
+  Signal month m: REL_m = (ES month-to-date point return / sigma_ES) - (ZB same / sigma_ZB),
+  measured through the close of day T-3 (3rd-to-last trading day, causal).
+  Condition: REL_m in its top tercile (trailing-36-month tercile bounds, causal).
+  LEG-FLOW: from T-2 close to T+1 close (the turn): ZB return > 0 and ES return < 0 expected
+  (measured jointly as ZB-minus-ES spread, points-vol-scaled).
+  LEG-REVERT: from T+1 close to T+5 close: the spread reverts (opposite sign).
+  BOTH legs must hold vs matched controls — the preregistered conjunction IS the claim.
+data: "ES + ZB causal daily (as G3_FTQGATE), 2009..2026-07; ~211 month-turns, ~70 top-tercile
+  events; seal assert."
+controls_and_nulls:
+  matched_control: "all month-turns unconditional (same windows) — the flow leg must exceed
+    the generic turn-of-month effect, which is itself a known folklore family."
+  null: "shared-draw circular shift of the condition flag across month-turns; event-block
+    bootstrap CIs."
+gates:
+  G1_MDE_first: "printed (~70 events; be honest that power is moderate)."
+  G2_flow: "conditional flow-leg spread > matched unconditional control, CI excludes 0."
+  G3_revert: "conditional revert-leg opposite-signed, CI excludes 0."
+  G4_conjunction: "BOTH G2 and G3 — a single-leg pass is recorded but the object FAILS
+    (the mechanism's signature is the pair)."
+  G5_era: "3-era signs printed."
+  G6_cost: "{1,2}-tick band, 2 RTs per event per leg; printed."
+decision_rule: "G4 PASS -> MEREBAL01 ENGINE CANDIDATE (small, calendar-native, Class-P
+  likely). FAIL -> closed at scope (§28) — and the generic turn-of-month control table gets
+  banked either way. DISCOVERY."
+ledger: "G00077, family GENESIS3_EVENT, registered before outcomes."
+outputs: [out/gate_table.txt, out/event_table.csv, out/controls.csv, REPORT.md]

@@ -1,0 +1,229 @@
+================================================================================================
+G3_LIQREV01_READJ_20260906 -- LIQREV01 regime-local standalone re-adjudication
+DESIGN_FROZEN.md sha256 = 45fedf86bf0a209dd5571a2797f6cb51078634df3c251e5566d3ea3ce775cb79
+Evidence status: DISCOVERY_CONSUMED throughout. Seed 20260819, 10000 bootstrap reps.
+================================================================================================
+
+[S1] DATA SEAL + FROZEN-POOL INTERSECTION CHECK (OQ-8 rule)
+  substrate: D:\OneDrive - Washington University in St. Louis\TradingResearch\systematic_research\research\scalping_lab\substrate\minute\NQ\nq1m_2005_202605.parquet
+  sha256 = dfd017eff0b031c2be89639fc4ad347d45053867edcdc2600002252b10b627cf (asserting prefix dfd017ef)
+[LIQREV01-repro] loading minute substrate ...
+  max bar date in substrate       2026-05-29
+  ASSERT max session < 2026-08-01   PASS
+  Files READ by this run: [substrate parquet (materialized 2026-08, non-pool),
+    canonical liqrev01_trades.csv artifact, hist_calendar_2005_2021.csv,
+    w8bfade_trades.csv (release-date list), runs/WE_W56_BREADTH/out/p1_daily.csv].
+  Frozen-pool registers (runs/G2_WAVE5_CARDS_20260906/BBO_GOVERNANCE_MEMO.md; the
+    design's 'research/genesis2/' path does not exist -- actual location disclosed):
+    W5 PROTECTED 168 / MICRO_BLIND 141 / BBO_BLIND 19 / ESNQ_BLIND 15 are all TICK/BBO
+    session pools over 2025-08-13 -> 2026-07-31. This run reads NO tick/BBO file and
+    extracts NO new session; input-file-list  INTERSECT  pool-member-file-lists = EMPTY.
+  Disclosure (OQ-8 spirit): the minute LAST-price substrate predates the pools and its
+    calendar range overlaps pool member DATES; its Last-price minute content was already
+    materialized and consumed by the original 2026-08-19 run -- no NEW exposure created.
+  No blind/frozen pool touched: PASS
+
+[D1] REPRODUCING THE FROZEN TRADE TABLE (verbatim dev pipeline) ...
+  release source: hist_calendar(2005-2021) + w8bfade release rows (2022+)
+  canonical artifact sha256 = c133ba198bbfbdca058aba70503ccb617d2ae8b55cc29800b50a7ed23342016e
+  reproduction       sha256 = c133ba198bbfbdca058aba70503ccb617d2ae8b55cc29800b50a7ed23342016e
+  D1 (repro sha match): PASS
+
+[D2] POST-2020 ECONOMICS (W2020: entries 2020-01-01 -> 2026-05-29)
+  trade count                       154  (expected 154)
+  net (1 NQ)                        +$259,973.56
+  $/trade                           +$1,688.14
+  $/wk over the 334.3-wk window     +$777.70
+  weekly grid: 335 weeks, 63 non-zero; eval_battery native income  $776.04/wk
+  WEEKLY-VOL SHARPE (lead metric, annualized sqrt(52))   1.018
+  (No fixed-DD or fixed-CDaR improvement claim is made anywhere in this run, so no
+   thinning placebo is owed; maxDD below is a DESCRIPTOR, never a selection denominator.)
+  trade-level-equity maxDD (1 NQ)   -$23,143.72   [descriptor]
+  trade-level-equity maxDD (1 MNQ)  -$2,314.37   [descriptor]
+  episode definitions (BOTH printed; dev deviation disclosed):
+    SPEC-conformant: maximal runs of STRESS SESSIONS (rv5_pct>=0.90) with session
+      gaps <= 5; trade -> episode of its entry session. 67 stress episodes exist
+      full-sample; 23 contain W2020 trades.
+    DEV (01_liqrev01.py): maximal runs of TRADES with entry gaps <= 5 sessions --
+      a deviation from SPEC wording (merges nothing across trade droughts inside a
+      stress run; splits stress runs whose interior days produced no trade).
+  episode-block bootstrap, 10000 reps, seed 20260819:
+    SPEC-conformant episodes (n=23): $/trade CI [+$692.71, +$2,558.75]
+    DEV episodes           (n=28): $/trade CI [+$687.42, +$2,546.32]
+  D2 GATE (SPEC-episode CI_lo > 0 on W2020): CI_lo = +$692.71 -> PASS
+
+[D3] EPISODE DEPENDENCE / NOT-A-LOTTERY
+  W2020 episodes (SPEC-conformant, ALL 23 listed in out/episode_table.csv):
+    ep44  2020-01-31 -> 2020-02-04  n= 3  net -$2,238.08
+    ep45  2020-02-24 -> 2020-04-02  n=25  net +$83,971.00
+    ep46  2020-09-03 -> 2020-09-14  n= 8  net -$3,679.88
+    ep47  2021-03-01 -> 2021-03-11  n= 8  net +$15,670.12
+    ep48  2021-10-01 -> 2021-10-05  n= 3  net +$9,171.92
+    ep49  2021-11-26 -> 2021-12-22  n=11  net +$10,122.04
+    ep50  2022-01-07 -> 2022-02-04  n= 9  net -$4,279.24
+    ep51  2022-02-15 -> 2022-02-15  n= 1  net -$369.36
+    ep52  2022-02-24 -> 2022-03-11  n= 5  net -$3,266.80
+    ep53  2022-04-26 -> 2022-05-17  n= 9  net +$44,745.76
+    ep54  2024-03-08 -> 2024-03-15  n= 4  net +$3,227.56
+    ep55  2024-04-10 -> 2024-05-06  n= 8  net +$6,910.12
+    ep56  2024-07-17 -> 2024-08-15  n=16  net +$13,175.24
+    ep57  2024-08-23 -> 2024-09-19  n= 7  net +$3,544.48
+    ep58  2024-12-19 -> 2025-01-15  n= 8  net +$1,315.12
+    ep59  2025-02-03 -> 2025-02-04  n= 2  net +$3,266.28
+    ep60  2025-02-27 -> 2025-03-19  n=10  net +$41,846.40
+    ep61  2025-04-03 -> 2025-04-16  n= 7  net +$38,039.48
+    ep62  2025-10-17 -> 2025-10-17  n= 1  net -$6,349.36
+    ep63  2025-11-18 -> 2025-11-26  n= 4  net +$2,002.56
+    ep64  2026-02-05 -> 2026-02-06  n= 2  net +$6,906.28
+    ep65  2026-03-09 -> 2026-03-12  n= 2  net -$2,208.72
+    ep66  2026-05-20 -> 2026-05-20  n= 1  net -$1,549.36
+  top-1 episode share of W2020 net  +$83,971.00 = 32.3%
+  top-3 episode share of W2020 net  +$170,563.16 = 65.6%
+  ex-top-3-episode: net +$89,410.40 over 20 episodes, $/trade CI [+$143.18, +$1,617.31]  (NON-GATING)
+  drought statistics: max inter-trade entry gap in W2020 = 661 days
+    (2022-05-17 -> 2024-03-08). In words: after 2022-05-17 the stress gate went fully dark for 661
+    days until 2024-03-08 -- calendar 2023 produced ZERO trades, as did calendar 2019.
+    A 1.8-year silent stretch is NORMAL for this object; absence of trades is not
+    regime death (D5 handles this via the 36-month lookback).
+  W2021 (entries >= 2021-01-01, calendar COVID-exclusion): 118 trades, net +$181,920.52, $/t +$1,541.70
+  D3 GATE (W2021 episode-block CI_lo > 0): CI [+$607.63, +$2,549.46] over 20 episodes -> PASS
+
+[D4] TAIL AT SIZE -- deployment unit 1 MNQ ($2/pt = exactly 1/10 of the NQ ledger)
+  worst historical trade (FULL sample, 1 MNQ)  -$2,313.44  (2025-04-03 long)
+  worst W2020 trade (1 MNQ)                    -$2,313.44
+  ES5 W2020 (mean of worst 7 trades, 1 MNQ)    -$1,264.72
+  worst episode (1 MNQ)                        -$634.94
+  worst calendar month (1 MNQ, 2022-01)        -$925.12
+  maxDD computed TWO ways (the CAP01 lesson -- each states its event in words):
+   WAY 1 (direct trade-path scan): the largest peak-to-trough decline of CUMULATIVE
+     TRADE-LEVEL equity, trades in entry order, W2020 at 1 MNQ:      -$2,314.37
+   WAY 2 (calendar-daily reconstruction): the largest peak-to-trough decline of the
+     CALENDAR-DAY equity path (exit-date-attributed daily P&L incl. 1498 zero
+     sessions), W2020 at 1 MNQ:                                      -$2,314.37
+   agreement: |way1 - way2| = $0.00 (identical event, two constructions)
+   pipeline identity check (episode concat in original order): $2314.37
+  Neither figure is 'P(losing the account)'. Each is a maximum historical drawdown of
+  an equity PATH -- an order statistic of this one realized sequence.
+  D4 GATE (a): |worst historical trade @1MNQ| <= $2594.55 (5.0% of $51,891 full pool):
+     observed -$2,313.44 -> PASS
+  D4 GATE (b): W2020 maxDD @1MNQ (worse of the two ways) <= $7783.65 (15% of pool):
+     observed -$2,314.37 -> PASS
+  live-account ratios (NON-GATING; pool policy is the owner's): worst trade = 22.7%,
+     W2020 maxDD = 22.7% of the $10,206 live account.
+  ZERO-EDGE LINE (labeled, for the owner packet): take the same 154 W2020 trade P&Ls
+    at 1 MNQ, remove the mean (edge := 0), and form all 154 circular shifts of the
+    sequence (dependence-preserving null). The event counted is: 'the trade-path max
+    drawdown of a zero-edge rotation reaches the $7,784 D4 bar'.
+    P(maxDD >= $7,784 | edge = 0) = 0.000   (median null maxDD $6437, p95 $6913)
+    This is a drawdown probability under a null, NOT 'P(losing the account)'.
+
+[D5] REGIME OBSERVABILITY -- R(d) trailing-36-month self-ledger monitor
+  R(d) = trailing-36-month net of the frozen rule's OWN trades (exit-attributed),
+    computable at any d with >= 8 trades in the window; ON iff n>=8 AND net > 0.
+  monthly series 2010-01 -> 2026-05 written to out/regime_monitor.csv (197 rows)
+  pre-2020 months ON: 67 of 120;  2020+ months ON: 77 of 77
+  first ON month >= 2019-12: 2019-12-31;  stays ON through 2026-05: True
+  2023 zero-trade year: 36-month lookback keeps n>=8 throughout (min n in 2023 = 46)
+  last computable month-end 2026-05-31: n36=72, net36 +$110,126.08, regime ON
+  V(d) secondary read (trailing-63s median rv5 / trailing-1260s median rv5, NON-GATING):
+    at 2026-05-29 V = 1.557 (>1 means vol regime elevated vs its own 5-yr base)
+  Regime-extension read 2026-06->07: NOT PERFORMED -- the only 2026-06->07 store on this
+    box is a BID/ASK quote-bar parquet (no Last-price series), so the frozen rule cannot
+    be extended without constructing a NEW substrate; per spec R_extension its absence
+    does not block (primary regime read ends 2026-05-29).
+  D5 GATE (regime ON at last computable date 2026-05): PASS
+
+[D6] PORTFOLIO MARGINAL vs THE LIVE P1 BOOK (genuinely new number)
+  p1_daily.csv sha256 = 9bc2d7f7000653b4d15f82b9ac9bf76ac25ec4cdbdb008d382453ec082a75357
+  DISCLOSED: every Python-chain P1 figure is ~2.0%% optimistic (double-lagged ATR at
+    we_fastctx.py:81, GENESIS III verdict) -- immaterial for correlation/geometry reads.
+  join grid: 632 days (p1 rows 607, LIQREV-active days 72, LIQREV trades in window 72)
+  THIN-OVERLAP HONESTY: only ~72 LIQREV trades intersect the P1 ledger (2024-2026
+    trades only -- 2022 trades end 05-17 before the ledger starts, 2023 is empty);
+    a zero-trade P1-bad-day contributes $0 and passes (a) -- that IS the no-harm finding.
+  full-overlap daily corr (zero-filled grid)      +0.365
+  both-active-days corr (n=72, reported)          +0.614
+  corr on P1 losing days (n=328)                   +0.013
+  P1 bottom-decile days: threshold $-1794.57, n=61, LIQREV active on 7 of them
+  LIQREV net on P1 bottom-decile days (1-NQ scale) -$9,415.52
+  worst combined day (0.3*P1 + 0.1*LIQREV)         -$2,782.17  (2025-04-04)
+  worst P1-alone day at deployed scale (0.3*P1)    -$1,734.89  (2023-08-25)
+  ratio worst-combined / worst-P1-alone            1.604x
+  weekly-vol Sharpe: P1-alone(deployed) 2.261 vs combined 2.107 (Δ -0.155)
+  day-clustered bootstrap (days resampled in PAIRS, daily-grain Sharpe, 10000 reps,
+    seed 20260819): P(ΔSharpe > 0) = 0.465   [REPORTED, non-gating]
+  D6 GATE (a) LIQREV net on P1 bottom-decile days > -$10,000 @1NQ: -$9,415.52 -> PASS
+  D6 GATE (b) worst combined day <= 1.5x worst P1-alone (deployed): 1.604x -> FAIL
+  D6 GATE (c) full-overlap daily corr <= 0.25: +0.365 -> FAIL
+
+[D7] COST / MICRO-EXECUTION VIABILITY -- stress rungs on W2020
+  commission: MNQ $1.30/ctrRT  [BASIS=COMMISSION_ONLY, EVIDENCE=MEASURED, n=704] ->
+    $13.00 per NQ-equivalent ctrRT (10 MNQ); 3x stress rung $39.00
+  MNQ spread: UNMEASURED anywhere in this repo [EVIDENCE=ASSUMED]; two live samples
+    suggest <= NQ; preregistered stress rungs {1, 2, 4} ticks per side stand.
+  fill-timing rungs {15:59, 16:03, next-open 09:30} recomputed ON W2020 (red team ran
+    them full-sample only). Gross at variant closes; the frozen ledger's 1-tick-adverse
+    fills are REPLACED by the explicit spread rung (no double-charge).
+  next-open variant: 154 of 154 trades computable (1-session hold preserved: enter at
+    first-RTH-bar close of d+1, exit at first-RTH-bar close of d+2)
+  ALL rungs (net $/trade at 1-NQ scale; full table in out/stress_rungs.csv):
+    fill \ spread/comm  1t/1x  2t/1x  4t/3x
+    close_1558         1680   1670   1624
+    close_1559         1659   1649   1603
+    close_1603         1617   1607   1561
+    next_open_0930     1526   1516   1470
+  WORST rung: next_open_0930 x 4t/side x 3x commission -> net/trade $1469.83 @1NQ ($146.98 @1MNQ)
+  D7 GATE (worst-rung W2020 net/trade > $500 @1-NQ scale): PASS
+  adapter feasibility (FACTS, no build in this run): decision on NQ primary close,
+    execution MNQ added series (MX01 pattern, drift-free by construction); one order
+    ~15:58:59 + one exit next session ~15:58:59; position held OVERNIGHT across 18:00 =>
+    full initial MNQ margin applies and the 16:39/16:45 flatten conventions do NOT
+    transfer; roll guard must inherit MIN-over-series blackout; new class name
+    LiqRev01Mnq_v1; local-path compile only, never CrossTrade source upload.
+    Margin figure to be read from the broker at packet time (blocker if unavailable).
+
+[D8] REPORTING OBLIGATIONS (not gates)
+  (i) post-2020 3x3 grid re-report (ALL 9 cells; W2020 restriction of each cell;
+      plateau read only, NO selection):
+      s85_q20: n=211 $  1222/t | s85_q25: n=243 $  1121/t | s85_q30: n=272 $  1184/t
+      s90_q20: n=154 $  1688/t | s90_q25: n=175 $  1504/t | s90_q30: n=194 $  1396/t
+      s95_q20: n= 83 $  2386/t | s95_q25: n= 94 $  2061/t | s95_q30: n=103 $  1952/t
+      plateau read: all 9 W2020 cells positive-sign? -> printed above, reported only.
+  (ii) thin (13:00-halt) holiday sessions: 75 such sessions in substrate.
+      FULL sample: 8 trades touch them, net -$12,334.88 (known conservative-direction defect)
+      W2020 WITH all trades:      n=154, $1688/t
+      W2020 WITHOUT thin-session: n=151, $1798/t (excluded net -$11,503.08)
+  (iii) overnight-gap flag, BOTH constructions shown on W2020:
+      DEV proxy (ret z>6): 1 flagged trades net +$42,080.64; WITHOUT them $1424/t
+      RED-TEAM-CORRECTED (minute-data overnight gap z>6 on exit day): 6 flagged
+      trades net +$728.84; WITHOUT them $1752/t
+  (iv) long/short split W2020: LONG n=83 net +$131,433.12 ($1584/t) | SHORT n=71 net +$128,540.44 ($1810/t)
+  (v) matched-placebo spread on W2020 (nearest calm-state trade by SIGNED entry-day
+      move, same side, with replacement; median match distance 0.8 pts):
+      real $1688/t vs matched-calm $-508/t -> state-attributable spread $2197/t
+
+================================================================================================
+GATE / SPEC / OBSERVED / PASS-FAIL TABLE (printed by the program)
+================================================================================================
+GATE                       | SPEC                                                           | OBSERVED                                       | PASS-FAIL
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+D1 repro                   | regenerated trade-table sha == canonical artifact sha          | repro c133ba198bbfbdca / canon c133ba198bbfbdca | PASS
+D2 W2020 economics         | episode-block bootstrap CI_lo > 0 (seed 20260819, 10k)         | CI_lo +$692.71 (dev-def CI_lo +$687.42)        | PASS
+D3 W2021 ex-COVID          | episode-block bootstrap CI_lo > 0 on entries >= 2021-01-01     | CI_lo +$607.63 (n_ep 20, n_trades 118)         | PASS
+D4a worst trade @1MNQ      | |worst historical trade| <= $2,594.55 (5% of full pool)        | -$2,313.44                                     | PASS
+D4b W2020 maxDD @1MNQ      | maxDD (worse of two computations) <= $7,783.65 (15% of pool)   | way1 -$2,314.37 / way2 -$2,314.37              | PASS
+D5 regime monitor          | R(2026-05) ON: >=8 trades in 36m AND trailing-36m net > 0      | n36=72, net36 +$110,126.08, ON                 | PASS
+D6a bottom-decile damage   | LIQREV net on P1 bottom-decile days > -$10,000 @1NQ            | -$9,415.52 on 7 active of 61 days              | PASS
+D6b worst combined day     | <= 1.5x worst P1-alone day at deployed scale                   | 1.604x (-$2,782.17 vs -$1,734.89)              | FAIL
+D6c daily corr             | full-overlap daily corr <= 0.25                                | +0.365 (active-day corr +0.614)                | FAIL
+D7 worst-rung cost         | W2020 net/trade > $500 @1NQ at worst fill x 4t/side x 3x comm  | $1469.83 (next_open_0930)                      | PASS
+
+DECISION RULE (preregistered, binary):
+  VERDICT: DEAD - PERMANENT CLOSURE
+  Scoped reason (verbatim): "the exact LIQREV01 post-2020 vol-acceleration reversal
+   object is not a rational regime-local standalone engine at deployable micro size
+   - failed D6b worst combined day, D6c daily corr on DISCOVERY_CONSUMED re-adjudication."
+
+HONEST MULTIPLICITY NOTE (SS6, mandatory): the object was originally SELECTED on this
+same window, so D2's pass is partially guaranteed by construction; the decision therefore
+hinges on D3-D7, which are new questions -- and the verdict label says REGIME-LOCAL forever.
