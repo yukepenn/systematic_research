@@ -366,3 +366,37 @@ reason = the T-2 placebo carries the SAME premium (+169 vs +164) - diffuse month
 extension-day flow; G2 CI includes 0; modern era ~zero after cost. The adverse prior (G00077 control) held.
 ```
 Banked fact: a DIFFUSE gross ZB month-turn tilt exists (+/+/+ eras) but is ~uncapturable after cost in the modern era.
+
+
+## GENESIS III Wave 6 closures (2026-09-06) — the world-scan ranks 13-23 sweep
+
+### Passive bond-roll calendar drift (G00087) — POWERED NULL
+```
+observable = ZN/ZB calendar spreads, 111/140 pairable root-cycles, FN-anchored event time
+representation = long-back/short-front [FN-10,FN-4]      reason = no drift even GROSS (-$22/cycle,
+p .47, 51% sign = coin flip) vs MDE $89; placebos clean; both eras negative after cost.
+```
+Sidecar: the NT8 day store has NO open interest -> margin-spiral OI card (#14) DATA-GATED locally.
+
+### ES roll-cycle financing richness shape (G00088) — directional null, thin power
+```
+reason = wrong sign (-0.035/day, p .77; the spread richens INTO the roll — the reverse placement,
+itself insignificant); post-2016 stability failed; cycle-level ES/NQ shape corr NEGATIVE (-0.17).
+n=47 cycles was the honest ceiling; MDE 0.077.
+```
+### 6E delayed overshooting after FOMC (G00089) — era-fragile
+```
+reason = the Scholl-Uhlig one-third gate fired: +$553/ct 2009-14, -$321 2015-20, -$75 2021-26 —
+>100% of the pooled effect in the ZLB third. Controls passed, moot. First 6E event closure.
+```
+### ES overnight dealer drift (G00090) — the card kill fired verbatim
+```
+reason = no clock-hour cell clears the K_eff bar (best 23:00 p .0216 vs .00313); the Euro-open
+cell is the FLATTEST in the grid; down-day conditional +0.31 pt p .53, decayed .64 -> .05, below
+the 2-tick ON cost rung. BANKED: the full ES overnight hour-grid map (out/hour_grid.csv).
+```
+### 6E month-end fix rebalancing (G00091) — POWERED NULL everywhere
+```
+reason = fix-day slope ~0 in BOTH eras (absence, not 2015-reform decay); reversal leg wrong-signed;
+top-tercile conditioning INVERTS the sign (-$89/event gross). MDE ~$230/event documented.
+```

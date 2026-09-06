@@ -1,0 +1,161 @@
+{
+  "n_events": 176,
+  "drops": {
+    "no_prev_month": 1,
+    "short_month": 7,
+    "short_next": 1,
+    "signal_unclean": 17,
+    "fix_unclean": 0,
+    "rev_unclean": 3
+  },
+  "n_pre": 62,
+  "n_post": 114,
+  "slope_fix": -0.0018155649210122916,
+  "slope_rev": 0.010073613089552869,
+  "ci_fix": [
+    -0.02823846176507679,
+    0.024903171718702887
+  ],
+  "ci_rev": [
+    -0.03887614883189173,
+    0.04780737707850399
+  ],
+  "ci_fix_normal": [
+    -0.024552894801123156,
+    0.02092176495909857
+  ],
+  "ci_rev_normal": [
+    -0.03528900257330552,
+    0.055436228752411255
+  ],
+  "slope_fix_pre": -0.003896471460072,
+  "slope_fix_post": -0.0015041170211298346,
+  "slope_rev_pre": 0.05050951190377423,
+  "slope_rev_post": -0.0076222454930135715,
+  "ci_fix_pre": [
+    -0.07517859862692554,
+    0.0681995528234679
+  ],
+  "ci_fix_post": [
+    -0.023380716818779824,
+    0.018841215612256438
+  ],
+  "ci_rev_pre": [
+    -0.03897865149906686,
+    0.1055170447781925
+  ],
+  "ci_rev_post": [
+    -0.06726840595955269,
+    0.03723709309113934
+  ],
+  "ci_fix_post_normal": [
+    -0.02435447185784468,
+    0.021346237815585013
+  ],
+  "p1_fix": 0.5452273863068465,
+  "p1_rev": 0.657671164417791,
+  "mde_fix": 0.028845087115763092,
+  "mde_fix_post": 0.028988473113005852,
+  "sd_signal": 0.04130155075710816,
+  "sd_signal_post": 0.04179126216960913,
+  "dir_all_usd": 46.697443181818954,
+  "dir_top_usd": -89.40677966101651,
+  "cost": {
+    "1": 10.61,
+    "2": 16.86
+  },
+  "gates": [
+    {
+      "gate": "G0a_SEAL_ES",
+      "spec": "max ES session < 2026-08-01",
+      "observed": "2026-07-31",
+      "ok": true
+    },
+    {
+      "gate": "G0b_SEAL_6E",
+      "spec": "max 6E session < 2026-08-01",
+      "observed": "2026-07-31",
+      "ok": true
+    },
+    {
+      "gate": "G0c_INPUTS_AS_IS",
+      "spec": "sha256 of both parquets == their source manifests (ES: AUCTCYCLE; 6E: DAILY_6E autopsy)",
+      "observed": "ES 249921cb6d79.. OK, 6E af70be2d8570.. OK",
+      "ok": true
+    },
+    {
+      "gate": "G0d_IDENTITY",
+      "spec": "certified transports: ES identity-gate maxerr < 1e-9; 6E reproduces certified s7 exactly",
+      "observed": "ES 0.0e+00, 6E 0.0e+00",
+      "ok": true
+    },
+    {
+      "gate": "G0e_ROLL_CAUSAL",
+      "spec": "ES roll causal (manifest); 6E roll = fixed 5-day pre-expiry (s6-sanctioned, named)",
+      "observed": "ES True, 6E {'volume_crossover': 1, 'pre_expiry_override': 69, 'initialise': 1}",
+      "ok": true
+    },
+    {
+      "gate": "G0f_SIGNAL_CAUSAL",
+      "spec": "signal cutoff (T-2 close) strictly before fix-leg entry (T-1 close) strictly before fix day, every event",
+      "observed": "176/176 events",
+      "ok": true
+    },
+    {
+      "gate": "G0g_POINTS",
+      "spec": "6E outcome math in POINTS (self-financing sums); signal denominator = RAW unadjusted ES close, never a back-adjusted level (DELEV01)",
+      "observed": "ret_points sums; base = held-front close",
+      "ok": true
+    },
+    {
+      "gate": "G1_MDE_first",
+      "spec": "printed (full + post-era) before observed",
+      "observed": "full 0.02885 vs |slope| 0.00182; post 0.02899 vs 0.00150",
+      "ok": true
+    },
+    {
+      "gate": "G2_slope",
+      "spec": "fix-day slope > 0 (mechanism sign) AND event-block boot 95% CI excludes 0",
+      "observed": "slope -0.00182, CI [-0.02824,+0.02490], p_shift 0.5452",
+      "ok": false
+    },
+    {
+      "gate": "G3_reversal",
+      "spec": "reversal-leg slope opposite-signed (< 0); frozen clause is SIGN-ONLY, CI informational",
+      "observed": "slope +0.01007, CI [-0.03888,+0.04781]",
+      "ok": false
+    },
+    {
+      "gate": "G4_era_2015",
+      "spec": "post-2015 slope > 0 AND post-era boot 95% CI excludes 0 (dead if ~0)",
+      "observed": "post slope -0.00150, CI [-0.02338,+0.01884]",
+      "ok": false
+    },
+    {
+      "gate": "G5_cost",
+      "spec": "1-day hold cost rungs printed with nets",
+      "observed": "$10.61 / $16.86 per event RT, printed",
+      "ok": true
+    },
+    {
+      "gate": "G6_CI_MEANING",
+      "spec": "IN WORDS: boot CI = 2.5/97.5 pct of 2000 circular block-bootstrap (block 6) OLS slopes, (signal,fix,rev) rows resampled JOINTLY over the month-end sequence; p_shift = share of 2000 shared-offset circular shifts of the signal sequence (ONE offset per draw, BOTH legs) with slope at least as favorable (fix >=, rev <=) as observed",
+      "observed": "2nd computations printed: OLS-normal CIs next to every boot CI",
+      "ok": true
+    },
+    {
+      "gate": "G7_PREREG_ECHO",
+      "spec": "constants echoed vs spec.yaml + header pins",
+      "observed": "T=last joint day; windows (T-1->T),(T->T+3); signal MTD..T-2; reform 2015-02-15; block 6; seed 20260906",
+      "ok": true
+    }
+  ],
+  "g2": false,
+  "g3": false,
+  "g4": false,
+  "candidate": false,
+  "all_validity_pass": true,
+  "verdict": "CLOSED AT SCOPE (S28) -- 6E session-mechanics cell gets its first entry",
+  "es_sha256": "249921cb6d790b8478910fabbc480e0ac82a3d20a206b38fedb34fa1b2054f91",
+  "e6_sha256": "af70be2d857019b932be715feb8d3362233da6f9278f6e75687b121e8aa19eae"
+}

@@ -1,0 +1,95 @@
+======================================================================================================================
+G3_TSYROLL_20260906 -- passive bond-roll front-running, ZN/ZB calendar spread (G00087, GENESIS3_EVENT)
+program: runs/G3_TSYROLL_20260906/src/tsyroll.py  sha256/16 ace0312a78f5d122
+day store: C:\Users\Yuke Zhang\Documents\NinjaTrader 8\db\day
+seeds: boot 87001 shift 87002; draws: boot 4000 shift 2000
+======================================================================================================================
+SEAL assert: max loaded date 2026-07-31 < 2026-08-01  OK
+tick headers: 140 contracts, all == declared (ZN 1/64, ZB 1/32): OK
+data census: 16210 contract-day rows; closes outside (60,250): 1; off half-tick grid: 1; zero-volume rows: 1
+contracts with NO usable data: ['ZB 03-09', 'ZN 03-09']
+
+PAIRING COVERAGE (honest census -- both legs required simultaneously)
+  census root-cycles: 140 (70 deliveries x 2 roots, 2009-03 .. 2026-06)
+    status NO_LEG_DATA                  n =   2
+    status OK                           n = 111
+    status UNPAIRED_PRIMARY_ENDPOINT    n =  27
+  ZN: primary-usable 55/70; dead cycles: 2009-03, 2015-12, 2016-03, 2016-06, 2016-09, 2018-12, 2019-03, 2019-06, 2021-12, 2022-03, 2022-06, 2024-12, 2025-03, 2025-06, 2026-06
+  ZB: primary-usable 56/70; dead cycles: 2009-03, 2015-12, 2016-03, 2016-06, 2016-09, 2018-12, 2019-03, 2019-06, 2021-12, 2022-03, 2022-06, 2024-12, 2025-03, 2025-06
+  event-day pairing rate over cycles with an FN on the front grid (FN-15..FN):
+    k:        -15   -14   -13   -12   -11   -10    -9    -8    -7    -6    -5    -4    -3    -2    -1     0
+    paired:   79%   79%   79%   80%   80%   80%   80%   80%   80%   80%   80%   80%   82%   83%   90%   93%
+  placebo coverage: -1-month usable 106/140; +1-month usable 111/140
+  panel fully paired (16/16): 108 of 140
+
+G7 COST MODEL (MODELED, SPREAD_ONLY basis; {1,2}-tick outright-equivalent band; 2 legs, 1 RT each):
+  ZN: tick 0.015625 pt -> opt (1 tick/leg-RT) 0.031250 pt = $ 31.25/cycle; cons (2 ticks/leg-RT) 0.062500 pt = $ 62.50/cycle   [cons rung GATES]
+  ZB: tick 0.03125 pt -> opt (1 tick/leg-RT) 0.062500 pt = $ 62.50/cycle; cons (2 ticks/leg-RT) 0.125000 pt = $125.00/cycle   [cons rung GATES]
+  info only (non-gating, COMMISSION_ONLY): + 2 legs x $4.36/ctrRT = $8.72/cycle
+
+G1 MDE (PRINTED BEFORE ANY OBSERVED POOLED MEAN):
+  N = 111 root-cycles (56 quarters; census 140; spec anticipated ~140) -- shortfall is DATA ABSENCE, reported above
+  quarter-pooled after-cost-cons sd = 0.2677 pt ($268)
+  MDE (one-sided 5%, 80% power) = 2.486 x sd/sqrt(N_q) = 0.0889 pt = $89/cycle
+  ZN-ZB same-quarter rho = +0.265 -> K_eff per quarter = 1.58 legs
+
+PRIMARY (LONG back / SHORT front, close FN-10 -> close FN-4, pooled ZN+ZB):
+  n = 111; gross mean -0.02168 pt = $-21.68/cycle
+  after-cost CONS -0.11571 pt = $-115.71/cycle   [GATING]
+  after-cost OPT  -0.06869 pt = $-68.69/cycle
+    ZN: n  55  gross +0.01619  net_cons -0.04631 pt ($-46.31)  share>0 net_cons 9.1%
+    ZB: n  56  gross -0.05887  net_cons -0.18387 pt ($-183.87)  share>0 net_cons 5.4%
+  quarter-block bootstrap (4000, seed 87001) 95% CI of after-cost-cons mean: [-0.19638, -0.06761] pt = [$-196, $-68]
+  null series ZN: 4803 paired daily spread-changes across 55 cycles, 665 flagged (window entries)
+  null series ZB: 4803 paired daily spread-changes across 56 cycles, 665 flagged (window entries)
+  observed per-flagged-day premium -0.003618 pt; x6 = -0.02171 pt (cross-check vs endpoint-close gross -0.02168 pt -- second computation of the same event)
+  shared-draw circular-shift null (2000 shifts, seed 87002): null mean -0.006166, sd 0.008680
+  p one-sided = 0.4713 [GATING]; z = +0.29 (normal-approx p 0.3846 cross-check)
+  IN WORDS: p is the probability, under dependence-preserving circular shifts of the roll-window flag
+  (ONE shared draw moving ZN and ZB together) over each root's paired daily calendar-spread-change series,
+  that randomly placed pseudo-windows show a mean per-day LONG-back/SHORT-front drift >= the observed one.
+
+G3 SIGN CONSISTENCY: after-cost-cons share of positive root-cycles = 7.2% (gross 51.4%); gate >= 60%
+
+G4 PLACEBOS (same construction at +/-1-month anchors, gross pt; 'shows the drift' = mean>0 AND q-block CI_lo>0):
+  -1 month: n = 106; gross mean -0.02078 pt ($-21); CI [-0.08152, +0.02359] -> shows drift: False
+  +1 month: n = 111; gross mean +0.01844 pt ($+18); CI [-0.02618, +0.07670] -> shows drift: False
+
+G5 NOT-CARRY (control = expected slide from each cycle's measured average daily spread slide over FN-15..FN;
+   expected primary under smooth carry = -6 x mean(dS); EXCESS = gross - expected; excess-after-cost carries G2):
+  n = 111 (>=8 panel changes required); carry-expected mean -0.00338 pt; excess gross mean -0.01830 pt
+  excess after-cost-cons mean -0.11233 pt ($-112.33); q-block CI [-0.18273, -0.06767]
+  (the shift-null clause on the excess is IDENTICAL to G2's by construction: the control is a per-cycle
+   constant anchored to FN, so it shifts observed and null equally; recorded, not re-tested)
+
+G6 ERA SPLIT (pre/post-2016 by FN date; after-cost cons; modern-negative = FAIL):
+  pre2016   ZN      n  26  gross +0.02284  net_cons -0.03966 pt ($-39.66)  share>0 19.2%
+  pre2016   ZB      n  26  gross -0.12440  net_cons -0.24940 pt ($-249.40)  share>0 7.7%
+  pre2016   POOLED  n  52  gross -0.05078  net_cons -0.14453 pt ($-144.53)  share>0 13.5%
+  post2016  ZN      n  29  gross +0.01024  net_cons -0.05226 pt ($-52.26)  share>0 0.0%
+  post2016  ZB      n  30  gross -0.00208  net_cons -0.12708 pt ($-127.08)  share>0 3.3%
+  post2016  POOLED  n  59  gross +0.00397  net_cons -0.09031 pt ($-90.31)  share>0 1.7%
+
+GATE TABLE  (printed by program)
+GATE          SPEC                                                      OBSERVED                                                                PASS-FAIL
+G1_MDE_first  MDE printed before observed (~140 root-cycles)            MDE 0.0889 pt ($89)/cycle at N=111 rc / 56 q (census 140)               PASS
+G2_drift      after-cost mean>0 AND q-block CI excl 0 AND shift p<.05   net_cons -0.11571 pt, CI [-0.19638,-0.06761], p_1s 0.4713               *** FAIL ***
+G3_sign       >= 60% of root-cycles positive (after-cost cons)          7.2% positive (gross 51.4%)                                             *** FAIL ***
+G4_placebo    +/-1-month windows must NOT show the drift                -1mo n=106 mean -0.02078 shows=False; +1mo n=111 mean +0.01844 shows=FalsePASS
+G5_not_carry  excess over measured avg slide carries G2 (mean>0, CI excl 0)excess net_cons -0.11233 pt, CI [-0.18273,-0.06767], n=111              *** FAIL ***
+G6_era        pre/post-2016 split; modern-negative = FAIL               pre -0.14453 / post -0.09031 pt net_cons                                *** FAIL ***
+G7_cost       MODELED {1,2}-tick outright-equiv band, cons rung gates   ZN $31.25/$62.50, ZB $62.50/$125.00 per cycle; cons gates G2/G3/G5/G6   PASS
+
+DECISION RULE (spec, mechanical): G2=FAIL G3=FAIL G4=PASS G5=FAIL G6=MODERN-NEGATIVE -> CLOSED AT SCOPE (S28 block)
+annualized after-cost-cons economics if held every cycle: 4 cycles/yr x $-115.71 = $-462.84/yr per 1-lot spread
+evidence_status: DISCOVERY (first read of this representation; consumed by this read)
+======================================================================================================================
+
+OI CENSUS SIDECAR (world-scan #14 step 1 -- layout question only, no price analysis):
+  probe file: ZN 12-25/2025.Last.ncd; size 6508 bytes; (size-28) % 48 = 0; 135 records
+  first raw record (hex): 00c0c3bc68acdd0800000000009f5b400000000000ab5b400000000000915b4000000000009a5b407000000000000000
+  decoded: ts 2025-06-16T00:00:00.000000 | o 110.484375 h 110.671875 l 110.265625 c 110.40625 | volume 112
+  layout: 28-byte header + 48-byte records = int64 ticks + 4 x float64 OHLC + int64 volume.
+  48 = 8+32+8 exactly; NO field remains for open interest. The day store does NOT carry OI.
+
+WROTE out/gate_table.txt, out/cycle_panel.csv, out/era_table.csv, out/cycle_summary.csv, out/cycle_primary.csv

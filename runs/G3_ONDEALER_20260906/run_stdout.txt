@@ -1,0 +1,125 @@
+====================================================================================================
+G3_ONDEALER_20260906  (ledger G00090, family GENESIS3_EVENT)   EVIDENCE STATUS: DISCOVERY
+Dealer-inventory overnight drift: Stage 1 = ES overnight clock-hour grid (17:00->09:30 ET);
+Stage 2 = prior-RTH-DOWN conditional Euro-window (02:00->05:00 ET) vs matched unconditional control.
+POINTS basis on the back-adjusted ES 1-min substrate. Frozen mechanical readings R1-R11 in src header.
+cost floor (BASIS=MODELED ALL_IN, comm $4.36/ctRT + spread PER SIDE): PRIMARY 1tk/side $29.36 RT = 0.5872 pt; STRESS 2tk/side $54.36 RT = 1.0872 pt  << the 2-tick rung GATES (thin ON book)
+
+[G0] substrate runs\SM1M_ES_SUBSTRATE\out\es_1m_2022_2026.parquet
+     sha256 0fd13777fa8fa79e2447c8be193031b40807eb272019b8541b1a47f84c927e9b
+     bars 1,620,385; span 2022-01-02 18:01:00 .. 2026-07-31 16:59:00; bars >= 2026-08-01: 0  SEAL OK
+     sessions 1,184; 17:xx-open bars 0 (halt cell structurally empty, as frozen)
+     overnight bars with return: 1,097,756; sessions in grid 1,184; sessions with <300 ON bars: 2 (kept AS-IS; map artifact)
+     POINTS only: no percent column is formed anywhere in this program.
+
+[G1] MDE FIRST (printed before any observed mean).  SE_h = sd_s(X[s,h])*sqrt(N_h)/M_h (session-cluster,
+     per-minute pts); MDE_sig = 1.96*SE, MDE_80 = 2.8016*SE (5% two-sided, 80% power).  Cell-total MDE = MDE*60.
+     cell         n_bars  n_sess   SE(pt/min)  MDE_sig(pt/min)  MDE_80(pt/min)  MDE_80(cell-hold pt)
+     18:00-18:59    69662    1182    0.003615      0.007086       0.010129          0.6077
+     19:00-19:59    70765    1181    0.003328      0.006524       0.009325          0.5595
+     20:00-20:59    70939    1183    0.003701      0.007253       0.010368          0.6221
+     21:00-21:59    70952    1183    0.003396      0.006656       0.009514          0.5708
+     22:00-22:59    70875    1182    0.002636      0.005166       0.007384          0.4430
+     23:00-23:59    70814    1182    0.002230      0.004372       0.006249          0.3749
+     00:00-00:59    70759    1182    0.002275      0.004460       0.006375          0.3825
+     01:00-01:59    70884    1182    0.002759      0.005407       0.007728          0.4637
+     02:00-02:59    70908    1182    0.003330      0.006527       0.009330          0.5598
+     03:00-03:59    70918    1182    0.004649      0.009113       0.013026          0.7816
+     04:00-04:59    70901    1182    0.004200      0.008232       0.011767          0.7060
+     05:00-05:59    70943    1183    0.003384      0.006633       0.009481          0.5688
+     06:00-06:59    70968    1183    0.003888      0.007620       0.010892          0.6535
+     07:00-07:59    70980    1183    0.004602      0.009020       0.012894          0.7736
+     08:00-08:59    70998    1184    0.007115      0.013946       0.019934          1.1960
+     09:00-09:29    35490    1184    0.006707      0.013146       0.018791          0.5637
+
+     Stage 2 population: eligible sessions (W defined AND prior-RTH defined) = 1136
+       excluded: 48 of 1184 (missing 02:00/05:00 stamp or prior 09:30/16:00 stamp)
+       DOWN 526 / UP 604 / zero-RTH 6 (zero excluded from conditional cells, kept in control)
+       sd(W) = 14.9227 pt;  SE(mean_down) ~ 0.6507 pt;  SE(EFFECT) ~ 0.4768 pt
+       MDE_sig(EFFECT) = 0.9345 pt ($46.73);  MDE_80(EFFECT) = 1.3358 pt ($66.79)
+       cost rungs for scale: PRIMARY 0.5872 pt / STRESS(GATING) 1.0872 pt
+
+[family] K = 16 clock cells; mean pairwise corr of session cell-sums rho_bar = -0.0064 (120 pairs)
+         K_eff = K/(1+(K-1)*rho_bar) = 17.711 -> clamped [1,16] = 16.000
+         K_eff-corrected two-sided alpha = 0.05/K_eff = 0.00313
+
+[Stage 1] ES overnight clock-hour grid (BANKED as the ES overnight structure map either way).
+     mu = pooled mean pts/min; loc = mu - overnight-wide mean; p_flip = two-sided grid-preserving
+     session-randomization p (R5b); p_norm = cluster normal-approx (second computation);
+     CI95 = circular session-block bootstrap of mu (L=10, B=2000).
+     overnight-wide per-minute mean = +0.000880 pt/min
+     cell          n_bars   mu(pt/min)    total_pt   t_clu   p_flip   p_norm    loc(pt/min)  p_loc    CI95(pt/min)          e1_mu      e2_mu
+     18:00-18:59    69662   +0.003503     +244.00   +0.97   0.3322   0.3326   +0.002622   0.4517   [-0.002712,+0.010414]   +0.001595   +0.004979
+     19:00-19:59    70765   -0.000809      -57.25   -0.24   0.8114   0.8080   -0.001689   0.6054   [-0.007494,+0.005558]   -0.006331   +0.003457
+     20:00-20:59    70939   +0.000596      +42.25   +0.16   0.8699   0.8721   -0.000285   0.9387   [-0.005821,+0.006995]   -0.004791   +0.004751
+     21:00-21:59    70952   +0.002759     +195.75   +0.81   0.4191   0.4166   +0.001878   0.5702   [-0.004145,+0.010755]   -0.002039   +0.006460
+     22:00-22:59    70875   -0.003672     -260.25   -1.39   0.1648   0.1636   -0.004552   0.0846   [-0.009031,+0.001495]   +0.002267   -0.008258
+     23:00-23:59    70814   +0.005207     +368.75   +2.33   0.0216   0.0196   +0.004327   0.0591   [+0.000306,+0.009863]   +0.005552   +0.004942
+     00:00-00:59    70759   -0.001971     -139.50   -0.87   0.3844   0.3862   -0.002852   0.2107   [-0.006138,+0.002143]   +0.003883   -0.006494
+     01:00-01:59    70884   +0.001781     +126.25   +0.65   0.5177   0.5185   +0.000901   0.7463   [-0.003213,+0.006683]   +0.001683   +0.001857
+     02:00-02:59    70908   +0.000451      +32.00   +0.14   0.8939   0.8922   -0.000429   0.8889   [-0.005783,+0.006801]   -0.003925   +0.003830
+     03:00-03:59    70918   +0.004583     +325.00   +0.99   0.3251   0.3243   +0.003702   0.4101   [-0.002220,+0.011878]   -0.000728   +0.008684
+     04:00-04:59    70901   +0.001960     +139.00   +0.47   0.6430   0.6407   +0.001080   0.7881   [-0.006470,+0.010287]   +0.003042   +0.001125
+     05:00-05:59    70943   +0.002580     +183.00   +0.76   0.4498   0.4459   +0.001699   0.6178   [-0.003985,+0.008720]   +0.002239   +0.002843
+     06:00-06:59    70968   +0.002100     +149.00   +0.54   0.5926   0.5892   +0.001219   0.7466   [-0.004530,+0.008849]   +0.000945   +0.002993
+     07:00-07:59    70980   -0.000250      -17.75   -0.05   0.9517   0.9567   -0.001131   0.7973   [-0.009266,+0.008772]   -0.004893   +0.003342
+     08:00-08:59    70998   -0.003588     -254.75   -0.50   0.6149   0.6141   -0.004469   0.5021   [-0.015633,+0.008830]   -0.010346   +0.001636
+     09:00-09:29    35490   -0.003071     -109.00   -0.46   0.6473   0.6470   -0.003952   0.5491   [-0.015132,+0.009736]   -0.016085   +0.006979
+
+[G2] (a) LITERAL whole-session circular shift, k in (1,5,25,125,625): max |null mu - obs mu| over 16 cells
+         = 0.000e+00  -> IDENTICALLY INVARIANT (permutation identity); DEGENERATE for a full-sample
+         pooled cell mean; recorded as measured. G2 is decided on the OPERATIVE null (R5b).
+     (b) OPERATIVE null, B=10,000, seed 20260906: min two-sided p over cells = 0.0216 at 23:00-23:59; bar = 0.00313
+         cells clearing the K_eff-corrected bar: NONE
+     IN WORDS: p_flip[h] is the probability, under random re-signing of WHOLE overnight sessions
+     (each session's entire overnight minute-vector x +/-1, one shared draw per session across all
+     16 clock cells), that cell h's pooled per-minute mean is at least as large in MAGNITUDE as
+     observed. Second computation p_norm agrees/disagrees per cell above.
+     -> G2 FAIL
+
+[Stage 2] Euro-window (02:00->05:00 ET) conditional on prior-RTH direction -- BOTH directions reported.
+     cell        n      mean W (pt)    $/event     EFFECT vs control (pt)   p_shift_2s
+     DOWN       526       +0.8241      +41.21            +0.3120            0.5273   << GATING
+     UP         604       +0.2194      +10.97            -0.2927            0.4921
+     CONTROL   1136       +0.5121      +25.61          (all eligible days, same window)
+     one-sided shift pcts for DOWN effect: P(delta* >= obs) = 0.2614; P(delta* <= obs) = 0.7394
+     block-bootstrap CI95 of EFFECT (second computation): [-0.5735, +1.1765] pt
+     eras: 2022-23 DOWN +0.6667 (n=222) UP -0.5593 (n=270) ALL +0.0272 (n=496) EFFECT +0.6394
+           2024-26 DOWN +0.9391 (n=304) UP +0.8488 (n=334) ALL +0.8879 (n=640) EFFECT +0.0513
+     IN WORDS: p_shift is the probability, under circular shifts of the prior-RTH-direction flag by
+     k WHOLE SESSIONS (k=1..1135, fully enumerated, shared k across DOWN/UP) against the fixed
+     Euro-window return series, that |mean(W|pseudo-DOWN) - mean(W|all)| is at least as large as observed.
+     -> G3 (DOWN cell beats matched unconditional control; two-sided shift p <= 0.05): FAIL
+
+[G4] ON cost floor (tradable = DOWN cell, held 02:00->05:00, direction = sign(mean_down), 1 RT/event):
+     |mean_down| = 0.8241 pt ($41.21/event) on n=526 events over 4.57 yr
+     PRIMARY 1tk/side: net +0.2369 pt ($+11.85/event)
+     STRESS  2tk/side: net -0.2631 pt ($-13.15/event)   << GATES
+     |EFFECT| beside (spec words): 0.3120 pt vs rungs 0.5872/1.0872 pt
+     -> G4 (|mean_down| - 2tk rung > 0, post-2022 = full substrate): FAIL
+
+[G5] chronology: sign consistency of the EFFECT across era halves
+     2022-23 EFFECT +0.6394 pt (n_down 222) | 2024-26 EFFECT +0.0513 pt (n_down 304)
+     cell-mean era signs beside (not gating): DOWN +1/+1, UP -1/+1
+     -> G5 (sign(EFFECT_2022-23) == sign(EFFECT_2024-26), both nonzero): PASS
+
+====================================================================================================
+GATE            SPEC                                                                     PASS/FAIL
+----------------------------------------------------------------------------------------------------
+G1_MDE_first    MDE printed per cell BEFORE observed means                                    PASS
+                OBSERVED: 16 hour cells + stage-2 printed; MDE_80(EFFECT) = 1.3358 pt
+G2_hour_structurea cell clears grid-preserving shift null at K_eff-corrected 5%                FAIL
+                OBSERVED: min p_flip 0.0216 at 23:00-23:59 vs bar 0.00313; K=16, K_eff=16.00; literal shift degenerate (0.0e+00)
+G3_conditional  DOWN cell beats matched unconditional control (2-sided shift p<=0.05)         FAIL
+                OBSERVED: EFFECT +0.3120 pt, p_shift 0.5273; boot CI [-0.5735,+1.1765]
+G4_cost_floor   {1,2}-tick ON band; 2-tick rung GATES; net-of-cost survival post-2022         FAIL
+                OBSERVED: |mean_down| 0.8241 pt; STRESS net -0.2631 pt ($-13.15/event)
+G5_chronology   2022-23 vs 2024-26 sign consistency (EFFECT)                                  PASS
+                OBSERVED: +0.6394 vs +0.0513 pt
+----------------------------------------------------------------------------------------------------
+blocking set G2+G3+G4+G5: G2:FAIL  G3:FAIL  G4:FAIL  G5:PASS
+DECISION (mechanical): CLOSED AT SCOPE (S28 block) -- the overnight hour-grid is BANKED as the ES overnight structure map
+EVIDENCE STATUS: DISCOVERY (first read of this representation; consumed by this read).
+====================================================================================================
+
+WROTE out/gate_table.txt, out/hour_grid.csv, out/conditional.csv

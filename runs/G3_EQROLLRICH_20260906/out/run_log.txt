@@ -1,0 +1,106 @@
+======================================================================================================================
+=== G3_EQROLLRICH_20260906 -- equity roll-cycle financing richness (HMV JF 2023) on ES + NQ   (G00088, GENESIS3_RV)
+======================================================================================================================
+
+FROZEN CONVENTIONS D1-D14 (full text in src/eqrollrich.py header, written before results):
+  D1 FN ANCHOR = CME quarterly equity roll convention: FN := expiry(3rd Friday) - 8 calendar
+     days = the THURSDAY preceding expiration week (peak of the CME-documented roll week);
+     asserted Thursday; mapped to last front session <= FN. Equity futures are cash-settled
+     (no true first notice); 'FN' is this roll-date anchor. FIXED BEFORE RESULTS.
+  D2 R = back - front close (points), same date; dR>0 = financing RICHENING. CHANGES only;
+     dividend LEVEL differences out (no level claims; dividend-expectation revisions remain).
+  D3 event time = front-contract trading sessions; EARLY=[FN-12,FN-6] (7 changes),
+     LATE=[FN-5,FN-1] (5 changes); shape = mean(dR early) - mean(dR late), points/day.
+  D5 include cycle iff early>=5/7 and late>=4/5 valid changes and front grid >=13 pre-FN.
+  D7 G2 null = per-cycle independent circular rotation of valid changes vs fixed labels,
+     20000 draws, seed 20260906, one-sided.
+  D10 G4 = ES era-mean shape > 0 in BOTH 2016-21 and 2022-26/07 (n>=5 each).
+  D13 G6 P-meaning gate added per campaign doctrine; decision rule unchanged (G2+G3+G4).
+
+--- DATA / SEAL
+    per-contract day store via certified ncd_day.py; contracts touched: 140 with data / 142 requested
+    SEAL: every read filtered < 2026-08-01; max session retained = 2026-07-31  assert PASS
+    tick sizes: ES [0.25]  NQ [0.25]
+
+--- G0c COVERAGE (rule D5 declared before results; store back-month availability is the binding fact)
+    ES: 70 candidate cycles (spec anticipated ~68) -> INCLUDED 47   excluded 23
+        included span 2009-06 .. 2024-09;  full 12/12 valid: 47 of 47
+        exclusion reasons: BACK_COVERAGE x21, NO_FRONT_DATA x1, FRONT_GRID_SHORT x1
+    NQ: 70 candidate cycles (spec anticipated ~68) -> INCLUDED 27   excluded 43
+        included span 2009-06 .. 2026-06;  full 12/12 valid: 25 of 27
+        exclusion reasons: BACK_COVERAGE x42, NO_FRONT_DATA x1
+
+--- G1: MDE FIRST (one-sided 5%, 80% power) -- printed before the observed statistic
+    N = 47 included ES cycles (spec anticipated ~68 -- store back-month availability cut
+    it to 47); sd(cycle shape) = 0.2126 pts/day
+    MDE = 2.4865 * sd/sqrt(N) = 0.0771 pts/day  (= $3.86/day on ES $50/pt)
+    POWER IS THIN: ~47 cycles resolve only a shape of >= 0.077 pts/day; a true richness
+    shape smaller than that is NOT detectable here. Said plainly, per spec G1.
+
+--- OBSERVED PRIMARY (ES)
+    pooled mean dR EARLY [FN-12,FN-6] = -0.0030 pts/day   pooled mean dR LATE [FN-5,FN-1] = +0.0319 pts/day
+    OBSERVED SHAPE STAT (mean over 47 cycles of early-minus-late) = -0.0350 pts/day   (= $-1.75/day)
+    cycle-level: median -0.0714   share>0 31.9%
+
+--- G2: SHAPE (cycle-level rotation permutation, D7)
+    null mean -0.00008  sd 0.04926  draws 20000  seed 20260906
+    p_perm (one-sided, P[draw >= obs]) = 0.7734
+    G2 requires shape > 0 AND p < 0.05:  shape -0.0350  p 0.7734
+
+--- G3: MECHANISM GATE -- ES/NQ within-cycle richness-change comovement (D9)
+    co-included cycles = 21 (2009-06..2015-09);  matched (cycle,slot) daily-change pairs n = 249
+    Pearson corr = +0.1531   naive 95% CI [+0.0294, +0.2723]   Spearman +0.1998
+    annex: cycle-level shape-stat corr (n=21) = -0.1723;  all matched slots regardless of inclusion (n=249) = +0.1531
+    G3 requires corr > 0:  +0.1531
+
+--- G4: ERA STABILITY (post-2016 MANDATED, D10)
+    2009-15    n= 21  mean shape -0.0412 pts/day  sign -
+    2016-21    n= 17  mean shape -0.0546 pts/day  sign -
+    2022-26/07 n=  9  mean shape +0.0167 pts/day  sign +
+    G4 requires BOTH post-2016 era means > 0 with n>=5:  2016-21 -0.0546 (n=17)  2022-26/07 +0.0167 (n=9)
+
+--- G5: COST NOTE (DIAGNOSTIC ONLY -- spec: a shape finding licenses a SIGNAL-LEAD, not a
+    trade; nothing here gates the decision)
+    exploiting richness directly = ES calendar spread, 2 legs:
+      COMMISSION_ONLY  $8.72/spread RT  (2 x $4.36 Lifetime template; EVIDENCE: installed)
+      SPREAD_ONLY      MODELED: ES calendar tick 0.05 pt = $2.50; roll-period calendar mkt
+                       typically 1 tick wide -> 2 crossings ~ $5.00  (NO calendar-spread
+                       quote data in this repo -- MODELED, not measured)
+      ALL_IN           MODELED ~ $13.72/spread RT  (NQ analog ~ $10.72: tick $1.00)
+    scale: observed |shape| 0.035 pts/day over a 7-day window ~ 12 $/cycle gross on ES -- quoted for scale only, NOT a P&L claim
+
+--- G6: P-MEANING (D13; doctrine gate -- decision rule unchanged)
+    IN WORDS: p_perm answers 'if the TIMING of daily calendar-spread changes within each
+    cycle were exchangeable (no richen-then-cheapen placement around the roll date), how
+    often would per-cycle random rotations produce a cross-cycle mean early-minus-late
+    shape at least as positive as observed?' It is a statement about WITHIN-CYCLE TIMING,
+    not about the sign or size of financing itself.
+    SECOND WAY (different event construction, same hypothesis): cycle-level sign-flip null
+    p_flip = 0.8704 (20000 draws); one-sample t = -1.13 (N=47)
+    qualitative agreement ((p_perm<.05)==(p_flip<.05)): True
+
+--- DIAGNOSTICS (declared D6, non-gating)
+    back-leg zero-volume share of used slots (ES, included cycles): 0.0% (settle-only prints, retained)
+    staleness: share of used changes with back EXACTLY unchanged while |dFront| >= 1 tick: 0.7%
+    front-drift mirror: corr(cycle shape, front-only shape) = +0.287 (strongly negative would suggest stale-back artifact)
+    mean front-only shape = +2.1018 pts/day
+    top-5 |dR| (no trimming): 2020-12 s-3 -8.00; 2020-12 s-4 +7.50; 2016-12 s-12 -6.75; 2016-12 s-11 +6.50; 2009-06 s-10 -2.50
+    NQ annex (never rescues/vetoes): N=27 included cycles, mean shape +0.3231 pts/day, share>0 63.0%
+
+GATE TABLE  (printed by program)
+GATE             SPEC                                                                           OBSERVED                                                           PASS-FAIL
+G0a_SEAL         all reads < 2026-08-01 (VIRGIN untouched)                                      max session read 2026-07-31                                        PASS
+G0b_FN_ANCHOR    FN convention documented by program, fixed before results (spec)               D1: FN = 3rd-Friday expiry - 8cd (Thu of roll week, CME convention); asserted Thu PASS
+G0c_COVERAGE     availability rule declared pre-results; exclusions printed                     ES 47/70 cycles included, NQ 27/70 (back-month store gaps recorded) PASS
+G1_MDE_first     MDE printed before observed; ~68 cycles; POWER IS THIN said plainly            MDE 0.0771 pts/day at N=47 (printed first); thin-power statement printed PASS
+G2_shape         shape stat > 0 AND cycle-level permutation p < 0.05                            shape -0.0350 pts/day; p_perm 0.7734 (20000 draws, seed 20260906)  *** FAIL ***
+G3_comovement    MECHANISM: ES/NQ within-cycle richness changes co-move, corr > 0               pooled matched corr +0.1531 (n=249 pairs, 21 co-included cycles)   PASS
+G4_era           post-2016 stability mandated: both post-2016 era means > 0, n>=5               2016-21 -0.0546 (n=17); 2022-26/07 +0.0167 (n=9)                   *** FAIL ***
+G5_cost          diagnostic only; cost note printed (licenses signal-lead, not a trade)         COMMISSION_ONLY $8.72; SPREAD_ONLY MODELED $5.00; ALL_IN MODELED ~$13.72/spr RT PASS
+G6_P_MEANING     p stated in words + second computation of same event, qual. agreement          p_perm 0.7734 vs sign-flip 0.8704, t -1.13; agree=True             PASS
+
+DECISION RULE (spec, mechanical): G2=FAIL  G3=PASS  G4=FAIL  ->  CLOSED AT SCOPE (S28 block)
+NQ annex NEVER rescues/vetoes (D14). evidence_status: DISCOVERY (first read of this representation).
+======================================================================================================================
+
+WROTE out/gate_table.txt, out/cycle_paths.csv, out/cycle_stats.csv, out/exclusions.csv, out/verdicts.json

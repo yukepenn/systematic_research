@@ -1,0 +1,69 @@
+======================================================================================================================
+=== G3_FIX6E_20260906 -- month-end London-fix equity-hedge rebalancing in 6E (G00091)
+======================================================================================================================
+inputs AS-IS: ES es_daily.parquet sha256 249921cb6d790b8478910fabbc480e0ac82a3d20a206b38fedb34fa1b2054f91
+              6E 6e_daily.parquet sha256 af70be2d857019b932be715feb8d3362233da6f9278f6e75687b121e8aa19eae
+joint axis: 4,166 sessions 2009-03-31 -> 2026-07-31; ES rows 4,308, 6E rows 4,273
+month-end events computed: 176   drops: {'no_prev_month': 1, 'short_month': 7, 'short_next': 1, 'signal_unclean': 17, 'fix_unclean': 0, 'rev_unclean': 3}   eras: PRE 62 (< 2015-02-15) / POST 114
+signal: ES MTD self-financing return through T-2 close, FRACTION units (points sum / raw prev-EOM close); sd(signal) 0.0413 (4.13% per month); outcome units: 6E POINTS
+
+G1 -- MDE FIRST (one-sided alpha 5%, power 80%; slope units: 6E points per 1.00 = 100% ES MTD):
+    full sample : MDE slope 0.02885  (per +1-sd signal event: 0.00119 pts = $149)   n 176
+    post-2015   : MDE slope 0.02899  (per +1-sd post signal: 0.00121 pts = $151)   n 114
+    POWER HONESTY: only slopes >= MDE are detectable at 80% power; the era gate G4 runs at n 114.
+
+OBSERVED SLOPES (OLS; y = 6E points, x = ES MTD fraction):
+    leg                              slope               boot 95% CI       OLS-normal CI (2nd) p_shift(1s)
+    FIX  close(T-1)->close(T)     -0.00182       [-0.02824,+0.02490]       [-0.02455,+0.02092]      0.5452
+    REV  close(T)->close(T+3)      0.01007       [-0.03888,+0.04781]       [-0.03529,+0.05544]      0.6577
+    economic scale: +1-sd signal (4.13% ES month) -> fix-day -0.00007 pts = $-9/event
+
+G4 -- ERA SPLIT AT THE 2015 WM/R REFORM (2015-02-15; fix-day date decides era):
+    era           n   fix slope               boot 95% CI   rev slope               rev boot CI
+    PRE          62    -0.00390       [-0.07518,+0.06820]     0.05051       [-0.03898,+0.10552]
+    POST        114    -0.00150       [-0.02338,+0.01884]    -0.00762       [-0.06727,+0.03724]
+    post-era OLS-normal CI (2nd computation): [-0.02435,+0.02135]
+
+CONDITIONAL TABLE -- |signal| terciles (full-sample cut, DESCRIPTIVE), both signs, with matched unconditional controls:
+    cell                        n  mean sig   fix pts     fix $   rev pts     rev $
+    ALL (uncond control)      176    0.0123  -0.00001        -1  -0.00047       -58
+    ALL sig>0                 118    0.0343   0.00027        34  -0.00051       -64
+    ALL sig<0                  58   -0.0325  -0.00058       -73  -0.00038       -47
+    T1_low all                 59    0.0031  -0.00076       -96   0.00075        93
+    T1_low sig>0               35    0.0104  -0.00078       -97   0.00128       160
+    T1_low sig<0               24   -0.0077  -0.00075       -93  -0.00004        -5
+    T2_mid all                 58    0.0122   0.00144       180  -0.00015       -18
+    T2_mid sig>0               43    0.0270   0.00234       292  -0.00170      -212
+    T2_mid sig<0               15   -0.0302  -0.00112      -140   0.00429       537
+    T3_top all                 59    0.0216  -0.00068       -85  -0.00199      -249
+    T3_top sig>0               40    0.0630  -0.00103      -129  -0.00081      -101
+    T3_top sig<0               19   -0.0655   0.00005         7  -0.00449      -561
+    mechanism-direction fix-day P&L (long 6E if sig>0 else short): all $+47/event   top-|signal| tercile $-89/event (GROSS, descriptive)
+
+G5 -- COST (BASIS: COMMISSION+k-TICK MODELED; 1-day hold, 1 RT 6E per event):
+    1-tick rung: $10.61/event   vs top-tercile mechanism-direction gross $-89 -> net $-100
+    2-tick rung: $16.86/event   vs top-tercile mechanism-direction gross $-89 -> net $-106
+
+GATE TABLE  (printed by program)
+GATE                SPEC                                                                                        OBSERVED                                                        PASS-FAIL
+G0a_SEAL_ES         max ES session < 2026-08-01                                                                 2026-07-31                                                      PASS
+G0b_SEAL_6E         max 6E session < 2026-08-01                                                                 2026-07-31                                                      PASS
+G0c_INPUTS_AS_IS    sha256 of both parquets == their source manifests (ES: AUCTCYCLE; 6E: DAILY_6E autopsy)     ES 249921cb6d79.. OK, 6E af70be2d8570.. OK                      PASS
+G0d_IDENTITY        certified transports: ES identity-gate maxerr < 1e-9; 6E reproduces certified s7 exactly    ES 0.0e+00, 6E 0.0e+00                                          PASS
+G0e_ROLL_CAUSAL     ES roll causal (manifest); 6E roll = fixed 5-day pre-expiry (s6-sanctioned, named)          ES True, 6E {'volume_crossover': 1, 'pre_expiry_override': 69, 'initialise': 1}PASS
+G0f_SIGNAL_CAUSAL   signal cutoff (T-2 close) strictly before fix-leg entry (T-1 close) strictly before fix day, every event176/176 events                                                  PASS
+G0g_POINTS          6E outcome math in POINTS (self-financing sums); signal denominator = RAW unadjusted ES close, never a back-adjusted level (DELEV01)ret_points sums; base = held-front close                        PASS
+G1_MDE_first        printed (full + post-era) before observed                                                   full 0.02885 vs |slope| 0.00182; post 0.02899 vs 0.00150        PASS
+G2_slope            fix-day slope > 0 (mechanism sign) AND event-block boot 95% CI excludes 0                   slope -0.00182, CI [-0.02824,+0.02490], p_shift 0.5452          *** FAIL ***
+G3_reversal         reversal-leg slope opposite-signed (< 0); frozen clause is SIGN-ONLY, CI informational      slope +0.01007, CI [-0.03888,+0.04781]                          *** FAIL ***
+G4_era_2015         post-2015 slope > 0 AND post-era boot 95% CI excludes 0 (dead if ~0)                        post slope -0.00150, CI [-0.02338,+0.01884]                     *** FAIL ***
+G5_cost             1-day hold cost rungs printed with nets                                                     $10.61 / $16.86 per event RT, printed                           PASS
+G6_CI_MEANING       IN WORDS: boot CI = 2.5/97.5 pct of 2000 circular block-bootstrap (block 6) OLS slopes, (signal,fix,rev) rows resampled JOINTLY over the month-end sequence; p_shift = share of 2000 shared-offset circular shifts of the signal sequence (ONE offset per draw, BOTH legs) with slope at least as favorable (fix >=, rev <=) as observed2nd computations printed: OLS-normal CIs next to every boot CI  PASS
+G7_PREREG_ECHO      constants echoed vs spec.yaml + header pins                                                 T=last joint day; windows (T-1->T),(T->T+3); signal MTD..T-2; reform 2015-02-15; block 6; seed 20260906PASS
+
+PREREG/DECLARED CONSTANTS ECHO: {"REFORM": "2015-02-15", "MIN_MONTH_DAYS": 15, "MIN_NEXT_DAYS": 3, "CLEAN_GAP_MAX": 5, "N_BB": 2000, "BLOCK_LEN": 6, "N_SHIFT": 2000, "MIN_SHIFT": 6, "PV_6E": 125000.0, "TICK_6E": 6.25, "COMMISSION": 4.36, "SEED": 20260906}
+
+DECISION RULE (mechanical, spec verbatim): G2 FAIL + G3 FAIL + G4 FAIL -> CLOSED AT SCOPE (S28) -- 6E session-mechanics cell gets its first entry
+VALIDITY GATES (all non-outcome gates): ALL PASS -- the run is VALID
+OUTCOME GATES: G2 FAIL  G3 FAIL  G4 FAIL  (failed gates recorded failed)
+======================================================================================================================
