@@ -28,18 +28,19 @@ MC-52/56 (blocked on the P-1 reserve) · MC-35 (blocked-as-rescue).
 3/3 eras, negative even gross (`G2_F10`, G00048); earnings leg stays demoted. ROLL02 killed
 exec-series roll gating and re-measured the pooled blackout at $93,173 (G00047).
 
-**The SWING band lane — FIRST READ DONE 2026-09-06 (`G2_SWING01`, G00044-46): all three
-sub-families (VX slope · COT flow · ER-conditioned continuation) UNDERPOWERED_STILL — "closes
-nothing on its own"; the lane stays OPEN with a sharpened design law.** ⭐ The durable output is
-a POWER FACT: at weekly sampling the shift-null sd of a 21d quintile spread is ~0.8–1.2 % log, so
-bucket tables need a ~2.5–3.9 %/21d conditional spread to detect — an edge that size wouldn't
-need detecting. **Any future swing wave must use FULL-SERIES statistics** (continuous-signal
-regression / portfolio-weighted exposure with overlap-aware nulls), not bucket tables — that is
-what the "t=2 at Sharpe 0.45" arithmetic assumed. Unquotable color for a next design: D3's
-continuation contrast flips sign cleanly pre/post-2010. Standing constraints unchanged:
-ratio-adjusted or cash-index basis (`G2_F3_DELEV01`), exposure-matched always-long controls,
-TSMOM/XSMOM exact scopes and H7's COT-tercile scope closed, H1's 2022+ implied-vol reserve
-untouched (SWING01 asserted zero VX rows ≥ 2022).
+**The SWING band lane — TWO READS DONE 2026-09-06, LANE PARKED: its premise is
+FALSIFIED-AS-ARGUED** (`G2_SWING01` G00044-46 bucket tables; `G2_SWING02` G00049-51 full-series
+weekly overlays — the design the lane's own arithmetic demanded). ⭐ **The measured fact that
+kills the premise:** at the 0.0167 family bar and 80 % power with a dependence-preserving null
+(~1.3× wider than iid), the detectable edge on the deep spine is **~0.66–0.78 annualized
+Sharpe**, not the premised 0.45 — META_ADVERSARY's t≈2 arithmetic ignored the bar+power factor
+(3.23) and the null width. VX slope / COT flow / ER-continuation all UNDERPOWERED at read 2
+(MDE 3–11× observed); S1 additionally DEFECT (an expanding-window z cannot demean a
+regime-shifted signal — the 2008-09 backwardation era leaves a standing −0.25 tilt). **Revival
+requires genuinely new observables, or a single-primary design that honestly reaches ~0.5-Sharpe
+sensitivity.** Unquotable color, 2-of-2 reads, no gate passed: ER-continuation flips sign
+pre/post-2010. Standing constraints unchanged: ratio/cash basis (`G2_F3_DELEV01`),
+TSMOM/XSMOM/H7 scopes closed, H1's 2022+ implied-vol reserve untouched (asserted in both reads).
 
 **Replenishment check:** MED tier ≥ 3 → no scan trigger; the binding shortage is *execution of
 the registered swing lane*, not new cards.

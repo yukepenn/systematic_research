@@ -1,0 +1,147 @@
+====================================================================================================
+G2_SWING02_FULLSERIES_20260906 -- program-printed gate table (never hand-assembled)
+BASE_SEED=20260906  N_SHIFTS=401  FAMILY_BAR p<=0.0167  MDE factor (80% power)=3.2349  MIN_HIST=52  CLIP=+/-2  NW_LAG=4
+READ 2 of the swing-band surfaces (sequential-refinement disclosure in spec.yaml applies).
+Evidence status of every number below: DISCOVERY_CONSUMED, gross, costless, no strategy licensed.
+====================================================================================================
+
+G0 SEAL --------------------------------------------------------------------------------------------
+GATE            | SPEC                                                | OBSERVED                                                    | PASS-FAIL
+G0.ndx          | max date <= 2026-05-29 after truncation             | max=2026-05-29                                              | PASS
+G0.vx           | S1 VX slice within 2007-04-01..2021-12-31           | S1 slice max<=2021-12-31 OK; rows_used=32018                | PASS
+G0.vx.reserve   | ZERO implied-vol rows >= 2022-01-01 in S1           | count=0                                                     | PASS
+G0.vx.legacy    | zero LEGACY_10X_SUSPECT rows in S1 window           | asserted in loader                                          | PASS
+G0.cot          | max report_date <= 2026-05-29 after truncation      | max=2026-05-26                                              | PASS
+G0.cot.market   | market FIXED to SWING01 record (spec)               | 'NASDAQ-100 Consolidated - CHICAGO MERCANTILE EXCHANGE'     | PASS
+
+S2 MARKET SELECTION (recorded BEFORE outcomes; spec FIXES the market to the series
+SWING01 recorded; the SWING01 selection rule was re-run and hard-asserted to return it):
+    MICRO E-MINI NASDAQ-100 INDEX - CHICAGO MERCANTILE EXCHANGE: longest continuous run 278 reports (2021-01-12 -> 2026-05-26)
+    NASDAQ MINI - CHICAGO MERCANTILE EXCHANGE: longest continuous run 225 reports (2022-02-08 -> 2026-05-26)
+    NASDAQ-100 Consolidated - CHICAGO MERCANTILE EXCHANGE: longest continuous run 828 reports (2010-07-20 -> 2026-05-26)
+    NASDAQ-100 STOCK INDEX (MINI) - CHICAGO MERCANTILE EXCHANGE: longest continuous run 603 reports (2010-07-20 -> 2022-02-01)
+    NASDAQ-100 STOCK INDEX - CHICAGO MERCANTILE EXCHANGE: longest continuous run 186 reports (2006-06-13 -> 2009-12-29)
+  CHOSEN (spec-fixed): NASDAQ-100 Consolidated - CHICAGO MERCANTILE EXCHANGE
+  row set = its longest continuous run: 2010-07-20 -> 2026-05-26 (828 reports)
+
+G1 SEMANTIC ----------------------------------------------------------------------------------------
+  [S1_VXSLOPE] The S1 headline number is the MEAN WEEKLY OVERLAY LOG RETURN over 693 NON-OVERLAPPING Friday-close-to-next-Friday-close NDX weeks (2008-04-04 -> 2021-12-31; VX settle inputs strictly 2007-04..2021-12; first scored week follows the 52-obs causal burn-in): the event it measures is whether w_t * r_(t+1) has nonzero mean, where w_t is the causal expanding-window z-score of the VX front/second settlement-ratio slope clipped to [-2,+2] (demeaned exposure -- timing information only, long drift cannot leak in) and r_(t+1) is the following week's NDX log return (gross, costless; NOT a P&L, NO tradable rule licensed).
+  [S2_COTFLOW] The S2 headline number is the MEAN WEEKLY OVERLAY LOG RETURN over 770 NON-OVERLAPPING knowability-Monday-close-to-next-knowability-Monday-close NDX weeks on the COT report grid (2011-08-22 -> 2026-05-18, market 'NASDAQ-100 Consolidated - CHICAGO MERCANTILE EXCHANGE'): the event it measures is whether w_t * r_(t+1) has nonzero mean, where w_t is the causal expanding-window z-score of the 4-report change in leveraged-fund net position / open interest clipped to [-2,+2], scored only from the first close at which the report was public, and r_(t+1) is the following report-week's NDX log return (gross, costless; NOT a P&L).
+  [S3_PATHCONT] The S3 headline number is the MEAN WEEKLY OVERLAY LOG RETURN over 2051 NON-OVERLAPPING Friday-close-to-next-Friday-close NDX weeks (1987-02-06 -> 2026-05-22): the event it measures is whether w_t * r_(t+1) has nonzero mean, where w_t is the causal expanding-window z-score of sign(trailing 21d NDX log return) x efficiency ratio (same 21d) clipped to [-2,+2] and r_(t+1) is the following week's NDX log return (gross, costless; NOT a P&L, NOT unconditional TSMOM -- the exposure is the demeaned signed-efficiency signal).
+  [S1 note] 25 Friday observations dropped (SWING01-verified contiguous 2012-11-30..2013-05-17 bad-settle/missing-curve stretch at the archive/modern file boundary). A missing or bad front settle NEVER promotes the second contract; the Friday is dropped instead, and the circular-shift null runs on the sampled series.
+  [S1_VXSLOPE grid] 693 scored weeks; forward-week span days: min=6, median=7, max=8; non-overlapping by construction (each week ends where the next begins).
+  [S2_COTFLOW grid] 770 scored weeks; forward-week span days: min=5, median=7, max=9; non-overlapping by construction (each week ends where the next begins).
+  [S3_PATHCONT grid] 2051 scored weeks; forward-week span days: min=3, median=7, max=11; non-overlapping by construction (each week ends where the next begins).
+
+G6 KNOWABILITY AUDIT -------------------------------------------------------------------------------
+criterion coded for EVERY observation: knowable-timestamp(all signal inputs, incl. the whole
+z-history, whose members are all strictly earlier) <= forward-window start timestamp.
+S1/S3: inputs dated <= obs close t; fwd starts AT close t (margin 0 = same 16:00 ET mark).
+S2: release Friday 15:30 ET must STRICTLY precede the knowability-Monday 16:00 ET close
+(asserted per-row in the builder).
+  [S1_VXSLOPE] 10 random observation points of 693:
+    obs=2010-09-10  signal[VX settle 2010-09-10 (front exp 2010-09-15)]  knowable=2010-09-10 16:00:00  fwd_start=2010-09-10 16:00:00 (close)  fwd_end=2010-09-17  margin=0.0h  OK
+    obs=2010-10-15  signal[VX settle 2010-10-15 (front exp 2010-10-20)]  knowable=2010-10-15 16:00:00  fwd_start=2010-10-15 16:00:00 (close)  fwd_end=2010-10-22  margin=0.0h  OK
+    obs=2011-07-08  signal[VX settle 2011-07-08 (front exp 2011-07-20)]  knowable=2011-07-08 16:00:00  fwd_start=2011-07-08 16:00:00 (close)  fwd_end=2011-07-15  margin=0.0h  OK
+    obs=2015-08-07  signal[VX settle 2015-08-07 (front exp 2015-08-19)]  knowable=2015-08-07 16:00:00  fwd_start=2015-08-07 16:00:00 (close)  fwd_end=2015-08-14  margin=0.0h  OK
+    obs=2015-12-31  signal[VX settle 2015-12-31 (front exp 2016-01-20)]  knowable=2015-12-31 16:00:00  fwd_start=2015-12-31 16:00:00 (close)  fwd_end=2016-01-08  margin=0.0h  OK
+    obs=2016-07-01  signal[VX settle 2016-07-01 (front exp 2016-07-20)]  knowable=2016-07-01 16:00:00  fwd_start=2016-07-01 16:00:00 (close)  fwd_end=2016-07-08  margin=0.0h  OK
+    obs=2017-04-21  signal[VX settle 2017-04-21 (front exp 2017-05-17)]  knowable=2017-04-21 16:00:00  fwd_start=2017-04-21 16:00:00 (close)  fwd_end=2017-04-28  margin=0.0h  OK
+    obs=2018-06-29  signal[VX settle 2018-06-29 (front exp 2018-07-18)]  knowable=2018-06-29 16:00:00  fwd_start=2018-06-29 16:00:00 (close)  fwd_end=2018-07-06  margin=0.0h  OK
+    obs=2020-10-09  signal[VX settle 2020-10-09 (front exp 2020-10-21)]  knowable=2020-10-09 16:00:00  fwd_start=2020-10-09 16:00:00 (close)  fwd_end=2020-10-16  margin=0.0h  OK
+    obs=2020-12-18  signal[VX settle 2020-12-18 (front exp 2021-01-20)]  knowable=2020-12-18 16:00:00  fwd_start=2020-12-18 16:00:00 (close)  fwd_end=2020-12-24  margin=0.0h  OK
+  [S2_COTFLOW] 10 random observation points of 770:
+    obs=2013-02-04  signal[COT as-of 2013-01-29 (Tuesday), released 2013-02-01 15:30:00]  knowable=2013-02-01 15:30:00  fwd_start=2013-02-04 16:00:00 (close)  fwd_end=2013-02-11  margin=72.5h  OK
+    obs=2015-07-20  signal[COT as-of 2015-07-14 (Tuesday), released 2015-07-17 15:30:00]  knowable=2015-07-17 15:30:00  fwd_start=2015-07-20 16:00:00 (close)  fwd_end=2015-07-27  margin=72.5h  OK
+    obs=2016-03-21  signal[COT as-of 2016-03-15 (Tuesday), released 2016-03-18 15:30:00]  knowable=2016-03-18 15:30:00  fwd_start=2016-03-21 16:00:00 (close)  fwd_end=2016-03-28  margin=72.5h  OK
+    obs=2017-09-05  signal[COT as-of 2017-08-29 (Tuesday), released 2017-09-01 15:30:00]  knowable=2017-09-01 15:30:00  fwd_start=2017-09-05 16:00:00 (close)  fwd_end=2017-09-11  margin=96.5h  OK
+    obs=2018-01-29  signal[COT as-of 2018-01-23 (Tuesday), released 2018-01-26 15:30:00]  knowable=2018-01-26 15:30:00  fwd_start=2018-01-29 16:00:00 (close)  fwd_end=2018-02-05  margin=72.5h  OK
+    obs=2018-02-05  signal[COT as-of 2018-01-30 (Tuesday), released 2018-02-02 15:30:00]  knowable=2018-02-02 15:30:00  fwd_start=2018-02-05 16:00:00 (close)  fwd_end=2018-02-12  margin=72.5h  OK
+    obs=2019-09-16  signal[COT as-of 2019-09-10 (Tuesday), released 2019-09-13 15:30:00]  knowable=2019-09-13 15:30:00  fwd_start=2019-09-16 16:00:00 (close)  fwd_end=2019-09-23  margin=72.5h  OK
+    obs=2022-10-24  signal[COT as-of 2022-10-18 (Tuesday), released 2022-10-21 15:30:00]  knowable=2022-10-21 15:30:00  fwd_start=2022-10-24 16:00:00 (close)  fwd_end=2022-10-31  margin=72.5h  OK
+    obs=2024-10-28  signal[COT as-of 2024-10-22 (Tuesday), released 2024-10-25 15:30:00]  knowable=2024-10-25 15:30:00  fwd_start=2024-10-28 16:00:00 (close)  fwd_end=2024-11-04  margin=72.5h  OK
+    obs=2024-12-09  signal[COT as-of 2024-12-03 (Tuesday), released 2024-12-06 15:30:00]  knowable=2024-12-06 15:30:00  fwd_start=2024-12-09 16:00:00 (close)  fwd_end=2024-12-16  margin=72.5h  OK
+  [S3_PATHCONT] 10 random observation points of 2051:
+    obs=1987-05-15  signal[21d window 1987-04-15..1987-05-15]  knowable=1987-05-15 16:00:00  fwd_start=1987-05-15 16:00:00 (close)  fwd_end=1987-05-22  margin=0.0h  OK
+    obs=1987-11-06  signal[21d window 1987-10-08..1987-11-06]  knowable=1987-11-06 16:00:00  fwd_start=1987-11-06 16:00:00 (close)  fwd_end=1987-11-13  margin=0.0h  OK
+    obs=1988-05-06  signal[21d window 1988-04-07..1988-05-06]  knowable=1988-05-06 16:00:00  fwd_start=1988-05-06 16:00:00 (close)  fwd_end=1988-05-13  margin=0.0h  OK
+    obs=1989-01-06  signal[21d window 1988-12-06..1989-01-06]  knowable=1989-01-06 16:00:00  fwd_start=1989-01-06 16:00:00 (close)  fwd_end=1989-01-13  margin=0.0h  OK
+    obs=1989-07-14  signal[21d window 1989-06-14..1989-07-14]  knowable=1989-07-14 16:00:00  fwd_start=1989-07-14 16:00:00 (close)  fwd_end=1989-07-21  margin=0.0h  OK
+    obs=1992-07-10  signal[21d window 1992-06-10..1992-07-10]  knowable=1992-07-10 16:00:00  fwd_start=1992-07-10 16:00:00 (close)  fwd_end=1992-07-17  margin=0.0h  OK
+    obs=1992-11-27  signal[21d window 1992-10-28..1992-11-27]  knowable=1992-11-27 16:00:00  fwd_start=1992-11-27 16:00:00 (close)  fwd_end=1992-12-04  margin=0.0h  OK
+    obs=2001-09-10  signal[21d window 2001-08-09..2001-09-10]  knowable=2001-09-10 16:00:00  fwd_start=2001-09-10 16:00:00 (close)  fwd_end=2001-09-21  margin=0.0h  OK
+    obs=2002-05-17  signal[21d window 2002-04-18..2002-05-17]  knowable=2002-05-17 16:00:00  fwd_start=2002-05-17 16:00:00 (close)  fwd_end=2002-05-24  margin=0.0h  OK
+    obs=2005-10-28  signal[21d window 2005-09-29..2005-10-28]  knowable=2005-10-28 16:00:00  fwd_start=2005-10-28 16:00:00 (close)  fwd_end=2005-11-04  margin=0.0h  OK
+  G6 all-row asserts held for all three sub-families -> PASS
+
+#### everything ABOVE this line was written to gate_table.txt BEFORE any outcome was computed ####
+
+====================================================================================================
+SUB-FAMILY S1_VXSLOPE   (n=693 non-overlapping weeks; statistic = mean weekly overlay return, w x r_next)
+====================================================================================================
+GATE      | SPEC                                                      | OBSERVED                                                                      | PASS-FAIL
+G0        | seal (see table above)                                    | asserts held                                                                  | PASS
+G1        | semantic sentence printed                                 | see G1 section above                                                          | PASS
+G2        | overlay mean vs 401-shift null, two-sided p<=0.0167       | mean=-0.001056/wk  p=0.3308  (null sd=0.000995; ann.Sharpe=-0.232; NW-t secondary below)| FAIL
+G3        | era sign agreement >= 2 of 3 (with full-window sign -)    | 2/3 agree  [2007-04..2009:-, 2010..2015:-, 2016..2021:+]                      | PASS
+G4        | exposure audit; assert |mean(w)| < 0.1                    | mean(w)=-0.2465  sd(w)=0.8138  mean|dw|=0.4004  always-long mean=+0.002904/wk (ann.Sharpe +0.74)| FAIL
+G4        | -> registered interpretation INVALID for this family      | overlay mean is not drift-free; verdict capped (no PASS, no closure)          | INFO
+G5        | MDE at 80% power for failed gate                          | G2 failed: MDE@80%power=0.003220/wk (~ann.Sharpe 0.709) vs |obs|=0.001056 (MDE/|obs|=3.05x) -> UNDERPOWERED_STILL| INFO
+G6        | knowability audit, any violation = run invalid            | printed above; all-row asserts held                                           | PASS
+SECONDARY (never the gate): Newey-West t (lag=4) of the weekly overlay mean: t=-0.85
+CONTEXT (not a gate): overlay sd=0.032747/wk; always-long is context only -- the overlay is demeaned so its mean is timing information, not drift.
+VERDICT S1_VXSLOPE: G4_EXPOSURE_AUDIT_FAIL -- |mean(w)| >= 0.10: the registered interpretation (drift-free timing overlay) is invalid for this family; G2 recorded as diagnostic only; licenses neither PASS nor closure
+
+====================================================================================================
+SUB-FAMILY S2_COTFLOW   (n=770 non-overlapping weeks; statistic = mean weekly overlay return, w x r_next)
+====================================================================================================
+GATE      | SPEC                                                      | OBSERVED                                                                      | PASS-FAIL
+G0        | seal (see table above)                                    | asserts held                                                                  | PASS
+G1        | semantic sentence printed                                 | see G1 section above                                                          | PASS
+G2        | overlay mean vs 401-shift null, two-sided p<=0.0167       | mean=-0.000647/wk  p=0.4279  (null sd=0.000813; ann.Sharpe=-0.192; NW-t secondary below)| FAIL
+G3        | era sign agreement >= 2 of 3 (with full-window sign -)    | 1/3 agree  [2010-08..2015:+, 2016..2020:-, 2021..2026-05:+]                   | FAIL
+G4        | exposure audit; assert |mean(w)| < 0.1                    | mean(w)=-0.0257  sd(w)=0.8426  mean|dw|=0.5038  always-long mean=+0.003488/wk (ann.Sharpe +0.91)| PASS
+G5        | MDE at 80% power for failed gate                          | G2 failed: MDE@80%power=0.002629/wk (~ann.Sharpe 0.782) vs |obs|=0.000647 (MDE/|obs|=4.07x) -> UNDERPOWERED_STILL| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 2010-08..2015 overlay mean=+0.000538 (n=228), era-scaled MDE~0.004832 [approx: full null sd x sqrt(N/n_era)]| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 2016..2020 overlay mean=-0.002700 (n=261), era-scaled MDE~0.004516 [approx: full null sd x sqrt(N/n_era)]| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 2021..2026-05 overlay mean=+0.000300 (n=281), era-scaled MDE~0.004352 [approx: full null sd x sqrt(N/n_era)]| INFO
+G6        | knowability audit, any violation = run invalid            | printed above; all-row asserts held                                           | PASS
+SECONDARY (never the gate): Newey-West t (lag=4) of the weekly overlay mean: t=-0.80
+CONTEXT (not a gate): overlay sd=0.024259/wk; always-long is context only -- the overlay is demeaned so its mean is timing information, not drift.
+VERDICT S2_COTFLOW: UNDERPOWERED_STILL
+
+====================================================================================================
+SUB-FAMILY S3_PATHCONT   (n=2051 non-overlapping weeks; statistic = mean weekly overlay return, w x r_next)
+====================================================================================================
+GATE      | SPEC                                                      | OBSERVED                                                                      | PASS-FAIL
+G0        | seal (see table above)                                    | asserts held                                                                  | PASS
+G1        | semantic sentence printed                                 | see G1 section above                                                          | PASS
+G2        | overlay mean vs 401-shift null, two-sided p<=0.0167       | mean=+0.000287/wk  p=0.6617  (null sd=0.000945; ann.Sharpe=+0.062; NW-t secondary below)| FAIL
+G3        | era sign agreement >= 3 of 4 (with full-window sign +)    | 2/4 agree  [1986..1999:+, 2000..2009:+, 2010..2017:-, 2018..2026-05:-]        | FAIL
+G4        | exposure audit; assert |mean(w)| < 0.1                    | mean(w)=+0.0056  sd(w)=0.9372  mean|dw|=0.5212  always-long mean=+0.002515/wk (ann.Sharpe +0.55)| PASS
+G5        | MDE at 80% power for failed gate                          | G2 failed: MDE@80%power=0.003057/wk (~ann.Sharpe 0.662) vs |obs|=0.000287 (MDE/|obs|=10.67x) -> UNDERPOWERED_STILL| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 1986..1999 overlay mean=+0.000982 (n=674), era-scaled MDE~0.005332 [approx: full null sd x sqrt(N/n_era)]| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 2000..2009 overlay mean=+0.000815 (n=522), era-scaled MDE~0.006059 [approx: full null sd x sqrt(N/n_era)]| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 2010..2017 overlay mean=-0.000947 (n=417), era-scaled MDE~0.006779 [approx: full null sd x sqrt(N/n_era)]| INFO
+G5        | MDE at 80% power for failed gate                          | G3 failed: era 2018..2026-05 overlay mean=-0.000239 (n=438), era-scaled MDE~0.006615 [approx: full null sd x sqrt(N/n_era)]| INFO
+G6        | knowability audit, any violation = run invalid            | printed above; all-row asserts held                                           | PASS
+SECONDARY (never the gate): Newey-West t (lag=4) of the weekly overlay mean: t=+0.41
+CONTEXT (not a gate): overlay sd=0.033296/wk; always-long is context only -- the overlay is demeaned so its mean is timing information, not drift.
+VERDICT S3_PATHCONT: UNDERPOWERED_STILL
+
+ALIGNMENT HAND-CHECK ROWS (for REPORT.md verification; middle scored row per sub-family)
+  [S1_VXSLOPE] sig_date=2015-05-15 front=13.675/exp 2015-05-20 second=15.525/exp 2015-06-17 raw=front/second-1=-0.119163 | z-hist n=398 mean=-0.042098 sd=0.073359 -> z=-1.0505 -> w=-1.0505 | obs=2015-05-15 close=4494.29 -> fwd_end=2015-05-22 close=4527.16 | r_next=ln(4527.16/4494.29)=+0.007287 (stored +0.007287) overlay=-0.007655
+  [S2_COTFLOW] as_of=2018-12-31 release=2019-01-03 15:30:00 net/OI=-0.013285 raw=d4(net/OI)=+0.049344 | z-hist n=437 mean=-0.000136 sd=0.088715 -> z=+0.5577 -> w=+0.5577 | obs=2019-01-07 close=6488.25 -> fwd_end=2019-01-14 close=6541.04 | r_next=ln(6541.04/6488.25)=+0.008103 (stored +0.008103) overlay=+0.004519
+  [S3_PATHCONT] sig_date=2006-09-29 win=2006-08-30..2006-09-29 r21=+0.044617 ER=0.2938 raw=sign*ER=+0.293840 | z-hist n=1077 mean=+0.072207 sd=0.273969 -> z=+0.8090 -> w=+0.8090 | obs=2006-09-29 close=1654.13 -> fwd_end=2006-10-06 close=1684.88 | r_next=ln(1684.88/1654.13)=+0.018419 (stored +0.018419) overlay=+0.014901
+
+FINAL VERDICTS -------------------------------------------------------------------------------------
+  S1_VXSLOPE: G4_EXPOSURE_AUDIT_FAIL -- |mean(w)| >= 0.10: the registered interpretation (drift-free timing overlay) is invalid for this family; G2 recorded as diagnostic only; licenses neither PASS nor closure
+  S2_COTFLOW: UNDERPOWERED_STILL
+  S3_PATHCONT: UNDERPOWERED_STILL
+LANE VERDICT (spec decision_rule, mandatory print): all three primary G2 gates came back UNDERPOWERED_STILL again -> the lane's premise is recorded FALSIFIED-AS-ARGUED and the lane is parked pending genuinely new observables.
+  (Additionally, S1_VXSLOPE failed the G4 exposure audit -- its registered interpretation is invalid independent of power; recorded above.)
+Decision rule (spec): PASS (G2+G3) -> Stage-5/6 minimal-rule spec (NEW run, fresh-shape
+confirmation required per the sequential-refinement disclosure). FAIL with adequate power ->
+observable CLOSED at the swing band (FAILURE_MEMORY row). UNDERPOWERED_STILL again -> the
+lane's premise is recorded FALSIFIED-AS-ARGUED, lane parked. No headline here is quotable as
+edge: gross, costless, DISCOVERY-CONSUMED the moment it printed.

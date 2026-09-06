@@ -129,6 +129,10 @@ and denied a slot (`skeptic_verdicts_w2.md:198-208`).
 Is that justified scope? The implicit defense — N: 4.6 modern years cannot power weekly-scale
 modest edges (true; see Q1 table). But the programme owns a 1,043-week deep spine
 (2006→2026, `GENESIS_DATA_ATLAS.md:14`), and at 1,043 weeks **t=2 needs only ann. Sharpe ≈ 0.45**
+*(⚠️ MEASURED CORRECTION 2026-09-06, `G2_SWING02`: at the 0.05/3 family bar, 80 % power, and a
+dependence-preserving null ~1.3× wider than iid, the actually detectable edge is **~0.66–0.78
+ann. Sharpe** — the t≈2 arithmetic below understates the bar. The lane was read twice and parked
+FALSIFIED-AS-ARGUED; see `ACTIVE_ALPHA_QUEUE.md`.)*
 — exactly the modest-edge band Q1 shows is invisible everywhere else. Owner doctrine explicitly
 says old-regime failure is a risk classification, not a veto (CLAUDE.md §4), and the ERABREAK
 inadmissibility ruling is scoped to *intraday vol statistics* (`G2_F3_ERABREAK01/REPORT.md:7-9`),
