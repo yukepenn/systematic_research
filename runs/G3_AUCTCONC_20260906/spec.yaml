@@ -1,0 +1,40 @@
+run_id: G3_AUCTCONC_20260906
+campaign: GENESIS III (Wave 4 — the concession half of the auction cycle, frozen era-unread)
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+provenance_honesty: |
+  G00073 preregistered TWO halves: the rebound (PRIMARY — now closed, powered) and the
+  concession (SECONDARY, reported gross only: -$160.75/event vs +$59.78 control). This run
+  freezes the concession-SHORT falsifier BEFORE its era split or any further statistic is
+  read (the G00073 pod deliberately did not read them). Mirror-selection debt: the concession
+  is 1 of exactly 2 preregistered halves -> all null p-values are Bonferroni x2 before
+  comparison to 0.05. Sample is DISCOVERY_CONSUMED for this family.
+
+frozen_object: |
+  SHORT the matching future (ZN for 10y, ZB for 30y) at close(D-5); exit at close(D0)
+  (the auction day). Events = the exact 414 mapped auctions in
+  runs/G3_AUCTCYCLE_20260906/out/event_study.csv, used AS-IS (sha printed). Series = the
+  certified causal-roll parquets in that run's out/, AS-IS.
+
+gates:
+  G1_MDE_first: "printed before observed (N_eff ~ 406, x2 debt applied to the alpha)."
+  G2_edge: "after-cost (conservative 2-tick rung) concession-short mean > 0, event-block CI
+    excludes 0, shared-draw shift null p*2 < 0.05."
+  G3_control: "beats the same matched market x weekday non-auction control (short side),
+    delta CI excludes 0."
+  G4_era: "2009-15 / 2016-21 / 2022-26 signs; ALL-positive = STRUCTURAL; modern-only =
+    REGIME-LOCAL (classification); modern <= 0 = FAIL (the rebound's fate)."
+  G5_specificity: "ES same-window read printed (the +$377 rebound-window drift suggests the
+    short side fights equity beta on overlapping days — measure, don't assume)."
+  G6_overlap_honesty: "10y/30y auctions cluster in the same week; D-5..D0 windows OVERLAP
+    heavily across the two roots. Print the overlap fraction and a deduplicated
+    one-position-at-a-time portfolio rendering beside the pooled per-event table; the
+    PORTFOLIO rendering is the economically honest one and carries the G2 gate."
+  G7_cost: "same rungs (ZN $35.61 / ZB $66.86 conservative); 23.5 events/yr economics."
+decision_rule: "G2(portfolio)+G3 PASS and G4 not modern-negative -> AUCTCONC01 ENGINE
+  CANDIDATE (Class-P likely; short-rates carry risk profile stated). Else CLOSED — and with
+  it the auction-cycle family is FULLY closed (both halves), recorded in FAILURE_MEMORY."
+evidence_status: DISCOVERY_CONSUMED.
+ledger: "G00080, family GENESIS3_EVENT, registered before outcomes."
+outputs: [out/gate_table.txt, out/event_table.csv, out/portfolio_rendering.csv, out/era_table.csv, REPORT.md]

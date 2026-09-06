@@ -1,0 +1,70 @@
+======================================================================================================================
+=== G3_BASISMOM_20260906  --  basis-momentum (Boons & Prado 2019) on {CL,GC,SI,ZN,ZB}  (G00075, GENESIS3_RV)
+======================================================================================================================
+
+--- DATA / AVAILABILITY (rule declared before results: month VALID iff >= 14 joint both-leg sessions; cum12 needs 12 consecutive valid months)
+    CL  months-on-grid 209  valid 82  liveW(signal)  67  live span 2010-03..2015-09
+    GC  months-on-grid 209  valid 148  liveW(signal)  68  live span 2010-10..2024-06
+    SI  months-on-grid 209  valid 158  liveW(signal)  72  live span 2010-09..2024-07
+    ZN  months-on-grid 209  valid 114  liveW(signal)   4  live span 2024-04..2024-07
+    ZB  months-on-grid 209  valid 124  liveW(signal)   5  live span 2010-03..2010-07
+
+--- G1: MDE FIRST (80% power, two-sided 5%: detectable ann Sharpe = 2.80*sqrt(12/M))
+    ARM-W portfolio months M = 80   pooled root-months = 216 (spec anticipated ~200/arm)
+    MDE annualized Sharpe = 1.08   -- a true Sharpe below this is NOT detectable at this sample size
+
+--- CAUSALITY PROBE (two-sided): corrupt daily returns AFTER month-end t* -> BM(t*) frozen; corrupt INSIDE window -> BM(t*) moves
+    CL  t*=2012-12  corrupt-future |dBM| = 0.00e+00 PASS   corrupt-inside |dBM| = 999.0 PASS (teeth)
+    GC  t*=2013-08  corrupt-future |dBM| = 0.00e+00 PASS   corrupt-inside |dBM| = 999.0 PASS (teeth)
+    SI  t*=2013-09  corrupt-future |dBM| = 0.00e+00 PASS   corrupt-inside |dBM| = 999.0 PASS (teeth)
+    ZN  t*=2024-06  corrupt-future |dBM| = 0.00e+00 PASS   corrupt-inside |dBM| = 999.0 PASS (teeth)
+    ZB  t*=2010-05  corrupt-future |dBM| = 0.00e+00 PASS   corrupt-inside |dBM| = 999.0 PASS (teeth)
+
+--- ARM-W (THE CLAIM): within-root calendar spread sign(BM), monthly
+    live months 80  (2010-04..2024-08 accrual)
+    PRIMARY_1tick  gross $       254  cost $      252  net $         2  mean/mo $    0.03  annSharpe   0.002  drag 99.1%
+    STRESS_2tick   gross $       254  cost $      453  net $      -199  mean/mo $   -2.48  annSharpe  -0.165  drag 178.1%
+    SI3_rung       gross $       254  cost $      544  net $      -289  mean/mo $   -3.62  annSharpe  -0.239  drag 213.8%
+    mean monthly turnover (contracts, both legs, all roots, per $100/day-vol unit): 0.146
+    per-root net (PRIMARY): CL $43  GC $-101  SI $83  ZN $-19  ZB $-3
+    [annex] continuous-series roll executions are NOT charged by the frozen monthly-turnover cost model; per-root front rolls/yr: CL=11.5  GC=3.5  SI=4.1  ZN=0.4  ZB=0.9
+
+--- MONOTONICITY (rank-response across within-root BM terciles; response = unsigned fwd spread $ per $100/day-vol)
+    pooled  T1     0.76   T2    -6.84   T3    -1.55   monotone(T1<T2<T3): False
+    CL      T1     6.51   T2   -17.20   T3    -4.41
+    GC      T1     1.57   T2    -0.69   T3     1.62
+    SI      T1    -5.28   T2    -2.56   T3    -1.97
+
+--- SUBSUMPTION (G3): ARM-W net ~ a + b1*STATIC-BASIS net + b2*MOM12 net  (NW lag 3, n=80 months)
+    alpha      1.122 $/mo   se   6.564   t   0.17   95% CI [-11.743, 13.987]
+    b_basis    0.060 (se 0.269)   b_mom12   -0.005 (se 0.004)
+
+--- G4 ERAS (accrual months; classification, not veto)
+    2009-15: n= 67  net $    101.58  sign +
+    2016-21: n=  9  net $    -92.98  sign -
+    2022-26: n=  4  net $     -6.19  sign -
+
+--- ARM-X (SECONDARY, BREADTH n=5 THIN -- informs mechanism map only, NEVER rescues ARM-W)
+    [flag] BM is on a POINT basis; cross-root ranks compare point scales -- interpret with care (frozen wording: 'rank on BM')
+    live months 0 -- too thin to report
+
+GATE TABLE  (printed by program)
+GATE               SPEC                                                                                               OBSERVED                                                                 PASS-FAIL
+G0a_SEAL           max session over all 5 roots < 2026-08-01                                                          2026-07-31                                                               PASS
+G0b_CERT_ROLL      certified ncd_day+roll reused; roll.py unit tests pass; front ledger causal; second leg = carry_v1 deferred convention, distinct from front on every date see out/build_log.txt (all asserted at build)                            PASS
+G0c_COVERAGE       availability rule declared pre-results: month valid iff >= 14 joint days; 12 consecutive valid months for cum12 liveW root-months 216; portfolio months 80 (spec assumed 2009..2026-07 continuous; store holds full strip 2009-2015 only) PASS
+G0d_CAUSALITY      two-sided probe: future corruption frozen, in-window corruption moves BM                           all 5 roots PASS                                                         PASS
+G1_MDE_first       MDE printed before observed results (~200 root-months anticipated)                                 M=80 portfolio months, 216 root-months, MDE annSharpe 1.08               PASS
+G2a_sharpe_pos     ARM-W after-cost (PRIMARY 1-tick) ann Sharpe > 0                                                   0.002 (mean $0.03/mo)                                                    PASS
+G2b_ci_excl0       95% block-bootstrap (12-mo circular) Sharpe CI excludes 0                                          Sharpe CI [-0.630, 0.648]  mean CI [$-8.47, $10.24]                      *** FAIL ***
+G2c_null_5pct      clears shared-offset circular-shift null at 5% (one-sided)                                         p = 0.2474 (2000 draws, shared offsets, seed 20260906)                   *** FAIL ***
+G2d_monotone       fwd spread response monotone across within-root BM terciles (pooled)                               T1 0.76 < T2 -6.84 < T3 -1.55 = False                                    *** FAIL ***
+G2_armW            G2a AND G2b AND G2c AND G2d                                                                        True/False/False/False                                                   *** FAIL ***
+G3_subsumption     alpha > 0 vs BOTH parents jointly, NW 95% CI excludes 0                                            alpha 1.122 $/mo, CI [-11.743, 13.987]                                   *** FAIL ***
+G4_era             3-era signs printed; classification not veto                                                       2009-15:+(n=67)  2016-21:-(n=9)  2022-26:-(n=4)                          PASS
+G5_cost            cost rungs printed: 1-tick / 2-tick / SI-3-tick; monthly turnover; drag                            net1 $2 net2 $-199 netSI3 $-289; drag(1t) 99.1%; turnover 0.146 ct/mo    PASS
+G6_P_MEANING       IN WORDS: p_shift = fraction of 2000 draws (ONE shared circular offset applied to every root's monthly BM on the common grid) whose after-cost PRIMARY portfolio mean monthly net >= observed; SECOND WAY = 12-month circular block-bootstrap CI of the same mean (printed in G2b) both computed; qualitative agreement: p=0.247 vs mean-CI [-8.47,10.24]   PASS
+
+DECISION RULE (mechanical): G2=FAIL  G3=FAIL  ->  CLOSED AT SCOPE (S28)
+ARM-X NEVER RESCUES ARM-W (frozen): ARM-X result is mechanism-map information only.
+======================================================================================================================

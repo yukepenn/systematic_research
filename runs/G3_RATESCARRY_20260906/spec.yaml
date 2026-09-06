@@ -1,0 +1,42 @@
+run_id: G3_RATESCARRY_20260906
+campaign: GENESIS III (Wave 4 — the winning control from G00074, given its own honest trial)
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+
+provenance_honesty: |
+  In G00074 the two OUTRIGHT single-root carry-timing controls (identical machinery) were
+  positive — ZN +$47.7k (Sharpe 0.61), ZB +$58.7k (Sharpe 0.70) — while the RV object died.
+  These were CONTROLS, observed before this registration -> selection debt is real and is
+  priced by (a) tightening the null bar to the 97.5th percentile (alpha halved), and
+  (b) requiring victory over BOTH exposure-matched static arms. The "mostly-long through a
+  13-year bond bull" caveat is the central threat: the 2022-26 era (the bond bear) is the
+  decisive classification read.
+
+frozen_object: |
+  Per root i in {ZN, ZB}, weekly (ISO, causal): position_t = sign(carry_i,t), carry as in
+  CARRY_V1/G00074 verbatim ((P_near - P_deferred)/month_gap / lagged-63d sigma). Always in,
+  long or short. Sized 1/sigma_i. Both roots reported separately AND as an equal-vol pool
+  (the pool carries the headline). Zero free parameters.
+
+gates:
+  G1_MDE_first: "printed (~596 weeks realized coverage expected, per G00074)."
+  G2_edge: "pool after-cost weekly mean > 0, block CI excludes 0, circular-shift null
+    percentile >= 97.5 (debt-tightened bar)."
+  G2b_null_agreement: "second null computation (13-wk block permutation); agreement judged
+    TAIL-SIDE (both above or both below the bar), NOT raw percentile distance — the banked
+    SIGC lesson. Split verdicts = INVALID-RUN."
+  G3_static_arms: "beats BOTH exposure-matched static arms (always-long, always-short,
+    same sizing/costs/calendar): pool Sharpe > each arm's, AND alpha regression vs the
+    static-long arm has CI excluding 0 (the timing must not reduce to the bull)."
+  G4_era: "2009-15 / 2016-21 / 2022-26 signs. The 2022-26 cell decides classification:
+    positive through the bear = genuinely conditional (STRUCTURAL candidate); negative
+    modern = the bull in disguise -> FAIL regardless of pooled total."
+  G5_cost: "MODELED $4.36 RT + {1,2}-tick band, weekly turnover printed."
+  G6_battery: "eval_battery weekly-vol lead; fixed-DD only as dollar descriptor; rho-to-P1
+    printed (expect ~-0.05 class)."
+decision_rule: "G2+G2b+G3+G4(modern not negative) PASS -> RATESCARRY01 ENGINE CANDIDATE
+  (Class-P assessment next). Any fail -> closed at scope; the G00074 §28 block gets a
+  completion note either way."
+evidence_status: DISCOVERY_CONSUMED (control observed first; stated on every table).
+ledger: "G00081, family GENESIS3_RV, registered before outcomes."
+outputs: [out/gate_table.txt, out/weekly_pnl.csv, out/static_arms.csv, out/era_table.csv, REPORT.md]

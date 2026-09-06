@@ -254,3 +254,55 @@ reason = no-harm portfolio gates: worst combined day 1.604x (bar 1.5x); daily rh
 Adjacent questions still open: none as a standalone book-mate for P1. NOT closed: rv5 stress-state
 infrastructure, matched-placebo machinery, the historical 8-gate dev record. Shadow amendment retirement
 = owner decision (packet).
+
+## GENESIS III Wave 3 closures (2026-09-06) — §28 blocks
+
+### Treasury auction rebound (G00073, `G3_AUCTCYCLE_20260906`) — POWERED kill
+```
+Closed:  observable = 414 TreasuryDirect 10y/30y auctions on certified causal-roll ZN/ZB daily
+representation = LONG matching future close(D0)->close(D+5)      event = auction day
+horizon = 5 days      target = rebound vs matched market x weekday control      execution = MODELED 2-tick rung
+sample = 2009-03..2026-07, N_eff 406, MDE $192/event      reason = -$64/event after cost (p 0.68), LOSES to
+control by -$124; eras +$204/-$82/-$439 = SIGN-FLIP (alive only in the LYZ RFS-2013 publication window);
+ES same-days +$377 = generic drift. D+1..D+5 window variants = same object, closed with it.
+```
+Adjacent-open: the CONCESSION half (G00080, frozen era-unread); 13:00 ET intraday response (no local
+intraday rates data pre-2022-12); when-issued basis (no data).
+
+### ZN/ZB duration-neutral slope-carry RV (G00074, `G3_ZNZB_SLOPE_20260906`)
+```
+Closed:  observable = weekly ZN/ZB calendar-slope carry ordering, vol-neutral legs (CARRY_V1 machinery)
+representation = duration-neutral pair RV      horizon = weekly      target = roll-down harvest
+execution = MODELED both legs      sample = 596 ISO weeks 2009-06..2026-07 (67% coverage)
+reason = GROSS-negative (-$9,476), all eras negative, shift pctl 20.5, alpha vs outright controls
+SIGNIFICANTLY NEGATIVE — the neutralization subtracts the component that pays.
+```
+Adjacent-open: outright per-root carry-timing (both controls positive, ZN 0.61 / ZB 0.70) → G00081
+(debt-priced: 97.5-pct bar, static-arm victory required, 2022-26 bear decisive).
+
+### Basis-momentum on the 5 curve-bearing roots (G00075, `G3_BASISMOM_20260906`) — DATA-COLLAPSED
+```
+Closed:  observable = front-minus-second 12m momentum difference, {CL,GC,SI,ZN,ZB}
+representation = ARM-W within-root calendar-spread expression      horizon = monthly
+sample = 216 root-months (local store holds the FULL STRIP ONLY 2009-2015; CL second leg unobservable 2016+)
+reason = gross annSharpe 0.215 p 0.247, non-monotone terciles, 99.1% cost drag, subsumption alpha CI incl 0;
+MDE annSharpe 1.08 — closed at the reachable scope. FULL-STRIP RE-TEST = DATA-GATED (owner spend decision).
+```
+
+### Corr-regime-gated flight-to-quality (G00076, `G3_FTQGATE_20260906`) — POWERED, INVERTED
+```
+Closed:  observable = ZB forward 1-3d after ES <= -1.5 sigma days x trailing-60d ES-ZB corr sign (causal lag)
+representation = 2x2 interaction vs per-regime unconditional controls      sample = 298 events 2009-03..2026-07
+reason = NEG-regime delta -0.167pt (p 0.95), interaction -0.213 — SIGN INVERTED (post-stress ZB
+UNDERPERFORMS its own regime baseline); powered (MDE 0.31-0.42pt). No object licensed from the
+inversion (post-hoc sign-pick ban).
+```
+Governance note: executed under the recorded P-2-reserve supersession ruling (spec §governance_ruling).
+
+### Month-end stock-bond rebalance conjunction (G00077, `G3_MEREBAL_20260906`)
+```
+Closed:  observable = top-tercile intra-month ES-vs-ZB relative return -> turn-window flow + post-turn reversal
+representation = two-leg conjunction vs all-turns control      sample = 45 conditional events / 170 turns
+reason = BOTH legs wrong-signed (flow delta -0.318 p 0.81; revert +0.468 p 0.84); no era shows the pair.
+Banked controls: generic ES/ZB turn-of-month spread ~= $6/event ~ zero; early-month ES drift +8.85pt (fact).
+```

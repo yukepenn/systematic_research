@@ -1,0 +1,60 @@
+run_id: G3_ZBMACRO_ENGINE_20260906
+campaign: GENESIS III (Wave 4 — ZBMACRO01 engine construction + adversarial skeptic)
+date_registered: "2026-09-06"
+spec_committed_before_results: true
+licensed_by: "G00078 STACK-MEMBER verdict. This run produces either an executable engine
+  dossier ready for FT0 (freeze) or a kill. Ledger G00079."
+
+engine_object_restated:  # frozen from G00072; zero retuning of the RULE
+  rule: "On GENESIS_H2_CALENDAR NFP_DAY/CPI_DAY sessions: if close(08:45)-close(08:30) < 0
+    (ZB points), SHORT k=2 ZB; exit at close(15:00). No overnight. No other conditioning."
+  sizing: "k=2 from G00078 (the Class-P decision cell); k=1 also dossiered."
+
+the_decisive_new_question:  # NOT retuning — execution honesty
+  delay_curve: |
+    The G00072 neighborhood shows entry at 08:50 close retains only ~$17 of the $177 —
+    the edge may concentrate in minutes 46-50. An engine that requires filling AT the
+    signal bar's close is latency-fragile and its executable claim must say so.
+    PREREGISTERED: recompute the frozen object with entry at close(08:46), close(08:47),
+    close(08:48), close(08:50) — the full curve printed. THE EXECUTABLE ENGINE CLAIM USES
+    close(08:46) (1-minute delay). G_delay gate: after-cost mean at 08:46 entry > 0 with
+    block-bootstrap CI excluding 0. If the 08:46 CI includes 0, the engine is
+    LATENCY-FRAGILE -> verdict KILLED-AT-EXECUTION (an honest Class-X failure mode), unless
+    the 08:46 point estimate retains >=60% of the 08:45 edge AND the curve is monotone-decaying
+    (then verdict FAST-EXECUTION-REQUIRED with the risk named, for the skeptic to attack).
+
+dossier_contents:  # all program-printed
+  - delay curve (above) + per-minute drift decomposition 08:45->09:15 on event days
+  - full eval_battery: weekly-vol lead; fixed-DD/CDaR only as dollar descriptors (no
+    income normalization; thinning placebo N/A stated)
+  - MAE/MFE intra-trade paths from the 1-min substrate; worst 5 trades anatomized
+  - calendar honesty: NFP/CPI overlap days, holiday-shifted releases, roll-window events
+    (ZB quarterly roll: any event day within 3 days of the volume crossover flagged)
+  - session/margin facts: entry 08:45-08:46 ET, flat by 15:00 -> no overnight margin;
+    ZB day margin ASSUMED-flagged
+  - capacity note: ZB top-of-book depth is deep; k=2 is negligible (stated, not proven)
+  - orthogonality recomputation at k=2 vs P1 (from G00078 joint series)
+
+adversarial_skeptic:  # runs AFTER the dossier, same run, separate section — refuter framing
+  lenses:
+    - duplication: "is this just published post-announcement drift / the surprise sign?
+      If the 08:30->08:45 move is a proxy for the macro surprise, say so — that is a
+      mechanism LABEL (behavioral underreaction / slow repricing), not a kill; a kill
+      requires showing the effect is already tradable-known AND arbitraged post-publication."
+    - fragility: "attack the delay curve, the 3-trade concentration (66% of net), the
+      n=40, the near-MDE mean. State the single most likely way this is nothing."
+    - regime: "CPI/NFP regime 2023-2026 is a high-inflation-attention era; state the decay
+      condition and a prospective kill rule (chronology-half monitor)."
+    - implementation: "NT8 path: decision on ZB 1-min primary, orders same instrument;
+      state the FT4-FT9 risks (new class, roll guard inheritance, session flatten at 15:00,
+      fail-closed on missing 08:30/08:45 bars)."
+  verdict_options: ["SURVIVES -> FT0 freeze + owner packet prep", "KILLED (name the lens)"]
+
+decision_rule: |
+  G_delay PASS (or FAST-EXECUTION-REQUIRED) AND skeptic SURVIVES -> ledger PASS ->
+  FT0: freeze the engine (rule + entry convention + k), then FT1-FT10 in a later run.
+  Any kill -> ledger FAIL with the lens named; ZBMACRO01 closed at engine stage
+  (the G00072 science verdict stands as science).
+evidence_status: DISCOVERY_CONSUMED; every table labeled.
+ledger: "G00079, family GENESIS3_ENGINE, registered before outcomes."
+outputs: [out/gate_table.txt, out/delay_curve.csv, out/dossier.md, out/skeptic.md, REPORT.md]

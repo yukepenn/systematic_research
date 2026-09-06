@@ -18,37 +18,20 @@ integration; every update is committed and pushed immediately (owner checkpoint 
 - ⭐ Standing survivor: **ZBMACRO01** (G00072 PASS/selected) — engine candidate, Class-P
   pre-read = G00078.
 
-## In flight at checkpoint time (Wave 3)
+## In flight (Wave 4) — updated 2026-09-06 after Wave-3 integration
 
-Six preregistered runs executing (specs committed at `f952593`/`6409d79`; agents write into
-their run dirs; partial `out/` may be present at any checkpoint):
+Wave 3 DONE and integrated (G00073-77 FAIL recorded with §28 blocks; G00078 PASS/STACK-MEMBER).
+Wave 4 executing (specs frozen; launch = workflow `genesis3-wave4`):
 
-| run | trial | done-marker to check |
+| run | trial | object |
 |---|---|---|
-| `runs/G3_AUCTCYCLE_20260906` | G00073 | out/gate_table.txt with final DECISION line |
-| `runs/G3_ZNZB_SLOPE_20260906` | G00074 | same |
-| `runs/G3_BASISMOM_20260906` | G00075 | same |
-| `runs/G3_FTQGATE_20260906` | G00076 | same |
-| `runs/G3_MEREBAL_20260906` | G00077 | same |
-| `runs/G3_ZBMACRO_CLASSP_20260906` | G00078 | same |
+| `runs/G3_ZBMACRO_ENGINE_20260906` | G00079 | engine construction + skeptic; DELAY CURVE decisive (08:46 entry is the executable claim) |
+| `runs/G3_AUCTCONC_20260906` | G00080 | concession-short, frozen ERA-UNREAD, x2 mirror debt, portfolio rendering carries G2 |
+| `runs/G3_RATESCARRY_20260906` | G00081 | outright ZN/ZB carry-timing; 97.5-pct debt bar; static arms; 2022-26 bear decisive |
+| (no trial) | — | P1 passive-entry policy GOVERNANCE PRE-CHECK (BBO memo at runs/G2_WAVE5_CARDS_20260906/) |
 
-**Recovery rule if the session died mid-wave:** for each run, if the final gate table +
-decision exist → coordinator writes REPORT.md if missing (from artifacts, program-printed
-tables only), records the ledger result, updates tracker/matrix, commits. If not complete →
-re-execute that spec EXACTLY (specs are frozen; do not redesign). Never re-run a run whose
-gate table already printed an evidence-window statistic if its spec is one-shot (only
-CARRY_SIGC was one-shot; it is DONE and its windows are SPENT).
-
-## Queue after Wave 3 (EVI order)
-
-1. Integrate Wave-3 verdicts (ledger, tracker, matrix, FAILURE_MEMORY §28 blocks) → commit+push.
-2. If G00078 = STACK-MEMBER → ZBMACRO01 engine construction + adversarial skeptic spec
-   (then FT0-FT10 fast track only if it survives the skeptic).
-3. World-scan card #2 (P1 passive-entry policy, Class-X): needs a BBO governance pre-check
-   vs `runs/G2_WAVE5_CARDS_20260906/BBO_GOVERNANCE_MEMO.md` (NOTE: the memo lives THERE,
-   not in research/genesis2/ — path drift found by the LIQREV pod) before any spec.
-4. Next world-scan survivors by EVI (`survivors.json`, ranks 6+), re-screened against the
-   freshest closures first.
+**Recovery rule:** same as before — finished (final DECISION line in out/gate_table.txt) →
+integrate + record ledger; unfinished → re-execute the frozen spec exactly.
 
 ## Standing duties every session
 
